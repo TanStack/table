@@ -13,7 +13,7 @@ A fast, lightweight, opinionated table and datagrid built on React
 - Minimal Design & easy to theme
 
 Why you may **not** want to use `react-table`:
-- No support for infinite scrolling. In our experience, infinite scrolling complicates data grids
+- No support for infinite scrolling. We chose to avoid the complex problems that come with it, and instead provide reliable and predictable pagination.
 
 ## Installation
 ```bash
