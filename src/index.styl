@@ -1,0 +1,191 @@
+@import 'nib'
+
+$easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
+
+.ReactTable
+  position:relative
+  table
+    width: 100%
+    border-collapse: collapse
+    border: 1px solid alpha(black, .1)
+    display: block
+    overflow-x: auto
+
+  .-td
+  .-th
+    &-inner
+      white-space: nowrap
+      text-overflow: ellipsis
+      padding: 7px 5px
+      overflow: hidden
+      z-index:0
+      transition: .3s ease
+      transition-property: width, min-width, padding, opacity
+
+  th
+  td
+    &:hover
+      .-td
+      .-th
+        &-inner
+          position:relative
+          overflow:visible
+          z-index:1
+          text-shadow:
+            0 0 1px white,
+            0 0 2px white,
+            1px 0 3px white,
+            1px 0 4px white,
+            2px 0 5px white,
+            2px 0 6px white,
+            3px 0 7px white,
+            3px 0 8px white,
+            4px 0 9px white,
+            4px 0 10px white,
+            5px 0 11px white,
+            5px 0 12px white,
+            6px 0 13px white,
+            6px 0 14px white,
+            7px 0 15px white,
+            7px 0 16px white,
+            8px 0 17px white,
+            8px 0 18px white,
+            9px 0 19px white,
+            9px 0 20px white
+
+          > *
+            text-shadow: none
+
+    &.hidden
+      border:0 !important
+      opacity: 0 !important
+      .-th-inner
+      .-td-inner
+        width: 0 !important
+        min-width: 0 !important
+        padding: 0 !important
+
+  thead
+    box-shadow: 0px 5px 20px 0 alpha(black, .1)
+    z-index: 0
+
+    &.-headerGroups
+      border-bottom: 1px solid alpha(black, .05)
+
+      th
+      td
+        background: alpha(black, .03)
+
+    tr
+      text-align:center
+
+    th
+    td
+      width: 1%
+      background: white
+      font-weight:500
+      color: $darkColor
+      border-right: 1px solid alpha(black, .05)
+      transition box-shadow .3s easeOutBack
+      box-shadow:inset 0 0 0 0 transparent
+      &.sort-asc
+        box-shadow:inset 0 3px 0 0 alpha(black, .6)
+      &.sort-desc
+        box-shadow:inset 0 -3px 0 0 alpha(black, .6)
+
+  tbody
+    z-index:0
+    tr
+      border-bottom: solid 1px alpha(black, .05)
+      &:last-child
+        border-bottom: 0
+
+      &:first-child td
+        box-shadow: inset 0 20px 20px -20px alpha(black, .2)
+    td
+      border-right:1px solid alpha(black, .02)
+      &:last-child
+        border-right:0
+
+  &.striped
+    tbody tr:nth-child(even)
+      background: alpha(black, .03)
+  &.highlight
+    tbody tr:hover
+      background: alpha(black, .05)
+
+  .-pagination
+    width:100%
+    display:flex
+    margin-top:5px
+    justify-content: space-between
+    align-items: center
+    flex-wrap: wrap
+
+    .-btn
+      appearance:none
+      display:block
+      width:100%
+      border: 0
+      border-radius: 3px
+      padding: 6px
+      font-size: 1em
+      color: alpha(black, .6)
+      background: alpha(black, .1)
+      transition: all .1s ease
+
+      &[disabled]
+        opacity: .5
+        cursor: default
+
+      &:not([disabled]):hover
+        background: alpha(black, .3)
+        color: white
+
+    .-left
+    .-center
+    .-right
+      flex: 1
+      // min-width:150px
+      margin-bottom:5px
+
+    .-left
+    .-right
+      text-align: center
+
+
+    .-center
+      text-align:center
+      padding: 0 5px
+
+
+  .-loading
+    display:block
+    position:absolute
+    left:0
+    right:0
+    top:0
+    bottom:0
+    background: alpha(white, .8)
+    transition: all .3s ease
+    z-index: 2
+    opacity: 0
+    pointer-events: none
+
+    > div
+      position:absolute
+      display: block
+      text-align:center
+      width:100%
+      top:50%
+      left: 0
+      font-size: 15px
+      color: alpha(black, .6)
+      transform: translateY(-52%)
+      transition: .3s $easeOutQuad
+
+    &.-active
+      opacity: 1
+      pointer-events: all
+      > div
+        transform: translateY(50%)
