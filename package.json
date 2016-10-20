@@ -1,5 +1,5 @@
 {
-  "name": "react-table-temp",
+  "name": "react-table",
   "version": "0.0.1",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
@@ -11,12 +11,13 @@
   "keywords": [
     "react",
     "table",
+    "react-table",
     "datagrid"
   ],
-  "main": "src/index.js",
+  "main": "react-table.js",
   "scripts": {
-    "build:js": "rm -rf react-table.js && browserify src/index.js --external react -s react-table -t babelify -tg uglifyify -o react-table.js",
-    "build:css": "rm -rf react-table.css && stylus src/index.styl -o react-table.css --use ./node_modules/nib/lib/nib.js --compress",
+    "build:js": "rm -rf react-table.js && browserify src/index.js -s reactTable -u react -t babelify -g uglifyify -o react-table.js",
+    "build:css": "rm -rf react-table.css && stylus src/index.styl --use ./node_modules/nib/lib/nib.js --compress -o react-table.css",
     "watch": "onchange 'src/**' -i -- npm-run-all build:*",
     "prepublish": "npm-run-all build:*"
   },

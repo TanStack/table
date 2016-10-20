@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 //
-import _ from './utils'
+import _ from './lodash'
 
 const defaultButton = (props) => (
   <button {...props} className='-btn'>{props.children}</button>

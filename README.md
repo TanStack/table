@@ -1,7 +1,7 @@
 # react-table
 A fast, lightweight, opinionated table and datagrid built on React
 
-[![Chart.js on Slack](https://img.shields.io/badge/slack-Chart.js-blue.svg)](https://react-table-slack.herokuapp.com/)
+[![react-table on Slack](https://img.shields.io/badge/slack-reactTable-blue.svg)](https://react-table-slack.herokuapp.com/)
 
 ## Features
 

@@ -1,0 +1,24 @@
+{
+  "name": "react-table-example",
+  "version": "1.0.0",
+  "description": "Jumpsuit getting started example",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jumpsuit/jumpsuit.git"
+  },
+  "scripts": {
+    "watch": "jumpsuit watch",
+    "build": "jumpsuit build"
+  },
+  "devDependencies": {
+    "nib": "^1.1.0",
+    "stylus": "^0.54.5"
+  },
+  "dependencies": {
+    "axios": "^0.13.1",
+    "jumpsuit": "^0.7.5",
+    "lodash": "^4.14.1"
+  }
+}

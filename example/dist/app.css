@@ -1,0 +1,262 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,600");
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+  color: #000;
+  background: #fff;
+}
+ol,
+ul {
+  list-style: none;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  vertical-align: middle;
+}
+caption,
+th,
+td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+a img {
+  border: none;
+}
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html {
+  min-height: 100vh;
+}
+body {
+  background: #003952;
+  background: -webkit-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
+  background: -moz-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
+  background: -o-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
+  background: -ms-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
+  background: radial-gradient(ellipse at center, #005275 0%, #003952 100%);
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+}
+.container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -o-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+.container section {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 50%;
+  height: 100vh;
+  text-align: center;
+  position: relative;
+}
+.container section:first-child:after {
+  content: '';
+  background: #003952;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 1px;
+  height: 90%;
+}
+.logo {
+  width: 150px;
+  margin: 0 auto 30px;
+}
+.logo img {
+  width: 100%;
+}
+.title {
+  font-size: 40px;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+.subtitle {
+  font-size: 16px;
+  opacity: 0.6;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+  filter: alpha(opacity=60);
+  letter-spacing: 1px;
+}
+.github {
+  width: 100%;
+  max-width: 480px;
+  padding: 0 30px;
+  margin-top: 50px;
+}
+.inpt {
+  border: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 20px;
+  width: 300px;
+  text-align: center;
+  border-radius: 4px;
+  outline: none;
+  width: 100%;
+}
+.usr {
+  background: #f5f5f5;
+  color: #003952;
+  -webkit-box-shadow: 0 2px 7px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 7px rgba(0,0,0,0.4);
+  text-align: left;
+  border: 1px solid #0082bb;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+.usr-avatar {
+  display: inline-block;
+  float: left;
+  margin-right: 10px;
+}
+.usr-avatar img {
+  width: 100px;
+}
+.usr-info {
+  font-size: 14px;
+  width: 280px;
+}
+.usr-info td {
+  padding: 3px 5px;
+  vertical-align: top;
+}
+.usr-info td:first-child {
+  width: 100px;
+  font-weight: 600;
+}
+.usr-none {
+  text-align: center;
+  color: #bfbfbf;
+}
+@media (max-width: 720px) {
+  .container {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -o-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -o-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+  .container section {
+    width: 100%;
+  }
+}
