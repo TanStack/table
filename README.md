@@ -10,9 +10,9 @@ A fast, lightweight, opinionated table and datagrid built on React
 - Uses customizable JSX and callbacks for everything
 - Client-side pagination and sorting
 - Server-side support
-- Minimal Design & easy to theme
+- Minimal design & easily themeable
 
-Why you may **not** want to use `react-table`:
+Why you may **not** want to use this component:
 - No support for infinite scrolling. We chose to avoid the complex problems that come with it, and instead provide reliable and predictable pagination.
 - You need tables built in something other than traditional HTML table elements.
 
@@ -20,6 +20,9 @@ Why you may **not** want to use `react-table`:
 ```bash
 $ npm install react-table
 ```
+
+#### Styles
+React-table is built to be dropped into existing applications or styled from the ground up, but if you'd like a decent starting point, you can optionally include our default theme `react-table.css`.  We think it looks great, honestly :)
 
 ## Quick Usage
 ```javascript
