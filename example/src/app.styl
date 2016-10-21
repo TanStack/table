@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// styles
+// Globals
 // -----------------------------------------------------------------------------
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600')
@@ -8,13 +8,16 @@
 global-reset()
 
 // -----------------------------------------------------------------------------
+// vendor styles
+// -----------------------------------------------------------------------------
+
+@import '../node_modules/react-table/react-table.css'
+
+// -----------------------------------------------------------------------------
 // variables
 // -----------------------------------------------------------------------------
 
 $fnt-open-sans = 'Open Sans', sans-serif
-$clr-white = #FFFFFF
-$clr-off-white = #F5F5F5
-$clr-gray = #bfbfbf
 $clr-jumpsuit1 = #003952
 $clr-jumpsuit2 = #005275
 $clr-jumpsuit3 = #0082bb
@@ -32,102 +35,36 @@ html
 body
   background $clr-jumpsuit1
   background radial-gradient(ellipse at center, $clr-jumpsuit2 0%, $clr-jumpsuit1 100%)
-  color $clr-white
   font-family $fnt-open-sans
   font-weight 300
+  padding-bottom: 50px
+
+h1
+  font-size: 2.5em
+  color: white
+
+a
+  color: white
+  font-weight: bold
+
+strong
+  font-weight: bold
 
 .container
-  display flex
-  justify-content space-between
-  padding 0 10px
-  section
-    display flex
-    align-items center
-    justify-content center
-    flex-direction column
-    width 50%
-    height 100vh
-    text-align center
-    position relative
-    &:first-child:after
-      content ''
-      background $clr-jumpsuit1
-      position absolute
-      right 0
-      top: 50%
-      transform: translateY(-50%)
-      width 1px
-      height 90%
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  min-height: 100vh
+  padding-top: 20px
 
-.logo
-  width 150px
-  margin 0 auto 30px
-  img
-    width 100%
+  .github-addon
+    font-size: 20px
+    color:white
+    padding: 10px
 
-.title
-  font-size 40px
-  font-weight 300
-  margin-bottom 10px
-
-.subtitle
-  font-size 16px
-  opacity .6
-  letter-spacing 1px
-
-.github
-  width 100%
-  max-width 480px
-  padding 0 30px
-  margin-top 50px
-
-.inpt
-  border none
-  font-family $fnt-open-sans
-  font-size 14px
-  font-weight 600
-  padding 12px 20px
-  width 300px
-  text-align center
-  border-radius 4px
-  outline none
-  width 100%
-
-.usr
-  background $clr-off-white
-  color $clr-jumpsuit1
-  box-shadow 0 2px 7px rgba(0, 0, 0, .4)
-  text-align left
-  border 1px solid $clr-jumpsuit3
-  border-radius 4px
-  padding 10px
-  margin-top 20px
-  width 100%
-
-.usr-avatar
-  display inline-block
-  float left
-  margin-right 10px
-  img
-    width 100px
-
-.usr-info
-  font-size 14px
-  width 280px
-  td
-    padding 3px 5px
-    vertical-align top
-    &:first-child
-      width 100px
-      font-weight 600
-
-.usr-none
-  text-align center
-  color $clr-gray
-
-@media (max-width: 720px)
-  .container
-    flex-direction column
-    justify-content center
-    section
-      width 100%
+  .table-wrap
+    background: white
+    width: 700px
+    padding: 10px
+    border-radius: 5px

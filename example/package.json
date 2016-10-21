@@ -14,11 +14,13 @@
   },
   "devDependencies": {
     "nib": "^1.1.0",
+    "standard": "^8.4.0",
     "stylus": "^0.54.5"
   },
   "dependencies": {
     "axios": "^0.13.1",
     "jumpsuit": "^0.7.5",
-    "lodash": "^4.14.1"
+    "lodash": "^4.16.4",
+    "namor": "^0.3.0"
   }
 }

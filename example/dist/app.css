@@ -90,6 +90,7 @@ td {
 a img {
   border: none;
 }
+.ReactTable{position:relative;}.ReactTable table{width:100%;border-collapse:collapse;border:1px solid rgba(0,0,0,0.1);display:block;overflow-x:auto}.ReactTable .-td-inner,.ReactTable .-th-inner{white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis;padding:7px 5px;overflow:hidden;z-index:0;-webkit-transition:0.3s ease;-moz-transition:0.3s ease;-o-transition:0.3s ease;-ms-transition:0.3s ease;transition:0.3s ease;-webkit-transition-property:width, min-width, padding, opacity;-moz-transition-property:width, min-width, padding, opacity;-o-transition-property:width, min-width, padding, opacity;-ms-transition-property:width, min-width, padding, opacity;transition-property:width, min-width, padding, opacity}.ReactTable th:hover .-td-inner,.ReactTable td:hover .-td-inner,.ReactTable th:hover .-th-inner,.ReactTable td:hover .-th-inner{position:relative;overflow:visible;z-index:1;text-shadow:0 0 1px #fff,0 0 2px #fff,1px 0 3px #fff,1px 0 4px #fff,2px 0 5px #fff,2px 0 6px #fff,3px 0 7px #fff,3px 0 8px #fff,4px 0 9px #fff,4px 0 10px #fff,5px 0 11px #fff,5px 0 12px #fff,6px 0 13px #fff,6px 0 14px #fff,7px 0 15px #fff,7px 0 16px #fff,8px 0 17px #fff,8px 0 18px #fff,9px 0 19px #fff,9px 0 20px #fff;}.ReactTable th:hover .-td-inner > *,.ReactTable td:hover .-td-inner > *,.ReactTable th:hover .-th-inner > *,.ReactTable td:hover .-th-inner > *{text-shadow:none}.ReactTable th.hidden,.ReactTable td.hidden{border:0 !important;opacity:0 !important;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)" !important;filter:alpha(opacity=0) !important;}.ReactTable th.hidden .-th-inner,.ReactTable td.hidden .-th-inner,.ReactTable th.hidden .-td-inner,.ReactTable td.hidden .-td-inner{width:0 !important;min-width:0 !important;padding:0 !important}.ReactTable thead{-webkit-box-shadow:0 5px 20px 0 rgba(0,0,0,0.1);box-shadow:0 5px 20px 0 rgba(0,0,0,0.1);z-index:0;}.ReactTable thead.-headerGroups{border-bottom:1px solid rgba(0,0,0,0.05);}.ReactTable thead.-headerGroups th,.ReactTable thead.-headerGroups td{background:rgba(0,0,0,0.03)}.ReactTable thead tr{text-align:center}.ReactTable thead th,.ReactTable thead td{width:1%;background:#fff;font-weight:500;color:$darkColor;border-right:1px solid rgba(0,0,0,0.05);-webkit-transition:box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);-moz-transition:box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);-o-transition:box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);-ms-transition:box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);transition:box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);-webkit-box-shadow:inset 0 0 0 0 transparent;box-shadow:inset 0 0 0 0 transparent;}.ReactTable thead th.sort-asc,.ReactTable thead td.sort-asc{-webkit-box-shadow:inset 0 3px 0 0 rgba(0,0,0,0.6);box-shadow:inset 0 3px 0 0 rgba(0,0,0,0.6)}.ReactTable thead th.sort-desc,.ReactTable thead td.sort-desc{-webkit-box-shadow:inset 0 -3px 0 0 rgba(0,0,0,0.6);box-shadow:inset 0 -3px 0 0 rgba(0,0,0,0.6)}.ReactTable tbody{z-index:0;}.ReactTable tbody tr{border-bottom:solid 1px rgba(0,0,0,0.05);}.ReactTable tbody tr:last-child{border-bottom:0}.ReactTable tbody tr:first-child td{-webkit-box-shadow:inset 0 20px 20px -20px rgba(0,0,0,0.2);box-shadow:inset 0 20px 20px -20px rgba(0,0,0,0.2)}.ReactTable tbody td{border-right:1px solid rgba(0,0,0,0.02);}.ReactTable tbody td:last-child{border-right:0}.ReactTable.striped tbody tr:nth-child(even){background:rgba(0,0,0,0.03)}.ReactTable.highlight tbody tr:hover{background:rgba(0,0,0,0.05)}.ReactTable .-pagination{width:100%;display:-webkit-box;display:-moz-box;display:-webkit-flex;display:-ms-flexbox;display:box;display:flex;margin-top:5px;-webkit-box-pack:justify;-moz-box-pack:justify;-o-box-pack:justify;-ms-flex-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-moz-box-align:center;-o-box-align:center;-ms-flex-align:center;-webkit-align-items:center;align-items:center;-webkit-box-lines:multiple;-moz-box-lines:multiple;-o-box-lines:multiple;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;}.ReactTable .-pagination .-btn{-webkit-appearance:none;-moz-appearance:none;appearance:none;display:block;width:100%;border:0;border-radius:3px;padding:6px;font-size:1em;color:rgba(0,0,0,0.6);background:rgba(0,0,0,0.1);-webkit-transition:all 0.1s ease;-moz-transition:all 0.1s ease;-o-transition:all 0.1s ease;-ms-transition:all 0.1s ease;transition:all 0.1s ease;cursor:pointer;outline:none;}.ReactTable .-pagination .-btn[disabled]{opacity:.5;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter:alpha(opacity=50);cursor:default}.ReactTable .-pagination .-btn:not([disabled]):hover{background:rgba(0,0,0,0.3);color:#fff}.ReactTable .-pagination .-left,.ReactTable .-pagination .-center,.ReactTable .-pagination .-right{-webkit-box-flex:1;-moz-box-flex:1;-o-box-flex:1;box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;margin-bottom:5px}.ReactTable .-pagination .-left,.ReactTable .-pagination .-right{text-align:center}.ReactTable .-pagination .-center{text-align:center;padding:0 5px}.ReactTable .-loading{display:block;position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(255,255,255,0.8);-webkit-transition:all 0.3s ease;-moz-transition:all 0.3s ease;-o-transition:all 0.3s ease;-ms-transition:all 0.3s ease;transition:all 0.3s ease;z-index:2;opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);pointer-events:none;}.ReactTable .-loading > div{position:absolute;display:block;text-align:center;width:100%;top:50%;left:0;font-size:15px;color:rgba(0,0,0,0.6);-webkit-transform:translateY(-52%);-moz-transform:translateY(-52%);-o-transform:translateY(-52%);-ms-transform:translateY(-52%);transform:translateY(-52%);-webkit-transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);-moz-transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);-o-transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);-ms-transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)}.ReactTable .-loading.-active{opacity:1;-ms-filter:none;filter:none;pointer-events:all;}.ReactTable .-loading.-active > div{-webkit-transform:translateY(50%);-moz-transform:translateY(50%);-o-transform:translateY(50%);-ms-transform:translateY(50%);transform:translateY(50%)}
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -105,9 +106,20 @@ body {
   background: -o-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
   background: -ms-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
   background: radial-gradient(ellipse at center, #005275 0%, #003952 100%);
-  color: #fff;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
+  padding-bottom: 50px;
+}
+h1 {
+  font-size: 2.5em;
+  color: #fff;
+}
+a {
+  color: #fff;
+  font-weight: bold;
+}
+strong {
+  font-weight: bold;
 }
 .container {
   display: -webkit-box;
@@ -116,21 +128,12 @@ body {
   display: -ms-flexbox;
   display: box;
   display: flex;
-  -webkit-box-pack: justify;
-  -moz-box-pack: justify;
-  -o-box-pack: justify;
-  -ms-flex-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 10px;
-}
-.container section {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: box;
-  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-align: center;
   -moz-box-align: center;
   -o-box-align: center;
@@ -143,120 +146,17 @@ body {
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  -o-box-orient: vertical;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  width: 50%;
-  height: 100vh;
-  text-align: center;
-  position: relative;
+  min-height: 100vh;
+  padding-top: 20px;
 }
-.container section:first-child:after {
-  content: '';
-  background: #003952;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  width: 1px;
-  height: 90%;
-}
-.logo {
-  width: 150px;
-  margin: 0 auto 30px;
-}
-.logo img {
-  width: 100%;
-}
-.title {
-  font-size: 40px;
-  font-weight: 300;
-  margin-bottom: 10px;
-}
-.subtitle {
-  font-size: 16px;
-  opacity: 0.6;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
-  filter: alpha(opacity=60);
-  letter-spacing: 1px;
-}
-.github {
-  width: 100%;
-  max-width: 480px;
-  padding: 0 30px;
-  margin-top: 50px;
-}
-.inpt {
-  border: none;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 20px;
-  width: 300px;
-  text-align: center;
-  border-radius: 4px;
-  outline: none;
-  width: 100%;
-}
-.usr {
-  background: #f5f5f5;
-  color: #003952;
-  -webkit-box-shadow: 0 2px 7px rgba(0,0,0,0.4);
-  box-shadow: 0 2px 7px rgba(0,0,0,0.4);
-  text-align: left;
-  border: 1px solid #0082bb;
-  border-radius: 4px;
+.container .github-addon {
+  font-size: 20px;
+  color: #fff;
   padding: 10px;
-  margin-top: 20px;
-  width: 100%;
 }
-.usr-avatar {
-  display: inline-block;
-  float: left;
-  margin-right: 10px;
-}
-.usr-avatar img {
-  width: 100px;
-}
-.usr-info {
-  font-size: 14px;
-  width: 280px;
-}
-.usr-info td {
-  padding: 3px 5px;
-  vertical-align: top;
-}
-.usr-info td:first-child {
-  width: 100px;
-  font-weight: 600;
-}
-.usr-none {
-  text-align: center;
-  color: #bfbfbf;
-}
-@media (max-width: 720px) {
-  .container {
-    -webkit-box-orient: vertical;
-    -moz-box-orient: vertical;
-    -o-box-orient: vertical;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    -o-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-  }
-  .container section {
-    width: 100%;
-  }
+.container .table-wrap {
+  background: #fff;
+  width: 700px;
+  padding: 10px;
+  border-radius: 5px;
 }

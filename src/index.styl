@@ -1,6 +1,7 @@
 @import 'nib'
 
 $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
+$easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
 
 .ReactTable
   position:relative
@@ -86,7 +87,7 @@ $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
       font-weight:500
       color: $darkColor
       border-right: 1px solid alpha(black, .05)
-      transition box-shadow .3s easeOutBack
+      transition box-shadow .3s $easeOutBack
       box-shadow:inset 0 0 0 0 transparent
       &.sort-asc
         box-shadow:inset 0 3px 0 0 alpha(black, .6)
@@ -133,6 +134,8 @@ $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
       color: alpha(black, .6)
       background: alpha(black, .1)
       transition: all .1s ease
+      cursor: pointer
+      outline:none
 
       &[disabled]
         opacity: .5
@@ -182,7 +185,7 @@ $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
       font-size: 15px
       color: alpha(black, .6)
       transform: translateY(-52%)
-      transition: .3s $easeOutQuad
+      transition: all .3s $easeOutQuad
 
     &.-active
       opacity: 1

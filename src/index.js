@@ -1,7 +1,15 @@
 import React from 'react'
 import classnames from 'classnames'
 //
-import _ from './lodash'
+const _ = {
+  get,
+  takeRight,
+  last,
+  orderBy,
+  range,
+  clone,
+  remove
+}
 
 const defaultButton = (props) => (
   <button {...props} className='-btn'>{props.children}</button>
@@ -23,7 +31,7 @@ export const ReactTableDefaults = {
   }
 }
 
-export default React.component({
+export default React.createClass({
   getDefaultProps () {
     return ReactTableDefaults
   },
@@ -366,21 +374,21 @@ export default React.component({
   },
   sortColumn (column, additive) {
     const existingSorting = this.state.sorting || []
-    const sorting = _.clone(this.state.sorting || [])
+    let sorting = _.clone(this.state.sorting || [])
     const existingIndex = sorting.findIndex(d => d.id === column.id)
     if (existingIndex > -1) {
       const existing = sorting[existingIndex]
       if (existing.asc) {
         existing.asc = false
         if (!additive) {
-          _.remove(sorting, d => d)
-          sorting.push(existing)
+          sorting = [existing]
         }
       } else {
         if (additive) {
           sorting.splice(existingIndex, 1)
         } else {
           existing.asc = true
+          sorting = [existing]
         }
       }
     } else {
@@ -390,14 +398,13 @@ export default React.component({
           asc: true
         })
       } else {
-        _.remove(sorting, d => d)
-        sorting.push({
+        sorting = [{
           id: column.id,
           asc: true
-        })
+        }]
       }
     }
-    const page = (existingIndex === 0 || (!existingSorting.length && sorting.length)) ? 0 : this.state.page
+    const page = (existingIndex === 0 || (!existingSorting.length && sorting.length) || !additive) ? 0 : this.state.page
     this.buildData(this.props, Object.assign({}, this.state, {page, sorting}))
   },
   nextPage (e) {
@@ -409,3 +416,87 @@ export default React.component({
     this.setPage(this.state.page - 1)
   }
 })
+
+
+
+// ########################################################################
+// Utils
+// ########################################################################
+
+
+function remove (a, b) {
+  return a.filter(function (o, i) {
+    var r = b(o)
+    if (r) {
+      a.splice(i, 1)
+      return true
+    }
+    return false
+  })
+}
+
+function get (a, b) {
+  if (isArray(b)) {
+    b = b.join('.')
+  }
+  return b
+    .replace('[', '.').replace(']', '')
+    .split('.')
+    .reduce(
+      function (obj, property) {
+        return obj[property]
+      }, a
+    )
+}
+
+function takeRight (arr, n) {
+  const start = n > arr.length ? 0 : arr.length - n
+  return arr.slice(start)
+}
+
+function last (arr) {
+  return arr[arr.length - 1]
+}
+
+function range (n) {
+  const arr = []
+  for (let i = 0; i < n; i++) {
+    arr.push(n)
+  }
+  return arr
+}
+
+function orderBy (arr, funcs, dirs) {
+  return arr.sort((a, b) => {
+    for (let i = 0; i < funcs.length; i++) {
+      const comp = funcs[i]
+      const ca = comp(a)
+      const cb = comp(b)
+      const desc = dirs[i] === false || dirs[i] === 'desc'
+      if (ca > cb) {
+        return desc ? -1 : 1
+      }
+      if (ca < cb) {
+        return desc ? 1 : -1
+      }
+    }
+    return 0
+  })
+}
+
+function clone (a) {
+  return JSON.parse(JSON.stringify(a, function (key, value) {
+    if (typeof value === 'function') {
+      return value.toString()
+    }
+    return value
+  }))
+}
+
+// ########################################################################
+// Helpers
+// ########################################################################
+
+function isArray (a) {
+  return Array.isArray(a)
+}
