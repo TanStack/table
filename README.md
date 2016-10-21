@@ -16,6 +16,8 @@ Why you may **not** want to use this component:
 - No support for infinite scrolling. We chose to avoid the complex problems that come with it, and instead provide reliable and predictable pagination.
 - You need tables built in something other than traditional HTML table elements.
 
+## [Demo](http://react-table.zabapps.com)
+
 ## Installation
 ```bash
 $ npm install react-table
