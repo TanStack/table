@@ -34,6 +34,7 @@ export default Component({
             <a
               className='github-button'
               href='https://github.com/tannerlinsley/react-table'
+              target='_blank'
               data-icon='octicon-star'
               data-style='mega'
               data-count-href='/tannerlinsley/react-table/stargazers'
@@ -44,7 +45,9 @@ export default Component({
             </a>
           </div>
           <div className='github-addon'>
-            <a href='https://github.com/tannerlinsley/react-table'>
+            <a
+              target='_blank'
+              href='https://github.com/tannerlinsley/react-table'>
               View on Github
             </a>
           </div>
@@ -56,6 +59,10 @@ export default Component({
             data={data}
             columns={columns}
           />
+        </div>
+        <div style={{textAlign: 'center', color: 'white'}}>
+          <br />
+          <em>Tip: Hold shift when sorting for multi-sort!</em>
         </div>
       </div>
     )
