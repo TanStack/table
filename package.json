@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "lodash": "^4.16.4"
+    "lodash": "^4.16.4",
+    "react": "^15.3.1"
   },
   "devDependencies": {
     "babel-cli": "6.14.0",
@@ -35,7 +36,6 @@
     "browserify": "13.1.0",
     "onchange": "^3.0.2",
     "react": "15.3.1",
-    "rollupify": "^0.3.4",
     "standard": "8.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"
