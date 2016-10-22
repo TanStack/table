@@ -195,15 +195,17 @@ To suggest a feature, create an issue if it does not already exist.
 If you would like to help develop a suggested feature follow these steps:
 
 - Fork this repo
-- Run `npm install`
-- Run `npm watch`
+- `npm install`
+- `npm watch`
 - Implement your changes to files in the `src/` directory
 - Submit PR for review
 
-If you would like to preview your changes, you can utilize the example like so:
+If you would like to preview your changes, you can link and utilize the example like so:
 
+- `npm link`
 - `cd example`
-- Run `npm install`
-- Run `npm watch`
+- `npm install`
+- `npm link react-table`
+- `npm watch`
 - Make changes to the example in `src/screens/index.js` if needed
 - View changes at `localhost:8000`
