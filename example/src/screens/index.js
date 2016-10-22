@@ -34,14 +34,18 @@ export default Component({
     return (
       <div className='container'>
         <div style={{textAlign: 'center'}}>
-          <h1>react-table <strong>demo</strong></h1>
+          <h1>
+            <span style={{position: 'absolute', textIndent: '-9999em'}}>
+              react-table <strong>demo</strong>
+            </span>
+            <img src='/Banner.png' className='logo' />
+          </h1>
           <br />
           <div>
             <a
               className='github-button'
               href='https://github.com/tannerlinsley/react-table'
               target='_blank'
-              data-icon='octicon-star'
               data-style='mega'
               data-count-href='/tannerlinsley/react-table/stargazers'
               data-count-api='/repos/tannerlinsley/react-table#stargazers_count'
@@ -50,6 +54,7 @@ export default Component({
               Star
             </a>
           </div>
+          <br />
           <div className='github-addon'>
             <a
               target='_blank'
@@ -66,9 +71,9 @@ export default Component({
             columns={columns}
           />
         </div>
-        <div style={{textAlign: 'center', color: 'white'}}>
+        <div style={{textAlign: 'center'}}>
           <br />
-          <em>Tip: Hold shift when sorting for multi-sort!</em>
+          <em>Tip: Hold shift when sorting to multi-sort!</em>
         </div>
       </div>
     )

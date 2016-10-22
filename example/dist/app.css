@@ -100,12 +100,7 @@ html {
   min-height: 100vh;
 }
 body {
-  background: #003952;
-  background: -webkit-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
-  background: -moz-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
-  background: -o-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
-  background: -ms-radial-gradient(ellipse at center, #005275 0%, #003952 100%);
-  background: radial-gradient(ellipse at center, #005275 0%, #003952 100%);
+  background: #fff;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
   padding-bottom: 50px;
@@ -115,11 +110,15 @@ h1 {
   color: #fff;
 }
 a {
-  color: #fff;
+  color: #02bfe6;
   font-weight: bold;
+  text-decoration: none;
 }
 strong {
   font-weight: bold;
+}
+.logo {
+  width: 400px;
 }
 .container {
   display: -webkit-box;
@@ -151,12 +150,22 @@ strong {
 }
 .container .github-addon {
   font-size: 20px;
-  color: #fff;
   padding: 10px;
 }
 .container .table-wrap {
-  background: #fff;
   width: 700px;
   padding: 10px;
   border-radius: 5px;
+  -webkit-box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
+}
+.ReactTable thead th.-sort-asc,
+.ReactTable thead td.-sort-asc {
+  -webkit-box-shadow: inset 0 3px 0 0 rgba(0,0,0,0.6);
+  box-shadow: inset 0 3px 0 0 rgba(0,0,0,0.6);
+}
+.ReactTable thead th.-sort-desc,
+.ReactTable thead td.-sort-desc {
+  -webkit-box-shadow: inset 0 -3px 0 0 rgba(0,0,0,0.6);
+  box-shadow: inset 0 -3px 0 0 rgba(0,0,0,0.6);
 }

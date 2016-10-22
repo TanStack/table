@@ -18,9 +18,7 @@ global-reset()
 // -----------------------------------------------------------------------------
 
 $fnt-open-sans = 'Open Sans', sans-serif
-$clr-jumpsuit1 = #003952
-$clr-jumpsuit2 = #005275
-$clr-jumpsuit3 = #0082bb
+$react = #25d8fd
 
 // -----------------------------------------------------------------------------
 // styles
@@ -33,8 +31,7 @@ html
   min-height 100vh
 
 body
-  background: $clr-jumpsuit1
-  background: radial-gradient(ellipse at center, $clr-jumpsuit2 0%, $clr-jumpsuit1 100%)
+  background: white
   font-family: $fnt-open-sans
   font-weight: 300
   padding-bottom: 50px
@@ -44,11 +41,15 @@ h1
   color: white
 
 a
-  color: white
+  color: darken($react, 20%)
   font-weight: bold
+  text-decoration: none
 
 strong
   font-weight: bold
+
+.logo
+  width: 400px
 
 .container
   display: flex
@@ -60,11 +61,19 @@ strong
 
   .github-addon
     font-size: 20px
-    color:white
     padding: 10px
 
   .table-wrap
-    background: white
     width: 700px
     padding: 10px
     border-radius: 5px
+    box-shadow: 0 0 20px 0 alpha(black, .2)
+
+.ReactTable
+	thead
+		th
+		td
+			&.-sort-asc
+				box-shadow:inset 0 3px 0 0 alpha(black, .6)
+			&.-sort-desc
+				box-shadow:inset 0 -3px 0 0 alpha(black, .6)
