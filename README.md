@@ -9,7 +9,7 @@ A fast, lightweight, opinionated table and datagrid built on React
 - No composition needed
 - Uses customizable JSX and callbacks for everything
 - Client-side pagination and sorting
-- Server-side support
+- Server-side data
 - Minimal design & easily themeable
 
 Why you may **not** want to use this component:
