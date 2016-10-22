@@ -261,10 +261,10 @@ export default React.createClass({
                   <th
                     key={i}
                     className={classnames(
-                      sort ? (sort.asc ? 'sort-asc' : 'sort-desc') : '',
+                      sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
                       {
-                        'cursor-pointer': column.sortable,
-                        'hidden': !show
+                        '-cursor-pointer': column.sortable,
+                        '-hidden': !show
                       }
                     )}
                     onClick={(e) => {

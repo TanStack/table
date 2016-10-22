@@ -158,8 +158,11 @@ Or just define them on the component
   header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
   accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
 
+  // A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
+  id: 'myProperty',
+
   // Optional
-  id: 'myProperty', // A unique ID is needed if the accessor is not a string or if you would like to override the column name used in server-side calls
+  columns: [...] // See Header Groups section below
   render: JSX eg. ({row, value, index}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
   sortable: true,
   sort: 'asc' or 'desc',
@@ -168,3 +171,39 @@ Or just define them on the component
   minWidth: Number // Allows the column to flex above this minimum amount
 }]
 ```
+
+## Header Groups
+To group columns with another header column, just nest your columns in a header column like so:
+```javascript
+const columns = [{
+  header: 'Favorites',
+  columns: [{
+    header: 'Color',
+    accessor: 'favorites.color'
+  }, {
+    header: 'Food',
+    accessor: 'favorites.food'
+  } {
+    header: 'Actor',
+    accessor: 'favorites.actor'
+  }]
+}]
+```
+
+## Contributing
+To suggest a feature, create an issue if it does not already exist.
+If you would like to help develop a suggested feature follow these steps:
+
+- Fork this repo
+- Run `npm install`
+- Run `npm watch`
+- Implement your changes to files in the `src/` directory
+- Submit PR for review
+
+If you would like to preview your changes, you can utilize the example like so:
+
+- `cd example`
+- Run `npm install`
+- Run `npm watch`
+- Make changes to the example in `src/screens/index.js` if needed
+- View changes at `localhost:8000`

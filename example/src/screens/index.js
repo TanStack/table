@@ -15,14 +15,20 @@ export default Component({
     })
 
     const columns = [{
-      header: 'First Name',
-      accessor: 'firstName'
+      header: 'Name',
+      columns: [{
+        header: 'First Name',
+        accessor: 'firstName'
+      }, {
+        header: 'Last Name',
+        accessor: 'lastName'
+      }]
     }, {
-      header: 'Last Name',
-      accessor: 'lastName'
-    }, {
-      header: 'Age',
-      accessor: 'age'
+      header: 'Info',
+      columns: [{
+        header: 'Age',
+        accessor: 'age'
+      }]
     }]
 
     return (

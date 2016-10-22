@@ -57,7 +57,7 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
           > *
             text-shadow: none
 
-    &.hidden
+    &.-hidden
       border:0 !important
       opacity: 0 !important
       .-th-inner
@@ -89,10 +89,12 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
       border-right: 1px solid alpha(black, .05)
       transition box-shadow .3s $easeOutBack
       box-shadow:inset 0 0 0 0 transparent
-      &.sort-asc
+      &.-sort-asc
         box-shadow:inset 0 3px 0 0 alpha(black, .6)
-      &.sort-desc
+      &.-sort-desc
         box-shadow:inset 0 -3px 0 0 alpha(black, .6)
+      &.-cursor-pointer
+        cursor: pointer
 
   tbody
     z-index:0
