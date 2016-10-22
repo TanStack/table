@@ -1,3 +1,5 @@
+![react-table](https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png)
+
 # react-table
 A fast, lightweight, opinionated table and datagrid built on React
 
