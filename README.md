@@ -16,8 +16,7 @@ A fast, lightweight, opinionated table and datagrid built on React
 - Minimal design & easily themeable
 
 Why you may **not** want to use this component:
-- No support for infinite scrolling. We chose to avoid the complex problems that come with it, and instead provide reliable and predictable pagination.
-- You need tables built in something other than traditional HTML table elements.
+- No support for infinite scrolling yet. We chose to avoid the complex problems that come with it, and instead provide reliable and predictable pagination.
 
 ## [Demo](http://react-table.zabapps.com)
 
