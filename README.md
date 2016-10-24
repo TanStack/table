@@ -109,24 +109,40 @@ This function will be called on mount, pagination events, and sorting events. It
 ```
 
 ## Multi-Sort
-When clicking on a column header, hold shift to multi-sort! You can toggle `aascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
+When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
 ## Default Props
 ```javascript
 {
-  className: '-striped -highlight',
+  // Classes
+  className: '-striped -highlight', // The most top level className for the component
+  tableClassName: '', // ClassName for the `table` element
+  theadClassName: '', // ClassName for the `thead` element
+  tbodyClassName: '', // ClassName for the `tbody` element
+  trClassName: '', // ClassName for all `tr` elements
+  paginationClassName: '' // ClassName for `pagination` element
+  //
   pageSize: 20,
-  minRows: 0,
-  data: [],
-  previousComponent: <button {...props} className='-btn'>{props.children}</button>,
-  nextComponent: <button {...props} className='-btn'>{props.children}</button>,
-  previousText: 'Previous',
-  nextText: 'Next',
-  loadingComponent: <span>Loading...</span>,
+  minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
+  // Global Column Defaults
   column: { // default properties for every column's model
     sortable: true,
     show: true
-  }
+  },
+  // Text
+  previousText: 'Previous',
+  nextText: 'Next',
+  // Component Overrides
+  tableComponent: null,
+  theadComponent: null,
+  tbodyComponent: null,
+  trComponent: null,
+  thComponent: null,
+  tdComponent: null,
+  paginationComponent: null,
+  previousComponent: null,
+  nextComponent: null,
+  loadingComponent: null
 }
 ```
 
@@ -164,6 +180,8 @@ Or just define them on the component
   id: 'myProperty',
 
   // Optional
+  className: '', // Set the classname of the `th/td` element of the column
+  innerClassName: '', // Set the classname of the `.th-inner/.td-inner` element of the column
   columns: [...] // See Header Groups section below
   render: JSX eg. ({row, value, index}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
   sortable: true,

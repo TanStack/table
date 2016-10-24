@@ -16,19 +16,36 @@ const defaultButton = (props) => (
 )
 
 export const ReactTableDefaults = {
+  // Classes
   className: '-striped -highlight',
+  tableClassName: '',
+  theadClassName: '',
+  tbodyClassName: '',
+  trClassName: '',
+  paginationClassName: '',
+  //
   pageSize: 20,
   minRows: 0,
-  data: [],
-  previousComponent: defaultButton,
-  nextComponent: defaultButton,
-  previousText: 'Previous',
-  nextText: 'Next',
-  loadingComponent: <span>Loading...</span>,
+  // Global Column Defaults
   column: {
     sortable: true,
     show: true
-  }
+  },
+  // Text
+  previousText: 'Previous',
+  nextText: 'Next',
+  loadingText: 'Loading...',
+  // Components
+  tableComponent: (props) => <table {...props}>{props.children}</table>,
+  theadComponent: (props) => <thead {...props}>{props.children}</thead>,
+  tbodyComponent: (props) => <tbody {...props}>{props.children}</tbody>,
+  trComponent: (props) => <tr {...props}>{props.children}</tr>,
+  thComponent: (props) => <th {...props}>{props.children}</th>,
+  tdComponent: (props) => <td {...props}>{props.children}</td>,
+  previousComponent: null,
+  nextComponent: null,
+  // Unlisted
+  data: []
 }
 
 export default React.createClass({
@@ -223,22 +240,30 @@ export default React.createClass({
     const canPrevious = this.state.page > 0
     const canNext = this.state.page + 1 < pagesLength
 
-    const PreviousComponent = this.props.previousComponent
-    const NextComponent = this.props.previousComponent
+    const TableComponent = this.props.tableComponent
+    const TheadComponent = this.props.theadComponent
+    const TbodyComponent = this.props.tbodyComponent
+    const TrComponent = this.props.trComponent
+    const ThComponent = this.props.thComponent
+    const TdComponent = this.props.tdComponent
+
+    const PreviousComponent = this.props.previousComponent || defaultButton
+    const NextComponent = this.props.nextComponent || defaultButton
 
     return (
       <div className={classnames(this.props.className, 'ReactTable')}>
-        <table>
+        <TableComponent className={classnames(this.props.tableClassName)}>
           {this.hasHeaderGroups && (
-            <thead className='-headerGroups'>
-              <tr>
+            <TheadComponent className={classnames(this.props.theadClassName, '-headerGroups')}>
+              <TrComponent className={this.props.trClassName}>
                 {this.headerGroups.map((column, i) => {
                   return (
-                    <th
+                    <ThComponent
                       key={i}
+                      className={classnames(column.className)}
                       colSpan={column.columns.length}>
                       <div
-                        className='-th-inner'>
+                        className={classnames(column.innerClassName, '-th-inner')}>
                         {typeof column.header === 'function' ? (
                           <column.header
                             data={this.props.data}
@@ -246,21 +271,22 @@ export default React.createClass({
                           />
                         ) : column.header}
                       </div>
-                    </th>
+                    </ThComponent>
                   )
                 })}
-              </tr>
-            </thead>
+              </TrComponent>
+            </TheadComponent>
           )}
-          <thead>
-            <tr>
+          <TheadComponent className={classnames(this.props.theadClassName)}>
+            <TrComponent className={this.props.trClassName}>
               {this.decoratedColumns.map((column, i) => {
                 const sort = this.state.sorting.find(d => d.id === column.id)
                 const show = typeof column.show === 'function' ? column.show() : column.show
                 return (
-                  <th
+                  <ThComponent
                     key={i}
                     className={classnames(
+                      column.className,
                       sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
                       {
                         '-cursor-pointer': column.sortable,
@@ -271,7 +297,7 @@ export default React.createClass({
                       column.sortable && this.sortColumn(column, e.shiftKey)
                     }}>
                     <div
-                      className='-th-inner'
+                      className={classnames(column.innerClassName, '-th-inner')}
                       style={{
                         width: column.width + 'px',
                         minWidth: column.minWidth + 'px'
@@ -283,24 +309,26 @@ export default React.createClass({
                         />
                       ) : column.header}
                     </div>
-                  </th>
+                  </ThComponent>
                 )
               })}
-            </tr>
-          </thead>
-          <tbody>
+            </TrComponent>
+          </TheadComponent>
+          <TbodyComponent className={classnames(this.props.tbodyClassName)}>
             {pageRows.map((row, i) => {
               return (
-                <tr key={i}>
+                <TrComponent
+                  className={classnames(this.props.trClassName)}
+                  key={i}>
                   {this.decoratedColumns.map((column, i2) => {
                     const Cell = column.render
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
-                      <td
-                        className={classnames({hidden: !show})}
+                      <TdComponent
+                        className={classnames(column.className, {hidden: !show})}
                         key={i2}>
                         <div
-                          className='-td-inner'
+                          className={classnames(column.innerClassName, '-td-inner')}
                           style={{
                             width: column.width + 'px',
                             minWidth: column.minWidth + 'px'
@@ -314,37 +342,39 @@ export default React.createClass({
                             ) : typeof Cell !== 'undefined' ? Cell
                           : row[column.id]}
                         </div>
-                      </td>
+                      </TdComponent>
                     )
                   })}
-                </tr>
+                </TrComponent>
               )
             })}
             {padRows.map((row, i) => {
               return (
-                <tr key={i}>
+                <TrComponent
+                  className={classnames(this.props.trClassName, '-padRow')}
+                  key={i}>
                   {this.decoratedColumns.map((column, i2) => {
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
-                      <td
-                        className={classnames({hidden: !show})}
+                      <TdComponent
+                        className={classnames(column.className, {hidden: !show})}
                         key={i2}>
                         <div
-                          className='-td-inner'
+                          className={classnames(column.innerClassName, '-td-inner')}
                           style={{
                             width: column.width + 'px',
                             minWidth: column.minWidth + 'px'
                           }}>&nbsp;</div>
-                      </td>
+                      </TdComponent>
                     )
                   })}
-                </tr>
+                </TrComponent>
               )
             })}
-          </tbody>
-        </table>
+          </TbodyComponent>
+        </TableComponent>
         {pagesLength > 1 && (
-          <div className='-pagination'>
+          <div className={classnames(this.props.paginationClassName, '-pagination')}>
             <div className='-left'>
               <PreviousComponent
                 onClick={canPrevious && ((e) => this.previousPage(e))}
@@ -366,7 +396,7 @@ export default React.createClass({
         )}
         <div className={classnames('-loading', {'-active': this.state.loading})}>
           <div className='-loading-inner'>
-            {this.props.loadingComponent}
+            {this.props.loadingText}
           </div>
         </div>
       </div>
@@ -417,12 +447,9 @@ export default React.createClass({
   }
 })
 
-
-
 // ########################################################################
 // Utils
 // ########################################################################
-
 
 function remove (a, b) {
   return a.filter(function (o, i) {

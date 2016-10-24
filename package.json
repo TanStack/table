@@ -19,6 +19,7 @@
     "build:js": "rm -rf react-table.js && browserify src/index.js -s reactTable -u react -t babelify -g uglifyify -o react-table.js",
     "build:css": "rm -rf react-table.css && stylus src/index.styl --use ./node_modules/nib/lib/nib.js --compress -o react-table.css",
     "watch": "onchange 'src/**' -i -- npm-run-all build:*",
+    "test": "standard",
     "prepublish": "npm-run-all build:*"
   },
   "dependencies": {
@@ -43,7 +44,9 @@
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
-      "lib",
+      "node_modules",
+      "dist",
+      "example",
       "react-table.js"
     ]
   },
