@@ -36,7 +36,6 @@
     "babelify": "^7.3.0",
     "browserify": "13.1.0",
     "onchange": "^3.0.2",
-    "react": "15.3.1",
     "standard": "8.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"
