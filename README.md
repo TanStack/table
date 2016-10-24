@@ -3,6 +3,7 @@
 # react-table
 A fast, lightweight, opinionated table and datagrid built on React
 
+[![Build Status](https://travis-ci.org/tannerlinsley/react-table.svg?branch=master)](https://travis-ci.org/tannerlinsley/react-table)
 [![react-table on Slack](https://img.shields.io/badge/slack-reactTable-blue.svg)](https://react-table-slack.herokuapp.com/)
 
 ## Features
