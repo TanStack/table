@@ -131,18 +131,7 @@ When clicking on a column header, hold shift to multi-sort! You can toggle `asce
   },
   // Text
   previousText: 'Previous',
-  nextText: 'Next',
-  // Component Overrides
-  tableComponent: null,
-  theadComponent: null,
-  tbodyComponent: null,
-  trComponent: null,
-  thComponent: null,
-  tdComponent: null,
-  paginationComponent: null,
-  previousComponent: null,
-  nextComponent: null,
-  loadingComponent: null
+  nextText: 'Next'
 }
 ```
 
@@ -165,7 +154,7 @@ Or just define them on the component
   pageSize={10}
   minRows={3}
   // etc...
-})
+  />
 ```
 
 ## Column Props
@@ -209,6 +198,35 @@ const columns = [{
   }]
 }]
 ```
+
+## Component Overrides
+Though we wouldn't suggest it, `react-table` has the ability to change the core componentry it used to render it's table. You can do so by assigning a react component to it's corresponding global prop, or on a one-off basis like so:
+```javascript
+// Change the global default
+import { ReactTableDefaults } from 'react-table'
+Object.assign(ReactTableDefaults, {
+  tableComponent: Component,
+  theadComponent: Component,
+  tbodyComponent: Component,
+  trComponent: Component,
+  thComponent: Component,
+  tdComponent: Component,
+  paginationComponent: Component,
+  previousComponent: Component,
+  nextComponent: Component,
+  loadingComponent: Component
+})
+
+// Or change per instance
+<ReactTable
+  tableComponent={Component},
+  theadComponent={Component},
+  // etc...
+  />
+```
+
+If you choose to change the core components React-Table uses to render, you must make sure your components support and utilized all of the neeeded features for that component to work properly. For a broad reference on how to do this, investigate [the source](https://github.com/tannerlinsley/react-table/blob/master/src/index.js) for the component you wish to replace.
+
 
 ## Contributing
 To suggest a feature, create an issue if it does not already exist.
