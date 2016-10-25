@@ -14,17 +14,19 @@
     "react-table",
     "datagrid"
   ],
-  "main": "react-table.js",
+  "main": "lib/index.js",
   "scripts": {
-    "build:js": "rm -rf react-table.js && browserify src/index.js -s reactTable -u react -t babelify -g uglifyify -o react-table.js",
+    "build:node": "babel src --out-dir lib --source-maps inline",
     "build:css": "rm -rf react-table.css && stylus src/index.styl --use ./node_modules/nib/lib/nib.js --compress -o react-table.css",
     "watch": "onchange 'src/**' -i -- npm-run-all build:*",
     "test": "standard",
-    "prepublish": "npm-run-all build:*"
+    "umd": "rm -rf react-table.js && browserify lib/index.js -s reactTable -x react -t babelify -g uglifyify -o react-table.js",
+    "prepublish": "npm-run-all build:* && npm run umd"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "lodash": "^4.16.4",
+    "classnames": "^2.2.5"
+  },
+  "peerDependencies": {
     "react": "^15.3.1"
   },
   "devDependencies": {
@@ -41,6 +43,9 @@
     "standard": "8.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"
+  },
+  "browserify-shim": {
+    "react": "global:React"
   },
   "standard": {
     "parser": "babel-eslint",
