@@ -52,6 +52,7 @@
     "ignore": [
       "node_modules",
       "dist",
+      "lib",
       "example",
       "react-table.js"
     ]
