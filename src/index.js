@@ -96,17 +96,20 @@ export default React.createClass({
     }
     const makeDecoratedColumn = (column) => {
       const dcol = Object.assign({}, this.props.column, column)
+
       if (typeof dcol.accessor === 'string') {
         dcol.id = dcol.id || dcol.accessor
         const accessorString = dcol.accessor
         dcol.accessor = row => _.get(row, accessorString)
+        return dcol
       }
-      if (!dcol.id) {
-        console.warn('No column ID found for column: ', dcol)
+
+      if (dcol.accessor && !dcol.id) {
+        console.warn(dcol)
+        throw new Error('A column id is required if using a non-string accessor for column above.')
       }
-      if (!dcol.accessor) {
-        console.warn('No column accessor found for column: ', dcol)
-      }
+
+      dcol.accessor = d => undefined
       return dcol
     }
 
