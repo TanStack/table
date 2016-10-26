@@ -20,15 +20,24 @@ Why you may **not** want to use this component:
 
 ## [Demo](http://react-table.zabapps.com)
 
-## Installation
+## Table of Contents
+- [Installation](#nstallation)
+- [Example](#example)
+- [Data](#data)
+- [Default Props](#default-props)
+- [Columns](#columns)
+- [Styles](#styles)
+- [Header Groups](#header-groups)
+- [Server-side Data](#server-side-data)
+- [Multi-sort](#multi-sort)
+- [Component Overrides](#component-overrides)
+
+## Installation <a name="installation"></a>
 ```bash
 $ npm install react-table
 ```
 
-#### Styles
-React-table is built to be dropped into existing applications or styled from the ground up, but if you'd like a decent starting point, you can optionally include our default theme `react-table.css`.  We think it looks great, honestly :)
-
-## Quick Usage
+## Example <a name="example"></a>
 ```javascript
 import ReactTable from 'react-table'
 
@@ -63,11 +72,11 @@ const columns = [{
 />
 ```
 
-## Data
+## Data <a name="data"></a>
 Every React-Table instance requires you to set the `data` prop. To use client-side data, simply pass the `data` prop anything that resembles an array or object. Client-side filtering and pagination is built in, and your table will update gracefully if you change any props. [Server-side data](#server-side-data) is also supported.
 
 
-## Default Props
+## Default Props <a name="default-props"></a>
 These are the default props for the main react component `<ReactTable />`
 ```javascript
 {
@@ -114,7 +123,7 @@ Or just define them on the component per-instance
   />
 ```
 
-## Column Definitions
+## Columns <a name="columns"></a>
 Every React-Table instance requires a `columns` prop, which is an array of objects containing the following properties
 
 ```javascript
@@ -139,7 +148,10 @@ Every React-Table instance requires a `columns` prop, which is an array of objec
 }]
 ```
 
-## Header Groups
+## Styles <a name="styles"></a>
+React-table is built to be dropped into existing applications or styled from the ground up, but if you'd like a decent starting point, you can optionally include our default theme `react-table.css`.  We think it looks great, honestly :)
+
+## Header Groups <a name="header-groups"></a>
 To group columns with another header column, just nest your columns in a header column like so:
 ```javascript
 const columns = [{
@@ -199,10 +211,10 @@ This function will be called on mount, pagination events, and sorting events. It
 />
 ```
 
-## Multi-Sort
+## Multi-Sort <a name="multi-sort"></a>
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
-## Component Overrides
+## Component Overrides <a name="component-overrides"></a>
 Though we wouldn't suggest it, `react-table` has the ability to change the core componentry it used to render it's table. You can do so by assigning a react component to it's corresponding global prop, or on a one-off basis like so:
 ```javascript
 // Change the global default
