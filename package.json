@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
