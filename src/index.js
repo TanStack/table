@@ -196,9 +196,10 @@ export default React.createClass({
     }
   },
   accessData (data) {
-    return data.map((d) => {
+    return data.map((d, i) => {
       const row = {
-        __original: d
+        __original: d,
+        __index: i
       }
       this.decoratedColumns.forEach(column => {
         row[column.id] = column.accessor(d)
@@ -337,7 +338,8 @@ export default React.createClass({
                             <Cell
                               value={row[column.id]}
                               row={row.__original}
-                              index={i}
+                              index={row.__index}
+                              viewIndex={i}
                             />
                             ) : typeof Cell !== 'undefined' ? Cell
                           : row[column.id]}

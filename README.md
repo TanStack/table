@@ -172,7 +172,7 @@ Or just define them on the component
   className: '', // Set the classname of the `th/td` element of the column
   innerClassName: '', // Set the classname of the `.th-inner/.td-inner` element of the column
   columns: [...] // See Header Groups section below
-  render: JSX eg. ({row, value, index}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+  render: JSX eg. ({row, value, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
   sortable: true,
   sort: 'asc' or 'desc',
   show: true,
