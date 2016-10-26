@@ -29,12 +29,14 @@ A fast, lightweight, opinionated table and datagrid built on React
 - [Multi-sort](#multi-sort)
 - [Component Overrides](#component-overrides)
 
-## Installation <a name="installation"></a>
+<a name="installation"></a>
+## Installation
 ```bash
 $ npm install react-table
 ```
 
-## Example <a name="example"></a>
+<a name="example"></a>
+## Example
 ```javascript
 import ReactTable from 'react-table'
 
@@ -69,11 +71,13 @@ const columns = [{
 />
 ```
 
-## Data <a name="data"></a>
+<a name="data"></a>
+## Data
 Every React-Table instance requires you to set the `data` prop. To use client-side data, simply pass the `data` prop anything that resembles an array or object. Client-side filtering and pagination is built in, and your table will update gracefully if you change any props. [Server-side data](#server-side-data) is also supported.
 
 
-## Default Props <a name="default-props"></a>
+<a name="default-props"></a>
+## Default Props
 These are the default props for the main react component `<ReactTable />`
 ```javascript
 {
@@ -120,7 +124,8 @@ Or just define them on the component per-instance
   />
 ```
 
-## Columns <a name="columns"></a>
+<a name="columns"></a>
+## Columns
 Every React-Table instance requires a `columns` prop, which is an array of objects containing the following properties
 
 ```javascript
@@ -145,10 +150,12 @@ Every React-Table instance requires a `columns` prop, which is an array of objec
 }]
 ```
 
-## Styles <a name="styles"></a>
+<a name="styles"></a>
+## Styles
 React-table is built to be dropped into existing applications or styled from the ground up, but if you'd like a decent starting point, you can optionally include our default theme `react-table.css`.  We think it looks great, honestly :)
 
-## Header Groups <a name="header-groups"></a>
+<a name="header-groups"></a>
+## Header Groups
 To group columns with another header column, just nest your columns in a header column like so:
 ```javascript
 const columns = [{
@@ -166,7 +173,8 @@ const columns = [{
 }]
 ```
 
-## Server-side Data <a name="server-side-data"></a>
+<a name="server-side-data"></a>
+## Server-side Data
 If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you. Instead of passing the `data` prop an array, you provide a function instead.
 
 This function will be called on mount, pagination events, and sorting events. It also provides you all of the parameters to help you query and format your data.
@@ -208,10 +216,12 @@ This function will be called on mount, pagination events, and sorting events. It
 />
 ```
 
-## Multi-Sort <a name="multi-sort"></a>
+<a name="multi-sort"></a>
+## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
-## Component Overrides <a name="component-overrides"></a>
+<a name="component-overrides"></a>
+## Component Overrides
 Though we wouldn't suggest it, `react-table` has the ability to change the core componentry it used to render it's table. You can do so by assigning a react component to it's corresponding global prop, or on a one-off basis like so:
 ```javascript
 // Change the global default
