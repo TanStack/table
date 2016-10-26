@@ -21,7 +21,8 @@
     "watch": "onchange 'src/**' -i -- npm-run-all build:*",
     "test": "standard",
     "umd": "rm -rf react-table.js && browserify lib/index.js -s reactTable -x react -t babelify -g uglifyify -o react-table.js",
-    "prepublish": "npm-run-all build:* && npm run umd"
+    "prepublish": "npm-run-all build:* && npm run umd",
+    "postpublish": "git push --tags"
   },
   "dependencies": {
     "classnames": "^2.2.5"

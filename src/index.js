@@ -22,14 +22,36 @@ export const ReactTableDefaults = {
   theadClassName: '',
   tbodyClassName: '',
   trClassName: '',
+  trClassCallback: d => null,
+  thClassName: '',
+  thGroupClassName: '',
+  tdClassName: '',
   paginationClassName: '',
+  // Styles
+  style: {},
+  tableStyle: {},
+  theadStyle: {},
+  tbodyStyle: {},
+  trStyle: {},
+  trStyleCallback: d => {},
+  thStyle: {},
+  tdStyle: {},
+  paginationStyle: {},
   //
   pageSize: 20,
   minRows: 0,
   // Global Column Defaults
   column: {
     sortable: true,
-    show: true
+    show: true,
+    className: '',
+    style: {},
+    innerClassName: '',
+    innerStyle: {},
+    headerClassName: '',
+    headerStyle: {},
+    headerInnerClassName: '',
+    headerInnerStyle: {}
   },
   // Text
   previousText: 'Previous',
@@ -255,19 +277,35 @@ export default React.createClass({
     const NextComponent = this.props.nextComponent || defaultButton
 
     return (
-      <div className={classnames(this.props.className, 'ReactTable')}>
-        <TableComponent className={classnames(this.props.tableClassName)}>
+      <div
+        className={classnames(this.props.className, 'ReactTable')}
+        style={this.props.style}
+      >
+        <TableComponent
+          className={classnames(this.props.tableClassName)}
+          style={this.props.tableStyle}
+        >
           {this.hasHeaderGroups && (
-            <TheadComponent className={classnames(this.props.theadClassName, '-headerGroups')}>
-              <TrComponent className={this.props.trClassName}>
+            <TheadComponent
+              className={classnames(this.props.theadGroupClassName, '-headerGroups')}
+              style={this.props.theadStyle}
+            >
+              <TrComponent
+                className={this.props.trClassName}
+                style={this.props.trStyle}
+              >
                 {this.headerGroups.map((column, i) => {
                   return (
                     <ThComponent
                       key={i}
-                      className={classnames(column.className)}
-                      colSpan={column.columns.length}>
+                      colSpan={column.columns.length}
+                      className={classnames(this.props.thClassname, column.headerClassName)}
+                      style={Object.assign({}, this.props.thStyle, column.headerStyle)}
+                    >
                       <div
-                        className={classnames(column.innerClassName, '-th-inner')}>
+                        className={classnames(column.headerInnerClassName, '-th-inner')}
+                        style={Object.assign({}, this.props.thInnerStyle, column.headerInnerStyle)}
+                      >
                         {typeof column.header === 'function' ? (
                           <column.header
                             data={this.props.data}
@@ -281,8 +319,14 @@ export default React.createClass({
               </TrComponent>
             </TheadComponent>
           )}
-          <TheadComponent className={classnames(this.props.theadClassName)}>
-            <TrComponent className={this.props.trClassName}>
+          <TheadComponent
+            className={classnames(this.props.theadClassName)}
+            style={this.props.theadStyle}
+          >
+            <TrComponent
+              className={this.props.trClassName}
+              style={this.props.trStyle}
+            >
               {this.decoratedColumns.map((column, i) => {
                 const sort = this.state.sorting.find(d => d.id === column.id)
                 const show = typeof column.show === 'function' ? column.show() : column.show
@@ -290,22 +334,25 @@ export default React.createClass({
                   <ThComponent
                     key={i}
                     className={classnames(
-                      column.className,
+                      this.props.thClassname,
+                      column.headerClassName,
                       sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
                       {
                         '-cursor-pointer': column.sortable,
                         '-hidden': !show
                       }
                     )}
+                    style={Object.assign({}, this.props.thStyle, column.headerStyle)}
                     onClick={(e) => {
                       column.sortable && this.sortColumn(column, e.shiftKey)
-                    }}>
+                    }}
+                  >
                     <div
-                      className={classnames(column.innerClassName, '-th-inner')}
-                      style={{
-                        width: column.width + 'px',
+                      className={classnames(column.headerInnerClassName, '-th-inner')}
+                      style={Object.assign({}, column.headerInnerStyle, {
                         minWidth: column.minWidth + 'px'
-                      }}>
+                      })}
+                    >
                       {typeof column.header === 'function' ? (
                         <column.header
                           data={this.props.data}
@@ -318,31 +365,41 @@ export default React.createClass({
               })}
             </TrComponent>
           </TheadComponent>
-          <TbodyComponent className={classnames(this.props.tbodyClassName)}>
+          <TbodyComponent
+            className={classnames(this.props.tbodyClassName)}
+            style={classnames(this.props.tbodyStyle)}
+          >
             {pageRows.map((row, i) => {
+              const rowInfo = {
+                row: row.__original,
+                index: row.__index,
+                viewIndex: i
+              }
               return (
                 <TrComponent
-                  className={classnames(this.props.trClassName)}
-                  key={i}>
+                  key={i}
+                  className={classnames(this.props.trClassName, this.props.trClassCallback(rowInfo))}
+                  style={Object.assign({}, this.props.trStyle, this.props.trStyleCallback(rowInfo))}
+                >
                   {this.decoratedColumns.map((column, i2) => {
                     const Cell = column.render
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
                       <TdComponent
+                        key={i2}
                         className={classnames(column.className, {hidden: !show})}
-                        key={i2}>
+                        style={Object.assign({}, this.props.tdStyle, column.style)}
+                      >
                         <div
                           className={classnames(column.innerClassName, '-td-inner')}
-                          style={{
-                            width: column.width + 'px',
+                          style={Object.assign({}, column.innerStyle, {
                             minWidth: column.minWidth + 'px'
-                          }}>
+                          })}
+                        >
                           {typeof Cell === 'function' ? (
                             <Cell
                               value={row[column.id]}
-                              row={row.__original}
-                              index={row.__index}
-                              viewIndex={i}
+                              {...rowInfo}
                             />
                             ) : typeof Cell !== 'undefined' ? Cell
                           : row[column.id]}
@@ -356,20 +413,24 @@ export default React.createClass({
             {padRows.map((row, i) => {
               return (
                 <TrComponent
+                  key={i}
                   className={classnames(this.props.trClassName, '-padRow')}
-                  key={i}>
+                  style={this.props.trStyle}
+                >
                   {this.decoratedColumns.map((column, i2) => {
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
                       <TdComponent
+                        key={i2}
                         className={classnames(column.className, {hidden: !show})}
-                        key={i2}>
+                        style={Object.assign({}, this.props.tdStyle, column.style)}
+                      >
                         <div
                           className={classnames(column.innerClassName, '-td-inner')}
-                          style={{
-                            width: column.width + 'px',
+                          style={Object.assign({}, column.innerStyle, {
                             minWidth: column.minWidth + 'px'
-                          }}>&nbsp;</div>
+                          })}
+                        >&nbsp;</div>
                       </TdComponent>
                     )
                   })}
@@ -379,11 +440,15 @@ export default React.createClass({
           </TbodyComponent>
         </TableComponent>
         {pagesLength > 1 && (
-          <div className={classnames(this.props.paginationClassName, '-pagination')}>
+          <div
+            className={classnames(this.props.paginationClassName, '-pagination')}
+            style={this.props.paginationStyle}
+          >
             <div className='-left'>
               <PreviousComponent
                 onClick={canPrevious && ((e) => this.previousPage(e))}
-                disabled={!canPrevious}>
+                disabled={!canPrevious}
+              >
                 {this.props.previousText}
               </PreviousComponent>
             </div>
@@ -393,7 +458,8 @@ export default React.createClass({
             <div className='-right'>
               <NextComponent
                 onClick={canNext && ((e) => this.nextPage(e))}
-                disabled={!canNext}>
+                disabled={!canNext}
+              >
                 {this.props.nextText}
               </NextComponent>
             </div>

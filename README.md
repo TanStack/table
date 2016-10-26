@@ -87,7 +87,18 @@ These are the default props for the main react component `<ReactTable />`
   theadClassName: '', // ClassName for the `thead` element
   tbodyClassName: '', // ClassName for the `tbody` element
   trClassName: '', // ClassName for all `tr` elements
+  trClassCallback: row => null, // A call back to dynamically add classes (via the classnames module) to a row element
   paginationClassName: '' // ClassName for `pagination` element
+  // Styles
+  style: {}, // Main style object for the component
+  tableStyle: {}, // style object for the `table` component
+  theadStyle: {}, // style object for the `thead` component
+  tbodyStyle: {}, // style object for the `tbody` component
+  trStyle: {}, // style object for the `tr` component
+  trStyleCallback: row => {}, // A call back to dynamically add styles to a row element
+  thStyle: {}, // style object for the `th` component
+  tdStyle: {}, // style object for the `td` component
+  paginationStyle: {}, // style object for the `paginination` component
   //
   pageSize: 20,
   minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
@@ -130,23 +141,31 @@ Every React-Table instance requires a `columns` prop, which is an array of objec
 
 ```javascript
 [{
-  // Required
-  header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
+  // General
   accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
-
-  // A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
-  id: 'myProperty',
-
-  // Optional
-  className: '', // Set the classname of the `th/td` element of the column
-  innerClassName: '', // Set the classname of the `.th-inner/.td-inner` element of the column
-  columns: [...] // See Header Groups section below
-  render: JSX eg. ({row, value, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+  id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
   sortable: true,
   sort: 'asc' or 'desc',
   show: true,
-  width: Number, // Locks the column width to this amount
   minWidth: Number // Allows the column to flex above this minimum amount
+
+  // Cell Options
+  className: '', // Set the classname of the `td` element of the column
+  style: {}, // Set the style of the `td` element of the column
+  innerClassName: '', // Set the classname of the `.-td-inner` element of the column
+  innerStyle: {}, // Set the style of the `.-td-inner` element of the column
+  render: JSX eg. ({row, value, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+
+  // Header & HeaderGroup Options
+  header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
+  headerClassName: '', // Set the classname of the `th` element of the column
+  headerStyle: {}, // Set the style of the `th` element of the column
+  headerInnerClassName: '', // Set the classname of the `.-th-inner` element of the column
+  headerInnerStyle: {}, // Set the style of the `.th-inner` element of the column
+
+  // Header Groups only
+  columns: [...] // See Header Groups section below
+
 }]
 ```
 
