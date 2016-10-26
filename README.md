@@ -63,10 +63,101 @@ const columns = [{
 />
 ```
 
-## Client-side Data
-To use client-side data, simply pass the `data` prop an array. Client-side filtering and pagination is built in, and your table will update gracefully if you change any props.
+## Data
+Every React-Table instance requires you to set the `data` prop. To use client-side data, simply pass the `data` prop anything that resembles an array or object. Client-side filtering and pagination is built in, and your table will update gracefully if you change any props. [Server-side data](#server-side-data) is also supported.
 
-## Server-side Data
+
+## Default Props
+These are the default props for the main react component `<ReactTable />`
+```javascript
+{
+  // Classes
+  className: '-striped -highlight', // The most top level className for the component
+  tableClassName: '', // ClassName for the `table` element
+  theadClassName: '', // ClassName for the `thead` element
+  tbodyClassName: '', // ClassName for the `tbody` element
+  trClassName: '', // ClassName for all `tr` elements
+  paginationClassName: '' // ClassName for `pagination` element
+  //
+  pageSize: 20,
+  minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
+  // Global Column Defaults
+  column: { // default properties for every column's model
+    sortable: true,
+    show: true
+  },
+  // Text
+  previousText: 'Previous',
+  nextText: 'Next'
+}
+```
+
+You can easily override the core defaults like so:
+
+```javascript
+import { ReactTableDefaults } from 'react-table'
+
+Object.assign(ReactTableDefaults, {
+  pageSize: 10,
+  minRows: 3,
+  // etc...
+})
+```
+
+Or just define them on the component per-instance
+
+```javascript
+<ReactTable
+  pageSize={10}
+  minRows={3}
+  // etc...
+  />
+```
+
+## Column Definitions
+Every React-Table instance requires a `columns` prop, which is an array of objects containing the following properties
+
+```javascript
+[{
+  // Required
+  header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
+  accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
+
+  // A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
+  id: 'myProperty',
+
+  // Optional
+  className: '', // Set the classname of the `th/td` element of the column
+  innerClassName: '', // Set the classname of the `.th-inner/.td-inner` element of the column
+  columns: [...] // See Header Groups section below
+  render: JSX eg. ({row, value, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+  sortable: true,
+  sort: 'asc' or 'desc',
+  show: true,
+  width: Number, // Locks the column width to this amount
+  minWidth: Number // Allows the column to flex above this minimum amount
+}]
+```
+
+## Header Groups
+To group columns with another header column, just nest your columns in a header column like so:
+```javascript
+const columns = [{
+  header: 'Favorites',
+  columns: [{
+    header: 'Color',
+    accessor: 'favorites.color'
+  }, {
+    header: 'Food',
+    accessor: 'favorites.food'
+  } {
+    header: 'Actor',
+    accessor: 'favorites.actor'
+  }]
+}]
+```
+
+## Server-side Data <a name="server-side-data"></a>
 If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you. Instead of passing the `data` prop an array, you provide a function instead.
 
 This function will be called on mount, pagination events, and sorting events. It also provides you all of the parameters to help you query and format your data.
@@ -110,94 +201,6 @@ This function will be called on mount, pagination events, and sorting events. It
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
-
-## Default Props
-```javascript
-{
-  // Classes
-  className: '-striped -highlight', // The most top level className for the component
-  tableClassName: '', // ClassName for the `table` element
-  theadClassName: '', // ClassName for the `thead` element
-  tbodyClassName: '', // ClassName for the `tbody` element
-  trClassName: '', // ClassName for all `tr` elements
-  paginationClassName: '' // ClassName for `pagination` element
-  //
-  pageSize: 20,
-  minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
-  // Global Column Defaults
-  column: { // default properties for every column's model
-    sortable: true,
-    show: true
-  },
-  // Text
-  previousText: 'Previous',
-  nextText: 'Next'
-}
-```
-
-You can easily override the core defaults like so:
-
-```javascript
-import { ReactTableDefaults } from 'react-table'
-
-Object.assign(ReactTableDefaults, {
-  pageSize: 10,
-  minRows: 3,
-  // etc...
-})
-```
-
-Or just define them on the component
-
-```javascript
-<ReactTable
-  pageSize={10}
-  minRows={3}
-  // etc...
-  />
-```
-
-## Column Props
-
-```javascript
-[{
-  // Required
-  header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
-  accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
-
-  // A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
-  id: 'myProperty',
-
-  // Optional
-  className: '', // Set the classname of the `th/td` element of the column
-  innerClassName: '', // Set the classname of the `.th-inner/.td-inner` element of the column
-  columns: [...] // See Header Groups section below
-  render: JSX eg. ({row, value, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
-  sortable: true,
-  sort: 'asc' or 'desc',
-  show: true,
-  width: Number, // Locks the column width to this amount
-  minWidth: Number // Allows the column to flex above this minimum amount
-}]
-```
-
-## Header Groups
-To group columns with another header column, just nest your columns in a header column like so:
-```javascript
-const columns = [{
-  header: 'Favorites',
-  columns: [{
-    header: 'Color',
-    accessor: 'favorites.color'
-  }, {
-    header: 'Food',
-    accessor: 'favorites.food'
-  } {
-    header: 'Actor',
-    accessor: 'favorites.actor'
-  }]
-}]
-```
 
 ## Component Overrides
 Though we wouldn't suggest it, `react-table` has the ability to change the core componentry it used to render it's table. You can do so by assigning a react component to it's corresponding global prop, or on a one-off basis like so:
