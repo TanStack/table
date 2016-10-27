@@ -398,11 +398,11 @@ export default React.createClass({
                         >
                           {typeof Cell === 'function' ? (
                             <Cell
-                              value={rowInfo[column.id]}
+                              value={rowInfo.row[column.id]}
                               {...rowInfo}
                             />
                             ) : typeof Cell !== 'undefined' ? Cell
-                          : rowInfo[column.id]}
+                          : rowInfo.row[column.id]}
                         </div>
                       </TdComponent>
                     )
