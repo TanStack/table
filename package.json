@@ -15,6 +15,12 @@
     "datagrid"
   ],
   "main": "lib/index.js",
+  "files": [
+    "lib/",
+    "react-table.js",
+    "react-table.css",
+    "media/*.png"
+  ],
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
     "build:css": "rm -rf react-table.css && stylus src/index.styl --use ./node_modules/nib/lib/nib.js --compress -o react-table.css",
