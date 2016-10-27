@@ -81,6 +81,14 @@ Every React-Table instance requires you to set the `data` prop. To use client-si
 These are the default props for the main react component `<ReactTable />`
 ```javascript
 {
+  // General
+  pageSize: 20,
+  minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
+
+  // Text
+  previousText: 'Previous',
+  nextText: 'Next'
+
   // Classes
   className: '-striped -highlight', // The most top level className for the component
   tableClassName: '', // ClassName for the `table` element
@@ -99,17 +107,6 @@ These are the default props for the main react component `<ReactTable />`
   thStyle: {}, // style object for the `th` component
   tdStyle: {}, // style object for the `td` component
   paginationStyle: {}, // style object for the `paginination` component
-  //
-  pageSize: 20,
-  minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
-  // Global Column Defaults
-  column: { // default properties for every column's model
-    sortable: true,
-    show: true
-  },
-  // Text
-  previousText: 'Previous',
-  nextText: 'Next'
 }
 ```
 
