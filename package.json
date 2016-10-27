@@ -47,7 +47,7 @@
     "nib": "^1.1.2",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
-    "standard": "8.0.0",
+    "standard": "^8.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"
   },
