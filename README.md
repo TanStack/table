@@ -151,7 +151,12 @@ Every React-Table instance requires a `columns` prop, which is an array of objec
   style: {}, // Set the style of the `td` element of the column
   innerClassName: '', // Set the classname of the `.-td-inner` element of the column
   innerStyle: {}, // Set the style of the `.-td-inner` element of the column
-  render: JSX eg. ({row, value, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+  render: JSX eg. ({value, rowValues, row, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+    // value == the accessed value of the column
+    // rowValues == an object of all of the accessed values for the row
+    // row == the original row of data supplied to the table
+    // index == the original index of the data supplied to the table
+    // viewIndex == the index of the row in the current page
 
   // Header & HeaderGroup Options
   header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,

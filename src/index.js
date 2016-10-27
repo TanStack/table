@@ -372,6 +372,7 @@ export default React.createClass({
             {pageRows.map((row, i) => {
               const rowInfo = {
                 row: row.__original,
+                rowValues: row,
                 index: row.__index,
                 viewIndex: i
               }
@@ -398,11 +399,11 @@ export default React.createClass({
                         >
                           {typeof Cell === 'function' ? (
                             <Cell
-                              value={rowInfo.row[column.id]}
                               {...rowInfo}
+                              value={rowInfo.rowValues[column.id]}
                             />
                             ) : typeof Cell !== 'undefined' ? Cell
-                          : rowInfo.row[column.id]}
+                          : rowInfo.rowValues[column.id]}
                         </div>
                       </TdComponent>
                     )
