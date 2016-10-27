@@ -21,7 +21,8 @@ export default Component({
         accessor: 'firstName'
       }, {
         header: 'Last Name',
-        accessor: 'lastName'
+        id: 'lastName',
+        accessor: d => d.lastName
       }]
     }, {
       header: 'Info',

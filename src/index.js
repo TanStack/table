@@ -126,12 +126,14 @@ export default React.createClass({
         return dcol
       }
 
-      if (dcol.accessor && !dcol.id) {
+      if (!dcol.accessor) {
+        dcol.accessor = d => undefined
+      }
+      if (!dcol.id) {
         console.warn(dcol)
         throw new Error('A column id is required if using a non-string accessor for column above.')
       }
 
-      dcol.accessor = d => undefined
       return dcol
     }
 
