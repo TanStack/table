@@ -367,7 +367,7 @@ export default React.createClass({
           </TheadComponent>
           <TbodyComponent
             className={classnames(this.props.tbodyClassName)}
-            style={classnames(this.props.tbodyStyle)}
+            style={this.props.tbodyStyle}
           >
             {pageRows.map((row, i) => {
               const rowInfo = {
