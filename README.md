@@ -66,7 +66,7 @@ const columns = [{
 }]
 
 <ReactTable
-  data=[data]
+  data={data}
   columns={columns}
 />
 ```
