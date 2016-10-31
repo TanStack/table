@@ -144,8 +144,8 @@ Every React-Table instance requires a `columns` prop, which is an array of objec
   accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
   id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
   sortable: true,
-  sort: 'asc' or 'desc',
-  show: true,
+  sort: 'asc' or 'desc', // used to determine the column sorting on init
+  show: true, // can be used to hide a column
   minWidth: Number // Allows the column to flex above this minimum amount
 
   // Cell Options
