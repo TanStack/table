@@ -64,70 +64,32 @@ export default Component({
   },
   render () {
     return (
-      <div className='container'>
-        <div style={{textAlign: 'center'}}>
-          <h1>
-            <span style={{position: 'absolute', textIndent: '-9999em'}}>
-              react-table <strong>server-side demo</strong>
-            </span>
-            <img src='/Banner.png' className='logo' />
-          </h1>
-          <br />
-          <div>
-            <a
-              className='github-button'
-              href='https://github.com/tannerlinsley/react-table'
-              target='_blank'
-              data-style='mega'
-              data-count-href='/tannerlinsley/react-table/stargazers'
-              data-count-api='/repos/tannerlinsley/react-table#stargazers_count'
-              data-count-aria-label='# stargazers on GitHub'
-              aria-label='Star tannerlinsley/react-table on GitHub'>
-              Star
-            </a>
-          </div>
-          <br />
-          <div className='github-addon'>
-            <a
-              target='_blank'
-              href='https://github.com/tannerlinsley/react-table'>
-              View on Github
-            </a>
-          </div>
-          <br />
-          <br />
-        </div>
-        <div className='table-wrap'>
-          <ReactTable
-            columns={[{
-              header: 'Name',
-              columns: [{
-                header: 'First Name',
-                accessor: 'firstName'
-              }, {
-                header: 'Last Name',
-                id: 'lastName',
-                accessor: d => d.lastName
-              }]
+      <div>
+        <ReactTable
+          columns={[{
+            header: 'Name',
+            columns: [{
+              header: 'First Name',
+              accessor: 'firstName'
             }, {
-              header: 'Info',
-              columns: [{
-                header: 'Age',
-                accessor: 'age'
-              }]
-            }]}
-            manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-            pageSize={5}
-            data={this.state.data} // Set the rows to be displayed
-            pages={this.state.pages} // Display the total number of pages
-            loading={this.state.loading} // Display the loading overlay when we need it
-            onChange={this.fetchData} // Request new data when things change
-          />
-        </div>
-        <div style={{textAlign: 'center'}}>
-          <br />
-          <em>Tip: Hold shift when sorting to multi-sort!</em>
-        </div>
+              header: 'Last Name',
+              id: 'lastName',
+              accessor: d => d.lastName
+            }]
+          }, {
+            header: 'Info',
+            columns: [{
+              header: 'Age',
+              accessor: 'age'
+            }]
+          }]}
+          manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          pageSize={5}
+          data={this.state.data} // Set the rows to be displayed
+          pages={this.state.pages} // Display the total number of pages
+          loading={this.state.loading} // Display the loading overlay when we need it
+          onChange={this.fetchData} // Request new data when things change
+        />
       </div>
     )
   }
