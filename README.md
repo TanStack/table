@@ -202,7 +202,7 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
 
 1. Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
 1. Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
-1. Subscribe to the `onChange` prop. This function is called any time sorting or pagination is changed by the user
+1. Subscribe to the `onChange` prop. This function is called at `compomentDidMount` and any time sorting or pagination is changed by the user
 1. In the `onChange` callback, request your data using the provided information in the params of the function (state and instance)
 1. Update your data with the rows to be displayed
 1. Optionally set how many pages there are total
@@ -212,17 +212,23 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
   ...
   data={this.state.data} // should default to []
   pages={this.state.pages} // should default to -1 (which means we don't know how many pages we have)
+  loading={this.state.loading}
   manual // informs React Table that you'll be handling sorting and pagination server-side
   onChange={(state, instance) => {
+    // show the loading overlay
+    this.setState({loading: true})
+    // fetch your data
     Axios.post('mysite.com/data', {
       page: state.page,
       pageSize: state.pageSize,
       sorting: state.sorting
     })
       .then((res) => {
+        // Update react-table
         this.setState({
           data: res.data.rows,
-          pages: res.data.pages
+          pages: res.data.pages,
+          loading: false
         })
       })
   }}
