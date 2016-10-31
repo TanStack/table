@@ -1,21 +1,22 @@
 import React from 'react'
 import classnames from 'classnames'
 //
-const _ = {
-  get,
-  takeRight,
-  last,
-  orderBy,
-  range,
-  clone,
-  remove
-}
+import _ from './utils'
 
 const defaultButton = (props) => (
   <button {...props} className='-btn'>{props.children}</button>
 )
 
 export const ReactTableDefaults = {
+  // State
+  data: [],
+  loading: false,
+  pageSize: 20,
+  minRows: 0,
+  // Callbacks
+  onChange: () => null,
+  onPageChange: () => null,
+  onSort: () => null,
   // Classes
   className: '-striped -highlight',
   tableClassName: '',
@@ -37,9 +38,6 @@ export const ReactTableDefaults = {
   thStyle: {},
   tdStyle: {},
   paginationStyle: {},
-  //
-  pageSize: 20,
-  minRows: 0,
   // Global Column Defaults
   column: {
     sortable: true,
@@ -65,9 +63,7 @@ export const ReactTableDefaults = {
   thComponent: (props) => <th {...props}>{props.children}</th>,
   tdComponent: (props) => <td {...props}>{props.children}</td>,
   previousComponent: null,
-  nextComponent: null,
-  // Unlisted
-  data: []
+  nextComponent: null
 }
 
 export default React.createClass({
@@ -76,91 +72,27 @@ export default React.createClass({
   },
   getInitialState () {
     return {
+      page: 0,
+      pages: -1,
       sorting: false
     }
   },
-  componentWillMount () {
-    this.update(this.props)
+  componentDidMount () {
+    this.fireOnChange()
   },
-  componentWillReceiveProps (nextProps) {
-    this.update(nextProps)
+  fireOnChange () {
+    this.props.onChange({
+      page: _.getFirstDefined(this.props.page, this.state.page),
+      pageSize: this.props.pageSize,
+      pages: this.props.pages,
+      sorting: this.getSorting()
+    }, this)
   },
-  update (props) {
-    const resetState = {
-      loading: false,
-      page: 0,
-      pages: -1
-      // columns: {}  for column hiding in the future
+  getInitSorting (columns) {
+    if (!columns) {
+      return []
     }
-    this.setState(resetState)
-    const newState = Object.assign({}, this.state, resetState)
-    this.isAsync = typeof props.data === 'function'
-    this.buildColumns(props, newState)
-    this.buildData(props, newState)
-  },
-  buildColumns (props) {
-    this.hasHeaderGroups = false
-    props.columns.forEach(column => {
-      if (column.columns) {
-        this.hasHeaderGroups = true
-      }
-    })
-
-    this.headerGroups = []
-    this.decoratedColumns = []
-    let currentSpan = []
-
-    const addHeader = (columns, column = {}) => {
-      this.headerGroups.push(Object.assign({}, column, {
-        columns: columns
-      }))
-      currentSpan = []
-    }
-    const makeDecoratedColumn = (column) => {
-      const dcol = Object.assign({}, this.props.column, column)
-
-      if (typeof dcol.accessor === 'string') {
-        dcol.id = dcol.id || dcol.accessor
-        const accessorString = dcol.accessor
-        dcol.accessor = row => _.get(row, accessorString)
-        return dcol
-      }
-
-      if (dcol.accessor && !dcol.id) {
-        console.warn(dcol)
-        throw new Error('A column id is required if using a non-string accessor for column above.')
-      }
-
-      if (!dcol.accessor) {
-        dcol.accessor = d => undefined
-      }
-
-      return dcol
-    }
-
-    props.columns.forEach((column, i) => {
-      if (column.columns) {
-        column.columns.forEach(nestedColumn => {
-          this.decoratedColumns.push(makeDecoratedColumn(nestedColumn))
-        })
-        if (this.hasHeaderGroups) {
-          if (currentSpan.length > 0) {
-            addHeader(currentSpan)
-          }
-          addHeader(_.takeRight(this.decoratedColumns, column.columns.length), column)
-        }
-      } else {
-        this.decoratedColumns.push(makeDecoratedColumn(column))
-        currentSpan.push(_.last(this.decoratedColumns))
-      }
-    })
-
-    if (this.hasHeaderGroups && currentSpan.length > 0) {
-      addHeader(currentSpan)
-    }
-  },
-  getInitSorting () {
-    const initSorting = this.decoratedColumns.filter(d => {
+    const initSorting = columns.filter(d => {
       return typeof d.sort !== 'undefined'
     }).map(d => {
       return {
@@ -170,98 +102,109 @@ export default React.createClass({
     })
 
     return initSorting.length ? initSorting : [{
-      id: this.decoratedColumns[0].id,
+      id: columns[0].id,
       asc: true
     }]
   },
-  buildData (props, state) {
-    const sorting = state.sorting === false ? this.getInitSorting() : state.sorting
-
-    const setData = (data) => {
-      this.setState({
-        sorting,
-        data,
-        page: state.page,
-        loading: false
-      })
-    }
-
-    if (this.isAsync) {
-      this.setState({
-        loading: true
-      })
-
-      const cb = (res) => {
-        if (!res) {
-          return Promise.reject('Uh Oh! Nothing was returned in ReactTable\'s data callback!')
-        }
-        if (res.pages) {
-          this.setState({
-            pages: res.pages
-          })
-        }
-        // Only access the data. Sorting is done server side.
-        const accessedData = this.accessData(res.rows)
-        setData(accessedData)
-      }
-
-      // Fetch data with current state
-      const dataRes = props.data({
-        sorting,
-        page: state.page || 0,
-        pageSize: props.pageSize,
-        pages: state.pages
-      }, cb)
-
-      if (dataRes && dataRes.then) {
-        dataRes.then(cb)
-      }
-    } else {
-      // Return locally accessed, sorted data
-      const accessedData = this.accessData(props.data)
-      const sortedData = this.sortData(accessedData, sorting)
-      setData(sortedData)
-    }
-  },
-  accessData (data) {
-    return data.map((d, i) => {
-      const row = {
-        __original: d,
-        __index: i
-      }
-      this.decoratedColumns.forEach(column => {
-        row[column.id] = column.accessor(d)
-      })
-      return row
-    })
-  },
   sortData (data, sorting) {
-    const resolvedSorting = sorting.length ? sorting : this.getInitSorting()
-    return _.orderBy(data, resolvedSorting.map(sort => {
+    return _.orderBy(data, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
           return -Infinity
         }
         return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
       }
-    }), resolvedSorting.map(d => d.asc ? 'asc' : 'desc'))
+    }), sorting.map(d => d.asc ? 'asc' : 'desc'))
   },
-  setPage (page) {
-    if (this.isAsync) {
-      return this.buildData(this.props, Object.assign({}, this.state, {page}))
+  makeDecoratedColumn (column) {
+    const dcol = Object.assign({}, this.props.column, column)
+
+    if (typeof dcol.accessor === 'string') {
+      dcol.id = dcol.id || dcol.accessor
+      const accessorString = dcol.accessor
+      dcol.accessor = row => _.get(row, accessorString)
+      return dcol
     }
-    this.setState({
-      page
-    })
+
+    if (dcol.accessor && !dcol.id) {
+      console.warn(dcol)
+      throw new Error('A column id is required if using a non-string accessor for column above.')
+    }
+
+    if (!dcol.accessor) {
+      dcol.accessor = d => undefined
+    }
+
+    return dcol
   },
-
+  getSorting (columns) {
+    return this.props.sorting || (this.state.sorting && this.state.sorting.length ? this.state.sorting : this.getInitSorting(columns))
+  },
   render () {
-    const data = this.state.data ? this.state.data : []
+    // Build Columns
+    const decoratedColumns = []
+    const headerGroups = []
+    let currentSpan = []
 
-    const pagesLength = this.isAsync ? this.state.pages : Math.ceil(data.length / this.props.pageSize)
+    // Determine Header Groups
+    let hasHeaderGroups = false
+    this.props.columns
+    .forEach(column => {
+      if (column.columns) {
+        hasHeaderGroups = true
+      }
+    })
+
+    // A convenience function to add a header and reset the currentSpan
+    const addHeader = (columns, column = {}) => {
+      headerGroups.push(Object.assign({}, column, {
+        columns: columns
+      }))
+      currentSpan = []
+    }
+
+    // Build the columns and headers
+    const visibleColumns = this.props.columns.filter(d => _.getFirstDefined(d.show, true))
+    visibleColumns.forEach((column, i) => {
+      if (column.columns) {
+        const nestedColumns = column.columns.filter(d => _.getFirstDefined(d.show, true))
+        nestedColumns.forEach(nestedColumn => {
+          decoratedColumns.push(this.makeDecoratedColumn(nestedColumn))
+        })
+        if (hasHeaderGroups) {
+          if (currentSpan.length > 0) {
+            addHeader(currentSpan)
+          }
+          addHeader(_.takeRight(decoratedColumns, nestedColumns.length), column)
+        }
+      } else {
+        decoratedColumns.push(this.makeDecoratedColumn(column))
+        currentSpan.push(_.last(decoratedColumns))
+      }
+    })
+
+    if (hasHeaderGroups && currentSpan.length > 0) {
+      addHeader(currentSpan)
+    }
+
+    const sorting = this.getSorting(decoratedColumns)
+    const accessedData = this.props.data.map((d, i) => {
+      const row = {
+        __original: d,
+        __index: i
+      }
+      decoratedColumns.forEach(column => {
+        row[column.id] = column.accessor(d)
+      })
+      return row
+    })
+    const data = this.props.manual ? accessedData : this.sortData(accessedData, sorting)
+
+    // Pagination
+    const pagesLength = this.props.manual ? this.props.pages : Math.ceil(data.length / this.props.pageSize)
     const startRow = this.props.pageSize * this.state.page
     const endRow = startRow + this.props.pageSize
-    const pageRows = this.isAsync ? data.slice(0, this.props.pageSize) : data.slice(startRow, endRow)
+    const pageRows = this.props.manual ? data : data.slice(startRow, endRow)
     const padRows = pagesLength > 1 ? _.range(this.props.pageSize - pageRows.length)
       : this.props.minRows ? _.range(Math.max(this.props.minRows - pageRows.length, 0))
       : []
@@ -288,7 +231,7 @@ export default React.createClass({
           className={classnames(this.props.tableClassName)}
           style={this.props.tableStyle}
         >
-          {this.hasHeaderGroups && (
+          {hasHeaderGroups && (
             <TheadComponent
               className={classnames(this.props.theadGroupClassName, '-headerGroups')}
               style={this.props.theadStyle}
@@ -297,7 +240,7 @@ export default React.createClass({
                 className={this.props.trClassName}
                 style={this.props.trStyle}
               >
-                {this.headerGroups.map((column, i) => {
+                {headerGroups.map((column, i) => {
                   return (
                     <ThComponent
                       key={i}
@@ -330,8 +273,8 @@ export default React.createClass({
               className={this.props.trClassName}
               style={this.props.trStyle}
             >
-              {this.decoratedColumns.map((column, i) => {
-                const sort = this.state.sorting.find(d => d.id === column.id)
+              {decoratedColumns.map((column, i) => {
+                const sort = sorting.find(d => d.id === column.id)
                 const show = typeof column.show === 'function' ? column.show() : column.show
                 return (
                   <ThComponent
@@ -385,7 +328,7 @@ export default React.createClass({
                   className={classnames(this.props.trClassName, this.props.trClassCallback(rowInfo))}
                   style={Object.assign({}, this.props.trStyle, this.props.trStyleCallback(rowInfo))}
                 >
-                  {this.decoratedColumns.map((column, i2) => {
+                  {decoratedColumns.map((column, i2) => {
                     const Cell = column.render
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
@@ -421,7 +364,7 @@ export default React.createClass({
                   className={classnames(this.props.trClassName, '-padRow')}
                   style={this.props.trStyle}
                 >
-                  {this.decoratedColumns.map((column, i2) => {
+                  {decoratedColumns.map((column, i2) => {
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
                       <TdComponent
@@ -469,7 +412,7 @@ export default React.createClass({
             </div>
           </div>
         )}
-        <div className={classnames('-loading', {'-active': this.state.loading})}>
+        <div className={classnames('-loading', {'-active': this.props.loading})}>
           <div className='-loading-inner'>
             {this.props.loadingText}
           </div>
@@ -477,8 +420,24 @@ export default React.createClass({
       </div>
     )
   },
+  // User actions
+  setPage (page) {
+    this.setState({
+      page
+    }, () => {
+      this.fireOnChange()
+    })
+  },
+  nextPage (e) {
+    e.preventDefault()
+    this.setPage(this.state.page + 1)
+  },
+  previousPage (e) {
+    e.preventDefault()
+    this.setPage(this.state.page - 1)
+  },
   sortColumn (column, additive) {
-    const existingSorting = this.state.sorting || []
+    const existingSorting = this.getSorting()
     let sorting = _.clone(this.state.sorting || [])
     const existingIndex = sorting.findIndex(d => d.id === column.id)
     if (existingIndex > -1) {
@@ -510,95 +469,11 @@ export default React.createClass({
       }
     }
     const page = (existingIndex === 0 || (!existingSorting.length && sorting.length) || !additive) ? 0 : this.state.page
-    this.buildData(this.props, Object.assign({}, this.state, {page, sorting}))
-  },
-  nextPage (e) {
-    e.preventDefault()
-    this.setPage(this.state.page + 1)
-  },
-  previousPage (e) {
-    e.preventDefault()
-    this.setPage(this.state.page - 1)
+    this.setState({
+      page,
+      sorting
+    }, () => {
+      this.fireOnChange()
+    })
   }
 })
-
-// ########################################################################
-// Utils
-// ########################################################################
-
-function remove (a, b) {
-  return a.filter(function (o, i) {
-    var r = b(o)
-    if (r) {
-      a.splice(i, 1)
-      return true
-    }
-    return false
-  })
-}
-
-function get (a, b) {
-  if (isArray(b)) {
-    b = b.join('.')
-  }
-  return b
-    .replace('[', '.').replace(']', '')
-    .split('.')
-    .reduce(
-      function (obj, property) {
-        return obj[property]
-      }, a
-    )
-}
-
-function takeRight (arr, n) {
-  const start = n > arr.length ? 0 : arr.length - n
-  return arr.slice(start)
-}
-
-function last (arr) {
-  return arr[arr.length - 1]
-}
-
-function range (n) {
-  const arr = []
-  for (let i = 0; i < n; i++) {
-    arr.push(n)
-  }
-  return arr
-}
-
-function orderBy (arr, funcs, dirs) {
-  return arr.sort((a, b) => {
-    for (let i = 0; i < funcs.length; i++) {
-      const comp = funcs[i]
-      const ca = comp(a)
-      const cb = comp(b)
-      const desc = dirs[i] === false || dirs[i] === 'desc'
-      if (ca > cb) {
-        return desc ? -1 : 1
-      }
-      if (ca < cb) {
-        return desc ? 1 : -1
-      }
-    }
-    return 0
-  })
-}
-
-function clone (a) {
-  return JSON.parse(JSON.stringify(a, function (key, value) {
-    if (typeof value === 'function') {
-      return value.toString()
-    }
-    return value
-  }))
-}
-
-// ########################################################################
-// Helpers
-// ########################################################################
-
-function isArray (a) {
-  return Array.isArray(a)
-}
