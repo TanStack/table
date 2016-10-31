@@ -9,10 +9,8 @@ A fast, lightweight, opinionated table and datagrid built on React
 ## Features
 
 - Lightweight at 3kb (and just 2kb more for styles)
-- No composition needed
-- Uses customizable JSX and callbacks for everything
-- Client-side pagination and sorting
-- Server-side data
+- Fully customizable JSX and callbacks for everything
+- Supports both Client-side & Server-side pagination and sorting
 - Minimal design & easily themeable
 
 ## [Demo](http://react-table.zabapps.com)
@@ -196,46 +194,38 @@ const columns = [{
 
 <a name="server-side-data"></a>
 ## Server-side Data
-If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you. Instead of passing the `data` prop an array, you provide a function instead.
+If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you.
 
-This function will be called on mount, pagination events, and sorting events. It also provides you all of the parameters to help you query and format your data.
+1. Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
+1. Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
+1. Subscribe to the `onChange` prop. This function is called any time sorting or pagination is changed by the user
+1. In the `onChange` callback, request your data using the provided information in the params of the function (state and instance)
+1. Update your data with the rows to be displayed
+1. Optionally set how many pages there are total
 
 ```javascript
 <ReactTable
-  data={(params, callback) => {
-
-    // params will give you all the info you need to query and sort your data
-    params == {
-      page: 0, // The page index the user is requesting
-      pageSize: 20, // The current pageSize
-      pages: -1, // The amount of existing pages (-1 means there is no page data yet)
-      sorting: [ // An array of column sort models (yes, you can multi-sort!)
-        {
-          id: 'columnID', // The columnID (usually the accessor string, but can be overridden for server-side or required if the column accessor is a function)
-          ascending: true or false
-        }
-      ]
-    }
-
-    // Query your data however you'd like, then structure your response like so:
-    const result = {
-      rows: [...], // Your data for the current page/sorting model
-      pages: 10 // optionally provide how many pages exist (this is only needed if you choose to display page numbers, and only the first time you make the call or if the page count changes)
-    }
-
-    // You can return a promise that resolve the result
-    return Axios.post('/myDataEnpoint', params) // resolves to `result`
-
-    // or use the manual callback whenever you please
-    setTimeout(() => {
-      callback(result)
-    }, 5000)
-
-    // That's it!
-
+  ...
+  data={this.state.data} // should default to []
+  pages={this.state.pages} // should default to -1 (which means we don't know how many pages we have)
+  manual // informs React Table that you'll be handling sorting and pagination server-side
+  onChange={(state, instance) => {
+    Axios.post('mysite.com/data', {
+      page: state.page,
+      pageSize: state.pageSize,
+      sorting: state.sorting
+    })
+      .then((res) => {
+        this.setState({
+          data: res.data.rows,
+          pages: res.data.pages
+        })
+      })
   }}
 />
 ```
+
+For a detailed example, take a peek at our [async table mockup](https://github.com/tannerlinsley/react-table/blob/master/example/src/screens/async.js)
 
 <a name="multi-sort"></a>
 ## Multi-Sort
