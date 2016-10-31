@@ -80,8 +80,12 @@ These are the default props for the main react component `<ReactTable />`
 ```javascript
 {
   // General
+  loading: false, // Whether to show the loading overlay or not
   pageSize: 20,
   minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
+
+  // Callbacks
+  onChange: () => null,
 
   // Text
   previousText: 'Previous',

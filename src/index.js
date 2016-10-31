@@ -15,8 +15,6 @@ export const ReactTableDefaults = {
   minRows: 0,
   // Callbacks
   onChange: () => null,
-  onPageChange: () => null,
-  onSort: () => null,
   // Classes
   className: '-striped -highlight',
   tableClassName: '',
