@@ -136,7 +136,7 @@ Or just define them on the component per-instance
 
 <a name="columns"></a>
 ## Columns
-Every React-Table instance requires a `columns` prop, which is an array of objects containing the following properties
+`<ReactTable/>` requires a `columns` prop, which is an array of objects with the following properties
 
 ```javascript
 [{
