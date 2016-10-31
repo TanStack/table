@@ -12,12 +12,11 @@ A fast, lightweight, opinionated table and datagrid built on React
 - Fully customizable JSX and callbacks for everything
 - Supports both Client-side & Server-side pagination and sorting
 - Minimal design & easily themeable
-
-## Table of Contents
-- [Basic Demo](http://react-table.zabapps.com)
 - ["Why I wrote React Table and the problems it has solved for Nozzle.io"](https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba) by Tanner Linsley
 
+## [Demo](http://react-table.zabapps.com)
 
+## Table of Contents
 - [Installation](#nstallation)
 - [Example](#example)
 - [Data](#data)
