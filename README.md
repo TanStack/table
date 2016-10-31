@@ -71,7 +71,7 @@ const columns = [{
 
 <a name="data"></a>
 ## Data
-Every React-Table instance requires you to set the `data` prop. To use client-side data, simply pass the `data` prop anything that resembles an array or object. Client-side filtering and pagination is built in, and your table will update gracefully if you change any props. [Server-side data](#server-side-data) is also supported.
+Simply pass the `data` prop anything that resembles an array or object. Client-side filtering and pagination is built in, and your table will update gracefully as you change any props. [Server-side data](#server-side-data) is also supported!
 
 
 <a name="default-props"></a>
