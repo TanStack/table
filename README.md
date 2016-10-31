@@ -8,7 +8,7 @@ A fast, lightweight, opinionated table and datagrid built on React
 
 ## Features
 
-- Lightweight at 3kb (and just 2kb more for styles)
+- Lightweight at 4kb (and just 2kb more for styles)
 - Fully customizable JSX and callbacks for everything
 - Supports both Client-side & Server-side pagination and sorting
 - Minimal design & easily themeable
