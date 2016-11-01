@@ -52,15 +52,16 @@ const data = [{
 
 const columns = [{
   header: 'Name',
-  accessor: 'name',
+  accessor: 'name' // String-based value accessors !
 }, {
   header: 'Age',
-  accessor: 'age'
+  accessor: 'age',
+  render: props => <span className='number'>props.value</span> // Custom cell components!
 }, {
   header: 'Friend Name',
-  accessor: d => d.friend.name
+  accessor: d => d.friend.name // Custom value accessors!
 }, {
-  header: 'Friend Age',
+  header: props => <span>Friend Age</span>, // Custom header components!
   accessor: 'friend.age'
 }]
 
