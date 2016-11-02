@@ -106,6 +106,7 @@ export default Component({
 function getCode () {
   return `
 import ReactTable from 'react-table'
+import Axios from 'axios'
 
 export default React.creatClass({
   getInitialState () {
