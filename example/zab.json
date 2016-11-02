@@ -1,4 +1,8 @@
 {
   "name": "react-table",
-  "root": "dist"
+  "root": "dist",
+  "routes": [{
+    "src": "/**",
+    "dest": "index.html"
+  }]
 }

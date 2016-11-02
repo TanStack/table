@@ -416,7 +416,7 @@ export default React.createClass({
             })}
           </TbodyComponent>
         </TableComponent>
-        {this.props.showPagination && pagesLength > 1 && (
+        {this.props.showPagination && (
           <Pagination
             currentPage={currentPage}
             pagesLength={pagesLength}

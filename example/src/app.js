@@ -13,5 +13,5 @@ Render(null, (
     </Route>
   </Router>
 ), {
-  useHash: true
+  useHash: false
 })
