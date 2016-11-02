@@ -12,4 +12,6 @@ Render(null, (
       <Route path='server-side' component={ServerSide} />
     </Route>
   </Router>
-))
+), {
+  useHash: true
+})
