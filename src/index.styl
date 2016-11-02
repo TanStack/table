@@ -120,10 +120,10 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
   .-pagination
     width:100%
     display:flex
-    margin-top:5px
     justify-content: space-between
     align-items: center
     flex-wrap: wrap
+    padding-top:3px
 
     .-btn
       appearance:none
@@ -147,21 +147,33 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
         background: alpha(black, .3)
         color: white
 
-    .-left
+    .-previous
     .-center
-    .-right
-      flex: 1
-      // min-width:150px
-      margin-bottom:5px
+    .-next
+      margin:3px 0
 
-    .-left
-    .-right
+    .-previous
+    .-next
+      flex: 1
       text-align: center
 
-
     .-center
+      flex: 1.5
       text-align:center
-      padding: 0 5px
+
+    .-pageInfo
+      display: inline-block
+      margin: 0 10px 3px
+      white-space: nowrap
+
+    .-pageJump
+      display:inline-block
+      input
+        width: 70px
+        text-align:center
+
+    .-pageSizeOptions
+      margin-left:12px
 
 
   .-loading
@@ -194,3 +206,29 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
       pointer-events: all
       > div
         transform: translateY(50%)
+
+  input
+  select
+    appearance: none
+    border: 1px solid rgba(0,0,0,0.1)
+    padding: 5px 7px
+    font-size: inherit
+    border-radius: 3px
+    font-weight: normal
+    outline:none
+
+  .select-wrap
+    position:relative
+    display:inline-block
+    select
+      padding: 5px 15px 5px 7px
+      min-width:100px
+    &:after
+      content: ''
+      position: absolute
+      right: 8px
+      top: 50%
+      transform: translate(0, -50%)
+      border-color: #999 transparent transparent
+      border-style: solid
+      border-width: 5px 5px 2.5px

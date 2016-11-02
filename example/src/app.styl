@@ -11,7 +11,7 @@ global-reset()
 // vendor styles
 // -----------------------------------------------------------------------------
 
-@import '../node_modules/react-table/react-table.css'
+@import '../../src/index'
 
 // -----------------------------------------------------------------------------
 // variables
@@ -34,7 +34,6 @@ body
   background: white
   font-family: $fnt-open-sans
   font-weight: 300
-  padding-bottom: 50px
 
 h1
   font-size: 2.5em
@@ -50,6 +49,7 @@ strong
 
 .logo
   width: 400px
+  max-width: 100%
 
 .container
   display: flex
@@ -63,11 +63,34 @@ strong
     font-size: 20px
     padding: 10px
 
-  .table-wrap
-    width: 700px
+.viewport
+  width:100%
+
+.table-wrap
+  width: 90%
+  margin: auto
+  padding: 10px
+  border-radius: 5px
+  box-shadow: 0 0 20px 0 alpha(black, .2)
+
+.menu
+  display:block
+  margin: 0 10px 20px
+  ul
+    display:block
+  li
+    display:inline-block
+  a
+    display:block
     padding: 10px
-    border-radius: 5px
-    box-shadow: 0 0 20px 0 alpha(black, .2)
+    margin: 5px
+    background: alpha(black, .7)
+    color: white
+    border-radius: 3px
+    transition: all .2s ease-out
+    &.active
+    &:hover
+      background: alpha(black, .9)
 
 .ReactTable
 	thead
@@ -77,3 +100,13 @@ strong
 				box-shadow:inset 0 3px 0 0 alpha(black, .6)
 			&.-sort-desc
 				box-shadow:inset 0 -3px 0 0 alpha(black, .6)
+
+pre
+  display:block
+  font-family: monospace
+  font-size: 15px
+  line-height: 20px
+  border-radius: 5px
+  margin: 20px auto
+  max-width: 90%
+  padding: 0 20px !important

@@ -83,11 +83,14 @@ These are the default props for the main react component `<ReactTable />`
 {
   // General
   loading: false, // Whether to show the loading overlay or not
-  pageSize: 20,
+  pageSize: 20, // The default page size (this can be changed by the user if `showPageSizeOptions` is enabled)
   minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
+  showPagination: true, // Shows or hides the pagination component
+  showPageSizeOptions: true, // Enables the user to change the page size
+  pageSizeOptions: [5, 10, 20, 25, 50, 100], // The available page size options
 
   // Callbacks
-  onChange: () => null,
+  onChange: (state, instance) => null, // Anytime the internal state of the table changes, this will fire
 
   // Text
   previousText: 'Previous',

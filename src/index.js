@@ -3,16 +3,17 @@ import classnames from 'classnames'
 //
 import _ from './utils'
 
-const defaultButton = (props) => (
-  <button {...props} className='-btn'>{props.children}</button>
-)
+import Pagination from './pagination'
 
 export const ReactTableDefaults = {
-  // State
+  // General
   data: [],
   loading: false,
   pageSize: 20,
-  minRows: 0,
+  showPagination: true,
+  showPageSizeOptions: true,
+  pageSizeOptions: [5, 10, 20, 25, 50, 100],
+  showPageJump: true,
   // Callbacks
   onChange: () => null,
   // Classes
@@ -58,10 +59,24 @@ export const ReactTableDefaults = {
   theadComponent: (props) => <thead {...props}>{props.children}</thead>,
   tbodyComponent: (props) => <tbody {...props}>{props.children}</tbody>,
   trComponent: (props) => <tr {...props}>{props.children}</tr>,
-  thComponent: (props) => <th {...props}>{props.children}</th>,
+  thComponent: (props) => {
+    const {toggleSort, ...rest} = props
+    return (
+      <th {...rest} onClick={e => {
+        toggleSort && toggleSort(e)
+      }}>{props.children}</th>
+    )
+  },
   tdComponent: (props) => <td {...props}>{props.children}</td>,
   previousComponent: null,
-  nextComponent: null
+  nextComponent: null,
+  loadingComponent: props => (
+    <div className={classnames('-loading', {'-active': props.loading})}>
+      <div className='-loading-inner'>
+        {props.loadingText}
+      </div>
+    </div>
+  )
 }
 
 export default React.createClass({
@@ -71,7 +86,6 @@ export default React.createClass({
   getInitialState () {
     return {
       page: 0,
-      pages: -1,
       sorting: false
     }
   },
@@ -80,11 +94,17 @@ export default React.createClass({
   },
   fireOnChange () {
     this.props.onChange({
-      page: _.getFirstDefined(this.props.page, this.state.page),
-      pageSize: this.props.pageSize,
-      pages: this.props.pages,
+      page: this.getPropOrState('page'),
+      pageSize: this.getStateOrProp('pageSize'),
+      pages: this.getPagesLength(),
       sorting: this.getSorting()
     }, this)
+  },
+  getPropOrState (key) {
+    return _.getFirstDefined(this.props[key], this.state[key])
+  },
+  getStateOrProp (key) {
+    return _.getFirstDefined(this.state[key], this.props[key])
   },
   getInitSorting (columns) {
     if (!columns) {
@@ -137,6 +157,13 @@ export default React.createClass({
   },
   getSorting (columns) {
     return this.props.sorting || (this.state.sorting && this.state.sorting.length ? this.state.sorting : this.getInitSorting(columns))
+  },
+  getPagesLength () {
+    return this.props.manual ? this.props.pages
+      : Math.ceil(this.props.data.length / this.getStateOrProp('pageSize'))
+  },
+  getMinRows () {
+    return _.getFirstDefined(this.props.minRows, this.props.pageSize)
   },
   render () {
     // Build Columns
@@ -198,17 +225,22 @@ export default React.createClass({
     })
     const data = this.props.manual ? accessedData : this.sortData(accessedData, sorting)
 
+    // Normalize state
+    const currentPage = this.getPropOrState('page')
+    const pageSize = this.getStateOrProp('pageSize')
+    const pagesLength = this.getPagesLength()
+
     // Pagination
-    const pagesLength = this.props.manual ? this.props.pages : Math.ceil(data.length / this.props.pageSize)
-    const startRow = this.props.pageSize * this.state.page
-    const endRow = startRow + this.props.pageSize
+    const startRow = pageSize * currentPage
+    const endRow = startRow + pageSize
     const pageRows = this.props.manual ? data : data.slice(startRow, endRow)
-    const padRows = pagesLength > 1 ? _.range(this.props.pageSize - pageRows.length)
-      : this.props.minRows ? _.range(Math.max(this.props.minRows - pageRows.length, 0))
+    const minRows = this.getMinRows()
+    const padRows = pagesLength > 1 ? _.range(pageSize - pageRows.length)
+      : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
       : []
 
-    const canPrevious = this.state.page > 0
-    const canNext = this.state.page + 1 < pagesLength
+    const canPrevious = currentPage > 0
+    const canNext = currentPage + 1 < pagesLength
 
     const TableComponent = this.props.tableComponent
     const TheadComponent = this.props.theadComponent
@@ -216,9 +248,9 @@ export default React.createClass({
     const TrComponent = this.props.trComponent
     const ThComponent = this.props.thComponent
     const TdComponent = this.props.tdComponent
-
-    const PreviousComponent = this.props.previousComponent || defaultButton
-    const NextComponent = this.props.nextComponent || defaultButton
+    const PreviousComponent = this.props.previousComponent
+    const NextComponent = this.props.nextComponent
+    const LoadingComponent = this.props.loadingComponent
 
     return (
       <div
@@ -287,7 +319,7 @@ export default React.createClass({
                       }
                     )}
                     style={Object.assign({}, this.props.thStyle, column.headerStyle)}
-                    onClick={(e) => {
+                    toggleSort={(e) => {
                       column.sortable && this.sortColumn(column, e.shiftKey)
                     }}
                   >
@@ -384,37 +416,26 @@ export default React.createClass({
             })}
           </TbodyComponent>
         </TableComponent>
-        {pagesLength > 1 && (
-          <div
-            className={classnames(this.props.paginationClassName, '-pagination')}
-            style={this.props.paginationStyle}
-          >
-            <div className='-left'>
-              <PreviousComponent
-                onClick={canPrevious && ((e) => this.previousPage(e))}
-                disabled={!canPrevious}
-              >
-                {this.props.previousText}
-              </PreviousComponent>
-            </div>
-            <div className='-center'>
-              Page {this.state.page + 1} of {pagesLength}
-            </div>
-            <div className='-right'>
-              <NextComponent
-                onClick={canNext && ((e) => this.nextPage(e))}
-                disabled={!canNext}
-              >
-                {this.props.nextText}
-              </NextComponent>
-            </div>
-          </div>
+        {this.props.showPagination && pagesLength > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            pagesLength={pagesLength}
+            pageSize={pageSize}
+            showPageSizeOptions={this.props.showPageSizeOptions}
+            pageSizeOptions={this.props.pageSizeOptions}
+            showPageJump={this.props.showPageJump}
+            canPrevious={canPrevious}
+            canNext={canNext}
+            previousText={this.props.previousText}
+            nextText={this.props.nextText}
+            previousComponent={PreviousComponent}
+            nextComponent={NextComponent}
+            //
+            onChange={this.setPage}
+            onPageSizeChange={this.setPageSize}
+          />
         )}
-        <div className={classnames('-loading', {'-active': this.props.loading})}>
-          <div className='-loading-inner'>
-            {this.props.loadingText}
-          </div>
-        </div>
+        <LoadingComponent {...this.props} />
       </div>
     )
   },
@@ -426,13 +447,17 @@ export default React.createClass({
       this.fireOnChange()
     })
   },
-  nextPage (e) {
-    e.preventDefault()
-    this.setPage(this.state.page + 1)
-  },
-  previousPage (e) {
-    e.preventDefault()
-    this.setPage(this.state.page - 1)
+  setPageSize (pageSize) {
+    const currentPageSize = this.getStateOrProp('pageSize')
+    const currentPage = this.getPropOrState('page')
+    const currentRow = currentPageSize * currentPage
+    const page = Math.floor(currentRow / pageSize)
+    this.setState({
+      pageSize,
+      page
+    }, () => {
+      this.fireOnChange()
+    })
   },
   sortColumn (column, additive) {
     const existingSorting = this.getSorting()
