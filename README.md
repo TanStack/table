@@ -86,6 +86,7 @@ These are the default props for the main react component `<ReactTable />`
   pageSize: 20, // The default page size (this can be changed by the user if `showPageSizeOptions` is enabled)
   minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
   showPagination: true, // Shows or hides the pagination component
+  showPageJump: true, // Shows or hides the pagination number input
   showPageSizeOptions: true, // Enables the user to change the page size
   pageSizeOptions: [5, 10, 20, 25, 50, 100], // The available page size options
 
