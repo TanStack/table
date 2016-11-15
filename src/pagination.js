@@ -42,8 +42,8 @@ export default React.createClass({
       onPageSizeChange
     } = this.props
 
-    const PreviousComponent = this.props.PreviousComponent || defaultButton
-    const NextComponent = this.props.NextComponent || defaultButton
+    const PreviousComponent = this.props.previousComponent || defaultButton
+    const NextComponent = this.props.nextComponent || defaultButton
 
     return (
       <div
