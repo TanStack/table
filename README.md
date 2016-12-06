@@ -1,4 +1,8 @@
-![react-table](https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png)
+<div align="center">
+  <a href="https://github.com/tannerlinsley/react-table"><img src="https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png" alt="React Table Logo" style="width:450px;"/></a>
+  <br />
+  <br />
+</div>
 
 # react-table
 A fast, lightweight, opinionated table and datagrid built on React
