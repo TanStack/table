@@ -163,7 +163,7 @@ export default React.createClass({
       : Math.ceil(this.props.data.length / this.getStateOrProp('pageSize'))
   },
   getMinRows () {
-    return _.getFirstDefined(this.props.minRows, this.props.pageSize)
+    return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
   },
   render () {
     // Build Columns
@@ -378,7 +378,7 @@ export default React.createClass({
                               {...rowInfo}
                               value={rowInfo.rowValues[column.id]}
                             />
-                            ) : typeof Cell !== 'undefined' ? Cell
+                          ) : typeof Cell !== 'undefined' ? Cell
                           : rowInfo.rowValues[column.id]}
                         </div>
                       </TdComponent>
