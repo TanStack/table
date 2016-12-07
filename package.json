@@ -16,6 +16,7 @@
   ],
   "main": "lib/index.js",
   "files": [
+    "src/",
     "lib/",
     "react-table.js",
     "react-table.css",

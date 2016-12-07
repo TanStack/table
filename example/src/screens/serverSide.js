@@ -3,7 +3,7 @@ import _ from 'lodash'
 import namor from 'namor'
 
 import CodeHighlight from 'components/codeHighlight'
-import ReactTable from '../../../lib/index.js'
+import ReactTable from 'react-table'
 
 // Let's mock some data to play around with
 const rawData = _.map(_.range(3424), d => {

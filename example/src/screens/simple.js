@@ -3,7 +3,7 @@ import _ from 'lodash'
 import namor from 'namor'
 
 import CodeHighlight from 'components/codeHighlight'
-import ReactTable from '../../../lib/index.js'
+import ReactTable from 'react-table'
 
 export default Component({
   render () {
