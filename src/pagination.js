@@ -63,7 +63,7 @@ export default React.createClass({
         </div>
         <div className='-center'>
           <span className='-pageInfo'>
-            Page {showPageJump ? (
+            {this.props.pageText} {showPageJump ? (
               <form className='-pageJump'
                 onSubmit={this.applyPage}
               >
@@ -83,7 +83,7 @@ export default React.createClass({
               </form>
               ) : (
                 <span className='-currentPage'>{currentPage + 1}</span>
-            )} of <span className='-totalPages'>{pagesLength}</span>
+            )} {this.props.ofText} <span className='-totalPages'>{pagesLength}</span>
           </span>
           {showPageSizeOptions && (
             <span className='select-wrap -pageSizeOptions'>
@@ -96,7 +96,7 @@ export default React.createClass({
                     <option
                       key={i}
                       value={option}>
-                      {option} rows
+                      {option} {this.props.rowsText}
                     </option>
                   )
                 })}

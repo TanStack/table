@@ -54,6 +54,9 @@ export const ReactTableDefaults = {
   previousText: 'Previous',
   nextText: 'Next',
   loadingText: 'Loading...',
+  pageText: 'Page',
+  ofText: 'of',
+  rowsText: 'rows',
   // Components
   tableComponent: (props) => <table {...props}>{props.children}</table>,
   theadComponent: (props) => <thead {...props}>{props.children}</thead>,
@@ -428,6 +431,9 @@ export default React.createClass({
             canNext={canNext}
             previousText={this.props.previousText}
             nextText={this.props.nextText}
+            pageText={this.props.pageText}
+            ofText={this.props.ofText}
+            rowsText={this.props.rowsText}
             previousComponent={PreviousComponent}
             nextComponent={NextComponent}
             //
