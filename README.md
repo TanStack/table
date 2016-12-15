@@ -2,7 +2,7 @@
   <a href="https://github.com/tannerlinsley/react-table"><img src="https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png" alt="React Table Logo" style="width:450px;"/></a>
   <br />
   <br />
-  
+
 </div>
 
 # react-table
@@ -99,7 +99,10 @@ These are the default props for the main react component `<ReactTable />`
 
   // Text
   previousText: 'Previous',
-  nextText: 'Next'
+  nextText: 'Next',
+  pageText: 'Page',
+  ofText: 'of',
+  rowsText: 'rows',
 
   // Classes
   className: '-striped -highlight', // The most top level className for the component
