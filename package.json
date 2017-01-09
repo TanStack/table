@@ -35,7 +35,7 @@
     "classnames": "^2.2.5"
   },
   "peerDependencies": {
-    "react": "^15.3.1"
+    "react": "^15.x.x"
   },
   "devDependencies": {
     "babel-cli": "6.14.0",
