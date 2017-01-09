@@ -16,6 +16,7 @@ export const ReactTableDefaults = {
   showPageJump: true,
   // Callbacks
   onChange: () => null,
+  onTrClick: () => null,
   // Classes
   className: '-striped -highlight',
   tableClassName: '',
@@ -23,7 +24,6 @@ export const ReactTableDefaults = {
   tbodyClassName: '',
   trClassName: '',
   trClassCallback: d => null,
-  onTrClick: () => null,
   thClassName: '',
   thGroupClassName: '',
   tdClassName: '',
@@ -72,6 +72,7 @@ export const ReactTableDefaults = {
     )
   },
   tdComponent: (props) => <td {...props}>{props.children}</td>,
+  paginationComponent: Pagination,
   previousComponent: null,
   nextComponent: null,
   loadingComponent: props => (
@@ -246,6 +247,7 @@ export default React.createClass({
     const canPrevious = currentPage > 0
     const canNext = currentPage + 1 < pagesLength
 
+    const PaginationComponent = this.props.paginationComponent
     const TableComponent = this.props.tableComponent
     const TheadComponent = this.props.theadComponent
     const TbodyComponent = this.props.tbodyComponent
@@ -422,7 +424,7 @@ export default React.createClass({
           </TbodyComponent>
         </TableComponent>
         {this.props.showPagination && (
-          <Pagination
+          <PaginationComponent
             currentPage={currentPage}
             pagesLength={pagesLength}
             pageSize={pageSize}
@@ -441,6 +443,8 @@ export default React.createClass({
             //
             onChange={this.setPage}
             onPageSizeChange={this.setPageSize}
+            //
+            className={this.props.paginationClassName}
           />
         )}
         <LoadingComponent {...this.props} />

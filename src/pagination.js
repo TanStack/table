@@ -39,7 +39,8 @@ export default React.createClass({
       showPageJump,
       canPrevious,
       canNext,
-      onPageSizeChange
+      onPageSizeChange,
+      className
     } = this.props
 
     const PreviousComponent = this.props.previousComponent || defaultButton
@@ -47,7 +48,7 @@ export default React.createClass({
 
     return (
       <div
-        className={classnames(this.props.paginationClassName, '-pagination')}
+        className={classnames(className, '-pagination')}
         style={this.props.paginationStyle}
       >
         <div className='-previous'>
