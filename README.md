@@ -290,7 +290,7 @@ If you would like to help develop a suggested feature follow these steps:
 
 - Fork this repo
 - `npm install`
-- `npm watch`
+- `npm run watch`
 - Implement your changes to files in the `src/` directory
 - Submit PR for review
 
@@ -300,7 +300,7 @@ If you would like to preview your changes, you can link and utilize the example 
 - `cd example`
 - `npm install`
 - `npm link react-table`
-- `npm watch`
+- `npm run watch`
 - Make changes to the example in `src/screens/index.js` if needed
 - View changes at `localhost:8000`
 
