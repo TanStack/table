@@ -96,6 +96,7 @@ These are the default props for the main react component `<ReactTable />`
 
   // Callbacks
   onChange: (state, instance) => null, // Anytime the internal state of the table changes, this will fire
+  onTrClick: (row, event) => null,  // Handler for row click events
 
   // Text
   previousText: 'Previous',

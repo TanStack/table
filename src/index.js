@@ -23,6 +23,7 @@ export const ReactTableDefaults = {
   tbodyClassName: '',
   trClassName: '',
   trClassCallback: d => null,
+  onTrClick: () => null,
   thClassName: '',
   thGroupClassName: '',
   tdClassName: '',
@@ -358,6 +359,7 @@ export default React.createClass({
               return (
                 <TrComponent
                   key={i}
+                  onClick={event => this.props.onTrClick(rowInfo.row, event)}
                   className={classnames(this.props.trClassName, this.props.trClassCallback(rowInfo))}
                   style={Object.assign({}, this.props.trStyle, this.props.trStyleCallback(rowInfo))}
                 >
