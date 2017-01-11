@@ -21,14 +21,14 @@
 ## <a href="http://react-table.zabapps.com/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_blank">Demo</a>
 
 ## Table of Contents
-- [Installation](#nstallation)
+- [Installation](#installation)
 - [Example](#example)
 - [Data](#data)
 - [Default Props](#default-props)
 - [Columns](#columns)
 - [Styles](#styles)
 - [Header Groups](#header-groups)
-- [Sub Tables & Components](#sub-tables--components)
+- [Sub Tables & Components](#sub-tables-components)
 - [Server-side Data](#server-side-data)
 - [Multi-sort](#multi-sort)
 - [Component Overrides](#component-overrides)
