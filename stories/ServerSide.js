@@ -111,7 +111,7 @@ function getCode () {
 import ReactTable from 'react-table'
 import Axios from 'axios'
 
-export default React.creatClass({
+export default React.createClass({
   getInitialState () {
     // To handle our data server-side, we need to keep track of our table state
     return {
