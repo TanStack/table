@@ -4,3 +4,5 @@ react-table.js
 react-table.css
 *.log
 example/dist/
+
+storybook-static

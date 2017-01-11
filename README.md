@@ -5,8 +5,8 @@
 
 </div>
 
-# react-table
-A fast, lightweight, opinionated table and datagrid built on React
+# React Table
+`react-table` is a **lightweight, fast and extendable datagrid** built for React
 
 [![Build Status](https://travis-ci.org/tannerlinsley/react-table.svg?branch=master)](https://travis-ci.org/tannerlinsley/react-table) [![npm](https://img.shields.io/npm/dm/react-table.svg)](https://npmjs.com/packag/react-table) [![react-table on Slack](https://img.shields.io/badge/slack-react--table-blue.svg)](https://react-table-slack.herokuapp.com/) [![GitHub stars](https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star)](https://github.com/tannerlinsley/react-table) [![Twitter Follow](https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow)](https://twitter.com/tannerlinsley)
 
@@ -16,9 +16,9 @@ A fast, lightweight, opinionated table and datagrid built on React
 - Fully customizable JSX and callbacks for everything
 - Supports both Client-side & Server-side pagination and sorting
 - Minimal design & easily themeable
-- ["Why I wrote React Table and the problems it has solved for Nozzle.io"](https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba) by Tanner Linsley
+- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_blank">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
 
-## [Demo](http://react-table.zabapps.com)
+## <a href="http://react-table.zabapps.com/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_blank">Demo</a>
 
 ## Table of Contents
 - [Installation](#nstallation)
@@ -28,6 +28,7 @@ A fast, lightweight, opinionated table and datagrid built on React
 - [Columns](#columns)
 - [Styles](#styles)
 - [Header Groups](#header-groups)
+- [Sub Tables & Components](#sub-tables--components)
 - [Server-side Data](#server-side-data)
 - [Multi-sort](#multi-sort)
 - [Component Overrides](#component-overrides)
@@ -93,6 +94,7 @@ These are the default props for the main react component `<ReactTable />`
   showPageJump: true, // Shows or hides the pagination number input
   showPageSizeOptions: true, // Enables the user to change the page size
   pageSizeOptions: [5, 10, 20, 25, 50, 100], // The available page size options
+  expanderColumnWidth: 30, // default columnWidth for the expander column
 
   // Callbacks
   onChange: (state, instance) => null, // Anytime the internal state of the table changes, this will fire
@@ -160,13 +162,11 @@ Or just define them on the component per-instance
   sortable: true,
   sort: 'asc' or 'desc', // used to determine the column sorting on init
   show: true, // can be used to hide a column
-  minWidth: Number // Allows the column to flex above this minimum amount
+  minWidth: 100 // A minimum width for this column. If there is room, columns will flex to fill
 
   // Cell Options
   className: '', // Set the classname of the `td` element of the column
   style: {}, // Set the style of the `td` element of the column
-  innerClassName: '', // Set the classname of the `.-td-inner` element of the column
-  innerStyle: {}, // Set the style of the `.-td-inner` element of the column
   render: JSX eg. ({value, rowValues, row, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
     // value == the accessed value of the column
     // rowValues == an object of all of the accessed values for the row
@@ -178,8 +178,6 @@ Or just define them on the component per-instance
   header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
   headerClassName: '', // Set the classname of the `th` element of the column
   headerStyle: {}, // Set the style of the `th` element of the column
-  headerInnerClassName: '', // Set the classname of the `.-th-inner` element of the column
-  headerInnerStyle: {}, // Set the style of the `.th-inner` element of the column
 
   // Header Groups only
   columns: [...] // See Header Groups section below
@@ -209,6 +207,24 @@ const columns = [{
   }]
 }]
 ```
+
+## Sub Tables & Components
+By adding a `subComponent` props, you can easily add an expansion level to all root-level rows:
+```javascript
+<ReactTable
+  data={data}
+  columns={columns}
+  pageSize={10}
+  subComponent={(row) => {
+    return (
+      <div>
+        You can put any component you want here, even another React Table! You even have access to the row-level data if you need!  Spark-charts, drill-throughs, infographics... the possibilities are endless!
+      </div>
+    )
+  }}
+/>
+```
+
 
 <a name="server-side-data"></a>
 ## Server-side Data

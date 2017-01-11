@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "root": "dist",
+  "root": "storybook-static",
   "routes": [{
     "src": "/**",
     "dest": "index.html"

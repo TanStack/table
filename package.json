@@ -25,19 +25,24 @@
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
     "build:css": "rm -rf react-table.css && stylus src/index.styl --use ./node_modules/nib/lib/nib.js --compress -o react-table.css",
-    "watch": "onchange 'src/**' -i -- npm-run-all build:*",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
+    "watch:css": "onchange 'src/**/*.styl' -i -- npm run build:css",
     "test": "standard",
     "umd": "rm -rf react-table.js && browserify lib/index.js -s reactTable -x react -t babelify -g uglifyify -o react-table.js",
     "prepublish": "npm-run-all build:* && npm run umd",
-    "postpublish": "git push --tags"
+    "storybook": "start-storybook -p 8000 -c .storybook",
+    "deploy": "build-storybook && zab deploy"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "inline-style-prefixer": "^2.0.5"
   },
   "peerDependencies": {
     "react": "^15.x.x"
   },
   "devDependencies": {
+    "@kadira/storybook": "^2.35.1",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
     "babel-preset-es2015": "6.14.0",
@@ -45,9 +50,15 @@
     "babel-preset-stage-2": "6.13.0",
     "babelify": "^7.3.0",
     "browserify": "13.1.0",
+    "github-markdown-css": "^2.4.1",
+    "html-loader": "^0.4.4",
+    "markdown-loader": "^0.1.7",
+    "namor": "^0.3.0",
     "nib": "^1.1.2",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "standard": "^8.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"

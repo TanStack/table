@@ -1,9 +1,19 @@
 import React from 'react'
 import classnames from 'classnames'
+import prefixAll from 'inline-style-prefixer/static'
 //
 import _ from './utils'
 
 import Pagination from './pagination'
+
+const makeTemplateComponent = (compClass) => ({children, className, ...rest}) => (
+  <div
+    className={classnames(compClass, className)}
+    {...rest}
+  >
+    {children}
+  </div>
+)
 
 export const ReactTableDefaults = {
   // General
@@ -14,6 +24,7 @@ export const ReactTableDefaults = {
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   showPageJump: true,
+  expanderColumnWidth: 30,
   // Callbacks
   onChange: () => null,
   onTrClick: () => null,
@@ -44,12 +55,11 @@ export const ReactTableDefaults = {
     show: true,
     className: '',
     style: {},
-    innerClassName: '',
-    innerStyle: {},
     headerClassName: '',
     headerStyle: {},
     headerInnerClassName: '',
-    headerInnerStyle: {}
+    headerInnerStyle: {},
+    minWidth: 100
   },
   // Text
   previousText: 'Previous',
@@ -59,19 +69,33 @@ export const ReactTableDefaults = {
   ofText: 'of',
   rowsText: 'rows',
   // Components
-  tableComponent: (props) => <table {...props}>{props.children}</table>,
-  theadComponent: (props) => <thead {...props}>{props.children}</thead>,
-  tbodyComponent: (props) => <tbody {...props}>{props.children}</tbody>,
-  trComponent: (props) => <tr {...props}>{props.children}</tr>,
-  thComponent: (props) => {
-    const {toggleSort, ...rest} = props
+  tableComponent: makeTemplateComponent('rt-table'),
+  theadComponent: makeTemplateComponent('rt-thead'),
+  tbodyComponent: makeTemplateComponent('rt-tbody'),
+  trGroupComponent: makeTemplateComponent('rt-tr-group'),
+  trComponent: makeTemplateComponent('rt-tr'),
+  thComponent: ({toggleSort, className, children, ...rest}) => {
     return (
-      <th {...rest} onClick={e => {
-        toggleSort && toggleSort(e)
-      }}>{props.children}</th>
+      <div
+        className={classnames(className, 'rt-th')}
+        onClick={e => {
+          toggleSort && toggleSort(e)
+        }}
+        {...rest}
+      >
+        {children}
+      </div>
     )
   },
-  tdComponent: (props) => <td {...props}>{props.children}</td>,
+  tdComponent: makeTemplateComponent('rt-td'),
+  expanderComponent: ({isOpen, toggle, ...rest}) => {
+    return (
+      <div
+        className={classnames('rt-expander', isOpen && '-open')}
+        {...rest}
+      />
+    )
+  },
   paginationComponent: Pagination,
   previousComponent: null,
   nextComponent: null,
@@ -91,7 +115,8 @@ export default React.createClass({
   getInitialState () {
     return {
       page: 0,
-      sorting: false
+      sorting: false,
+      visibleSubComponents: {}
     }
   },
   componentDidMount () {
@@ -171,6 +196,39 @@ export default React.createClass({
     return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
   },
   render () {
+    const {visibleSubComponents} = this.state
+    const {
+      className,
+      style,
+      tableClassName,
+      tableStyle,
+      theadGroupClassName,
+      theadStyle,
+      trClassName,
+      trStyle,
+      thClassname,
+      thStyle,
+      data,
+      theadClassName,
+      tbodyClassName,
+      tbodyStyle,
+      onTrClick,
+      trClassCallback,
+      trStyleCallback,
+      tdStyle,
+      showPagination,
+      showPageSizeOptions,
+      pageSizeOptions,
+      showPageJump,
+      previousText,
+      nextText,
+      pageText,
+      ofText,
+      rowsText,
+      paginationClassName,
+      expanderColumnWidth
+    } = this.props
+
     // Build Columns
     const decoratedColumns = []
     const headerGroups = []
@@ -213,6 +271,8 @@ export default React.createClass({
       }
     })
 
+    const columnPercentage = 100 / decoratedColumns.length
+
     if (hasHeaderGroups && currentSpan.length > 0) {
       addHeader(currentSpan)
     }
@@ -228,7 +288,7 @@ export default React.createClass({
       })
       return row
     })
-    const data = this.props.manual ? accessedData : this.sortData(accessedData, sorting)
+    const resolvedData = this.props.manual ? accessedData : this.sortData(accessedData, sorting)
 
     // Normalize state
     const currentPage = this.getPropOrState('page')
@@ -238,7 +298,7 @@ export default React.createClass({
     // Pagination
     const startRow = pageSize * currentPage
     const endRow = startRow + pageSize
-    const pageRows = this.props.manual ? data : data.slice(startRow, endRow)
+    const pageRows = this.props.manual ? resolvedData : resolvedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
     const padRows = pagesLength > 1 ? _.range(pageSize - pageRows.length)
       : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
@@ -247,54 +307,67 @@ export default React.createClass({
     const canPrevious = currentPage > 0
     const canNext = currentPage + 1 < pagesLength
 
-    const PaginationComponent = this.props.paginationComponent
     const TableComponent = this.props.tableComponent
     const TheadComponent = this.props.theadComponent
     const TbodyComponent = this.props.tbodyComponent
+    const TrGroupComponent = this.props.trGroupComponent
     const TrComponent = this.props.trComponent
     const ThComponent = this.props.thComponent
     const TdComponent = this.props.tdComponent
+    const ExpanderComponent = this.props.expanderComponent
+    const PaginationComponent = this.props.paginationComponent
     const PreviousComponent = this.props.previousComponent
     const NextComponent = this.props.nextComponent
     const LoadingComponent = this.props.loadingComponent
+    const SubComponent = this.props.subComponent
+
+    const rowWidth = (SubComponent ? expanderColumnWidth : 0) + _.sum(decoratedColumns.map(d => d.minWidth))
 
     return (
       <div
-        className={classnames(this.props.className, 'ReactTable')}
-        style={this.props.style}
+        className={classnames(className, 'ReactTable')}
+        style={style}
       >
         <TableComponent
-          className={classnames(this.props.tableClassName)}
-          style={this.props.tableStyle}
+          className={classnames(tableClassName)}
+          style={tableStyle}
         >
           {hasHeaderGroups && (
             <TheadComponent
-              className={classnames(this.props.theadGroupClassName, '-headerGroups')}
-              style={this.props.theadStyle}
+              className={classnames(theadGroupClassName, '-headerGroups')}
+              style={Object.assign({}, theadStyle, {
+                minWidth: `${rowWidth}px`
+              })}
             >
               <TrComponent
-                className={this.props.trClassName}
-                style={this.props.trStyle}
+                className={trClassName}
+                style={trStyle}
               >
+                {SubComponent && (
+                  <ThComponent
+                    className={classnames(thClassname, 'rt-expander-header')}
+                    style={prefixAll({
+                      flex: `0 0 auto`,
+                      width: `${expanderColumnWidth}px`
+                    })}
+                  />
+                )}
                 {headerGroups.map((column, i) => {
                   return (
                     <ThComponent
                       key={i}
-                      colSpan={column.columns.length}
-                      className={classnames(this.props.thClassname, column.headerClassName)}
-                      style={Object.assign({}, this.props.thStyle, column.headerStyle)}
+                      className={classnames(thClassname, column.headerClassName)}
+                      style={Object.assign({}, thStyle, column.headerStyle, prefixAll({
+                        flex: `${column.columns.length * columnPercentage} 0 auto`,
+                        width: `${_.sum(column.columns.map(d => d.minWidth))}px`
+                      }))}
                     >
-                      <div
-                        className={classnames(column.headerInnerClassName, '-th-inner')}
-                        style={Object.assign({}, this.props.thInnerStyle, column.headerInnerStyle)}
-                      >
-                        {typeof column.header === 'function' ? (
-                          <column.header
-                            data={this.props.data}
-                            column={column}
-                          />
-                        ) : column.header}
-                      </div>
+                      {typeof column.header === 'function' ? (
+                        <column.header
+                          data={resolvedData}
+                          column={column}
+                        />
+                      ) : column.header}
                     </ThComponent>
                   )
                 })}
@@ -302,13 +375,24 @@ export default React.createClass({
             </TheadComponent>
           )}
           <TheadComponent
-            className={classnames(this.props.theadClassName)}
-            style={this.props.theadStyle}
+            className={classnames(theadClassName, '-header')}
+            style={Object.assign({}, theadStyle, {
+              minWidth: `${rowWidth}px`
+            })}
           >
             <TrComponent
-              className={this.props.trClassName}
-              style={this.props.trStyle}
+              className={trClassName}
+              style={trStyle}
             >
+              {SubComponent && (
+                <ThComponent
+                  className={classnames(thClassname, 'rt-expander-header')}
+                  style={prefixAll({
+                    flex: `0 0 auto`,
+                    width: `${expanderColumnWidth}px`
+                  })}
+                />
+              )}
               {decoratedColumns.map((column, i) => {
                 const sort = sorting.find(d => d.id === column.id)
                 const show = typeof column.show === 'function' ? column.show() : column.show
@@ -316,7 +400,7 @@ export default React.createClass({
                   <ThComponent
                     key={i}
                     className={classnames(
-                      this.props.thClassname,
+                      thClassname,
                       column.headerClassName,
                       sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
                       {
@@ -324,32 +408,30 @@ export default React.createClass({
                         '-hidden': !show
                       }
                     )}
-                    style={Object.assign({}, this.props.thStyle, column.headerStyle)}
+                    style={Object.assign({}, thStyle, column.headerStyle, prefixAll({
+                      flex: `${columnPercentage} 0 auto`,
+                      width: `${column.minWidth}px`
+                    }))}
                     toggleSort={(e) => {
                       column.sortable && this.sortColumn(column, e.shiftKey)
                     }}
                   >
-                    <div
-                      className={classnames(column.headerInnerClassName, '-th-inner')}
-                      style={Object.assign({}, column.headerInnerStyle, {
-                        minWidth: column.minWidth + 'px'
-                      })}
-                    >
-                      {typeof column.header === 'function' ? (
-                        <column.header
-                          data={this.props.data}
-                          column={column}
-                        />
-                      ) : column.header}
-                    </div>
+                    {typeof column.header === 'function' ? (
+                      <column.header
+                        data={resolvedData}
+                        column={column}
+                      />
+                    ) : column.header}
                   </ThComponent>
                 )
               })}
             </TrComponent>
           </TheadComponent>
           <TbodyComponent
-            className={classnames(this.props.tbodyClassName)}
-            style={this.props.tbodyStyle}
+            className={classnames(tbodyClassName)}
+            style={Object.assign({}, tbodyStyle, {
+              minWidth: `${rowWidth}px`
+            })}
           >
             {pageRows.map((row, i) => {
               const rowInfo = {
@@ -359,26 +441,44 @@ export default React.createClass({
                 viewIndex: i
               }
               return (
-                <TrComponent
-                  key={i}
-                  onClick={event => this.props.onTrClick(rowInfo.row, event)}
-                  className={classnames(this.props.trClassName, this.props.trClassCallback(rowInfo))}
-                  style={Object.assign({}, this.props.trStyle, this.props.trStyleCallback(rowInfo))}
-                >
-                  {decoratedColumns.map((column, i2) => {
-                    const Cell = column.render
-                    const show = typeof column.show === 'function' ? column.show() : column.show
-                    return (
-                      <TdComponent
-                        key={i2}
-                        className={classnames(column.className, {hidden: !show})}
-                        style={Object.assign({}, this.props.tdStyle, column.style)}
+                <TrGroupComponent key={i}>
+                  <TrComponent
+                    onClick={event => onTrClick(rowInfo.row, event)}
+                    className={classnames(trClassName, trClassCallback(rowInfo))}
+                    style={Object.assign({}, trStyle, trStyleCallback(rowInfo))}
+                  >
+                    {SubComponent && (
+                      <ThComponent
+                        className={classnames(thClassname, 'rt-expander-wrap')}
+                        style={prefixAll({
+                          flex: `0 0 auto`,
+                          width: `${expanderColumnWidth}px`
+                        })}
+                        onClick={() => {
+                          this.setState({
+                            visibleSubComponents: {
+                              ...visibleSubComponents,
+                              [i]: !visibleSubComponents[i]
+                            }
+                          })
+                        }}
                       >
-                        <div
-                          className={classnames(column.innerClassName, '-td-inner')}
-                          style={Object.assign({}, column.innerStyle, {
-                            minWidth: column.minWidth + 'px'
-                          })}
+                        <ExpanderComponent
+                          isOpen={visibleSubComponents[i]}
+                        />
+                      </ThComponent>
+                    )}
+                    {decoratedColumns.map((column, i2) => {
+                      const Cell = column.render
+                      const show = typeof column.show === 'function' ? column.show() : column.show
+                      return (
+                        <TdComponent
+                          key={i2}
+                          className={classnames(column.className, {hidden: !show})}
+                          style={Object.assign({}, tdStyle, column.style, prefixAll({
+                            flex: `${columnPercentage} 0 auto`,
+                            width: `${column.minWidth}px`
+                          }))}
                         >
                           {typeof Cell === 'function' ? (
                             <Cell
@@ -387,34 +487,44 @@ export default React.createClass({
                             />
                           ) : typeof Cell !== 'undefined' ? Cell
                           : rowInfo.rowValues[column.id]}
-                        </div>
-                      </TdComponent>
-                    )
-                  })}
-                </TrComponent>
+                        </TdComponent>
+                      )
+                    })}
+                  </TrComponent>
+                  {SubComponent && visibleSubComponents[i] ? (
+                    SubComponent(rowInfo)
+                  ) : null}
+                </TrGroupComponent>
               )
             })}
             {padRows.map((row, i) => {
               return (
                 <TrComponent
                   key={i}
-                  className={classnames(this.props.trClassName, '-padRow')}
-                  style={this.props.trStyle}
+                  className={classnames(trClassName, '-padRow')}
+                  style={trStyle}
                 >
+                  {SubComponent && (
+                    <ThComponent
+                      className={classnames(thClassname, 'rt-expander-header')}
+                      style={prefixAll({
+                        flex: `0 0 auto`,
+                        width: `${expanderColumnWidth}px`
+                      })}
+                    />
+                  )}
                   {decoratedColumns.map((column, i2) => {
                     const show = typeof column.show === 'function' ? column.show() : column.show
                     return (
                       <TdComponent
                         key={i2}
                         className={classnames(column.className, {hidden: !show})}
-                        style={Object.assign({}, this.props.tdStyle, column.style)}
+                        style={Object.assign({}, tdStyle, column.style, {
+                          flex: `${columnPercentage} 0 auto`,
+                          width: `${column.minWidth}px`
+                        })}
                       >
-                        <div
-                          className={classnames(column.innerClassName, '-td-inner')}
-                          style={Object.assign({}, column.innerStyle, {
-                            minWidth: column.minWidth + 'px'
-                          })}
-                        >&nbsp;</div>
+                        &nbsp;
                       </TdComponent>
                     )
                   })}
@@ -423,28 +533,28 @@ export default React.createClass({
             })}
           </TbodyComponent>
         </TableComponent>
-        {this.props.showPagination && (
+        {showPagination && (
           <PaginationComponent
             currentPage={currentPage}
             pagesLength={pagesLength}
             pageSize={pageSize}
-            showPageSizeOptions={this.props.showPageSizeOptions}
-            pageSizeOptions={this.props.pageSizeOptions}
-            showPageJump={this.props.showPageJump}
+            showPageSizeOptions={showPageSizeOptions}
+            pageSizeOptions={pageSizeOptions}
+            showPageJump={showPageJump}
             canPrevious={canPrevious}
             canNext={canNext}
-            previousText={this.props.previousText}
-            nextText={this.props.nextText}
-            pageText={this.props.pageText}
-            ofText={this.props.ofText}
-            rowsText={this.props.rowsText}
+            previousText={previousText}
+            nextText={nextText}
+            pageText={pageText}
+            ofText={ofText}
+            rowsText={rowsText}
             previousComponent={PreviousComponent}
             nextComponent={NextComponent}
             //
             onChange={this.setPage}
             onPageSizeChange={this.setPageSize}
             //
-            className={this.props.paginationClassName}
+            className={paginationClassName}
           />
         )}
         <LoadingComponent {...this.props} />
@@ -454,6 +564,7 @@ export default React.createClass({
   // User actions
   setPage (page) {
     this.setState({
+      visibleSubComponents: {},
       page
     }, () => {
       this.fireOnChange()

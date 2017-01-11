@@ -6,7 +6,8 @@ export default {
   range,
   clone,
   remove,
-  getFirstDefined
+  getFirstDefined,
+  sum
 }
 
 function remove (a, b) {
@@ -92,4 +93,10 @@ function getFirstDefined (...args) {
       return args[i]
     }
   }
+}
+
+function sum (arr) {
+  return arr.reduce((a, b) => {
+    return a + b
+  }, 0)
 }

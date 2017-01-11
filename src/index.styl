@@ -2,90 +2,37 @@
 
 $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
 $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
+$expandSize = 7px
 
 .ReactTable
   position:relative
-  table
+  border: 1px solid alpha(black, .1)
+  *
+    box-sizing: border-box
+  .rt-table
+    display: flex
+    flex-direction: column
+    align-items: stretch
     width: 100%
     border-collapse: collapse
-    border: 1px solid alpha(black, .1)
-    display: block
-    overflow-x: auto
+    overflow: auto
 
-  .-td
-  .-th
-    &-inner
-      white-space: nowrap
-      text-overflow: ellipsis
-      padding: 7px 5px
-      overflow: hidden
-      z-index:0
-      transition: .3s ease
-      transition-property: width, min-width, padding, opacity
-
-  th
-  td
-    &:hover
-      .-td
-      .-th
-        &-inner
-          position:relative
-          overflow:visible
-          z-index:1
-          text-shadow:
-            0 0 1px white,
-            0 0 2px white,
-            1px 0 3px white,
-            1px 0 4px white,
-            2px 0 5px white,
-            2px 0 6px white,
-            3px 0 7px white,
-            3px 0 8px white,
-            4px 0 9px white,
-            4px 0 10px white,
-            5px 0 11px white,
-            5px 0 12px white,
-            6px 0 13px white,
-            6px 0 14px white,
-            7px 0 15px white,
-            7px 0 16px white,
-            8px 0 17px white,
-            8px 0 18px white,
-            9px 0 19px white,
-            9px 0 20px white
-
-          > *
-            text-shadow: none
-
-    &.-hidden
-      border:0 !important
-      opacity: 0 !important
-      .-th-inner
-      .-td-inner
-        width: 0 !important
-        min-width: 0 !important
-        padding: 0 !important
-
-  thead
-    box-shadow: 0px 5px 20px 0 alpha(black, .1)
-    z-index: 0
-
+  .rt-thead
+    display: flex
+    flex-direction: column
     &.-headerGroups
+      background: alpha(black, .03)
       border-bottom: 1px solid alpha(black, .05)
 
-      th
-      td
-        background: alpha(black, .03)
+    &.-header
+      box-shadow: 0 2px 15px 0px alpha(black, .15)
 
-    tr
+    .rt-tr
       text-align:center
 
-    th
-    td
-      width: 1%
-      background: white
-      font-weight:500
-      color: $darkColor
+    .rt-th
+    .rt-td
+      color: black
       border-right: 1px solid alpha(black, .05)
       transition box-shadow .3s $easeOutBack
       box-shadow:inset 0 0 0 0 transparent
@@ -95,40 +42,81 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
         box-shadow:inset 0 -3px 0 0 alpha(black, .6)
       &.-cursor-pointer
         cursor: pointer
-
-  tbody
-    z-index:0
-    tr
+      &:last-child
+        border-right: 0
+  .rt-tbody
+    display: flex
+    flex-direction: column
+    // z-index:0
+    .rt-tr-group
       border-bottom: solid 1px alpha(black, .05)
       &:last-child
         border-bottom: 0
-
-      &:first-child td
-        box-shadow: inset 0 20px 20px -20px alpha(black, .2)
-    td
+    .rt-td
       border-right:1px solid alpha(black, .02)
       &:last-child
         border-right:0
+  .rt-tr-group
+    display: flex
+    flex-direction: column
+    align-items: stretch
+  .rt-tr
+    display: inline-flex
+  .rt-th
+  .rt-td
+    flex: 1 0 0px
+    white-space: nowrap
+    text-overflow: ellipsis
+    padding: 7px 5px
+    overflow: hidden
+    transition: .3s ease
+    transition-property: width, min-width, padding, opacity
 
-  &.striped
-    tbody tr:nth-child(even)
+    &.-hidden
+      width: 0 !important
+      min-width: 0 !important
+      padding: 0 !important
+      border:0 !important
+      opacity: 0 !important
+
+  .rt-expander-wrap
+    display:flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+
+  .rt-expander
+    width: 0
+    height: 0
+    border-left: ($expandSize * .72) solid transparent
+    border-right: ($expandSize * .72) solid transparent
+    border-top: $expandSize solid alpha(black, .8)
+    transition: all .3s $easeOutBack
+    transform: rotate(-90deg)
+    &.-open
+      transform: rotate(0deg)
+
+  &.-striped
+    .rt-tr-group:nth-child(even)
       background: alpha(black, .03)
-  &.highlight
-    tbody tr:hover
+  &.-highlight
+    .rt-tr-group:hover
       background: alpha(black, .05)
 
   .-pagination
-    width:100%
+    z-index: 1
     display:flex
     justify-content: space-between
-    align-items: center
+    align-items: stretch
     flex-wrap: wrap
-    padding-top:3px
+    padding: 3px
+    box-shadow: 0 0px 15px 0px alpha(black, .1)
 
     .-btn
       appearance:none
       display:block
       width:100%
+      height: 100%
       border: 0
       border-radius: 3px
       padding: 6px
@@ -148,11 +136,6 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
         color: white
 
     .-previous
-    .-center
-    .-next
-      margin:3px 0
-
-    .-previous
     .-next
       flex: 1
       text-align: center
@@ -169,7 +152,7 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
 
     .-pageInfo
       display: inline-block
-      margin: 0 10px 3px
+      margin: 3px 10px
       white-space: nowrap
 
     .-pageJump
@@ -179,7 +162,7 @@ $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
         text-align:center
 
     .-pageSizeOptions
-      margin:0 10px 3px
+      margin: 3px 10px
 
 
   .-loading

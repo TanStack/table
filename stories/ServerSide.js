@@ -1,11 +1,10 @@
-import { Component } from 'jumpsuit'
+import React from 'react'
 import _ from 'lodash'
 import namor from 'namor'
 
-import CodeHighlight from 'components/codeHighlight'
-import ReactTable from 'react-table'
+import CodeHighlight from './components/codeHighlight'
+import ReactTable from '../lib/index'
 
-// Let's mock some data to play around with
 const rawData = _.map(_.range(3424), d => {
   return {
     firstName: namor.generate({ words: 1, numLen: 0 }),
@@ -39,7 +38,7 @@ const requestData = (pageSize, page, sorting) => {
   })
 }
 
-export default Component({
+const ServerSide = React.createClass({
   getInitialState () {
     // To handle our data server-side, we need a few things in the state to help us out:
     return {
@@ -97,11 +96,15 @@ export default Component({
           <br />
           <em>Tip: Hold shift when sorting to multi-sort!</em>
         </div>
-        <CodeHighlight>{getCode()}</CodeHighlight>
+        <CodeHighlight>{() => getCode()}</CodeHighlight>
       </div>
     )
   }
 })
+
+export default () => (
+  <ServerSide />
+)
 
 function getCode () {
   return `
