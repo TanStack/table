@@ -73,7 +73,8 @@
       "dist",
       "lib",
       "example",
-      "react-table.js"
+      "react-table.js",
+      "stories"
     ]
   },
   "babel": {
