@@ -17,13 +17,18 @@ export const ReactTableDefaults = {
   showPageJump: true,
   expanderColumnWidth: 30,
 
-  // State Overrides (for controlled-component style)
+  // Controlled State Overrides
   // page
   // pageSize
   // sorting
   // visibleSubComponents
 
-  // Callbacks
+  // Controlled State Callbacks
+  onExpand: undefined,
+  onPageChange: undefined,
+  onPageSizeChange: undefined,
+
+  // General Callbacks
   onChange: () => null,
   onTrClick: () => null,
   // Classes
@@ -86,17 +91,17 @@ export const ReactTableDefaults = {
     )
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
-  ExpanderComponent: ({isOpen, toggle, ...rest}) => {
+  ExpanderComponent: ({isExpanded, toggle, ...rest}) => {
     return (
       <div
-        className={classnames('rt-expander', isOpen && '-open')}
+        className={classnames('rt-expander', isExpanded && '-open')}
         {...rest}
       />
     )
   },
   PaginationComponent: Pagination,
-  PreviousComponent: null,
-  NextComponent: null,
+  PreviousComponent: undefined,
+  NextComponent: undefined,
   LoadingComponent: ({loading, loadingText}) => (
     <div className={classnames('-loading', {'-active': loading})}>
       <div className='-loading-inner'>
@@ -116,7 +121,7 @@ export default React.createClass({
       page: 0,
       pageSize: this.props.defaultPageSize || 10,
       sorting: false,
-      visibleSubComponents: {}
+      visibleSubComponents: []
     }
   },
 
@@ -125,6 +130,7 @@ export default React.createClass({
   },
 
   render () {
+    const resolvedProps = this.getResolvedState()
     const {
       className,
       style,
@@ -146,18 +152,11 @@ export default React.createClass({
       trStyleCallback,
       tdStyle,
       showPagination,
-      showPageSizeOptions,
-      pageSizeOptions,
-      showPageJump,
-      previousText,
-      nextText,
-      pageText,
-      ofText,
-      rowsText,
       paginationClassName,
       expanderColumnWidth,
       manual,
       loadingText,
+      onExpand,
       // State
       visibleSubComponents,
       loading,
@@ -173,11 +172,9 @@ export default React.createClass({
       TdComponent,
       ExpanderComponent,
       PaginationComponent,
-      PreviousComponent,
-      NextComponent,
       LoadingComponent,
       SubComponent
-    } = this.getResolvedState()
+    } = resolvedProps
 
     // Build Columns
     const decoratedColumns = []
@@ -373,6 +370,8 @@ export default React.createClass({
                 index: row.__index,
                 viewIndex: i
               }
+              const visibleSubComponentIndex = visibleSubComponents.indexOf(i)
+              const isExpanded = visibleSubComponentIndex > -1
               return (
                 <TrGroupComponent key={i}>
                   <TrComponent
@@ -387,17 +386,28 @@ export default React.createClass({
                           flex: `0 0 auto`,
                           width: `${expanderColumnWidth}px`
                         })}
-                        onClick={() => {
+                        onClick={(e) => {
+                          if (onExpand) {
+                            return onExpand(i, e)
+                          }
+                          if (isExpanded) {
+                            return this.setState({
+                              visibleSubComponents: [
+                              ...visibleSubComponents.slice(0, visibleSubComponentIndex - 1),
+                              ...visibleSubComponents.slice(visibleSubComponentIndex + 1)
+                              ]
+                            })
+                          }
                           this.setState({
-                            visibleSubComponents: {
-                              ...visibleSubComponents,
-                              [i]: !visibleSubComponents[i]
-                            }
+                            visibleSubComponents: [
+                            ...visibleSubComponents,
+                            i
+                            ]
                           })
                         }}
                       >
                         <ExpanderComponent
-                          isOpen={visibleSubComponents[i]}
+                          isExpanded={isExpanded}
                         />
                       </ThComponent>
                     )}
@@ -424,7 +434,7 @@ export default React.createClass({
                       )
                     })}
                   </TrComponent>
-                  {SubComponent && visibleSubComponents[i] ? (
+                  {SubComponent && isExpanded ? (
                     SubComponent(rowInfo)
                   ) : null}
                 </TrGroupComponent>
@@ -468,25 +478,12 @@ export default React.createClass({
         </TableComponent>
         {showPagination && (
           <PaginationComponent
-            page={page}
+            {...resolvedProps}
             pagesLength={pagesLength}
-            pageSize={pageSize}
-            showPageSizeOptions={showPageSizeOptions}
-            pageSizeOptions={pageSizeOptions}
-            showPageJump={showPageJump}
             canPrevious={canPrevious}
             canNext={canNext}
-            previousText={previousText}
-            nextText={nextText}
-            pageText={pageText}
-            ofText={ofText}
-            rowsText={rowsText}
-            previousComponent={PreviousComponent}
-            nextComponent={NextComponent}
-            //
-            onChange={this.setPage}
-            onPageSizeChange={this.setPageSize}
-            //
+            onPageChange={this.onPageChange}
+            onPageSizeChange={this.onPageSizeChange}
             className={paginationClassName}
           />
         )}
@@ -577,18 +574,30 @@ export default React.createClass({
   },
 
   // User actions
-  setPage (page) {
+  onPageChange (page) {
+    const { onPageChange } = this.props
+    if (onPageChange) {
+      return onPageChange(page)
+    }
     this.setState({
-      visibleSubComponents: {},
+      visibleSubComponents: [],
       page
     }, () => {
       this.fireOnChange()
     })
   },
-  setPageSize (newPageSize) {
+  onPageSizeChange (newPageSize) {
+    const { onPageSizeChange } = this.props
     const { pageSize, page } = this.getResolvedState()
+
+    // Normalize the page to display
     const currentRow = pageSize * page
     const newPage = Math.floor(currentRow / pageSize)
+
+    if (onPageSizeChange) {
+      return onPageSizeChange(newPageSize, newPage)
+    }
+
     this.setState({
       pageSize: newPageSize,
       page: newPage

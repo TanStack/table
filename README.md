@@ -30,6 +30,7 @@
 - [Header Groups](#header-groups)
 - [Sub Tables & Components](#sub-tables-components)
 - [Server-side Data](#server-side-data)
+- [Fully Controlled Component](#fully-controlled-component)
 - [Multi-sort](#multi-sort)
 - [Component Overrides](#component-overrides)
 
@@ -123,11 +124,15 @@ These are all of the available props (and their default values) for the main `<R
   tdStyle: {}, // style object for the `td` component
   paginationStyle: {}, // style object for the `paginination` component
 
-  // Controlled State (see Using as a Fully Controlled Component below)
+  // Controlled Props (see Using as a Fully Controlled Component below)
   page: undefined,
   pageSize: undefined,
   sorting: undefined,
-  visibleSubComponents: undefined
+  visibleSubComponents: undefined,
+  // Controlled Callbacks
+  onExpand: undefined,
+  onPageChange: undefined,
+  onPageSizeChange: undefined,
 }
 ```
 
@@ -265,6 +270,32 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
 ```
 
 For a detailed example, take a peek at our [async table mockup](https://github.com/tannerlinsley/react-table/blob/master/example/src/screens/async.js)
+
+## Fully Controlled Component
+React Table by default works fantastically out of the box, but you can achieve even more control and customization if you choose to maintain the state yourself. It is very easy to do, even if you only want to manage *parts* of the state.
+
+Here are the props and their corresponding callbacks that control the state of the a table:
+```javascript
+<ReactTable
+  // Props
+  page={0} // the index of the page you wish to display
+  pageSize={20} // the number of rows per page to be displayed
+  sorting={[{
+      id: 'lastName',
+      asc: true
+    }, {
+      id: 'firstName',
+      asc: true
+  }]} // the sorting model for the table
+  visibleSubComponents={[1,4,5]} // The row indexes on the current page that should appear expanded
+
+  // Callbacks
+  onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
+  onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
+  onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held.
+  onExpand={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `visibleSubComponents`
+/>
+```
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!

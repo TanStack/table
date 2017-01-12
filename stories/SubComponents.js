@@ -39,19 +39,21 @@ export default () => {
           data={data}
           columns={columns}
           defaultPageSize={10}
-          subComponent={(row) => {
+          SubComponent={(row) => {
             return (
               <div style={{padding: '20px'}}>
-                <em>You can put any component you want here, even another React Table!.  It has access to the row data: </em>
-                <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
+                <em>You can put any component you want here, even another React Table!</em>
+                <br />
+                <br />
                 <ReactTable
                   data={data}
                   columns={columns}
-                  defaultPageSize={10}
-                  subComponent={(row) => {
+                  defaultPageSize={3}
+                  showPagination={false}
+                  SubComponent={(row) => {
                     return (
                       <div style={{padding: '20px'}}>
-                        <em>You can put any component you want here, even another React Table!  It even has access to the row data: </em>
+                        <em>It even has access to the row data: </em>
                         <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
                       </div>
                     )
@@ -96,9 +98,27 @@ export default (
     data={data}
     columns={columns}
     defaultPageSize={10}
-    subComponent={(row) => {
+    SubComponent={(row) => {
       return (
-        <code><pre>{JSON.stringify(row, null, 2)}</pre></code>
+        <div style={{padding: '20px'}}>
+          <em>You can put any component you want here, even another React Table!</em>
+          <br />
+          <br />
+          <ReactTable
+            data={data}
+            columns={columns}
+            defaultPageSize={3}
+            showPagination={false}
+            SubComponent={(row) => {
+              return (
+                <div style={{padding: '20px'}}>
+                  <em>It even has access to the row data: </em>
+                  <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
+                </div>
+              )
+            }}
+          />
+        </div>
       )
     }}
   />

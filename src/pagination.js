@@ -22,7 +22,7 @@ export default React.createClass({
   changePage (page) {
     page = this.getSafePage(page)
     this.setState({page})
-    this.props.onChange(page)
+    this.props.onPageChange(page)
   },
   applyPage (e) {
     e && e.preventDefault()
@@ -31,8 +31,10 @@ export default React.createClass({
   },
   render () {
     const {
-      page,
+      // Computed
       pagesLength,
+      // Props
+      page,
       showPageSizeOptions,
       pageSizeOptions,
       pageSize,
@@ -40,11 +42,10 @@ export default React.createClass({
       canPrevious,
       canNext,
       onPageSizeChange,
-      className
+      className,
+      PreviousComponent = defaultButton,
+      NextComponent = defaultButton
     } = this.props
-
-    const PreviousComponent = this.props.previousComponent || defaultButton
-    const NextComponent = this.props.nextComponent || defaultButton
 
     return (
       <div
