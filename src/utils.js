@@ -1,3 +1,6 @@
+import React from 'react'
+import classnames from 'classnames'
+//
 export default {
   get,
   takeRight,
@@ -7,7 +10,8 @@ export default {
   clone,
   remove,
   getFirstDefined,
-  sum
+  sum,
+  makeTemplateComponent
 }
 
 function remove (a, b) {
@@ -99,4 +103,15 @@ function sum (arr) {
   return arr.reduce((a, b) => {
     return a + b
   }, 0)
+}
+
+function makeTemplateComponent (compClass) {
+  return ({children, className, ...rest}) => (
+    <div
+      className={classnames(compClass, className)}
+      {...rest}
+    >
+      {children}
+    </div>
+  )
 }

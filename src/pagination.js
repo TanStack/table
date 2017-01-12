@@ -10,11 +10,11 @@ const defaultButton = (props) => (
 export default React.createClass({
   getInitialState () {
     return {
-      page: this.props.currentPage
+      page: this.props.page
     }
   },
   componentWillReceiveProps (nextProps) {
-    this.setState({page: nextProps.currentPage})
+    this.setState({page: nextProps.page})
   },
   getSafePage (page) {
     return Math.min(Math.max(page, 0), this.props.pagesLength - 1)
@@ -27,11 +27,11 @@ export default React.createClass({
   applyPage (e) {
     e && e.preventDefault()
     const page = this.state.page
-    this.changePage(page === '' ? this.props.currentPage : page)
+    this.changePage(page === '' ? this.props.page : page)
   },
   render () {
     const {
-      currentPage,
+      page,
       pagesLength,
       showPageSizeOptions,
       pageSizeOptions,
@@ -55,7 +55,7 @@ export default React.createClass({
           <PreviousComponent
             onClick={(e) => {
               if (!canPrevious) return
-              this.changePage(currentPage - 1)
+              this.changePage(page - 1)
             }}
             disabled={!canPrevious}
           >
@@ -82,8 +82,8 @@ export default React.createClass({
                   onBlur={this.applyPage}
                 />
               </form>
-              ) : (
-                <span className='-currentPage'>{currentPage + 1}</span>
+            ) : (
+              <span className='-currentPage'>{page + 1}</span>
             )} {this.props.ofText} <span className='-totalPages'>{pagesLength}</span>
           </span>
           {showPageSizeOptions && (
@@ -109,7 +109,7 @@ export default React.createClass({
           <NextComponent
             onClick={(e) => {
               if (!canNext) return
-              this.changePage(currentPage + 1)
+              this.changePage(page + 1)
             }}
             disabled={!canNext}
           >

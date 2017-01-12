@@ -6,25 +6,23 @@ import _ from './utils'
 
 import Pagination from './pagination'
 
-const makeTemplateComponent = (compClass) => ({children, className, ...rest}) => (
-  <div
-    className={classnames(compClass, className)}
-    {...rest}
-  >
-    {children}
-  </div>
-)
-
 export const ReactTableDefaults = {
   // General
   data: [],
   loading: false,
-  pageSize: 20,
   showPagination: true,
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
+  defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 30,
+
+  // State Overrides (for controlled-component style)
+  // page
+  // pageSize
+  // sorting
+  // visibleSubComponents
+
   // Callbacks
   onChange: () => null,
   onTrClick: () => null,
@@ -69,12 +67,12 @@ export const ReactTableDefaults = {
   ofText: 'of',
   rowsText: 'rows',
   // Components
-  tableComponent: makeTemplateComponent('rt-table'),
-  theadComponent: makeTemplateComponent('rt-thead'),
-  tbodyComponent: makeTemplateComponent('rt-tbody'),
-  trGroupComponent: makeTemplateComponent('rt-tr-group'),
-  trComponent: makeTemplateComponent('rt-tr'),
-  thComponent: ({toggleSort, className, children, ...rest}) => {
+  TableComponent: _.makeTemplateComponent('rt-table'),
+  TheadComponent: _.makeTemplateComponent('rt-thead'),
+  TbodyComponent: _.makeTemplateComponent('rt-tbody'),
+  TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
+  TrComponent: _.makeTemplateComponent('rt-tr'),
+  ThComponent: ({toggleSort, className, children, ...rest}) => {
     return (
       <div
         className={classnames(className, 'rt-th')}
@@ -87,8 +85,8 @@ export const ReactTableDefaults = {
       </div>
     )
   },
-  tdComponent: makeTemplateComponent('rt-td'),
-  expanderComponent: ({isOpen, toggle, ...rest}) => {
+  TdComponent: _.makeTemplateComponent('rt-td'),
+  ExpanderComponent: ({isOpen, toggle, ...rest}) => {
     return (
       <div
         className={classnames('rt-expander', isOpen && '-open')}
@@ -96,13 +94,13 @@ export const ReactTableDefaults = {
       />
     )
   },
-  paginationComponent: Pagination,
-  previousComponent: null,
-  nextComponent: null,
-  loadingComponent: props => (
-    <div className={classnames('-loading', {'-active': props.loading})}>
+  PaginationComponent: Pagination,
+  PreviousComponent: null,
+  NextComponent: null,
+  LoadingComponent: ({loading, loadingText}) => (
+    <div className={classnames('-loading', {'-active': loading})}>
       <div className='-loading-inner'>
-        {props.loadingText}
+        {loadingText}
       </div>
     </div>
   )
@@ -112,91 +110,21 @@ export default React.createClass({
   getDefaultProps () {
     return ReactTableDefaults
   },
+
   getInitialState () {
     return {
       page: 0,
+      pageSize: this.props.defaultPageSize || 10,
       sorting: false,
       visibleSubComponents: {}
     }
   },
+
   componentDidMount () {
     this.fireOnChange()
   },
-  fireOnChange () {
-    this.props.onChange({
-      page: this.getPropOrState('page'),
-      pageSize: this.getStateOrProp('pageSize'),
-      pages: this.getPagesLength(),
-      sorting: this.getSorting()
-    }, this)
-  },
-  getPropOrState (key) {
-    return _.getFirstDefined(this.props[key], this.state[key])
-  },
-  getStateOrProp (key) {
-    return _.getFirstDefined(this.state[key], this.props[key])
-  },
-  getInitSorting (columns) {
-    if (!columns) {
-      return []
-    }
-    const initSorting = columns.filter(d => {
-      return typeof d.sort !== 'undefined'
-    }).map(d => {
-      return {
-        id: d.id,
-        asc: d.sort === 'asc'
-      }
-    })
 
-    return initSorting.length ? initSorting : [{
-      id: columns[0].id,
-      asc: true
-    }]
-  },
-  sortData (data, sorting) {
-    return _.orderBy(data, sorting.map(sort => {
-      return row => {
-        if (row[sort.id] === null || row[sort.id] === undefined) {
-          return -Infinity
-        }
-        return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
-      }
-    }), sorting.map(d => d.asc ? 'asc' : 'desc'))
-  },
-  makeDecoratedColumn (column) {
-    const dcol = Object.assign({}, this.props.column, column)
-
-    if (typeof dcol.accessor === 'string') {
-      dcol.id = dcol.id || dcol.accessor
-      const accessorString = dcol.accessor
-      dcol.accessor = row => _.get(row, accessorString)
-      return dcol
-    }
-
-    if (dcol.accessor && !dcol.id) {
-      console.warn(dcol)
-      throw new Error('A column id is required if using a non-string accessor for column above.')
-    }
-
-    if (!dcol.accessor) {
-      dcol.accessor = d => undefined
-    }
-
-    return dcol
-  },
-  getSorting (columns) {
-    return this.props.sorting || (this.state.sorting && this.state.sorting.length ? this.state.sorting : this.getInitSorting(columns))
-  },
-  getPagesLength () {
-    return this.props.manual ? this.props.pages
-      : Math.ceil(this.props.data.length / this.getStateOrProp('pageSize'))
-  },
-  getMinRows () {
-    return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
-  },
   render () {
-    const {visibleSubComponents} = this.state
     const {
       className,
       style,
@@ -209,6 +137,7 @@ export default React.createClass({
       thClassname,
       thStyle,
       data,
+      columns,
       theadClassName,
       tbodyClassName,
       tbodyStyle,
@@ -226,8 +155,29 @@ export default React.createClass({
       ofText,
       rowsText,
       paginationClassName,
-      expanderColumnWidth
-    } = this.props
+      expanderColumnWidth,
+      manual,
+      loadingText,
+      // State
+      visibleSubComponents,
+      loading,
+      pageSize,
+      page,
+      // Components
+      TableComponent,
+      TheadComponent,
+      TbodyComponent,
+      TrGroupComponent,
+      TrComponent,
+      ThComponent,
+      TdComponent,
+      ExpanderComponent,
+      PaginationComponent,
+      PreviousComponent,
+      NextComponent,
+      LoadingComponent,
+      SubComponent
+    } = this.getResolvedState()
 
     // Build Columns
     const decoratedColumns = []
@@ -236,8 +186,7 @@ export default React.createClass({
 
     // Determine Header Groups
     let hasHeaderGroups = false
-    this.props.columns
-    .forEach(column => {
+    columns.forEach(column => {
       if (column.columns) {
         hasHeaderGroups = true
       }
@@ -252,7 +201,7 @@ export default React.createClass({
     }
 
     // Build the columns and headers
-    const visibleColumns = this.props.columns.filter(d => _.getFirstDefined(d.show, true))
+    const visibleColumns = columns.filter(d => _.getFirstDefined(d.show, true))
     visibleColumns.forEach((column, i) => {
       if (column.columns) {
         const nestedColumns = column.columns.filter(d => _.getFirstDefined(d.show, true))
@@ -278,7 +227,7 @@ export default React.createClass({
     }
 
     const sorting = this.getSorting(decoratedColumns)
-    const accessedData = this.props.data.map((d, i) => {
+    const accessedData = data.map((d, i) => {
       const row = {
         __original: d,
         __index: i
@@ -288,38 +237,22 @@ export default React.createClass({
       })
       return row
     })
-    const resolvedData = this.props.manual ? accessedData : this.sortData(accessedData, sorting)
+    const resolvedData = manual ? accessedData : this.sortData(accessedData, sorting)
 
     // Normalize state
-    const currentPage = this.getPropOrState('page')
-    const pageSize = this.getStateOrProp('pageSize')
     const pagesLength = this.getPagesLength()
 
     // Pagination
-    const startRow = pageSize * currentPage
+    const startRow = pageSize * page
     const endRow = startRow + pageSize
-    const pageRows = this.props.manual ? resolvedData : resolvedData.slice(startRow, endRow)
+    const pageRows = manual ? resolvedData : resolvedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
     const padRows = pagesLength > 1 ? _.range(pageSize - pageRows.length)
       : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
       : []
 
-    const canPrevious = currentPage > 0
-    const canNext = currentPage + 1 < pagesLength
-
-    const TableComponent = this.props.tableComponent
-    const TheadComponent = this.props.theadComponent
-    const TbodyComponent = this.props.tbodyComponent
-    const TrGroupComponent = this.props.trGroupComponent
-    const TrComponent = this.props.trComponent
-    const ThComponent = this.props.thComponent
-    const TdComponent = this.props.tdComponent
-    const ExpanderComponent = this.props.expanderComponent
-    const PaginationComponent = this.props.paginationComponent
-    const PreviousComponent = this.props.previousComponent
-    const NextComponent = this.props.nextComponent
-    const LoadingComponent = this.props.loadingComponent
-    const SubComponent = this.props.subComponent
+    const canPrevious = page > 0
+    const canNext = page + 1 < pagesLength
 
     const rowWidth = (SubComponent ? expanderColumnWidth : 0) + _.sum(decoratedColumns.map(d => d.minWidth))
 
@@ -535,7 +468,7 @@ export default React.createClass({
         </TableComponent>
         {showPagination && (
           <PaginationComponent
-            currentPage={currentPage}
+            page={page}
             pagesLength={pagesLength}
             pageSize={pageSize}
             showPageSizeOptions={showPageSizeOptions}
@@ -557,10 +490,92 @@ export default React.createClass({
             className={paginationClassName}
           />
         )}
-        <LoadingComponent {...this.props} />
+        <LoadingComponent
+          loading={loading}
+          loadingText={loadingText}
+        />
       </div>
     )
   },
+
+  // Helpers
+  getResolvedState () {
+    return {
+      ...this.state,
+      ...this.props,
+      pages: this.getPagesLength(),
+      sorting: this.getSorting()
+    }
+  },
+  fireOnChange () {
+    this.props.onChange(this.getResolvedState(), this)
+  },
+  getPropOrState (key) {
+    return _.getFirstDefined(this.props[key], this.state[key])
+  },
+  getStateOrProp (key) {
+    return _.getFirstDefined(this.state[key], this.props[key])
+  },
+  getInitSorting (columns) {
+    if (!columns) {
+      return []
+    }
+    const initSorting = columns.filter(d => {
+      return typeof d.sort !== 'undefined'
+    }).map(d => {
+      return {
+        id: d.id,
+        asc: d.sort === 'asc'
+      }
+    })
+
+    return initSorting.length ? initSorting : [{
+      id: columns[0].id,
+      asc: true
+    }]
+  },
+  sortData (data, sorting) {
+    return _.orderBy(data, sorting.map(sort => {
+      return row => {
+        if (row[sort.id] === null || row[sort.id] === undefined) {
+          return -Infinity
+        }
+        return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
+      }
+    }), sorting.map(d => d.asc ? 'asc' : 'desc'))
+  },
+  makeDecoratedColumn (column) {
+    const dcol = Object.assign({}, this.props.column, column)
+
+    if (typeof dcol.accessor === 'string') {
+      dcol.id = dcol.id || dcol.accessor
+      const accessorString = dcol.accessor
+      dcol.accessor = row => _.get(row, accessorString)
+      return dcol
+    }
+
+    if (dcol.accessor && !dcol.id) {
+      console.warn(dcol)
+      throw new Error('A column id is required if using a non-string accessor for column above.')
+    }
+
+    if (!dcol.accessor) {
+      dcol.accessor = d => undefined
+    }
+
+    return dcol
+  },
+  getSorting (columns) {
+    return this.props.sorting || (this.state.sorting && this.state.sorting.length ? this.state.sorting : this.getInitSorting(columns))
+  },
+  getPagesLength () {
+    return this.props.manual ? this.props.pages
+      : Math.ceil(this.props.data.length / this.getStateOrProp('pageSize'))
+  },
+  getMinRows () {
+    return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
+  },
+
   // User actions
   setPage (page) {
     this.setState({
@@ -570,14 +585,13 @@ export default React.createClass({
       this.fireOnChange()
     })
   },
-  setPageSize (pageSize) {
-    const currentPageSize = this.getStateOrProp('pageSize')
-    const currentPage = this.getPropOrState('page')
-    const currentRow = currentPageSize * currentPage
-    const page = Math.floor(currentRow / pageSize)
+  setPageSize (newPageSize) {
+    const { pageSize, page } = this.getResolvedState()
+    const currentRow = pageSize * page
+    const newPage = Math.floor(currentRow / pageSize)
     this.setState({
-      pageSize,
-      page
+      pageSize: newPageSize,
+      page: newPage
     }, () => {
       this.fireOnChange()
     })

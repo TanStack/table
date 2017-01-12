@@ -38,7 +38,7 @@ export default () => {
         <ReactTable
           data={data}
           columns={columns}
-          pageSize={10}
+          defaultPageSize={10}
           subComponent={(row) => {
             return (
               <div style={{padding: '20px'}}>
@@ -47,7 +47,7 @@ export default () => {
                 <ReactTable
                   data={data}
                   columns={columns}
-                  pageSize={10}
+                  defaultPageSize={10}
                   subComponent={(row) => {
                     return (
                       <div style={{padding: '20px'}}>
@@ -95,7 +95,7 @@ export default (
   <ReactTable
     data={data}
     columns={columns}
-    pageSize={10}
+    defaultPageSize={10}
     subComponent={(row) => {
       return (
         <code><pre>{JSON.stringify(row, null, 2)}</pre></code>

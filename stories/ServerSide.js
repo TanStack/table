@@ -85,7 +85,7 @@ const ServerSide = React.createClass({
               }]
             }]}
             manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-            pageSize={10}
+            defaultPageSize={10}
             data={this.state.data} // Set the rows to be displayed
             pages={this.state.pages} // Display the total number of pages
             loading={this.state.loading} // Display the loading overlay when we need it

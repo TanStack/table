@@ -38,7 +38,7 @@ export default () => {
         <ReactTable
           data={data}
           columns={columns}
-          pageSize={10}
+          defaultPageSize={10}
         />
       </div>
       <div style={{textAlign: 'center'}}>
@@ -78,7 +78,7 @@ return (
   <ReactTable
     data={data}
     columns={columns}
-    pageSize={10}
+    defaultPageSize={10}
   />
 )
   `

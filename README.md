@@ -24,7 +24,7 @@
 - [Installation](#installation)
 - [Example](#example)
 - [Data](#data)
-- [Default Props](#default-props)
+- [Props](#props)
 - [Columns](#columns)
 - [Styles](#styles)
 - [Header Groups](#header-groups)
@@ -33,13 +33,11 @@
 - [Multi-sort](#multi-sort)
 - [Component Overrides](#component-overrides)
 
-<a name="installation"></a>
 ## Installation
 ```bash
 $ npm install react-table
 ```
 
-<a name="example"></a>
 ## Example
 ```javascript
 import ReactTable from 'react-table'
@@ -76,19 +74,17 @@ const columns = [{
 />
 ```
 
-<a name="data"></a>
 ## Data
 Simply pass the `data` prop anything that resembles an array or object. Client-side sorting and pagination are built in, and your table will update gracefully as you change any props. [Server-side data](#server-side-data) is also supported!
 
 
-<a name="default-props"></a>
-## Default Props
-These are the default props for the main react component `<ReactTable />`
+## Props
+These are all of the available props (and their default values) for the main `<ReactTable />` component.
 ```javascript
 {
   // General
   loading: false, // Whether to show the loading overlay or not
-  pageSize: 20, // The default page size (this can be changed by the user if `showPageSizeOptions` is enabled)
+  defaultPageSize: 20, // The default page size (this can be changed by the user if `showPageSizeOptions` is enabled)
   minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
   showPagination: true, // Shows or hides the pagination component
   showPageJump: true, // Shows or hides the pagination number input
@@ -115,6 +111,7 @@ These are the default props for the main react component `<ReactTable />`
   trClassName: '', // ClassName for all `tr` elements
   trClassCallback: row => null, // A call back to dynamically add classes (via the classnames module) to a row element
   paginationClassName: '' // ClassName for `pagination` element
+
   // Styles
   style: {}, // Main style object for the component
   tableStyle: {}, // style object for the `table` component
@@ -125,6 +122,12 @@ These are the default props for the main react component `<ReactTable />`
   thStyle: {}, // style object for the `th` component
   tdStyle: {}, // style object for the `td` component
   paginationStyle: {}, // style object for the `paginination` component
+
+  // Controlled State (see Using as a Fully Controlled Component below)
+  page: undefined,
+  pageSize: undefined,
+  sorting: undefined,
+  visibleSubComponents: undefined
 }
 ```
 
@@ -134,7 +137,7 @@ You can easily override the core defaults like so:
 import { ReactTableDefaults } from 'react-table'
 
 Object.assign(ReactTableDefaults, {
-  pageSize: 10,
+  defaultPageSize: 10,
   minRows: 3,
   // etc...
 })
@@ -144,15 +147,14 @@ Or just define them on the component per-instance
 
 ```javascript
 <ReactTable
-  pageSize={10}
+  defaultPageSize={10}
   minRows={3}
   // etc...
   />
 ```
 
-<a name="columns"></a>
 ## Columns
-`<ReactTable/>` requires a `columns` prop, which is an array of objects with the following properties
+`<ReactTable/>` requires a `columns` prop, which is an array of objects containing the following properties
 
 ```javascript
 [{
@@ -162,7 +164,7 @@ Or just define them on the component per-instance
   sortable: true,
   sort: 'asc' or 'desc', // used to determine the column sorting on init
   show: true, // can be used to hide a column
-  minWidth: 100 // A minimum width for this column. If there is room, columns will flex to fill
+  minWidth: 100 // A minimum width for this column. If there is room, columns will flex to fill available space
 
   // Cell Options
   className: '', // Set the classname of the `td` element of the column
@@ -185,11 +187,9 @@ Or just define them on the component per-instance
 }]
 ```
 
-<a name="styles"></a>
 ## Styles
 React-table is built to be dropped into existing applications or styled from the ground up, but if you'd like a decent starting point, you can optionally include our default theme `react-table.css`.  We think it looks great, honestly :)
 
-<a name="header-groups"></a>
 ## Header Groups
 To group columns with another header column, just nest your columns in a header column like so:
 ```javascript
@@ -209,13 +209,13 @@ const columns = [{
 ```
 
 ## Sub Tables & Components
-By adding a `subComponent` props, you can easily add an expansion level to all root-level rows:
+By adding a `SubComponent` props, you can easily add an expansion level to all root-level rows:
 ```javascript
 <ReactTable
   data={data}
   columns={columns}
-  pageSize={10}
-  subComponent={(row) => {
+  defaultPageSize={10}
+  SubComponent={(row) => {
     return (
       <div>
         You can put any component you want here, even another React Table! You even have access to the row-level data if you need!  Spark-charts, drill-throughs, infographics... the possibilities are endless!
@@ -226,7 +226,6 @@ By adding a `subComponent` props, you can easily add an expansion level to all r
 ```
 
 
-<a name="server-side-data"></a>
 ## Server-side Data
 If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you.
 
@@ -267,38 +266,38 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
 
 For a detailed example, take a peek at our [async table mockup](https://github.com/tannerlinsley/react-table/blob/master/example/src/screens/async.js)
 
-<a name="multi-sort"></a>
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
-<a name="component-overrides"></a>
 ## Component Overrides
-Though we wouldn't suggest it, `react-table` has the ability to change the core componentry it used to render it's table. You can do so by assigning a react component to it's corresponding global prop, or on a one-off basis like so:
+Though we confidently stand by the markup and architecture behind it, `react-table` does offer the ability to change the core componentry it uses to render everything. You can extend or override these internal components by passing a react component to it's corresponding prop on either the global props or on a one-off basis like so:
 ```javascript
 // Change the global default
 import { ReactTableDefaults } from 'react-table'
 Object.assign(ReactTableDefaults, {
-  tableComponent: Component,
-  theadComponent: Component,
-  tbodyComponent: Component,
-  trComponent: Component,
-  thComponent: Component,
-  tdComponent: Component,
-  paginationComponent: Component,
-  previousComponent: Component,
-  nextComponent: Component,
-  loadingComponent: Component
+  TableComponent: Component,
+  TheadComponent: Component,
+  TbodyComponent: Component,
+  TrGroupComponent: Component,
+  TrComponent: Component,
+  ThComponent: Component,
+  TdComponent: Component,
+  PaginationComponent: Component,
+  PreviousComponent: Component,
+  NextComponent: Component,
+  LoadingComponent: Component,
+  ExpanderComponent: Component
 })
 
 // Or change per instance
 <ReactTable
-  tableComponent={Component},
-  theadComponent={Component},
+  TableComponent={Component},
+  TheadComponent={Component},
   // etc...
   />
 ```
 
-If you choose to change the core components React-Table uses to render, you must make sure your components support and utilized all of the neeeded features for that component to work properly. For a broad reference on how to do this, investigate [the source](https://github.com/tannerlinsley/react-table/blob/master/src/index.js) for the component you wish to replace.
+If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating [the source](https://github.com/tannerlinsley/react-table/blob/master/src/index.js) for the component you wish to replace.
 
 
 ## Contributing
