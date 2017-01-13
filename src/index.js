@@ -393,15 +393,19 @@ export default React.createClass({
                           if (isExpanded) {
                             return this.setState({
                               visibleSubComponents: [
+                              /* eslint-disable*/
                               ...visibleSubComponents.slice(0, visibleSubComponentIndex - 1),
                               ...visibleSubComponents.slice(visibleSubComponentIndex + 1)
+                              /* eslint-enable*/
                               ]
                             })
                           }
                           this.setState({
                             visibleSubComponents: [
+                            /* eslint-disable*/
                             ...visibleSubComponents,
                             i
+                            /* eslint-enable*/
                             ]
                           })
                         }}
