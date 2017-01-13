@@ -35,8 +35,7 @@
     "deploy": "build-storybook && zab deploy"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "inline-style-prefixer": "^2.0.5"
+    "classnames": "^2.2.5"
   },
   "peerDependencies": {
     "react": "^15.x.x"

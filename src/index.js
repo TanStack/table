@@ -1,6 +1,5 @@
 import React from 'react'
 import classnames from 'classnames'
-import prefixAll from 'inline-style-prefixer/static'
 //
 import _ from './utils'
 
@@ -27,6 +26,7 @@ export const ReactTableDefaults = {
   onExpand: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
+  onSortingChange: undefined,
 
   // General Callbacks
   onChange: () => null,
@@ -276,7 +276,7 @@ export default React.createClass({
                 {SubComponent && (
                   <ThComponent
                     className={classnames(thClassname, 'rt-expander-header')}
-                    style={prefixAll({
+                    style={_.prefixAll({
                       flex: `0 0 auto`,
                       width: `${expanderColumnWidth}px`
                     })}
@@ -287,7 +287,7 @@ export default React.createClass({
                     <ThComponent
                       key={i}
                       className={classnames(thClassname, column.headerClassName)}
-                      style={Object.assign({}, thStyle, column.headerStyle, prefixAll({
+                      style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
                         flex: `${column.columns.length * columnPercentage} 0 auto`,
                         width: `${_.sum(column.columns.map(d => d.minWidth))}px`
                       }))}
@@ -317,7 +317,7 @@ export default React.createClass({
               {SubComponent && (
                 <ThComponent
                   className={classnames(thClassname, 'rt-expander-header')}
-                  style={prefixAll({
+                  style={_.prefixAll({
                     flex: `0 0 auto`,
                     width: `${expanderColumnWidth}px`
                   })}
@@ -338,7 +338,7 @@ export default React.createClass({
                         '-hidden': !show
                       }
                     )}
-                    style={Object.assign({}, thStyle, column.headerStyle, prefixAll({
+                    style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
                       flex: `${columnPercentage} 0 auto`,
                       width: `${column.minWidth}px`
                     }))}
@@ -382,7 +382,7 @@ export default React.createClass({
                     {SubComponent && (
                       <ThComponent
                         className={classnames(thClassname, 'rt-expander-wrap')}
-                        style={prefixAll({
+                        style={_.prefixAll({
                           flex: `0 0 auto`,
                           width: `${expanderColumnWidth}px`
                         })}
@@ -418,7 +418,7 @@ export default React.createClass({
                         <TdComponent
                           key={i2}
                           className={classnames(column.className, {hidden: !show})}
-                          style={Object.assign({}, tdStyle, column.style, prefixAll({
+                          style={Object.assign({}, tdStyle, column.style, _.prefixAll({
                             flex: `${columnPercentage} 0 auto`,
                             width: `${column.minWidth}px`
                           }))}
@@ -450,7 +450,7 @@ export default React.createClass({
                   {SubComponent && (
                     <ThComponent
                       className={classnames(thClassname, 'rt-expander-header')}
-                      style={prefixAll({
+                      style={_.prefixAll({
                         flex: `0 0 auto`,
                         width: `${expanderColumnWidth}px`
                       })}
@@ -606,6 +606,10 @@ export default React.createClass({
     })
   },
   sortColumn (column, additive) {
+    const { onSortingChange } = this.props
+    if (onSortingChange) {
+      return onSortingChange(column, additive)
+    }
     const existingSorting = this.getSorting()
     let sorting = _.clone(this.state.sorting || [])
     const existingIndex = sorting.findIndex(d => d.id === column.id)

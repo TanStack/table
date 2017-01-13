@@ -11,7 +11,8 @@ export default {
   remove,
   getFirstDefined,
   sum,
-  makeTemplateComponent
+  makeTemplateComponent,
+  prefixAll
 }
 
 function remove (a, b) {
@@ -114,4 +115,8 @@ function makeTemplateComponent (compClass) {
       {children}
     </div>
   )
+}
+
+function prefixAll (obj) {
+  return obj
 }
