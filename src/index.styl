@@ -56,6 +56,8 @@ $expandSize = 7px
       border-right:1px solid alpha(black, .02)
       &:last-child
         border-right:0
+    .rt-pivot
+      cursor: pointer
   .rt-tr-group
     display: flex
     flex-direction: column
@@ -79,29 +81,35 @@ $expandSize = 7px
       border:0 !important
       opacity: 0 !important
 
-  .rt-expander-wrap
-    display:flex
-    align-items: center
-    justify-content: center
-    cursor: pointer
-
   .rt-expander
-    width: 0
-    height: 0
-    border-left: ($expandSize * .72) solid transparent
-    border-right: ($expandSize * .72) solid transparent
-    border-top: $expandSize solid alpha(black, .8)
-    transition: all .3s $easeOutBack
-    transform: rotate(-90deg)
-    &.-open
-      transform: rotate(0deg)
+    display: inline-block
+    position:relative
+    margin: 0
+    color: transparent
+    margin: 0 10px
+    &:after
+      content: ''
+      position: absolute
+      width: 0
+      height: 0
+      top:50%
+      left:50%
+      transform: translate(-50%, -50%) rotate(-90deg)
+      border-left: ($expandSize * .72) solid transparent
+      border-right: ($expandSize * .72) solid transparent
+      border-top: $expandSize solid alpha(black, .8)
+      transition: all .3s $easeOutBack
+      cursor: pointer
+    &.-open:after
+        transform: translate(-50%, -50%) rotate(0deg)
 
   &.-striped
-    .rt-tr-group:nth-child(even)
+    .rt-tr.-odd
       background: alpha(black, .03)
   &.-highlight
-    .rt-tr-group:hover
-      background: alpha(black, .05)
+    .rt-tbody
+      .rt-tr:hover
+        background: alpha(black, .05)
 
   .-pagination
     z-index: 1

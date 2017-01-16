@@ -13,6 +13,8 @@ import Readme from '../README.md'
 import Simple from '../stories/Simple.js'
 import ServerSide from '../stories/ServerSide.js'
 import SubComponents from '../stories/SubComponents.js'
+import Pivoting from '../stories/Pivoting.js'
+import PivotingSubComponents from '../stories/PivotingSubComponents.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -31,4 +33,6 @@ configure(() => {
     .add('Client-side Data', Simple)
     .add('Server-side Data', ServerSide)
     .add('Sub Components', SubComponents)
+    .add('Pivoting & Aggregation', Pivoting)
+    .add('Pivoting & Aggregation w/ Sub Components', PivotingSubComponents)
 }, module)

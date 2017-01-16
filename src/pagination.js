@@ -17,7 +17,7 @@ export default React.createClass({
     this.setState({page: nextProps.page})
   },
   getSafePage (page) {
-    return Math.min(Math.max(page, 0), this.props.pagesLength - 1)
+    return Math.min(Math.max(page, 0), this.props.pages - 1)
   },
   changePage (page) {
     page = this.getSafePage(page)
@@ -32,7 +32,7 @@ export default React.createClass({
   render () {
     const {
       // Computed
-      pagesLength,
+      pages,
       // Props
       page,
       showPageSizeOptions,
@@ -85,7 +85,7 @@ export default React.createClass({
               </form>
             ) : (
               <span className='-currentPage'>{page + 1}</span>
-            )} {this.props.ofText} <span className='-totalPages'>{pagesLength}</span>
+            )} {this.props.ofText} <span className='-totalPages'>{pages}</span>
           </span>
           {showPageSizeOptions && (
             <span className='select-wrap -pageSizeOptions'>

@@ -3,41 +3,45 @@ import classnames from 'classnames'
 //
 export default {
   get,
+  set,
   takeRight,
   last,
-  orderBy,
+  sortBy,
   range,
-  clone,
   remove,
+  clone,
   getFirstDefined,
   sum,
   makeTemplateComponent,
-  prefixAll
+  prefixAll,
+  groupBy,
+  isArray
 }
 
-function remove (a, b) {
-  return a.filter(function (o, i) {
-    var r = b(o)
-    if (r) {
-      a.splice(i, 1)
-      return true
-    }
-    return false
-  })
-}
-
-function get (a, b) {
-  if (isArray(b)) {
-    b = b.join('.')
+function get (obj, path, def) {
+  if (!path) {
+    return obj
   }
-  return b
-    .replace('[', '.').replace(']', '')
-    .split('.')
-    .reduce(
-      function (obj, property) {
-        return obj[property]
-      }, a
-    )
+  const pathObj = makePathArray(path)
+  let val
+  try {
+    val = pathObj.reduce((current, pathPart) => current[pathPart], obj)
+  } catch (e) {}
+  return typeof val !== 'undefined' ? val : def
+}
+
+function set (obj = {}, path, value) {
+  const keys = makePathArray(path)
+  let keyPart
+  let cursor = obj
+  while ((keyPart = keys.shift()) && keys.length) {
+    if (!cursor[keyPart]) {
+      cursor[keyPart] = {}
+    }
+    cursor = cursor[keyPart]
+  }
+  cursor[keyPart] = value
+  return obj
 }
 
 function takeRight (arr, n) {
@@ -57,7 +61,7 @@ function range (n) {
   return arr
 }
 
-function orderBy (arr, funcs, dirs) {
+function sortBy (arr, funcs, dirs) {
   return arr.sort((a, b) => {
     for (let i = 0; i < funcs.length; i++) {
       const comp = funcs[i]
@@ -75,21 +79,28 @@ function orderBy (arr, funcs, dirs) {
   })
 }
 
-function clone (a) {
-  return JSON.parse(JSON.stringify(a, function (key, value) {
-    if (typeof value === 'function') {
-      return value.toString()
+function remove (a, b) {
+  return a.filter(function (o, i) {
+    var r = b(o)
+    if (r) {
+      a.splice(i, 1)
+      return true
     }
-    return value
-  }))
+    return false
+  })
 }
 
-// ########################################################################
-// Helpers
-// ########################################################################
-
-function isArray (a) {
-  return Array.isArray(a)
+function clone (a) {
+  try {
+    return JSON.parse(JSON.stringify(a, (key, value) => {
+      if (typeof value === 'function') {
+        return value.toString()
+      }
+      return value
+    }))
+  } catch (e) {
+    return a
+  }
 }
 
 function getFirstDefined (...args) {
@@ -119,4 +130,40 @@ function makeTemplateComponent (compClass) {
 
 function prefixAll (obj) {
   return obj
+}
+
+function groupBy (xs, key) {
+  return xs.reduce((rv, x, i) => {
+    const resKey = typeof key === 'function' ? key(x, i) : x[key]
+    rv[resKey] = rv[resKey] || []
+    rv[resKey].push(x)
+    return rv
+  }, {})
+}
+
+function isArray (a) {
+  return Array.isArray(a)
+}
+
+// ########################################################################
+// Non-exported Helpers
+// ########################################################################
+
+function makePathArray (obj) {
+  return flattenDeep(obj)
+      .join('.')
+      .replace('[', '.')
+      .replace(']', '')
+      .split('.')
+}
+
+function flattenDeep (arr, newArr = []) {
+  if (!isArray(arr)) {
+    newArr.push(arr)
+  } else {
+    for (var i = 0; i < arr.length; i++) {
+      flattenDeep(arr[i], newArr)
+    }
+  }
+  return newArr
 }

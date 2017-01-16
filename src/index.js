@@ -14,23 +14,36 @@ export const ReactTableDefaults = {
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
   showPageJump: true,
-  expanderColumnWidth: 30,
+  expanderColumnWidth: 35,
 
   // Controlled State Overrides
   // page
   // pageSize
   // sorting
-  // visibleSubComponents
 
   // Controlled State Callbacks
-  onExpand: undefined,
+  onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
 
+  // Pivoting
+  pivotBy: [],
+  pivotColumnWidth: 200,
+  pivotValKey: '_pivotVal',
+  pivotIDKey: '_pivotID',
+  subRowsKey: '_subRows',
+
+  // Pivoting State Overrides
+  // expandedRows: {},
+
+  // Pivoting State Callbacks
+  onExpandRow: undefined,
+
   // General Callbacks
   onChange: () => null,
   onTrClick: () => null,
+
   // Classes
   className: '-striped -highlight',
   tableClassName: '',
@@ -42,6 +55,7 @@ export const ReactTableDefaults = {
   thGroupClassName: '',
   tdClassName: '',
   paginationClassName: '',
+
   // Styles
   style: {},
   tableStyle: {},
@@ -52,6 +66,7 @@ export const ReactTableDefaults = {
   thStyle: {},
   tdStyle: {},
   paginationStyle: {},
+
   // Global Column Defaults
   column: {
     sortable: true,
@@ -64,6 +79,7 @@ export const ReactTableDefaults = {
     headerInnerStyle: {},
     minWidth: 100
   },
+
   // Text
   previousText: 'Previous',
   nextText: 'Next',
@@ -71,6 +87,7 @@ export const ReactTableDefaults = {
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
+
   // Components
   TableComponent: _.makeTemplateComponent('rt-table'),
   TheadComponent: _.makeTemplateComponent('rt-thead'),
@@ -91,12 +108,12 @@ export const ReactTableDefaults = {
     )
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
-  ExpanderComponent: ({isExpanded, toggle, ...rest}) => {
+  ExpanderComponent: ({isExpanded, ...rest}) => {
     return (
       <div
         className={classnames('rt-expander', isExpanded && '-open')}
         {...rest}
-      />
+      >&bull;</div>
     )
   },
   PaginationComponent: Pagination,
@@ -120,13 +137,68 @@ export default React.createClass({
     return {
       page: 0,
       pageSize: this.props.defaultPageSize || 10,
-      sorting: false,
-      visibleSubComponents: []
+      sorting: [],
+      expandedRows: {}
     }
+  },
+
+  getResolvedState (props, state) {
+    const resolvedProps = {
+      ...this.state,
+      ...state,
+      ...this.props,
+      ...props
+    }
+    return resolvedProps
+  },
+
+  componentWillMount () {
+    this.setStateWithData(this.getDataModel())
   },
 
   componentDidMount () {
     this.fireOnChange()
+  },
+
+  componentWillReceiveProps (nextProps, nextState) {
+    const oldState = this.getResolvedState()
+    const newState = this.getResolvedState(nextProps, nextState)
+    // Props that trigger a data update
+    if (
+      oldState.data !== newState.data ||
+      oldState.columns !== newState.columns ||
+      oldState.pivotBy !== newState.pivotBy ||
+      oldState.sorting !== newState.sorting
+    ) {
+      this.setState(this.getDataModel(nextProps, nextState))
+    }
+  },
+
+  setStateWithData (newState, cb) {
+    const oldState = this.getResolvedState()
+    const newResolvedState = this.getResolvedState({}, newState)
+    if (
+      oldState.sorting !== newResolvedState.sorting
+    ) {
+      Object.assign(newState, this.getDataModel({}, newState))
+    }
+    return this.setState(newState, cb)
+  },
+
+  shouldComponentUpdate (nextProps, nextState) {
+    const oldState = this.getResolvedState()
+    const newState = this.getResolvedState(nextProps, nextState)
+    // State changes that trigger a render
+    if (
+      oldState.sorting !== newState.sorting ||
+      oldState.resolvedData !== newState.resolvedData ||
+      oldState.page !== newState.page ||
+      oldState.pageSize !== newState.pageSize ||
+      oldState.expandedRows !== newState.expandedRows
+    ) {
+      return true
+    }
+    return false
   },
 
   render () {
@@ -142,8 +214,6 @@ export default React.createClass({
       trStyle,
       thClassname,
       thStyle,
-      data,
-      columns,
       theadClassName,
       tbodyClassName,
       tbodyStyle,
@@ -156,12 +226,18 @@ export default React.createClass({
       expanderColumnWidth,
       manual,
       loadingText,
-      onExpand,
       // State
-      visibleSubComponents,
       loading,
       pageSize,
       page,
+      sorting,
+      // Pivoting State
+      pivotBy,
+      pivotValKey,
+      pivotIDKey,
+      subRowsKey,
+      expandedRows,
+      onExpandRow,
       // Components
       TableComponent,
       TheadComponent,
@@ -173,85 +249,324 @@ export default React.createClass({
       ExpanderComponent,
       PaginationComponent,
       LoadingComponent,
-      SubComponent
+      SubComponent,
+      columnPercentage,
+      // Data model
+      pivotColumn,
+      resolvedData,
+      allVisibleColumns,
+      headerGroups,
+      standardColumns,
+      allDecoratedColumns,
+      hasHeaderGroups,
+      pages
     } = resolvedProps
-
-    // Build Columns
-    const decoratedColumns = []
-    const headerGroups = []
-    let currentSpan = []
-
-    // Determine Header Groups
-    let hasHeaderGroups = false
-    columns.forEach(column => {
-      if (column.columns) {
-        hasHeaderGroups = true
-      }
-    })
-
-    // A convenience function to add a header and reset the currentSpan
-    const addHeader = (columns, column = {}) => {
-      headerGroups.push(Object.assign({}, column, {
-        columns: columns
-      }))
-      currentSpan = []
-    }
-
-    // Build the columns and headers
-    const visibleColumns = columns.filter(d => _.getFirstDefined(d.show, true))
-    visibleColumns.forEach((column, i) => {
-      if (column.columns) {
-        const nestedColumns = column.columns.filter(d => _.getFirstDefined(d.show, true))
-        nestedColumns.forEach(nestedColumn => {
-          decoratedColumns.push(this.makeDecoratedColumn(nestedColumn))
-        })
-        if (hasHeaderGroups) {
-          if (currentSpan.length > 0) {
-            addHeader(currentSpan)
-          }
-          addHeader(_.takeRight(decoratedColumns, nestedColumns.length), column)
-        }
-      } else {
-        decoratedColumns.push(this.makeDecoratedColumn(column))
-        currentSpan.push(_.last(decoratedColumns))
-      }
-    })
-
-    const columnPercentage = 100 / decoratedColumns.length
-
-    if (hasHeaderGroups && currentSpan.length > 0) {
-      addHeader(currentSpan)
-    }
-
-    const sorting = this.getSorting(decoratedColumns)
-    const accessedData = data.map((d, i) => {
-      const row = {
-        __original: d,
-        __index: i
-      }
-      decoratedColumns.forEach(column => {
-        row[column.id] = column.accessor(d)
-      })
-      return row
-    })
-    const resolvedData = manual ? accessedData : this.sortData(accessedData, sorting)
-
-    // Normalize state
-    const pagesLength = this.getPagesLength()
 
     // Pagination
     const startRow = pageSize * page
     const endRow = startRow + pageSize
     const pageRows = manual ? resolvedData : resolvedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
-    const padRows = pagesLength > 1 ? _.range(pageSize - pageRows.length)
+    const padRows = pages > 1 ? _.range(pageSize - pageRows.length)
       : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
       : []
 
-    const canPrevious = page > 0
-    const canNext = page + 1 < pagesLength
+    const recurseRowsViewIndex = (rows, path = [], index = -1) => {
+      rows.forEach((row, i) => {
+        index++
+        row._viewIndex = index
+        const newPath = path.concat([i])
+        if (row[subRowsKey] && _.get(expandedRows, newPath)) {
+          index = recurseRowsViewIndex(row[subRowsKey], newPath, index)
+        }
+      })
+      return index
+    }
 
-    const rowWidth = (SubComponent ? expanderColumnWidth : 0) + _.sum(decoratedColumns.map(d => d.minWidth))
+    recurseRowsViewIndex(pageRows)
+
+    const canPrevious = page > 0
+    const canNext = page + 1 < pages
+
+    const rowWidth = (SubComponent ? expanderColumnWidth : 0) + _.sum(allVisibleColumns.map(d => d.minWidth))
+
+    let rowIndex = -1
+
+    const makeHeaderGroup = () => (
+      <TheadComponent
+        className={classnames(theadGroupClassName, '-headerGroups')}
+        style={Object.assign({}, theadStyle, {
+          minWidth: `${rowWidth}px`
+        })}
+      >
+        <TrComponent
+          className={trClassName}
+          style={trStyle}
+        >
+          {pivotBy.length ? (
+            <ThComponent
+              className={classnames(thClassname, 'rt-pivot-header')}
+              style={_.prefixAll({
+                flex: `${columnPercentage} 0 auto`,
+                width: `${pivotColumn.minWidth}px`
+              })}
+            />
+          ) : SubComponent ? (
+            <ThComponent
+              className={classnames(thClassname, 'rt-expander-header')}
+              style={_.prefixAll({
+                flex: `0 0 auto`,
+                width: `${expanderColumnWidth}px`
+              })}
+            />
+          ) : null}
+          {headerGroups.map((column, i) => {
+            return (
+              <ThComponent
+                key={i}
+                className={classnames(thClassname, column.headerClassName)}
+                style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
+                  flex: `${column.columns.length * columnPercentage} 0 auto`,
+                  width: `${_.sum(column.columns.map(d => d.minWidth))}px`
+                }))}
+              >
+                {typeof column.header === 'function' ? (
+                  <column.header
+                    data={resolvedData}
+                    column={column}
+                  />
+                ) : column.header}
+              </ThComponent>
+            )
+          })}
+        </TrComponent>
+      </TheadComponent>
+    )
+
+    const makeHeader = () => {
+      const pivotSort = pivotColumn && sorting.find(d => d.id === pivotColumn.id)
+      return (
+        <TheadComponent
+          className={classnames(theadClassName, '-header')}
+          style={Object.assign({}, theadStyle, {
+            minWidth: `${rowWidth}px`
+          })}
+        >
+          <TrComponent
+            className={trClassName}
+            style={trStyle}
+          >
+            {pivotBy.length ? (
+              <ThComponent
+                className={classnames(
+                  thClassname,
+                  'rt-pivot-header',
+                  pivotSort ? (pivotSort.asc ? '-sort-asc' : '-sort-desc') : '',
+                  pivotColumn.sortable && '-cursor-pointer'
+                )}
+                style={_.prefixAll({
+                  flex: `${columnPercentage} 0 auto`,
+                  width: `${pivotColumn.minWidth}px`
+                })}
+                toggleSort={(e) => {
+                  pivotColumn.sortable && this.sortColumn(pivotColumn.pivotColumns, e.shiftKey)
+                }}
+              >
+                {pivotColumn.pivotColumns.map((column, i) => {
+                  return (
+                    <span key={column.id}>
+                      {typeof column.header === 'function' ? (
+                        <column.header
+                          data={resolvedData}
+                          column={column}
+                        />
+                      ) : column.header}
+                      {i < pivotColumn.pivotColumns.length - 1 && (
+                        <ExpanderComponent />
+                      )}
+                    </span>
+                  )
+                })}
+              </ThComponent>
+            ) : SubComponent ? (
+              <ThComponent
+                className={classnames(thClassname, 'rt-expander-header')}
+                style={_.prefixAll({
+                  flex: `0 0 auto`,
+                  width: `${expanderColumnWidth}px`
+                })}
+              />
+            ) : null}
+            {standardColumns.map(makeHeaderGroupColumn)}
+          </TrComponent>
+        </TheadComponent>
+      )
+    }
+    const makeHeaderGroupColumn = (column, i) => {
+      const sort = sorting.find(d => d.id === column.id)
+      const show = typeof column.show === 'function' ? column.show() : column.show
+      return (
+        <ThComponent
+          key={i}
+          className={classnames(
+            thClassname,
+            column.headerClassName,
+            sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
+            {
+              '-cursor-pointer': column.sortable,
+              '-hidden': !show
+            }
+          )}
+          style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
+            flex: `${columnPercentage} 0 auto`,
+            width: `${column.minWidth}px`
+          }))}
+          toggleSort={(e) => {
+            column.sortable && this.sortColumn(column, e.shiftKey)
+          }}
+        >
+          {typeof column.header === 'function' ? (
+            <column.header
+              data={resolvedData}
+              column={column}
+            />
+          ) : column.header}
+        </ThComponent>
+      )
+    }
+
+    const makePageRow = (row, i, path = []) => {
+      const rowInfo = {
+        row: row.__original,
+        rowValues: row,
+        index: row.__index,
+        viewIndex: ++rowIndex,
+        level: path.length,
+        nestingPath: path.concat([i]),
+        aggregated: !!row[subRowsKey],
+        subRows: row[subRowsKey]
+      }
+      const isExpanded = _.get(expandedRows, rowInfo.nestingPath)
+      const rowPivotColumn = allDecoratedColumns.find(d => d.id === row[pivotIDKey])
+      const PivotCell = rowPivotColumn && rowPivotColumn.pivotRender
+      return (
+        <TrGroupComponent key={i}>
+          <TrComponent
+            onClick={event => onTrClick(rowInfo.row, event)}
+            className={classnames(trClassName, trClassCallback(rowInfo), row._viewIndex % 2 ? '-even' : '-odd')}
+            style={Object.assign({}, trStyle, trStyleCallback(rowInfo))}
+          >
+            {(pivotBy.length || SubComponent) && (
+              <TdComponent
+                className={classnames(thClassname, 'rt-pivot')}
+                style={_.prefixAll({
+                  paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
+                  flex: `${pivotColumn ? columnPercentage : 0} 0 auto`,
+                  width: `${pivotColumn ? pivotColumn.minWidth : expanderColumnWidth}px`
+                })}
+                onClick={(e) => {
+                  if (onExpandRow) {
+                    return onExpandRow(rowInfo.nestingPath, e)
+                  }
+                  let newExpandedRows = _.clone(expandedRows)
+                  if (isExpanded) {
+                    return this.setStateWithData({
+                      expandedRows: _.set(newExpandedRows, rowInfo.nestingPath, false)
+                    })
+                  }
+                  return this.setStateWithData({
+                    expandedRows: _.set(newExpandedRows, rowInfo.nestingPath, {})
+                  })
+                }}
+              >
+                {rowInfo.subRows ? (
+                  <span>
+                    <ExpanderComponent
+                      isExpanded={isExpanded}
+                    />
+                    {rowPivotColumn && rowPivotColumn.pivotRender ? (
+                      <PivotCell
+                        {...rowInfo}
+                        value={rowInfo.rowValues[pivotValKey]}
+                      />
+                    ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
+                  </span>
+                ) : SubComponent ? (
+                  <span>
+                    <ExpanderComponent
+                      isExpanded={isExpanded}
+                    />
+                  </span>
+                ) : null}
+              </TdComponent>
+            )}
+            {standardColumns.map((column, i2) => {
+              const Cell = column.render
+              const show = typeof column.show === 'function' ? column.show() : column.show
+              return (
+                <TdComponent
+                  key={i2}
+                  className={classnames(column.className, {hidden: !show})}
+                  style={Object.assign({}, tdStyle, column.style, _.prefixAll({
+                    flex: `${columnPercentage} 0 auto`,
+                    width: `${column.minWidth}px`
+                  }))}
+                >
+                  {typeof Cell === 'function' ? (
+                    <Cell
+                      {...rowInfo}
+                      value={rowInfo.rowValues[column.id]}
+                    />
+                  ) : typeof Cell !== 'undefined' ? Cell
+                  : rowInfo.rowValues[column.id]}
+                </TdComponent>
+              )
+            })}
+          </TrComponent>
+          {(
+            rowInfo.subRows &&
+            isExpanded &&
+            rowInfo.subRows.map((d, i) => makePageRow(d, i, rowInfo.nestingPath))
+          )}
+          {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo)}
+        </TrGroupComponent>
+      )
+    }
+
+    const makePadRow = (row, i) => {
+      return (
+        <TrComponent
+          key={i}
+          className={classnames(trClassName, '-padRow')}
+          style={trStyle}
+        >
+          {SubComponent && (
+            <ThComponent
+              className={classnames(thClassname, 'rt-expander-header')}
+              style={_.prefixAll({
+                flex: `0 0 auto`,
+                width: `${expanderColumnWidth}px`
+              })}
+            />
+          )}
+          {standardColumns.map((column, i2) => {
+            const show = typeof column.show === 'function' ? column.show() : column.show
+            return (
+              <TdComponent
+                key={i2}
+                className={classnames(column.className, {hidden: !show})}
+                style={Object.assign({}, tdStyle, column.style, {
+                  flex: `${columnPercentage} 0 auto`,
+                  width: `${column.minWidth}px`
+                })}
+              >
+                &nbsp;
+              </TdComponent>
+            )
+          })}
+        </TrComponent>
+      )
+    }
 
     return (
       <div
@@ -262,228 +577,22 @@ export default React.createClass({
           className={classnames(tableClassName)}
           style={tableStyle}
         >
-          {hasHeaderGroups && (
-            <TheadComponent
-              className={classnames(theadGroupClassName, '-headerGroups')}
-              style={Object.assign({}, theadStyle, {
-                minWidth: `${rowWidth}px`
-              })}
-            >
-              <TrComponent
-                className={trClassName}
-                style={trStyle}
-              >
-                {SubComponent && (
-                  <ThComponent
-                    className={classnames(thClassname, 'rt-expander-header')}
-                    style={_.prefixAll({
-                      flex: `0 0 auto`,
-                      width: `${expanderColumnWidth}px`
-                    })}
-                  />
-                )}
-                {headerGroups.map((column, i) => {
-                  return (
-                    <ThComponent
-                      key={i}
-                      className={classnames(thClassname, column.headerClassName)}
-                      style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
-                        flex: `${column.columns.length * columnPercentage} 0 auto`,
-                        width: `${_.sum(column.columns.map(d => d.minWidth))}px`
-                      }))}
-                    >
-                      {typeof column.header === 'function' ? (
-                        <column.header
-                          data={resolvedData}
-                          column={column}
-                        />
-                      ) : column.header}
-                    </ThComponent>
-                  )
-                })}
-              </TrComponent>
-            </TheadComponent>
-          )}
-          <TheadComponent
-            className={classnames(theadClassName, '-header')}
-            style={Object.assign({}, theadStyle, {
-              minWidth: `${rowWidth}px`
-            })}
-          >
-            <TrComponent
-              className={trClassName}
-              style={trStyle}
-            >
-              {SubComponent && (
-                <ThComponent
-                  className={classnames(thClassname, 'rt-expander-header')}
-                  style={_.prefixAll({
-                    flex: `0 0 auto`,
-                    width: `${expanderColumnWidth}px`
-                  })}
-                />
-              )}
-              {decoratedColumns.map((column, i) => {
-                const sort = sorting.find(d => d.id === column.id)
-                const show = typeof column.show === 'function' ? column.show() : column.show
-                return (
-                  <ThComponent
-                    key={i}
-                    className={classnames(
-                      thClassname,
-                      column.headerClassName,
-                      sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
-                      {
-                        '-cursor-pointer': column.sortable,
-                        '-hidden': !show
-                      }
-                    )}
-                    style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
-                      flex: `${columnPercentage} 0 auto`,
-                      width: `${column.minWidth}px`
-                    }))}
-                    toggleSort={(e) => {
-                      column.sortable && this.sortColumn(column, e.shiftKey)
-                    }}
-                  >
-                    {typeof column.header === 'function' ? (
-                      <column.header
-                        data={resolvedData}
-                        column={column}
-                      />
-                    ) : column.header}
-                  </ThComponent>
-                )
-              })}
-            </TrComponent>
-          </TheadComponent>
+          {hasHeaderGroups && makeHeaderGroup()}
+          {makeHeader()}
           <TbodyComponent
             className={classnames(tbodyClassName)}
             style={Object.assign({}, tbodyStyle, {
               minWidth: `${rowWidth}px`
             })}
           >
-            {pageRows.map((row, i) => {
-              const rowInfo = {
-                row: row.__original,
-                rowValues: row,
-                index: row.__index,
-                viewIndex: i
-              }
-              const visibleSubComponentIndex = visibleSubComponents.indexOf(i)
-              const isExpanded = visibleSubComponentIndex > -1
-              return (
-                <TrGroupComponent key={i}>
-                  <TrComponent
-                    onClick={event => onTrClick(rowInfo.row, event)}
-                    className={classnames(trClassName, trClassCallback(rowInfo))}
-                    style={Object.assign({}, trStyle, trStyleCallback(rowInfo))}
-                  >
-                    {SubComponent && (
-                      <ThComponent
-                        className={classnames(thClassname, 'rt-expander-wrap')}
-                        style={_.prefixAll({
-                          flex: `0 0 auto`,
-                          width: `${expanderColumnWidth}px`
-                        })}
-                        onClick={(e) => {
-                          if (onExpand) {
-                            return onExpand(i, e)
-                          }
-                          if (isExpanded) {
-                            return this.setState({
-                              visibleSubComponents: [
-                              /* eslint-disable*/
-                              ...visibleSubComponents.slice(0, visibleSubComponentIndex - 1),
-                              ...visibleSubComponents.slice(visibleSubComponentIndex + 1)
-                              /* eslint-enable*/
-                              ]
-                            })
-                          }
-                          this.setState({
-                            visibleSubComponents: [
-                            /* eslint-disable*/
-                            ...visibleSubComponents,
-                            i
-                            /* eslint-enable*/
-                            ]
-                          })
-                        }}
-                      >
-                        <ExpanderComponent
-                          isExpanded={isExpanded}
-                        />
-                      </ThComponent>
-                    )}
-                    {decoratedColumns.map((column, i2) => {
-                      const Cell = column.render
-                      const show = typeof column.show === 'function' ? column.show() : column.show
-                      return (
-                        <TdComponent
-                          key={i2}
-                          className={classnames(column.className, {hidden: !show})}
-                          style={Object.assign({}, tdStyle, column.style, _.prefixAll({
-                            flex: `${columnPercentage} 0 auto`,
-                            width: `${column.minWidth}px`
-                          }))}
-                        >
-                          {typeof Cell === 'function' ? (
-                            <Cell
-                              {...rowInfo}
-                              value={rowInfo.rowValues[column.id]}
-                            />
-                          ) : typeof Cell !== 'undefined' ? Cell
-                          : rowInfo.rowValues[column.id]}
-                        </TdComponent>
-                      )
-                    })}
-                  </TrComponent>
-                  {SubComponent && isExpanded ? (
-                    SubComponent(rowInfo)
-                  ) : null}
-                </TrGroupComponent>
-              )
-            })}
-            {padRows.map((row, i) => {
-              return (
-                <TrComponent
-                  key={i}
-                  className={classnames(trClassName, '-padRow')}
-                  style={trStyle}
-                >
-                  {SubComponent && (
-                    <ThComponent
-                      className={classnames(thClassname, 'rt-expander-header')}
-                      style={_.prefixAll({
-                        flex: `0 0 auto`,
-                        width: `${expanderColumnWidth}px`
-                      })}
-                    />
-                  )}
-                  {decoratedColumns.map((column, i2) => {
-                    const show = typeof column.show === 'function' ? column.show() : column.show
-                    return (
-                      <TdComponent
-                        key={i2}
-                        className={classnames(column.className, {hidden: !show})}
-                        style={Object.assign({}, tdStyle, column.style, {
-                          flex: `${columnPercentage} 0 auto`,
-                          width: `${column.minWidth}px`
-                        })}
-                      >
-                        &nbsp;
-                      </TdComponent>
-                    )
-                  })}
-                </TrComponent>
-              )
-            })}
+            {pageRows.map((d, i) => makePageRow(d, i))}
+            {padRows.map(makePadRow)}
           </TbodyComponent>
         </TableComponent>
         {showPagination && (
           <PaginationComponent
             {...resolvedProps}
-            pagesLength={pagesLength}
+            pages={pages}
             canPrevious={canPrevious}
             canNext={canNext}
             onPageChange={this.onPageChange}
@@ -500,14 +609,186 @@ export default React.createClass({
   },
 
   // Helpers
-  getResolvedState () {
+  getDataModel (nextProps, nextState) {
+    const {
+      columns,
+      pivotBy,
+      data,
+      pivotIDKey,
+      pivotValKey,
+      subRowsKey,
+      manual,
+      sorting,
+      pageSize,
+      pages
+    } = this.getResolvedState(nextProps, nextState)
+
+    // Determine Header Groups
+    let hasHeaderGroups = false
+    columns.forEach(column => {
+      if (column.columns) {
+        hasHeaderGroups = true
+      }
+    })
+
+    // Build Header Groups
+    const headerGroups = []
+    let currentSpan = []
+
+    // A convenience function to add a header and reset the currentSpan
+    const addHeader = (columns, column = {}) => {
+      headerGroups.push(Object.assign({}, column, {
+        columns: columns
+      }))
+      currentSpan = []
+    }
+
+    // Decorate the columns
+    const decorateAndAddToAll = (col) => {
+      const decoratedColumn = this.makeDecoratedColumn(col)
+      allDecoratedColumns.push(decoratedColumn)
+      return decoratedColumn
+    }
+    let allDecoratedColumns = []
+    const decoratedColumns = columns.map((column, i) => {
+      if (column.columns) {
+        return {
+          ...column,
+          columns: column.columns.map(decorateAndAddToAll)
+        }
+      } else {
+        decorateAndAddToAll(column)
+      }
+    })
+
+    // Build the visible columns and headers and flat column list
+    let visibleColumns = decoratedColumns.slice()
+    let allVisibleColumns = []
+
+    visibleColumns = visibleColumns.map((column, i) => {
+      if (column.columns) {
+        const visibleSubColumns = column.columns.filter(d => pivotBy.indexOf(d.id) > -1 ? false : _.getFirstDefined(d.show, true))
+        return {
+          ...column,
+          columns: visibleSubColumns
+        }
+      }
+      return column
+    })
+
+    visibleColumns = visibleColumns.filter(column => {
+      return column.columns ? column.columns.length : pivotBy.indexOf(column.id) > -1 ? false : _.getFirstDefined(column.show, true)
+    })
+
+    // Build allVisible columns and HeaderGroups
+    visibleColumns.forEach((column, i) => {
+      if (column.columns) {
+        allVisibleColumns = allVisibleColumns.concat(column.columns)
+        if (currentSpan.length > 0) {
+          addHeader(currentSpan)
+        }
+        addHeader(column.columns, column)
+        return
+      }
+      allVisibleColumns.push(column)
+      currentSpan.push(column)
+    })
+    if (hasHeaderGroups && currentSpan.length > 0) {
+      addHeader(currentSpan)
+    }
+
+    // Move the pivot columns into a single column if needed
+    if (pivotBy.length) {
+      const pivotColumns = []
+      for (var i = 0; i < allDecoratedColumns.length; i++) {
+        if (pivotBy.indexOf(allDecoratedColumns[i].id) > -1) {
+          pivotColumns.push(allDecoratedColumns[i])
+        }
+      }
+      allVisibleColumns.unshift({
+        ...pivotColumns[0],
+        pivotColumns
+      })
+    }
+
+    // Determine the flex percentage for each column
+    const columnPercentage = 100 / allVisibleColumns.length
+
+    // Access the data
+    let accessedData = data.map((d, i) => {
+      const row = {
+        __original: d,
+        __index: i
+      }
+      allDecoratedColumns.forEach(column => {
+        row[column.id] = column.accessor(d)
+      })
+      return row
+    })
+
+    // If pivoting, recursively group the data
+    const aggregate = (rows) => {
+      const aggregationValues = {}
+      aggregatingColumns.forEach(column => {
+        const values = rows.map(d => d[column.id])
+        aggregationValues[column.id] = column.aggregate(values, rows)
+      })
+      return aggregationValues
+    }
+    let standardColumns = pivotBy.length ? allVisibleColumns.slice(1) : allVisibleColumns
+    const aggregatingColumns = standardColumns.filter(d => d.aggregate)
+    let pivotColumn
+    if (pivotBy.length) {
+      pivotColumn = allVisibleColumns[0]
+      const groupRecursively = (rows, keys, i = 0) => {
+        // This is the last level, just return the rows
+        if (i === keys.length) {
+          return rows
+        }
+        // Group the rows together for this level
+        let groupedRows = Object.entries(
+          _.groupBy(rows, keys[i]))
+            .map(([key, value]) => {
+              return {
+                [pivotIDKey]: keys[i],
+                [pivotValKey]: key,
+                [keys[i]]: key,
+                [subRowsKey]: value
+              }
+            }
+        )
+        // Recurse into the subRows
+        groupedRows = groupedRows.map(rowGroup => {
+          let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
+          return {
+            ...rowGroup,
+            [subRowsKey]: subRows,
+            ...aggregate(subRows)
+          }
+        })
+        return groupedRows
+      }
+      accessedData = groupRecursively(accessedData, pivotBy)
+    }
+
+    const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
+
+    // Resolve the data from either manual data or sorted data
+    const resolvedData = manual ? accessedData : this.sortData(accessedData, resolvedSorting)
+
     return {
-      ...this.state,
-      ...this.props,
-      pages: this.getPagesLength(),
-      sorting: this.getSorting()
+      columnPercentage,
+      pivotColumn,
+      resolvedData,
+      allVisibleColumns,
+      headerGroups,
+      standardColumns,
+      allDecoratedColumns,
+      hasHeaderGroups,
+      pages: manual ? pages : Math.ceil(resolvedData.length / pageSize)
     }
   },
+
   fireOnChange () {
     this.props.onChange(this.getResolvedState(), this)
   },
@@ -536,7 +817,7 @@ export default React.createClass({
     }]
   },
   sortData (data, sorting) {
-    return _.orderBy(data, sorting.map(sort => {
+    const sorted = _.sortBy(data, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
           return -Infinity
@@ -544,6 +825,16 @@ export default React.createClass({
         return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
       }
     }), sorting.map(d => d.asc ? 'asc' : 'desc'))
+
+    return sorted.map(row => {
+      if (!row[this.props.subRowsKey]) {
+        return row
+      }
+      return {
+        ...row,
+        [this.props.subRowsKey]: this.sortData(row[this.props.subRowsKey], sorting)
+      }
+    })
   },
   makeDecoratedColumn (column) {
     const dcol = Object.assign({}, this.props.column, column)
@@ -566,13 +857,6 @@ export default React.createClass({
 
     return dcol
   },
-  getSorting (columns) {
-    return this.props.sorting || (this.state.sorting && this.state.sorting.length ? this.state.sorting : this.getInitSorting(columns))
-  },
-  getPagesLength () {
-    return this.props.manual ? this.props.pages
-      : Math.ceil(this.props.data.length / this.getStateOrProp('pageSize'))
-  },
   getMinRows () {
     return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
   },
@@ -583,8 +867,8 @@ export default React.createClass({
     if (onPageChange) {
       return onPageChange(page)
     }
-    this.setState({
-      visibleSubComponents: [],
+    this.setStateWithData({
+      expandedRows: {},
       page
     }, () => {
       this.fireOnChange()
@@ -602,7 +886,7 @@ export default React.createClass({
       return onPageSizeChange(newPageSize, newPage)
     }
 
-    this.setState({
+    this.setStateWithData({
       pageSize: newPageSize,
       page: newPage
     }, () => {
@@ -610,45 +894,79 @@ export default React.createClass({
     })
   },
   sortColumn (column, additive) {
+    const { sorting } = this.getResolvedState()
     const { onSortingChange } = this.props
     if (onSortingChange) {
       return onSortingChange(column, additive)
     }
-    const existingSorting = this.getSorting()
-    let sorting = _.clone(this.state.sorting || [])
-    const existingIndex = sorting.findIndex(d => d.id === column.id)
-    if (existingIndex > -1) {
-      const existing = sorting[existingIndex]
-      if (existing.asc) {
-        existing.asc = false
+    let newSorting = _.clone(sorting || [])
+    if (_.isArray(column)) {
+      const existingIndex = newSorting.findIndex(d => d.id === column[0].id)
+      if (existingIndex > -1) {
+        const existing = newSorting[existingIndex]
+        if (existing.asc) {
+          column.forEach((d, i) => {
+            newSorting[existingIndex + i].asc = false
+          })
+        } else {
+          if (additive) {
+            newSorting.splice(existingIndex, column.length)
+          } else {
+            column.forEach((d, i) => {
+              newSorting[existingIndex + i].asc = true
+            })
+          }
+        }
         if (!additive) {
-          sorting = [existing]
+          newSorting = newSorting.slice(existingIndex, column.length)
         }
       } else {
         if (additive) {
-          sorting.splice(existingIndex, 1)
+          newSorting = newSorting.concat(column.map(d => ({
+            id: d.id,
+            asc: true
+          })))
         } else {
-          existing.asc = true
-          sorting = [existing]
+          newSorting = column.map(d => ({
+            id: d.id,
+            asc: true
+          }))
         }
       }
     } else {
-      if (additive) {
-        sorting.push({
-          id: column.id,
-          asc: true
-        })
+      const existingIndex = newSorting.findIndex(d => d.id === column.id)
+      if (existingIndex > -1) {
+        const existing = newSorting[existingIndex]
+        if (existing.asc) {
+          existing.asc = false
+          if (!additive) {
+            newSorting = [existing]
+          }
+        } else {
+          if (additive) {
+            newSorting.splice(existingIndex, 1)
+          } else {
+            existing.asc = true
+            newSorting = [existing]
+          }
+        }
       } else {
-        sorting = [{
-          id: column.id,
-          asc: true
-        }]
+        if (additive) {
+          newSorting.push({
+            id: column.id,
+            asc: true
+          })
+        } else {
+          newSorting = [{
+            id: column.id,
+            asc: true
+          }]
+        }
       }
     }
-    const page = (existingIndex === 0 || (!existingSorting.length && sorting.length) || !additive) ? 0 : this.state.page
-    this.setState({
-      page,
-      sorting
+    this.setStateWithData({
+      page: ((!sorting.length && newSorting.length) || !additive) ? 0 : this.state.page,
+      sorting: newSorting
     }, () => {
       this.fireOnChange()
     })

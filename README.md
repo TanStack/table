@@ -12,10 +12,12 @@
 
 ## Features
 
-- Lightweight at 4kb (and just 2kb more for styles)
-- Fully customizable JSX and callbacks for everything
-- Supports both Client-side & Server-side pagination and sorting
+- Lightweight at 7kb (and just 2kb more for styles)
+- Fully customizable JSX templating
+- Supports both Client-side & Server-side pagination and multi-sorting
+- Column Pivoting & Aggregation
 - Minimal design & easily themeable
+- Fully controllable via optional props and callbacks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_blank">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
 
 ## <a href="http://react-table.zabapps.com/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_blank">Demo</a>
@@ -28,7 +30,8 @@
 - [Columns](#columns)
 - [Styles](#styles)
 - [Header Groups](#header-groups)
-- [Sub Tables & Components](#sub-tables-components)
+- [Pivoting & Aggregation](#pivoting-aggregation)
+- [Sub Tables & Sub Components](#sub-tables-sub-components)
 - [Server-side Data](#server-side-data)
 - [Fully Controlled Component](#fully-controlled-component)
 - [Multi-sort](#multi-sort)
@@ -128,9 +131,9 @@ These are all of the available props (and their default values) for the main `<R
   page: undefined,
   pageSize: undefined,
   sorting: undefined,
-  visibleSubComponents: undefined,
+  expandedRows: undefined,
   // Controlled Callbacks
-  onExpand: undefined,
+  onExpandRow: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
 }
@@ -155,7 +158,7 @@ Or just define them on the component per-instance
   defaultPageSize={10}
   minRows={3}
   // etc...
-  />
+/>
 ```
 
 ## Columns
@@ -213,7 +216,37 @@ const columns = [{
 }]
 ```
 
-## Sub Tables & Components
+## Pivoting & Aggregation
+Pivoting the table will group records together based on their accessed values and allow the rows in that group to be expanded underneath it.
+To pivot, pass an array of `columnID`'s to `pivotBy`. Remember, a column's `id` is either the one that you assign it (when using a custom accessors) or its `accessor` string.
+```javascript
+<ReactTable
+  ...
+  pivotBy={['lastName', 'age']}
+/>
+```
+
+Naturally when grouping rows together, you may want to aggregate the rows inside it into the grouped column. No aggregation is done by default, however, it is very simple to aggregate any pivoted columns:
+```javascript
+// In this example, we use lodash to sum and average the values, but you can use whatever you want to aggregate.
+const columns = [{
+  header: 'Age',
+  accessor: 'age',
+  aggregate: (values, rows) => _.round(_.mean(values)),
+  render: row => {
+    // You can even render the cell differently if it's an aggregated cell
+    return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
+  }
+}, {
+  header: 'Visits',
+  accessor: 'visits',
+  aggregate: (values, rows) => _.sum(values)
+}]
+```
+
+Pivoted columns can be sorted just like regular columns, but not independently of each other.  For instance, if you click to sort the pivot column in ascending order, it will sort by each pivot recursively in ascending order together.
+
+## Sub Tables & Sub Components
 By adding a `SubComponent` props, you can easily add an expansion level to all root-level rows:
 ```javascript
 <ReactTable
@@ -287,13 +320,20 @@ Here are the props and their corresponding callbacks that control the state of t
       id: 'firstName',
       asc: true
   }]} // the sorting model for the table
-  visibleSubComponents={[1,4,5]} // The row indexes on the current page that should appear expanded
+  expandedRows={{
+    1: true,
+    4: true,
+    5: {
+      2: true,
+      3: true
+    }
+  }} // The nested row indexes on the current page that should appear expanded
 
   // Callbacks
   onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
-  onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held.
-  onExpand={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `visibleSubComponents`
+  onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
+  onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
 />
 ```
 
