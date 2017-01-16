@@ -6,7 +6,7 @@ import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../lib/index'
 
 export default () => {
-  const data = _.map(_.range(1000000), d => {
+  const data = _.map(_.range(100000), d => {
     return {
       firstName: namor.generate({ words: 1, numLen: 0 }),
       lastName: namor.generate({ words: 1, numLen: 0 }),

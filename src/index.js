@@ -541,9 +541,10 @@ export default React.createClass({
 
     const makePadRow = (row, i) => {
       return (
-        <TrGroupComponent>
+        <TrGroupComponent
+          key={i}
+        >
           <TrComponent
-            key={i}
             className={classnames(trClassName, '-padRow')}
             style={trStyle}
           >
