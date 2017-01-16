@@ -15,6 +15,7 @@ import ServerSide from '../stories/ServerSide.js'
 import SubComponents from '../stories/SubComponents.js'
 import Pivoting from '../stories/Pivoting.js'
 import PivotingSubComponents from '../stories/PivotingSubComponents.js'
+import MillionRows from '../stories/MillionRows.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -35,4 +36,5 @@ configure(() => {
     .add('Sub Components', SubComponents)
     .add('Pivoting & Aggregation', Pivoting)
     .add('Pivoting & Aggregation w/ Sub Components', PivotingSubComponents)
+    .add('1 Million Rows w/ Pivoting & Sub Components', MillionRows)
 }, module)

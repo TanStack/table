@@ -177,11 +177,11 @@ export default React.createClass({
   setStateWithData (newState, cb) {
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
-    if (
-      oldState.sorting !== newResolvedState.sorting
-    ) {
+    if (oldState.sorting !== newResolvedState.sorting) {
       Object.assign(newState, this.getDataModel({}, newState))
     }
+    // Calculate pageSize all the time
+    newState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
     return this.setState(newState, cb)
   },
 
@@ -231,6 +231,7 @@ export default React.createClass({
       pageSize,
       page,
       sorting,
+      pages,
       // Pivoting State
       pivotBy,
       pivotValKey,
@@ -258,8 +259,7 @@ export default React.createClass({
       headerGroups,
       standardColumns,
       allDecoratedColumns,
-      hasHeaderGroups,
-      pages
+      hasHeaderGroups
     } = resolvedProps
 
     // Pagination
@@ -535,36 +535,38 @@ export default React.createClass({
 
     const makePadRow = (row, i) => {
       return (
-        <TrComponent
-          key={i}
-          className={classnames(trClassName, '-padRow')}
-          style={trStyle}
-        >
-          {SubComponent && (
-            <ThComponent
-              className={classnames(thClassname, 'rt-expander-header')}
-              style={_.prefixAll({
-                flex: `0 0 auto`,
-                width: `${expanderColumnWidth}px`
-              })}
-            />
-          )}
-          {standardColumns.map((column, i2) => {
-            const show = typeof column.show === 'function' ? column.show() : column.show
-            return (
-              <TdComponent
-                key={i2}
-                className={classnames(column.className, {hidden: !show})}
-                style={Object.assign({}, tdStyle, column.style, {
-                  flex: `${columnPercentage} 0 auto`,
-                  width: `${column.minWidth}px`
+        <TrGroupComponent>
+          <TrComponent
+            key={i}
+            className={classnames(trClassName, '-padRow')}
+            style={trStyle}
+          >
+            {SubComponent && (
+              <ThComponent
+                className={classnames(thClassname, 'rt-expander-header')}
+                style={_.prefixAll({
+                  flex: `0 0 auto`,
+                  width: `${expanderColumnWidth}px`
                 })}
-              >
-                &nbsp;
-              </TdComponent>
-            )
-          })}
-        </TrComponent>
+              />
+            )}
+            {standardColumns.map((column, i2) => {
+              const show = typeof column.show === 'function' ? column.show() : column.show
+              return (
+                <TdComponent
+                  key={i2}
+                  className={classnames(column.className, {hidden: !show})}
+                  style={Object.assign({}, tdStyle, column.style, {
+                    flex: `${columnPercentage} 0 auto`,
+                    width: `${column.minWidth}px`
+                  })}
+                >
+                  &nbsp;
+                </TdComponent>
+              )
+            })}
+          </TrComponent>
+        </TrGroupComponent>
       )
     }
 
@@ -618,9 +620,7 @@ export default React.createClass({
       pivotValKey,
       subRowsKey,
       manual,
-      sorting,
-      pageSize,
-      pages
+      sorting
     } = this.getResolvedState(nextProps, nextState)
 
     // Determine Header Groups
@@ -784,8 +784,7 @@ export default React.createClass({
       headerGroups,
       standardColumns,
       allDecoratedColumns,
-      hasHeaderGroups,
-      pages: manual ? pages : Math.ceil(resolvedData.length / pageSize)
+      hasHeaderGroups
     }
   },
 
@@ -880,7 +879,7 @@ export default React.createClass({
 
     // Normalize the page to display
     const currentRow = pageSize * page
-    const newPage = Math.floor(currentRow / pageSize)
+    const newPage = Math.floor(currentRow / newPageSize)
 
     if (onPageSizeChange) {
       return onPageSizeChange(newPageSize, newPage)
