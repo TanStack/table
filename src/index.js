@@ -170,18 +170,23 @@ export default React.createClass({
       oldState.pivotBy !== newState.pivotBy ||
       oldState.sorting !== newState.sorting
     ) {
-      this.setState(this.getDataModel(nextProps, nextState))
+      this.setStateWithData(this.getDataModel(nextProps, nextState))
     }
   },
 
   setStateWithData (newState, cb) {
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
-    if (oldState.sorting !== newResolvedState.sorting) {
-      Object.assign(newState, this.getDataModel({}, newState))
+    if (
+      oldState.resolvedData !== newResolvedState.resolvedData ||
+      oldState.sorting !== newResolvedState.sorting
+    ) {
+      Object.assign(newState, this.getSortedData({}, newState))
     }
     // Calculate pageSize all the time
-    newState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
+    if (newResolvedState.resolvedData) {
+      newState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
+    }
     return this.setState(newState, cb)
   },
 
@@ -190,8 +195,7 @@ export default React.createClass({
     const newState = this.getResolvedState(nextProps, nextState)
     // State changes that trigger a render
     if (
-      oldState.sorting !== newState.sorting ||
-      oldState.resolvedData !== newState.resolvedData ||
+      oldState.sortedData !== newState.sortedData ||
       oldState.page !== newState.page ||
       oldState.pageSize !== newState.pageSize ||
       oldState.expandedRows !== newState.expandedRows
@@ -259,13 +263,15 @@ export default React.createClass({
       headerGroups,
       standardColumns,
       allDecoratedColumns,
-      hasHeaderGroups
+      hasHeaderGroups,
+      // Sorted Data
+      sortedData
     } = resolvedProps
 
     // Pagination
     const startRow = pageSize * page
     const endRow = startRow + pageSize
-    const pageRows = manual ? resolvedData : resolvedData.slice(startRow, endRow)
+    const pageRows = manual ? resolvedData : sortedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
     const padRows = pages > 1 ? _.range(pageSize - pageRows.length)
       : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
@@ -332,7 +338,7 @@ export default React.createClass({
               >
                 {typeof column.header === 'function' ? (
                   <column.header
-                    data={resolvedData}
+                    data={sortedData}
                     column={column}
                   />
                 ) : column.header}
@@ -377,7 +383,7 @@ export default React.createClass({
                     <span key={column.id}>
                       {typeof column.header === 'function' ? (
                         <column.header
-                          data={resolvedData}
+                          data={sortedData}
                           column={column}
                         />
                       ) : column.header}
@@ -427,7 +433,7 @@ export default React.createClass({
         >
           {typeof column.header === 'function' ? (
             <column.header
-              data={resolvedData}
+              data={sortedData}
               column={column}
             />
           ) : column.header}
@@ -618,9 +624,7 @@ export default React.createClass({
       data,
       pivotIDKey,
       pivotValKey,
-      subRowsKey,
-      manual,
-      sorting
+      subRowsKey
     } = this.getResolvedState(nextProps, nextState)
 
     // Determine Header Groups
@@ -715,7 +719,7 @@ export default React.createClass({
     const columnPercentage = 100 / allVisibleColumns.length
 
     // Access the data
-    let accessedData = data.map((d, i) => {
+    let resolvedData = data.map((d, i) => {
       const row = {
         __original: d,
         __index: i
@@ -768,23 +772,34 @@ export default React.createClass({
         })
         return groupedRows
       }
-      accessedData = groupRecursively(accessedData, pivotBy)
+      resolvedData = groupRecursively(resolvedData, pivotBy)
     }
 
-    const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
-
-    // Resolve the data from either manual data or sorted data
-    const resolvedData = manual ? accessedData : this.sortData(accessedData, resolvedSorting)
-
     return {
+      resolvedData,
       columnPercentage,
       pivotColumn,
-      resolvedData,
       allVisibleColumns,
       headerGroups,
       standardColumns,
       allDecoratedColumns,
       hasHeaderGroups
+    }
+  },
+
+  getSortedData (nextProps, nextState) {
+    const {
+      manual,
+      sorting,
+      allDecoratedColumns,
+      resolvedData
+    } = this.getResolvedState(nextProps, nextState)
+
+    const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
+
+    // Resolve the data from either manual data or sorted data
+    return {
+      sortedData: manual ? resolvedData : this.sortData(resolvedData, resolvedSorting)
     }
   },
 
