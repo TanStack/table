@@ -396,14 +396,11 @@ If you would like to help develop a suggested feature follow these steps:
 - Implement your changes to files in the `src/` directory
 - Submit PR for review
 
-If you would like to preview your changes, you can link and utilize the example like so:
+If you would like to preview your changes as you develop, you can link and utilize our <a href="https://github.com/storybooks/react-storybook" target="\_parent">React Storybook</a> like so:
 
-- `npm link`
-- `cd example`
 - `npm install`
-- `npm link react-table`
-- `npm run watch`
-- Make changes to the example in `src/screens/index.js` if needed
+- `npm run watch && run storybook` (or run them in separate tabs)
+- Make changes to stories in `/stories`, or create a new one if needed
 - View changes at `localhost:8000`
 
 ## Used By
