@@ -3,7 +3,7 @@ import _ from 'lodash'
 import namor from 'namor'
 
 import CodeHighlight from './components/codeHighlight'
-import ReactTable from '../lib/index'
+import ReactTable from '../src/index'
 
 export default () => {
   const data = _.map(_.range(5553), d => {

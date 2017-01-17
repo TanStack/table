@@ -399,7 +399,7 @@ If you would like to help develop a suggested feature follow these steps:
 If you would like to preview your changes as you develop, you can link and utilize our <a href="https://github.com/storybooks/react-storybook" target="\_parent">React Storybook</a> like so:
 
 - `npm install`
-- `npm run watch && run storybook` (or run them in separate tabs)
+- `run storybook` (or run them in separate tabs)
 - Make changes to stories in `/stories`, or create a new one if needed
 - View changes at `localhost:8000`
 
