@@ -456,7 +456,7 @@ export default React.createClass({
       const rowPivotColumn = allDecoratedColumns.find(d => d.id === row[pivotIDKey])
       const PivotCell = rowPivotColumn && rowPivotColumn.pivotRender
       return (
-        <TrGroupComponent key={i}>
+        <TrGroupComponent key={rowInfo.nestingPath.join('_')}>
           <TrComponent
             onClick={event => onTrClick(rowInfo.row, event)}
             className={classnames(trClassName, trClassCallback(rowInfo), row._viewIndex % 2 ? '-even' : '-odd')}
