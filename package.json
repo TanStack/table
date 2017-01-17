@@ -73,7 +73,8 @@
       "lib",
       "example",
       "react-table.js",
-      "stories"
+      "stories",
+      "docs"
     ]
   },
   "babel": {
