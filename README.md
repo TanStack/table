@@ -12,7 +12,7 @@
 <a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
   <img src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
 </a>
-<a href="https://npmjs.com/packag/react-table" target="\_parent">
+<a href="https://npmjs.com/package/react-table" target="\_parent">
   <img src="https://img.shields.io/npm/dm/react-table.svg" />
 </a>
 <a href="https://react-table-slack.herokuapp.com/" target="\_parent">
