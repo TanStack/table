@@ -32,7 +32,7 @@
     "umd": "rm -rf react-table.js && browserify lib/index.js -s reactTable -x react -t babelify -g uglifyify -o react-table.js",
     "prepublish": "npm-run-all build:* && npm run umd",
     "storybook": "start-storybook -p 8000 -c .storybook",
-    "deploy": "build-storybook && zab deploy"
+    "docs": "build-storybook -o docs"
   },
   "dependencies": {
     "classnames": "^2.2.5"
