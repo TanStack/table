@@ -10,19 +10,19 @@
 
 
 <a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
-  <img src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master " />
+  <img src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
 </a>
 <a href="https://npmjs.com/packag/react-table" target="\_parent">
-  <img src="https://img.shields.io/npm/dm/react-table.svg " />
+  <img src="https://img.shields.io/npm/dm/react-table.svg" />
 </a>
 <a href="https://react-table-slack.herokuapp.com/" target="\_parent">
-  <img src="https://img.shields.io/badge/slack-react--table-blue.svg " />
+  <img src="https://img.shields.io/badge/slack-react--table-blue.svg" />
 </a>
 <a href="https://github.com/tannerlinsley/react-table" target="\_parent">
-  <img src="https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star " />
+  <img src="https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star" />
 </a>
 <a href="https://twitter.com/tannerlinsley" target="\_parent">
-  <img src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow " />
+  <img src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
 
 ## Features
