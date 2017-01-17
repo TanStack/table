@@ -1,8 +1,0 @@
-{
-  "name": "react-table",
-  "root": "storybook-static",
-  "routes": [{
-    "src": "/**",
-    "dest": "index.html"
-  }]
-}
