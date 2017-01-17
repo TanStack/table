@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/tannerlinsley/react-table"><img src="https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png" alt="React Table Logo" style="width:450px;"/></a>
+  <a href="https://github.com/tannerlinsley/react-table" target="\_parent"><img src="https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png" alt="React Table Logo" style="width:450px;"/></a>
   <br />
   <br />
 
@@ -8,7 +8,22 @@
 # React Table
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
-[![Build Status](https://travis-ci.org/tannerlinsley/react-table.svg?branch=master)](https://travis-ci.org/tannerlinsley/react-table) [![npm](https://img.shields.io/npm/dm/react-table.svg)](https://npmjs.com/packag/react-table) [![react-table on Slack](https://img.shields.io/badge/slack-react--table-blue.svg)](https://react-table-slack.herokuapp.com/) [![GitHub stars](https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star)](https://github.com/tannerlinsley/react-table) [![Twitter Follow](https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow)](https://twitter.com/tannerlinsley)
+
+<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
+  <img src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master " />
+</a>
+<a href="https://npmjs.com/packag/react-table" target="\_parent">
+  <img src="https://img.shields.io/npm/dm/react-table.svg " />
+</a>
+<a href="https://react-table-slack.herokuapp.com/" target="\_parent">
+  <img src="https://img.shields.io/badge/slack-react--table-blue.svg " />
+</a>
+<a href="https://github.com/tannerlinsley/react-table" target="\_parent">
+  <img src="https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star " />
+</a>
+<a href="https://twitter.com/tannerlinsley" target="\_parent">
+  <img src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow " />
+</a>
 
 ## Features
 
@@ -18,9 +33,9 @@
 - Column Pivoting & Aggregation
 - Minimal design & easily themeable
 - Fully controllable via optional props and callbacks
-- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_blank">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
+- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
 
-## <a href="http://react-table.zabapps.com/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_blank">Demo</a>
+## <a href="http://react-table.zabapps.com/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Demo</a>
 
 ## Table of Contents
 - [Installation](#installation)
@@ -302,7 +317,7 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
 />
 ```
 
-For a detailed example, take a peek at our [async table mockup](https://github.com/tannerlinsley/react-table/blob/master/example/src/screens/async.js)
+For a detailed example, take a peek at our <a href="https://github.com/tannerlinsley/react-table/blob/master/stories/ServerSide.js" target="\_parent">async table mockup</a>
 
 ## Fully Controlled Component
 React Table by default works fantastically out of the box, but you can achieve even more control and customization if you choose to maintain the state yourself. It is very easy to do, even if you only want to manage *parts* of the state.
@@ -368,7 +383,7 @@ Object.assign(ReactTableDefaults, {
   />
 ```
 
-If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating [the source](https://github.com/tannerlinsley/react-table/blob/master/src/index.js) for the component you wish to replace.
+If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating <a href="https://github.com/tannerlinsley/react-table/blob/master/src/index.js" target="\_parent">the source</a> for the component you wish to replace.
 
 
 ## Contributing
@@ -393,6 +408,6 @@ If you would like to preview your changes, you can link and utilize the example 
 
 ## Used By
 
-<a href='https://nozzle.io'>
+<a href='https://nozzle.io' target="\_parent">
   <img src='https://nozzle.io/img/logo-blue.png' alt='Nozzle Logo' style='width:300px;'/>
 </a>
