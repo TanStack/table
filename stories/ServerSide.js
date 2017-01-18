@@ -69,21 +69,15 @@ const ServerSide = React.createClass({
         <div className='table-wrap'>
           <ReactTable
             columns={[{
-              header: 'Name',
-              columns: [{
-                header: 'First Name',
-                accessor: 'firstName'
-              }, {
-                header: 'Last Name',
-                id: 'lastName',
-                accessor: d => d.lastName
-              }]
+              header: 'First Name',
+              accessor: 'firstName'
             }, {
-              header: 'Info',
-              columns: [{
-                header: 'Age',
-                accessor: 'age'
-              }]
+              header: 'Last Name',
+              id: 'lastName',
+              accessor: d => d.lastName
+            }, {
+              header: 'Age',
+              accessor: 'age'
             }]}
             manual // Forces table not to paginate or sort automatically, so we can handle it server-side
             defaultPageSize={10}
@@ -161,14 +155,30 @@ export default React.createClass({
 
     return (
       <ReactTable
-        columns={columns}
-        manual // This forces table not to paginate or sort automatically, so we can handle things server-side
+        columns={[{
+          header: 'Name',
+          columns: [{
+            header: 'First Name',
+            accessor: 'firstName'
+          }, {
+            header: 'Last Name',
+            id: 'lastName',
+            accessor: d => d.lastName
+          }]
+        }, {
+          header: 'Info',
+          columns: [{
+            header: 'Age',
+            accessor: 'age'
+          }]
+        }]}
+        manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+        defaultPageSize={10}
         data={this.state.data} // Set the rows to be displayed
         pages={this.state.pages} // Display the total number of pages
         loading={this.state.loading} // Display the loading overlay when we need it
         onChange={this.fetchData} // Request new data when things change
       />
-    )
   }
 })
   `

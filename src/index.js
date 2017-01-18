@@ -662,7 +662,7 @@ export default React.createClass({
           columns: column.columns.map(decorateAndAddToAll)
         }
       } else {
-        decorateAndAddToAll(column)
+        return decorateAndAddToAll(column)
       }
     })
 
