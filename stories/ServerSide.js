@@ -135,42 +135,18 @@ export default React.createClass({
       })
   },
   render () {
-    const columns = [{
-      header: 'Name',
-      columns: [{
-        header: 'First Name',
-        accessor: 'firstName'
-      }, {
-        header: 'Last Name',
-        id: 'lastName',
-        accessor: d => d.lastName
-      }]
-    }, {
-      header: 'Info',
-      columns: [{
-        header: 'Age',
-        accessor: 'age'
-      }]
-    }]
-
     return (
       <ReactTable
         columns={[{
-          header: 'Name',
-          columns: [{
-            header: 'First Name',
-            accessor: 'firstName'
-          }, {
-            header: 'Last Name',
-            id: 'lastName',
-            accessor: d => d.lastName
-          }]
+          header: 'First Name',
+          accessor: 'firstName'
         }, {
-          header: 'Info',
-          columns: [{
-            header: 'Age',
-            accessor: 'age'
-          }]
+          header: 'Last Name',
+          id: 'lastName',
+          accessor: d => d.lastName
+        }, {
+          header: 'Age',
+          accessor: 'age'
         }]}
         manual // Forces table not to paginate or sort automatically, so we can handle it server-side
         defaultPageSize={10}
