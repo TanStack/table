@@ -135,7 +135,7 @@ function prefixAll (obj) {
 function groupBy (xs, key) {
   return xs.reduce((rv, x, i) => {
     const resKey = typeof key === 'function' ? key(x, i) : x[key]
-    rv[resKey] = rv[resKey] || []
+    rv[resKey] = isArray(rv[resKey]) ? rv[resKey] : []
     rv[resKey].push(x)
     return rv
   }, {})
