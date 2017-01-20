@@ -12,6 +12,7 @@ import Readme from '../README.md'
 //
 import Simple from '../stories/Simple.js'
 import CellRenderers from '../stories/CellRenderers.js'
+import MaxWidths from '../stories/MaxWidths.js'
 import ServerSide from '../stories/ServerSide.js'
 import SubComponents from '../stories/SubComponents.js'
 import Pivoting from '../stories/Pivoting.js'
@@ -34,6 +35,7 @@ configure(() => {
   storiesOf('2. Demos')
     .add('Simple Table', Simple)
     .add('Cell Renderers & Custom Components', CellRenderers)
+    // .add('Max Widths', MaxWidths)
     .add('Server-side Data', ServerSide)
     .add('Sub Components', SubComponents)
     .add('Pivoting & Aggregation', Pivoting)
