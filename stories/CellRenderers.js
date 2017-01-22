@@ -81,6 +81,7 @@ export default () => {
     <div>
       <div className='table-wrap'>
         <ReactTable
+          className='-striped -highlight'
           data={data}
           columns={columns}
           defaultPageSize={10}

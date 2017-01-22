@@ -53,9 +53,27 @@
 - [Component Overrides](#component-overrides)
 
 ## Installation
+1. Install React Table as a dependency
 ```bash
 $ npm install react-table
+# or
+$ yarn react-table
 ```
+2. Import the `react-table` module
+```javascript
+// ES6
+import ReactTable from 'react-table'
+// ES5
+var ReactTable = require('react-table').default
+```
+3. Import styles by including `react-table.css` anywhere on the page
+```javascript
+// JS (Webpack)
+import 'react-table/react-table.css'
+// html
+<link rel="stylesheet" href="node_modules/react-table/react-table.css">
+```
+
 
 ## Example
 ```javascript
@@ -211,7 +229,12 @@ Or just define them on the component per-instance
 ```
 
 ## Styles
-React-table is built to be dropped into existing applications or styled from the ground up, but if you'd like a decent starting point, you can optionally include our default theme `react-table.css`.  We think it looks great, honestly :)
+React-table ships with a minimal and clean stylesheet to get you on your feet quickly. It's located at `react-table/react-table.css`.
+
+- Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
+- Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
+
+We think the default styles looks great! But, if you prefer a more custom look, all of the included styles are easily overridable. Every single component contains a unique class that makes it super easy to customize. Just go for it!
 
 ## Header Groups
 To group columns with another header column, just nest your columns in a header column like so:

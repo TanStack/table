@@ -68,6 +68,7 @@ const ServerSide = React.createClass({
       <div>
         <div className='table-wrap'>
           <ReactTable
+            className='-striped -highlight'
             columns={[{
               header: 'First Name',
               accessor: 'firstName'

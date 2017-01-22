@@ -45,7 +45,7 @@ export const ReactTableDefaults = {
   onTrClick: () => null,
 
   // Classes
-  className: '-striped -highlight',
+  className: '',
   tableClassName: '',
   theadClassName: '',
   tbodyClassName: '',

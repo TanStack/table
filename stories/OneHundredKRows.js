@@ -47,6 +47,7 @@ export default () => {
         <ReactTable
           data={data}
           columns={columns}
+          className='-striped -highlight'
           defaultPageSize={10}
           pivotBy={['firstName', 'lastName']}
           SubComponent={(row) => {

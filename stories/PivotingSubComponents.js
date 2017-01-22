@@ -48,6 +48,7 @@ export default () => {
           data={data}
           columns={columns}
           defaultPageSize={10}
+          className='-striped -highlight'
           pivotBy={['firstName', 'lastName']}
           SubComponent={(row) => {
             return (
