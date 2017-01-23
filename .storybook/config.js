@@ -35,7 +35,7 @@ configure(() => {
   storiesOf('2. Demos')
     .add('Simple Table', Simple)
     .add('Cell Renderers & Custom Components', CellRenderers)
-    // .add('Max Widths', MaxWidths)
+    .add('Max Widths', MaxWidths)
     .add('Server-side Data', ServerSide)
     .add('Sub Components', SubComponents)
     .add('Pivoting & Aggregation', Pivoting)

@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
-    "build:css": "rm -rf react-table.css && stylus src/index.styl --use ./node_modules/nib/lib/nib.js --compress -o react-table.css",
+    "build:css": "rm -rf react-table.css && stylus src/index.styl --use autoprefixer-stylus --compress -o react-table.css",
     "watch": "npm-run-all --parallel watch:*",
     "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
     "watch:css": "onchange 'src/**/*.styl' -i -- npm run build:css",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@kadira/storybook": "^2.35.1",
+    "autoprefixer-stylus": "^0.13.0",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
     "babel-preset-es2015": "6.14.0",

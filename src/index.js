@@ -314,7 +314,8 @@ export default React.createClass({
               className={classnames(thClassname, 'rt-pivot-header')}
               style={_.prefixAll({
                 flex: `${columnPercentage} 0 auto`,
-                width: `${pivotColumn.minWidth}px`
+                width: `${pivotColumn.minWidth}px`,
+                maxWidth: `${pivotColumn.maxWidth}px`
               })}
             />
           ) : SubComponent ? (
@@ -333,7 +334,10 @@ export default React.createClass({
                 className={classnames(thClassname, column.headerClassName)}
                 style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
                   flex: `${column.columns.length * columnPercentage} 0 auto`,
-                  width: `${_.sum(column.columns.map(d => d.minWidth))}px`
+                  width: `${_.sum(column.columns.map(d => {
+                    return d.maxWidth < d.minWidth ? d.maxWidth : d.minWidth
+                  }))}px`,
+                  maxWidth: `${_.sum(column.columns.map(d => d.maxWidth))}px`
                 }))}
               >
                 {typeof column.header === 'function' ? (
@@ -372,7 +376,8 @@ export default React.createClass({
                 )}
                 style={_.prefixAll({
                   flex: `${columnPercentage} 0 auto`,
-                  width: `${pivotColumn.minWidth}px`
+                  width: `${pivotColumn.minWidth}px`,
+                  maxWidth: `${pivotColumn.maxWidth}px`
                 })}
                 toggleSort={(e) => {
                   pivotColumn.sortable && this.sortColumn(pivotColumn.pivotColumns, e.shiftKey)
@@ -425,7 +430,8 @@ export default React.createClass({
           )}
           style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
             flex: `${columnPercentage} 0 auto`,
-            width: `${column.minWidth}px`
+            width: `${column.minWidth}px`,
+            maxWidth: `${column.maxWidth}px`
           }))}
           toggleSort={(e) => {
             column.sortable && this.sortColumn(column, e.shiftKey)
@@ -468,7 +474,8 @@ export default React.createClass({
                 style={_.prefixAll({
                   paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
                   flex: `${pivotColumn ? columnPercentage : 0} 0 auto`,
-                  width: `${pivotColumn ? pivotColumn.minWidth : expanderColumnWidth}px`
+                  width: `${pivotColumn ? pivotColumn.minWidth : expanderColumnWidth}px`,
+                  maxWidth: pivotColumn && `${pivotColumn.maxWidth}px`
                 })}
                 onClick={(e) => {
                   if (onExpandRow) {
@@ -515,7 +522,8 @@ export default React.createClass({
                   className={classnames(column.className, {hidden: !show})}
                   style={Object.assign({}, tdStyle, column.style, _.prefixAll({
                     flex: `${columnPercentage} 0 auto`,
-                    width: `${column.minWidth}px`
+                    width: `${column.minWidth}px`,
+                    maxWidth: `${column.maxWidth}px`
                   }))}
                 >
                   {typeof Cell === 'function' ? (
@@ -868,6 +876,11 @@ export default React.createClass({
 
     if (!dcol.accessor) {
       dcol.accessor = d => undefined
+    }
+
+    // Ensure minWidth is not greater than maxWidth if set
+    if (dcol.maxWidth < dcol.minWidth) {
+      dcol.minWidth = dcol.maxWidth
     }
 
     return dcol
