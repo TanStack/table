@@ -57,7 +57,7 @@
 ```bash
 $ npm install react-table
 # or
-$ yarn react-table
+$ yarn add react-table
 ```
 2. Import the `react-table` module
 ```javascript
