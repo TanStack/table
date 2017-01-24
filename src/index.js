@@ -45,16 +45,28 @@ export const ReactTableDefaults = {
   onTrClick: () => null,
 
   // Classes
-  className: '',
+  className: 'ReactTable',
   tableClassName: '',
-  theadClassName: '',
+  theadGroupClassName: '-headerGroups',
+  theadClassName: '-header',
   tbodyClassName: '',
   trClassName: '',
   trClassCallback: d => null,
+  padRowClassName: '-padRow',
   thClassName: '',
+  thPivotClassName: 'rt-pivot-header',
+  thSubComponentClassName: 'rt-expander-header',
   thGroupClassName: '',
   tdClassName: '',
+  pivotClassName: 'rt-pivot',
+  cursorPointerClassName: '-cursor-pointer',
+  hiddenClassName: '-hidden',
   paginationClassName: '',
+  sortAscClassName: '-sort-asc',
+  sortDescClassName: '-sort-desc',
+  evenClassName: '-even',
+  oddClassName: '-odd',
+
 
   // Styles
   style: {},
@@ -208,42 +220,43 @@ export default React.createClass({
   render () {
     const resolvedProps = this.getResolvedState()
     const {
-      className,
-      style,
-      tableClassName,
-      tableStyle,
-      theadGroupClassName,
-      theadStyle,
-      trClassName,
-      trStyle,
-      thClassName,
-      thStyle,
-      theadClassName,
-      tbodyClassName,
-      tbodyStyle,
-      onTrClick,
-      trClassCallback,
-      trStyleCallback,
-      tdStyle,
-      showPagination,
-      paginationClassName,
-      expanderColumnWidth,
-      manual,
-      loadingText,
-      // State
       loading,
-      pageSize,
-      page,
-      sorting,
-      pages,
-      // Pivoting State
+      showPagination,
+      expanderColumnWidth,
       pivotBy,
       pivotValKey,
       pivotIDKey,
       subRowsKey,
-      expandedRows,
       onExpandRow,
-      // Components
+      onTrClick,
+      className,
+      tableClassName,
+      theadGroupClassName,
+      trClassName,
+      trClassCallback,
+      padRowClassName,
+      thClassName,
+      thPivotClassName,
+      thSubComponentClassName,
+      pivotClassName,
+      cursorPointerClassName,
+      hiddenClassName,
+      theadClassName,
+      tbodyClassName,
+      paginationClassName,
+      sortAscClassName,
+      sortDescClassName,
+      evenClassName,
+      oddClassName,
+      style,
+      tableStyle,
+      theadStyle,
+      tbodyStyle,
+      trStyle,
+      trStyleCallback,
+      thStyle,
+      tdStyle,
+      loadingText,
       TableComponent,
       TheadComponent,
       TbodyComponent,
@@ -256,7 +269,6 @@ export default React.createClass({
       LoadingComponent,
       SubComponent,
       columnPercentage,
-      // Data model
       pivotColumn,
       resolvedData,
       allVisibleColumns,
@@ -264,8 +276,13 @@ export default React.createClass({
       standardColumns,
       allDecoratedColumns,
       hasHeaderGroups,
-      // Sorted Data
-      sortedData
+      sortedData,
+      manual,
+      pageSize,
+      page,
+      sorting,
+      pages,
+      expandedRows
     } = resolvedProps
 
     // Pagination
@@ -300,7 +317,7 @@ export default React.createClass({
 
     const makeHeaderGroup = () => (
       <TheadComponent
-        className={classnames(theadGroupClassName, '-headerGroups')}
+        className={classnames(theadGroupClassName)}
         style={Object.assign({}, theadStyle, {
           minWidth: `${rowWidth}px`
         })}
@@ -311,7 +328,7 @@ export default React.createClass({
         >
           {pivotBy.length ? (
             <ThComponent
-              className={classnames(thClassName, 'rt-pivot-header')}
+              className={classnames(thClassName, thPivotClassName)}
               style={_.prefixAll({
                 flex: `${columnPercentage} 0 auto`,
                 width: `${pivotColumn.minWidth}px`,
@@ -320,7 +337,7 @@ export default React.createClass({
             />
           ) : SubComponent ? (
             <ThComponent
-              className={classnames(thClassName, 'rt-expander-header')}
+              className={classnames(thClassName, thSubComponentClassName)}
               style={_.prefixAll({
                 flex: `0 0 auto`,
                 width: `${expanderColumnWidth}px`
@@ -357,7 +374,7 @@ export default React.createClass({
       const pivotSort = pivotColumn && sorting.find(d => d.id === pivotColumn.id)
       return (
         <TheadComponent
-          className={classnames(theadClassName, '-header')}
+          className={theadClassName}
           style={Object.assign({}, theadStyle, {
             minWidth: `${rowWidth}px`
           })}
@@ -370,9 +387,9 @@ export default React.createClass({
               <ThComponent
                 className={classnames(
                   thClassName,
-                  'rt-pivot-header',
-                  pivotSort ? (pivotSort.asc ? '-sort-asc' : '-sort-desc') : '',
-                  pivotColumn.sortable && '-cursor-pointer'
+                  thPivotClassName,
+                  pivotSort ? (pivotSort.asc ? sortAscClassName : sortDescClassName) : '',
+                  pivotColumn.sortable && cursorPointerClassName
                 )}
                 style={_.prefixAll({
                   flex: `${columnPercentage} 0 auto`,
@@ -401,7 +418,7 @@ export default React.createClass({
               </ThComponent>
             ) : SubComponent ? (
               <ThComponent
-                className={classnames(thClassName, 'rt-expander-header')}
+                className={classnames(thClassName, thSubComponentClassName)}
                 style={_.prefixAll({
                   flex: `0 0 auto`,
                   width: `${expanderColumnWidth}px`
@@ -422,11 +439,9 @@ export default React.createClass({
           className={classnames(
             thClassName,
             column.headerClassName,
-            sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
-            {
-              '-cursor-pointer': column.sortable,
-              '-hidden': !show
-            }
+              sort ? (sort.asc ? sortAscClassName : sortDescClassName) : '',
+              column.sortable ? cursorPointerClassName : '',
+              show ? '' : hiddenClassName
           )}
           style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
             flex: `${columnPercentage} 0 auto`,
@@ -465,12 +480,12 @@ export default React.createClass({
         <TrGroupComponent key={rowInfo.nestingPath.join('_')}>
           <TrComponent
             onClick={event => onTrClick(rowInfo.row, event)}
-            className={classnames(trClassName, trClassCallback(rowInfo), row._viewIndex % 2 ? '-even' : '-odd')}
+            className={classnames(trClassName, trClassCallback(rowInfo), row._viewIndex % 2 ? evenClassName : oddClassName)}
             style={Object.assign({}, trStyle, trStyleCallback(rowInfo))}
           >
             {(pivotBy.length || SubComponent) && (
               <TdComponent
-                className={classnames(thClassName, 'rt-pivot')}
+                className={classnames(thClassName, pivotClassName)}
                 style={_.prefixAll({
                   paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
                   flex: `${pivotColumn ? columnPercentage : 0} 0 auto`,
@@ -519,7 +534,7 @@ export default React.createClass({
               return (
                 <TdComponent
                   key={i2}
-                  className={classnames(column.className, {hidden: !show})}
+                  className={classnames(column.className, show ? '' : hiddenClassName)}
                   style={Object.assign({}, tdStyle, column.style, _.prefixAll({
                     flex: `${columnPercentage} 0 auto`,
                     width: `${column.minWidth}px`,
@@ -553,12 +568,12 @@ export default React.createClass({
           key={i}
         >
           <TrComponent
-            className={classnames(trClassName, '-padRow')}
+            className={classnames(trClassName, padRowClassName)}
             style={trStyle}
           >
             {SubComponent && (
               <ThComponent
-                className={classnames(thClassName, 'rt-expander-header')}
+                className={classnames(thClassName, thSubComponentClassName)}
                 style={_.prefixAll({
                   flex: `0 0 auto`,
                   width: `${expanderColumnWidth}px`
@@ -587,7 +602,7 @@ export default React.createClass({
 
     return (
       <div
-        className={classnames(className, 'ReactTable')}
+        className={className}
         style={style}
       >
         <TableComponent
@@ -657,12 +672,12 @@ export default React.createClass({
     }
 
     // Decorate the columns
+    let allDecoratedColumns = []
     const decorateAndAddToAll = (col) => {
       const decoratedColumn = this.makeDecoratedColumn(col)
       allDecoratedColumns.push(decoratedColumn)
       return decoratedColumn
     }
-    let allDecoratedColumns = []
     const decoratedColumns = columns.map((column, i) => {
       if (column.columns) {
         return {
