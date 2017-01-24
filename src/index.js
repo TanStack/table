@@ -216,7 +216,7 @@ export default React.createClass({
       theadStyle,
       trClassName,
       trStyle,
-      thClassname,
+      thClassName,
       thStyle,
       theadClassName,
       tbodyClassName,
@@ -311,7 +311,7 @@ export default React.createClass({
         >
           {pivotBy.length ? (
             <ThComponent
-              className={classnames(thClassname, 'rt-pivot-header')}
+              className={classnames(thClassName, 'rt-pivot-header')}
               style={_.prefixAll({
                 flex: `${columnPercentage} 0 auto`,
                 width: `${pivotColumn.minWidth}px`,
@@ -320,7 +320,7 @@ export default React.createClass({
             />
           ) : SubComponent ? (
             <ThComponent
-              className={classnames(thClassname, 'rt-expander-header')}
+              className={classnames(thClassName, 'rt-expander-header')}
               style={_.prefixAll({
                 flex: `0 0 auto`,
                 width: `${expanderColumnWidth}px`
@@ -331,7 +331,7 @@ export default React.createClass({
             return (
               <ThComponent
                 key={i}
-                className={classnames(thClassname, column.headerClassName)}
+                className={classnames(thClassName, column.headerClassName)}
                 style={Object.assign({}, thStyle, column.headerStyle, _.prefixAll({
                   flex: `${column.columns.length * columnPercentage} 0 auto`,
                   width: `${_.sum(column.columns.map(d => {
@@ -369,7 +369,7 @@ export default React.createClass({
             {pivotBy.length ? (
               <ThComponent
                 className={classnames(
-                  thClassname,
+                  thClassName,
                   'rt-pivot-header',
                   pivotSort ? (pivotSort.asc ? '-sort-asc' : '-sort-desc') : '',
                   pivotColumn.sortable && '-cursor-pointer'
@@ -401,7 +401,7 @@ export default React.createClass({
               </ThComponent>
             ) : SubComponent ? (
               <ThComponent
-                className={classnames(thClassname, 'rt-expander-header')}
+                className={classnames(thClassName, 'rt-expander-header')}
                 style={_.prefixAll({
                   flex: `0 0 auto`,
                   width: `${expanderColumnWidth}px`
@@ -420,7 +420,7 @@ export default React.createClass({
         <ThComponent
           key={i}
           className={classnames(
-            thClassname,
+            thClassName,
             column.headerClassName,
             sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
             {
@@ -470,7 +470,7 @@ export default React.createClass({
           >
             {(pivotBy.length || SubComponent) && (
               <TdComponent
-                className={classnames(thClassname, 'rt-pivot')}
+                className={classnames(thClassName, 'rt-pivot')}
                 style={_.prefixAll({
                   paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
                   flex: `${pivotColumn ? columnPercentage : 0} 0 auto`,
@@ -558,7 +558,7 @@ export default React.createClass({
           >
             {SubComponent && (
               <ThComponent
-                className={classnames(thClassname, 'rt-expander-header')}
+                className={classnames(thClassName, 'rt-expander-header')}
                 style={_.prefixAll({
                   flex: `0 0 auto`,
                   width: `${expanderColumnWidth}px`
