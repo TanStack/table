@@ -67,7 +67,6 @@ export const ReactTableDefaults = {
   evenClassName: '-even',
   oddClassName: '-odd',
 
-
   // Styles
   style: {},
   tableStyle: {},
