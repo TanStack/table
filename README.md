@@ -49,7 +49,8 @@
 - [Sub Tables & Sub Components](#sub-tables--sub-components)
 - [Server-side Data](#server-side-data)
 - [Fully Controlled Component](#fully-controlled-component)
-- [Multi-sort](#multi-sort)
+- [Functional Rendering](#functional-rendering)
+- [Multi-Sort](#multi-sort)
 - [Component Overrides](#component-overrides)
 
 ## Installation
@@ -374,6 +375,52 @@ Here are the props and their corresponding callbacks that control the state of t
   onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
 />
+```
+
+## Functional Rendering
+Possibly one of the coolest features of React-Table is its ability to expose internal state for custom render logic. The easiest way to do this is to optionally pass a function as a child of `<ReactTable />`.
+
+The function you pass will be called with the following items:
+- Fully-resolved state of the table
+- The standard table generator
+- The instance of the component
+
+You can then return any JSX or react you want! This turns out to be perfect for:
+- Accessing the internal state of the table before rendering the table
+- Decorating the table with more UI
+- Building your own 100% custom display logic, while utilizing the state and methods of the table component
+
+Example:
+```javascript
+<ReactTable
+  columns={columns}
+  data={data}
+  ...
+>
+  {(state, makeTable, instance) => {
+    // Now you have full access to the state of the table!
+    state.decoratedColumns === [...] // all of the columns (with id's and meta)
+    state.visibleColumns === [...] // all of the columns (with id's and meta)
+    state.visibleColumns === [...] // all of the columns (with id's and meta)
+    // etc.
+
+    // `makeTable` is a function that returns the standard table markup
+    return makeTable()
+
+    // So add some decoration!
+    return (
+      <div>
+        <customPivotBySelect />
+        <customColumnHideShow />
+        <customAnything />
+        {makeTable()}
+      </div>
+    )
+
+    // The possibilities are endless!!!
+
+  }}
+</ReactTable>
 ```
 
 ## Multi-Sort

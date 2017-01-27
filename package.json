@@ -60,6 +60,7 @@
     "postcss-cli": "^2.6.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-json-tree": "^0.10.1",
     "standard": "^8.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"

@@ -181,6 +181,10 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
+almost-equal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/almost-equal/-/almost-equal-1.1.0.tgz#f851c631138757994276aa2efbe8dfa3066cccdd"
+
 alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
@@ -348,26 +352,7 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-autoprefixer-stylus@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/autoprefixer-stylus/-/autoprefixer-stylus-0.13.0.tgz#cc2a864e121fad691421c82d9f3e4328137b7df4"
-  dependencies:
-    autoprefixer "6.6.1"
-    multi-stage-sourcemap "0.2.1"
-    postcss "5.2.8"
-
-autoprefixer@6.6.1, autoprefixer@^6.3.1, autoprefixer@^6.3.7:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-6.6.1.tgz#11a4077abb4b313253ec2f6e1adb91ad84253519"
-  dependencies:
-    browserslist "~1.5.1"
-    caniuse-db "^1.0.30000604"
-    normalize-range "^0.1.2"
-    num2fraction "^1.2.2"
-    postcss "^5.2.8"
-    postcss-value-parser "^3.2.3"
-
-autoprefixer@^6.7.0:
+autoprefixer@^6.3.1, autoprefixer@^6.3.7, autoprefixer@^6.7.0:
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-6.7.0.tgz#88992cf04df141e7b8293550f2ee716c565d1cae"
   dependencies:
@@ -1190,7 +1175,7 @@ babel-runtime@6.11.6:
     core-js "^2.4.0"
     regenerator-runtime "^0.9.5"
 
-babel-runtime@6.x.x, babel-runtime@^6.0.0, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.5.0, babel-runtime@^6.9.0, babel-runtime@^6.9.1, babel-runtime@^6.9.2:
+babel-runtime@6.x.x, babel-runtime@^6.0.0, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.5.0, babel-runtime@^6.6.1, babel-runtime@^6.9.0, babel-runtime@^6.9.1, babel-runtime@^6.9.2:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.22.0.tgz#1cf8b4ac67c77a4ddb0db2ae1f74de52ac4ca611"
   dependencies:
@@ -1248,6 +1233,10 @@ babylon@~5.8.3:
 balanced-match@^0.4.1, balanced-match@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
+
+base16@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/base16/-/base16-1.0.0.tgz#e297f60d7ec1014a7a971a39ebc8a98c0b681e70"
 
 base64-js@^1.0.2:
   version "1.2.0"
@@ -1441,13 +1430,7 @@ browserify@13.1.0:
     vm-browserify "~0.0.1"
     xtend "^4.0.0"
 
-browserslist@^1.0.1, browserslist@^1.4.0, browserslist@^1.5.2, browserslist@~1.5.1:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.5.2.tgz#1c82fde0ee8693e6d15c49b7bff209dc06298c56"
-  dependencies:
-    caniuse-db "^1.0.30000604"
-
-browserslist@~1.6.0:
+browserslist@^1.0.1, browserslist@^1.4.0, browserslist@^1.5.2, browserslist@~1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.6.0.tgz#85fb7c993540d3fda31c282baf7f5aee698ac9ee"
   dependencies:
@@ -1528,7 +1511,7 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.3.0"
     shelljs "^0.7.0"
 
-caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000604, caniuse-db@^1.0.30000613:
+caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000613:
   version "1.0.30000617"
   resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000617.tgz#9b7fd81f58a35526315c83e60cb5f076f0beb392"
 
@@ -1661,6 +1644,13 @@ color-convert@^1.3.0:
 color-name@^1.0.0, color-name@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.1.tgz#4b1415304cf50028ea81643643bd82ea05803689"
+
+color-space@^1.14.3:
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/color-space/-/color-space-1.14.7.tgz#b7f5a31779427bb25f9927a69410d80c2eaaa71b"
+  dependencies:
+    husl "^5.0.0"
+    mumath "^3.0.0"
 
 color-string@^0.3.0:
   version "0.3.0"
@@ -2962,6 +2952,10 @@ https-browserify@0.0.1, https-browserify@~0.0.0:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
+husl@^5.0.0:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/husl/-/husl-5.0.3.tgz#ee272aaff1bebe40df3588ed007b70de7e679788"
+
 iconv-lite@0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
@@ -3468,6 +3462,14 @@ lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
 
+lodash.curry@^4.0.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.curry/-/lodash.curry-4.1.1.tgz#248e36072ede906501d75966200a86dab8b23170"
+
+lodash.flow@^3.3.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.flow/-/lodash.flow-3.5.0.tgz#87bf40292b8cf83e4e8ce1a3ae4209e20071675a"
+
 lodash.indexof@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/lodash.indexof/-/lodash.indexof-4.0.5.tgz#53714adc2cddd6ed87638f893aa9b6c24e31ef3c"
@@ -3732,11 +3734,11 @@ ms@0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
-multi-stage-sourcemap@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/multi-stage-sourcemap/-/multi-stage-sourcemap-0.2.1.tgz#b09fc8586eaa17f81d575c4ad02e0f7a3f6b1105"
+mumath@^3.0.0:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/mumath/-/mumath-3.3.3.tgz#262e10fcc10699f7050dc707575d39db5c903181"
   dependencies:
-    source-map "^0.1.34"
+    almost-equal "^1.1.0"
 
 mute-stream@0.0.5:
   version "0.0.5"
@@ -4449,16 +4451,7 @@ postcss-zindex@^2.0.1:
     postcss "^5.0.4"
     uniqs "^2.0.0"
 
-postcss@5.2.8, postcss@^5.0.0, postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.13, postcss@^5.0.14, postcss@^5.0.16, postcss@^5.0.2, postcss@^5.0.4, postcss@^5.0.5, postcss@^5.0.6, postcss@^5.0.8, postcss@^5.2.5, postcss@^5.2.8:
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-5.2.8.tgz#05720c49df23c79bda51fd01daeb1e9222e94390"
-  dependencies:
-    chalk "^1.1.3"
-    js-base64 "^2.1.9"
-    source-map "^0.5.6"
-    supports-color "^3.1.2"
-
-postcss@^5.2.11:
+postcss@^5.0.0, postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.13, postcss@^5.0.14, postcss@^5.0.16, postcss@^5.0.2, postcss@^5.0.4, postcss@^5.0.5, postcss@^5.0.6, postcss@^5.0.8, postcss@^5.2.11, postcss@^5.2.5:
   version "5.2.11"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-5.2.11.tgz#ff29bcd6d2efb98bfe08a022055ec599bbe7b761"
   dependencies:
@@ -4540,6 +4533,10 @@ punycode@^1.2.4, punycode@^1.3.2, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
+pure-color@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/pure-color/-/pure-color-1.2.0.tgz#702d2f2819dd545b1fde5116fca5f0c2dad2d18d"
+
 q@^1.1.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.4.1.tgz#55705bcd93c5f3673530c2c2cbc0c2b3addc286e"
@@ -4591,6 +4588,16 @@ rc@~1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~1.0.4"
 
+react-base16-styling@^0.4.1:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/react-base16-styling/-/react-base16-styling-0.4.6.tgz#ac23cb19b278974d965003b88f06a038d790bc80"
+  dependencies:
+    base16 "^1.0.0"
+    color-space "^1.14.3"
+    lodash.curry "^4.0.1"
+    lodash.flow "^3.3.0"
+    pure-color "^1.2.0"
+
 react-docgen@^2.12.1:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/react-docgen/-/react-docgen-2.13.0.tgz#7fcc4a3104ea8d4fd428383ba38df11166837be9"
@@ -4626,6 +4633,14 @@ react-inspector@^1.1.0:
     babel-runtime "^6.9.2"
     is-dom "^1.0.5"
 
+react-json-tree@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/react-json-tree/-/react-json-tree-0.10.1.tgz#7f9eab36abf8adf329c7e5ad4091f5987bcbd5de"
+  dependencies:
+    babel-runtime "^6.6.1"
+    react-base16-styling "^0.4.1"
+    react-pure-render "^1.0.2"
+
 react-komposer@^1.9.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/react-komposer/-/react-komposer-1.13.1.tgz#4b8ac4bcc71323bd7413dcab95c831197f50eed0"
@@ -4653,6 +4668,10 @@ react-modal@^1.2.0, react-modal@^1.2.1:
     element-class "^0.2.0"
     exenv "1.2.0"
     lodash.assign "^4.2.0"
+
+react-pure-render@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-pure-render/-/react-pure-render-1.0.2.tgz#9d8a928c7f2c37513c2d064e57b3e3c356e9fabb"
 
 react-simple-di@^1.2.0:
   version "1.2.0"
@@ -5141,7 +5160,7 @@ source-map-support@^0.4.2:
   dependencies:
     source-map "^0.5.3"
 
-source-map@0.1.x, source-map@^0.1.34:
+source-map@0.1.x:
   version "0.1.43"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
   dependencies:
@@ -5366,7 +5385,7 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-supports-color@^3.1.0, supports-color@^3.1.2, supports-color@^3.2.3:
+supports-color@^3.1.0, supports-color@^3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.2.3.tgz#65ac0504b3954171d8a64946b2ae3cbb8a5f54f6"
   dependencies:

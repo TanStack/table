@@ -208,6 +208,7 @@ export default React.createClass({
   render () {
     const resolvedProps = this.getResolvedState()
     const {
+      children,
       className,
       style,
       tableClassName,
@@ -585,7 +586,7 @@ export default React.createClass({
       )
     }
 
-    return (
+    const makeTable = () => (
       <div
         className={classnames(className, 'ReactTable')}
         style={style}
@@ -623,6 +624,21 @@ export default React.createClass({
         />
       </div>
     )
+
+    // childProps are optionally passed to a function-as-a-child
+    const childState = {
+      ...resolvedProps,
+      startRow,
+      endRow,
+      pageRows,
+      minRows,
+      padRows,
+      canPrevious,
+      canNext,
+      rowWidth
+    }
+
+    return children ? children(childState, makeTable, this) : makeTable()
   },
 
   // Helpers

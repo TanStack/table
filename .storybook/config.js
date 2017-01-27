@@ -18,6 +18,7 @@ import SubComponents from '../stories/SubComponents.js'
 import Pivoting from '../stories/Pivoting.js'
 import PivotingSubComponents from '../stories/PivotingSubComponents.js'
 import OneHundredKRows from '../stories/OneHundredKRows.js'
+import FunctionalRendering from '../stories/FunctionalRendering.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -41,4 +42,5 @@ configure(() => {
     .add('Pivoting & Aggregation', Pivoting)
     .add('Pivoting & Aggregation w/ Sub Components', PivotingSubComponents)
     .add('100k Rows w/ Pivoting & Sub Components', OneHundredKRows)
+    .add('Functional Rendering', FunctionalRendering)
 }, module)
