@@ -28,8 +28,6 @@ export default () => {
       accessor: d => d.lastName
     }]
   }, {
-    expander: true
-  }, {
     header: 'Info',
     columns: [{
       header: 'Age',
@@ -39,6 +37,8 @@ export default () => {
         return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
       }
     }]
+  }, {
+    expander: true
   }]
 
   return (
@@ -50,7 +50,6 @@ export default () => {
           columns={columns}
           defaultPageSize={10}
           SubComponent={() => <span>Hello</span>}
-          pivotBy={['lastName']}
         />
       </div>
       <div style={{textAlign: 'center'}}>
