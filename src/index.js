@@ -28,7 +28,7 @@ export const ReactTableDefaults = {
   onSortingChange: undefined,
 
   // Pivoting
-  pivotBy: [],
+  pivotBy: undefined,
   pivotColumnWidth: 200,
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
@@ -691,7 +691,7 @@ export default React.createClass({
   getDataModel (nextProps, nextState) {
     const {
       columns,
-      pivotBy,
+      pivotBy = [],
       data,
       pivotIDKey,
       pivotValKey,
