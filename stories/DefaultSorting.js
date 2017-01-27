@@ -18,20 +18,18 @@ export default () => {
     header: 'Name',
     columns: [{
       header: 'First Name',
-      accessor: 'firstName',
-      maxWidth: 200
+      accessor: 'firstName'
     }, {
       header: 'Last Name',
       id: 'lastName',
-      accessor: d => d.lastName,
-      maxWidth: 400
+      accessor: d => d.lastName
     }]
   }, {
     header: 'Info',
     columns: [{
       header: 'Age',
       accessor: 'age',
-      maxWidth: 60
+      sort: 'desc'
     }]
   }]
 
@@ -58,30 +56,28 @@ function getCode () {
   return `
 import ReactTable from 'react-table'
 
+// Create some column definitions
 const columns = [{
   header: 'Name',
   columns: [{
     header: 'First Name',
-    accessor: 'firstName',
-    maxWidth: 200
+    accessor: 'firstName'
   }, {
     header: 'Last Name',
     id: 'lastName',
-    accessor: d => d.lastName,
-    maxWidth: 400
+    accessor: d => d.lastName
   }]
 }, {
   header: 'Info',
   columns: [{
     header: 'Age',
-    accessor: 'age',
-    maxWidth: 60
+    accessor: 'age'
   }]
 }]
 
+// Display your table!
 return (
   <ReactTable
-    className='-striped -highlight'
     data={data}
     columns={columns}
     defaultPageSize={10}

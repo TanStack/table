@@ -206,8 +206,13 @@ Or just define them on the component per-instance
   sortable: true,
   sort: 'asc' or 'desc', // used to determine the column sorting on init
   show: true, // can be used to hide a column
+  width: undefined, // A hardcoded width for the column. This overrides both min and max width options
   minWidth: 100 // A minimum width for this column. If there is extra room, column will flex to fill available space (up to the max-width, if set)
   maxWidth: undefined // A maximum width for this column.
+
+  // Special
+  expander: false // This option will override all data-related options and designates the column to be used
+  // for pivoting and sub-component expansion
 
   // Cell Options
   className: '', // Set the classname of the `td` element of the column
