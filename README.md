@@ -43,8 +43,10 @@
 - [Data](#data)
 - [Props](#props)
 - [Columns](#columns)
+- [Column Header Groups](#column-header-groups)
+- [Custom Cell & Header Rendering](#custom-cell--and-header-rendering)
 - [Styles](#styles)
-- [Header Groups](#header-groups)
+- [Custom Props](#custom-props)
 - [Pivoting & Aggregation](#pivoting--aggregation)
 - [Sub Tables & Sub Components](#sub-tables--sub-components)
 - [Server-side Data](#server-side-data)
@@ -52,6 +54,10 @@
 - [Functional Rendering](#functional-rendering)
 - [Multi-Sort](#multi-sort)
 - [Component Overrides](#component-overrides)
+- [Contributing](#contributing)
+- [Scripts](#scripts)
+- [Used By](#used-by)
+
 
 ## Installation
 1. Install React Table as a dependency
@@ -121,55 +127,87 @@ These are all of the available props (and their default values) for the main `<R
 ```javascript
 {
   // General
-  loading: false, // Whether to show the loading overlay or not
-  defaultPageSize: 20, // The default page size (this can be changed by the user if `showPageSizeOptions` is enabled)
-  minRows: 0, // Ensure this many rows are always rendered, regardless of rows on page
-  showPagination: true, // Shows or hides the pagination component
-  showPageJump: true, // Shows or hides the pagination number input
-  showPageSizeOptions: true, // Enables the user to change the page size
-  pageSizeOptions: [5, 10, 20, 25, 50, 100], // The available page size options
-  expanderColumnWidth: 30, // default columnWidth for the expander column
+  data: [],
+  loading: false,
+  showPagination: true,
+  showPageSizeOptions: true,
+  pageSizeOptions: [5, 10, 20, 25, 50, 100],
+  defaultPageSize: 20,
+  showPageJump: true,
+  expanderColumnWidth: 35,
 
-  // Callbacks
-  onChange: (state, instance) => null, // Anytime the internal state of the table changes, this will fire
-  onTrClick: (row, event) => null,  // Handler for row click events
+  // Controlled State Overrides (see Fully Controlled Component section)
+  page: undefined,
+  pageSize: undefined,
+  sorting: undefined
+
+  // Controlled State Callbacks
+  onExpandSubComponent: undefined,
+  onPageChange: undefined,
+  onPageSizeChange: undefined,
+  onSortingChange: undefined,
+
+  // Pivoting
+  pivotBy: undefined,
+  pivotColumnWidth: 200,
+  pivotValKey: '_pivotVal',
+  pivotIDKey: '_pivotID',
+  subRowsKey: '_subRows',
+
+  // Pivoting State Overrides (see Fully Controlled Component section)
+  expandedRows: {},
+
+  // Pivoting State Callbacks
+  onExpandRow: undefined,
+
+  // General Callbacks
+  onChange: () => null,
+
+  // Classes
+  className: '',
+  style: {},
+
+  // Component decorators
+  getProps: () => ({}),
+  getTableProps: () => ({}),
+  getTheadGroupProps: () => ({}),
+  getTheadGroupTrProps: () => ({}),
+  getTheadGroupThProps: () => ({}),
+  getTheadProps: () => ({}),
+  getTheadTrProps: () => ({}),
+  getTheadThProps: () => ({}),
+  getTbodyProps: () => ({}),
+  getTrGroupProps: () => ({}),
+  getTrProps: () => ({}),
+  getThProps: () => ({}),
+  getTdProps: () => ({}),
+  getPaginationProps: () => ({}),
+  getLoadingProps: () => ({}),
+
+  // Global Column Defaults
+  column: {
+    sortable: true,
+    show: true,
+    minWidth: 100,
+    // Cells only
+    render: undefined,
+    className: '',
+    style: {},
+    getProps: () => ({}),
+    // Headers only
+    header: undefined,
+    headerClassName: '',
+    headerStyle: {},
+    getHeaderProps: () => ({})
+  },
 
   // Text
   previousText: 'Previous',
   nextText: 'Next',
+  loadingText: 'Loading...',
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
-
-  // Classes
-  className: '-striped -highlight', // The most top level className for the component
-  tableClassName: '', // ClassName for the `table` element
-  theadClassName: '', // ClassName for the `thead` element
-  tbodyClassName: '', // ClassName for the `tbody` element
-  trClassName: '', // ClassName for all `tr` elements
-  trClassCallback: row => null, // A call back to dynamically add classes (via the classnames module) to a row element
-  paginationClassName: '' // ClassName for `pagination` element
-
-  // Styles
-  style: {}, // Main style object for the component
-  tableStyle: {}, // style object for the `table` component
-  theadStyle: {}, // style object for the `thead` component
-  tbodyStyle: {}, // style object for the `tbody` component
-  trStyle: {}, // style object for the `tr` component
-  trStyleCallback: row => {}, // A call back to dynamically add styles to a row element
-  thStyle: {}, // style object for the `th` component
-  tdStyle: {}, // style object for the `td` component
-  paginationStyle: {}, // style object for the `paginination` component
-
-  // Controlled Props (see Using as a Fully Controlled Component below)
-  page: undefined,
-  pageSize: undefined,
-  sorting: undefined,
-  expandedRows: undefined,
-  // Controlled Callbacks
-  onExpandRow: undefined,
-  onPageChange: undefined,
-  onPageSizeChange: undefined,
 }
 ```
 
@@ -185,7 +223,7 @@ Object.assign(ReactTableDefaults, {
 })
 ```
 
-Or just define them on the component per-instance
+Or just define them as props
 
 ```javascript
 <ReactTable
@@ -217,7 +255,7 @@ Or just define them on the component per-instance
   // Cell Options
   className: '', // Set the classname of the `td` element of the column
   style: {}, // Set the style of the `td` element of the column
-  render: JSX eg. ({value, rowValues, row, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+  render: JSX eg. (rowInfo: {value, rowValues, row, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
     // value == the accessed value of the column
     // rowValues == an object of all of the accessed values for the row
     // row == the original row of data supplied to the table
@@ -235,19 +273,12 @@ Or just define them on the component per-instance
 }]
 ```
 
-## Styles
-React-table ships with a minimal and clean stylesheet to get you on your feet quickly. It's located at `react-table/react-table.css`.
-
-- Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
-- Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
-
-We think the default styles looks great! But, if you prefer a more custom look, all of the included styles are easily overridable. Every single component contains a unique class that makes it super easy to customize. Just go for it!
-
-## Header Groups
-To group columns with another header column, just nest your columns in a header column like so:
+## Column Header Groups
+To group columns with another header column, just nest your columns in a header column.  Header columns utilize the same header properties as regular columns.
 ```javascript
 const columns = [{
   header: 'Favorites',
+  headerClassName: 'my-favorites-column-header-group'
   columns: [{
     header: 'Color',
     accessor: 'favorites.color'
@@ -258,6 +289,146 @@ const columns = [{
     header: 'Actor',
     accessor: 'favorites.actor'
   }]
+}]
+```
+
+## Custom Cell & Header Rendering
+You can use any react component or JSX to display column headers or cells. Any component you use will be passed the following props:
+- `row` - Original row from your data
+- `rowValues` - The post-accessed values from the original row
+- `index` - The index of the row
+- `viewIndex` - the index of the row relative to the current page
+- `level` - The nesting depth (zero-indexed)
+- `nestingPath` - The nesting path of the row
+- `aggregated` - A boolean stating if the row is an aggregation row
+- `subRows` - An array of any expandable sub-rows contained in this row
+
+```javascript
+// This column uses a stateless component to produce a different colored bar depending on the value
+// You can also use stateful components or any other function that returns JSX
+const columns = [{
+  header: () => <span><i className='fa-tasks' /> Progress</span>,
+  accessor: 'progress',
+  render: row => (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#dadada',
+        borderRadius: '2px'
+      }}
+    >
+      <div
+        style={{
+          width: `${row.value}%`,
+          height: '100%',
+          backgroundColor: row.value > 66 ? '#85cc00'
+            : row.value > 33 ? '#ffbf00'
+            : '#ff2e00',
+          borderRadius: '2px',
+          transition: 'all .2s ease-out'
+        }}
+      />
+    </div>
+  )
+}]
+```
+
+## Styles
+React-table ships with a minimal and clean stylesheet to get you on your feet quickly. It's located at `react-table/react-table.css`.
+
+#### Built-in Styles
+- Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
+- Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
+
+#### CSS Styles
+We think the default styles looks great! But, if you prefer a more custom look, all of the included styles are easily overridable. Every single component contains a unique class that makes it super easy to customize. Just go for it!
+
+#### JS Styles
+Every single react-table element and `get[ComponentName]Props` callback support classes (powered by `classname` and js styles.
+
+## Custom Props
+
+#### Built-in Components
+Every single built-in component's props can be dynamically extended using any one of these prop-callbacks:
+```javascript
+<ReactTable
+  getProps={fn}
+  getTableProps={fn}
+  getTheadGroupProps={fn}
+  getTheadGroupTrProps={fn}
+  getTheadGroupThProps={fn}
+  getTheadProps={fn}
+  getTheadTrProps={fn}
+  getTheadThProps={fn}
+  getTbodyProps={fn}
+  getTrGroupProps={fn}
+  getTrProps={fn}
+  getThProps={fn}
+  getTdProps={fn}
+  getPaginationProps={fn}
+  getLoadingProps={fn}
+/>
+```
+
+These callbacks are executed with each render of the element with three parameters:
+1. Table State
+1. RowInfo (where applicable)
+1. Column (where applicable)
+
+This makes it extremely easy to add, say... a row click callback!
+```javascript
+// When any Td element is clicked, we'll log out some information
+<ReactTable
+  getTdProps={(state, rowInfo, column) => {
+    return {
+      onClick: e => {
+        console.log('A Td Element was clicked!')
+        console.log('It was in this column:', column)
+        console.log('It was in this row:', rowInfo)
+        console.log('it produced this event:', e)
+      }
+    }
+  }}
+/>
+```
+
+You can use these callbacks for dynamic styling as well!
+```javascript
+// Any Tr element will be green if its (row.age > 20)
+<ReactTable
+  getTrProps={(state, rowInfo, column) => {
+    return {
+      style: {
+        background: rowInfo.age > 20 ? 'green' : 'red'
+      }
+    }
+  }}
+/>
+```
+
+#### Column Components
+Just as core components can have dynamic props, columns and column headers can too!
+
+You can utilize either of these prop callbacks on columns:
+```javascript
+const columns = [{
+  getHeaderProps: () => (...),
+  getProps: () => (...)
+}]
+```
+
+In a similar fashion these can be used to dynamically style just about anything!
+```javascript
+// This columns cells will be red if (row.name === Santa Clause)
+const columns = [{
+  getProps: (state, rowInfo, column) => {
+    return {
+      style: {
+        background: rowInfo.name === 'Santa Clause' ? 'red' : null
+      }
+    }
+  }
 }]
 ```
 

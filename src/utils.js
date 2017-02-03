@@ -6,16 +6,16 @@ export default {
   set,
   takeRight,
   last,
-  sortBy,
+  orderBy,
   range,
   remove,
   clone,
   getFirstDefined,
   sum,
   makeTemplateComponent,
-  prefixAll,
   groupBy,
-  isArray
+  isArray,
+  splitProps
 }
 
 function get (obj, path, def) {
@@ -61,7 +61,7 @@ function range (n) {
   return arr
 }
 
-function sortBy (arr, funcs, dirs) {
+function orderBy (arr, funcs, dirs) {
   return arr.sort((a, b) => {
     for (let i = 0; i < funcs.length; i++) {
       const comp = funcs[i]
@@ -75,7 +75,9 @@ function sortBy (arr, funcs, dirs) {
         return desc ? 1 : -1
       }
     }
-    return 0
+    return dirs[0]
+      ? a.__index - b.__index
+      : b.__index - b.__index
   })
 }
 
@@ -128,10 +130,6 @@ function makeTemplateComponent (compClass) {
   )
 }
 
-function prefixAll (obj) {
-  return obj
-}
-
 function groupBy (xs, key) {
   return xs.reduce((rv, x, i) => {
     const resKey = typeof key === 'function' ? key(x, i) : x[key]
@@ -166,4 +164,12 @@ function flattenDeep (arr, newArr = []) {
     }
   }
   return newArr
+}
+
+function splitProps ({className, style, ...rest}) {
+  return {
+    className,
+    style,
+    rest
+  }
 }
