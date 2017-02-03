@@ -14,6 +14,7 @@ import Simple from '../stories/Simple.js'
 import CellRenderers from '../stories/CellRenderers.js'
 import DefaultSorting from '../stories/DefaultSorting.js'
 import CustomWidths from '../stories/CustomWidths.js'
+import CustomComponentProps from '../stories/CustomComponentProps.js'
 import ServerSide from '../stories/ServerSide.js'
 import SubComponents from '../stories/SubComponents.js'
 import Pivoting from '../stories/Pivoting.js'
@@ -40,6 +41,7 @@ configure(() => {
     .add('Cell Renderers & Custom Components', CellRenderers)
     .add('Default Sorting', DefaultSorting)
     .add('Custom Column Widths', CustomWidths)
+    .add('Custom Component Props', CustomComponentProps)
     .add('Server-side Data', ServerSide)
     .add('Sub Components', SubComponents)
     .add('Pivoting & Aggregation', Pivoting)

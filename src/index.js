@@ -478,6 +478,7 @@ export default React.createClass({
           const pivotSort = resolvedSorting.find(d => d.id === column.id)
           return (
             <ThComponent
+              key={i}
               className={classnames(
                 'rt-pivot-header',
                 column.sortable && '-cursor-pointer',
@@ -515,6 +516,7 @@ export default React.createClass({
         }
         return (
           <ThComponent
+            key={i}
             className={classnames(
               'rt-expander-header',
               classes

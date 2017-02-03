@@ -27,9 +27,11 @@ export default {
 
     // A convenience function to add a header and reset the currentSpan
     const addHeader = (columns, column = columns[0]) => {
-      headerGroups.push(Object.assign({}, column, {
+      headerGroups.push({
+        ...this.props.column,
+        ...column,
         columns: columns
-      }))
+      })
       currentSpan = []
     }
 
@@ -48,7 +50,10 @@ export default {
     }
 
     const makeDecoratedColumn = (column) => {
-      const dcol = Object.assign({}, this.props.column, column)
+      const dcol = {
+        ...this.props.column,
+        ...column
+      }
 
       if (dcol.expander) {
         dcol.width = expanderColumnWidth
