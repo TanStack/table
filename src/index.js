@@ -320,8 +320,8 @@ export default React.createClass({
     // Visual Components
 
     const makeHeaderGroups = () => {
-      const theadGroupProps = _.splitProps(getTheadGroupProps(finalState))
-      const theadGroupTrProps = _.splitProps(getTheadGroupTrProps(finalState))
+      const theadGroupProps = _.splitProps(getTheadGroupProps(finalState, undefined, undefined, this))
+      const theadGroupTrProps = _.splitProps(getTheadGroupTrProps(finalState, undefined, undefined, this))
       return (
         <TheadComponent
           className={classnames('-headerGroups', theadGroupProps.className)}
@@ -346,8 +346,8 @@ export default React.createClass({
       const flex = _.sum(column.columns.map(d => d.width ? 0 : d.minWidth))
       const width = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.minWidth)))
       const maxWidth = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.maxWidth)))
-      const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column))
-      const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column))
+      const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column, this))
+      const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
       const classes = [
         column.headerClassName,
@@ -426,8 +426,8 @@ export default React.createClass({
     }
 
     const makeHeaders = () => {
-      const theadProps = _.splitProps(getTheadProps(finalState))
-      const theadTrProps = _.splitProps(getTheadTrProps(finalState))
+      const theadProps = _.splitProps(getTheadProps(finalState, undefined, undefined, this))
+      const theadTrProps = _.splitProps(getTheadTrProps(finalState, undefined, undefined, this))
       return (
         <TheadComponent
           className={classnames('-header', theadProps.className)}
@@ -453,8 +453,8 @@ export default React.createClass({
       const show = typeof column.show === 'function' ? column.show() : column.show
       const width = _.getFirstDefined(column.width, column.minWidth)
       const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
-      const theadThProps = _.splitProps(getTheadThProps(finalState, undefined, column))
-      const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column))
+      const theadThProps = _.splitProps(getTheadThProps(finalState, undefined, column, this))
+      const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
       const classes = [
         column.headerClassName,
@@ -573,8 +573,8 @@ export default React.createClass({
         subRows: row[subRowsKey]
       }
       const isExpanded = _.get(expandedRows, rowInfo.nestingPath)
-      const trGroupProps = getTrGroupProps(finalState, rowInfo)
-      const trProps = _.splitProps(getTrProps(finalState, rowInfo))
+      const trGroupProps = getTrGroupProps(finalState, rowInfo, undefined, this)
+      const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
       return (
         <TrGroupComponent
           key={rowInfo.nestingPath.join('_')}
@@ -593,8 +593,8 @@ export default React.createClass({
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(column.width, column.minWidth)
               const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
-              const tdProps = _.splitProps(getTdProps(finalState, rowInfo, column))
-              const columnProps = _.splitProps(column.getProps(finalState, rowInfo, column))
+              const tdProps = _.splitProps(getTdProps(finalState, rowInfo, column, this))
+              const columnProps = _.splitProps(column.getProps(finalState, rowInfo, column, this))
 
               const classes = [
                 tdProps.className,
@@ -727,9 +727,9 @@ export default React.createClass({
     }
 
     const makePadRow = (row, i) => {
-      const trGroupProps = getTrGroupProps(finalState)
-      const trProps = _.splitProps(getTrProps(finalState))
-      const thProps = _.splitProps(getThProps(finalState))
+      const trGroupProps = getTrGroupProps(finalState, undefined, undefined, this)
+      const trProps = _.splitProps(getTrProps(finalState, undefined, undefined, this))
+      const thProps = _.splitProps(getThProps(finalState, undefined, undefined, this))
       return (
         <TrGroupComponent
           key={i}
@@ -760,8 +760,8 @@ export default React.createClass({
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(column.width, column.minWidth)
               const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
-              const tdProps = _.splitProps(getTdProps(finalState, undefined, column))
-              const columnProps = _.splitProps(column.getProps(finalState, undefined, column))
+              const tdProps = _.splitProps(getTdProps(finalState, undefined, column, this))
+              const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
 
               const classes = [
                 tdProps.className,
@@ -800,11 +800,11 @@ export default React.createClass({
     }
 
     const makeTable = () => {
-      const rootProps = _.splitProps(getProps(finalState))
-      const tableProps = _.splitProps(getTableProps(finalState))
-      const tBodyProps = _.splitProps(getTbodyProps(finalState))
-      const paginationProps = _.splitProps(getPaginationProps(finalState))
-      const loadingProps = getLoadingProps(finalState)
+      const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
+      const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
+      const tBodyProps = _.splitProps(getTbodyProps(finalState, undefined, undefined, this))
+      const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
+      const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
       return (
         <div
           className={classnames(

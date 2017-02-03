@@ -373,20 +373,22 @@ Every single built-in component's props can be dynamically extended using any on
 
 These callbacks are executed with each render of the element with three parameters:
 1. Table State
-1. RowInfo (where applicable)
-1. Column (where applicable)
+1. RowInfo (undefined if not applicable)
+1. Column (undefined if not applicable)
+1. React Table Instance
 
 This makes it extremely easy to add, say... a row click callback!
 ```javascript
 // When any Td element is clicked, we'll log out some information
 <ReactTable
-  getTdProps={(state, rowInfo, column) => {
+  getTdProps={(state, rowInfo, column, instance) => {
     return {
       onClick: e => {
         console.log('A Td Element was clicked!')
+        console.log('it produced this event:', e)
         console.log('It was in this column:', column)
         console.log('It was in this row:', rowInfo)
-        console.log('it produced this event:', e)
+        console.log('It was in this table instance:', instance)
       }
     }
   }}
