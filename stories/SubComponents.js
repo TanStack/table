@@ -68,8 +68,8 @@ export class SubComponents extends React.Component {
             data={this.state.data}
             columns={columns}
             defaultPageSize={10}
-            closeSubComponentOnDataChange={false}
-            preventAutoSortWhenComponentIsOpen={true}
+            closeSubComponentOnDataChange={true}
+            preventAutoSortWhenSubComponentIsOpen={true}
             SubComponent={(row) => {
               return (
                 <div style={{padding: '20px'}}>

@@ -19,7 +19,7 @@ export const ReactTableDefaults = {
   showPageJump: true,
   expanderColumnWidth: 35,
   closeSubComponentOnDataChange: true,
-  preventAutoSortWhenComponentIsOpen: true,
+  preventAutoSortWhenSubComponentIsOpen: true,
 
   // Controlled State Overrides
   // page: undefined,
