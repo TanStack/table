@@ -76,8 +76,8 @@ export class SubComponents extends React.Component {
             data={this.state.data}
             columns={columns}
             defaultPageSize={10}
-            closeSubComponentOnDataChange={false}
-            preventAutoSortWhenSubComponentIsOpen={true}
+            collapseOnDataChange={false}
+            freezeWhenExpanded={true}
             sorting={this.state.sortingArray}
             SubComponent={(row) => {
               return (
@@ -178,7 +178,7 @@ export class SubComponents extends React.Component {
             data={this.state.data}
             columns={columns}
             defaultPageSize={10}
-            closeSubComponentOnDataChange={false}
+            collapseOnDataChange={false}
             preventAutoSortWhenComponentIsOpen={true}
             SubComponent={(row) => {
               return (

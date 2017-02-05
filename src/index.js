@@ -18,8 +18,8 @@ export const ReactTableDefaults = {
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
-  closeSubComponentOnDataChange: true,
-  preventAutoSortWhenSubComponentIsOpen: true,
+  collapseOnDataChange: true,
+  freezeWhenExpanded: true,
 
   // Controlled State Overrides
   // page: undefined,
@@ -211,7 +211,7 @@ export default React.createClass({
     // if we get new data, automatically close expanded subcomponents (if option is set)
     if (
       oldState.resolvedData !== newResolvedState.resolvedData &&
-      this.props.closeSubComponentOnDataChange
+      this.props.collapseOnDataChange
     ) {
       newState['expandedRows'] = {}
     }
