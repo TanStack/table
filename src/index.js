@@ -18,6 +18,8 @@ export const ReactTableDefaults = {
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
+  closeSubComponentOnDataChange: true,
+  preventAutoSortWhenComponentIsOpen: true,
 
   // Controlled State Overrides
   // page: undefined,
@@ -162,6 +164,11 @@ export default React.createClass({
     return resolvedState
   },
 
+  componentDidUpdate () {
+    // console.log('NEW COMPONENT STATE');
+    // console.log(this.state)
+  },
+
   componentWillMount () {
     this.setStateWithData(this.getDataModel())
   },
@@ -171,6 +178,9 @@ export default React.createClass({
   },
 
   componentWillReceiveProps (nextProps, nextState) {
+    console.log('receiving props');
+    console.log(this.state)
+
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
     // Props that trigger a data update
@@ -182,27 +192,109 @@ export default React.createClass({
     ) {
       this.setStateWithData(this.getDataModel(nextProps, nextState))
     }
+
   },
 
   setStateWithData (newState, cb) {
+
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
+
+    console.log('<<<<<<------------------------------------------------------------------')
+    console.log('setting state with data. New data:')
+    console.log(newResolvedState);
+    console.log('------------------------------------')
+    console.log('Old data:')
+    console.log(oldState);
+    console.log('------------------------------------------------------------------------')
+
+
+    // if we get new data, automatically close expanded subcomponents (if option is set)
     if (
-      oldState.resolvedData !== newResolvedState.resolvedData ||
-      oldState.sorting !== newResolvedState.sorting
+      oldState.resolvedData !== newResolvedState.resolvedData &&
+      this.props.closeSubComponentOnDataChange
     ) {
-      Object.assign(newState, this.getSortedData({}, newState))
+        newState['expandedRows'] = {}
     }
+
+
+    if (
+      oldState.resolvedData !== newResolvedState.resolvedData
+    ) {
+        console.log('...new data...')
+        if( this.props.preventAutoSortWhenComponentIsOpen &&
+            Object.keys(oldState.expandedRows).length > 0 //&&
+            //newState.sorting == 'undefined' // this is an array when a user clicks to sort
+          ) {
+            let rowIsOpen = false
+            Object.keys(oldState.expandedRows).forEach(row => {
+              if(oldState.expandedRows[row]) {
+                rowIsOpen = true;
+              }
+            });
+
+            if(rowIsOpen) {
+              const {
+                sorting,
+                allDecoratedColumns,
+                resolvedData
+              } = this.getResolvedState({}, newState)
+              const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
+              // Object.assign(newState, {resolvedSorting: resolvedSorting, sortedData: resolvedData})
+              // console.log('>>> new data; old sorting')
+              let newData = oldState.sortedData.slice(); //this.getSortedData({}, oldState).sortedData; //this.getSortedData({}, newState).sortedData; //oldState.sortedData;
+              // console.log(newData)
+              newData.push(newState.resolvedData[newState.resolvedData.length-1]); // oldState.resolvedData.push(newState.resolvedData[newState.resolvedData.length-1]);
+              // newData.push
+              // console.log(newData)
+              Object.assign(newState, {resolvedSorting: oldState.resolvedSorting, sortedData: newData})
+              // console.log('>>> resolved data')
+              // console.log(resolvedData)
+              // Object.assign(newState, this.getSortedData({}, newState))
+              // we also can't pass through new sorting data because things will re-sort on component close
+
+            } else {
+              // console.log('>>> new data, new sorting 1')
+              Object.assign(newState, this.getSortedData({}, newState))
+            }
+        } else {
+          // console.log('>>> new data, new sorting 2')
+          Object.assign(newState, this.getSortedData({}, newState))
+        }
+    }
+
+
+    if (
+      oldState.sorting !== newResolvedState.sorting 
+    ) {
+        // close all rows when user click to sort... easier and better ux?
+        newState['expandedRows'] = {}
+        Object.assign(newState, this.getSortedData({}, newState))
+    }
+
+
+
     // Calculate pageSize all the time
     if (newResolvedState.resolvedData) {
       newState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
     }
+    console.log('setting new state:')
+    console.log(newState)
+    console.log('------------------------------------------------------------------>>>>>>')
+
     return this.setState(newState, cb)
   },
 
   shouldComponentUpdate (nextProps, nextState) {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
+
+    console.log('>>>>>>>>>>>>>>>>> should we update?')
+    console.log('OLD: ')
+    console.log(oldState)
+    console.log('NEW: ')
+    console.log(newState)
+    console.log('>>>>>>>>>>>>>>>>>')
     // State changes that trigger a render
     if (
       oldState.sortedData !== newState.sortedData ||
@@ -210,8 +302,10 @@ export default React.createClass({
       oldState.pageSize !== newState.pageSize ||
       oldState.expandedRows !== newState.expandedRows
     ) {
+      console.log('...yes')
       return true
     }
+    console.log('...no')
     return false
   },
 
@@ -274,6 +368,11 @@ export default React.createClass({
 
     // Determine the flex percentage for each column
     // const columnPercentage = 100 / allVisibleColumns.length
+
+
+    console.log('------- rerender ------')
+    console.log(this.state);
+
 
     // Pagination
     const startRow = pageSize * page
@@ -390,6 +489,7 @@ export default React.createClass({
         }
         return (
           <ThComponent
+            key={i}
             className={classnames(
               'rt-expander-header',
               classes
@@ -669,6 +769,7 @@ export default React.createClass({
                 // Return the regular expander cell
                 return (
                   <TdComponent
+                    key={i2}
                     className={classnames(
                       classes,
                       {hidden: !show}
