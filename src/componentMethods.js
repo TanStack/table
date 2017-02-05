@@ -10,7 +10,8 @@ export default {
       pivotValKey,
       subRowsKey,
       expanderColumnWidth,
-      SubComponent
+      SubComponent,
+      sorting
     } = this.getResolvedState(nextProps, nextState)
 
     // Determine Header Groups
@@ -212,13 +213,18 @@ export default {
       resolvedData = groupRecursively(resolvedData, pivotBy)
     }
 
+    // sorting somehow isn't copied over correctly
+    let newSorting = sorting.slice()
+
     return {
       resolvedData,
       pivotColumn,
       allVisibleColumns,
       headerGroups,
       allDecoratedColumns,
-      hasHeaderGroups
+      hasHeaderGroups,
+      sorting,
+      newSorting
     }
   },
   getSortedData (nextProps, nextState) {
@@ -226,10 +232,17 @@ export default {
       manual,
       sorting,
       allDecoratedColumns,
-      resolvedData
+      resolvedData,
+      newSorting
     } = this.getResolvedState(nextProps, nextState)
 
-    const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
+    // somehow using 'sorting' variable doesn't work?! using a new newSorting variable
+    const resolvedSorting = newSorting.length ? newSorting : this.getInitSorting(allDecoratedColumns)
+
+    console.log('get sorted data - sorting?')
+    console.log(nextState)
+    console.log(sorting)
+    console.log(newSorting)
 
     // Resolve the data from either manual data or sorted data
     return {

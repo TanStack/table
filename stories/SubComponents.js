@@ -15,7 +15,8 @@ export class SubComponents extends React.Component {
     super(props);
 
     this.state = {
-      data: []
+      data: [],
+      sortingArray: [],
     }
 
     this.state.data = _.map(_.range(10), d => {
@@ -36,6 +37,11 @@ export class SubComponents extends React.Component {
         age: Math.floor(Math.random() * 30)
       })
     this.setState({data: data});
+  }
+
+  sortByFirstName() {
+    let sortingArray = [{id: 'firstName', asc: true}];
+    this.setState({sortingArray: sortingArray});
   }
 
   render() {
@@ -60,7 +66,9 @@ export class SubComponents extends React.Component {
 
     return (
       <div>
-        <div onClick={this.addData.bind(this)}>Add more data!</div>
+        <a href="#" onClick={this.addData.bind(this)}>Add more data!</a> &nbsp;
+        <a href="#" onClick={this.sortByFirstName.bind(this)}>Programmatically sort by first name!</a>
+        <br />
         <br />
         <div className='table-wrap'>
           <ReactTable
@@ -68,8 +76,9 @@ export class SubComponents extends React.Component {
             data={this.state.data}
             columns={columns}
             defaultPageSize={10}
-            closeSubComponentOnDataChange={true}
+            closeSubComponentOnDataChange={false}
             preventAutoSortWhenSubComponentIsOpen={true}
+            sorting={this.state.sortingArray}
             SubComponent={(row) => {
               return (
                 <div style={{padding: '20px'}}>

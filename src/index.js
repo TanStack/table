@@ -178,11 +178,11 @@ export default React.createClass({
   },
 
   componentWillReceiveProps (nextProps, nextState) {
-    console.log('receiving props');
-    console.log(this.state)
+    console.log('receiving props. new state:')
 
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
+
     // Props that trigger a data update
     if (
       oldState.data !== newState.data ||
@@ -192,87 +192,79 @@ export default React.createClass({
     ) {
       this.setStateWithData(this.getDataModel(nextProps, nextState))
     }
-
   },
 
   setStateWithData (newState, cb) {
-
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
 
     console.log('<<<<<<------------------------------------------------------------------')
     console.log('setting state with data. New data:')
-    console.log(newResolvedState);
-    console.log('------------------------------------')
+    console.log(newState)
+    console.log('-v-v-v-v-v-v-v-v-v-v-')
     console.log('Old data:')
-    console.log(oldState);
+    console.log(oldState)
     console.log('------------------------------------------------------------------------')
 
+    newResolvedState.sorting = newResolvedState.newSorting.slice()
 
     // if we get new data, automatically close expanded subcomponents (if option is set)
     if (
       oldState.resolvedData !== newResolvedState.resolvedData &&
       this.props.closeSubComponentOnDataChange
     ) {
-        newState['expandedRows'] = {}
+      newState['expandedRows'] = {}
     }
-
 
     if (
       oldState.resolvedData !== newResolvedState.resolvedData
     ) {
-        console.log('...new data...')
-        if( this.props.preventAutoSortWhenComponentIsOpen &&
-            Object.keys(oldState.expandedRows).length > 0 //&&
-            //newState.sorting == 'undefined' // this is an array when a user clicks to sort
-          ) {
-            let rowIsOpen = false
-            Object.keys(oldState.expandedRows).forEach(row => {
-              if(oldState.expandedRows[row]) {
-                rowIsOpen = true;
-              }
-            });
+      console.log('...new data...')
+      if (this.props.preventAutoSortWhenComponentIsOpen &&
+          Object.keys(oldState.expandedRows).length > 0
+        ) {
+        let rowIsOpen = false
+        Object.keys(oldState.expandedRows).forEach(row => {
+          if (oldState.expandedRows[row]) {
+            rowIsOpen = true
+          }
+        })
 
-            if(rowIsOpen) {
-              const {
-                sorting,
-                allDecoratedColumns,
-                resolvedData
-              } = this.getResolvedState({}, newState)
-              const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
-              // Object.assign(newState, {resolvedSorting: resolvedSorting, sortedData: resolvedData})
-              // console.log('>>> new data; old sorting')
-              let newData = oldState.sortedData.slice(); //this.getSortedData({}, oldState).sortedData; //this.getSortedData({}, newState).sortedData; //oldState.sortedData;
-              // console.log(newData)
-              newData.push(newState.resolvedData[newState.resolvedData.length-1]); // oldState.resolvedData.push(newState.resolvedData[newState.resolvedData.length-1]);
-              // newData.push
-              // console.log(newData)
-              Object.assign(newState, {resolvedSorting: oldState.resolvedSorting, sortedData: newData})
-              // console.log('>>> resolved data')
-              // console.log(resolvedData)
-              // Object.assign(newState, this.getSortedData({}, newState))
-              // we also can't pass through new sorting data because things will re-sort on component close
-
-            } else {
-              // console.log('>>> new data, new sorting 1')
-              Object.assign(newState, this.getSortedData({}, newState))
-            }
+        if (rowIsOpen) {
+          // const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
+          // Object.assign(newState, {resolvedSorting: resolvedSorting, sortedData: resolvedData})
+          // console.log('>>> new data; old sorting')
+          let newData = oldState.sortedData.slice() // this.getSortedData({}, oldState).sortedData; //this.getSortedData({}, newState).sortedData; //oldState.sortedData;
+          // console.log(newData)
+          newData.push(newState.resolvedData[newState.resolvedData.length - 1]) // oldState.resolvedData.push(newState.resolvedData[newState.resolvedData.length-1]);
+          // newData.push
+          // console.log(newData)
+          Object.assign(newState, {resolvedSorting: oldState.resolvedSorting, sortedData: newData})
+          return this.setState(newState, cb)
+          // console.log('>>> resolved data')
+          // console.log(resolvedData)
+          // Object.assign(newState, this.getSortedData({}, newState))
+          // we also can't pass through new sorting data because things will re-sort on component close
         } else {
-          // console.log('>>> new data, new sorting 2')
+          console.log('>>> new data, new sorting 1')
           Object.assign(newState, this.getSortedData({}, newState))
+          return this.setState(newState, cb)
         }
+      } else {
+        console.log('>>> new data, new sorting 2')
+        Object.assign(newState, this.getSortedData({}, newState))
+        return this.setState(newState, cb)
+      }
     }
-
 
     if (
-      oldState.sorting !== newResolvedState.sorting 
+      oldState.sorting !== newResolvedState.sorting
     ) {
-        // close all rows when user click to sort... easier and better ux?
-        newState['expandedRows'] = {}
-        Object.assign(newState, this.getSortedData({}, newState))
+      console.log('...new sorting...')
+      // close all rows when user click to sort... easier and better ux?
+      newState['expandedRows'] = {}
+      Object.assign(newState, this.getSortedData({}, newState))
     }
-
-
 
     // Calculate pageSize all the time
     if (newResolvedState.resolvedData) {
@@ -369,10 +361,8 @@ export default React.createClass({
     // Determine the flex percentage for each column
     // const columnPercentage = 100 / allVisibleColumns.length
 
-
     console.log('------- rerender ------')
-    console.log(this.state);
-
+    console.log(this.state)
 
     // Pagination
     const startRow = pageSize * page
