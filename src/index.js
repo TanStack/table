@@ -18,8 +18,8 @@ export const ReactTableDefaults = {
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
-  collapseOnDataChange: true,
-  freezeWhenExpanded: true,
+  collapseOnChange: true,
+  freezeWhenExpanded: false,
 
   // Controlled State Overrides
   // page: undefined,
@@ -156,17 +156,12 @@ export default React.createClass({
 
   getResolvedState (props, state) {
     const resolvedState = {
-      ...this.state,
-      ...state,
-      ...this.props,
-      ...props
+      ..._.compactObject(this.state),
+      ..._.compactObject(state),
+      ..._.compactObject(this.props),
+      ..._.compactObject(props)
     }
     return resolvedState
-  },
-
-  componentDidUpdate () {
-    // console.log('NEW COMPONENT STATE');
-    // console.log(this.state)
   },
 
   componentWillMount () {
@@ -178,8 +173,6 @@ export default React.createClass({
   },
 
   componentWillReceiveProps (nextProps, nextState) {
-    console.log('receiving props. new state:')
-
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
@@ -197,96 +190,55 @@ export default React.createClass({
   setStateWithData (newState, cb) {
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
+    const { freezeWhenExpanded } = newResolvedState
 
-    console.log('<<<<<<------------------------------------------------------------------')
-    console.log('setting state with data. New data:')
-    console.log(newState)
-    console.log('-v-v-v-v-v-v-v-v-v-v-')
-    console.log('Old data:')
-    console.log(oldState)
-    console.log('------------------------------------------------------------------------')
+    // Default to unfrozen state
+    newResolvedState.frozen = false
 
-    newResolvedState.sorting = newResolvedState.newSorting.slice()
-
-    // if we get new data, automatically close expanded subcomponents (if option is set)
+    // If freezeWhenExpanded is set and any underlying data or
+    // sorting has changed, check for frozen conditions
     if (
-      oldState.resolvedData !== newResolvedState.resolvedData &&
-      this.props.collapseOnDataChange
+      freezeWhenExpanded &&
+      (
+        oldState.resolvedData !== newResolvedState.resolvedData
+      )
     ) {
-      newState['expandedRows'] = {}
-    }
-
-    if (
-      oldState.resolvedData !== newResolvedState.resolvedData
-    ) {
-      console.log('...new data...')
-      if (this.props.preventAutoSortWhenComponentIsOpen &&
-          Object.keys(oldState.expandedRows).length > 0
-        ) {
-        let rowIsOpen = false
-        Object.keys(oldState.expandedRows).forEach(row => {
-          if (oldState.expandedRows[row]) {
-            rowIsOpen = true
-          }
-        })
-
-        if (rowIsOpen) {
-          // const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
-          // Object.assign(newState, {resolvedSorting: resolvedSorting, sortedData: resolvedData})
-          // console.log('>>> new data; old sorting')
-          let newData = oldState.sortedData.slice() // this.getSortedData({}, oldState).sortedData; //this.getSortedData({}, newState).sortedData; //oldState.sortedData;
-          // console.log(newData)
-          newData.push(newState.resolvedData[newState.resolvedData.length - 1]) // oldState.resolvedData.push(newState.resolvedData[newState.resolvedData.length-1]);
-          // newData.push
-          // console.log(newData)
-          Object.assign(newState, {resolvedSorting: oldState.resolvedSorting, sortedData: newData})
-          return this.setState(newState, cb)
-          // console.log('>>> resolved data')
-          // console.log(resolvedData)
-          // Object.assign(newState, this.getSortedData({}, newState))
-          // we also can't pass through new sorting data because things will re-sort on component close
-        } else {
-          console.log('>>> new data, new sorting 1')
-          Object.assign(newState, this.getSortedData({}, newState))
-          return this.setState(newState, cb)
+      // if any rows are expanded, freeze the existing data and sorting
+      const keys = Object.keys(oldState.expandedRows)
+      for (var i = 0; i < keys.length; i++) {
+        if (oldState.expandedRows[keys[i]]) {
+          newResolvedState.frozen = true
+          break
         }
-      } else {
-        console.log('>>> new data, new sorting 2')
-        Object.assign(newState, this.getSortedData({}, newState))
-        return this.setState(newState, cb)
       }
     }
 
+    // If the data isn't frozen and either the data or
+    // sorting model has changed, update the data
     if (
-      oldState.sorting !== newResolvedState.sorting
+      (oldState.frozen && !newResolvedState.frozen) ||
+      oldState.sorting !== newResolvedState.sorting ||
+      (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
-      console.log('...new sorting...')
-      // close all rows when user click to sort... easier and better ux?
-      newState['expandedRows'] = {}
-      Object.assign(newState, this.getSortedData({}, newState))
+      // If collapseOnChange is set, automatically close expanded subcomponents
+      if (this.props.collapseOnChange) {
+        newResolvedState.expandedRows = {}
+      }
+      Object.assign(newResolvedState, this.getSortedData(newResolvedState))
     }
 
     // Calculate pageSize all the time
     if (newResolvedState.resolvedData) {
-      newState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
+      newResolvedState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
     }
-    console.log('setting new state:')
-    console.log(newState)
-    console.log('------------------------------------------------------------------>>>>>>')
 
-    return this.setState(newState, cb)
+    return this.setState(newResolvedState, cb)
   },
 
   shouldComponentUpdate (nextProps, nextState) {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
-    console.log('>>>>>>>>>>>>>>>>> should we update?')
-    console.log('OLD: ')
-    console.log(oldState)
-    console.log('NEW: ')
-    console.log(newState)
-    console.log('>>>>>>>>>>>>>>>>>')
     // State changes that trigger a render
     if (
       oldState.sortedData !== newState.sortedData ||
@@ -294,10 +246,8 @@ export default React.createClass({
       oldState.pageSize !== newState.pageSize ||
       oldState.expandedRows !== newState.expandedRows
     ) {
-      console.log('...yes')
       return true
     }
-    console.log('...no')
     return false
   },
 
@@ -360,9 +310,6 @@ export default React.createClass({
 
     // Determine the flex percentage for each column
     // const columnPercentage = 100 / allVisibleColumns.length
-
-    console.log('------- rerender ------')
-    console.log(this.state)
 
     // Pagination
     const startRow = pageSize * page

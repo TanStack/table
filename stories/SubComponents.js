@@ -12,11 +12,11 @@ export default () => (
 
 export class SubComponents extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       data: [],
-      sortingArray: [],
+      sortingArray: undefined
     }
 
     this.state.data = _.map(_.range(10), d => {
@@ -26,26 +26,24 @@ export class SubComponents extends React.Component {
         age: Math.floor(Math.random() * 30)
       }
     })
-
   }
 
-  addData() {
-    let data = this.state.data;
+  addData () {
+    let data = this.state.data
     data.push({
-        firstName: namor.generate({ words: 1, numLen: 0 }),
-        lastName: namor.generate({ words: 1, numLen: 0 }),
-        age: Math.floor(Math.random() * 30)
-      })
-    this.setState({data: data});
+      firstName: namor.generate({ words: 1, numLen: 0 }),
+      lastName: namor.generate({ words: 1, numLen: 0 }),
+      age: Math.floor(Math.random() * 30)
+    })
+    this.setState({data: data})
   }
 
-  sortByFirstName() {
-    let sortingArray = [{id: 'firstName', asc: true}];
-    this.setState({sortingArray: sortingArray});
+  sortByFirstName () {
+    let sortingArray = [{id: 'firstName', asc: true}]
+    this.setState({sortingArray: sortingArray})
   }
 
-  render() {
-
+  render () {
     const columns = [{
       header: 'Name',
       columns: [{
@@ -66,8 +64,8 @@ export class SubComponents extends React.Component {
 
     return (
       <div>
-        <a href="#" onClick={this.addData.bind(this)}>Add more data!</a> &nbsp;
-        <a href="#" onClick={this.sortByFirstName.bind(this)}>Programmatically sort by first name!</a>
+        <a href='#' onClick={this.addData.bind(this)}>Add more data!</a> &nbsp;
+        <a href='#' onClick={this.sortByFirstName.bind(this)}>Programmatically sort by first name!</a>
         <br />
         <br />
         <div className='table-wrap'>
@@ -77,7 +75,7 @@ export class SubComponents extends React.Component {
             columns={columns}
             defaultPageSize={10}
             collapseOnDataChange={false}
-            freezeWhenExpanded={true}
+            freezeWhenExpanded
             sorting={this.state.sortingArray}
             SubComponent={(row) => {
               return (
@@ -85,20 +83,20 @@ export class SubComponents extends React.Component {
                   <em>You can put any component you want here, even another React Table!</em>
                   <br />
                   <br />
-                  {/*<ReactTable
-                                      data={this.state.data}
-                                      columns={columns}
-                                      defaultPageSize={3}
-                                      showPagination={false}
-                                      SubComponent={(row) => {
-                                        return (
-                                          <div style={{padding: '20px'}}>
-                                            <em>It even has access to the row data: </em>
-                                            <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
-                                          </div>
-                                        )
-                                      }}
-                                    />*/}
+                  { /* <ReactTable
+                    data={this.state.data}
+                    columns={columns}
+                    defaultPageSize={3}
+                    showPagination={false}
+                    SubComponent={(row) => {
+                      return (
+                        <div style={{padding: '20px'}}>
+                          <em>It even has access to the row data: </em>
+                          <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
+                        </div>
+                      )
+                    }}
+                  /> */ }
                 </div>
               )
             }}
@@ -122,7 +120,7 @@ export default () => (
 
 export class SubComponents extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       data: []
@@ -139,13 +137,13 @@ export class SubComponents extends React.Component {
   }
 
   addData() {
-    let data = this.state.data;
+    let data = this.state.data
     data.push({
         firstName: namor.generate({ words: 1, numLen: 0 }),
         lastName: namor.generate({ words: 1, numLen: 0 }),
         age: Math.floor(Math.random() * 30)
       })
-    this.setState({data: data});
+    this.setState({data: data})
   }
 
   render() {
