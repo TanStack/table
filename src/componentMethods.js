@@ -221,13 +221,13 @@ export default {
       hasHeaderGroups
     }
   },
-  getSortedData (nextProps, nextState) {
+  getSortedData (state) {
     const {
       manual,
       sorting,
       allDecoratedColumns,
       resolvedData
-    } = this.getResolvedState(nextProps, nextState)
+    } = state
 
     const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
 

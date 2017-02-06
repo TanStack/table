@@ -18,6 +18,8 @@ export const ReactTableDefaults = {
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
+  collapseOnChange: true,
+  freezeWhenExpanded: false,
 
   // Controlled State Overrides
   // page: undefined,
@@ -154,10 +156,10 @@ export default React.createClass({
 
   getResolvedState (props, state) {
     const resolvedState = {
-      ...this.state,
-      ...state,
-      ...this.props,
-      ...props
+      ..._.compactObject(this.state),
+      ..._.compactObject(state),
+      ..._.compactObject(this.props),
+      ..._.compactObject(props)
     }
     return resolvedState
   },
@@ -173,6 +175,7 @@ export default React.createClass({
   componentWillReceiveProps (nextProps, nextState) {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
+
     // Props that trigger a data update
     if (
       oldState.data !== newState.data ||
@@ -187,22 +190,49 @@ export default React.createClass({
   setStateWithData (newState, cb) {
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
-    if (
-      oldState.resolvedData !== newResolvedState.resolvedData ||
-      oldState.sorting !== newResolvedState.sorting
-    ) {
-      Object.assign(newState, this.getSortedData({}, newState))
+    const { freezeWhenExpanded } = newResolvedState
+
+    // Default to unfrozen state
+    newResolvedState.frozen = false
+
+    // If freezeWhenExpanded is set, check for frozen conditions
+    if (freezeWhenExpanded) {
+      // if any rows are expanded, freeze the existing data and sorting
+      const keys = Object.keys(newResolvedState.expandedRows)
+      for (var i = 0; i < keys.length; i++) {
+        if (newResolvedState.expandedRows[keys[i]]) {
+          newResolvedState.frozen = true
+          break
+        }
+      }
     }
+
+    // If the data isn't frozen and either the data or
+    // sorting model has changed, update the data
+    if (
+      (oldState.frozen && !newResolvedState.frozen) ||
+      oldState.sorting !== newResolvedState.sorting ||
+      (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
+    ) {
+      // If collapseOnChange is set, automatically close expanded subcomponents
+      if (this.props.collapseOnChange) {
+        newResolvedState.expandedRows = {}
+      }
+      Object.assign(newResolvedState, this.getSortedData(newResolvedState))
+    }
+
     // Calculate pageSize all the time
     if (newResolvedState.resolvedData) {
-      newState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
+      newResolvedState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
     }
-    return this.setState(newState, cb)
+
+    return this.setState(newResolvedState, cb)
   },
 
   shouldComponentUpdate (nextProps, nextState) {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
+
     // State changes that trigger a render
     if (
       oldState.sortedData !== newState.sortedData ||
@@ -390,6 +420,7 @@ export default React.createClass({
         }
         return (
           <ThComponent
+            key={i}
             className={classnames(
               'rt-expander-header',
               classes
@@ -669,6 +700,7 @@ export default React.createClass({
                 // Return the regular expander cell
                 return (
                   <TdComponent
+                    key={i2}
                     className={classnames(
                       classes,
                       {hidden: !show}

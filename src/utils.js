@@ -15,7 +15,8 @@ export default {
   makeTemplateComponent,
   groupBy,
   isArray,
-  splitProps
+  splitProps,
+  compactObject
 }
 
 function get (obj, path, def) {
@@ -172,4 +173,14 @@ function splitProps ({className, style, ...rest}) {
     style,
     rest
   }
+}
+
+function compactObject (obj) {
+  const newObj = {}
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key) && obj[key] !== undefined && typeof obj[key] !== 'undefined') {
+      newObj[key] = obj[key]
+    }
+  }
+  return newObj
 }
