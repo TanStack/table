@@ -36,9 +36,7 @@
     "docs": "build-storybook -o docs && cp .storybook/CNAME docs/CNAME"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "inflight": "^1.0.6",
-    "storybook": "^0.0.0"
+    "classnames": "^2.2.5"
   },
   "peerDependencies": {
     "react": "^15.x.x"
@@ -64,6 +62,7 @@
     "react-dom": "^15.4.2",
     "react-json-tree": "^0.10.1",
     "standard": "^8.0.0",
+    "storybook": "^0.0.0",
     "stylus": "^0.54.5",
     "uglifyify": "3.0.3"
   },
