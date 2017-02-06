@@ -195,18 +195,12 @@ export default React.createClass({
     // Default to unfrozen state
     newResolvedState.frozen = false
 
-    // If freezeWhenExpanded is set and any underlying data or
-    // sorting has changed, check for frozen conditions
-    if (
-      freezeWhenExpanded &&
-      (
-        oldState.resolvedData !== newResolvedState.resolvedData
-      )
-    ) {
+    // If freezeWhenExpanded is set, check for frozen conditions
+    if (freezeWhenExpanded) {
       // if any rows are expanded, freeze the existing data and sorting
-      const keys = Object.keys(oldState.expandedRows)
+      const keys = Object.keys(newResolvedState.expandedRows)
       for (var i = 0; i < keys.length; i++) {
-        if (oldState.expandedRows[keys[i]]) {
+        if (newResolvedState.expandedRows[keys[i]]) {
           newResolvedState.frozen = true
           break
         }
