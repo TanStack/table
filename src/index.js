@@ -406,6 +406,7 @@ export default React.createClass({
         if (column.pivotColumns) {
           return (
             <ThComponent
+              key={i}
               className={classnames(
                 'rt-pivot-header',
                 classes
@@ -660,6 +661,7 @@ export default React.createClass({
                   const PivotCell = column.pivotRender
                   return (
                     <TdComponent
+                      key={i2}
                       className={classnames(
                         'rt-pivot',
                         classes
