@@ -10,7 +10,9 @@ export default {
       pivotValKey,
       subRowsKey,
       expanderColumnWidth,
-      SubComponent
+      SubComponent,
+      page,
+      pageSize
     } = this.getResolvedState(nextProps, nextState)
 
     // Determine Header Groups
@@ -212,13 +214,16 @@ export default {
       resolvedData = groupRecursively(resolvedData, pivotBy)
     }
 
+    const newPages = Math.ceil(resolvedData.length / pageSize)
+
     return {
       resolvedData,
       pivotColumn,
       allVisibleColumns,
       headerGroups,
       allDecoratedColumns,
-      hasHeaderGroups
+      hasHeaderGroups,
+      page: (page + 1) > newPages ? newPages - 1 : page
     }
   },
   getSortedData (state) {
