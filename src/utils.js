@@ -16,7 +16,8 @@ export default {
   groupBy,
   isArray,
   splitProps,
-  compactObject
+  compactObject,
+  isSortingDesc
 }
 
 function get (obj, path, def) {
@@ -183,4 +184,8 @@ function compactObject (obj) {
     }
   }
   return newObj
+}
+
+function isSortingDesc (d) {
+  return !!(d.sort === 'desc' || d.desc === true || d.asc === false)
 }

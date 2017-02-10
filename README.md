@@ -135,6 +135,10 @@ These are all of the available props (and their default values) for the main `<R
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
+  collapseOnSortingChange: false,
+  collapseOnPageChange: true,
+  freezeWhenExpanded: false,
+  defaultSorting: [],
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
@@ -242,7 +246,6 @@ Or just define them as props
   accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
   id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
   sortable: true,
-  sort: 'asc' or 'desc', // used to determine the column sorting on init
   show: true, // can be used to hide a column
   width: undefined, // A hardcoded width for the column. This overrides both min and max width options
   minWidth: 100 // A minimum width for this column. If there is extra room, column will flex to fill available space (up to the max-width, if set)

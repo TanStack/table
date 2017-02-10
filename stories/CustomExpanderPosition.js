@@ -80,8 +80,6 @@ const columns = [{
     accessor: d => d.lastName
   }]
 }, {
-  expander: true
-}, {
   header: 'Info',
   columns: [{
     header: 'Age',
@@ -91,6 +89,8 @@ const columns = [{
       return <span>{row.aggregated ? \`$\{row.value} (avg)\` : row.value}</span>
     }
   }]
+}, {
+  expander: true
 }]
 
 return (
@@ -100,7 +100,6 @@ return (
     columns={columns}
     defaultPageSize={10}
     SubComponent={() => <span>Hello</span>}
-    pivotBy={['lastName']}
   />
 )
   `

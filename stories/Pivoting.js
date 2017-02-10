@@ -50,12 +50,6 @@ export default () => {
           className='-striped -highlight'
           defaultPageSize={10}
           pivotBy={['firstName', 'lastName']}
-          // expandedRows={{
-          //   2: true,
-          //   3: {
-          //     2: true
-          //   }
-          // }}
         />
       </div>
       <div style={{textAlign: 'center'}}>
@@ -83,38 +77,25 @@ const columns = [{
   header: 'Info',
   columns: [{
     header: 'Age',
-    accessor: 'age'
+    accessor: 'age',
+    aggregate: vals => _.round(_.mean(vals)),
+    render: row => {
+      return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
+    }
+  }, {
+    header: 'Visits',
+    accessor: 'visits',
+    aggregate: vals => _.sum(vals)
   }]
 }]
 
-export default (
+return (
   <ReactTable
     data={data}
     columns={columns}
+    className='-striped -highlight'
     defaultPageSize={10}
-    SubComponent={(row) => {
-      return (
-        <div style={{padding: '20px'}}>
-          <em>You can put any component you want here, even another React Table!</em>
-          <br />
-          <br />
-          <ReactTable
-            data={data}
-            columns={columns}
-            defaultPageSize={3}
-            showPagination={false}
-            SubComponent={(row) => {
-              return (
-                <div style={{padding: '20px'}}>
-                  <em>It even has access to the row data: </em>
-                  <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
-                </div>
-              )
-            }}
-          />
-        </div>
-      )
-    }}
+    pivotBy={['firstName', 'lastName']}
   />
 )
   `

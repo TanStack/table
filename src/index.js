@@ -18,8 +18,10 @@ export const ReactTableDefaults = {
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
-  collapseOnChange: true,
+  collapseOnSortingChange: false,
+  collapseOnPageChange: true,
   freezeWhenExpanded: false,
+  defaultSorting: [],
 
   // Controlled State Overrides
   // page: undefined,
@@ -149,7 +151,7 @@ export default React.createClass({
     return {
       page: 0,
       pageSize: this.props.defaultPageSize || 10,
-      sorting: [],
+      sorting: this.props.defaultSorting,
       expandedRows: {}
     }
   },
@@ -214,10 +216,14 @@ export default React.createClass({
       oldState.sorting !== newResolvedState.sorting ||
       (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
-      // If collapseOnChange is set, automatically close expanded subcomponents
-      if (this.props.collapseOnChange) {
+      // Handle collapseOnSortingChange & collapseOnPageChange
+      if (
+        (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
+        (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnPageChange)
+      ) {
         newResolvedState.expandedRows = {}
       }
+
       Object.assign(newResolvedState, this.getSortedData(newResolvedState))
     }
 
@@ -274,7 +280,7 @@ export default React.createClass({
       loading,
       pageSize,
       page,
-      resolvedSorting,
+      sorting,
       pages,
       // Pivoting State
       pivotValKey,
@@ -481,7 +487,7 @@ export default React.createClass({
     }
 
     const makeHeader = (column, i) => {
-      const sort = resolvedSorting.find(d => d.id === column.id)
+      const sort = sorting.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
       const width = _.getFirstDefined(column.width, column.minWidth)
       const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
@@ -507,7 +513,7 @@ export default React.createClass({
 
       if (column.expander) {
         if (column.pivotColumns) {
-          const pivotSort = resolvedSorting.find(d => d.id === column.id)
+          const pivotSort = sorting.find(d => d.id === column.id)
           return (
             <ThComponent
               key={i}
@@ -515,7 +521,7 @@ export default React.createClass({
                 'rt-pivot-header',
                 column.sortable && '-cursor-pointer',
                 classes,
-                pivotSort ? (pivotSort.asc ? '-sort-asc' : '-sort-desc') : ''
+                pivotSort ? (pivotSort.desc ? '-sort-asc' : '-sort-desc') : ''
               )}
               style={{
                 ...styles,
@@ -568,7 +574,7 @@ export default React.createClass({
           key={i}
           className={classnames(
             classes,
-            sort ? (sort.asc ? '-sort-asc' : '-sort-desc') : '',
+            sort ? (sort.desc ? '-sort-asc' : '-sort-desc') : '',
             column.sortable && '-cursor-pointer',
             !show && '-hidden',
           )}

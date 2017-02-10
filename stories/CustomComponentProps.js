@@ -34,12 +34,24 @@ export default () => {
 
   return (
     <div>
+      <strong>Hey!</strong> Open your console! :)
       <div className='table-wrap'>
         <ReactTable
           className='-striped -highlight'
           data={data}
           columns={columns}
           defaultPageSize={10}
+          getTdProps={(state, rowInfo, column, instance) => {
+            return {
+              onMouseEnter: e => console.log('Cell - onMouseEnter', {
+                state,
+                rowInfo,
+                column,
+                instance,
+                event: e
+              })
+            }
+          }}
         />
       </div>
       <div style={{textAlign: 'center'}}>
@@ -53,9 +65,6 @@ export default () => {
 
 function getCode () {
   return `
-import ReactTable from 'react-table'
-
-// Create some column definitions
 const columns = [{
   header: 'Name',
   columns: [{
@@ -74,12 +83,23 @@ const columns = [{
   }]
 }]
 
-// Display your table!
 return (
   <ReactTable
+    className='-striped -highlight'
     data={data}
     columns={columns}
     defaultPageSize={10}
+    getTdProps={(state, rowInfo, column, instance) => {
+      return {
+        onMouseEnter: e => console.log('Cell - onMouseEnter', {
+          state,
+          rowInfo,
+          column,
+          instance,
+          event: e
+        })
+      }
+    }}
   />
 )
   `

@@ -28,8 +28,7 @@ export default () => {
     header: 'Info',
     columns: [{
       header: 'Age',
-      accessor: 'age',
-      sort: 'desc'
+      accessor: 'age'
     }]
   }]
 
@@ -41,6 +40,10 @@ export default () => {
           data={data}
           columns={columns}
           defaultPageSize={10}
+          defaultSorting={[{
+            id: 'age',
+            desc: true
+          }]}
         />
       </div>
       <div style={{textAlign: 'center'}}>
@@ -54,34 +57,35 @@ export default () => {
 
 function getCode () {
   return `
-import ReactTable from 'react-table'
-
-// Create some column definitions
-const columns = [{
-  header: 'Name',
-  columns: [{
-    header: 'First Name',
-    accessor: 'firstName'
+  const columns = [{
+    header: 'Name',
+    columns: [{
+      header: 'First Name',
+      accessor: 'firstName'
+    }, {
+      header: 'Last Name',
+      id: 'lastName',
+      accessor: d => d.lastName
+    }]
   }, {
-    header: 'Last Name',
-    id: 'lastName',
-    accessor: d => d.lastName
+    header: 'Info',
+    columns: [{
+      header: 'Age',
+      accessor: 'age'
+    }]
   }]
-}, {
-  header: 'Info',
-  columns: [{
-    header: 'Age',
-    accessor: 'age'
-  }]
-}]
 
-// Display your table!
-return (
-  <ReactTable
-    data={data}
-    columns={columns}
-    defaultPageSize={10}
-  />
-)
+  return (
+    <ReactTable
+      className='-striped -highlight'
+      data={data}
+      columns={columns}
+      defaultPageSize={10}
+      defaultSorting={[{
+        id: 'age',
+        desc: true
+      }]}
+    />
+  )
   `
 }

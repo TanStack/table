@@ -100,15 +100,24 @@ const columns = [{
   header: 'Info',
   columns: [{
     header: 'Age',
-    accessor: 'age'
+    accessor: 'age',
+    aggregate: vals => _.round(_.mean(vals)),
+    render: row => {
+      return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
+    }
+  }, {
+    header: 'Visits',
+    accessor: 'visits',
+    aggregate: vals => _.sum(vals)
   }]
 }]
 
-export default (
+return (
   <ReactTable
     data={data}
     columns={columns}
     defaultPageSize={10}
+    className='-striped -highlight'
     pivotBy={['firstName', 'lastName']}
     SubComponent={(row) => {
       return (

@@ -226,20 +226,16 @@ export default {
       page: (page + 1) > newPages ? newPages - 1 : page
     }
   },
-  getSortedData (state) {
+  getSortedData (resolvedState) {
     const {
       manual,
       sorting,
-      allDecoratedColumns,
       resolvedData
-    } = state
-
-    const resolvedSorting = sorting.length ? sorting : this.getInitSorting(allDecoratedColumns)
+    } = resolvedState
 
     // Resolve the data from either manual data or sorted data
     return {
-      resolvedSorting,
-      sortedData: manual ? resolvedData : this.sortData(resolvedData, resolvedSorting)
+      sortedData: manual ? resolvedData : this.sortData(resolvedData, sorting)
     }
   },
 
@@ -252,26 +248,6 @@ export default {
   getStateOrProp (key) {
     return _.getFirstDefined(this.state[key], this.props[key])
   },
-  getInitSorting (columns) {
-    if (!columns) {
-      return []
-    }
-    const initSorting = columns.filter(d => {
-      return typeof d.sort !== 'undefined'
-    }).map(d => {
-      return {
-        id: d.id,
-        asc: d.sort === 'asc'
-      }
-    })
-
-    return initSorting
-
-    // return initSorting.length ? initSorting : [{
-    //   id: columns.find(d => d.id).id,
-    //   asc: true
-    // }]
-  },
   sortData (data, sorting) {
     if (!sorting.length) {
       return data
@@ -283,7 +259,7 @@ export default {
         }
         return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
       }
-    }), sorting.map(d => d.asc ? 'asc' : 'desc'))
+    }), sorting.map(d => !d.desc))
 
     return sorted.map(row => {
       if (!row[this.props.subRowsKey]) {
@@ -338,54 +314,25 @@ export default {
     if (onSortingChange) {
       return onSortingChange(column, additive)
     }
-    let newSorting = _.clone(sorting || [])
-    if (_.isArray(column)) {
-      const existingIndex = newSorting.findIndex(d => d.id === column[0].id)
-      if (existingIndex > -1) {
-        const existing = newSorting[existingIndex]
-        if (existing.asc) {
-          column.forEach((d, i) => {
-            newSorting[existingIndex + i].asc = false
-          })
-        } else {
-          if (additive) {
-            newSorting.splice(existingIndex, column.length)
-          } else {
-            column.forEach((d, i) => {
-              newSorting[existingIndex + i].asc = true
-            })
-          }
-        }
-        if (!additive) {
-          newSorting = newSorting.slice(existingIndex, column.length)
-        }
-      } else {
-        if (additive) {
-          newSorting = newSorting.concat(column.map(d => ({
-            id: d.id,
-            asc: true
-          })))
-        } else {
-          newSorting = column.map(d => ({
-            id: d.id,
-            asc: true
-          }))
-        }
-      }
-    } else {
+    let newSorting = _.clone(sorting || []).map(d => {
+      d.desc = _.isSortingDesc(d)
+      return d
+    })
+    if (!_.isArray(column)) {
+      // Single-Sort
       const existingIndex = newSorting.findIndex(d => d.id === column.id)
       if (existingIndex > -1) {
         const existing = newSorting[existingIndex]
-        if (existing.asc) {
-          existing.asc = false
-          if (!additive) {
-            newSorting = [existing]
-          }
-        } else {
+        if (existing.desc) {
           if (additive) {
             newSorting.splice(existingIndex, 1)
           } else {
-            existing.asc = true
+            existing.desc = false
+            newSorting = [existing]
+          }
+        } else {
+          existing.desc = true
+          if (!additive) {
             newSorting = [existing]
           }
         }
@@ -393,13 +340,49 @@ export default {
         if (additive) {
           newSorting.push({
             id: column.id,
-            asc: true
+            desc: false
           })
         } else {
           newSorting = [{
             id: column.id,
-            asc: true
+            desc: false
           }]
+        }
+      }
+    } else {
+      // Multi-Sort
+      const existingIndex = newSorting.findIndex(d => d.id === column[0].id)
+      // Existing Sorted Column
+      if (existingIndex > -1) {
+        const existing = newSorting[existingIndex]
+        if (existing.desc) {
+          if (additive) {
+            newSorting.splice(existingIndex, column.length)
+          } else {
+            column.forEach((d, i) => {
+              newSorting[existingIndex + i].desc = false
+            })
+          }
+        } else {
+          column.forEach((d, i) => {
+            newSorting[existingIndex + i].desc = true
+          })
+        }
+        if (!additive) {
+          newSorting = newSorting.slice(existingIndex, column.length)
+        }
+      } else {
+        // New Sort Column
+        if (additive) {
+          newSorting = newSorting.concat(column.map(d => ({
+            id: d.id,
+            desc: false
+          })))
+        } else {
+          newSorting = column.map(d => ({
+            id: d.id,
+            desc: false
+          }))
         }
       }
     }

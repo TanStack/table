@@ -40,6 +40,13 @@ export default () => {
           data={data}
           columns={columns}
           defaultPageSize={10}
+          getTdProps={() => {
+            return {
+              onClick: () => {
+                console.log('clicked')
+              }
+            }
+          }}
         />
       </div>
       <div style={{textAlign: 'center'}}>
