@@ -273,6 +273,9 @@ export default {
     // }]
   },
   sortData (data, sorting) {
+    if (!sorting.length) {
+      return data
+    }
     const sorted = _.orderBy(data, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
