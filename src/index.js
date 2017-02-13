@@ -746,12 +746,16 @@ export default React.createClass({
                   {...tdProps.rest}
                 >
                   {typeof Cell === 'function' ? (
-                    <Cell
-                      {...rowInfo}
-                      value={rowInfo.rowValues[column.id]}
-                    />
-                  ) : typeof Cell !== 'undefined' ? Cell
-                  : rowInfo.rowValues[column.id]}
+                    Cell.prototype.isReactComponent ? (
+                      <Cell
+                        {...rowInfo}
+                        value={rowInfo.rowValues[column.id]}
+                      />
+                    ) : Cell({
+                      ...rowInfo,
+                      value: rowInfo.rowValues[column.id]
+                    })
+                  ) : rowInfo.rowValues[column.id]}
                 </TdComponent>
               )
             })}
