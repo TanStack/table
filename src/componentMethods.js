@@ -12,6 +12,7 @@ export default {
       expanderColumnWidth,
       SubComponent,
       page,
+      pages,
       pageSize
     } = this.getResolvedState(nextProps, nextState)
 
@@ -214,7 +215,8 @@ export default {
       resolvedData = groupRecursively(resolvedData, pivotBy)
     }
 
-    const newPages = Math.ceil(resolvedData.length / pageSize)
+    const newPages = _.getFirstDefined(pages, Math.ceil(resolvedData.length / pageSize))
+    const newPage = page > newPages ? newPage - 1 : page
 
     return {
       resolvedData,
@@ -223,7 +225,7 @@ export default {
       headerGroups,
       allDecoratedColumns,
       hasHeaderGroups,
-      page: (page + 1) > newPages ? newPages - 1 : page
+      page: Math.max(newPage, 0)
     }
   },
   getSortedData (resolvedState) {
