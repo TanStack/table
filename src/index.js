@@ -453,12 +453,10 @@ export default React.createClass({
           }}
           {...rest}
         >
-          {typeof column.header === 'function' ? (
-            <column.header
-              data={sortedData}
-              column={column}
-            />
-          ) : column.header}
+          {_.normalizeComponent(column.header, {
+            data: sortedData,
+            column: column
+          })}
         </ThComponent>
       )
     }
@@ -537,12 +535,10 @@ export default React.createClass({
               {column.pivotColumns.map((pivotColumn, i) => {
                 return (
                   <span key={pivotColumn.id}>
-                    {typeof pivotColumn.header === 'function' ? (
-                      <pivotColumn.header
-                        data={sortedData}
-                        column={pivotColumn}
-                      />
-                    ) : pivotColumn.header}
+                    {_.normalizeComponent(pivotColumn.header, {
+                      data: sortedData,
+                      column: column
+                    })}
                     {i < column.pivotColumns.length - 1 && (
                       <ExpanderComponent />
                     )}
@@ -589,12 +585,10 @@ export default React.createClass({
           }}
           {...rest}
         >
-          {typeof column.header === 'function' ? (
-            <column.header
-              data={sortedData}
-              column={column}
-            />
-          ) : column.header}
+          {_.normalizeComponent(column.header, {
+            data: sortedData,
+            column: column
+          })}
         </ThComponent>
       )
     }
@@ -627,7 +621,6 @@ export default React.createClass({
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
-              const Cell = column.render
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(column.width, column.minWidth)
               const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
@@ -745,17 +738,10 @@ export default React.createClass({
                   }}
                   {...tdProps.rest}
                 >
-                  {typeof Cell === 'function' ? (
-                    Cell.prototype.isReactComponent ? (
-                      <Cell
-                        {...rowInfo}
-                        value={rowInfo.rowValues[column.id]}
-                      />
-                    ) : Cell({
-                      ...rowInfo,
-                      value: rowInfo.rowValues[column.id]
-                    })
-                  ) : rowInfo.rowValues[column.id]}
+                  {_.normalizeComponent(column.render, {
+                    ...rowInfo,
+                    value: rowInfo.rowValues[column.id]
+                  }, rowInfo.rowValues[column.id])}
                 </TdComponent>
               )
             })}

@@ -17,7 +17,8 @@ export default {
   isArray,
   splitProps,
   compactObject,
-  isSortingDesc
+  isSortingDesc,
+  normalizeComponent
 }
 
 function get (obj, path, def) {
@@ -188,4 +189,14 @@ function compactObject (obj) {
 
 function isSortingDesc (d) {
   return !!(d.sort === 'desc' || d.desc === true || d.asc === false)
+}
+
+function normalizeComponent (Comp, params, fallback = Comp) {
+  return typeof Comp === 'function' ? (
+    Comp.prototype.isReactComponent ? (
+      <Comp
+        {...params}
+      />
+    ) : Comp(params)
+  ) : fallback
 }
