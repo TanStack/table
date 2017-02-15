@@ -70,6 +70,7 @@ export const ReactTableDefaults = {
   getTdProps: emptyObj,
   getPaginationProps: emptyObj,
   getLoadingProps: emptyObj,
+  getNoDataProps: emptyObj,
 
   // Global Column Defaults
   column: {
@@ -92,6 +93,7 @@ export const ReactTableDefaults = {
   previousText: 'Previous',
   nextText: 'Next',
   loadingText: 'Loading...',
+  noDataText: 'No rows found',
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
@@ -139,7 +141,8 @@ export const ReactTableDefaults = {
         {loadingText}
       </div>
     </div>
-  )
+  ),
+  NoDataComponent: _.makeTemplateComponent('rt-noData')
 }
 
 export default React.createClass({
@@ -272,10 +275,12 @@ export default React.createClass({
       getTdProps,
       getPaginationProps,
       getLoadingProps,
+      getNoDataProps,
       showPagination,
       expanderColumnWidth,
       manual,
       loadingText,
+      noDataText,
       // State
       loading,
       pageSize,
@@ -299,6 +304,7 @@ export default React.createClass({
       PaginationComponent,
       LoadingComponent,
       SubComponent,
+      NoDataComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -835,6 +841,7 @@ export default React.createClass({
       const tBodyProps = _.splitProps(getTbodyProps(finalState, undefined, undefined, this))
       const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
       const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
+      const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
       return (
         <div
           className={classnames(
@@ -879,6 +886,13 @@ export default React.createClass({
               style={paginationProps.style}
               {...paginationProps.rest}
             />
+          )}
+          {!pageRows.length && (
+            <NoDataComponent
+              {...noDataProps}
+            >
+              {_.normalizeComponent(noDataText)}
+            </NoDataComponent>
           )}
           <LoadingComponent
             loading={loading}

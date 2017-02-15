@@ -22,6 +22,7 @@ import PivotingSubComponents from '../stories/PivotingSubComponents.js'
 import OneHundredKRows from '../stories/OneHundredKRows.js'
 import FunctionalRendering from '../stories/FunctionalRendering.js'
 import CustomExpanderPosition from '../stories/CustomExpanderPosition.js'
+import NoDataText from '../stories/NoDataText.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -49,4 +50,5 @@ configure(() => {
     .add('100k Rows w/ Pivoting & Sub Components', OneHundredKRows)
     .add('Functional Rendering', FunctionalRendering)
     .add('Custom Expander Position', CustomExpanderPosition)
+    .add('Custom "No Data" Text', NoDataText)
 }, module)

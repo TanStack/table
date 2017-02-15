@@ -37,7 +37,10 @@ export default () => {
       <div className='table-wrap'>
         <ReactTable
           className='-striped -highlight'
-          data={data}
+          data={[]}
+          noDataText='Oh Noes!'
+          // noDataText={() => 'Oh Noes!'} // Supports functions
+          // noDataText={() => <span>Oh Noes!</span>} // Supports JSX / React Components
           columns={columns}
           defaultPageSize={10}
         />
@@ -77,7 +80,10 @@ const columns = [{
 // Display your table!
 return (
   <ReactTable
-    data={data}
+    data={[]}
+    noDataText='Oh Noes!'
+    // noDataText={() => 'Oh Noes!'} // Supports functions
+    // noDataText={() => <span>Oh Noes!</span>} // Supports JSX / React Components
     columns={columns}
     defaultPageSize={10}
   />

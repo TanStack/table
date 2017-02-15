@@ -187,6 +187,7 @@ These are all of the available props (and their default values) for the main `<R
   getTdProps: () => ({}),
   getPaginationProps: () => ({}),
   getLoadingProps: () => ({}),
+  getNoDataProps: () => ({}),
 
   // Global Column Defaults
   column: {
@@ -209,6 +210,7 @@ These are all of the available props (and their default values) for the main `<R
   previousText: 'Previous',
   nextText: 'Next',
   loadingText: 'Loading...',
+  noDataText: 'No rows found',  
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
