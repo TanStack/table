@@ -44,11 +44,11 @@
 - [Props](#props)
 - [Columns](#columns)
 - [Column Header Groups](#column-header-groups)
-- [Custom Cell & Header Rendering](#custom-cell--and-header-rendering)
+- [Custom Cell and Header Rendering](#custom-cell-and-header-rendering)
 - [Styles](#styles)
 - [Custom Props](#custom-props)
-- [Pivoting & Aggregation](#pivoting--aggregation)
-- [Sub Tables & Sub Components](#sub-tables--sub-components)
+- [Pivoting and Aggregation](#pivoting-and-aggregation)
+- [Sub Tables and Sub Components](#sub-tables-and-sub-components)
 - [Server-side Data](#server-side-data)
 - [Fully Controlled Component](#fully-controlled-component)
 - [Functional Rendering](#functional-rendering)
@@ -297,7 +297,7 @@ const columns = [{
 }]
 ```
 
-## Custom Cell & Header Rendering
+## Custom Cell and Header Rendering
 You can use any react component or JSX to display column headers or cells. Any component you use will be passed the following props:
 - `row` - Original row from your data
 - `rowValues` - The post-accessed values from the original row
@@ -439,7 +439,7 @@ const columns = [{
 }]
 ```
 
-## Pivoting & Aggregation
+## Pivoting and Aggregation
 Pivoting the table will group records together based on their accessed values and allow the rows in that group to be expanded underneath it.
 To pivot, pass an array of `columnID`'s to `pivotBy`. Remember, a column's `id` is either the one that you assign it (when using a custom accessors) or its `accessor` string.
 ```javascript
@@ -469,7 +469,7 @@ const columns = [{
 
 Pivoted columns can be sorted just like regular columns, but not independently of each other.  For instance, if you click to sort the pivot column in ascending order, it will sort by each pivot recursively in ascending order together.
 
-## Sub Tables & Sub Components
+## Sub Tables and Sub Components
 By adding a `SubComponent` props, you can easily add an expansion level to all root-level rows:
 ```javascript
 <ReactTable
