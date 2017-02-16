@@ -755,11 +755,13 @@ export default React.createClass({
             {...paginationProps.rest}
           />
         ) : null}
-        <NoDataComponent
-          {...noDataProps}
-        >
-          {_.normalizeComponent(noDataText)}
-        </NoDataComponent>
+        {!pageRows.length && (
+          <NoDataComponent
+            {...noDataProps}
+          >
+            {_.normalizeComponent(noDataText)}
+          </NoDataComponent>
+        )}
         <LoadingComponent
           loading={loading}
           loadingText={loadingText}
