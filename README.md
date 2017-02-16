@@ -99,7 +99,7 @@ const data = [{
 
 const columns = [{
   header: 'Name',
-  accessor: 'name' // String-based value accessors !
+  accessor: 'name' // String-based value accessors! 
 }, {
   header: 'Age',
   accessor: 'age',
@@ -245,7 +245,7 @@ Or just define them as props
 ```javascript
 [{
   // General
-  accessor: 'propertyName' or Accessor eg. (row) => row.propertyName,
+  accessor: 'propertyName' // or Accessor eg. (row) => row.propertyName (see "Accessors" section for more details)
   id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
   sortable: true,
   show: true, // can be used to hide a column
@@ -277,6 +277,28 @@ Or just define them as props
 
 }]
 ```
+
+## Accessors
+Accessors are functions that return the value to populate the row's value for the column.
+This lets the render function not have to worry about accessing the correct data, the value is automatically populated in it's props.
+
+If a `string` or `array` is passed the default accessor is used.
+The default accessor will parse the input into an array and recursively flatten it.
+Any values that contain a dot (`.`) will be split.
+Any values that contain bracket (`[]`) will be split.
+This array is then used as the path to the value to return.
+
+("$" is the placeholder value that would be returned by the default accessor)
+| value        | path            | data                   |
+|--------------|-----------------|------------------------|
+| "a"          | ["a"]           | {"a": $}               |
+| "a.b"        | ["a", "b"]      | {"a": {"b": $}}        |
+| "a[0]"       | ["a", "0"]      | {"a": [$]}             |
+| ["a.b", "c"] | ["a", "b", "c"] | {"a": {"b": {"c": $}}} |
+
+*NOTE*
+If your data has a field/key with a dot (`.`) you will need to supply a custom accessor.
+
 
 ## Column Header Groups
 To group columns with another header column, just nest your columns in a header column.  Header columns utilize the same header properties as regular columns.
