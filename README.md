@@ -24,6 +24,9 @@
 <a href="https://twitter.com/tannerlinsley" target="\_parent">
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
+<a href="https://cash.me/$tannerlinsley" target="\_parent">
+  <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
+</a>
 
 ## Features
 
@@ -185,6 +188,9 @@ These are all of the available props (and their default values) for the main `<R
   getTrProps: () => ({}),
   getThProps: () => ({}),
   getTdProps: () => ({}),
+  getTfootProps: () => ({}),
+  getTfootTrProps: () => ({}),
+  getTfootThProps: () => ({}),
   getPaginationProps: () => ({}),
   getLoadingProps: () => ({}),
   getNoDataProps: () => ({}),
@@ -204,6 +210,11 @@ These are all of the available props (and their default values) for the main `<R
     headerClassName: '',
     headerStyle: {},
     getHeaderProps: () => ({})
+    // Footers only
+    footer: undefined,
+    footerClassName: '',
+    footerStyle: {},
+    getFooterProps: () => ({})
   },
 
   // Text
@@ -268,12 +279,19 @@ Or just define them as props
     // viewIndex == the index of the row in the current page
 
   // Header & HeaderGroup Options
-  header: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
+  header: 'Header Name', a function that returns a primitive, or JSX / React Component eg. ({data, column}) => <div>Header Name</div>,
   headerClassName: '', // Set the classname of the `th` element of the column
   headerStyle: {}, // Set the style of the `th` element of the column
+  getHeaderProps: (state, rowInfo, column, instance) => ({}) // a function that returns props to decorate the `th` element of the column
 
   // Header Groups only
   columns: [...] // See Header Groups section below
+
+  // Footer
+  footer: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
+  footerClassName: '', // Set the classname of the `td` element of the column's footer
+  footerStyle: {}, // Set the style of the `td` element of the column's footer
+  getFooterProps: (state, rowInfo, column, instance) => ({}) // a function that returns props to decorate the `td` element of the column's footer
 
 }]
 ```
@@ -319,8 +337,8 @@ const columns = [{
 }]
 ```
 
-## Custom Cell and Header Rendering
-You can use any react component or JSX to display column headers or cells. Any component you use will be passed the following props:
+## Custom Cell, Header and Footer Rendering
+You can use any react component or JSX to display content in column headers, cells and footers. Any component you use will be passed the following props (if available):
 - `row` - Original row from your data
 - `rowValues` - The post-accessed values from the original row
 - `index` - The index of the row
@@ -362,17 +380,19 @@ const columns = [{
 ```
 
 ## Styles
-React-table ships with a minimal and clean stylesheet to get you on your feet quickly. It's located at `react-table/react-table.css`.
+- React-table ships with a minimal and clean stylesheet to get you on your feet quickly.
+- The stylesheet is located at `react-table/react-table.css`.
+- There are countless ways to import a stylesheet. If you have questions on how to do so, consult the documentation of your build system.
 
-#### Built-in Styles
+#### Classes
 - Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
 - Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
 
-#### CSS Styles
+#### CSS
 We think the default styles looks great! But, if you prefer a more custom look, all of the included styles are easily overridable. Every single component contains a unique class that makes it super easy to customize. Just go for it!
 
 #### JS Styles
-Every single react-table element and `get[ComponentName]Props` callback support classes (powered by `classname` and js styles.
+Every single react-table element and `get[ComponentName]Props` callback supports `classname` and `style` props.
 
 ## Custom Props
 

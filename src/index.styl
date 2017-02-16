@@ -100,6 +100,16 @@ $expandSize = 7px
       cursor: pointer
     &.-open:after
         transform: translate(-50%, -50%) rotate(0deg)
+  .rt-tfoot
+    display: flex
+    flex-direction: column
+    background: white
+    box-shadow: 0 0px 15px 0px alpha(black, .15)
+
+    .rt-td
+      border-right:1px solid alpha(black, .05)
+      &:last-child
+        border-right:0
 
   &.-striped
     .rt-tr.-odd
@@ -117,6 +127,7 @@ $expandSize = 7px
     flex-wrap: wrap
     padding: 3px
     box-shadow: 0 0px 15px 0px alpha(black, .1)
+    border-top: 2px solid alpha(black, .1)
 
     .-btn
       appearance:none

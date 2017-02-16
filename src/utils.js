@@ -191,7 +191,7 @@ function isSortingDesc (d) {
   return !!(d.sort === 'desc' || d.desc === true || d.asc === false)
 }
 
-function normalizeComponent (Comp, params, fallback = Comp) {
+function normalizeComponent (Comp, params = {}, fallback = Comp) {
   return typeof Comp === 'function' ? (
     Comp.prototype.isReactComponent ? (
       <Comp

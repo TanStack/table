@@ -2,257 +2,12 @@ import React from 'react'
 import classnames from 'classnames'
 //
 import _ from './utils'
-
-import componentMethods from './componentMethods'
-import Pagination from './pagination'
-
-const emptyObj = () => ({})
-
-export const ReactTableDefaults = {
-  // General
-  data: [],
-  loading: false,
-  showPagination: true,
-  showPageSizeOptions: true,
-  pageSizeOptions: [5, 10, 20, 25, 50, 100],
-  defaultPageSize: 20,
-  showPageJump: true,
-  expanderColumnWidth: 35,
-  collapseOnSortingChange: false,
-  collapseOnPageChange: true,
-  freezeWhenExpanded: false,
-  defaultSorting: [],
-
-  // Controlled State Overrides
-  // page: undefined,
-  // pageSize: undefined,
-  // sorting: undefined,
-
-  // Controlled State Callbacks
-  onExpandSubComponent: undefined,
-  onPageChange: undefined,
-  onPageSizeChange: undefined,
-  onSortingChange: undefined,
-
-  // Pivoting
-  pivotBy: undefined,
-  pivotColumnWidth: 200,
-  pivotValKey: '_pivotVal',
-  pivotIDKey: '_pivotID',
-  subRowsKey: '_subRows',
-
-  // Pivoting State Overrides
-  // expandedRows: {},
-
-  // Pivoting State Callbacks
-  onExpandRow: undefined,
-
-  // General Callbacks
-  onChange: () => null,
-
-  // Classes
-  className: '',
-  style: {},
-
-  // Component decorators
-  getProps: emptyObj,
-  getTableProps: emptyObj,
-  getTheadGroupProps: emptyObj,
-  getTheadGroupTrProps: emptyObj,
-  getTheadGroupThProps: emptyObj,
-  getTheadProps: emptyObj,
-  getTheadTrProps: emptyObj,
-  getTheadThProps: emptyObj,
-  getTbodyProps: emptyObj,
-  getTrGroupProps: emptyObj,
-  getTrProps: emptyObj,
-  getThProps: emptyObj,
-  getTdProps: emptyObj,
-  getPaginationProps: emptyObj,
-  getLoadingProps: emptyObj,
-  getNoDataProps: emptyObj,
-
-  // Global Column Defaults
-  column: {
-    sortable: true,
-    show: true,
-    minWidth: 100,
-    // Cells only
-    render: undefined,
-    className: '',
-    style: {},
-    getProps: () => ({}),
-    // Headers only
-    header: undefined,
-    headerClassName: '',
-    headerStyle: {},
-    getHeaderProps: () => ({})
-  },
-
-  // Text
-  previousText: 'Previous',
-  nextText: 'Next',
-  loadingText: 'Loading...',
-  noDataText: 'No rows found',
-  pageText: 'Page',
-  ofText: 'of',
-  rowsText: 'rows',
-
-  // Components
-  TableComponent: _.makeTemplateComponent('rt-table'),
-  TheadComponent: _.makeTemplateComponent('rt-thead'),
-  TbodyComponent: _.makeTemplateComponent('rt-tbody'),
-  TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
-  TrComponent: _.makeTemplateComponent('rt-tr'),
-  ThComponent: ({toggleSort, className, children, ...rest}) => {
-    return (
-      <div
-        className={classnames(className, 'rt-th')}
-        onClick={e => {
-          toggleSort && toggleSort(e)
-        }}
-        {...rest}
-      >
-        {children}
-      </div>
-    )
-  },
-  TdComponent: _.makeTemplateComponent('rt-td'),
-  ExpanderComponent: ({isExpanded, ...rest}) => {
-    return (
-      <div
-        className={classnames('rt-expander', isExpanded && '-open')}
-        {...rest}
-      >&bull;</div>
-    )
-  },
-  PaginationComponent: Pagination,
-  PreviousComponent: undefined,
-  NextComponent: undefined,
-  LoadingComponent: ({className, loading, loadingText, ...rest}) => (
-    <div className={classnames(
-      '-loading',
-      {'-active': loading},
-      className
-    )}
-      {...rest}
-    >
-      <div className='-loading-inner'>
-        {loadingText}
-      </div>
-    </div>
-  ),
-  NoDataComponent: _.makeTemplateComponent('rt-noData')
-}
+import lifecycle from './lifecycle'
+import methods from './methods'
 
 export default React.createClass({
-  getDefaultProps () {
-    return ReactTableDefaults
-  },
-
-  getInitialState () {
-    return {
-      page: 0,
-      pageSize: this.props.defaultPageSize || 10,
-      sorting: this.props.defaultSorting,
-      expandedRows: {}
-    }
-  },
-
-  getResolvedState (props, state) {
-    const resolvedState = {
-      ..._.compactObject(this.state),
-      ..._.compactObject(state),
-      ..._.compactObject(this.props),
-      ..._.compactObject(props)
-    }
-    return resolvedState
-  },
-
-  componentWillMount () {
-    this.setStateWithData(this.getDataModel())
-  },
-
-  componentDidMount () {
-    this.fireOnChange()
-  },
-
-  componentWillReceiveProps (nextProps, nextState) {
-    const oldState = this.getResolvedState()
-    const newState = this.getResolvedState(nextProps, nextState)
-
-    // Props that trigger a data update
-    if (
-      oldState.data !== newState.data ||
-      oldState.columns !== newState.columns ||
-      oldState.pivotBy !== newState.pivotBy ||
-      oldState.sorting !== newState.sorting
-    ) {
-      this.setStateWithData(this.getDataModel(nextProps, nextState))
-    }
-  },
-
-  setStateWithData (newState, cb) {
-    const oldState = this.getResolvedState()
-    const newResolvedState = this.getResolvedState({}, newState)
-    const { freezeWhenExpanded } = newResolvedState
-
-    // Default to unfrozen state
-    newResolvedState.frozen = false
-
-    // If freezeWhenExpanded is set, check for frozen conditions
-    if (freezeWhenExpanded) {
-      // if any rows are expanded, freeze the existing data and sorting
-      const keys = Object.keys(newResolvedState.expandedRows)
-      for (var i = 0; i < keys.length; i++) {
-        if (newResolvedState.expandedRows[keys[i]]) {
-          newResolvedState.frozen = true
-          break
-        }
-      }
-    }
-
-    // If the data isn't frozen and either the data or
-    // sorting model has changed, update the data
-    if (
-      (oldState.frozen && !newResolvedState.frozen) ||
-      oldState.sorting !== newResolvedState.sorting ||
-      (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
-    ) {
-      // Handle collapseOnSortingChange & collapseOnPageChange
-      if (
-        (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
-        (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnPageChange)
-      ) {
-        newResolvedState.expandedRows = {}
-      }
-
-      Object.assign(newResolvedState, this.getSortedData(newResolvedState))
-    }
-
-    // Calculate pageSize all the time
-    if (newResolvedState.resolvedData) {
-      newResolvedState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
-    }
-
-    return this.setState(newResolvedState, cb)
-  },
-
-  shouldComponentUpdate (nextProps, nextState) {
-    const oldState = this.getResolvedState()
-    const newState = this.getResolvedState(nextProps, nextState)
-
-    // State changes that trigger a render
-    if (
-      oldState.sortedData !== newState.sortedData ||
-      oldState.page !== newState.page ||
-      oldState.pageSize !== newState.pageSize ||
-      oldState.expandedRows !== newState.expandedRows
-    ) {
-      return true
-    }
-    return false
-  },
+  ...lifecycle,
+  ...methods,
 
   render () {
     const resolvedState = this.getResolvedState()
@@ -271,8 +26,10 @@ export default React.createClass({
       getTbodyProps,
       getTrGroupProps,
       getTrProps,
-      getThProps,
       getTdProps,
+      getTfootProps,
+      getTfootTrProps,
+      getTfootTdProps,
       getPaginationProps,
       getLoadingProps,
       getNoDataProps,
@@ -300,6 +57,7 @@ export default React.createClass({
       TrComponent,
       ThComponent,
       TdComponent,
+      TfootComponent,
       ExpanderComponent,
       PaginationComponent,
       LoadingComponent,
@@ -314,9 +72,6 @@ export default React.createClass({
       sortedData
     } = resolvedState
 
-    // Determine the flex percentage for each column
-    // const columnPercentage = 100 / allVisibleColumns.length
-
     // Pagination
     const startRow = pageSize * page
     const endRow = startRow + pageSize
@@ -325,6 +80,8 @@ export default React.createClass({
     const padRows = pages > 1 ? _.range(pageSize - pageRows.length)
       : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
       : []
+
+    const hasColumnFooter = allVisibleColumns.some(d => d.footer)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       rows.forEach((row, i) => {
@@ -354,6 +111,7 @@ export default React.createClass({
       pageRows,
       minRows,
       padRows,
+      hasColumnFooter,
       canPrevious,
       canNext,
       rowMinWidth
@@ -765,7 +523,7 @@ export default React.createClass({
     const makePadRow = (row, i) => {
       const trGroupProps = getTrGroupProps(finalState, undefined, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, undefined, undefined, this))
-      const thProps = _.splitProps(getThProps(finalState, undefined, undefined, this))
+      const tdProps = _.splitProps(getTdProps(finalState, undefined, undefined, this))
       return (
         <TrGroupComponent
           key={i}
@@ -782,14 +540,14 @@ export default React.createClass({
               <ThComponent
                 className={classnames(
                   'rt-expander-header',
-                  thProps.className
+                  tdProps.className
                 )}
                 style={{
-                  ...thProps.style,
+                  ...tdProps.style,
                   flex: `0 0 auto`,
                   width: `${expanderColumnWidth}px`
                 }}
-                {...thProps.rest}
+                {...tdProps.rest}
               />
             )}
             {allVisibleColumns.map((column, i2) => {
@@ -835,6 +593,115 @@ export default React.createClass({
       )
     }
 
+    const makeColumnFooters = () => {
+      const tFootProps = getTfootProps(finalState, undefined, undefined, this)
+      const tFootTrProps = _.splitProps(getTfootTrProps(finalState, undefined, undefined, this))
+      return (
+        <TfootComponent
+          className={tFootProps.className}
+          style={{
+            ...tFootProps.style,
+            minWidth: `${rowMinWidth}px`
+          }}
+          {...tFootProps.rest}
+        >
+          <TrComponent
+            className={classnames(
+              tFootTrProps.className
+            )}
+            style={tFootTrProps.style}
+            {...tFootTrProps.rest}
+          >
+            {allVisibleColumns.map((column, i2) => {
+              const show = typeof column.show === 'function' ? column.show() : column.show
+              const width = _.getFirstDefined(column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
+              const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
+              const columnFooterProps = _.splitProps(column.getFooterProps(finalState, undefined, column, this))
+
+              const classes = [
+                tFootTdProps.className,
+                column.className,
+                columnProps.className,
+                columnFooterProps.className
+              ]
+
+              const styles = {
+                ...tFootTdProps.style,
+                ...column.style,
+                ...columnProps.style,
+                ...columnFooterProps.style
+              }
+
+              if (column.expander) {
+                if (column.pivotColumns) {
+                  return (
+                    <TdComponent
+                      key={i2}
+                      className={classnames(
+                        'rt-pivot',
+                        classes
+                      )}
+                      style={{
+                        ...styles,
+                        flex: `${width} 0 auto`,
+                        width: `${width}px`,
+                        maxWidth: `${maxWidth}px`
+                      }}
+                      {...columnProps.rest}
+                      {...tFootTdProps.rest}
+                      {...columnFooterProps.rest}
+                    >
+                      {_.normalizeComponent(column.footer)}
+                    </TdComponent>
+                  )
+                }
+
+                // Return the regular expander cell
+                return (
+                  <TdComponent
+                    key={i2}
+                    className={classnames(
+                      classes,
+                      {hidden: !show}
+                    )}
+                    style={{
+                      ...styles,
+                      flex: `0 0 auto`,
+                      width: `${expanderColumnWidth}px`
+                    }}
+                  />
+                )
+              }
+
+              // Return regular cell
+              return (
+                <TdComponent
+                  key={i2}
+                  className={classnames(
+                    classes,
+                    !show && 'hidden'
+                  )}
+                  style={{
+                    ...styles,
+                    flex: `${width} 0 auto`,
+                    width: `${width}px`,
+                    maxWidth: `${maxWidth}px`
+                  }}
+                  {...columnProps.rest}
+                  {...tFootTdProps.rest}
+                  {...columnFooterProps.rest}
+                >
+                  {_.normalizeComponent(column.footer)}
+                </TdComponent>
+              )
+            })}
+          </TrComponent>
+        </TfootComponent>
+      )
+    }
+
     const makeTable = () => {
       const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
       const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
@@ -873,6 +740,7 @@ export default React.createClass({
               {pageRows.map((d, i) => makePageRow(d, i))}
               {padRows.map(makePadRow)}
             </TbodyComponent>
+            {hasColumnFooter && makeColumnFooters()}
           </TableComponent>
           {showPagination && (
             <PaginationComponent
@@ -905,9 +773,5 @@ export default React.createClass({
 
     // childProps are optionally passed to a function-as-a-child
     return children ? children(finalState, makeTable, this) : makeTable()
-  },
-
-  // Helpers
-  ...componentMethods
-
+  }
 })
