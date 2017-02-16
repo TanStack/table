@@ -1,3 +1,7 @@
 body{
 	padding: 20px;
 }
+
+strong {
+	font-weight: bold
+}

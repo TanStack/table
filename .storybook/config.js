@@ -23,6 +23,7 @@ import OneHundredKRows from '../stories/OneHundredKRows.js'
 import FunctionalRendering from '../stories/FunctionalRendering.js'
 import CustomExpanderPosition from '../stories/CustomExpanderPosition.js'
 import NoDataText from '../stories/NoDataText.js'
+import Footers from '../stories/Footers.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -51,4 +52,5 @@ configure(() => {
     .add('Functional Rendering', FunctionalRendering)
     .add('Custom Expander Position', CustomExpanderPosition)
     .add('Custom "No Data" Text', NoDataText)
+    .add('Footers', Footers)
 }, module)
