@@ -60,16 +60,13 @@ export default () => {
   return (
     <div>
       <strong>Functional rendering</strong> simply means that you have all of the building blocks to render your own React Table however you'd like.
-      <br />
-      <br />
-      Whether it's <strong>completely custom</strong>, or even just <strong>rearranging the order of the table's elements</strong>, this is how you can do it.
 
       <br />
       <br />
       <br />
       <br />
 
-      <strong>Pagination at the top using partials:</strong>
+      <strong>Decorating the standard table output</strong>
       <br />
       <br />
 
@@ -78,84 +75,7 @@ export default () => {
           data={data}
           columns={columns}
         >
-          {(state, {
-            Root,
-            Table,
-            HeaderGroups,
-            Headers,
-            Rows,
-            Footers,
-            Pagination,
-            NoData,
-            Loading
-          }, instance) => {
-            return (
-              <Root>
-                <Pagination />
-                <Table>
-                  <HeaderGroups />
-                  <Headers />
-                  <Rows />
-                  <Footers />
-                </Table>
-                <NoData />
-                <Loading />
-              </Root>
-            )
-          }}
-        </ReactTable>
-      </div>
-
-      <CodeHighlight>{() => `
-import ReactTable from 'react-table'
-
-return (
-  <ReactTable
-    data={data}
-    columns={columns}
-  >
-    {(state, {
-      Root,
-      Table,
-      HeaderGroups,
-      Headers,
-      Rows,
-      Footers,
-      Pagination,
-      NoData,
-      Loading
-    }, instance) => {
-      return (
-        <Root>
-          <Pagination />
-          <Table>
-            <HeaderGroups />
-            <Headers />
-            <Rows />
-            <Footers />
-          </Table>
-          <NoData />
-          <Loading />
-        </Root>
-      )
-    }}
-  </ReactTable>
-)
-      `}</CodeHighlight>
-
-      <br />
-      <br />
-
-      <strong>Wrapping the standard table output</strong>
-      <br />
-      <br />
-
-      <div className='table-wrap'>
-        <ReactTable
-          data={data}
-          columns={columns}
-        >
-          {(state, Table, instance) => {
+          {(state, makeTable, instance) => {
             return (
               <div style={{
                 background: '#ffcf00',
@@ -164,7 +84,7 @@ return (
                 padding: '5px'
               }}>
                 <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
-                <Table />
+                {makeTable()}
               </div>
             )
           }}

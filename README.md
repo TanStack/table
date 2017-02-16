@@ -102,7 +102,7 @@ const data = [{
 
 const columns = [{
   header: 'Name',
-  accessor: 'name' // String-based value accessors! 
+  accessor: 'name' // String-based value accessors!
 }, {
   header: 'Age',
   accessor: 'age',
@@ -607,48 +607,13 @@ Possibly one of the coolest features of React-Table is its ability to expose int
 
 The function you pass will be called with the following items:
 - Fully-resolved state of the table
-- The standard table component (including individual partials as properties of this component)
+- A function that returns the standard table component
 - The instance of the component
 
 You can then return any JSX or react you want! This turns out to be perfect for:
-- Reordering the internal components of the table
 - Accessing the internal state of the table without a `ref`
 - Decorating the table or extending it with your own UI
 - Building your own custom display logic
-
-Custom pagination order:
-```javascript
-<ReactTable
-  data={data}
-  columns={columns}
->
-  {(state, {
-    Root,
-    Table,
-    HeaderGroups,
-    Headers,
-    Rows,
-    Footers,
-    Pagination,
-    NoData,
-    Loading
-  }, instance) => {
-    return (
-      <Root>
-        <Pagination />
-        <Table>
-          <HeaderGroups />
-          <Headers />
-          <Rows />
-          <Footers />
-        </Table>
-        <NoData />
-        <Loading />
-      </Root>
-    )
-  }}
-</ReactTable>
-```
 
 Accessing internal state and wrapping with more UI:
 ```javascript
@@ -656,7 +621,7 @@ Accessing internal state and wrapping with more UI:
   data={data}
   columns={columns}
 >
-  {(state, Table, instance) => {
+  {(state, makeTable, instance) => {
     return (
       <div style={{
         background: '#ffcf00',
@@ -665,7 +630,7 @@ Accessing internal state and wrapping with more UI:
         padding: '5px'
       }}>
         <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
-        <Table />
+        {makeTable()}
       </div>
     )
   }}
@@ -683,18 +648,20 @@ Though we confidently stand by the markup and architecture behind it, `react-tab
 // Change the global default
 import { ReactTableDefaults } from 'react-table'
 Object.assign(ReactTableDefaults, {
-  TableComponent: Component,
-  TheadComponent: Component,
-  TbodyComponent: Component,
-  TrGroupComponent: Component,
-  TrComponent: Component,
-  ThComponent: Component,
-  TdComponent: Component,
-  PaginationComponent: Component,
-  PreviousComponent: Component,
-  NextComponent: Component,
-  LoadingComponent: Component,
-  ExpanderComponent: Component
+  TableComponent: component,
+  TheadComponent: component,
+  TbodyComponent: component,
+  TrGroupComponent: component,
+  TrComponent: component,
+  ThComponent: component
+  TdComponent: component,
+  TfootComponent: component,
+  ExpanderComponent: component,
+  PaginationComponent: component,
+  PreviousComponent: undefined,
+  NextComponent: undefined,
+  LoadingComponent: component,
+  NoDataComponent: component,
 })
 
 // Or change per instance
