@@ -40,22 +40,169 @@ export default () => {
     header: 'Name',
     columns: [{
       header: 'First Name',
-      accessor: 'firstName'
+      accessor: 'firstName',
+      footer: 'Footer'
     }, {
       header: 'Last Name',
       id: 'lastName',
-      accessor: d => d.lastName
+      accessor: d => d.lastName,
+      footer: 'Footer'
     }]
   }, {
     header: 'Info',
     columns: [{
       header: 'Age',
-      accessor: 'age'
+      accessor: 'age',
+      footer: 'Footer'
     }]
   }]
 
   return (
     <div>
+      <strong>Functional rendering</strong> simply means that you have all of the building blocks to render your own React Table however you'd like.
+      <br />
+      <br />
+      Whether it's <strong>completely custom</strong>, or even just <strong>rearranging the order of the table's elements</strong>, this is how you can do it.
+
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <strong>Pagination at the top using partials:</strong>
+      <br />
+      <br />
+
+      <div className='table-wrap'>
+        <ReactTable
+          data={data}
+          columns={columns}
+        >
+          {(state, {
+            Root,
+            Table,
+            HeaderGroups,
+            Headers,
+            Rows,
+            Footers,
+            Pagination,
+            NoData,
+            Loading
+          }, instance) => {
+            return (
+              <Root>
+                <Pagination />
+                <Table>
+                  <HeaderGroups />
+                  <Headers />
+                  <Rows />
+                  <Footers />
+                </Table>
+                <NoData />
+                <Loading />
+              </Root>
+            )
+          }}
+        </ReactTable>
+      </div>
+
+      <CodeHighlight>{() => `
+import ReactTable from 'react-table'
+
+return (
+  <ReactTable
+    data={data}
+    columns={columns}
+  >
+    {(state, {
+      Root,
+      Table,
+      HeaderGroups,
+      Headers,
+      Rows,
+      Footers,
+      Pagination,
+      NoData,
+      Loading
+    }, instance) => {
+      return (
+        <Root>
+          <Pagination />
+          <Table>
+            <HeaderGroups />
+            <Headers />
+            <Rows />
+            <Footers />
+          </Table>
+          <NoData />
+          <Loading />
+        </Root>
+      )
+    }}
+  </ReactTable>
+)
+      `}</CodeHighlight>
+
+      <br />
+      <br />
+
+      <strong>Wrapping the standard table output</strong>
+      <br />
+      <br />
+
+      <div className='table-wrap'>
+        <ReactTable
+          data={data}
+          columns={columns}
+        >
+          {(state, Table, instance) => {
+            return (
+              <div style={{
+                background: '#ffcf00',
+                borderRadius: '5px',
+                overflow: 'hidden',
+                padding: '5px'
+              }}>
+                <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
+                <Table />
+              </div>
+            )
+          }}
+        </ReactTable>
+      </div>
+
+      <CodeHighlight>{() => `
+import ReactTable from 'react-table'
+
+return (
+  <ReactTable
+    data={data}
+    columns={columns}
+  >
+    {(state, Table, instance) => {
+      return (
+        <div style={{
+          background: '#ffcf00',
+          borderRadius: '5px',
+          overflow: 'hidden',
+          padding: '5px'
+        }}>
+          <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
+          <Table />
+        </div>
+      )
+    }}
+  </ReactTable>
+)
+      `}</CodeHighlight>
+
+      <br />
+      <br />
+
+      <strong>Need more control? This is the entire table state and component instance at your disposal!</strong>
+      <br />
+      <br />
+
       <div className='table-wrap'>
         <ReactTable
           className='-striped -highlight'
@@ -63,54 +210,23 @@ export default () => {
           columns={columns}
           defaultPageSize={10}
         >
-          {(state, makeTable, instance) => {
-            console.log(state)
+          {(state, StandardTable, instance) => {
             return (
               <div>
-                Look! This is the entire table state and component instance at your disposal!
                 <JSONTree
                   data={Object.assign({}, state, {children: 'function () {...}'})}
                   theme={JSONtheme}
                   invertTheme
                 />
-                <br />
-                <br />
-                {makeTable()}
               </div>
             )
           }}
         </ReactTable>
       </div>
       <br />
-      <CodeHighlight>{() => getCode()}</CodeHighlight>
-    </div>
-  )
-}
-
-function getCode () {
-  return `
+      <CodeHighlight>{() => `
 import ReactTable from 'react-table'
 
-// Create some column definitions
-const columns = [{
-  header: 'Name',
-  columns: [{
-    header: 'First Name',
-    accessor: 'firstName'
-  }, {
-    header: 'Last Name',
-    id: 'lastName',
-    accessor: d => d.lastName
-  }]
-}, {
-  header: 'Info',
-  columns: [{
-    header: 'Age',
-    accessor: 'age'
-  }]
-}]
-
-// Display your table!
 return (
   <ReactTable
     className='-striped -highlight'
@@ -118,23 +234,20 @@ return (
     columns={columns}
     defaultPageSize={10}
   >
-    {(state, makeTable, instance) => {
-      console.log(state)
+    {(state, StandardTable, instance) => {
       return (
         <div>
-          Look! This is the entire table state and component instance at your disposal!
           <JSONTree
             data={Object.assign({}, state, {children: 'function () {...}'})}
             theme={JSONtheme}
             invertTheme
           />
-          <br />
-          <br />
-          {makeTable()}
         </div>
       )
     }}
   </ReactTable>
 )
-  `
+      `}</CodeHighlight>
+    </div>
+  )
 }

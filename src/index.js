@@ -702,13 +702,14 @@ export default React.createClass({
       )
     }
 
-    const makeTable = () => {
-      const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
-      const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
-      const tBodyProps = _.splitProps(getTbodyProps(finalState, undefined, undefined, this))
-      const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
-      const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
-      const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
+    const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
+    const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
+    const tBodyProps = _.splitProps(getTbodyProps(finalState, undefined, undefined, this))
+    const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
+    const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
+    const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
+
+    const Root = ({children}) => {
       return (
         <div
           className={classnames(
@@ -722,56 +723,96 @@ export default React.createClass({
           }}
           {...rootProps.rest}
         >
-          <TableComponent
-            className={classnames(tableProps.className)}
-            style={tableProps.style}
-            {...tableProps.rest}
-          >
-            {hasHeaderGroups && makeHeaderGroups()}
-            {makeHeaders()}
-            <TbodyComponent
-              className={classnames(tBodyProps.className)}
-              style={{
-                ...tBodyProps.style,
-                minWidth: `${rowMinWidth}px`
-              }}
-              {...tBodyProps.rest}
-            >
-              {pageRows.map((d, i) => makePageRow(d, i))}
-              {padRows.map(makePadRow)}
-            </TbodyComponent>
-            {hasColumnFooter && makeColumnFooters()}
-          </TableComponent>
-          {showPagination && (
-            <PaginationComponent
-              {...resolvedState}
-              pages={pages}
-              canPrevious={canPrevious}
-              canNext={canNext}
-              onPageChange={this.onPageChange}
-              onPageSizeChange={this.onPageSizeChange}
-              className={paginationProps.className}
-              style={paginationProps.style}
-              {...paginationProps.rest}
-            />
-          )}
-          {!pageRows.length && (
-            <NoDataComponent
-              {...noDataProps}
-            >
-              {_.normalizeComponent(noDataText)}
-            </NoDataComponent>
-          )}
-          <LoadingComponent
-            loading={loading}
-            loadingText={loadingText}
-            {...loadingProps}
-          />
+          {children}
         </div>
       )
     }
 
+    const Table = ({children}) => (
+      <TableComponent
+        className={classnames(tableProps.className)}
+        style={tableProps.style}
+        {...tableProps.rest}
+      >
+        {children}
+      </TableComponent>
+    )
+
+    const HeaderGroups = () => hasHeaderGroups ? makeHeaderGroups() : null
+    const Headers = () => makeHeaders()
+    const Rows = ({children}) => (
+      <TbodyComponent
+        className={classnames(tBodyProps.className)}
+        style={{
+          ...tBodyProps.style,
+          minWidth: `${rowMinWidth}px`
+        }}
+        {...tBodyProps.rest}
+      >
+        {pageRows.map((d, i) => makePageRow(d, i))}
+        {padRows.map(makePadRow)}
+      </TbodyComponent>
+    )
+
+    const Footers = () => hasColumnFooter ? makeColumnFooters() : null
+
+    const Pagination = () => showPagination ? (
+      <PaginationComponent
+        {...resolvedState}
+        pages={pages}
+        canPrevious={canPrevious}
+        canNext={canNext}
+        onPageChange={this.onPageChange}
+        onPageSizeChange={this.onPageSizeChange}
+        className={paginationProps.className}
+        style={paginationProps.style}
+        {...paginationProps.rest}
+      />
+    ) : null
+
+    const NoData = () => !pageRows.length ? (
+      <NoDataComponent
+        {...noDataProps}
+      >
+        {_.normalizeComponent(noDataText)}
+      </NoDataComponent>
+    ) : null
+
+    const Loading = () => (
+      <LoadingComponent
+        loading={loading}
+        loadingText={loadingText}
+        {...loadingProps}
+      />
+    )
+
+    const StandardTable = () => (
+      <Root>
+        <Table>
+          <HeaderGroups />
+          <Headers />
+          <Rows />
+          <Footers />
+        </Table>
+        <Pagination />
+        <NoData />
+        <Loading />
+      </Root>
+    )
+
+    Object.assign(StandardTable, {
+      Root,
+      Table,
+      HeaderGroups,
+      Headers,
+      Rows,
+      Footers,
+      Pagination,
+      NoData,
+      Loading
+    })
+
     // childProps are optionally passed to a function-as-a-child
-    return children ? children(finalState, makeTable, this) : makeTable()
+    return children ? children(finalState, StandardTable, this) : <StandardTable />
   }
 })

@@ -603,50 +603,76 @@ Here are the props and their corresponding callbacks that control the state of t
 ```
 
 ## Functional Rendering
-Possibly one of the coolest features of React-Table is its ability to expose internal state for custom render logic. The easiest way to do this is to optionally pass a function as a child of `<ReactTable />`.
+Possibly one of the coolest features of React-Table is its ability to expose internal components and state for custom render logic. The easiest way to do this is to pass a function as the child of `<ReactTable />`.
 
 The function you pass will be called with the following items:
 - Fully-resolved state of the table
-- The standard table generator
+- The standard table component (including individual partials as properties of this component)
 - The instance of the component
 
 You can then return any JSX or react you want! This turns out to be perfect for:
-- Accessing the internal state of the table before rendering the table
-- Decorating the table with more UI
-- Building your own 100% custom display logic, while utilizing the state and methods of the table component
+- Reordering the internal components of the table
+- Accessing the internal state of the table without a `ref`
+- Decorating the table or extending it with your own UI
+- Building your own custom display logic
 
-Example:
+Custom pagination order:
 ```javascript
 <ReactTable
-  columns={columns}
   data={data}
-  ...
+  columns={columns}
 >
-  {(state, makeTable, instance) => {
-    // Now you have full access to the state of the table!
-    state.decoratedColumns === [...] // all of the columns (with id's and meta)
-    state.visibleColumns === [...] // all of the columns (with id's and meta)
-    state.visibleColumns === [...] // all of the columns (with id's and meta)
-    // etc.
-
-    // `makeTable` is a function that returns the standard table markup
-    return makeTable()
-
-    // So add some decoration!
+  {(state, {
+    Root,
+    Table,
+    HeaderGroups,
+    Headers,
+    Rows,
+    Footers,
+    Pagination,
+    NoData,
+    Loading
+  }, instance) => {
     return (
-      <div>
-        <customPivotBySelect />
-        <customColumnHideShow />
-        <customAnything />
-        {makeTable()}
-      </div>
+      <Root>
+        <Pagination />
+        <Table>
+          <HeaderGroups />
+          <Headers />
+          <Rows />
+          <Footers />
+        </Table>
+        <NoData />
+        <Loading />
+      </Root>
     )
-
-    // The possibilities are endless!!!
-
   }}
 </ReactTable>
 ```
+
+Accessing internal state and wrapping with more UI:
+```javascript
+<ReactTable
+  data={data}
+  columns={columns}
+>
+  {(state, Table, instance) => {
+    return (
+      <div style={{
+        background: '#ffcf00',
+        borderRadius: '5px',
+        overflow: 'hidden',
+        padding: '5px'
+      }}>
+        <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
+        <Table />
+      </div>
+    )
+  }}
+</ReactTable>
+```
+
+The possibilities are endless!
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
