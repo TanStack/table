@@ -4,6 +4,9 @@ import classnames from 'classnames'
 import _ from './utils'
 import lifecycle from './lifecycle'
 import methods from './methods'
+import defaults from './defaultProps'
+
+export const ReactTableDefaults = defaults
 
 export default React.createClass({
   ...lifecycle,
