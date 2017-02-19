@@ -109,7 +109,7 @@ export default {
   TbodyComponent: _.makeTemplateComponent('rt-tbody'),
   TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
   TrComponent: _.makeTemplateComponent('rt-tr'),
-  ThComponent: ({toggleSort, className, children, ...rest}) => {
+  ThComponent: ({toggleSort, className, children, mainProps, ...rest}) => {
     return (
       <div
         className={classnames(className, 'rt-th')}
@@ -124,7 +124,7 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  ExpanderComponent: ({isExpanded, ...rest}) => {
+  ExpanderComponent: ({isExpanded, mainProps, ...rest}) => {
     return (
       <div
         className={classnames('rt-expander', isExpanded && '-open')}
@@ -135,7 +135,7 @@ export default {
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
-  LoadingComponent: ({className, loading, loadingText, ...rest}) => (
+  LoadingComponent: ({className, loading, loadingText, mainProps, ...rest}) => (
     <div className={classnames(
       '-loading',
       {'-active': loading},

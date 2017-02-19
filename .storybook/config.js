@@ -24,6 +24,7 @@ import FunctionalRendering from '../stories/FunctionalRendering.js'
 import CustomExpanderPosition from '../stories/CustomExpanderPosition.js'
 import NoDataText from '../stories/NoDataText.js'
 import Footers from '../stories/Footers.js'
+import ExtendingComponents from '../stories/ExtentingComponents.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -53,4 +54,5 @@ configure(() => {
     .add('Custom Expander Position', CustomExpanderPosition)
     .add('Custom "No Data" Text', NoDataText)
     .add('Footers', Footers)
+    .add('Extending components', ExtendingComponents)
 }, module)
