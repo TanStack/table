@@ -117,9 +117,6 @@ export default React.createClass({
       rowMinWidth
     }
 
-
-
-
     // Visual Components
 
     const makeHeaderGroups = () => {
@@ -554,7 +551,7 @@ export default React.createClass({
     }
 
     const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
-    const mainProps = finalState;
+    const mainProps = finalState
     const makePadRow = (row, i) => {
       const trGroupProps = getTrGroupProps(finalState, undefined, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, undefined, undefined, this))
@@ -611,8 +608,7 @@ export default React.createClass({
                 <TdComponent
                   mainProps={{
                     ...mainProps,
-                    column,
-                    rowInfo
+                    column
                   }}
                   key={i2}
                   className={classnames(
@@ -685,8 +681,7 @@ export default React.createClass({
                     <TdComponent
                       mainProps={{
                         ...mainProps,
-                        column,
-                        rowInfo
+                        column
                       }}
                       key={i2}
                       className={classnames(
@@ -713,8 +708,7 @@ export default React.createClass({
                   <TdComponent
                     mainProps={{
                       ...mainProps,
-                      column,
-                      rowInfo
+                      column
                     }}
                     key={i2}
                     className={classnames(
@@ -735,8 +729,7 @@ export default React.createClass({
                 <TdComponent
                   mainProps={{
                     ...mainProps,
-                    column,
-                    rowInfo
+                    column
                   }}
                   key={i2}
                   className={classnames(
