@@ -418,11 +418,11 @@ Every single built-in component's props can be dynamically extended using any on
 />
 ```
 
-These callbacks are executed with each render of the element with three parameters:
-1. Table State
-1. RowInfo (undefined if not applicable)
-1. Column (undefined if not applicable)
-1. React Table Instance
+These callbacks are executed with each render of the element with four parameters:
+ 1. Table State
+ 2. RowInfo (undefined if not applicable)
+ 3. Column (undefined if not applicable)
+ 4. React Table Instance
 
 This makes it extremely easy to add, say... a row click callback!
 ```javascript
