@@ -139,7 +139,7 @@ These are all of the available props (and their default values) for the main `<R
   showPageJump: true,
   expanderColumnWidth: 35,
   collapseOnSortingChange: false,
-  collapseOnPageChange: true,
+  collapseOnDataChange: true,
   freezeWhenExpanded: false,
   defaultSorting: [],
 
