@@ -280,13 +280,17 @@ export default {
 
   // User actions
   onPageChange (page) {
-    const { onPageChange } = this.props
+    const { onPageChange, collapseOnPageChange } = this.props
     if (onPageChange) {
       return onPageChange(page)
     }
-    this.setStateWithData({
-      page
-    }, () => {
+    const newState = { page }
+    if (collapseOnPageChange) {
+      newState.expandedRows = {}
+    }
+    this.setStateWithData(
+      newState
+    , () => {
       this.fireOnChange()
     })
   },

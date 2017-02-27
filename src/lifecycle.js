@@ -42,8 +42,7 @@ export default {
       oldState.data !== newState.data ||
       oldState.columns !== newState.columns ||
       oldState.pivotBy !== newState.pivotBy ||
-      oldState.sorting !== newState.sorting ||
-      oldState.page !== newState.page
+      oldState.sorting !== newState.sorting
     ) {
       this.setStateWithData(this.getDataModel(nextProps, nextState))
     }
@@ -76,16 +75,15 @@ export default {
       oldState.sorting !== newResolvedState.sorting ||
       (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
-      Object.assign(newResolvedState, this.getSortedData(newResolvedState))
-    }
+      // Handle collapseOnSortingChange & collapseOnDataChange
+      if (
+        (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
+        (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
+      ) {
+        newResolvedState.expandedRows = {}
+      }
 
-    // Handle collapseOnSortingChange & collapseOnPageChange & collapseOnDataChange
-    if (
-      (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
-      (oldState.page !== newResolvedState.page && this.props.collapseOnPageChange) ||
-      (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
-    ) {
-      newResolvedState.expandedRows = {}
+      Object.assign(newResolvedState, this.getSortedData(newResolvedState))
     }
 
     // Calculate pageSize all the time
