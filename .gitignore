@@ -3,3 +3,4 @@ lib/
 react-table.js
 react-table.css
 *.log
+.idea

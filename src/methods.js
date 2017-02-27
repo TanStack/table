@@ -285,7 +285,6 @@ export default {
       return onPageChange(page)
     }
     this.setStateWithData({
-      expandedRows: {},
       page
     }, () => {
       this.fireOnChange()
