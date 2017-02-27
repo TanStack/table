@@ -16,8 +16,9 @@ export default {
   defaultPageSize: 20,
   showPageJump: true,
   expanderColumnWidth: 35,
-  collapseOnSortingChange: false,
+  collapseOnSortingChange: true,
   collapseOnPageChange: true,
+  collapseOnDataChange: true,
   freezeWhenExpanded: false,
   defaultSorting: [],
 
