@@ -26,7 +26,7 @@ export default {
   },
 
   componentWillMount () {
-    this.setStateWithData(this.getDataModel())
+    this.setStateWithData(this.getDataModel(this.getResolvedState()))
   },
 
   componentDidMount () {
@@ -37,6 +37,10 @@ export default {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
+    if (oldState.defaultSorting !== newState.defaultSorting) {
+      newState.sorting = newState.defaultSorting
+    }
+
     // Props that trigger a data update
     if (
       oldState.data !== newState.data ||
@@ -44,7 +48,7 @@ export default {
       oldState.pivotBy !== newState.pivotBy ||
       oldState.sorting !== newState.sorting
     ) {
-      this.setStateWithData(this.getDataModel(nextProps, nextState))
+      this.setStateWithData(this.getDataModel(newState))
     }
   },
 

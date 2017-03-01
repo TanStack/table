@@ -1,7 +1,7 @@
 import _ from './utils'
 
 export default {
-  getDataModel (nextProps, nextState) {
+  getDataModel (newState) {
     const {
       columns,
       pivotBy = [],
@@ -14,7 +14,7 @@ export default {
       page,
       pages,
       pageSize
-    } = this.getResolvedState(nextProps, nextState)
+    } = newState
 
     // Determine Header Groups
     let hasHeaderGroups = false
@@ -219,6 +219,7 @@ export default {
     const newPage = page > newPages ? newPage - 1 : page
 
     return {
+      ...newState,
       resolvedData,
       pivotColumn,
       allVisibleColumns,

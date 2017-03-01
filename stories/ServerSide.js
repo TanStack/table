@@ -48,13 +48,13 @@ const ServerSide = React.createClass({
     }
   },
   fetchData (state, instance) {
-    console.log(state, instance)
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
     this.setState({loading: true})
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
     requestData(state.pageSize, state.page, state.sorting)
       .then((res) => {
+        console.log(res.rows)
         // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
         this.setState({
           data: res.rows,
