@@ -696,7 +696,10 @@ export default React.createClass({
                   {...tFootTdProps.rest}
                   {...columnFooterProps.rest}
                 >
-                  {_.normalizeComponent(column.footer)}
+                  {_.normalizeComponent(column.footer, {
+                    data: sortedData,
+                    column: column
+                  })}
                 </TdComponent>
               )
             })}
