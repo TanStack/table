@@ -66,9 +66,7 @@ export default React.createClass({
         <div className='-center'>
           <span className='-pageInfo'>
             {this.props.pageText} {showPageJump ? (
-              <form className='-pageJump'
-                onSubmit={this.applyPage}
-              >
+              <div className='-pageJump'>
                 <input
                   type={this.state.page === '' ? 'text' : 'number'}
                   onChange={e => {
@@ -81,8 +79,13 @@ export default React.createClass({
                   }}
                   value={this.state.page === '' ? '' : this.state.page + 1}
                   onBlur={this.applyPage}
+                  onKeyPress={e => {
+                    if (e.which === 13 || e.keyCode === 13) {
+                      this.applyPage()
+                    }
+                  }}
                 />
-              </form>
+              </div>
             ) : (
               <span className='-currentPage'>{page + 1}</span>
             )} {this.props.ofText} <span className='-totalPages'>{pages}</span>
