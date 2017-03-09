@@ -4,7 +4,7 @@ import classnames from 'classnames'
 // import _ from './utils'
 
 const defaultButton = (props) => (
-  <button {...props} className='-btn'>{props.children}</button>
+  <button type='button' {...props} className='-btn'>{props.children}</button>
 )
 
 export default React.createClass({
