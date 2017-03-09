@@ -308,6 +308,7 @@ Any values that contain bracket (`[]`) will be split.
 This array is then used as the path to the value to return.
 
 ("$" is the placeholder value that would be returned by the default accessor)
+
 | value        | path            | data                   |
 |--------------|-----------------|------------------------|
 | "a"          | ["a"]           | {"a": $}               |
