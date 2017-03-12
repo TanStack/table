@@ -24,13 +24,13 @@
   ],
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
-    "build:css": "rm -rf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
+    "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
     "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
     "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
     "watch:css": "onchange 'src/**/*.styl' -i -- npm run build:css",
     "test": "standard",
-    "umd": "rm -rf react-table.js && browserify lib/index.js -s reactTable -x react -t babelify -g uglifyify -o react-table.js",
+    "umd": "rimraf react-table.js && browserify lib/index.js -s reactTable -x react -t babelify -g uglifyify -o react-table.js",
     "prepublish": "npm-run-all build:* && npm run umd",
     "storybook": "start-storybook -p 8000 -c .storybook",
     "docs": "build-storybook -o docs && cp .storybook/CNAME docs/CNAME"
@@ -61,6 +61,7 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-json-tree": "^0.10.1",
+	"rimraf": "^2.6.1",
     "standard": "^8.0.0",
     "storybook": "^0.0.0",
     "stylus": "^0.54.5",
