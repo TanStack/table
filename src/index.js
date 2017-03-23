@@ -286,7 +286,7 @@ export default React.createClass({
                 'rt-pivot-header',
                 column.sortable && '-cursor-pointer',
                 classes,
-                pivotSort ? (pivotSort.desc ? '-sort-asc' : '-sort-desc') : ''
+                pivotSort ? (pivotSort.desc ? '-sort-desc' : '-sort-asc') : ''
               )}
               style={{
                 ...styles,
@@ -337,7 +337,7 @@ export default React.createClass({
           key={i}
           className={classnames(
             classes,
-            sort ? (sort.desc ? '-sort-asc' : '-sort-desc') : '',
+            sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
             column.sortable && '-cursor-pointer',
             !show && '-hidden',
           )}
