@@ -21,6 +21,9 @@ export default {
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   defaultSorting: [],
+  showFilters: false,
+  defaultFiltering: [],
+  defaultFilterMethod: (filter, row, column) => (row[filter.id] == filter.value),
 
   // Controlled State Overrides
   // page: undefined,
@@ -32,6 +35,7 @@ export default {
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
+  onFilteringChange: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -62,6 +66,9 @@ export default {
   getTheadProps: emptyObj,
   getTheadTrProps: emptyObj,
   getTheadThProps: emptyObj,
+  getTheadFilterProps: emptyObj,
+  getTheadFilterTrProps: emptyObj,
+  getTheadFilterThProps: emptyObj,
   getTbodyProps: emptyObj,
   getTrGroupProps: emptyObj,
   getTrProps: emptyObj,
@@ -92,7 +99,8 @@ export default {
     footer: undefined,
     footerClassName: '',
     footerStyle: {},
-    getFooterProps: emptyObj
+    getFooterProps: emptyObj,
+    filterMethod: undefined
   },
 
   // Text
@@ -142,7 +150,7 @@ export default {
       {'-active': loading},
       className
     )}
-      {...rest}
+         {...rest}
     >
       <div className='-loading-inner'>
         {loadingText}
