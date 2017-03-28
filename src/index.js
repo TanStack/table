@@ -416,7 +416,7 @@ export default React.createClass({
           const pivotCols = []
           for (let i = 0; i < column.pivotColumns.length; i++) {
             const col = column.pivotColumns[i]
-            const filter = filtering.find(filter => filter.id == col.id)
+            const filter = filtering.find(filter => filter.id === col.id)
             pivotCols.push(
               <span key={col.id}
                 style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
@@ -474,7 +474,7 @@ export default React.createClass({
         )
       }
 
-      const filter = filtering.find(filter => filter.id == column.id)
+      const filter = filtering.find(filter => filter.id === column.id)
 
       return (
         <ThComponent

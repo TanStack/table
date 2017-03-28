@@ -262,7 +262,7 @@ export default {
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
             (row) => {
-              const column = allVisibleColumns.find(x => x.id == nextFilter.id) || {}
+              const column = allVisibleColumns.find(x => x.id === nextFilter.id) || {}
               const filterMethod = column.filterMethod || defaultFilterMethod
               return filterMethod(nextFilter, row, column)
             })
@@ -428,9 +428,9 @@ export default {
     }
 
     // Remove old filter first if it exists
-    const newFiltering = (filtering || []).filter(x => x.id != column.id)
+    const newFiltering = (filtering || []).filter(x => x.id !== column.id)
 
-    if (event.target.value != '') {
+    if (event.target.value !== '') {
       newFiltering.push({
         id: column.id,
         value: event.target.value

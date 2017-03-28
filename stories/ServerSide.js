@@ -18,13 +18,13 @@ const requestData = (pageSize, page, sorting, filtering) => {
   return new Promise((resolve, reject) => {
     // On the server, you'll likely use SQL or noSQL or some other query language to do this.
     // For this mock, we'll just use lodash
-    let filteredData = rawData;
+    let filteredData = rawData
     if (filtering.length) {
       filteredData = filtering.reduce(
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
             (row) => {
-              return (row[nextFilter.id]+"").includes(nextFilter.value)
+              return (row[nextFilter.id] + '').includes(nextFilter.value)
             })
         }
         , filteredData)
@@ -93,7 +93,7 @@ const ServerSide = React.createClass({
             }]}
             manual // Forces table not to paginate or sort automatically, so we can handle it server-side
             defaultPageSize={10}
-            showFilters={true}
+            showFilters
             data={this.state.data} // Set the rows to be displayed
             pages={this.state.pages} // Display the total number of pages
             loading={this.state.loading} // Display the loading overlay when we need it
