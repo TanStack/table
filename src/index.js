@@ -413,27 +413,27 @@ export default React.createClass({
 
       if (column.expander) {
         if (column.pivotColumns) {
-          const pivotCols = [];
+          const pivotCols = []
           for (let i = 0; i < column.pivotColumns.length; i++) {
-            const col = column.pivotColumns[i];
+            const col = column.pivotColumns[i]
             const filter = filtering.find(filter => filter.id == col.id)
             pivotCols.push(
               <span key={col.id}
-                    style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
-                    <input type="text"
-                           style={{
-                             flex: 1,
-                             width: 20,
-                             backgroundColor: i > 0 ? '#f3f3f3' : '#fff'
-                           }}
-                           value={filter ? filter.value : ""}
-                           disabled={i > 0}
-                           onChange={(event) => this.filterColumn(col, event)}
-                    />
-                </span>
+                style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
+                <input type='text'
+                  style={{
+                    flex: 1,
+                    width: 20,
+                    backgroundColor: i > 0 ? '#f3f3f3' : '#fff'
+                  }}
+                  value={filter ? filter.value : ''}
+                  disabled={i > 0}
+                  onChange={(event) => this.filterColumn(col, event)}
+                />
+              </span>
             )
             if (i < column.pivotColumns.length - 1) {
-              pivotCols.push(<ExpanderComponent key={col.id + "-" + i}/>)
+              pivotCols.push(<ExpanderComponent key={col.id + '-' + i} />)
             }
           }
           return (
@@ -490,12 +490,12 @@ export default React.createClass({
           }}
           {...rest}
         >
-          <input type="text"
-                 style={{
-                   width: `100%`,
-                 }}
-                 value={filter ? filter.value : ""}
-                 onChange={(event) => this.filterColumn(column, event)}
+          <input type='text'
+            style={{
+              width: `100%`
+            }}
+            value={filter ? filter.value : ''}
+            onChange={(event) => this.filterColumn(column, event)}
           />
         </ThComponent>
       )
@@ -584,23 +584,23 @@ export default React.createClass({
                       onClick={onTdClick}
                     >
                       {rowInfo.subRows ? (
-                          <span>
+                        <span>
                           <ExpanderComponent
                             isExpanded={isExpanded}
                           />
-                            {column && column.pivotRender ? (
-                                <PivotCell
-                                  {...rowInfo}
-                                  value={rowInfo.rowValues[pivotValKey]}
-                                />
-                              ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
+                          {column && column.pivotRender ? (
+                            <PivotCell
+                              {...rowInfo}
+                              value={rowInfo.rowValues[pivotValKey]}
+                            />
+                            ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
                         </span>
                         ) : SubComponent ? (
-                            <span>
-                          <ExpanderComponent
-                            isExpanded={isExpanded}
-                          />
-                        </span>
+                          <span>
+                            <ExpanderComponent
+                              isExpanded={isExpanded}
+                            />
+                          </span>
                           ) : null}
                     </TdComponent>
                   )
@@ -876,17 +876,17 @@ export default React.createClass({
           {hasColumnFooter ? makeColumnFooters() : null}
         </TableComponent>
         {showPagination ? (
-            <PaginationComponent
-              {...resolvedState}
-              pages={pages}
-              canPrevious={canPrevious}
-              canNext={canNext}
-              onPageChange={this.onPageChange}
-              onPageSizeChange={this.onPageSizeChange}
-              className={paginationProps.className}
-              style={paginationProps.style}
-              {...paginationProps.rest}
-            />
+          <PaginationComponent
+            {...resolvedState}
+            pages={pages}
+            canPrevious={canPrevious}
+            canNext={canNext}
+            onPageChange={this.onPageChange}
+            onPageSizeChange={this.onPageSizeChange}
+            className={paginationProps.className}
+            style={paginationProps.style}
+            {...paginationProps.rest}
+          />
           ) : null}
         {!pageRows.length && (
           <NoDataComponent

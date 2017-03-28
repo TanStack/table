@@ -193,14 +193,13 @@ export default {
         let groupedRows = Object.entries(
           _.groupBy(rows, keys[i]))
           .map(([key, value]) => {
-              return {
-                [pivotIDKey]: keys[i],
-                [pivotValKey]: key,
-                [keys[i]]: key,
-                [subRowsKey]: value
-              }
+            return {
+              [pivotIDKey]: keys[i],
+              [pivotValKey]: key,
+              [keys[i]]: key,
+              [subRowsKey]: value
             }
-          )
+          })
         // Recurse into the subRows
         groupedRows = groupedRows.map(rowGroup => {
           let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
@@ -431,7 +430,7 @@ export default {
     // Remove old filter first if it exists
     const newFiltering = (filtering || []).filter(x => x.id != column.id)
 
-    if (event.target.value != "") {
+    if (event.target.value != '') {
       newFiltering.push({
         id: column.id,
         value: event.target.value

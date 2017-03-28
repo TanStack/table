@@ -150,7 +150,7 @@ export default {
       {'-active': loading},
       className
     )}
-         {...rest}
+      {...rest}
     >
       <div className='-loading-inner'>
         {loadingText}
