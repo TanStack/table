@@ -108,6 +108,7 @@ const columns = [{
   accessor: 'age',
   render: props => <span className='number'>{props.value}</span> // Custom cell components!
 }, {
+  id: 'friendName', // Required because our accessor is not a string
   header: 'Friend Name',
   accessor: d => d.friend.name // Custom value accessors!
 }, {
