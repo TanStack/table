@@ -144,6 +144,9 @@ These are all of the available props (and their default values) for the main `<R
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   defaultSorting: [],
+  showFilters: false,
+  defaultFiltering: [],
+  defaultFilterMethod: (filter, row) => (row[filter.id] == filter.value),
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
@@ -155,6 +158,7 @@ These are all of the available props (and their default values) for the main `<R
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
+  onFilteringChange: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -185,6 +189,9 @@ These are all of the available props (and their default values) for the main `<R
   getTheadProps: () => ({}),
   getTheadTrProps: () => ({}),
   getTheadThProps: () => ({}),
+  getTheadFilterProps: () => ({}),
+  getTheadFilterTrProps: () => ({}),
+  getTheadFilterThProps: () => ({}),
   getTbodyProps: () => ({}),
   getTrGroupProps: () => ({}),
   getTrProps: () => ({}),
@@ -216,7 +223,8 @@ These are all of the available props (and their default values) for the main `<R
     footer: undefined,
     footerClassName: '',
     footerStyle: {},
-    getFooterProps: () => ({})
+    getFooterProps: () => ({}),
+    filterMethod: undefined
   },
 
   // Text
@@ -293,8 +301,13 @@ Or just define them as props
   footer: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
   footerClassName: '', // Set the classname of the `td` element of the column's footer
   footerStyle: {}, // Set the style of the `td` element of the column's footer
-  getFooterProps: (state, rowInfo, column, instance) => ({}) // a function that returns props to decorate the `td` element of the column's footer
+  getFooterProps: (state, rowInfo, column, instance) => ({}) // A function that returns props to decorate the `td` element of the column's footer
 
+  // Filtering
+  filterMethod: (filter, row, column) => {return true} // A function returning a boolean that specifies the filtering logic for the column
+    // filter == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field]}
+    // row == the row of data supplied to the table
+    // column == the column that the filter is on
 }]
 ```
 
@@ -533,7 +546,7 @@ By adding a `SubComponent` props, you can easily add an expansion level to all r
 
 
 ## Server-side Data
-If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you.
+If you want to handle pagination, sorting, and filtering on the server, `react-table` makes it easy on you.
 
 1. Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
 1. Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
@@ -556,7 +569,8 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
     Axios.post('mysite.com/data', {
       page: state.page,
       pageSize: state.pageSize,
-      sorting: state.sorting
+      sorting: state.sorting,
+      filtering: state.filtering
     })
       .then((res) => {
         // Update react-table
@@ -602,6 +616,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
+  onFilteringChange={(column, event) => {...}} // Called when a user enters a value into a filter input field. The event is the onChange event of the input field.
 />
 ```
 

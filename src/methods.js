@@ -192,15 +192,14 @@ export default {
         // Group the rows together for this level
         let groupedRows = Object.entries(
           _.groupBy(rows, keys[i]))
-            .map(([key, value]) => {
-              return {
-                [pivotIDKey]: keys[i],
-                [pivotValKey]: key,
-                [keys[i]]: key,
-                [subRowsKey]: value
-              }
+          .map(([key, value]) => {
+            return {
+              [pivotIDKey]: keys[i],
+              [pivotValKey]: key,
+              [keys[i]]: key,
+              [subRowsKey]: value
             }
-        )
+          })
         // Recurse into the subRows
         groupedRows = groupedRows.map(rowGroup => {
           let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
@@ -233,12 +232,16 @@ export default {
     const {
       manual,
       sorting,
-      resolvedData
+      filtering,
+      showFilters,
+      defaultFilterMethod,
+      resolvedData,
+      allVisibleColumns
     } = resolvedState
 
     // Resolve the data from either manual data or sorted data
     return {
-      sortedData: manual ? resolvedData : this.sortData(resolvedData, sorting)
+      sortedData: manual ? resolvedData : this.sortData(resolvedData, sorting, showFilters, filtering, defaultFilterMethod, allVisibleColumns)
     }
   },
 
@@ -251,11 +254,28 @@ export default {
   getStateOrProp (key) {
     return _.getFirstDefined(this.state[key], this.props[key])
   },
-  sortData (data, sorting) {
-    if (!sorting.length) {
-      return data
+  sortData (data, sorting, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
+    let filteredData = data
+
+    if (showFilters && filtering.length) {
+      filteredData = filtering.reduce(
+        (filteredSoFar, nextFilter) => {
+          return filteredSoFar.filter(
+            (row) => {
+              const column = allVisibleColumns.find(x => x.id === nextFilter.id) || {}
+              const filterMethod = column.filterMethod || defaultFilterMethod
+              return filterMethod(nextFilter, row, column)
+            })
+        }
+        , filteredData
+      )
     }
-    const sorted = _.orderBy(data, sorting.map(sort => {
+
+    if (!sorting.length) {
+      return filteredData
+    }
+
+    const sorted = _.orderBy(filteredData, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
           return -Infinity
@@ -281,23 +301,23 @@ export default {
 
   // User actions
   onPageChange (page) {
-    const { onPageChange, collapseOnPageChange } = this.props
+    const {onPageChange, collapseOnPageChange} = this.props
     if (onPageChange) {
       return onPageChange(page)
     }
-    const newState = { page }
+    const newState = {page}
     if (collapseOnPageChange) {
       newState.expandedRows = {}
     }
     this.setStateWithData(
       newState
-    , () => {
-      this.fireOnChange()
-    })
+      , () => {
+        this.fireOnChange()
+      })
   },
   onPageSizeChange (newPageSize) {
-    const { onPageSizeChange } = this.props
-    const { pageSize, page } = this.getResolvedState()
+    const {onPageSizeChange} = this.props
+    const {pageSize, page} = this.getResolvedState()
 
     // Normalize the page to display
     const currentRow = pageSize * page
@@ -315,8 +335,8 @@ export default {
     })
   },
   sortColumn (column, additive) {
-    const { sorting } = this.getResolvedState()
-    const { onSortingChange } = this.props
+    const {sorting} = this.getResolvedState()
+    const {onSortingChange} = this.props
     if (onSortingChange) {
       return onSortingChange(column, additive)
     }
@@ -395,6 +415,31 @@ export default {
     this.setStateWithData({
       page: ((!sorting.length && newSorting.length) || !additive) ? 0 : this.state.page,
       sorting: newSorting
+    }, () => {
+      this.fireOnChange()
+    })
+  },
+  filterColumn (column, event) {
+    const {filtering} = this.getResolvedState()
+    const {onFilteringChange} = this.props
+
+    if (onFilteringChange) {
+      return onFilteringChange(column, event)
+    }
+
+    // Remove old filter first if it exists
+    const newFiltering = (filtering || []).filter(x => x.id !== column.id)
+
+    if (event.target.value !== '') {
+      newFiltering.push({
+        id: column.id,
+        value: event.target.value
+      })
+    }
+
+    this.setStateWithData({
+      page: 0,
+      filtering: newFiltering
     }, () => {
       this.fireOnChange()
     })
