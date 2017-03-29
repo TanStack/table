@@ -56,6 +56,7 @@
 - [Fully Controlled Component](#fully-controlled-component)
 - [Functional Rendering](#functional-rendering)
 - [Multi-Sort](#multi-sort)
+- [Filtering](#filtering)
 - [Component Overrides](#component-overrides)
 - [Contributing](#contributing)
 - [Scripts](#scripts)
@@ -144,6 +145,12 @@ These are all of the available props (and their default values) for the main `<R
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   defaultSorting: [],
+  showFilters: false,
+  defaultFiltering: [],
+  defaultFilterMethod: (filter, row, column) => {
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
+  },
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
@@ -155,6 +162,7 @@ These are all of the available props (and their default values) for the main `<R
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
+  onFilteringChange: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -185,6 +193,9 @@ These are all of the available props (and their default values) for the main `<R
   getTheadProps: () => ({}),
   getTheadTrProps: () => ({}),
   getTheadThProps: () => ({}),
+  getTheadFilterProps: () => ({}),
+  getTheadFilterTrProps: () => ({}),
+  getTheadFilterThProps: () => ({}),
   getTbodyProps: () => ({}),
   getTrGroupProps: () => ({}),
   getTrProps: () => ({}),
@@ -216,7 +227,9 @@ These are all of the available props (and their default values) for the main `<R
     footer: undefined,
     footerClassName: '',
     footerStyle: {},
-    getFooterProps: () => ({})
+    getFooterProps: () => ({}),
+    filterMethod: undefined,
+    hideFilter: false
   },
 
   // Text
@@ -258,16 +271,16 @@ Or just define them as props
 ```javascript
 [{
   // General
-  accessor: 'propertyName' // or Accessor eg. (row) => row.propertyName (see "Accessors" section for more details)
+  accessor: 'propertyName', // or Accessor eg. (row) => row.propertyName (see "Accessors" section for more details)
   id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
   sortable: true,
   show: true, // can be used to hide a column
   width: undefined, // A hardcoded width for the column. This overrides both min and max width options
-  minWidth: 100 // A minimum width for this column. If there is extra room, column will flex to fill available space (up to the max-width, if set)
-  maxWidth: undefined // A maximum width for this column.
+  minWidth: 100, // A minimum width for this column. If there is extra room, column will flex to fill available space (up to the max-width, if set)
+  maxWidth: undefined, // A maximum width for this column.
 
   // Special
-  expander: false // This option will override all data-related options and designates the column to be used
+  expander: false, // This option will override all data-related options and designates the column to be used
   // for pivoting and sub-component expansion
 
   // Cell Options
@@ -284,17 +297,23 @@ Or just define them as props
   header: 'Header Name', a function that returns a primitive, or JSX / React Component eg. ({data, column}) => <div>Header Name</div>,
   headerClassName: '', // Set the classname of the `th` element of the column
   headerStyle: {}, // Set the style of the `th` element of the column
-  getHeaderProps: (state, rowInfo, column, instance) => ({}) // a function that returns props to decorate the `th` element of the column
+  getHeaderProps: (state, rowInfo, column, instance) => ({}), // a function that returns props to decorate the `th` element of the column
 
   // Header Groups only
-  columns: [...] // See Header Groups section below
+  columns: [...], // See Header Groups section below
 
   // Footer
   footer: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
   footerClassName: '', // Set the classname of the `td` element of the column's footer
   footerStyle: {}, // Set the style of the `td` element of the column's footer
-  getFooterProps: (state, rowInfo, column, instance) => ({}) // a function that returns props to decorate the `td` element of the column's footer
+  getFooterProps: (state, rowInfo, column, instance) => ({}), // A function that returns props to decorate the `td` element of the column's footer
 
+  // Filtering
+  filterMethod: (filter, row, column) => {return true}, // A function returning a boolean that specifies the filtering logic for the column
+    // filter == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
+    // row == the row of data supplied to the table
+    // column == the column that the filter is on
+  hideFilter: false // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
 }]
 ```
 
@@ -533,7 +552,7 @@ By adding a `SubComponent` props, you can easily add an expansion level to all r
 
 
 ## Server-side Data
-If you want to handle pagination, and sorting on the server, `react-table` makes it easy on you.
+If you want to handle pagination, sorting, and filtering on the server, `react-table` makes it easy on you.
 
 1. Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
 1. Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
@@ -556,7 +575,8 @@ If you want to handle pagination, and sorting on the server, `react-table` makes
     Axios.post('mysite.com/data', {
       page: state.page,
       pageSize: state.pageSize,
-      sorting: state.sorting
+      sorting: state.sorting,
+      filtering: state.filtering
     })
       .then((res) => {
         // Update react-table
@@ -602,6 +622,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
+  onFilteringChange={(column, event) => {...}} // Called when a user enters a value into a filter input field. The event is the onChange event of the input field.
 />
 ```
 
@@ -644,6 +665,17 @@ The possibilities are endless!
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
+
+## Filtering
+Filtering can be enabled by setting the `showFilters` option on the table.
+
+If you don't want particular column to be filtered you can set the `hideFilter` option on the column.
+
+By default the table tries to filter by checking if the row's value starts with the filter text. The default method for filtering the table can be set with the table's `defaultFilterMethod` option.
+
+If you want to override a particular column's filtering method, you can set the `filterMethod` option on a column.
+
+See <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Custom%20Filtering&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Custom Filtering</a> demo for examples.
 
 ## Component Overrides
 Though we confidently stand by the markup and architecture behind it, `react-table` does offer the ability to change the core componentry it uses to render everything. You can extend or override these internal components by passing a react component to it's corresponding prop on either the global props or on a one-off basis like so:

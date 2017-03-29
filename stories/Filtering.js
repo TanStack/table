@@ -5,7 +5,7 @@ import namor from 'namor'
 import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
-class SubComponents extends React.Component {
+class Filtering extends React.Component {
 
   constructor(props) {
     super(props)
@@ -28,7 +28,7 @@ class SubComponents extends React.Component {
         collapseOnPageChange: true,
         collapseOnDataChange: true,
         freezeWhenExpanded: false,
-        showFilters: false
+        showFilters: true
       },
       data: data
     }
@@ -37,17 +37,17 @@ class SubComponents extends React.Component {
   }
 
   render() {
-
-
     const columns = [{
       header: 'Name',
       columns: [{
         header: 'First Name',
-        accessor: 'firstName'
+        accessor: 'firstName',
+        filterMethod: (filter, row) => (row[filter.id].startsWith(filter.value) && row[filter.id].endsWith(filter.value))
       }, {
         header: 'Last Name',
         id: 'lastName',
-        accessor: d => d.lastName
+        accessor: d => d.lastName,
+        filterMethod: (filter, row) => (row[filter.id].includes(filter.value))
       }]
     }, {
       header: 'Info',
@@ -89,6 +89,7 @@ class SubComponents extends React.Component {
             data={this.state.data}
             columns={columns}
             defaultPageSize={10}
+            defaultFilterMethod={(filter, row) => (String(row[filter.id]) === filter.value)}
             {...this.state.tableOptions}
             SubComponent={(row) => {
               return (
@@ -119,6 +120,14 @@ class SubComponents extends React.Component {
           <br />
           <em>Tip: Hold shift when sorting to multi-sort!</em>
         </div>
+        <div>
+          <h1>Custom Filters In This Example</h1>
+          <p>The default filter for all columns of a table if it is not specified in the configuration is set to match on values that start with the filter text. Example: age.startsWith("2").</p>
+          <p>This example overrides the default filter behavior by setting the <strong>defaultFilterMethod</strong> table option to match on values that are exactly equal to the filter text. Example: age == "23")</p>
+          <p>Each column can also be customized with the column <strong>filterMethod</strong> option:</p>
+          <p>In this example the firstName column filters on the value starting with and ending with the filter value.</p>
+          <p>In this example the lastName column filters on the value including the filter value anywhere in its text.</p>
+        </div>
         <CodeHighlight>{() => this.getCode()}</CodeHighlight>
       </div>
     )
@@ -142,11 +151,13 @@ const columns = [{
   header: 'Name',
   columns: [{
     header: 'First Name',
-    accessor: 'firstName'
+    accessor: 'firstName',
+    filterMethod: (filter, row) => (row[filter.id].startsWith(filter.value) && row[filter.id].endsWith(filter.value))
   }, {
     header: 'Last Name',
     id: 'lastName',
-    accessor: d => d.lastName
+    accessor: d => d.lastName,
+    filterMethod: (filter, row) => (row[filter.id].includes(filter.value))
   }]
 }, {
   header: 'Info',
@@ -161,6 +172,7 @@ export default (
     data={data}
     columns={columns}
     defaultPageSize={10}
+    defaultFilterMethod={(filter, row) => (String(row[filter.id]) === filter.value)}
     {...otherOptions}
     SubComponent={(row) => {
       return (
@@ -191,4 +203,4 @@ export default (
   }
 }
 
-export default () => <SubComponents/>
+export default () => <Filtering/>

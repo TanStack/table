@@ -11,7 +11,8 @@ export default {
       page: 0,
       pageSize: this.props.defaultPageSize || 10,
       sorting: this.props.defaultSorting,
-      expandedRows: {}
+      expandedRows: {},
+      filtering: this.props.defaultFiltering
     }
   },
 
@@ -41,12 +42,19 @@ export default {
       newState.sorting = newState.defaultSorting
     }
 
+    if ((oldState.showFilters !== newState.showFilters) ||
+      (oldState.showFilters !== newState.showFilters)) {
+      newState.filtering = newState.defaultFiltering
+    }
+
     // Props that trigger a data update
     if (
       oldState.data !== newState.data ||
       oldState.columns !== newState.columns ||
       oldState.pivotBy !== newState.pivotBy ||
-      oldState.sorting !== newState.sorting
+      oldState.sorting !== newState.sorting ||
+      oldState.showFilters !== newState.showFilters ||
+      oldState.filtering !== newState.filtering
     ) {
       this.setStateWithData(this.getDataModel(newState))
     }
@@ -55,7 +63,7 @@ export default {
   setStateWithData (newState, cb) {
     const oldState = this.getResolvedState()
     const newResolvedState = this.getResolvedState({}, newState)
-    const { freezeWhenExpanded } = newResolvedState
+    const {freezeWhenExpanded} = newResolvedState
 
     // Default to unfrozen state
     newResolvedState.frozen = false
@@ -77,11 +85,15 @@ export default {
     if (
       (oldState.frozen && !newResolvedState.frozen) ||
       oldState.sorting !== newResolvedState.sorting ||
+      oldState.filtering !== newResolvedState.filtering ||
+      oldState.showFilters !== newResolvedState.showFilters ||
       (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
       // Handle collapseOnSortingChange & collapseOnDataChange
       if (
         (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
+        (oldState.filtering !== newResolvedState.filtering) ||
+        (oldState.showFilters !== newResolvedState.showFilters) ||
         (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
       ) {
         newResolvedState.expandedRows = {}
@@ -91,8 +103,8 @@ export default {
     }
 
     // Calculate pageSize all the time
-    if (newResolvedState.resolvedData) {
-      newResolvedState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.resolvedData.length / newResolvedState.pageSize)
+    if (newResolvedState.sortedData) {
+      newResolvedState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.sortedData.length / newResolvedState.pageSize)
     }
 
     return this.setState(newResolvedState, cb)

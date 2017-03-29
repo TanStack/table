@@ -14,23 +14,34 @@ const rawData = _.map(_.range(3424), d => {
 })
 
 // Now let's mock the server.  It's job is simple: use the table model to sort and return the page data
-const requestData = (pageSize, page, sorting) => {
+const requestData = (pageSize, page, sorting, filtering) => {
   return new Promise((resolve, reject) => {
     // On the server, you'll likely use SQL or noSQL or some other query language to do this.
     // For this mock, we'll just use lodash
-    const sortedData = _.orderBy(rawData, sorting.map(sort => {
+    let filteredData = rawData;
+    if (filtering.length) {
+      filteredData = filtering.reduce(
+        (filteredSoFar, nextFilter) => {
+          return filteredSoFar.filter(
+            (row) => {
+              return (row[nextFilter.id]+"").includes(nextFilter.value)
+            })
+        }
+        , filteredData)
+    }
+    const sortedData = _.orderBy(filteredData, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
           return -Infinity
         }
         return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
       }
-    }), sorting.map(d => d.asc ? 'asc' : 'desc'))
+    }), sorting.map(d => d.desc ? 'desc' : 'asc'))
 
     // Be sure to send back the rows to be displayed and any other pertinent information, like how many pages there are total.
     const res = {
       rows: sortedData.slice(pageSize * page, (pageSize * page) + pageSize),
-      pages: Math.ceil(rawData.length / pageSize)
+      pages: Math.ceil(filteredData.length / pageSize)
     }
 
     // Here we'll simulate a server response with 500ms of delay.
@@ -52,7 +63,7 @@ const ServerSide = React.createClass({
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
     this.setState({loading: true})
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
-    requestData(state.pageSize, state.page, state.sorting)
+    requestData(state.pageSize, state.page, state.sorting, state.filtering)
       .then((res) => {
         console.log(res.rows)
         // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
@@ -82,6 +93,7 @@ const ServerSide = React.createClass({
             }]}
             manual // Forces table not to paginate or sort automatically, so we can handle it server-side
             defaultPageSize={10}
+            showFilters={true}
             data={this.state.data} // Set the rows to be displayed
             pages={this.state.pages} // Display the total number of pages
             loading={this.state.loading} // Display the loading overlay when we need it
@@ -124,7 +136,8 @@ export default React.createClass({
     Axios.post('mysite.com/data', {
       pageSize: state.pageSize,
       page: state.page,
-      sorting: state.sorting
+      sorting: state.sorting,
+      filtering: state.filtering
     })
       .then((res) => {
         // Now update your state!
@@ -151,6 +164,7 @@ export default React.createClass({
         }]}
         manual // Forces table not to paginate or sort automatically, so we can handle it server-side
         defaultPageSize={10}
+        showFilters={true}
         data={this.state.data} // Set the rows to be displayed
         pages={this.state.pages} // Display the total number of pages
         loading={this.state.loading} // Display the loading overlay when we need it

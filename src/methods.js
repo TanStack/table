@@ -192,15 +192,14 @@ export default {
         // Group the rows together for this level
         let groupedRows = Object.entries(
           _.groupBy(rows, keys[i]))
-            .map(([key, value]) => {
-              return {
-                [pivotIDKey]: keys[i],
-                [pivotValKey]: key,
-                [keys[i]]: key,
-                [subRowsKey]: value
-              }
+          .map(([key, value]) => {
+            return {
+              [pivotIDKey]: keys[i],
+              [pivotValKey]: key,
+              [keys[i]]: key,
+              [subRowsKey]: value
             }
-        )
+          })
         // Recurse into the subRows
         groupedRows = groupedRows.map(rowGroup => {
           let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
@@ -233,15 +232,18 @@ export default {
     const {
       manual,
       sorting,
-      resolvedData
+      filtering,
+      showFilters,
+      defaultFilterMethod,
+      resolvedData,
+      allVisibleColumns
     } = resolvedState
 
     // Resolve the data from either manual data or sorted data
     return {
-      sortedData: manual ? resolvedData : this.sortData(resolvedData, sorting)
+      sortedData: manual ? resolvedData : this.sortData(this.filterData(resolvedData, showFilters, filtering, defaultFilterMethod, allVisibleColumns), sorting)
     }
   },
-
   fireOnChange () {
     this.props.onChange(this.getResolvedState(), this)
   },
@@ -251,10 +253,56 @@ export default {
   getStateOrProp (key) {
     return _.getFirstDefined(this.state[key], this.props[key])
   },
+  filterData (data, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
+    let filteredData = data
+
+    if (showFilters && filtering.length) {
+      filteredData = filtering.reduce(
+        (filteredSoFar, nextFilter) => {
+          return filteredSoFar.filter(
+            (row) => {
+              let column
+
+              if (nextFilter.pivotId) {
+                const parentColumn = allVisibleColumns.find(x => x.id === nextFilter.id)
+                column = parentColumn.pivotColumns.find(x => x.id === nextFilter.pivotId)
+              } else {
+                column = allVisibleColumns.find(x => x.id === nextFilter.id)
+              }
+
+              const filterMethod = column.filterMethod || defaultFilterMethod
+
+              return filterMethod(nextFilter, row, column)
+            })
+        }
+        , filteredData
+      )
+
+      // Apply the filter to the subrows if we are pivoting, and then
+      // filter any rows without subcolumns because it would be strange to show
+      filteredData = filteredData.map(row => {
+        if (!row[this.props.subRowsKey]) {
+          return row
+        }
+        return {
+          ...row,
+          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filtering, defaultFilterMethod, allVisibleColumns)
+        }
+      }).filter(row => {
+        if (!row[this.props.subRowsKey]) {
+          return true
+        }
+        return row[this.props.subRowsKey].length > 0
+      })
+    }
+
+    return filteredData
+  },
   sortData (data, sorting) {
     if (!sorting.length) {
       return data
     }
+
     const sorted = _.orderBy(data, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
@@ -281,23 +329,23 @@ export default {
 
   // User actions
   onPageChange (page) {
-    const { onPageChange, collapseOnPageChange } = this.props
+    const {onPageChange, collapseOnPageChange} = this.props
     if (onPageChange) {
       return onPageChange(page)
     }
-    const newState = { page }
+    const newState = {page}
     if (collapseOnPageChange) {
       newState.expandedRows = {}
     }
     this.setStateWithData(
       newState
-    , () => {
-      this.fireOnChange()
-    })
+      , () => {
+        this.fireOnChange()
+      })
   },
   onPageSizeChange (newPageSize) {
-    const { onPageSizeChange } = this.props
-    const { pageSize, page } = this.getResolvedState()
+    const {onPageSizeChange} = this.props
+    const {pageSize, page} = this.getResolvedState()
 
     // Normalize the page to display
     const currentRow = pageSize * page
@@ -315,8 +363,8 @@ export default {
     })
   },
   sortColumn (column, additive) {
-    const { sorting } = this.getResolvedState()
-    const { onSortingChange } = this.props
+    const {sorting} = this.getResolvedState()
+    const {onSortingChange} = this.props
     if (onSortingChange) {
       return onSortingChange(column, additive)
     }
@@ -395,6 +443,42 @@ export default {
     this.setStateWithData({
       page: ((!sorting.length && newSorting.length) || !additive) ? 0 : this.state.page,
       sorting: newSorting
+    }, () => {
+      this.fireOnChange()
+    })
+  },
+  filterColumn (column, event, pivotColumn) {
+    const {filtering} = this.getResolvedState()
+    const {onFilteringChange} = this.props
+
+    if (onFilteringChange) {
+      return onFilteringChange(column, event)
+    }
+
+    // Remove old filter first if it exists
+    const newFiltering = (filtering || []).filter(x => {
+      if (x.id !== column.id) {
+        return true
+      }
+      if (x.pivotId) {
+        if (pivotColumn) {
+          return x.pivotId !== pivotColumn.id
+        }
+        return true
+      }
+    })
+
+    if (event.target.value !== '') {
+      newFiltering.push({
+        id: column.id,
+        value: event.target.value,
+        pivotId: pivotColumn ? pivotColumn.id : undefined
+      })
+    }
+
+    this.setStateWithData({
+      page: 0,
+      filtering: newFiltering
     }, () => {
       this.fireOnChange()
     })

@@ -33,11 +33,13 @@ export default () => {
       aggregate: vals => _.round(_.mean(vals)),
       render: row => {
         return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
-      }
+      },
+      filterMethod: (filter, row) => (filter.value == `${row[filter.id]} (avg)`)
     }, {
       header: 'Visits',
       accessor: 'visits',
-      aggregate: vals => _.sum(vals)
+      aggregate: vals => _.sum(vals),
+      hideFilter: true
     }]
   }]
 
@@ -50,6 +52,7 @@ export default () => {
           defaultPageSize={10}
           className='-striped -highlight'
           pivotBy={['firstName', 'lastName']}
+          showFilters={true}
           SubComponent={(row) => {
             return (
               <div style={{padding: '20px'}}>
@@ -104,11 +107,13 @@ const columns = [{
     aggregate: vals => _.round(_.mean(vals)),
     render: row => {
       return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
-    }
+    },
+    filterMethod: (filter, row) => (filter.value == \`\${row[filter.id]} (avg)\`) 
   }, {
     header: 'Visits',
     accessor: 'visits',
-    aggregate: vals => _.sum(vals)
+    aggregate: vals => _.sum(vals),
+    hideFilter: true
   }]
 }]
 
@@ -119,6 +124,7 @@ return (
     defaultPageSize={10}
     className='-striped -highlight'
     pivotBy={['firstName', 'lastName']}
+    showFilters={true}
     SubComponent={(row) => {
       return (
         <div style={{padding: '20px'}}>

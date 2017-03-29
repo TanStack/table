@@ -26,6 +26,9 @@ export default React.createClass({
       getTheadProps,
       getTheadTrProps,
       getTheadThProps,
+      getTheadFilterProps,
+      getTheadFilterTrProps,
+      getTheadFilterThProps,
       getTbodyProps,
       getTrGroupProps,
       getTrProps,
@@ -41,11 +44,13 @@ export default React.createClass({
       manual,
       loadingText,
       noDataText,
+      showFilters,
       // State
       loading,
       pageSize,
       page,
       sorting,
+      filtering,
       pages,
       // Pivoting State
       pivotValKey,
@@ -82,7 +87,7 @@ export default React.createClass({
     const minRows = this.getMinRows()
     const padRows = pages > 1 ? _.range(pageSize - pageRows.length)
       : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
-      : []
+        : []
 
     const hasColumnFooter = allVisibleColumns.some(d => d.footer)
 
@@ -360,6 +365,144 @@ export default React.createClass({
       )
     }
 
+    const makeFilters = () => {
+      const theadFilterProps = _.splitProps(getTheadFilterProps(finalState, undefined, undefined, this))
+      const theadFilterTrProps = _.splitProps(getTheadFilterTrProps(finalState, undefined, undefined, this))
+      return (
+        <TheadComponent
+          className={classnames('-filters', theadFilterProps.className)}
+          style={{
+            ...theadFilterProps.style,
+            minWidth: `${rowMinWidth}px`
+          }}
+          {...theadFilterProps.rest}
+        >
+          <TrComponent
+            className={theadFilterTrProps.className}
+            style={theadFilterTrProps.style}
+            {...theadFilterTrProps.rest}
+          >
+            {allVisibleColumns.map(makeFilter)}
+          </TrComponent>
+        </TheadComponent>
+      )
+    }
+
+    const makeFilter = (column, i) => {
+      const width = _.getFirstDefined(column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+      const theadFilterThProps = _.splitProps(getTheadFilterThProps(finalState, undefined, column, this))
+      const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
+
+      const classes = [
+        column.headerClassName,
+        theadFilterThProps.className,
+        columnHeaderProps.className
+      ]
+
+      const styles = {
+        ...column.headerStyle,
+        ...theadFilterThProps.style,
+        ...columnHeaderProps.style
+      }
+
+      const rest = {
+        ...theadFilterThProps.rest,
+        ...columnHeaderProps.rest
+      }
+
+      if (column.expander) {
+        if (column.pivotColumns) {
+          const pivotCols = []
+          for (let i = 0; i < column.pivotColumns.length; i++) {
+            const col = column.pivotColumns[i]
+            const filter = filtering.find(filter => filter.id === column.id && filter.pivotId === col.id)
+            pivotCols.push(
+              <span key={col.id}
+                style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
+                {!col.hideFilter ? (
+                  <input type='text'
+                    style={{
+                      flex: 1,
+                      width: 20
+                    }}
+                    value={filter ? filter.value : ''}
+                    onChange={(event) => this.filterColumn(column, event, col)}
+                  />
+                ) : null}
+              </span>
+            )
+            if (i < column.pivotColumns.length - 1) {
+              pivotCols.push(<ExpanderComponent key={col.id + '-' + i} />)
+            }
+          }
+          return (
+            <ThComponent
+              key={i}
+              className={classnames(
+                'rt-pivot-header',
+                column.sortable && '-cursor-pointer',
+                classes
+              )}
+              style={{
+                ...styles,
+                flex: `${width} 0 auto`,
+                width: `${width}px`,
+                maxWidth: `${maxWidth}px`,
+                display: 'flex'
+              }}
+              {...rest}
+            >
+              {pivotCols}
+            </ThComponent>
+          )
+        }
+        return (
+          <ThComponent
+            key={i}
+            className={classnames(
+              'rt-expander-header',
+              classes
+            )}
+            style={{
+              ...styles,
+              flex: `0 0 auto`,
+              width: `${expanderColumnWidth}px`
+            }}
+            {...rest}
+          />
+        )
+      }
+
+      const filter = filtering.find(filter => filter.id === column.id)
+
+      return (
+        <ThComponent
+          key={i}
+          className={classnames(
+            classes
+          )}
+          style={{
+            ...styles,
+            flex: `${width} 0 auto`,
+            width: `${width}px`,
+            maxWidth: `${maxWidth}px`
+          }}
+          {...rest}
+        >
+          {!column.hideFilter ? (
+            <input type='text'
+              style={{
+                width: `100%`
+              }}
+              value={filter ? filter.value : ''}
+              onChange={(event) => this.filterColumn(column, event)}
+            />
+          ) : null}
+        </ThComponent>
+      )
+    }
+
     const makePageRow = (row, i, path = []) => {
       const rowInfo = {
         row: row.__original,
@@ -452,15 +595,15 @@ export default React.createClass({
                               {...rowInfo}
                               value={rowInfo.rowValues[pivotValKey]}
                             />
-                          ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
+                            ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
                         </span>
-                      ) : SubComponent ? (
-                        <span>
-                          <ExpanderComponent
-                            isExpanded={isExpanded}
-                          />
-                        </span>
-                      ) : null}
+                        ) : SubComponent ? (
+                          <span>
+                            <ExpanderComponent
+                              isExpanded={isExpanded}
+                            />
+                          </span>
+                          ) : null}
                     </TdComponent>
                   )
                 }
@@ -526,7 +669,6 @@ export default React.createClass({
     const makePadRow = (row, i) => {
       const trGroupProps = getTrGroupProps(finalState, undefined, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, undefined, undefined, this))
-      const tdProps = _.splitProps(getTdProps(finalState, undefined, undefined, this))
       return (
         <TrGroupComponent
           key={i}
@@ -539,20 +681,6 @@ export default React.createClass({
             )}
             style={trProps.style || {}}
           >
-            {SubComponent && (
-              <ThComponent
-                className={classnames(
-                  'rt-expander-header',
-                  tdProps.className
-                )}
-                style={{
-                  ...tdProps.style,
-                  flex: `0 0 auto`,
-                  width: `${expanderColumnWidth}px`
-                }}
-                {...tdProps.rest}
-              />
-            )}
             {allVisibleColumns.map((column, i2) => {
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(column.width, column.minWidth)
@@ -735,6 +863,7 @@ export default React.createClass({
         >
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
+          {showFilters ? makeFilters() : null}
           <TbodyComponent
             className={classnames(tBodyProps.className)}
             style={{
@@ -760,7 +889,7 @@ export default React.createClass({
             style={paginationProps.style}
             {...paginationProps.rest}
           />
-        ) : null}
+          ) : null}
         {!pageRows.length && (
           <NoDataComponent
             {...noDataProps}

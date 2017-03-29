@@ -21,6 +21,12 @@ export default {
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   defaultSorting: [],
+  showFilters: false,
+  defaultFiltering: [],
+  defaultFilterMethod: (filter, row, column) => {
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
+  },
 
   // Controlled State Overrides
   // page: undefined,
@@ -32,6 +38,7 @@ export default {
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
+  onFilteringChange: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -62,6 +69,9 @@ export default {
   getTheadProps: emptyObj,
   getTheadTrProps: emptyObj,
   getTheadThProps: emptyObj,
+  getTheadFilterProps: emptyObj,
+  getTheadFilterTrProps: emptyObj,
+  getTheadFilterThProps: emptyObj,
   getTbodyProps: emptyObj,
   getTrGroupProps: emptyObj,
   getTrProps: emptyObj,
@@ -92,7 +102,9 @@ export default {
     footer: undefined,
     footerClassName: '',
     footerStyle: {},
-    getFooterProps: emptyObj
+    getFooterProps: emptyObj,
+    filterMethod: undefined,
+    hideFilter: false
   },
 
   // Text
