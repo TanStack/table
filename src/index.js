@@ -127,6 +127,7 @@ export default React.createClass({
       const theadGroupTrProps = _.splitProps(getTheadGroupTrProps(finalState, undefined, undefined, this))
       return (
         <TheadComponent
+          mainProps={mainProps}
           className={classnames('-headerGroups', theadGroupProps.className)}
           style={{
             ...theadGroupProps.style,
@@ -135,6 +136,7 @@ export default React.createClass({
           {...theadGroupProps.rest}
         >
           <TrComponent
+            mainProps={mainProps}
             className={theadGroupTrProps.className}
             style={theadGroupTrProps.style}
             {...theadGroupTrProps.rest}
@@ -179,6 +181,7 @@ export default React.createClass({
         if (column.pivotColumns) {
           return (
             <ThComponent
+              mainProps={mainProps}
               key={i}
               className={classnames(
                 'rt-pivot-header',
@@ -194,6 +197,7 @@ export default React.createClass({
         }
         return (
           <ThComponent
+            mainProps={mainProps}
             key={i}
             className={classnames(
               'rt-expander-header',
@@ -210,6 +214,7 @@ export default React.createClass({
       }
       return (
         <ThComponent
+          mainProps={mainProps}
           key={i}
           className={classnames(
             classes
@@ -233,6 +238,7 @@ export default React.createClass({
       const theadTrProps = _.splitProps(getTheadTrProps(finalState, undefined, undefined, this))
       return (
         <TheadComponent
+          mainProps={mainProps}
           className={classnames('-header', theadProps.className)}
           style={{
             ...theadProps.style,
@@ -241,6 +247,7 @@ export default React.createClass({
           {...theadProps.rest}
         >
           <TrComponent
+            mainProps={mainProps}
             className={theadTrProps.className}
             style={theadTrProps.style}
             {...theadTrProps.rest}
@@ -281,6 +288,7 @@ export default React.createClass({
           const pivotSort = sorting.find(d => d.id === column.id)
           return (
             <ThComponent
+              mainProps={mainProps}
               key={i}
               className={classnames(
                 'rt-pivot-header',
@@ -307,7 +315,7 @@ export default React.createClass({
                       column: column
                     })}
                     {i < column.pivotColumns.length - 1 && (
-                      <ExpanderComponent />
+                      <ExpanderComponent mainProps={mainProps} />
                     )}
                   </span>
                 )
@@ -317,6 +325,7 @@ export default React.createClass({
         }
         return (
           <ThComponent
+            mainProps={mainProps}
             key={i}
             className={classnames(
               'rt-expander-header',
@@ -334,6 +343,7 @@ export default React.createClass({
 
       return (
         <ThComponent
+          mainProps={mainProps}
           key={i}
           className={classnames(
             classes,
@@ -376,10 +386,12 @@ export default React.createClass({
       const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
       return (
         <TrGroupComponent
+          mainProps={mainProps}
           key={rowInfo.nestingPath.join('_')}
           {...trGroupProps}
         >
           <TrComponent
+            mainProps={mainProps}
             className={classnames(
               trProps.className,
               row._viewIndex % 2 ? '-even' : '-odd'
@@ -427,6 +439,11 @@ export default React.createClass({
                   const PivotCell = column.pivotRender
                   return (
                     <TdComponent
+                      mainProps={{
+                        ...mainProps,
+                        column,
+                        rowInfo
+                      }}
                       key={i2}
                       className={classnames(
                         'rt-pivot',
@@ -445,6 +462,7 @@ export default React.createClass({
                       {rowInfo.subRows ? (
                         <span>
                           <ExpanderComponent
+                            mainProps={mainProps}
                             isExpanded={isExpanded}
                           />
                           {column && column.pivotRender ? (
@@ -457,6 +475,7 @@ export default React.createClass({
                       ) : SubComponent ? (
                         <span>
                           <ExpanderComponent
+                            mainProps={mainProps}
                             isExpanded={isExpanded}
                           />
                         </span>
@@ -468,6 +487,11 @@ export default React.createClass({
                 // Return the regular expander cell
                 return (
                   <TdComponent
+                    mainProps={{
+                      ...mainProps,
+                      column,
+                      rowInfo
+                    }}
                     key={i2}
                     className={classnames(
                       classes,
@@ -482,6 +506,7 @@ export default React.createClass({
                   >
                     <span>
                       <ExpanderComponent
+                        mainProps={mainProps}
                         isExpanded={isExpanded}
                       />
                     </span>
@@ -492,6 +517,11 @@ export default React.createClass({
               // Return regular cell
               return (
                 <TdComponent
+                  mainProps={{
+                    ...mainProps,
+                    column,
+                    rowInfo
+                  }}
                   key={i2}
                   className={classnames(
                     classes,
@@ -518,21 +548,25 @@ export default React.createClass({
             isExpanded &&
             rowInfo.subRows.map((d, i) => makePageRow(d, i, rowInfo.nestingPath))
           )}
-          {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo)}
+          {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo, mainProps)}
         </TrGroupComponent>
       )
     }
 
+    const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
+    const mainProps = finalState
     const makePadRow = (row, i) => {
       const trGroupProps = getTrGroupProps(finalState, undefined, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, undefined, undefined, this))
       const tdProps = _.splitProps(getTdProps(finalState, undefined, undefined, this))
       return (
         <TrGroupComponent
+          mainProps={mainProps}
           key={i}
           {...trGroupProps}
         >
           <TrComponent
+            mainProps={mainProps}
             className={classnames(
               '-padRow',
               trProps.className,
@@ -541,6 +575,7 @@ export default React.createClass({
           >
             {SubComponent && (
               <ThComponent
+                mainProps={mainProps}
                 className={classnames(
                   'rt-expander-header',
                   tdProps.className
@@ -574,6 +609,10 @@ export default React.createClass({
 
               return (
                 <TdComponent
+                  mainProps={{
+                    ...mainProps,
+                    column
+                  }}
                   key={i2}
                   className={classnames(
                     classes,
@@ -601,6 +640,7 @@ export default React.createClass({
       const tFootTrProps = _.splitProps(getTfootTrProps(finalState, undefined, undefined, this))
       return (
         <TfootComponent
+          mainProps={mainProps}
           className={tFootProps.className}
           style={{
             ...tFootProps.style,
@@ -609,6 +649,7 @@ export default React.createClass({
           {...tFootProps.rest}
         >
           <TrComponent
+            mainProps={mainProps}
             className={classnames(
               tFootTrProps.className
             )}
@@ -641,6 +682,10 @@ export default React.createClass({
                 if (column.pivotColumns) {
                   return (
                     <TdComponent
+                      mainProps={{
+                        ...mainProps,
+                        column
+                      }}
                       key={i2}
                       className={classnames(
                         'rt-pivot',
@@ -664,6 +709,10 @@ export default React.createClass({
                 // Return the regular expander cell
                 return (
                   <TdComponent
+                    mainProps={{
+                      ...mainProps,
+                      column
+                    }}
                     key={i2}
                     className={classnames(
                       classes,
@@ -681,6 +730,10 @@ export default React.createClass({
               // Return regular cell
               return (
                 <TdComponent
+                  mainProps={{
+                    ...mainProps,
+                    column
+                  }}
                   key={i2}
                   className={classnames(
                     classes,
@@ -707,8 +760,6 @@ export default React.createClass({
         </TfootComponent>
       )
     }
-
-    const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
     const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
     const tBodyProps = _.splitProps(getTbodyProps(finalState, undefined, undefined, this))
     const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
@@ -729,6 +780,7 @@ export default React.createClass({
         {...rootProps.rest}
       >
         <TableComponent
+          mainProps={mainProps}
           className={classnames(tableProps.className)}
           style={tableProps.style}
           {...tableProps.rest}
@@ -736,6 +788,7 @@ export default React.createClass({
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
           <TbodyComponent
+            mainProps={mainProps}
             className={classnames(tBodyProps.className)}
             style={{
               ...tBodyProps.style,
@@ -750,6 +803,7 @@ export default React.createClass({
         </TableComponent>
         {showPagination ? (
           <PaginationComponent
+            mainProps={mainProps}
             {...resolvedState}
             pages={pages}
             canPrevious={canPrevious}
@@ -763,12 +817,14 @@ export default React.createClass({
         ) : null}
         {!pageRows.length && (
           <NoDataComponent
+            mainProps={mainProps}
             {...noDataProps}
           >
             {_.normalizeComponent(noDataText)}
           </NoDataComponent>
         )}
         <LoadingComponent
+          mainProps={mainProps}
           loading={loading}
           loadingText={loadingText}
           {...loadingProps}

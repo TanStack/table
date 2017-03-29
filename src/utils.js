@@ -123,14 +123,16 @@ function sum (arr) {
 }
 
 function makeTemplateComponent (compClass) {
-  return ({children, className, ...rest}) => (
-    <div
-      className={classnames(compClass, className)}
-      {...rest}
-    >
-      {children}
-    </div>
-  )
+  return ({children, className, mainProps, ...rest}) => {
+    return (
+      <div
+        className={classnames(compClass, className)}
+        {...rest}
+      >
+        {children}
+      </div>
+    )
+  }
 }
 
 function groupBy (xs, key) {
