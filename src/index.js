@@ -416,20 +416,20 @@ export default React.createClass({
           const pivotCols = []
           for (let i = 0; i < column.pivotColumns.length; i++) {
             const col = column.pivotColumns[i]
-            const filter = filtering.find(filter => filter.id === col.id)
+            const filter = filtering.find(filter => filter.id === column.id && filter.pivotId === col.id)
             pivotCols.push(
               <span key={col.id}
                 style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
-                <input type='text'
-                  style={{
-                    flex: 1,
-                    width: 20,
-                    backgroundColor: i > 0 ? '#f3f3f3' : '#fff'
-                  }}
-                  value={filter ? filter.value : ''}
-                  disabled={i > 0}
-                  onChange={(event) => this.filterColumn(col, event)}
-                />
+                {!col.hideFilter ? (
+                  <input type='text'
+                    style={{
+                      flex: 1,
+                      width: 20
+                    }}
+                    value={filter ? filter.value : ''}
+                    onChange={(event) => this.filterColumn(column, event, col)}
+                  />
+                ) : null}
               </span>
             )
             if (i < column.pivotColumns.length - 1) {
@@ -490,13 +490,15 @@ export default React.createClass({
           }}
           {...rest}
         >
-          <input type='text'
-            style={{
-              width: `100%`
-            }}
-            value={filter ? filter.value : ''}
-            onChange={(event) => this.filterColumn(column, event)}
-          />
+          {!column.hideFilter ? (
+            <input type='text'
+              style={{
+                width: `100%`
+              }}
+              value={filter ? filter.value : ''}
+              onChange={(event) => this.filterColumn(column, event)}
+            />
+          ) : null}
         </ThComponent>
       )
     }

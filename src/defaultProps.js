@@ -23,7 +23,10 @@ export default {
   defaultSorting: [],
   showFilters: false,
   defaultFiltering: [],
-  defaultFilterMethod: (filter, row, column) => (row[filter.id] === filter.value),
+  defaultFilterMethod: (filter, row, column) => {
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
+  },
 
   // Controlled State Overrides
   // page: undefined,
@@ -100,7 +103,8 @@ export default {
     footerClassName: '',
     footerStyle: {},
     getFooterProps: emptyObj,
-    filterMethod: undefined
+    filterMethod: undefined,
+    hideFilter: false
   },
 
   // Text

@@ -241,10 +241,9 @@ export default {
 
     // Resolve the data from either manual data or sorted data
     return {
-      sortedData: manual ? resolvedData : this.sortData(resolvedData, sorting, showFilters, filtering, defaultFilterMethod, allVisibleColumns)
+      sortedData: manual ? resolvedData : this.sortData(this.filterData(resolvedData, showFilters, filtering, defaultFilterMethod, allVisibleColumns), sorting)
     }
   },
-
   fireOnChange () {
     this.props.onChange(this.getResolvedState(), this)
   },
@@ -254,7 +253,7 @@ export default {
   getStateOrProp (key) {
     return _.getFirstDefined(this.state[key], this.props[key])
   },
-  sortData (data, sorting, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
+  filterData (data, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
     let filteredData = data
 
     if (showFilters && filtering.length) {
@@ -262,20 +261,49 @@ export default {
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
             (row) => {
-              const column = allVisibleColumns.find(x => x.id === nextFilter.id) || {}
+              let column
+
+              if (nextFilter.pivotId) {
+                const parentColumn = allVisibleColumns.find(x => x.id === nextFilter.id)
+                column = parentColumn.pivotColumns.find(x => x.id === nextFilter.pivotId)
+              } else {
+                column = allVisibleColumns.find(x => x.id === nextFilter.id)
+              }
+
               const filterMethod = column.filterMethod || defaultFilterMethod
+
               return filterMethod(nextFilter, row, column)
             })
         }
         , filteredData
       )
+
+      // Apply the filter to the subrows if we are pivoting, and then
+      // filter any rows without subcolumns because it would be strange to show
+      filteredData = filteredData.map(row => {
+        if (!row[this.props.subRowsKey]) {
+          return row
+        }
+        return {
+          ...row,
+          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filtering, defaultFilterMethod, allVisibleColumns)
+        }
+      }).filter(row => {
+        if (!row[this.props.subRowsKey]) {
+          return true
+        }
+        return row[this.props.subRowsKey].length > 0
+      })
     }
 
+    return filteredData
+  },
+  sortData (data, sorting) {
     if (!sorting.length) {
-      return filteredData
+      return data
     }
 
-    const sorted = _.orderBy(filteredData, sorting.map(sort => {
+    const sorted = _.orderBy(data, sorting.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
           return -Infinity
@@ -419,7 +447,7 @@ export default {
       this.fireOnChange()
     })
   },
-  filterColumn (column, event) {
+  filterColumn (column, event, pivotColumn) {
     const {filtering} = this.getResolvedState()
     const {onFilteringChange} = this.props
 
@@ -428,12 +456,23 @@ export default {
     }
 
     // Remove old filter first if it exists
-    const newFiltering = (filtering || []).filter(x => x.id !== column.id)
+    const newFiltering = (filtering || []).filter(x => {
+      if (x.id !== column.id) {
+        return true
+      }
+      if (x.pivotId) {
+        if (pivotColumn) {
+          return x.pivotId !== pivotColumn.id
+        }
+        return true
+      }
+    })
 
     if (event.target.value !== '') {
       newFiltering.push({
         id: column.id,
-        value: event.target.value
+        value: event.target.value,
+        pivotId: pivotColumn ? pivotColumn.id : undefined
       })
     }
 

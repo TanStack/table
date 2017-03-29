@@ -38,7 +38,8 @@ export default () => {
     }, {
       header: 'Visits',
       accessor: 'visits',
-      aggregate: vals => _.sum(vals)
+      aggregate: vals => _.sum(vals),
+      hideFilter: true
     }]
   }]
 
@@ -111,7 +112,8 @@ const columns = [{
   }, {
     header: 'Visits',
     accessor: 'visits',
-    aggregate: vals => _.sum(vals)
+    aggregate: vals => _.sum(vals),
+    hideFilter: true
   }]
 }]
 
