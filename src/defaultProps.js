@@ -23,7 +23,7 @@ export default {
   defaultSorting: [],
   showFilters: false,
   defaultFiltering: [],
-  defaultFilterMethod: (filter, row, column) => (row[filter.id] == filter.value),
+  defaultFilterMethod: (filter, row, column) => (row[filter.id] === filter.value),
 
   // Controlled State Overrides
   // page: undefined,
