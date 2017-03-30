@@ -105,6 +105,7 @@ export default {
     // Calculate pageSize all the time
     if (newResolvedState.sortedData) {
       newResolvedState.pages = newResolvedState.manual ? newResolvedState.pages : Math.ceil(newResolvedState.sortedData.length / newResolvedState.pageSize)
+      newResolvedState.page = Math.max(newResolvedState.page >= newResolvedState.pages ? newResolvedState.pages - 1 : newResolvedState.page, 0)
     }
 
     return this.setState(newResolvedState, cb)

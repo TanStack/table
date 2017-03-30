@@ -10,10 +10,7 @@ export default {
       pivotValKey,
       subRowsKey,
       expanderColumnWidth,
-      SubComponent,
-      page,
-      pages,
-      pageSize
+      SubComponent
     } = newState
 
     // Determine Header Groups
@@ -214,9 +211,6 @@ export default {
       resolvedData = groupRecursively(resolvedData, pivotBy)
     }
 
-    const newPages = _.getFirstDefined(pages, Math.ceil(resolvedData.length / pageSize))
-    const newPage = page > newPages ? newPage - 1 : page
-
     return {
       ...newState,
       resolvedData,
@@ -224,8 +218,7 @@ export default {
       allVisibleColumns,
       headerGroups,
       allDecoratedColumns,
-      hasHeaderGroups,
-      page: Math.max(newPage, 0)
+      hasHeaderGroups
     }
   },
   getSortedData (resolvedState) {
@@ -477,7 +470,6 @@ export default {
     }
 
     this.setStateWithData({
-      page: 0,
       filtering: newFiltering
     }, () => {
       this.fireOnChange()
