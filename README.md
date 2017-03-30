@@ -47,7 +47,7 @@
 - [Props](#props)
 - [Columns](#columns)
 - [Column Header Groups](#column-header-groups)
-- [Custom Cell and Header Rendering](#custom-cell-and-header-rendering)
+- [Custom Cell and Header and Footer Rendering](#custom-cell-header-and-footer-rendering)
 - [Styles](#styles)
 - [Custom Props](#custom-props)
 - [Pivoting and Aggregation](#pivoting-and-aggregation)
