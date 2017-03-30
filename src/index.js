@@ -85,9 +85,7 @@ export default React.createClass({
     const endRow = startRow + pageSize
     const pageRows = manual ? resolvedData : sortedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
-    const padRows = pages > 1 ? _.range(pageSize - pageRows.length)
-      : minRows ? _.range(Math.max(minRows - pageRows.length, 0))
-        : []
+    const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
     const hasColumnFooter = allVisibleColumns.some(d => d.footer)
 
