@@ -230,7 +230,15 @@ These are all of the available props (and their default values) for the main `<R
     getFooterProps: () => ({}),
     filterMethod: undefined,
     hideFilter: false,
-    filterRender: undefined
+    filterRender: ({filter, onFilterChange}) => (
+      <input type='text'
+        style={{
+          width: '100%'
+        }}
+        value={filter ? filter.value : ''}
+        onChange={(event) => onFilterChange(event.target.value)}
+      />
+    )
   },
 
   // Text
@@ -315,7 +323,7 @@ Or just define them as props
     // row == the row of data supplied to the table
     // column == the column that the filter is on
   hideFilter: false, // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
-  filterRender: JSX // eg. ({onFilterChange}) => <select onChange={event => onFilterChange(event.target.value)}></select> // The value passed to onFilterChange will be the value passed to filter.value of the filterMethod
+  filterRender: JSX // eg. ({filter, onFilterChange}) => <select onChange={event => onFilterChange(event.target.value)} value={filter ? filter.value : ''}></select> // The value passed to onFilterChange will be the value passed to filter.value of the filterMethod
 }]
 ```
 

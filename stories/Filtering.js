@@ -68,8 +68,11 @@ class Filtering extends React.Component {
           }
           return row[filter.id] < 21
         },
-        filterRender: ({onFilterChange}) => (
-          <select onChange={event => onFilterChange(event.target.value)} style={{width: '100%'}}>
+        filterRender: ({filter, onFilterChange}) => (
+          <select
+            onChange={event => onFilterChange(event.target.value)}
+            style={{width: '100%'}}
+            value={filter ? filter.value : 'all'}>
             <option value="all"></option>
             <option value="true">Can Drink</option>
             <option value="false">Can't Drink</option>
@@ -209,8 +212,11 @@ const columns = [{
       }
       return row[filter.id] < 21
     },
-    filterRender: ({onFilterChange}) => (
-      <select onChange={event => onFilterChange(event.target.value)} style={{width: '100%'}}>
+    filterRender: ({filter, onFilterChange}) => (
+      <select
+        onChange={event => onFilterChange(event.target.value)}
+        style={{width: '100%'}}
+        value={filter ? filter.value : 'all'}>
         <option value="all"></option>
         <option value="true">Can Drink</option>
         <option value="false">Can't Drink</option>

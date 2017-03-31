@@ -105,7 +105,15 @@ export default {
     getFooterProps: emptyObj,
     filterMethod: undefined,
     hideFilter: false,
-    filterRender: undefined
+    filterRender: ({filter, onFilterChange}) => (
+      <input type='text'
+        style={{
+          width: '100%'
+        }}
+        value={filter ? filter.value : ''}
+        onChange={(event) => onFilterChange(event.target.value)}
+      />
+    )
   },
 
   // Text

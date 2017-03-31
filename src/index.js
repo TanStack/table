@@ -417,21 +417,15 @@ export default React.createClass({
             const filter = filtering.find(filter => filter.id === column.id && filter.pivotId === col.id)
             pivotCols.push(
               <span key={col.id}
-                style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
+                style={{flex: 1}}>
                 {!col.hideFilter ? (
                   _.normalizeComponent(col.filterRender,
                     {
+                      col,
+                      filter,
                       onFilterChange: (value) => (this.filterColumn(column, value, col))
                     },
-                    (
-                      <input type='text'
-                        style={{
-                          flex: 1
-                        }}
-                        value={filter ? filter.value : ''}
-                        onChange={(event) => this.filterColumn(column, event.target.value, col)}
-                      />
-                    )
+                    defaults.column.filterRender
                   )
                 ) : null}
               </span>
@@ -497,17 +491,11 @@ export default React.createClass({
           {!column.hideFilter ? (
             _.normalizeComponent(column.filterRender,
               {
+                column,
+                filter,
                 onFilterChange: (value) => (this.filterColumn(column, value))
               },
-              (
-                <input type='text'
-                  style={{
-                    width: `100%`
-                  }}
-                  value={filter ? filter.value : ''}
-                  onChange={(event) => this.filterColumn(column, event.target.value)}
-                />
-              )
+              defaults.column.filterRender
             )
           ) : null}
         </ThComponent>
