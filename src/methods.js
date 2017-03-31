@@ -440,12 +440,12 @@ export default {
       this.fireOnChange()
     })
   },
-  filterColumn (column, event, pivotColumn) {
+  filterColumn (column, value, pivotColumn) {
     const {filtering} = this.getResolvedState()
     const {onFilteringChange} = this.props
 
     if (onFilteringChange) {
-      return onFilteringChange(column, event)
+      return onFilteringChange(column, value)
     }
 
     // Remove old filter first if it exists
@@ -461,10 +461,10 @@ export default {
       }
     })
 
-    if (event.target.value !== '') {
+    if (value !== '') {
       newFiltering.push({
         id: column.id,
-        value: event.target.value,
+        value: value,
         pivotId: pivotColumn ? pivotColumn.id : undefined
       })
     }

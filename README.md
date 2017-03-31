@@ -229,7 +229,16 @@ These are all of the available props (and their default values) for the main `<R
     footerStyle: {},
     getFooterProps: () => ({}),
     filterMethod: undefined,
-    hideFilter: false
+    hideFilter: false,
+    filterRender: ({filter, onFilterChange}) => (
+      <input type='text'
+        style={{
+          width: '100%'
+        }}
+        value={filter ? filter.value : ''}
+        onChange={(event) => onFilterChange(event.target.value)}
+      />
+    )
   },
 
   // Text
@@ -303,7 +312,7 @@ Or just define them as props
   columns: [...], // See Header Groups section below
 
   // Footer
-  footer: 'Header Name' or JSX eg. ({data, column}) => <div>Header Name</div>,
+  footer: 'Footer Name' or JSX eg. ({data, column}) => <div>Footer Name</div>,
   footerClassName: '', // Set the classname of the `td` element of the column's footer
   footerStyle: {}, // Set the style of the `td` element of the column's footer
   getFooterProps: (state, rowInfo, column, instance) => ({}), // A function that returns props to decorate the `td` element of the column's footer
@@ -313,7 +322,8 @@ Or just define them as props
     // filter == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
     // row == the row of data supplied to the table
     // column == the column that the filter is on
-  hideFilter: false // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
+  hideFilter: false, // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
+  filterRender: JSX // eg. ({filter, onFilterChange}) => <select onChange={event => onFilterChange(event.target.value)} value={filter ? filter.value : ''}></select> // The value passed to onFilterChange will be the value passed to filter.value of the filterMethod
 }]
 ```
 
@@ -622,7 +632,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
-  onFilteringChange={(column, event) => {...}} // Called when a user enters a value into a filter input field. The event is the onChange event of the input field.
+  onFilteringChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option. 
 />
 ```
 
@@ -674,6 +684,8 @@ If you don't want particular column to be filtered you can set the `hideFilter` 
 By default the table tries to filter by checking if the row's value starts with the filter text. The default method for filtering the table can be set with the table's `defaultFilterMethod` option.
 
 If you want to override a particular column's filtering method, you can set the `filterMethod` option on a column.
+
+To completely override the filter that is shown, you can set the `filterRender` column option. Using this option you can specify the JSX that is shown. The option is passed an `onFilterChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
 
 See <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Custom%20Filtering&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Custom Filtering</a> demo for examples.
 
