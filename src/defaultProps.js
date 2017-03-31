@@ -104,7 +104,8 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
-    hideFilter: false
+    hideFilter: false,
+    filterRender: undefined
   },
 
   // Text

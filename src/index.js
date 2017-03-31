@@ -419,14 +419,20 @@ export default React.createClass({
               <span key={col.id}
                 style={{display: 'flex', alignContent: 'flex-end', flex: 1}}>
                 {!col.hideFilter ? (
-                  <input type='text'
-                    style={{
-                      flex: 1,
-                      width: 20
-                    }}
-                    value={filter ? filter.value : ''}
-                    onChange={(event) => this.filterColumn(column, event, col)}
-                  />
+                  _.normalizeComponent(col.filterRender,
+                    {
+                      onFilterChange: (value) => (this.filterColumn(column, value, col))
+                    },
+                    (
+                      <input type='text'
+                        style={{
+                          flex: 1
+                        }}
+                        value={filter ? filter.value : ''}
+                        onChange={(event) => this.filterColumn(column, event.target.value, col)}
+                      />
+                    )
+                  )
                 ) : null}
               </span>
             )
@@ -489,13 +495,20 @@ export default React.createClass({
           {...rest}
         >
           {!column.hideFilter ? (
-            <input type='text'
-              style={{
-                width: `100%`
-              }}
-              value={filter ? filter.value : ''}
-              onChange={(event) => this.filterColumn(column, event)}
-            />
+            _.normalizeComponent(column.filterRender,
+              {
+                onFilterChange: (value) => (this.filterColumn(column, value))
+              },
+              (
+                <input type='text'
+                  style={{
+                    width: `100%`
+                  }}
+                  value={filter ? filter.value : ''}
+                  onChange={(event) => this.filterColumn(column, event.target.value)}
+                />
+              )
+            )
           ) : null}
         </ThComponent>
       )
@@ -593,15 +606,15 @@ export default React.createClass({
                               {...rowInfo}
                               value={rowInfo.rowValues[pivotValKey]}
                             />
-                            ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
+                          ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
                         </span>
-                        ) : SubComponent ? (
-                          <span>
-                            <ExpanderComponent
-                              isExpanded={isExpanded}
-                            />
-                          </span>
-                          ) : null}
+                      ) : SubComponent ? (
+                        <span>
+                          <ExpanderComponent
+                            isExpanded={isExpanded}
+                          />
+                        </span>
+                      ) : null}
                     </TdComponent>
                   )
                 }
@@ -887,7 +900,7 @@ export default React.createClass({
             style={paginationProps.style}
             {...paginationProps.rest}
           />
-          ) : null}
+        ) : null}
         {!pageRows.length && (
           <NoDataComponent
             {...noDataProps}
