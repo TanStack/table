@@ -19,8 +19,8 @@ export default {
   getResolvedState (props, state) {
     const resolvedState = {
       ..._.compactObject(this.state),
-      ..._.compactObject(state),
       ..._.compactObject(this.props),
+      ..._.compactObject(state),
       ..._.compactObject(props)
     }
     return resolvedState
