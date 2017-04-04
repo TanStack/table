@@ -12,7 +12,9 @@ export default {
       pageSize: this.props.defaultPageSize || 10,
       sorting: this.props.defaultSorting,
       expandedRows: {},
-      filtering: this.props.defaultFiltering
+      filtering: this.props.defaultFiltering,
+      resizing: this.props.defaultResizing,
+      currentlyResizing: undefined
     }
   },
 

@@ -189,14 +189,14 @@ export default {
         // Group the rows together for this level
         let groupedRows = Object.entries(
           _.groupBy(rows, keys[i]))
-          .map(([key, value]) => {
-            return {
-              [pivotIDKey]: keys[i],
-              [pivotValKey]: key,
-              [keys[i]]: key,
-              [subRowsKey]: value
-            }
-          })
+        .map(([key, value]) => {
+          return {
+            [pivotIDKey]: keys[i],
+            [pivotValKey]: key,
+            [keys[i]]: key,
+            [subRowsKey]: value
+          }
+        })
         // Recurse into the subRows
         groupedRows = groupedRows.map(rowGroup => {
           let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
@@ -474,5 +474,51 @@ export default {
     }, () => {
       this.fireOnChange()
     })
+  },
+  resizeColumnStart (column, event) {
+    const parentWidth = event.target.parentElement.getBoundingClientRect().width
+
+    this.setStateWithData({
+      currentlyResizing: {
+        id: column.id,
+        startX: event.pageX,
+        parentWidth: parentWidth
+      }
+    }, () => {
+      document.addEventListener('mousemove', this.resizeColumnMoving)
+      document.addEventListener('mouseup', this.resizeColumnEnd)
+      document.addEventListener('mouseleave', this.resizeColumnEnd)
+
+      this.fireOnChange()
+    })
+
+    event.preventDefault()
+  },
+  resizeColumnEnd (event) {
+    document.removeEventListener('mousemove', this.resizeColumnMoving)
+    document.removeEventListener('mouseup', this.resizeColumnEnd)
+    document.removeEventListener('mouseleave', this.resizeColumnEnd)
+
+    event.preventDefault()
+  },
+  resizeColumnMoving (event) {
+    const {resizing, currentlyResizing} = this.getResolvedState()
+
+    // Delete old value
+    const newResizing = resizing.filter(x => x.id !== currentlyResizing.id)
+
+    // Set the min size to 10 to account for margins or else the group headers don't line up correctly
+    newResizing.push({
+      id: currentlyResizing.id,
+      value: Math.max(currentlyResizing.parentWidth + event.pageX - currentlyResizing.startX, 10)
+    })
+
+    this.setStateWithData({
+      resizing: newResizing
+    }, () => {
+      this.fireOnChange()
+    })
+
+    event.preventDefault()
   }
 }

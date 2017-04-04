@@ -27,6 +27,8 @@ export default {
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
+  resizable: true,
+  defaultResizing: [],
 
   // Controlled State Overrides
   // page: undefined,

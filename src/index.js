@@ -45,12 +45,14 @@ export default React.createClass({
       loadingText,
       noDataText,
       showFilters,
+      resizable,
       // State
       loading,
       pageSize,
       page,
       sorting,
       filtering,
+      resizing,
       pages,
       // Pivoting State
       pivotValKey,
@@ -89,6 +91,8 @@ export default React.createClass({
 
     const hasColumnFooter = allVisibleColumns.some(d => d.footer)
 
+    const totalColumns = allVisibleColumns.length
+
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       rows.forEach((row, i) => {
         index++
@@ -106,7 +110,10 @@ export default React.createClass({
     const canPrevious = page > 0
     const canNext = page + 1 < pages
 
-    const rowMinWidth = _.sum(allVisibleColumns.map(d => _.getFirstDefined(d.width, d.minWidth)))
+    const rowMinWidth = _.sum(allVisibleColumns.map(d => {
+      const resized = resizing.find(x => x.id === d.id) || {}
+      return _.getFirstDefined(resized.value, d.width, d.minWidth)
+    }))
 
     let rowIndex = -1
 
@@ -149,9 +156,20 @@ export default React.createClass({
     }
 
     const makeHeaderGroup = (column, i) => {
-      const flex = _.sum(column.columns.map(d => d.width ? 0 : d.minWidth))
-      const width = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.minWidth)))
-      const maxWidth = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.maxWidth)))
+      const flex = _.sum(column.columns.map(d => {
+        const resized = resizing.find(x => x.id === d.id) || {}
+        return d.width || resized.value ? 0 : d.minWidth
+      }))
+      const width = _.sum(column.columns.map(d => {
+        const resized = resizing.find(x => x.id === d.id) || {}
+        return _.getFirstDefined(resized.value, d.width, d.minWidth)
+      }))
+      const maxWidth = _.sum(column.columns.map(d => {
+        const resized = resizing.find(x => x.id === d.id) || {}
+        return _.getFirstDefined(resized.value, d.width, d.maxWidth)
+      }))
+      // const width = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.minWidth)))
+      // const maxWidth = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.maxWidth)))
       const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -255,10 +273,11 @@ export default React.createClass({
     }
 
     const makeHeader = (column, i) => {
+      const resized = resizing.find(x => x.id === column.id) || {}
       const sort = sorting.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
-      const width = _.getFirstDefined(column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
       const theadThProps = _.splitProps(getTheadThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -348,17 +367,33 @@ export default React.createClass({
             ...styles,
             flex: `${width} 0 auto`,
             width: `${width}px`,
-            maxWidth: `${maxWidth}px`
+            maxWidth: `${maxWidth}px`,
+            position: 'relative',
+            overflow: i !== totalColumns - 1 ? 'visible' : undefined
           }}
           toggleSort={(e) => {
             column.sortable && this.sortColumn(column, e.shiftKey)
           }}
           {...rest}
         >
-          {_.normalizeComponent(column.header, {
-            data: sortedData,
-            column: column
-          })}
+          <div>
+            {_.normalizeComponent(column.header, {
+              data: sortedData,
+              column: column
+            })}
+          </div>
+          {resizable ? (
+            <div style={{
+              display: 'inline-block',
+              position: 'absolute',
+              width: 36,
+              top: 0,
+              bottom: 0,
+              right: -18,
+              cursor: 'col-resize',
+              zIndex: 10
+            }} onMouseDown={e => this.resizeColumnStart(column, e)} />
+          ) : null}
         </ThComponent>
       )
     }
@@ -387,8 +422,9 @@ export default React.createClass({
     }
 
     const makeFilter = (column, i) => {
-      const width = _.getFirstDefined(column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+      const resized = resizing.find(x => x.id === column.id) || {}
+      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
       const theadFilterThProps = _.splitProps(getTheadFilterThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -530,9 +566,10 @@ export default React.createClass({
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
+              const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tdProps = _.splitProps(getTdProps(finalState, rowInfo, column, this))
               const columnProps = _.splitProps(column.getProps(finalState, rowInfo, column, this))
 
@@ -681,9 +718,10 @@ export default React.createClass({
             style={trProps.style || {}}
           >
             {allVisibleColumns.map((column, i2) => {
+              const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tdProps = _.splitProps(getTdProps(finalState, undefined, column, this))
               const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
 
@@ -743,9 +781,10 @@ export default React.createClass({
             {...tFootTrProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
+              const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
               const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
               const columnFooterProps = _.splitProps(column.getFooterProps(finalState, undefined, column, this))
