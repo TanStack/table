@@ -153,11 +153,13 @@ These are all of the available props (and their default values) for the main `<R
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
+  resizable: true,
+  defaultResizing: [],
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
   pageSize: undefined,
-  sorting: undefined
+  sorting: undefined,
 
   // Controlled State Callbacks
   onExpandSubComponent: undefined,
@@ -165,6 +167,7 @@ These are all of the available props (and their default values) for the main `<R
   onPageSizeChange: undefined,
   onSortingChange: undefined,
   onFilteringChange: undefined,
+  onResize: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -209,6 +212,7 @@ These are all of the available props (and their default values) for the main `<R
   getPaginationProps: () => ({}),
   getLoadingProps: () => ({}),
   getNoDataProps: () => ({}),
+  getResizerProps: () => ({}),
 
   // Global Column Defaults
   column: {
@@ -449,6 +453,8 @@ Every single built-in component's props can be dynamically extended using any on
   getTdProps={fn}
   getPaginationProps={fn}
   getLoadingProps={fn}
+  getNoDataProps: {fn},
+  getResizerProps: {fn}
 />
 ```
 
@@ -635,6 +641,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
   onFilteringChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option. 
+  onResize={(column, event, isTouch) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
 
@@ -711,6 +718,7 @@ Object.assign(ReactTableDefaults, {
   NextComponent: undefined,
   LoadingComponent: component,
   NoDataComponent: component,
+  ResizerComponent: component
 })
 
 // Or change per instance

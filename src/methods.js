@@ -189,14 +189,14 @@ export default {
         // Group the rows together for this level
         let groupedRows = Object.entries(
           _.groupBy(rows, keys[i]))
-          .map(([key, value]) => {
-            return {
-              [pivotIDKey]: keys[i],
-              [pivotValKey]: key,
-              [keys[i]]: key,
-              [subRowsKey]: value
-            }
-          })
+        .map(([key, value]) => {
+          return {
+            [pivotIDKey]: keys[i],
+            [pivotValKey]: key,
+            [keys[i]]: key,
+            [subRowsKey]: value
+          }
+        })
         // Recurse into the subRows
         groupedRows = groupedRows.map(rowGroup => {
           let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
@@ -356,7 +356,19 @@ export default {
     })
   },
   sortColumn (column, additive) {
-    const {sorting} = this.getResolvedState()
+    const {sorting, skipNextSort} = this.getResolvedState()
+
+    // we can't stop event propagation from the column resize move handlers
+    // attached to the document because of react's synthetic events
+    // so we have to prevent the sort function from actually sorting
+    // if we click on the column resize element within a header.
+    if (skipNextSort) {
+      this.setStateWithData({
+        skipNextSort: false
+      })
+      return
+    }
+
     const {onSortingChange} = this.props
     if (onSortingChange) {
       return onSortingChange(column, additive)
@@ -445,7 +457,7 @@ export default {
     const {onFilteringChange} = this.props
 
     if (onFilteringChange) {
-      return onFilteringChange(column, value)
+      return onFilteringChange(column, value, pivotColumn)
     }
 
     // Remove old filter first if it exists
@@ -473,6 +485,90 @@ export default {
       filtering: newFiltering
     }, () => {
       this.fireOnChange()
+    })
+  },
+  resizeColumnStart (column, event, isTouch) {
+    const {onResize} = this.props
+
+    if (onResize) {
+      return onResize(column, event, isTouch)
+    }
+
+    const parentWidth = event.target.parentElement.getBoundingClientRect().width
+
+    let pageX
+    if (isTouch) {
+      pageX = event.changedTouches[0].pageX
+    } else {
+      pageX = event.pageX
+    }
+
+    this.setStateWithData({
+      currentlyResizing: {
+        id: column.id,
+        startX: pageX,
+        parentWidth: parentWidth
+      }
+    }, () => {
+      if (isTouch) {
+        document.addEventListener('touchmove', this.resizeColumnMoving)
+        document.addEventListener('touchcancel', this.resizeColumnEnd)
+        document.addEventListener('touchend', this.resizeColumnEnd)
+      } else {
+        document.addEventListener('mousemove', this.resizeColumnMoving)
+        document.addEventListener('mouseup', this.resizeColumnEnd)
+        document.addEventListener('mouseleave', this.resizeColumnEnd)
+      }
+    })
+  },
+  resizeColumnEnd (event) {
+    let isTouch = event.type === 'touchend' || event.type === 'touchcancel'
+
+    if (isTouch) {
+      document.removeEventListener('touchmove', this.resizeColumnMoving)
+      document.removeEventListener('touchcancel', this.resizeColumnEnd)
+      document.removeEventListener('touchend', this.resizeColumnEnd)
+    }
+
+    // If its a touch event clear the mouse one's as well because sometimes
+    // the mouseDown event gets called as well, but the mouseUp event doesn't
+    document.removeEventListener('mousemove', this.resizeColumnMoving)
+    document.removeEventListener('mouseup', this.resizeColumnEnd)
+    document.removeEventListener('mouseleave', this.resizeColumnEnd)
+
+    // The touch events don't propagate up to the sorting's onMouseDown event so
+    // no need to prevent it from happening or else the first click after a touch
+    // event resize will not sort the column.
+    if (!isTouch) {
+      this.setStateWithData({
+        skipNextSort: true
+      })
+    }
+  },
+  resizeColumnMoving (event) {
+    const {resizing, currentlyResizing} = this.getResolvedState()
+
+    // Delete old value
+    const newResizing = resizing.filter(x => x.id !== currentlyResizing.id)
+
+    let pageX
+
+    if (event.type === 'touchmove') {
+      pageX = event.changedTouches[0].pageX
+    } else if (event.type === 'mousemove') {
+      pageX = event.pageX
+    }
+
+    // Set the min size to 10 to account for margin and border or else the group headers don't line up correctly
+    const newWidth = Math.max(currentlyResizing.parentWidth + pageX - currentlyResizing.startX, 11)
+
+    newResizing.push({
+      id: currentlyResizing.id,
+      value: newWidth
+    })
+
+    this.setStateWithData({
+      resizing: newResizing
     })
   }
 }

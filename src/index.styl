@@ -18,6 +18,11 @@ $expandSize = 7px
   .rt-thead
     display: flex
     flex-direction: column
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
     &.-headerGroups
       background: alpha(black, .03)
       border-bottom: 1px solid alpha(black, .05)
@@ -36,6 +41,9 @@ $expandSize = 7px
 
     .rt-th
     .rt-td
+      padding: 5px 5px
+      line-height: normal
+      position: relative
       border-right: 1px solid alpha(black, .05)
       transition box-shadow .3s $easeOutBack
       box-shadow:inset 0 0 0 0 transparent
@@ -47,6 +55,16 @@ $expandSize = 7px
         cursor: pointer
       &:last-child
         border-right: 0
+
+    .rt-resizable-header
+      overflow: visible
+      &:last-child
+        overflow: hidden
+
+    .rt-resizable-header-content
+      overflow: hidden
+      text-overflow: ellipsis
+
   .rt-tbody
     display: flex
     flex-direction: column
@@ -105,6 +123,17 @@ $expandSize = 7px
       cursor: pointer
     &.-open:after
         transform: translate(-50%, -50%) rotate(0deg)
+
+  .rt-resizer
+    display: inline-block
+    position: absolute
+    width: 36px
+    top: 0
+    bottom: 0
+    right: -18px
+    cursor: col-resize
+    z-index: 10
+
   .rt-tfoot
     display: flex
     flex-direction: column

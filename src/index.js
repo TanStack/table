@@ -39,18 +39,21 @@ export default React.createClass({
       getPaginationProps,
       getLoadingProps,
       getNoDataProps,
+      getResizerProps,
       showPagination,
       expanderColumnWidth,
       manual,
       loadingText,
       noDataText,
       showFilters,
+      resizable,
       // State
       loading,
       pageSize,
       page,
       sorting,
       filtering,
+      resizing,
       pages,
       // Pivoting State
       pivotValKey,
@@ -71,6 +74,7 @@ export default React.createClass({
       LoadingComponent,
       SubComponent,
       NoDataComponent,
+      ResizerComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -106,7 +110,10 @@ export default React.createClass({
     const canPrevious = page > 0
     const canNext = page + 1 < pages
 
-    const rowMinWidth = _.sum(allVisibleColumns.map(d => _.getFirstDefined(d.width, d.minWidth)))
+    const rowMinWidth = _.sum(allVisibleColumns.map(d => {
+      const resized = resizing.find(x => x.id === d.id) || {}
+      return _.getFirstDefined(resized.value, d.width, d.minWidth)
+    }))
 
     let rowIndex = -1
 
@@ -149,9 +156,18 @@ export default React.createClass({
     }
 
     const makeHeaderGroup = (column, i) => {
-      const flex = _.sum(column.columns.map(d => d.width ? 0 : d.minWidth))
-      const width = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.minWidth)))
-      const maxWidth = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.maxWidth)))
+      const flex = _.sum(column.columns.map(d => {
+        const resized = resizing.find(x => x.id === d.id) || {}
+        return d.width || resized.value ? 0 : d.minWidth
+      }))
+      const width = _.sum(column.columns.map(d => {
+        const resized = resizing.find(x => x.id === d.id) || {}
+        return _.getFirstDefined(resized.value, d.width, d.minWidth)
+      }))
+      const maxWidth = _.sum(column.columns.map(d => {
+        const resized = resizing.find(x => x.id === d.id) || {}
+        return _.getFirstDefined(resized.value, d.width, d.maxWidth)
+      }))
       const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -255,10 +271,11 @@ export default React.createClass({
     }
 
     const makeHeader = (column, i) => {
+      const resized = resizing.find(x => x.id === column.id) || {}
       const sort = sorting.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
-      const width = _.getFirstDefined(column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
       const theadThProps = _.splitProps(getTheadThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -279,6 +296,14 @@ export default React.createClass({
         ...columnHeaderProps.rest
       }
 
+      const resizer = resizable ? (
+        <ResizerComponent
+          onMouseDown={e => this.resizeColumnStart(column, e, false)}
+          onTouchStart={e => this.resizeColumnStart(column, e, true)}
+          {...resizerProps}
+        />
+      ) : null
+
       if (column.expander) {
         if (column.pivotColumns) {
           const pivotSort = sorting.find(d => d.id === column.id)
@@ -287,6 +312,7 @@ export default React.createClass({
               key={i}
               className={classnames(
                 'rt-pivot-header',
+                'rt-resizable-header',
                 column.sortable && '-cursor-pointer',
                 classes,
                 pivotSort ? (pivotSort.desc ? '-sort-desc' : '-sort-asc') : ''
@@ -302,19 +328,22 @@ export default React.createClass({
               }}
               {...rest}
             >
-              {column.pivotColumns.map((pivotColumn, i) => {
-                return (
-                  <span key={pivotColumn.id}>
-                    {_.normalizeComponent(pivotColumn.header, {
-                      data: sortedData,
-                      column: column
-                    })}
-                    {i < column.pivotColumns.length - 1 && (
-                      <ExpanderComponent />
-                    )}
-                  </span>
-                )
-              })}
+              <div className='rt-resizable-header-content'>
+                {column.pivotColumns.map((pivotColumn, i) => {
+                  return (
+                    <span key={pivotColumn.id}>
+                      {_.normalizeComponent(pivotColumn.header, {
+                        data: sortedData,
+                        column: column
+                      })}
+                      {i < column.pivotColumns.length - 1 && (
+                        <ExpanderComponent />
+                      )}
+                    </span>
+                  )
+                })}
+              </div>
+              {resizer}
             </ThComponent>
           )
         }
@@ -340,6 +369,7 @@ export default React.createClass({
           key={i}
           className={classnames(
             classes,
+            'rt-resizable-header',
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
             column.sortable && '-cursor-pointer',
             !show && '-hidden',
@@ -355,10 +385,13 @@ export default React.createClass({
           }}
           {...rest}
         >
-          {_.normalizeComponent(column.header, {
-            data: sortedData,
-            column: column
-          })}
+          <div className='rt-resizable-header-content'>
+            {_.normalizeComponent(column.header, {
+              data: sortedData,
+              column: column
+            })}
+          </div>
+          {resizer}
         </ThComponent>
       )
     }
@@ -387,8 +420,9 @@ export default React.createClass({
     }
 
     const makeFilter = (column, i) => {
-      const width = _.getFirstDefined(column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+      const resized = resizing.find(x => x.id === column.id) || {}
+      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
       const theadFilterThProps = _.splitProps(getTheadFilterThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -530,9 +564,10 @@ export default React.createClass({
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
+              const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tdProps = _.splitProps(getTdProps(finalState, rowInfo, column, this))
               const columnProps = _.splitProps(column.getProps(finalState, rowInfo, column, this))
 
@@ -681,9 +716,10 @@ export default React.createClass({
             style={trProps.style || {}}
           >
             {allVisibleColumns.map((column, i2) => {
+              const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tdProps = _.splitProps(getTdProps(finalState, undefined, column, this))
               const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
 
@@ -743,9 +779,10 @@ export default React.createClass({
             {...tFootTrProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
+              const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(column.width, column.maxWidth)
+              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
               const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
               const columnFooterProps = _.splitProps(column.getFooterProps(finalState, undefined, column, this))
@@ -841,6 +878,7 @@ export default React.createClass({
     const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
     const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
+    const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
     const makeTable = () => (
       <div
