@@ -569,8 +569,6 @@ export default {
 
     this.setStateWithData({
       resizing: newResizing
-    }, () => {
-      this.fireOnChange()
     })
   }
 }
