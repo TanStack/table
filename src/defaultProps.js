@@ -41,6 +41,7 @@ export default {
   onPageSizeChange: undefined,
   onSortingChange: undefined,
   onFilteringChange: undefined,
+  onResize: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -84,6 +85,7 @@ export default {
   getPaginationProps: emptyObj,
   getLoadingProps: emptyObj,
   getNoDataProps: emptyObj,
+  getResizerProps: emptyObj,
 
   // Global Column Defaults
   column: {
@@ -172,5 +174,6 @@ export default {
       </div>
     </div>
   ),
-  NoDataComponent: _.makeTemplateComponent('rt-noData')
+  NoDataComponent: _.makeTemplateComponent('rt-noData'),
+  ResizerComponent: _.makeTemplateComponent('rt-resizer')
 }

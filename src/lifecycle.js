@@ -14,7 +14,8 @@ export default {
       expandedRows: {},
       filtering: this.props.defaultFiltering,
       resizing: this.props.defaultResizing,
-      currentlyResizing: undefined
+      currentlyResizing: undefined,
+      skipNextSort: false
     }
   },
 

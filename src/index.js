@@ -39,6 +39,7 @@ export default React.createClass({
       getPaginationProps,
       getLoadingProps,
       getNoDataProps,
+      getResizerProps,
       showPagination,
       expanderColumnWidth,
       manual,
@@ -73,6 +74,7 @@ export default React.createClass({
       LoadingComponent,
       SubComponent,
       NoDataComponent,
+      ResizerComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -90,8 +92,6 @@ export default React.createClass({
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
     const hasColumnFooter = allVisibleColumns.some(d => d.footer)
-
-    const totalColumns = allVisibleColumns.length
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       rows.forEach((row, i) => {
@@ -168,8 +168,6 @@ export default React.createClass({
         const resized = resizing.find(x => x.id === d.id) || {}
         return _.getFirstDefined(resized.value, d.width, d.maxWidth)
       }))
-      // const width = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.minWidth)))
-      // const maxWidth = _.sum(column.columns.map(d => _.getFirstDefined(d.width, d.maxWidth)))
       const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -298,6 +296,14 @@ export default React.createClass({
         ...columnHeaderProps.rest
       }
 
+      const resizer = resizable ? (
+        <ResizerComponent
+          onMouseDown={e => this.resizeColumnStart(column, e, false)}
+          onTouchStart={e => this.resizeColumnStart(column, e, true)}
+          {...resizerProps}
+        />
+      ) : null
+
       if (column.expander) {
         if (column.pivotColumns) {
           const pivotSort = sorting.find(d => d.id === column.id)
@@ -306,6 +312,7 @@ export default React.createClass({
               key={i}
               className={classnames(
                 'rt-pivot-header',
+                'rt-resizable-header',
                 column.sortable && '-cursor-pointer',
                 classes,
                 pivotSort ? (pivotSort.desc ? '-sort-desc' : '-sort-asc') : ''
@@ -321,19 +328,22 @@ export default React.createClass({
               }}
               {...rest}
             >
-              {column.pivotColumns.map((pivotColumn, i) => {
-                return (
-                  <span key={pivotColumn.id}>
-                    {_.normalizeComponent(pivotColumn.header, {
-                      data: sortedData,
-                      column: column
-                    })}
-                    {i < column.pivotColumns.length - 1 && (
-                      <ExpanderComponent />
-                    )}
-                  </span>
-                )
-              })}
+              <div className='rt-resizable-header-content'>
+                {column.pivotColumns.map((pivotColumn, i) => {
+                  return (
+                    <span key={pivotColumn.id}>
+                      {_.normalizeComponent(pivotColumn.header, {
+                        data: sortedData,
+                        column: column
+                      })}
+                      {i < column.pivotColumns.length - 1 && (
+                        <ExpanderComponent />
+                      )}
+                    </span>
+                  )
+                })}
+              </div>
+              {resizer}
             </ThComponent>
           )
         }
@@ -359,6 +369,7 @@ export default React.createClass({
           key={i}
           className={classnames(
             classes,
+            'rt-resizable-header',
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
             column.sortable && '-cursor-pointer',
             !show && '-hidden',
@@ -367,33 +378,20 @@ export default React.createClass({
             ...styles,
             flex: `${width} 0 auto`,
             width: `${width}px`,
-            maxWidth: `${maxWidth}px`,
-            position: 'relative',
-            overflow: i !== totalColumns - 1 ? 'visible' : undefined
+            maxWidth: `${maxWidth}px`
           }}
           toggleSort={(e) => {
             column.sortable && this.sortColumn(column, e.shiftKey)
           }}
           {...rest}
         >
-          <div>
+          <div className='rt-resizable-header-content'>
             {_.normalizeComponent(column.header, {
               data: sortedData,
               column: column
             })}
           </div>
-          {resizable ? (
-            <div style={{
-              display: 'inline-block',
-              position: 'absolute',
-              width: 36,
-              top: 0,
-              bottom: 0,
-              right: -18,
-              cursor: 'col-resize',
-              zIndex: 10
-            }} onMouseDown={e => this.resizeColumnStart(column, e)} />
-          ) : null}
+          {resizer}
         </ThComponent>
       )
     }
@@ -880,6 +878,7 @@ export default React.createClass({
     const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
     const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
+    const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
     const makeTable = () => (
       <div
