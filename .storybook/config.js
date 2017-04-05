@@ -25,6 +25,7 @@ import CustomExpanderPosition from '../stories/CustomExpanderPosition.js'
 import NoDataText from '../stories/NoDataText.js'
 import Footers from '../stories/Footers.js'
 import Filtering from '../stories/Filtering.js'
+import ControlledTable from '../stories/ControlledTable.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -55,4 +56,5 @@ configure(() => {
     .add('Custom "No Data" Text', NoDataText)
     .add('Footers', Footers)
     .add('Custom Filtering', Filtering)
+    .add('Controlled Component', ControlledTable)
 }, module)
