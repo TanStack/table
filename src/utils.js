@@ -80,7 +80,7 @@ function orderBy (arr, funcs, dirs) {
     }
     return dirs[0]
       ? a.__index - b.__index
-      : b.__index - b.__index
+      : b.__index - a.__index
   })
 }
 
