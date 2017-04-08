@@ -161,6 +161,7 @@ const columns = [{
 
 return (
   <ReactTable
+    className='-striped -highlight'
     data={data}
     columns={columns}
     defaultPageSize={10}

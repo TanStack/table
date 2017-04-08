@@ -112,8 +112,6 @@ class ControlledTable extends React.Component {
   constructor() {
     super()
     this.sortChange = this.sortChange.bind(this)
-    this.pageChange = this.pageChange.bind(this)
-    this.pageSizeChange = this.pageSizeChange.bind(this)
     this.state = {
       sorting: [],
       page: 0,
