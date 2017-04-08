@@ -17,12 +17,17 @@ export default React.createClass({
     this.setState({page: nextProps.page})
   },
   getSafePage (page) {
+    if (isNaN(page)) {
+      page = this.props.page
+    }
     return Math.min(Math.max(page, 0), this.props.pages - 1)
   },
   changePage (page) {
     page = this.getSafePage(page)
     this.setState({page})
-    this.props.onPageChange(page)
+    if (this.props.page !== page) {
+      this.props.onPageChange(page)
+    }
   },
   applyPage (e) {
     e && e.preventDefault()
