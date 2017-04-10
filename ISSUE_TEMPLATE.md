@@ -8,8 +8,8 @@ include a detailed explanation of the problem here...
 2. to reproduce the issue
 
 ## System Information
-**Browser & Browser Version:**
-**Node Version:**
-**OS Version:**
-**NPM Version:**
-**Yarn Version:**
+* **Browser & Browser Version:**
+* **Node Version:**
+* **OS Version:**
+* **NPM Version:**
+* **Yarn Version:**
