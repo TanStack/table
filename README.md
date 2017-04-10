@@ -88,26 +88,26 @@ import 'react-table/react-table.css'
 
 ## Example
 ```javascript
-import ReactTable from 'react-table'
+import ReactTable from 'react-table';
 
 render() {
   const data = [{
     name: 'Tanner Linsley',
-    age: 26,
+    age: 26
     friend: {
       name: 'Jason Maurer',
-      age: 23,
+      age: 23
     }
   },{
     ...
-  }]
+  }];
 
   const columns = [{
     header: 'Name',
     accessor: 'name' // String-based value accessors!
   }, {
     header: 'Age',
-    accessor: 'age',
+    accessor: 'age'
     render: props => <span className='number'>{props.value}</span> // Custom cell components!
   }, {
     id: 'friendName', // Required because our accessor is not a string
@@ -504,7 +504,7 @@ You can utilize either of these prop callbacks on columns:
 const columns = [{
   getHeaderProps: () => (...),
   getProps: () => (...)
-}]
+}];
 ```
 
 In a similar fashion these can be used to dynamically style just about anything!
@@ -518,7 +518,7 @@ const columns = [{
       }
     }
   }
-}]
+}];
 ```
 
 ## Pivoting and Aggregation
@@ -546,7 +546,7 @@ const columns = [{
   header: 'Visits',
   accessor: 'visits',
   aggregate: (values, rows) => _.sum(values)
-}]
+}];
 ```
 
 Pivoted columns can be sorted just like regular columns, but not independently of each other.  For instance, if you click to sort the pivot column in ascending order, it will sort by each pivot recursively in ascending order together.
