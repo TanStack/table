@@ -93,7 +93,7 @@ import ReactTable from 'react-table';
 render() {
   const data = [{
     name: 'Tanner Linsley',
-    age: 26
+    age: 26,
     friend: {
       name: 'Jason Maurer',
       age: 23
@@ -107,7 +107,7 @@ render() {
     accessor: 'name' // String-based value accessors!
   }, {
     header: 'Age',
-    accessor: 'age'
+    accessor: 'age',
     render: props => <span className='number'>{props.value}</span> // Custom cell components!
   }, {
     id: 'friendName', // Required because our accessor is not a string
