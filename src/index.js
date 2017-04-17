@@ -87,25 +87,31 @@ export default React.createClass({
     // Pagination
     const startRow = pageSize * page
     const endRow = startRow + pageSize
-    const pageRows = manual ? resolvedData : sortedData.slice(startRow, endRow)
+    let pageRows = manual ? resolvedData : sortedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
     const hasColumnFooter = allVisibleColumns.some(d => d.footer)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
-      rows.forEach((row, i) => {
-        index++
-        row._viewIndex = index
-        const newPath = path.concat([i])
-        if (row[subRowsKey] && _.get(expandedRows, newPath)) {
-          index = recurseRowsViewIndex(row[subRowsKey], newPath, index)
-        }
-      })
-      return index
+      return [
+        rows.map((row, i) => {
+          index++
+          const rowWithViewIndex = {
+            ...row,
+            _viewIndex: index
+          }
+          const newPath = path.concat([i])
+          if (rowWithViewIndex[subRowsKey] && _.get(expandedRows, newPath)) {
+            [rowWithViewIndex[subRowsKey], index] = recurseRowsViewIndex(rowWithViewIndex[subRowsKey], newPath, index)
+          }
+          return rowWithViewIndex
+        }),
+        index
+      ]
     }
 
-    recurseRowsViewIndex(pageRows)
+    [pageRows] = recurseRowsViewIndex(pageRows)
 
     const canPrevious = page > 0
     const canNext = page + 1 < pages
