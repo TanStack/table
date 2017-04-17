@@ -260,7 +260,6 @@ $expandSize = 7px
 
   input
   select
-    appearance: none
     border: 1px solid rgba(0,0,0,0.1)
     background: white
     padding: 5px 7px
@@ -268,6 +267,10 @@ $expandSize = 7px
     border-radius: 3px
     font-weight: normal
     outline:none
+
+  input:not([type="checkbox"]):not([type="radio"])
+  select
+    appearance: none
 
   .select-wrap
     position:relative
