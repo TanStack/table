@@ -45,6 +45,7 @@ export default React.createClass({
       manual,
       loadingText,
       noDataText,
+      expanderHeaderText,
       showFilters,
       resizable,
       // State
@@ -366,7 +367,12 @@ export default React.createClass({
               width: `${expanderColumnWidth}px`
             }}
             {...rest}
-          />
+          >
+            {_.normalizeComponent(expanderHeaderText, {
+              data: sortedData,
+              column: column
+            })}
+          </ThComponent>
         )
       }
 

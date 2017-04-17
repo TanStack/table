@@ -125,6 +125,7 @@ export default {
   nextText: 'Next',
   loadingText: 'Loading...',
   noDataText: 'No rows found',
+  expanderHeaderText: '',
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
