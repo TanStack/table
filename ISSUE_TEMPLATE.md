@@ -1,10 +1,10 @@
 ## Problem Description
 include a detailed explanation of the problem here...
 
-## Code Snippet(s)
+## Code Snippet(s) or Codepen (http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010)
 
 ## Steps to Reproduce
-1. list the steps 
+1. list the steps
 2. to reproduce the issue
 
 ## System Information

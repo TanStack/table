@@ -38,7 +38,9 @@
 - Fully controllable via optional props and callbacks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
 
-## <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=0&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Demo</a>
+## Demos and examples
+- <a href="http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010" target="\_blank">Codepen</a>
+- <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=0&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Storybook</a>
 
 ## Table of Contents
 - [Installation](#installation)
@@ -640,7 +642,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
-  onFilteringChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option. 
+  onFilteringChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option.
   onResize={(column, event, isTouch) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
