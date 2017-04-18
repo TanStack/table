@@ -68,8 +68,6 @@
 ## Installation
 1. Install React Table as a dependency
 ```bash
-$ npm install react-table
-# or
 $ yarn add react-table
 ```
 2. Import the `react-table` module
@@ -79,12 +77,24 @@ import ReactTable from 'react-table'
 // ES5
 var ReactTable = require('react-table').default
 ```
-3. Import styles by including `react-table.css` anywhere on the page
+3. Import styles by including `react-table.css`
 ```javascript
 // JS (Webpack)
 import 'react-table/react-table.css'
-// html
+// Old-school
 <link rel="stylesheet" href="node_modules/react-table/react-table.css">
+```
+##### CDN
+```html
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/react-table@latest/react-table.css">
+
+  <!-- JS -->
+  <script src="https://unpkg.com/react-table@latest/react-table.js"></script>
+
+  <script>
+    var ReactTable = window.ReactTable.default
+  </script>
 ```
 
 
