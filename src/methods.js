@@ -1,6 +1,15 @@
 import _ from './utils'
 
-export default {
+export default Base => class extends Base {
+  getResolvedState (props, state) {
+    const resolvedState = {
+      ..._.compactObject(this.state),
+      ..._.compactObject(this.props),
+      ..._.compactObject(state),
+      ..._.compactObject(props)
+    }
+    return resolvedState
+  }
   getDataModel (newState) {
     const {
       columns,
@@ -220,7 +229,8 @@ export default {
       allDecoratedColumns,
       hasHeaderGroups
     }
-  },
+  }
+
   getSortedData (resolvedState) {
     const {
       manual,
@@ -236,16 +246,20 @@ export default {
     return {
       sortedData: manual ? resolvedData : this.sortData(this.filterData(resolvedData, showFilters, filtering, defaultFilterMethod, allVisibleColumns), sorting)
     }
-  },
+  }
+
   fireOnChange () {
     this.props.onChange(this.getResolvedState(), this)
-  },
+  }
+
   getPropOrState (key) {
     return _.getFirstDefined(this.props[key], this.state[key])
-  },
+  }
+
   getStateOrProp (key) {
     return _.getFirstDefined(this.state[key], this.props[key])
-  },
+  }
+
   filterData (data, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
     let filteredData = data
 
@@ -290,7 +304,8 @@ export default {
     }
 
     return filteredData
-  },
+  }
+
   sortData (data, sorting) {
     if (!sorting.length) {
       return data
@@ -314,11 +329,11 @@ export default {
         [this.props.subRowsKey]: this.sortData(row[this.props.subRowsKey], sorting)
       }
     })
-  },
+  }
 
   getMinRows () {
     return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
-  },
+  }
 
   // User actions
   onPageChange (page) {
@@ -335,7 +350,8 @@ export default {
       , () => {
         this.fireOnChange()
       })
-  },
+  }
+
   onPageSizeChange (newPageSize) {
     const {onPageSizeChange} = this.props
     const {pageSize, page} = this.getResolvedState()
@@ -354,7 +370,8 @@ export default {
     }, () => {
       this.fireOnChange()
     })
-  },
+  }
+
   sortColumn (column, additive) {
     const {sorting, skipNextSort} = this.getResolvedState()
 
@@ -451,7 +468,8 @@ export default {
     }, () => {
       this.fireOnChange()
     })
-  },
+  }
+
   filterColumn (column, value, pivotColumn) {
     const {filtering} = this.getResolvedState()
     const {onFilteringChange} = this.props
@@ -486,7 +504,8 @@ export default {
     }, () => {
       this.fireOnChange()
     })
-  },
+  }
+
   resizeColumnStart (column, event, isTouch) {
     const {onResize} = this.props
 
@@ -520,7 +539,8 @@ export default {
         document.addEventListener('mouseleave', this.resizeColumnEnd)
       }
     })
-  },
+  }
+
   resizeColumnEnd (event) {
     let isTouch = event.type === 'touchend' || event.type === 'touchcancel'
 
@@ -544,7 +564,8 @@ export default {
         skipNextSort: true
       })
     }
-  },
+  }
+
   resizeColumnMoving (event) {
     const {resizing, currentlyResizing} = this.getResolvedState()
 

@@ -1,17 +1,46 @@
-import React from 'react'
+import React, { Component } from 'react'
 import classnames from 'classnames'
 //
 import _ from './utils'
-import lifecycle from './lifecycle'
-import methods from './methods'
-import defaults from './defaultProps'
+import Lifecycle from './lifecycle'
+import Methods from './methods'
+import defaultProps from './defaultProps'
 
-export const ReactTableDefaults = defaults
+export const ReactTableDefaults = defaultProps
 
-export default React.createClass({
-  ...lifecycle,
-  ...methods,
+export default class ReactTable extends Methods(Lifecycle(Component)) {
+  static defaultProps = defaultProps
+  constructor (props) {
+    super()
 
+    this.getResolvedState = this.getResolvedState.bind(this)
+    this.getDataModel = this.getDataModel.bind(this)
+    this.getSortedData = this.getSortedData.bind(this)
+    this.fireOnChange = this.fireOnChange.bind(this)
+    this.getPropOrState = this.getPropOrState.bind(this)
+    this.getStateOrProp = this.getStateOrProp.bind(this)
+    this.filterData = this.filterData.bind(this)
+    this.sortData = this.sortData.bind(this)
+    this.getMinRows = this.getMinRows.bind(this)
+    this.onPageChange = this.onPageChange.bind(this)
+    this.onPageSizeChange = this.onPageSizeChange.bind(this)
+    this.sortColumn = this.sortColumn.bind(this)
+    this.filterColumn = this.filterColumn.bind(this)
+    this.resizeColumnStart = this.resizeColumnStart.bind(this)
+    this.resizeColumnEnd = this.resizeColumnEnd.bind(this)
+    this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
+
+    this.state = {
+      page: 0,
+      pageSize: props.defaultPageSize || 10,
+      sorting: props.defaultSorting,
+      expandedRows: {},
+      filtering: props.defaultFiltering,
+      resizing: props.defaultResizing,
+      currentlyResizing: undefined,
+      skipNextSort: false
+    }
+  }
   render () {
     const resolvedState = this.getResolvedState()
     const {
@@ -465,7 +494,7 @@ export default React.createClass({
                       filter,
                       onFilterChange: (value) => (this.filterColumn(column, value, col))
                     },
-                    defaults.column.filterRender
+                    defaultProps.column.filterRender
                   )
                 ) : null}
               </span>
@@ -535,7 +564,7 @@ export default React.createClass({
                 filter,
                 onFilterChange: (value) => (this.filterColumn(column, value))
               },
-              defaults.column.filterRender
+              defaultProps.column.filterRender
             )
           ) : null}
         </ThComponent>
@@ -951,4 +980,4 @@ export default React.createClass({
     // childProps are optionally passed to a function-as-a-child
     return children ? children(finalState, makeTable, this) : makeTable()
   }
-})
+}

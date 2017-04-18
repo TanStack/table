@@ -1,41 +1,12 @@
-import _ from './utils'
-import defaultProps from './defaultProps'
-
-export default {
-  getDefaultProps () {
-    return defaultProps
-  },
-
-  getInitialState () {
-    return {
-      page: 0,
-      pageSize: this.props.defaultPageSize || 10,
-      sorting: this.props.defaultSorting,
-      expandedRows: {},
-      filtering: this.props.defaultFiltering,
-      resizing: this.props.defaultResizing,
-      currentlyResizing: undefined,
-      skipNextSort: false
-    }
-  },
-
-  getResolvedState (props, state) {
-    const resolvedState = {
-      ..._.compactObject(this.state),
-      ..._.compactObject(this.props),
-      ..._.compactObject(state),
-      ..._.compactObject(props)
-    }
-    return resolvedState
-  },
+export default Base => class extends Base {
 
   componentWillMount () {
     this.setStateWithData(this.getDataModel(this.getResolvedState()))
-  },
+  }
 
   componentDidMount () {
     this.fireOnChange()
-  },
+  }
 
   componentWillReceiveProps (nextProps, nextState) {
     const oldState = this.getResolvedState()
@@ -61,7 +32,7 @@ export default {
     ) {
       this.setStateWithData(this.getDataModel(newState))
     }
-  },
+  }
 
   setStateWithData (newState, cb) {
     const oldState = this.getResolvedState()
