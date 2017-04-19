@@ -10,6 +10,7 @@ export default Base => class extends Base {
     }
     return resolvedState
   }
+
   getDataModel (newState) {
     const {
       columns,
@@ -275,6 +276,11 @@ export default Base => class extends Base {
                 column = parentColumn.pivotColumns.find(x => x.id === nextFilter.pivotId)
               } else {
                 column = allVisibleColumns.find(x => x.id === nextFilter.id)
+              }
+
+              // Only filter columns that are visible
+              if (!column) {
+                return true
               }
 
               const filterMethod = column.filterMethod || defaultFilterMethod
