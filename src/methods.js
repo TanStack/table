@@ -65,10 +65,7 @@ export default Base => class extends Base {
         dcol = {
           ...this.props.column,
           ...this.props.expanderDefaults,
-          render: ({isExpanded, ...rest}) => {
-            const Expander = this.props.ExpanderComponent
-            return <Expander isExpanded={isExpanded} />
-          },
+          render: this.props.ExpanderComponent,
           ...column
         }
       } else {

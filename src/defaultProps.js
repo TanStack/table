@@ -156,12 +156,11 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  ExpanderComponent: ({isExpanded, ...rest}) => {
+  ExpanderComponent: ({isExpanded}) => {
     return (
-      <div
-        className={classnames('rt-expander', isExpanded && '-open')}
-        {...rest}
-      >&bull;</div>
+      <div className={classnames('rt-expander', isExpanded && '-open')}>
+        &bull;
+      </div>
     )
   },
   PaginationComponent: Pagination,
