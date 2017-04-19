@@ -263,7 +263,8 @@ These are all of the available props (and their default values) for the main `<R
   previousText: 'Previous',
   nextText: 'Next',
   loadingText: 'Loading...',
-  noDataText: 'No rows found',  
+  noDataText: 'No rows found',  // Supports functions / JSX ( noDataText={()=><span>Oh Noes!</span>} )
+  expanderHeaderText: '', // Supports functions / JSX ( expanderHeaderText={()=><div>More Info</div>} )
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',

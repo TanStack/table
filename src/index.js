@@ -74,6 +74,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       manual,
       loadingText,
       noDataText,
+      expanderHeaderText,
       showFilters,
       resizable,
       // State
@@ -395,7 +396,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               width: `${expanderColumnWidth}px`
             }}
             {...rest}
-          />
+          >
+            {_.normalizeComponent(expanderHeaderText, {
+              data: sortedData,
+              column: column
+            })}
+          </ThComponent>
         )
       }
 
