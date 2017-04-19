@@ -1,3 +1,4 @@
+import React from 'react'
 import _ from './utils'
 
 export default Base => class extends Base {
@@ -10,6 +11,7 @@ export default Base => class extends Base {
     }
     return resolvedState
   }
+
   getDataModel (newState) {
     const {
       columns,
@@ -18,7 +20,6 @@ export default Base => class extends Base {
       pivotIDKey,
       pivotValKey,
       subRowsKey,
-      expanderColumnWidth,
       SubComponent
     } = newState
 
@@ -59,14 +60,22 @@ export default Base => class extends Base {
     }
 
     const makeDecoratedColumn = (column) => {
-      const dcol = {
-        ...this.props.column,
-        ...column
-      }
-
-      if (dcol.expander) {
-        dcol.width = expanderColumnWidth
-        return dcol
+      let dcol
+      if (column.expander) {
+        dcol = {
+          ...this.props.column,
+          ...this.props.expanderDefaults,
+          render: ({isExpanded, ...rest}) => {
+            const Expander = this.props.ExpanderComponent
+            return <Expander isExpanded={isExpanded} />
+          },
+          ...column
+        }
+      } else {
+        dcol = {
+          ...this.props.column,
+          ...column
+        }
       }
 
       if (typeof dcol.accessor === 'string') {

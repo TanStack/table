@@ -15,7 +15,6 @@ export default {
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
   showPageJump: true,
-  expanderColumnWidth: 35,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
   collapseOnDataChange: true,
@@ -118,6 +117,13 @@ export default {
         onChange={(event) => onFilterChange(event.target.value)}
       />
     )
+  },
+
+  expanderDefaults: {
+    sortable: false,
+    width: 35,
+    hideFilter: true
+    // render: will be overriden in methods.js to display ExpanderComponent
   },
 
   // Text

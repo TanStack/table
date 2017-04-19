@@ -10,6 +10,7 @@ export const ReactTableDefaults = defaultProps
 
 export default class ReactTable extends Methods(Lifecycle(Component)) {
   static defaultProps = defaultProps
+
   constructor (props) {
     super()
 
@@ -41,6 +42,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       skipNextSort: false
     }
   }
+
   render () {
     const resolvedState = this.getResolvedState()
     const {
@@ -70,7 +72,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       getNoDataProps,
       getResizerProps,
       showPagination,
-      expanderColumnWidth,
       manual,
       loadingText,
       noDataText,
@@ -246,22 +247,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             />
           )
         }
-        return (
-          <ThComponent
-            key={i}
-            className={classnames(
-              'rt-expander-header',
-              classes
-            )}
-            style={{
-              ...styles,
-              flex: `0 0 auto`,
-              width: `${expanderColumnWidth}px`
-            }}
-            {...rest}
-          />
-        )
       }
+
       return (
         <ThComponent
           key={i}
@@ -274,7 +261,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          {_.normalizeComponent(column.header, {
+          {_.normalizeComponent(column.expander ? '' : column.header, {
             data: sortedData,
             column: column
           })}
@@ -382,21 +369,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             </ThComponent>
           )
         }
-        return (
-          <ThComponent
-            key={i}
-            className={classnames(
-              'rt-expander-header',
-              classes
-            )}
-            style={{
-              ...styles,
-              flex: `0 0 auto`,
-              width: `${expanderColumnWidth}px`
-            }}
-            {...rest}
-          />
-        )
       }
 
       return (
@@ -524,21 +496,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             </ThComponent>
           )
         }
-        return (
-          <ThComponent
-            key={i}
-            className={classnames(
-              'rt-expander-header',
-              classes
-            )}
-            style={{
-              ...styles,
-              flex: `0 0 auto`,
-              width: `${expanderColumnWidth}px`
-            }}
-            {...rest}
-          />
-        )
       }
 
       const filter = filtering.find(filter => filter.id === column.id)
@@ -618,6 +575,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 ...columnProps.style
               }
 
+              const extraProps = {}
+
               if (column.expander) {
                 const onTdClick = (e) => {
                   if (onExpandRow) {
@@ -633,6 +592,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     expandedRows: _.set(newExpandedRows, rowInfo.nestingPath, {})
                   })
                 }
+
+                extraProps['onClick'] = onTdClick
 
                 if (column.pivotColumns) {
                   // Return the pivot expander cell
@@ -676,29 +637,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     </TdComponent>
                   )
                 }
-
-                // Return the regular expander cell
-                return (
-                  <TdComponent
-                    key={i2}
-                    className={classnames(
-                      classes,
-                      {hidden: !show}
-                    )}
-                    style={{
-                      ...styles,
-                      flex: `0 0 auto`,
-                      width: `${expanderColumnWidth}px`
-                    }}
-                    onClick={onTdClick}
-                  >
-                    <span>
-                      <ExpanderComponent
-                        isExpanded={isExpanded}
-                      />
-                    </span>
-                  </TdComponent>
-                )
               }
 
               // Return regular cell
@@ -716,10 +654,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     maxWidth: `${maxWidth}px`
                   }}
                   {...tdProps.rest}
+                  {...extraProps}
                 >
                   {_.normalizeComponent(column.render, {
                     ...rowInfo,
-                    value: rowInfo.rowValues[column.id]
+                    value: rowInfo.rowValues[column.id],
+                    isExpanded
                   }, rowInfo.rowValues[column.id])}
                 </TdComponent>
               )
@@ -859,22 +799,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     </TdComponent>
                   )
                 }
-
-                // Return the regular expander cell
-                return (
-                  <TdComponent
-                    key={i2}
-                    className={classnames(
-                      classes,
-                      {hidden: !show}
-                    )}
-                    style={{
-                      ...styles,
-                      flex: `0 0 auto`,
-                      width: `${expanderColumnWidth}px`
-                    }}
-                  />
-                )
               }
 
               // Return regular cell
