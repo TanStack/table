@@ -44,7 +44,7 @@ export default Base => class extends Base {
       currentSpan = []
     }
 
-    let columnsWithExpanderAndPivot = [...columns]
+    let columnsWithExpander = [...columns]
 
     let expanderColumn = columns.find(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
     // The actual expander might be in the columns field of a group column
@@ -55,7 +55,7 @@ export default Base => class extends Base {
     // If it has subrows or pivot columns we need to make sure we have an expander column
     if ((SubComponent || pivotBy.length) && !expanderColumn) {
       expanderColumn = {expander: true}
-      columnsWithExpanderAndPivot = [expanderColumn, ...columnsWithExpanderAndPivot]
+      columnsWithExpander = [expanderColumn, ...columnsWithExpander]
     }
 
     const makeDecoratedColumn = (column) => {
@@ -64,6 +64,7 @@ export default Base => class extends Base {
         dcol = {
           ...this.props.column,
           render: this.props.ExpanderComponent,
+          filterRender: this.props.ExpanderComponent,
           ...this.props.pivotDefaults,
           ...column
         }
@@ -112,7 +113,7 @@ export default Base => class extends Base {
       return decoratedColumn
     }
     let allDecoratedColumns = []
-    const decoratedColumns = columnsWithExpanderAndPivot.map((column, i) => {
+    const decoratedColumns = columnsWithExpander.map((column, i) => {
       if (column.columns) {
         return {
           ...column,
