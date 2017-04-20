@@ -15,7 +15,6 @@ export default {
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
   showPageJump: true,
-  expanderColumnWidth: 35,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
   collapseOnDataChange: true,
@@ -120,6 +119,19 @@ export default {
     )
   },
 
+  // Global Expander Column Defaults
+  expanderDefaults: {
+    sortable: false,
+    width: 35,
+    hideFilter: true
+    // render: will be overriden in methods.js to display ExpanderComponent
+  },
+
+  // Global Pivot Column Defaults
+  pivotDefaults: {
+    // render: will be overriden in methods.js to display ExpanderComponent
+  },
+
   // Text
   previousText: 'Previous',
   nextText: 'Next',
@@ -150,12 +162,11 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  ExpanderComponent: ({isExpanded, ...rest}) => {
+  ExpanderComponent: ({isExpanded}) => {
     return (
-      <div
-        className={classnames('rt-expander', isExpanded && '-open')}
-        {...rest}
-      >&bull;</div>
+      <div className={classnames('rt-expander', isExpanded && '-open')}>
+        &bull;
+      </div>
     )
   },
   PaginationComponent: Pagination,

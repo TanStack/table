@@ -10,6 +10,7 @@ export const ReactTableDefaults = defaultProps
 
 export default class ReactTable extends Methods(Lifecycle(Component)) {
   static defaultProps = defaultProps
+
   constructor (props) {
     super()
 
@@ -41,6 +42,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       skipNextSort: false
     }
   }
+
   render () {
     const resolvedState = this.getResolvedState()
     const {
@@ -70,7 +72,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       getNoDataProps,
       getResizerProps,
       showPagination,
-      expanderColumnWidth,
       manual,
       loadingText,
       noDataText,
@@ -98,7 +99,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       ThComponent,
       TdComponent,
       TfootComponent,
-      ExpanderComponent,
       PaginationComponent,
       LoadingComponent,
       SubComponent,
@@ -229,39 +229,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         maxWidth: `${maxWidth}px`
       }
 
-      if (column.expander) {
-        if (column.pivotColumns) {
-          return (
-            <ThComponent
-              key={i}
-              className={classnames(
-                'rt-pivot-header',
-                classes
-              )}
-              style={{
-                ...styles,
-                ...flexStyles
-              }}
-              {...rest}
-            />
-          )
-        }
-        return (
-          <ThComponent
-            key={i}
-            className={classnames(
-              'rt-expander-header',
-              classes
-            )}
-            style={{
-              ...styles,
-              flex: `0 0 auto`,
-              width: `${expanderColumnWidth}px`
-            }}
-            {...rest}
-          />
-        )
-      }
       return (
         <ThComponent
           key={i}
@@ -372,7 +339,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                         column: column
                       })}
                       {i < column.pivotColumns.length - 1 && (
-                        <ExpanderComponent />
+                        _.normalizeComponent(column.render, {
+                          data: sortedData,
+                          column: column
+                        })
                       )}
                     </span>
                   )
@@ -382,21 +352,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             </ThComponent>
           )
         }
-        return (
-          <ThComponent
-            key={i}
-            className={classnames(
-              'rt-expander-header',
-              classes
-            )}
-            style={{
-              ...styles,
-              flex: `0 0 auto`,
-              width: `${expanderColumnWidth}px`
-            }}
-            {...rest}
-          />
-        )
       }
 
       return (
@@ -500,7 +455,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               </span>
             )
             if (i < column.pivotColumns.length - 1) {
-              pivotCols.push(<ExpanderComponent key={col.id + '-' + i} />)
+              pivotCols.push(
+                _.normalizeComponent(column.filterRender,
+                  {
+                    column,
+                    filter,
+                    key: col.id + '-' + i
+                  },
+                  defaultProps.column.filterRender
+                ))
             }
           }
           return (
@@ -524,21 +487,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             </ThComponent>
           )
         }
-        return (
-          <ThComponent
-            key={i}
-            className={classnames(
-              'rt-expander-header',
-              classes
-            )}
-            style={{
-              ...styles,
-              flex: `0 0 auto`,
-              width: `${expanderColumnWidth}px`
-            }}
-            {...rest}
-          />
-        )
       }
 
       const filter = filtering.find(filter => filter.id === column.id)
@@ -618,6 +566,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 ...columnProps.style
               }
 
+              const extraProps = {}
+
               if (column.expander) {
                 const onTdClick = (e) => {
                   if (onExpandRow) {
@@ -633,6 +583,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     expandedRows: _.set(newExpandedRows, rowInfo.nestingPath, {})
                   })
                 }
+
+                extraProps['onClick'] = onTdClick
 
                 if (column.pivotColumns) {
                   // Return the pivot expander cell
@@ -656,9 +608,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     >
                       {rowInfo.subRows ? (
                         <span>
-                          <ExpanderComponent
-                            isExpanded={isExpanded}
-                          />
+                          {_.normalizeComponent(column.render, {
+                            ...rowInfo,
+                            value: rowInfo.rowValues[column.id],
+                            isExpanded
+                          }, rowInfo.rowValues[column.id])}
                           {column && column.pivotRender ? (
                             <PivotCell
                               {...rowInfo}
@@ -668,37 +622,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                         </span>
                       ) : SubComponent ? (
                         <span>
-                          <ExpanderComponent
-                            isExpanded={isExpanded}
-                          />
+                          {_.normalizeComponent(column.render, {
+                            ...rowInfo,
+                            value: rowInfo.rowValues[column.id],
+                            isExpanded
+                          }, rowInfo.rowValues[column.id])}
                         </span>
                       ) : null}
                     </TdComponent>
                   )
                 }
-
-                // Return the regular expander cell
-                return (
-                  <TdComponent
-                    key={i2}
-                    className={classnames(
-                      classes,
-                      {hidden: !show}
-                    )}
-                    style={{
-                      ...styles,
-                      flex: `0 0 auto`,
-                      width: `${expanderColumnWidth}px`
-                    }}
-                    onClick={onTdClick}
-                  >
-                    <span>
-                      <ExpanderComponent
-                        isExpanded={isExpanded}
-                      />
-                    </span>
-                  </TdComponent>
-                )
               }
 
               // Return regular cell
@@ -716,10 +649,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     maxWidth: `${maxWidth}px`
                   }}
                   {...tdProps.rest}
+                  {...extraProps}
                 >
                   {_.normalizeComponent(column.render, {
                     ...rowInfo,
-                    value: rowInfo.rowValues[column.id]
+                    value: rowInfo.rowValues[column.id],
+                    isExpanded
                   }, rowInfo.rowValues[column.id])}
                 </TdComponent>
               )
@@ -859,22 +794,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     </TdComponent>
                   )
                 }
-
-                // Return the regular expander cell
-                return (
-                  <TdComponent
-                    key={i2}
-                    className={classnames(
-                      classes,
-                      {hidden: !show}
-                    )}
-                    style={{
-                      ...styles,
-                      flex: `0 0 auto`,
-                      width: `${expanderColumnWidth}px`
-                    }}
-                  />
-                )
               }
 
               // Return regular cell

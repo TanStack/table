@@ -8,8 +8,8 @@ import ReactTable from '../src/index'
 export default () => {
   const data = _.map(_.range(5553), d => {
     return {
-      firstName: namor.generate({ words: 1, numLen: 0 }),
-      lastName: namor.generate({ words: 1, numLen: 0 }),
+      firstName: namor.generate({words: 1, numLen: 0}),
+      lastName: namor.generate({words: 1, numLen: 0}),
       age: Math.floor(Math.random() * 30)
     }
   })
@@ -19,26 +19,33 @@ export default () => {
     columns: [{
       header: 'First Name',
       accessor: 'firstName',
-      render: row => {
-        return <span>{row.aggregated ? '...' : row.value}</span>
-      }
+      footer: () => <div style={{textAlign: 'center'}}>First Name</div>
     }, {
       header: 'Last Name',
-      id: 'lastName',
-      accessor: d => d.lastName
+      accessor: 'lastName',
+      footer: () => <div style={{textAlign: 'center'}}>Last Name</div>
     }]
   }, {
     header: 'Info',
     columns: [{
       header: 'Age',
       accessor: 'age',
-      aggregate: vals => _.round(_.mean(vals)),
-      render: row => {
-        return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
-      }
+      footer: () => <div style={{textAlign: 'center'}}>Age</div>
     }]
   }, {
-    expander: true
+    header: 'Expand',
+    columns: [{
+      expander: true,
+      header: () => (<strong>More</strong>),
+      width: 65,
+      render: ({isExpanded, ...rest}) => (
+        <div>
+          {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
+        </div>
+      ),
+      style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
+      footer: () => <span>&hearts;</span>
+    }]
   }]
 
   return (
@@ -71,26 +78,33 @@ const columns = [{
   columns: [{
     header: 'First Name',
     accessor: 'firstName',
-    render: row => {
-      return <span>{row.aggregated ? '...' : row.value}</span>
-    }
+    footer: () => <div style={{textAlign: 'center'}}>First Name</div>
   }, {
     header: 'Last Name',
-    id: 'lastName',
-    accessor: d => d.lastName
+    accessor: 'lastName',
+    footer: () => <div style={{textAlign: 'center'}}>Last Name</div>
   }]
 }, {
   header: 'Info',
   columns: [{
     header: 'Age',
     accessor: 'age',
-    aggregate: vals => _.round(_.mean(vals)),
-    render: row => {
-      return <span>{row.aggregated ? \`$\{row.value} (avg)\` : row.value}</span>
-    }
+    footer: () => <div style={{textAlign: 'center'}}>Age</div>
   }]
 }, {
-  expander: true
+  header: 'Expand',
+  columns: [{
+    expander: true,
+    header: () => (<strong>More</strong>),
+    width: 65,
+    render: ({isExpanded, ...rest}) => (
+      <div>
+        {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
+      </div>
+    ),
+    style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
+    footer: () => <span>&hearts;</span>
+  }]
 }]
 
 return (

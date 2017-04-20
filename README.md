@@ -153,7 +153,6 @@ These are all of the available props (and their default values) for the main `<R
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
   showPageJump: true,
-  expanderColumnWidth: 35,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
   collapseOnDataChange: true,
@@ -258,6 +257,19 @@ These are all of the available props (and their default values) for the main `<R
       />
     )
   },
+  
+  // Global Expander Column Defaults
+  expanderDefaults: {
+    sortable: false,
+    width: 35,
+    hideFilter: true
+    // render: will be overriden in methods.js to display ExpanderComponent
+  },
+
+  // Global Pivot Column Defaults
+  pivotDefaults: {
+    // render: will be overriden in methods.js to display ExpanderComponent
+  },
 
   // Text
   previousText: 'Previous',
@@ -307,8 +319,13 @@ Or just define them as props
   maxWidth: undefined, // A maximum width for this column.
 
   // Special
-  expander: false, // This option will override all data-related options and designates the column to be used
-  // for pivoting and sub-component expansion
+  // Turns this column into a special column for specifying expander and pivot column options.
+  // If this option is true and there is NOT a pivot column, the `expanderDefaults` options will be applied on top of the column options.
+  // If this option is true and there IS a pivot column, the `pivotDefaults` options will be applied on top of the column options.
+  // Adding a column with the `expander` option set will allow you to rearrange expander and pivot column orderings in the table.
+  // It will also let you specify rendering of the header (and header group if this special column is placed in the `columns` option of another column) and
+  // the rendering of the expander itself.
+  expander: false, 
 
   // Cell Options
   className: '', // Set the classname of the `td` element of the column

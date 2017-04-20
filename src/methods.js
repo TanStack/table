@@ -10,6 +10,7 @@ export default Base => class extends Base {
     }
     return resolvedState
   }
+
   getDataModel (newState) {
     const {
       columns,
@@ -18,7 +19,6 @@ export default Base => class extends Base {
       pivotIDKey,
       pivotValKey,
       subRowsKey,
-      expanderColumnWidth,
       SubComponent
     } = newState
 
@@ -44,29 +44,42 @@ export default Base => class extends Base {
       currentSpan = []
     }
 
-    const noSubExpanderColumns = columns.map(col => {
-      return {
-        ...col,
-        columns: col.columns ? col.columns.filter(d => !d.expander) : undefined
-      }
-    })
+    let columnsWithExpander = [...columns]
 
-    let expanderColumnIndex = columns.findIndex(col => col.expander)
-    const needsExpander = (SubComponent || pivotBy.length) && expanderColumnIndex === -1
-    const columnsWithExpander = needsExpander ? [{expander: true}, ...noSubExpanderColumns] : noSubExpanderColumns
-    if (needsExpander) {
-      expanderColumnIndex = 0
+    let expanderColumn = columns.find(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
+    // The actual expander might be in the columns field of a group column
+    if (expanderColumn && !expanderColumn.expander) {
+      expanderColumn = expanderColumn.columns.find(col => col.expander)
+    }
+
+    // If it has subrows or pivot columns we need to make sure we have an expander column
+    if ((SubComponent || pivotBy.length) && !expanderColumn) {
+      expanderColumn = {expander: true}
+      columnsWithExpander = [expanderColumn, ...columnsWithExpander]
     }
 
     const makeDecoratedColumn = (column) => {
-      const dcol = {
-        ...this.props.column,
-        ...column
-      }
-
-      if (dcol.expander) {
-        dcol.width = expanderColumnWidth
-        return dcol
+      let dcol
+      if (pivotBy.length && column.expander) {
+        dcol = {
+          ...this.props.column,
+          render: this.props.ExpanderComponent,
+          filterRender: this.props.ExpanderComponent,
+          ...this.props.pivotDefaults,
+          ...column
+        }
+      } else if (column.expander) {
+        dcol = {
+          ...this.props.column,
+          render: this.props.ExpanderComponent,
+          ...this.props.expanderDefaults,
+          ...column
+        }
+      } else {
+        dcol = {
+          ...this.props.column,
+          ...column
+        }
       }
 
       if (typeof dcol.accessor === 'string') {
@@ -138,12 +151,24 @@ export default Base => class extends Base {
           pivotColumns.push(allDecoratedColumns[i])
         }
       }
-      const pivotColumn = {
-        ...pivotColumns[0],
-        pivotColumns,
-        expander: true
+
+      const pivotExpanderColumn = visibleColumns.findIndex(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
+      if (pivotExpanderColumn >= 0) {
+        const pivotColumn = {
+          ...visibleColumns[pivotExpanderColumn],
+          pivotColumns
+        }
+        visibleColumns[pivotExpanderColumn] = pivotColumn
+      } else {
+        // If the expander column wasn't on the top level column, find it in the `columns` option.
+        const pivotExpanderSubColumn = visibleColumns[pivotExpanderColumn].columns.findIndex(col => col.expander)
+        const pivotColumn = {
+          ...visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn],
+          pivotColumns
+        }
+        // Add the pivot columns to the expander column
+        visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn] = pivotColumn
       }
-      visibleColumns[expanderColumnIndex] = pivotColumn
     }
 
     // Build flast list of allVisibleColumns and HeaderGroups
@@ -185,8 +210,7 @@ export default Base => class extends Base {
       })
       return aggregationValues
     }
-    let standardColumns = pivotBy.length ? allVisibleColumns.slice(1) : allVisibleColumns
-    const aggregatingColumns = standardColumns.filter(d => d.aggregate)
+    const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)
     let pivotColumn
     if (pivotBy.length) {
       pivotColumn = allVisibleColumns[0]
