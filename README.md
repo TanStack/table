@@ -501,7 +501,7 @@ You can use these callbacks for dynamic styling as well!
   getTrProps={(state, rowInfo, column) => {
     return {
       style: {
-        background: rowInfo.age > 20 ? 'green' : 'red'
+        background: rowInfo.row.age > 20 ? 'green' : 'red'
       }
     }
   }}
