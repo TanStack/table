@@ -526,7 +526,7 @@ const columns = [{
   getProps: (state, rowInfo, column) => {
     return {
       style: {
-        background: rowInfo.name === 'Santa Clause' ? 'red' : null
+        background: rowInfo.row.name === 'Santa Clause' ? 'red' : null
       }
     }
   }
