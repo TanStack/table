@@ -308,7 +308,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       if (column.expander) {
         if (column.pivotColumns) {
-          const pivotSort = sorting.find(d => d.id === column.id)
+          const pivotSort = sorting.find(d => d.id === column.pivotColumns[0].id)
           return (
             <ThComponent
               key={i}
