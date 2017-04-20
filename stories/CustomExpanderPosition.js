@@ -33,16 +33,19 @@ export default () => {
       footer: () => <div style={{textAlign: 'center'}}>Age</div>
     }]
   }, {
-    expander: true,
-    header: () => (<strong>More</strong>),
-    width: 65,
-    render: ({isExpanded, ...rest}) => (
-      <div>
-        {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
-      </div>
-    ),
-    style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
-    footer: () => <span>&hearts;</span>
+    header: 'Expand',
+    columns: [{
+      expander: true,
+      header: () => (<strong>More</strong>),
+      width: 65,
+      render: ({isExpanded, ...rest}) => (
+        <div>
+          {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
+        </div>
+      ),
+      style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
+      footer: () => <span>&hearts;</span>
+    }]
   }]
 
   return (
@@ -89,16 +92,19 @@ const columns = [{
     footer: () => <div style={{textAlign: 'center'}}>Age</div>
   }]
 }, {
-  expander: true,
-  header: () => (<strong>More</strong>),
-  width: 65,
-  render: ({isExpanded, ...rest}) => (
-    <div>
-      {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
-    </div>
-  ),
-  style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
-  footer: () => <span>&hearts;</span>
+  header: 'Expand',
+  columns: [{
+    expander: true,
+    header: () => (<strong>More</strong>),
+    width: 65,
+    render: ({isExpanded, ...rest}) => (
+      <div>
+        {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
+      </div>
+    ),
+    style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
+    footer: () => <span>&hearts;</span>
+  }]
 }]
 
 return (

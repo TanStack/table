@@ -119,10 +119,16 @@ export default {
     )
   },
 
+  // Global Expander Column Defaults
   expanderDefaults: {
     sortable: false,
     width: 35,
     hideFilter: true
+    // render: will be overriden in methods.js to display ExpanderComponent
+  },
+
+  // Global Pivot Column Defaults
+  pivotDefaults: {
     // render: will be overriden in methods.js to display ExpanderComponent
   },
 

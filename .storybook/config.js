@@ -26,6 +26,7 @@ import NoDataText from '../stories/NoDataText.js'
 import Footers from '../stories/Footers.js'
 import Filtering from '../stories/Filtering.js'
 import ControlledTable from '../stories/ControlledTable.js'
+import PivotingOptions from '../stories/PivotingOptions.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -51,6 +52,7 @@ configure(() => {
     .add('Pivoting & Aggregation', Pivoting)
     .add('Pivoting & Aggregation w/ Sub Components', PivotingSubComponents)
     .add('100k Rows w/ Pivoting & Sub Components', OneHundredKRows)
+    .add('Pivoting Options', PivotingOptions)
     .add('Functional Rendering', FunctionalRendering)
     .add('Custom Expander Position', CustomExpanderPosition)
     .add('Custom "No Data" Text', NoDataText)

@@ -99,7 +99,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       ThComponent,
       TdComponent,
       TfootComponent,
-      ExpanderComponent,
       PaginationComponent,
       LoadingComponent,
       SubComponent,
@@ -230,25 +229,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         maxWidth: `${maxWidth}px`
       }
 
-      if (column.expander) {
-        if (column.pivotColumns) {
-          return (
-            <ThComponent
-              key={i}
-              className={classnames(
-                'rt-pivot-header',
-                classes
-              )}
-              style={{
-                ...styles,
-                ...flexStyles
-              }}
-              {...rest}
-            />
-          )
-        }
-      }
-
       return (
         <ThComponent
           key={i}
@@ -261,7 +241,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          {_.normalizeComponent(column.expander ? '' : column.header, {
+          {_.normalizeComponent(column.header, {
             data: sortedData,
             column: column
           })}
@@ -359,7 +339,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                         column: column
                       })}
                       {i < column.pivotColumns.length - 1 && (
-                        <ExpanderComponent />
+                        _.normalizeComponent(column.render, {
+                          data: sortedData,
+                          column: column
+                        })
                       )}
                     </span>
                   )
@@ -472,7 +455,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               </span>
             )
             if (i < column.pivotColumns.length - 1) {
-              pivotCols.push(<ExpanderComponent key={col.id + '-' + i} />)
+              pivotCols.push(
+                _.normalizeComponent(column.filterRender,
+                  {
+                    column,
+                    filter,
+                    key: col.id + '-' + i
+                  },
+                  defaultProps.column.filterRender
+                ))
             }
           }
           return (
@@ -617,9 +608,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     >
                       {rowInfo.subRows ? (
                         <span>
-                          <ExpanderComponent
-                            isExpanded={isExpanded}
-                          />
+                          {_.normalizeComponent(column.render, {
+                            ...rowInfo,
+                            value: rowInfo.rowValues[column.id],
+                            isExpanded
+                          }, rowInfo.rowValues[column.id])}
                           {column && column.pivotRender ? (
                             <PivotCell
                               {...rowInfo}
@@ -629,9 +622,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                         </span>
                       ) : SubComponent ? (
                         <span>
-                          <ExpanderComponent
-                            isExpanded={isExpanded}
-                          />
+                          {_.normalizeComponent(column.render, {
+                            ...rowInfo,
+                            value: rowInfo.rowValues[column.id],
+                            isExpanded
+                          }, rowInfo.rowValues[column.id])}
                         </span>
                       ) : null}
                     </TdComponent>
