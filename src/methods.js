@@ -160,11 +160,13 @@ export default Base => class extends Base {
         }
         visibleColumns[pivotExpanderColumn] = pivotColumn
       } else {
+        // If the expander column wasn't on the top level column, find it in the `columns` option.
         const pivotExpanderSubColumn = visibleColumns[pivotExpanderColumn].columns.findIndex(col => col.expander)
         const pivotColumn = {
           ...visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn],
           pivotColumns
         }
+        // Add the pivot columns to the expander column
         visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn] = pivotColumn
       }
     }
