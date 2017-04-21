@@ -129,6 +129,7 @@ export default {
 
   // Global Pivot Column Defaults
   pivotDefaults: {
+    filterRender: undefined
     // render: will be overriden in methods.js to display ExpanderComponent
   },
 

@@ -19,11 +19,13 @@ export default () => {
     header: 'Name',
     columns: [{
       header: 'First Name',
-      accessor: 'firstName'
+      accessor: 'firstName',
+      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>
     }, {
       header: 'Last Name',
       id: 'lastName',
-      accessor: d => d.lastName
+      accessor: d => d.lastName,
+      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>
     }]
   }, {
     header: 'Info',
@@ -43,14 +45,13 @@ export default () => {
       hideFilter: true
     }]
   }, {
-    header: () => <strong>First &#8674; Last Name Pivot</strong>,
+    header: () => <strong>Overriden Pivot Column Header Group</strong>,
     expander: true,
     minWidth: 200,
     render: ({isExpanded, ...rest}) => (
       isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
     ),
-    filterRender: ({key}) => <span key={key}> &#10609; </span>,
-    footer: () => <div style={{textAlign: 'center'}}><strong>Pivot Footer</strong></div>
+    footer: () => <div style={{textAlign: 'center'}}><strong>Overriden Pivot Column Footer</strong></div>
   }]
 
   return (
@@ -71,7 +72,7 @@ export default () => {
                 <br />
                 <ReactTable
                   data={data}
-                  columns={columns.filter(x=>!x.expander)}
+                  columns={columns.filter(x => !x.expander)}
                   defaultPageSize={3}
                   showPagination={false}
                   SubComponent={(row) => {

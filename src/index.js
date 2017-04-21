@@ -120,7 +120,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const minRows = this.getMinRows()
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
-    const hasColumnFooter = allVisibleColumns.some(d => d.footer)
+    const hasColumnFooter = allVisibleColumns.some(d => d.footer || (d.pivotColumns && d.pivotColumns.some(e => e.footer)))
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       return [
@@ -290,7 +290,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makeHeader = (column) => {
+    const makeHeader = (column, i) => {
       const resized = resizing.find(x => x.id === column.id) || {}
       const sort = sorting.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
@@ -330,7 +330,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       return (
         <ThComponent
-          key={column.id}
+          key={i + '-' + column.id}
           className={classnames(
             classes,
             'rt-resizable-header',
@@ -383,7 +383,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makeFilter = (column) => {
+    const makeFilter = (column, i) => {
       const resized = resizing.find(x => x.id === column.id) || {}
       const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
       const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
@@ -407,7 +407,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.rest
       }
 
-      if (column.pivotColumns) {
+      if (!column.filterRender && column.pivotColumns) {
         return column.pivotColumns.map(makeFilter)
       }
 
@@ -415,7 +415,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       return (
         <ThComponent
-          key={column.id}
+          key={i + '-' + column.id}
           className={classnames(
             classes
           )}
@@ -509,19 +509,18 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 extraProps['onClick'] = onTdClick
 
                 if (column.pivotColumns) {
-                  let pivotWidth = 0
-                  let pivotMaxWidth = 0
-
-                  for (let i = 0; i < column.pivotColumns.length; i++) {
-                    const col = column.pivotColumns[i]
-
-                    const colResized = resizing.find(x => x.id === col.id) || {}
-                    const colWidth = _.getFirstDefined(colResized.value, col.width, col.minWidth)
-                    const colMaxWidth = _.getFirstDefined(colResized.value, col.width, col.maxWidth)
-
-                    pivotWidth += colWidth
-                    pivotMaxWidth += colMaxWidth
-                  }
+                  const pivotFlex = _.sum(column.pivotColumns.map(d => {
+                    const resized = resizing.find(x => x.id === d.id) || {}
+                    return d.width || resized.value ? 0 : d.minWidth
+                  }))
+                  const pivotWidth = _.sum(column.pivotColumns.map(d => {
+                    const resized = resizing.find(x => x.id === d.id) || {}
+                    return _.getFirstDefined(resized.value, d.width, d.minWidth)
+                  }))
+                  const pivotMaxWidth = _.sum(column.pivotColumns.map(d => {
+                    const resized = resizing.find(x => x.id === d.id) || {}
+                    return _.getFirstDefined(resized.value, d.width, d.maxWidth)
+                  }))
 
                   // Return the pivot expander cell
                   const PivotCell = column.pivotRender
@@ -535,7 +534,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                       style={{
                         ...styles,
                         paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
-                        flex: `${pivotWidth} 0 auto`,
+                        flex: `${pivotFlex} 0 auto`,
                         width: `${pivotWidth}px`,
                         maxWidth: `${pivotMaxWidth}px`
                       }}
@@ -617,51 +616,70 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           <TrComponent
             className={classnames(
               '-padRow',
+              (pageRows.length + i) % 2 ? '-even' : '-odd',
               trProps.className,
             )}
             style={trProps.style || {}}
           >
-            {allVisibleColumns.map((column, i2) => {
-              const resized = resizing.find(x => x.id === column.id) || {}
-              const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
-              const tdProps = _.splitProps(getTdProps(finalState, undefined, column, this))
-              const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
-
-              const classes = [
-                tdProps.className,
-                column.className,
-                columnProps.className
-              ]
-
-              const styles = {
-                ...tdProps.style,
-                ...column.style,
-                ...columnProps.style
-              }
-
-              return (
-                <TdComponent
-                  key={i2}
-                  className={classnames(
-                    classes,
-                    !show && 'hidden'
-                  )}
-                  style={{
-                    ...styles,
-                    flex: `${width} 0 auto`,
-                    width: `${width}px`,
-                    maxWidth: `${maxWidth}px`
-                  }}
-                  {...tdProps.rest}
-                >
-                  &nbsp;
-                </TdComponent>
-              )
-            })}
+            {allVisibleColumns.map(makePadColumn)}
           </TrComponent>
         </TrGroupComponent>
+      )
+    }
+
+    const makePadColumn = (column, i) => {
+      const resized = resizing.find(x => x.id === column.id) || {}
+      const show = typeof column.show === 'function' ? column.show() : column.show
+      let width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      let flex = width
+      let maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+      const tdProps = _.splitProps(getTdProps(finalState, undefined, column, this))
+      const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
+
+      const classes = [
+        tdProps.className,
+        column.className,
+        columnProps.className
+      ]
+
+      const styles = {
+        ...tdProps.style,
+        ...column.style,
+        ...columnProps.style
+      }
+
+      if (column.pivotColumns) {
+        flex = _.sum(column.pivotColumns.map(d => {
+          const resized = resizing.find(x => x.id === d.id) || {}
+          return d.width || resized.value ? 0 : d.minWidth
+        }))
+        width = _.sum(column.pivotColumns.map(d => {
+          const resized = resizing.find(x => x.id === d.id) || {}
+          return _.getFirstDefined(resized.value, d.width, d.minWidth)
+        }))
+        maxWidth = _.sum(column.pivotColumns.map(d => {
+          const resized = resizing.find(x => x.id === d.id) || {}
+          return _.getFirstDefined(resized.value, d.width, d.maxWidth)
+        }))
+      }
+
+      return (
+        <TdComponent
+          key={i + '-' + column.id}
+          className={classnames(
+            classes,
+            !show && 'hidden'
+          )}
+          style={{
+            ...styles,
+            flex: `${flex} 0 auto`,
+            width: `${width}px`,
+            maxWidth: `${maxWidth}px`
+          }}
+          {...tdProps.rest}
+        >
+          &nbsp;
+        </TdComponent>
       )
     }
 
@@ -684,81 +702,61 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={tFootTrProps.style}
             {...tFootTrProps.rest}
           >
-            {allVisibleColumns.map((column, i2) => {
-              const resized = resizing.find(x => x.id === column.id) || {}
-              const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
-              const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
-              const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
-              const columnFooterProps = _.splitProps(column.getFooterProps(finalState, undefined, column, this))
-
-              const classes = [
-                tFootTdProps.className,
-                column.className,
-                columnProps.className,
-                columnFooterProps.className
-              ]
-
-              const styles = {
-                ...tFootTdProps.style,
-                ...column.style,
-                ...columnProps.style,
-                ...columnFooterProps.style
-              }
-
-              if (column.expander) {
-                if (column.pivotColumns) {
-                  return (
-                    <TdComponent
-                      key={i2}
-                      className={classnames(
-                        'rt-pivot',
-                        classes
-                      )}
-                      style={{
-                        ...styles,
-                        flex: `${width} 0 auto`,
-                        width: `${width}px`,
-                        maxWidth: `${maxWidth}px`
-                      }}
-                      {...columnProps.rest}
-                      {...tFootTdProps.rest}
-                      {...columnFooterProps.rest}
-                    >
-                      {_.normalizeComponent(column.footer)}
-                    </TdComponent>
-                  )
-                }
-              }
-
-              // Return regular cell
-              return (
-                <TdComponent
-                  key={i2}
-                  className={classnames(
-                    classes,
-                    !show && 'hidden'
-                  )}
-                  style={{
-                    ...styles,
-                    flex: `${width} 0 auto`,
-                    width: `${width}px`,
-                    maxWidth: `${maxWidth}px`
-                  }}
-                  {...columnProps.rest}
-                  {...tFootTdProps.rest}
-                  {...columnFooterProps.rest}
-                >
-                  {_.normalizeComponent(column.footer, {
-                    data: sortedData,
-                    column: column
-                  })}
-                </TdComponent>
-              )
-            })}
+            {allVisibleColumns.map(makeColumnFooter)}
           </TrComponent>
         </TfootComponent>
+      )
+    }
+
+    const makeColumnFooter = (column, i) => {
+      const resized = resizing.find(x => x.id === column.id) || {}
+      const show = typeof column.show === 'function' ? column.show() : column.show
+      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+      const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
+      const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
+      const columnFooterProps = _.splitProps(column.getFooterProps(finalState, undefined, column, this))
+
+      const classes = [
+        tFootTdProps.className,
+        column.className,
+        columnProps.className,
+        columnFooterProps.className
+      ]
+
+      const styles = {
+        ...tFootTdProps.style,
+        ...column.style,
+        ...columnProps.style,
+        ...columnFooterProps.style
+      }
+
+      if (!column.footer && column.pivotColumns) {
+        return column.pivotColumns.map(makeColumnFooter)
+      }
+
+      return (
+        <TdComponent
+          key={i + '-' + column.id}
+          className={classnames(
+            classes,
+            !show && 'hidden'
+          )}
+          style={{
+            ...styles,
+            flex: `${width} 0 auto`,
+            width: `${width}px`,
+            maxWidth: `${maxWidth}px`
+          }}
+          {...columnProps.rest}
+          {...tFootTdProps.rest}
+          {...columnFooterProps.rest}
+        >
+          {_.normalizeComponent(column.footer, {
+            data: sortedData,
+            column: column
+          })}
+        </TdComponent>
       )
     }
 

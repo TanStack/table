@@ -294,11 +294,16 @@ export default Base => class extends Base {
             (row) => {
               let column
 
-              if (nextFilter.pivotId) {
-                const parentColumn = allVisibleColumns.find(x => x.id === nextFilter.id)
-                column = parentColumn.pivotColumns.find(x => x.id === nextFilter.pivotId)
-              } else {
-                column = allVisibleColumns.find(x => x.id === nextFilter.id)
+              column = allVisibleColumns.find(x => x.id === nextFilter.id || (x.pivotColumns && x.pivotColumns.some(y => y.id === nextFilter.id)))
+
+              // Could possibly be in pivotColumns
+              if (column.id !== nextFilter.id && column.pivotColumns) {
+                column = column.pivotColumns.find(x => x.id === nextFilter.id)
+              }
+
+              // Don't filter hidden columns
+              if (!column) {
+                return
               }
 
               const filterMethod = column.filterMethod || defaultFilterMethod
@@ -494,12 +499,12 @@ export default Base => class extends Base {
     })
   }
 
-  filterColumn (column, value, pivotColumn) {
+  filterColumn (column, value) {
     const {filtering} = this.getResolvedState()
     const {onFilteringChange} = this.props
 
     if (onFilteringChange) {
-      return onFilteringChange(column, value, pivotColumn)
+      return onFilteringChange(column, value)
     }
 
     // Remove old filter first if it exists
@@ -507,19 +512,12 @@ export default Base => class extends Base {
       if (x.id !== column.id) {
         return true
       }
-      if (x.pivotId) {
-        if (pivotColumn) {
-          return x.pivotId !== pivotColumn.id
-        }
-        return true
-      }
     })
 
     if (value !== '') {
       newFiltering.push({
         id: column.id,
-        value: value,
-        pivotId: pivotColumn ? pivotColumn.id : undefined
+        value: value
       })
     }
 
