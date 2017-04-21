@@ -192,14 +192,32 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeHeaderGroup = (column, i) => {
       const flex = _.sum(column.columns.map(d => {
+        if (d.pivotColumns) {
+          return _.sum(d.pivotColumns.map(e => {
+            const resized = resizing.find(x => x.id === e.id) || {}
+            return e.width || resized.value ? 0 : e.minWidth
+          }))
+        }
         const resized = resizing.find(x => x.id === d.id) || {}
         return d.width || resized.value ? 0 : d.minWidth
       }))
       const width = _.sum(column.columns.map(d => {
+        if (d.pivotColumns) {
+          return _.sum(d.pivotColumns.map(e => {
+            const resized = resizing.find(x => x.id === e.id) || {}
+            return _.getFirstDefined(resized.value, e.width, e.minWidth)
+          }))
+        }
         const resized = resizing.find(x => x.id === d.id) || {}
         return _.getFirstDefined(resized.value, d.width, d.minWidth)
       }))
       const maxWidth = _.sum(column.columns.map(d => {
+        if (d.pivotColumns) {
+          return _.sum(d.pivotColumns.map(e => {
+            const resized = resizing.find(x => x.id === e.id) || {}
+            return _.getFirstDefined(resized.value, e.width, e.maxWidth)
+          }))
+        }
         const resized = resizing.find(x => x.id === d.id) || {}
         return _.getFirstDefined(resized.value, d.width, d.maxWidth)
       }))
@@ -231,7 +249,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       return (
         <ThComponent
-          key={i}
+          key={i + '-' + column.id}
           className={classnames(
             classes
           )}
@@ -272,7 +290,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makeHeader = (column, i) => {
+    const makeHeader = (column) => {
       const resized = resizing.find(x => x.id === column.id) || {}
       const sort = sorting.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
@@ -306,57 +324,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         />
       ) : null
 
-      if (column.expander) {
-        if (column.pivotColumns) {
-          const pivotSort = sorting.find(d => d.id === column.pivotColumns[0].id)
-          return (
-            <ThComponent
-              key={i}
-              className={classnames(
-                'rt-pivot-header',
-                'rt-resizable-header',
-                column.sortable && '-cursor-pointer',
-                classes,
-                pivotSort ? (pivotSort.desc ? '-sort-desc' : '-sort-asc') : ''
-              )}
-              style={{
-                ...styles,
-                flex: `${width} 0 auto`,
-                width: `${width}px`,
-                maxWidth: `${maxWidth}px`
-              }}
-              toggleSort={(e) => {
-                column.sortable && this.sortColumn(column.pivotColumns, e.shiftKey)
-              }}
-              {...rest}
-            >
-              <div className='rt-resizable-header-content'>
-                {column.pivotColumns.map((pivotColumn, i) => {
-                  return (
-                    <span key={pivotColumn.id}>
-                      {_.normalizeComponent(pivotColumn.header, {
-                        data: sortedData,
-                        column: column
-                      })}
-                      {i < column.pivotColumns.length - 1 && (
-                        _.normalizeComponent(column.render, {
-                          data: sortedData,
-                          column: column
-                        })
-                      )}
-                    </span>
-                  )
-                })}
-              </div>
-              {resizer}
-            </ThComponent>
-          )
-        }
+      if (column.pivotColumns) {
+        return column.pivotColumns.map(makeHeader)
       }
 
       return (
         <ThComponent
-          key={i}
+          key={column.id}
           className={classnames(
             classes,
             'rt-resizable-header',
@@ -409,7 +383,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makeFilter = (column, i) => {
+    const makeFilter = (column) => {
       const resized = resizing.find(x => x.id === column.id) || {}
       const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
       const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
@@ -433,67 +407,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.rest
       }
 
-      if (column.expander) {
-        if (column.pivotColumns) {
-          const pivotCols = []
-          for (let i = 0; i < column.pivotColumns.length; i++) {
-            const col = column.pivotColumns[i]
-            const filter = filtering.find(filter => filter.id === column.id && filter.pivotId === col.id)
-            pivotCols.push(
-              <span key={col.id}
-                style={{flex: 1}}>
-                {!col.hideFilter ? (
-                  _.normalizeComponent(col.filterRender,
-                    {
-                      col,
-                      filter,
-                      onFilterChange: (value) => (this.filterColumn(column, value, col))
-                    },
-                    defaultProps.column.filterRender
-                  )
-                ) : null}
-              </span>
-            )
-            if (i < column.pivotColumns.length - 1) {
-              pivotCols.push(
-                _.normalizeComponent(column.filterRender,
-                  {
-                    column,
-                    filter,
-                    key: col.id + '-' + i
-                  },
-                  defaultProps.column.filterRender
-                ))
-            }
-          }
-          return (
-            <ThComponent
-              key={i}
-              className={classnames(
-                'rt-pivot-header',
-                column.sortable && '-cursor-pointer',
-                classes
-              )}
-              style={{
-                ...styles,
-                flex: `${width} 0 auto`,
-                width: `${width}px`,
-                maxWidth: `${maxWidth}px`,
-                display: 'flex'
-              }}
-              {...rest}
-            >
-              {pivotCols}
-            </ThComponent>
-          )
-        }
+      if (column.pivotColumns) {
+        return column.pivotColumns.map(makeFilter)
       }
 
       const filter = filtering.find(filter => filter.id === column.id)
 
       return (
         <ThComponent
-          key={i}
+          key={column.id}
           className={classnames(
             classes
           )}
@@ -587,6 +509,20 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 extraProps['onClick'] = onTdClick
 
                 if (column.pivotColumns) {
+                  let pivotWidth = 0
+                  let pivotMaxWidth = 0
+
+                  for (let i = 0; i < column.pivotColumns.length; i++) {
+                    const col = column.pivotColumns[i]
+
+                    const colResized = resizing.find(x => x.id === col.id) || {}
+                    const colWidth = _.getFirstDefined(colResized.value, col.width, col.minWidth)
+                    const colMaxWidth = _.getFirstDefined(colResized.value, col.width, col.maxWidth)
+
+                    pivotWidth += colWidth
+                    pivotMaxWidth += colMaxWidth
+                  }
+
                   // Return the pivot expander cell
                   const PivotCell = column.pivotRender
                   return (
@@ -599,9 +535,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                       style={{
                         ...styles,
                         paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
-                        flex: `${width} 0 auto`,
-                        width: `${width}px`,
-                        maxWidth: `${maxWidth}px`
+                        flex: `${pivotWidth} 0 auto`,
+                        width: `${pivotWidth}px`,
+                        maxWidth: `${pivotMaxWidth}px`
                       }}
                       {...tdProps.rest}
                       onClick={onTdClick}
