@@ -39,7 +39,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       filtering: props.defaultFiltering,
       resizing: props.defaultResizing,
       currentlyResizing: undefined,
-      skipNextSort: false
+      skipNextSort: false,
+      currentlyResizing: false
     }
   }
 
@@ -110,7 +111,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       headerGroups,
       hasHeaderGroups,
       // Sorted Data
-      sortedData
+      sortedData,
+      currentlyResizing
     } = resolvedState
 
     // Pagination
@@ -769,7 +771,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         {...rootProps.rest}
       >
         <TableComponent
-          className={classnames(tableProps.className)}
+          className={classnames(
+            tableProps.className,
+            currentlyResizing ? 'rt-resizing' : ''
+          )}
           style={tableProps.style}
           {...tableProps.rest}
         >

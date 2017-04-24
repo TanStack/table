@@ -583,7 +583,8 @@ export default Base => class extends Base {
     // event resize will not sort the column.
     if (!isTouch) {
       this.setStateWithData({
-        skipNextSort: true
+        skipNextSort: true,
+        currentlyResizing: false
       })
     }
   }
