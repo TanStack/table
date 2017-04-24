@@ -191,36 +191,23 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeHeaderGroup = (column, i) => {
+      const resizedValue = col => (resizing.find(x => x.id === col.id) || {}).value
+
       const flex = _.sum(column.columns.map(d => {
-        if (d.pivotColumns) {
-          return _.sum(d.pivotColumns.map(e => {
-            const resized = resizing.find(x => x.id === e.id) || {}
-            return e.width || resized.value ? 0 : e.minWidth
-          }))
-        }
-        const resized = resizing.find(x => x.id === d.id) || {}
-        return d.width || resized.value ? 0 : d.minWidth
+        const widthFunction = col => col.width || resizedValue(col) ? 0 : col.minWidth
+        return d.pivotColumns ? _.sum(d.pivotColumns.map(widthFunction)) : widthFunction(d)
       }))
+
       const width = _.sum(column.columns.map(d => {
-        if (d.pivotColumns) {
-          return _.sum(d.pivotColumns.map(e => {
-            const resized = resizing.find(x => x.id === e.id) || {}
-            return _.getFirstDefined(resized.value, e.width, e.minWidth)
-          }))
-        }
-        const resized = resizing.find(x => x.id === d.id) || {}
-        return _.getFirstDefined(resized.value, d.width, d.minWidth)
+        const widthFunction = col => _.getFirstDefined(resizedValue(col), col.width, col.minWidth)
+        return d.pivotColumns ? _.sum(d.pivotColumns.map(widthFunction)) : widthFunction(d)
       }))
+
       const maxWidth = _.sum(column.columns.map(d => {
-        if (d.pivotColumns) {
-          return _.sum(d.pivotColumns.map(e => {
-            const resized = resizing.find(x => x.id === e.id) || {}
-            return _.getFirstDefined(resized.value, e.width, e.maxWidth)
-          }))
-        }
-        const resized = resizing.find(x => x.id === d.id) || {}
-        return _.getFirstDefined(resized.value, d.width, d.maxWidth)
+        const widthFunction = col => _.getFirstDefined(resizedValue(col), col.width, col.maxWidth)
+        return d.pivotColumns ? _.sum(d.pivotColumns.map(widthFunction)) : widthFunction(d)
       }))
+
       const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
