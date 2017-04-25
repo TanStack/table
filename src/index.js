@@ -38,9 +38,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       expandedRows: {},
       filtering: props.defaultFiltering,
       resizing: props.defaultResizing,
-      currentlyResizing: undefined,
-      skipNextSort: false,
-      currentlyResizing: false
+      currentlyResizing: false,
+      skipNextSort: false
     }
   }
 
