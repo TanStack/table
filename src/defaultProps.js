@@ -10,7 +10,9 @@ export default {
   // General
   data: [],
   loading: false,
-  showPagination: true,
+  showPagination: {
+    bottom: true
+  },
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,

@@ -73,7 +73,6 @@ export default () => {
                   data={data}
                   columns={columns.filter(x=>!x.expander)}
                   defaultPageSize={3}
-                  showPagination={false}
                   SubComponent={(row) => {
                     return (
                       <div style={{padding: '20px'}}>
@@ -157,7 +156,10 @@ return (
                 data={data}
                 columns={columns.filter(x=>!x.expander)}
                 defaultPageSize={3}
-                showPagination={false}
+                showPagination={{
+                  top: false,
+                  bottom: false
+                }}
                 SubComponent={(row) => {
                   return (
                     <div style={{padding: '20px'}}>
