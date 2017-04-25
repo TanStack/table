@@ -77,7 +77,7 @@ class Filtering extends React.Component {
             value={filter ? filter.value : 'all'}>
             <option value="all"></option>
             <option value="true">Can Drink</option>
-            <option value="false">Can't Drink</option>
+            <option value="false">Can&#39;t Drink</option>
           </select>
         )
       }
