@@ -21,7 +21,9 @@ class Filtering extends React.Component {
     this.state = {
       tableOptions: {
         loading: false,
-        showPagination: true,
+        showPagination: {
+          bottom: true
+        },
         showPageSizeOptions: true,
         showPageJump: true,
         collapseOnSortingChange: true,
@@ -75,7 +77,7 @@ class Filtering extends React.Component {
             value={filter ? filter.value : 'all'}>
             <option value="all"></option>
             <option value="true">Can Drink</option>
-            <option value="false">Can't Drink</option>
+            <option value="false">Can&#39;t Drink</option>
           </select>
         )
       }
@@ -126,7 +128,10 @@ class Filtering extends React.Component {
                     data={this.state.data}
                     columns={columns}
                     defaultPageSize={3}
-                    showPagination={false}
+                    showPagination={{
+                      top: false,
+                      bottom: false
+                    }}
                     SubComponent={(row) => {
                       return (
                         <div style={{padding: '20px'}}>
@@ -242,7 +247,10 @@ export default (
             data={data}
             columns={columns}
             defaultPageSize={3}
-            showPagination={false}
+            showPagination={{
+              top: false,
+              bottom: false
+            }}
             SubComponent={(row) => {
               return (
                 <div style={{padding: '20px'}}>

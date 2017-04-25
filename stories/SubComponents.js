@@ -21,7 +21,10 @@ class SubComponents extends React.Component {
     this.state = {
       tableOptions: {
         loading: false,
-        showPagination: true,
+        showPagination: {
+          top: false,
+          bottom: false
+        }
         showPageSizeOptions: true,
         showPageJump: true,
         collapseOnSortingChange: true,
@@ -100,7 +103,10 @@ class SubComponents extends React.Component {
                     data={this.state.data}
                     columns={columns}
                     defaultPageSize={3}
-                    showPagination={false}
+                    showPagination={{
+                      top: false,
+                      bottom: false
+                    }}
                     SubComponent={(row) => {
                       return (
                         <div style={{padding: '20px'}}>
@@ -172,7 +178,10 @@ export default (
             data={data}
             columns={columns}
             defaultPageSize={3}
-            showPagination={false}
+            showPagination={{
+              top: false,
+              bottom: false
+            }}
             SubComponent={(row) => {
               return (
                 <div style={{padding: '20px'}}>

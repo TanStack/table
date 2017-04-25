@@ -852,6 +852,19 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={tableProps.style}
           {...tableProps.rest}
         >
+          {showPagination && showPagination.top ? (
+            <PaginationComponent
+              {...resolvedState}
+              pages={pages}
+              canPrevious={canPrevious}
+              canNext={canNext}
+              onPageChange={this.onPageChange}
+              onPageSizeChange={this.onPageSizeChange}
+              className={paginationProps.className}
+              style={paginationProps.style}
+              {...paginationProps.rest}
+            />
+          ) : null}
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
           {showFilters ? makeFilters() : null}
@@ -868,7 +881,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           </TbodyComponent>
           {hasColumnFooter ? makeColumnFooters() : null}
         </TableComponent>
-        {showPagination ? (
+        {showPagination && showPagination.bottom ? (
           <PaginationComponent
             {...resolvedState}
             pages={pages}
