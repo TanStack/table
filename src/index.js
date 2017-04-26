@@ -560,7 +560,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               // Return regular cell
               return (
                 <TdComponent
-                  key={i2}
+                  key={i2 + '-' + column.id}
                   className={classnames(
                     classes,
                     !show && 'hidden'
