@@ -650,10 +650,10 @@ Here are the props and their corresponding callbacks that control the state of t
   pageSize={20} // the number of rows per page to be displayed
   sorting={[{
       id: 'lastName',
-      asc: true
+      desc: true
     }, {
       id: 'firstName',
-      asc: true
+      desc: true
   }]} // the sorting model for the table
   expandedRows={{
     1: true,
