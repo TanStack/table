@@ -547,6 +547,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
+              rowInfo['columnId'] = column.id
               const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
