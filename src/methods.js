@@ -64,7 +64,6 @@ export default Base => class extends Base {
         dcol = {
           ...this.props.column,
           render: this.props.ExpanderComponent,
-          filterRender: this.props.ExpanderComponent,
           ...this.props.pivotDefaults,
           ...column
         }
