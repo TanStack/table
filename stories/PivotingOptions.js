@@ -20,7 +20,7 @@ export default () => {
     columns: [{
       header: 'First Name',
       accessor: 'firstName',
-      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>
+      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>,
     }, {
       header: 'Last Name',
       id: 'lastName',
@@ -48,6 +48,7 @@ export default () => {
     header: () => <strong>Overriden Pivot Column Header Group</strong>,
     expander: true,
     minWidth: 200,
+    pivotRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>,
     render: ({isExpanded, ...rest}) => (
       isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
     ),
@@ -100,85 +101,87 @@ export default () => {
 
 function getCode () {
   return `
-const columns = [{
-  header: 'Name',
-  columns: [{
-    header: 'First Name',
-    accessor: 'firstName'
+  const columns = [{
+    header: 'Name',
+    columns: [{
+      header: 'First Name',
+      accessor: 'firstName',
+      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>,
+    }, {
+      header: 'Last Name',
+      id: 'lastName',
+      accessor: d => d.lastName,
+      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>
+    }]
   }, {
-    header: 'Last Name',
-    id: 'lastName',
-    accessor: d => d.lastName
-  }]
-}, {
-  header: 'Info',
-  columns: [{
-    header: 'Age',
-    accessor: 'age',
-    aggregate: vals => {
-      return _.round(_.mean(vals))
-    },
-    render: row => {
-      return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
-    }
+    header: 'Info',
+    columns: [{
+      header: 'Age',
+      accessor: 'age',
+      aggregate: vals => {
+        return _.round(_.mean(vals))
+      },
+      render: row => {
+        return <span>{row.aggregated ? \`\${row.value}(avg)\` : row.value}</span>
+      }
+    }, {
+      header: 'Visits',
+      accessor: 'visits',
+      aggregate: vals => _.sum(vals),
+      hideFilter: true
+    }]
   }, {
-    header: 'Visits',
-    accessor: 'visits',
-    aggregate: vals => _.sum(vals),
-    hideFilter: true
+    header: () => <strong>Overriden Pivot Column Header Group</strong>,
+    expander: true,
+    minWidth: 200,
+    pivotRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>,
+    render: ({isExpanded, ...rest}) => (
+      isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
+    ),
+    footer: () => <div style={{textAlign: 'center'}}><strong>Overriden Pivot Column Footer</strong></div>
   }]
-}, {
-  header: () => <strong>First &#8674; Last Name Pivot</strong>,
-  expander: true,
-  minWidth: 200,
-  render: ({isExpanded, ...rest}) => (
-    isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
-  ),
-  filterRender: ({key}) => <span key={key}> &#10609; </span>,
-  footer: () => <div style={{textAlign: 'center'}}><strong>Pivot Footer</strong></div>
-}]
 
-return (
-  <div>
-    <div className='table-wrap'>
-      <ReactTable
-        data={data}
-        columns={columns}
-        defaultPageSize={10}
-        className='-striped -highlight'
-        pivotBy={['firstName', 'lastName']}
-        showFilters={true}
-        SubComponent={(row) => {
-          return (
-            <div style={{padding: '20px'}}>
-              <em>You can put any component you want here, even another React Table!</em>
-              <br />
-              <br />
-              <ReactTable
-                data={data}
-                columns={columns.filter(x=>!x.expander)}
-                defaultPageSize={3}
-                showPagination={false}
-                SubComponent={(row) => {
-                  return (
-                    <div style={{padding: '20px'}}>
-                      <em>It even has access to the row data: </em>
-                      <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
-                    </div>
-                  )
-                }}
-              />
-            </div>
-          )
-        }}
-      />
+  return (
+    <div>
+      <div className='table-wrap'>
+        <ReactTable
+          data={data}
+          columns={columns}
+          defaultPageSize={10}
+          className='-striped -highlight'
+          pivotBy={['firstName', 'lastName']}
+          showFilters={true}
+          SubComponent={(row) => {
+            return (
+              <div style={{padding: '20px'}}>
+                <em>You can put any component you want here, even another React Table!</em>
+                <br />
+                <br />
+                <ReactTable
+                  data={data}
+                  columns={columns.filter(x => !x.expander)}
+                  defaultPageSize={3}
+                  showPagination={false}
+                  SubComponent={(row) => {
+                    return (
+                      <div style={{padding: '20px'}}>
+                        <em>It even has access to the row data: </em>
+                        <CodeHighlight>{() => JSON.stringify(row, null, 2)}</CodeHighlight>
+                      </div>
+                    )
+                  }}
+                />
+              </div>
+            )
+          }}
+        />
+      </div>
+      <div style={{textAlign: 'center'}}>
+        <br />
+        <em>Tip: Hold shift when sorting to multi-sort!</em>
+      </div>
+      <CodeHighlight>{() => getCode()}</CodeHighlight>
     </div>
-    <div style={{textAlign: 'center'}}>
-      <br />
-      <em>Tip: Hold shift when sorting to multi-sort!</em>
-    </div>
-    <CodeHighlight>{() => getCode()}</CodeHighlight>
-  </div>
-)
+  )
   `
 }
