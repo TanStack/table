@@ -129,6 +129,7 @@ const columns = [{
 }, {
   header: () => <strong>First &#8674; Last Name Pivot</strong>,
   expander: true,
+  pivotRender: row => <span>{row.value}</span>,
   minWidth: 200,
   render: ({isExpanded, ...rest}) => (
     isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
