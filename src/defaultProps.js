@@ -44,7 +44,6 @@ export default {
 
   // Pivoting
   pivotBy: undefined,
-  pivotColumnWidth: 200,
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
