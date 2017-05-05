@@ -66,8 +66,8 @@ export default Base => class extends Base {
           ...this.props.column,
           render: (props) => (
             <div>
-              <this.props.ExpanderComponent {...props}/>
-              <this.props.PivotValueComponent {...props}/>
+              <this.props.ExpanderComponent {...props} />
+              <this.props.PivotValueComponent {...props} />
             </div>
           ),
           ...this.props.pivotDefaults,
