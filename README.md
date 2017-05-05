@@ -182,7 +182,6 @@ These are all of the available props (and their default values) for the main `<R
 
   // Pivoting
   pivotBy: undefined,
-  pivotColumnWidth: 200,
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
@@ -268,7 +267,8 @@ These are all of the available props (and their default values) for the main `<R
 
   // Global Pivot Column Defaults
   pivotDefaults: {
-    // render: will be overriden in methods.js to display ExpanderComponent
+    filterRender: undefined
+    // render: will be overriden in methods.js to display ExpanderComponent and PivotValueComponent
   },
 
   // Text
@@ -578,7 +578,7 @@ const columns = [{
 }]
 ```
 
-Pivoted columns can be sorted just like regular columns, but not independently of each other.  For instance, if you click to sort the pivot column in ascending order, it will sort by each pivot recursively in ascending order together.
+Pivoted columns can be sorted just like regular columns including holding down the `<shift>` button to multi-sort.
 
 ## Sub Tables and Sub Components
 By adding a `SubComponent` props, you can easily add an expansion level to all root-level rows:
@@ -742,6 +742,7 @@ Object.assign(ReactTableDefaults, {
   TdComponent: component,
   TfootComponent: component,
   ExpanderComponent: component,
+  PivotValueComponent: component,
   PaginationComponent: component,
   PreviousComponent: undefined,
   NextComponent: undefined,

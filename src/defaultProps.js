@@ -44,7 +44,6 @@ export default {
 
   // Pivoting
   pivotBy: undefined,
-  pivotColumnWidth: 200,
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
@@ -129,7 +128,8 @@ export default {
 
   // Global Pivot Column Defaults
   pivotDefaults: {
-    // render: will be overriden in methods.js to display ExpanderComponent
+    filterRender: undefined
+    // render: will be overriden in methods.js to display ExpanderComponent and PivotValueComponent
   },
 
   // Text
@@ -162,13 +162,14 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  ExpanderComponent: ({isExpanded}) => {
-    return (
-      <div className={classnames('rt-expander', isExpanded && '-open')}>
-        &bull;
-      </div>
-    )
-  },
+  ExpanderComponent: ({isExpanded}) => (
+    <div className={classnames('rt-expander', isExpanded && '-open')}>
+      &bull;
+    </div>
+  ),
+  PivotValueComponent: ({subRows, value}) => (
+    <span>{value} {subRows && `(${subRows.length})`}</span>
+  ),
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
