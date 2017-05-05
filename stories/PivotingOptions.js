@@ -19,13 +19,11 @@ export default () => {
     header: 'Name',
     columns: [{
       header: 'First Name',
-      accessor: 'firstName',
-      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>,
+      accessor: 'firstName'
     }, {
       header: 'Last Name',
       id: 'lastName',
-      accessor: d => d.lastName,
-      footer: () => <div style={{textAlign: 'center'}}><strong>First Name Footer</strong></div>
+      accessor: d => d.lastName
     }]
   }, {
     header: 'Info',
@@ -49,9 +47,6 @@ export default () => {
     expander: true,
     minWidth: 200,
     pivotRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>,
-    render: ({isExpanded, ...rest}) => (
-      isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
-    ),
     footer: () => <div style={{textAlign: 'center'}}><strong>Overriden Pivot Column Footer</strong></div>
   }]
 
@@ -64,7 +59,15 @@ export default () => {
           defaultPageSize={10}
           className='-striped -highlight'
           pivotBy={['firstName', 'lastName']}
+          defaultSorting={[{id: 'firstName', desc: false}, {id: 'lastName', desc: true}]}
+          collapseOnSortingChange={false}
           showFilters={true}
+          ExpanderComponent={({isExpanded, ...rest}) => (
+            isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
+          )}
+          PivotValueComponent={ ({subRows, value}) => (
+            <span><span style={{color: 'darkred'}}>{value}</span> {subRows && `(${subRows.length} Last Names)`}</span>
+          )}
           SubComponent={(row) => {
             return (
               <div style={{padding: '20px'}}>

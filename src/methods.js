@@ -1,3 +1,4 @@
+import React from 'react'
 import _ from './utils'
 
 export default Base => class extends Base {
@@ -63,7 +64,12 @@ export default Base => class extends Base {
       if (pivotBy.length && column.expander) {
         dcol = {
           ...this.props.column,
-          render: this.props.ExpanderComponent,
+          render: (props) => (
+            <div>
+              <this.props.ExpanderComponent {...props}/>
+              <this.props.PivotValueComponent {...props}/>
+            </div>
+          ),
           ...this.props.pivotDefaults,
           ...column
         }

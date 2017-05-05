@@ -87,6 +87,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       pages,
       // Pivoting State
       pivotValKey,
+      pivotBy,
       subRowsKey,
       expandedRows,
       onExpandRow,
@@ -308,6 +309,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         <ResizerComponent
           onMouseDown={e => this.resizeColumnStart(column, e, false)}
           onTouchStart={e => this.resizeColumnStart(column, e, true)}
+
           {...resizerProps}
         />
       ) : null
@@ -325,6 +327,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
             column.sortable && '-cursor-pointer',
             !show && '-hidden',
+            pivotBy && pivotBy.slice(0, -1).includes(column.id) && 'rt-header-pivot'
           )}
           style={{
             ...styles,
@@ -511,7 +514,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   }))
 
                   // Return the pivot expander cell
-                  const PivotCell = column.pivotRender
                   return (
                     <TdComponent
                       key={i2}
@@ -530,27 +532,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                       onClick={onTdClick}
                     >
                       {rowInfo.subRows ? (
-                        <span>
-                          {_.normalizeComponent(column.render, {
-                            ...rowInfo,
-                            value: rowInfo.rowValues[column.id],
-                            isExpanded
-                          }, rowInfo.rowValues[column.id])}
-                          {column && column.pivotRender ? (
-                            <PivotCell
-                              {...rowInfo}
-                              value={rowInfo.rowValues[pivotValKey]}
-                            />
-                          ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
-                        </span>
+                        _.normalizeComponent(column.render, {
+                          ...rowInfo,
+                          value: row[pivotValKey],
+                          isExpanded
+                        }, rowInfo.rowValues[column.id])
                       ) : SubComponent ? (
-                        <span>
-                          {_.normalizeComponent(column.render, {
-                            ...rowInfo,
-                            value: rowInfo.rowValues[column.id],
-                            isExpanded
-                          }, rowInfo.rowValues[column.id])}
-                        </span>
+                        _.normalizeComponent(column.render, {
+                          ...rowInfo,
+                          value: rowInfo.rowValues[column.id],
+                          isExpanded
+                        }, rowInfo.rowValues[column.id])
                       ) : null}
                     </TdComponent>
                   )
