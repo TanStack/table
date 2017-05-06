@@ -36,13 +36,12 @@ class MyTable extends React.Component {
     ];
   }
 
-  renderEditable(rowInfo) {
-    return (<div style={{ backgroundColor: '#fafafa' }} contentEditable onBlur={(e) => {
-      console.log('edit', e.target.textContent);
+  renderEditable(cellInfo) {
+    return (<div style={{ backgroundColor: '#fafafa' }} contentEditable suppressContentEditableWarning onBlur={(e) => {
       const data = [...this.state.data];
-      data[rowInfo.index][rowInfo.columnId] = e.target.textContent;
+      data[cellInfo.index][cellInfo.column.id] = e.target.textContent;
       this.setState({data: data});
-    }}>{this.state.data[rowInfo.index][rowInfo.columnId]}</div>);
+    }}>{this.state.data[cellInfo.index][cellInfo.column.id]}</div>);
   }
 
   render() {
@@ -89,20 +88,21 @@ class MyTable extends React.Component {
     ];
   }
 
-  renderEditable(rowInfo) {
-    return (<div style={{ backgroundColor: '#fafafa' }} contentEditable onBlur={(e) => {
-      console.log('edit', e.target.textContent);
+  renderEditable(cellInfo) {
+    return (<div style={{ backgroundColor: '#fafafa' }} contentEditable suppressContentEditableWarning onBlur={(e) => {
       const data = [...this.state.data];
-      data[rowInfo.index][rowInfo.columnId] = e.target.textContent;
+      data[cellInfo.index][cellInfo.column.id] = e.target.textContent;
       this.setState({data: data});
-    }}>{this.state.data[rowInfo.index][rowInfo.columnId]}</div>);
+    }}>{this.state.data[cellInfo.index][cellInfo.column.id]}</div>);
   }
 
   render() {
     return (<ReactTable
       data={this.state.data}
       columns={this.columns}
-      defaultPageSize={10}
+      defaultPageSize={2}
+      showPageSizeOptions={false}
+      showPagination={false}
     />);
   }
 }

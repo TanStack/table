@@ -547,7 +547,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
-              rowInfo['columnId'] = column.id
+              const cellInfo = { ...rowInfo, column: {...column} };
               const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
@@ -572,16 +572,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               if (column.expander) {
                 const onTdClick = (e) => {
                   if (onExpandRow) {
-                    return onExpandRow(rowInfo.nestingPath, e)
+                    return onExpandRow(cellInfo.nestingPath, e)
                   }
                   let newExpandedRows = _.clone(expandedRows)
                   if (isExpanded) {
                     return this.setStateWithData({
-                      expandedRows: _.set(newExpandedRows, rowInfo.nestingPath, false)
+                      expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, false)
                     })
                   }
                   return this.setStateWithData({
-                    expandedRows: _.set(newExpandedRows, rowInfo.nestingPath, {})
+                    expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, {})
                   })
                 }
 
@@ -599,7 +599,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                       )}
                       style={{
                         ...styles,
-                        paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (rowInfo.nestingPath.length - 1)}px`,
+                        paddingLeft: cellInfo.nestingPath.length === 1 ? undefined : `${30 * (cellInfo.nestingPath.length - 1)}px`,
                         flex: `${width} 0 auto`,
                         width: `${width}px`,
                         maxWidth: `${maxWidth}px`
@@ -607,27 +607,27 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                       {...tdProps.rest}
                       onClick={onTdClick}
                     >
-                      {rowInfo.subRows ? (
+                      {cellInfo.subRows ? (
                         <span>
                           {_.normalizeComponent(column.render, {
-                            ...rowInfo,
-                            value: rowInfo.rowValues[column.id],
+                            ...cellInfo,
+                            value: cellInfo.rowValues[column.id],
                             isExpanded
-                          }, rowInfo.rowValues[column.id])}
+                          }, cellInfo.rowValues[column.id])}
                           {column && column.pivotRender ? (
                             <PivotCell
-                              {...rowInfo}
-                              value={rowInfo.rowValues[pivotValKey]}
+                              {...cellInfo}
+                              value={cellInfo.rowValues[pivotValKey]}
                             />
-                          ) : <span>{row[pivotValKey]} ({rowInfo.subRows.length})</span>}
+                          ) : <span>{row[pivotValKey]} ({cellInfo.subRows.length})</span>}
                         </span>
                       ) : SubComponent ? (
                         <span>
                           {_.normalizeComponent(column.render, {
-                            ...rowInfo,
-                            value: rowInfo.rowValues[column.id],
+                            ...cellInfo,
+                            value: cellInfo.rowValues[column.id],
                             isExpanded
-                          }, rowInfo.rowValues[column.id])}
+                          }, cellInfo.rowValues[column.id])}
                         </span>
                       ) : null}
                     </TdComponent>
@@ -653,10 +653,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   {...extraProps}
                 >
                   {_.normalizeComponent(column.render, {
-                    ...rowInfo,
-                    value: rowInfo.rowValues[column.id],
+                    ...cellInfo,
+                    value: cellInfo.rowValues[column.id],
                     isExpanded
-                  }, rowInfo.rowValues[column.id])}
+                  }, cellInfo.rowValues[column.id])}
                 </TdComponent>
               )
             })}

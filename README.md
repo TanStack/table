@@ -330,10 +330,11 @@ Or just define them as props
   // Cell Options
   className: '', // Set the classname of the `td` element of the column
   style: {}, // Set the style of the `td` element of the column
-  render: JSX eg. (rowInfo: {value, rowValues, row, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
+  render: JSX eg. (cellInfo: {value, rowValues, row, column, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
     // value == the accessed value of the column
     // rowValues == an object of all of the accessed values for the row
     // row == the original row of data supplied to the table
+    // column == the column properties (id, header, sortable, ...)
     // index == the original index of the data supplied to the table
     // viewIndex == the index of the row in the current page
 
@@ -482,8 +483,8 @@ Every single built-in component's props can be dynamically extended using any on
   getTdProps={fn}
   getPaginationProps={fn}
   getLoadingProps={fn}
-  getNoDataProps: {fn},
-  getResizerProps: {fn}
+  getNoDataProps={fn}
+  getResizerProps={fn}
 />
 ```
 
