@@ -27,6 +27,7 @@ import Footers from '../stories/Footers.js'
 import Filtering from '../stories/Filtering.js'
 import ControlledTable from '../stories/ControlledTable.js'
 import PivotingOptions from '../stories/PivotingOptions.js'
+import EditableTable from '../stories/EditableTable.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -59,4 +60,5 @@ configure(() => {
     .add('Footers', Footers)
     .add('Custom Filtering', Filtering)
     .add('Controlled Component', ControlledTable)
+    .add('Editable table', EditableTable)
 }, module)
