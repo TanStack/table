@@ -65,6 +65,31 @@ $expandSize = 7px
       overflow: hidden
       text-overflow: ellipsis
 
+    .rt-header-pivot
+      border-right-color: #f7f7f7
+
+    .rt-header-pivot:after, .rt-header-pivot:before
+      left: 100%
+      top: 50%
+      border: solid transparent
+      content: " "
+      height: 0
+      width: 0
+      position: absolute
+      pointer-events: none
+
+    .rt-header-pivot:after
+      border-color: rgba(255, 255, 255, 0)
+      border-left-color: #FFF
+      border-width: 8px
+      margin-top: -8px
+
+    .rt-header-pivot:before
+      border-color: rgba(102, 102, 102, 0)
+      border-left-color: #f7f7f7
+      border-width: 10px
+      margin-top: -10px
+
   .rt-tbody
     display: flex
     flex-direction: column
@@ -287,3 +312,10 @@ $expandSize = 7px
       border-color: #999 transparent transparent
       border-style: solid
       border-width: 5px 5px 2.5px
+
+  .rt-resizing
+    .rt-th
+    .rt-td
+      transition: none!important
+      cursor: col-resize
+      user-select none
