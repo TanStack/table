@@ -32,17 +32,21 @@ export default () => {
     columns: [{
       header: 'Age',
       accessor: 'age',
-      // aggregate: vals => {
-      //   return _.round(_.mean(vals))
-      // },
-      render: row => {
+      aggregate: vals => {
+        return _.round(_.mean(vals))
+      },
+      aggregateRender: row => {
         console.log(row.value)
-        return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
+        return <span>{row.value} (avg)</span>
       }
     }, {
       header: 'Visits',
       accessor: 'visits',
       aggregate: vals => _.sum(vals),
+      // aggregateRender: row => {
+      //   console.log(row.value)
+      //   return <span>{row.value}</span>
+      // },
       hideFilter: true
     }]
   }, {

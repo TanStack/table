@@ -31,10 +31,10 @@ export default () => {
       header: 'Age',
       accessor: 'age',
       aggregate: vals => _.round(_.mean(vals)),
-      render: row => {
-        return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
+      aggregateRender: row => {
+        return <span>{row.value} (avg)</span>
       },
-      filterMethod: (filter, row) => (filter.value == `${row[filter.id]} (avg)`)
+      filterMethod: (filter, row) => (filter.value === `${row[filter.id]} (avg)`)
     }, {
       header: 'Visits',
       accessor: 'visits',
@@ -108,7 +108,7 @@ const columns = [{
     render: row => {
       return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
     },
-    filterMethod: (filter, row) => (filter.value == \`\${row[filter.id]} (avg)\`) 
+    filterMethod: (filter, row) => (filter.value == \`\${row[filter.id]} (avg)\`)
   }, {
     header: 'Visits',
     accessor: 'visits',

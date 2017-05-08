@@ -168,12 +168,12 @@ export default {
   PivotValueComponent: ({subRows, value}) => (
     <span>{value} {subRows && `(${subRows.length})`}</span>
   ),
-  PivotPreviewComponent: ({subRows, column}) => {
-    const previewValues = subRows.slice(0, 3).map((row, i) => (
-      <span key={i}>{row[column.id]}, </span>
+  AggregateComponent: ({subRows, column}) => {
+    const previewValues = subRows.map((row, i) => (
+      <span key={i}>{row[column.id]}{i < subRows.length - 1 ? ', ' : ''}</span>
     ))
     return (
-      <span>{previewValues}...</span>
+      <span>{previewValues}</span>
     )
   },
   PivotComponent: undefined, // this is a computed default generated using

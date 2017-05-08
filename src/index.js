@@ -108,7 +108,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       ResizerComponent,
       ExpanderComponent,
       PivotValueComponent,
-      PivotPreviewComponent,
+      AggregateComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -511,8 +511,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               let isPreview
               let expandable
 
+              // Resolve Aggregate Renderer
+              const ResolvedAggregateComponent = column.aggregateRender ||
+                !column.aggregate && AggregateComponent
+
               // Is this column pivoted?
               if (pivotBy && column.pivot) {
+                // Make it expandable
+                expandable = true
+                interactionProps = {
+                  onClick: onExpanderClick
+                }
                 // Is this column a branch?
                 isBranch = rowInfo.rowValues[pivotIDKey] === column.id &&
                   cellInfo.subRows
@@ -520,10 +529,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 isPreview = pivotBy.indexOf(column.id) >= pivotBy.indexOf(rowInfo.rowValues[pivotIDKey]) &&
                   cellInfo.subRows
 
-                // Resolve renderers
+                // Resolve Pivot Renderers
                 const ResolvedExpanderComponent = column.expanderRender || ExpanderComponent
                 const ResolvedPivotValueComponent = column.pivotValueRender || PivotValueComponent
-                const ResolvedPivotPreviewComponent = column.pivotPreviewRender || PivotPreviewComponent
                 // Build the default PivotComponent
                 const DefaultResolvedPivotComponent = props => (
                   <div>
@@ -541,24 +549,22 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     value: row[pivotValKey],
                     isExpanded
                   }, cellInfo.rowValues[column.id])
-                  interactionProps = {
-                    onClick: onExpanderClick
-                  }
-                  expandable = true
                 } else if (isPreview) {
                   // Show the pivot preview
-                  resolvedCell = _.normalizeComponent(ResolvedPivotPreviewComponent, {
+                  resolvedCell = _.normalizeComponent(ResolvedAggregateComponent, {
                     ...cellInfo,
                     value: cellInfo.rowValues[column.id],
                     isExpanded
                   }, cellInfo.rowValues[column.id])
-                  interactionProps = {
-                    onClick: onExpanderClick
-                  }
-                  expandable = true
                 } else {
                   resolvedCell = null
                 }
+              } else if (cellInfo.aggregated) {
+                resolvedCell = _.normalizeComponent(ResolvedAggregateComponent, {
+                  ...cellInfo,
+                  value: cellInfo.rowValues[column.id],
+                  isExpanded
+                }, cellInfo.rowValues[column.id])
               }
 
               // Expander onClick event
@@ -572,8 +578,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   }
                 }
               }
-
-              // Return regular cell
+              
+              // Return the cell
               return (
                 <TdComponent
                   key={i2 + '-' + column.id}

@@ -31,8 +31,8 @@ export default () => {
       header: 'Age',
       accessor: 'age',
       aggregate: vals => _.round(_.mean(vals)),
-      render: row => {
-        return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
+      aggregateRender: row => {
+        return <span>{row.value} (avg)</span>
       }
     }, {
       header: 'Visits',
