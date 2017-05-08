@@ -38,27 +38,27 @@ class Filtering extends React.Component {
 
   render () {
     const columns = [{
-      header: 'Name',
+      Header: 'Name',
       columns: [{
-        header: 'First Name',
+        Header: 'First Name',
         accessor: 'firstName',
         filterMethod: (filter, row) => (row[filter.id].startsWith(filter.value) && row[filter.id].endsWith(filter.value))
       }, {
-        header: 'Last Name',
+        Header: 'Last Name',
         id: 'lastName',
         accessor: d => d.lastName,
         filterMethod: (filter, row) => (row[filter.id].includes(filter.value))
       }]
     }, {
-      header: 'Info',
+      Header: 'Info',
       columns: [{
-        header: 'Age',
+        Header: 'Age',
         accessor: 'age'
       }, {
-        header: 'Over 21',
+        Header: 'Over 21',
         accessor: 'age',
         id: 'over',
-        render: ({value}) => (value >= 21 ? 'Yes' : 'No'),
+        Cell: ({value}) => (value >= 21 ? 'Yes' : 'No'),
         filterMethod: (filter, row) => {
           if (filter.value === 'all') {
             return true
@@ -72,10 +72,11 @@ class Filtering extends React.Component {
           <select
             onChange={event => onFilterChange(event.target.value)}
             style={{width: '100%'}}
-            value={filter ? filter.value : 'all'}>
-            <option value="all"></option>
-            <option value="true">Can Drink</option>
-            <option value="false">Can't Drink</option>
+            value={filter ? filter.value : 'all'}
+          >
+            <option value='all' />
+            <option value='true'>Can Drink</option>
+            <option value='false'>Can't Drink</option>
           </select>
         )
       }
@@ -88,23 +89,23 @@ class Filtering extends React.Component {
           <h1>Table Options</h1>
           <table>
             <tbody>
-            {
-              Object.keys(this.state.tableOptions).map(optionKey => {
-                const optionValue = this.state.tableOptions[optionKey]
-                return (
-                  <tr key={optionKey}>
-                    <td>{optionKey}</td>
-                    <td style={{paddingLeft: 10, paddingTop: 5}}>
-                      <input type="checkbox"
-                        name={optionKey}
-                        checked={optionValue}
-                        onChange={this.setTableOption}
-                      />
-                    </td>
-                  </tr>
-                )
-              })
-            }
+              {
+                Object.keys(this.state.tableOptions).map(optionKey => {
+                  const optionValue = this.state.tableOptions[optionKey]
+                  return (
+                    <tr key={optionKey}>
+                      <td>{optionKey}</td>
+                      <td style={{paddingLeft: 10, paddingTop: 5}}>
+                        <input type='checkbox'
+                          name={optionKey}
+                          checked={optionValue}
+                          onChange={this.setTableOption}
+                        />
+                      </td>
+                    </tr>
+                  )
+                })
+              }
             </tbody>
           </table>
         </div>
@@ -182,27 +183,27 @@ class Filtering extends React.Component {
   getCode () {
     return `
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName',
     filterMethod: (filter, row) => (row[filter.id].startsWith(filter.value) && row[filter.id].endsWith(filter.value))
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName,
     filterMethod: (filter, row) => (row[filter.id].includes(filter.value))
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age'
   }, {
-    header: 'Over 21',
+    Header: 'Over 21',
     accessor: 'age',
     id: 'over',
-    render: ({value}) => (value >= 21 ? 'Yes' : 'No'),
+    Cell: ({value}) => (value >= 21 ? 'Yes' : 'No'),
     filterMethod: (filter, row) => {
       if (filter.value === 'all') {
         return true

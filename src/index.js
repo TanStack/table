@@ -109,6 +109,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       ExpanderComponent,
       PivotValueComponent,
       AggregateComponent,
+      FilterComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -126,7 +127,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const minRows = this.getMinRows()
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
-    const hasColumnFooter = allVisibleColumns.some(d => d.footer || (d.pivotColumns && d.pivotColumns.some(e => e.footer)))
+    const hasColumnFooter = allVisibleColumns.some(d => d.footer)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       return [
@@ -198,21 +199,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeHeaderGroup = (column, i) => {
       const resizedValue = col => (resizing.find(x => x.id === col.id) || {}).value
-
-      const flex = _.sum(column.columns.map(d => {
-        const widthFunction = col => col.width || resizedValue(col) ? 0 : col.minWidth
-        return d.pivotColumns ? _.sum(d.pivotColumns.map(widthFunction)) : widthFunction(d)
-      }))
-
-      const width = _.sum(column.columns.map(d => {
-        const widthFunction = col => _.getFirstDefined(resizedValue(col), col.width, col.minWidth)
-        return d.pivotColumns ? _.sum(d.pivotColumns.map(widthFunction)) : widthFunction(d)
-      }))
-
-      const maxWidth = _.sum(column.columns.map(d => {
-        const widthFunction = col => _.getFirstDefined(resizedValue(col), col.width, col.maxWidth)
-        return d.pivotColumns ? _.sum(d.pivotColumns.map(widthFunction)) : widthFunction(d)
-      }))
+      const flex = _.sum(column.columns.map(col => col.width || resizedValue(col) ? 0 : col.minWidth))
+      const width = _.sum(column.columns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.minWidth)))
+      const maxWidth = _.sum(column.columns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.maxWidth)))
 
       const theadGroupThProps = _.splitProps(getTheadGroupThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
@@ -252,7 +241,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          {_.normalizeComponent(column.header, {
+          {_.normalizeComponent(column.Header, {
             data: sortedData,
             column: column
           })}
@@ -318,10 +307,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         />
       ) : null
 
-      // if (column.pivotColumns) {
-      //   return column.pivotColumns.map(makeHeader)
-      // }
-
       return (
         <ThComponent
           key={i + '-' + column.id}
@@ -345,7 +330,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {...rest}
         >
           <div className='rt-resizable-header-content'>
-            {_.normalizeComponent(column.header, {
+            {_.normalizeComponent(column.Header, {
               data: sortedData,
               column: column
             })}
@@ -402,11 +387,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.rest
       }
 
-      if (!column.filterRender && column.pivotColumns) {
-        return column.pivotColumns.map(makeFilter)
-      }
-
       const filter = filtering.find(filter => filter.id === column.id)
+
+      const ResolvedFilterComponent = column.Filter || FilterComponent
 
       return (
         <ThComponent
@@ -423,13 +406,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {...rest}
         >
           {!column.hideFilter ? (
-            _.normalizeComponent(column.filterRender,
+            _.normalizeComponent(ResolvedFilterComponent,
               {
                 column,
                 filter,
                 onFilterChange: (value) => (this.filterColumn(column, value))
               },
-              defaultProps.column.filterRender
+              defaultProps.column.Filter
             )
           ) : null}
         </ThComponent>
@@ -500,7 +483,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               }
 
               // Default to a standard cell
-              let resolvedCell = _.normalizeComponent(column.render, {
+              let resolvedCell = _.normalizeComponent(column.Cell, {
                 ...cellInfo,
                 value: cellInfo.rowValues[column.id],
                 isExpanded
@@ -512,13 +495,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               let expandable
 
               // Resolve Aggregate Renderer
-              const ResolvedAggregateComponent = column.aggregateRender ||
+              const ResolvedAggregateComponent = column.Aggregated ||
                 !column.aggregate && AggregateComponent
 
               // Is this column pivoted?
               if (pivotBy && column.pivot) {
                 // Make it expandable
-                expandable = true
+                expandable = cellInfo.subRows
                 interactionProps = {
                   onClick: onExpanderClick
                 }
@@ -530,8 +513,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   cellInfo.subRows
 
                 // Resolve Pivot Renderers
-                const ResolvedExpanderComponent = column.expanderRender || ExpanderComponent
-                const ResolvedPivotValueComponent = column.pivotValueRender || PivotValueComponent
+                const ResolvedExpanderComponent = column.Expander || ExpanderComponent
+                const ResolvedPivotValueComponent = column.PivotValue || PivotValueComponent
                 // Build the default PivotComponent
                 const DefaultResolvedPivotComponent = props => (
                   <div>
@@ -540,7 +523,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   </div>
                 )
                 // Allow a completely custom pivotRender
-                const resolvedPivot = column.pivotRender || DefaultResolvedPivotComponent
+                const resolvedPivot = column.Pivot || DefaultResolvedPivotComponent
                 // Pivot Cell Render Override
                 if (isBranch) {
                   // isPivot
@@ -569,16 +552,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
               // Expander onClick event
               if (column.expander) {
+                expandable = true
+                interactionProps = {
+                  onClick: onExpanderClick
+                }
                 if (cellInfo.subRows) {
                   resolvedCell = null
-                } else {
-                  expandable = true
-                  interactionProps = {
-                    onClick: onExpanderClick
-                  }
                 }
               }
-              
+
               // Return the cell
               return (
                 <TdComponent
@@ -656,21 +638,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnProps.style
       }
 
-      if (column.pivotColumns) {
-        flex = _.sum(column.pivotColumns.map(d => {
-          const resized = resizing.find(x => x.id === d.id) || {}
-          return d.width || resized.value ? 0 : d.minWidth
-        }))
-        width = _.sum(column.pivotColumns.map(d => {
-          const resized = resizing.find(x => x.id === d.id) || {}
-          return _.getFirstDefined(resized.value, d.width, d.minWidth)
-        }))
-        maxWidth = _.sum(column.pivotColumns.map(d => {
-          const resized = resizing.find(x => x.id === d.id) || {}
-          return _.getFirstDefined(resized.value, d.width, d.maxWidth)
-        }))
-      }
-
       return (
         <TdComponent
           key={i + '-' + column.id}
@@ -739,10 +706,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnFooterProps.style
       }
 
-      if (!column.footer && column.pivotColumns) {
-        return column.pivotColumns.map(makeColumnFooter)
-      }
-
       return (
         <TdComponent
           key={i + '-' + column.id}
@@ -760,7 +723,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {...tFootTdProps.rest}
           {...columnFooterProps.rest}
         >
-          {_.normalizeComponent(column.footer, {
+          {_.normalizeComponent(column.Footer, {
             data: sortedData,
             column: column
           })}

@@ -14,25 +14,25 @@ const data = _.map(_.range(5553), d => {
 })
 
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age'
   }]
 }]
 
 class ControlledTable extends React.Component {
-  constructor() {
+  constructor () {
     super()
     this.sortChange = this.sortChange.bind(this)
     this.state = {
@@ -42,20 +42,22 @@ class ControlledTable extends React.Component {
     }
   }
 
-  sortChange(column, shift) {
-    if(shift)
-      alert('Shift click not implemented in this demo')
+  sortChange (column, shift) {
+    if (shift) {
+      window.alert('Shift click not implemented in this demo')
+    }
     var sort = {id: column.id}
-    if(this.state.sorting.length && this.state.sorting[0].id == column.id)
+    if (this.state.sorting.length && this.state.sorting[0].id === column.id) {
       this.state.sorting[0].asc ? sort.desc = true : sort.asc = true
-    else
+    } else {
       sort.asc = true
+    }
     this.setState({
       sorting: [sort]
     })
   }
 
-  render() {
+  render () {
     return (
       <div>
         <div className='table-wrap'>
@@ -91,19 +93,19 @@ function getCode () {
 })
 
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age'
   }]
 }]

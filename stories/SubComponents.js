@@ -6,8 +6,7 @@ import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
 class SubComponents extends React.Component {
-
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     const data = _.map(_.range(5553), d => {
@@ -33,53 +32,50 @@ class SubComponents extends React.Component {
       data: data
     }
 
-    this.setTableOption = this.setTableOption.bind(this);
+    this.setTableOption = this.setTableOption.bind(this)
   }
-
-  render() {
-
-
+  render () {
     const columns = [{
-      header: 'Name',
+      Header: 'Name',
       columns: [{
-        header: 'First Name',
+        Header: 'First Name',
         accessor: 'firstName'
       }, {
-        header: 'Last Name',
+        Header: 'Last Name',
         id: 'lastName',
         accessor: d => d.lastName
       }]
     }, {
-      header: 'Info',
+      Header: 'Info',
       columns: [{
-        header: 'Age',
+        Header: 'Age',
         accessor: 'age'
       }]
     }]
 
     return (
       <div>
-        <div style={{float: "left"}}>
+        <div style={{float: 'left'}}>
           <h1>Table Options</h1>
           <table>
             <tbody>
-            {
-              Object.keys(this.state.tableOptions).map(optionKey => {
-                const optionValue = this.state.tableOptions[optionKey];
-                return (
-                  <tr key={optionKey}>
-                    <td>{optionKey}</td>
-                    <td style={{paddingLeft: 10, paddingTop: 5}}>
-                      <input type="checkbox"
-                             name={optionKey}
-                             checked={optionValue}
-                             onChange={this.setTableOption}
-                      />
-                    </td>
-                  </tr>
-                )
-              })
-            }
+              {
+                Object.keys(this.state.tableOptions).map(optionKey => {
+                  const optionValue = this.state.tableOptions[optionKey]
+                  return (
+                    <tr key={optionKey}>
+                      <td>{optionKey}</td>
+                      <td style={{paddingLeft: 10, paddingTop: 5}}>
+                        <input type='checkbox'
+                          name={optionKey}
+                          checked={optionValue}
+                          onChange={this.setTableOption}
+                        />
+                      </td>
+                    </tr>
+                  )
+                })
+              }
             </tbody>
           </table>
         </div>
@@ -124,10 +120,10 @@ class SubComponents extends React.Component {
     )
   }
 
-  setTableOption(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+  setTableOption (event) {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
     this.setState({
       tableOptions: {
         ...this.state.tableOptions,
@@ -136,22 +132,22 @@ class SubComponents extends React.Component {
     })
   }
 
-  getCode() {
+  getCode () {
     return `
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age'
   }]
 }]
@@ -191,4 +187,4 @@ export default (
   }
 }
 
-export default () => <SubComponents/>
+export default () => <SubComponents />

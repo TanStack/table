@@ -16,26 +16,26 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName'
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
       aggregate: vals => _.round(_.mean(vals)),
-      aggregateRender: row => {
+      Aggregated: row => {
         return <span>{row.value} (avg)</span>
       }
     }, {
-      header: 'Visits',
+      Header: 'Visits',
       accessor: 'visits',
       aggregate: vals => _.sum(vals)
     }]
@@ -87,26 +87,26 @@ export default () => {
 function getCode () {
   return `
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age',
     aggregate: vals => _.round(_.mean(vals)),
-    render: row => {
+    Cell: row => {
       return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
     }
   }, {
-    header: 'Visits',
+    Header: 'Visits',
     accessor: 'visits',
     aggregate: vals => _.sum(vals)
   }]

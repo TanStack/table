@@ -15,21 +15,21 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName',
       maxWidth: 200
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName,
       width: 300
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
       minWidth: 400
     }]
@@ -59,21 +59,21 @@ function getCode () {
 import ReactTable from 'react-table'
 
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName',
     maxWidth: 200
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName,
     width: 300
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age',
     minWidth: 400
   }]

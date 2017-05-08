@@ -87,39 +87,36 @@ export default {
 
   // Global Column Defaults
   column: {
+    // Renderers
+    Cell: undefined,
+    Header: undefined,
+    Footer: undefined,
+    Aggregated: undefined,
+    Pivot: undefined,
+    PivotValue: undefined,
+    Expander: undefined,
+    Filter: undefined,
+    // All Columns
+    //
     sortable: true,
     show: true,
     minWidth: 100,
     // Cells only
-    render: undefined,
     className: '',
     style: {},
     getProps: emptyObj,
     // Pivot only
     aggregate: undefined,
-    pivotRender: undefined, // this is a dynamic default, set at run-time in methods.js to display PivotComponent
-    pivotPreviewRender: undefined, // this is a dynamic default, set at run-time in methods.js to display PivotComponent
     // Headers only
-    header: undefined,
     headerClassName: '',
     headerStyle: {},
     getHeaderProps: emptyObj,
     // Footers only
-    footer: undefined,
     footerClassName: '',
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
-    hideFilter: false,
-    filterRender: ({filter, onFilterChange}) => (
-      <input type='text'
-        style={{
-          width: '100%'
-        }}
-        value={filter ? filter.value : ''}
-        onChange={(event) => onFilterChange(event.target.value)}
-      />
-    )
+    hideFilter: false
   },
 
   // Global Expander Column Defaults
@@ -160,6 +157,15 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
+  FilterComponent: ({filter, onFilterChange}) => (
+    <input type='text'
+      style={{
+        width: '100%'
+      }}
+      value={filter ? filter.value : ''}
+      onChange={(event) => onFilterChange(event.target.value)}
+    />
+  ),
   ExpanderComponent: ({isExpanded}) => (
     <div className={classnames('rt-expander', isExpanded && '-open')}>
       &bull;

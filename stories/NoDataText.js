@@ -1,33 +1,23 @@
 import React from 'react'
-import _ from 'lodash'
-import namor from 'namor'
 
 import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
 export default () => {
-  const data = _.map(_.range(5553), d => {
-    return {
-      firstName: namor.generate({ words: 1, numLen: 0 }),
-      lastName: namor.generate({ words: 1, numLen: 0 }),
-      age: Math.floor(Math.random() * 30)
-    }
-  })
-
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName'
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age'
     }]
   }]
@@ -60,19 +50,19 @@ import ReactTable from 'react-table'
 
 // Create some column definitions
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age'
   }]
 }]

@@ -15,36 +15,36 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName',
-      footer: () => <div style={{textAlign: 'center'}}>First Name</div>
+      Footer: () => <div style={{textAlign: 'center'}}>First Name</div>
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       accessor: 'lastName',
-      footer: () => <div style={{textAlign: 'center'}}>Last Name</div>
+      Footer: () => <div style={{textAlign: 'center'}}>Last Name</div>
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
-      footer: () => <div style={{textAlign: 'center'}}>Age</div>
+      Footer: () => <div style={{textAlign: 'center'}}>Age</div>
     }]
   }, {
-    header: 'Expand',
+    Header: 'Expand',
     columns: [{
       expander: true,
-      header: () => (<strong>More</strong>),
+      Header: () => (<strong>More</strong>),
       width: 65,
-      render: ({isExpanded, ...rest}) => (
+      Cell: ({isExpanded, ...rest}) => (
         <div>
           {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
         </div>
       ),
       style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
-      footer: () => <span>&hearts;</span>
+      Footer: () => <span>&hearts;</span>
     }]
   }]
 
@@ -74,36 +74,36 @@ import ReactTable from 'react-table'
 
 // Create some column definitions
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName',
-    footer: () => <div style={{textAlign: 'center'}}>First Name</div>
+    Footer: () => <div style={{textAlign: 'center'}}>First Name</div>
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     accessor: 'lastName',
-    footer: () => <div style={{textAlign: 'center'}}>Last Name</div>
+    Footer: () => <div style={{textAlign: 'center'}}>Last Name</div>
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age',
-    footer: () => <div style={{textAlign: 'center'}}>Age</div>
+    Footer: () => <div style={{textAlign: 'center'}}>Age</div>
   }]
 }, {
-  header: 'Expand',
+  Header: 'Expand',
   columns: [{
     expander: true,
-    header: () => (<strong>More</strong>),
+    Header: () => (<strong>More</strong>),
     width: 65,
-    render: ({isExpanded, ...rest}) => (
+    Cell: ({isExpanded, ...rest}) => (
       <div>
         {isExpanded ? <span>&#x2299;</span> : <span>&#x2295;</span>}
       </div>
     ),
     style: {cursor: 'pointer', fontSize: 25, padding: '0', textAlign: 'center', userSelect: 'none'},
-    footer: () => <span>&hearts;</span>
+    Footer: () => <span>&hearts;</span>
   }]
 }]
 

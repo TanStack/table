@@ -16,42 +16,36 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName',
-      pivotValueRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>
+      PivotValue: ({value}) => <span style={{color: 'darkred'}}>{value}</span>
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName,
-      pivotValueRender: ({value}) => <span style={{color: 'darkblue'}}>{value}</span>
+      PivotValue: ({value}) => <span style={{color: 'darkblue'}}>{value}</span>,
+      Footer: () => <div style={{textAlign: 'center'}}><strong>Pivot Column Footer</strong></div>
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
       aggregate: vals => {
         return _.round(_.mean(vals))
       },
-      aggregateRender: row => {
-        console.log(row.value)
-        return <span>{row.value} (avg)</span>
-      }
+      Aggregated: row => <span>{row.value} (avg)</span>
     }, {
-      header: 'Visits',
+      Header: 'Visits',
       accessor: 'visits',
       aggregate: vals => _.sum(vals),
-      // aggregateRender: row => {
-      //   console.log(row.value)
-      //   return <span>{row.value}</span>
-      // },
       hideFilter: true
     }]
   }, {
     pivot: true,
-    header: () => <strong>Overriden Pivot Column Header Group</strong>
+    Header: () => <strong>Overridden Pivot Column Header Group</strong>
   }, {
     expander: true
   }]
@@ -79,7 +73,7 @@ export default () => {
                 <br />
                 <ReactTable
                   data={data}
-                  columns={columns.filter(x => !x.expander)}
+                  columns={columns.filter(x => !x.expander && !x.pivot)}
                   defaultPageSize={3}
                   showPagination={false}
                   SubComponent={(row) => {
@@ -108,38 +102,38 @@ export default () => {
 function getCode () {
   return `
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName'
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
       aggregate: vals => {
         return _.round(_.mean(vals))
       },
-      render: row => {
+      Cell: row => {
         return <span>{row.aggregated ? \`\${row.value} (avg)\` : row.value}</span>
       }
     }, {
-      header: 'Visits',
+      Header: 'Visits',
       accessor: 'visits',
       aggregate: vals => _.sum(vals),
       hideFilter: true
     }]
   }, {
-    header: () => <strong>Overriden Pivot Column Header Group</strong>,
+    Header: () => <strong>Overriden Pivot Column Header Group</strong>,
     expander: true,
     minWidth: 200,
     pivotRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>,
-    footer: () => <div style={{textAlign: 'center'}}><strong>Overriden Pivot Column Footer</strong></div>
+    Footer: () => <div style={{textAlign: 'center'}}><strong>Overriden Pivot Column Footer</strong></div>
   }]
 
   return (

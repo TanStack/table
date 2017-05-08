@@ -37,23 +37,23 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName',
-      footer: 'Footer'
+      Footer: 'Footer'
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName,
-      footer: 'Footer'
+      Footer: 'Footer'
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
-      footer: 'Footer'
+      Footer: 'Footer'
     }]
   }]
 

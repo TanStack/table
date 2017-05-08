@@ -1,3 +1,4 @@
+import React from 'react'
 import _ from './utils'
 
 export default Base => class extends Base {
@@ -150,6 +151,7 @@ export default Base => class extends Base {
       })
 
       let pivotColumnGroup = {
+        header: () => <strong>Group</strong>,
         columns: pivotColumns.map(col => ({
           ...col,
           pivot: true

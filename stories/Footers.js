@@ -15,11 +15,11 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName',
-      footer: (
+      Footer: (
         <span><strong>Popular:</strong> {
           _.first(
             _.reduce(
@@ -34,10 +34,10 @@ export default () => {
         </span>
       )
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName,
-      footer: (
+      Footer: (
         <span><strong>Longest:</strong> {
           _.reduce(
             _.map(
@@ -52,11 +52,11 @@ export default () => {
       )
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Age',
+      Header: 'Age',
       accessor: 'age',
-      footer: <span><strong>Average:</strong> {_.round(_.mean(_.map(data, d => d.age)))}</span>
+      Footer: <span><strong>Average:</strong> {_.round(_.mean(_.map(data, d => d.age)))}</span>
     }]
   }]
 
@@ -85,11 +85,11 @@ import ReactTable from 'react-table'
 
 // Create some column definitions
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
       accessor: 'firstName',
-      footer: (
+      Footer: (
         <span><strong>Popular:</strong> {
           _.first(
             _.reduce(
@@ -104,10 +104,10 @@ const columns = [{
         </span>
       )
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
       accessor: d => d.lastName,
-      footer: (
+      Footer: (
         <span><strong>Longest:</strong> {
           _.reduce(
             _.map(
@@ -122,11 +122,11 @@ const columns = [{
       )
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
       accessor: 'age',
-      footer: <span><strong>Average:</strong> {_.round(_.mean(_.map(data, d => d.age)))}</span>
+      Footer: <span><strong>Average:</strong> {_.round(_.mean(_.map(data, d => d.age)))}</span>
   }]
 }]
 

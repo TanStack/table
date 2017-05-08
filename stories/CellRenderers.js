@@ -19,21 +19,21 @@ export default () => {
   })
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     columns: [{
-      header: 'First Name',
+      Header: 'First Name',
       accessor: 'firstName'
     }, {
-      header: 'Last Name',
+      Header: 'Last Name',
       id: 'lastName',
       accessor: d => d.lastName
     }]
   }, {
-    header: 'Info',
+    Header: 'Info',
     columns: [{
-      header: 'Profile Progress',
+      Header: 'Profile Progress',
       accessor: 'progress',
-      render: row => (
+      Cell: row => (
         <div
           style={{
             width: '100%',
@@ -56,9 +56,9 @@ export default () => {
         </div>
       )
     }, {
-      header: 'Status',
+      Header: 'Status',
       accessor: 'status',
-      render: row => (
+      Cell: row => (
         <span>
           <span style={{
             color: row.value === 'relationship' ? '#ff2e00'
@@ -101,21 +101,21 @@ function getCode () {
 import ReactTable from 'react-table'
 
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Profile Progress',
+    Header: 'Profile Progress',
     accessor: 'progress',
-    render: row => (
+    Cell: row => (
       <div
         style={{
           width: '100%',
@@ -138,9 +138,9 @@ const columns = [{
       </div>
     )
   }, {
-    header: 'Status',
+    Header: 'Status',
     accessor: 'status',
-    render: row => (
+    Cell: row => (
       <span>
         <span style={{
           color: row.value === 'relationship' ? '#ff2e00'
