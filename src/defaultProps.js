@@ -97,7 +97,6 @@ export default {
     Expander: undefined,
     Filter: undefined,
     // All Columns
-    //
     sortable: true,
     show: true,
     minWidth: 100,
