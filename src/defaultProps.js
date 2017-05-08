@@ -95,6 +95,10 @@ export default {
     className: '',
     style: {},
     getProps: emptyObj,
+    // Pivot only
+    aggregate: undefined,
+    pivotRender: undefined, // this is a dynamic default, set at run-time in methods.js to display PivotComponent
+    pivotPreviewRender: undefined, // this is a dynamic default, set at run-time in methods.js to display PivotComponent
     // Headers only
     header: undefined,
     headerClassName: '',
@@ -123,13 +127,7 @@ export default {
     sortable: false,
     width: 35,
     hideFilter: true
-    // render: will be overriden in methods.js to display ExpanderComponent
-  },
-
-  // Global Pivot Column Defaults
-  pivotDefaults: {
-    filterRender: undefined
-    // render: will be overriden in methods.js to display ExpanderComponent and PivotValueComponent
+    // render: undefined // this is a dynamic default, set at run-time in methods.js to display ExpanderComponent
   },
 
   // Text
@@ -170,6 +168,16 @@ export default {
   PivotValueComponent: ({subRows, value}) => (
     <span>{value} {subRows && `(${subRows.length})`}</span>
   ),
+  PivotPreviewComponent: ({subRows, column}) => {
+    const previewValues = subRows.slice(0, 3).map((row, i) => (
+      <span key={i}>{row[column.id]}, </span>
+    ))
+    return (
+      <span>{previewValues}...</span>
+    )
+  },
+  PivotComponent: undefined, // this is a computed default generated using
+  // the ExpanderComponent and PivotValueComponent at run-time in methods.js
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,

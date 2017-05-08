@@ -87,6 +87,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       pages,
       // Pivoting State
       pivotValKey,
+      pivotIDKey,
       pivotBy,
       subRowsKey,
       expandedRows,
@@ -105,6 +106,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       SubComponent,
       NoDataComponent,
       ResizerComponent,
+      ExpanderComponent,
+      PivotValueComponent,
+      PivotPreviewComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -314,9 +318,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         />
       ) : null
 
-      if (column.pivotColumns) {
-        return column.pivotColumns.map(makeHeader)
-      }
+      // if (column.pivotColumns) {
+      //   return column.pivotColumns.map(makeHeader)
+      // }
 
       return (
         <ThComponent
@@ -480,73 +484,92 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 ...columnProps.style
               }
 
-              const extraProps = {}
-
-              if (column.expander) {
-                const onTdClick = (e) => {
-                  if (onExpandRow) {
-                    return onExpandRow(cellInfo.nestingPath, e)
-                  }
-                  let newExpandedRows = _.clone(expandedRows)
-                  if (isExpanded) {
-                    return this.setStateWithData({
-                      expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, false)
-                    })
-                  }
+              const onExpanderClick = (e) => {
+                if (onExpandRow) {
+                  return onExpandRow(cellInfo.nestingPath, e)
+                }
+                let newExpandedRows = _.clone(expandedRows)
+                if (isExpanded) {
                   return this.setStateWithData({
-                    expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, {})
+                    expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, false)
                   })
                 }
+                return this.setStateWithData({
+                  expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, {})
+                })
+              }
 
-                extraProps['onClick'] = onTdClick
+              // Default to a standard cell
+              let resolvedCell = _.normalizeComponent(column.render, {
+                ...cellInfo,
+                value: cellInfo.rowValues[column.id],
+                isExpanded
+              }, cellInfo.rowValues[column.id])
 
-                if (column.pivotColumns) {
-                  const pivotFlex = _.sum(column.pivotColumns.map(d => {
-                    const resized = resizing.find(x => x.id === d.id) || {}
-                    return d.width || resized.value ? 0 : d.minWidth
-                  }))
-                  const pivotWidth = _.sum(column.pivotColumns.map(d => {
-                    const resized = resizing.find(x => x.id === d.id) || {}
-                    return _.getFirstDefined(resized.value, d.width, d.minWidth)
-                  }))
-                  const pivotMaxWidth = _.sum(column.pivotColumns.map(d => {
-                    const resized = resizing.find(x => x.id === d.id) || {}
-                    return _.getFirstDefined(resized.value, d.width, d.maxWidth)
-                  }))
+              let interactionProps
+              let isBranch
+              let isPreview
+              let expandable
 
-                  // Return the pivot expander cell
-                  return (
-                    <TdComponent
-                      key={i2}
-                      className={classnames(
-                        'rt-pivot',
-                        classes
-                      )}
-                      style={{
-                        ...styles,
-                        paddingLeft: rowInfo.nestingPath.length === 1 ? undefined : `${30 * (cellInfo.nestingPath.length - 1)}px`,
-                        flex: `${pivotFlex} 0 auto`,
-                        width: `${pivotWidth}px`,
-                        maxWidth: `${pivotMaxWidth}px`
-                      }}
-                      {...tdProps.rest}
-                      onClick={onTdClick}
-                    >
-                      {cellInfo.subRows ? (
-                        _.normalizeComponent(column.render, {
-                          ...cellInfo,
-                          value: row[pivotValKey],
-                          isExpanded
-                        }, cellInfo.rowValues[column.id])
-                      ) : SubComponent ? (
-                        _.normalizeComponent(column.render, {
-                          ...cellInfo,
-                          value: cellInfo.rowValues[column.id],
-                          isExpanded
-                        }, cellInfo.rowValues[column.id])
-                      ) : null}
-                    </TdComponent>
-                  )
+              // Is this column pivoted?
+              if (pivotBy && column.pivot) {
+                // Is this column a branch?
+                isBranch = rowInfo.rowValues[pivotIDKey] === column.id &&
+                  cellInfo.subRows
+                // Should this column be blank?
+                isPreview = pivotBy.indexOf(column.id) >= pivotBy.indexOf(rowInfo.rowValues[pivotIDKey]) &&
+                  cellInfo.subRows
+
+                // Resolve renderers
+                const ResolvedExpanderComponent = column.expanderRender || ExpanderComponent
+                const ResolvedPivotValueComponent = column.pivotValueRender || PivotValueComponent
+                const ResolvedPivotPreviewComponent = column.pivotPreviewRender || PivotPreviewComponent
+                // Build the default PivotComponent
+                const DefaultResolvedPivotComponent = props => (
+                  <div>
+                    <ResolvedExpanderComponent {...props} />
+                    <ResolvedPivotValueComponent {...props} />
+                  </div>
+                )
+                // Allow a completely custom pivotRender
+                const resolvedPivot = column.pivotRender || DefaultResolvedPivotComponent
+                // Pivot Cell Render Override
+                if (isBranch) {
+                  // isPivot
+                  resolvedCell = _.normalizeComponent(resolvedPivot, {
+                    ...cellInfo,
+                    value: row[pivotValKey],
+                    isExpanded
+                  }, cellInfo.rowValues[column.id])
+                  interactionProps = {
+                    onClick: onExpanderClick
+                  }
+                  expandable = true
+                } else if (isPreview) {
+                  // Show the pivot preview
+                  resolvedCell = _.normalizeComponent(ResolvedPivotPreviewComponent, {
+                    ...cellInfo,
+                    value: cellInfo.rowValues[column.id],
+                    isExpanded
+                  }, cellInfo.rowValues[column.id])
+                  interactionProps = {
+                    onClick: onExpanderClick
+                  }
+                  expandable = true
+                } else {
+                  resolvedCell = null
+                }
+              }
+
+              // Expander onClick event
+              if (column.expander) {
+                if (cellInfo.subRows) {
+                  resolvedCell = null
+                } else {
+                  expandable = true
+                  interactionProps = {
+                    onClick: onExpanderClick
+                  }
                 }
               }
 
@@ -556,7 +579,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   key={i2 + '-' + column.id}
                   className={classnames(
                     classes,
-                    !show && 'hidden'
+                    !show && 'hidden',
+                    expandable && 'rt-expandable',
+                    (isBranch || isPreview) && 'rt-pivot'
                   )}
                   style={{
                     ...styles,
@@ -565,13 +590,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     maxWidth: `${maxWidth}px`
                   }}
                   {...tdProps.rest}
-                  {...extraProps}
+                  {...interactionProps}
                 >
-                  {_.normalizeComponent(column.render, {
-                    ...cellInfo,
-                    value: cellInfo.rowValues[column.id],
-                    isExpanded
-                  }, cellInfo.rowValues[column.id])}
+                  {resolvedCell}
                 </TdComponent>
               )
             })}

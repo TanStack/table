@@ -12,7 +12,7 @@ export default Base => class extends Base {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
-    if (oldState.defaultSorting !== newState.defaultSorting) {
+    if (JSON.stringify(oldState.defaultSorting) !== JSON.stringify(newState.defaultSorting)) {
       newState.sorting = newState.defaultSorting
     }
 

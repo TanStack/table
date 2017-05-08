@@ -1,4 +1,3 @@
-import React from 'react'
 import _ from './utils'
 
 export default Base => class extends Base {
@@ -53,27 +52,15 @@ export default Base => class extends Base {
       expanderColumn = expanderColumn.columns.find(col => col.expander)
     }
 
-    // If it has subrows or pivot columns we need to make sure we have an expander column
-    if ((SubComponent || pivotBy.length) && !expanderColumn) {
+    // If we have SubComponent's we need to make sure we have an expander column
+    if (SubComponent && !expanderColumn) {
       expanderColumn = {expander: true}
       columnsWithExpander = [expanderColumn, ...columnsWithExpander]
     }
 
     const makeDecoratedColumn = (column) => {
       let dcol
-      if (pivotBy.length && column.expander) {
-        dcol = {
-          ...this.props.column,
-          render: (props) => (
-            <div>
-              <this.props.ExpanderComponent {...props} />
-              <this.props.PivotValueComponent {...props} />
-            </div>
-          ),
-          ...this.props.pivotDefaults,
-          ...column
-        }
-      } else if (column.expander) {
+      if (column.expander) {
         dcol = {
           ...this.props.column,
           render: this.props.ExpanderComponent,
@@ -148,31 +135,36 @@ export default Base => class extends Base {
       return column.columns ? column.columns.length : pivotBy.indexOf(column.id) > -1 ? false : _.getFirstDefined(column.show, true)
     })
 
-    // Move the pivot columns into a single column if needed
+    // Find any custom pivot location
+    const pivotIndex = visibleColumns.findIndex(col => col.pivot)
+
+    // Handle Pivot Columns
     if (pivotBy.length) {
+      // Retrieve the pivot columns in the correct pivot order
       const pivotColumns = []
-      for (var i = 0; i < allDecoratedColumns.length; i++) {
-        if (pivotBy.indexOf(allDecoratedColumns[i].id) > -1) {
-          pivotColumns.push(allDecoratedColumns[i])
+      pivotBy.forEach(pivotID => {
+        const found = allDecoratedColumns.find(d => d.id === pivotID)
+        if (found) {
+          pivotColumns.push(found)
         }
+      })
+
+      let pivotColumnGroup = {
+        columns: pivotColumns.map(col => ({
+          ...col,
+          pivot: true
+        }))
       }
 
-      const pivotExpanderColumn = visibleColumns.findIndex(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
-      if (pivotExpanderColumn >= 0) {
-        const pivotColumn = {
-          ...visibleColumns[pivotExpanderColumn],
-          pivotColumns
+      // Place the pivotColumns back into the visibleColumns
+      if (pivotIndex >= 0) {
+        pivotColumnGroup = {
+          ...visibleColumns[pivotIndex],
+          ...pivotColumnGroup
         }
-        visibleColumns[pivotExpanderColumn] = pivotColumn
+        visibleColumns.splice(pivotIndex, 1, pivotColumnGroup)
       } else {
-        // If the expander column wasn't on the top level column, find it in the `columns` option.
-        const pivotExpanderSubColumn = visibleColumns[pivotExpanderColumn].columns.findIndex(col => col.expander)
-        const pivotColumn = {
-          ...visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn],
-          pivotColumns
-        }
-        // Add the pivot columns to the expander column
-        visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn] = pivotColumn
+        visibleColumns.unshift(pivotColumnGroup)
       }
     }
 
@@ -215,10 +207,10 @@ export default Base => class extends Base {
       })
       return aggregationValues
     }
+
+    // TODO: Make it possible to fabricate nested rows without pivoting
     const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)
-    let pivotColumn
     if (pivotBy.length) {
-      pivotColumn = allVisibleColumns[0]
       const groupRecursively = (rows, keys, i = 0) => {
         // This is the last level, just return the rows
         if (i === keys.length) {
@@ -252,7 +244,6 @@ export default Base => class extends Base {
     return {
       ...newState,
       resolvedData,
-      pivotColumn,
       allVisibleColumns,
       headerGroups,
       allDecoratedColumns,

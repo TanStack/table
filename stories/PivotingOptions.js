@@ -19,21 +19,24 @@ export default () => {
     header: 'Name',
     columns: [{
       header: 'First Name',
-      accessor: 'firstName'
+      accessor: 'firstName',
+      pivotValueRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>
     }, {
       header: 'Last Name',
       id: 'lastName',
-      accessor: d => d.lastName
+      accessor: d => d.lastName,
+      pivotValueRender: ({value}) => <span style={{color: 'darkblue'}}>{value}</span>
     }]
   }, {
     header: 'Info',
     columns: [{
       header: 'Age',
       accessor: 'age',
-      aggregate: vals => {
-        return _.round(_.mean(vals))
-      },
+      // aggregate: vals => {
+      //   return _.round(_.mean(vals))
+      // },
       render: row => {
+        console.log(row.value)
         return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
       }
     }, {
@@ -43,11 +46,10 @@ export default () => {
       hideFilter: true
     }]
   }, {
-    header: () => <strong>Overriden Pivot Column Header Group</strong>,
-    expander: true,
-    minWidth: 200,
-    pivotRender: ({value}) => <span style={{color: 'darkred'}}>{value}</span>,
-    footer: () => <div style={{textAlign: 'center'}}><strong>Overriden Pivot Column Footer</strong></div>
+    pivot: true,
+    header: () => <strong>Overriden Pivot Column Header Group</strong>
+  }, {
+    expander: true
   }]
 
   return (
@@ -61,12 +63,9 @@ export default () => {
           pivotBy={['firstName', 'lastName']}
           defaultSorting={[{id: 'firstName', desc: false}, {id: 'lastName', desc: true}]}
           collapseOnSortingChange={false}
-          showFilters={true}
+          showFilters
           ExpanderComponent={({isExpanded, ...rest}) => (
             isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
-          )}
-          PivotValueComponent={ ({subRows, value}) => (
-            <span><span style={{color: 'darkred'}}>{value}</span> {subRows && `(${subRows.length} Last Names)`}</span>
           )}
           SubComponent={(row) => {
             return (
