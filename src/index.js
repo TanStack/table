@@ -570,7 +570,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   onClick: onExpanderClick
                 }
                 if (pivotBy) {
-                  console.log(cellInfo)
                   if (cellInfo.groupedByPivot) {
                     resolvedCell = null
                   }
