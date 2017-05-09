@@ -15,35 +15,27 @@ export default () => {
       })
       return {
         firstName: namor.generate({ words: 1, numLen: 0 }),
-        age: (ages => {
-          return Math.round(ages.reduce((p, c) => p + c, 0) / ages.length)
-        })(grandChildren.map(d => d.age)),
-        aggregated: true,
+        age: Math.floor(Math.random() * 30),
         children: grandChildren
       }
     })
     return {
       lastName: namor.generate({ words: 1, numLen: 0 }),
-      firstName: children.map(d => d.firstName).join(', '),
-      age: (ages => {
-        return Math.round(ages.reduce((p, c) => p + c, 0) / ages.length)
-      })(children.map(d => d.age)),
-      aggregated: true,
+      firstName: children.map(d => d.firstName),
+      age: Math.floor(Math.random() * 30),
       children
     }
   })
 
   const columns = [{
-    expander: true
-  }, {
     Header: 'Name',
     columns: [{
       Header: 'First Name',
-      accessor: 'firstName'
+      accessor: 'firstName',
+      expander: true
     }, {
       Header: 'Last Name',
-      id: 'lastName',
-      accessor: d => d.lastName
+      accessor: 'lastName'
     }]
   }, {
     Header: 'Info',
@@ -62,8 +54,6 @@ export default () => {
           columns={columns}
           defaultPageSize={10}
           subRowsKey='children'
-          aggregatedKey='aggregated'
-          pivotBy={['lastName']}
         />
       </div>
       <div style={{textAlign: 'center'}}>

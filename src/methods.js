@@ -52,18 +52,18 @@ export default Base => class extends Base {
 
     const makeDecoratedColumn = (column) => {
       let dcol
-      if (column.expander) {
+      // if (column.expander) {
+      //   dcol = {
+      //     ...this.props.column,
+      //     ...this.props.expanderDefaults,
+      //     ...column
+      //   }
+      // } else {
         dcol = {
           ...this.props.column,
-          ...this.props.expanderDefaults,
           ...column
         }
-      } else {
-        dcol = {
-          ...this.props.column,
-          ...column
-        }
-      }
+      // }
 
       if (typeof dcol.accessor === 'string') {
         dcol.id = dcol.id || dcol.accessor
@@ -145,7 +145,7 @@ export default Base => class extends Base {
         columns: pivotColumns.map(col => ({
           ...this.props.pivotDefaults,
           ...col,
-          pivot: true
+          pivoted: true
         }))
       }
 

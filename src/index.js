@@ -478,6 +478,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 isExpanded,
                 column: {...column},
                 value: rowInfo.row[column.id],
+                pivoted: column.pivoted,
+                expander: column.expander,
                 resized,
                 show,
                 width,
@@ -519,36 +521,35 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               // Resolve Renderers
               const ResolvedAggregatedComponent = column.Aggregated || (!column.aggregate ? AggregatedComponent : column.Cell)
               const ResolvedExpanderComponent = column.Expander || ExpanderComponent
+              const ResolvedPivotValueComponent = column.PivotValue || PivotValueComponent
+              const DefaultResolvedPivotComponent = PivotComponent || (props => (
+                <div>
+                  <ResolvedExpanderComponent {...props} />
+                  <ResolvedPivotValueComponent {...props} />
+                </div>
+              ))
+              const ResolvedPivotComponent = column.Pivot || DefaultResolvedPivotComponent
 
               // Is this column pivoted?
-              if (pivotBy && column.pivot) {
+              if (cellInfo.pivoted || cellInfo.expander) {
                 // Make it expandable
                 cellInfo.expandable = cellInfo.subRows
                 interactionProps = {
                   onClick: onExpanderClick
                 }
+              }
+
+              if (cellInfo.pivoted) {
                 // Is this column a branch?
                 isBranch = rowInfo.row[pivotIDKey] === column.id &&
                   cellInfo.subRows
                 // Should this column be blank?
                 isPreview = pivotBy.indexOf(column.id) > pivotBy.indexOf(rowInfo.row[pivotIDKey]) &&
                   cellInfo.subRows
-
-                // Resolve Pivot Renderers
-                const ResolvedPivotValueComponent = column.PivotValue || PivotValueComponent
-                // Build the default PivotComponent
-                const DefaultResolvedPivotComponent = PivotComponent || (props => (
-                  <div>
-                    <ResolvedExpanderComponent {...props} />
-                    <ResolvedPivotValueComponent {...props} />
-                  </div>
-                ))
-                // Allow a completely custom pivotRender
-                const resolvedPivot = column.Pivot || DefaultResolvedPivotComponent
                 // Pivot Cell Render Override
                 if (isBranch) {
                   // isPivot
-                  resolvedCell = _.normalizeComponent(resolvedPivot, {
+                  resolvedCell = _.normalizeComponent(ResolvedPivotComponent, {
                     ...cellInfo,
                     value: row[pivotValKey]
                   }, row[pivotValKey])
@@ -560,23 +561,22 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 }
               } else if (cellInfo.aggregated) {
                 resolvedCell = _.normalizeComponent(ResolvedAggregatedComponent, cellInfo, value)
-              }
-
-              // Expander onClick event
-              if (column.expander) {
-                resolvedCell = _.normalizeComponent(ResolvedExpanderComponent, cellInfo)
-                cellInfo.expandable = true
-                interactionProps = {
-                  onClick: onExpanderClick
+              } else if (column.expander) {
+                resolvedCell = _.normalizeComponent(ResolvedPivotComponent, cellInfo, value)
+                if (cellInfo.subRows) {
+                  resolvedCell = null
                 }
-                if (pivotBy) {
-                  if (cellInfo.groupedByPivot) {
-                    resolvedCell = null
-                  }
-                  if (!cellInfo.subRows && !SubComponent) {
-                    resolvedCell = null
-                  }
+                if (!cellInfo.subRows && !SubComponent) {
+                  resolvedCell = null
                 }
+                // if (pivotBy) {
+                //   if (cellInfo.groupedByPivot) {
+                //     resolvedCell = null
+                //   }
+                //   if (!cellInfo.subRows && !SubComponent) {
+                //     resolvedCell = null
+                //   }
+                // }
               }
 
               // Return the cell
