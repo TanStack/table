@@ -34,29 +34,14 @@ const columns = [{
 class ControlledTable extends React.Component {
   constructor () {
     super()
-    this.sortChange = this.sortChange.bind(this)
     this.state = {
       sorting: [],
       page: 0,
-      pageSize: 10
+      pageSize: 10,
+      expandedRows: {},
+      resizing: []
     }
   }
-
-  sortChange (column, shift) {
-    if (shift) {
-      window.alert('Shift click not implemented in this demo')
-    }
-    var sort = {id: column.id}
-    if (this.state.sorting.length && this.state.sorting[0].id === column.id) {
-      this.state.sorting[0].asc ? sort.desc = true : sort.asc = true
-    } else {
-      sort.asc = true
-    }
-    this.setState({
-      sorting: [sort]
-    })
-  }
-
   render () {
     return (
       <div>
@@ -66,11 +51,16 @@ class ControlledTable extends React.Component {
             data={data}
             columns={columns}
             sorting={this.state.sorting}
-            onSortingChange={this.sortChange}
+            onSortingChange={sorting => this.setState({sorting})}
             page={this.state.page}
             onPageChange={page => this.setState({page})}
             pageSize={this.state.pageSize}
             onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
+            expandedRows={this.state.expandedRows}
+            onExpandRow={(expandedRows) => this.setState({expandedRows})}
+            resizing={this.state.resizing}
+            onResize={resizing => this.setState({resizing})}
+            pivotBy={['lastName']}
           />
         </div>
         <div style={{textAlign: 'center'}}>

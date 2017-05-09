@@ -31,20 +31,6 @@ export default Base => class extends Base {
       }
     })
 
-    // Build Header Groups
-    const headerGroups = []
-    let currentSpan = []
-
-    // A convenience function to add a header and reset the currentSpan
-    const addHeader = (columns, column = columns[0]) => {
-      headerGroups.push({
-        ...this.props.column,
-        ...column,
-        columns: columns
-      })
-      currentSpan = []
-    }
-
     let columnsWithExpander = [...columns]
 
     let expanderColumn = columns.find(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
@@ -64,7 +50,7 @@ export default Base => class extends Base {
       if (column.expander) {
         dcol = {
           ...this.props.column,
-          render: this.props.ExpanderComponent,
+          Header: this.props.ExpanderComponent,
           ...this.props.expanderDefaults,
           ...column
         }
@@ -153,6 +139,7 @@ export default Base => class extends Base {
       let pivotColumnGroup = {
         header: () => <strong>Group</strong>,
         columns: pivotColumns.map(col => ({
+          ...this.props.pivotDefaults,
           ...col,
           pivot: true
         }))
@@ -168,6 +155,20 @@ export default Base => class extends Base {
       } else {
         visibleColumns.unshift(pivotColumnGroup)
       }
+    }
+
+    // Build Header Groups
+    const headerGroups = []
+    let currentSpan = []
+
+    // A convenience function to add a header and reset the currentSpan
+    const addHeader = (columns, column) => {
+      headerGroups.push({
+        ...this.props.column,
+        ...column,
+        columns: columns
+      })
+      currentSpan = []
     }
 
     // Build flast list of allVisibleColumns and HeaderGroups
@@ -261,17 +262,36 @@ export default Base => class extends Base {
       showFilters,
       defaultFilterMethod,
       resolvedData,
-      allVisibleColumns
+      allVisibleColumns,
+      allDecoratedColumns
     } = resolvedState
+
+    const sortersByID = {}
+
+    allDecoratedColumns
+      .filter(col => col.sortMethod)
+      .forEach(col => {
+        sortersByID[col.id] = col.sortMethod
+      })
 
     // Resolve the data from either manual data or sorted data
     return {
-      sortedData: manual ? resolvedData : this.sortData(this.filterData(resolvedData, showFilters, filtering, defaultFilterMethod, allVisibleColumns), sorting)
+      sortedData: manual ? resolvedData : this.sortData(
+        this.filterData(
+          resolvedData,
+          showFilters,
+          filtering,
+          defaultFilterMethod,
+          allVisibleColumns
+        ),
+        sorting,
+        sortersByID
+      )
     }
   }
 
-  fireOnChange () {
-    this.props.onChange(this.getResolvedState(), this)
+  fireFetchData () {
+    this.props.onFetchData(this.getResolvedState(), this)
   }
 
   getPropOrState (key) {
@@ -333,17 +353,20 @@ export default Base => class extends Base {
     return filteredData
   }
 
-  sortData (data, sorting) {
+  sortData (data, sorting, sortersByID = {}) {
     if (!sorting.length) {
       return data
     }
 
     const sorted = _.orderBy(data, sorting.map(sort => {
-      return row => {
-        if (row[sort.id] === null || row[sort.id] === undefined) {
-          return -Infinity
+      // Support custom sorting methods for each column
+      if (sortersByID[sort.id]) {
+        return row => {
+          return sortersByID[sort.id](row[sort.id])
         }
-        return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
+      }
+      return row => {
+        return this.props.sortMethod[sort.id](row[sort.id])
       }
     }), sorting.map(d => !d.desc))
 
@@ -353,7 +376,7 @@ export default Base => class extends Base {
       }
       return {
         ...row,
-        [this.props.subRowsKey]: this.sortData(row[this.props.subRowsKey], sorting)
+        [this.props.subRowsKey]: this.sortData(row[this.props.subRowsKey], sorting, sortersByID)
       }
     })
   }
@@ -365,18 +388,19 @@ export default Base => class extends Base {
   // User actions
   onPageChange (page) {
     const {onPageChange, collapseOnPageChange} = this.props
-    if (onPageChange) {
-      return onPageChange(page)
+    onPageChange && onPageChange(page)
+    // If controlled, do not keep track of state
+    if (typeof this.props.page !== 'undefined') {
+      this.fireFetchData()
+      return
     }
     const newState = {page}
     if (collapseOnPageChange) {
       newState.expandedRows = {}
     }
-    this.setStateWithData(
-      newState
-      , () => {
-        this.fireOnChange()
-      })
+    this.setStateWithData(newState, () => {
+      this.fireFetchData()
+    })
   }
 
   onPageSizeChange (newPageSize) {
@@ -387,15 +411,17 @@ export default Base => class extends Base {
     const currentRow = pageSize * page
     const newPage = Math.floor(currentRow / newPageSize)
 
-    if (onPageSizeChange) {
-      return onPageSizeChange(newPageSize, newPage)
+    onPageSizeChange && onPageSizeChange(newPageSize, newPage)
+    if (typeof this.props.page !== 'undefined') {
+      this.fireFetchData()
+      return
     }
 
     this.setStateWithData({
       pageSize: newPageSize,
       page: newPage
     }, () => {
-      this.fireOnChange()
+      this.fireFetchData()
     })
   }
 
@@ -414,9 +440,7 @@ export default Base => class extends Base {
     }
 
     const {onSortingChange} = this.props
-    if (onSortingChange) {
-      return onSortingChange(column, additive)
-    }
+
     let newSorting = _.clone(sorting || []).map(d => {
       d.desc = _.isSortingDesc(d)
       return d
@@ -489,20 +513,26 @@ export default Base => class extends Base {
         }
       }
     }
+    // If controlled, do not keep track of state
+    onSortingChange && onSortingChange(newSorting, column, additive)
+    if (typeof this.props.sorting !== 'undefined') {
+      this.fireFetchData()
+      return
+    }
     this.setStateWithData({
       page: ((!sorting.length && newSorting.length) || !additive) ? 0 : this.state.page,
       sorting: newSorting
     }, () => {
-      this.fireOnChange()
+      this.fireFetchData()
     })
   }
 
   filterColumn (column, value) {
     const {filtering} = this.getResolvedState()
-    const {onFilteringChange} = this.props
+    const {onFilterChange} = this.props
 
-    if (onFilteringChange) {
-      return onFilteringChange(column, value)
+    if (onFilterChange) {
+      return onFilterChange(column, value)
     }
 
     // Remove old filter first if it exists
@@ -522,17 +552,11 @@ export default Base => class extends Base {
     this.setStateWithData({
       filtering: newFiltering
     }, () => {
-      this.fireOnChange()
+      this.fireFetchData()
     })
   }
 
   resizeColumnStart (column, event, isTouch) {
-    const {onResize} = this.props
-
-    if (onResize) {
-      return onResize(column, event, isTouch)
-    }
-
     const parentWidth = event.target.parentElement.getBoundingClientRect().width
 
     let pageX
@@ -588,6 +612,7 @@ export default Base => class extends Base {
   }
 
   resizeColumnMoving (event) {
+    const {onResize} = this.props
     const {resizing, currentlyResizing} = this.getResolvedState()
 
     // Delete old value
@@ -608,6 +633,12 @@ export default Base => class extends Base {
       id: currentlyResizing.id,
       value: newWidth
     })
+
+    onResize && onResize(newResizing, event)
+
+    if (this.props.resizing) {
+      return
+    }
 
     this.setStateWithData({
       resizing: newResizing

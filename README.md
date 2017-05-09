@@ -115,18 +115,18 @@ render() {
   }]
 
   const columns = [{
-    header: 'Name',
+    Header: 'Name',
     accessor: 'name' // String-based value accessors!
   }, {
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age',
-    render: props => <span className='number'>{props.value}</span> // Custom cell components!
+    Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
   }, {
     id: 'friendName', // Required because our accessor is not a string
-    header: 'Friend Name',
+    Header: 'Friend Name',
     accessor: d => d.friend.name // Custom value accessors!
   }, {
-    header: props => <span>Friend Age</span>, // Custom header components!
+    Header: props => <span>Friend Age</span>, // Custom header components!
     accessor: 'friend.age'
   }]
 
@@ -171,14 +171,16 @@ These are all of the available props (and their default values) for the main `<R
   page: undefined,
   pageSize: undefined,
   sorting: undefined,
+  expandedRows: {},
 
   // Controlled State Callbacks
   onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
-  onFilteringChange: undefined,
+  onFilterChange: undefined,
   onResize: undefined,
+  onExpandRow: undefined,
 
   // Pivoting
   pivotBy: undefined,
@@ -186,14 +188,8 @@ These are all of the available props (and their default values) for the main `<R
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
 
-  // Pivoting State Overrides (see Fully Controlled Component section)
-  expandedRows: {},
-
-  // Pivoting State Callbacks
-  onExpandRow: undefined,
-
-  // General Callbacks
-  onChange: () => null,
+  // Server-side callbacks
+  onFetchData: () => null,
 
   // Classes
   className: '',
@@ -226,50 +222,45 @@ These are all of the available props (and their default values) for the main `<R
 
   // Global Column Defaults
   column: {
+    // Renderers
+    Cell: undefined,
+    Header: undefined,
+    Footer: undefined,
+    Aggregated: undefined,
+    Pivot: undefined,
+    PivotValue: undefined,
+    Expander: undefined,
+    Filter: undefined,
+    // Standard options
+    resizable: true,
     sortable: true,
     show: true,
     minWidth: 100,
     // Cells only
-    render: undefined,
     className: '',
     style: {},
     getProps: () => ({}),
     // Headers only
-    header: undefined,
     headerClassName: '',
     headerStyle: {},
     getHeaderProps: () => ({})
     // Footers only
-    footer: undefined,
     footerClassName: '',
     footerStyle: {},
     getFooterProps: () => ({}),
     filterMethod: undefined,
-    hideFilter: false,
-    filterRender: ({filter, onFilterChange}) => (
-      <input type='text'
-        style={{
-          width: '100%'
-        }}
-        value={filter ? filter.value : ''}
-        onChange={(event) => onFilterChange(event.target.value)}
-      />
-    )
+    hideFilter: false
   },
-  
+
   // Global Expander Column Defaults
   expanderDefaults: {
     sortable: false,
     width: 35,
     hideFilter: true
-    // render: will be overriden in methods.js to display ExpanderComponent
   },
 
   // Global Pivot Column Defaults
-  pivotDefaults: {
-    filterRender: undefined
-    // render: will be overriden in methods.js to display ExpanderComponent and PivotValueComponent
-  },
+  pivotDefaults: {},
 
   // Text
   previousText: 'Previous',
@@ -309,6 +300,32 @@ Or just define them as props
 
 ```javascript
 [{
+  // Renderers
+  // Provide a JSX element or stateless function to a Renderer to display whatever you want as the column's cell with access to the entire row
+  // cellInfo: {
+    // value: the accessed value of the column
+    // rowValues: an object of all of the accessed values for the row
+    // row: the original row of data supplied to the table
+    // column: the column properties (id, header, sortable, ...)
+    // index: the original index of the data supplied to the table
+    // viewIndex: the index of the row in the current page
+  // }
+  Cell: JSX | String | Function | cellInfo => <span>{value}</span>,
+  Header: JSX | String | Function | cellInfo => <div>Header Name</div>,
+  Footer: JSX | String | Function | cellInfo => <div>Footer Name</div>,
+  Filter: JSX | cellInfo => (
+    <select onChange={event => onFilterChange(event.target.value)} value={filter ? filter.value : ''}></select>
+    // The value passed to onFilterChange will be the value passed to filter.value of the filterMethod
+  )
+  Aggregated: JSX | String | Function | cellInfo => <span>{values.join(',')}</span>,
+  Pivot: JSX | String | Function | cellInfo => (
+    <span>
+      <Expander/><PivotValue />
+    </span>
+  ),
+  PivotValue: JSX | String | Function | cellInfo => <div>{value}</div>,
+  Expander: JSX | String | Function | cellInfo => <MyColumnExpander />,
+
   // General
   accessor: 'propertyName', // or Accessor eg. (row) => row.propertyName (see "Accessors" section for more details)
   id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
@@ -319,27 +336,20 @@ Or just define them as props
   maxWidth: undefined, // A maximum width for this column.
 
   // Special
-  // Turns this column into a special column for specifying expander and pivot column options.
-  // If this option is true and there is NOT a pivot column, the `expanderDefaults` options will be applied on top of the column options.
-  // If this option is true and there IS a pivot column, the `pivotDefaults` options will be applied on top of the column options.
-  // Adding a column with the `expander` option set will allow you to rearrange expander and pivot column orderings in the table.
+  pivot: false,
+  // Turns this column into a special column for specifying pivot position in your column definitions.
+  // The `pivotDefaults` options will be applied on top of this column's options.
+  // It will also let you specify rendering of the header (and header group if this special column is placed in the `columns` option of another column)
+  expander: false,
+  // Turns this column into a special column for specifying expander position and options in your column definitions.
+  // The `expanderDefaults` options will be applied on top of this column's options.
   // It will also let you specify rendering of the header (and header group if this special column is placed in the `columns` option of another column) and
-  // the rendering of the expander itself.
-  expander: false, 
+  // the rendering of the expander itself via the `Expander` property
 
   // Cell Options
   className: '', // Set the classname of the `td` element of the column
   style: {}, // Set the style of the `td` element of the column
-  render: JSX eg. (cellInfo: {value, rowValues, row, column, index, viewIndex}) => <span>{value}</span>, // Provide a JSX element or stateless function to render whatever you want as the column's cell with access to the entire row
-    // value == the accessed value of the column
-    // rowValues == an object of all of the accessed values for the row
-    // row == the original row of data supplied to the table
-    // column == the column properties (id, header, sortable, ...)
-    // index == the original index of the data supplied to the table
-    // viewIndex == the index of the row in the current page
-
   // Header & HeaderGroup Options
-  header: 'Header Name', a function that returns a primitive, or JSX / React Component eg. ({data, column}) => <div>Header Name</div>,
   headerClassName: '', // Set the classname of the `th` element of the column
   headerStyle: {}, // Set the style of the `th` element of the column
   getHeaderProps: (state, rowInfo, column, instance) => ({}), // a function that returns props to decorate the `th` element of the column
@@ -348,7 +358,6 @@ Or just define them as props
   columns: [...], // See Header Groups section below
 
   // Footer
-  footer: 'Footer Name' or JSX eg. ({data, column}) => <div>Footer Name</div>,
   footerClassName: '', // Set the classname of the `td` element of the column's footer
   footerStyle: {}, // Set the style of the `td` element of the column's footer
   getFooterProps: (state, rowInfo, column, instance) => ({}), // A function that returns props to decorate the `td` element of the column's footer
@@ -359,7 +368,6 @@ Or just define them as props
     // row == the row of data supplied to the table
     // column == the column that the filter is on
   hideFilter: false, // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
-  filterRender: JSX // eg. ({filter, onFilterChange}) => <select onChange={event => onFilterChange(event.target.value)} value={filter ? filter.value : ''}></select> // The value passed to onFilterChange will be the value passed to filter.value of the filterMethod
 }]
 ```
 
@@ -390,16 +398,16 @@ If your data has a field/key with a dot (`.`) you will need to supply a custom a
 To group columns with another header column, just nest your columns in a header column.  Header columns utilize the same header properties as regular columns.
 ```javascript
 const columns = [{
-  header: 'Favorites',
+  Header: 'Favorites',
   headerClassName: 'my-favorites-column-header-group'
   columns: [{
-    header: 'Color',
+    Header: 'Color',
     accessor: 'favorites.color'
   }, {
-    header: 'Food',
+    Header: 'Food',
     accessor: 'favorites.food'
   } {
-    header: 'Actor',
+    Header: 'Actor',
     accessor: 'favorites.actor'
   }]
 }]
@@ -420,9 +428,9 @@ You can use any react component or JSX to display content in column headers, cel
 // This column uses a stateless component to produce a different colored bar depending on the value
 // You can also use stateful components or any other function that returns JSX
 const columns = [{
-  header: () => <span><i className='fa-tasks' /> Progress</span>,
+  Header: () => <span><i className='fa-tasks' /> Progress</span>,
   accessor: 'progress',
-  render: row => (
+  Cell: row => (
     <div
       style={{
         width: '100%',
@@ -565,15 +573,15 @@ Naturally when grouping rows together, you may want to aggregate the rows inside
 ```javascript
 // In this example, we use lodash to sum and average the values, but you can use whatever you want to aggregate.
 const columns = [{
-  header: 'Age',
+  Header: 'Age',
   accessor: 'age',
   aggregate: (values, rows) => _.round(_.mean(values)),
-  render: row => {
+  Aggregated: row => {
     // You can even render the cell differently if it's an aggregated cell
-    return <span>{row.aggregated ? `${row.value} (avg)` : row.value}</span>
+    return <span>row.value (avg)</span>
   }
 }, {
-  header: 'Visits',
+  Header: 'Visits',
   accessor: 'visits',
   aggregate: (values, rows) => _.sum(values)
 }]
@@ -604,8 +612,8 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
 
 1. Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
 1. Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
-1. Subscribe to the `onChange` prop. This function is called at `compomentDidMount` and any time sorting or pagination is changed by the user
-1. In the `onChange` callback, request your data using the provided information in the params of the function (state and instance)
+1. Subscribe to the `onFetchData` prop. This function is called at `compomentDidMount` and any time sorting, pagination or filterting is changed in the table
+1. In the `onFetchData` callback, request your data using the provided information in the params of the function (current state and instance)
 1. Update your data with the rows to be displayed
 1. Optionally set how many pages there are total
 
@@ -616,7 +624,7 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
   pages={this.state.pages} // should default to -1 (which means we don't know how many pages we have)
   loading={this.state.loading}
   manual // informs React Table that you'll be handling sorting and pagination server-side
-  onChange={(state, instance) => {
+  onFetchData={(state, instance) => {
     // show the loading overlay
     this.setState({loading: true})
     // fetch your data
@@ -664,14 +672,15 @@ Here are the props and their corresponding callbacks that control the state of t
       3: true
     }
   }} // The nested row indexes on the current page that should appear expanded
+  resizing={[...]} // the current resized column model
 
   // Callbacks
   onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
-  onSortingChange={(column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
-  onExpandRow={(index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
-  onFilteringChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option.
-  onResize={(column, event, isTouch) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
+  onSortingChange={(newSorting, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
+  onExpandRow={(newExpandedRows, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
+  onFilterChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option.
+  onResize={(newResizing, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
 
@@ -712,6 +721,9 @@ Accessing internal state and wrapping with more UI:
 
 The possibilities are endless!
 
+## Sorting
+Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort. You can override the default sorting with the `sortingMethod` prop which takes a column value, and expects you to return a naturally sortable value. You may also override the sorting for individual columns via the `column.sortingMethod` column property.
+
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
@@ -743,7 +755,10 @@ Object.assign(ReactTableDefaults, {
   TdComponent: component,
   TfootComponent: component,
   ExpanderComponent: component,
+  AggregateComponent: component,
   PivotValueComponent: component,
+  PivotComponent: component,
+  FilterComponent: component,
   PaginationComponent: component,
   PreviousComponent: undefined,
   NextComponent: undefined,

@@ -13,6 +13,7 @@ import Readme from '../README.md'
 import Simple from '../stories/Simple.js'
 import CellRenderers from '../stories/CellRenderers.js'
 import DefaultSorting from '../stories/DefaultSorting.js'
+import CustomSorting from '../stories/CustomSorting.js'
 import CustomWidths from '../stories/CustomWidths.js'
 import CustomComponentProps from '../stories/CustomComponentProps.js'
 import ServerSide from '../stories/ServerSide.js'
@@ -46,6 +47,7 @@ configure(() => {
     .add('Simple Table', Simple)
     .add('Cell Renderers & Custom Components', CellRenderers)
     .add('Default Sorting', DefaultSorting)
+    .add('Custom Sorting', CustomSorting)
     .add('Custom Column Widths', CustomWidths)
     .add('Custom Component Props', CustomComponentProps)
     .add('Server-side Data', ServerSide)

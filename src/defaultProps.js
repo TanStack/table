@@ -29,17 +29,19 @@ export default {
   resizable: true,
   defaultResizing: [],
 
-  // Controlled State Overrides
+  // Controlled State Props
   // page: undefined,
   // pageSize: undefined,
   // sorting: undefined,
+  // expandedRows: {},
+  // resizing: [],
 
   // Controlled State Callbacks
   onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
-  onFilteringChange: undefined,
+  onFilterChange: undefined,
   onResize: undefined,
 
   // Pivoting
@@ -48,14 +50,11 @@ export default {
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
 
-  // Pivoting State Overrides
-  // expandedRows: {},
-
   // Pivoting State Callbacks
   onExpandRow: undefined,
 
-  // General Callbacks
-  onChange: () => null,
+  // Server-side Callbacks
+  onFetchData: () => null,
 
   // Classes
   className: '',
@@ -115,6 +114,12 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
+    sortMethod: value => {
+      if (value === null || value === undefined) {
+        return -Infinity
+      }
+      return typeof value === 'string' ? value.toLowerCase() : value
+    },
     hideFilter: false
   },
 
@@ -124,6 +129,10 @@ export default {
     width: 35,
     hideFilter: true
     // render: undefined // this is a dynamic default, set at run-time in methods.js to display ExpanderComponent
+  },
+
+  pivotDefaults: {
+    // extend the defaults for pivoted columns here
   },
 
   // Text

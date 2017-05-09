@@ -5,7 +5,7 @@ export default Base => class extends Base {
   }
 
   componentDidMount () {
-    this.fireOnChange()
+    this.fireFetchData()
   }
 
   componentWillReceiveProps (nextProps, nextState) {

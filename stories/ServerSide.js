@@ -65,7 +65,6 @@ const ServerSide = React.createClass({
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
     requestData(state.pageSize, state.page, state.sorting, state.filtering)
       .then((res) => {
-        console.log(res.rows)
         // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
         this.setState({
           data: res.rows,
@@ -97,7 +96,7 @@ const ServerSide = React.createClass({
             data={this.state.data} // Set the rows to be displayed
             pages={this.state.pages} // Display the total number of pages
             loading={this.state.loading} // Display the loading overlay when we need it
-            onChange={this.fetchData} // Request new data when things change
+            onFetchData={this.fetchData} // Request new data when things change
           />
         </div>
         <div style={{textAlign: 'center'}}>
@@ -168,7 +167,7 @@ export default React.createClass({
         data={this.state.data} // Set the rows to be displayed
         pages={this.state.pages} // Display the total number of pages
         loading={this.state.loading} // Display the loading overlay when we need it
-        onChange={this.fetchData} // Request new data when things change
+        onFetchData={this.fetchData} // Request new data when things change
       />
   }
 })

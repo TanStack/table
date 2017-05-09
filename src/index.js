@@ -17,7 +17,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
     this.getSortedData = this.getSortedData.bind(this)
-    this.fireOnChange = this.fireOnChange.bind(this)
+    this.fireFetchData = this.fireFetchData.bind(this)
     this.getPropOrState = this.getPropOrState.bind(this)
     this.getStateOrProp = this.getStateOrProp.bind(this)
     this.filterData = this.filterData.bind(this)
@@ -108,6 +108,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       ResizerComponent,
       ExpanderComponent,
       PivotValueComponent,
+      PivotComponent,
       AggregateComponent,
       FilterComponent,
       // Data model
@@ -127,7 +128,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const minRows = this.getMinRows()
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
-    const hasColumnFooter = allVisibleColumns.some(d => d.footer)
+    const hasColumnFooter = allVisibleColumns.some(d => d.Footer)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       return [
@@ -298,7 +299,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.rest
       }
 
-      const resizer = resizable ? (
+      const resizer = (typeof column.resizable !== 'undefined' ? column.resizable : resizable) ? (
         <ResizerComponent
           onMouseDown={e => this.resizeColumnStart(column, e, false)}
           onTouchStart={e => this.resizeColumnStart(column, e, true)}
@@ -447,13 +448,19 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
-              const cellInfo = { ...rowInfo, column: {...column} }
+              const cellInfo = {
+                ...rowInfo,
+                isExpanded,
+                column: {...column}
+              }
               const resized = resizing.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
               const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
               const tdProps = _.splitProps(getTdProps(finalState, rowInfo, column, this))
               const columnProps = _.splitProps(column.getProps(finalState, rowInfo, column, this))
+
+              const value = cellInfo.rowValues[column.id]
 
               const classes = [
                 tdProps.className,
@@ -468,26 +475,29 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               }
 
               const onExpanderClick = (e) => {
-                if (onExpandRow) {
-                  return onExpandRow(cellInfo.nestingPath, e)
-                }
                 let newExpandedRows = _.clone(expandedRows)
                 if (isExpanded) {
-                  return this.setStateWithData({
-                    expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, false)
-                  })
+                  newExpandedRows = _.set(newExpandedRows, cellInfo.nestingPath, false)
+                } else {
+                  newExpandedRows = _.set(newExpandedRows, cellInfo.nestingPath, {})
+                }
+                if (onExpandRow) {
+                  onExpandRow(newExpandedRows, cellInfo.nestingPath, e)
+                }
+                // If expandedRows is being controlled, don't manage internal state
+                if (this.props.expandedRows) {
+                  return
                 }
                 return this.setStateWithData({
-                  expandedRows: _.set(newExpandedRows, cellInfo.nestingPath, {})
+                  expandedRows: newExpandedRows
                 })
               }
 
               // Default to a standard cell
               let resolvedCell = _.normalizeComponent(column.Cell, {
                 ...cellInfo,
-                value: cellInfo.rowValues[column.id],
-                isExpanded
-              }, cellInfo.rowValues[column.id])
+                value
+              }, value)
 
               let interactionProps
               let isBranch
@@ -497,6 +507,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               // Resolve Aggregate Renderer
               const ResolvedAggregateComponent = column.Aggregated ||
                 !column.aggregate && AggregateComponent
+
+              // Resolve ExpanderComponent
+              const ResolvedExpanderComponent = column.Expander || ExpanderComponent
 
               // Is this column pivoted?
               if (pivotBy && column.pivot) {
@@ -513,15 +526,14 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   cellInfo.subRows
 
                 // Resolve Pivot Renderers
-                const ResolvedExpanderComponent = column.Expander || ExpanderComponent
                 const ResolvedPivotValueComponent = column.PivotValue || PivotValueComponent
                 // Build the default PivotComponent
-                const DefaultResolvedPivotComponent = props => (
+                const DefaultResolvedPivotComponent = PivotComponent || (props => (
                   <div>
                     <ResolvedExpanderComponent {...props} />
                     <ResolvedPivotValueComponent {...props} />
                   </div>
-                )
+                ))
                 // Allow a completely custom pivotRender
                 const resolvedPivot = column.Pivot || DefaultResolvedPivotComponent
                 // Pivot Cell Render Override
@@ -529,29 +541,30 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   // isPivot
                   resolvedCell = _.normalizeComponent(resolvedPivot, {
                     ...cellInfo,
-                    value: row[pivotValKey],
-                    isExpanded
-                  }, cellInfo.rowValues[column.id])
+                    value: row[pivotValKey]
+                  }, row[pivotValKey])
                 } else if (isPreview) {
                   // Show the pivot preview
                   resolvedCell = _.normalizeComponent(ResolvedAggregateComponent, {
                     ...cellInfo,
-                    value: cellInfo.rowValues[column.id],
-                    isExpanded
-                  }, cellInfo.rowValues[column.id])
+                    value
+                  }, value)
                 } else {
                   resolvedCell = null
                 }
               } else if (cellInfo.aggregated) {
                 resolvedCell = _.normalizeComponent(ResolvedAggregateComponent, {
                   ...cellInfo,
-                  value: cellInfo.rowValues[column.id],
-                  isExpanded
-                }, cellInfo.rowValues[column.id])
+                  value
+                }, value)
               }
 
               // Expander onClick event
               if (column.expander) {
+                resolvedCell = _.normalizeComponent(ResolvedExpanderComponent, {
+                  ...cellInfo,
+                  value
+                })
                 expandable = true
                 interactionProps = {
                   onClick: onExpanderClick
