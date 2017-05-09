@@ -178,7 +178,7 @@ These are all of the available props (and their default values) for the main `<R
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
-  onFilterChange: undefined,
+  onFiltersChange: undefined,
   onResize: undefined,
   onExpandRow: undefined,
 
@@ -300,31 +300,22 @@ Or just define them as props
 
 ```javascript
 [{
-  // Renderers
-  // Provide a JSX element or stateless function to a Renderer to display whatever you want as the column's cell with access to the entire row
-  // cellInfo: {
-    // value: the accessed value of the column
-    // rowValues: an object of all of the accessed values for the row
-    // row: the original row of data supplied to the table
-    // column: the column properties (id, header, sortable, ...)
-    // index: the original index of the data supplied to the table
-    // viewIndex: the index of the row in the current page
-  // }
-  Cell: JSX | String | Function | cellInfo => <span>{value}</span>,
-  Header: JSX | String | Function | cellInfo => <div>Header Name</div>,
-  Footer: JSX | String | Function | cellInfo => <div>Footer Name</div>,
-  Filter: JSX | cellInfo => (
-    <select onChange={event => onFilterChange(event.target.value)} value={filter ? filter.value : ''}></select>
-    // The value passed to onFilterChange will be the value passed to filter.value of the filterMethod
+  // Renderers - For more information, see "Renderers" section below
+  Cell: JSX | String | Function // Used to render a standard cell, defaults to the accessed value
+  Header: JSX | String | Function // Used to render the header of a column or column group
+  Footer: JSX | String | Function // Used to render the footer of a column
+  Filter: JSX | cellInfo => ( // Used to render the filter UI of a filter-enabled column
+    <select onChange={event => onFiltersChange(event.target.value)} value={filter ? filter.value : ''}></select>
+    // The value passed to onFiltersChange will be the value passed to filter.value of the filterMethod
   )
-  Aggregated: JSX | String | Function | cellInfo => <span>{values.join(',')}</span>,
-  Pivot: JSX | String | Function | cellInfo => (
+  Aggregated: JSX | String | Function // Used to render aggregated cells. Defaults to a comma separated list of values.
+  Pivot: JSX | String | Function | cellInfo => ( // Used to render a pivoted cell
     <span>
-      <Expander/><PivotValue />
+      <Expander/><PivotValue /> // By default, will utilize the the PivotValue and Expander components at run time
     </span>
   ),
-  PivotValue: JSX | String | Function | cellInfo => <div>{value}</div>,
-  Expander: JSX | String | Function | cellInfo => <MyColumnExpander />,
+  PivotValue: JSX | String | Function // Used to render the value inside of a Pivot cell
+  Expander: JSX | String | Function // Used to render the expander in both Pivot and Expander cells
 
   // General
   accessor: 'propertyName', // or Accessor eg. (row) => row.propertyName (see "Accessors" section for more details)
@@ -369,6 +360,51 @@ Or just define them as props
     // column == the column that the filter is on
   hideFilter: false, // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
 }]
+```
+
+## Renderers
+React Table supports very flexible renderers for just about everything:
+- `Cell` - Renders a standard cell
+- `Header` - Renders a column header or column group header
+- `Footer` - Renders a column footer
+- `Filter` - Renders a column's filter UI
+- `Aggregated` - Renders an aggregated cell
+- `Pivot` - Renders a pivoted cell (by default, will utilize `Expander` and `PivotValue` renderers)
+- `PivotValue` - Renders the value inside a `Pivot` renderer
+- `Expander` - Renders the Expander used in both the default `Pivot` renderer and any expander-designated column
+
+Any of these renderers can be one of the following:
+- A React Class
+- JSX or any rendered react component
+- Stateless functional component
+- Function that returns any primitive
+
+All of these formats receive the following props:
+```javascript
+{
+  // Row-level props
+  row: Object, // the materialized row of data
+  original: , // the original row of data
+  index: '', // the index of the row in the original arra
+  viewIndex: '', // the index of the row relative to the current view
+  level: '', // the nesting level of this row
+  nestingPath: '', // the nesting path of this row
+  aggregated: '', // true if this row's values were aggregated
+  groupedByPivot: '', // true if this row was produced by a pivot
+  subRows: '', // any sub rows defined by the `subRowKey` prop
+
+  // Cells-level props
+  isExpanded: '', // true if this row is expanded
+  value: '', // the materialized value of this cell
+  resized: '', // the resize information for this cell's column
+  show: '', // true if the column is visible
+  width: '', // the resolved width of this cell
+  maxWidth: '', // the resolved maxWidth of this cell
+  tdProps: '', // the resolved tdProps from `getTdProps` for this cell
+  columnProps: '', // the resolved column props from 'getProps' for this cell's column
+  classes: '', // the resolved array of classes for this cell
+  styles: '' // the resolved styles for this cell
+}
 ```
 
 ## Accessors
@@ -416,7 +452,7 @@ const columns = [{
 ## Custom Cell, Header and Footer Rendering
 You can use any react component or JSX to display content in column headers, cells and footers. Any component you use will be passed the following props (if available):
 - `row` - Original row from your data
-- `rowValues` - The post-accessed values from the original row
+- `row` - The post-accessed values from the original row
 - `index` - The index of the row
 - `viewIndex` - the index of the row relative to the current page
 - `level` - The nesting depth (zero-indexed)
@@ -657,29 +693,36 @@ Here are the props and their corresponding callbacks that control the state of t
   // Props
   page={0} // the index of the page you wish to display
   pageSize={20} // the number of rows per page to be displayed
-  sorting={[{
+  sorting={[{ // the sorting model for the table
       id: 'lastName',
       desc: true
     }, {
       id: 'firstName',
       desc: true
-  }]} // the sorting model for the table
-  expandedRows={{
+  }]}
+  expandedRows={{ // The nested row indexes on the current page that should appear expanded
     1: true,
     4: true,
     5: {
       2: true,
       3: true
     }
-  }} // The nested row indexes on the current page that should appear expanded
-  resizing={[...]} // the current resized column model
+  }}
+  filters={[{ // the current filters model
+    id: 'lastName',
+    value: 'linsley'
+  }]}
+  resizing={[{ // the current resized column model
+    "id": "lastName",
+    "value": 446.25
+  }]}
 
   // Callbacks
   onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortingChange={(newSorting, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandRow={(newExpandedRows, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
-  onFilterChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFilterChange handler by the filterRender option.
+  onFiltersChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the filterRender option.
   onResize={(newResizing, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
@@ -736,7 +779,7 @@ By default the table tries to filter by checking if the row's value starts with 
 
 If you want to override a particular column's filtering method, you can set the `filterMethod` option on a column.
 
-To completely override the filter that is shown, you can set the `filterRender` column option. Using this option you can specify the JSX that is shown. The option is passed an `onFilterChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
+To completely override the filter that is shown, you can set the `filterRender` column option. Using this option you can specify the JSX that is shown. The option is passed an `onFiltersChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
 
 See <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Custom%20Filtering&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Custom Filtering</a> demo for examples.
 
@@ -755,7 +798,7 @@ Object.assign(ReactTableDefaults, {
   TdComponent: component,
   TfootComponent: component,
   ExpanderComponent: component,
-  AggregateComponent: component,
+  AggregatedComponent: component,
   PivotValueComponent: component,
   PivotComponent: component,
   FilterComponent: component,

@@ -29,6 +29,7 @@ import Filtering from '../stories/Filtering.js'
 import ControlledTable from '../stories/ControlledTable.js'
 import PivotingOptions from '../stories/PivotingOptions.js'
 import EditableTable from '../stories/EditableTable.js'
+import SubRows from '../stories/SubRows.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -63,4 +64,5 @@ configure(() => {
     .add('Custom Filtering', Filtering)
     .add('Controlled Component', ControlledTable)
     .add('Editable table', EditableTable)
+    .add('Sub Rows', SubRows)
 }, module)

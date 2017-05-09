@@ -20,6 +20,11 @@ export default Base => class extends Base {
       pivotIDKey,
       pivotValKey,
       subRowsKey,
+      aggregatedKey,
+      nestingLevelKey,
+      originalKey,
+      indexKey,
+      groupedByPivotKey,
       SubComponent
     } = newState
 
@@ -50,7 +55,6 @@ export default Base => class extends Base {
       if (column.expander) {
         dcol = {
           ...this.props.column,
-          Header: this.props.ExpanderComponent,
           ...this.props.expanderDefaults,
           ...column
         }
@@ -189,17 +193,23 @@ export default Base => class extends Base {
     }
 
     // Access the data
-    let resolvedData = data.map((d, i) => {
+    const accessRow = (d, i, level = 0) => {
       const row = {
-        __original: d,
-        __index: i
+        [originalKey]: d,
+        [indexKey]: i,
+        [subRowsKey]: d[subRowsKey],
+        [nestingLevelKey]: level
       }
       allDecoratedColumns.forEach(column => {
         if (column.expander) return
         row[column.id] = column.accessor(d)
       })
+      if (row[subRowsKey]) {
+        row[subRowsKey] = row[subRowsKey].map((d, i) => accessRow(d, i, level + 1))
+      }
       return row
-    })
+    }
+    let resolvedData = data.map((d, i) => accessRow(d, i))
 
     // If pivoting, recursively group the data
     const aggregate = (rows) => {
@@ -227,7 +237,9 @@ export default Base => class extends Base {
             [pivotIDKey]: keys[i],
             [pivotValKey]: key,
             [keys[i]]: key,
-            [subRowsKey]: value
+            [subRowsKey]: value,
+            [nestingLevelKey]: i,
+            [groupedByPivotKey]: true
           }
         })
         // Recurse into the subRows
@@ -236,6 +248,7 @@ export default Base => class extends Base {
           return {
             ...rowGroup,
             [subRowsKey]: subRows,
+            [aggregatedKey]: true,
             ...aggregate(subRows)
           }
         })
@@ -258,7 +271,7 @@ export default Base => class extends Base {
     const {
       manual,
       sorting,
-      filtering,
+      filters,
       showFilters,
       defaultFilterMethod,
       resolvedData,
@@ -280,7 +293,7 @@ export default Base => class extends Base {
         this.filterData(
           resolvedData,
           showFilters,
-          filtering,
+          filters,
           defaultFilterMethod,
           allVisibleColumns
         ),
@@ -302,11 +315,11 @@ export default Base => class extends Base {
     return _.getFirstDefined(this.state[key], this.props[key])
   }
 
-  filterData (data, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
+  filterData (data, showFilters, filters, defaultFilterMethod, allVisibleColumns) {
     let filteredData = data
 
-    if (showFilters && filtering.length) {
-      filteredData = filtering.reduce(
+    if (showFilters && filters.length) {
+      filteredData = filters.reduce(
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
             (row) => {
@@ -340,7 +353,7 @@ export default Base => class extends Base {
         }
         return {
           ...row,
-          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filtering, defaultFilterMethod, allVisibleColumns)
+          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filters, defaultFilterMethod, allVisibleColumns)
         }
       }).filter(row => {
         if (!row[this.props.subRowsKey]) {
@@ -528,15 +541,11 @@ export default Base => class extends Base {
   }
 
   filterColumn (column, value) {
-    const {filtering} = this.getResolvedState()
-    const {onFilterChange} = this.props
-
-    if (onFilterChange) {
-      return onFilterChange(column, value)
-    }
+    const {filters} = this.getResolvedState()
+    const {onFiltersChange} = this.props
 
     // Remove old filter first if it exists
-    const newFiltering = (filtering || []).filter(x => {
+    const newFiltering = (filters || []).filter(x => {
       if (x.id !== column.id) {
         return true
       }
@@ -549,8 +558,16 @@ export default Base => class extends Base {
       })
     }
 
+    onFiltersChange && onFiltersChange(newFiltering, column, value)
+
+    // If filters is being controlled, do not manage state internally
+    if (this.props.filters) {
+      this.fireFetchData()
+      return
+    }
+
     this.setStateWithData({
-      filtering: newFiltering
+      filters: newFiltering
     }, () => {
       this.fireFetchData()
     })

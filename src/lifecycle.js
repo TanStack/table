@@ -18,7 +18,7 @@ export default Base => class extends Base {
 
     if ((oldState.showFilters !== newState.showFilters) ||
       (oldState.showFilters !== newState.showFilters)) {
-      newState.filtering = newState.defaultFiltering
+      newState.filters = newState.defaultFilters
     }
 
     // Props that trigger a data update
@@ -28,7 +28,7 @@ export default Base => class extends Base {
       oldState.pivotBy !== newState.pivotBy ||
       oldState.sorting !== newState.sorting ||
       oldState.showFilters !== newState.showFilters ||
-      oldState.filtering !== newState.filtering
+      oldState.filters !== newState.filters
     ) {
       this.setStateWithData(this.getDataModel(newState))
     }
@@ -59,14 +59,14 @@ export default Base => class extends Base {
     if (
       (oldState.frozen && !newResolvedState.frozen) ||
       oldState.sorting !== newResolvedState.sorting ||
-      oldState.filtering !== newResolvedState.filtering ||
+      oldState.filters !== newResolvedState.filters ||
       oldState.showFilters !== newResolvedState.showFilters ||
       (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
       // Handle collapseOnSortingChange & collapseOnDataChange
       if (
         (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
-        (oldState.filtering !== newResolvedState.filtering) ||
+        (oldState.filters !== newResolvedState.filters) ||
         (oldState.showFilters !== newResolvedState.showFilters) ||
         (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
       ) {

@@ -39,7 +39,8 @@ class ControlledTable extends React.Component {
       page: 0,
       pageSize: 10,
       expandedRows: {},
-      resizing: []
+      resizing: [],
+      filters: []
     }
   }
   render () {
@@ -50,23 +51,27 @@ class ControlledTable extends React.Component {
             className='-striped -highlight'
             data={data}
             columns={columns}
-            sorting={this.state.sorting}
-            onSortingChange={sorting => this.setState({sorting})}
-            page={this.state.page}
-            onPageChange={page => this.setState({page})}
-            pageSize={this.state.pageSize}
-            onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
-            expandedRows={this.state.expandedRows}
-            onExpandRow={(expandedRows) => this.setState({expandedRows})}
-            resizing={this.state.resizing}
-            onResize={resizing => this.setState({resizing})}
             pivotBy={['lastName']}
+            showFilters
+            // Controlled Props
+            sorting={this.state.sorting}
+            page={this.state.page}
+            pageSize={this.state.pageSize}
+            expandedRows={this.state.expandedRows}
+            resizing={this.state.resizing}
+            filters={this.state.filters}
+            // Callbacks
+            onSortingChange={sorting => this.setState({sorting})}
+            onPageChange={page => this.setState({page})}
+            onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
+            onExpandRow={(expandedRows) => this.setState({expandedRows})}
+            onResize={resizing => this.setState({resizing})}
+            onFiltersChange={filters => this.setState({filters})}
           />
         </div>
-        <div style={{textAlign: 'center'}}>
-          <br />
-          <em>Tip: For simplicity, multi-sort is not implemented in this demo</em>
-        </div>
+        <br />
+        <pre><code><strong>this.state ===</strong> {JSON.stringify(this.state, null, 2)}</code></pre>
+        <br />
         <CodeHighlight>{() => getCode()}</CodeHighlight>
       </div>
     )

@@ -7,21 +7,35 @@ import ReactTable from '../src/index'
 
 export default () => {
   const data = _.map(_.range(5553), d => {
-    return {
-      firstName: namor.generate({ words: 1, numLen: 0 }),
-      lastName: namor.generate({ words: 1, numLen: 0 }),
-      age: Math.floor(Math.random() * 30),
-      children: _.map(_.range(10), d => {
+    const children = _.map(_.range(10), d => {
+      const grandChildren = _.map(_.range(10), d => {
         return {
-          firstName: namor.generate({ words: 1, numLen: 0 }),
-          lastName: namor.generate({ words: 1, numLen: 0 }),
           age: Math.floor(Math.random() * 30)
         }
       })
+      return {
+        firstName: namor.generate({ words: 1, numLen: 0 }),
+        age: (ages => {
+          return Math.round(ages.reduce((p, c) => p + c, 0) / ages.length)
+        })(grandChildren.map(d => d.age)),
+        aggregated: true,
+        children: grandChildren
+      }
+    })
+    return {
+      lastName: namor.generate({ words: 1, numLen: 0 }),
+      firstName: children.map(d => d.firstName).join(', '),
+      age: (ages => {
+        return Math.round(ages.reduce((p, c) => p + c, 0) / ages.length)
+      })(children.map(d => d.age)),
+      aggregated: true,
+      children
     }
   })
 
   const columns = [{
+    expander: true
+  }, {
     Header: 'Name',
     columns: [{
       Header: 'First Name',
@@ -47,6 +61,9 @@ export default () => {
           data={data}
           columns={columns}
           defaultPageSize={10}
+          subRowsKey='children'
+          aggregatedKey='aggregated'
+          pivotBy={['lastName']}
         />
       </div>
       <div style={{textAlign: 'center'}}>

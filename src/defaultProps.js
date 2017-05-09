@@ -21,7 +21,7 @@ export default {
   freezeWhenExpanded: false,
   defaultSorting: [],
   showFilters: false,
-  defaultFiltering: [],
+  defaultFilters: [],
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
@@ -33,25 +33,30 @@ export default {
   // page: undefined,
   // pageSize: undefined,
   // sorting: undefined,
-  // expandedRows: {},
   // resizing: [],
+  // expandedRows: {},
 
   // Controlled State Callbacks
   onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortingChange: undefined,
-  onFilterChange: undefined,
+  onFiltersChange: undefined,
   onResize: undefined,
+  onExpandRow: undefined,
 
   // Pivoting
   pivotBy: undefined,
+
+  // Key Costansts
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
-
-  // Pivoting State Callbacks
-  onExpandRow: undefined,
+  aggregatedKey: '_aggregated',
+  nestingLevelKey: '_nestingLevel',
+  originalKey: '_original',
+  indexKey: '_index',
+  groupedByPivotKey: '_groupedByPivot',
 
   // Server-side Callbacks
   onFetchData: () => null,
@@ -165,13 +170,13 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  FilterComponent: ({filter, onFilterChange}) => (
+  FilterComponent: ({filter, onChange}) => (
     <input type='text'
       style={{
         width: '100%'
       }}
       value={filter ? filter.value : ''}
-      onChange={(event) => onFilterChange(event.target.value)}
+      onChange={(event) => onChange(event.target.value)}
     />
   ),
   ExpanderComponent: ({isExpanded}) => (
@@ -182,10 +187,12 @@ export default {
   PivotValueComponent: ({subRows, value}) => (
     <span>{value} {subRows && `(${subRows.length})`}</span>
   ),
-  AggregateComponent: ({subRows, column}) => {
-    const previewValues = subRows.map((row, i) => (
-      <span key={i}>{row[column.id]}{i < subRows.length - 1 ? ', ' : ''}</span>
-    ))
+  AggregatedComponent: ({subRows, column}) => {
+    const previewValues = subRows
+      .filter(d => typeof d[column.id] !== 'undefined')
+      .map((row, i) => (
+        <span key={i}>{row[column.id]}{i < subRows.length - 1 ? ', ' : ''}</span>
+      ))
     return (
       <span>{previewValues}</span>
     )
