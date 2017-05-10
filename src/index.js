@@ -77,7 +77,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       noDataText,
       showFilters,
       resizable,
-      // Property keyspivotValKey,
+      // Pivoting State
       pivotIDKey,
       pivotValKey,
       pivotBy,
@@ -93,10 +93,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       sorted,
       filtered,
       resized,
-      pages,
-      // Pivoting State
       expanded,
-      onExpanded,
+      pages,
+      onExpandedChange,
       // Components
       TableComponent,
       TheadComponent,
@@ -503,8 +502,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 } else {
                   newExpanded = _.set(newExpanded, cellInfo.nestingPath, {})
                 }
-                if (onExpanded) {
-                  onExpanded(newExpanded, cellInfo.nestingPath, e)
+                if (onExpandedChange) {
+                  onExpandedChange(newExpanded, cellInfo.nestingPath, e)
                 }
                 // If expanded is being controlled, don't manage internal state
                 if (this.props.expanded) {

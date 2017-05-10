@@ -63,7 +63,7 @@ class Story extends React.Component {
             onSortedChange={sorted => this.setState({sorted})}
             onPageChange={page => this.setState({page})}
             onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
-            onExpanded={expanded => this.setState({expanded})}
+            onExpandedChange={expanded => this.setState({expanded})}
             onResizedChange={resized => this.setState({resized})}
             onFilteredChange={filtered => this.setState({filtered})}
           />

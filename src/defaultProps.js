@@ -62,7 +62,7 @@ export default {
   onSortedChange: undefined,
   onFilteredChange: undefined,
   onResizedChange: undefined,
-  onExpanded: undefined,
+  onExpandedChange: undefined,
 
   // Pivoting
   pivotBy: undefined,
