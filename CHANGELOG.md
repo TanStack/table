@@ -7,7 +7,7 @@
   - `PivotValue` - Custom renderer for Pivot cell values (deprecates the undocumented `pivotRender` option)
   - `Expander` - Custom renderer for Pivot cell Expander
 - Pivot Columns are now visibly separate and sorted/filtered independently.
-- Custom sorting methods per instance via `sortMethod` and per column via `column.sortMethod`
+- Custom sorting methods per instance via `defaultSortMethod` and per column via `column.sortMethod`
 - Prevent transitions while column resizing for a smoother resize effect.
 - You may now use `column.resizable` to restrict or allow resizing for specific columns
 - Disable text selection while resizing columns.
