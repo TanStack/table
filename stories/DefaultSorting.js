@@ -40,7 +40,7 @@ class Story extends React.Component {
             data={data}
             columns={columns}
             defaultPageSize={10}
-            defaultSorting={[{
+            defaultSorted={[{
               id: 'age',
               desc: true
             }]}

@@ -34,7 +34,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.state = {
       page: 0,
       pageSize: props.defaultPageSize,
-      sorting: props.defaultSorting,
+      sorted: props.defaultSorted,
       expandedRows: props.defaultExpanded,
       filters: props.defaultFilters,
       resizing: props.defaultResizing,
@@ -90,7 +90,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       loading,
       pageSize,
       page,
-      sorting,
+      sorted,
       filters,
       resizing,
       pages,
@@ -280,7 +280,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeHeader = (column, i) => {
       const resized = resizing.find(x => x.id === column.id) || {}
-      const sort = sorting.find(d => d.id === column.id)
+      const sort = sorted.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
       const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
       const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)

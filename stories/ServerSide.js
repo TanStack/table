@@ -13,7 +13,7 @@ const rawData = _.map(_.range(3424), d => {
 })
 
 // Now let's mock the server.  It's job is simple: use the table model to sort and return the page data
-const requestData = (pageSize, page, sorting, filters) => {
+const requestData = (pageSize, page, sorted, filters) => {
   return new Promise((resolve, reject) => {
     // On the server, you'll likely use SQL or noSQL or some other query language to do this.
     // For this mock, we'll just use lodash
@@ -28,14 +28,14 @@ const requestData = (pageSize, page, sorting, filters) => {
         }
         , filteredData)
     }
-    const sortedData = _.orderBy(filteredData, sorting.map(sort => {
+    const sortedData = _.orderBy(filteredData, sorted.map(sort => {
       return row => {
         if (row[sort.id] === null || row[sort.id] === undefined) {
           return -Infinity
         }
         return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
       }
-    }), sorting.map(d => d.desc ? 'desc' : 'asc'))
+    }), sorted.map(d => d.desc ? 'desc' : 'asc'))
 
     // Be sure to send back the rows to be displayed and any other pertinent information, like how many pages there are total.
     const res = {
@@ -63,7 +63,7 @@ class Story extends React.Component {
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
     this.setState({loading: true})
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
-    requestData(state.pageSize, state.page, state.sorting, state.filters)
+    requestData(state.pageSize, state.page, state.sorted, state.filters)
       .then((res) => {
         // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
         this.setState({

@@ -270,7 +270,7 @@ export default Base => class extends Base {
   getSortedData (resolvedState) {
     const {
       manual,
-      sorting,
+      sorted,
       filters,
       showFilters,
       defaultFilterMethod,
@@ -297,7 +297,7 @@ export default Base => class extends Base {
           defaultFilterMethod,
           allVisibleColumns
         ),
-        sorting,
+        sorted,
         sortMethodsByColumnID
       )
     }
@@ -366,14 +366,14 @@ export default Base => class extends Base {
     return filteredData
   }
 
-  sortData (data, sorting, sortMethodsByColumnID = {}) {
-    if (!sorting.length) {
+  sortData (data, sorted, sortMethodsByColumnID = {}) {
+    if (!sorted.length) {
       return data
     }
 
-    const sorted = (this.props.orderByMethod || _.orderBy)(
+    const sortedData = (this.props.orderByMethod || _.orderBy)(
       data,
-      sorting.map(sort => {
+      sorted.map(sort => {
         // Support custom sorting methods for each column
         if (sortMethodsByColumnID[sort.id]) {
           return (a, b) => {
@@ -384,18 +384,18 @@ export default Base => class extends Base {
           return this.props.defaultSortMethod(a[sort.id], b[sort.id])
         }
       }),
-      sorting.map(d => !d.desc),
+      sorted.map(d => !d.desc),
       this.props.indexKey
     )
 
-    sorted.forEach(row => {
+    sortedData.forEach(row => {
       if (!row[this.props.subRowsKey]) {
         return
       }
-      row[this.props.subRowsKey] = this.sortData(row[this.props.subRowsKey], sorting, sortMethodsByColumnID)
+      row[this.props.subRowsKey] = this.sortData(row[this.props.subRowsKey], sorted, sortMethodsByColumnID)
     })
 
-    return sorted
+    return sortedData
   }
 
   getMinRows () {
@@ -443,7 +443,7 @@ export default Base => class extends Base {
   }
 
   sortColumn (column, additive) {
-    const {sorting, skipNextSort} = this.getResolvedState()
+    const {sorted, skipNextSort} = this.getResolvedState()
 
     // we can't stop event propagation from the column resize move handlers
     // attached to the document because of react's synthetic events
@@ -456,38 +456,38 @@ export default Base => class extends Base {
       return
     }
 
-    const {onSortingChange} = this.props
+    const {onSortedChange} = this.props
 
-    let newSorting = _.clone(sorting || []).map(d => {
+    let newSorted = _.clone(sorted || []).map(d => {
       d.desc = _.isSortingDesc(d)
       return d
     })
     if (!_.isArray(column)) {
       // Single-Sort
-      const existingIndex = newSorting.findIndex(d => d.id === column.id)
+      const existingIndex = newSorted.findIndex(d => d.id === column.id)
       if (existingIndex > -1) {
-        const existing = newSorting[existingIndex]
+        const existing = newSorted[existingIndex]
         if (existing.desc) {
           if (additive) {
-            newSorting.splice(existingIndex, 1)
+            newSorted.splice(existingIndex, 1)
           } else {
             existing.desc = false
-            newSorting = [existing]
+            newSorted = [existing]
           }
         } else {
           existing.desc = true
           if (!additive) {
-            newSorting = [existing]
+            newSorted = [existing]
           }
         }
       } else {
         if (additive) {
-          newSorting.push({
+          newSorted.push({
             id: column.id,
             desc: false
           })
         } else {
-          newSorting = [{
+          newSorted = [{
             id: column.id,
             desc: false
           }]
@@ -495,35 +495,35 @@ export default Base => class extends Base {
       }
     } else {
       // Multi-Sort
-      const existingIndex = newSorting.findIndex(d => d.id === column[0].id)
+      const existingIndex = newSorted.findIndex(d => d.id === column[0].id)
       // Existing Sorted Column
       if (existingIndex > -1) {
-        const existing = newSorting[existingIndex]
+        const existing = newSorted[existingIndex]
         if (existing.desc) {
           if (additive) {
-            newSorting.splice(existingIndex, column.length)
+            newSorted.splice(existingIndex, column.length)
           } else {
             column.forEach((d, i) => {
-              newSorting[existingIndex + i].desc = false
+              newSorted[existingIndex + i].desc = false
             })
           }
         } else {
           column.forEach((d, i) => {
-            newSorting[existingIndex + i].desc = true
+            newSorted[existingIndex + i].desc = true
           })
         }
         if (!additive) {
-          newSorting = newSorting.slice(existingIndex, column.length)
+          newSorted = newSorted.slice(existingIndex, column.length)
         }
       } else {
         // New Sort Column
         if (additive) {
-          newSorting = newSorting.concat(column.map(d => ({
+          newSorted = newSorted.concat(column.map(d => ({
             id: d.id,
             desc: false
           })))
         } else {
-          newSorting = column.map(d => ({
+          newSorted = column.map(d => ({
             id: d.id,
             desc: false
           }))
@@ -531,14 +531,14 @@ export default Base => class extends Base {
       }
     }
     // If controlled, do not keep track of state
-    onSortingChange && onSortingChange(newSorting, column, additive)
-    if (typeof this.props.sorting !== 'undefined') {
+    onSortedChange && onSortedChange(newSorted, column, additive)
+    if (typeof this.props.sorted !== 'undefined') {
       this.fireFetchData()
       return
     }
     this.setStateWithData({
-      page: ((!sorting.length && newSorting.length) || !additive) ? 0 : this.state.page,
-      sorting: newSorting
+      page: ((!sorted.length && newSorted.length) || !additive) ? 0 : this.state.page,
+      sorted: newSorted
     }, () => {
       this.fireFetchData()
     })

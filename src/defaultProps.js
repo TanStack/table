@@ -19,8 +19,8 @@ export default {
   collapseOnPageChange: true,
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
-  defaultSorting: [],
   showFilters: false,
+  defaultSorted: [],
   defaultFilters: [],
   defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
@@ -50,7 +50,7 @@ export default {
   // Controlled State Props
   // page: undefined,
   // pageSize: undefined,
-  // sorting: undefined,
+  // sorted: [],
   // resizing: [],
   // expandedRows: {},
 
@@ -58,7 +58,7 @@ export default {
   onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
-  onSortingChange: undefined,
+  onSortedChange: undefined,
   onFiltersChange: undefined,
   onResize: undefined,
   onExpandRow: undefined,

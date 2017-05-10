@@ -34,7 +34,7 @@ class Story extends React.Component {
   constructor () {
     super()
     this.state = {
-      sorting: [],
+      sorted: [],
       page: 0,
       pageSize: 10,
       expandedRows: {},
@@ -53,14 +53,14 @@ class Story extends React.Component {
             pivotBy={['lastName']}
             showFilters
             // Controlled Props
-            sorting={this.state.sorting}
+            sorted={this.state.sorted}
             page={this.state.page}
             pageSize={this.state.pageSize}
             expandedRows={this.state.expandedRows}
             resizing={this.state.resizing}
             filters={this.state.filters}
             // Callbacks
-            onSortingChange={sorting => this.setState({sorting})}
+            onSortedChange={sorted => this.setState({sorted})}
             onPageChange={page => this.setState({page})}
             onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
             onExpandRow={(expandedRows) => this.setState({expandedRows})}

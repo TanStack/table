@@ -79,7 +79,7 @@ class Story extends React.Component {
             defaultPageSize={10}
             className='-striped -highlight'
             pivotBy={['firstName', 'lastName']}
-            defaultSorting={[{id: 'firstName', desc: false}, {id: 'lastName', desc: true}]}
+            defaultSorted={[{id: 'firstName', desc: false}, {id: 'lastName', desc: true}]}
             collapseOnSortingChange={false}
             showFilters
             ExpanderComponent={({isExpanded, ...rest}) => (

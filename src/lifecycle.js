@@ -12,8 +12,8 @@ export default Base => class extends Base {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
-    if (JSON.stringify(oldState.defaultSorting) !== JSON.stringify(newState.defaultSorting)) {
-      newState.sorting = newState.defaultSorting
+    if (JSON.stringify(oldState.defaultSorted) !== JSON.stringify(newState.defaultSorted)) {
+      newState.sorted = newState.defaultSorted
     }
 
     if ((oldState.showFilters !== newState.showFilters) ||
@@ -26,7 +26,7 @@ export default Base => class extends Base {
       oldState.data !== newState.data ||
       oldState.columns !== newState.columns ||
       oldState.pivotBy !== newState.pivotBy ||
-      oldState.sorting !== newState.sorting ||
+      oldState.sorted !== newState.sorted ||
       oldState.showFilters !== newState.showFilters ||
       oldState.filters !== newState.filters
     ) {
@@ -58,14 +58,14 @@ export default Base => class extends Base {
     // sorting model has changed, update the data
     if (
       (oldState.frozen && !newResolvedState.frozen) ||
-      oldState.sorting !== newResolvedState.sorting ||
+      oldState.sorted !== newResolvedState.sorted ||
       oldState.filters !== newResolvedState.filters ||
       oldState.showFilters !== newResolvedState.showFilters ||
       (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
-      // Handle collapseOnSortingChange & collapseOnDataChange
+      // Handle collapseOnsortedChange & collapseOnDataChange
       if (
-        (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
+        (oldState.sorted !== newResolvedState.sorted && this.props.collapseOnSortingChange) ||
         (oldState.filters !== newResolvedState.filters) ||
         (oldState.showFilters !== newResolvedState.showFilters) ||
         (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
