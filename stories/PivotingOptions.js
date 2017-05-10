@@ -121,7 +121,7 @@ class Story extends React.Component {
 
 // Source Code
 const CodeHighlight = require('./components/codeHighlight').default
-const source = require('!raw-loader!./EditableTable')
+const source = require('!raw-loader!./PivotingOptions')
 
 export default () => (
   <div>
