@@ -35,7 +35,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       page: 0,
       pageSize: props.defaultPageSize,
       sorted: props.defaultSorted,
-      expandedRows: props.defaultExpanded,
+      expanded: props.defaultExpanded,
       filtered: props.defaultFiltered,
       resizing: props.defaultResizing,
       currentlyResizing: false,
@@ -95,8 +95,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       resizing,
       pages,
       // Pivoting State
-      expandedRows,
-      onExpandRow,
+      expanded,
+      onExpanded,
       // Components
       TableComponent,
       TheadComponent,
@@ -144,7 +144,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             _viewIndex: index
           }
           const newPath = path.concat([i])
-          if (rowWithViewIndex[subRowsKey] && _.get(expandedRows, newPath)) {
+          if (rowWithViewIndex[subRowsKey] && _.get(expanded, newPath)) {
             [rowWithViewIndex[subRowsKey], index] = recurseRowsViewIndex(rowWithViewIndex[subRowsKey], newPath, index)
           }
           return rowWithViewIndex
@@ -437,7 +437,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         groupedByPivot: row[groupedByPivotKey],
         subRows: row[subRowsKey]
       }
-      const isExpanded = _.get(expandedRows, rowInfo.nestingPath)
+      const isExpanded = _.get(expanded, rowInfo.nestingPath)
       const trGroupProps = getTrGroupProps(finalState, rowInfo, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
       return (
@@ -497,21 +497,21 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               let isPreview
 
               const onExpanderClick = (e) => {
-                let newExpandedRows = _.clone(expandedRows)
+                let newExpanded = _.clone(expanded)
                 if (isExpanded) {
-                  newExpandedRows = _.set(newExpandedRows, cellInfo.nestingPath, false)
+                  newExpanded = _.set(newExpanded, cellInfo.nestingPath, false)
                 } else {
-                  newExpandedRows = _.set(newExpandedRows, cellInfo.nestingPath, {})
+                  newExpanded = _.set(newExpanded, cellInfo.nestingPath, {})
                 }
-                if (onExpandRow) {
-                  onExpandRow(newExpandedRows, cellInfo.nestingPath, e)
+                if (onExpanded) {
+                  onExpanded(newExpanded, cellInfo.nestingPath, e)
                 }
-                // If expandedRows is being controlled, don't manage internal state
-                if (this.props.expandedRows) {
+                // If expanded is being controlled, don't manage internal state
+                if (this.props.expanded) {
                   return
                 }
                 return this.setStateWithData({
-                  expandedRows: newExpandedRows
+                  expanded: newExpanded
                 })
               }
 

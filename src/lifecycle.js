@@ -45,9 +45,9 @@ export default Base => class extends Base {
     // If freezeWhenExpanded is set, check for frozen conditions
     if (freezeWhenExpanded) {
       // if any rows are expanded, freeze the existing data and sorting
-      const keys = Object.keys(newResolvedState.expandedRows)
+      const keys = Object.keys(newResolvedState.expanded)
       for (var i = 0; i < keys.length; i++) {
-        if (newResolvedState.expandedRows[keys[i]]) {
+        if (newResolvedState.expanded[keys[i]]) {
           newResolvedState.frozen = true
           break
         }
@@ -70,7 +70,7 @@ export default Base => class extends Base {
         (oldState.showFilters !== newResolvedState.showFilters) ||
         (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
       ) {
-        newResolvedState.expandedRows = {}
+        newResolvedState.expanded = {}
       }
 
       Object.assign(newResolvedState, this.getSortedData(newResolvedState))

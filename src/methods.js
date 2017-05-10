@@ -413,7 +413,7 @@ export default Base => class extends Base {
     }
     const newState = {page}
     if (collapseOnPageChange) {
-      newState.expandedRows = {}
+      newState.expanded = {}
     }
     this.setStateWithData(newState, () => {
       this.fireFetchData()

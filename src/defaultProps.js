@@ -53,7 +53,7 @@ export default {
   // sorted: [],
   // filtered: [],
   // resizing: [],
-  // expandedRows: {},
+  // expanded: {},
 
   // Controlled State Callbacks
   onExpandSubComponent: undefined,
@@ -62,7 +62,7 @@ export default {
   onSortedChange: undefined,
   onFilteredChange: undefined,
   onResize: undefined,
-  onExpandRow: undefined,
+  onExpanded: undefined,
 
   // Pivoting
   pivotBy: undefined,
