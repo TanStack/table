@@ -633,11 +633,11 @@ export default Base => class extends Base {
   }
 
   resizeColumnMoving (event) {
-    const {onResize} = this.props
-    const {resizing, currentlyResizing} = this.getResolvedState()
+    const {onResizedChange} = this.props
+    const {resized, currentlyResizing} = this.getResolvedState()
 
     // Delete old value
-    const newResizing = resizing.filter(x => x.id !== currentlyResizing.id)
+    const newResized = resized.filter(x => x.id !== currentlyResizing.id)
 
     let pageX
 
@@ -650,19 +650,19 @@ export default Base => class extends Base {
     // Set the min size to 10 to account for margin and border or else the group headers don't line up correctly
     const newWidth = Math.max(currentlyResizing.parentWidth + pageX - currentlyResizing.startX, 11)
 
-    newResizing.push({
+    newResized.push({
       id: currentlyResizing.id,
       value: newWidth
     })
 
-    onResize && onResize(newResizing, event)
+    onResizedChange && onResizedChange(newResized, event)
 
-    if (this.props.resizing) {
+    if (this.props.resized) {
       return
     }
 
     this.setStateWithData({
-      resizing: newResizing
+      resized: newResized
     })
   }
 }

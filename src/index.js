@@ -37,7 +37,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       sorted: props.defaultSorted,
       expanded: props.defaultExpanded,
       filtered: props.defaultFiltered,
-      resizing: props.defaultResizing,
+      resized: props.defaultResized,
       currentlyResizing: false,
       skipNextSort: false
     }
@@ -92,7 +92,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       page,
       sorted,
       filtered,
-      resizing,
+      resized,
       pages,
       // Pivoting State
       expanded,
@@ -159,8 +159,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const canNext = page + 1 < pages
 
     const rowMinWidth = _.sum(allVisibleColumns.map(d => {
-      const resized = resizing.find(x => x.id === d.id) || {}
-      return _.getFirstDefined(resized.value, d.width, d.minWidth)
+      const resizedColumn = resized.find(x => x.id === d.id) || {}
+      return _.getFirstDefined(resizedColumn.value, d.width, d.minWidth)
     }))
 
     let rowIndex = -1
@@ -204,7 +204,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeHeaderGroup = (column, i) => {
-      const resizedValue = col => (resizing.find(x => x.id === col.id) || {}).value
+      const resizedValue = col => (resized.find(x => x.id === col.id) || {}).value
       const flex = _.sum(column.columns.map(col => col.width || resizedValue(col) ? 0 : col.minWidth))
       const width = _.sum(column.columns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.minWidth)))
       const maxWidth = _.sum(column.columns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.maxWidth)))
@@ -279,11 +279,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeHeader = (column, i) => {
-      const resized = resizing.find(x => x.id === column.id) || {}
+      const resizedCol = resized.find(x => x.id === column.id) || {}
       const sort = sorted.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
-      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+      const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
       const theadThProps = _.splitProps(getTheadThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -370,9 +370,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeFilter = (column, i) => {
-      const resized = resizing.find(x => x.id === column.id) || {}
-      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+      const resizedCol = resized.find(x => x.id === column.id) || {}
+      const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
       const theadFilterThProps = _.splitProps(getTheadFilterThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -454,10 +454,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {...trProps.rest}
           >
             {allVisibleColumns.map((column, i2) => {
-              const resized = resizing.find(x => x.id === column.id) || {}
+              const resizedCol = resized.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
-              const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
-              const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+              const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
+              const maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
               const tdProps = _.splitProps(getTdProps(finalState, rowInfo, column, this))
               const columnProps = _.splitProps(column.getProps(finalState, rowInfo, column, this))
 
@@ -641,11 +641,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makePadColumn = (column, i) => {
-      const resized = resizing.find(x => x.id === column.id) || {}
+      const resizedCol = resized.find(x => x.id === column.id) || {}
       const show = typeof column.show === 'function' ? column.show() : column.show
-      let width = _.getFirstDefined(resized.value, column.width, column.minWidth)
+      let width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
       let flex = width
-      let maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+      let maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
       const tdProps = _.splitProps(getTdProps(finalState, undefined, column, this))
       const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
 
@@ -707,10 +707,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeColumnFooter = (column, i) => {
-      const resized = resizing.find(x => x.id === column.id) || {}
+      const resizedCol = resized.find(x => x.id === column.id) || {}
       const show = typeof column.show === 'function' ? column.show() : column.show
-      const width = _.getFirstDefined(resized.value, column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(resized.value, column.width, column.maxWidth)
+      const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
+      const maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
       const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
       const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
       const columnFooterProps = _.splitProps(column.getFooterProps(finalState, undefined, column, this))

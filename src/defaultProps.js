@@ -20,8 +20,10 @@ export default {
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   showFilters: false,
+  resizable: true,
   defaultSorted: [],
   defaultFiltered: [],
+  defaultResized: [],
   defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
@@ -44,15 +46,13 @@ export default {
     // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
     return 0
   },
-  resizable: true,
-  defaultResizing: [],
 
   // Controlled State Props
   // page: undefined,
   // pageSize: undefined,
   // sorted: [],
   // filtered: [],
-  // resizing: [],
+  // resized: [],
   // expanded: {},
 
   // Controlled State Callbacks
@@ -61,7 +61,7 @@ export default {
   onPageSizeChange: undefined,
   onSortedChange: undefined,
   onFilteredChange: undefined,
-  onResize: undefined,
+  onResizedChange: undefined,
   onExpanded: undefined,
 
   // Pivoting
