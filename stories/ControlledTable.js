@@ -2,7 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import namor from 'namor'
 
-import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
 const data = _.map(_.range(5553), d => {
@@ -31,7 +30,7 @@ const columns = [{
   }]
 }]
 
-class ControlledTable extends React.Component {
+class Story extends React.Component {
   constructor () {
     super()
     this.state = {
@@ -72,79 +71,18 @@ class ControlledTable extends React.Component {
         <br />
         <pre><code><strong>this.state ===</strong> {JSON.stringify(this.state, null, 2)}</code></pre>
         <br />
-        <CodeHighlight>{() => getCode()}</CodeHighlight>
       </div>
     )
   }
 }
 
-function getCode () {
-  return `const data = _.map(_.range(5553), d => {
-  return {
-    firstName: namor.generate({ words: 1, numLen: 0 }),
-    lastName: namor.generate({ words: 1, numLen: 0 }),
-    age: Math.floor(Math.random() * 30)
-  }
-})
+// Source Code
+const CodeHighlight = require('./components/codeHighlight').default
+const source = require('!raw-loader!./ControlledTable')
 
-const columns = [{
-  Header: 'Name',
-  columns: [{
-    Header: 'First Name',
-    accessor: 'firstName'
-  }, {
-    Header: 'Last Name',
-    id: 'lastName',
-    accessor: d => d.lastName
-  }]
-}, {
-  Header: 'Info',
-  columns: [{
-    Header: 'Age',
-    accessor: 'age'
-  }]
-}]
-
-class ControlledTable extends React.Component {
-  constructor() {
-    super()
-    this.sortChange = this.sortChange.bind(this)
-    this.state = {
-      sorting: [],
-      page: 0,
-      pageSize: 10
-    }
-  }
-
-  sortChange(column, shift) {
-    if(shift)
-      alert('Shift click not implemented in this demo')
-    var sort = {id: column.id}
-    if(this.state.sorting.length && this.state.sorting[0].id == column.id)
-      this.state.sorting[0].asc ? sort.desc = true : sort.asc = true
-    else
-      sort.asc = true
-    this.setState({
-      sorting: [sort]
-    })
-  }
-
-  render() {
-    return (
-      <ReactTable
-        className='-striped -highlight'
-        data={data}
-        columns={columns}
-        sorting={this.state.sorting}
-        onSortingChange={this.sortChange}
-        page={this.state.page}
-        onPageChange={page => this.setState({page})}
-        pageSize={this.state.pageSize}
-        onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
-      />
-    )
-  }
-}`
-}
-
-export default () => <ControlledTable />
+export default () => (
+  <div>
+    <Story />
+    <CodeHighlight>{() => source}</CodeHighlight>
+  </div>
+)

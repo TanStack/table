@@ -3,12 +3,10 @@ import _ from 'lodash'
 import namor from 'namor'
 
 import CodeHighlight from './components/codeHighlight'
+
 import ReactTable from '../src/index'
 
-import source from '!raw-loader!./Filtering'
-
-class Filtering extends React.Component {
-
+class Story extends React.Component {
   constructor (props) {
     super(props)
 
@@ -91,23 +89,23 @@ class Filtering extends React.Component {
           <h1>Table Options</h1>
           <table>
             <tbody>
-            {
-              Object.keys(this.state.tableOptions).map(optionKey => {
-                const optionValue = this.state.tableOptions[optionKey]
-                return (
-                  <tr key={optionKey}>
-                    <td>{optionKey}</td>
-                    <td style={{paddingLeft: 10, paddingTop: 5}}>
-                      <input type='checkbox'
-                        name={optionKey}
-                        checked={optionValue}
-                        onChange={this.setTableOption}
-                      />
-                    </td>
-                  </tr>
-                )
-              })
-            }
+              {
+                Object.keys(this.state.tableOptions).map(optionKey => {
+                  const optionValue = this.state.tableOptions[optionKey]
+                  return (
+                    <tr key={optionKey}>
+                      <td>{optionKey}</td>
+                      <td style={{paddingLeft: 10, paddingTop: 5}}>
+                        <input type='checkbox'
+                          name={optionKey}
+                          checked={optionValue}
+                          onChange={this.setTableOption}
+                        />
+                      </td>
+                    </tr>
+                  )
+                })
+              }
             </tbody>
           </table>
         </div>
@@ -151,21 +149,20 @@ class Filtering extends React.Component {
         <div>
           <h1>Custom Filters In This Example</h1>
           <p>The default filter for all columns of a table if it is not specified in the configuration is set to match
-            on values that start with the filter text. Example: age.startsWith("2").</p>
+          on values that start with the filter text. Example: age.startsWith("2").</p>
           <p>This example overrides the default filter behavior by setting
             the <strong>defaultFilterMethod</strong> table option to match on values that are exactly equal to the
-            filter text. Example: age == "23")</p>
+          filter text. Example: age == "23")</p>
           <p>Each column can also be customized with the column <strong>filterMethod</strong> option:</p>
           <p>In this example the firstName column filters on the value starting with and ending with the filter
-            value.</p>
+          value.</p>
           <p>In this example the lastName column filters on the value including the filter value anywhere in its
-            text.</p>
+          text.</p>
           <p>To completely override the filter that is shown, you can set the <strong>Filter</strong> column
             option. Using this option you can specify the JSX that is shown. The option is passed
             an <strong>onChange</strong> method that must be called with the value that you wan't to
             pass to the <strong>filterMethod</strong> option whenever the filter has changed.</p>
         </div>
-        <CodeHighlight>{() => source}</CodeHighlight>
       </div>
     )
   }
@@ -183,4 +180,12 @@ class Filtering extends React.Component {
   }
 }
 
-export default () => <Filtering />
+// Source Code
+const source = require('!raw-loader!./Filtering')
+
+export default () => (
+  <div>
+    <Story />
+    <CodeHighlight>{() => source}</CodeHighlight>
+  </div>
+)

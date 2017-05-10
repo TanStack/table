@@ -2,7 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import namor from 'namor'
 
-import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
 const rawData = _.map(_.range(3424), d => {
@@ -49,15 +48,16 @@ const requestData = (pageSize, page, sorting, filters) => {
   })
 }
 
-const ServerSide = React.createClass({
-  getInitialState () {
-    // To handle our data server-side, we need a few things in the state to help us out:
-    return {
+class Story extends React.Component {
+  constructor () {
+    super()
+    this.state = {
       data: [],
       pages: null,
       loading: true
     }
-  },
+    this.fetchData = this.fetchData.bind(this)
+  }
   fetchData (state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
@@ -72,7 +72,7 @@ const ServerSide = React.createClass({
           loading: false
         })
       })
-  },
+  }
   render () {
     return (
       <div>
@@ -103,73 +103,18 @@ const ServerSide = React.createClass({
           <br />
           <em>Tip: Hold shift when sorting to multi-sort!</em>
         </div>
-        <CodeHighlight>{() => getCode()}</CodeHighlight>
       </div>
     )
   }
-})
+}
+
+// Source Code
+const CodeHighlight = require('./components/codeHighlight').default
+const source = require('!raw-loader!./ServerSide')
 
 export default () => (
-  <ServerSide />
+  <div>
+    <Story />
+    <CodeHighlight>{() => source}</CodeHighlight>
+  </div>
 )
-
-function getCode () {
-  return `
-import ReactTable from 'react-table'
-import Axios from 'axios'
-
-export default React.createClass({
-  getInitialState () {
-    // To handle our data server-side, we need to keep track of our table state
-    return {
-      data: [],
-      pages: null,
-      loading: true
-    }
-  },
-  fetchData (state, instance) {
-    // Whenever the table model changes (sorting, pagination, etc), this method gets called and passed the current table model.
-    // You can set the 'loading' prop of the table to true to use the built-in loading notice, or show you're own loading bar if you want.
-    this.setState({loading: true})
-    // Request the data from a server however you want! Be sure to send the bits of the table model that it may neeed.
-    Axios.post('mysite.com/data', {
-      pageSize: state.pageSize,
-      page: state.page,
-      sorting: state.sorting,
-      filters: state.filters
-    })
-      .then((res) => {
-        // Now update your state!
-        this.setState({
-          data: res.rows,
-          pages: res.pages,
-          loading: false
-        })
-      })
-  },
-  render () {
-    return (
-      <ReactTable
-        columns={[{
-          Header: 'First Name',
-          accessor: 'firstName'
-        }, {
-          Header: 'Last Name',
-          id: 'lastName',
-          accessor: d => d.lastName
-        }, {
-          Header: 'Age',
-          accessor: 'age'
-        }]}
-        manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-        defaultPageSize={10}
-        showFilters={true}
-        data={this.state.data} // Set the rows to be displayed
-        pages={this.state.pages} // Display the total number of pages
-        loading={this.state.loading} // Display the loading overlay when we need it
-        onFetchData={this.fetchData} // Request new data when things change
-      />
-  }
-})
-  `
-}
