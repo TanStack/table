@@ -36,7 +36,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       pageSize: props.defaultPageSize,
       sorted: props.defaultSorted,
       expandedRows: props.defaultExpanded,
-      filters: props.defaultFilters,
+      filtered: props.defaultFiltered,
       resizing: props.defaultResizing,
       currentlyResizing: false,
       skipNextSort: false
@@ -91,7 +91,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       pageSize,
       page,
       sorted,
-      filters,
+      filtered,
       resizing,
       pages,
       // Pivoting State
@@ -393,7 +393,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.rest
       }
 
-      const filter = filters.find(filter => filter.id === column.id)
+      const filter = filtered.find(filter => filter.id === column.id)
 
       const ResolvedFilterComponent = column.Filter || FilterComponent
 

@@ -21,7 +21,7 @@ export default {
   freezeWhenExpanded: false,
   showFilters: false,
   defaultSorted: [],
-  defaultFilters: [],
+  defaultFiltered: [],
   defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
@@ -51,6 +51,7 @@ export default {
   // page: undefined,
   // pageSize: undefined,
   // sorted: [],
+  // filtered: [],
   // resizing: [],
   // expandedRows: {},
 
@@ -59,7 +60,7 @@ export default {
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortedChange: undefined,
-  onFiltersChange: undefined,
+  onFilteredChange: undefined,
   onResize: undefined,
   onExpandRow: undefined,
 

@@ -271,7 +271,7 @@ export default Base => class extends Base {
     const {
       manual,
       sorted,
-      filters,
+      filtered,
       showFilters,
       defaultFilterMethod,
       resolvedData,
@@ -293,7 +293,7 @@ export default Base => class extends Base {
         this.filterData(
           resolvedData,
           showFilters,
-          filters,
+          filtered,
           defaultFilterMethod,
           allVisibleColumns
         ),
@@ -315,11 +315,11 @@ export default Base => class extends Base {
     return _.getFirstDefined(this.state[key], this.props[key])
   }
 
-  filterData (data, showFilters, filters, defaultFilterMethod, allVisibleColumns) {
+  filterData (data, showFilters, filtered, defaultFilterMethod, allVisibleColumns) {
     let filteredData = data
 
-    if (showFilters && filters.length) {
-      filteredData = filters.reduce(
+    if (showFilters && filtered.length) {
+      filteredData = filtered.reduce(
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
             (row) => {
@@ -353,7 +353,7 @@ export default Base => class extends Base {
         }
         return {
           ...row,
-          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filters, defaultFilterMethod, allVisibleColumns)
+          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filtered, defaultFilterMethod, allVisibleColumns)
         }
       }).filter(row => {
         if (!row[this.props.subRowsKey]) {
@@ -545,11 +545,11 @@ export default Base => class extends Base {
   }
 
   filterColumn (column, value) {
-    const {filters} = this.getResolvedState()
-    const {onFiltersChange} = this.props
+    const {filtered} = this.getResolvedState()
+    const {onFilteredChange} = this.props
 
     // Remove old filter first if it exists
-    const newFiltering = (filters || []).filter(x => {
+    const newFiltering = (filtered || []).filter(x => {
       if (x.id !== column.id) {
         return true
       }
@@ -562,16 +562,16 @@ export default Base => class extends Base {
       })
     }
 
-    onFiltersChange && onFiltersChange(newFiltering, column, value)
+    onFilteredChange && onFilteredChange(newFiltering, column, value)
 
     // If filters is being controlled, do not manage state internally
-    if (this.props.filters) {
+    if (this.props.filtered) {
       this.fireFetchData()
       return
     }
 
     this.setStateWithData({
-      filters: newFiltering
+      filtered: newFiltering
     }, () => {
       this.fireFetchData()
     })

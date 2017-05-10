@@ -39,7 +39,7 @@ class Story extends React.Component {
       pageSize: 10,
       expandedRows: {},
       resizing: [],
-      filters: []
+      filtered: []
     }
   }
   render () {
@@ -58,14 +58,14 @@ class Story extends React.Component {
             pageSize={this.state.pageSize}
             expandedRows={this.state.expandedRows}
             resizing={this.state.resizing}
-            filters={this.state.filters}
+            filtered={this.state.filtered}
             // Callbacks
             onSortedChange={sorted => this.setState({sorted})}
             onPageChange={page => this.setState({page})}
             onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
             onExpandRow={(expandedRows) => this.setState({expandedRows})}
             onResize={resizing => this.setState({resizing})}
-            onFiltersChange={filters => this.setState({filters})}
+            onFilteredChange={filtered => this.setState({filtered})}
           />
         </div>
         <br />
