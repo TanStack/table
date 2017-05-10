@@ -114,7 +114,6 @@ class Story extends React.Component {
           <br />
           <em>Tip: Hold shift when sorting to multi-sort!</em>
         </div>
-        <CodeHighlight>{() => this.getCode()}</CodeHighlight>
       </div>
     )
   }
