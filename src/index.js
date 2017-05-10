@@ -33,9 +33,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     this.state = {
       page: 0,
-      pageSize: props.defaultPageSize || 10,
+      pageSize: props.defaultPageSize,
       sorting: props.defaultSorting,
-      expandedRows: {},
+      expandedRows: props.defaultExpanded,
       filters: props.defaultFilters,
       resizing: props.defaultResizing,
       currentlyResizing: false,

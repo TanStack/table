@@ -22,6 +22,7 @@ export default {
   defaultSorting: [],
   showFilters: false,
   defaultFilters: [],
+  defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
