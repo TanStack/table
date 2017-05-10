@@ -64,5 +64,5 @@ configure(() => {
     .add('Custom Filtering', Filtering)
     .add('Controlled Component', ControlledTable)
     .add('Editable table', EditableTable)
-    .add('Sub Rows', SubRows)
+    // .add('Sub Rows', SubRows)
 }, module)

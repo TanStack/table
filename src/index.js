@@ -561,22 +561,18 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 }
               } else if (cellInfo.aggregated) {
                 resolvedCell = _.normalizeComponent(ResolvedAggregatedComponent, cellInfo, value)
-              } else if (column.expander) {
-                resolvedCell = _.normalizeComponent(ResolvedPivotComponent, cellInfo, value)
-                if (cellInfo.subRows) {
-                  resolvedCell = null
+              }
+
+              if (cellInfo.expander) {
+                resolvedCell = _.normalizeComponent(ResolvedExpanderComponent, cellInfo, row[pivotValKey])
+                if (pivotBy) {
+                  if (cellInfo.groupedByPivot) {
+                    resolvedCell = null
+                  }
+                  if (!cellInfo.subRows && !SubComponent) {
+                    resolvedCell = null
+                  }
                 }
-                if (!cellInfo.subRows && !SubComponent) {
-                  resolvedCell = null
-                }
-                // if (pivotBy) {
-                //   if (cellInfo.groupedByPivot) {
-                //     resolvedCell = null
-                //   }
-                //   if (!cellInfo.subRows && !SubComponent) {
-                //     resolvedCell = null
-                //   }
-                // }
               }
 
               // Return the cell

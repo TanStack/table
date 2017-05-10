@@ -17,17 +17,25 @@ export default () => {
   const columns = [{
     Header: 'Name',
     columns: [{
-      Header: 'First Name (Sorted by Length)',
+      Header: 'First Name (Sorted by Length, A-Z)',
       accessor: 'firstName',
-      sortMethod: value => {
-        return value.length
+      sortMethod: (a, b) => {
+        if (a.length === b.length) {
+          return a > b ? 1 : -1
+        }
+        return a.length > b.length ? 1 : -1
       }
     }, {
-      Header: 'Last Name (Sorted by last letter)',
+      Header: 'Last Name (Sorted in reverse, A-Z)',
       id: 'lastName',
       accessor: d => d.lastName,
-      sortMethod: value => {
-        return value.substring([value.length - 1])
+      sortMethod: (a, b) => {
+        if (a === b) {
+          return 0
+        }
+        const aReverse = a.split('').reverse().join('')
+        const bReverse = b.split('').reverse().join('')
+        return aReverse > bReverse ? 1 : -1
       }
     }]
   }, {

@@ -52,18 +52,18 @@ export default Base => class extends Base {
 
     const makeDecoratedColumn = (column) => {
       let dcol
-      // if (column.expander) {
-      //   dcol = {
-      //     ...this.props.column,
-      //     ...this.props.expanderDefaults,
-      //     ...column
-      //   }
-      // } else {
+      if (column.expander) {
+        dcol = {
+          ...this.props.column,
+          ...this.props.expanderDefaults,
+          ...column
+        }
+      } else {
         dcol = {
           ...this.props.column,
           ...column
         }
-      // }
+      }
 
       if (typeof dcol.accessor === 'string') {
         dcol.id = dcol.id || dcol.accessor
@@ -279,12 +279,12 @@ export default Base => class extends Base {
       allDecoratedColumns
     } = resolvedState
 
-    const sortersByID = {}
+    const sortMethodsByColumnID = {}
 
     allDecoratedColumns
       .filter(col => col.sortMethod)
       .forEach(col => {
-        sortersByID[col.id] = col.sortMethod
+        sortMethodsByColumnID[col.id] = col.sortMethod
       })
 
     // Resolve the data from either manual data or sorted data
@@ -298,7 +298,7 @@ export default Base => class extends Base {
           allVisibleColumns
         ),
         sorting,
-        sortersByID
+        sortMethodsByColumnID
       )
     }
   }
@@ -366,32 +366,36 @@ export default Base => class extends Base {
     return filteredData
   }
 
-  sortData (data, sorting, sortersByID = {}) {
+  sortData (data, sorting, sortMethodsByColumnID = {}) {
     if (!sorting.length) {
       return data
     }
 
-    const sorted = _.orderBy(data, sorting.map(sort => {
-      // Support custom sorting methods for each column
-      if (sortersByID[sort.id]) {
-        return row => {
-          return sortersByID[sort.id](row[sort.id])
+    const sorted = (this.props.orderByMethod || _.orderBy)(
+      data,
+      sorting.map(sort => {
+        // Support custom sorting methods for each column
+        if (sortMethodsByColumnID[sort.id]) {
+          return (a, b) => {
+            return sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id])
+          }
         }
-      }
-      return row => {
-        return this.props.sortMethod[sort.id](row[sort.id])
-      }
-    }), sorting.map(d => !d.desc))
+        return (a, b) => {
+          return this.props.defaultSortMethod(a[sort.id], b[sort.id])
+        }
+      }),
+      sorting.map(d => !d.desc),
+      this.props.indexKey
+    )
 
-    return sorted.map(row => {
+    sorted.forEach(row => {
       if (!row[this.props.subRowsKey]) {
-        return row
+        return
       }
-      return {
-        ...row,
-        [this.props.subRowsKey]: this.sortData(row[this.props.subRowsKey], sorting, sortersByID)
-      }
+      row[this.props.subRowsKey] = this.sortData(row[this.props.subRowsKey], sorting, sortMethodsByColumnID)
     })
+
+    return sorted
   }
 
   getMinRows () {

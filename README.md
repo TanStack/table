@@ -166,6 +166,7 @@ These are all of the available props (and their default values) for the main `<R
   },
   resizable: true,
   defaultResizing: [],
+  defaultSortMethod: undefined,
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
@@ -769,6 +770,34 @@ Sorting comes built in with React-Table. Click column header to sort by its colu
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
+
+## Custom Sorting Algorithm
+To override the default sorting algorithm for the whole table use the `defaultSortMethod` prop.
+To override the sorting algorithm for a single column, use the `sortMethod` column property.
+
+Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
+- `a` the first value to compare
+- `b` the second value to compare
+- `dir` the
+```javascript
+defaultSortMethod = (a, b) => {
+  // force null and undefined to the bottom
+  a = (a === null || a === undefined) ? -Infinity : a
+  b = (b === null || b === undefined) ? -Infinity : b
+  // force any string values to lowercase
+  a = a === 'string' ? a.toLowerCase() : a
+  b = b === 'string' ? b.toLowerCase() : b
+  // Return either 1 or -1 to indicate a sort priority
+  if (a > b) {
+    return 1
+  }
+  if (a < b) {
+    return -1
+  }
+  // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
+  return 0
+}
+```
 
 ## Filtering
 Filtering can be enabled by setting the `showFilters` option on the table.
