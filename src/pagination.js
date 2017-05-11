@@ -104,7 +104,7 @@ export default class ReactTablePagination extends Component {
               </div>
             ) : (
               <span className='-currentPage'>{page + 1}</span>
-            )} {this.props.ofText} <span className='-totalPages'>{pages}</span>
+            )} {this.props.ofText} <span className='-totalPages'>{pages || 1}</span>
           </span>
           {showPageSizeOptions && (
             <span className='select-wrap -pageSizeOptions'>
