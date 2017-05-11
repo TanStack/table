@@ -163,9 +163,9 @@ These are all of the available props (and their default values) for the main `<R
   collapseOnPageChange: true,
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
-  showFilters: false,
   sortable: true,
   resizable: true,
+  filterable: false,
   defaultSorted: [],
   defaultFiltered: [],
   defaultResized: [],
@@ -268,6 +268,7 @@ These are all of the available props (and their default values) for the main `<R
     // Standard options
     sortable: undefined, // use table default
     resizable: undefined, // use table default
+    filterable: undefined, // use table default
     show: true,
     minWidth: 100,
     // Cells only
@@ -283,16 +284,15 @@ These are all of the available props (and their default values) for the main `<R
     footerStyle: {},
     getFooterProps: () => ({}),
     filterMethod: undefined,
-    sortMethod: undefined,
-    hideFilter: false
+    sortMethod: undefined
   },
 
   // Global Expander Column Defaults
   expanderDefaults: {
     sortable: false,
     resizable: false,
-    width: 35,
-    hideFilter: true
+    filterable: false,
+    width: 35
   },
 
   // Global Pivot Column Defaults
@@ -356,7 +356,9 @@ Or just define them as props
   // General
   accessor: 'propertyName', // or Accessor eg. (row) => row.propertyName (see "Accessors" section for more details)
   id: 'myProperty', // Conditional - A unique ID is required if the accessor is not a string or if you would like to override the column name used in server-side calls
-  sortable: true,
+  sortable: boolean, // Overrides the table option
+  resizable: boolean, // Overrides the table option
+  filterable: boolean, // Overrides the table option
   show: true, // can be used to hide a column
   width: undefined, // A hardcoded width for the column. This overrides both min and max width options
   minWidth: 100, // A minimum width for this column. If there is extra room, column will flex to fill available space (up to the max-width, if set)
@@ -394,7 +396,6 @@ Or just define them as props
     // filter == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
     // row == the row of data supplied to the table
     // column == the column that the filter is on
-  hideFilter: false, // If `showFilters` is set on the table, this option will let you selectively hide the filter on a particular row
 }]
 ```
 
@@ -836,9 +837,9 @@ defaultSortMethod = (a, b) => {
 ```
 
 ## Filtering
-Filtering can be enabled by setting the `showFilters` option on the table.
+Filtering can be enabled by setting the `filterable` option on the table.
 
-If you don't want particular column to be filtered you can set the `hideFilter` option on the column.
+If you don't want particular column to be filtered you can set the `filterable={false}` option on the column.
 
 By default the table tries to filter by checking if the row's value starts with the filter text. The default method for filtering the table can be set with the table's `defaultFilterMethod` option.
 

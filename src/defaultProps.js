@@ -19,9 +19,9 @@ export default {
   collapseOnPageChange: true,
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
-  showFilters: false,
   sortable: true,
   resizable: true,
+  filterable: false,
   defaultSorted: [],
   defaultFiltered: [],
   defaultResized: [],
@@ -123,6 +123,7 @@ export default {
     // All Columns
     sortable: undefined, // use table default
     resizable: undefined, // use table default
+    filterable: undefined, // use table default
     show: true,
     minWidth: 100,
     // Cells only
@@ -140,16 +141,15 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
-    sortMethod: undefined,
-    hideFilter: false
+    sortMethod: undefined
   },
 
   // Global Expander Column Defaults
   expanderDefaults: {
     sortable: false,
     resizable: false,
-    width: 35,
-    hideFilter: true
+    filterable: false,
+    width: 35
   },
 
   pivotDefaults: {

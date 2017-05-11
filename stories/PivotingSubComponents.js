@@ -39,7 +39,7 @@ class Story extends React.Component {
         Header: 'Visits',
         accessor: 'visits',
         aggregate: vals => _.sum(vals),
-        hideFilter: true
+        filterable: false
       }]
     }]
 
@@ -52,7 +52,7 @@ class Story extends React.Component {
             defaultPageSize={10}
             className='-striped -highlight'
             pivotBy={['firstName', 'lastName']}
-            showFilters
+            filterable
             SubComponent={(row) => {
               return (
                 <div style={{padding: '20px'}}>

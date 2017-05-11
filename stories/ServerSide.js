@@ -92,7 +92,7 @@ class Story extends React.Component {
             }]}
             manual // Forces table not to paginate or sort automatically, so we can handle it server-side
             defaultPageSize={10}
-            showFilters
+            filterable
             data={this.state.data} // Set the rows to be displayed
             pages={this.state.pages} // Display the total number of pages
             loading={this.state.loading} // Display the loading overlay when we need it

@@ -26,7 +26,7 @@ class Story extends React.Component {
         collapseOnPageChange: true,
         collapseOnDataChange: true,
         freezeWhenExpanded: false,
-        showFilters: false,
+        filterable: false,
         sortable: true,
         resizable: true
       },

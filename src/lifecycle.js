@@ -12,14 +12,29 @@ export default Base => class extends Base {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
-    if (JSON.stringify(oldState.defaultSorted) !== JSON.stringify(newState.defaultSorted)) {
-      newState.sorted = newState.defaultSorted
-    }
+    // Do a deep compare of new and old `defaultOption` and
+    // if they are different reset `option = defaultOption`
+    const defaultableOptions = ['sorted', 'filtered', 'resized', 'expanded']
+    defaultableOptions.forEach(x => {
+      const defaultName = `default${x.charAt(0).toUpperCase() + x.slice(1)}`
+      if (JSON.stringify(oldState[defaultName]) !== JSON.stringify(newState[defaultName])) {
+        newState[x] = newState[defaultName]
+      }
+    })
 
-    if ((oldState.showFilters !== newState.showFilters) ||
-      (oldState.showFilters !== newState.showFilters)) {
-      newState.filtered = newState.defaultFiltered
-    }
+    // If they change these table options, we need to reset defaults
+    // or else we could get into a state where the user has changed the UI
+    // and then disabled the ability to change it back.
+    // e.g. If `filterable` has changed, set `filtered = defaultFiltered`
+    const resettableOptions = ['sortable', 'filterable', 'resizable']
+    resettableOptions.forEach(x => {
+      if (oldState[x] !== newState[x]) {
+        const baseName = x.replace('able', '')
+        const optionName = `${baseName}ed`
+        const defaultName = `default${optionName.charAt(0).toUpperCase() + optionName.slice(1)}`
+        newState[optionName] = newState[defaultName]
+      }
+    })
 
     // Props that trigger a data update
     if (
@@ -27,7 +42,6 @@ export default Base => class extends Base {
       oldState.columns !== newState.columns ||
       oldState.pivotBy !== newState.pivotBy ||
       oldState.sorted !== newState.sorted ||
-      oldState.showFilters !== newState.showFilters ||
       oldState.filtered !== newState.filtered
     ) {
       this.setStateWithData(this.getDataModel(newState))

@@ -41,7 +41,7 @@ class Story extends React.Component {
         Header: 'Visits',
         accessor: 'visits',
         aggregate: vals => _.sum(vals),
-        hideFilter: true
+        filterable: false
       }]
     }, {
       pivot: true,
@@ -81,7 +81,7 @@ class Story extends React.Component {
             pivotBy={['firstName', 'lastName']}
             defaultSorted={[{id: 'firstName', desc: false}, {id: 'lastName', desc: true}]}
             collapseOnSortingChange={false}
-            showFilters
+            filterable
             ExpanderComponent={({isExpanded, ...rest}) => (
               isExpanded ? <span> &#10136; </span> : <span> &#10137; </span>
             )}

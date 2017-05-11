@@ -51,7 +51,7 @@ class Story extends React.Component {
             data={data}
             columns={columns}
             pivotBy={['lastName']}
-            showFilters
+            filterable
             // Controlled Props
             sorted={this.state.sorted}
             page={this.state.page}

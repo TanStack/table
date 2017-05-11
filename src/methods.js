@@ -272,7 +272,6 @@ export default Base => class extends Base {
       manual,
       sorted,
       filtered,
-      showFilters,
       defaultFilterMethod,
       resolvedData,
       allVisibleColumns,
@@ -282,17 +281,16 @@ export default Base => class extends Base {
     const sortMethodsByColumnID = {}
 
     allDecoratedColumns
-      .filter(col => col.sortMethod)
-      .forEach(col => {
-        sortMethodsByColumnID[col.id] = col.sortMethod
-      })
+    .filter(col => col.sortMethod)
+    .forEach(col => {
+      sortMethodsByColumnID[col.id] = col.sortMethod
+    })
 
     // Resolve the data from either manual data or sorted data
     return {
       sortedData: manual ? resolvedData : this.sortData(
         this.filterData(
           resolvedData,
-          showFilters,
           filtered,
           defaultFilterMethod,
           allVisibleColumns
@@ -315,10 +313,10 @@ export default Base => class extends Base {
     return _.getFirstDefined(this.state[key], this.props[key])
   }
 
-  filterData (data, showFilters, filtered, defaultFilterMethod, allVisibleColumns) {
+  filterData (data, filtered, defaultFilterMethod, allVisibleColumns) {
     let filteredData = data
 
-    if (showFilters && filtered.length) {
+    if (filtered.length) {
       filteredData = filtered.reduce(
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
@@ -332,9 +330,9 @@ export default Base => class extends Base {
                 column = column.pivotColumns.find(x => x.id === nextFilter.id)
               }
 
-              // Don't filter hidden columns
-              if (!column) {
-                return
+              // Don't filter hidden columns or columns that have had their filters disabled
+              if (!column || column.filterable === false) {
+                return true
               }
 
               const filterMethod = column.filterMethod || defaultFilterMethod
@@ -353,7 +351,7 @@ export default Base => class extends Base {
         }
         return {
           ...row,
-          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filtered, defaultFilterMethod, allVisibleColumns)
+          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], filtered, defaultFilterMethod, allVisibleColumns)
         }
       }).filter(row => {
         if (!row[this.props.subRowsKey]) {

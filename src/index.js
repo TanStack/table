@@ -75,9 +75,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       manual,
       loadingText,
       noDataText,
-      showFilters,
       sortable,
       resizable,
+      filterable,
       // Pivoting State
       pivotIDKey,
       pivotValKey,
@@ -134,6 +134,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
     const hasColumnFooter = allVisibleColumns.some(d => d.Footer)
+    const hasFilters = filterable || allVisibleColumns.some(d => d.filterable)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
       return [
@@ -400,6 +401,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       const ResolvedFilterComponent = column.Filter || FilterComponent
 
+      const isFilterable = _.getFirstDefined(column.filterable, filterable, false)
+
       return (
         <ThComponent
           key={i + '-' + column.id}
@@ -414,7 +417,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          {!column.hideFilter ? (
+          {isFilterable ? (
             _.normalizeComponent(ResolvedFilterComponent,
               {
                 column,
@@ -788,7 +791,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
-          {showFilters ? makeFilters() : null}
+          {hasFilters ? makeFilters() : null}
           <TbodyComponent
             className={classnames(tBodyProps.className)}
             style={{
