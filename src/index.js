@@ -76,6 +76,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       loadingText,
       noDataText,
       showFilters,
+      sortable,
       resizable,
       // Pivoting State
       pivotIDKey,
@@ -303,7 +304,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.rest
       }
 
-      const resizer = (typeof column.resizable !== 'undefined' ? column.resizable : resizable) ? (
+      const isResizable = _.getFirstDefined(column.resizable, resizable, false)
+      const resizer = isResizable ? (
         <ResizerComponent
           onMouseDown={e => this.resizeColumnStart(column, e, false)}
           onTouchStart={e => this.resizeColumnStart(column, e, true)}
@@ -312,6 +314,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         />
       ) : null
 
+      const isSortable = _.getFirstDefined(column.sortable, sortable, false)
+
       return (
         <ThComponent
           key={i + '-' + column.id}
@@ -319,7 +323,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             classes,
             'rt-resizable-header',
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
-            column.sortable && '-cursor-pointer',
+            isSortable && '-cursor-pointer',
             !show && '-hidden',
             pivotBy && pivotBy.slice(0, -1).includes(column.id) && 'rt-header-pivot'
           )}
@@ -330,7 +334,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             maxWidth: `${maxWidth}px`
           }}
           toggleSort={(e) => {
-            column.sortable && this.sortColumn(column, e.shiftKey)
+            isSortable && this.sortColumn(column, e.shiftKey)
           }}
           {...rest}
         >
@@ -522,11 +526,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               const ResolvedExpanderComponent = column.Expander || ExpanderComponent
               const ResolvedPivotValueComponent = column.PivotValue || PivotValueComponent
               const DefaultResolvedPivotComponent = PivotComponent || (props => (
-                <div>
-                  <ResolvedExpanderComponent {...props} />
-                  <ResolvedPivotValueComponent {...props} />
-                </div>
-              ))
+                  <div>
+                    <ResolvedExpanderComponent {...props} />
+                    <ResolvedPivotValueComponent {...props} />
+                  </div>
+                ))
               const ResolvedPivotComponent = column.Pivot || DefaultResolvedPivotComponent
 
               // Is this cell expandable?

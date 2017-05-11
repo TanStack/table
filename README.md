@@ -164,6 +164,7 @@ These are all of the available props (and their default values) for the main `<R
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   showFilters: false,
+  sortable: true,
   resizable: true,
   defaultSorted: [],
   defaultFiltered: [],
@@ -265,8 +266,8 @@ These are all of the available props (and their default values) for the main `<R
     Expander: undefined,
     Filter: undefined,
     // Standard options
-    resizable: true,
-    sortable: true,
+    sortable: undefined, // use table default
+    resizable: undefined, // use table default
     show: true,
     minWidth: 100,
     // Cells only
@@ -289,6 +290,7 @@ These are all of the available props (and their default values) for the main `<R
   // Global Expander Column Defaults
   expanderDefaults: {
     sortable: false,
+    resizable: false,
     width: 35,
     hideFilter: true
   },

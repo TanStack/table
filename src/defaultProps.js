@@ -20,6 +20,7 @@ export default {
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   showFilters: false,
+  sortable: true,
   resizable: true,
   defaultSorted: [],
   defaultFiltered: [],
@@ -120,7 +121,8 @@ export default {
     Expander: undefined,
     Filter: undefined,
     // All Columns
-    sortable: true,
+    sortable: undefined, // use table default
+    resizable: undefined, // use table default
     show: true,
     minWidth: 100,
     // Cells only
@@ -145,6 +147,7 @@ export default {
   // Global Expander Column Defaults
   expanderDefaults: {
     sortable: false,
+    resizable: false,
     width: 35,
     hideFilter: true
   },
