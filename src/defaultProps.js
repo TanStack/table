@@ -57,7 +57,6 @@ export default {
   // expanded: {},
 
   // Controlled State Callbacks
-  onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortedChange: undefined,
