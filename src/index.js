@@ -528,12 +528,14 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               const ResolvedAggregatedComponent = column.Aggregated || (!column.aggregate ? AggregatedComponent : column.Cell)
               const ResolvedExpanderComponent = column.Expander || ExpanderComponent
               const ResolvedPivotValueComponent = column.PivotValue || PivotValueComponent
-              const DefaultResolvedPivotComponent = PivotComponent || (props => (
-                  <div>
-                    <ResolvedExpanderComponent {...props} />
-                    <ResolvedPivotValueComponent {...props} />
-                  </div>
-                ))
+              const DefaultResolvedPivotComponent = PivotComponent || (
+                  props => (
+                    <div>
+                      <ResolvedExpanderComponent {...props} />
+                      <ResolvedPivotValueComponent {...props} />
+                    </div>
+                  )
+                )
               const ResolvedPivotComponent = column.Pivot || DefaultResolvedPivotComponent
 
               // Is this cell expandable?
