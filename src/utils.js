@@ -64,23 +64,20 @@ function range (n) {
   return arr
 }
 
-function orderBy (arr, funcs, dirs) {
-  return arr.sort((a, b) => {
+function orderBy (arr, funcs, dirs, indexKey) {
+  return arr.sort((rowA, rowB) => {
     for (let i = 0; i < funcs.length; i++) {
       const comp = funcs[i]
-      const ca = comp(a)
-      const cb = comp(b)
       const desc = dirs[i] === false || dirs[i] === 'desc'
-      if (ca > cb) {
-        return desc ? -1 : 1
-      }
-      if (ca < cb) {
-        return desc ? 1 : -1
+      const sortInt = comp(rowA, rowB)
+      if (sortInt) {
+        return desc ? -sortInt : sortInt
       }
     }
+    // Use the row index for tie breakers
     return dirs[0]
-      ? a.__index - b.__index
-      : b.__index - a.__index
+      ? rowA[indexKey] - rowB[indexKey]
+      : rowB[indexKey] - rowA[indexKey]
   })
 }
 

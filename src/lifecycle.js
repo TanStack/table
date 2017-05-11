@@ -5,30 +5,44 @@ export default Base => class extends Base {
   }
 
   componentDidMount () {
-    this.fireOnChange()
+    this.fireFetchData()
   }
 
   componentWillReceiveProps (nextProps, nextState) {
     const oldState = this.getResolvedState()
     const newState = this.getResolvedState(nextProps, nextState)
 
-    if (oldState.defaultSorting !== newState.defaultSorting) {
-      newState.sorting = newState.defaultSorting
-    }
+    // Do a deep compare of new and old `defaultOption` and
+    // if they are different reset `option = defaultOption`
+    const defaultableOptions = ['sorted', 'filtered', 'resized', 'expanded']
+    defaultableOptions.forEach(x => {
+      const defaultName = `default${x.charAt(0).toUpperCase() + x.slice(1)}`
+      if (JSON.stringify(oldState[defaultName]) !== JSON.stringify(newState[defaultName])) {
+        newState[x] = newState[defaultName]
+      }
+    })
 
-    if ((oldState.showFilters !== newState.showFilters) ||
-      (oldState.showFilters !== newState.showFilters)) {
-      newState.filtering = newState.defaultFiltering
-    }
+    // If they change these table options, we need to reset defaults
+    // or else we could get into a state where the user has changed the UI
+    // and then disabled the ability to change it back.
+    // e.g. If `filterable` has changed, set `filtered = defaultFiltered`
+    const resettableOptions = ['sortable', 'filterable', 'resizable']
+    resettableOptions.forEach(x => {
+      if (oldState[x] !== newState[x]) {
+        const baseName = x.replace('able', '')
+        const optionName = `${baseName}ed`
+        const defaultName = `default${optionName.charAt(0).toUpperCase() + optionName.slice(1)}`
+        newState[optionName] = newState[defaultName]
+      }
+    })
 
     // Props that trigger a data update
     if (
       oldState.data !== newState.data ||
       oldState.columns !== newState.columns ||
       oldState.pivotBy !== newState.pivotBy ||
-      oldState.sorting !== newState.sorting ||
-      oldState.showFilters !== newState.showFilters ||
-      oldState.filtering !== newState.filtering
+      oldState.sorted !== newState.sorted ||
+      oldState.filtered !== newState.filtered
     ) {
       this.setStateWithData(this.getDataModel(newState))
     }
@@ -45,9 +59,9 @@ export default Base => class extends Base {
     // If freezeWhenExpanded is set, check for frozen conditions
     if (freezeWhenExpanded) {
       // if any rows are expanded, freeze the existing data and sorting
-      const keys = Object.keys(newResolvedState.expandedRows)
+      const keys = Object.keys(newResolvedState.expanded)
       for (var i = 0; i < keys.length; i++) {
-        if (newResolvedState.expandedRows[keys[i]]) {
+        if (newResolvedState.expanded[keys[i]]) {
           newResolvedState.frozen = true
           break
         }
@@ -58,19 +72,19 @@ export default Base => class extends Base {
     // sorting model has changed, update the data
     if (
       (oldState.frozen && !newResolvedState.frozen) ||
-      oldState.sorting !== newResolvedState.sorting ||
-      oldState.filtering !== newResolvedState.filtering ||
+      oldState.sorted !== newResolvedState.sorted ||
+      oldState.filtered !== newResolvedState.filtered ||
       oldState.showFilters !== newResolvedState.showFilters ||
       (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
     ) {
-      // Handle collapseOnSortingChange & collapseOnDataChange
+      // Handle collapseOnsortedChange & collapseOnDataChange
       if (
-        (oldState.sorting !== newResolvedState.sorting && this.props.collapseOnSortingChange) ||
-        (oldState.filtering !== newResolvedState.filtering) ||
+        (oldState.sorted !== newResolvedState.sorted && this.props.collapseOnSortingChange) ||
+        (oldState.filtered !== newResolvedState.filtered) ||
         (oldState.showFilters !== newResolvedState.showFilters) ||
         (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData && this.props.collapseOnDataChange)
       ) {
-        newResolvedState.expandedRows = {}
+        newResolvedState.expanded = {}
       }
 
       Object.assign(newResolvedState, this.getSortedData(newResolvedState))

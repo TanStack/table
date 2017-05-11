@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "5.6.0",
+  "version": "6.0.0",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -38,7 +38,8 @@
     "docs": "build-storybook -o docs && cp .storybook/CNAME docs/CNAME"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "raw-loader": "^0.5.1"
   },
   "peerDependencies": {
     "react": "^15.x.x"

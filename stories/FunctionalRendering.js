@@ -3,7 +3,6 @@ import _ from 'lodash'
 import namor from 'namor'
 import JSONTree from 'react-json-tree'
 
-import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
 const JSONtheme = {
@@ -27,147 +26,111 @@ const JSONtheme = {
   base0F: '#cc6633'
 }
 
-export default () => {
-  const data = _.map(_.range(5553), d => {
-    return {
-      firstName: namor.generate({ words: 1, numLen: 0 }),
-      lastName: namor.generate({ words: 1, numLen: 0 }),
-      age: Math.floor(Math.random() * 30)
-    }
-  })
+class Story extends React.Component {
+  render () {
+    const data = _.map(_.range(5553), d => {
+      return {
+        firstName: namor.generate({ words: 1, numLen: 0 }),
+        lastName: namor.generate({ words: 1, numLen: 0 }),
+        age: Math.floor(Math.random() * 30)
+      }
+    })
 
-  const columns = [{
-    header: 'Name',
-    columns: [{
-      header: 'First Name',
-      accessor: 'firstName',
-      footer: 'Footer'
+    const columns = [{
+      Header: 'Name',
+      columns: [{
+        Header: 'First Name',
+        accessor: 'firstName',
+        Footer: 'Footer'
+      }, {
+        Header: 'Last Name',
+        id: 'lastName',
+        accessor: d => d.lastName,
+        Footer: 'Footer'
+      }]
     }, {
-      header: 'Last Name',
-      id: 'lastName',
-      accessor: d => d.lastName,
-      footer: 'Footer'
+      Header: 'Info',
+      columns: [{
+        Header: 'Age',
+        accessor: 'age',
+        Footer: 'Footer'
+      }]
     }]
-  }, {
-    header: 'Info',
-    columns: [{
-      header: 'Age',
-      accessor: 'age',
-      footer: 'Footer'
-    }]
-  }]
 
-  return (
-    <div>
-      <strong>Functional rendering</strong> simply means that you have all of the building blocks to render your own React Table however you'd like.
+    return (
+      <div>
+        <strong>Functional rendering</strong> simply means that you have all of the building blocks to render your own React Table however you'd like.
 
-      <br />
-      <br />
-      <br />
-      <br />
+        <br />
+        <br />
+        <br />
+        <br />
 
-      <strong>Decorating the standard table output</strong>
-      <br />
-      <br />
+        <strong>Decorating the standard table output</strong>
+        <br />
+        <br />
 
-      <div className='table-wrap'>
-        <ReactTable
-          data={data}
-          columns={columns}
-        >
-          {(state, makeTable, instance) => {
-            return (
-              <div style={{
-                background: '#ffcf00',
-                borderRadius: '5px',
-                overflow: 'hidden',
-                padding: '5px'
-              }}>
-                <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
-                {makeTable()}
-              </div>
-            )
-          }}
-        </ReactTable>
-      </div>
-
-      <CodeHighlight>{() => `
-import ReactTable from 'react-table'
-
-return (
-  <ReactTable
-    data={data}
-    columns={columns}
-  >
-    {(state, Table, instance) => {
-      return (
-        <div style={{
-          background: '#ffcf00',
-          borderRadius: '5px',
-          overflow: 'hidden',
-          padding: '5px'
-        }}>
-          <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
-          <Table />
+        <div className='table-wrap'>
+          <ReactTable
+            data={data}
+            columns={columns}
+          >
+            {(state, makeTable, instance) => {
+              return (
+                <div style={{
+                  background: '#ffcf00',
+                  borderRadius: '5px',
+                  overflow: 'hidden',
+                  padding: '5px'
+                }}>
+                  <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
+                  {makeTable()}
+                </div>
+              )
+            }}
+          </ReactTable>
         </div>
-      )
-    }}
-  </ReactTable>
-)
-      `}</CodeHighlight>
 
-      <br />
-      <br />
+        <br />
+        <br />
 
-      <strong>Need more control? This is the entire table state and component instance at your disposal!</strong>
-      <br />
-      <br />
+        <strong>Need more control? This is the entire table state and component instance at your disposal!</strong>
+        <br />
+        <br />
 
-      <div className='table-wrap'>
-        <ReactTable
-          className='-striped -highlight'
-          data={data}
-          columns={columns}
-          defaultPageSize={10}
-        >
-          {(state, StandardTable, instance) => {
-            return (
-              <div>
-                <JSONTree
-                  data={Object.assign({}, state, {children: 'function () {...}'})}
-                  theme={JSONtheme}
-                  invertTheme
-                />
-              </div>
-            )
-          }}
-        </ReactTable>
-      </div>
-      <br />
-      <CodeHighlight>{() => `
-import ReactTable from 'react-table'
-
-return (
-  <ReactTable
-    className='-striped -highlight'
-    data={data}
-    columns={columns}
-    defaultPageSize={10}
-  >
-    {(state, StandardTable, instance) => {
-      return (
-        <div>
-          <JSONTree
-            data={Object.assign({}, state, {children: 'function () {...}'})}
-            theme={JSONtheme}
-            invertTheme
-          />
+        <div className='table-wrap'>
+          <ReactTable
+            className='-striped -highlight'
+            data={data}
+            columns={columns}
+            defaultPageSize={10}
+          >
+            {(state, StandardTable, instance) => {
+              return (
+                <div>
+                  <JSONTree
+                    data={Object.assign({}, state, {children: 'function () {...}'})}
+                    theme={JSONtheme}
+                    invertTheme
+                  />
+                </div>
+              )
+            }}
+          </ReactTable>
         </div>
-      )
-    }}
-  </ReactTable>
-)
-      `}</CodeHighlight>
-    </div>
-  )
+        <br />
+      </div>
+    )
+  }
 }
+
+// Source Code
+const CodeHighlight = require('./components/codeHighlight').default
+const source = require('!raw-loader!./FunctionalRendering')
+
+export default () => (
+  <div>
+    <Story />
+    <CodeHighlight>{() => source}</CodeHighlight>
+  </div>
+)

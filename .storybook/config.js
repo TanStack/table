@@ -13,6 +13,7 @@ import Readme from '../README.md'
 import Simple from '../stories/Simple.js'
 import CellRenderers from '../stories/CellRenderers.js'
 import DefaultSorting from '../stories/DefaultSorting.js'
+import CustomSorting from '../stories/CustomSorting.js'
 import CustomWidths from '../stories/CustomWidths.js'
 import CustomComponentProps from '../stories/CustomComponentProps.js'
 import ServerSide from '../stories/ServerSide.js'
@@ -28,6 +29,7 @@ import Filtering from '../stories/Filtering.js'
 import ControlledTable from '../stories/ControlledTable.js'
 import PivotingOptions from '../stories/PivotingOptions.js'
 import EditableTable from '../stories/EditableTable.js'
+import SubRows from '../stories/SubRows.js'
 //
 configure(() => {
   storiesOf('1. Docs')
@@ -46,6 +48,7 @@ configure(() => {
     .add('Simple Table', Simple)
     .add('Cell Renderers & Custom Components', CellRenderers)
     .add('Default Sorting', DefaultSorting)
+    .add('Custom Sorting', CustomSorting)
     .add('Custom Column Widths', CustomWidths)
     .add('Custom Component Props', CustomComponentProps)
     .add('Server-side Data', ServerSide)
@@ -61,4 +64,5 @@ configure(() => {
     .add('Custom Filtering', Filtering)
     .add('Controlled Component', ControlledTable)
     .add('Editable table', EditableTable)
+    // .add('Sub Rows', SubRows)
 }, module)

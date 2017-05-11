@@ -2,7 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import namor from 'namor'
 
-import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
 const data = _.map(_.range(5553), d => {
@@ -14,48 +13,36 @@ const data = _.map(_.range(5553), d => {
 })
 
 const columns = [{
-  header: 'Name',
+  Header: 'Name',
   columns: [{
-    header: 'First Name',
+    Header: 'First Name',
     accessor: 'firstName'
   }, {
-    header: 'Last Name',
+    Header: 'Last Name',
     id: 'lastName',
     accessor: d => d.lastName
   }]
 }, {
-  header: 'Info',
+  Header: 'Info',
   columns: [{
-    header: 'Age',
+    Header: 'Age',
     accessor: 'age'
   }]
 }]
 
-class ControlledTable extends React.Component {
-  constructor() {
+class Story extends React.Component {
+  constructor () {
     super()
-    this.sortChange = this.sortChange.bind(this)
     this.state = {
-      sorting: [],
+      sorted: [],
       page: 0,
-      pageSize: 10
+      pageSize: 10,
+      expanded: {},
+      resized: [],
+      filtered: []
     }
   }
-
-  sortChange(column, shift) {
-    if(shift)
-      alert('Shift click not implemented in this demo')
-    var sort = {id: column.id}
-    if(this.state.sorting.length && this.state.sorting[0].id == column.id)
-      this.state.sorting[0].asc ? sort.desc = true : sort.asc = true
-    else
-      sort.asc = true
-    this.setState({
-      sorting: [sort]
-    })
-  }
-
-  render() {
+  render () {
     return (
       <div>
         <div className='table-wrap'>
@@ -63,91 +50,39 @@ class ControlledTable extends React.Component {
             className='-striped -highlight'
             data={data}
             columns={columns}
-            sorting={this.state.sorting}
-            onSortingChange={this.sortChange}
+            pivotBy={['lastName']}
+            filterable
+            // Controlled Props
+            sorted={this.state.sorted}
             page={this.state.page}
-            onPageChange={page => this.setState({page})}
             pageSize={this.state.pageSize}
+            expanded={this.state.expanded}
+            resized={this.state.resized}
+            filtered={this.state.filtered}
+            // Callbacks
+            onSortedChange={sorted => this.setState({sorted})}
+            onPageChange={page => this.setState({page})}
             onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
+            onExpandedChange={expanded => this.setState({expanded})}
+            onResizedChange={resized => this.setState({resized})}
+            onFilteredChange={filtered => this.setState({filtered})}
           />
         </div>
-        <div style={{textAlign: 'center'}}>
-          <br />
-          <em>Tip: For simplicity, multi-sort is not implemented in this demo</em>
-        </div>
-        <CodeHighlight>{() => getCode()}</CodeHighlight>
+        <br />
+        <pre><code><strong>this.state ===</strong> {JSON.stringify(this.state, null, 2)}</code></pre>
+        <br />
       </div>
     )
   }
 }
 
-function getCode () {
-  return `const data = _.map(_.range(5553), d => {
-  return {
-    firstName: namor.generate({ words: 1, numLen: 0 }),
-    lastName: namor.generate({ words: 1, numLen: 0 }),
-    age: Math.floor(Math.random() * 30)
-  }
-})
+// Source Code
+const CodeHighlight = require('./components/codeHighlight').default
+const source = require('!raw-loader!./ControlledTable')
 
-const columns = [{
-  header: 'Name',
-  columns: [{
-    header: 'First Name',
-    accessor: 'firstName'
-  }, {
-    header: 'Last Name',
-    id: 'lastName',
-    accessor: d => d.lastName
-  }]
-}, {
-  header: 'Info',
-  columns: [{
-    header: 'Age',
-    accessor: 'age'
-  }]
-}]
-
-class ControlledTable extends React.Component {
-  constructor() {
-    super()
-    this.sortChange = this.sortChange.bind(this)
-    this.state = {
-      sorting: [],
-      page: 0,
-      pageSize: 10
-    }
-  }
-
-  sortChange(column, shift) {
-    if(shift)
-      alert('Shift click not implemented in this demo')
-    var sort = {id: column.id}
-    if(this.state.sorting.length && this.state.sorting[0].id == column.id)
-      this.state.sorting[0].asc ? sort.desc = true : sort.asc = true
-    else
-      sort.asc = true
-    this.setState({
-      sorting: [sort]
-    })
-  }
-
-  render() {
-    return (
-      <ReactTable
-        className='-striped -highlight'
-        data={data}
-        columns={columns}
-        sorting={this.state.sorting}
-        onSortingChange={this.sortChange}
-        page={this.state.page}
-        onPageChange={page => this.setState({page})}
-        pageSize={this.state.pageSize}
-        onPageSizeChange={(pageSize, page) => this.setState({page, pageSize})}
-      />
-    )
-  }
-}`
-}
-
-export default () => <ControlledTable />
+export default () => (
+  <div>
+    <Story />
+    <CodeHighlight>{() => source}</CodeHighlight>
+  </div>
+)

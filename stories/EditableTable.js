@@ -1,124 +1,69 @@
 import React from 'react'
-import _ from 'lodash'
-import namor from 'namor'
 
-import CodeHighlight from './components/codeHighlight'
 import ReactTable from '../src/index'
 
-class MyTable extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.renderEditable = this.renderEditable.bind(this);
+class Story extends React.Component {
+  constructor (props, context) {
+    super(props, context)
+    this.renderEditable = this.renderEditable.bind(this)
 
     this.state = {
       data: [
         { firstName: 'Lucy', lastName: 'Marks' },
         { firstName: 'Bejamin', lastName: 'Pike' }
       ]
-    };
+    }
 
     this.columns = [
       {
-        header: 'First Name',
+        Header: 'First Name',
         accessor: 'firstName',
-        render: this.renderEditable
+        Cell: this.renderEditable
       },
       {
-        header: 'Last Name',
+        Header: 'Last Name',
         accessor: 'lastName',
-        render: this.renderEditable
+        Cell: this.renderEditable
       },
       {
-        header: 'Full Name',
+        Header: 'Full Name',
         id: 'full',
         accessor: d => d.firstName + ' ' + d.lastName
       }
-    ];
+    ]
   }
 
-  renderEditable(cellInfo) {
+  renderEditable (cellInfo) {
     return (<div style={{ backgroundColor: '#fafafa' }} contentEditable suppressContentEditableWarning onBlur={(e) => {
-      const data = [...this.state.data];
-      data[cellInfo.index][cellInfo.column.id] = e.target.textContent;
-      this.setState({data: data});
-    }}>{this.state.data[cellInfo.index][cellInfo.column.id]}</div>);
+      const data = [...this.state.data]
+      data[cellInfo.index][cellInfo.column.id] = e.target.textContent
+      this.setState({data: data})
+    }}>{this.state.data[cellInfo.index][cellInfo.column.id]}</div>)
   }
 
-  render() {
-    return (<ReactTable
-      data={this.state.data}
-      columns={this.columns}
-      defaultPageSize={2}
-      showPageSizeOptions={false}
-      showPagination={false}
-    />);
-  }
-}
-
-function getCode() {
-  return `
-class MyTable extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.renderEditable = this.renderEditable.bind(this);
-
-    this.state = {
-      data: [
-        { firstName: 'Lucy', lastName: 'Marks' },
-        { firstName: 'Bejamin', lastName: 'Pike' }
-      ]
-    };
-
-    this.columns = [
-      {
-        header: 'First Name',
-        accessor: 'firstName',
-        render: this.renderEditable
-      },
-      {
-        header: 'Last Name',
-        accessor: 'lastName',
-        render: this.renderEditable
-      },
-      {
-        header: 'Full Name',
-        id: 'full',
-        accessor: d => d.firstName + ' ' + d.lastName
-      }
-    ];
-  }
-
-  renderEditable(cellInfo) {
-    return (<div style={{ backgroundColor: '#fafafa' }} contentEditable suppressContentEditableWarning onBlur={(e) => {
-      const data = [...this.state.data];
-      data[cellInfo.index][cellInfo.column.id] = e.target.textContent;
-      this.setState({data: data});
-    }}>{this.state.data[cellInfo.index][cellInfo.column.id]}</div>);
-  }
-
-  render() {
-    return (<ReactTable
-      data={this.state.data}
-      columns={this.columns}
-      defaultPageSize={2}
-      showPageSizeOptions={false}
-      showPagination={false}
-    />);
-  }
-}
-`
-}
-
-export default () => {
-
-  return (
-    <div>
-      <p>First two columns are editable just by clicking into them using the <code>contentEditable</code> attribute. Last column (Full Name) is computed from the first two.</p>
+  render () {
+    return (
       <div className='table-wrap' style={{marginBottom: '20px'}}>
-        <MyTable />
+        <p>First two columns are editable just by clicking into them using the <code>contentEditable</code> attribute. Last column (Full Name) is computed from the first two.</p>
+        <ReactTable
+          data={this.state.data}
+          columns={this.columns}
+          defaultPageSize={2}
+          showPageSizeOptions={false}
+          showPagination={false}
+        />
       </div>
-
-      <CodeHighlight>{() => getCode()}</CodeHighlight>
-    </div>
-  )
+    )
+  }
 }
+
+// Source Code
+const CodeHighlight = require('./components/codeHighlight').default
+const source = require('!raw-loader!./EditableTable')
+
+export default () => (
+  <div>
+    <Story />
+    <CodeHighlight>{() => source}</CodeHighlight>
+  </div>
+)

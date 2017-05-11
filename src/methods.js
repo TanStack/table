@@ -20,6 +20,11 @@ export default Base => class extends Base {
       pivotIDKey,
       pivotValKey,
       subRowsKey,
+      aggregatedKey,
+      nestingLevelKey,
+      originalKey,
+      indexKey,
+      groupedByPivotKey,
       SubComponent
     } = newState
 
@@ -31,20 +36,6 @@ export default Base => class extends Base {
       }
     })
 
-    // Build Header Groups
-    const headerGroups = []
-    let currentSpan = []
-
-    // A convenience function to add a header and reset the currentSpan
-    const addHeader = (columns, column = columns[0]) => {
-      headerGroups.push({
-        ...this.props.column,
-        ...column,
-        columns: columns
-      })
-      currentSpan = []
-    }
-
     let columnsWithExpander = [...columns]
 
     let expanderColumn = columns.find(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
@@ -53,30 +44,17 @@ export default Base => class extends Base {
       expanderColumn = expanderColumn.columns.find(col => col.expander)
     }
 
-    // If it has subrows or pivot columns we need to make sure we have an expander column
-    if ((SubComponent || pivotBy.length) && !expanderColumn) {
+    // If we have SubComponent's we need to make sure we have an expander column
+    if (SubComponent && !expanderColumn) {
       expanderColumn = {expander: true}
       columnsWithExpander = [expanderColumn, ...columnsWithExpander]
     }
 
     const makeDecoratedColumn = (column) => {
       let dcol
-      if (pivotBy.length && column.expander) {
+      if (column.expander) {
         dcol = {
           ...this.props.column,
-          render: (props) => (
-            <div>
-              <this.props.ExpanderComponent {...props} />
-              <this.props.PivotValueComponent {...props} />
-            </div>
-          ),
-          ...this.props.pivotDefaults,
-          ...column
-        }
-      } else if (column.expander) {
-        dcol = {
-          ...this.props.column,
-          render: this.props.ExpanderComponent,
           ...this.props.expanderDefaults,
           ...column
         }
@@ -148,32 +126,53 @@ export default Base => class extends Base {
       return column.columns ? column.columns.length : pivotBy.indexOf(column.id) > -1 ? false : _.getFirstDefined(column.show, true)
     })
 
-    // Move the pivot columns into a single column if needed
+    // Find any custom pivot location
+    const pivotIndex = visibleColumns.findIndex(col => col.pivot)
+
+    // Handle Pivot Columns
     if (pivotBy.length) {
+      // Retrieve the pivot columns in the correct pivot order
       const pivotColumns = []
-      for (var i = 0; i < allDecoratedColumns.length; i++) {
-        if (pivotBy.indexOf(allDecoratedColumns[i].id) > -1) {
-          pivotColumns.push(allDecoratedColumns[i])
+      pivotBy.forEach(pivotID => {
+        const found = allDecoratedColumns.find(d => d.id === pivotID)
+        if (found) {
+          pivotColumns.push(found)
         }
+      })
+
+      let pivotColumnGroup = {
+        header: () => <strong>Group</strong>,
+        columns: pivotColumns.map(col => ({
+          ...this.props.pivotDefaults,
+          ...col,
+          pivoted: true
+        }))
       }
 
-      const pivotExpanderColumn = visibleColumns.findIndex(col => col.expander || (col.columns && col.columns.some(col2 => col2.expander)))
-      if (pivotExpanderColumn >= 0) {
-        const pivotColumn = {
-          ...visibleColumns[pivotExpanderColumn],
-          pivotColumns
+      // Place the pivotColumns back into the visibleColumns
+      if (pivotIndex >= 0) {
+        pivotColumnGroup = {
+          ...visibleColumns[pivotIndex],
+          ...pivotColumnGroup
         }
-        visibleColumns[pivotExpanderColumn] = pivotColumn
+        visibleColumns.splice(pivotIndex, 1, pivotColumnGroup)
       } else {
-        // If the expander column wasn't on the top level column, find it in the `columns` option.
-        const pivotExpanderSubColumn = visibleColumns[pivotExpanderColumn].columns.findIndex(col => col.expander)
-        const pivotColumn = {
-          ...visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn],
-          pivotColumns
-        }
-        // Add the pivot columns to the expander column
-        visibleColumns[pivotExpanderColumn].columns[pivotExpanderSubColumn] = pivotColumn
+        visibleColumns.unshift(pivotColumnGroup)
       }
+    }
+
+    // Build Header Groups
+    const headerGroups = []
+    let currentSpan = []
+
+    // A convenience function to add a header and reset the currentSpan
+    const addHeader = (columns, column) => {
+      headerGroups.push({
+        ...this.props.column,
+        ...column,
+        columns: columns
+      })
+      currentSpan = []
     }
 
     // Build flast list of allVisibleColumns and HeaderGroups
@@ -194,17 +193,23 @@ export default Base => class extends Base {
     }
 
     // Access the data
-    let resolvedData = data.map((d, i) => {
+    const accessRow = (d, i, level = 0) => {
       const row = {
-        __original: d,
-        __index: i
+        [originalKey]: d,
+        [indexKey]: i,
+        [subRowsKey]: d[subRowsKey],
+        [nestingLevelKey]: level
       }
       allDecoratedColumns.forEach(column => {
         if (column.expander) return
         row[column.id] = column.accessor(d)
       })
+      if (row[subRowsKey]) {
+        row[subRowsKey] = row[subRowsKey].map((d, i) => accessRow(d, i, level + 1))
+      }
       return row
-    })
+    }
+    let resolvedData = data.map((d, i) => accessRow(d, i))
 
     // If pivoting, recursively group the data
     const aggregate = (rows) => {
@@ -215,10 +220,10 @@ export default Base => class extends Base {
       })
       return aggregationValues
     }
+
+    // TODO: Make it possible to fabricate nested rows without pivoting
     const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)
-    let pivotColumn
     if (pivotBy.length) {
-      pivotColumn = allVisibleColumns[0]
       const groupRecursively = (rows, keys, i = 0) => {
         // This is the last level, just return the rows
         if (i === keys.length) {
@@ -232,7 +237,9 @@ export default Base => class extends Base {
             [pivotIDKey]: keys[i],
             [pivotValKey]: key,
             [keys[i]]: key,
-            [subRowsKey]: value
+            [subRowsKey]: value,
+            [nestingLevelKey]: i,
+            [groupedByPivotKey]: true
           }
         })
         // Recurse into the subRows
@@ -241,6 +248,7 @@ export default Base => class extends Base {
           return {
             ...rowGroup,
             [subRowsKey]: subRows,
+            [aggregatedKey]: true,
             ...aggregate(subRows)
           }
         })
@@ -252,7 +260,6 @@ export default Base => class extends Base {
     return {
       ...newState,
       resolvedData,
-      pivotColumn,
       allVisibleColumns,
       headerGroups,
       allDecoratedColumns,
@@ -263,22 +270,39 @@ export default Base => class extends Base {
   getSortedData (resolvedState) {
     const {
       manual,
-      sorting,
-      filtering,
-      showFilters,
+      sorted,
+      filtered,
       defaultFilterMethod,
       resolvedData,
-      allVisibleColumns
+      allVisibleColumns,
+      allDecoratedColumns
     } = resolvedState
+
+    const sortMethodsByColumnID = {}
+
+    allDecoratedColumns
+    .filter(col => col.sortMethod)
+    .forEach(col => {
+      sortMethodsByColumnID[col.id] = col.sortMethod
+    })
 
     // Resolve the data from either manual data or sorted data
     return {
-      sortedData: manual ? resolvedData : this.sortData(this.filterData(resolvedData, showFilters, filtering, defaultFilterMethod, allVisibleColumns), sorting)
+      sortedData: manual ? resolvedData : this.sortData(
+        this.filterData(
+          resolvedData,
+          filtered,
+          defaultFilterMethod,
+          allVisibleColumns
+        ),
+        sorted,
+        sortMethodsByColumnID
+      )
     }
   }
 
-  fireOnChange () {
-    this.props.onChange(this.getResolvedState(), this)
+  fireFetchData () {
+    this.props.onFetchData(this.getResolvedState(), this)
   }
 
   getPropOrState (key) {
@@ -289,11 +313,11 @@ export default Base => class extends Base {
     return _.getFirstDefined(this.state[key], this.props[key])
   }
 
-  filterData (data, showFilters, filtering, defaultFilterMethod, allVisibleColumns) {
+  filterData (data, filtered, defaultFilterMethod, allVisibleColumns) {
     let filteredData = data
 
-    if (showFilters && filtering.length) {
-      filteredData = filtering.reduce(
+    if (filtered.length) {
+      filteredData = filtered.reduce(
         (filteredSoFar, nextFilter) => {
           return filteredSoFar.filter(
             (row) => {
@@ -306,9 +330,9 @@ export default Base => class extends Base {
                 column = column.pivotColumns.find(x => x.id === nextFilter.id)
               }
 
-              // Don't filter hidden columns
-              if (!column) {
-                return
+              // Don't filter hidden columns or columns that have had their filters disabled
+              if (!column || column.filterable === false) {
+                return true
               }
 
               const filterMethod = column.filterMethod || defaultFilterMethod
@@ -327,7 +351,7 @@ export default Base => class extends Base {
         }
         return {
           ...row,
-          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], showFilters, filtering, defaultFilterMethod, allVisibleColumns)
+          [this.props.subRowsKey]: this.filterData(row[this.props.subRowsKey], filtered, defaultFilterMethod, allVisibleColumns)
         }
       }).filter(row => {
         if (!row[this.props.subRowsKey]) {
@@ -340,29 +364,36 @@ export default Base => class extends Base {
     return filteredData
   }
 
-  sortData (data, sorting) {
-    if (!sorting.length) {
+  sortData (data, sorted, sortMethodsByColumnID = {}) {
+    if (!sorted.length) {
       return data
     }
 
-    const sorted = _.orderBy(data, sorting.map(sort => {
-      return row => {
-        if (row[sort.id] === null || row[sort.id] === undefined) {
-          return -Infinity
+    const sortedData = (this.props.orderByMethod || _.orderBy)(
+      data,
+      sorted.map(sort => {
+        // Support custom sorting methods for each column
+        if (sortMethodsByColumnID[sort.id]) {
+          return (a, b) => {
+            return sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id])
+          }
         }
-        return typeof row[sort.id] === 'string' ? row[sort.id].toLowerCase() : row[sort.id]
-      }
-    }), sorting.map(d => !d.desc))
+        return (a, b) => {
+          return this.props.defaultSortMethod(a[sort.id], b[sort.id])
+        }
+      }),
+      sorted.map(d => !d.desc),
+      this.props.indexKey
+    )
 
-    return sorted.map(row => {
+    sortedData.forEach(row => {
       if (!row[this.props.subRowsKey]) {
-        return row
+        return
       }
-      return {
-        ...row,
-        [this.props.subRowsKey]: this.sortData(row[this.props.subRowsKey], sorting)
-      }
+      row[this.props.subRowsKey] = this.sortData(row[this.props.subRowsKey], sorted, sortMethodsByColumnID)
     })
+
+    return sortedData
   }
 
   getMinRows () {
@@ -372,18 +403,19 @@ export default Base => class extends Base {
   // User actions
   onPageChange (page) {
     const {onPageChange, collapseOnPageChange} = this.props
-    if (onPageChange) {
-      return onPageChange(page)
+    onPageChange && onPageChange(page)
+    // If controlled, do not keep track of state
+    if (typeof this.props.page !== 'undefined') {
+      this.fireFetchData()
+      return
     }
     const newState = {page}
     if (collapseOnPageChange) {
-      newState.expandedRows = {}
+      newState.expanded = {}
     }
-    this.setStateWithData(
-      newState
-      , () => {
-        this.fireOnChange()
-      })
+    this.setStateWithData(newState, () => {
+      this.fireFetchData()
+    })
   }
 
   onPageSizeChange (newPageSize) {
@@ -394,20 +426,22 @@ export default Base => class extends Base {
     const currentRow = pageSize * page
     const newPage = Math.floor(currentRow / newPageSize)
 
-    if (onPageSizeChange) {
-      return onPageSizeChange(newPageSize, newPage)
+    onPageSizeChange && onPageSizeChange(newPageSize, newPage)
+    if (typeof this.props.page !== 'undefined') {
+      this.fireFetchData()
+      return
     }
 
     this.setStateWithData({
       pageSize: newPageSize,
       page: newPage
     }, () => {
-      this.fireOnChange()
+      this.fireFetchData()
     })
   }
 
   sortColumn (column, additive) {
-    const {sorting, skipNextSort} = this.getResolvedState()
+    const {sorted, skipNextSort} = this.getResolvedState()
 
     // we can't stop event propagation from the column resize move handlers
     // attached to the document because of react's synthetic events
@@ -420,40 +454,38 @@ export default Base => class extends Base {
       return
     }
 
-    const {onSortingChange} = this.props
-    if (onSortingChange) {
-      return onSortingChange(column, additive)
-    }
-    let newSorting = _.clone(sorting || []).map(d => {
+    const {onSortedChange} = this.props
+
+    let newSorted = _.clone(sorted || []).map(d => {
       d.desc = _.isSortingDesc(d)
       return d
     })
     if (!_.isArray(column)) {
       // Single-Sort
-      const existingIndex = newSorting.findIndex(d => d.id === column.id)
+      const existingIndex = newSorted.findIndex(d => d.id === column.id)
       if (existingIndex > -1) {
-        const existing = newSorting[existingIndex]
+        const existing = newSorted[existingIndex]
         if (existing.desc) {
           if (additive) {
-            newSorting.splice(existingIndex, 1)
+            newSorted.splice(existingIndex, 1)
           } else {
             existing.desc = false
-            newSorting = [existing]
+            newSorted = [existing]
           }
         } else {
           existing.desc = true
           if (!additive) {
-            newSorting = [existing]
+            newSorted = [existing]
           }
         }
       } else {
         if (additive) {
-          newSorting.push({
+          newSorted.push({
             id: column.id,
             desc: false
           })
         } else {
-          newSorting = [{
+          newSorted = [{
             id: column.id,
             desc: false
           }]
@@ -461,59 +493,61 @@ export default Base => class extends Base {
       }
     } else {
       // Multi-Sort
-      const existingIndex = newSorting.findIndex(d => d.id === column[0].id)
+      const existingIndex = newSorted.findIndex(d => d.id === column[0].id)
       // Existing Sorted Column
       if (existingIndex > -1) {
-        const existing = newSorting[existingIndex]
+        const existing = newSorted[existingIndex]
         if (existing.desc) {
           if (additive) {
-            newSorting.splice(existingIndex, column.length)
+            newSorted.splice(existingIndex, column.length)
           } else {
             column.forEach((d, i) => {
-              newSorting[existingIndex + i].desc = false
+              newSorted[existingIndex + i].desc = false
             })
           }
         } else {
           column.forEach((d, i) => {
-            newSorting[existingIndex + i].desc = true
+            newSorted[existingIndex + i].desc = true
           })
         }
         if (!additive) {
-          newSorting = newSorting.slice(existingIndex, column.length)
+          newSorted = newSorted.slice(existingIndex, column.length)
         }
       } else {
         // New Sort Column
         if (additive) {
-          newSorting = newSorting.concat(column.map(d => ({
+          newSorted = newSorted.concat(column.map(d => ({
             id: d.id,
             desc: false
           })))
         } else {
-          newSorting = column.map(d => ({
+          newSorted = column.map(d => ({
             id: d.id,
             desc: false
           }))
         }
       }
     }
+    // If controlled, do not keep track of state
+    onSortedChange && onSortedChange(newSorted, column, additive)
+    if (typeof this.props.sorted !== 'undefined') {
+      this.fireFetchData()
+      return
+    }
     this.setStateWithData({
-      page: ((!sorting.length && newSorting.length) || !additive) ? 0 : this.state.page,
-      sorting: newSorting
+      page: ((!sorted.length && newSorted.length) || !additive) ? 0 : this.state.page,
+      sorted: newSorted
     }, () => {
-      this.fireOnChange()
+      this.fireFetchData()
     })
   }
 
   filterColumn (column, value) {
-    const {filtering} = this.getResolvedState()
-    const {onFilteringChange} = this.props
-
-    if (onFilteringChange) {
-      return onFilteringChange(column, value)
-    }
+    const {filtered} = this.getResolvedState()
+    const {onFilteredChange} = this.props
 
     // Remove old filter first if it exists
-    const newFiltering = (filtering || []).filter(x => {
+    const newFiltering = (filtered || []).filter(x => {
       if (x.id !== column.id) {
         return true
       }
@@ -526,20 +560,22 @@ export default Base => class extends Base {
       })
     }
 
+    onFilteredChange && onFilteredChange(newFiltering, column, value)
+
+    // If filters is being controlled, do not manage state internally
+    if (this.props.filtered) {
+      this.fireFetchData()
+      return
+    }
+
     this.setStateWithData({
-      filtering: newFiltering
+      filtered: newFiltering
     }, () => {
-      this.fireOnChange()
+      this.fireFetchData()
     })
   }
 
   resizeColumnStart (column, event, isTouch) {
-    const {onResize} = this.props
-
-    if (onResize) {
-      return onResize(column, event, isTouch)
-    }
-
     const parentWidth = event.target.parentElement.getBoundingClientRect().width
 
     let pageX
@@ -595,10 +631,11 @@ export default Base => class extends Base {
   }
 
   resizeColumnMoving (event) {
-    const {resizing, currentlyResizing} = this.getResolvedState()
+    const {onResizedChange} = this.props
+    const {resized, currentlyResizing} = this.getResolvedState()
 
     // Delete old value
-    const newResizing = resizing.filter(x => x.id !== currentlyResizing.id)
+    const newResized = resized.filter(x => x.id !== currentlyResizing.id)
 
     let pageX
 
@@ -611,13 +648,19 @@ export default Base => class extends Base {
     // Set the min size to 10 to account for margin and border or else the group headers don't line up correctly
     const newWidth = Math.max(currentlyResizing.parentWidth + pageX - currentlyResizing.startX, 11)
 
-    newResizing.push({
+    newResized.push({
       id: currentlyResizing.id,
       value: newWidth
     })
 
+    onResizedChange && onResizedChange(newResized, event)
+
+    if (this.props.resized) {
+      return
+    }
+
     this.setStateWithData({
-      resizing: newResizing
+      resized: newResized
     })
   }
 }
