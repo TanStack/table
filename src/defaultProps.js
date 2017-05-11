@@ -67,7 +67,7 @@ export default {
   // Pivoting
   pivotBy: undefined,
 
-  // Key Costansts
+  // Key Constants
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
@@ -138,6 +138,7 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
+    sortMethod: undefined,
     hideFilter: false
   },
 
@@ -146,7 +147,6 @@ export default {
     sortable: false,
     width: 35,
     hideFilter: true
-    // render: undefined // this is a dynamic default, set at run-time in methods.js to display ExpanderComponent
   },
 
   pivotDefaults: {

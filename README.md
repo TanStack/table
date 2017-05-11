@@ -28,8 +28,14 @@
   <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
 </a>
 
-## Features
+## Versions
+This document refers to version 6.x.x of react-table.
 
+Previous versions:
+
+[5.x.x Readme](https://github.com/tannerlinsley/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
+
+## Features
 - Lightweight at 7kb (and just 2kb more for styles)
 - Fully customizable JSX templating
 - Supports both Client-side & Server-side pagination and multi-sorting
@@ -157,37 +163,63 @@ These are all of the available props (and their default values) for the main `<R
   collapseOnPageChange: true,
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
-  defaultSorting: [],
   showFilters: false,
-  defaultFiltering: [],
+  resizable: true,
+  defaultSorted: [],
+  defaultFiltered: [],
+  defaultResized: [],
+  defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
-  resizable: true,
-  defaultResizing: [],
-  defaultSortMethod: undefined,
+  defaultSortMethod: (a, b) => {
+    // force null and undefined to the bottom
+    a = (a === null || a === undefined) ? -Infinity : a
+    b = (b === null || b === undefined) ? -Infinity : b
+    // force any string values to lowercase
+    a = a === 'string' ? a.toLowerCase() : a
+    b = b === 'string' ? b.toLowerCase() : b
+    // Return either 1 or -1 to indicate a sort priority
+    if (a > b) {
+      return 1
+    }
+    if (a < b) {
+      return -1
+    }
+    // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
+    return 0
+  },
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
   pageSize: undefined,
-  sorting: undefined,
-  expandedRows: {},
+  sorted: [],
+  filtered: [],
+  resized: [],
+  expanded: {},
 
   // Controlled State Callbacks
   onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
-  onSortingChange: undefined,
-  onFiltersChange: undefined,
-  onResize: undefined,
-  onExpandRow: undefined,
+  onSortedChange: undefined,
+  onFilteredChange: undefined,
+  onResizedChange: undefined,
+  onExpandedChange: undefined,
 
   // Pivoting
   pivotBy: undefined,
+  
+  // Key Constants
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
   subRowsKey: '_subRows',
+  aggregatedKey: '_aggregated',
+  nestingLevelKey: '_nestingLevel',
+  originalKey: '_original',
+  indexKey: '_index',
+  groupedByPivotKey: '_groupedByPivot',
 
   // Server-side callbacks
   onFetchData: () => null,
@@ -250,6 +282,7 @@ These are all of the available props (and their default values) for the main `<R
     footerStyle: {},
     getFooterProps: () => ({}),
     filterMethod: undefined,
+    sortMethod: undefined,
     hideFilter: false
   },
 
@@ -668,8 +701,8 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
     Axios.post('mysite.com/data', {
       page: state.page,
       pageSize: state.pageSize,
-      sorting: state.sorting,
-      filtering: state.filtering
+      sorted: state.sorted,
+      filtered: state.filtered
     })
       .then((res) => {
         // Update react-table
@@ -721,10 +754,10 @@ Here are the props and their corresponding callbacks that control the state of t
   // Callbacks
   onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
-  onSortingChange={(newSorting, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
-  onExpandRow={(newExpandedRows, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
-  onFiltersChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the filterRender option.
-  onResize={(newResizing, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
+  onSortedChange={(newSorted, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
+  onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
+  onFilteredChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the filterRender option.
+  onResizedChange={(newResized, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
 
@@ -766,13 +799,14 @@ Accessing internal state and wrapping with more UI:
 The possibilities are endless!
 
 ## Sorting
-Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort. You can override the default sorting with the `sortingMethod` prop which takes a column value, and expects you to return a naturally sortable value. You may also override the sorting for individual columns via the `column.sortingMethod` column property.
+Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort. 
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
 ## Custom Sorting Algorithm
 To override the default sorting algorithm for the whole table use the `defaultSortMethod` prop.
+
 To override the sorting algorithm for a single column, use the `sortMethod` column property.
 
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
@@ -808,7 +842,7 @@ By default the table tries to filter by checking if the row's value starts with 
 
 If you want to override a particular column's filtering method, you can set the `filterMethod` option on a column.
 
-To completely override the filter that is shown, you can set the `filterRender` column option. Using this option you can specify the JSX that is shown. The option is passed an `onFiltersChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
+To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
 
 See <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Custom%20Filtering&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Custom Filtering</a> demo for examples.
 
