@@ -201,7 +201,6 @@ These are all of the available props (and their default values) for the main `<R
   expanded: {},
 
   // Controlled State Callbacks
-  onExpandSubComponent: undefined,
   onPageChange: undefined,
   onPageSizeChange: undefined,
   onSortedChange: undefined,
