@@ -2,9 +2,9 @@ const webpack = require('webpack')
 module.exports = {
   entry: './lib/index.js',
   output: {
-    filename: './react-table.js',
+    filename: './react-story.js',
     libraryTarget: 'umd',
-    library: 'ReactTable'
+    library: 'ReactStory'
   },
   externals: {
     react: {
