@@ -1,57 +1,71 @@
 {
-  "name": "react-story",
+  "name": "react-table",
   "version": "6.0.0",
-  "description": "A story component for displaying, developing, and testing React components",
+  "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
-  "homepage": "https://github.com/tannerlinsley/react-story#readme",
+  "homepage": "https://github.com/tannerlinsley/react-table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tannerlinsley/react-story.git"
+    "url": "git+https://github.com/tannerlinsley/react-table.git"
   },
   "keywords": [
     "react",
-    "story",
-    "react-story",
+    "table",
+    "react-table",
     "datagrid"
   ],
   "main": "lib/index.js",
   "files": [
     "src/",
     "lib/",
-    "react-story.js",
+    "react-table.js",
+    "react-table.css",
     "media/*.png"
   ],
   "scripts": {
-    "build:node": "babel src --out-dir lib --source-maps inline --presets=es2015,stage-2,react",
+    "build:node": "babel src --out-dir lib --source-maps inline",
+    "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
+    "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
     "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
+    "watch:css": "onchange 'src/**/*.styl' -i -- npm run build:css",
     "test": "standard",
-    "umd": "rimraf react-story.js && webpack --config umd.webpack.js",
+    "umd": "rimraf react-table.js && webpack --config umd.webpack.js",
     "build": "npm-run-all build:*",
     "prepublish": "npm run build && npm run umd",
-    "postpublish": "git push --tags"
+    "postpublish": "git push --tags",
+    "storybook": "start-storybook -p 8000 -c .storybook",
+    "docs": "build-storybook -o docs && cp .storybook/CNAME docs/CNAME"
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "glamorous": "^3.14.0",
-    "react-router-dom": "next"
+    "raw-loader": "^0.5.1"
   },
   "peerDependencies": {
     "react": "^15.x.x"
   },
   "devDependencies": {
+    "@kadira/storybook": "^2.35.1",
     "autoprefixer": "^6.7.0",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
     "babel-preset-es2015": "6.14.0",
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-2": "6.13.0",
+    "github-markdown-css": "^2.4.1",
+    "html-loader": "^0.4.4",
+    "markdown-loader": "^0.1.7",
+    "namor": "^0.3.0",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "postcss-cli": "^2.6.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-json-tree": "^0.10.1",
     "rimraf": "^2.6.1",
     "standard": "^8.0.0",
+    "storybook": "^0.0.0",
+    "stylus": "^0.54.5",
     "webpack": "^2.4.1"
   },
   "standard": {
@@ -61,9 +75,16 @@
       "dist",
       "lib",
       "example",
-      "react-story.js",
+      "react-table.js",
       "stories",
       "docs"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-2",
+      "react"
     ]
   }
 }
