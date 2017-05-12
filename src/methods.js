@@ -325,6 +325,11 @@ export default Base => class extends Base {
 
               column = allVisibleColumns.find(x => x.id === nextFilter.id || (x.pivotColumns && x.pivotColumns.some(y => y.id === nextFilter.id)))
 
+              // Don't filter hidden columns
+              if (!column) {
+                return true
+              }
+
               // Could possibly be in pivotColumns
               if (column.id !== nextFilter.id && column.pivotColumns) {
                 column = column.pivotColumns.find(x => x.id === nextFilter.id)
