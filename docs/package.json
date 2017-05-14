@@ -12,7 +12,7 @@
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "react-story": "^0.0.5"
+    "react-story": "^0.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
