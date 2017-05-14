@@ -34,18 +34,16 @@
     "build": "npm-run-all build:*",
     "prepublish": "npm run build && npm run umd",
     "postpublish": "git push --tags",
-    "storybook": "start-storybook -p 8000 -c .storybook",
-    "docs": "build-storybook -o docs && cp .storybook/CNAME docs/CNAME"
+    "docs": "cd docs && yarn && yarn start",
+    "docs:build": "cd docs && yarn && yarn run build"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "raw-loader": "^0.5.1"
+    "classnames": "^2.2.5"
   },
   "peerDependencies": {
     "react": "^15.x.x"
   },
   "devDependencies": {
-    "@kadira/storybook": "^2.35.1",
     "autoprefixer": "^6.7.0",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
@@ -59,11 +57,12 @@
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
+    "raw-loader": "^0.5.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-json-tree": "^0.10.1",
     "rimraf": "^2.6.1",
-    "standard": "^8.0.0",
+    "standard": "^10.0.2",
     "storybook": "^0.0.0",
     "stylus": "^0.54.5",
     "webpack": "^2.4.1"

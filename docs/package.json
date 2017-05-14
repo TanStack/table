@@ -1,0 +1,22 @@
+{
+  "name": "new",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.9.5"
+  },
+  "dependencies": {
+    "github-markdown-css": "^2.6.0",
+    "marked": "^0.3.6",
+    "raw-loader": "^0.5.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-story": "^0.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
