@@ -891,19 +891,18 @@ To suggest a feature, create an issue if it does not already exist.
 If you would like to help develop a suggested feature follow these steps:
 
 - Fork this repo
-- `$ yarn`
-- `$ yarn run storybook`
+- Install dependencies with `$ yarn`
+- Auto-build files as you edit with `$ yarn run watch`
 - Implement your changes to files in the `src/` directory
-- View changes as you code via our <a href="https://github.com/storybooks/react-storybook" target="\_parent">React Storybook</a> `localhost:8000`
-- Make changes to stories in `/stories`, or create a new one if needed
+- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
+- View changes as you edit `docs/src`,
 - Submit PR for review
 
 #### Scripts
 
-- `$ yarn run storybook` Runs the storybook server
+- `$ yarn run watch` Watches files and builds via babel
+- `$ yarn run docs` Runs the storybook server
 - `$ yarn run test` Runs the test suite
-- `$ yarn run prepublish` Builds the distributable bundle
-- `$ yarn run docs` Builds the website/docs from the storybook for github pages
 
 ## Used By
 
