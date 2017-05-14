@@ -638,7 +638,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             className={classnames(
               '-padRow',
               (pageRows.length + i) % 2 ? '-even' : '-odd',
-              trProps.className,
+              trProps.className
             )}
             style={trProps.style || {}}
           >

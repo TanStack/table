@@ -1,5 +1,4 @@
 export default Base => class extends Base {
-
   componentWillMount () {
     this.setStateWithData(this.getDataModel(this.getResolvedState()))
   }
