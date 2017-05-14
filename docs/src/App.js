@@ -44,7 +44,6 @@ export default class App extends React.Component {
           >
             <a
               href='//github.com/tannerlinsley/react-table'
-              target='\_parent'
               style={{
                 display: 'block',
                 textAlign: 'center',
