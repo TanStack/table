@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.9.5"
+    "react-scripts": "0.9.5",
+    "standard": "^10.0.2"
   },
   "dependencies": {
     "github-markdown-css": "^2.6.0",

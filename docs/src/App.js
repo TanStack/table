@@ -1,5 +1,4 @@
 import React from 'react'
-import { Div } from 'glamorous'
 //
 import ReactStory, { defaultProps } from 'react-story'
 
@@ -26,7 +25,6 @@ import Filtering from './stories/Filtering.js'
 import ControlledTable from './stories/ControlledTable.js'
 import PivotingOptions from './stories/PivotingOptions.js'
 import EditableTable from './stories/EditableTable.js'
-import SubRows from './stories/SubRows.js'
 
 export default class App extends React.Component {
   render () {
@@ -35,7 +33,7 @@ export default class App extends React.Component {
         style={{
           display: 'block',
           width: '100%',
-          height: '100%',
+          height: '100%'
         }}
         pathPrefix='story/'
         StoryWrapper={(props) => (
@@ -57,7 +55,7 @@ export default class App extends React.Component {
                 src='//npmcdn.com/react-table/media/Banner.png'
                 alt='React Table Logo'
                 style={{
-                  width: '100px',
+                  width: '100px'
                 }}
               />
             </a>
@@ -69,64 +67,28 @@ export default class App extends React.Component {
             />
           </defaultProps.StoryWrapper>
         )}
-        stories={[{
-          name: 'Readme',
-          component: Readme
-        }, {
-          name: 'Cell Renderers & Custom Components',
-          component: CellRenderers
-        }, {
-          name: 'Default Sorting',
-          component: DefaultSorting
-        }, {
-          name: 'Custom Sorting',
-          component: CustomSorting
-        }, {
-          name: 'Custom Column Widths',
-          component: CustomWidths
-        }, {
-          name: 'Custom Component Props',
-          component: CustomComponentProps
-        }, {
-          name: 'Server-side Data',
-          component: ServerSide
-        }, {
-          name: 'Sub Components',
-          component: SubComponents
-        }, {
-          name: 'Pivoting & Aggregation',
-          component: Pivoting
-        }, {
-          name: 'Pivoting & Aggregation w/ Sub Components',
-          component: PivotingSubComponents
-        }, {
-          name: '100k Rows w/ Pivoting & Sub Components',
-          component: OneHundredKRows
-        }, {
-          name: 'Pivoting Options',
-          component: PivotingOptions
-        }, {
-          name: 'Functional Rendering',
-          component: FunctionalRendering
-        }, {
-          name: 'Custom Expander Position',
-          component: CustomExpanderPosition
-        }, {
-          name: 'Custom "No Data" Text',
-          component: NoDataText
-        }, {
-          name: 'Footers',
-          component: Footers
-        }, {
-          name: 'Custom Filtering',
-          component: Filtering
-        }, {
-          name: 'Controlled Component',
-          component: ControlledTable
-        }, {
-          name: 'Editable table',
-          component: EditableTable
-        }]}
+        stories={[
+          { name: 'Readme', component: Readme },
+          { name: 'Simple Table', component: Simple },
+          { name: 'Cell Renderers & Custom Components', component: CellRenderers },
+          { name: 'Default Sorting', component: DefaultSorting },
+          { name: 'Custom Sorting', component: CustomSorting },
+          { name: 'Custom Column Widths', component: CustomWidths },
+          { name: 'Custom Component Props', component: CustomComponentProps },
+          { name: 'Server-side Data', component: ServerSide },
+          { name: 'Sub Components', component: SubComponents },
+          { name: 'Pivoting & Aggregation', component: Pivoting },
+          { name: 'Pivoting & Aggregation w/ Sub Components', component: PivotingSubComponents },
+          { name: '100k Rows w/ Pivoting & Sub Components', component: OneHundredKRows },
+          { name: 'Pivoting Options', component: PivotingOptions },
+          { name: 'Functional Rendering', component: FunctionalRendering },
+          { name: 'Custom Expander Position', component: CustomExpanderPosition },
+          { name: 'Custom "No Data" Text', component: NoDataText },
+          { name: 'Footers', component: Footers },
+          { name: 'Custom Filtering', component: Filtering },
+          { name: 'Controlled Component', component: ControlledTable },
+          { name: 'Editable Table', component: EditableTable }
+        ]}
       />
     )
   }
