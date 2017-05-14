@@ -46,7 +46,7 @@ Previous versions:
 
 ## Demos and examples
 - <a href="http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010" target="\_blank">Codepen</a>
-- <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Client-side%20Data&full=0&down=0&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Storybook</a>
+- <a href="http://react-table.js.org/#/story/simple-table" target="\_parent">Storybook</a>
 
 ## Table of Contents
 - [Installation](#installation)
@@ -210,7 +210,7 @@ These are all of the available props (and their default values) for the main `<R
 
   // Pivoting
   pivotBy: undefined,
-  
+
   // Key Constants
   pivotValKey: '_pivotVal',
   pivotIDKey: '_pivotID',
@@ -801,7 +801,7 @@ Accessing internal state and wrapping with more UI:
 The possibilities are endless!
 
 ## Sorting
-Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort. 
+Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort.
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
@@ -846,7 +846,7 @@ If you want to override a particular column's filtering method, you can set the 
 
 To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
 
-See <a href="http://react-table.js.org/?selectedKind=2.%20Demos&selectedStory=Custom%20Filtering&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel" target="\_parent">Custom Filtering</a> demo for examples.
+See <a href="http://react-table.js.org/#/story/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
 
 ## Component Overrides
 Though we confidently stand by the markup and architecture behind it, `react-table` does offer the ability to change the core componentry it uses to render everything. You can extend or override these internal components by passing a react component to it's corresponding prop on either the global props or on a one-off basis like so:
