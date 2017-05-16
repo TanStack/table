@@ -821,8 +821,8 @@ defaultSortMethod = (a, b) => {
   a = (a === null || a === undefined) ? -Infinity : a
   b = (b === null || b === undefined) ? -Infinity : b
   // force any string values to lowercase
-  a = a === 'string' ? a.toLowerCase() : a
-  b = b === 'string' ? b.toLowerCase() : b
+  a = typeof a === 'string' ? a.toLowerCase() : a
+  b = typeof b === 'string' ? b.toLowerCase() : b
   // Return either 1 or -1 to indicate a sort priority
   if (a > b) {
     return 1
