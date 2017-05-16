@@ -323,12 +323,7 @@ export default Base => class extends Base {
             (row) => {
               let column
 
-              column = allVisibleColumns.find(x => x.id === nextFilter.id || (x.pivotColumns && x.pivotColumns.some(y => y.id === nextFilter.id)))
-
-              // Could possibly be in pivotColumns
-              if (column.id !== nextFilter.id && column.pivotColumns) {
-                column = column.pivotColumns.find(x => x.id === nextFilter.id)
-              }
+              column = allVisibleColumns.find(x => x.id === nextFilter.id)
 
               // Don't filter hidden columns or columns that have had their filters disabled
               if (!column || column.filterable === false) {
