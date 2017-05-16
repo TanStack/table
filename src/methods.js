@@ -403,17 +403,13 @@ export default Base => class extends Base {
   // User actions
   onPageChange (page) {
     const {onPageChange, collapseOnPageChange} = this.props
-    onPageChange && onPageChange(page)
-    // If controlled, do not keep track of state
-    if (typeof this.props.page !== 'undefined') {
-      this.fireFetchData()
-      return
-    }
+
     const newState = {page}
     if (collapseOnPageChange) {
       newState.expanded = {}
     }
     this.setStateWithData(newState, () => {
+      onPageChange && onPageChange(page)
       this.fireFetchData()
     })
   }
@@ -426,16 +422,11 @@ export default Base => class extends Base {
     const currentRow = pageSize * page
     const newPage = Math.floor(currentRow / newPageSize)
 
-    onPageSizeChange && onPageSizeChange(newPageSize, newPage)
-    if (typeof this.props.page !== 'undefined') {
-      this.fireFetchData()
-      return
-    }
-
     this.setStateWithData({
       pageSize: newPageSize,
       page: newPage
     }, () => {
+      onPageSizeChange && onPageSizeChange(newPageSize, newPage)
       this.fireFetchData()
     })
   }
@@ -528,16 +519,12 @@ export default Base => class extends Base {
         }
       }
     }
-    // If controlled, do not keep track of state
-    onSortedChange && onSortedChange(newSorted, column, additive)
-    if (typeof this.props.sorted !== 'undefined') {
-      this.fireFetchData()
-      return
-    }
+
     this.setStateWithData({
       page: ((!sorted.length && newSorted.length) || !additive) ? 0 : this.state.page,
       sorted: newSorted
     }, () => {
+      onSortedChange && onSortedChange(newSorted, column, additive)
       this.fireFetchData()
     })
   }
@@ -560,17 +547,10 @@ export default Base => class extends Base {
       })
     }
 
-    onFilteredChange && onFilteredChange(newFiltering, column, value)
-
-    // If filters is being controlled, do not manage state internally
-    if (this.props.filtered) {
-      this.fireFetchData()
-      return
-    }
-
     this.setStateWithData({
       filtered: newFiltering
     }, () => {
+      onFilteredChange && onFilteredChange(newFiltering, column, value)
       this.fireFetchData()
     })
   }
@@ -653,14 +633,10 @@ export default Base => class extends Base {
       value: newWidth
     })
 
-    onResizedChange && onResizedChange(newResized, event)
-
-    if (this.props.resized) {
-      return
-    }
-
     this.setStateWithData({
       resized: newResized
+    }, () => {
+      onResizedChange && onResizedChange(newResized, event)
     })
   }
 }

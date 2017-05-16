@@ -509,15 +509,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 } else {
                   newExpanded = _.set(newExpanded, cellInfo.nestingPath, {})
                 }
-                if (onExpandedChange) {
-                  onExpandedChange(newExpanded, cellInfo.nestingPath, e)
-                }
-                // If expanded is being controlled, don't manage internal state
-                if (this.props.expanded) {
-                  return
-                }
+
                 return this.setStateWithData({
                   expanded: newExpanded
+                }, () => {
+                  onExpandedChange && onExpandedChange(newExpanded, cellInfo.nestingPath, e)
                 })
               }
 
