@@ -4,10 +4,13 @@ $expandSize = 7px
 
 .ReactTable
   position:relative
+  display: flex
+  flex-direction: column
   border: 1px solid alpha(black, .1)
   *
     box-sizing: border-box
   .rt-table
+    flex: 1
     display: flex
     flex-direction: column
     align-items: stretch
@@ -16,6 +19,7 @@ $expandSize = 7px
     overflow: auto
 
   .rt-thead
+    flex: 1 0 auto
     display: flex
     flex-direction: column
     -webkit-user-select: none;
@@ -91,8 +95,10 @@ $expandSize = 7px
       margin-top: -10px
 
   .rt-tbody
+    flex: 99999 1 auto
     display: flex
     flex-direction: column
+    overflow: auto
     // z-index:0
     .rt-tr-group
       border-bottom: solid 1px alpha(black, .05)
@@ -105,10 +111,12 @@ $expandSize = 7px
     .rt-expandable
       cursor: pointer
   .rt-tr-group
+    flex: 1 0 auto
     display: flex
     flex-direction: column
     align-items: stretch
   .rt-tr
+    flex: 1 0 auto
     display: inline-flex
   .rt-th
   .rt-td
@@ -191,6 +199,7 @@ $expandSize = 7px
       appearance:none
       display:block
       width:100%
+      height:100%
       border: 0
       border-radius: 3px
       padding: 6px
