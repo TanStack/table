@@ -20,7 +20,10 @@ class Story extends React.PureComponent {
     this.state = {
       tableOptions: {
         loading: false,
-        showPagination: true,
+        showPagination: {
+          top: false,
+          bottom: false
+        },
         showPageSizeOptions: true,
         showPageJump: true,
         collapseOnSortingChange: true,
@@ -98,7 +101,10 @@ class Story extends React.PureComponent {
                     data={this.state.data}
                     columns={columns}
                     defaultPageSize={3}
-                    showPagination={false}
+                    showPagination={{
+                      top: false,
+                      bottom: false
+                    }}
                     SubComponent={(row) => {
                       return (
                         <div style={{padding: '20px'}}>

@@ -60,12 +60,13 @@ export default class ReactTablePagination extends Component {
       onPageSizeChange,
       className,
       PreviousComponent = defaultButton,
-      NextComponent = defaultButton
+      NextComponent = defaultButton,
+      placement
     } = this.props
 
     return (
       <div
-        className={classnames(className, '-pagination')}
+        className={classnames(className, '-pagination', `-${placement}Pagination` )}
         style={this.props.paginationStyle}
       >
         <div className='-previous'>

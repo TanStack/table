@@ -22,7 +22,10 @@ class Story extends React.PureComponent {
     this.state = {
       tableOptions: {
         loading: false,
-        showPagination: true,
+        showPagination: {
+         top: false,
+         bottom: true 
+        },
         showPageSizeOptions: true,
         showPageJump: true,
         collapseOnSortingChange: true,
