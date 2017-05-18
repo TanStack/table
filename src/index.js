@@ -781,7 +781,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       >
         {showPagination.top ? (
           <PaginationComponent
-            placement="top"
+            placement='top'
             topPagination
             {...resolvedState}
             pages={pages}
@@ -821,7 +821,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         {showPagination.bottom ? (
           <PaginationComponent
             {...resolvedState}
-            placement="bottom"
+            placement='bottom'
             pages={pages}
             canPrevious={canPrevious}
             canNext={canNext}
