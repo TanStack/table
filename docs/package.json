@@ -9,9 +9,11 @@
   "dependencies": {
     "github-markdown-css": "^2.6.0",
     "marked": "^0.3.6",
+    "namor": "^1.0.1",
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-json-tree": "^0.10.9",
     "react-story": "^0.0.6"
   },
   "scripts": {
