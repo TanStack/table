@@ -10,8 +10,8 @@ class Story extends React.PureComponent {
     const data = _.map(_.range(5553), d => {
       const statusChance = Math.random()
       return {
-        firstName: namor.generate({ words: 1, numLen: 0 }),
-        lastName: namor.generate({ words: 1, numLen: 0 }),
+        firstName: namor.generate({ words: 1, numbers: 0 }),
+        lastName: namor.generate({ words: 1, numbers: 0 }),
         progress: Math.floor(Math.random() * 100),
         status: statusChance > 0.66 ? 'relationship'
           : statusChance > 0.33 ? 'complicated'

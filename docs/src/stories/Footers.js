@@ -9,8 +9,8 @@ class Story extends React.PureComponent {
   render () {
     const data = _.map(_.range(5553), d => {
       return {
-        firstName: namor.generate({ words: 1, numLen: 0 }),
-        lastName: namor.generate({ words: 1, numLen: 0 }),
+        firstName: namor.generate({ words: 1, numbers: 0 }),
+        lastName: namor.generate({ words: 1, numbers: 0 }),
         age: Math.floor(Math.random() * 30)
       }
     })

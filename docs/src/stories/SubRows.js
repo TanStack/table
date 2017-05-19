@@ -15,13 +15,13 @@ class Story extends React.PureComponent {
           }
         })
         return {
-          firstName: namor.generate({ words: 1, numLen: 0 }),
+          firstName: namor.generate({ words: 1, numbers: 0 }),
           age: Math.floor(Math.random() * 30),
           children: grandChildren
         }
       })
       return {
-        lastName: namor.generate({ words: 1, numLen: 0 }),
+        lastName: namor.generate({ words: 1, numbers: 0 }),
         firstName: children.map(d => d.firstName),
         age: Math.floor(Math.random() * 30),
         children
