@@ -38,7 +38,8 @@
     "docs:build": "cd docs && yarn && yarn run build"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "react-json-tree": "^0.10.9"
   },
   "peerDependencies": {
     "react": "^15.x.x"
@@ -50,22 +51,15 @@
     "babel-preset-es2015": "6.14.0",
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-2": "6.13.0",
-    "github-markdown-css": "^2.4.1",
-    "html-loader": "^0.4.4",
-    "markdown-loader": "^0.1.7",
-    "namor": "^0.3.0",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
-    "raw-loader": "^0.5.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-json-tree": "^0.10.1",
     "rimraf": "^2.6.1",
     "standard": "^10.0.2",
-    "storybook": "^0.0.0",
     "stylus": "^0.54.5",
-    "webpack": "^2.4.1"
+    "webpack": "^2.5.1"
   },
   "standard": {
     "parser": "babel-eslint",

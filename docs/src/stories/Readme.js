@@ -6,10 +6,15 @@ import Readme from '!raw!../../../README.md'
 import 'github-markdown-css/github-markdown.css'
 
 export default class Story extends React.Component {
-  render () {
-    return <span className='markdown-body' dangerouslySetInnerHTML={{__html: marked(Readme)}} />
+  render() {
+    return (
+      <span
+        className="markdown-body"
+        dangerouslySetInnerHTML={{ __html: marked(Readme) }}
+      />
+    )
   }
-  componentDidMount () {
+  componentDidMount() {
     global.Prism.highlightAll()
   }
 }
