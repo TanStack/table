@@ -20,6 +20,7 @@ import OneHundredKRows from './stories/OneHundredKRows.js'
 import FunctionalRendering from './stories/FunctionalRendering.js'
 import CustomExpanderPosition from './stories/CustomExpanderPosition.js'
 import NoDataText from './stories/NoDataText.js'
+import ShowPaginationNoData from './stories/ShowPaginationNoData.js'
 import Footers from './stories/Footers.js'
 import Filtering from './stories/Filtering.js'
 import ControlledTable from './stories/ControlledTable.js'
@@ -96,6 +97,7 @@ export default class App extends React.Component {
             component: CustomExpanderPosition
           },
           { name: 'Custom "No Data" Text', component: NoDataText },
+          { name: 'Show Pagination No Data', component: ShowPaginationNoData },
           { name: 'Footers', component: Footers },
           { name: 'Custom Filtering', component: Filtering },
           { name: 'Controlled Component', component: ControlledTable },
