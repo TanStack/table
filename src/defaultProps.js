@@ -19,6 +19,7 @@ export default {
   collapseOnPageChange: true,
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
+  showPaddedRows: true,
   sortable: true,
   resizable: true,
   filterable: false,

@@ -72,6 +72,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       getNoDataProps,
       getResizerProps,
       showPagination,
+      showPaddedRows,
       manual,
       loadingText,
       noDataText,
@@ -131,7 +132,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const endRow = startRow + pageSize
     let pageRows = manual ? resolvedData : sortedData.slice(startRow, endRow)
     const minRows = this.getMinRows()
-    const padRows = _.range(Math.max(minRows - pageRows.length, 0))
+    const padRows = showPaddedRows ? _.range(Math.max(minRows - pageRows.length, 0)) : []
 
     const hasColumnFooter = allVisibleColumns.some(d => d.Footer)
     const hasFilters = filterable || allVisibleColumns.some(d => d.filterable)
