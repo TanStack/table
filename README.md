@@ -158,6 +158,7 @@ These are all of the available props (and their default values) for the main `<R
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
+  minRows: undefined,
   showPageJump: true,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
