@@ -72,6 +72,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       getNoDataProps,
       getResizerProps,
       showPagination,
+      showPaginationNoData,
       manual,
       loadingText,
       noDataText,
@@ -766,6 +767,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
     const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
+    const hasData = pageRows.length
+
     const makeTable = () => (
       <div
         className={classnames(
@@ -803,7 +806,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           </TbodyComponent>
           {hasColumnFooter ? makeColumnFooters() : null}
         </TableComponent>
-        {showPagination ? (
+        {showPagination && (showPaginationNoData || hasData) ? (
           <PaginationComponent
             {...resolvedState}
             pages={pages}
@@ -816,7 +819,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {...paginationProps.rest}
           />
         ) : null}
-        {!pageRows.length && (
+        {!hasData && (
           <NoDataComponent
             {...noDataProps}
           >
