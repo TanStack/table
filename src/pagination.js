@@ -61,12 +61,11 @@ export default class ReactTablePagination extends Component {
       className,
       PreviousComponent = defaultButton,
       NextComponent = defaultButton,
-      placement
     } = this.props
 
     return (
       <div
-        className={classnames(className, '-pagination', `-${placement}Pagination`)}
+        className={classnames(className, '-pagination')}
         style={this.props.paginationStyle}
       >
         <div className='-previous'>

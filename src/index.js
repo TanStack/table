@@ -72,6 +72,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       getNoDataProps,
       getResizerProps,
       showPagination,
+      showPaginationTop,
+      showPaginationBottom
       manual,
       loadingText,
       noDataText,
@@ -758,16 +760,33 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
+    const makePagination = () => {
+      const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
+      return <PaginationComponent
+        topPagination
+        {...resolvedState}
+        pages={pages}
+        canPrevious={canPrevious}
+        canNext={canNext}
+        onPageChange={this.onPageChange}
+        onPageSizeChange={this.onPageSizeChange}
+        className={paginationProps.className}
+        style={paginationProps.style}
+        {...paginationProps.rest}
+      />
+    };
+
     const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
     const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
     const tBodyProps = _.splitProps(getTbodyProps(finalState, undefined, undefined, this))
-    const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
     const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
     const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
-    const makeTable = () => (
-      <div
+
+    const makeTable = () => {
+      const pagination = makePagination();
+      return (<div
         className={classnames(
           'ReactTable',
           className,
@@ -779,21 +798,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         }}
         {...rootProps.rest}
       >
-        {showPagination.top ? (
-          <PaginationComponent
-            placement='top'
-            topPagination
-            {...resolvedState}
-            pages={pages}
-            canPrevious={canPrevious}
-            canNext={canNext}
-            onPageChange={this.onPageChange}
-            onPageSizeChange={this.onPageSizeChange}
-            className={paginationProps.className}
-            style={paginationProps.style}
-            {...paginationProps.rest}
-          />
-        ) : null}
+        {showPagination && paginationTop ? 
+          <div className="pagination-top">
+            {pagination}
+          </div> 
+          : null}
         <TableComponent
           className={classnames(
             tableProps.className,
@@ -818,20 +827,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           </TbodyComponent>
           {hasColumnFooter ? makeColumnFooters() : null}
         </TableComponent>
-        {showPagination.bottom ? (
-          <PaginationComponent
-            {...resolvedState}
-            placement='bottom'
-            pages={pages}
-            canPrevious={canPrevious}
-            canNext={canNext}
-            onPageChange={this.onPageChange}
-            onPageSizeChange={this.onPageSizeChange}
-            className={paginationProps.className}
-            style={paginationProps.style}
-            {...paginationProps.rest}
-          />
-        ) : null}
+        {showPagination && paginationBottom ? 
+          <div className="pagination-bottom">
+            {pagination}
+          </div> 
+          : null}
         {!pageRows.length && (
           <NoDataComponent
             {...noDataProps}
@@ -844,8 +844,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           loadingText={loadingText}
           {...loadingProps}
         />
-      </div>
-    )
+      </div>);
+    }
 
     // childProps are optionally passed to a function-as-a-child
     return children ? children(finalState, makeTable, this) : makeTable()
