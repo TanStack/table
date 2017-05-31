@@ -60,7 +60,7 @@ export default class ReactTablePagination extends Component {
       onPageSizeChange,
       className,
       PreviousComponent = defaultButton,
-      NextComponent = defaultButton,
+      NextComponent = defaultButton
     } = this.props
 
     return (

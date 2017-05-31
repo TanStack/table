@@ -774,7 +774,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         style={paginationProps.style}
         {...paginationProps.rest}
       />
-    };
+    }
 
     const rootProps = _.splitProps(getProps(finalState, undefined, undefined, this))
     const tableProps = _.splitProps(getTableProps(finalState, undefined, undefined, this))
@@ -783,68 +783,69 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
     const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
-
     const makeTable = () => {
-      const pagination = makePagination();
-      return (<div
-        className={classnames(
-          'ReactTable',
-          className,
-          rootProps.className
-        )}
-        style={{
-          ...style,
-          ...rootProps.style
-        }}
-        {...rootProps.rest}
-      >
-        {showPagination && showPaginationTop ? 
-          <div className="pagination-top">
-            {pagination}
-          </div> 
-          : null}
-        <TableComponent
+      const pagination = makePagination()
+      return (
+        <div
           className={classnames(
-            tableProps.className,
-            currentlyResizing ? 'rt-resizing' : ''
+            'ReactTable',
+            className,
+            rootProps.className
           )}
-          style={tableProps.style}
-          {...tableProps.rest}
+          style={{
+            ...style,
+            ...rootProps.style
+          }}
+          {...rootProps.rest}
         >
-          {hasHeaderGroups ? makeHeaderGroups() : null}
-          {makeHeaders()}
-          {hasFilters ? makeFilters() : null}
-          <TbodyComponent
-            className={classnames(tBodyProps.className)}
-            style={{
-              ...tBodyProps.style,
-              minWidth: `${rowMinWidth}px`
-            }}
-            {...tBodyProps.rest}
+          {showPagination && showPaginationTop
+            ? <div className='pagination-top'>
+              {pagination}
+            </div>
+            : null}
+          <TableComponent
+            className={classnames(
+              tableProps.className,
+              currentlyResizing ? 'rt-resizing' : ''
+            )}
+            style={tableProps.style}
+            {...tableProps.rest}
           >
-            {pageRows.map((d, i) => makePageRow(d, i))}
-            {padRows.map(makePadRow)}
-          </TbodyComponent>
-          {hasColumnFooter ? makeColumnFooters() : null}
-        </TableComponent>
-        {showPagination && showPaginationBottom ? 
-          <div className="pagination-bottom">
-            {pagination}
-          </div> 
-          : null}
-        {!pageRows.length && (
-          <NoDataComponent
-            {...noDataProps}
-          >
-            {_.normalizeComponent(noDataText)}
-          </NoDataComponent>
-        )}
-        <LoadingComponent
-          loading={loading}
-          loadingText={loadingText}
-          {...loadingProps}
-        />
-      </div>);
+            {hasHeaderGroups ? makeHeaderGroups() : null}
+            {makeHeaders()}
+            {hasFilters ? makeFilters() : null}
+            <TbodyComponent
+              className={classnames(tBodyProps.className)}
+              style={{
+                ...tBodyProps.style,
+                minWidth: `${rowMinWidth}px`
+              }}
+              {...tBodyProps.rest}
+            >
+              {pageRows.map((d, i) => makePageRow(d, i))}
+              {padRows.map(makePadRow)}
+            </TbodyComponent>
+            {hasColumnFooter ? makeColumnFooters() : null}
+          </TableComponent>
+          {showPagination && showPaginationBottom
+            ? <div className='pagination-bottom'>
+              {pagination}
+            </div>
+            : null}
+          {!pageRows.length && (
+            <NoDataComponent
+              {...noDataProps}
+            >
+              {_.normalizeComponent(noDataText)}
+            </NoDataComponent>
+          )}
+          <LoadingComponent
+            loading={loading}
+            loadingText={loadingText}
+            {...loadingProps}
+          />
+        </div>
+      )
     }
 
     // childProps are optionally passed to a function-as-a-child

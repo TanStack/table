@@ -155,7 +155,7 @@ These are all of the available props (and their default values) for the main `<R
   data: [],
   loading: false,
   showPagination: true,
-  showPagionationTop: false,
+  showPaginationTop: false,
   showPaginationBottom: true
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
