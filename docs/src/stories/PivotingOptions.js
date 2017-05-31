@@ -96,10 +96,7 @@ class Story extends React.PureComponent {
                     data={data}
                     columns={subtableColumns}
                     defaultPageSize={3}
-                    showPagination={{
-                      top: false,
-                      bottom: false
-                    }}
+                    showPagination={false}
                     SubComponent={(row) => {
                       return (
                         <div style={{padding: '20px'}}>

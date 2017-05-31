@@ -14,7 +14,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-json-tree": "^0.10.9",
-    "react-story": "^0.0.6"
+    "react-story": "^0.0.10"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -51,10 +51,7 @@ class Story extends React.PureComponent {
           columns={this.columns}
           defaultPageSize={2}
           showPageSizeOptions={false}
-          showPagination={{
-            top: false,
-            bottom: false
-          }}
+          showPagination={false}
         />
       </div>
     )

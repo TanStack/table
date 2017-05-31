@@ -73,7 +73,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       getResizerProps,
       showPagination,
       showPaginationTop,
-      showPaginationBottom
+      showPaginationBottom,
       manual,
       loadingText,
       noDataText,
@@ -798,7 +798,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         }}
         {...rootProps.rest}
       >
-        {showPagination && paginationTop ? 
+        {showPagination && showPaginationTop ? 
           <div className="pagination-top">
             {pagination}
           </div> 
@@ -827,7 +827,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           </TbodyComponent>
           {hasColumnFooter ? makeColumnFooters() : null}
         </TableComponent>
-        {showPagination && paginationBottom ? 
+        {showPagination && showPaginationBottom ? 
           <div className="pagination-bottom">
             {pagination}
           </div> 
