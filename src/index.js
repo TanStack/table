@@ -763,7 +763,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const makePagination = () => {
       const paginationProps = _.splitProps(getPaginationProps(finalState, undefined, undefined, this))
       return <PaginationComponent
-        topPagination
         {...resolvedState}
         pages={pages}
         canPrevious={canPrevious}
