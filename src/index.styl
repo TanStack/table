@@ -305,6 +305,8 @@ $expandSize = 7px
   input:not([type="checkbox"]):not([type="radio"])
   select
     appearance: none
+    &::-ms-expand
+      display: none
 
   .select-wrap
     position:relative

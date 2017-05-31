@@ -158,6 +158,7 @@ These are all of the available props (and their default values) for the main `<R
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
+  minRows: undefined,
   showPageJump: true,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
@@ -729,7 +730,7 @@ Here are the props and their corresponding callbacks that control the state of t
   // Props
   page={0} // the index of the page you wish to display
   pageSize={20} // the number of rows per page to be displayed
-  sorting={[{ // the sorting model for the table
+  sorted={[{ // the sorting model for the table
       id: 'lastName',
       desc: true
     }, {
