@@ -63,7 +63,7 @@ class Story extends React.PureComponent {
 }
 
 const CodeHighlight = require('./components/codeHighlight').default
-const source = require('!raw!./Simple')
+const source = require('!raw!./MultiplePagers')
 
 export default () => (
   <div>
