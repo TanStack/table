@@ -11,6 +11,8 @@ export default {
   data: [],
   loading: false,
   showPagination: true,
+  showPaginationTop: false,
+  showPaginationBottom: true,
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,

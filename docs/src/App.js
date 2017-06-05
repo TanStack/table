@@ -26,6 +26,7 @@ import ControlledTable from './stories/ControlledTable.js'
 import PivotingOptions from './stories/PivotingOptions.js'
 import EditableTable from './stories/EditableTable.js'
 import FixedHeader from './stories/FixedHeader.js'
+import MultiplePagers from './stories/MultiplePagers';
 
 export default class App extends React.Component {
   render() {
@@ -100,7 +101,8 @@ export default class App extends React.Component {
           { name: 'Custom Filtering', component: Filtering },
           { name: 'Controlled Component', component: ControlledTable },
           { name: 'Editable Table', component: EditableTable },
-          { name: 'Fixed Header w/ Vertical Scroll', component: FixedHeader }
+          { name: 'Fixed Header w/ Vertical Scroll', component: FixedHeader },
+          { name: 'Multiple Pagers (Top and Bottom)', component: MultiplePagers}
         ]}
       />
     )
