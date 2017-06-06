@@ -106,7 +106,7 @@ import 'react-table/react-table.css'
 
 ## Example
 ```javascript
-import ReactTable from 'react-table'
+import ReactTable from 'react-table';
 
 render() {
   const data = [{
@@ -114,11 +114,11 @@ render() {
     age: 26,
     friend: {
       name: 'Jason Maurer',
-      age: 23,
+      age: 23
     }
   },{
     ...
-  }]
+  }];
 
   const columns = [{
     Header: 'Name',
@@ -617,7 +617,7 @@ You can utilize either of these prop callbacks on columns:
 const columns = [{
   getHeaderProps: () => (...),
   getProps: () => (...)
-}]
+}];
 ```
 
 In a similar fashion these can be used to dynamically style just about anything!
@@ -631,7 +631,7 @@ const columns = [{
       }
     }
   }
-}]
+}];
 ```
 
 ## Pivoting and Aggregation
@@ -659,7 +659,7 @@ const columns = [{
   Header: 'Visits',
   accessor: 'visits',
   aggregate: (values, rows) => _.sum(values)
-}]
+}];
 ```
 
 Pivoted columns can be sorted just like regular columns including holding down the `<shift>` button to multi-sort.
