@@ -330,6 +330,11 @@ export default Base => class extends Base {
                 return true
               }
 
+              // Only filter columns that are visible
+              if (!column) {
+                return true
+              }
+
               const filterMethod = column.filterMethod || defaultFilterMethod
 
               return filterMethod(nextFilter, row, column)
