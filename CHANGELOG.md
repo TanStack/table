@@ -1,3 +1,8 @@
+## 6.3.0
+##### New Features
+- `defaultSortDesc` - allows you to set the default sorting direction for all columns to descending.
+- `column.defaultSortDesc` - allows you to set the default sorting direction for a specific column. Falls back to the global `defaultSortDesc` when not set at all.
+
 ## 6.0.0
 
 ##### New Features

@@ -24,18 +24,21 @@ export default {
   sortable: true,
   resizable: true,
   filterable: false,
+  defaultSortDesc: false,
   defaultSorted: [],
   defaultFiltered: [],
   defaultResized: [],
   defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
-    return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
+    return row[id] !== undefined
+      ? String(row[id]).startsWith(filter.value)
+      : true
   },
   defaultSortMethod: (a, b) => {
     // force null and undefined to the bottom
-    a = (a === null || a === undefined) ? '' : a
-    b = (b === null || b === undefined) ? '' : b
+    a = a === null || a === undefined ? '' : a
+    b = b === null || b === undefined ? '' : b
     // force any string values to lowercase
     a = typeof a === 'string' ? a.toLowerCase() : a
     b = typeof b === 'string' ? b.toLowerCase() : b
@@ -142,7 +145,7 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
-    sortMethod: undefined
+    sortMethod: undefined,
   },
 
   // Global Expander Column Defaults
@@ -150,7 +153,7 @@ export default {
     sortable: false,
     resizable: false,
     filterable: false,
-    width: 35
+    width: 35,
   },
 
   pivotDefaults: {
@@ -172,7 +175,7 @@ export default {
   TbodyComponent: _.makeTemplateComponent('rt-tbody'),
   TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
   TrComponent: _.makeTemplateComponent('rt-tr'),
-  ThComponent: ({toggleSort, className, children, ...rest}) => {
+  ThComponent: ({ toggleSort, className, children, ...rest }) => {
     return (
       <div
         className={classnames(className, 'rt-th')}
@@ -187,51 +190,45 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  FilterComponent: ({filter, onChange}) => (
-    <input type='text'
+  FilterComponent: ({ filter, onChange }) =>
+    <input
+      type='text'
       style={{
-        width: '100%'
+        width: '100%',
       }}
       value={filter ? filter.value : ''}
-      onChange={(event) => onChange(event.target.value)}
-    />
-  ),
-  ExpanderComponent: ({isExpanded}) => (
+      onChange={event => onChange(event.target.value)}
+    />,
+  ExpanderComponent: ({ isExpanded }) =>
     <div className={classnames('rt-expander', isExpanded && '-open')}>
       &bull;
-    </div>
-  ),
-  PivotValueComponent: ({subRows, value}) => (
-    <span>{value} {subRows && `(${subRows.length})`}</span>
-  ),
-  AggregatedComponent: ({subRows, column}) => {
+    </div>,
+  PivotValueComponent: ({ subRows, value }) =>
+    <span>{value} {subRows && `(${subRows.length})`}</span>,
+  AggregatedComponent: ({ subRows, column }) => {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
-      .map((row, i) => (
-        <span key={i}>{row[column.id]}{i < subRows.length - 1 ? ', ' : ''}</span>
-      ))
-    return (
-      <span>{previewValues}</span>
-    )
+      .map((row, i) =>
+        <span key={i}>
+          {row[column.id]}{i < subRows.length - 1 ? ', ' : ''}
+        </span>
+      )
+    return <span>{previewValues}</span>
   },
   PivotComponent: undefined, // this is a computed default generated using
   // the ExpanderComponent and PivotValueComponent at run-time in methods.js
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
-  LoadingComponent: ({className, loading, loadingText, ...rest}) => (
-    <div className={classnames(
-      '-loading',
-      {'-active': loading},
-      className
-    )}
+  LoadingComponent: ({ className, loading, loadingText, ...rest }) =>
+    <div
+      className={classnames('-loading', { '-active': loading }, className)}
       {...rest}
     >
       <div className='-loading-inner'>
         {loadingText}
       </div>
-    </div>
-  ),
+    </div>,
   NoDataComponent: _.makeTemplateComponent('rt-noData'),
-  ResizerComponent: _.makeTemplateComponent('rt-resizer')
+  ResizerComponent: _.makeTemplateComponent('rt-resizer'),
 }

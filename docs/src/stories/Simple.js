@@ -6,7 +6,7 @@ import namor from 'namor'
 import ReactTable from '../../../lib/index'
 
 class Story extends React.PureComponent {
-  render () {
+  render() {
     const data = _.map(_.range(5553), d => {
       return {
         firstName: namor.generate({ words: 1, numbers: 0 }),
@@ -22,35 +22,43 @@ class Story extends React.PureComponent {
       }
     })
 
-    const columns = [{
-      Header: 'Name',
-      columns: [{
-        Header: 'First Name',
-        accessor: 'firstName'
-      }, {
-        Header: 'Last Name',
-        id: 'lastName',
-        accessor: d => d.lastName
-      }]
-    }, {
-      Header: 'Info',
-      columns: [{
-        Header: 'Age',
-        accessor: 'age'
-      }]
-    }]
+    const columns = [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName'
+          },
+          {
+            Header: 'Last Name',
+            id: 'lastName',
+            accessor: d => d.lastName
+          }
+        ]
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age'
+          }
+        ]
+      }
+    ]
 
     return (
       <div>
-        <div className='table-wrap'>
+        <div className="table-wrap">
           <ReactTable
-            className='-striped -highlight'
+            className="-striped -highlight"
             data={data}
             columns={columns}
             defaultPageSize={10}
           />
         </div>
-        <div style={{textAlign: 'center'}}>
+        <div style={{ textAlign: 'center' }}>
           <br />
           <em>Tip: Hold shift when sorting to multi-sort!</em>
         </div>
@@ -62,9 +70,8 @@ class Story extends React.PureComponent {
 const CodeHighlight = require('./components/codeHighlight').default
 const source = require('!raw!./Simple')
 
-export default () => (
+export default () =>
   <div>
     <Story />
     <CodeHighlight>{() => source}</CodeHighlight>
   </div>
-)

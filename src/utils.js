@@ -18,7 +18,7 @@ export default {
   splitProps,
   compactObject,
   isSortingDesc,
-  normalizeComponent
+  normalizeComponent,
 }
 
 function get (obj, path, def) {
@@ -94,12 +94,14 @@ function remove (a, b) {
 
 function clone (a) {
   try {
-    return JSON.parse(JSON.stringify(a, (key, value) => {
-      if (typeof value === 'function') {
-        return value.toString()
-      }
-      return value
-    }))
+    return JSON.parse(
+      JSON.stringify(a, (key, value) => {
+        if (typeof value === 'function') {
+          return value.toString()
+        }
+        return value
+      })
+    )
   } catch (e) {
     return a
   }
@@ -120,14 +122,10 @@ function sum (arr) {
 }
 
 function makeTemplateComponent (compClass) {
-  return ({children, className, ...rest}) => (
-    <div
-      className={classnames(compClass, className)}
-      {...rest}
-    >
+  return ({ children, className, ...rest }) =>
+    <div className={classnames(compClass, className)} {...rest}>
       {children}
     </div>
-  )
 }
 
 function groupBy (xs, key) {
@@ -149,10 +147,10 @@ function isArray (a) {
 
 function makePathArray (obj) {
   return flattenDeep(obj)
-      .join('.')
-      .replace('[', '.')
-      .replace(']', '')
-      .split('.')
+    .join('.')
+    .replace('[', '.')
+    .replace(']', '')
+    .split('.')
 }
 
 function flattenDeep (arr, newArr = []) {
@@ -166,18 +164,22 @@ function flattenDeep (arr, newArr = []) {
   return newArr
 }
 
-function splitProps ({className, style, ...rest}) {
+function splitProps ({ className, style, ...rest }) {
   return {
     className,
     style,
-    rest
+    rest,
   }
 }
 
 function compactObject (obj) {
   const newObj = {}
   for (var key in obj) {
-    if (obj.hasOwnProperty(key) && obj[key] !== undefined && typeof obj[key] !== 'undefined') {
+    if (
+      obj.hasOwnProperty(key) &&
+      obj[key] !== undefined &&
+      typeof obj[key] !== 'undefined'
+    ) {
       newObj[key] = obj[key]
     }
   }
@@ -189,11 +191,9 @@ function isSortingDesc (d) {
 }
 
 function normalizeComponent (Comp, params = {}, fallback = Comp) {
-  return typeof Comp === 'function' ? (
-    Object.getPrototypeOf(Comp).isReactComponent ? (
-      <Comp
-        {...params}
-      />
-    ) : Comp(params)
-  ) : fallback
+  return typeof Comp === 'function'
+    ? Object.getPrototypeOf(Comp).isReactComponent
+      ? <Comp {...params} />
+      : Comp(params)
+    : fallback
 }

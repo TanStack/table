@@ -169,6 +169,7 @@ These are all of the available props (and their default values) for the main `<R
   sortable: true,
   resizable: true,
   filterable: false,
+  defaultSortDesc: false,
   defaultSorted: [],
   defaultFiltered: [],
   defaultResized: [],
@@ -286,7 +287,8 @@ These are all of the available props (and their default values) for the main `<R
     footerStyle: {},
     getFooterProps: () => ({}),
     filterMethod: undefined,
-    sortMethod: undefined
+    sortMethod: undefined,
+    defaultSortDesc: undefined,
   },
 
   // Global Expander Column Defaults
@@ -804,7 +806,11 @@ Accessing internal state and wrapping with more UI:
 The possibilities are endless!
 
 ## Sorting
-Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort.
+Sorting comes built in with React-Table.
+- Click a column header to sort by its accessor.
+- Click it again to reverse the sort.
+- Set `defaultSortDesc` property to `true` to make the first sort direction default to descending.
+- Override a specific column's default sort direction by using the same `defaultSortDesc` property on a column, set to `true`
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
