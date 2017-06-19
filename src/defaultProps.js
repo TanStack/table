@@ -231,4 +231,5 @@ export default {
     </div>,
   NoDataComponent: _.makeTemplateComponent('rt-noData'),
   ResizerComponent: _.makeTemplateComponent('rt-resizer'),
+  PadRowComponent: () => <span>&nbsp;</span>,
 }

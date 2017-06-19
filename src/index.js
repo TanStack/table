@@ -118,6 +118,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       PivotComponent,
       AggregatedComponent,
       FilterComponent,
+      PadRowComponent,
       // Data model
       resolvedData,
       allVisibleColumns,
@@ -159,7 +160,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         index
       ]
     }
-
     ;[pageRows] = recurseRowsViewIndex(pageRows)
 
     const canPrevious = page > 0
@@ -804,7 +804,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             maxWidth: `${maxWidth}px`
           }}
           {...tdProps.rest}
-        />
+        >
+          {_.normalizeComponent(PadRowComponent)}
+        </TdComponent>
       )
     }
 

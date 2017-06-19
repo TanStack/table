@@ -1,3 +1,7 @@
+## 6.4.0
+##### New Features
+- `PadRowComponent` - the content rendered inside of a padding row. Defaults to a react component that renders `&nbsp;`
+
 ## 6.3.0
 ##### New Features
 - `defaultSortDesc` - allows you to set the default sorting direction for all columns to descending.

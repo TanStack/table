@@ -195,6 +195,7 @@ These are all of the available props (and their default values) for the main `<R
     // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
     return 0
   },
+  PadRowComponent: () => <span>&nbsp;</span>, // the content rendered inside of a padding row
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
