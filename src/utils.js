@@ -150,8 +150,8 @@ function isArray (a) {
 function makePathArray (obj) {
   return flattenDeep(obj)
       .join('.')
-      .replace('[', '.')
-      .replace(']', '')
+      .replace(/\[/g, '.')
+      .replace(/\]/g, '')
       .split('.')
 }
 
