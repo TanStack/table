@@ -204,16 +204,23 @@ export default {
       &bull;
     </div>,
   PivotValueComponent: ({ subRows, value }) =>
-    <span>{value} {subRows && `(${subRows.length})`}</span>,
+    <span>
+      {value} {subRows && `(${subRows.length})`}
+    </span>,
   AggregatedComponent: ({ subRows, column }) => {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
       .map((row, i) =>
         <span key={i}>
-          {row[column.id]}{i < subRows.length - 1 ? ', ' : ''}
+          {row[column.id]}
+          {i < subRows.length - 1 ? ', ' : ''}
         </span>
       )
-    return <span>{previewValues}</span>
+    return (
+      <span>
+        {previewValues}
+      </span>
+    )
   },
   PivotComponent: undefined, // this is a computed default generated using
   // the ExpanderComponent and PivotValueComponent at run-time in methods.js

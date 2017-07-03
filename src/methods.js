@@ -309,15 +309,15 @@ export default Base =>
         sortedData: manual
           ? resolvedData
           : this.sortData(
-              this.filterData(
-                resolvedData,
-                filtered,
-                defaultFilterMethod,
-                allVisibleColumns
-              ),
-              sorted,
-              sortMethodsByColumnID
+            this.filterData(
+              resolvedData,
+              filtered,
+              defaultFilterMethod,
+              allVisibleColumns
             ),
+            sorted,
+            sortMethodsByColumnID
+          ),
       }
     }
 
@@ -559,9 +559,10 @@ export default Base =>
 
       this.setStateWithData(
         {
-          page: (!sorted.length && newSorted.length) || !additive
-            ? 0
-            : this.state.page,
+          page:
+            (!sorted.length && newSorted.length) || !additive
+              ? 0
+              : this.state.page,
           sorted: newSorted,
         },
         () => {

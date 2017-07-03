@@ -8,20 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/tannerlinsley/react-table.git"
   },
-  "keywords": [
-    "react",
-    "table",
-    "react-table",
-    "datagrid"
-  ],
+  "keywords": ["react", "table", "react-table", "datagrid"],
   "main": "lib/index.js",
-  "files": [
-    "src/",
-    "lib/",
-    "react-table.js",
-    "react-table.css",
-    "media/*.png"
-  ],
+  "files": ["src/", "lib/", "react-table.js", "react-table.css", "media/*.png"],
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
     "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
@@ -29,7 +18,7 @@
     "watch": "npm-run-all --parallel watch:*",
     "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
     "watch:css": "onchange 'src/**/*.styl' -i -- npm run build:css",
-    "test": "standard",
+    "test": "eslint src",
     "umd": "rimraf react-table.js && webpack --config umd.webpack.js",
     "build": "npm-run-all build:*",
     "prepublish": "npm run build && npm run umd",
@@ -38,8 +27,7 @@
     "docs:build": "yarn build && cd docs && yarn && yarn run build"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "react-json-tree": "^0.10.9"
+    "classnames": "^2.2.5"
   },
   "peerDependencies": {
     "react": "^15.x.x"
@@ -51,33 +39,19 @@
     "babel-preset-es2015": "6.14.0",
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-2": "6.13.0",
+    "eslint": "^4.1.1",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-json-tree": "^0.10.9",
     "rimraf": "^2.6.1",
     "standard": "^10.0.2",
     "stylus": "^0.54.5",
     "webpack": "^2.5.1"
   },
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": [
-      "node_modules",
-      "dist",
-      "lib",
-      "example",
-      "react-table.js",
-      "stories",
-      "docs"
-    ]
-  },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-2",
-      "react"
-    ]
+    "presets": ["es2015", "stage-2", "react"]
   }
 }
