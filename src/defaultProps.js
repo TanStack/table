@@ -145,6 +145,7 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
+    filterAll: false,
     sortMethod: undefined,
   },
 

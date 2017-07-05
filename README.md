@@ -287,6 +287,7 @@ These are all of the available props (and their default values) for the main `<R
     footerClassName: '',
     footerStyle: {},
     getFooterProps: () => ({}),
+    filterAll: false,
     filterMethod: undefined,
     sortMethod: undefined,
     defaultSortDesc: undefined,
@@ -397,10 +398,11 @@ Or just define them as props
   getFooterProps: (state, rowInfo, column, instance) => ({}), // A function that returns props to decorate the `td` element of the column's footer
 
   // Filtering
-  filterMethod: (filter, row, column) => {return true}, // A function returning a boolean that specifies the filtering logic for the column
-    // filter == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
-    // row == the row of data supplied to the table
-    // column == the column that the filter is on
+  filterMethod: (filter, row || rows, column) => {return true}, // A function returning a boolean that specifies the filtering logic for the column
+    // 'filter' == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
+    // 'row' || 'rows' == the row (or rows, if filterAll is set to true) of data supplied to the table
+    // 'column' == the column that the filter is on
+  filterAll: false
 }]
 ```
 
@@ -853,6 +855,10 @@ If you don't want particular column to be filtered you can set the `filterable={
 By default the table tries to filter by checking if the row's value starts with the filter text. The default method for filtering the table can be set with the table's `defaultFilterMethod` option.
 
 If you want to override a particular column's filtering method, you can set the `filterMethod` option on a column.
+
+By default, `filterMethod` is passed a single row of data at a time, and you are responsible for returning `true` or `false`, indicating whether it should be shown.
+
+Alternatively, you can set `filterAll` to `true`, and `fitlerMethod` will be passed the entire array of rows to be filtered, and you will then be responsible for returning the new filtered array. This is extremely handy when you need to utilize a utility like fuzzy matching that requires the entire array of items.
 
 To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
 

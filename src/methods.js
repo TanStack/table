@@ -338,20 +338,23 @@ export default Base =>
 
       if (filtered.length) {
         filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
-          return filteredSoFar.filter(row => {
-            let column
+          const column = allVisibleColumns.find(x => x.id === nextFilter.id)
 
-            column = allVisibleColumns.find(x => x.id === nextFilter.id)
+          // Don't filter hidden columns or columns that have had their filters disabled
+          if (!column || column.filterable === false) {
+            return filteredSoFar
+          }
 
-            // Don't filter hidden columns or columns that have had their filters disabled
-            if (!column || column.filterable === false) {
-              return true
-            }
+          const filterMethod = column.filterMethod || defaultFilterMethod
 
-            const filterMethod = column.filterMethod || defaultFilterMethod
-
-            return filterMethod(nextFilter, row, column)
-          })
+          // If 'filterAll' is set to true, pass the entire dataset to the filter method
+          if (column.filterAll) {
+            return filterMethod(nextFilter, filteredSoFar, column)
+          } else {
+            return filteredSoFar.filter(row => {
+              return filterMethod(nextFilter, row, column)
+            })
+          }
         }, filteredData)
 
         // Apply the filter to the subrows if we are pivoting, and then

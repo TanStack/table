@@ -1,3 +1,7 @@
+## 6.5.0
+##### New Features
+- `column.filterAll` - defaults to `false`, but when set to `true` will provide the entire array of rows to `filterMethod` as opposed to one row at a time. This allows for more fine-grained filtering using any method you can dream up. See the [Custom Filtering example](https://react-table.js.org/#/story/custom-filtering) for more info.
+
 ## 6.4.0
 ##### New Features
 - `PadRowComponent` - the content rendered inside of a padding row. Defaults to a react component that renders `&nbsp;`

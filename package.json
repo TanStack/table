@@ -8,9 +8,20 @@
     "type": "git",
     "url": "git+https://github.com/tannerlinsley/react-table.git"
   },
-  "keywords": ["react", "table", "react-table", "datagrid"],
+  "keywords": [
+    "react",
+    "table",
+    "react-table",
+    "datagrid"
+  ],
   "main": "lib/index.js",
-  "files": ["src/", "lib/", "react-table.js", "react-table.css", "media/*.png"],
+  "files": [
+    "src/",
+    "lib/",
+    "react-table.js",
+    "react-table.css",
+    "media/*.png"
+  ],
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
     "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
@@ -40,6 +51,7 @@
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-2": "6.13.0",
     "eslint": "^4.1.1",
+    "match-sorter": "^1.8.0",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
@@ -52,6 +64,10 @@
     "webpack": "^2.5.1"
   },
   "babel": {
-    "presets": ["es2015", "stage-2", "react"]
+    "presets": [
+      "es2015",
+      "stage-2",
+      "react"
+    ]
   }
 }
