@@ -171,11 +171,11 @@ export default {
   rowsText: 'rows',
 
   // Components
-  TableComponent: _.makeTemplateComponent('rt-table'),
-  TheadComponent: _.makeTemplateComponent('rt-thead'),
-  TbodyComponent: _.makeTemplateComponent('rt-tbody'),
-  TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
-  TrComponent: _.makeTemplateComponent('rt-tr'),
+  TableComponent: _.makeTemplateComponent('rt-table', 'Table'),
+  TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead'),
+  TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
+  TrGroupComponent: _.makeTemplateComponent('rt-tr-group', 'TrGroup'),
+  TrComponent: _.makeTemplateComponent('rt-tr', 'Tr'),
   ThComponent: ({ toggleSort, className, children, ...rest }) => {
     return (
       <div
@@ -189,8 +189,8 @@ export default {
       </div>
     )
   },
-  TdComponent: _.makeTemplateComponent('rt-td'),
-  TfootComponent: _.makeTemplateComponent('rt-tfoot'),
+  TdComponent: _.makeTemplateComponent('rt-td', 'Td'),
+  TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
   FilterComponent: ({ filter, onChange }) =>
     <input
       type='text'
@@ -237,7 +237,7 @@ export default {
         {loadingText}
       </div>
     </div>,
-  NoDataComponent: _.makeTemplateComponent('rt-noData'),
-  ResizerComponent: _.makeTemplateComponent('rt-resizer'),
+  NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
+  ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
   PadRowComponent: () => <span>&nbsp;</span>,
 }

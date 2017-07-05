@@ -121,11 +121,16 @@ function sum (arr) {
   }, 0)
 }
 
-function makeTemplateComponent (compClass) {
-  return ({ children, className, ...rest }) =>
+function makeTemplateComponent (compClass, displayName) {
+  if (!displayName) {
+    throw new Error('No displayName found for template component:', compClass)
+  }
+  const cmp = ({ children, className, ...rest }) =>
     <div className={classnames(compClass, className)} {...rest}>
       {children}
     </div>
+  cmp.displayName = displayName
+  return cmp
 }
 
 function groupBy (xs, key) {
