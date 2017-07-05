@@ -709,8 +709,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     width: `${width}px`,
                     maxWidth: `${maxWidth}px`,
                   }}
-                  {...tdProps.rest}
                   {...interactionProps}
+                  {...tdProps.rest}
+                  {...columnProps.rest}
                 >
                   {resolvedCell}
                 </TdComponent>
