@@ -88,7 +88,8 @@ export default Base =>
             this.props.collapseOnSortingChange) ||
           oldState.filtered !== newResolvedState.filtered ||
           oldState.showFilters !== newResolvedState.showFilters ||
-          (!newResolvedState.frozen &&
+          (oldState.sortedData &&
+            !newResolvedState.frozen &&
             oldState.resolvedData !== newResolvedState.resolvedData &&
             this.props.collapseOnDataChange)
         ) {
