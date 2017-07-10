@@ -42,8 +42,15 @@ class Story extends React.PureComponent {
     }, {
       Header: 'Info',
       columns: [{
-        Header: 'Age',
-        accessor: 'age'
+        Header: 'Age (Same order for both sort directions)',
+        accessor: 'age',
+        sortMethod: (a, b, dir) => {
+          if (dir === 'desc') {
+            return a - b
+          } else {
+            return b - a
+          }
+        }
       }]
     }]
 
