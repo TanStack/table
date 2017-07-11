@@ -28,6 +28,10 @@
   <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
 </a>
 
+<br />
+
+[![Sponsor](https://codesponsor.io/sponsor/github/tannerlinsley/react-table.svg)](https://codesponsor.io/link/github/tannerlinsley/react-table)
+
 ## Versions
 This document refers to version 6.x.x of react-table.
 
