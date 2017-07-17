@@ -29,6 +29,7 @@
 </a>
 
 <br />
+<br />
 
 [![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table)
 
