@@ -30,7 +30,7 @@
 
 <br />
 
-[![Sponsor](https://codesponsor.io/sponsor/github/tannerlinsley/react-table.svg)](https://codesponsor.io/link/github/tannerlinsley/react-table)
+[![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table)
 
 ## Versions
 This document refers to version 6.x.x of react-table.
