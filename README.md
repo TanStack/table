@@ -831,9 +831,9 @@ To override the sorting algorithm for a single column, use the `sortMethod` colu
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
 - `a` the first value to compare
 - `b` the second value to compare
-- `dir` the
+- `dir` the sorting order, can be either `'desc'` or `'asc'` (not used in the default method, but you can use it in your custom methods if your use case requires sorting logic to be different depending on the sort direction, see #373)
 ```javascript
-defaultSortMethod = (a, b) => {
+defaultSortMethod = (a, b, dir) => {
   // force null and undefined to the bottom
   a = (a === null || a === undefined) ? -Infinity : a
   b = (b === null || b === undefined) ? -Infinity : b
