@@ -28,6 +28,11 @@
   <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
 </a>
 
+<br />
+<br />
+
+[![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table)
+
 ## Versions
 This document refers to version 6.x.x of react-table.
 
@@ -169,6 +174,7 @@ These are all of the available props (and their default values) for the main `<R
   sortable: true,
   resizable: true,
   filterable: false,
+  defaultSortDesc: false,
   defaultSorted: [],
   defaultFiltered: [],
   defaultResized: [],
@@ -194,6 +200,7 @@ These are all of the available props (and their default values) for the main `<R
     // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
     return 0
   },
+  PadRowComponent: () => <span>&nbsp;</span>, // the content rendered inside of a padding row
 
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
@@ -285,8 +292,10 @@ These are all of the available props (and their default values) for the main `<R
     footerClassName: '',
     footerStyle: {},
     getFooterProps: () => ({}),
+    filterAll: false,
     filterMethod: undefined,
-    sortMethod: undefined
+    sortMethod: undefined,
+    defaultSortDesc: undefined,
   },
 
   // Global Expander Column Defaults
@@ -394,10 +403,11 @@ Or just define them as props
   getFooterProps: (state, rowInfo, column, instance) => ({}), // A function that returns props to decorate the `td` element of the column's footer
 
   // Filtering
-  filterMethod: (filter, row, column) => {return true}, // A function returning a boolean that specifies the filtering logic for the column
-    // filter == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
-    // row == the row of data supplied to the table
-    // column == the column that the filter is on
+  filterMethod: (filter, row || rows, column) => {return true}, // A function returning a boolean that specifies the filtering logic for the column
+    // 'filter' == an object specifying which filter is being applied. Format: {id: [the filter column's id], value: [the value the user typed in the filter field], pivotId: [if filtering on a pivot column, the pivotId will be set to the pivot column's id and the `id` field will be set to the top level pivoting column]}
+    // 'row' || 'rows' == the row (or rows, if filterAll is set to true) of data supplied to the table
+    // 'column' == the column that the filter is on
+  filterAll: false
 }]
 ```
 
@@ -804,7 +814,11 @@ Accessing internal state and wrapping with more UI:
 The possibilities are endless!
 
 ## Sorting
-Sorting comes built in with React-Table. Click column header to sort by its column. Click it again to reverse the sort.
+Sorting comes built in with React-Table.
+- Click a column header to sort by its accessor.
+- Click it again to reverse the sort.
+- Set `defaultSortDesc` property to `true` to make the first sort direction default to descending.
+- Override a specific column's default sort direction by using the same `defaultSortDesc` property on a column, set to `true`
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
@@ -846,6 +860,10 @@ If you don't want particular column to be filtered you can set the `filterable={
 By default the table tries to filter by checking if the row's value starts with the filter text. The default method for filtering the table can be set with the table's `defaultFilterMethod` option.
 
 If you want to override a particular column's filtering method, you can set the `filterMethod` option on a column.
+
+By default, `filterMethod` is passed a single row of data at a time, and you are responsible for returning `true` or `false`, indicating whether it should be shown.
+
+Alternatively, you can set `filterAll` to `true`, and `filterMethod` will be passed the entire array of rows to be filtered, and you will then be responsible for returning the new filtered array. This is extremely handy when you need to utilize a utility like fuzzy matching that requires the entire array of items.
 
 To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
 

@@ -24,18 +24,21 @@ export default {
   sortable: true,
   resizable: true,
   filterable: false,
+  defaultSortDesc: false,
   defaultSorted: [],
   defaultFiltered: [],
   defaultResized: [],
   defaultExpanded: {},
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
-    return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
+    return row[id] !== undefined
+      ? String(row[id]).startsWith(filter.value)
+      : true
   },
   defaultSortMethod: (a, b) => {
     // force null and undefined to the bottom
-    a = (a === null || a === undefined) ? '' : a
-    b = (b === null || b === undefined) ? '' : b
+    a = a === null || a === undefined ? '' : a
+    b = b === null || b === undefined ? '' : b
     // force any string values to lowercase
     a = typeof a === 'string' ? a.toLowerCase() : a
     b = typeof b === 'string' ? b.toLowerCase() : b
@@ -142,7 +145,8 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
-    sortMethod: undefined
+    filterAll: false,
+    sortMethod: undefined,
   },
 
   // Global Expander Column Defaults
@@ -150,7 +154,7 @@ export default {
     sortable: false,
     resizable: false,
     filterable: false,
-    width: 35
+    width: 35,
   },
 
   pivotDefaults: {
@@ -167,12 +171,12 @@ export default {
   rowsText: 'rows',
 
   // Components
-  TableComponent: _.makeTemplateComponent('rt-table'),
-  TheadComponent: _.makeTemplateComponent('rt-thead'),
-  TbodyComponent: _.makeTemplateComponent('rt-tbody'),
-  TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
-  TrComponent: _.makeTemplateComponent('rt-tr'),
-  ThComponent: ({toggleSort, className, children, ...rest}) => {
+  TableComponent: _.makeTemplateComponent('rt-table', 'Table'),
+  TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead'),
+  TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
+  TrGroupComponent: _.makeTemplateComponent('rt-tr-group', 'TrGroup'),
+  TrComponent: _.makeTemplateComponent('rt-tr', 'Tr'),
+  ThComponent: ({ toggleSort, className, children, ...rest }) => {
     return (
       <div
         className={classnames(className, 'rt-th')}
@@ -185,33 +189,38 @@ export default {
       </div>
     )
   },
-  TdComponent: _.makeTemplateComponent('rt-td'),
-  TfootComponent: _.makeTemplateComponent('rt-tfoot'),
-  FilterComponent: ({filter, onChange}) => (
-    <input type='text'
+  TdComponent: _.makeTemplateComponent('rt-td', 'Td'),
+  TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
+  FilterComponent: ({ filter, onChange }) =>
+    <input
+      type='text'
       style={{
-        width: '100%'
+        width: '100%',
       }}
       value={filter ? filter.value : ''}
-      onChange={(event) => onChange(event.target.value)}
-    />
-  ),
-  ExpanderComponent: ({isExpanded}) => (
+      onChange={event => onChange(event.target.value)}
+    />,
+  ExpanderComponent: ({ isExpanded }) =>
     <div className={classnames('rt-expander', isExpanded && '-open')}>
       &bull;
-    </div>
-  ),
-  PivotValueComponent: ({subRows, value}) => (
-    <span>{value} {subRows && `(${subRows.length})`}</span>
-  ),
-  AggregatedComponent: ({subRows, column}) => {
+    </div>,
+  PivotValueComponent: ({ subRows, value }) =>
+    <span>
+      {value} {subRows && `(${subRows.length})`}
+    </span>,
+  AggregatedComponent: ({ subRows, column }) => {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
-      .map((row, i) => (
-        <span key={i}>{row[column.id]}{i < subRows.length - 1 ? ', ' : ''}</span>
-      ))
+      .map((row, i) =>
+        <span key={i}>
+          {row[column.id]}
+          {i < subRows.length - 1 ? ', ' : ''}
+        </span>
+      )
     return (
-      <span>{previewValues}</span>
+      <span>
+        {previewValues}
+      </span>
     )
   },
   PivotComponent: undefined, // this is a computed default generated using
@@ -219,19 +228,16 @@ export default {
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
-  LoadingComponent: ({className, loading, loadingText, ...rest}) => (
-    <div className={classnames(
-      '-loading',
-      {'-active': loading},
-      className
-    )}
+  LoadingComponent: ({ className, loading, loadingText, ...rest }) =>
+    <div
+      className={classnames('-loading', { '-active': loading }, className)}
       {...rest}
     >
       <div className='-loading-inner'>
         {loadingText}
       </div>
-    </div>
-  ),
-  NoDataComponent: _.makeTemplateComponent('rt-noData'),
-  ResizerComponent: _.makeTemplateComponent('rt-resizer')
+    </div>,
+  NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
+  ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
+  PadRowComponent: () => <span>&nbsp;</span>,
 }
