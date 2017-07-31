@@ -55,7 +55,7 @@ export default Base =>
         columnsWithExpander = [expanderColumn, ...columnsWithExpander]
       }
 
-      const makeDecoratedColumn = column => {
+      const makeDecoratedColumn = (column, parentColumn) => {
         let dcol
         if (column.expander) {
           dcol = {
@@ -70,6 +70,16 @@ export default Base =>
           }
         }
 
+        // Ensure minWidth is not greater than maxWidth if set
+        if (dcol.maxWidth < dcol.minWidth) {
+          dcol.minWidth = dcol.maxWidth
+        }
+
+        if (parentColumn) {
+          dcol.parentColumn = parentColumn
+        }
+
+        // First check for string accessor
         if (typeof dcol.accessor === 'string') {
           dcol.id = dcol.id || dcol.accessor
           const accessorString = dcol.accessor
@@ -77,6 +87,7 @@ export default Base =>
           return dcol
         }
 
+        // Fall back to functional accessor (but require an ID)
         if (dcol.accessor && !dcol.id) {
           console.warn(dcol)
           throw new Error(
@@ -84,30 +95,26 @@ export default Base =>
           )
         }
 
+        // Fall back to an undefined accessor
         if (!dcol.accessor) {
           dcol.accessor = d => undefined
-        }
-
-        // Ensure minWidth is not greater than maxWidth if set
-        if (dcol.maxWidth < dcol.minWidth) {
-          dcol.minWidth = dcol.maxWidth
         }
 
         return dcol
       }
 
       // Decorate the columns
-      const decorateAndAddToAll = col => {
-        const decoratedColumn = makeDecoratedColumn(col)
+      const decorateAndAddToAll = (column, parentColumn) => {
+        const decoratedColumn = makeDecoratedColumn(column, parentColumn)
         allDecoratedColumns.push(decoratedColumn)
         return decoratedColumn
       }
-      let allDecoratedColumns = []
+      const allDecoratedColumns = []
       const decoratedColumns = columnsWithExpander.map((column, i) => {
         if (column.columns) {
           return {
             ...column,
-            columns: column.columns.map(decorateAndAddToAll),
+            columns: column.columns.map(d => decorateAndAddToAll(d, column)),
           }
         } else {
           return decorateAndAddToAll(column)
@@ -156,8 +163,17 @@ export default Base =>
           }
         })
 
+        let PivotParentColumn = pivotColumns.reduce(
+          (prev, current) =>
+            prev && prev === current.parentColumn && current.parentColumn,
+          pivotColumns[0].parentColumn
+        )
+
+        let PivotGroupHeader = hasHeaderGroups && PivotParentColumn.Header
+        PivotGroupHeader = PivotGroupHeader || (() => <strong>Pivoted</strong>)
+
         let pivotColumnGroup = {
-          header: () => <strong>Group</strong>,
+          Header: PivotGroupHeader,
           columns: pivotColumns.map(col => ({
             ...this.props.pivotDefaults,
             ...col,
