@@ -233,7 +233,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const flexStyles = {
         flex: `${flex} 0 auto`,
         width: `${width}px`,
-        maxWidth: `${maxWidth}px`
+        maxWidth: maxWidth ? `${maxWidth}px` : null
       }
 
       return (

@@ -33,18 +33,24 @@ class Story extends React.PureComponent {
 
   getColumns()
   {
-    return [{
-      Header: 'First Name',
-      accessor: 'firstName',
-      width: 100
-    }, {
-      Header: 'Last Name',
-      accessor: 'lastName'
-    }, {
-      Header: 'Age',
-      accessor: 'age',
-      width: 50
-    }]
+
+
+    return [
+      {Header:'Zoot', columns:[{
+        Header: 'First Name',
+        accessor: 'firstName',
+        width: 100
+      }, {
+        Header: 'Last Name',
+        accessor: 'lastName'
+      }]},
+      {Header:'Yarg', columns:[{
+        Header: 'Age',
+        accessor: 'age',
+        width: 50
+      }]}
+
+    ]
   }
 
   getDefaultResizedState()
