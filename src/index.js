@@ -283,8 +283,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const resizedCol = resized.find(x => x.id === column.id) || {}
       const sort = sorted.find(d => d.id === column.id)
       const show = typeof column.show === 'function' ? column.show() : column.show
-      const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
-      const maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
+      var width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth) || column.minWidth
+      var maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
       const theadThProps = _.splitProps(getTheadThProps(finalState, undefined, column, this))
       const columnHeaderProps = _.splitProps(column.getHeaderProps(finalState, undefined, column, this))
 
@@ -332,7 +332,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...styles,
             flex: `${width} 0 auto`,
             width: `${width}px`,
-            maxWidth: `${maxWidth}px`
+            maxWidth: maxWidth ? `${maxWidth}px` : null
           }}
           toggleSort={(e) => {
             isSortable && this.sortColumn(column, e.shiftKey)
