@@ -26,7 +26,7 @@ class Story extends React.PureComponent {
 
     this.state =
     {
-      resized:this.getDefaultResizedState()
+      resized:[]
     };
 
   }
@@ -34,16 +34,13 @@ class Story extends React.PureComponent {
   getColumns()
   {
     return [{
-      id:'firstName',
       Header: 'First Name',
       accessor: 'firstName',
       width: 100
     }, {
-      id:'lastName',
       Header: 'Last Name',
       accessor: 'lastName'
     }, {
-      id:'age',
       Header: 'Age',
       accessor: 'age',
       width: 50
@@ -68,7 +65,7 @@ class Story extends React.PureComponent {
 
   resetColumns()
   {
-    this.setState({resized:this.getDefaultResizedState()});
+    this.setState({resized:[]});
   }
 
   render () {
