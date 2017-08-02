@@ -261,8 +261,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       const flexStyles = {
         flex: `${flex} 0 auto`,
-        width: `${width}px`,
-        maxWidth: `${maxWidth}px`,
+        width: _.asPx(width),
+        maxWidth: _.asPx(maxWidth),
       }
 
       return (
@@ -376,8 +376,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...styles,
             flex: `${width} 0 auto`,
-            width: `${width}px`,
-            maxWidth: `${maxWidth}px`,
+            width: _.asPx(width),
+            maxWidth: _.asPx(maxWidth),
           }}
           toggleSort={e => {
             isSortable && this.sortColumn(column, e.shiftKey)
@@ -475,8 +475,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...styles,
             flex: `${width} 0 auto`,
-            width: `${width}px`,
-            maxWidth: `${maxWidth}px`,
+            width: _.asPx(width),
+            maxWidth: _.asPx(maxWidth),
           }}
           {...rest}
         >
@@ -706,8 +706,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   style={{
                     ...styles,
                     flex: `${width} 0 auto`,
-                    width: `${width}px`,
-                    maxWidth: `${maxWidth}px`,
+                    width: _.asPx(width),
+                    maxWidth: _.asPx(maxWidth),
                   }}
                   {...interactionProps}
                   {...tdProps.rest}
@@ -798,8 +798,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...styles,
             flex: `${flex} 0 auto`,
-            width: `${width}px`,
-            maxWidth: `${maxWidth}px`,
+            width: _.asPx(width),
+            maxWidth: _.asPx(maxWidth),
           }}
           {...tdProps.rest}
         >
@@ -878,8 +878,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...styles,
             flex: `${width} 0 auto`,
-            width: `${width}px`,
-            maxWidth: `${maxWidth}px`,
+            width: _.asPx(width),
+            maxWidth: _.asPx(maxWidth),
           }}
           {...columnProps.rest}
           {...tFootTdProps.rest}
