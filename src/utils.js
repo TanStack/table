@@ -19,7 +19,7 @@ export default {
   compactObject,
   isSortingDesc,
   normalizeComponent,
-  asPx
+  asPx,
 }
 
 function get (obj, path, def) {
@@ -143,11 +143,10 @@ function groupBy (xs, key) {
   }, {})
 }
 
-function asPx(value) {
-  value = Number(value);
+function asPx (value) {
+  value = Number(value)
   return (Number.isNaN(value)) ? null : value + 'px'
 }
-
 
 function isArray (a) {
   return Array.isArray(a)
