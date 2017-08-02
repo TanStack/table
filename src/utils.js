@@ -18,7 +18,8 @@ export default {
   splitProps,
   compactObject,
   isSortingDesc,
-  normalizeComponent
+  normalizeComponent,
+  asPx
 }
 
 function get (obj, path, def) {
@@ -182,6 +183,13 @@ function compactObject (obj) {
     }
   }
   return newObj
+}
+
+function asPx(value)
+{
+  var pxString = null;
+  value        = Number(value);
+  return (Number.isNaN(value)) ? null : value + 'px'
 }
 
 function isSortingDesc (d) {
