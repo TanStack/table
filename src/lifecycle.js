@@ -99,6 +99,11 @@ export default Base =>
         Object.assign(newResolvedState, this.getSortedData(newResolvedState))
       }
 
+      // Set page to 0 if filters change
+      if (oldState.filtered !== newResolvedState.filtered) {
+        newResolvedState.page = 0
+      }
+
       // Calculate pageSize all the time
       if (newResolvedState.sortedData) {
         newResolvedState.pages = newResolvedState.manual
