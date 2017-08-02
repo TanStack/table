@@ -21,7 +21,8 @@ const columns = [{
   }, {
     Header: 'Last Name',
     id: 'lastName',
-    accessor: d => d.lastName
+    accessor: d => d.lastName,
+    width: 170
   }]
 }, {
   Header: 'Info',
@@ -31,21 +32,31 @@ const columns = [{
   }]
 }]
 
+function makeDefaultState()
+{
+  return {
+    sorted: [],
+    page: 0,
+    pageSize: 10,
+    expanded: {},
+    resized: [],
+    filtered: []
+  }
+}
+
 class Story extends React.PureComponent {
   constructor () {
     super()
-    this.state = {
-      sorted: [],
-      page: 0,
-      pageSize: 10,
-      expanded: {},
-      resized: [],
-      filtered: []
-    }
+    this.state = makeDefaultState()
+    this.resetState = this.resetState.bind(this)
+  }
+  resetState(){
+    this.setState(makeDefaultState())
   }
   render () {
     return (
       <div>
+
         <div className='table-wrap'>
           <ReactTable
             className='-striped -highlight'
@@ -70,6 +81,7 @@ class Story extends React.PureComponent {
           />
         </div>
         <br />
+        <div style={{float:'right'}}><button onClick={this.resetState}>Reset State</button></div>
         <pre><code><strong>this.state ===</strong> {JSON.stringify(this.state, null, 2)}</code></pre>
         <br />
       </div>
