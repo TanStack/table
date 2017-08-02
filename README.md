@@ -1,5 +1,7 @@
+<br />
+<br />
 <div align="center">
-  <a href="https://github.com/tannerlinsley/react-table" target="\_parent"><img src="https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png" alt="React Table Logo" style="width:450px;"/></a>
+  <a href="https://github.com/tannerlinsley/react-table" target="\_parent"><img src="https://github.com/react-tools/media/raw/master/logo-react-table.png" alt="React Table Logo" style="width:450px;"/></a>
   <br />
   <br />
 
@@ -33,13 +35,6 @@
 
 [![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/tannerlinsley/react-table)
 
-## Versions
-This document refers to version 6.x.x of react-table.
-
-Previous versions:
-
-[5.x.x Readme](https://github.com/tannerlinsley/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
-
 ## Features
 - Lightweight at 7kb (and just 2kb more for styles)
 - Fully customizable JSX templating
@@ -52,6 +47,12 @@ Previous versions:
 ## Demos and examples
 - <a href="http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010" target="\_blank">Codepen</a>
 - <a href="http://react-table.js.org/#/story/simple-table" target="\_parent">Storybook</a>
+
+## Versions
+- This documentation is for version 6 of react-table.
+- [View the Changelog](https://github.com/tannerlinsley/react-table/blob/master/CHANGELOG.md)
+- Previous versions:
+  - [5.x.x Readme](https://github.com/tannerlinsley/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
 
 ## Table of Contents
 - [Installation](#installation)

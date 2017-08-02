@@ -26,7 +26,7 @@ import ControlledTable from './stories/ControlledTable.js'
 import PivotingOptions from './stories/PivotingOptions.js'
 import EditableTable from './stories/EditableTable.js'
 import FixedHeader from './stories/FixedHeader.js'
-import MultiplePagers from './stories/MultiplePagers';
+import MultiplePagers from './stories/MultiplePagers'
 
 export default class App extends React.Component {
   render() {
@@ -38,7 +38,7 @@ export default class App extends React.Component {
           height: '100%'
         }}
         pathPrefix="story/"
-        StoryWrapper={props => (
+        StoryWrapper={props =>
           <defaultProps.StoryWrapper
             css={{
               padding: 0
@@ -53,10 +53,11 @@ export default class App extends React.Component {
               }}
             >
               <img
-                src="//npmcdn.com/react-table/media/Banner.png"
+                src="https://github.com/react-tools/media/raw/master/logo-react-table.png"
                 alt="React Table Logo"
                 style={{
-                  width: '100px'
+                  width: '150px',
+                  padding: '10px'
                 }}
               />
             </a>
@@ -66,8 +67,7 @@ export default class App extends React.Component {
                 padding: '10px'
               }}
             />
-          </defaultProps.StoryWrapper>
-        )}
+          </defaultProps.StoryWrapper>}
         stories={[
           { name: 'Readme', component: Readme },
           { name: 'Simple Table', component: Simple },
@@ -102,7 +102,10 @@ export default class App extends React.Component {
           { name: 'Controlled Component', component: ControlledTable },
           { name: 'Editable Table', component: EditableTable },
           { name: 'Fixed Header w/ Vertical Scroll', component: FixedHeader },
-          { name: 'Multiple Pagers (Top and Bottom)', component: MultiplePagers}
+          {
+            name: 'Multiple Pagers (Top and Bottom)',
+            component: MultiplePagers
+          }
         ]}
       />
     )
