@@ -686,18 +686,24 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 }
               }
 
+              const resolvedOnExpanderClick = useOnExpanderClick
+                ? onExpanderClick
+                : () => {}
+
               // If there are multiple onClick events, make sure they don't override eachother. This should maybe be expanded to handle all function attributes
-              const interactionProps = {}
+              const interactionProps = {
+                onClick: resolvedOnExpanderClick,
+              }
 
               if (tdProps.rest.onClick) {
                 interactionProps.onClick = e => {
-                  tdProps.rest.onClick(e, () => onExpanderClick(e))
+                  tdProps.rest.onClick(e, () => resolvedOnExpanderClick(e))
                 }
               }
 
               if (columnProps.rest.onClick) {
                 interactionProps.onClick = e => {
-                  columnProps.rest.onClick(e, () => onExpanderClick(e))
+                  columnProps.rest.onClick(e, () => resolvedOnExpanderClick(e))
                 }
               }
 
