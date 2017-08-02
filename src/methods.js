@@ -616,7 +616,8 @@ export default Base =>
       )
     }
 
-    resizeColumnStart (column, event, isTouch) {
+    resizeColumnStart (event, column, isTouch) {
+      event.stopPropagation()
       const parentWidth = event.target.parentElement.getBoundingClientRect()
         .width
 
@@ -627,6 +628,7 @@ export default Base =>
         pageX = event.pageX
       }
 
+      this.trapEvents = true
       this.setStateWithData(
         {
           currentlyResizing: {
@@ -649,33 +651,8 @@ export default Base =>
       )
     }
 
-    resizeColumnEnd (event) {
-      let isTouch = event.type === 'touchend' || event.type === 'touchcancel'
-
-      if (isTouch) {
-        document.removeEventListener('touchmove', this.resizeColumnMoving)
-        document.removeEventListener('touchcancel', this.resizeColumnEnd)
-        document.removeEventListener('touchend', this.resizeColumnEnd)
-      }
-
-      // If its a touch event clear the mouse one's as well because sometimes
-      // the mouseDown event gets called as well, but the mouseUp event doesn't
-      document.removeEventListener('mousemove', this.resizeColumnMoving)
-      document.removeEventListener('mouseup', this.resizeColumnEnd)
-      document.removeEventListener('mouseleave', this.resizeColumnEnd)
-
-      // The touch events don't propagate up to the sorting's onMouseDown event so
-      // no need to prevent it from happening or else the first click after a touch
-      // event resize will not sort the column.
-      if (!isTouch) {
-        this.setStateWithData({
-          skipNextSort: true,
-          currentlyResizing: false,
-        })
-      }
-    }
-
     resizeColumnMoving (event) {
+      event.stopPropagation()
       const { onResizedChange } = this.props
       const { resized, currentlyResizing } = this.getResolvedState()
 
@@ -709,5 +686,32 @@ export default Base =>
           onResizedChange && onResizedChange(newResized, event)
         }
       )
+    }
+
+    resizeColumnEnd (event) {
+      event.stopPropagation()
+      let isTouch = event.type === 'touchend' || event.type === 'touchcancel'
+
+      if (isTouch) {
+        document.removeEventListener('touchmove', this.resizeColumnMoving)
+        document.removeEventListener('touchcancel', this.resizeColumnEnd)
+        document.removeEventListener('touchend', this.resizeColumnEnd)
+      }
+
+      // If its a touch event clear the mouse one's as well because sometimes
+      // the mouseDown event gets called as well, but the mouseUp event doesn't
+      document.removeEventListener('mousemove', this.resizeColumnMoving)
+      document.removeEventListener('mouseup', this.resizeColumnEnd)
+      document.removeEventListener('mouseleave', this.resizeColumnEnd)
+
+      // The touch events don't propagate up to the sorting's onMouseDown event so
+      // no need to prevent it from happening or else the first click after a touch
+      // event resize will not sort the column.
+      if (!isTouch) {
+        this.setStateWithData({
+          skipNextSort: true,
+          currentlyResizing: false,
+        })
+      }
     }
   }

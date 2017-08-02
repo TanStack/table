@@ -352,8 +352,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const isResizable = _.getFirstDefined(column.resizable, resizable, false)
       const resizer = isResizable
         ? (<ResizerComponent
-          onMouseDown={e => this.resizeColumnStart(column, e, false)}
-          onTouchStart={e => this.resizeColumnStart(column, e, true)}
+          onMouseDown={e => this.resizeColumnStart(e, column, false)}
+          onTouchStart={e => this.resizeColumnStart(e, column, true)}
           {...resizerProps}
         />)
         : null
