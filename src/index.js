@@ -574,7 +574,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
               const value = cellInfo.value
 
-              let interactionProps
+              let useOnExpanderClick
               let isBranch
               let isPreview
 
@@ -626,17 +626,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               if (cellInfo.pivoted || cellInfo.expander) {
                 // Make it expandable by defualt
                 cellInfo.expandable = true
-                interactionProps = {
-                  onClick: onExpanderClick,
-                }
+                useOnExpanderClick = true
                 // If pivoted, has no subRows, and does not have a subComponent, do not make expandable
-                if (cellInfo.pivoted) {
-                  if (!cellInfo.subRows) {
-                    if (!SubComponent) {
-                      cellInfo.expandable = false
-                      interactionProps = {}
-                    }
-                  }
+                if (cellInfo.pivoted && !cellInfo.subRows && !SubComponent) {
+                  cellInfo.expandable = false
                 }
               }
 
@@ -693,6 +686,21 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 }
               }
 
+              // If there are multiple onClick events, make sure they don't override eachother. This should maybe be expanded to handle all function attributes
+              const interactionProps = {}
+
+              if (tdProps.rest.onClick) {
+                interactionProps.onClick = e => {
+                  tdProps.rest.onClick(e, () => onExpanderClick(e))
+                }
+              }
+
+              if (columnProps.rest.onClick) {
+                interactionProps.onClick = e => {
+                  columnProps.rest.onClick(e, () => onExpanderClick(e))
+                }
+              }
+
               // Return the cell
               return (
                 <TdComponent
@@ -709,9 +717,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     width: _.asPx(width),
                     maxWidth: _.asPx(maxWidth),
                   }}
-                  {...interactionProps}
                   {...tdProps.rest}
                   {...columnProps.rest}
+                  {...interactionProps}
                 >
                   {resolvedCell}
                 </TdComponent>

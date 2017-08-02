@@ -145,7 +145,7 @@ function groupBy (xs, key) {
 
 function asPx (value) {
   value = Number(value)
-  return (Number.isNaN(value)) ? null : value + 'px'
+  return Number.isNaN(value) ? null : value + 'px'
 }
 
 function isArray (a) {
@@ -179,7 +179,7 @@ function splitProps ({ className, style, ...rest }) {
   return {
     className,
     style,
-    rest,
+    rest: rest || {},
   }
 }
 
