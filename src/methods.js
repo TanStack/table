@@ -454,7 +454,6 @@ export default Base =>
       }
       this.setStateWithData(newState, () => {
         onPageChange && onPageChange(page)
-        this.fireFetchData()
       })
     }
 
@@ -473,7 +472,6 @@ export default Base =>
         },
         () => {
           onPageSizeChange && onPageSizeChange(newPageSize, newPage)
-          this.fireFetchData()
         }
       )
     }
@@ -586,7 +584,6 @@ export default Base =>
         },
         () => {
           onSortedChange && onSortedChange(newSorted, column, additive)
-          this.fireFetchData()
         }
       )
     }
@@ -615,7 +612,6 @@ export default Base =>
         },
         () => {
           onFilteredChange && onFilteredChange(newFiltering, column, value)
-          this.fireFetchData()
         }
       )
     }

@@ -114,6 +114,16 @@ export default Base =>
         )
       }
 
-      return this.setState(newResolvedState, cb)
+      return this.setState(newResolvedState, () => {
+        cb && cb()
+        if (
+          oldState.page !== newResolvedState.page ||
+          oldState.pageSize !== newResolvedState.pageSize ||
+          oldState.sorted !== newResolvedState.sorted ||
+          oldState.filtered !== newResolvedState.filtered
+        ) {
+          this.fireFetchData()
+        }
+      })
     }
   }
