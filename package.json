@@ -3,10 +3,10 @@
   "version": "6.5.3",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
-  "homepage": "https://github.com/tannerlinsley/react-table#readme",
+  "homepage": "https://github.com/react-tools/react-table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tannerlinsley/react-table.git"
+    "url": "git+https://github.com/react-tools/react-table.git"
   },
   "keywords": [
     "react",
