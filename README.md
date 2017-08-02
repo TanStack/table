@@ -593,7 +593,7 @@ This makes it extremely easy to add, say... a row click callback!
 <ReactTable
   getTdProps={(state, rowInfo, column, instance) => {
     return {
-      onClick: (e, handleOriginal => {
+      onClick: (e, handleOriginal) => {
         console.log('A Td Element was clicked!')
         console.log('it produced this event:', e)
         console.log('It was in this column:', column)
