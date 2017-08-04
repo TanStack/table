@@ -1,112 +1,102 @@
 import React from 'react'
 //
 import ReactStory, { defaultProps } from 'react-story'
-
+import CodeSandbox from './CodeSandbox.js'
 import './stories/utils/prism.css'
 import '../../react-table.css'
 
 import Readme from './stories/Readme.js'
-import Simple from './stories/Simple.js'
-import CellRenderers from './stories/CellRenderers.js'
-import DefaultSorting from './stories/DefaultSorting.js'
-import CustomSorting from './stories/CustomSorting.js'
-import CustomWidths from './stories/CustomWidths.js'
-import CustomComponentProps from './stories/CustomComponentProps.js'
-import ServerSide from './stories/ServerSide.js'
-import SubComponents from './stories/SubComponents.js'
-import Pivoting from './stories/Pivoting.js'
-import PivotingSubComponents from './stories/PivotingSubComponents.js'
-import OneHundredKRows from './stories/OneHundredKRows.js'
-import FunctionalRendering from './stories/FunctionalRendering.js'
-import CustomExpanderPosition from './stories/CustomExpanderPosition.js'
-import NoDataText from './stories/NoDataText.js'
-import Footers from './stories/Footers.js'
-import Filtering from './stories/Filtering.js'
-import ControlledTable from './stories/ControlledTable.js'
-import PivotingOptions from './stories/PivotingOptions.js'
-import EditableTable from './stories/EditableTable.js'
-import FixedHeader from './stories/FixedHeader.js'
-import MultiplePagers from './stories/MultiplePagers'
+
+const stories = [
+  { name: 'Readme', component: Readme },
+  { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
+  {
+    name: 'Cell Renderers & Custom Components',
+    component: CodeSandbox('OyRL04Z4Y'),
+  },
+  { name: 'Default Sorting', component: CodeSandbox('gLwmmjzA3') },
+  {
+    name: 'Custom Sorting',
+    component: CodeSandbox('VGx67J35'),
+  },
+  { name: 'Custom Column Widths', component: CodeSandbox('o2OORXNXN') },
+  { name: 'Custom Component Props', component: CodeSandbox('nZW3L0wp4') },
+  { name: 'Server-side Data', component: CodeSandbox('wjrn8wy3R') },
+  { name: 'Sub Components', component: CodeSandbox('n2gqAxl7') },
+  { name: 'Pivoting & Aggregation', component: CodeSandbox('oNY9z8xN') },
+  {
+    name: 'Pivoting & Aggregation w/ Sub Components',
+    component: CodeSandbox('p0kEVBgQ'),
+  },
+  {
+    name: '100k Rows w/ Pivoting & Sub Components',
+    component: CodeSandbox('DRmKj0XyK'),
+  },
+  { name: 'Pivoting Options', component: CodeSandbox('kZKmNBK6r') },
+  { name: 'Functional Rendering', component: CodeSandbox('VPZ0Bzv8X') },
+  {
+    name: 'Custom Expander Position',
+    component: CodeSandbox('1jj2XrPEV'),
+  },
+  { name: 'Custom "No Data" Text', component: CodeSandbox('RgRpRDv80') },
+  { name: 'Footers', component: CodeSandbox('KOqQXn3p8') },
+  { name: 'Custom Filtering', component: CodeSandbox('5Eyxxxyx') },
+  { name: 'Controlled Component', component: CodeSandbox('r7XEZRK2') },
+  { name: 'Editable Table', component: CodeSandbox('n5r19gzQP') },
+  {
+    name: 'Fixed Header w/ Vertical Scroll',
+    component: CodeSandbox('7LY0gjA8O'),
+  },
+  {
+    name: 'Multiple Pagers (Top and Bottom)',
+    component: CodeSandbox('VEZ8OgvX'),
+  },
+]
 
 export default class App extends React.Component {
-  render() {
+  render () {
     return (
       <ReactStory
         style={{
           display: 'block',
           width: '100%',
-          height: '100%'
+          height: '100%',
         }}
-        pathPrefix="story/"
+        pathPrefix='story/'
         StoryWrapper={props =>
           <defaultProps.StoryWrapper
             css={{
-              padding: 0
+              padding: 0,
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <a
-              href="//github.com/react-tools/react-table"
+              href='//github.com/react-tools/react-table'
               style={{
                 display: 'block',
                 textAlign: 'center',
-                borderBottom: 'solid 3px #cccccc'
+                borderBottom: 'solid 3px #cccccc',
               }}
             >
               <img
-                src="https://github.com/react-tools/media/raw/master/logo-react-table.png"
-                alt="React Table Logo"
+                src='https://github.com/react-tools/media/raw/master/logo-react-table.png'
+                alt='React Table Logo'
                 style={{
                   width: '150px',
-                  padding: '10px'
+                  padding: '10px',
                 }}
               />
             </a>
             <div
               {...props}
               style={{
-                padding: '10px'
+                flex: '1 0 auto',
+                position: 'relative',
               }}
             />
           </defaultProps.StoryWrapper>}
-        stories={[
-          { name: 'Readme', component: Readme },
-          { name: 'Simple Table', component: Simple },
-          {
-            name: 'Cell Renderers & Custom Components',
-            component: CellRenderers
-          },
-          { name: 'Default Sorting', component: DefaultSorting },
-          { name: 'Custom Sorting', component: CustomSorting },
-          { name: 'Custom Column Widths', component: CustomWidths },
-          { name: 'Custom Component Props', component: CustomComponentProps },
-          { name: 'Server-side Data', component: ServerSide },
-          { name: 'Sub Components', component: SubComponents },
-          { name: 'Pivoting & Aggregation', component: Pivoting },
-          {
-            name: 'Pivoting & Aggregation w/ Sub Components',
-            component: PivotingSubComponents
-          },
-          {
-            name: '100k Rows w/ Pivoting & Sub Components',
-            component: OneHundredKRows
-          },
-          { name: 'Pivoting Options', component: PivotingOptions },
-          { name: 'Functional Rendering', component: FunctionalRendering },
-          {
-            name: 'Custom Expander Position',
-            component: CustomExpanderPosition
-          },
-          { name: 'Custom "No Data" Text', component: NoDataText },
-          { name: 'Footers', component: Footers },
-          { name: 'Custom Filtering', component: Filtering },
-          { name: 'Controlled Component', component: ControlledTable },
-          { name: 'Editable Table', component: EditableTable },
-          { name: 'Fixed Header w/ Vertical Scroll', component: FixedHeader },
-          {
-            name: 'Multiple Pagers (Top and Bottom)',
-            component: MultiplePagers
-          }
-        ]}
+        stories={stories}
       />
     )
   }

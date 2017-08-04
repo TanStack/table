@@ -36,10 +36,12 @@
 [![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table)
 
 ## Features
-- Lightweight at 7kb (and just 2kb more for styles)
-- Fully customizable JSX templating
-- Supports both Client-side & Server-side pagination and multi-sorting
-- Column Pivoting & Aggregation
+- Lightweight at 11kb (and just 2kb more for styles)
+- Fully customizable (JSX, templates, state, styles, callbacks)
+- Client-side & Server-side pagination
+- Multi-sort
+- Filters
+- Pivoting & Aggregation
 - Minimal design & easily themeable
 - Fully controllable via optional props and callbacks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
