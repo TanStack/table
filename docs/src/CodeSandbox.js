@@ -4,7 +4,7 @@ export default id => () => {
   return (
     <iframe
       src={`https://codesandbox.io/embed/${id}?autoresize=1&hidenavigation=1&view=${global.innerWidth <
-      700
+      1000
         ? 'preview'
         : 'split'}`}
       style={{
