@@ -46,9 +46,7 @@
 - Fully controllable via optional props and callbacks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
 
-## Demos and examples
-- <a href="http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010" target="\_blank">Codepen</a>
-- <a href="http://react-table.js.org/#/story/simple-table" target="\_parent">Storybook</a>
+## [Demos and examples](http://react-table.js.org/#/story/simple-table)
 
 ## Versions
 - This documentation is for version 6 of react-table.
