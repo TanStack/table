@@ -1,8 +1,5 @@
-<div align="center">
+<div style="text-align:center;">
   <a href="https://github.com/react-tools/react-table" target="\_parent"><img src="https://github.com/react-tools/media/raw/master/logo-react-table.png" alt="React Table Logo" style="width:450px;"/></a>
-  <br />
-  <br />
-
 </div>
 
 # React Table
