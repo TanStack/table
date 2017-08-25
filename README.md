@@ -762,7 +762,7 @@ Here are the props and their corresponding callbacks that control the state of t
       3: true
     }
   }}
-  filters={[{ // the current filters model
+  filtered={[{ // the current filters model
     id: 'lastName',
     value: 'linsley'
   }]}
