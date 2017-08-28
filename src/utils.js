@@ -202,8 +202,9 @@ function isSortingDesc (d) {
 }
 
 function normalizeComponent (Comp, params = {}, fallback = Comp) {
+  const isReactComponent = Object.getPrototypeOf(Comp).isReactComponent || React.Component.isPrototypeOf(Comp)
   return typeof Comp === 'function'
-    ? Object.getPrototypeOf(Comp).isReactComponent
+    ? isReactComponent
       ? <Comp {...params} />
       : Comp(params)
     : fallback
