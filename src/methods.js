@@ -365,7 +365,16 @@ export default Base =>
 
           // If 'filterAll' is set to true, pass the entire dataset to the filter method
           if (column.filterAll) {
-            return filterMethod(nextFilter, filteredSoFar, column)
+            return filteredSoFar.filter(row => {
+              let result = false
+              for (const currentColumn of allVisibleColumns) {
+                if (filterMethod({id: currentColumn.id, value: nextFilter.value}, row, column)) {
+                  result = true
+                  break
+                }
+              }
+              return result
+            })
           } else {
             return filteredSoFar.filter(row => {
               return filterMethod(nextFilter, row, column)
