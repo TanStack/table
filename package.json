@@ -41,7 +41,7 @@
     "classnames": "^2.2.5"
   },
   "peerDependencies": {
-    "react": "^15.x.x"
+    "react": "^15.x.x || ^16.x.x"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
