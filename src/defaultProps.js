@@ -180,9 +180,7 @@ export default {
     return (
       <div
         className={classnames(className, 'rt-th')}
-        onClick={e => {
-          toggleSort && toggleSort(e)
-        }}
+        onClick={toggleSort}
         {...rest}
       >
         {children}
