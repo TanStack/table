@@ -766,7 +766,7 @@ Here are the props and their corresponding callbacks that control the state of t
     id: 'lastName',
     value: 'linsley'
   }]}
-  resizing={[{ // the current resized column model
+  resized={[{ // the current resized column model
     "id": "lastName",
     "value": 446.25
   }]}
