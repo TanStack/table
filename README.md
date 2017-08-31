@@ -309,7 +309,7 @@ These are all of the available props (and their default values) for the main `<R
   previousText: 'Previous',
   nextText: 'Next',
   loadingText: 'Loading...',
-  noDataText: 'No rows found',  
+  noDataText: 'No rows found',
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
@@ -754,7 +754,7 @@ Here are the props and their corresponding callbacks that control the state of t
       id: 'firstName',
       desc: true
   }]}
-  expandedRows={{ // The nested row indexes on the current page that should appear expanded
+  expanded={{ // The nested row indexes on the current page that should appear expanded
     1: true,
     4: true,
     5: {
@@ -775,7 +775,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortedChange={(newSorted, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
-  onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
+  onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expanded`
   onFilteredChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the Filter option.
   onResizedChange={(newResized, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
