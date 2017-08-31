@@ -124,8 +124,8 @@ export default Base =>
         if (
           oldState.page !== newResolvedState.page ||
           oldState.pageSize !== newResolvedState.pageSize ||
-          oldState.sorted !== newResolvedState.sorted ||
-          oldState.filtered !== newResolvedState.filtered
+          JSON.stringify(oldState.sorted) !== JSON.stringify(newResolvedState.sorted) ||
+          JSON.stringify(oldState.filtered) !== JSON.stringify(newResolvedState.filtered)
         ) {
           this.fireFetchData()
         }
