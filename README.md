@@ -5,7 +5,6 @@
 # React Table
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
-
 <a href="https://travis-ci.org/react-tools/react-table" target="\_parent">
   <img alt="" src="https://travis-ci.org/react-tools/react-table.svg?branch=master" />
 </a>
@@ -27,6 +26,8 @@
 
 <br />
 <br />
+
+[![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table)
 
 ## Features
 - Lightweight at 11kb (and just 2kb more for styles)
@@ -935,5 +936,3 @@ If you would like to help develop a suggested feature follow these steps:
 <a href='https://nozzle.io' target="\_parent">
   <img src='https://nozzle.io/img/logo-blue.png' alt='Nozzle Logo' style='width:300px;'/>
 </a>
-
-[![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table)
