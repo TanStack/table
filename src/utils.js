@@ -144,8 +144,7 @@ function groupBy (xs, key) {
 }
 
 function asPx (value) {
-  value = Number(value)
-  return Number.isNaN(value) ? null : value + 'px'
+  return !isNumeric(value) ? null : value + 'px'
 }
 
 function isArray (a) {
@@ -207,4 +206,8 @@ function normalizeComponent (Comp, params = {}, fallback = Comp) {
       ? <Comp {...params} />
       : Comp(params)
     : fallback
+}
+
+function isNumeric (n) {
+  return !isNaN(parseFloat(n)) && isFinite(n)
 }
