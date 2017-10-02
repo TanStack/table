@@ -486,7 +486,7 @@ const columns = [{
   }, {
     Header: 'Food',
     accessor: 'favorites.food'
-  } {
+  }, {
     Header: 'Actor',
     accessor: 'favorites.actor'
   }]
