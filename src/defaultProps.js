@@ -35,7 +35,7 @@ export default {
       ? String(row[id]).startsWith(filter.value)
       : true
   },
-  defaultSortMethod: (a, b) => {
+  defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = a === null || a === undefined ? '' : a
     b = b === null || b === undefined ? '' : b
