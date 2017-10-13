@@ -91,7 +91,7 @@ export default {
       PropTypes.string,
       PropTypes.func,
     ]),
-    Footer: undefiPropTypes.oneOfType([
+    Footer: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
       PropTypes.func,
