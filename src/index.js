@@ -614,11 +614,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 column.PivotValue || PivotValueComponent
               const DefaultResolvedPivotComponent =
                 PivotComponent ||
-                (props =>
+                (props => (
                   <div>
                     <ResolvedExpanderComponent {...props} />
                     <ResolvedPivotValueComponent {...props} />
-                  </div>)
+                  </div>
+                ))
               const ResolvedPivotComponent =
                 column.Pivot || DefaultResolvedPivotComponent
 
