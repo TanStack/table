@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.9.5",
-    "standard": "^10.0.2",
     "autoprefixer": "^6.7.0",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
@@ -21,10 +19,10 @@
     "react-json-tree": "^0.10.9",
     "rimraf": "^2.6.1",
     "standard": "^10.0.2",
-    "stylus": "^0.54.5",
-    "webpack": "^2.5.1"
+    "stylus": "^0.54.5"
   },
   "dependencies": {
+    "eslint-config-react-tools": "^1.0.10",
     "github-markdown-css": "^2.6.0",
     "marked": "^0.3.6",
     "namor": "^1.0.1",
@@ -32,6 +30,8 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-json-tree": "^0.10.9",
+    "react-script": "^2.0.5",
+    "react-scripts": "^0.9.5",
     "react-story": "^0.0.10"
   },
   "scripts": {
