@@ -1,21 +1,30 @@
 {
   "name": "react-table",
-  "version": "6.6.0",
-  "description":
-    "A fast, lightweight, opinionated table and datagrid built on React",
+  "version": "6.7.0-alpha-0",
+  "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/react-tools/react-table#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/react-tools/react-table.git"
   },
-  "keywords": ["react", "table", "react-table", "datagrid"],
+  "keywords": [
+    "react",
+    "table",
+    "react-table",
+    "datagrid"
+  ],
   "main": "lib/index.js",
-  "files": ["src/", "lib/", "react-table.js", "react-table.css", "media/*.png"],
+  "files": [
+    "src/",
+    "lib/",
+    "react-table.js",
+    "react-table.css",
+    "media/*.png"
+  ],
   "scripts": {
     "build:node": "babel src --out-dir lib --source-maps inline",
-    "build:css":
-      "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
+    "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
     "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
     "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
@@ -62,6 +71,10 @@
     "webpack": "^2.5.1"
   },
   "babel": {
-    "presets": ["es2015", "stage-2", "react"]
+    "presets": [
+      "es2015",
+      "stage-2",
+      "react"
+    ]
   }
 }
