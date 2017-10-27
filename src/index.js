@@ -501,6 +501,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         row: row,
         index: row[indexKey],
         viewIndex: ++rowIndex,
+        pageSize: pageSize,
+        page: page,
         level: path.length,
         nestingPath: path.concat([i]),
         aggregated: row[aggregatedKey],
