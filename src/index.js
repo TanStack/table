@@ -5,10 +5,12 @@ import _ from './utils'
 import Lifecycle from './lifecycle'
 import Methods from './methods'
 import defaultProps from './defaultProps'
+import propTypes from './propTypes'
 
 export const ReactTableDefaults = defaultProps
 
 export default class ReactTable extends Methods(Lifecycle(Component)) {
+  static propTypes = propTypes
   static defaultProps = defaultProps
 
   constructor (props) {
