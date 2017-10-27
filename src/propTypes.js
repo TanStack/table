@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 export default {
   // General
@@ -55,28 +55,28 @@ export default {
   style: PropTypes.object,
 
   // Component decorators
-  getProps: PropTypes.object,
-  getTableProps: PropTypes.object,
-  getTheadGroupProps: PropTypes.object,
-  getTheadGroupTrProps: PropTypes.object,
-  getTheadGroupThProps: PropTypes.object,
-  getTheadProps: PropTypes.object,
-  getTheadTrProps: PropTypes.object,
-  getTheadThProps: PropTypes.object,
-  getTheadFilterProps: PropTypes.object,
-  getTheadFilterTrProps: PropTypes.object,
-  getTheadFilterThProps: PropTypes.object,
-  getTbodyProps: PropTypes.object,
-  getTrGroupProps: PropTypes.object,
-  getTrProps: PropTypes.object,
-  getTdProps: PropTypes.object,
-  getTfootProps: PropTypes.object,
-  getTfootTrProps: PropTypes.object,
-  getTfootTdProps: PropTypes.object,
-  getPaginationProps: PropTypes.object,
-  getLoadingProps: PropTypes.object,
-  getNoDataProps: PropTypes.object,
-  getResizerProps: PropTypes.object,
+  getProps: PropTypes.func,
+  getTableProps: PropTypes.func,
+  getTheadGroupProps: PropTypes.func,
+  getTheadGroupTrProps: PropTypes.func,
+  getTheadGroupThProps: PropTypes.func,
+  getTheadProps: PropTypes.func,
+  getTheadTrProps: PropTypes.func,
+  getTheadThProps: PropTypes.func,
+  getTheadFilterProps: PropTypes.func,
+  getTheadFilterTrProps: PropTypes.func,
+  getTheadFilterThProps: PropTypes.func,
+  getTbodyProps: PropTypes.func,
+  getTrGroupProps: PropTypes.func,
+  getTrProps: PropTypes.func,
+  getTdProps: PropTypes.func,
+  getTfootProps: PropTypes.func,
+  getTfootTrProps: PropTypes.func,
+  getTfootTdProps: PropTypes.func,
+  getPaginationProps: PropTypes.func,
+  getLoadingProps: PropTypes.func,
+  getNoDataProps: PropTypes.func,
+  getResizerProps: PropTypes.func,
 
   // Global Column Defaults
   columns: PropTypes.shape({
@@ -84,42 +84,39 @@ export default {
     Cell: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
     Header: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
     Footer: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
     Aggregated: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
     Pivot: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
     PivotValue: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
     Expander: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]),
-    Filter: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.func,
-    ]),
+    Filter: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
     // All Columns
     sortable: PropTypes.bool, // use table default
@@ -147,7 +144,7 @@ export default {
     getFooterProps: PropTypes.object,
     filterMethod: PropTypes.func,
     filterAll: PropTypes.bool,
-    sortMethod: PropTypes.func,
+    sortMethod: PropTypes.func
   }),
 
   // Global Expander Column Defaults
@@ -155,7 +152,7 @@ export default {
     sortable: PropTypes.bool,
     resizable: PropTypes.bool,
     filterable: PropTypes.bool,
-    width: PropTypes.number,
+    width: PropTypes.number
   }),
 
   pivotDefaults: PropTypes.object,
@@ -190,5 +187,5 @@ export default {
   LoadingComponent: PropTypes.element,
   NoDataComponent: PropTypes.element,
   ResizerComponent: PropTypes.element,
-  PadRowComponent: PropTypes.element,
-}
+  PadRowComponent: PropTypes.element
+};
