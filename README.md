@@ -74,7 +74,11 @@
 ## Installation
 1. Install React Table as a dependency
 ```bash
+# Yarn
 $ yarn add react-table
+
+# NPM
+$ npm install react-table
 ```
 2. Import the `react-table` module
 ```javascript
@@ -178,7 +182,7 @@ These are all of the available props (and their default values) for the main `<R
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
-  defaultSortMethod: (a, b) => {
+  defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = (a === null || a === undefined) ? -Infinity : a
     b = (b === null || b === undefined) ? -Infinity : b
@@ -486,7 +490,7 @@ const columns = [{
   }, {
     Header: 'Food',
     accessor: 'favorites.food'
-  } {
+  }, {
     Header: 'Actor',
     accessor: 'favorites.actor'
   }]
@@ -837,9 +841,9 @@ To override the sorting algorithm for a single column, use the `sortMethod` colu
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
 - `a` the first value to compare
 - `b` the second value to compare
-- `dir` the
+- `desc` true if sort is descending, false if ascending
 ```javascript
-defaultSortMethod = (a, b) => {
+defaultSortMethod = (a, b, desc) => {
   // force null and undefined to the bottom
   a = (a === null || a === undefined) ? -Infinity : a
   b = (b === null || b === undefined) ? -Infinity : b
@@ -871,7 +875,7 @@ By default, `filterMethod` is passed a single row of data at a time, and you are
 
 Alternatively, you can set `filterAll` to `true`, and `filterMethod` will be passed the entire array of rows to be filtered, and you will then be responsible for returning the new filtered array. This is extremely handy when you need to utilize a utility like fuzzy matching that requires the entire array of items.
 
-To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
+To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you want to pass to the `filterMethod` option whenever the filter has changed.
 
 See <a href="http://react-table.js.org/#/story/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
 
@@ -886,7 +890,7 @@ Object.assign(ReactTableDefaults, {
   TbodyComponent: component,
   TrGroupComponent: component,
   TrComponent: component,
-  ThComponent: component
+  ThComponent: component,
   TdComponent: component,
   TfootComponent: component,
   ExpanderComponent: component,

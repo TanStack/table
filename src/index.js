@@ -5,10 +5,12 @@ import _ from './utils'
 import Lifecycle from './lifecycle'
 import Methods from './methods'
 import defaultProps from './defaultProps'
+import propTypes from './propTypes'
 
 export const ReactTableDefaults = defaultProps
 
 export default class ReactTable extends Methods(Lifecycle(Component)) {
+  static propTypes = propTypes
   static defaultProps = defaultProps
 
   constructor (props) {
@@ -501,6 +503,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         row: row,
         index: row[indexKey],
         viewIndex: ++rowIndex,
+        pageSize: pageSize,
+        page: page,
         level: path.length,
         nestingPath: path.concat([i]),
         aggregated: row[aggregatedKey],
@@ -614,11 +618,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 column.PivotValue || PivotValueComponent
               const DefaultResolvedPivotComponent =
                 PivotComponent ||
-                (props =>
+                (props => (
                   <div>
                     <ResolvedExpanderComponent {...props} />
                     <ResolvedPivotValueComponent {...props} />
-                  </div>)
+                  </div>
+                ))
               const ResolvedPivotComponent =
                 column.Pivot || DefaultResolvedPivotComponent
 
