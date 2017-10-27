@@ -74,9 +74,10 @@
 ## Installation
 1. Install React Table as a dependency
 ```bash
-// Yarn
+# Yarn
 $ yarn add react-table
-// NPM
+
+# NPM
 $ npm install react-table
 ```
 2. Import the `react-table` module
