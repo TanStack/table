@@ -871,7 +871,7 @@ By default, `filterMethod` is passed a single row of data at a time, and you are
 
 Alternatively, you can set `filterAll` to `true`, and `filterMethod` will be passed the entire array of rows to be filtered, and you will then be responsible for returning the new filtered array. This is extremely handy when you need to utilize a utility like fuzzy matching that requires the entire array of items.
 
-To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
+To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you want to pass to the `filterMethod` option whenever the filter has changed.
 
 See <a href="http://react-table.js.org/#/story/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
 
