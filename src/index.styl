@@ -2,6 +2,16 @@ $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
 $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
 $expandSize = 7px
 
+.input-select-style() {
+  border: 1px solid rgba(0,0,0,0.1)
+  background: white
+  padding: 5px 7px
+  font-size: inherit
+  border-radius: 3px
+  font-weight: normal
+  outline:none
+}
+
 .ReactTable
   position:relative
   display: flex
@@ -33,6 +43,10 @@ $expandSize = 7px
 
     &.-filters
       border-bottom: 1px solid alpha(black, 0.05)
+      
+      input
+      select
+        .input-select-style;
 
       .rt-th
         border-right: 1px solid alpha(black, 0.02)
@@ -198,14 +212,8 @@ $expandSize = 7px
 
     input
     select
-      border: 1px solid rgba(0,0,0,0.1)
-      background: white
-      padding: 5px 7px
-      font-size: inherit
-      border-radius: 3px
-      font-weight: normal
-      outline:none
-
+      .input-select-style;
+      
     .-btn
       appearance:none
       display:block
