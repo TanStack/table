@@ -178,7 +178,7 @@ These are all of the available props (and their default values) for the main `<R
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
-  defaultSortMethod: (a, b) => {
+  defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = (a === null || a === undefined) ? -Infinity : a
     b = (b === null || b === undefined) ? -Infinity : b
@@ -837,9 +837,9 @@ To override the sorting algorithm for a single column, use the `sortMethod` colu
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
 - `a` the first value to compare
 - `b` the second value to compare
-- `dir` the
+- `desc` true if sort is descending, false if ascending
 ```javascript
-defaultSortMethod = (a, b) => {
+defaultSortMethod = (a, b, desc) => {
   // force null and undefined to the bottom
   a = (a === null || a === undefined) ? -Infinity : a
   b = (b === null || b === undefined) ? -Infinity : b
