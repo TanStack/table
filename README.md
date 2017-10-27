@@ -886,7 +886,7 @@ Object.assign(ReactTableDefaults, {
   TbodyComponent: component,
   TrGroupComponent: component,
   TrComponent: component,
-  ThComponent: component
+  ThComponent: component,
   TdComponent: component,
   TfootComponent: component,
   ExpanderComponent: component,
