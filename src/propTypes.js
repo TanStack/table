@@ -128,7 +128,7 @@ export default {
     // Cells only
     className: PropTypes.string,
     style: PropTypes.object,
-    getProps: PropTypes.object,
+    getProps: PropTypes.func,
 
     // Pivot only
     aggregate: PropTypes.func,
@@ -136,7 +136,7 @@ export default {
     // Headers only
     headerClassName: PropTypes.string,
     headerStyle: PropTypes.object,
-    getHeaderProps: PropTypes.object,
+    getHeaderProps: PropTypes.func,
 
     // Footers only
     footerClassName: PropTypes.string,
@@ -158,34 +158,34 @@ export default {
   pivotDefaults: PropTypes.object,
 
   // Text
-  previousText: PropTypes.string,
-  nextText: PropTypes.string,
-  loadingText: PropTypes.string,
-  noDataText: PropTypes.string,
-  pageText: PropTypes.string,
-  ofText: PropTypes.string,
-  rowsText: PropTypes.string,
+  previousText: PropTypes.node,
+  nextText: PropTypes.node,
+  loadingText: PropTypes.node,
+  noDataText: PropTypes.node,
+  pageText: PropTypes.node,
+  ofText: PropTypes.node,
+  rowsText: PropTypes.node,
 
   // Components
-  TableComponent: PropTypes.element,
-  TheadComponent: PropTypes.element,
-  TbodyComponent: PropTypes.element,
-  TrGroupComponent: PropTypes.element,
-  TrComponent: PropTypes.element,
-  ThComponent: PropTypes.element,
-  TdComponent: PropTypes.element,
-  TfootComponent: PropTypes.element,
-  FilterComponent: PropTypes.element,
-  ExpanderComponent: PropTypes.element,
-  PivotValueComponent: PropTypes.element,
-  AggregatedComponent: PropTypes.element,
-  PivotComponent: PropTypes.element, // this is a computed default generated using
+  TableComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  TheadComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  TbodyComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  TrGroupComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  TrComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  ThComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  TdComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  TfootComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  FilterComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  ExpanderComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  PivotValueComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  AggregatedComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  PivotComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]), // this is a computed default generated using
   // the ExpanderComponent and PivotValueComponent at run-time in methods.js
-  PaginationComponent: PropTypes.element,
-  PreviousComponent: PropTypes.element,
-  NextComponent: PropTypes.element,
-  LoadingComponent: PropTypes.element,
-  NoDataComponent: PropTypes.element,
-  ResizerComponent: PropTypes.element,
-  PadRowComponent: PropTypes.element
+  PaginationComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  PreviousComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  NextComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  LoadingComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  NoDataComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  ResizerComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element])
 };
