@@ -38,7 +38,7 @@
 - Pivoting & Aggregation
 - Minimal design & easily themeable
 - Fully controllable via optional props and callbacks
-- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
+- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
 ## [Demos and examples](http://react-table.js.org/#/story/simple-table)
 
@@ -479,7 +479,7 @@ If your data has a field/key with a dot (`.`) you will need to supply a custom a
 
 
 ## Column Header Groups
-To group columns with another header column, just nest your columns in a header column.  Header columns utilize the same header properties as regular columns.
+To group columns with another header column, just nest your columns in a header column. Header columns utilize the same header properties as regular columns.
 ```javascript
 const columns = [{
   Header: 'Favorites',
@@ -926,7 +926,7 @@ If you would like to help develop a suggested feature follow these steps:
 - Auto-build files as you edit with `$ yarn run watch`
 - Implement your changes to files in the `src/` directory
 - Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`,
+- View changes as you edit `docs/src`
 - Submit PR for review
 
 #### Scripts
