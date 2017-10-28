@@ -342,7 +342,7 @@ Or just define them as props
 ```
 
 ## Columns
-`<ReactTable/>` requires a `columns` prop, which is an array of objects containing the following properties
+`<ReactTable />` requires a `columns` prop, which is an array of objects containing the following properties
 
 ```javascript
 [{
@@ -357,7 +357,7 @@ Or just define them as props
   Aggregated: JSX | String | Function // Used to render aggregated cells. Defaults to a comma separated list of values.
   Pivot: JSX | String | Function | cellInfo => ( // Used to render a pivoted cell
     <span>
-      <Expander/><PivotValue /> // By default, will utilize the the PivotValue and Expander components at run time
+      <Expander /><PivotValue /> // By default, will utilize the the PivotValue and Expander components at run time
     </span>
   ),
   PivotValue: JSX | String | Function // Used to render the value inside of a Pivot cell
