@@ -97,7 +97,9 @@ export default {
   getTheadGroupThProps: emptyObj,
   getTheadProps: emptyObj,
   getTheadTrProps: emptyObj,
-  getTheadThProps: emptyObj,
+  getTheadThProps: ({ sorted }, rowInfo, column) => ({
+    sorted: sorted.find(col => col.id === column.id)
+  }),
   getTheadFilterProps: emptyObj,
   getTheadFilterTrProps: emptyObj,
   getTheadFilterThProps: emptyObj,
