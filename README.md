@@ -245,7 +245,9 @@ These are all of the available props (and their default values) for the main `<R
   getTheadGroupThProps: () => ({}),
   getTheadProps: () => ({}),
   getTheadTrProps: () => ({}),
-  getTheadThProps: () => ({}),
+  getTheadThProps: ({ sorted }, rowInfo, column) => ({
+    sorted: sorted.find(col => col.id === column.id)
+  }),
   getTheadFilterProps: () => ({}),
   getTheadFilterTrProps: () => ({}),
   getTheadFilterThProps: () => ({}),
