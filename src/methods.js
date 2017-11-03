@@ -412,11 +412,11 @@ export default Base =>
           // Support custom sorting methods for each column
           if (sortMethodsByColumnID[sort.id]) {
             return (a, b) => {
-              return sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id])
+              return sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id], sort.desc)
             }
           }
           return (a, b) => {
-            return this.props.defaultSortMethod(a[sort.id], b[sort.id])
+            return this.props.defaultSortMethod(a[sort.id], b[sort.id], sort.desc)
           }
         }),
         sorted.map(d => !d.desc),

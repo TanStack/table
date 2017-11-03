@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "6.5.3",
+  "version": "6.7.4",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/react-tools/react-table#readme",
@@ -35,13 +35,14 @@
     "prepublish": "npm run build && npm run umd",
     "postpublish": "git push --tags",
     "docs": "yarn watch & cd docs && yarn && yarn start",
-    "docs:build": "yarn build && cd docs && yarn && yarn run build"
+    "docs:build": "yarn build && cd docs && yarn && yarn build"
   },
   "dependencies": {
     "classnames": "^2.2.5"
   },
   "peerDependencies": {
-    "react": "^15.x.x"
+    "react": "^15.x.x || ^16.x.x",
+    "eslint-config-react-tools": "^1.0.10"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
@@ -51,10 +52,16 @@
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-2": "6.13.0",
     "eslint": "^4.1.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.2.0",
+    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-standard": "^3.0.1",
     "match-sorter": "^1.8.0",
     "npm-run-all": "^3.1.1",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
+    "prop-types": "^15.6.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-json-tree": "^0.10.9",

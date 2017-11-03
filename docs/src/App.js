@@ -63,7 +63,7 @@ export default class App extends React.Component {
           height: '100%',
         }}
         pathPrefix='story/'
-        StoryWrapper={props =>
+        StoryWrapper={props => (
           <defaultProps.StoryWrapper
             css={{
               padding: 0,
@@ -95,7 +95,8 @@ export default class App extends React.Component {
                 position: 'relative',
               }}
             />
-          </defaultProps.StoryWrapper>}
+          </defaultProps.StoryWrapper>
+        )}
         stories={stories}
       />
     )

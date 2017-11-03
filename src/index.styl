@@ -2,6 +2,15 @@ $easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
 $easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
 $expandSize = 7px
 
+input-select-style()
+  border: 1px solid rgba(0,0,0,0.1)
+  background: white
+  padding: 5px 7px
+  font-size: inherit
+  border-radius: 3px
+  font-weight: normal
+  outline:none
+
 .ReactTable
   position:relative
   display: flex
@@ -10,7 +19,7 @@ $expandSize = 7px
   *
     box-sizing: border-box
   .rt-table
-    flex: 1
+    flex: auto 1
     display: flex
     flex-direction: column
     align-items: stretch
@@ -33,6 +42,10 @@ $expandSize = 7px
 
     &.-filters
       border-bottom: 1px solid alpha(black, 0.05)
+
+      input
+      select
+        input-select-style();
 
       .rt-th
         border-right: 1px solid alpha(black, 0.02)
@@ -168,6 +181,7 @@ $expandSize = 7px
     z-index: 10
 
   .rt-tfoot
+    flex: 1 0 auto
     display: flex
     flex-direction: column
     box-shadow: 0 0px 15px 0px alpha(black, .15)
@@ -194,6 +208,10 @@ $expandSize = 7px
     padding: 3px
     box-shadow: 0 0px 15px 0px alpha(black, .1)
     border-top: 2px solid alpha(black, .1)
+
+    input
+    select
+      input-select-style()
 
     .-btn
       appearance:none
@@ -291,16 +309,6 @@ $expandSize = 7px
       pointer-events: all
       > div
         transform: translateY(50%)
-
-  input
-  select
-    border: 1px solid rgba(0,0,0,0.1)
-    background: white
-    padding: 5px 7px
-    font-size: inherit
-    border-radius: 3px
-    font-weight: normal
-    outline:none
 
   .rt-resizing
     .rt-th

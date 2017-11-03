@@ -35,7 +35,7 @@ export default {
       ? String(row[id]).startsWith(filter.value)
       : true
   },
-  defaultSortMethod: (a, b) => {
+  defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = a === null || a === undefined ? '' : a
     b = b === null || b === undefined ? '' : b
@@ -191,7 +191,7 @@ export default {
   },
   TdComponent: _.makeTemplateComponent('rt-td', 'Td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
-  FilterComponent: ({ filter, onChange }) =>
+  FilterComponent: ({ filter, onChange }) => (
     <input
       type='text'
       style={{
@@ -199,24 +199,27 @@ export default {
       }}
       value={filter ? filter.value : ''}
       onChange={event => onChange(event.target.value)}
-    />,
-  ExpanderComponent: ({ isExpanded }) =>
+    />
+  ),
+  ExpanderComponent: ({ isExpanded }) => (
     <div className={classnames('rt-expander', isExpanded && '-open')}>
       &bull;
-    </div>,
-  PivotValueComponent: ({ subRows, value }) =>
+    </div>
+  ),
+  PivotValueComponent: ({ subRows, value }) => (
     <span>
       {value} {subRows && `(${subRows.length})`}
-    </span>,
+    </span>
+  ),
   AggregatedComponent: ({ subRows, column }) => {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
-      .map((row, i) =>
+      .map((row, i) => (
         <span key={i}>
           {row[column.id]}
           {i < subRows.length - 1 ? ', ' : ''}
         </span>
-      )
+      ))
     return (
       <span>
         {previewValues}
@@ -228,7 +231,7 @@ export default {
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
-  LoadingComponent: ({ className, loading, loadingText, ...rest }) =>
+  LoadingComponent: ({ className, loading, loadingText, ...rest }) => (
     <div
       className={classnames('-loading', { '-active': loading }, className)}
       {...rest}
@@ -236,7 +239,8 @@ export default {
       <div className='-loading-inner'>
         {loadingText}
       </div>
-    </div>,
+    </div>
+  ),
   NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
   ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
   PadRowComponent: () => <span>&nbsp;</span>,
