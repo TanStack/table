@@ -834,7 +834,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
       return (
         <TfootComponent
-          className={tFootProps.className}
+          className={classnames('-footer', tFootProps.className)}
           style={{
             ...tFootProps.style,
             minWidth: `${rowMinWidth}px`,
@@ -842,7 +842,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {...tFootProps.rest}
         >
           <TrComponent
-            className={classnames(tFootTrProps.className)}
+            className={tFootTrProps.className}
             style={tFootTrProps.style}
             {...tFootTrProps.rest}
           >
@@ -878,7 +878,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       const classes = [
         tFootTdProps.className,
-        column.className,
+        column.footerClassName,
         columnProps.className,
         columnFooterProps.className,
       ]
