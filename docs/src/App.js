@@ -7,8 +7,17 @@ import '../../react-table.css'
 
 import Readme from './stories/Readme.js'
 
+import { TreeTable, CheckboxTable } from './examples/index'
+
+const exampleStories = [
+  // examples
+  { name: 'TreeTable', component: TreeTable },
+  { name: 'CheckboxTable', component: CheckboxTable },
+];
+
 const stories = [
   { name: 'Readme', component: Readme },
+  
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
   {
     name: 'Cell Renderers & Custom Components',
@@ -51,6 +60,10 @@ const stories = [
     name: 'Multiple Pagers (Top and Bottom)',
     component: CodeSandbox('VEZ8OgvX'),
   },
+
+  // other examples
+  ...exampleStories,
+  
 ]
 
 export default class App extends React.Component {
@@ -63,7 +76,7 @@ export default class App extends React.Component {
           height: '100%',
         }}
         pathPrefix='story/'
-        StoryWrapper={props => (
+        StoryWrapper={props =>
           <defaultProps.StoryWrapper
             css={{
               padding: 0,
@@ -95,8 +108,7 @@ export default class App extends React.Component {
                 position: 'relative',
               }}
             />
-          </defaultProps.StoryWrapper>
-        )}
+          </defaultProps.StoryWrapper>}
         stories={stories}
       />
     )
