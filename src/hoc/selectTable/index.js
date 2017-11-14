@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 
 import React from 'react';
 
@@ -13,7 +13,7 @@ export default (Component) => {
       const checked = this.props.isSelected(row[this.props.keyField]);
       return (
         <input 
-          type='checkbox' 
+          type={this.props.selectType} 
           checked={checked} 
           onClick={(e)=>{
             const { shiftKey } = e;
@@ -28,10 +28,11 @@ export default (Component) => {
 
     headSelector = (row) =>
     {
+      if (this.props.selectType === 'radio') return null;
       const checked = this.props.selectAll;
       return (
         <input 
-          type='checkbox' 
+          type={this.props.selectType} 
           checked={checked} 
           onClick={(e)=>{
             e.stopPropagation();
@@ -82,6 +83,7 @@ export default (Component) => {
     selectAll: false,
     toggleSelection: (key, shift, row)=>{ console.log('No toggleSelection handler provided:', { key, shift, row }) },
     toggleAll: () => { console.log('No toggleAll handler provided.') },
+    selectType: 'radio',
   }
   
   return wrapper;

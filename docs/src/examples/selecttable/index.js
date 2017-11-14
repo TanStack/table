@@ -5,9 +5,9 @@ import shortid from 'shortid';
 import ReactTable from '../../../../lib/index'
 import '../../../../react-table.css'
 
-import checkboxTableHOC from './checkboxHOC';
+import selectTableHOC from '../../../../lib/hoc/selectTable'
 
-const CheckboxTable = checkboxTableHOC(ReactTable);
+const SelectTable = selectTableHOC(ReactTable);
 
 async function getData()
 {
@@ -46,6 +46,7 @@ export class ComponentTest extends React.Component {
       columns: null,
       selection: [],
       selectAll: false,
+      selectType: 'radio',
     };
   }
   componentDidMount()
@@ -62,23 +63,29 @@ export class ComponentTest extends React.Component {
       Other implementations could use object keys, a Javascript Set, or Redux... etc.
     */
     // start off with the existing state
-    let selection = [
-      ...this.state.selection
-    ];
-    const keyIndex = selection.indexOf(key);
-    // check to see if the key exists
-    if(keyIndex>=0) {
-      // it does exist so we will remove it using destructing
-      selection = [
-        ...selection.slice(0,keyIndex),
-        ...selection.slice(keyIndex+1)
-      ]
+    if (this.state.selectType === 'radio') {
+      let selection = [];
+      if (selection.indexOf(key)<0) selection.push(key);
+      this.setState({selection});
     } else {
-      // it does not exist so add it
-      selection.push(key);
+      let selection = [
+        ...this.state.selection
+      ];
+      const keyIndex = selection.indexOf(key);
+      // check to see if the key exists
+      if(keyIndex>=0) {
+        // it does exist so we will remove it using destructing
+        selection = [
+          ...selection.slice(0,keyIndex),
+          ...selection.slice(keyIndex+1)
+        ]
+      } else {
+        // it does not exist so add it
+        selection.push(key);
+      }
+      // update the state
+      this.setState({selection});
     }
-    // update the state
-    this.setState({selection});
   }
   toggleAll = () => {
     /*
@@ -125,24 +132,29 @@ export class ComponentTest extends React.Component {
   logSelection = () => {
     console.log('selection:',this.state.selection);
   }
+  toggleType = () => {
+    this.setState({ selectType: this.state.selectType === 'radio' ? 'checkbox' : 'radio', selection: [], selectAll: false, });
+  }
   render(){
-    const { toggleSelection, toggleAll, isSelected, logSelection } = this;
-    const { data, columns, selectAll } = this.state;
+    const { toggleSelection, toggleAll, isSelected, logSelection, toggleType, } = this;
+    const { data, columns, selectAll, selectType } = this.state;
     const extraProps = 
     {
       selectAll,
       isSelected,
       toggleAll,
       toggleSelection,
+      selectType,
     }
     return (
       <div style={{ padding: '10px'}}>
         <h1>react-table - Checkbox Table</h1>
+        <button onClick={toggleType}>Select Type: <strong>{selectType}</strong></button>
         <button onClick={logSelection}>Log Selection to Console</button>
         {` (${this.state.selection.length}) selected`}
         {
           data?
-          <CheckboxTable
+          <SelectTable
             data={data}
             columns={columns}
             ref={(r)=>this.checkboxTable = r}

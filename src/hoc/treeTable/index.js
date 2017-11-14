@@ -1,6 +1,6 @@
+/* eslint-disable */
 
-
-import React from 'react';
+import React from 'react'
 
 export default (Component) => {
   const wrapper = (componentProps) => {
@@ -13,7 +13,7 @@ export default (Component) => {
         cell.props.style.width = '100%';
         cell.props.style.maxWidth = 'unset';
         cell.props.style.paddingLeft = `${componentProps.treeTableIndent*ri.level}px`;
-        cell.props.style.backgroundColor = '#DDD';
+        // cell.props.style.backgroundColor = '#DDD';
         cell.props.style.borderBottom = '1px solid rgba(128,128,128,0.2)';
         
         return <div {...rest}>{cell}</div>;

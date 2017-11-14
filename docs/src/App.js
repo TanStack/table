@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react'
 //
 import ReactStory, { defaultProps } from 'react-story'
@@ -6,18 +8,20 @@ import './stories/utils/prism.css'
 import '../../react-table.css'
 
 import Readme from './stories/Readme.js'
+import HOCReadme from './stories/HOCReadme.js'
 
-import { TreeTable, CheckboxTable } from './examples/index'
+import { TreeTable, SelectTable } from './examples/index'
 
 const exampleStories = [
   // examples
   { name: 'TreeTable', component: TreeTable },
-  { name: 'CheckboxTable', component: CheckboxTable },
-];
+  { name: 'SelectTable', component: SelectTable },
+]
 
 const stories = [
   { name: 'Readme', component: Readme },
-  
+  { name: 'HOC Readme', component: HOCReadme },
+
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
   {
     name: 'Cell Renderers & Custom Components',

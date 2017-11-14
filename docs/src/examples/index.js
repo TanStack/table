@@ -1,8 +1,9 @@
+/* eslint-disable */
 
-import TreeTable from './treetable';
-import CheckboxTable from './checkbox';
+import TreeTable from './treetable'
+import SelectTable from './selecttable'
 
 export {
   TreeTable,
-  CheckboxTable,
+  SelectTable,
 }
