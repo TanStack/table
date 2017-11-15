@@ -10,13 +10,14 @@ import '../../react-table.css'
 import Readme from './stories/Readme.js'
 import HOCReadme from './stories/HOCReadme.js'
 
-import { TreeTable, SelectTable } from './examples/index'
-
-const exampleStories = [
-  // examples
-  { name: 'TreeTable', component: TreeTable },
-  { name: 'SelectTable', component: SelectTable },
-]
+// import { TreeTable, SelectTable, SelectTreeTable } from './examples/index'
+// 
+// const exampleStories = [
+//   // examples
+//   { name: 'TreeTable', component: TreeTable },
+//   { name: 'SelectTable', component: SelectTable },
+//   { name: 'SelectTreeTable', component: SelectTreeTable },
+// ]
 
 const stories = [
   { name: 'Readme', component: Readme },
@@ -64,10 +65,11 @@ const stories = [
     name: 'Multiple Pagers (Top and Bottom)',
     component: CodeSandbox('VEZ8OgvX'),
   },
-
-  // other examples
-  ...exampleStories,
   
+  { name: 'Tree Table', component: CodeSandbox('lxmr4wynzq') },
+  { name: 'Select Table', component: CodeSandbox('7yq5ylw09j') },
+  { name: 'Select Tree Table', component: CodeSandbox('2p7jp4klwp') },
+
 ]
 
 export default class App extends React.Component {

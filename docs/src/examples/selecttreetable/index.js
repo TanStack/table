@@ -6,8 +6,9 @@ import ReactTable from '../../../../lib/index'
 import '../../../../react-table.css'
 
 import selectTableHOC from '../../../../lib/hoc/selectTable'
+import treeTableHOC from '../../../../lib/hoc/treeTable'
 
-const SelectTable = selectTableHOC(ReactTable);
+const SelectTreeTable = selectTableHOC(treeTableHOC(ReactTable));
 
 async function getData()
 {
@@ -37,6 +38,19 @@ function getColumns(data)
   return columns;
 }
 
+function getNodes(data,node=[])
+{
+  data.forEach((item)=>{
+    if(item.hasOwnProperty('_subRows') && item._subRows)
+    {
+      node = getNodes(item._subRows,node);
+    } else {
+      node.push(item._original);
+    }
+  });
+  return node;
+}
+
 export class ComponentTest extends React.Component {
   constructor(props) {
     super(props);
@@ -53,7 +67,8 @@ export class ComponentTest extends React.Component {
   {
     getData().then((data)=>{
       const columns = getColumns(data);
-      this.setState({ data, columns });
+      const pivotBy = ['state','post'];
+      this.setState({ data, columns, pivotBy });
     });
   }
   toggleSelection = (key,shift,row) => {
@@ -114,12 +129,11 @@ export class ComponentTest extends React.Component {
       const wrappedInstance = this.selectTable.getWrappedInstance();
       // the 'sortedData' property contains the currently accessible records based on the filter and sort
       const currentRecords = wrappedInstance.getResolvedState().sortedData;
+      // we need to get all the 'real' (original) records out to get at their IDs
+      const nodes = getNodes(currentRecords);
       // we just push all the IDs onto the selection array
-      currentRecords.forEach((item)=>{
-        if(item._original)
-        {
-          selection.push(item._original._id);
-        }
+      nodes.forEach((item)=>{
+        selection.push(item._id);
       })
     }
     this.setState({selectAll,selection})
@@ -138,9 +152,19 @@ export class ComponentTest extends React.Component {
   toggleType = () => {
     this.setState({ selectType: this.state.selectType === 'radio' ? 'checkbox' : 'radio', selection: [], selectAll: false, });
   }
+  toggleTree = () => {
+    if(this.state.pivotBy.length) {
+      this.setState({pivotBy:[],expanded:{}});
+    } else {
+      this.setState({pivotBy:['state','post'],expanded:{}});
+    }
+  }
+  onExpandedChange = (expanded) => {
+    this.setState({expanded});
+  }
   render(){
-    const { toggleSelection, toggleAll, isSelected, logSelection, toggleType } = this;
-    const { data, columns, selectAll, selectType } = this.state;
+    const { toggleSelection, toggleAll, isSelected, logSelection, toggleType, toggleTree, onExpandedChange, } = this;
+    const { data, columns, selectAll, selectType, pivotBy, expanded, } = this.state;
     const extraProps = 
     {
       selectAll,
@@ -148,20 +172,38 @@ export class ComponentTest extends React.Component {
       toggleAll,
       toggleSelection,
       selectType,
+      pivotBy,
+      expanded,
+      onExpandedChange,
+      pageSize: 5,
     }
     return (
       <div style={{ padding: '10px'}}>
-        <h1>react-table - Select Table</h1>
+        <h1>react-table - Select Tree Table</h1>
+        <p>This example combines two HOCs (the TreeTable and the SelectTable) to make a composite component.</p>
+        <p>We'll call it SelectTreeTable!</p>
+        <p>Here is what the buttons do:</p>
+        <ul>
+          <li><strong>Toggle Tree:</strong> enables or disabled the pivotBy on the table.</li>
+          <li><strong>Select Type:</strong> changes from 'checkbox' to 'radio' and back again.</li>
+          <li><strong>Log Selection to Console:</strong> open your console to see what has been selected.</li>
+        </ul>
+        <p>
+          <strong>NOTE:</strong> the selection is maintained when toggling the tree on and off but is cleared
+          when switching between select types (radio, checkbox).
+        </p>
+        <button onClick={toggleTree}>Toggle Tree [{pivotBy && pivotBy.length ? pivotBy.join(', ') : ''}]</button>
         <button onClick={toggleType}>Select Type: <strong>{selectType}</strong></button>
         <button onClick={logSelection}>Log Selection to Console</button>
         {` (${this.state.selection.length}) selected`}
         {
           data?
-          <SelectTable
+          <SelectTreeTable
             data={data}
             columns={columns}
             ref={(r)=>this.selectTable = r}
             className="-striped -highlight"
+            freezeWhenExpanded={true}
             {...extraProps}
           />
           :null
