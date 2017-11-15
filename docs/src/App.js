@@ -10,6 +10,8 @@ import '../../react-table.css'
 import Readme from './stories/Readme.js'
 import HOCReadme from './stories/HOCReadme.js'
 
+// import Tester from './examples/expander';
+
 // import { TreeTable, SelectTable, SelectTreeTable } from './examples/index'
 // 
 // const exampleStories = [
@@ -22,6 +24,8 @@ import HOCReadme from './stories/HOCReadme.js'
 const stories = [
   { name: 'Readme', component: Readme },
   { name: 'HOC Readme', component: HOCReadme },
+  
+  // { name: 'Tester', component: Tester },
 
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
   {

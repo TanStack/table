@@ -22,6 +22,7 @@ export default {
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   sortable: true,
+  multiSort: true,
   resizable: true,
   filterable: false,
   defaultSortDesc: false,

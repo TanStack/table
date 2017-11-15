@@ -80,6 +80,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       loadingText,
       noDataText,
       sortable,
+      multiSort,
       resizable,
       filterable,
       // Pivoting State
@@ -382,7 +383,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             maxWidth: _.asPx(maxWidth),
           }}
           toggleSort={e => {
-            isSortable && this.sortColumn(column, e.shiftKey)
+            isSortable && this.sortColumn(column, multiSort ? e.shiftKey : false)
           }}
           {...rest}
         >
