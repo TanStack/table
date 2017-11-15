@@ -66,9 +66,9 @@ const stories = [
     component: CodeSandbox('VEZ8OgvX'),
   },
   
-  { name: 'Tree Table', component: CodeSandbox('lxmr4wynzq') },
-  { name: 'Select Table', component: CodeSandbox('7yq5ylw09j') },
-  { name: 'Select Tree Table', component: CodeSandbox('2p7jp4klwp') },
+  { name: 'Tree Table (HOC)', component: CodeSandbox('lxmr4wynzq') },
+  { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
+  { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
 
 ]
 
