@@ -690,6 +690,10 @@ export default Base =>
 
     resizeColumnEnd (event) {
       event.stopPropagation()
+
+      const { onResizedComplete } = this.props
+      const { currentlyResizing } = this.getResolvedState()
+
       let isTouch = event.type === 'touchend' || event.type === 'touchcancel'
 
       if (isTouch) {
@@ -710,7 +714,17 @@ export default Base =>
       if (!isTouch) {
         this.setStateWithData({
           skipNextSort: true,
-          currentlyResizing: false,
+          currentlyResizing: false
+        },
+        () => {
+            onResizedComplete && onResizedComplete(currentlyResizing, event)
+        })
+      } else {
+          this.setStateWithData({
+              currentlyResizing: false
+          },
+        () => {
+            onResizedComplete && onResizedComplete(currentlyResizing, event)
         })
       }
     }

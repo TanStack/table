@@ -32,6 +32,7 @@ export default {
   onSortedChange: PropTypes.func,
   onFilteredChange: PropTypes.func,
   onResizedChange: PropTypes.func,
+  onResizedComplete: PropTypes.func,
   onExpandedChange: PropTypes.func,
 
   // Pivoting
