@@ -4,7 +4,7 @@ import classnames from 'classnames'
 // import _ from './utils'
 
 const defaultButton = props => (
-  <button type='button' {...props} className='-btn'>
+  <button type="button" {...props} className="-btn">
     {props.children}
   </button>
 )
@@ -42,7 +42,7 @@ export default class ReactTablePagination extends Component {
   }
 
   applyPage (e) {
-    e && e.preventDefault()
+    if (e) { e.preventDefault() }
     const page = this.state.page
     this.changePage(page === '' ? this.props.page : page)
   }
@@ -70,9 +70,9 @@ export default class ReactTablePagination extends Component {
         className={classnames(className, '-pagination')}
         style={this.props.paginationStyle}
       >
-        <div className='-previous'>
+        <div className="-previous">
           <PreviousComponent
-            onClick={e => {
+            onClick={() => {
               if (!canPrevious) return
               this.changePage(page - 1)
             }}
@@ -81,11 +81,11 @@ export default class ReactTablePagination extends Component {
             {this.props.previousText}
           </PreviousComponent>
         </div>
-        <div className='-center'>
-          <span className='-pageInfo'>
+        <div className="-center">
+          <span className="-pageInfo">
             {this.props.pageText}{' '}
             {showPageJump
-              ? <div className='-pageJump'>
+              ? <div className="-pageJump">
                 <input
                   type={this.state.page === '' ? 'text' : 'number'}
                   onChange={e => {
@@ -105,31 +105,30 @@ export default class ReactTablePagination extends Component {
                   }}
                 />
               </div>
-              : <span className='-currentPage'>
+              : <span className="-currentPage">
                 {page + 1}
               </span>}{' '}
             {this.props.ofText}{' '}
-            <span className='-totalPages'>{pages || 1}</span>
+            <span className="-totalPages">{pages || 1}</span>
           </span>
           {showPageSizeOptions &&
-            <span className='select-wrap -pageSizeOptions'>
+            <span className="select-wrap -pageSizeOptions">
               <select
                 onChange={e => onPageSizeChange(Number(e.target.value))}
                 value={pageSize}
               >
-                {pageSizeOptions.map((option, i) => {
-                  return (
-                    <option key={i} value={option}>
-                      {option} {this.props.rowsText}
-                    </option>
-                  )
-                })}
+                {pageSizeOptions.map((option, i) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <option key={i} value={option}>
+                    {option} {this.props.rowsText}
+                  </option>
+                ))}
               </select>
             </span>}
         </div>
-        <div className='-next'>
+        <div className="-next">
           <NextComponent
-            onClick={e => {
+            onClick={() => {
               if (!canNext) return
               this.changePage(page + 1)
             }}
