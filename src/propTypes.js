@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
 export default {
   // General
@@ -85,37 +85,37 @@ export default {
       Cell: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       Header: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       Footer: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       Aggregated: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       Pivot: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       PivotValue: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       Expander: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-        PropTypes.func
+        PropTypes.func,
       ]),
       Filter: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
@@ -145,8 +145,8 @@ export default {
       getFooterProps: PropTypes.object,
       filterMethod: PropTypes.func,
       filterAll: PropTypes.bool,
-      sortMethod: PropTypes.func
-    })
+      sortMethod: PropTypes.func,
+    }),
   ),
 
   // Global Expander Column Defaults
@@ -154,7 +154,7 @@ export default {
     sortable: PropTypes.bool,
     resizable: PropTypes.bool,
     filterable: PropTypes.bool,
-    width: PropTypes.number
+    width: PropTypes.number,
   }),
 
   pivotDefaults: PropTypes.object,
@@ -181,7 +181,8 @@ export default {
   ExpanderComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   PivotValueComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   AggregatedComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-  PivotComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]), // this is a computed default generated using
+  // this is a computed default generated using
+  PivotComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   // the ExpanderComponent and PivotValueComponent at run-time in methods.js
   PaginationComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   PreviousComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
@@ -189,5 +190,5 @@ export default {
   LoadingComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   NoDataComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   ResizerComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element])
-};
+  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+}
