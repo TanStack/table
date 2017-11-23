@@ -30,12 +30,14 @@ export default {
   defaultFiltered: [],
   defaultResized: [],
   defaultExpanded: {},
+  // eslint-disable-next-line no-unused-vars
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
     return row[id] !== undefined
       ? String(row[id]).startsWith(filter.value)
       : true
   },
+  // eslint-disable-next-line no-unused-vars
   defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = a === null || a === undefined ? '' : a
@@ -50,7 +52,8 @@ export default {
     if (a < b) {
       return -1
     }
-    // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
+    // returning 0, undefined or any falsey value will use subsequent sorts or
+    // the index as a tiebreaker
     return 0
   },
 
@@ -177,24 +180,24 @@ export default {
   TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
   TrGroupComponent: _.makeTemplateComponent('rt-tr-group', 'TrGroup'),
   TrComponent: _.makeTemplateComponent('rt-tr', 'Tr'),
-  ThComponent: ({ toggleSort, className, children, ...rest }) => {
-    return (
-      <div
-        className={classnames(className, 'rt-th')}
-        onClick={e => {
-          toggleSort && toggleSort(e)
-        }}
-        {...rest}
-      >
-        {children}
-      </div>
-    )
-  },
+  ThComponent: ({ toggleSort, className, children, ...rest }) => (
+    <div
+      className={classnames(className, 'rt-th')}
+      onClick={e => (
+        toggleSort && toggleSort(e)
+      )}
+      role="button"
+      tabIndex={0}
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
   TdComponent: _.makeTemplateComponent('rt-td', 'Td'),
   TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
   FilterComponent: ({ filter, onChange }) => (
     <input
-      type='text'
+      type="text"
       style={{
         width: '100%',
       }}
@@ -216,6 +219,7 @@ export default {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
       .map((row, i) => (
+        // eslint-disable-next-line react/no-array-index-key
         <span key={i}>
           {row[column.id]}
           {i < subRows.length - 1 ? ', ' : ''}
@@ -237,7 +241,7 @@ export default {
       className={classnames('-loading', { '-active': loading }, className)}
       {...rest}
     >
-      <div className='-loading-inner'>
+      <div className="-loading-inner">
         {loadingText}
       </div>
     </div>
