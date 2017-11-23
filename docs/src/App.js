@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react'
 //
 import ReactStory, { defaultProps } from 'react-story'
@@ -6,6 +8,18 @@ import './stories/utils/prism.css'
 import '../../react-table.css'
 
 import Readme from './stories/Readme.js'
+import HOCReadme from './stories/HOCReadme.js'
+
+// import Tester from './examples/expander';
+
+// import { TreeTable, SelectTable, SelectTreeTable } from './examples/index'
+// 
+// const exampleStories = [
+//   // examples
+//   { name: 'TreeTable', component: TreeTable },
+//   { name: 'SelectTable', component: SelectTable },
+//   { name: 'SelectTreeTable', component: SelectTreeTable },
+// ]
 
 import { TreeTable, CheckboxTable } from './examples/index'
 
@@ -17,7 +31,9 @@ const exampleStories = [
 
 const stories = [
   { name: 'Readme', component: Readme },
+  { name: 'HOC Readme', component: HOCReadme },
   
+  // { name: 'Tester', component: Tester },
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
   {
     name: 'Cell Renderers & Custom Components',
@@ -60,10 +76,9 @@ const stories = [
     name: 'Multiple Pagers (Top and Bottom)',
     component: CodeSandbox('VEZ8OgvX'),
   },
-
-  // other examples
-  ...exampleStories,
-  
+  { name: 'Tree Table (HOC)', component: CodeSandbox('lxmr4wynzq') },
+  { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
+  { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
 ]
 
 export default class App extends React.Component {

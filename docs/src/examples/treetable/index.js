@@ -4,7 +4,7 @@ import React from 'react';
 import ReactTable from '../../../../lib/index'
 import '../../../../react-table.css'
 
-import treeTableHOC from './treeTableHOC';
+import treeTableHOC from '../../../../lib/hoc/treeTable'
 
 async function getData()
 {
