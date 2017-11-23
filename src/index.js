@@ -367,7 +367,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             maxWidth: _.asPx(maxWidth),
           }}
           toggleSort={e => {
-            isSortable && this.sortColumn(column, multiSort ? e.shiftKey : false)
+            if (isSortable) this.sortColumn(column, multiSort ? e.shiftKey : false)
           }}
           {...rest}
         >
