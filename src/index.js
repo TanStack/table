@@ -80,6 +80,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       loadingText,
       noDataText,
       sortable,
+      multiSort,
       resizable,
       filterable,
       // Pivoting State
@@ -365,9 +366,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             width: _.asPx(width),
             maxWidth: _.asPx(maxWidth),
           }}
-          toggleSort={e => (
-            isSortable && this.sortColumn(column, e.shiftKey)
-          )}
+          toggleSort={e => {
+            isSortable && this.sortColumn(column, multiSort ? e.shiftKey : false)
+          }}
           {...rest}
         >
           <div className={classnames(isResizable && 'rt-resizable-header-content')}>
