@@ -30,7 +30,9 @@ function get (obj, path, def) {
   let val
   try {
     val = pathObj.reduce((current, pathPart) => current[pathPart], obj)
-  } catch (e) {}
+  } catch (e) {
+    // continue regardless of error
+  }
   return typeof val !== 'undefined' ? val : def
 }
 
@@ -59,7 +61,7 @@ function last (arr) {
 
 function range (n) {
   const arr = []
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < n; i += 1) {
     arr.push(n)
   }
   return arr
@@ -67,7 +69,7 @@ function range (n) {
 
 function orderBy (arr, funcs, dirs, indexKey) {
   return arr.sort((rowA, rowB) => {
-    for (let i = 0; i < funcs.length; i++) {
+    for (let i = 0; i < funcs.length; i += 1) {
       const comp = funcs[i]
       const desc = dirs[i] === false || dirs[i] === 'desc'
       const sortInt = comp(rowA, rowB)
@@ -83,8 +85,8 @@ function orderBy (arr, funcs, dirs, indexKey) {
 }
 
 function remove (a, b) {
-  return a.filter(function (o, i) {
-    var r = b(o)
+  return a.filter((o, i) => {
+    const r = b(o)
     if (r) {
       a.splice(i, 1)
       return true
@@ -101,7 +103,7 @@ function clone (a) {
           return value.toString()
         }
         return value
-      })
+      }),
     )
   } catch (e) {
     return a
@@ -109,7 +111,7 @@ function clone (a) {
 }
 
 function getFirstDefined (...args) {
-  for (var i = 0; i < args.length; i++) {
+  for (let i = 0; i < args.length; i += 1) {
     if (typeof args[i] !== 'undefined') {
       return args[i]
     }
@@ -117,9 +119,9 @@ function getFirstDefined (...args) {
 }
 
 function sum (arr) {
-  return arr.reduce((a, b) => {
-    return a + b
-  }, 0)
+  return arr.reduce((a, b) => (
+    a + b
+  ), 0)
 }
 
 function makeTemplateComponent (compClass, displayName) {
@@ -146,7 +148,7 @@ function groupBy (xs, key) {
 
 function asPx (value) {
   value = Number(value)
-  return Number.isNaN(value) ? null : value + 'px'
+  return Number.isNaN(value) ? null : `${value}px`
 }
 
 function isArray (a) {
@@ -169,7 +171,7 @@ function flattenDeep (arr, newArr = []) {
   if (!isArray(arr)) {
     newArr.push(arr)
   } else {
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i += 1) {
       flattenDeep(arr[i], newArr)
     }
   }
@@ -186,15 +188,16 @@ function splitProps ({ className, style, ...rest }) {
 
 function compactObject (obj) {
   const newObj = {}
-  for (var key in obj) {
+  Object.keys(obj).map(key => {
     if (
-      obj.hasOwnProperty(key) &&
+      Object.prototype.hasOwnProperty.call(obj, key) &&
       obj[key] !== undefined &&
       typeof obj[key] !== 'undefined'
     ) {
       newObj[key] = obj[key]
     }
-  }
+    return true
+  })
   return newObj
 }
 

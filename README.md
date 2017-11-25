@@ -171,6 +171,7 @@ These are all of the available props (and their default values) for the main `<R
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   sortable: true,
+  multiSort: true,
   resizable: true,
   filterable: false,
   defaultSortDesc: false,
@@ -832,6 +833,9 @@ Sorting comes built in with React-Table.
 
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
+
+You can set the `multiSort` prop to `false` to disable this feature (which may be useful for server-side sorting when you are not
+going to sort multiple columns).
 
 ## Custom Sorting Algorithm
 To override the default sorting algorithm for the whole table use the `defaultSortMethod` prop.
