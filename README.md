@@ -216,6 +216,7 @@ These are all of the available props (and their default values) for the main `<R
   onSortedChange: undefined,
   onFilteredChange: undefined,
   onResizedChange: undefined,
+  onResizedComplete: undefined,
   onExpandedChange: undefined,
 
   // Pivoting
@@ -784,6 +785,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expanded`
   onFilteredChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the Filter option.
   onResizedChange={(newResized, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
+  onResizedComplete={(newResized, event) => {...}} // Called when a user finishes resizing a component
 />
 ```
 
