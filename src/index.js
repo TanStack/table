@@ -828,14 +828,23 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         getTrProps(finalState, undefined, undefined, this),
       )
       return (
-        <TrGroupComponent key={i} {...trGroupProps}>
+        <TrGroupComponent 
+          key={i} 
+          className={classnames('-footer', tFootProps.className)}
+          style={{
+            ...tFootProps.style,
+            minWidth: `${rowMinWidth}px`,
+          }}
+          {...trGroupProps}
+        >
           <TrComponent
             className={classnames(
               '-padRow',
               (pageRows.length + i) % 2 ? '-even' : '-odd',
-              trProps.className,
+              tFootTrProps.className,
             )}
-            style={trProps.style || {}}
+            style={trFootTrProps.style || {}}
+            {...tFootTrProps.rest}
           >
             {allVisibleColumns.map(makePadColumn)}
           </TrComponent>
@@ -869,7 +878,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       const classes = [
         tFootTdProps.className,
-        column.className,
+        column.footerClassName,
         columnProps.className,
         columnFooterProps.className,
       ]
