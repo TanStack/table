@@ -64,7 +64,7 @@ export default Base =>
       if (freezeWhenExpanded) {
         // if any rows are expanded, freeze the existing data and sorting
         const keys = Object.keys(newResolvedState.expanded)
-        for (var i = 0; i < keys.length; i++) {
+        for (let i = 0; i < keys.length; i += 1) {
           if (newResolvedState.expanded[keys[i]]) {
             newResolvedState.frozen = true
             break
@@ -109,18 +109,18 @@ export default Base =>
         newResolvedState.pages = newResolvedState.manual
           ? newResolvedState.pages
           : Math.ceil(
-            newResolvedState.sortedData.length / newResolvedState.pageSize
+            newResolvedState.sortedData.length / newResolvedState.pageSize,
           )
         newResolvedState.page = Math.max(
           newResolvedState.page >= newResolvedState.pages
             ? newResolvedState.pages - 1
             : newResolvedState.page,
-          0
+          0,
         )
       }
 
       return this.setState(newResolvedState, () => {
-        cb && cb()
+        if (cb) { cb() }
         if (
           oldState.page !== newResolvedState.page ||
           oldState.pageSize !== newResolvedState.pageSize ||
