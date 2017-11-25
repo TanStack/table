@@ -705,18 +705,18 @@ export default Base =>
       if (!isTouch) {
         this.setStateWithData({
           skipNextSort: true,
-          currentlyResizing: false
+          currentlyResizing: false,
         },
-        () => {
-            onResizedComplete && onResizedComplete(currentlyResizing, event)
-        })
+        () => (
+          onResizedComplete && onResizedComplete(currentlyResizing, event)
+        ))
       } else {
-          this.setStateWithData({
-              currentlyResizing: false
-          },
-        () => {
-            onResizedComplete && onResizedComplete(currentlyResizing, event)
-        })
+        this.setStateWithData({
+          currentlyResizing: false,
+        },
+        () => (
+          onResizedComplete && onResizedComplete(currentlyResizing, event)
+        ))
       }
     }
   }
