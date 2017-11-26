@@ -9,31 +9,17 @@ import '../../react-table.css'
 
 import Readme from './stories/Readme.js'
 import HOCReadme from './stories/HOCReadme.js'
+// import Test from './stories/test.js'
 
 // import Tester from './examples/expander';
-
-// import { TreeTable, SelectTable, SelectTreeTable } from './examples/index'
-// 
-// const exampleStories = [
-//   // examples
-//   { name: 'TreeTable', component: TreeTable },
-//   { name: 'SelectTable', component: SelectTable },
-//   { name: 'SelectTreeTable', component: SelectTreeTable },
-// ]
-
-import { TreeTable, CheckboxTable } from './examples/index'
-
-const exampleStories = [
-  // examples
-  { name: 'TreeTable', component: TreeTable },
-  { name: 'CheckboxTable', component: CheckboxTable },
-];
 
 const stories = [
   { name: 'Readme', component: Readme },
   { name: 'HOC Readme', component: HOCReadme },
   
-  // { name: 'Tester', component: Tester },
+  // ...exampleStories,
+  
+  // { name: 'Tester', component: Test },
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
   {
     name: 'Cell Renderers & Custom Components',

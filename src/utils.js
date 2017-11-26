@@ -188,16 +188,18 @@ function splitProps ({ className, style, ...rest }) {
 
 function compactObject (obj) {
   const newObj = {}
-  Object.keys(obj).map(key => {
-    if (
-      Object.prototype.hasOwnProperty.call(obj, key) &&
-      obj[key] !== undefined &&
-      typeof obj[key] !== 'undefined'
-    ) {
-      newObj[key] = obj[key]
-    }
-    return true
-  })
+  if (obj) {
+    Object.keys(obj).map(key => {
+      if (
+        Object.prototype.hasOwnProperty.call(obj, key) &&
+        obj[key] !== undefined &&
+        typeof obj[key] !== 'undefined'
+      ) {
+        newObj[key] = obj[key]
+      }
+      return true
+    })
+  }
   return newObj
 }
 
