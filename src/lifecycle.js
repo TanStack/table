@@ -43,7 +43,7 @@ export default Base =>
       // Props that trigger a data update
       if (
         oldState.data !== newState.data ||
-        oldState.columns !== newState.columns ||
+        JSON.stringify(oldState.columns) !== JSON.stringify(newState.columns) ||
         oldState.pivotBy !== newState.pivotBy ||
         oldState.sorted !== newState.sorted ||
         oldState.filtered !== newState.filtered
