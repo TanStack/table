@@ -182,7 +182,7 @@ export default {
   TrComponent: _.makeTemplateComponent('rt-tr', 'Tr'),
   ThComponent: ({ toggleSort, className, children, ...rest }) => (
     <div
-      className={classnames(className, 'rt-th')}
+      className={classnames('rt-th', className)}
       onClick={e => (
         toggleSort && toggleSort(e)
       )}
