@@ -199,7 +199,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     )
     const loadingProps = getLoadingProps(finalState, undefined, undefined, this)
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
-    const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
     // Visual Components
 
@@ -341,7 +340,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ? (<ResizerComponent
           onMouseDown={e => this.resizeColumnStart(e, column, false)}
           onTouchStart={e => this.resizeColumnStart(e, column, true)}
-          {...resizerProps}
+          {...getResizerProps('finalState', undefined, column, this)}
         />)
         : null
 
