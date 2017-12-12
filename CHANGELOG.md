@@ -1,3 +1,10 @@
+## 6.7.5
+#### Fixes & Optimizations
+- Now passes `column` to `getResizerProps` (#667)
+- NOTE: `getResizerProps` is now only called if the column is resizable
+- Fixes the `className` ordering in defaultProps for ThComponent (#673)
+- NOTE: user supplied classNames now come at the end so they can extend the defaults
+
 ## 6.7.4
 #### Fixes & Optimizations
 - Fix Prop types for columns
