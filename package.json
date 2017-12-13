@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "6.7.4",
+  "version": "6.7.5",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/react-tools/react-table#readme",
@@ -32,7 +32,7 @@
     "test": "eslint src",
     "umd": "rimraf react-table.js && webpack --config umd.webpack.js",
     "build": "npm-run-all build:*",
-    "prepublish": "npm run build && npm run umd",
+    "prepublishOnly": "npm run build && npm run umd",
     "postpublish": "git push --tags",
     "docs": "yarn watch & cd docs && yarn && yarn start",
     "docs:build": "yarn build && cd docs && yarn && yarn build"
