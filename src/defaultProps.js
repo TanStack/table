@@ -186,8 +186,7 @@ export default {
       onClick={e => (
         toggleSort && toggleSort(e)
       )}
-      role="button"
-      tabIndex={0}
+      role="heading"
       {...rest}
     >
       {children}
