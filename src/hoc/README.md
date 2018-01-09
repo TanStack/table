@@ -63,6 +63,11 @@ You include the HOC in the same manner as you would for the treeTableHOC but the
 - toggleSelection - called when the use clicks a specific checkbox/radio in a row
 - selectType - either `checkbox|radio` to indicate what type of selection is required
 
+**Note:** The select field defaults to the accessor `_id` property in order to render the select field for that particular row.  If your objects have different
+unique ID fields, make sure to tell React Table that by passing it the `keyField` property. 
+```Javascript
+<ReactTable keyField='id' />
+```
 In the case of `radio` there is no `selectAll` displayed but the developer is responsible for only making one selection in 
 the controlling component's state.  You could select multiple but it wouldn't make sense and you should use `checkbox` instead.
 
