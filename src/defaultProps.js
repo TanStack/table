@@ -175,24 +175,58 @@ export default {
   rowsText: 'rows',
 
   // Components
-  TableComponent: _.makeTemplateComponent('rt-table', 'Table'),
+  TableComponent: ({ children, className, ...rest }) => (
+    <div
+      className={classnames('rt-table', className)}
+      role="grid"
+      // tabIndex='0'
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
   TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead'),
   TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
-  TrGroupComponent: _.makeTemplateComponent('rt-tr-group', 'TrGroup'),
-  TrComponent: _.makeTemplateComponent('rt-tr', 'Tr'),
+  TrGroupComponent: ({ children, className, ...rest }) => (
+    <div
+      className={classnames('rt-tr-group', className)}
+      role="rowgroup"
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
+  TrComponent: ({ children, className, ...rest }) => (
+    <div
+      className={classnames('rt-tr', className)}
+      role="row"
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
   ThComponent: ({ toggleSort, className, children, ...rest }) => (
     <div
       className={classnames('rt-th', className)}
       onClick={e => (
         toggleSort && toggleSort(e)
       )}
-      role="heading"
+      role="columnheader"
+      tabIndex="-1" // Resolves eslint issues without implementing keyboard navigation incorrectly
       {...rest}
     >
       {children}
     </div>
   ),
-  TdComponent: _.makeTemplateComponent('rt-td', 'Td'),
+  TdComponent: ({ toggleSort, className, children, ...rest }) => (
+    <div
+      className={classnames('rt-td', className)}
+      role="gridcell"
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
   TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
   FilterComponent: ({ filter, onChange }) => (
     <input
