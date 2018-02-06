@@ -15,15 +15,18 @@
     "datagrid"
   ],
   "main": "lib/index.js",
+  "module": "es/index.js",
   "files": [
     "src/",
+    "es/",
     "lib/",
     "react-table.js",
     "react-table.css",
     "media/*.png"
   ],
   "scripts": {
-    "build:node": "babel src --out-dir lib --source-maps inline",
+    "build:cjs": "babel src --out-dir lib --source-maps inline",
+    "build:es": "BABEL_ENV=es babel src --out-dir es --source-maps inline",
     "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
     "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
@@ -71,13 +74,31 @@
     "webpack": "^2.5.1"
   },
   "babel": {
-    "presets": [
-      "env",
-      "react"
-    ],
-    "plugins": [
-      "transform-object-rest-spread",
-      "transform-class-properties"
-    ]
+    "env": {
+      "development": {
+        "presets": [
+          ["env", {
+            "modules": "commonjs"
+          }],
+          "react"
+        ],
+        "plugins": [
+          "transform-object-rest-spread",
+          "transform-class-properties"
+        ]
+      },
+      "es": {
+        "presets": [
+          ["env", {
+            "modules": false
+          }],
+          "react"
+        ],
+        "plugins": [
+          "transform-object-rest-spread",
+          "transform-class-properties"
+        ]
+      }
+    }
   }
 }

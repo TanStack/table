@@ -1,5 +1,6 @@
 node_modules/
 lib/
+es/
 docs/build
 react-table.js
 react-table.css
