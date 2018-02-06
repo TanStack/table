@@ -21,13 +21,15 @@
     "es/",
     "lib/",
     "react-table.js",
+    "react-table.min.js",
     "react-table.css",
     "media/*.png"
   ],
   "scripts": {
     "build:cjs": "babel src --out-dir lib --source-maps inline",
     "build:es": "BABEL_ENV=es babel src --out-dir es --source-maps inline",
-    "build:umd": "rimraf react-table.js && webpack --config umd.webpack.js",
+    "build:umd": "BABEL_ENV=umd rollup -c",
+    "build:umd-min": "BABEL_ENV=umd NODE_ENV=production rollup -c",
     "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn css:autoprefix",
     "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
@@ -50,6 +52,7 @@
     "autoprefixer": "^6.7.0",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -69,17 +72,25 @@
     "react-dom": "^15.4.2",
     "react-json-tree": "^0.10.9",
     "rimraf": "^2.6.1",
+    "rollup": "^0.55.3",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^3.0.0",
     "standard": "^10.0.2",
-    "stylus": "^0.54.5",
-    "webpack": "^2.5.1"
+    "stylus": "^0.54.5"
   },
   "babel": {
     "env": {
       "development": {
         "presets": [
-          ["env", {
-            "modules": "commonjs"
-          }],
+          [
+            "env",
+            {
+              "modules": "commonjs"
+            }
+          ],
           "react"
         ],
         "plugins": [
@@ -89,14 +100,33 @@
       },
       "es": {
         "presets": [
-          ["env", {
-            "modules": false
-          }],
+          [
+            "env",
+            {
+              "modules": false
+            }
+          ],
           "react"
         ],
         "plugins": [
           "transform-object-rest-spread",
           "transform-class-properties"
+        ]
+      },
+      "umd": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": false
+            }
+          ],
+          "react"
+        ],
+        "plugins": [
+          "transform-object-rest-spread",
+          "transform-class-properties",
+          "external-helpers"
         ]
       }
     }
