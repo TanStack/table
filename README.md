@@ -163,7 +163,8 @@ These are all of the available props (and their default values) for the main `<R
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
-  minRows: undefined,
+  minRows: undefined, // controls the minimum number of rows to display - default will be `pageSize`
+  // NOTE: if you set minRows to 0 then you get rid of empty padding rows BUT your table formatting will also look strange when there are ZERO rows in the table
   showPageJump: true,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
@@ -500,7 +501,7 @@ const columns = [{
 ## Custom Cell, Header and Footer Rendering
 You can use any react component or JSX to display content in column headers, cells and footers. Any component you use will be passed the following props (if available):
 - `row` - Original row from your data
-- `row` - The post-accessed values from the original row
+- `original` - The post-accessed values from the original row
 - `index` - The index of the row
 - `viewIndex` - the index of the row relative to the current page
 - `level` - The nesting depth (zero-indexed)
