@@ -50,7 +50,7 @@ const stories = [
   },
   { name: 'Custom "No Data" Text', component: CodeSandbox('RgRpRDv80') },
   { name: 'Footers', component: CodeSandbox('KOqQXn3p8') },
-  { name: 'Custom Filtering', component: CodeSandbox('5Eyxxxyx') },
+  { name: 'Custom Filtering', component: CodeSandbox('9y543m99ww') },
   { name: 'Controlled Component', component: CodeSandbox('r7XEZRK2') },
   { name: 'Editable Table', component: CodeSandbox('n5r19gzQP') },
   {
