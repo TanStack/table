@@ -27,8 +27,6 @@
 <br />
 <br />
 
-[![Sponsor](https://app.codesponsor.io/embed/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table.svg)](https://app.codesponsor.io/link/zpmS8V9r31sBSCeVzP7Wm6Sr/react-tools/react-table)
-
 ## Features
 - Lightweight at 11kb (and just 2kb more for styles)
 - Fully customizable (JSX, templates, state, styles, callbacks)
