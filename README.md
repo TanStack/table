@@ -99,6 +99,7 @@ import 'react-table/react-table.css'
 
   <!-- JS -->
   <script src="https://unpkg.com/react-table@latest/react-table.js"></script>
+  <script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
 
   <script>
     var ReactTable = window.ReactTable.default

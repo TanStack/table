@@ -15,24 +15,29 @@
     "datagrid"
   ],
   "main": "lib/index.js",
+  "module": "es/index.js",
   "files": [
     "src/",
+    "es/",
     "lib/",
     "react-table.js",
+    "react-table.min.js",
     "react-table.css",
     "media/*.png"
   ],
   "scripts": {
-    "build:node": "babel src --out-dir lib --source-maps inline",
-    "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn run css:autoprefix",
+    "build:cjs": "babel src --out-dir lib --source-maps inline",
+    "build:es": "BABEL_ENV=es babel src --out-dir es --source-maps inline",
+    "build:umd": "BABEL_ENV=umd rollup -c",
+    "build:umd-min": "BABEL_ENV=umd NODE_ENV=production rollup -c",
+    "build:css": "rimraf react-table.css && stylus src/index.styl --compress -o react-table.css && yarn css:autoprefix",
     "css:autoprefix": "postcss --use autoprefixer react-table.css -r",
     "watch": "npm-run-all --parallel watch:*",
-    "watch:node": "onchange 'src/**/*.js' -i -- npm run build:node",
-    "watch:css": "onchange 'src/**/*.styl' -i -- npm run build:css",
+    "watch:js": "onchange 'src/**/*.js' -i -- yarn build:cjs",
+    "watch:css": "onchange 'src/**/*.styl' -i -- yarn build:css",
     "test": "eslint src",
-    "umd": "rimraf react-table.js && webpack --config umd.webpack.js",
     "build": "npm-run-all build:*",
-    "prepublish": "npm run build && npm run umd",
+    "prepublish": "yarn build",
     "postpublish": "git push --tags",
     "docs": "yarn watch & cd docs && yarn && yarn start",
     "docs:build": "yarn build && cd docs && yarn && yarn build"
@@ -47,9 +52,11 @@
     "autoprefixer": "^6.7.0",
     "babel-cli": "6.14.0",
     "babel-eslint": "6.1.2",
-    "babel-preset-es2015": "6.14.0",
-    "babel-preset-react": "6.11.1",
-    "babel-preset-stage-2": "6.13.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^4.1.1",
     "eslint-config-react-tools": "^1.0.10",
     "eslint-plugin-class-property": "^1.0.6",
@@ -65,15 +72,63 @@
     "react-dom": "^15.4.2",
     "react-json-tree": "^0.10.9",
     "rimraf": "^2.6.1",
+    "rollup": "^0.55.3",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^3.0.0",
     "standard": "^10.0.2",
-    "stylus": "^0.54.5",
-    "webpack": "^2.5.1"
+    "stylus": "^0.54.5"
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-2",
-      "react"
-    ]
+    "env": {
+      "development": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": "commonjs"
+            }
+          ],
+          "react"
+        ],
+        "plugins": [
+          "transform-object-rest-spread",
+          "transform-class-properties"
+        ]
+      },
+      "es": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": false
+            }
+          ],
+          "react"
+        ],
+        "plugins": [
+          "transform-object-rest-spread",
+          "transform-class-properties"
+        ]
+      },
+      "umd": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": false
+            }
+          ],
+          "react"
+        ],
+        "plugins": [
+          "transform-object-rest-spread",
+          "transform-class-properties",
+          "external-helpers"
+        ]
+      }
+    }
   }
 }
