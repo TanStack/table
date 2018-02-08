@@ -67,7 +67,7 @@ export default (Component) => {
     {
       const { 
         columns:originalCols, isSelected, toggleSelection, toggleAll, keyField, selectAll, 
-        selectType, SelectAllInputComponent, SelectInputComponent,
+        selectType, selectWidth, SelectAllInputComponent, SelectInputComponent,
         ...rest 
       } = this.props;
       const select = {
@@ -75,7 +75,7 @@ export default (Component) => {
         accessor: ()=>'x', // this value is not important
         Header: this.headSelector.bind(this),
         Cell: (ci) => { return this.rowSelector.bind(this)(ci.original); },
-        width: 30,
+        width: selectWidth || 30,
         filterable: false,
         sortable: false,
         resizable: false,
