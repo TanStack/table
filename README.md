@@ -233,6 +233,7 @@ These are all of the available props (and their default values) for the main `<R
 
   // Server-side callbacks
   onFetchData: () => null,
+  fireFetchData: () => null,
 
   // Classes
   className: '',
@@ -741,6 +742,15 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
   }}
 />
 ```
+You can also fetch data manually with prop `fireFetchData`
+
+```javascript
+  <ReactTable
+  ...
+  fireFetchData={(fetchDataCallback) => fetchDataCallback()}
+  />
+```
+
 
 For a detailed example, take a peek at our <a href="https://github.com/react-tools/react-table/blob/master/stories/ServerSide.js" target="\_parent">async table mockup</a>
 

@@ -88,6 +88,7 @@ export default {
 
   // Server-side Callbacks
   onFetchData: () => null,
+  fireFetchData: () => null,
 
   // Classes
   className: '',

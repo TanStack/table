@@ -49,6 +49,7 @@ export default {
 
   // Server-side Callbacks
   onFetchData: PropTypes.func,
+  fireFetchData: PropTypes.func,
 
   // Classes
   className: PropTypes.string,
