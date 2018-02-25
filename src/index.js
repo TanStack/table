@@ -827,7 +827,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         getTrProps(finalState, undefined, undefined, this),
       )
       return (
-        <TrGroupComponent key={i} {...trGroupProps}>
+        <TrGroupComponent key={`pad-${i}`} {...trGroupProps}>
           <TrComponent
             className={classnames(
               '-padRow',
