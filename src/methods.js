@@ -611,7 +611,7 @@ export default Base =>
       event.stopPropagation()
       const parentWidth = event.target.parentElement.getBoundingClientRect()
         .width
-      const document = event.target.ownerDocument;
+      const document = event.target.ownerDocument
 
       let pageX
       if (isTouch) {
@@ -684,7 +684,7 @@ export default Base =>
     resizeColumnEnd (event) {
       event.stopPropagation()
       const isTouch = event.type === 'touchend' || event.type === 'touchcancel'
-      const document = event.target.ownerDocument;
+      const document = event.target.ownerDocument
 
       if (isTouch) {
         document.removeEventListener('touchmove', this.resizeColumnMoving)
