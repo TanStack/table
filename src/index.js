@@ -991,7 +991,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               {pagination}
             </div>
             : null}
-          {!pageRows.length &&
+          {!pageRows.length && !this.props.loading &&
             <NoDataComponent {...noDataProps}>
               {_.normalizeComponent(noDataText)}
             </NoDataComponent>}
