@@ -40,7 +40,7 @@ const stories = [
   },
   {
     name: '100k Rows w/ Pivoting & Sub Components',
-    component: CodeSandbox('DRmKj0XyK'),
+    component: CodeSandbox('z6njpyqox4'),
   },
   { name: 'Pivoting Options', component: CodeSandbox('kZKmNBK6r') },
   { name: 'Functional Rendering', component: CodeSandbox('VPZ0Bzv8X') },
