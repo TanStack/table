@@ -1,3 +1,65 @@
+## 6.7.5
+#### Fixes & Optimizations
+- Now passes `column` to `getResizerProps` (#667)
+- NOTE: `getResizerProps` is now only called if the column is resizable
+- Fixes the `className` ordering in defaultProps for ThComponent (#673)
+- NOTE: user supplied classNames now come at the end so they can extend the defaults
+
+## 6.7.4
+#### Fixes & Optimizations
+- Fix Prop types for columns
+
+## 6.7.3
+#### Fixes & Optimizations
+- Fix the rest of the proptypes
+
+## 6.7.2
+#### Fixes & Optimizations
+- `getPropTypes` proptype check
+
+## 6.7.1
+#### Fixes & Optimizations
+- `eslint-config` moved to dev deps
+
+## 6.7.0
+## 6.7.0-alpha-0
+#### New Features
+- Expose page/pageSize to rows/cells
+- Supply sort direction to custom sort methods
+
+#### Fixes & Optimizations
+- README updates
+- Linter cleanup
+- Added PropTypes node module
+- Deps, linting and style upgrades
+
+## 6.6.0
+#### Fixes & Optimizations
+- moved repo to react-tools
+- Doc examples moved to codesandbox.io
+- README updates
+- CSS refacting for rt-tfoot to match rt-thead
+- CSS more specific for input and select
+
+## 6.5.3 
+#### Fixes & Optimizations
+- `onClick` proxying and eslint
+
+## 6.5.2
+#### New Features
+- Provide onClick handleOriginal function - #406
+
+#### Fixes & Optimizations
+- README updates
+- `makePathArray` in utils - #326
+- Various fixes: #294, #376, #398, #415, 
+
+## 6.5.1
+#### Fixes & Optimizations
+- `defaultExpanded` now works correctly - #372
+- `column.getProps().rest` props are now applied correctly
+- `makeTemplateComponent` now supports `displayName` - #289
+
 ## 6.5.0
 ##### New Features
 - `column.filterAll` - defaults to `false`, but when set to `true` will provide the entire array of rows to `filterMethod` as opposed to one row at a time. This allows for more fine-grained filtering using any method you can dream up. See the [Custom Filtering example](https://react-table.js.org/#/story/custom-filtering) for more info.

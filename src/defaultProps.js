@@ -22,6 +22,7 @@ export default {
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   sortable: true,
+  multiSort: true,
   resizable: true,
   filterable: false,
   defaultSortDesc: false,
@@ -29,13 +30,15 @@ export default {
   defaultFiltered: [],
   defaultResized: [],
   defaultExpanded: {},
+  // eslint-disable-next-line no-unused-vars
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
     return row[id] !== undefined
       ? String(row[id]).startsWith(filter.value)
       : true
   },
-  defaultSortMethod: (a, b) => {
+  // eslint-disable-next-line no-unused-vars
+  defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = a === null || a === undefined ? '' : a
     b = b === null || b === undefined ? '' : b
@@ -49,7 +52,8 @@ export default {
     if (a < b) {
       return -1
     }
-    // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
+    // returning 0, undefined or any falsey value will use subsequent sorts or
+    // the index as a tiebreaker
     return 0
   },
 
@@ -171,52 +175,89 @@ export default {
   rowsText: 'rows',
 
   // Components
-  TableComponent: _.makeTemplateComponent('rt-table', 'Table'),
+  TableComponent: ({ children, className, ...rest }) => (
+    <div
+      className={classnames('rt-table', className)}
+      role="grid"
+      // tabIndex='0'
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
   TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead'),
   TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
-  TrGroupComponent: _.makeTemplateComponent('rt-tr-group', 'TrGroup'),
-  TrComponent: _.makeTemplateComponent('rt-tr', 'Tr'),
-  ThComponent: ({ toggleSort, className, children, ...rest }) => {
-    return (
-      <div
-        className={classnames(className, 'rt-th')}
-        onClick={e => {
-          toggleSort && toggleSort(e)
-        }}
-        {...rest}
-      >
-        {children}
-      </div>
-    )
-  },
-  TdComponent: _.makeTemplateComponent('rt-td', 'Td'),
+  TrGroupComponent: ({ children, className, ...rest }) => (
+    <div
+      className={classnames('rt-tr-group', className)}
+      role="rowgroup"
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
+  TrComponent: ({ children, className, ...rest }) => (
+    <div
+      className={classnames('rt-tr', className)}
+      role="row"
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
+  ThComponent: ({ toggleSort, className, children, ...rest }) => (
+    <div
+      className={classnames('rt-th', className)}
+      onClick={e => (
+        toggleSort && toggleSort(e)
+      )}
+      role="columnheader"
+      tabIndex="-1" // Resolves eslint issues without implementing keyboard navigation incorrectly
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
+  TdComponent: ({ toggleSort, className, children, ...rest }) => (
+    <div
+      className={classnames('rt-td', className)}
+      role="gridcell"
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
   TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
-  FilterComponent: ({ filter, onChange }) =>
+  FilterComponent: ({ filter, onChange }) => (
     <input
-      type='text'
+      type="text"
       style={{
         width: '100%',
       }}
       value={filter ? filter.value : ''}
       onChange={event => onChange(event.target.value)}
-    />,
-  ExpanderComponent: ({ isExpanded }) =>
+    />
+  ),
+  ExpanderComponent: ({ isExpanded }) => (
     <div className={classnames('rt-expander', isExpanded && '-open')}>
       &bull;
-    </div>,
-  PivotValueComponent: ({ subRows, value }) =>
+    </div>
+  ),
+  PivotValueComponent: ({ subRows, value }) => (
     <span>
       {value} {subRows && `(${subRows.length})`}
-    </span>,
+    </span>
+  ),
   AggregatedComponent: ({ subRows, column }) => {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
-      .map((row, i) =>
+      .map((row, i) => (
+        // eslint-disable-next-line react/no-array-index-key
         <span key={i}>
           {row[column.id]}
           {i < subRows.length - 1 ? ', ' : ''}
         </span>
-      )
+      ))
     return (
       <span>
         {previewValues}
@@ -228,15 +269,16 @@ export default {
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
-  LoadingComponent: ({ className, loading, loadingText, ...rest }) =>
+  LoadingComponent: ({ className, loading, loadingText, ...rest }) => (
     <div
       className={classnames('-loading', { '-active': loading }, className)}
       {...rest}
     >
-      <div className='-loading-inner'>
+      <div className="-loading-inner">
         {loadingText}
       </div>
-    </div>,
+    </div>
+  ),
   NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
   ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
   PadRowComponent: () => <span>&nbsp;</span>,

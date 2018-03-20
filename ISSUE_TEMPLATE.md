@@ -1,15 +1,14 @@
-## Problem Description
-include a detailed explanation of the problem here...
+## What version of React-Table are you using?
+Your bug may already be fixed in the latest release. Run `yarn upgrade react-table`!
+Place your version here...
 
-## Code Snippet(s) or Codepen (http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010)
+## What bug are you experiencing, or what feature are you proposing?
+Please include a detailed explanation here...
 
-## Steps to Reproduce
+## Use https://codesandbox.io/s/X6npLXPRW (by clicking the "Fork" button) to reproduce the issue.
+Then paste a link to your newly forked codesandbox here...
+
+## What are the steps to reproduce the issue?
 1. list the steps
-2. to reproduce the issue
-
-## System Information
-* **Browser & Browser Version:**
-* **Node Version:**
-* **OS Version:**
-* **NPM Version:**
-* **Yarn Version:**
+2. to reproduce
+3. the issue

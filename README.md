@@ -1,16 +1,12 @@
-<div align="center">
-  <a href="https://github.com/tannerlinsley/react-table" target="\_parent"><img src="https://github.com/tannerlinsley/react-table/raw/master/media/Banner.png" alt="React Table Logo" style="width:450px;"/></a>
-  <br />
-  <br />
-
+<div style="text-align:center;">
+  <a href="https://github.com/react-tools/react-table" target="\_parent"><img src="https://github.com/react-tools/media/raw/master/logo-react-table.png" alt="React Table Logo" style="width:450px;"/></a>
 </div>
 
 # React Table
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
-
-<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
+<a href="https://travis-ci.org/react-tools/react-table" target="\_parent">
+  <img alt="" src="https://travis-ci.org/react-tools/react-table.svg?branch=master" />
 </a>
 <a href="https://npmjs.com/package/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
@@ -18,8 +14,8 @@
 <a href="https://react-chat-signup.herokuapp.com/" target="\_parent">
   <img alt="" src="https://img.shields.io/badge/slack-react--chat-blue.svg" />
 </a>
-<a href="https://github.com/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star" />
+<a href="https://github.com/react-tools/react-table" target="\_parent">
+  <img alt="" src="https://img.shields.io/github/stars/react-tools/react-table.svg?style=social&label=Star" />
 </a>
 <a href="https://twitter.com/tannerlinsley" target="\_parent">
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
@@ -28,25 +24,27 @@
   <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
 </a>
 
-## Versions
-This document refers to version 6.x.x of react-table.
-
-Previous versions:
-
-[5.x.x Readme](https://github.com/tannerlinsley/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
+<br />
+<br />
 
 ## Features
-- Lightweight at 7kb (and just 2kb more for styles)
-- Fully customizable JSX templating
-- Supports both Client-side & Server-side pagination and multi-sorting
-- Column Pivoting & Aggregation
+- Lightweight at 11kb (and just 2kb more for styles)
+- Fully customizable (JSX, templates, state, styles, callbacks)
+- Client-side & Server-side pagination
+- Multi-sort
+- Filters
+- Pivoting & Aggregation
 - Minimal design & easily themeable
 - Fully controllable via optional props and callbacks
-- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io</a> by Tanner Linsley
+- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
-## Demos and examples
-- <a href="http://codepen.io/tannerlinsley/pen/QpeZBa?editors=0010" target="\_blank">Codepen</a>
-- <a href="http://react-table.js.org/#/story/simple-table" target="\_parent">Storybook</a>
+## [Demos and examples](http://react-table.js.org/#/story/simple-table)
+
+## Versions
+- This documentation is for version 6 of react-table.
+- [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
+- Previous versions:
+  - [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
 
 ## Table of Contents
 - [Installation](#installation)
@@ -74,7 +72,11 @@ Previous versions:
 ## Installation
 1. Install React Table as a dependency
 ```bash
+# Yarn
 $ yarn add react-table
+
+# NPM
+$ npm install react-table
 ```
 2. Import the `react-table` module
 ```javascript
@@ -97,6 +99,7 @@ import 'react-table/react-table.css'
 
   <!-- JS -->
   <script src="https://unpkg.com/react-table@latest/react-table.js"></script>
+  <script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
 
   <script>
     var ReactTable = window.ReactTable.default
@@ -160,13 +163,15 @@ These are all of the available props (and their default values) for the main `<R
   showPageSizeOptions: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
-  minRows: undefined,
+  minRows: undefined, // controls the minimum number of rows to display - default will be `pageSize`
+  // NOTE: if you set minRows to 0 then you get rid of empty padding rows BUT your table formatting will also look strange when there are ZERO rows in the table
   showPageJump: true,
   collapseOnSortingChange: true,
   collapseOnPageChange: true,
   collapseOnDataChange: true,
   freezeWhenExpanded: false,
   sortable: true,
+  multiSort: true,
   resizable: true,
   filterable: false,
   defaultSortDesc: false,
@@ -178,7 +183,7 @@ These are all of the available props (and their default values) for the main `<R
     const id = filter.pivotId || filter.id
     return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
-  defaultSortMethod: (a, b) => {
+  defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
     a = (a === null || a === undefined) ? -Infinity : a
     b = (b === null || b === undefined) ? -Infinity : b
@@ -308,7 +313,7 @@ These are all of the available props (and their default values) for the main `<R
   previousText: 'Previous',
   nextText: 'Next',
   loadingText: 'Loading...',
-  noDataText: 'No rows found',  
+  noDataText: 'No rows found',
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
@@ -338,7 +343,7 @@ Or just define them as props
 ```
 
 ## Columns
-`<ReactTable/>` requires a `columns` prop, which is an array of objects containing the following properties
+`<ReactTable />` requires a `columns` prop, which is an array of objects containing the following properties
 
 ```javascript
 [{
@@ -353,7 +358,7 @@ Or just define them as props
   Aggregated: JSX | String | Function // Used to render aggregated cells. Defaults to a comma separated list of values.
   Pivot: JSX | String | Function | cellInfo => ( // Used to render a pivoted cell
     <span>
-      <Expander/><PivotValue /> // By default, will utilize the the PivotValue and Expander components at run time
+      <Expander /><PivotValue /> // By default, will utilize the the PivotValue and Expander components at run time
     </span>
   ),
   PivotValue: JSX | String | Function // Used to render the value inside of a Pivot cell
@@ -475,7 +480,7 @@ If your data has a field/key with a dot (`.`) you will need to supply a custom a
 
 
 ## Column Header Groups
-To group columns with another header column, just nest your columns in a header column.  Header columns utilize the same header properties as regular columns.
+To group columns with another header column, just nest your columns in a header column. Header columns utilize the same header properties as regular columns.
 ```javascript
 const columns = [{
   Header: 'Favorites',
@@ -486,7 +491,7 @@ const columns = [{
   }, {
     Header: 'Food',
     accessor: 'favorites.food'
-  } {
+  }, {
     Header: 'Actor',
     accessor: 'favorites.actor'
   }]
@@ -496,7 +501,7 @@ const columns = [{
 ## Custom Cell, Header and Footer Rendering
 You can use any react component or JSX to display content in column headers, cells and footers. Any component you use will be passed the following props (if available):
 - `row` - Original row from your data
-- `row` - The post-accessed values from the original row
+- `original` - The post-accessed values from the original row
 - `index` - The index of the row
 - `viewIndex` - the index of the row relative to the current page
 - `level` - The nesting depth (zero-indexed)
@@ -576,6 +581,8 @@ Every single built-in component's props can be dynamically extended using any on
 />
 ```
 
+If used, **a callback prop must return an valid object**, even if it's an empty one.
+
 These callbacks are executed with each render of the element with four parameters:
  1. Table State
  2. RowInfo (undefined if not applicable)
@@ -588,12 +595,21 @@ This makes it extremely easy to add, say... a row click callback!
 <ReactTable
   getTdProps={(state, rowInfo, column, instance) => {
     return {
-      onClick: e => {
+      onClick: (e, handleOriginal) => {
         console.log('A Td Element was clicked!')
         console.log('it produced this event:', e)
         console.log('It was in this column:', column)
         console.log('It was in this row:', rowInfo)
         console.log('It was in this table instance:', instance)
+
+        // IMPORTANT! React-Table uses onClick internally to trigger
+        // events like expanding SubComponents and pivots.
+        // By default a custom 'onClick' handler will override this functionality.
+        // If you want to fire the original onClick handler, call the
+        // 'handleOriginal' function.
+        if (handleOriginal) {
+          handleOriginal()
+        }
       }
     }
   }}
@@ -726,7 +742,7 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
 />
 ```
 
-For a detailed example, take a peek at our <a href="https://github.com/tannerlinsley/react-table/blob/master/stories/ServerSide.js" target="\_parent">async table mockup</a>
+For a detailed example, take a peek at our <a href="https://github.com/react-tools/react-table/blob/master/stories/ServerSide.js" target="\_parent">async table mockup</a>
 
 ## Fully Controlled Component
 React Table by default works fantastically out of the box, but you can achieve even more control and customization if you choose to maintain the state yourself. It is very easy to do, even if you only want to manage *parts* of the state.
@@ -744,7 +760,7 @@ Here are the props and their corresponding callbacks that control the state of t
       id: 'firstName',
       desc: true
   }]}
-  expandedRows={{ // The nested row indexes on the current page that should appear expanded
+  expanded={{ // The nested row indexes on the current page that should appear expanded
     1: true,
     4: true,
     5: {
@@ -752,11 +768,11 @@ Here are the props and their corresponding callbacks that control the state of t
       3: true
     }
   }}
-  filters={[{ // the current filters model
+  filtered={[{ // the current filters model
     id: 'lastName',
     value: 'linsley'
   }]}
-  resizing={[{ // the current resized column model
+  resized={[{ // the current resized column model
     "id": "lastName",
     "value": 446.25
   }]}
@@ -765,8 +781,8 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageChange={(pageIndex) => {...}} // Called when the page index is changed by the user
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortedChange={(newSorted, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
-  onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expandedRows`
-  onFilteredChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the filterRender option.
+  onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expanded`
+  onFilteredChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the Filter option.
   onResizedChange={(newResized, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
@@ -818,6 +834,9 @@ Sorting comes built in with React-Table.
 ## Multi-Sort
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
+You can set the `multiSort` prop to `false` to disable this feature (which may be useful for server-side sorting when you are not
+going to sort multiple columns).
+
 ## Custom Sorting Algorithm
 To override the default sorting algorithm for the whole table use the `defaultSortMethod` prop.
 
@@ -826,9 +845,9 @@ To override the sorting algorithm for a single column, use the `sortMethod` colu
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
 - `a` the first value to compare
 - `b` the second value to compare
-- `dir` the
+- `desc` true if sort is descending, false if ascending
 ```javascript
-defaultSortMethod = (a, b) => {
+defaultSortMethod = (a, b, desc) => {
   // force null and undefined to the bottom
   a = (a === null || a === undefined) ? -Infinity : a
   b = (b === null || b === undefined) ? -Infinity : b
@@ -860,7 +879,7 @@ By default, `filterMethod` is passed a single row of data at a time, and you are
 
 Alternatively, you can set `filterAll` to `true`, and `filterMethod` will be passed the entire array of rows to be filtered, and you will then be responsible for returning the new filtered array. This is extremely handy when you need to utilize a utility like fuzzy matching that requires the entire array of items.
 
-To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you wan't to pass to the `filterMethod` option whenever the filter has changed.
+To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you want to pass to the `filterMethod` option whenever the filter has changed.
 
 See <a href="http://react-table.js.org/#/story/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
 
@@ -875,7 +894,7 @@ Object.assign(ReactTableDefaults, {
   TbodyComponent: component,
   TrGroupComponent: component,
   TrComponent: component,
-  ThComponent: component
+  ThComponent: component,
   TdComponent: component,
   TfootComponent: component,
   ExpanderComponent: component,
@@ -899,7 +918,7 @@ Object.assign(ReactTableDefaults, {
   />
 ```
 
-If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating <a href="https://github.com/tannerlinsley/react-table/blob/master/src/index.js" target="\_parent">the source</a> for the component you wish to replace.
+If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating <a href="https://github.com/react-tools/react-table/blob/master/src/index.js" target="\_parent">the source</a> for the component you wish to replace.
 
 
 ## Contributing
@@ -911,7 +930,7 @@ If you would like to help develop a suggested feature follow these steps:
 - Auto-build files as you edit with `$ yarn run watch`
 - Implement your changes to files in the `src/` directory
 - Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`,
+- View changes as you edit `docs/src`
 - Submit PR for review
 
 #### Scripts

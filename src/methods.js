@@ -42,7 +42,7 @@ export default Base =>
       let expanderColumn = columns.find(
         col =>
           col.expander ||
-          (col.columns && col.columns.some(col2 => col2.expander))
+          (col.columns && col.columns.some(col2 => col2.expander)),
       )
       // The actual expander might be in the columns field of a group column
       if (expanderColumn && !expanderColumn.expander) {
@@ -55,7 +55,7 @@ export default Base =>
         columnsWithExpander = [expanderColumn, ...columnsWithExpander]
       }
 
-      const makeDecoratedColumn = column => {
+      const makeDecoratedColumn = (column, parentColumn) => {
         let dcol
         if (column.expander) {
           dcol = {
@@ -70,6 +70,16 @@ export default Base =>
           }
         }
 
+        // Ensure minWidth is not greater than maxWidth if set
+        if (dcol.maxWidth < dcol.minWidth) {
+          dcol.minWidth = dcol.maxWidth
+        }
+
+        if (parentColumn) {
+          dcol.parentColumn = parentColumn
+        }
+
+        // First check for string accessor
         if (typeof dcol.accessor === 'string') {
           dcol.id = dcol.id || dcol.accessor
           const accessorString = dcol.accessor
@@ -77,55 +87,52 @@ export default Base =>
           return dcol
         }
 
+        // Fall back to functional accessor (but require an ID)
         if (dcol.accessor && !dcol.id) {
           console.warn(dcol)
           throw new Error(
-            'A column id is required if using a non-string accessor for column above.'
+            'A column id is required if using a non-string accessor for column above.',
           )
         }
 
+        // Fall back to an undefined accessor
         if (!dcol.accessor) {
-          dcol.accessor = d => undefined
-        }
-
-        // Ensure minWidth is not greater than maxWidth if set
-        if (dcol.maxWidth < dcol.minWidth) {
-          dcol.minWidth = dcol.maxWidth
+          dcol.accessor = () => undefined
         }
 
         return dcol
       }
 
+      const allDecoratedColumns = []
+
       // Decorate the columns
-      const decorateAndAddToAll = col => {
-        const decoratedColumn = makeDecoratedColumn(col)
+      const decorateAndAddToAll = (column, parentColumn) => {
+        const decoratedColumn = makeDecoratedColumn(column, parentColumn)
         allDecoratedColumns.push(decoratedColumn)
         return decoratedColumn
       }
-      let allDecoratedColumns = []
-      const decoratedColumns = columnsWithExpander.map((column, i) => {
+
+      const decoratedColumns = columnsWithExpander.map(column => {
         if (column.columns) {
           return {
             ...column,
-            columns: column.columns.map(decorateAndAddToAll),
+            columns: column.columns.map(d => decorateAndAddToAll(d, column)),
           }
-        } else {
-          return decorateAndAddToAll(column)
         }
+        return decorateAndAddToAll(column)
       })
 
       // Build the visible columns, headers and flat column list
       let visibleColumns = decoratedColumns.slice()
       let allVisibleColumns = []
 
-      visibleColumns = visibleColumns.map((column, i) => {
+      visibleColumns = visibleColumns.map(column => {
         if (column.columns) {
-          const visibleSubColumns = column.columns.filter(
-            d =>
-              pivotBy.indexOf(d.id) > -1
-                ? false
-                : _.getFirstDefined(d.show, true)
-          )
+          const visibleSubColumns = column.columns.filter(d => (
+            pivotBy.indexOf(d.id) > -1
+              ? false
+              : _.getFirstDefined(d.show, true)
+          ))
           return {
             ...column,
             columns: visibleSubColumns,
@@ -134,13 +141,13 @@ export default Base =>
         return column
       })
 
-      visibleColumns = visibleColumns.filter(column => {
-        return column.columns
+      visibleColumns = visibleColumns.filter(column => (
+        column.columns
           ? column.columns.length
           : pivotBy.indexOf(column.id) > -1
             ? false
             : _.getFirstDefined(column.show, true)
-      })
+      ))
 
       // Find any custom pivot location
       const pivotIndex = visibleColumns.findIndex(col => col.pivot)
@@ -156,8 +163,17 @@ export default Base =>
           }
         })
 
+        const PivotParentColumn = pivotColumns.reduce(
+          (prev, current) =>
+            prev && prev === current.parentColumn && current.parentColumn,
+          pivotColumns[0].parentColumn,
+        )
+
+        let PivotGroupHeader = hasHeaderGroups && PivotParentColumn.Header
+        PivotGroupHeader = PivotGroupHeader || (() => <strong>Pivoted</strong>)
+
         let pivotColumnGroup = {
-          header: () => <strong>Group</strong>,
+          Header: PivotGroupHeader,
           columns: pivotColumns.map(col => ({
             ...this.props.pivotDefaults,
             ...col,
@@ -186,13 +202,13 @@ export default Base =>
         headerGroups.push({
           ...this.props.column,
           ...column,
-          columns: columns,
+          columns,
         })
         currentSpan = []
       }
 
       // Build flast list of allVisibleColumns and HeaderGroups
-      visibleColumns.forEach((column, i) => {
+      visibleColumns.forEach(column => {
         if (column.columns) {
           allVisibleColumns = allVisibleColumns.concat(column.columns)
           if (currentSpan.length > 0) {
@@ -222,12 +238,17 @@ export default Base =>
         })
         if (row[subRowsKey]) {
           row[subRowsKey] = row[subRowsKey].map((d, i) =>
-            accessRow(d, i, level + 1)
+            accessRow(d, i, level + 1),
           )
         }
         return row
       }
       let resolvedData = data.map((d, i) => accessRow(d, i))
+
+      // TODO: Make it possible to fabricate nested rows without pivoting
+      const aggregatingColumns = allVisibleColumns.filter(
+        d => !d.expander && d.aggregate,
+      )
 
       // If pivoting, recursively group the data
       const aggregate = rows => {
@@ -238,11 +259,6 @@ export default Base =>
         })
         return aggregationValues
       }
-
-      // TODO: Make it possible to fabricate nested rows without pivoting
-      const aggregatingColumns = allVisibleColumns.filter(
-        d => !d.expander && d.aggregate
-      )
       if (pivotBy.length) {
         const groupRecursively = (rows, keys, i = 0) => {
           // This is the last level, just return the rows
@@ -251,20 +267,18 @@ export default Base =>
           }
           // Group the rows together for this level
           let groupedRows = Object.entries(
-            _.groupBy(rows, keys[i])
-          ).map(([key, value]) => {
-            return {
-              [pivotIDKey]: keys[i],
-              [pivotValKey]: key,
-              [keys[i]]: key,
-              [subRowsKey]: value,
-              [nestingLevelKey]: i,
-              [groupedByPivotKey]: true,
-            }
-          })
+            _.groupBy(rows, keys[i]),
+          ).map(([key, value]) => ({
+            [pivotIDKey]: keys[i],
+            [pivotValKey]: key,
+            [keys[i]]: key,
+            [subRowsKey]: value,
+            [nestingLevelKey]: i,
+            [groupedByPivotKey]: true,
+          }))
           // Recurse into the subRows
           groupedRows = groupedRows.map(rowGroup => {
-            let subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
+            const subRows = groupRecursively(rowGroup[subRowsKey], keys, i + 1)
             return {
               ...rowGroup,
               [subRowsKey]: subRows,
@@ -313,10 +327,10 @@ export default Base =>
               resolvedData,
               filtered,
               defaultFilterMethod,
-              allVisibleColumns
+              allVisibleColumns,
             ),
             sorted,
-            sortMethodsByColumnID
+            sortMethodsByColumnID,
           ),
       }
     }
@@ -350,11 +364,10 @@ export default Base =>
           // If 'filterAll' is set to true, pass the entire dataset to the filter method
           if (column.filterAll) {
             return filterMethod(nextFilter, filteredSoFar, column)
-          } else {
-            return filteredSoFar.filter(row => {
-              return filterMethod(nextFilter, row, column)
-            })
           }
+          return filteredSoFar.filter(row => (
+            filterMethod(nextFilter, row, column)
+          ))
         }, filteredData)
 
         // Apply the filter to the subrows if we are pivoting, and then
@@ -370,7 +383,7 @@ export default Base =>
                 row[this.props.subRowsKey],
                 filtered,
                 defaultFilterMethod,
-                allVisibleColumns
+                allVisibleColumns,
               ),
             }
           })
@@ -395,16 +408,16 @@ export default Base =>
         sorted.map(sort => {
           // Support custom sorting methods for each column
           if (sortMethodsByColumnID[sort.id]) {
-            return (a, b) => {
-              return sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id])
-            }
+            return (a, b) => (
+              sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id], sort.desc)
+            )
           }
-          return (a, b) => {
-            return this.props.defaultSortMethod(a[sort.id], b[sort.id])
-          }
+          return (a, b) => (
+            this.props.defaultSortMethod(a[sort.id], b[sort.id], sort.desc)
+          )
         }),
         sorted.map(d => !d.desc),
-        this.props.indexKey
+        this.props.indexKey,
       )
 
       sortedData.forEach(row => {
@@ -414,7 +427,7 @@ export default Base =>
         row[this.props.subRowsKey] = this.sortData(
           row[this.props.subRowsKey],
           sorted,
-          sortMethodsByColumnID
+          sortMethodsByColumnID,
         )
       })
 
@@ -424,7 +437,7 @@ export default Base =>
     getMinRows () {
       return _.getFirstDefined(
         this.props.minRows,
-        this.getStateOrProp('pageSize')
+        this.getStateOrProp('pageSize'),
       )
     }
 
@@ -436,10 +449,9 @@ export default Base =>
       if (collapseOnPageChange) {
         newState.expanded = {}
       }
-      this.setStateWithData(newState, () => {
+      this.setStateWithData(newState, () => (
         onPageChange && onPageChange(page)
-        this.fireFetchData()
-      })
+      ))
     }
 
     onPageSizeChange (newPageSize) {
@@ -455,17 +467,16 @@ export default Base =>
           pageSize: newPageSize,
           page: newPage,
         },
-        () => {
+        () => (
           onPageSizeChange && onPageSizeChange(newPageSize, newPage)
-          this.fireFetchData()
-        }
+        ),
       )
     }
 
     sortColumn (column, additive) {
       const { sorted, skipNextSort, defaultSortDesc } = this.getResolvedState()
 
-      const firstSortDirection = column.hasOwnProperty('defaultSortDesc')
+      const firstSortDirection = Object.prototype.hasOwnProperty.call(column, 'defaultSortDesc')
         ? column.defaultSortDesc
         : defaultSortDesc
       const secondSortDirection = !firstSortDirection
@@ -505,20 +516,18 @@ export default Base =>
               newSorted = [existing]
             }
           }
+        } else if (additive) {
+          newSorted.push({
+            id: column.id,
+            desc: firstSortDirection,
+          })
         } else {
-          if (additive) {
-            newSorted.push({
+          newSorted = [
+            {
               id: column.id,
               desc: firstSortDirection,
-            })
-          } else {
-            newSorted = [
-              {
-                id: column.id,
-                desc: firstSortDirection,
-              },
-            ]
-          }
+            },
+          ]
         }
       } else {
         // Multi-Sort
@@ -542,21 +551,19 @@ export default Base =>
           if (!additive) {
             newSorted = newSorted.slice(existingIndex, column.length)
           }
-        } else {
-          // New Sort Column
-          if (additive) {
-            newSorted = newSorted.concat(
-              column.map(d => ({
-                id: d.id,
-                desc: firstSortDirection,
-              }))
-            )
-          } else {
-            newSorted = column.map(d => ({
+        // New Sort Column
+        } else if (additive) {
+          newSorted = newSorted.concat(
+            column.map(d => ({
               id: d.id,
               desc: firstSortDirection,
-            }))
-          }
+            })),
+          )
+        } else {
+          newSorted = column.map(d => ({
+            id: d.id,
+            desc: firstSortDirection,
+          }))
         }
       }
 
@@ -568,10 +575,9 @@ export default Base =>
               : this.state.page,
           sorted: newSorted,
         },
-        () => {
+        () => (
           onSortedChange && onSortedChange(newSorted, column, additive)
-          this.fireFetchData()
-        }
+        ),
       )
     }
 
@@ -580,16 +586,14 @@ export default Base =>
       const { onFilteredChange } = this.props
 
       // Remove old filter first if it exists
-      const newFiltering = (filtered || []).filter(x => {
-        if (x.id !== column.id) {
-          return true
-        }
-      })
+      const newFiltering = (filtered || []).filter(x => (
+        x.id !== column.id
+      ))
 
       if (value !== '') {
         newFiltering.push({
           id: column.id,
-          value: value,
+          value,
         })
       }
 
@@ -597,14 +601,14 @@ export default Base =>
         {
           filtered: newFiltering,
         },
-        () => {
+        () => (
           onFilteredChange && onFilteredChange(newFiltering, column, value)
-          this.fireFetchData()
-        }
+        ),
       )
     }
 
-    resizeColumnStart (column, event, isTouch) {
+    resizeColumnStart (event, column, isTouch) {
+      event.stopPropagation()
       const parentWidth = event.target.parentElement.getBoundingClientRect()
         .width
 
@@ -615,12 +619,13 @@ export default Base =>
         pageX = event.pageX
       }
 
+      this.trapEvents = true
       this.setStateWithData(
         {
           currentlyResizing: {
             id: column.id,
             startX: pageX,
-            parentWidth: parentWidth,
+            parentWidth,
           },
         },
         () => {
@@ -633,12 +638,51 @@ export default Base =>
             document.addEventListener('mouseup', this.resizeColumnEnd)
             document.addEventListener('mouseleave', this.resizeColumnEnd)
           }
-        }
+        },
+      )
+    }
+
+    resizeColumnMoving (event) {
+      event.stopPropagation()
+      const { onResizedChange } = this.props
+      const { resized, currentlyResizing } = this.getResolvedState()
+
+      // Delete old value
+      const newResized = resized.filter(x => x.id !== currentlyResizing.id)
+
+      let pageX
+
+      if (event.type === 'touchmove') {
+        pageX = event.changedTouches[0].pageX
+      } else if (event.type === 'mousemove') {
+        pageX = event.pageX
+      }
+
+      // Set the min size to 10 to account for margin and border or else the
+      // group headers don't line up correctly
+      const newWidth = Math.max(
+        currentlyResizing.parentWidth + pageX - currentlyResizing.startX,
+        11,
+      )
+
+      newResized.push({
+        id: currentlyResizing.id,
+        value: newWidth,
+      })
+
+      this.setStateWithData(
+        {
+          resized: newResized,
+        },
+        () => (
+          onResizedChange && onResizedChange(newResized, event)
+        ),
       )
     }
 
     resizeColumnEnd (event) {
-      let isTouch = event.type === 'touchend' || event.type === 'touchcancel'
+      event.stopPropagation()
+      const isTouch = event.type === 'touchend' || event.type === 'touchcancel'
 
       if (isTouch) {
         document.removeEventListener('touchmove', this.resizeColumnMoving)
@@ -661,41 +705,5 @@ export default Base =>
           currentlyResizing: false,
         })
       }
-    }
-
-    resizeColumnMoving (event) {
-      const { onResizedChange } = this.props
-      const { resized, currentlyResizing } = this.getResolvedState()
-
-      // Delete old value
-      const newResized = resized.filter(x => x.id !== currentlyResizing.id)
-
-      let pageX
-
-      if (event.type === 'touchmove') {
-        pageX = event.changedTouches[0].pageX
-      } else if (event.type === 'mousemove') {
-        pageX = event.pageX
-      }
-
-      // Set the min size to 10 to account for margin and border or else the group headers don't line up correctly
-      const newWidth = Math.max(
-        currentlyResizing.parentWidth + pageX - currentlyResizing.startX,
-        11
-      )
-
-      newResized.push({
-        id: currentlyResizing.id,
-        value: newWidth,
-      })
-
-      this.setStateWithData(
-        {
-          resized: newResized,
-        },
-        () => {
-          onResizedChange && onResizedChange(newResized, event)
-        }
-      )
     }
   }
