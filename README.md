@@ -205,6 +205,7 @@ These are all of the available props (and their default values) for the main `<R
   // Controlled State Overrides (see Fully Controlled Component section)
   page: undefined,
   pageSize: undefined,
+  totalPages: undefined,
   sorted: [],
   filtered: [],
   resized: [],

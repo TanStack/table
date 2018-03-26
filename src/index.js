@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-//
+
 import _ from './utils'
 import Lifecycle from './lifecycle'
 import Methods from './methods'
@@ -36,6 +36,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.state = {
       page: 0,
       pageSize: props.defaultPageSize,
+      totalPages: props.totalPages,
       sorted: props.defaultSorted,
       expanded: props.defaultExpanded,
       filtered: props.defaultFiltered,
@@ -935,6 +936,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         <PaginationComponent
           {...resolvedState}
           pages={pages}
+          totalPages={this.totalPages}
           canPrevious={canPrevious}
           canNext={canNext}
           onPageChange={this.onPageChange}
