@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-//
-// import _ from './utils'
 
 const defaultButton = props => (
   <button type="button" {...props} className="-btn">
@@ -56,6 +54,7 @@ export default class ReactTablePagination extends Component {
       showPageSizeOptions,
       pageSizeOptions,
       pageSize,
+      totalPages,
       showPageJump,
       canPrevious,
       canNext,
@@ -109,7 +108,9 @@ export default class ReactTablePagination extends Component {
                 {page + 1}
               </span>}{' '}
             {this.props.ofText}{' '}
-            <span className="-totalPages">{pages || 1}</span>
+            <span className="-totalPages">
+              {totalPages || (pages || 1)}
+            </span>
           </span>
           {showPageSizeOptions &&
             <span className="select-wrap -pageSizeOptions">

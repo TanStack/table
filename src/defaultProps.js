@@ -60,6 +60,7 @@ export default {
   // Controlled State Props
   // page: undefined,
   // pageSize: undefined,
+  // totalPages: undefined,
   // sorted: [],
   // filtered: [],
   // resized: [],
