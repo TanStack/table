@@ -4,6 +4,7 @@ import React from 'react'
 //
 import ReactStory, { defaultProps } from 'react-story'
 import CodeSandbox from './CodeSandbox.js'
+import CodeSandboxAutoImport from './CodeSandboxAutoImport.js'
 import './stories/utils/prism.css'
 import '../../react-table.css'
 
@@ -20,6 +21,7 @@ const stories = [
   
   // { name: 'Tester', component: Test },
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
+  { name: 'CodeSandbox auto-import POC (Simple Table)', component: CodeSandboxAutoImport('simpletable') },
   {
     name: 'Cell Renderers & Custom Components',
     component: CodeSandbox('OyRL04Z4Y'),
