@@ -299,6 +299,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const makeHeader = (column, i) => {
       const resizedCol = resized.find(x => x.id === column.id) || {}
       const sort = sorted.find(d => d.id === column.id)
+      const sortIndex = sort ? sorted.map(d => d.id).indexOf(column.id) : null;
       const show =
         typeof column.show === 'function' ? column.show() : column.show
       const width = _.getFirstDefined(
@@ -353,6 +354,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             classes,
             isResizable && 'rt-resizable-header',
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
+            sort ? `-sort-${sortIndex}` : '',
             isSortable && '-cursor-pointer',
             !show && '-hidden',
             pivotBy &&
