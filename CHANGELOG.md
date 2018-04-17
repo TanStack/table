@@ -1,3 +1,9 @@
+## 6.8.1
+
+#### Fixes & Optimizations
+
+* Updated eslint and code formatting
+
 ## 6.7.5
 
 #### Fixes & Optimizations
