@@ -40,9 +40,7 @@ export default Base =>
       let columnsWithExpander = [...columns]
 
       let expanderColumn = columns.find(
-        col =>
-          col.expander ||
-          (col.columns && col.columns.some(col2 => col2.expander)),
+        col => col.expander || (col.columns && col.columns.some(col2 => col2.expander))
       )
       // The actual expander might be in the columns field of a group column
       if (expanderColumn && !expanderColumn.expander) {
@@ -91,7 +89,7 @@ export default Base =>
         if (dcol.accessor && !dcol.id) {
           console.warn(dcol)
           throw new Error(
-            'A column id is required if using a non-string accessor for column above.',
+            'A column id is required if using a non-string accessor for column above.'
           )
         }
 
@@ -128,11 +126,9 @@ export default Base =>
 
       visibleColumns = visibleColumns.map(column => {
         if (column.columns) {
-          const visibleSubColumns = column.columns.filter(d => (
-            pivotBy.indexOf(d.id) > -1
-              ? false
-              : _.getFirstDefined(d.show, true)
-          ))
+          const visibleSubColumns = column.columns.filter(
+            d => (pivotBy.indexOf(d.id) > -1 ? false : _.getFirstDefined(d.show, true))
+          )
           return {
             ...column,
             columns: visibleSubColumns,
@@ -141,13 +137,14 @@ export default Base =>
         return column
       })
 
-      visibleColumns = visibleColumns.filter(column => (
-        column.columns
-          ? column.columns.length
-          : pivotBy.indexOf(column.id) > -1
-            ? false
-            : _.getFirstDefined(column.show, true)
-      ))
+      visibleColumns = visibleColumns.filter(
+        column =>
+          column.columns
+            ? column.columns.length
+            : pivotBy.indexOf(column.id) > -1
+              ? false
+              : _.getFirstDefined(column.show, true)
+      )
 
       // Find any custom pivot location
       const pivotIndex = visibleColumns.findIndex(col => col.pivot)
@@ -164,9 +161,8 @@ export default Base =>
         })
 
         const PivotParentColumn = pivotColumns.reduce(
-          (prev, current) =>
-            prev && prev === current.parentColumn && current.parentColumn,
-          pivotColumns[0].parentColumn,
+          (prev, current) => prev && prev === current.parentColumn && current.parentColumn,
+          pivotColumns[0].parentColumn
         )
 
         let PivotGroupHeader = hasHeaderGroups && PivotParentColumn.Header
@@ -237,18 +233,14 @@ export default Base =>
           row[column.id] = column.accessor(d)
         })
         if (row[subRowsKey]) {
-          row[subRowsKey] = row[subRowsKey].map((d, i) =>
-            accessRow(d, i, level + 1),
-          )
+          row[subRowsKey] = row[subRowsKey].map((d, i) => accessRow(d, i, level + 1))
         }
         return row
       }
       let resolvedData = data.map((d, i) => accessRow(d, i))
 
       // TODO: Make it possible to fabricate nested rows without pivoting
-      const aggregatingColumns = allVisibleColumns.filter(
-        d => !d.expander && d.aggregate,
-      )
+      const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)
 
       // If pivoting, recursively group the data
       const aggregate = rows => {
@@ -266,9 +258,7 @@ export default Base =>
             return rows
           }
           // Group the rows together for this level
-          let groupedRows = Object.entries(
-            _.groupBy(rows, keys[i]),
-          ).map(([key, value]) => ({
+          let groupedRows = Object.entries(_.groupBy(rows, keys[i])).map(([key, value]) => ({
             [pivotIDKey]: keys[i],
             [pivotValKey]: key,
             [keys[i]]: key,
@@ -323,14 +313,9 @@ export default Base =>
         sortedData: manual
           ? resolvedData
           : this.sortData(
-            this.filterData(
-              resolvedData,
-              filtered,
-              defaultFilterMethod,
-              allVisibleColumns,
-            ),
+            this.filterData(resolvedData, filtered, defaultFilterMethod, allVisibleColumns),
             sorted,
-            sortMethodsByColumnID,
+            sortMethodsByColumnID
           ),
       }
     }
@@ -365,9 +350,7 @@ export default Base =>
           if (column.filterAll) {
             return filterMethod(nextFilter, filteredSoFar, column)
           }
-          return filteredSoFar.filter(row => (
-            filterMethod(nextFilter, row, column)
-          ))
+          return filteredSoFar.filter(row => filterMethod(nextFilter, row, column))
         }, filteredData)
 
         // Apply the filter to the subrows if we are pivoting, and then
@@ -383,7 +366,7 @@ export default Base =>
                 row[this.props.subRowsKey],
                 filtered,
                 defaultFilterMethod,
-                allVisibleColumns,
+                allVisibleColumns
               ),
             }
           })
@@ -408,16 +391,12 @@ export default Base =>
         sorted.map(sort => {
           // Support custom sorting methods for each column
           if (sortMethodsByColumnID[sort.id]) {
-            return (a, b) => (
-              sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id], sort.desc)
-            )
+            return (a, b) => sortMethodsByColumnID[sort.id](a[sort.id], b[sort.id], sort.desc)
           }
-          return (a, b) => (
-            this.props.defaultSortMethod(a[sort.id], b[sort.id], sort.desc)
-          )
+          return (a, b) => this.props.defaultSortMethod(a[sort.id], b[sort.id], sort.desc)
         }),
         sorted.map(d => !d.desc),
-        this.props.indexKey,
+        this.props.indexKey
       )
 
       sortedData.forEach(row => {
@@ -427,7 +406,7 @@ export default Base =>
         row[this.props.subRowsKey] = this.sortData(
           row[this.props.subRowsKey],
           sorted,
-          sortMethodsByColumnID,
+          sortMethodsByColumnID
         )
       })
 
@@ -435,10 +414,7 @@ export default Base =>
     }
 
     getMinRows () {
-      return _.getFirstDefined(
-        this.props.minRows,
-        this.getStateOrProp('pageSize'),
-      )
+      return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
     }
 
     // User actions
@@ -449,9 +425,7 @@ export default Base =>
       if (collapseOnPageChange) {
         newState.expanded = {}
       }
-      this.setStateWithData(newState, () => (
-        onPageChange && onPageChange(page)
-      ))
+      this.setStateWithData(newState, () => onPageChange && onPageChange(page))
     }
 
     onPageSizeChange (newPageSize) {
@@ -467,9 +441,7 @@ export default Base =>
           pageSize: newPageSize,
           page: newPage,
         },
-        () => (
-          onPageSizeChange && onPageSizeChange(newPageSize, newPage)
-        ),
+        () => onPageSizeChange && onPageSizeChange(newPageSize, newPage)
       )
     }
 
@@ -551,13 +523,13 @@ export default Base =>
           if (!additive) {
             newSorted = newSorted.slice(existingIndex, column.length)
           }
-        // New Sort Column
+          // New Sort Column
         } else if (additive) {
           newSorted = newSorted.concat(
             column.map(d => ({
               id: d.id,
               desc: firstSortDirection,
-            })),
+            }))
           )
         } else {
           newSorted = column.map(d => ({
@@ -569,15 +541,10 @@ export default Base =>
 
       this.setStateWithData(
         {
-          page:
-            (!sorted.length && newSorted.length) || !additive
-              ? 0
-              : this.state.page,
+          page: (!sorted.length && newSorted.length) || !additive ? 0 : this.state.page,
           sorted: newSorted,
         },
-        () => (
-          onSortedChange && onSortedChange(newSorted, column, additive)
-        ),
+        () => onSortedChange && onSortedChange(newSorted, column, additive)
       )
     }
 
@@ -586,9 +553,7 @@ export default Base =>
       const { onFilteredChange } = this.props
 
       // Remove old filter first if it exists
-      const newFiltering = (filtered || []).filter(x => (
-        x.id !== column.id
-      ))
+      const newFiltering = (filtered || []).filter(x => x.id !== column.id)
 
       if (value !== '') {
         newFiltering.push({
@@ -601,16 +566,13 @@ export default Base =>
         {
           filtered: newFiltering,
         },
-        () => (
-          onFilteredChange && onFilteredChange(newFiltering, column, value)
-        ),
+        () => onFilteredChange && onFilteredChange(newFiltering, column, value)
       )
     }
 
     resizeColumnStart (event, column, isTouch) {
       event.stopPropagation()
-      const parentWidth = event.target.parentElement.getBoundingClientRect()
-        .width
+      const parentWidth = event.target.parentElement.getBoundingClientRect().width
 
       let pageX
       if (isTouch) {
@@ -638,7 +600,7 @@ export default Base =>
             document.addEventListener('mouseup', this.resizeColumnEnd)
             document.addEventListener('mouseleave', this.resizeColumnEnd)
           }
-        },
+        }
       )
     }
 
@@ -662,7 +624,7 @@ export default Base =>
       // group headers don't line up correctly
       const newWidth = Math.max(
         currentlyResizing.parentWidth + pageX - currentlyResizing.startX,
-        11,
+        11
       )
 
       newResized.push({
@@ -674,9 +636,7 @@ export default Base =>
         {
           resized: newResized,
         },
-        () => (
-          onResizedChange && onResizedChange(newResized, event)
-        ),
+        () => onResizedChange && onResizedChange(newResized, event)
       )
     }
 

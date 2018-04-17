@@ -3,6 +3,7 @@
 </div>
 
 # React Table
+
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
 <a href="https://travis-ci.org/react-tools/react-table" target="\_parent">
@@ -28,49 +29,53 @@
 <br />
 
 ## Features
-- Lightweight at 11kb (and just 2kb more for styles)
-- Fully customizable (JSX, templates, state, styles, callbacks)
-- Client-side & Server-side pagination
-- Multi-sort
-- Filters
-- Pivoting & Aggregation
-- Minimal design & easily themeable
-- Fully controllable via optional props and callbacks
-- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
+
+* Lightweight at 11kb (and just 2kb more for styles)
+* Fully customizable (JSX, templates, state, styles, callbacks)
+* Client-side & Server-side pagination
+* Multi-sort
+* Filters
+* Pivoting & Aggregation
+* Minimal design & easily themeable
+* Fully controllable via optional props and callbacks
+* <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
 ## [Demos and examples](http://react-table.js.org/#/story/simple-table)
 
 ## Versions
-- This documentation is for version 6 of react-table.
-- [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
-- Previous versions:
-  - [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
+
+* This documentation is for version 6 of react-table.
+* [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
+* Previous versions:
+  * [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
 
 ## Table of Contents
-- [Installation](#installation)
-- [Example](#example)
-- [Data](#data)
-- [Props](#props)
-- [Columns](#columns)
-- [Column Header Groups](#column-header-groups)
-- [Custom Cell and Header and Footer Rendering](#custom-cell-header-and-footer-rendering)
-- [Styles](#styles)
-- [Custom Props](#custom-props)
-- [Pivoting and Aggregation](#pivoting-and-aggregation)
-- [Sub Tables and Sub Components](#sub-tables-and-sub-components)
-- [Server-side Data](#server-side-data)
-- [Fully Controlled Component](#fully-controlled-component)
-- [Functional Rendering](#functional-rendering)
-- [Multi-Sort](#multi-sort)
-- [Filtering](#filtering)
-- [Component Overrides](#component-overrides)
-- [Contributing](#contributing)
-- [Scripts](#scripts)
-- [Used By](#used-by)
 
+* [Installation](#installation)
+* [Example](#example)
+* [Data](#data)
+* [Props](#props)
+* [Columns](#columns)
+* [Column Header Groups](#column-header-groups)
+* [Custom Cell and Header and Footer Rendering](#custom-cell-header-and-footer-rendering)
+* [Styles](#styles)
+* [Custom Props](#custom-props)
+* [Pivoting and Aggregation](#pivoting-and-aggregation)
+* [Sub Tables and Sub Components](#sub-tables-and-sub-components)
+* [Server-side Data](#server-side-data)
+* [Fully Controlled Component](#fully-controlled-component)
+* [Functional Rendering](#functional-rendering)
+* [Multi-Sort](#multi-sort)
+* [Filtering](#filtering)
+* [Component Overrides](#component-overrides)
+* [Contributing](#contributing)
+* [Scripts](#scripts)
+* [Used By](#used-by)
 
 ## Installation
-1. Install React Table as a dependency
+
+1.  Install React Table as a dependency
+
 ```bash
 # Yarn
 $ yarn add react-table
@@ -78,21 +83,27 @@ $ yarn add react-table
 # NPM
 $ npm install react-table
 ```
-2. Import the `react-table` module
+
+2.  Import the `react-table` module
+
 ```javascript
 // ES6
-import ReactTable from 'react-table'
+import ReactTable from "react-table";
 // ES5
-var ReactTable = require('react-table').default
+var ReactTable = require("react-table").default;
 ```
-3. Import styles by including `react-table.css`
+
+3.  Import styles by including `react-table.css`
+
 ```javascript
 // JS (Webpack)
 import 'react-table/react-table.css'
 // Old-school
 <link rel="stylesheet" href="node_modules/react-table/react-table.css">
 ```
+
 ##### CDN
+
 ```html
   <!-- CSS -->
   <link rel="stylesheet" href="https://unpkg.com/react-table@latest/react-table.css">
@@ -106,8 +117,8 @@ import 'react-table/react-table.css'
   </script>
 ```
 
-
 ## Example
+
 ```javascript
 import ReactTable from 'react-table'
 
@@ -147,11 +158,13 @@ render() {
 ```
 
 ## Data
+
 Simply pass the `data` prop anything that resembles an array or object. Client-side sorting and pagination are built in, and your table will update gracefully as you change any props. [Server-side data](#server-side-data) is also supported!
 
-
 ## Props
+
 These are all of the available props (and their default values) for the main `<ReactTable />` component.
+
 ```javascript
 {
   // General
@@ -323,13 +336,13 @@ These are all of the available props (and their default values) for the main `<R
 You can easily override the core defaults like so:
 
 ```javascript
-import { ReactTableDefaults } from 'react-table'
+import { ReactTableDefaults } from "react-table";
 
 Object.assign(ReactTableDefaults, {
   defaultPageSize: 10,
-  minRows: 3,
+  minRows: 3
   // etc...
-})
+});
 ```
 
 Or just define them as props
@@ -343,6 +356,7 @@ Or just define them as props
 ```
 
 ## Columns
+
 `<ReactTable />` requires a `columns` prop, which is an array of objects containing the following properties
 
 ```javascript
@@ -412,23 +426,27 @@ Or just define them as props
 ```
 
 ## Renderers
+
 React Table supports very flexible renderers for just about everything:
-- `Cell` - Renders a standard cell
-- `Header` - Renders a column header or column group header
-- `Footer` - Renders a column footer
-- `Filter` - Renders a column's filter UI
-- `Aggregated` - Renders an aggregated cell
-- `Pivot` - Renders a pivoted cell (by default, will utilize `Expander` and `PivotValue` renderers)
-- `PivotValue` - Renders the value inside a `Pivot` renderer
-- `Expander` - Renders the Expander used in both the default `Pivot` renderer and any expander-designated column
+
+* `Cell` - Renders a standard cell
+* `Header` - Renders a column header or column group header
+* `Footer` - Renders a column footer
+* `Filter` - Renders a column's filter UI
+* `Aggregated` - Renders an aggregated cell
+* `Pivot` - Renders a pivoted cell (by default, will utilize `Expander` and `PivotValue` renderers)
+* `PivotValue` - Renders the value inside a `Pivot` renderer
+* `Expander` - Renders the Expander used in both the default `Pivot` renderer and any expander-designated column
 
 Any of these renderers can be one of the following:
-- A React Class
-- JSX or any rendered react component
-- Stateless functional component
-- Function that returns any primitive
+
+* A React Class
+* JSX or any rendered react component
+* Stateless functional component
+* Function that returns any primitive
 
 All of these formats receive the following props:
+
 ```javascript
 {
   // Row-level props
@@ -457,6 +475,7 @@ All of these formats receive the following props:
 ```
 
 ## Accessors
+
 Accessors are functions that return the value to populate the row's value for the column.
 This lets the render function not have to worry about accessing the correct data, the value is automatically populated in it's props.
 
@@ -469,18 +488,19 @@ This array is then used as the path to the value to return.
 ("$" is the placeholder value that would be returned by the default accessor)
 
 | value        | path            | data                   |
-|--------------|-----------------|------------------------|
+| ------------ | --------------- | ---------------------- |
 | "a"          | ["a"]           | {"a": $}               |
 | "a.b"        | ["a", "b"]      | {"a": {"b": $}}        |
 | "a[0]"       | ["a", "0"]      | {"a": [$]}             |
 | ["a.b", "c"] | ["a", "b", "c"] | {"a": {"b": {"c": $}}} |
 
-*NOTE*
+_NOTE_
 If your data has a field/key with a dot (`.`) you will need to supply a custom accessor.
 
-
 ## Column Header Groups
+
 To group columns with another header column, just nest your columns in a header column. Header columns utilize the same header properties as regular columns.
+
 ```javascript
 const columns = [{
   Header: 'Favorites',
@@ -499,66 +519,83 @@ const columns = [{
 ```
 
 ## Custom Cell, Header and Footer Rendering
+
 You can use any react component or JSX to display content in column headers, cells and footers. Any component you use will be passed the following props (if available):
-- `row` - Original row from your data
-- `original` - The post-accessed values from the original row
-- `index` - The index of the row
-- `viewIndex` - the index of the row relative to the current page
-- `level` - The nesting depth (zero-indexed)
-- `nestingPath` - The nesting path of the row
-- `aggregated` - A boolean stating if the row is an aggregation row
-- `subRows` - An array of any expandable sub-rows contained in this row
+
+* `row` - Original row from your data
+* `original` - The post-accessed values from the original row
+* `index` - The index of the row
+* `viewIndex` - the index of the row relative to the current page
+* `level` - The nesting depth (zero-indexed)
+* `nestingPath` - The nesting path of the row
+* `aggregated` - A boolean stating if the row is an aggregation row
+* `subRows` - An array of any expandable sub-rows contained in this row
 
 ```javascript
 // This column uses a stateless component to produce a different colored bar depending on the value
 // You can also use stateful components or any other function that returns JSX
-const columns = [{
-  Header: () => <span><i className='fa-tasks' /> Progress</span>,
-  accessor: 'progress',
-  Cell: row => (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#dadada',
-        borderRadius: '2px'
-      }}
-    >
+const columns = [
+  {
+    Header: () => (
+      <span>
+        <i className="fa-tasks" /> Progress
+      </span>
+    ),
+    accessor: "progress",
+    Cell: row => (
       <div
         style={{
-          width: `${row.value}%`,
-          height: '100%',
-          backgroundColor: row.value > 66 ? '#85cc00'
-            : row.value > 33 ? '#ffbf00'
-            : '#ff2e00',
-          borderRadius: '2px',
-          transition: 'all .2s ease-out'
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#dadada",
+          borderRadius: "2px"
         }}
-      />
-    </div>
-  )
-}]
+      >
+        <div
+          style={{
+            width: `${row.value}%`,
+            height: "100%",
+            backgroundColor:
+              row.value > 66
+                ? "#85cc00"
+                : row.value > 33
+                  ? "#ffbf00"
+                  : "#ff2e00",
+            borderRadius: "2px",
+            transition: "all .2s ease-out"
+          }}
+        />
+      </div>
+    )
+  }
+];
 ```
 
 ## Styles
-- React-table ships with a minimal and clean stylesheet to get you on your feet quickly.
-- The stylesheet is located at `react-table/react-table.css`.
-- There are countless ways to import a stylesheet. If you have questions on how to do so, consult the documentation of your build system.
+
+* React-table ships with a minimal and clean stylesheet to get you on your feet quickly.
+* The stylesheet is located at `react-table/react-table.css`.
+* There are countless ways to import a stylesheet. If you have questions on how to do so, consult the documentation of your build system.
 
 #### Classes
-- Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
-- Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
+
+* Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
+* Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
 
 #### CSS
+
 We think the default styles looks great! But, if you prefer a more custom look, all of the included styles are easily overridable. Every single component contains a unique class that makes it super easy to customize. Just go for it!
 
 #### JS Styles
+
 Every single react-table element and `get[ComponentName]Props` callback supports `classname` and `style` props.
 
 ## Custom Props
 
 #### Built-in Components
+
 Every single built-in component's props can be dynamically extended using any one of these prop-callbacks:
+
 ```javascript
 <ReactTable
   getProps={fn}
@@ -584,23 +621,25 @@ Every single built-in component's props can be dynamically extended using any on
 If used, **a callback prop must return an valid object**, even if it's an empty one.
 
 These callbacks are executed with each render of the element with four parameters:
- 1. Table State
- 2. RowInfo (undefined if not applicable)
- 3. Column (undefined if not applicable)
- 4. React Table Instance
+
+1.  Table State
+2.  RowInfo (undefined if not applicable)
+3.  Column (undefined if not applicable)
+4.  React Table Instance
 
 This makes it extremely easy to add, say... a row click callback!
+
 ```javascript
 // When any Td element is clicked, we'll log out some information
 <ReactTable
   getTdProps={(state, rowInfo, column, instance) => {
     return {
       onClick: (e, handleOriginal) => {
-        console.log('A Td Element was clicked!')
-        console.log('it produced this event:', e)
-        console.log('It was in this column:', column)
-        console.log('It was in this row:', rowInfo)
-        console.log('It was in this table instance:', instance)
+        console.log("A Td Element was clicked!");
+        console.log("it produced this event:", e);
+        console.log("It was in this column:", column);
+        console.log("It was in this row:", rowInfo);
+        console.log("It was in this table instance:", instance);
 
         // IMPORTANT! React-Table uses onClick internally to trigger
         // events like expanding SubComponents and pivots.
@@ -608,32 +647,35 @@ This makes it extremely easy to add, say... a row click callback!
         // If you want to fire the original onClick handler, call the
         // 'handleOriginal' function.
         if (handleOriginal) {
-          handleOriginal()
+          handleOriginal();
         }
       }
-    }
+    };
   }}
 />
 ```
 
 You can use these callbacks for dynamic styling as well!
+
 ```javascript
 // Any Tr element will be green if its (row.age > 20)
 <ReactTable
   getTrProps={(state, rowInfo, column) => {
     return {
       style: {
-        background: rowInfo.row.age > 20 ? 'green' : 'red'
+        background: rowInfo.row.age > 20 ? "green" : "red"
       }
-    }
+    };
   }}
 />
 ```
 
 #### Column Components
+
 Just as core components can have dynamic props, columns and column headers can too!
 
 You can utilize either of these prop callbacks on columns:
+
 ```javascript
 const columns = [{
   getHeaderProps: () => (...),
@@ -642,22 +684,27 @@ const columns = [{
 ```
 
 In a similar fashion these can be used to dynamically style just about anything!
+
 ```javascript
 // This columns cells will be red if (row.name === Santa Clause)
-const columns = [{
-  getProps: (state, rowInfo, column) => {
-    return {
-      style: {
-        background: rowInfo.row.name === 'Santa Clause' ? 'red' : null
-      }
+const columns = [
+  {
+    getProps: (state, rowInfo, column) => {
+      return {
+        style: {
+          background: rowInfo.row.name === "Santa Clause" ? "red" : null
+        }
+      };
     }
   }
-}]
+];
 ```
 
 ## Pivoting and Aggregation
+
 Pivoting the table will group records together based on their accessed values and allow the rows in that group to be expanded underneath it.
 To pivot, pass an array of `columnID`'s to `pivotBy`. Remember, a column's `id` is either the one that you assign it (when using a custom accessors) or its `accessor` string.
+
 ```javascript
 <ReactTable
   ...
@@ -666,52 +713,60 @@ To pivot, pass an array of `columnID`'s to `pivotBy`. Remember, a column's `id` 
 ```
 
 Naturally when grouping rows together, you may want to aggregate the rows inside it into the grouped column. No aggregation is done by default, however, it is very simple to aggregate any pivoted columns:
+
 ```javascript
 // In this example, we use lodash to sum and average the values, but you can use whatever you want to aggregate.
-const columns = [{
-  Header: 'Age',
-  accessor: 'age',
-  aggregate: (values, rows) => _.round(_.mean(values)),
-  Aggregated: row => {
-    // You can even render the cell differently if it's an aggregated cell
-    return <span>row.value (avg)</span>
+const columns = [
+  {
+    Header: "Age",
+    accessor: "age",
+    aggregate: (values, rows) => _.round(_.mean(values)),
+    Aggregated: row => {
+      // You can even render the cell differently if it's an aggregated cell
+      return <span>row.value (avg)</span>;
+    }
+  },
+  {
+    Header: "Visits",
+    accessor: "visits",
+    aggregate: (values, rows) => _.sum(values)
   }
-}, {
-  Header: 'Visits',
-  accessor: 'visits',
-  aggregate: (values, rows) => _.sum(values)
-}]
+];
 ```
 
 Pivoted columns can be sorted just like regular columns including holding down the `<shift>` button to multi-sort.
 
 ## Sub Tables and Sub Components
+
 By adding a `SubComponent` props, you can easily add an expansion level to all root-level rows:
+
 ```javascript
 <ReactTable
   data={data}
   columns={columns}
   defaultPageSize={10}
-  SubComponent={(row) => {
+  SubComponent={row => {
     return (
       <div>
-        You can put any component you want here, even another React Table! You even have access to the row-level data if you need!  Spark-charts, drill-throughs, infographics... the possibilities are endless!
+        You can put any component you want here, even another React Table! You
+        even have access to the row-level data if you need! Spark-charts,
+        drill-throughs, infographics... the possibilities are endless!
       </div>
-    )
+    );
   }}
 />
 ```
 
-
 ## Server-side Data
+
 If you want to handle pagination, sorting, and filtering on the server, `react-table` makes it easy on you.
 
-1. Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
-1. Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
-1. Subscribe to the `onFetchData` prop. This function is called at `compomentDidMount` and any time sorting, pagination or filterting is changed in the table
-1. In the `onFetchData` callback, request your data using the provided information in the params of the function (current state and instance)
-1. Update your data with the rows to be displayed
-1. Optionally set how many pages there are total
+1.  Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
+1.  Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
+1.  Subscribe to the `onFetchData` prop. This function is called at `compomentDidMount` and any time sorting, pagination or filterting is changed in the table
+1.  In the `onFetchData` callback, request your data using the provided information in the params of the function (current state and instance)
+1.  Update your data with the rows to be displayed
+1.  Optionally set how many pages there are total
 
 ```javascript
 <ReactTable
@@ -745,9 +800,11 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
 For a detailed example, take a peek at our <a href="https://github.com/react-tools/react-table/blob/master/stories/ServerSide.js" target="\_parent">async table mockup</a>
 
 ## Fully Controlled Component
-React Table by default works fantastically out of the box, but you can achieve even more control and customization if you choose to maintain the state yourself. It is very easy to do, even if you only want to manage *parts* of the state.
+
+React Table by default works fantastically out of the box, but you can achieve even more control and customization if you choose to maintain the state yourself. It is very easy to do, even if you only want to manage _parts_ of the state.
 
 Here are the props and their corresponding callbacks that control the state of the a table:
+
 ```javascript
 <ReactTable
   // Props
@@ -788,36 +845,44 @@ Here are the props and their corresponding callbacks that control the state of t
 ```
 
 ## Functional Rendering
+
 Possibly one of the coolest features of React-Table is its ability to expose internal components and state for custom render logic. The easiest way to do this is to pass a function as the child of `<ReactTable />`.
 
 The function you pass will be called with the following items:
-- Fully-resolved state of the table
-- A function that returns the standard table component
-- The instance of the component
+
+* Fully-resolved state of the table
+* A function that returns the standard table component
+* The instance of the component
 
 You can then return any JSX or react you want! This turns out to be perfect for:
-- Accessing the internal state of the table without a `ref`
-- Decorating the table or extending it with your own UI
-- Building your own custom display logic
+
+* Accessing the internal state of the table without a `ref`
+* Decorating the table or extending it with your own UI
+* Building your own custom display logic
 
 Accessing internal state and wrapping with more UI:
+
 ```javascript
-<ReactTable
-  data={data}
-  columns={columns}
->
+<ReactTable data={data} columns={columns}>
   {(state, makeTable, instance) => {
     return (
-      <div style={{
-        background: '#ffcf00',
-        borderRadius: '5px',
-        overflow: 'hidden',
-        padding: '5px'
-      }}>
-        <pre><code>state.allVisibleColumns === {JSON.stringify(state.allVisibleColumns, null, 4)}</code></pre>
+      <div
+        style={{
+          background: "#ffcf00",
+          borderRadius: "5px",
+          overflow: "hidden",
+          padding: "5px"
+        }}
+      >
+        <pre>
+          <code>
+            state.allVisibleColumns ==={" "}
+            {JSON.stringify(state.allVisibleColumns, null, 4)}
+          </code>
+        </pre>
         {makeTable()}
       </div>
-    )
+    );
   }}
 </ReactTable>
 ```
@@ -825,48 +890,55 @@ Accessing internal state and wrapping with more UI:
 The possibilities are endless!
 
 ## Sorting
+
 Sorting comes built in with React-Table.
-- Click a column header to sort by its accessor.
-- Click it again to reverse the sort.
-- Set `defaultSortDesc` property to `true` to make the first sort direction default to descending.
-- Override a specific column's default sort direction by using the same `defaultSortDesc` property on a column, set to `true`
+
+* Click a column header to sort by its accessor.
+* Click it again to reverse the sort.
+* Set `defaultSortDesc` property to `true` to make the first sort direction default to descending.
+* Override a specific column's default sort direction by using the same `defaultSortDesc` property on a column, set to `true`
 
 ## Multi-Sort
+
 When clicking on a column header, hold shift to multi-sort! You can toggle `ascending` `descending` and `none` for multi-sort columns. Clicking on a header without holding shift will clear the multi-sort and replace it with the single sort of that column. It's quite handy!
 
 You can set the `multiSort` prop to `false` to disable this feature (which may be useful for server-side sorting when you are not
 going to sort multiple columns).
 
 ## Custom Sorting Algorithm
+
 To override the default sorting algorithm for the whole table use the `defaultSortMethod` prop.
 
 To override the sorting algorithm for a single column, use the `sortMethod` column property.
 
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
-- `a` the first value to compare
-- `b` the second value to compare
-- `desc` true if sort is descending, false if ascending
+
+* `a` the first value to compare
+* `b` the second value to compare
+* `desc` true if sort is descending, false if ascending
+
 ```javascript
 defaultSortMethod = (a, b, desc) => {
   // force null and undefined to the bottom
-  a = (a === null || a === undefined) ? -Infinity : a
-  b = (b === null || b === undefined) ? -Infinity : b
+  a = a === null || a === undefined ? -Infinity : a;
+  b = b === null || b === undefined ? -Infinity : b;
   // force any string values to lowercase
-  a = typeof a === 'string' ? a.toLowerCase() : a
-  b = typeof b === 'string' ? b.toLowerCase() : b
+  a = typeof a === "string" ? a.toLowerCase() : a;
+  b = typeof b === "string" ? b.toLowerCase() : b;
   // Return either 1 or -1 to indicate a sort priority
   if (a > b) {
-    return 1
+    return 1;
   }
   if (a < b) {
-    return -1
+    return -1;
   }
   // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
-  return 0
-}
+  return 0;
+};
 ```
 
 ## Filtering
+
 Filtering can be enabled by setting the `filterable` option on the table.
 
 If you don't want particular column to be filtered you can set the `filterable={false}` option on the column.
@@ -884,7 +956,9 @@ To completely override the filter that is shown, you can set the `Filter` column
 See <a href="http://react-table.js.org/#/story/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
 
 ## Component Overrides
+
 Though we confidently stand by the markup and architecture behind it, `react-table` does offer the ability to change the core componentry it uses to render everything. You can extend or override these internal components by passing a react component to it's corresponding prop on either the global props or on a one-off basis like so:
+
 ```javascript
 // Change the global default
 import { ReactTableDefaults } from 'react-table'
@@ -920,24 +994,24 @@ Object.assign(ReactTableDefaults, {
 
 If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating <a href="https://github.com/react-tools/react-table/blob/master/src/index.js" target="\_parent">the source</a> for the component you wish to replace.
 
-
 ## Contributing
+
 To suggest a feature, create an issue if it does not already exist.
 If you would like to help develop a suggested feature follow these steps:
 
-- Fork this repo
-- Install dependencies with `$ yarn`
-- Auto-build files as you edit with `$ yarn run watch`
-- Implement your changes to files in the `src/` directory
-- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`
-- Submit PR for review
+* Fork this repo
+* Install dependencies with `$ yarn`
+* Auto-build files as you edit with `$ yarn run watch`
+* Implement your changes to files in the `src/` directory
+* Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
+* View changes as you edit `docs/src`
+* Submit PR for review
 
 #### Scripts
 
-- `$ yarn run watch` Watches files and builds via babel
-- `$ yarn run docs` Runs the storybook server
-- `$ yarn run test` Runs the test suite
+* `$ yarn run watch` Watches files and builds via babel
+* `$ yarn run docs` Runs the storybook server
+* `$ yarn run test` Runs the test suite
 
 ## Used By
 

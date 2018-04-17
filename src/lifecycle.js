@@ -17,10 +17,7 @@ export default Base =>
       const defaultableOptions = ['sorted', 'filtered', 'resized', 'expanded']
       defaultableOptions.forEach(x => {
         const defaultName = `default${x.charAt(0).toUpperCase() + x.slice(1)}`
-        if (
-          JSON.stringify(oldState[defaultName]) !==
-          JSON.stringify(newState[defaultName])
-        ) {
+        if (JSON.stringify(oldState[defaultName]) !== JSON.stringify(newState[defaultName])) {
           newState[x] = newState[defaultName]
         }
       })
@@ -34,8 +31,7 @@ export default Base =>
         if (oldState[x] !== newState[x]) {
           const baseName = x.replace('able', '')
           const optionName = `${baseName}ed`
-          const defaultName = `default${optionName.charAt(0).toUpperCase() +
-            optionName.slice(1)}`
+          const defaultName = `default${optionName.charAt(0).toUpperCase() + optionName.slice(1)}`
           newState[optionName] = newState[defaultName]
         }
       })
@@ -79,13 +75,11 @@ export default Base =>
         oldState.sorted !== newResolvedState.sorted ||
         oldState.filtered !== newResolvedState.filtered ||
         oldState.showFilters !== newResolvedState.showFilters ||
-        (!newResolvedState.frozen &&
-          oldState.resolvedData !== newResolvedState.resolvedData)
+        (!newResolvedState.frozen && oldState.resolvedData !== newResolvedState.resolvedData)
       ) {
         // Handle collapseOnsortedChange & collapseOnDataChange
         if (
-          (oldState.sorted !== newResolvedState.sorted &&
-            this.props.collapseOnSortingChange) ||
+          (oldState.sorted !== newResolvedState.sorted && this.props.collapseOnSortingChange) ||
           oldState.filtered !== newResolvedState.filtered ||
           oldState.showFilters !== newResolvedState.showFilters ||
           (oldState.sortedData &&
@@ -108,19 +102,19 @@ export default Base =>
       if (newResolvedState.sortedData) {
         newResolvedState.pages = newResolvedState.manual
           ? newResolvedState.pages
-          : Math.ceil(
-            newResolvedState.sortedData.length / newResolvedState.pageSize,
-          )
+          : Math.ceil(newResolvedState.sortedData.length / newResolvedState.pageSize)
         newResolvedState.page = Math.max(
           newResolvedState.page >= newResolvedState.pages
             ? newResolvedState.pages - 1
             : newResolvedState.page,
-          0,
+          0
         )
       }
 
       return this.setState(newResolvedState, () => {
-        if (cb) { cb() }
+        if (cb) {
+          cb()
+        }
         if (
           oldState.page !== newResolvedState.page ||
           oldState.pageSize !== newResolvedState.pageSize ||

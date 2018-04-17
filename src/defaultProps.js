@@ -33,9 +33,7 @@ export default {
   // eslint-disable-next-line no-unused-vars
   defaultFilterMethod: (filter, row, column) => {
     const id = filter.pivotId || filter.id
-    return row[id] !== undefined
-      ? String(row[id]).startsWith(filter.value)
-      : true
+    return row[id] !== undefined ? String(row[id]).startsWith(filter.value) : true
   },
   // eslint-disable-next-line no-unused-vars
   defaultSortMethod: (a, b, desc) => {
@@ -188,29 +186,22 @@ export default {
   TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead'),
   TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
   TrGroupComponent: ({ children, className, ...rest }) => (
-    <div
-      className={classnames('rt-tr-group', className)}
-      role="rowgroup"
-      {...rest}
-    >
+    <div className={classnames('rt-tr-group', className)} role="rowgroup" {...rest}>
       {children}
     </div>
   ),
   TrComponent: ({ children, className, ...rest }) => (
-    <div
-      className={classnames('rt-tr', className)}
-      role="row"
-      {...rest}
-    >
+    <div className={classnames('rt-tr', className)} role="row" {...rest}>
       {children}
     </div>
   ),
-  ThComponent: ({ toggleSort, className, children, ...rest }) => (
+  ThComponent: ({
+    toggleSort, className, children, ...rest
+  }) => (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
       className={classnames('rt-th', className)}
-      onClick={e => (
-        toggleSort && toggleSort(e)
-      )}
+      onClick={e => toggleSort && toggleSort(e)}
       role="columnheader"
       tabIndex="-1" // Resolves eslint issues without implementing keyboard navigation incorrectly
       {...rest}
@@ -218,12 +209,10 @@ export default {
       {children}
     </div>
   ),
-  TdComponent: ({ toggleSort, className, children, ...rest }) => (
-    <div
-      className={classnames('rt-td', className)}
-      role="gridcell"
-      {...rest}
-    >
+  TdComponent: ({
+    toggleSort, className, children, ...rest
+  }) => (
+    <div className={classnames('rt-td', className)} role="gridcell" {...rest}>
       {children}
     </div>
   ),
@@ -239,9 +228,7 @@ export default {
     />
   ),
   ExpanderComponent: ({ isExpanded }) => (
-    <div className={classnames('rt-expander', isExpanded && '-open')}>
-      &bull;
-    </div>
+    <div className={classnames('rt-expander', isExpanded && '-open')}>&bull;</div>
   ),
   PivotValueComponent: ({ subRows, value }) => (
     <span>
@@ -249,34 +236,25 @@ export default {
     </span>
   ),
   AggregatedComponent: ({ subRows, column }) => {
-    const previewValues = subRows
-      .filter(d => typeof d[column.id] !== 'undefined')
-      .map((row, i) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <span key={i}>
-          {row[column.id]}
-          {i < subRows.length - 1 ? ', ' : ''}
-        </span>
-      ))
-    return (
-      <span>
-        {previewValues}
+    const previewValues = subRows.filter(d => typeof d[column.id] !== 'undefined').map((row, i) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <span key={i}>
+        {row[column.id]}
+        {i < subRows.length - 1 ? ', ' : ''}
       </span>
-    )
+    ))
+    return <span>{previewValues}</span>
   },
   PivotComponent: undefined, // this is a computed default generated using
   // the ExpanderComponent and PivotValueComponent at run-time in methods.js
   PaginationComponent: Pagination,
   PreviousComponent: undefined,
   NextComponent: undefined,
-  LoadingComponent: ({ className, loading, loadingText, ...rest }) => (
-    <div
-      className={classnames('-loading', { '-active': loading }, className)}
-      {...rest}
-    >
-      <div className="-loading-inner">
-        {loadingText}
-      </div>
+  LoadingComponent: ({
+    className, loading, loadingText, ...rest
+  }) => (
+    <div className={classnames('-loading', { '-active': loading }, className)} {...rest}>
+      <div className="-loading-inner">{loadingText}</div>
     </div>
   ),
   NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),

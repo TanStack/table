@@ -78,9 +78,7 @@ function orderBy (arr, funcs, dirs, indexKey) {
       }
     }
     // Use the row index for tie breakers
-    return dirs[0]
-      ? rowA[indexKey] - rowB[indexKey]
-      : rowB[indexKey] - rowA[indexKey]
+    return dirs[0] ? rowA[indexKey] - rowB[indexKey] : rowB[indexKey] - rowA[indexKey]
   })
 }
 
@@ -103,7 +101,7 @@ function clone (a) {
           return value.toString()
         }
         return value
-      }),
+      })
     )
   } catch (e) {
     return a
@@ -119,9 +117,7 @@ function getFirstDefined (...args) {
 }
 
 function sum (arr) {
-  return arr.reduce((a, b) => (
-    a + b
-  ), 0)
+  return arr.reduce((a, b) => a + b, 0)
 }
 
 function makeTemplateComponent (compClass, displayName) {
@@ -208,9 +204,13 @@ function isSortingDesc (d) {
 }
 
 function normalizeComponent (Comp, params = {}, fallback = Comp) {
-  return typeof Comp === 'function'
-    ? Object.getPrototypeOf(Comp).isReactComponent
-      ? <Comp {...params} />
-      : Comp(params)
-    : fallback
+  return typeof Comp === 'function' ? (
+    Object.getPrototypeOf(Comp).isReactComponent ? (
+      <Comp {...params} />
+    ) : (
+      Comp(params)
+    )
+  ) : (
+    fallback
+  )
 }

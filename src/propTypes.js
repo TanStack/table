@@ -82,41 +82,13 @@ export default {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       // Renderers
-      Cell: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
-      Header: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
-      Footer: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
-      Aggregated: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
-      Pivot: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
-      PivotValue: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
-      Expander: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.string,
-        PropTypes.func,
-      ]),
+      Cell: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
+      Header: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
+      Footer: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
+      Aggregated: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
+      Pivot: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
+      PivotValue: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
+      Expander: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
       Filter: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
       // All Columns
@@ -146,7 +118,7 @@ export default {
       filterMethod: PropTypes.func,
       filterAll: PropTypes.bool,
       sortMethod: PropTypes.func,
-    }),
+    })
   ),
 
   // Global Expander Column Defaults
