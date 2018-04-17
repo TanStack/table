@@ -340,10 +340,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          {_.normalizeComponent(column.Header, {
-            data: sortedData,
-            column,
-          })}
+          <div className={classnames(isResizable && 'rt-resizable-header-content')}>
+            {_.normalizeComponent(column.Header, {
+              data: sortedData,
+              column,
+            })}
+          </div>
           {resizer}
         </ThComponent>
       )
