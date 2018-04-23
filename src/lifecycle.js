@@ -5,6 +5,8 @@ export default Base =>
     }
 
     componentDidMount () {
+      this.props.fireFetchData(this.fireFetchData.bind(this))
+
       this.fireFetchData()
     }
 
