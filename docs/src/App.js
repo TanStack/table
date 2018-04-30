@@ -17,7 +17,7 @@ import HOCReadme from './stories/HOCReadme.js'
 const stories = [
   { name: 'Readme', component: Readme },
   { name: 'HOC Readme', component: HOCReadme },
-  
+
   // { name: 'Tester', component: Test },
   { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
   {
@@ -64,10 +64,11 @@ const stories = [
   { name: 'Tree Table (HOC)', component: CodeSandbox('lxmr4wynzq') },
   { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
   { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
+  //{ name: 'Foldable Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
 ]
 
 export default class App extends React.Component {
-  render () {
+  render() {
     return (
       <ReactStory
         style={{
