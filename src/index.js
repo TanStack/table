@@ -34,7 +34,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
 
     this.state = {
-      page: 0,
+      page: props.defaultPage,
       pageSize: props.defaultPageSize,
       sorted: props.defaultSorted,
       expanded: props.defaultExpanded,
