@@ -103,6 +103,45 @@ const SelectTreeTable = selectTableHOC(treeTableHOC(ReactTable));
 In this particular instance it is (probably) because the functions need access to the state on the wrapped component to manage
 the selected items. Although that is not totally clearly the issue.
 
+### AdvancedExpandTable
+
+HOC which allows any Cell in the row to toggle the row's
+SubComponent. Also allows the SubComponent to toggle itself.
+
+Expand functions available to any SubComponent or Column Cell:
+  toggleRowSubComponent
+  showRowSubComponent
+  hideRowSubComponent
+
+They are available through the `props.columnProps.rest` object.
+
+Simple Usage in a Column:
+
+```javascript
+    Cell: props => {
+      const {
+        value
+        columnProps: { rest: { showRowSubComponent } },
+        nestingPath
+      } = props;
+      return (
+        <div>
+          <button
+            onClick={e => showRowSubComponent(nestingPath, e)}
+          >
+            {value}
+          </button>
+        </div>
+      );
+    }
+```
+
+Each Column Renderer (E.g. Cell ) gets the expand functions in its props
+Each SubComponent gets the expand functions in its props
+
+Expand functions takes the `nestingPath` or `rowInfo` given to each
+Column Renderer and SubComponent already by ReactTable.
+
 ## HOC Guide for ReactTable
 
 There are a few rules required when writing a HOC for ReactTable (other than meeting the normal lint standards - which are
