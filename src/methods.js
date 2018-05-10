@@ -118,13 +118,13 @@ export default Base =>
           }
         }
         return decorateAndAddToAll(column, parent)
-      };
+      }
 
       const decoratedColumns = columnsWithExpander.map(decorateColumn)
 
       // Build the visible columns, headers and flat column list
       let visibleColumns = decoratedColumns.slice()
-      let allVisibleColumns = []
+      const allVisibleColumns = []
 
       const visibleReducer = (visible, column) => {
         if (column.columns) {
@@ -132,16 +132,16 @@ export default Base =>
           return visibleSubColumns.length ? visible.concat({
             ...column,
             columns: visibleSubColumns,
-          }) : visible;
+          }) : visible
         } else if (
           pivotBy.indexOf(column.id) > -1
             ? false
             : _.getFirstDefined(column.show, true)
         ) {
-          return visible.concat(column);
+          return visible.concat(column)
         }
-        return visible;
-      };
+        return visible
+      }
 
       visibleColumns = visibleColumns.reduce(visibleReducer, [])
 
@@ -197,8 +197,8 @@ export default Base =>
             span: totalSpan.length,
             groups: (totalSpan.length ? [{
               ...this.props.column,
-              columns: totalSpan
-            }] : [])
+              columns: totalSpan,
+            }] : []),
           }
         }
         headerGroupLayers[layer].span += columns.length
@@ -222,35 +222,35 @@ export default Base =>
             totalSpan = totalSpan.concat(add)
           }
 
-          layer++
+          layer += 1
           const {
             currentSpan: mySpan,
           } = column.columns.reduce(getAllVisibleColumns, {
             totalSpan,
           })
-          layer--
+          layer -= 1
 
           addToLayer(mySpan, layer, totalSpan, column)
           return {
             add: false,
             totalSpan: totalSpan.concat(mySpan),
-            currentSpan: currentSpan.concat(mySpan)
-          };
+            currentSpan: currentSpan.concat(mySpan),
+          }
         }
         allVisibleColumns.push(column)
         return {
           add: (add || []).concat(column),
           totalSpan,
-          currentSpan: currentSpan.concat(column)
+          currentSpan: currentSpan.concat(column),
         }
       }
       if (hasHeaderGroups) {
         const { currentSpan } = visibleColumns.reduce(getAllVisibleColumns, {})
-        headerGroupLayers = headerGroupLayers.map((layer) => {
+        headerGroupLayers = headerGroupLayers.map(layer => {
           if (layer.span !== currentSpan.length) {
             layer.groups = layer.groups.concat({
               ...this.props.column,
-              columns: currentSpan.slice(layer.span)
+              columns: currentSpan.slice(layer.span),
             })
           }
           return layer.groups
