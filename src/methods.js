@@ -244,8 +244,8 @@ export default Base =>
           currentSpan: currentSpan.concat(column),
         }
       }
+      const { currentSpan } = visibleColumns.reduce(getAllVisibleColumns, {})
       if (hasHeaderGroups) {
-        const { currentSpan } = visibleColumns.reduce(getAllVisibleColumns, {})
         headerGroupLayers = headerGroupLayers.map(layer => {
           if (layer.span !== currentSpan.length) {
             layer.groups = layer.groups.concat({
