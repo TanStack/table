@@ -9,6 +9,7 @@ const emptyObj = () => ({})
 export default {
   // General
   data: [],
+  resolveData: data => data,
   loading: false,
   showPagination: true,
   showPaginationTop: false,

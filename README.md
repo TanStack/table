@@ -161,6 +161,21 @@ render() {
 
 Simply pass the `data` prop anything that resembles an array or object. Client-side sorting and pagination are built in, and your table will update gracefully as you change any props. [Server-side data](#server-side-data) is also supported!
 
+```javascript
+<ReactTable
+  data={[...]}
+/>
+```
+
+**Pro Tip: Using the `resolveData` prop** - Any time the `data` prop value changes (using a `===` comparison), the table will update, but sometimes you need to materialize, alter, or shape this data before it enters the table. To do this, you can use the `resolveData` prop! It recieves the `data` prop as the only parameter and returns the resolved data.
+
+```javascript
+<ReactTable
+  data={myData} // The data prop should be immutable and only change when you want to update the table
+  resolveData={data => data.map(row => row)} // But you can break immutability here because `resolveData` runs when the `data` prop changes!
+/>
+```
+
 ## Props
 
 These are all of the available props (and their default values) for the main `<ReactTable />` component.
@@ -169,6 +184,7 @@ These are all of the available props (and their default values) for the main `<R
 {
   // General
   data: [],
+  resolveData: data => resolvedData,
   loading: false,
   showPagination: true,
   showPaginationTop: false,

@@ -1,3 +1,9 @@
+## 6.8.3
+
+#### Fixes & Optimizations
+
+* Allow the `resolveData` prop to alter or materialize new data when the `data` prop changes.
+
 ## 6.8.1
 
 #### Fixes & Optimizations

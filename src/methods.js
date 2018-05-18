@@ -18,6 +18,7 @@ export default Base =>
         columns,
         pivotBy = [],
         data,
+        resolveData,
         pivotIDKey,
         pivotValKey,
         subRowsKey,
@@ -237,7 +238,7 @@ export default Base =>
         }
         return row
       }
-      let resolvedData = data.map((d, i) => accessRow(d, i))
+      let resolvedData = resolveData(data).map((d, i) => accessRow(d, i))
 
       // TODO: Make it possible to fabricate nested rows without pivoting
       const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)
