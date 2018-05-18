@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 export default {
   // General
-  data: PropTypes.array,
+  data: PropTypes.any.isRequired,
   loading: PropTypes.bool,
   showPagination: PropTypes.bool,
   showPaginationTop: PropTypes.bool,
