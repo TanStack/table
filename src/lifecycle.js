@@ -103,7 +103,7 @@ export default Base =>
         newResolvedState.pages = newResolvedState.manual
           ? newResolvedState.pages
           : Math.ceil(newResolvedState.sortedData.length / newResolvedState.pageSize)
-        newResolvedState.page = Math.max(
+        newResolvedState.page = newResolvedState.manual ? newResolvedState.page : Math.max(
           newResolvedState.page >= newResolvedState.pages
             ? newResolvedState.pages - 1
             : newResolvedState.page,
