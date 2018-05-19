@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "6.8.4",
+  "version": "6.8.5",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/react-tools/react-table#readme",
@@ -68,8 +68,8 @@
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
     "prop-types": "^15.6.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "react-json-tree": "^0.10.9",
     "rimraf": "^2.6.1",
     "rollup": "^0.55.3",
