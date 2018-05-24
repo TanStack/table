@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "6.7.6",
+  "version": "6.8.6",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/react-tools/react-table#readme",
@@ -46,7 +46,8 @@
     "classnames": "^2.2.5"
   },
   "peerDependencies": {
-    "react": "^15.x.x || ^16.x.x"
+    "react": "^15.x.x || ^16.x.x",
+    "react-dom": "^15.x.x || ^16.x.x"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
@@ -65,12 +66,12 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "match-sorter": "^1.8.0",
-    "npm-run-all": "^3.1.1",
+    "npm-run-all": "^4.1.2",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
     "prop-types": "^15.6.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "react-json-tree": "^0.10.9",
     "rimraf": "^2.6.1",
     "rollup": "^0.55.3",

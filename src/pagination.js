@@ -27,7 +27,7 @@ export default class ReactTablePagination extends Component {
   }
 
   getSafePage (page) {
-    if (isNaN(page)) {
+    if (Number.isNaN(page)) {
       page = this.props.page
     }
     return Math.min(Math.max(page, 0), this.props.pages - 1)
@@ -42,7 +42,9 @@ export default class ReactTablePagination extends Component {
   }
 
   applyPage (e) {
-    if (e) { e.preventDefault() }
+    if (e) {
+      e.preventDefault()
+    }
     const page = this.state.page
     this.changePage(page === '' ? this.props.page : page)
   }
@@ -66,10 +68,7 @@ export default class ReactTablePagination extends Component {
     } = this.props
 
     return (
-      <div
-        className={classnames(className, '-pagination')}
-        style={this.props.style}
-      >
+      <div className={classnames(className, '-pagination')} style={this.props.style}>
         <div className="-previous">
           <PreviousComponent
             onClick={() => {
@@ -84,8 +83,8 @@ export default class ReactTablePagination extends Component {
         <div className="-center">
           <span className="-pageInfo">
             {this.props.pageText}{' '}
-            {showPageJump
-              ? <div className="-pageJump">
+            {showPageJump ? (
+              <div className="-pageJump">
                 <input
                   type={this.state.page === '' ? 'text' : 'number'}
                   onChange={e => {
@@ -105,18 +104,14 @@ export default class ReactTablePagination extends Component {
                   }}
                 />
               </div>
-              : <span className="-currentPage">
-                {page + 1}
-              </span>}{' '}
-            {this.props.ofText}{' '}
-            <span className="-totalPages">{pages || 1}</span>
+            ) : (
+              <span className="-currentPage">{page + 1}</span>
+            )}{' '}
+            {this.props.ofText} <span className="-totalPages">{pages || 1}</span>
           </span>
-          {showPageSizeOptions &&
+          {showPageSizeOptions && (
             <span className="select-wrap -pageSizeOptions">
-              <select
-                onChange={e => onPageSizeChange(Number(e.target.value))}
-                value={pageSize}
-              >
+              <select onChange={e => onPageSizeChange(Number(e.target.value))} value={pageSize}>
                 {pageSizeOptions.map((option, i) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <option key={i} value={option}>
@@ -124,7 +119,8 @@ export default class ReactTablePagination extends Component {
                   </option>
                 ))}
               </select>
-            </span>}
+            </span>
+          )}
         </div>
         <div className="-next">
           <NextComponent

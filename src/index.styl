@@ -73,6 +73,9 @@ input-select-style()
       &:last-child
         border-right: 0
 
+    .rt-th:focus
+      outline: none
+
     .rt-resizable-header
       overflow: visible
       &:last-child
@@ -123,6 +126,7 @@ input-select-style()
         border-right:0
     .rt-expandable
       cursor: pointer
+      text-overflow: clip
   .rt-tr-group
     flex: 1 0 auto
     display: flex
