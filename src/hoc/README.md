@@ -103,6 +103,107 @@ const SelectTreeTable = selectTableHOC(treeTableHOC(ReactTable));
 In this particular instance it is (probably) because the functions need access to the state on the wrapped component to manage
 the selected items. Although that is not totally clearly the issue.
 
+### FoldableTable
+FoldableTable is a HOC that make the columns are foldable. The reason I developed this HOC because when working on the real project related to the financial which display so many columns for validation and comparison. 
+
+So foldable columns allow users to temporary hidden the unwanted to columns so that they can focus on the data that they want to see.
+
+#### How it work
+```javascfript
+import ReactTable from 'react-table'
+import FoldableTableHOC from 'react-table/lib/hoc/foldableTable'
+
+const FoldableTable = FoldableTableHOC(ReactTable);
+```
+It will scan all the columns which `foldable` is `true` and apply the foldable column feature. This feature will work for both normal columns and header columns as samples below.
+
+- With Header Columns
+```javascript
+render(){
+  return <FoldableTable
+           columns={[{
+              Header: "Name",
+              foldable: true,
+              columns: [{
+                  Header: "First Name",
+                  accessor: "first_name"
+                },{
+                  Header: "Last Name",
+                  accessor: "last_name"
+                }]
+              },{
+              Header: "Info",
+              foldable: true,
+              columns: [{
+                  Header: "Email",
+                  accessor: "email"
+                },{
+                  Header: "Gender",
+                  accessor: "gender"
+               }]
+            }]
+        }/>
+}
+```
+
+![With Header Columns](https://raw.githubusercontent.com/baoduy/Images/master/Wordpress/JavaScripts/react-table%20foldableHOC/FoldableTable%20With%20Header.gif)
+
+- With Nornal Columns
+```javascript
+render() {
+    return <FoldableTable
+        columns={[{
+                Header: "First Name",
+                accessor: "first_name"
+            },
+            {
+                Header: "Last Name",
+                accessor: "last_name",
+                foldable: true,
+            },
+            {
+                Header: "Email",
+                accessor: "email",
+                foldable: true,
+            },
+            {
+                Header: "Gender",
+                accessor: "gender",
+                foldable: true,
+            }]}></FoldableTable>
+}
+```
+
+![With Normal Columns](https://raw.githubusercontent.com/baoduy/Images/master/Wordpress/JavaScripts/react-table%20foldableHOC/FoldableTable%20Without%20Header.gif)
+
+- The `FoldableTable` also fully compatible with existing HOCs, below is with selectTableHOC.
+
+![With Normal Columns](https://raw.githubusercontent.com/baoduy/Images/master/Wordpress/JavaScripts/react-table%20foldableHOC/FoldableTable%20With%20selectTable.gif)
+
+#### State management
+If you would like to manage the state of FoldableTable, then add the following codes.
+```javascript
+render() {
+    return <FoldableTable
+        onFoldChange={newFolded => this.setState(p => { return { folded: newFolded } })}
+       folded={this.state.folded}
+       />
+}
+```
+#### Custom Compoments
+ - FoldIconComponent: to render the Icon of buttons.
+ - FoldButtonComponent: to render the folding buttons for each Column.
+ With default rendering as below.
+```javascript
+const defaultFoldIconComponent = ({ collapsed }) => {
+   //Render your Icon here
+}
+
+const defaultFoldButtonComponent = ({ header, collapsed, icon, onClick }) => {
+   //Render your button here.
+}
+```
+
 ## HOC Guide for ReactTable
 
 There are a few rules required when writing a HOC for ReactTable (other than meeting the normal lint standards - which are

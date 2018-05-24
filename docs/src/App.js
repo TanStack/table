@@ -15,8 +15,8 @@ import HOCReadme from "./stories/HOCReadme.js";
 // import Tester from './examples/expander';
 
 const stories = [
-  { name: "Readme", component: Readme },
-  { name: "HOC Readme", component: HOCReadme },
+  { name: 'Readme', component: Readme },
+  { name: 'HOC Readme', component: HOCReadme },
 
   // { name: 'Tester', component: Test },
   { name: "Simple Table", component: CodeSandbox("X6npLXPRW") },
@@ -61,10 +61,12 @@ const stories = [
     name: "Multiple Pagers (Top and Bottom)",
     component: CodeSandbox("VEZ8OgvX")
   },
-  { name: "Tree Table (HOC)", component: CodeSandbox("lxmr4wynzq") },
-  { name: "Select Table (HOC)", component: CodeSandbox("7yq5ylw09j") },
-  { name: "Select Tree Table (HOC)", component: CodeSandbox("2p7jp4klwp") }
-];
+
+  { name: 'Tree Table (HOC)', component: CodeSandbox('lxmr4wynzq') },
+  { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
+  { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
+  { name: 'Foldable Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
+]
 
 export default class App extends React.Component {
   render() {
