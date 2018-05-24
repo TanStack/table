@@ -468,7 +468,7 @@ All of these formats receive the following props:
   // Row-level props
   row: Object, // the materialized row of data
   original: , // the original row of data
-  index: '', // the index of the row in the original arra
+  index: '', // the index of the row in the original array
   viewIndex: '', // the index of the row relative to the current view
   level: '', // the nesting level of this row
   nestingPath: '', // the nesting path of this row
