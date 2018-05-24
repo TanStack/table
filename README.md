@@ -780,7 +780,7 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
 
 1.  Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
 1.  Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
-1.  Subscribe to the `onFetchData` prop. This function is called at `compomentDidMount` and any time sorting, pagination or filterting is changed in the table
+1.  Subscribe to the `onFetchData` prop. This function is called at `componentDidMount` and any time sorting, pagination or filterting is changed in the table
 1.  In the `onFetchData` callback, request your data using the provided information in the params of the function (current state and instance)
 1.  Update your data with the rows to be displayed
 1.  Optionally set how many pages there are total
