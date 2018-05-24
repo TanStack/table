@@ -294,6 +294,8 @@ These are all of the available props (and their default values) for the main `<R
   getResizerProps: () => ({}),
 
   // Global Column Defaults
+  // To override only some values, import { ReactTableDefaults } from 'react-table'
+  // and construct your overrides (e.g. {...ReactTableDefaults.column, className: 'react-table-cell'})
   column: {
     // Renderers
     Cell: undefined,
@@ -329,6 +331,8 @@ These are all of the available props (and their default values) for the main `<R
   },
 
   // Global Expander Column Defaults
+  // To override only some values, import { ReactTableDefaults } from 'react-table'
+  // and construct your overrides (e.g. {...ReactTableDefaults.expanderDefaults, sortable: true})
   expanderDefaults: {
     sortable: false,
     resizable: false,
