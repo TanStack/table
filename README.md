@@ -214,11 +214,11 @@ These are all of the available props (and their default values) for the main `<R
   },
   defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
-    a = (a === null || a === undefined) ? -Infinity : a
-    b = (b === null || b === undefined) ? -Infinity : b
+    a = a === null || a === undefined ? '' : a
+    b = b === null || b === undefined ? '' : b
     // force any string values to lowercase
-    a = a === 'string' ? a.toLowerCase() : a
-    b = b === 'string' ? b.toLowerCase() : b
+    a = typeof a === 'string' ? a.toLowerCase() : a
+    b = typeof b === 'string' ? b.toLowerCase() : b
     // Return either 1 or -1 to indicate a sort priority
     if (a > b) {
       return 1
@@ -226,7 +226,8 @@ These are all of the available props (and their default values) for the main `<R
     if (a < b) {
       return -1
     }
-    // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
+    // returning 0, undefined or any falsey value will use subsequent sorts or
+    // the index as a tiebreaker
     return 0
   },
   PadRowComponent: () => <span>&nbsp;</span>, // the content rendered inside of a padding row
