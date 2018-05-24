@@ -1,7 +1,7 @@
 export default Base =>
   class extends Base {
     componentWillMount () {
-      this.setStateWithData(this.getDataModel(this.getResolvedState()))
+      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
     }
 
     componentDidMount () {
@@ -44,7 +44,7 @@ export default Base =>
         oldState.sorted !== newState.sorted ||
         oldState.filtered !== newState.filtered
       ) {
-        this.setStateWithData(this.getDataModel(newState))
+        this.setStateWithData(this.getDataModel(newState, oldState.data !== newState.data))
       }
     }
 

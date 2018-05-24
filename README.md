@@ -12,8 +12,8 @@
 <a href="https://npmjs.com/package/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
 </a>
-<a href="https://react-chat-signup.herokuapp.com/" target="\_parent">
-  <img alt="" src="https://img.shields.io/badge/slack-react--chat-blue.svg" />
+<a href="https://spectrum.chat/react-table">
+  <img alt="Join the community on Spectrum" src="https://withspectrum.github.io/badge/badge.svg" />
 </a>
 <a href="https://github.com/react-tools/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/github/stars/react-tools/react-table.svg?style=social&label=Star" />

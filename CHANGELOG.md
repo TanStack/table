@@ -1,3 +1,15 @@
+## 6.8.6
+
+#### Fixes & Optimizations
+
+* Since `resolveData` is now capable of materializing data on it's own, the `data` prop is no longer required as a prop-type.
+
+## 6.8.4
+
+#### Fixes & Optimizations
+
+* Only run `resolveData` prop when `data` prop has changed, not any others.
+
 ## 6.8.3
 
 #### Fixes & Optimizations
