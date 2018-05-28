@@ -71,7 +71,7 @@ You include the HOC in the same manner as you would for the treeTableHOC but the
 **Note:** The select field defaults to the accessor `_id` property in order to render the select field for that particular row. If your objects have different
 unique ID fields, make sure to tell React Table that by passing it the `keyField` property.
 
-```Javascript
+```javascript
 <ReactTable keyField='id' />
 ```
 
@@ -190,10 +190,11 @@ render() {
        />
 }
 ```
-#### Custom Compoments
+#### Custom Components
  - FoldIconComponent: to render the Icon of buttons.
  - FoldButtonComponent: to render the folding buttons for each Column.
  With default rendering as below.
+
 ```javascript
 const defaultFoldIconComponent = ({ collapsed }) => {
    //Render your Icon here
