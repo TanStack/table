@@ -115,7 +115,7 @@ export default class ReactTablePagination extends Component {
                 {pageSizeOptions.map((option, i) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <option key={i} value={option}>
-                    {option} {this.props.rowsText}
+                    {`${option} ${this.props.rowsText}`}
                   </option>
                 ))}
               </select>

@@ -214,11 +214,11 @@ These are all of the available props (and their default values) for the main `<R
   },
   defaultSortMethod: (a, b, desc) => {
     // force null and undefined to the bottom
-    a = (a === null || a === undefined) ? -Infinity : a
-    b = (b === null || b === undefined) ? -Infinity : b
+    a = a === null || a === undefined ? '' : a
+    b = b === null || b === undefined ? '' : b
     // force any string values to lowercase
-    a = a === 'string' ? a.toLowerCase() : a
-    b = b === 'string' ? b.toLowerCase() : b
+    a = typeof a === 'string' ? a.toLowerCase() : a
+    b = typeof b === 'string' ? b.toLowerCase() : b
     // Return either 1 or -1 to indicate a sort priority
     if (a > b) {
       return 1
@@ -226,7 +226,8 @@ These are all of the available props (and their default values) for the main `<R
     if (a < b) {
       return -1
     }
-    // returning 0, undefined or any falsey value will use subsequent sorts or the index as a tiebreaker
+    // returning 0, undefined or any falsey value will use subsequent sorts or
+    // the index as a tiebreaker
     return 0
   },
   PadRowComponent: () => <span>&nbsp;</span>, // the content rendered inside of a padding row
@@ -293,6 +294,8 @@ These are all of the available props (and their default values) for the main `<R
   getResizerProps: () => ({}),
 
   // Global Column Defaults
+  // To override only some values, import { ReactTableDefaults } from 'react-table'
+  // and construct your overrides (e.g. {...ReactTableDefaults.column, className: 'react-table-cell'})
   column: {
     // Renderers
     Cell: undefined,
@@ -328,6 +331,8 @@ These are all of the available props (and their default values) for the main `<R
   },
 
   // Global Expander Column Defaults
+  // To override only some values, import { ReactTableDefaults } from 'react-table'
+  // and construct your overrides (e.g. {...ReactTableDefaults.expanderDefaults, sortable: true})
   expanderDefaults: {
     sortable: false,
     resizable: false,
@@ -468,7 +473,7 @@ All of these formats receive the following props:
   // Row-level props
   row: Object, // the materialized row of data
   original: , // the original row of data
-  index: '', // the index of the row in the original arra
+  index: '', // the index of the row in the original array
   viewIndex: '', // the index of the row relative to the current view
   level: '', // the nesting level of this row
   nestingPath: '', // the nesting path of this row
@@ -779,7 +784,7 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
 
 1.  Feed React Table `data` from somewhere dynamic. eg. `state`, a redux store, etc...
 1.  Add `manual` as a prop. This informs React Table that you'll be handling sorting and pagination server-side
-1.  Subscribe to the `onFetchData` prop. This function is called at `compomentDidMount` and any time sorting, pagination or filterting is changed in the table
+1.  Subscribe to the `onFetchData` prop. This function is called at `componentDidMount` and any time sorting, pagination or filterting is changed in the table
 1.  In the `onFetchData` callback, request your data using the provided information in the params of the function (current state and instance)
 1.  Update your data with the rows to be displayed
 1.  Optionally set how many pages there are total
@@ -855,7 +860,7 @@ Here are the props and their corresponding callbacks that control the state of t
   onPageSizeChange={(pageSize, pageIndex) => {...}} // Called when the pageSize is changed by the user. The resolve page is also sent to maintain approximate position in the data
   onSortedChange={(newSorted, column, shiftKey) => {...}} // Called when a sortable column header is clicked with the column itself and if the shiftkey was held. If the column is a pivoted column, `column` will be an array of columns
   onExpandedChange={(newExpanded, index, event) => {...}} // Called when an expander is clicked. Use this to manage `expanded`
-  onFilteredChange={(column, value) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the Filter option.
+  onFilteredChange={(filtered, column) => {...}} // Called when a user enters a value into a filter input field or the value passed to the onFiltersChange handler by the Filter option.
   onResizedChange={(newResized, event) => {...}} // Called when a user clicks on a resizing component (the right edge of a column header)
 />
 ```
