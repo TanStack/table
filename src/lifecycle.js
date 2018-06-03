@@ -103,12 +103,14 @@ export default Base =>
         newResolvedState.pages = newResolvedState.manual
           ? newResolvedState.pages
           : Math.ceil(newResolvedState.sortedData.length / newResolvedState.pageSize)
-        newResolvedState.page = newResolvedState.manual ? newResolvedState.page : Math.max(
-          newResolvedState.page >= newResolvedState.pages
-            ? newResolvedState.pages - 1
-            : newResolvedState.page,
-          0
-        )
+        newResolvedState.page = newResolvedState.manual
+          ? newResolvedState.page
+          : Math.max(
+            newResolvedState.page >= newResolvedState.pages
+              ? newResolvedState.pages - 1
+              : newResolvedState.page,
+            0
+          )
       }
 
       return this.setState(newResolvedState, () => {
