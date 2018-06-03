@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-//
 import _ from './utils'
 import Lifecycle from './lifecycle'
 import Methods from './methods'
