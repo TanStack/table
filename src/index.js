@@ -15,23 +15,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   constructor (props) {
     super()
 
-    this.getResolvedState = this.getResolvedState.bind(this)
-    this.getDataModel = this.getDataModel.bind(this)
-    this.getSortedData = this.getSortedData.bind(this)
-    this.fireFetchData = this.fireFetchData.bind(this)
-    this.getPropOrState = this.getPropOrState.bind(this)
-    this.getStateOrProp = this.getStateOrProp.bind(this)
-    this.filterData = this.filterData.bind(this)
-    this.sortData = this.sortData.bind(this)
-    this.getMinRows = this.getMinRows.bind(this)
-    this.onPageChange = this.onPageChange.bind(this)
-    this.onPageSizeChange = this.onPageSizeChange.bind(this)
-    this.sortColumn = this.sortColumn.bind(this)
-    this.filterColumn = this.filterColumn.bind(this)
-    this.resizeColumnStart = this.resizeColumnStart.bind(this)
-    this.resizeColumnEnd = this.resizeColumnEnd.bind(this)
-    this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
-
     this.state = {
       page: props.defaultPage,
       pageSize: props.defaultPageSize,
