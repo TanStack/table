@@ -17,13 +17,11 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
-    "src/",
     "es/",
     "lib/",
     "react-table.js",
     "react-table.min.js",
-    "react-table.css",
-    "media/*.png"
+    "react-table.css"
   ],
   "scripts": {
     "build:cjs": "babel src --out-dir lib --source-maps inline",
