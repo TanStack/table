@@ -219,6 +219,8 @@ They are available through the `props.columnProps.rest` object.
 
 On any change to the props, the table will reset the expanded state.
 
+Accepts a onExpandedChange callback to be called whenever the table expanded state changes
+
 Note: only supports 1 level of nesting.
 
 Example usage in a Column Cell Renderer:
@@ -245,7 +247,9 @@ Example usage in a Column Cell Renderer:
 Example usage in the ReactTable SubComponent (toggle itself):
 
 ```javascript
-  <ReactTable>
+  const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
+  
+  <AdvancedExpandReactTable>
   ...
   SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
     return (
