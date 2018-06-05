@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import set from "lodash.set";
-import get from "lodash.get";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import set from 'lodash.set';
+import get from 'lodash.get';
 
 /*
   AvancedExpandTableHOC for ReactTable
@@ -15,7 +15,7 @@ import get from "lodash.get";
     hideRowSubComponent
 
   Each Column Renderer (E.g. Cell ) gets the expand functions in its props
-  Each SubComponent gets the expand functions in its props
+  And Each SubComponent gets the expand functions in its props
 
   Expand functions takes the `rowInfo` given to each
   Column Renderer and SubComponent already by ReactTable.
@@ -84,7 +84,7 @@ export const advancedExpandTableHOC = TableComponent =>
       onExpandedChange: null
     };
 
-    static DisplayName = "AdvancedExpandTable";
+    static DisplayName = 'AdvancedExpandTable';
 
     // since we pass the expand functions to each Cell,
     // we need to filter it out from being passed as an
@@ -120,10 +120,10 @@ export const advancedExpandTableHOC = TableComponent =>
           const newExpanded = { ...prevState.expanded };
 
           switch (expandType) {
-            case "show":
+            case 'show':
               set(newExpanded, nestingPath, {});
               break;
-            case "hide":
+            case 'hide':
               set(newExpanded, nestingPath, false);
               break;
             default:
@@ -144,11 +144,11 @@ export const advancedExpandTableHOC = TableComponent =>
     }
 
     showRowSubComponent(rowInfo, e) {
-      this.resolveNewTableState(rowInfo, e, "show");
+      this.resolveNewTableState(rowInfo, e, 'show');
     }
 
     hideRowSubComponent(rowInfo, e) {
-      this.resolveNewTableState(rowInfo, e, "hide");
+      this.resolveNewTableState(rowInfo, e, 'hide');
     }
 
     getTdProps(tableState, rowInfo, column) {
@@ -169,7 +169,7 @@ export const advancedExpandTableHOC = TableComponent =>
 
     getWrappedInstance() {
       if (!this.wrappedInstance)
-        console.warn("AdvancedExpandTable - No wrapped instance");
+        console.warn('AdvancedExpandTable - No wrapped instance');
       if (this.wrappedInstance.getWrappedInstance)
         return this.wrappedInstance.getWrappedInstance();
       else return this.wrappedInstance;

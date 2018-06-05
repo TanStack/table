@@ -1,20 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classnames from "classnames";
-import { render } from "react-dom";
-import _set from "lodash.set";
-import _get from "lodash.get";
-import { makeData, Logo, Tips } from "./Utils";
-import { advancedExpandTableHOC } from "./advancedExpandTableHOC";
+import React from 'react';
+import { render } from 'react-dom';
+import { makeData, Logo, Tips } from './Utils';
+import { advancedExpandTableHOC } from './advancedExpandTableHOC';
 
 // Import React Table
-import ReactTable from "react-table";
-import "react-table/react-table.css";
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 
 const columns = [
   {
-    Header: "First Name",
-    accessor: "firstName",
+    Header: 'First Name',
+    accessor: 'firstName',
     Cell: props => {
       const {
         // react table props
@@ -33,16 +29,16 @@ const columns = [
     }
   },
   {
-    Header: "Last Name",
-    id: "lastName",
+    Header: 'Last Name',
+    id: 'lastName',
     accessor: d => d.lastName
   },
   {
-    Header: "Info",
+    Header: 'Info',
     columns: [
       {
-        Header: "Age",
-        accessor: "age",
+        Header: 'Age',
+        accessor: 'age',
         Cell: props => {
           const {
             // react table props
@@ -63,17 +59,17 @@ const columns = [
         }
       },
       {
-        Header: "Status",
-        accessor: "status"
+        Header: 'Status',
+        accessor: 'status'
       }
     ]
   },
   {
-    Header: "Stats",
+    Header: 'Stats',
     columns: [
       {
-        Header: "Visits",
-        accessor: "visits"
+        Header: 'Visits',
+        accessor: 'visits'
       }
     ]
   }
@@ -96,10 +92,10 @@ class App extends React.Component {
           data={data}
           columns={columns}
           defaultPageSize={10}
-          className="-striped -highlight"
+          className='-striped -highlight'
           SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
             return (
-              <div style={{ padding: "20px" }}>
+              <div style={{ padding: '20px' }}>
                 <button
                   onClick={e => toggleRowSubComponent({ nestingPath }, e)}
                 >
@@ -117,4 +113,4 @@ class App extends React.Component {
   }
 }
 
-render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById('root'));
