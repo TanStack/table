@@ -217,7 +217,11 @@ Expand functions available to any SubComponent or Column Cell:
 
 They are available through the `props.columnProps.rest` object.
 
-Simple Usage in a Column:
+On any change to the props, the table will reset the expanded state.
+
+Note: only supports 1 level of nesting.
+
+Example usage in a Column Cell Renderer:
 
 ```javascript
     Cell: props => {
@@ -236,6 +240,25 @@ Simple Usage in a Column:
         </div>
       );
     }
+```
+
+Example usage in the ReactTable SubComponent (toggle itself):
+
+```javascript
+  <ReactTable>
+  ...
+  SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
+    return (
+      <div>
+        <button
+          onClick={e => toggleRowSubComponent({ nestingPath }, e)}
+        >
+          {row.value}
+        </button>
+      </div>
+    );
+  }}
+  />
 ```
 
 Each Column Renderer (E.g. Cell ) gets the expand functions in its props and each SubComponent gets the expand functions in its props
