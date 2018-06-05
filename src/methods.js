@@ -13,11 +13,12 @@ export default Base =>
       return resolvedState
     }
 
-    getDataModel (newState) {
+    getDataModel (newState, dataChanged) {
       const {
         columns,
         pivotBy = [],
         data,
+        resolveData,
         pivotIDKey,
         pivotValKey,
         subRowsKey,
@@ -237,7 +238,16 @@ export default Base =>
         }
         return row
       }
-      let resolvedData = data.map((d, i) => accessRow(d, i))
+
+      // // If the data hasn't changed, just use the cached data
+      let resolvedData = this.resolvedData
+      // If the data has changed, run the data resolver and cache the result
+      if (!this.resolvedData || dataChanged) {
+        resolvedData = resolveData(data)
+        this.resolvedData = resolvedData
+      }
+      // Use the resolved data
+      resolvedData = resolvedData.map((d, i) => accessRow(d, i))
 
       // TODO: Make it possible to fabricate nested rows without pivoting
       const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)

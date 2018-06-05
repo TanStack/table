@@ -34,7 +34,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
 
     this.state = {
-      page: 0,
+      page: props.defaultPage,
       pageSize: props.defaultPageSize,
       sorted: props.defaultSorted,
       expanded: props.defaultExpanded,
@@ -708,7 +708,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const trGroupProps = getTrGroupProps(finalState, undefined, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, undefined, undefined, this))
       return (
-        <TrGroupComponent key={i} {...trGroupProps}>
+        <TrGroupComponent key={`pad-${i}`} {...trGroupProps}>
           <TrComponent
             className={classnames(
               '-padRow',
