@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { makeData, Logo, Tips } from './Utils';
-import { advancedExpandTableHOC } from './advancedExpandTableHOC';
+import { advancedExpandTableHOC } from '../../../../lib/hoc/advancedExpandTable';
 
 // Import React Table
 import ReactTable from 'react-table';
