@@ -22,7 +22,7 @@ const columns = [
           <button
             onClick={e => showRowSubComponent({ nestingPath: nestingPath }, e)}
           >
-            SHOW ME {props.value}
+            SHOW SUBCOMPONENT {props.value}
           </button>
         </div>
       );
@@ -52,7 +52,7 @@ const columns = [
                   toggleRowSubComponent({ nestingPath: nestingPath }, e)
                 }
               >
-                TOGGLE ME {props.value}
+                TOGGLE SUBCOMPONENT {props.value}
               </button>
             </div>
           );
@@ -99,7 +99,7 @@ class App extends React.Component {
                 <button
                   onClick={e => toggleRowSubComponent({ nestingPath }, e)}
                 >
-                  CLOSE ME!! {row.firstName} {row.lastName}
+                  CLOSE SUBCOMPONENT {row.firstName} {row.lastName}
                 </button>
               </div>
             );
