@@ -51,6 +51,7 @@ export default Component => {
           let column = col
           if (rest.pivotBy && (rest.pivotBy.includes(col.accessor) || rest.pivotBy.includes(col.id))) {
             column = {
+              id: col.id,
               accessor: col.accessor,
               width: `${treeTableIndent}px`,
               show: false,
