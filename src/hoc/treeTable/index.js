@@ -49,7 +49,7 @@ export default Component => {
       const extra = {
         columns: columns.map(col => {
           let column = col
-          if (rest.pivotBy && rest.pivotBy.includes(col.accessor)) {
+          if (rest.pivotBy && (rest.pivotBy.includes(col.accessor) || rest.pivotBy.includes(col.id))) {
             column = {
               accessor: col.accessor,
               width: `${treeTableIndent}px`,
