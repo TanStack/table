@@ -114,7 +114,7 @@ export default {
       // Footers only
       footerClassName: PropTypes.string,
       footerStyle: PropTypes.object,
-      getFooterProps: PropTypes.object,
+      getFooterProps: PropTypes.func,
       filterMethod: PropTypes.func,
       filterAll: PropTypes.bool,
       sortMethod: PropTypes.func,
