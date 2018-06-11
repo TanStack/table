@@ -643,7 +643,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   key={`${i2}-${column.id}`}
                   className={classnames(
                     classes,
-                    !show && 'hidden',
+                    !cellInfo.expandable && !show && 'hidden',
                     cellInfo.expandable && 'rt-expandable',
                     (isBranch || isPreview) && 'rt-pivot'
                   )}
