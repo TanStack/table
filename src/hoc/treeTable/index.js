@@ -55,6 +55,9 @@ export default Component => {
               width: `${treeTableIndent}px`,
               show: false,
               Header: '',
+              Expander: col.Expander,
+              PivotValue: col.PivotValue,
+              Pivot: col.Pivot,
             }
           }
           return column
