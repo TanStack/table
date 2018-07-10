@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import left from './left.svg';
 import right from './right.svg';
