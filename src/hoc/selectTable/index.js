@@ -17,7 +17,7 @@ const defaultSelectInputComponent = props => {
   )
 }
 
-export default (options, Component) => {
+export default (Component, options) => {
   const wrapper = class RTSelectTable extends React.Component {
     constructor(props) {
       super(props)
