@@ -18,6 +18,7 @@ export default {
   sortable: PropTypes.bool,
   resizable: PropTypes.bool,
   filterable: PropTypes.bool,
+  showFiltersAbove: PropTypes.bool,
   defaultSortDesc: PropTypes.bool,
   defaultSorted: PropTypes.array,
   defaultFiltered: PropTypes.array,
