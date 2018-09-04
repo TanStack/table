@@ -125,7 +125,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       // Data model
       resolvedData,
       allVisibleColumns,
-      headerGroups,
+      headerGroupLayers,
       hasHeaderGroups,
       // Sorted Data
       sortedData,
@@ -272,13 +272,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...theadGroupProps.rest}
         >
-          <TrComponent
-            className={theadGroupTrProps.className}
-            style={theadGroupTrProps.style}
-            {...theadGroupTrProps.rest}
-          >
-            {headerGroups.map(makeHeaderGroup)}
-          </TrComponent>
+          {
+            headerGroupLayers.map(headerGroups => (
+              <TrComponent
+                className={theadGroupTrProps.className}
+                style={theadGroupTrProps.style}
+                {...theadGroupTrProps.rest}
+              >
+                {headerGroups.map(makeHeaderGroup)}
+              </TrComponent>
+            ))
+          }
         </TheadComponent>
       )
     }

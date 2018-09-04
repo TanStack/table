@@ -111,41 +111,40 @@ export default Base =>
         return decoratedColumn
       }
 
-      const decoratedColumns = columnsWithExpander.map(column => {
+      const decorateColumn = (column, parent) => {
         if (column.columns) {
           return {
             ...column,
-            columns: column.columns.map(d => decorateAndAddToAll(d, column)),
+            columns: column.columns.map(d => decorateColumn(d, column)),
           }
         }
-        return decorateAndAddToAll(column)
-      })
+        return decorateAndAddToAll(column, parent)
+      }
+
+      const decoratedColumns = columnsWithExpander.map(decorateColumn)
 
       // Build the visible columns, headers and flat column list
       let visibleColumns = decoratedColumns.slice()
-      let allVisibleColumns = []
+      const allVisibleColumns = []
 
-      visibleColumns = visibleColumns.map(column => {
+      const visibleReducer = (visible, column) => {
         if (column.columns) {
-          const visibleSubColumns = column.columns.filter(
-            d => (pivotBy.indexOf(d.id) > -1 ? false : _.getFirstDefined(d.show, true))
-          )
-          return {
+          const visibleSubColumns = column.columns.reduce(visibleReducer, [])
+          return visibleSubColumns.length ? visible.concat({
             ...column,
             columns: visibleSubColumns,
-          }
+          }) : visible
+        } else if (
+          pivotBy.indexOf(column.id) > -1
+            ? false
+            : _.getFirstDefined(column.show, true)
+        ) {
+          return visible.concat(column)
         }
-        return column
-      })
+        return visible
+      }
 
-      visibleColumns = visibleColumns.filter(
-        column =>
-          column.columns
-            ? column.columns.length
-            : pivotBy.indexOf(column.id) > -1
-              ? false
-              : _.getFirstDefined(column.show, true)
-      )
+      visibleColumns = visibleColumns.reduce(visibleReducer, [])
 
       // Find any custom pivot location
       const pivotIndex = visibleColumns.findIndex(col => col.pivot)
@@ -191,34 +190,72 @@ export default Base =>
       }
 
       // Build Header Groups
-      const headerGroups = []
-      let currentSpan = []
+      let headerGroupLayers = []
 
-      // A convenience function to add a header and reset the currentSpan
-      const addHeader = (columns, column) => {
-        headerGroups.push({
+      const addToLayer = (columns, layer, totalSpan, column) => {
+        if (!headerGroupLayers[layer]) {
+          headerGroupLayers[layer] = {
+            span: totalSpan.length,
+            groups: (totalSpan.length ? [{
+              ...this.props.column,
+              columns: totalSpan,
+            }] : []),
+          }
+        }
+        headerGroupLayers[layer].span += columns.length
+        headerGroupLayers[layer].groups = headerGroupLayers[layer].groups.concat({
           ...this.props.column,
           ...column,
           columns,
         })
-        currentSpan = []
       }
 
       // Build flast list of allVisibleColumns and HeaderGroups
-      visibleColumns.forEach(column => {
+      let layer = 0
+      const getAllVisibleColumns = ({
+        currentSpan = [],
+        add,
+        totalSpan = [],
+      }, column) => {
         if (column.columns) {
-          allVisibleColumns = allVisibleColumns.concat(column.columns)
-          if (currentSpan.length > 0) {
-            addHeader(currentSpan)
+          if (add) {
+            addToLayer(add, layer, totalSpan)
+            totalSpan = totalSpan.concat(add)
           }
-          addHeader(column.columns, column)
-          return
+
+          layer += 1
+          const {
+            currentSpan: mySpan,
+          } = column.columns.reduce(getAllVisibleColumns, {
+            totalSpan,
+          })
+          layer -= 1
+
+          addToLayer(mySpan, layer, totalSpan, column)
+          return {
+            add: false,
+            totalSpan: totalSpan.concat(mySpan),
+            currentSpan: currentSpan.concat(mySpan),
+          }
         }
         allVisibleColumns.push(column)
-        currentSpan.push(column)
-      })
-      if (hasHeaderGroups && currentSpan.length > 0) {
-        addHeader(currentSpan)
+        return {
+          add: (add || []).concat(column),
+          totalSpan,
+          currentSpan: currentSpan.concat(column),
+        }
+      }
+      const { currentSpan } = visibleColumns.reduce(getAllVisibleColumns, {})
+      if (hasHeaderGroups) {
+        headerGroupLayers = headerGroupLayers.map(layer => {
+          if (layer.span !== currentSpan.length) {
+            layer.groups = layer.groups.concat({
+              ...this.props.column,
+              columns: currentSpan.slice(layer.span),
+            })
+          }
+          return layer.groups
+        })
       }
 
       // Access the data
@@ -295,7 +332,7 @@ export default Base =>
         ...newState,
         resolvedData,
         allVisibleColumns,
-        headerGroups,
+        headerGroupLayers,
         allDecoratedColumns,
         hasHeaderGroups,
       }
