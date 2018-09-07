@@ -471,7 +471,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         pageSize,
         page,
         level: path.length,
-        nestingPath: path.concat([i]),
+        nestingPath: path.concat([row[pivotValKey] ? row[pivotValKey] : i]),
         aggregated: row[aggregatedKey],
         groupedByPivot: row[groupedByPivotKey],
         subRows: row[subRowsKey],
