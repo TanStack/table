@@ -174,7 +174,15 @@ function flattenDeep (arr, newArr = []) {
   return newArr
 }
 
-function splitProps ({ className, style, ...rest }) {
+function splitProps (obj) {
+  if (!obj) {
+    return {
+      className: '',
+      style: {},
+      rest: {},
+    }
+  }
+  const { className, style, ...rest } = obj
   return {
     className,
     style,
