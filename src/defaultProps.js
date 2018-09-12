@@ -173,6 +173,8 @@ export default {
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
+  pageJumpText: 'jump to page',
+  rowsSelectorText: 'rows per page',
 
   // Components
   TableComponent: ({ children, className, ...rest }) => (
