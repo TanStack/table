@@ -98,7 +98,7 @@ const createStreamTable = (ReactTable, {
 
     // TODO: Add CSS class names for wrappers
     return (
-        <React.Fragment>
+        <div>
           {
             this.state.isStreaming ? (
               <progress max={this.state.totalRecords} value={this.state.data.length} />
@@ -108,7 +108,7 @@ const createStreamTable = (ReactTable, {
             {...otherProps}
             data={this.state.data}
           />
-        </React.Fragment>
+        </div>
     )
   }
 }
