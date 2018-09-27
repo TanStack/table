@@ -134,6 +134,7 @@ export default {
     filterable: undefined, // use table default
     show: true,
     minWidth: 100,
+    minResizeWidth: 11,
     // Cells only
     className: '',
     style: {},
