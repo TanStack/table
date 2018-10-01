@@ -66,6 +66,7 @@ const stories = [
   { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
   { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
   { name: 'Foldable Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
+  { name: 'Virtualized Table (HOC)', component: CodeSandbox('zn2q157w2m') },
 ]
 
 export default class App extends React.Component {

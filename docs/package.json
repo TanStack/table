@@ -42,6 +42,7 @@
     "react-script": "^2.0.5",
     "react-scripts": "^0.9.5",
     "react-story": "^0.0.10",
+    "react-virtualized": "^9.20.1",
     "shortid": "^2.2.8"
   },
   "scripts": {

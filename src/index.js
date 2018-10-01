@@ -130,6 +130,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       // Sorted Data
       sortedData,
       currentlyResizing,
+      // Low level customization
+      functionalRowRendering,
     } = resolvedState
 
     // Pagination
@@ -664,6 +666,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           </TrComponent>
           {rowInfo.subRows &&
             isExpanded &&
+            !functionalRowRendering &&
             rowInfo.subRows.map((d, i) => makePageRow(d, i, rowInfo.nestingPath))}
           {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo)}
         </TrGroupComponent>
@@ -814,6 +817,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeTable = () => {
       const pagination = makePagination()
+      const tbodyChildren = functionalRowRendering
+        ? makePageRow
+        : [
+          ...pageRows.map((d, i) => makePageRow(d, i)),
+          ...padRows.map(makePadRow),
+        ]
       return (
         <div
           className={classnames('ReactTable', className, rootProps.className)}
@@ -842,8 +851,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               }}
               {...tBodyProps.rest}
             >
-              {pageRows.map((d, i) => makePageRow(d, i))}
-              {padRows.map(makePadRow)}
+              {tbodyChildren}
             </TbodyComponent>
             {hasColumnFooter ? makeColumnFooters() : null}
           </TableComponent>

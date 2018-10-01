@@ -262,4 +262,7 @@ export default {
   NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
   ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
   PadRowComponent: () => <span>&nbsp;</span>,
+
+  // Low level customization
+  functionalRowRendering: false,
 }
