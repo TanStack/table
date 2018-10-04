@@ -56,6 +56,7 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-inline-react-svg": "^0.5.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "cross-env": "^5.1.4",
@@ -97,7 +98,8 @@
         ],
         "plugins": [
           "transform-object-rest-spread",
-          "transform-class-properties"
+          "transform-class-properties",
+          "inline-react-svg"
         ]
       },
       "es": {
@@ -112,7 +114,8 @@
         ],
         "plugins": [
           "transform-object-rest-spread",
-          "transform-class-properties"
+          "transform-class-properties",
+          "inline-react-svg"
         ]
       },
       "umd": {
@@ -128,7 +131,8 @@
         "plugins": [
           "transform-object-rest-spread",
           "transform-class-properties",
-          "external-helpers"
+          "external-helpers",
+          "inline-react-svg"
         ]
       }
     }
