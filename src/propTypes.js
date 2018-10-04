@@ -163,4 +163,7 @@ export default {
   NoDataComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   ResizerComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+
+  // Low level customization
+  functionalRowRendering: PropTypes.bool
 }
