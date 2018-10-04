@@ -771,7 +771,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeColumnFooters = () => {
-      const tFootProps = getTfootProps(finalState, undefined, undefined, this)
+      const tFootProps = _.splitProps(getTfootProps(finalState, undefined, undefined, this))
       const tFootTrProps = _.splitProps(getTfootTrProps(finalState, undefined, undefined, this))
       return (
         <TfootComponent
