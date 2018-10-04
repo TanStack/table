@@ -665,7 +665,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {rowInfo.subRows &&
             isExpanded &&
             rowInfo.subRows.map((d, i) => makePageRow(d, i, rowInfo.nestingPath))}
-          {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo)}
+          {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo, () => {
+            let newExpanded = _.clone(expanded)
+            newExpanded = _.set(newExpanded, cellInfo.nestingPath, false)
+          })}
         </TrGroupComponent>
       )
     }

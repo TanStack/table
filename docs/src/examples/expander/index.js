@@ -47,7 +47,7 @@ export default class ComponentTest extends React.component {
 //     const rtProps = {
 //       data,
 //       columns,
-//       // ExpanderComponent: (props)=><ExpanderComponent {...props} />,
+//       // ExpanderComponent: (props, closeExpanded)=><ExpanderComponent {...props, closeExpanded} />,
 //       // SubComponent: (props)=><SubComponent {...props} />,
 //       // multiSort: false,
 //     }
