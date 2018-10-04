@@ -818,7 +818,7 @@ If you want to handle pagination, sorting, and filtering on the server, `react-t
 />
 ```
 
-For a detailed example, take a peek at our <a href="https://github.com/react-tools/react-table/blob/master/stories/ServerSide.js" target="\_parent">async table mockup</a>
+For a detailed example, take a peek at our <a href="https://react-table.js.org/#/story/server-side-data" target="\_parent">async table mockup</a>
 
 ## Fully Controlled Component
 
