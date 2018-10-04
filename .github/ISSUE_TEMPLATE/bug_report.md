@@ -17,6 +17,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Codesandbox!**
+Use a new [react-table codesandbox](codesandbox.io/s/X6npLXPRW) to reproduce the issue.
+
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
