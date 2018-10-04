@@ -3,17 +3,14 @@ import _ from './utils'
 
 export default Base =>
   class extends Base {
-    getResolvedState (props, state) {
-      const resolvedState = {
-        ..._.compactObject(this.state),
-        ..._.compactObject(this.props),
-        ..._.compactObject(state),
-        ..._.compactObject(props),
-      }
-      return resolvedState
-    }
+    getResolvedState = (props, state) => ({
+      ..._.compactObject(this.state),
+      ..._.compactObject(this.props),
+      ..._.compactObject(state),
+      ..._.compactObject(props),
+    })
 
-    getDataModel (newState, dataChanged) {
+    getDataModel = (newState, dataChanged) => {
       const {
         columns,
         pivotBy = [],
@@ -301,7 +298,7 @@ export default Base =>
       }
     }
 
-    getSortedData (resolvedState) {
+    getSortedData = resolvedState => {
       const {
         manual,
         sorted,
@@ -330,19 +327,15 @@ export default Base =>
       }
     }
 
-    fireFetchData () {
+    fireFetchData = () => {
       this.props.onFetchData(this.getResolvedState(), this)
     }
 
-    getPropOrState (key) {
-      return _.getFirstDefined(this.props[key], this.state[key])
-    }
+    getPropOrState = key => _.getFirstDefined(this.props[key], this.state[key])
 
-    getStateOrProp (key) {
-      return _.getFirstDefined(this.state[key], this.props[key])
-    }
+    getStateOrProp = key => _.getFirstDefined(this.state[key], this.props[key])
 
-    filterData (data, filtered, defaultFilterMethod, allVisibleColumns) {
+    filterData = (data, filtered, defaultFilterMethod, allVisibleColumns) => {
       let filteredData = data
 
       if (filtered.length) {
@@ -391,7 +384,7 @@ export default Base =>
       return filteredData
     }
 
-    sortData (data, sorted, sortMethodsByColumnID = {}) {
+    sortData = (data, sorted, sortMethodsByColumnID = {}) => {
       if (!sorted.length) {
         return data
       }
@@ -423,12 +416,10 @@ export default Base =>
       return sortedData
     }
 
-    getMinRows () {
-      return _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
-    }
+    getMinRows = () => _.getFirstDefined(this.props.minRows, this.getStateOrProp('pageSize'))
 
     // User actions
-    onPageChange (page) {
+    onPageChange = page => {
       const { onPageChange, collapseOnPageChange } = this.props
 
       const newState = { page }
@@ -438,7 +429,7 @@ export default Base =>
       this.setStateWithData(newState, () => onPageChange && onPageChange(page))
     }
 
-    onPageSizeChange (newPageSize) {
+    onPageSizeChange = newPageSize => {
       const { onPageSizeChange } = this.props
       const { pageSize, page } = this.getResolvedState()
 
@@ -455,7 +446,7 @@ export default Base =>
       )
     }
 
-    sortColumn (column, additive) {
+    sortColumn = (column, additive) => {
       const { sorted, skipNextSort, defaultSortDesc } = this.getResolvedState()
 
       const firstSortDirection = Object.prototype.hasOwnProperty.call(column, 'defaultSortDesc')
@@ -558,7 +549,7 @@ export default Base =>
       )
     }
 
-    filterColumn (column, value) {
+    filterColumn = (column, value) => {
       const { filtered } = this.getResolvedState()
       const { onFilteredChange } = this.props
 
@@ -580,7 +571,7 @@ export default Base =>
       )
     }
 
-    resizeColumnStart (event, column, isTouch) {
+    resizeColumnStart = (event, column, isTouch) => {
       event.stopPropagation()
       const parentWidth = event.target.parentElement.getBoundingClientRect().width
 
@@ -614,7 +605,7 @@ export default Base =>
       )
     }
 
-    resizeColumnMoving (event) {
+    resizeColumnMoving = event => {
       event.stopPropagation()
       const { onResizedChange } = this.props
       const { resized, currentlyResizing } = this.getResolvedState()
@@ -650,7 +641,7 @@ export default Base =>
       )
     }
 
-    resizeColumnEnd (event) {
+    resizeColumnEnd = event => {
       event.stopPropagation()
       const isTouch = event.type === 'touchend' || event.type === 'touchcancel'
 
