@@ -139,6 +139,8 @@ export default {
   pageText: PropTypes.node,
   ofText: PropTypes.node,
   rowsText: PropTypes.node,
+  pageJumpText: PropTypes.node,
+  rowsSelectorText: PropTypes.node,
 
   // Components
   TableComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),

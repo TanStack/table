@@ -351,6 +351,10 @@ These are all of the available props (and their default values) for the main `<R
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
+  
+  // Accessibility Labels
+  pageJumpText: 'jump to page',
+  rowsSelectorText: 'rows per page',
 }
 ```
 

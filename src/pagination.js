@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-//
-// import _ from './utils'
 
 const defaultButton = props => (
   <button type="button" {...props} className="-btn">
@@ -88,6 +86,7 @@ export default class ReactTablePagination extends Component {
             {showPageJump ? (
               <div className="-pageJump">
                 <input
+                  aria-label={this.props.pageJumpText}
                   type={this.state.page === '' ? 'text' : 'number'}
                   onChange={e => {
                     const val = e.target.value
@@ -113,7 +112,10 @@ export default class ReactTablePagination extends Component {
           </span>
           {showPageSizeOptions && (
             <span className="select-wrap -pageSizeOptions">
-              <select onChange={e => onPageSizeChange(Number(e.target.value))} value={pageSize}>
+              <select
+                aria-label={this.props.rowsSelectorText}
+                onChange={e => onPageSizeChange(Number(e.target.value))}
+                value={pageSize}>
                 {pageSizeOptions.map((option, i) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <option key={i} value={option}>
