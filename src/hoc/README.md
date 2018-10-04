@@ -205,6 +205,71 @@ const defaultFoldButtonComponent = ({ header, collapsed, icon, onClick }) => {
 }
 ```
 
+### AdvancedExpandTable
+
+HOC which allows any Cell in the row to toggle the row's
+SubComponent (expand/collapse). Also allows the SubComponent to toggle itself. Technically supports toggling any row's SubComponent.
+
+Expand functions available to any SubComponent or Column Cell:
+  toggleRowSubComponent
+  showRowSubComponent
+  hideRowSubComponent
+
+They are available through the `props.columnProps.rest` object.
+
+On any change to the props, the table will reset the expanded state.
+
+Accepts a onExpandedChange callback to be called whenever the table expanded state changes
+
+Note: only supports 1 level of nesting.
+
+Example usage in a Column Cell Renderer:
+
+```javascript
+    Cell: props => {
+      const {
+        value
+        columnProps: { rest: { showRowSubComponent } },
+        nestingPath
+      } = props;
+      return (
+        <div>
+          <button
+            onClick={e => showRowSubComponent(nestingPath, e)}
+          >
+            {value}
+          </button>
+        </div>
+      );
+    }
+```
+
+Example usage in the ReactTable SubComponent (toggle itself):
+
+```javascript
+  const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
+  
+  <AdvancedExpandReactTable>
+  ...
+  SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
+    return (
+      <div>
+        <button
+          onClick={e => toggleRowSubComponent({ nestingPath }, e)}
+        >
+          {row.value}
+        </button>
+      </div>
+    );
+  }}
+  />
+```
+
+Each Column Renderer (E.g. Cell ) gets the expand functions in its props and each SubComponent gets the expand functions in its props
+
+Expand functions takes the `nestingPath` or `rowInfo` given to each
+Column Renderer and SubComponent already by ReactTable.
+
 ## HOC Guide for ReactTable
 
 There are a few rules required when writing a HOC for ReactTable (other than meeting the normal lint standards - which are
