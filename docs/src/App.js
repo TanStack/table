@@ -10,6 +10,8 @@ import "../../react-table.css";
 import Readme from "./stories/Readme.js";
 import HOCReadme from "./stories/HOCReadme.js";
 
+import StreamTableExample from './examples/streamTable';
+
 // import Test from './stories/test.js'
 
 // import Tester from './examples/expander';
@@ -66,6 +68,7 @@ const stories = [
   { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
   { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
   { name: 'Foldable Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
+  { name: 'Streaming Table (HOC)', component: StreamTableExample},
 ]
 
 export default class App extends React.Component {
