@@ -106,7 +106,7 @@ export default Component => {
     toggleAll: () => {
       console.log('No toggleAll handler provided.')
     },
-    selectType: 'check',
+    selectType: 'checkbox',
     SelectInputComponent: defaultSelectInputComponent,
     SelectAllInputComponent: defaultSelectInputComponent,
   }
