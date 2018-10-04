@@ -631,6 +631,9 @@ Every single built-in component's props can be dynamically extended using any on
   getTheadProps={fn}
   getTheadTrProps={fn}
   getTheadThProps={fn}
+  getTheadFilterProps={fn}
+  getTheadFilterTrProps={fn}
+  getTheadFilterThProps={fn}
   getTbodyProps={fn}
   getTrGroupProps={fn}
   getTrProps={fn}
