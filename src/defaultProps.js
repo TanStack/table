@@ -128,6 +128,7 @@ export default {
     PivotValue: undefined,
     Expander: undefined,
     Filter: undefined,
+    Placeholder: undefined,
     // All Columns
     sortable: undefined, // use table default
     resizable: undefined, // use table default
@@ -219,12 +220,13 @@ export default {
     </div>
   ),
   TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
-  FilterComponent: ({ filter, onChange }) => (
+  FilterComponent: ({ filter, onChange, column }) => (
     <input
       type="text"
       style={{
         width: '100%',
       }}
+      placeholder={column.Placeholder}
       value={filter ? filter.value : ''}
       onChange={event => onChange(event.target.value)}
     />
