@@ -97,6 +97,7 @@ export default {
       filterable: PropTypes.bool, // use table default
       show: PropTypes.bool,
       minWidth: PropTypes.number,
+      minResizeWidth: PropTypes.number,
 
       // Cells only
       className: PropTypes.string,
@@ -117,7 +118,7 @@ export default {
       getFooterProps: PropTypes.func,
       filterMethod: PropTypes.func,
       filterAll: PropTypes.bool,
-      sortMethod: PropTypes.func,
+      sortMethod: PropTypes.func
     })
   ),
 
@@ -126,7 +127,7 @@ export default {
     sortable: PropTypes.bool,
     resizable: PropTypes.bool,
     filterable: PropTypes.bool,
-    width: PropTypes.number,
+    width: PropTypes.number
   }),
 
   pivotDefaults: PropTypes.object,
@@ -164,5 +165,5 @@ export default {
   LoadingComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   NoDataComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   ResizerComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element])
 }

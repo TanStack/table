@@ -616,8 +616,10 @@ export default Base =>
 
     resizeColumnMoving (event) {
       event.stopPropagation()
-      const { onResizedChange } = this.props
-      const { resized, currentlyResizing } = this.getResolvedState()
+      const { onResizedChange, column } = this.props
+      const { resized, currentlyResizing, columns } = this.getResolvedState()
+      const currentColumn = columns.find(c => c.accessor === currentlyResizing.id);
+      const minResizeWidth = currentColumn ? currentColumn.minResizeWidth : column.minResizeWidth;
 
       // Delete old value
       const newResized = resized.filter(x => x.id !== currentlyResizing.id)
@@ -630,11 +632,9 @@ export default Base =>
         pageX = event.pageX
       }
 
-      // Set the min size to 10 to account for margin and border or else the
-      // group headers don't line up correctly
       const newWidth = Math.max(
         currentlyResizing.parentWidth + pageX - currentlyResizing.startX,
-        11
+        minResizeWidth
       )
 
       newResized.push({
