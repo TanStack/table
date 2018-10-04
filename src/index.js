@@ -83,6 +83,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       multiSort,
       resizable,
       filterable,
+      showFiltersAbove,
       // Pivoting State
       pivotIDKey,
       pivotValKey,
@@ -834,9 +835,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={tableProps.style}
             {...tableProps.rest}
           >
+            {hasFilters && showFiltersAbove ? makeFilters() : null}
             {hasHeaderGroups ? makeHeaderGroups() : null}
             {makeHeaders()}
-            {hasFilters ? makeFilters() : null}
+            {hasFilters && !showFiltersAbove ? makeFilters() : null}
             <TbodyComponent
               className={classnames(tBodyProps.className)}
               style={{

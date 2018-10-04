@@ -203,6 +203,7 @@ These are all of the available props (and their default values) for the main `<R
   multiSort: true,
   resizable: true,
   filterable: false,
+  showFiltersAbove: false,
   defaultSortDesc: false,
   defaultSorted: [],
   defaultFiltered: [],

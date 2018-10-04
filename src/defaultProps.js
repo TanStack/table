@@ -27,6 +27,7 @@ export default {
   multiSort: true,
   resizable: true,
   filterable: false,
+  showFiltersAbove: false,
   defaultSortDesc: false,
   defaultSorted: [],
   defaultFiltered: [],
