@@ -323,7 +323,7 @@ export default Base =>
         sortedData: manual
           ? resolvedData
           : this.sortData(
-            this.filterData(resolvedData, filtered, defaultFilterMethod, allVisibleColumns),
+            this.filterData(resolvedData, filtered, defaultFilterMethod, allDecoratedColumns),
             sorted,
             sortMethodsByColumnID
           ),
