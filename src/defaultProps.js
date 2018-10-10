@@ -128,12 +128,14 @@ export default {
     PivotValue: undefined,
     Expander: undefined,
     Filter: undefined,
+    Placeholder: undefined,
     // All Columns
     sortable: undefined, // use table default
     resizable: undefined, // use table default
     filterable: undefined, // use table default
     show: true,
     minWidth: 100,
+    minResizeWidth: 11,
     // Cells only
     className: '',
     style: {},
@@ -173,6 +175,8 @@ export default {
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
+  pageJumpText: 'jump to page',
+  rowsSelectorText: 'rows per page',
 
   // Components
   TableComponent: ({ children, className, ...rest }) => (
@@ -219,12 +223,13 @@ export default {
     </div>
   ),
   TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot'),
-  FilterComponent: ({ filter, onChange }) => (
+  FilterComponent: ({ filter, onChange, column }) => (
     <input
       type="text"
       style={{
         width: '100%',
       }}
+      placeholder={column.Placeholder}
       value={filter ? filter.value : ''}
       onChange={event => onChange(event.target.value)}
     />

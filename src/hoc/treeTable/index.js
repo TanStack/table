@@ -31,7 +31,7 @@ export default Component => {
         cell.props.style.borderBottom = '1px solid rgba(128,128,128,0.2)'
 
         return (
-          <div className={`rt-tr ${rest.className}`} style={rest.style}>
+          <div className={`rt-tr ${rest.className}`} role="row" style={rest.style}>
             {cell}
           </div>
         )
@@ -49,12 +49,16 @@ export default Component => {
       const extra = {
         columns: columns.map(col => {
           let column = col
-          if (rest.pivotBy && rest.pivotBy.includes(col.accessor)) {
+          if (rest.pivotBy && (rest.pivotBy.includes(col.accessor) || rest.pivotBy.includes(col.id))) {
             column = {
+              id: col.id,
               accessor: col.accessor,
               width: `${treeTableIndent}px`,
               show: false,
               Header: '',
+              Expander: col.Expander,
+              PivotValue: col.PivotValue,
+              Pivot: col.Pivot,
             }
           }
           return column

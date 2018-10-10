@@ -97,6 +97,7 @@ export default {
       filterable: PropTypes.bool, // use table default
       show: PropTypes.bool,
       minWidth: PropTypes.number,
+      minResizeWidth: PropTypes.number,
 
       // Cells only
       className: PropTypes.string,
@@ -114,10 +115,10 @@ export default {
       // Footers only
       footerClassName: PropTypes.string,
       footerStyle: PropTypes.object,
-      getFooterProps: PropTypes.object,
+      getFooterProps: PropTypes.func,
       filterMethod: PropTypes.func,
       filterAll: PropTypes.bool,
-      sortMethod: PropTypes.func,
+      sortMethod: PropTypes.func
     })
   ),
 
@@ -126,7 +127,7 @@ export default {
     sortable: PropTypes.bool,
     resizable: PropTypes.bool,
     filterable: PropTypes.bool,
-    width: PropTypes.number,
+    width: PropTypes.number
   }),
 
   pivotDefaults: PropTypes.object,
@@ -139,6 +140,8 @@ export default {
   pageText: PropTypes.node,
   ofText: PropTypes.node,
   rowsText: PropTypes.node,
+  pageJumpText: PropTypes.node,
+  rowsSelectorText: PropTypes.node,
 
   // Components
   TableComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
@@ -162,5 +165,5 @@ export default {
   LoadingComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   NoDataComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   ResizerComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  PadRowComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element])
 }

@@ -17,7 +17,7 @@ const defaultSelectInputComponent = props => {
   )
 }
 
-export default Component => {
+export default (Component, options) => {
   const wrapper = class RTSelectTable extends React.Component {
     constructor(props) {
       super(props)
@@ -72,6 +72,7 @@ export default Component => {
         SelectInputComponent,
         ...rest
       } = this.props
+      const { floatingLeft = false } = options
       const select = {
         id: '_selector',
         accessor: () => 'x', // this value is not important
@@ -85,7 +86,8 @@ export default Component => {
         resizable: false,
         style: { textAlign: 'center' },
       }
-      const columns = [select, ...originalCols]
+
+      const columns = floatingLeft ? [...originalCols, select] : [select, ...originalCols]
       const extra = {
         columns,
       }
@@ -106,7 +108,7 @@ export default Component => {
     toggleAll: () => {
       console.log('No toggleAll handler provided.')
     },
-    selectType: 'check',
+    selectType: 'checkbox',
     SelectInputComponent: defaultSelectInputComponent,
     SelectAllInputComponent: defaultSelectInputComponent,
   }
