@@ -150,7 +150,7 @@ render() {
     accessor: 'friend.age'
   }]
 
-  <ReactTable
+  return <ReactTable
     data={data}
     columns={columns}
   />
