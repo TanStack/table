@@ -865,3 +865,5 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     return children ? children(finalState, makeTable, this) : makeTable()
   }
 }
+
+console.log("Dudes.... this is gnar!")
