@@ -217,10 +217,13 @@ const defaultFoldButtonComponent = ({ header, collapsed, icon, onClick }) => {
 HOC which allows any Cell in the row to toggle the row's
 SubComponent (expand/collapse). Also allows the SubComponent to toggle itself. Technically supports toggling any row's SubComponent.
 
-Expand functions available to any SubComponent or Column Cell:
-  toggleRowSubComponent
-  showRowSubComponent
-  hideRowSubComponent
+These are the expand functions available to any SubComponent or Column Cell:
+
+```
+toggleRowSubComponent
+showRowSubComponent
+hideRowSubComponent
+```
 
 They are available through the `props.columnProps.rest` object.
 
