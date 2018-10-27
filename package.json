@@ -26,7 +26,7 @@
     "media/*.png"
   ],
   "scripts": {
-    "build:cjs": "babel src --out-dir lib --source-maps inline",
+    "build:cjs": "babel src --out-dir lib --source-maps inline --copy-files",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --source-maps inline",
     "build:umd": "cross-env BABEL_ENV=umd rollup -c",
     "build:umd-min": "cross-env BABEL_ENV=umd NODE_ENV=production rollup -c",
