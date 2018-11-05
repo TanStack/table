@@ -1,0 +1,322 @@
+$easeOutQuad = cubic-bezier(0.250, 0.460, 0.450, 0.940)
+$easeOutBack = cubic-bezier(0.175,  0.885, 0.320, 1.275)
+$expandSize = 7px
+
+input-select-style()
+  border: 1px solid rgba(0,0,0,0.1)
+  background: white
+  padding: 5px 7px
+  font-size: inherit
+  border-radius: 3px
+  font-weight: normal
+  outline:none
+
+.ReactTable
+  position:relative
+  display: flex
+  flex-direction: column
+  border: 1px solid alpha(black, .1)
+  *
+    box-sizing: border-box
+  .rt-table
+    flex: auto 1
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    width: 100%
+    border-collapse: collapse
+    overflow: auto
+
+  .rt-thead
+    flex: 1 0 auto
+    display: flex
+    flex-direction: column
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &.-headerGroups
+      background: alpha(black, .03)
+      border-bottom: 1px solid alpha(black, .05)
+
+    &.-filters
+      border-bottom: 1px solid alpha(black, 0.05)
+
+      input
+      select
+        input-select-style();
+
+      .rt-th
+        border-right: 1px solid alpha(black, 0.02)
+
+    &.-header
+      box-shadow: 0 2px 15px 0px alpha(black, .15)
+
+    .rt-tr
+      text-align:center
+
+    .rt-th
+    .rt-td
+      padding: 5px 5px
+      line-height: normal
+      position: relative
+      border-right: 1px solid alpha(black, .05)
+      transition box-shadow .3s $easeOutBack
+      box-shadow:inset 0 0 0 0 transparent
+      &.-sort-asc
+        box-shadow:inset 0 3px 0 0 alpha(black, .6)
+      &.-sort-desc
+        box-shadow:inset 0 -3px 0 0 alpha(black, .6)
+      &.-cursor-pointer
+        cursor: pointer
+      &:last-child
+        border-right: 0
+
+    .rt-th:focus
+      outline: none
+
+    .rt-resizable-header
+      overflow: visible
+      &:last-child
+        overflow: hidden
+
+    .rt-resizable-header-content
+      overflow: hidden
+      text-overflow: ellipsis
+
+    .rt-header-pivot
+      border-right-color: #f7f7f7
+
+    .rt-header-pivot:after, .rt-header-pivot:before
+      left: 100%
+      top: 50%
+      border: solid transparent
+      content: " "
+      height: 0
+      width: 0
+      position: absolute
+      pointer-events: none
+
+    .rt-header-pivot:after
+      border-color: rgba(255, 255, 255, 0)
+      border-left-color: #FFF
+      border-width: 8px
+      margin-top: -8px
+
+    .rt-header-pivot:before
+      border-color: rgba(102, 102, 102, 0)
+      border-left-color: #f7f7f7
+      border-width: 10px
+      margin-top: -10px
+
+  .rt-tbody
+    flex: 99999 1 auto
+    display: flex
+    flex-direction: column
+    overflow: auto
+    // z-index:0
+    .rt-tr-group
+      border-bottom: solid 1px alpha(black, .05)
+      &:last-child
+        border-bottom: 0
+    .rt-td
+      border-right:1px solid alpha(black, .02)
+      &:last-child
+        border-right:0
+    .rt-expandable
+      cursor: pointer
+      text-overflow: clip
+  .rt-tr-group
+    flex: 1 0 auto
+    display: flex
+    flex-direction: column
+    align-items: stretch
+  .rt-tr
+    flex: 1 0 auto
+    display: inline-flex
+  .rt-th
+  .rt-td
+    flex: 1 0 0px
+    white-space: nowrap
+    text-overflow: ellipsis
+    padding: 7px 5px
+    overflow: hidden
+    transition: .3s ease
+    transition-property: width, min-width, padding, opacity
+
+    &.-hidden
+      width: 0 !important
+      min-width: 0 !important
+      padding: 0 !important
+      border:0 !important
+      opacity: 0 !important
+
+  .rt-expander
+    display: inline-block
+    position:relative
+    margin: 0
+    color: transparent
+    margin: 0 10px
+    &:after
+      content: ''
+      position: absolute
+      width: 0
+      height: 0
+      top:50%
+      left:50%
+      transform: translate(-50%, -50%) rotate(-90deg)
+      border-left: ($expandSize * .72) solid transparent
+      border-right: ($expandSize * .72) solid transparent
+      border-top: $expandSize solid alpha(black, .8)
+      transition: all .3s $easeOutBack
+      cursor: pointer
+    &.-open:after
+        transform: translate(-50%, -50%) rotate(0deg)
+
+  .rt-resizer
+    display: inline-block
+    position: absolute
+    width: 36px
+    top: 0
+    bottom: 0
+    right: -18px
+    cursor: col-resize
+    z-index: 10
+
+  .rt-tfoot
+    flex: 1 0 auto
+    display: flex
+    flex-direction: column
+    box-shadow: 0 0px 15px 0px alpha(black, .15)
+
+    .rt-td
+      border-right:1px solid alpha(black, .05)
+      &:last-child
+        border-right:0
+
+  &.-striped
+    .rt-tr.-odd
+      background: alpha(black, .03)
+  &.-highlight
+    .rt-tbody
+      .rt-tr:not(.-padRow):hover
+        background: alpha(black, .05)
+
+  .-pagination
+    z-index: 1
+    display:flex
+    justify-content: space-between
+    align-items: stretch
+    flex-wrap: wrap
+    padding: 3px
+    box-shadow: 0 0px 15px 0px alpha(black, .1)
+    border-top: 2px solid alpha(black, .1)
+
+    input
+    select
+      input-select-style()
+
+    .-btn
+      appearance:none
+      display:block
+      width:100%
+      height:100%
+      border: 0
+      border-radius: 3px
+      padding: 6px
+      font-size: 1em
+      color: alpha(black, .6)
+      background: alpha(black, .1)
+      transition: all .1s ease
+      cursor: pointer
+      outline:none
+
+      &[disabled]
+        opacity: .5
+        cursor: default
+
+      &:not([disabled]):hover
+        background: alpha(black, .3)
+        color: white
+
+    .-previous
+    .-next
+      flex: 1
+      text-align: center
+
+    .-center
+      flex: 1.5
+      text-align:center
+      margin-bottom:0
+      display: flex
+      flex-direction: row
+      flex-wrap: wrap
+      align-items: center
+      justify-content: space-around
+
+    .-pageInfo
+      display: inline-block
+      margin: 3px 10px
+      white-space: nowrap
+
+    .-pageJump
+      display:inline-block
+      input
+        width: 70px
+        text-align:center
+
+    .-pageSizeOptions
+      margin: 3px 10px
+
+  .rt-noData
+    display:block
+    position:absolute
+    left:50%
+    top:50%
+    transform: translate(-50%, -50%)
+    background: alpha(white, .8)
+    transition: all .3s ease
+    z-index: 1
+    pointer-events: none
+    padding: 20px
+    color: alpha(black, .5)
+
+  .-loading
+    display:block
+    position:absolute
+    left:0
+    right:0
+    top:0
+    bottom:0
+    background: alpha(white, .8)
+    transition: all .3s ease
+    z-index: -1
+    opacity: 0
+    pointer-events: none
+
+    > div
+      position:absolute
+      display: block
+      text-align:center
+      width:100%
+      top:50%
+      left: 0
+      font-size: 15px
+      color: alpha(black, .6)
+      transform: translateY(-52%)
+      transition: all .3s $easeOutQuad
+
+    &.-active
+      opacity: 1
+      z-index: 2
+      pointer-events: all
+      > div
+        transform: translateY(50%)
+
+  .rt-resizing
+    .rt-th
+    .rt-td
+      transition: none!important
+      cursor: col-resize
+      user-select none
