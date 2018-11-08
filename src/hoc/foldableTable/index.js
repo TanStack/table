@@ -25,7 +25,7 @@ const defaultFoldButtonComponent = ({ header, collapsed, icon, onClick }) => {
       <div style={style} onClick={onClick}>
         {icon}
       </div>
-      {!collapsed && <div>{header}</div>}
+      {!collapsed && <div style={{"textAlign": "left"}} >{header}</div>}
     </div>
   )
 }
