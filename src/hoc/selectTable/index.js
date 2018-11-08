@@ -6,6 +6,7 @@ const defaultSelectInputComponent = props => {
   return (
     <input
       type={props.selectType || 'checkbox'}
+      aria-label={`${props.checked ? 'Un-select':'Select'} row with id:${props.id}` }
       checked={props.checked}
       onClick={e => {
         const { shiftKey } = e
