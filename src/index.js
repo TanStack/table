@@ -84,9 +84,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       resizable,
       filterable,
       // Pivoting State
+      pivotBy,
+      pivotConfig,
       pivotIDKey,
       pivotValKey,
-      pivotBy,
       subRowsKey,
       aggregatedKey,
       originalKey,
@@ -541,6 +542,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 )
               }
 
+              ///check if this row has one or less subrows. This is used to decide to add and render the expander function.
+              const hasOneOrLessSubRows = cellInfo.subRows && cellInfo.subRows.length <= 1
+
               // Default to a standard cell
               let resolvedCell = _.normalizeComponent(column.Cell, cellInfo, value)
 
@@ -569,6 +573,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 if (cellInfo.pivoted && !cellInfo.subRows && !SubComponent) {
                   cellInfo.expandable = false
                 }
+                ///If pivoted and hideSingleRowExpander=true and has only one subRow, do not make expandable
+                if (cellInfo.pivoted && pivotConfig.hideSingleRowExpander && hasOneOrLessSubRows) {
+                  cellInfo.expandable = false
+                  useOnExpanderClick = false
+                } 
               }
 
               if (cellInfo.pivoted) {
@@ -606,7 +615,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   row[pivotValKey]
                 )
                 if (pivotBy) {
-                  if (cellInfo.groupedByPivot) {
+                  if (cellInfo.groupedByPivot && !pivotConfig.allowPivotExpanderCol) {
+                    resolvedCell = null
+                  }
+                  if (pivotConfig.hideSingleRowExpander && hasOneOrLessSubRows) {
                     resolvedCell = null
                   }
                   if (!cellInfo.subRows && !SubComponent) {

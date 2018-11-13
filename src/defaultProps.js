@@ -75,6 +75,10 @@ export default {
 
   // Pivoting
   pivotBy: undefined,
+  pivotConfig: {
+    hideSingleRowExpander: false,
+    allowPivotExpanderCol: false,
+  },
 
   // Key Constants
   pivotValKey: '_pivotVal',
