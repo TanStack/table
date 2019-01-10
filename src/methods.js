@@ -331,7 +331,15 @@ export default Base =>
     }
 
     fireFetchData () {
-      this.props.onFetchData(this.getResolvedState(), this)
+      // determine the current state, preferring certain state values over props
+      const currentState = {
+        ...this.getResolvedState(),
+        page: this.getStateOrProp('page'),
+        pageSize: this.getStateOrProp('pageSize'),
+        filter: this.getStateOrProp('filter'),
+      };
+
+      this.props.onFetchData(currentState, this)
     }
 
     getPropOrState (key) {
