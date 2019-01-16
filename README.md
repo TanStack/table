@@ -48,6 +48,12 @@
 * [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
 * Previous versions:
   * [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
+  
+## Sponsors
+
+[![Sponsors](https://raw.githubusercontent.com/react-tools/react-table/master/media/sponsors.png)](https://patreon.com/tannerlinsley)
+
+**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and maintain it. If you would like to contribute to my Patreon goal for v7, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley). Gold 
 
 ## Table of Contents
 
