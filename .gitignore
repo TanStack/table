@@ -8,3 +8,4 @@ react-table.css
 *.log
 .idea
 .DS_Store
+.history
