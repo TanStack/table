@@ -30,53 +30,64 @@
 
 ## Features
 
-* Lightweight at 11kb (and just 2kb more for styles)
-* Fully customizable (JSX, templates, state, styles, callbacks)
-* Client-side & Server-side pagination
-* Multi-sort
-* Filters
-* Pivoting & Aggregation
-* Minimal design & easily themeable
-* Fully controllable via optional props and callbacks
-* <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
+- Lightweight at 11kb (and just 2kb more for styles)
+- Fully customizable (JSX, templates, state, styles, callbacks)
+- Client-side & Server-side pagination
+- Multi-sort
+- Filters
+- Pivoting & Aggregation
+- Minimal design & easily themeable
+- Fully controllable via optional props and callbacks
+- <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
 ## [Demos and examples](http://react-table.js.org/#/story/simple-table)
 
 ## Versions
 
-* This documentation is for version 6 of react-table.
-* [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
-* Previous versions:
-  * [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
-  
+- This documentation is for version 6 of react-table.
+- [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
+- Previous versions:
+
+  - [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
+
 ## Sponsors
 
-[![Sponsors](https://raw.githubusercontent.com/react-tools/react-table/master/media/sponsors.png)](https://patreon.com/tannerlinsley)
+|                                                                                                                                                     |                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [![Platinum Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png)](https://patreon.com/tannerlinsley) | [![Retool](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png)](https://tryretool.com) |
 
-**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and maintain it. If you would like to contribute to my Patreon goal for v7, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley). Gold 
+|                                                                                                                                             |                                                                                                                                      |                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Gold Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png)](https://patreon.com/tannerlinsley) | [![Retool](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png)](https://tryretool.com) | [![Retool](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png)](https://tryretool.com) |
+
+|                                                                                                                                                 |                                                                                                                                        |                                                                                                                                        |                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Silver Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png)](https://patreon.com/tannerlinsley) | [![Retool](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png)](https://tryretool.com) | [![Retool](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png)](https://tryretool.com) | [![Retool](https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png)](https://tryretool.com) |
+
+**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and maintain it. If you would like to contribute to my Patreon goal for v7, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley). Gold
 
 ## Table of Contents
 
-* [Installation](#installation)
-* [Example](#example)
-* [Data](#data)
-* [Props](#props)
-* [Columns](#columns)
-* [Column Header Groups](#column-header-groups)
-* [Custom Cell and Header and Footer Rendering](#custom-cell-header-and-footer-rendering)
-* [Styles](#styles)
-* [Custom Props](#custom-props)
-* [Pivoting and Aggregation](#pivoting-and-aggregation)
-* [Sub Tables and Sub Components](#sub-tables-and-sub-components)
-* [Server-side Data](#server-side-data)
-* [Fully Controlled Component](#fully-controlled-component)
-* [Functional Rendering](#functional-rendering)
-* [Multi-Sort](#multi-sort)
-* [Filtering](#filtering)
-* [Component Overrides](#component-overrides)
-* [Contributing](#contributing)
-* [Scripts](#scripts)
-* [Used By](#used-by)
+- [Installation](#installation)
+- [Example](#example)
+- [Data](#data)
+- [Props](#props)
+- [Columns](#columns)
+- [Column Header Groups](#column-header-groups)
+- [Custom Cell and Header and Footer Rendering](#custom-cell-header-and-footer-rendering)
+- [Styles](#styles)
+- [Custom Props](#custom-props)
+- [Pivoting and Aggregation](#pivoting-and-aggregation)
+- [Sub Tables and Sub Components](#sub-tables-and-sub-components)
+- [Server-side Data](#server-side-data)
+- [Fully Controlled Component](#fully-controlled-component)
+- [Functional Rendering](#functional-rendering)
+- [Multi-Sort](#multi-sort)
+- [Filtering](#filtering)
+- [Component Overrides](#component-overrides)
+- [Contributing](#contributing)
+- [Scripts](#scripts)
+- [Used By](#used-by)
 
 ## Installation
 
@@ -111,16 +122,19 @@ import 'react-table/react-table.css'
 ##### CDN
 
 ```html
-  <!-- CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/react-table@latest/react-table.css">
+<!-- CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/react-table@latest/react-table.css"
+/>
 
-  <!-- JS -->
-  <script src="https://unpkg.com/react-table@latest/react-table.js"></script>
-  <script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
+<!-- JS -->
+<script src="https://unpkg.com/react-table@latest/react-table.js"></script>
+<script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
 
-  <script>
-    var ReactTable = window.ReactTable.default
-  </script>
+<script>
+  var ReactTable = window.ReactTable.default;
+</script>
 ```
 
 ## Example
@@ -357,7 +371,7 @@ These are all of the available props (and their default values) for the main `<R
   pageText: 'Page',
   ofText: 'of',
   rowsText: 'rows',
-  
+
   // Accessibility Labels
   pageJumpText: 'jump to page',
   rowsSelectorText: 'rows per page',
@@ -460,21 +474,21 @@ Or just define them as props
 
 React Table supports very flexible renderers for just about everything:
 
-* `Cell` - Renders a standard cell
-* `Header` - Renders a column header or column group header
-* `Footer` - Renders a column footer
-* `Filter` - Renders a column's filter UI
-* `Aggregated` - Renders an aggregated cell
-* `Pivot` - Renders a pivoted cell (by default, will utilize `Expander` and `PivotValue` renderers)
-* `PivotValue` - Renders the value inside a `Pivot` renderer
-* `Expander` - Renders the Expander used in both the default `Pivot` renderer and any expander-designated column
+- `Cell` - Renders a standard cell
+- `Header` - Renders a column header or column group header
+- `Footer` - Renders a column footer
+- `Filter` - Renders a column's filter UI
+- `Aggregated` - Renders an aggregated cell
+- `Pivot` - Renders a pivoted cell (by default, will utilize `Expander` and `PivotValue` renderers)
+- `PivotValue` - Renders the value inside a `Pivot` renderer
+- `Expander` - Renders the Expander used in both the default `Pivot` renderer and any expander-designated column
 
 Any of these renderers can be one of the following:
 
-* A React Class
-* JSX or any rendered react component
-* Stateless functional component
-* Function that returns any primitive
+- A React Class
+- JSX or any rendered react component
+- Stateless functional component
+- Function that returns any primitive
 
 All of these formats receive the following props:
 
@@ -516,14 +530,14 @@ Any values that contain a dot (`.`) will be split.
 Any values that contain bracket (`[]`) will be split.
 This array is then used as the path to the value to return.
 
-("$" is the placeholder value that would be returned by the default accessor)
+("\$" is the placeholder value that would be returned by the default accessor)
 
-| value        | path            | data                   |
-| ------------ | --------------- | ---------------------- |
-| "a"          | ["a"]           | {"a": $}               |
-| "a.b"        | ["a", "b"]      | {"a": {"b": $}}        |
-| "a[0]"       | ["a", "0"]      | {"a": [$]}             |
-| ["a.b", "c"] | ["a", "b", "c"] | {"a": {"b": {"c": $}}} |
+| value        | path            | data                    |
+| ------------ | --------------- | ----------------------- |
+| "a"          | ["a"]           | {"a": \$}               |
+| "a.b"        | ["a", "b"]      | {"a": {"b": \$}}        |
+| "a[0]"       | ["a", "0"]      | {"a": [$]}              |
+| ["a.b", "c"] | ["a", "b", "c"] | {"a": {"b": {"c": \$}}} |
 
 _NOTE_
 If your data has a field/key with a dot (`.`) you will need to supply a custom accessor.
@@ -553,14 +567,14 @@ const columns = [{
 
 You can use any react component or JSX to display content in column headers, cells and footers. Any component you use will be passed the following props (if available):
 
-* `row` - Original row from your data
-* `original` - The post-accessed values from the original row
-* `index` - The index of the row
-* `viewIndex` - the index of the row relative to the current page
-* `level` - The nesting depth (zero-indexed)
-* `nestingPath` - The nesting path of the row
-* `aggregated` - A boolean stating if the row is an aggregation row
-* `subRows` - An array of any expandable sub-rows contained in this row
+- `row` - Original row from your data
+- `original` - The post-accessed values from the original row
+- `index` - The index of the row
+- `viewIndex` - the index of the row relative to the current page
+- `level` - The nesting depth (zero-indexed)
+- `nestingPath` - The nesting path of the row
+- `aggregated` - A boolean stating if the row is an aggregation row
+- `subRows` - An array of any expandable sub-rows contained in this row
 
 ```javascript
 // This column uses a stateless component to produce a different colored bar depending on the value
@@ -590,8 +604,8 @@ const columns = [
               row.value > 66
                 ? "#85cc00"
                 : row.value > 33
-                  ? "#ffbf00"
-                  : "#ff2e00",
+                ? "#ffbf00"
+                : "#ff2e00",
             borderRadius: "2px",
             transition: "all .2s ease-out"
           }}
@@ -604,14 +618,14 @@ const columns = [
 
 ## Styles
 
-* React-table ships with a minimal and clean stylesheet to get you on your feet quickly.
-* The stylesheet is located at `react-table/react-table.css`.
-* There are countless ways to import a stylesheet. If you have questions on how to do so, consult the documentation of your build system.
+- React-table ships with a minimal and clean stylesheet to get you on your feet quickly.
+- The stylesheet is located at `react-table/react-table.css`.
+- There are countless ways to import a stylesheet. If you have questions on how to do so, consult the documentation of your build system.
 
 #### Classes
 
-* Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
-* Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
+- Adding a `-striped` className to ReactTable will slightly color odd numbered rows for legibility
+- Adding a `-highlight` className to ReactTable will highlight any row as you hover over it
 
 #### CSS
 
@@ -884,15 +898,15 @@ Possibly one of the coolest features of React-Table is its ability to expose int
 
 The function you pass will be called with the following items:
 
-* Fully-resolved state of the table
-* A function that returns the standard table component
-* The instance of the component
+- Fully-resolved state of the table
+- A function that returns the standard table component
+- The instance of the component
 
 You can then return any JSX or react you want! This turns out to be perfect for:
 
-* Accessing the internal state of the table without a `ref`
-* Decorating the table or extending it with your own UI
-* Building your own custom display logic
+- Accessing the internal state of the table without a `ref`
+- Decorating the table or extending it with your own UI
+- Building your own custom display logic
 
 Accessing internal state and wrapping with more UI:
 
@@ -927,10 +941,10 @@ The possibilities are endless!
 
 Sorting comes built in with React-Table.
 
-* Click a column header to sort by its accessor.
-* Click it again to reverse the sort.
-* Set `defaultSortDesc` property to `true` to make the first sort direction default to descending.
-* Override a specific column's default sort direction by using the same `defaultSortDesc` property on a column, set to `true`
+- Click a column header to sort by its accessor.
+- Click it again to reverse the sort.
+- Set `defaultSortDesc` property to `true` to make the first sort direction default to descending.
+- Override a specific column's default sort direction by using the same `defaultSortDesc` property on a column, set to `true`
 
 ## Multi-Sort
 
@@ -947,9 +961,9 @@ To override the sorting algorithm for a single column, use the `sortMethod` colu
 
 Supply a function that implements the native javascript [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) interface. This is React Table's default sorting algorithm:
 
-* `a` the first value to compare
-* `b` the second value to compare
-* `desc` true if sort is descending, false if ascending
+- `a` the first value to compare
+- `b` the second value to compare
+- `desc` true if sort is descending, false if ascending
 
 ```javascript
 defaultSortMethod = (a, b, desc) => {
@@ -1033,19 +1047,19 @@ If you choose to change the core components React-Table uses to render, you must
 To suggest a feature, create an issue if it does not already exist.
 If you would like to help develop a suggested feature follow these steps:
 
-* Fork this repo
-* Install dependencies with `$ yarn`
-* Auto-build files as you edit with `$ yarn run watch`
-* Implement your changes to files in the `src/` directory
-* Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-* View changes as you edit `docs/src`
-* Submit PR for review
+- Fork this repo
+- Install dependencies with `$ yarn`
+- Auto-build files as you edit with `$ yarn run watch`
+- Implement your changes to files in the `src/` directory
+- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
+- View changes as you edit `docs/src`
+- Submit PR for review
 
 #### Scripts
 
-* `$ yarn run watch` Watches files and builds via babel
-* `$ yarn run docs` Runs the storybook server
-* `$ yarn run test` Runs the test suite
+- `$ yarn run watch` Watches files and builds via babel
+- `$ yarn run docs` Runs the storybook server
+- `$ yarn run test` Runs the test suite
 
 ## Used By
 
