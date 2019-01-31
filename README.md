@@ -25,7 +25,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <br />
 <br />
 
-⚠️ Version 7 is under active development and is currently in an alpha state. If you are looking for [React Table v6, click here](/tree/v6)
+⚠️ Version 7 is under active development and is currently in an alpha state. If you are looking for [React Table v6, click here](https://github.com/tannerlinsley/react-table/tree/v6)
 
 ## Features
 
@@ -168,7 +168,7 @@ import { useReactTable } from "react-table";
 
 # Documentation
 
-Documentation for v7 is coming soon. If you're looking for the [v6 documentation, click here](/tree/v6)
+Documentation for v7 is coming soon. If you're looking for the [v6 documentation, click here](https://github.com/tannerlinsley/react-table/tree/v6)
 
 ## Contributing
 
