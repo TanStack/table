@@ -10,6 +10,8 @@ export default {
   range,
   remove,
   clone,
+  leaves,
+  iterTree,
   getFirstDefined,
   sum,
   makeTemplateComponent,
@@ -106,6 +108,24 @@ function clone (a) {
   } catch (e) {
     return a
   }
+}
+
+function leaves (root, childProperty) {
+  if (Object.prototype.hasOwnProperty.call(root, childProperty)) {
+    const children = root[childProperty].map(child => leaves(child, childProperty))
+    return [].concat(...children)
+  }
+
+  return [root]
+}
+
+function iterTree (root, childProperty) {
+  if (Object.prototype.hasOwnProperty.call(root, childProperty)) {
+    const children = root[childProperty].map(child => leaves(child, childProperty))
+    return [].concat(root, ...children)
+  }
+
+  return [root]
 }
 
 function getFirstDefined (...args) {

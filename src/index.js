@@ -124,7 +124,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       PadRowComponent,
       // Data model
       resolvedData,
-      allVisibleColumns,
+      visibleColumns,
       headerGroups,
       hasHeaderGroups,
       // Sorted Data
@@ -139,8 +139,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const minRows = this.getMinRows()
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
-    const hasColumnFooter = allVisibleColumns.some(d => d.Footer)
-    const hasFilters = filterable || allVisibleColumns.some(d => d.filterable)
+    const hasColumnFooter = visibleColumns.some(d => d.Footer)
+    const hasFilters = filterable || visibleColumns.some(d => d.filterable)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => [
       rows.map((row, i) => {
@@ -167,7 +167,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const canNext = page + 1 < pages
 
     const rowMinWidth = _.sum(
-      allVisibleColumns.map(d => {
+      visibleColumns.map(d => {
         const resizedColumn = resized.find(x => x.id === d.id) || {}
         return _.getFirstDefined(resizedColumn.value, d.width, d.minWidth)
       })
@@ -198,14 +198,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeHeaderGroup = (column, i) => {
       const resizedValue = col => (resized.find(x => x.id === col.id) || {}).value
+
+      const leafColumns = _.leaves(column, 'columns')
       const flex = _.sum(
-        column.columns.map(col => (col.width || resizedValue(col) ? 0 : col.minWidth))
+        leafColumns.map(col => (col.width || resizedValue(col) ? 0 : col.minWidth))
       )
       const width = _.sum(
-        column.columns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.minWidth))
+        leafColumns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.minWidth))
       )
       const maxWidth = _.sum(
-        column.columns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.maxWidth))
+        leafColumns.map(col => _.getFirstDefined(resizedValue(col), col.width, col.maxWidth))
       )
 
       const theadGroupThProps = _.splitProps(
@@ -256,15 +258,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makeHeaderGroups = () => {
+    const makeHeaderGroups = (row, i) => {
       const theadGroupProps = _.splitProps(
-        getTheadGroupProps(finalState, undefined, undefined, this)
+        getTheadGroupProps(finalState, undefined, row, this)
       )
       const theadGroupTrProps = _.splitProps(
-        getTheadGroupTrProps(finalState, undefined, undefined, this)
+        getTheadGroupTrProps(finalState, undefined, row, this)
       )
       return (
         <TheadComponent
+          key={`${i}-${row.id}`}
           className={classnames('-headerGroups', theadGroupProps.className)}
           style={{
             ...theadGroupProps.style,
@@ -277,7 +280,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={theadGroupTrProps.style}
             {...theadGroupTrProps.rest}
           >
-            {headerGroups.map(makeHeaderGroup)}
+            {row.map(makeHeaderGroup)}
           </TrComponent>
         </TheadComponent>
       )
@@ -368,7 +371,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={theadTrProps.style}
             {...theadTrProps.rest}
           >
-            {allVisibleColumns.map(makeHeader)}
+            {visibleColumns.map(makeHeader)}
           </TrComponent>
         </TheadComponent>
       )
@@ -456,7 +459,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={theadFilterTrProps.style}
             {...theadFilterTrProps.rest}
           >
-            {allVisibleColumns.map(makeFilter)}
+            {visibleColumns.map(makeFilter)}
           </TrComponent>
         </TheadComponent>
       )
@@ -486,7 +489,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={trProps.style}
             {...trProps.rest}
           >
-            {allVisibleColumns.map((column, i2) => {
+            {visibleColumns.map((column, i2) => {
               const resizedCol = resized.find(x => x.id === column.id) || {}
               const show = typeof column.show === 'function' ? column.show() : column.show
               const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
@@ -721,7 +724,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             )}
             style={trProps.style || {}}
           >
-            {allVisibleColumns.map(makePadColumn)}
+            {visibleColumns.map(makePadColumn)}
           </TrComponent>
         </TrGroupComponent>
       )
@@ -791,7 +794,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={tFootTrProps.style}
             {...tFootTrProps.rest}
           >
-            {allVisibleColumns.map(makeColumnFooter)}
+            {visibleColumns.map(makeColumnFooter)}
           </TrComponent>
         </TfootComponent>
       )
@@ -835,7 +838,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             style={tableProps.style}
             {...tableProps.rest}
           >
-            {hasHeaderGroups ? makeHeaderGroups() : null}
+            {hasHeaderGroups ? headerGroups.map(makeHeaderGroups) : null}
             {makeHeaders()}
             {hasFilters ? makeFilters() : null}
             <TbodyComponent
