@@ -36,6 +36,17 @@ But there is more documentation on the `select` HOC below.
 
 ## Currently Available HOCs
 
+Any of the below HOCs can be imported from react-table like so:
+
+```javascript
+import ReactTable from "react-table";
+import treeTableHOC from "react-table/lib/hoc/treeTable";
+
+const TreeTable = treeTableHOC(ReactTable);
+```
+
+Swap `treeTable` and `TreeTable` with any of the other HOC names as necessary.
+
 ### TreeTable
 
 TreeTable takes over the rendering of the generated pivot rows of ReactTable so that they appear more like an expandable Tree.
@@ -45,9 +56,6 @@ It accomplishes this by rendering a 100% wide div and then only rendering the ce
 Using it is as simple as doing the following:
 
 ```javascript
-import ReactTable from "react-table";
-import treeTableHOC from "react-table/lib/hoc/treeTable";
-
 const TreeTable = treeTableHOC(ReactTable);
 ```
 
@@ -96,7 +104,7 @@ SelectTreeTable is a combination of TreeTable and SelectTable.
 
 To function correctly the chain has to be in the correct order as follows (see the comments in the guid on HOCs below).
 
-```Javascript
+```javascript
 const SelectTreeTable = selectTableHOC(treeTableHOC(ReactTable));
 ```
 
@@ -108,13 +116,12 @@ FoldableTable is a HOC that make the columns are foldable. The reason I develope
 
 So foldable columns allow users to temporary hidden the unwanted to columns so that they can focus on the data that they want to see.
 
-#### How it work
-```javascfript
-import ReactTable from 'react-table'
-import FoldableTableHOC from 'react-table/lib/hoc/foldableTable'
+#### How it works
 
+```javascript
 const FoldableTable = FoldableTableHOC(ReactTable);
 ```
+
 It will scan all the columns which `foldable` is `true` and apply the foldable column feature. This feature will work for both normal columns and header columns as samples below.
 
 - With Header Columns
@@ -210,10 +217,13 @@ const defaultFoldButtonComponent = ({ header, collapsed, icon, onClick }) => {
 HOC which allows any Cell in the row to toggle the row's
 SubComponent (expand/collapse). Also allows the SubComponent to toggle itself. Technically supports toggling any row's SubComponent.
 
-Expand functions available to any SubComponent or Column Cell:
-  toggleRowSubComponent
-  showRowSubComponent
-  hideRowSubComponent
+These are the expand functions available to any SubComponent or Column Cell:
+
+```
+toggleRowSubComponent
+showRowSubComponent
+hideRowSubComponent
+```
 
 They are available through the `props.columnProps.rest` object.
 
