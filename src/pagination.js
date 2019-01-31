@@ -8,8 +8,51 @@ const defaultButton = props => (
 )
 
 export default class ReactTablePagination extends Component {
+  static defaultProps = {
+    PreviousComponent: defaultButton,
+    NextComponent: defaultButton,
+    renderPageJump: ({
+      onChange, value, onBlur, onKeyPress, inputType, pageJumpText,
+    }) => (
+      <div className="-pageJump">
+        <input
+          aria-label={pageJumpText}
+          type={inputType}
+          onChange={onChange}
+          value={value}
+          onBlur={onBlur}
+          onKeyPress={onKeyPress}
+        />
+      </div>
+    ),
+    renderCurrentPage: page => <span className="-currentPage">{page + 1}</span>,
+    renderTotalPagesCount: pages => <span className="-totalPages">{pages || 1}</span>,
+    renderPageSizeOptions: ({
+      pageSize,
+      pageSizeOptions,
+      rowsSelectorText,
+      onPageSizeChange,
+      rowsText,
+    }) => (
+      <span className="select-wrap -pageSizeOptions">
+        <select
+          aria-label={rowsSelectorText}
+          onChange={e => onPageSizeChange(Number(e.target.value))}
+          value={pageSize}
+        >
+          {pageSizeOptions.map((option, i) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <option key={i} value={option}>
+              {`${option} ${rowsText}`}
+            </option>
+          ))}
+        </select>
+      </span>
+    ),
+  }
+
   constructor (props) {
-    super()
+    super(props)
 
     this.getSafePage = this.getSafePage.bind(this)
     this.changePage = this.changePage.bind(this)
@@ -49,6 +92,28 @@ export default class ReactTablePagination extends Component {
     this.changePage(page === '' ? this.props.page : page)
   }
 
+  getPageJumpProperties () {
+    return {
+      onKeyPress: e => {
+        if (e.which === 13 || e.keyCode === 13) {
+          this.applyPage()
+        }
+      },
+      onBlur: this.applyPage,
+      value: this.state.page === '' ? '' : this.state.page + 1,
+      onChange: e => {
+        const val = e.target.value
+        const page = val - 1
+        if (val === '') {
+          return this.setState({ page: val })
+        }
+        this.setState({ page: this.getSafePage(page) })
+      },
+      inputType: this.state.page === '' ? 'text' : 'number',
+      pageJumpText: this.props.pageJumpText,
+    }
+  }
+
   render () {
     const {
       // Computed
@@ -63,8 +128,12 @@ export default class ReactTablePagination extends Component {
       canNext,
       onPageSizeChange,
       className,
-      PreviousComponent = defaultButton,
-      NextComponent = defaultButton,
+      PreviousComponent,
+      NextComponent,
+      renderPageJump,
+      renderCurrentPage,
+      renderTotalPagesCount,
+      renderPageSizeOptions,
     } = this.props
 
     return (
@@ -83,48 +152,17 @@ export default class ReactTablePagination extends Component {
         <div className="-center">
           <span className="-pageInfo">
             {this.props.pageText}{' '}
-            {showPageJump ? (
-              <div className="-pageJump">
-                <input
-                  aria-label={this.props.pageJumpText}
-                  type={this.state.page === '' ? 'text' : 'number'}
-                  onChange={e => {
-                    const val = e.target.value
-                    const page = val - 1
-                    if (val === '') {
-                      return this.setState({ page: val })
-                    }
-                    this.setState({ page: this.getSafePage(page) })
-                  }}
-                  value={this.state.page === '' ? '' : this.state.page + 1}
-                  onBlur={this.applyPage}
-                  onKeyPress={e => {
-                    if (e.which === 13 || e.keyCode === 13) {
-                      this.applyPage()
-                    }
-                  }}
-                />
-              </div>
-            ) : (
-              <span className="-currentPage">{page + 1}</span>
-            )}{' '}
-            {this.props.ofText} <span className="-totalPages">{pages || 1}</span>
+            {showPageJump ? renderPageJump(this.getPageJumpProperties()) : renderCurrentPage(page)}{' '}
+            {this.props.ofText} {renderTotalPagesCount(pages)}
           </span>
-          {showPageSizeOptions && (
-            <span className="select-wrap -pageSizeOptions">
-              <select
-                aria-label={this.props.rowsSelectorText}
-                onChange={e => onPageSizeChange(Number(e.target.value))}
-                value={pageSize}>
-                {pageSizeOptions.map((option, i) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <option key={i} value={option}>
-                    {`${option} ${this.props.rowsText}`}
-                  </option>
-                ))}
-              </select>
-            </span>
-          )}
+          {showPageSizeOptions &&
+            renderPageSizeOptions({
+              pageSize,
+              rowsSelectorText: this.props.rowsSelectorText,
+              pageSizeOptions,
+              onPageSizeChange,
+              rowsText: this.props.rowsText,
+            })}
         </div>
         <div className="-next">
           <NextComponent

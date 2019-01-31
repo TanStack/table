@@ -313,6 +313,18 @@ These are all of the available props (and their default values) for the main `<R
   getNoDataProps: () => ({}),
   getResizerProps: () => ({}),
 
+  // Custom pagination rendering
+  renderPageJump: ({ onChange, value, onBlur, onKeyPress, inputType, pageJumpText }) => component,
+  renderCurrentPage: page => component,
+  renderTotalPagesCount: pages => component,
+  renderPageSizeOptions: ({
+      pageSize,
+      pageSizeOptions,
+      rowsSelectorText,
+      onPageSizeChange,
+      rowsText,
+    }) => component
+
   // Global Column Defaults
   // To override only some values, import { ReactTableDefaults } from 'react-table'
   // and construct your overrides (e.g. {...ReactTableDefaults.column, className: 'react-table-cell'})
