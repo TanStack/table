@@ -52,6 +52,8 @@
 
 ## Sponsors
 
+**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and continue to maintain it. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley).
+
 <table>
   <tbody>
     <tr>
@@ -159,9 +161,9 @@ $ npm install react-table
 
 ```javascript
 // ES6
-import ReactTable from "react-table";
+import ReactTable from 'react-table'
 // ES5
-var ReactTable = require("react-table").default;
+var ReactTable = require('react-table').default
 ```
 
 3.  Import styles by including `react-table.css`
@@ -187,7 +189,7 @@ import 'react-table/react-table.css'
 <script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
 
 <script>
-  var ReactTable = window.ReactTable.default;
+  var ReactTable = window.ReactTable.default
 </script>
 ```
 
@@ -447,13 +449,13 @@ These are all of the available props (and their default values) for the main `<R
 You can easily override the core defaults like so:
 
 ```javascript
-import { ReactTableDefaults } from "react-table";
+import { ReactTableDefaults } from 'react-table'
 
 Object.assign(ReactTableDefaults, {
   defaultPageSize: 10,
   minRows: 3
   // etc...
-});
+})
 ```
 
 Or just define them as props
@@ -652,34 +654,34 @@ const columns = [
         <i className="fa-tasks" /> Progress
       </span>
     ),
-    accessor: "progress",
+    accessor: 'progress',
     Cell: row => (
       <div
         style={{
-          width: "100%",
-          height: "100%",
-          backgroundColor: "#dadada",
-          borderRadius: "2px"
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#dadada',
+          borderRadius: '2px'
         }}
       >
         <div
           style={{
             width: `${row.value}%`,
-            height: "100%",
+            height: '100%',
             backgroundColor:
               row.value > 66
-                ? "#85cc00"
+                ? '#85cc00'
                 : row.value > 33
-                ? "#ffbf00"
-                : "#ff2e00",
-            borderRadius: "2px",
-            transition: "all .2s ease-out"
+                ? '#ffbf00'
+                : '#ff2e00',
+            borderRadius: '2px',
+            transition: 'all .2s ease-out'
           }}
         />
       </div>
     )
   }
-];
+]
 ```
 
 ## Styles
@@ -749,11 +751,11 @@ This makes it extremely easy to add, say... a row click callback!
   getTdProps={(state, rowInfo, column, instance) => {
     return {
       onClick: (e, handleOriginal) => {
-        console.log("A Td Element was clicked!");
-        console.log("it produced this event:", e);
-        console.log("It was in this column:", column);
-        console.log("It was in this row:", rowInfo);
-        console.log("It was in this table instance:", instance);
+        console.log('A Td Element was clicked!')
+        console.log('it produced this event:', e)
+        console.log('It was in this column:', column)
+        console.log('It was in this row:', rowInfo)
+        console.log('It was in this table instance:', instance)
 
         // IMPORTANT! React-Table uses onClick internally to trigger
         // events like expanding SubComponents and pivots.
@@ -761,10 +763,10 @@ This makes it extremely easy to add, say... a row click callback!
         // If you want to fire the original onClick handler, call the
         // 'handleOriginal' function.
         if (handleOriginal) {
-          handleOriginal();
+          handleOriginal()
         }
       }
-    };
+    }
   }}
 />
 ```
@@ -777,9 +779,9 @@ You can use these callbacks for dynamic styling as well!
   getTrProps={(state, rowInfo, column) => {
     return {
       style: {
-        background: rowInfo.row.age > 20 ? "green" : "red"
+        background: rowInfo.row.age > 20 ? 'green' : 'red'
       }
-    };
+    }
   }}
 />
 ```
@@ -806,12 +808,12 @@ const columns = [
     getProps: (state, rowInfo, column) => {
       return {
         style: {
-          background: rowInfo.row.name === "Santa Clause" ? "red" : null
+          background: rowInfo.row.name === 'Santa Clause' ? 'red' : null
         }
-      };
+      }
     }
   }
-];
+]
 ```
 
 ## Pivoting and Aggregation
@@ -832,20 +834,20 @@ Naturally when grouping rows together, you may want to aggregate the rows inside
 // In this example, we use lodash to sum and average the values, but you can use whatever you want to aggregate.
 const columns = [
   {
-    Header: "Age",
-    accessor: "age",
+    Header: 'Age',
+    accessor: 'age',
     aggregate: (values, rows) => _.round(_.mean(values)),
     Aggregated: row => {
       // You can even render the cell differently if it's an aggregated cell
-      return <span>row.value (avg)</span>;
+      return <span>row.value (avg)</span>
     }
   },
   {
-    Header: "Visits",
-    accessor: "visits",
+    Header: 'Visits',
+    accessor: 'visits',
     aggregate: (values, rows) => _.sum(values)
   }
-];
+]
 ```
 
 Pivoted columns can be sorted just like regular columns including holding down the `<shift>` button to multi-sort.
@@ -866,7 +868,7 @@ By adding a `SubComponent` props, you can easily add an expansion level to all r
         even have access to the row-level data if you need! Spark-charts,
         drill-throughs, infographics... the possibilities are endless!
       </div>
-    );
+    )
   }}
 />
 ```
@@ -982,21 +984,21 @@ Accessing internal state and wrapping with more UI:
     return (
       <div
         style={{
-          background: "#ffcf00",
-          borderRadius: "5px",
-          overflow: "hidden",
-          padding: "5px"
+          background: '#ffcf00',
+          borderRadius: '5px',
+          overflow: 'hidden',
+          padding: '5px'
         }}
       >
         <pre>
           <code>
-            state.allVisibleColumns ==={" "}
+            state.allVisibleColumns ==={' '}
             {JSON.stringify(state.allVisibleColumns, null, 4)}
           </code>
         </pre>
         {makeTable()}
       </div>
-    );
+    )
   }}
 </ReactTable>
 ```
@@ -1034,21 +1036,21 @@ Supply a function that implements the native javascript [`Array.sort`](https://d
 ```javascript
 defaultSortMethod = (a, b, desc) => {
   // force null and undefined to the bottom
-  a = a === null || a === undefined ? -Infinity : a;
-  b = b === null || b === undefined ? -Infinity : b;
+  a = a === null || a === undefined ? -Infinity : a
+  b = b === null || b === undefined ? -Infinity : b
   // force any string values to lowercase
-  a = typeof a === "string" ? a.toLowerCase() : a;
-  b = typeof b === "string" ? b.toLowerCase() : b;
+  a = typeof a === 'string' ? a.toLowerCase() : a
+  b = typeof b === 'string' ? b.toLowerCase() : b
   // Return either 1 or -1 to indicate a sort priority
   if (a > b) {
-    return 1;
+    return 1
   }
   if (a < b) {
-    return -1;
+    return -1
   }
   // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
-  return 0;
-};
+  return 0
+}
 ```
 
 ## Filtering
