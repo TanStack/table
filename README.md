@@ -1,7 +1,3 @@
-<div style="text-align:center;">
-  <a href="https://github.com/tannerlinsley/react-table" target="\_parent"><img src="https://github.com/tannerlinsley/media/raw/master/logo-react-table.png" alt="React Table Logo" style="width:450px;"/></a>
-</div>
-
 # React Table
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
@@ -77,8 +73,8 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png">
+        <a href="https://nozzle.io" target="_blank">
+          <img width="300" src="https://nozzle.io/img/logo-blue.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -188,9 +184,3 @@ If you would like to help develop a suggested feature follow these steps:
 - `$ yarn run watch` Watches files and builds via babel
 - `$ yarn run docs` Runs the storybook server
 - `$ yarn run test` Runs the test suite
-
-## Used By
-
-<a href='https://nozzle.io' target="\_parent">
-  <img src='https://nozzle.io/img/logo-blue.png' alt='Nozzle Logo' style='width:300px;'/>
-</a>
