@@ -66,6 +66,10 @@
 
 **React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and maintain it. If you would like to contribute to my Patreon goal for v7, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley). Gold
 
+## Issues, Questions and Support
+
+Github issues are temporarily disabled until v7 is out. Most if not all issues that were or will be opened are likely to be resolved or uneccessary after v7 is released (mostly due to the headless approach of the new component). If you have an issue or a question, feel free to use the [React Table Spectrum Community/Forum](https://spectrum.chat/react-table)!
+
 ## Table of Contents
 
 - [Installation](#installation)

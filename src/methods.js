@@ -313,7 +313,6 @@ export default Base =>
         filtered,
         defaultFilterMethod,
         resolvedData,
-        visibleColumns,
         allDecoratedColumns,
       } = resolvedState
 
@@ -342,7 +341,7 @@ export default Base =>
         page: this.getStateOrProp('page'),
         pageSize: this.getStateOrProp('pageSize'),
         filter: this.getStateOrProp('filter'),
-      };
+      }
 
       this.props.onFetchData(currentState, this)
     }

@@ -259,12 +259,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeHeaderGroups = (row, i) => {
-      const theadGroupProps = _.splitProps(
-        getTheadGroupProps(finalState, undefined, row, this)
-      )
-      const theadGroupTrProps = _.splitProps(
-        getTheadGroupTrProps(finalState, undefined, row, this)
-      )
+      const theadGroupProps = _.splitProps(getTheadGroupProps(finalState, undefined, row, this))
+      const theadGroupTrProps = _.splitProps(getTheadGroupTrProps(finalState, undefined, row, this))
       return (
         <TheadComponent
           key={`${i}-${row.id}`}
@@ -668,11 +664,14 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {rowInfo.subRows &&
             isExpanded &&
             rowInfo.subRows.map((d, i) => makePageRow(d, i, rowInfo.nestingPath))}
-          {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo, () => {
-            const newExpanded = _.clone(expanded)
+          {SubComponent &&
+            !rowInfo.subRows &&
+            isExpanded &&
+            SubComponent(rowInfo, () => {
+              const newExpanded = _.clone(expanded)
 
-            _.set(newExpanded, cellInfo.nestingPath, false)
-          })}
+              _.set(newExpanded, rowInfo.nestingPath, false)
+            })}
         </TrGroupComponent>
       )
     }
@@ -800,7 +799,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makePagination = (isTop) => {
+    const makePagination = isTop => {
       const paginationProps = _.splitProps(
         getPaginationProps(finalState, undefined, undefined, this)
       )
@@ -820,50 +819,48 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makeTable = () => {
-      return (
-        <div
-          className={classnames('ReactTable', className, rootProps.className)}
-          style={{
-            ...style,
-            ...rootProps.style,
-          }}
-          {...rootProps.rest}
+    const makeTable = () => (
+      <div
+        className={classnames('ReactTable', className, rootProps.className)}
+        style={{
+          ...style,
+          ...rootProps.style,
+        }}
+        {...rootProps.rest}
+      >
+        {showPagination && showPaginationTop ? (
+          <div className="pagination-top">{makePagination(true)}</div>
+        ) : null}
+        <TableComponent
+          className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
+          style={tableProps.style}
+          {...tableProps.rest}
         >
-          {showPagination && showPaginationTop ? (
-            <div className="pagination-top">{makePagination(true)}</div>
-          ) : null}
-          <TableComponent
-            className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
-            style={tableProps.style}
-            {...tableProps.rest}
+          {hasHeaderGroups ? headerGroups.map(makeHeaderGroups) : null}
+          {makeHeaders()}
+          {hasFilters ? makeFilters() : null}
+          <TbodyComponent
+            className={classnames(tBodyProps.className)}
+            style={{
+              ...tBodyProps.style,
+              minWidth: `${rowMinWidth}px`,
+            }}
+            {...tBodyProps.rest}
           >
-            {hasHeaderGroups ? headerGroups.map(makeHeaderGroups) : null}
-            {makeHeaders()}
-            {hasFilters ? makeFilters() : null}
-            <TbodyComponent
-              className={classnames(tBodyProps.className)}
-              style={{
-                ...tBodyProps.style,
-                minWidth: `${rowMinWidth}px`,
-              }}
-              {...tBodyProps.rest}
-            >
-              {pageRows.map((d, i) => makePageRow(d, i))}
-              {padRows.map(makePadRow)}
-            </TbodyComponent>
-            {hasColumnFooter ? makeColumnFooters() : null}
-          </TableComponent>
-          {showPagination && showPaginationBottom ? (
-            <div className="pagination-bottom">{makePagination(false)}</div>
-          ) : null}
-          {!pageRows.length && (
-            <NoDataComponent {...noDataProps}>{_.normalizeComponent(noDataText)}</NoDataComponent>
-          )}
-          <LoadingComponent loading={loading} loadingText={loadingText} {...loadingProps} />
-        </div>
-      )
-    }
+            {pageRows.map((d, i) => makePageRow(d, i))}
+            {padRows.map(makePadRow)}
+          </TbodyComponent>
+          {hasColumnFooter ? makeColumnFooters() : null}
+        </TableComponent>
+        {showPagination && showPaginationBottom ? (
+          <div className="pagination-bottom">{makePagination(false)}</div>
+        ) : null}
+        {!pageRows.length && (
+          <NoDataComponent {...noDataProps}>{_.normalizeComponent(noDataText)}</NoDataComponent>
+        )}
+        <LoadingComponent loading={loading} loadingText={loadingText} {...loadingProps} />
+      </div>
+    )
 
     // childProps are optionally passed to a function-as-a-child
     return children ? children(finalState, makeTable, this) : makeTable()
