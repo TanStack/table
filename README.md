@@ -25,6 +25,8 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <br />
 <br />
 
+⚠️ Version 7 is under active development and is currently in an alpha state. If you are looking for [React Table v6, click here](/tree/v6)
+
 ## Features
 
 - Lightweight
