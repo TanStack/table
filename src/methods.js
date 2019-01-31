@@ -328,7 +328,7 @@ export default Base =>
         sortedData: manual
           ? resolvedData
           : this.sortData(
-            this.filterData(resolvedData, filtered, defaultFilterMethod, visibleColumns),
+            this.filterData(resolvedData, filtered, defaultFilterMethod, allDecoratedColumns),
             sorted,
             sortMethodsByColumnID
           ),
@@ -336,7 +336,15 @@ export default Base =>
     }
 
     fireFetchData () {
-      this.props.onFetchData(this.getResolvedState(), this)
+      // determine the current state, preferring certain state values over props
+      const currentState = {
+        ...this.getResolvedState(),
+        page: this.getStateOrProp('page'),
+        pageSize: this.getStateOrProp('pageSize'),
+        filter: this.getStateOrProp('filter'),
+      };
+
+      this.props.onFetchData(currentState, this)
     }
 
     getPropOrState (key) {
@@ -623,8 +631,8 @@ export default Base =>
       event.stopPropagation()
       const { onResizedChange, column } = this.props
       const { resized, currentlyResizing, columns } = this.getResolvedState()
-      const currentColumn = columns.find(c => c.accessor === currentlyResizing.id);
-      const minResizeWidth = currentColumn ? currentColumn.minResizeWidth : column.minResizeWidth;
+      const currentColumn = columns.find(c => c.accessor === currentlyResizing.id)
+      const minResizeWidth = currentColumn ? currentColumn.minResizeWidth : column.minResizeWidth
 
       // Delete old value
       const newResized = resized.filter(x => x.id !== currentlyResizing.id)

@@ -669,8 +669,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             isExpanded &&
             rowInfo.subRows.map((d, i) => makePageRow(d, i, rowInfo.nestingPath))}
           {SubComponent && !rowInfo.subRows && isExpanded && SubComponent(rowInfo, () => {
-            let newExpanded = _.clone(expanded)
-            newExpanded = _.set(newExpanded, cellInfo.nestingPath, false)
+            const newExpanded = _.clone(expanded)
+
+            _.set(newExpanded, cellInfo.nestingPath, false)
           })}
         </TrGroupComponent>
       )
@@ -799,7 +800,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
     }
 
-    const makePagination = () => {
+    const makePagination = (isTop) => {
       const paginationProps = _.splitProps(
         getPaginationProps(finalState, undefined, undefined, this)
       )
@@ -813,13 +814,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           onPageSizeChange={this.onPageSizeChange}
           className={paginationProps.className}
           style={paginationProps.style}
+          isTop={isTop}
           {...paginationProps.rest}
         />
       )
     }
 
     const makeTable = () => {
-      const pagination = makePagination()
       return (
         <div
           className={classnames('ReactTable', className, rootProps.className)}
@@ -830,7 +831,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {...rootProps.rest}
         >
           {showPagination && showPaginationTop ? (
-            <div className="pagination-top">{pagination}</div>
+            <div className="pagination-top">{makePagination(true)}</div>
           ) : null}
           <TableComponent
             className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
@@ -854,7 +855,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {hasColumnFooter ? makeColumnFooters() : null}
           </TableComponent>
           {showPagination && showPaginationBottom ? (
-            <div className="pagination-bottom">{pagination}</div>
+            <div className="pagination-bottom">{makePagination(false)}</div>
           ) : null}
           {!pageRows.length && (
             <NoDataComponent {...noDataProps}>{_.normalizeComponent(noDataText)}</NoDataComponent>

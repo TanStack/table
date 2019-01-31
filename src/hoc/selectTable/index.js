@@ -6,7 +6,9 @@ const defaultSelectInputComponent = props => {
   return (
     <input
       type={props.selectType || 'checkbox'}
+      aria-label={`${props.checked ? 'Un-select':'Select'} row with id:${props.id}` }
       checked={props.checked}
+      id={props.id}
       onClick={e => {
         const { shiftKey } = e
         e.stopPropagation()
@@ -31,8 +33,8 @@ export default (Component, options) => {
         checked,
         onClick: toggleSelection,
         selectType,
-        id: row[keyField],
         row,
+        id: `select-${row[keyField]}`
       }
       return React.createElement(this.props.SelectInputComponent, inputProps)
     }
@@ -46,6 +48,7 @@ export default (Component, options) => {
         checked,
         onClick: toggleAll,
         selectType,
+        id: 'select-all'
       }
 
       return React.createElement(SelectAllInputComponent, inputProps)
@@ -72,7 +75,6 @@ export default (Component, options) => {
         SelectInputComponent,
         ...rest
       } = this.props
-      const { floatingLeft = false } = options
       const select = {
         id: '_selector',
         accessor: () => 'x', // this value is not important
@@ -87,7 +89,7 @@ export default (Component, options) => {
         style: { textAlign: 'center' },
       }
 
-      const columns = floatingLeft ? [...originalCols, select] : [select, ...originalCols]
+      const columns = (options !== undefined && options.floatingLeft === true) ? [...originalCols, select] : [select, ...originalCols]
       const extra = {
         columns,
       }

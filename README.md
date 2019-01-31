@@ -170,7 +170,7 @@ render() {
     accessor: 'friend.age'
   }]
 
-  <ReactTable
+  return <ReactTable
     data={data}
     columns={columns}
   />
@@ -312,6 +312,18 @@ These are all of the available props (and their default values) for the main `<R
   getLoadingProps: () => ({}),
   getNoDataProps: () => ({}),
   getResizerProps: () => ({}),
+
+  // Custom pagination rendering
+  renderPageJump: ({ onChange, value, onBlur, onKeyPress, inputType, pageJumpText }) => component,
+  renderCurrentPage: page => component,
+  renderTotalPagesCount: pages => component,
+  renderPageSizeOptions: ({
+      pageSize,
+      pageSizeOptions,
+      rowsSelectorText,
+      onPageSizeChange,
+      rowsText,
+    }) => component
 
   // Global Column Defaults
   // To override only some values, import { ReactTableDefaults } from 'react-table'
