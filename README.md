@@ -113,32 +113,11 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
   </tbody>
 </table>
 
-## Issues, Questions and Support
-
-Github issues are temporarily disabled until v7 is out. Most if not all issues that were or will be opened are likely to be resolved or uneccessary after v7 is released (mostly due to the headless approach of the new component). If you have an issue or a question, feel free to use the [React Table Spectrum Community/Forum](https://spectrum.chat/react-table)!
-
 ## Table of Contents
 
 - [Installation](#installation)
 - [Example](#example)
-- [Data](#data)
-- [Props](#props)
-- [Columns](#columns)
-- [Column Header Groups](#column-header-groups)
-- [Custom Cell and Header and Footer Rendering](#custom-cell-header-and-footer-rendering)
-- [Styles](#styles)
-- [Custom Props](#custom-props)
-- [Pivoting and Aggregation](#pivoting-and-aggregation)
-- [Sub Tables and Sub Components](#sub-tables-and-sub-components)
-- [Server-side Data](#server-side-data)
-- [Fully Controlled Component](#fully-controlled-component)
-- [Functional Rendering](#functional-rendering)
-- [Multi-Sort](#multi-sort)
-- [Filtering](#filtering)
-- [Component Overrides](#component-overrides)
 - [Contributing](#contributing)
-- [Scripts](#scripts)
-- [Used By](#used-by)
 
 ## Installation
 
@@ -179,7 +158,7 @@ If you would like to help develop a suggested feature follow these steps:
 - View changes as you edit `docs/src`
 - Submit PR for review
 
-#### Scripts
+#### Package Utilities
 
 - `$ yarn run watch` Watches files and builds via babel
 - `$ yarn run docs` Runs the storybook server
