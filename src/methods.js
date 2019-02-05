@@ -31,17 +31,27 @@ export default Base =>
       } = newState
 
       // Determine if there are Header Groups
-      const hasHeaderGroups = columns.some(column => column.columns)
+      let hasHeaderGroups = false
+      columns.forEach(column => {
+        if (column.columns) {
+          hasHeaderGroups = true
+        }
+      })
 
-      // Find the expander column which could be deep in tree of columns
-      const allColumns = _.iterTree(columns, 'columns')
-      const expanderColumn = _.getFirstDefined(allColumns)
+      let columnsWithExpander = [...columns]
 
+      let expanderColumn = columns.find(
+        col => col.expander || (col.columns && col.columns.some(col2 => col2.expander))
+      )
+
+      f (expanderColumn && !expanderColumn.expander) {
+        expanderColumn = expanderColumn.columns.find(col => col.expander)
+      }
       // If we have SubComponent's we need to make sure we have an expander column
-      const hasSubComponentAndNoExpanderColumn = SubComponent && !expanderColumn
-      const columnsWithExpander = hasSubComponentAndNoExpanderColumn
-        ? [{ expander: true }, ...columns]
-        : [...columns]
+      if (SubComponent && !expanderColumn) {
+        expanderColumn = { expander: true }
+        columnsWithExpander = [expanderColumn, ...columnsWithExpander]
+      }
 
       const makeDecoratedColumn = (column, parentColumn) => {
         let dcol
@@ -95,31 +105,40 @@ export default Base =>
       const allDecoratedColumns = []
 
       // Decorate the columns
-      const decorateAndAddToAll = (columns, parentColumn) => columns.map(column => {
+      const decorateAndAddToAll = (column, parentColumn) => {
         const decoratedColumn = makeDecoratedColumn(column, parentColumn)
-        if (column.columns) {
-          decoratedColumn.columns = decorateAndAddToAll(column.columns, column)
-        }
-
         allDecoratedColumns.push(decoratedColumn)
         return decoratedColumn
+      }
+
+      const decoratedColumns = columnsWithExpander.map(column => {
+        if (column.columns) {
+          return {
+            ...column,
+            columns: column.columns.map(d => decorateAndAddToAll(d, column)),
+          }
+        }
+        return decorateAndAddToAll(column)
       })
 
-      const decoratedColumns = decorateAndAddToAll(columnsWithExpander)
-      const mapVisibleColumns = columns => columns.map(column => {
+      // Build the visible columns, headers and flat column list
+      let visibleColumns = decoratedColumns.slice()
+      let allVisibleColumns = []
+
+      visibleColumns = visibleColumns.map(column => {
         if (column.columns) {
           const visibleSubColumns = column.columns.filter(
             d => (pivotBy.indexOf(d.id) > -1 ? false : _.getFirstDefined(d.show, true))
           )
           return {
             ...column,
-            columns: mapVisibleColumns(visibleSubColumns),
+            columns: visibleSubColumns,
           }
         }
         return column
       })
 
-      const filterVisibleColumns = columns => columns.filter(
+      visibleColumns = visibleColumns.filter(
         column =>
           column.columns
             ? column.columns.length
@@ -128,12 +147,8 @@ export default Base =>
               : _.getFirstDefined(column.show, true)
       )
 
-      // Build the full array of visible columns - this is an array that contains all columns that
-      // are not hidden via pivoting
-      const allVisibleColumns = filterVisibleColumns(mapVisibleColumns(decoratedColumns.slice()))
-
       // Find any custom pivot location
-      const pivotIndex = allVisibleColumns.findIndex(col => col.pivot)
+      const pivotIndex = visibleColumns.findIndex(col => col.pivot)
 
       // Handle Pivot Columns
       if (pivotBy.length) {
@@ -166,65 +181,45 @@ export default Base =>
         // Place the pivotColumns back into the visibleColumns
         if (pivotIndex >= 0) {
           pivotColumnGroup = {
-            ...allVisibleColumns[pivotIndex],
+            ...visibleColumns[pivotIndex],
             ...pivotColumnGroup,
           }
-          allVisibleColumns.splice(pivotIndex, 1, pivotColumnGroup)
+          visibleColumns.splice(pivotIndex, 1, pivotColumnGroup)
         } else {
-          allVisibleColumns.unshift(pivotColumnGroup)
+          visibleColumns.unshift(pivotColumnGroup)
         }
       }
 
-      // Build Visible Columns and Header Groups
-      const allColumnHeaders = []
+      // Build Header Groups
+      const headerGroups = []
+      let currentSpan = []
 
-      const addHeader = column => {
-        let level = 0
+      // A convenience function to add a header and reset the currentSpan
+      const addHeader = (columns, column) => {
+        headerGroups.push({
+          ...this.props.column,
+          ...column,
+          columns,
+        })
+        currentSpan = []
+      }
 
-        // If this column has children, push them first and add this column to the next level
+      // Build flat list of allVisibleColumns and HeaderGroups
+      visibleColumns.forEach(column => {
         if (column.columns) {
-          const childLevels = column.columns.map(addHeader)
-          level = Math.max(...childLevels) + 1
-        }
-
-        // Add spans above columns without parents (orphans) to fill the space above them
-        if (allColumnHeaders.length <= level) allColumnHeaders.push([])
-        if (level > 0) {
-          // The spans need to contain the shifted headers as children. This finds all of the
-          // columns in the lower level between the first child of this column and the last child
-          // of the preceding column (if there is one)
-          const lowerLevel = allColumnHeaders[level - 1]
-          const precedingColumn = _.last(allColumnHeaders[level])
-
-          const indexOfFirstChildInLowerLevel = lowerLevel.indexOf(column.columns[0])
-          const indexAfterLastChildInPrecedingColumn = precedingColumn
-            ? lowerLevel.indexOf(_.last(precedingColumn.columns)) + 1
-            : 0
-
-          // If there are ophans, add a span above them
-          const orphans = lowerLevel.slice(
-            indexAfterLastChildInPrecedingColumn,
-            indexOfFirstChildInLowerLevel
-          )
-
-          if (orphans.length) {
-            allColumnHeaders[level].push({
-              ...this.props.column,
-              columns: orphans,
-            })
+          allVisibleColumns = allVisibleColumns.concat(column.columns)
+          if (currentSpan.length > 0) {
+            addHeader(currentSpan)
           }
+          addHeader(column.columns, column)
+          return
         }
-
-        allColumnHeaders[level].push(column)
-
-        return level
+        allVisibleColumns.push(column)
+        currentSpan.push(column)
+      })
+      if (hasHeaderGroups && currentSpan.length > 0) {
+        addHeader(currentSpan)
       }
-
-      allVisibleColumns.forEach(addHeader)
-
-      // visibleColumns is an array containing column definitions for the bottom row of TH elements
-      const visibleColumns = allColumnHeaders.shift()
-      const headerGroups = allColumnHeaders.reverse()
 
       // Access the data
       const accessRow = (d, i, level = 0) => {
@@ -255,7 +250,7 @@ export default Base =>
       resolvedData = resolvedData.map((d, i) => accessRow(d, i))
 
       // TODO: Make it possible to fabricate nested rows without pivoting
-      const aggregatingColumns = visibleColumns.filter(d => !d.expander && d.aggregate)
+      const aggregatingColumns = allVisibleColumns.filter(d => !d.expander && d.aggregate)
 
       // If pivoting, recursively group the data
       const aggregate = rows => {
@@ -299,7 +294,7 @@ export default Base =>
       return {
         ...newState,
         resolvedData,
-        visibleColumns,
+        allVisibleColumns,
         headerGroups,
         allDecoratedColumns,
         hasHeaderGroups,
@@ -313,6 +308,7 @@ export default Base =>
         filtered,
         defaultFilterMethod,
         resolvedData,
+        allVisibleColumns,
         allDecoratedColumns,
       } = resolvedState
 
@@ -327,7 +323,7 @@ export default Base =>
         sortedData: manual
           ? resolvedData
           : this.sortData(
-            this.filterData(resolvedData, filtered, defaultFilterMethod, allDecoratedColumns),
+            this.filterData(resolvedData, filtered, defaultFilterMethod, allVisibleColumns),
             sorted,
             sortMethodsByColumnID
           ),
@@ -354,12 +350,12 @@ export default Base =>
       return _.getFirstDefined(this.state[key], this.props[key])
     }
 
-    filterData (data, filtered, defaultFilterMethod, visibleColumns) {
+    filterData (data, filtered, defaultFilterMethod, allVisibleColumns) {
       let filteredData = data
 
       if (filtered.length) {
         filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
-          const column = visibleColumns.find(x => x.id === nextFilter.id)
+          const column = allVisibleColumns.find(x => x.id === nextFilter.id)
 
           // Don't filter hidden columns or columns that have had their filters disabled
           if (!column || column.filterable === false) {
@@ -388,7 +384,7 @@ export default Base =>
                 row[this.props.subRowsKey],
                 filtered,
                 defaultFilterMethod,
-                visibleColumns
+                allVisibleColumns
               ),
             }
           })
