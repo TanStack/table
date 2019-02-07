@@ -44,7 +44,7 @@ export default Base =>
         col => col.expander || (col.columns && col.columns.some(col2 => col2.expander))
       )
 
-      f (expanderColumn && !expanderColumn.expander) {
+      if (expanderColumn && !expanderColumn.expander) {
         expanderColumn = expanderColumn.columns.find(col => col.expander)
       }
       // If we have SubComponent's we need to make sure we have an expander column
