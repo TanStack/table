@@ -1,0 +1,19 @@
+{
+  "name": "react-table-cell-renderers",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "react",
+    "react-table",
+    "datagrid",
+    "grid",
+    "table"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "react-table": "6.5.3",
+    "react-dom": "15.5.3",
+    "react": "15.5.3",
+    "namor": "1.0.1"
+  }
+}
