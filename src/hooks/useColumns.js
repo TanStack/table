@@ -1,45 +1,61 @@
 import { useMemo } from 'react'
+import PropTypes from 'prop-types'
 
-import { getFirstDefined, getBy } from '../utils'
+import { getBy } from '../utils'
 
-export default function useColumns ({
-  debug,
-  groupBy,
-  userColumns,
-  disableSorting,
-  disableGrouping,
-  disableFilters,
-}) {
-  return useMemo(
-    () => {
-      if (debug) console.info('getColumns')
-
-      // Decorate All the columns
-      const columnTree = decorateColumnTree(userColumns)
-
-      // Get the flat list of all columns
-      let columns = flattenBy(columnTree, 'columns')
-
-      columns = [
-        ...groupBy.map(g => columns.find(col => col.id === g)),
-        ...columns.filter(col => !groupBy.includes(col.id)),
-      ]
-
-      // Get headerGroups
-      const headerGroups = makeHeaderGroups(columns, findMaxDepth(columnTree))
-      const headers = flattenBy(headerGroups, 'headers')
-
-      return {
-        columns,
-        headerGroups,
-        headers,
-      }
-    },
-    [groupBy, userColumns]
+const propTypes = {
+  // General
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      Cell: PropTypes.any,
+      Header: PropTypes.any
+    })
   )
+}
+
+export const useColumns = props => {
+  const {
+    debug,
+    columns: userColumns,
+    state: [{ groupBy }]
+  } = props
+
+  PropTypes.checkPropTypes(propTypes, props, 'property', 'useColumns')
+
+  const { columns, headerGroups, headers } = useMemo(() => {
+    if (debug) console.info('getColumns')
+
+    // Decorate All the columns
+    let columnTree = decorateColumnTree(userColumns)
+
+    // Get the flat list of all columns
+    let columns = flattenBy(columnTree, 'columns')
+
+    columns = [
+      ...groupBy.map(g => columns.find(col => col.id === g)),
+      ...columns.filter(col => !groupBy.includes(col.id))
+    ]
+
+    // Get headerGroups
+    const headerGroups = makeHeaderGroups(columns, findMaxDepth(columnTree))
+    const headers = flattenBy(headerGroups, 'headers')
+
+    return {
+      columns,
+      headerGroups,
+      headers
+    }
+  }, [groupBy, userColumns])
+
+  return {
+    ...props,
+    columns,
+    headerGroups,
+    headers
+  }
 
   // Find the depth of the columns
-  function findMaxDepth (columns, depth = 0) {
+  function findMaxDepth(columns, depth = 0) {
     return columns.reduce((prev, curr) => {
       if (curr.columns) {
         return Math.max(prev, findMaxDepth(curr.columns, depth + 1))
@@ -48,29 +64,15 @@ export default function useColumns ({
     }, 0)
   }
 
-  function decorateColumn (column, parent) {
+  function decorateColumn(column, parent) {
     // First check for string accessor
-    let {
-      id, accessor, Header, canSortBy, canGroupBy, canFilter,
-    } = column
+    let { id, accessor, Header } = column
 
     if (typeof accessor === 'string') {
       id = id || accessor
       const accessorString = accessor
       accessor = row => getBy(row, accessorString)
     }
-
-    const grouped = groupBy.includes(id)
-
-    canSortBy = accessor
-      ? getFirstDefined(canSortBy, disableSorting === true ? false : undefined, true)
-      : false
-    canGroupBy = accessor
-      ? getFirstDefined(canGroupBy, disableGrouping === true ? false : undefined, true)
-      : false
-    canFilter = accessor
-      ? getFirstDefined(canFilter, disableFilters === true ? false : undefined, true)
-      : false
 
     if (!id && typeof Header === 'string') {
       id = Header
@@ -87,22 +89,16 @@ export default function useColumns ({
       Cell: cell => cell.value,
       show: true,
       ...column,
-      grouped,
-      canSortBy,
-      canGroupBy,
-      canFilter,
       id,
       accessor,
-      parent,
+      parent
     }
-
-    column.Aggregated = column.Aggregated || column.Cell
 
     return column
   }
 
   // Build the visible columns, headers and flat column list
-  function decorateColumnTree (columns, parent, depth = 0) {
+  function decorateColumnTree(columns, parent, depth = 0) {
     return columns.map(column => {
       column = decorateColumn(column, parent)
       if (column.columns) {
@@ -112,7 +108,7 @@ export default function useColumns ({
     })
   }
 
-  function flattenBy (columns, childKey) {
+  function flattenBy(columns, childKey) {
     const flatColumns = []
 
     const recurse = columns => {
@@ -131,7 +127,7 @@ export default function useColumns ({
   }
 
   // Build the header groups from the bottom up
-  function makeHeaderGroups (columns, maxDepth) {
+  function makeHeaderGroups(columns, maxDepth) {
     const headerGroups = []
 
     const removeChildColumns = column => {
@@ -144,7 +140,7 @@ export default function useColumns ({
 
     const buildGroup = (columns, depth = 0) => {
       const headerGroup = {
-        headers: [],
+        headers: []
       }
 
       const parentColumns = []
@@ -161,16 +157,24 @@ export default function useColumns ({
             parentColumns.push({
               ...column.parent,
               originalID: column.parent.id,
-              id: [column.parent.id, parentColumns.length].join('_'),
+              id: [column.parent.id, parentColumns.length].join('_')
             })
           }
         } else if (hasParents) {
           // If other columns have parents, add a place holder if necessary
           const placeholderColumn = decorateColumn({
             originalID: [column.id, 'placeholder', maxDepth - depth].join('_'),
-            id: [column.id, 'placeholder', maxDepth - depth, parentColumns.length].join('_'),
+            id: [
+              column.id,
+              'placeholder',
+              maxDepth - depth,
+              parentColumns.length
+            ].join('_')
           })
-          if (isFirst || latestParentColumn.originalID !== placeholderColumn.originalID) {
+          if (
+            isFirst ||
+            latestParentColumn.originalID !== placeholderColumn.originalID
+          ) {
             parentColumns.push(placeholderColumn)
           }
         }

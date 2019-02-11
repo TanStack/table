@@ -1,115 +1,135 @@
-import { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 
-import { getFirstDefined, sum } from './utils'
-
-const propTypes = {
-  defaultFlex: PropTypes.number,
-}
+import { getFirstDefined, sum } from '../utils'
 
 export const actions = {}
 
-export default function useFlexLayout (api, props = {}) {
-  // Validate props
+const propTypes = {
+  defaultFlex: PropTypes.number
+}
+
+export const useFlexLayout = props => {
   PropTypes.checkPropTypes(propTypes, props, 'property', 'useFlexLayout')
 
   const {
+    defaultFlex = 1,
     hooks: {
-      getRowProps, getHeaderRowProps, getHeaderProps, getCellProps,
-    },
-    visibleColumns,
-  } = api
+      columns: columnsHooks,
+      getRowProps,
+      getHeaderRowProps,
+      getHeaderProps,
+      getCellProps
+    }
+  } = props
 
-  const { defaultFlex = 1 } = props
+  columnsHooks.push((columns, api) => {
+    const visibleColumns = columns.filter(column => {
+      column.visible =
+        typeof column.show === 'function' ? column.show(api) : !!column.show
+      return column.visible
+    })
 
-  const [columnMeasurements, setColumnMeasurements] = useState({})
+    const columnMeasurements = {}
 
-  const rowStyles = useMemo(
-    () => {
-      let sumWidth = 0
-      visibleColumns.forEach(column => {
-        const { width, minWidth } = getSizesForColumn(
-          column,
-          defaultFlex,
-          undefined,
-          undefined,
-          api
-        )
-        if (width) {
-          sumWidth += width
-        } else if (minWidth) {
-          sumWidth += minWidth
-        } else {
-          sumWidth += defaultFlex
-        }
-      })
+    let sumWidth = 0
+    visibleColumns.forEach(column => {
+      const { width, minWidth } = getSizesForColumn(
+        column,
+        defaultFlex,
+        undefined,
+        undefined,
+        api
+      )
+      if (width) {
+        sumWidth += width
+      } else if (minWidth) {
+        sumWidth += minWidth
+      } else {
+        sumWidth += defaultFlex
+      }
+    })
 
+    const rowStyles = {
+      style: {
+        display: 'flex',
+        minWidth: `${sumWidth}px`
+      }
+    }
+
+    api.rowStyles = rowStyles
+
+    getRowProps.push(() => rowStyles)
+    getHeaderRowProps.push(() => rowStyles)
+
+    getHeaderProps.push(column => ({
+      style: {
+        boxSizing: 'border-box',
+        ...getStylesForColumn(column, columnMeasurements, defaultFlex, api)
+      }
+      // [refKey]: el => {
+      //   renderedCellInfoRef.current[key] = {
+      //     column,
+      //     el
+      //   };
+      // },
+    }))
+
+    getCellProps.push(cell => {
       return {
         style: {
-          display: 'flex',
-          minWidth: `${sumWidth}px`,
-        },
+          display: 'block',
+          boxSizing: 'border-box',
+          ...getStylesForColumn(
+            cell.column,
+            columnMeasurements,
+            defaultFlex,
+            undefined,
+            api
+          )
+        }
+        // [refKey]: el => {
+        //   renderedCellInfoRef.current[columnPathStr] = {
+        //     column,
+        //     el
+        //   };
+        // }
       }
-    },
-    [visibleColumns]
-  )
+    })
 
-  getRowProps.push(row => rowStyles)
-  getHeaderRowProps.push(row => rowStyles)
+    return columns
+  })
 
-  getHeaderProps.push(column => ({
-    style: {
-      boxSizing: 'border-box',
-      ...getStylesForColumn(column, columnMeasurements, defaultFlex, api),
-    },
-    // [refKey]: el => {
-    //   renderedCellInfoRef.current[key] = {
-    //     column,
-    //     el
-    //   };
-    // },
-  }))
-
-  getCellProps.push(cell => ({
-    style: {
-      display: 'block',
-      boxSizing: 'border-box',
-      ...getStylesForColumn(cell.column, columnMeasurements, defaultFlex, undefined, api),
-    },
-    // [refKey]: el => {
-    //   renderedCellInfoRef.current[columnPathStr] = {
-    //     column,
-    //     el
-    //   };
-    // }
-  }))
-
-  return {
-    rowStyles,
-  }
+  return props
 }
 
-function getStylesForColumn (column, columnMeasurements, defaultFlex, api) {
-  const { flex, width, maxWidth } = getSizesForColumn(column, columnMeasurements, defaultFlex, api)
+// Utils
+
+function getStylesForColumn(column, columnMeasurements, defaultFlex, api) {
+  const { flex, width, maxWidth } = getSizesForColumn(
+    column,
+    columnMeasurements,
+    defaultFlex,
+    api
+  )
 
   return {
     flex: `${flex} 0 auto`,
     width: `${width}px`,
-    maxWidth: `${maxWidth}px`,
+    maxWidth: `${maxWidth}px`
   }
 }
 
-function getSizesForColumn (
-  {
-    columns, id, width, minWidth, maxWidth,
-  },
+function getSizesForColumn(
+  { columns, id, width, minWidth, maxWidth },
   columnMeasurements,
   defaultFlex,
   api
 ) {
   if (columns) {
     columns = columns
-      .map(column => getSizesForColumn(column, columnMeasurements, defaultFlex, api))
+      .map(column =>
+        getSizesForColumn(column, columnMeasurements, defaultFlex, api)
+      )
       .filter(Boolean)
 
     if (!columns.length) {
@@ -123,7 +143,7 @@ function getSizesForColumn (
     return {
       flex,
       width,
-      maxWidth,
+      maxWidth
     }
   }
 
@@ -133,7 +153,7 @@ function getSizesForColumn (
       width === 'auto'
         ? columnMeasurements[id] || defaultFlex
         : getFirstDefined(width, minWidth, defaultFlex),
-    maxWidth,
+    maxWidth
   }
 }
 

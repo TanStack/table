@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function getBy (obj, path, def) {
+export function getBy(obj, path, def) {
   if (!path) {
     return obj
   }
@@ -14,7 +14,7 @@ export function getBy (obj, path, def) {
   return typeof val !== 'undefined' ? val : def
 }
 
-export function defaultOrderByFn (arr, funcs, dirs) {
+export function defaultOrderByFn(arr, funcs, dirs) {
   return [...arr].sort((rowA, rowB) => {
     for (let i = 0; i < funcs.length; i += 1) {
       const sortFn = funcs[i]
@@ -28,7 +28,7 @@ export function defaultOrderByFn (arr, funcs, dirs) {
   })
 }
 
-export function defaultSortByFn (a, b, desc) {
+export function defaultSortByFn(a, b, desc) {
   // force null and undefined to the bottom
   a = a === null || a === undefined ? '' : a
   b = b === null || b === undefined ? '' : b
@@ -47,7 +47,7 @@ export function defaultSortByFn (a, b, desc) {
   return 0
 }
 
-export function getFirstDefined (...args) {
+export function getFirstDefined(...args) {
   for (let i = 0; i < args.length; i += 1) {
     if (typeof args[i] !== 'undefined') {
       return args[i]
@@ -55,16 +55,19 @@ export function getFirstDefined (...args) {
   }
 }
 
-export function defaultGroupByFn (rows, grouper) {
+export function defaultGroupByFn(rows, grouper) {
   return rows.reduce((prev, row, i) => {
-    const resKey = typeof grouper === 'function' ? grouper(row.values, i) : row.values[grouper]
+    const resKey =
+      typeof grouper === 'function'
+        ? grouper(row.values, i)
+        : row.values[grouper]
     prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
     prev[resKey].push(row)
     return prev
   }, {})
 }
 
-export function defaultFilterFn (row, id, value, column) {
+export function defaultFilterFn(row, id, value, column) {
   return row.values[id] !== undefined
     ? String(row.values[id])
       .toLowerCase()
@@ -72,57 +75,55 @@ export function defaultFilterFn (row, id, value, column) {
     : true
 }
 
-export function setBy (obj = {}, path, value) {
+export function setBy(obj = {}, path, value) {
   const recurse = (obj, depth = 0) => {
     const key = path[depth]
     const target = typeof obj[key] !== 'object' ? {} : obj[key]
-    const subValue = depth === path.length - 1 ? value : recurse(target, depth + 1)
+    const subValue =
+      depth === path.length - 1 ? value : recurse(target, depth + 1)
     return {
       ...obj,
-      [key]: subValue,
+      [key]: subValue
     }
   }
 
   return recurse(obj)
 }
 
-export function getElementDimensions (element) {
+export function getElementDimensions(element) {
   const rect = element.getBoundingClientRect()
   const style = window.getComputedStyle(element)
   const margins = {
     left: parseInt(style.marginLeft),
-    right: parseInt(style.marginRight),
+    right: parseInt(style.marginRight)
   }
   const padding = {
     left: parseInt(style.paddingLeft),
-    right: parseInt(style.paddingRight),
+    right: parseInt(style.paddingRight)
   }
   return {
     left: Math.ceil(rect.left),
     width: Math.ceil(rect.width),
-    outerWidth: Math.ceil(rect.width + margins.left + margins.right + padding.left + padding.right),
+    outerWidth: Math.ceil(
+      rect.width + margins.left + margins.right + padding.left + padding.right
+    ),
     marginLeft: margins.left,
     marginRight: margins.right,
     paddingLeft: padding.left,
     paddingRight: padding.right,
-    scrollWidth: element.scrollWidth,
+    scrollWidth: element.scrollWidth
   }
 }
 
-export function flexRender (Comp, props) {
+export function flexRender(Comp, props) {
   if (typeof Comp === 'function') {
-    return Object.getPrototypeOf(Comp).isReactComponent ? <Comp {...props} /> : Comp(props)
+    return Object.getPrototypeOf(Comp).isReactComponent ? (
+      <Comp {...props} />
+    ) : (
+      Comp(props)
+    )
   }
   return Comp
-}
-
-export function findExpandedDepth (obj, depth = 1) {
-  return Object.values(obj).reduce((prev, curr) => {
-    if (typeof curr === 'object') {
-      return Math.max(prev, findExpandedDepth(curr, depth + 1))
-    }
-    return depth
-  }, 0)
 }
 
 export const mergeProps = (...groups) => {
@@ -133,15 +134,18 @@ export const mergeProps = (...groups) => {
       ...rest,
       style: {
         ...(props.style || {}),
-        ...style,
+        ...style
       },
-      className: [props.className, className].filter(Boolean).join(' '),
+      className: [props.className, className].filter(Boolean).join(' ')
     }
   })
   return props
 }
 
-export const applyHooks = (hooks, ...args) =>
+export const applyHooks = (hooks, initial, ...args) =>
+  hooks.reduce((prev, next) => next(prev, ...args), initial)
+
+export const applyPropHooks = (hooks, ...args) =>
   hooks.reduce((prev, next) => mergeProps(prev, next(...args)), {})
 
 export const warnUnknownProps = props => {
@@ -154,11 +158,11 @@ ${JSON.stringify(props, null, 2)}`
   }
 }
 
-export function sum (arr) {
+export function sum(arr) {
   return arr.reduce((prev, curr) => prev + curr, 0)
 }
 
-function makePathArray (obj) {
+function makePathArray(obj) {
   return flattenDeep(obj)
     .join('.')
     .replace(/\[/g, '.')
@@ -166,7 +170,7 @@ function makePathArray (obj) {
     .split('.')
 }
 
-function flattenDeep (arr, newArr = []) {
+function flattenDeep(arr, newArr = []) {
   if (!Array.isArray(arr)) {
     newArr.push(arr)
   } else {

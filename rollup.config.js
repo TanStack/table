@@ -1,42 +1,32 @@
-import nodeResolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
-import replace from 'rollup-plugin-replace'
 import commonjs from 'rollup-plugin-commonjs'
-import uglify from 'rollup-plugin-uglify'
+import external from 'rollup-plugin-peer-deps-external'
+import resolve from 'rollup-plugin-node-resolve'
+import { uglify } from 'rollup-plugin-uglify'
 
-const env = process.env.NODE_ENV
+import pkg from './package.json'
 
-const config = {
+export default {
   input: 'src/index.js',
-  output: {
-    file: env === 'production' ? 'react-table.min.js' : 'react-table.js',
-    format: 'umd',
-    globals: {
-      react: 'React',
-    },
-    name: 'ReactTable',
-    exports: 'named',
-  },
-  external: ['react'],
-  plugins: [
-    nodeResolve(),
-    babel({
-      exclude: '**/node_modules/**',
-    }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify(env),
-    }),
-    commonjs(),
+  output: [
+    {
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap: true
+    }
+    // {
+    //   file: pkg.module,
+    //   format: "es",
+    //   sourcemap: true
+    // }
   ],
+  plugins: [
+    external(),
+    babel({
+      exclude: 'node_modules/**'
+    }),
+    resolve(),
+    commonjs(),
+    uglify()
+  ]
 }
-
-if (env === 'production') {
-  config.plugins.push(uglify({
-    compress: {
-      dead_code: true,
-      warnings: false,
-    },
-  }))
-}
-
-export default config
