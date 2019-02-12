@@ -198,8 +198,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeHeaderGroup = (column, i) => {
       const resizedValue = col => (resized.find(x => x.id === col.id) || {}).value
-
-      const leafColumns = _.leaves(column, 'columns')
       const flex = _.sum(
         column.columns.map(col => (col.width || resizedValue(col) ? 0 : col.minWidth))
       )
@@ -263,7 +261,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const theadGroupTrProps = _.splitProps(getTheadGroupTrProps(finalState, undefined, undefined, this))
       return (
         <TheadComponent
-          key={`${i}-${row.id}`}
           className={classnames('-headerGroups', theadGroupProps.className)}
           style={{
             ...theadGroupProps.style,

@@ -64,7 +64,6 @@ export default Base =>
         } else {
           dcol = {
             ...this.props.column,
-            ...this.props.column,
             ...column,
           }
         }
