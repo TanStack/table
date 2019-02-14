@@ -29,6 +29,7 @@ Looking for v6 information?
 - [Documentation](https://github.com/tannerlinsley/react-table/tree/v6)
 - [HOC Documentation](https://github.com/tannerlinsley/react-table/tree/v6#hoc-extensions)
 - [Examples](https://github.com/tannerlinsley/react-table/tree/master/archives/v6-examples)
+- [HOC Examples](https://github.com/tannerlinsley/react-table/tree/v6/docs/src/examples)
 
 ## Features
 
