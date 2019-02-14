@@ -257,8 +257,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeHeaderGroups = () => {
-      const theadGroupProps = _.splitProps(getTheadGroupProps(finalState, undefined, undefined, this))
-      const theadGroupTrProps = _.splitProps(getTheadGroupTrProps(finalState, undefined, undefined, this))
+      const theadGroupProps = 
+	      _.splitProps(getTheadGroupProps(finalState, undefined, undefined, this))
+      const theadGroupTrProps =
+     	  _.splitProps(getTheadGroupTrProps(finalState, undefined, undefined, this))
+		  
       return (
         <TheadComponent
           className={classnames('-headerGroups', theadGroupProps.className)}
