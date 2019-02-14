@@ -25,6 +25,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 This documentation is for Version 7, which is under active development and currently in an alpha state.
 
 ## Version 6
+Looking for v6 information?
 - [Documentation](https://github.com/tannerlinsley/react-table/tree/v6)
 - [HOC Documentation](https://github.com/tannerlinsley/react-table/tree/v6#hoc-extensions)
 - [Examples](https://github.com/tannerlinsley/react-table/tree/master/archives/v6-examples)
