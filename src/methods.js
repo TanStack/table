@@ -627,7 +627,7 @@ export default Base =>
       const { onResizedChange, column } = this.props
       const { resized, currentlyResizing, columns } = this.getResolvedState()
       const currentColumn = columns.find(c => c.accessor === currentlyResizing.id)
-      const minResizeWidth = currentColumn ? currentColumn.minResizeWidth : column.minResizeWidth
+      const minResizeWidth = currentColumn && currentColumn.minResizeWidth != null ? currentColumn.minResizeWidth : column.minResizeWidth
 
       // Delete old value
       const newResized = resized.filter(x => x.id !== currentlyResizing.id)
