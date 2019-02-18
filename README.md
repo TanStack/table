@@ -28,7 +28,7 @@ This documentation is for Version 7, which is under active development and curre
 Looking for v6 information?
 - [Documentation](https://github.com/tannerlinsley/react-table/tree/v6)
 - [HOC Documentation](https://github.com/tannerlinsley/react-table/tree/v6#hoc-extensions)
-- [Examples](https://github.com/tannerlinsley/react-table/tree/master/archives/v6-examples)
+- [Examples](https://github.com/tannerlinsley/react-table/tree/v6#codesandbox-examples)
 - [HOC Examples](https://github.com/tannerlinsley/react-table/tree/v6/docs/src/examples)
 
 ## Features
