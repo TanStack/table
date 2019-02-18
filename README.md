@@ -61,7 +61,6 @@
 - [pivoting-options](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-options)
 - [pivoting-sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-sub-components)
 - [server-side-data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-server-side-data)
-- [simple-table (1)](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-simple-table "1")
 - [simple-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-simple-table)
 - [sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-sub-components)
 
