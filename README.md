@@ -40,14 +40,36 @@
 - Fully controllable via optional props and callbacks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
-## [Demos and examples](http://react-table.js.org/#/story/simple-table)
+## CodeSandbox Examples
+
+- [100k-rows-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-100k-rows-aggregation)
+- [cell-renderers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-cell-renderers)
+- [controlled-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-controlled-table)
+- [custom-column-widths](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-column-widths)
+- [custom-component-props](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-component-props)
+- [custom-expander-position](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-expander-position)
+- [custom-filtering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-filtering)
+- [custom-no-data-text](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-no-data-text)
+- [custom-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-sorting)
+- [default-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-default-sorting)
+- [editable-content](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-editable-content)
+- [fixed-header-vertical-scroll](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-fixed-header-vertical-scroll)
+- [footers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-footers)
+- [functional-rendering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-functional-rendering)
+- [multiple-pagination-bars](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-multiple-pagination-bars)
+- [pivoting-and-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-and-aggregation)
+- [pivoting-options](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-options)
+- [pivoting-sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-sub-components)
+- [server-side-data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-server-side-data)
+- [simple-table (1)](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-simple-table "1")
+- [simple-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-simple-table)
+- [sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-sub-components)
 
 ## Versions
 
 - This documentation is for version 6 of react-table.
 - [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
 - Previous versions:
-
   - [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
 
 ## Sponsors
