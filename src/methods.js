@@ -626,7 +626,7 @@ export default Base =>
       event.stopPropagation()
       const { onResizedChange, column } = this.props
       const { resized, currentlyResizing, columns } = this.getResolvedState()
-      const currentColumn = columns.find(c => c.accessor === currentlyResizing.id)
+      const currentColumn = columns.find(c => c.accessor === currentlyResizing.id || c.id === currentlyResizing.id)
       const minResizeWidth = currentColumn && currentColumn.minResizeWidth != null ? currentColumn.minResizeWidth : column.minResizeWidth
 
       // Delete old value
