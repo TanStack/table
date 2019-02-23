@@ -170,6 +170,7 @@ export const useTable = (props, ...plugins) => {
         )
       }
 
+
       cell.render = (type, userProps = {}) => {
         if (!type) {
           throw new Error(
