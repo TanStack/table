@@ -64,7 +64,7 @@ export const useGroupBy = props => {
   const toggleGroupBy = (id, toggle) => {
     return setState(old => {
       const resolvedToggle =
-        typeof set !== 'undefined' ? toggle : !groupBy.includes(id)
+        typeof toggle !== 'undefined' ? toggle : !groupBy.includes(id)
       if (resolvedToggle) {
         return {
           ...old,
