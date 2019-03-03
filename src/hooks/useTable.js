@@ -139,17 +139,16 @@ export const useTable = (props, ...plugins) => {
   // This function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
   api.prepareRow = row => {
-    const { path } = row
+    const { path, index } = row
     row.getRowProps = props =>
       mergeProps(
-        { key: ['row', path].join('_') },
+        { key: ['row', path || index].join('_') },
         applyHooks(api.hooks.getRowProps, row, api),
         props
       )
 
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(api.hooks.row, row, api)
-    
     row.cells = row.cells.filter(cell => cell.column.visible)
 
     row.cells.forEach(cell => {
@@ -169,7 +168,6 @@ export const useTable = (props, ...plugins) => {
           props
         )
       }
-
 
       cell.render = (type, userProps = {}) => {
         if (!type) {
