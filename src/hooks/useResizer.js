@@ -68,7 +68,7 @@ export const useResizer = props => {
     const { index, initialPosition, initialWidth } = currentlyResizingInfo;
     const positionXDelta = currentPosition - initialPosition;
     const minWidth = columns[index].minWidth || 10;
-    const maxWidth = columns[index].maxWidth;
+    const maxWidth = columns[index].maxWidth || null;
 
     let updatedWidth = initialWidth + positionXDelta > 0 ? initialWidth + positionXDelta : 0;
 
@@ -76,7 +76,7 @@ export const useResizer = props => {
       updatedWidth = minWidth;
     }
 
-    if (updatedWidth > maxWidth) {
+    if (maxWidth && updatedWidth > maxWidth) {
       updatedWidth = maxWidth;
     }
 
