@@ -6,8 +6,8 @@
 
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
-<a href="https://travis-ci.org/react-tools/react-table" target="\_parent">
-  <img alt="" src="https://travis-ci.org/react-tools/react-table.svg?branch=master" />
+<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
+  <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=v6" />
 </a>
 <a href="https://npmjs.com/package/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
