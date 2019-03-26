@@ -13,19 +13,20 @@ export const useTableState = (
     ...defaultState,
     ...initialState
   })
+  console.log('useTableState', defaultState, initialState, state)
 
   const overriddenState = useMemo(() => {
     const newState = {
       ...state
     }
-    Object.keys(overrides).forEach(key => {
+    Object.keys(overrides).forEach((key) => {
       newState[key] = overrides[key]
     })
     return newState
   }, [state, ...Object.values(overrides)])
 
   const reducedSetState = (updater, type) =>
-    setState(old => {
+    setState((old) => {
       const newState = updater(old)
       return reducer(old, newState, type)
     })

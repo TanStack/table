@@ -10,6 +10,7 @@ const renderErr =
 const propTypes = {
   // General
   data: PropTypes.array.isRequired,
+  defaults: PropTypes.object,
   debug: PropTypes.bool
 }
 
@@ -18,15 +19,12 @@ export const useTable = (props, ...plugins) => {
   PropTypes.checkPropTypes(propTypes, props, 'property', 'useTable')
 
   // Destructure props
-  let { data = [], state: userState, debug } = props
+  let { data = [], defaults = {}, debug } = props
 
   debug = process.env.NODE_ENV === 'production' ? false : debug
 
-  // Always provide a default state
-  const defaultState = useTableState()
-
-  // But use the users state if provided
-  const state = userState || defaultState
+  // Use defaults from the props as initial values for the state.
+  const state = useTableState(defaults)
 
   // These are hooks that plugins can use right before render
   const hooks = {
@@ -69,7 +67,7 @@ export const useTable = (props, ...plugins) => {
   if (debug) console.time('hooks.headers')
   api.headers = applyHooks(api.hooks.headers, api.headers, api)
   if (debug) console.timeEnd('hooks.headers')
-  ;[...api.columns, ...api.headers].forEach(column => {
+  ;[...api.columns, ...api.headers].forEach((column) => {
     // Give columns/headers rendering power
     column.render = (type, userProps = {}) => {
       if (!type) {
@@ -83,7 +81,7 @@ export const useTable = (props, ...plugins) => {
     }
 
     // Give columns/headers getHeaderProps
-    column.getHeaderProps = props =>
+    column.getHeaderProps = (props) =>
       mergeProps(
         {
           key: ['header', column.id].join('_')
@@ -100,9 +98,9 @@ export const useTable = (props, ...plugins) => {
     api
   ).filter((headerGroup, i) => {
     // Filter out any headers and headerGroups that don't have visible columns
-    headerGroup.headers = headerGroup.headers.filter(header => {
-      const recurse = columns =>
-        columns.filter(column => {
+    headerGroup.headers = headerGroup.headers.filter((header) => {
+      const recurse = (columns) =>
+        columns.filter((column) => {
           if (column.columns) {
             return recurse(column.columns)
           }
@@ -138,9 +136,9 @@ export const useTable = (props, ...plugins) => {
 
   // This function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
-  api.prepareRow = row => {
+  api.prepareRow = (row) => {
     const { path } = row
-    row.getRowProps = props =>
+    row.getRowProps = (props) =>
       mergeProps(
         { key: ['row', path].join('_') },
         applyHooks(api.hooks.getRowProps, row, api),
@@ -149,17 +147,17 @@ export const useTable = (props, ...plugins) => {
 
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(api.hooks.row, row, api)
-    
-    row.cells = row.cells.filter(cell => cell.column.visible)
 
-    row.cells.forEach(cell => {
+    row.cells = row.cells.filter((cell) => cell.column.visible)
+
+    row.cells.forEach((cell) => {
       if (!cell) {
         return
       }
 
       const { column } = cell
 
-      cell.getCellProps = props => {
+      cell.getCellProps = (props) => {
         const columnPathStr = [path, column.id].join('_')
         return mergeProps(
           {
@@ -169,7 +167,6 @@ export const useTable = (props, ...plugins) => {
           props
         )
       }
-
 
       cell.render = (type, userProps = {}) => {
         if (!type) {
@@ -186,10 +183,10 @@ export const useTable = (props, ...plugins) => {
     })
   }
 
-  api.getTableProps = userProps =>
+  api.getTableProps = (userProps) =>
     mergeProps(applyPropHooks(api.hooks.getTableProps, api), userProps)
 
-  api.getRowProps = userProps =>
+  api.getRowProps = (userProps) =>
     mergeProps(applyPropHooks(api.hooks.getRowProps, api), userProps)
 
   return api
