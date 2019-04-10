@@ -17,7 +17,7 @@ export default Base =>
       const defaultableOptions = ['sorted', 'filtered', 'resized', 'expanded']
       defaultableOptions.forEach(x => {
         const defaultName = `default${x.charAt(0).toUpperCase() + x.slice(1)}`
-        if (JSON.stringify(oldState[defaultName]) !== JSON.stringify(newState[defaultName])) {
+        if (compare(oldState[defaultName], newState[defaultName])) {
           newState[x] = newState[defaultName]
         }
       })
