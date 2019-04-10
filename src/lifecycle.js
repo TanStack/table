@@ -1,3 +1,5 @@
+import compare from './utils'
+
 export default Base =>
   class extends Base {
     componentWillMount () {

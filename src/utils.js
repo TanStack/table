@@ -250,68 +250,72 @@ function getRegExpFlags (regExp) {
   return flags.join('')
 }
 
-function compare(value1, value2) {
+function compare (value1, value2) {
   if (value1 === value2) {
-    return true;
+    return true
   }
-  /* eslint-disable no-self-compare */
+
   // if both values are NaNs return true
+  /* eslint-disable no-self-compare */
   if ((value1 !== value1) && (value2 !== value2)) {
-    return true;
+    return true
   }
+  /* eslint-disable eqeqeq */
   if ({}.toString.call(value1) != {}.toString.call(value2)) {
-    return false;
+    return false
   }
   if (value1 !== Object(value1)) {
     // non equal primitives
-    return false;
+    return false
   }
   if (!value1) {
-    return false;
+    return false
   }
   if (Array.isArray(value1)) {
-    return compareArrays(value1, value2);
+    return compareArrays(value1, value2)
   }
+
+  /* eslint-disable eqeqeq */
   if ({}.toString.call(value1) == '[object Object]') {
-    return compareObjects(value1, value2);
-  } else {
-    return compareNativeSubtypes(value1, value2);
+    return compareObjects(value1, value2)
   }
+  return compareNativeSubtypes(value1, value2)
 }
 
-function compareNativeSubtypes(value1, value2) {
+function compareNativeSubtypes (value1, value2) {
   // e.g. Function, RegExp, Date
-  return value1.toString() === value2.toString();
+  /* eslint-disable eqeqeq */
+  return value1.toString() == value2.toString()
 }
 
-function compareArrays(value1, value2) {
-  var len = value1.length;
+function compareArrays (value1, value2) {
+  const len = value1.length
   if (len != value2.length) {
-    return false;
+    return false
   }
-  var alike = true;
-  for (var i = 0; i < len; i++) {
+  let alike = true
+  for (let i = 0; i < len; i++) {
     if (!compare(value1[i], value2[i])) {
-      alike = false;
-      break;
+      alike = false
+      break
     }
   }
-  return alike;
+  return alike
 }
 
-function compareObjects(value1, value2) {
-  var keys1 = Object.keys(value1).sort();
-  var keys2 = Object.keys(value2).sort();
-  var len = keys1.length;
+function compareObjects (value1, value2) {
+  const keys1 = Object.keys(value1).sort()
+  const keys2 = Object.keys(value2).sort()
+  const len = keys1.length
   if (len != keys2.length) {
-    return false;
+    return false
   }
-  for (var i = 0; i < len; i++) {
-    var key1 = keys1[i];
-    var key2 = keys2[i];
+  for (let i = 0; i < len; i++) {
+    const key1 = keys1[i]
+    const key2 = keys2[i]
     if (!(key1 == key2 && compare(value1[key1], value2[key2]))) {
-      return false;
+      return false
     }
   }
-  return true;
+  return true
 }
