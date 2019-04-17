@@ -47,10 +47,12 @@ export const useResizer = props => {
         column.isBottomLevel = true;
 
         column.getResizerProps = () => ({
-          onMouseDown: e => onDragStart(e, column, index),
+          ...((column.resizable === undefined || column.resizable === true) && {
+            onMouseDown: e => onDragStart(e, column, index),
 
-          // prop overrides
-          ...(getResizerProps && getResizerProps)
+            // prop overrides
+            ...(getResizerProps && getResizerProps)
+          })
         });
 
         bottomLevelColumnCount++;
