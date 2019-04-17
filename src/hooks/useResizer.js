@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { addActions, actions } from "../actions";
@@ -32,7 +32,7 @@ export const useResizer = props => {
     onResizedChange
   } = props;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (resizedColumns) {
       Object.keys(resizedColumns).forEach(index => (columns[index].width = resizedColumns[index]));
     }
