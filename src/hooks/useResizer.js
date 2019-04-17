@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import { addActions, actions } from "../actions";
@@ -19,8 +19,6 @@ const propTypes = {
   onResizedChange: PropTypes.func
 };
 
-let currentlyResizingInfo;
-
 export const useResizer = props => {
   PropTypes.checkPropTypes(propTypes, props, "property", "useResizer");
 
@@ -31,6 +29,7 @@ export const useResizer = props => {
     getResizerProps,
     onResizedChange
   } = props;
+  const currentlyResizingInfo = useRef(undefined);
 
   useEffect(() => {
     if (resizedColumns) {
@@ -65,7 +64,7 @@ export const useResizer = props => {
 
   const resizeColumn = e => {
     const { clientX: currentPosition } = e;
-    const { index, initialPosition, initialWidth } = currentlyResizingInfo;
+    const { index, initialPosition, initialWidth } = currentlyResizingInfo.current;
     const positionXDelta = currentPosition - initialPosition;
     const minWidth = columns[index].minWidth || 10;
     const maxWidth = columns[index].maxWidth || null;
@@ -99,7 +98,7 @@ export const useResizer = props => {
   const onDragStart = (e, column, index) => {
     e.preventDefault();
 
-    currentlyResizingInfo = {
+    currentlyResizingInfo.current = {
       index,
       initialWidth: column.width || 0,
       initialPosition: e.clientX
@@ -110,7 +109,7 @@ export const useResizer = props => {
   };
 
   const onDragEnd = () => {
-    currentlyResizingInfo = null;
+    currentlyResizingInfo.current = null;
     document.removeEventListener("mousemove", resizeColumn);
     document.removeEventListener("mouseup", onDragEnd);
   };
