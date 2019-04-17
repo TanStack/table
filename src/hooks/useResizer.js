@@ -46,8 +46,10 @@ export const useResizer = props => {
 
         column.isBottomLevel = true;
 
+        column.resizable = column.resizable !== undefined ? column.resizable : true;
+
         column.getResizerProps = () => ({
-          ...((column.resizable === undefined || column.resizable === true) && {
+          ...(column.resizable && {
             onMouseDown: e => onDragStart(e, column, index),
 
             // prop overrides
