@@ -145,7 +145,7 @@ $ npm install react-table
 import { useReactTable } from "react-table";
 ```
 
-## Examples
+## Example
 
 [React Table v7 Sandbox](https://codesandbox.io/s/m5lxzzpz69)
 
