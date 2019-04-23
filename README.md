@@ -756,7 +756,7 @@ Every single built-in component's props can be dynamically extended using any on
 />
 ```
 
-If used, **a callback prop must return an valid object**, even if it's an empty one.
+If used, **a callback prop must return a valid object**, even if it's an empty one.
 
 These callbacks are executed with each render of the element with four parameters:
 
