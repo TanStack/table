@@ -77,8 +77,8 @@ export const useFlexLayout = props => {
     getCellProps.push(cell => {
       return {
         style: {
-          display: 'block',
-          boxSizing: 'border-box',
+          // display: 'block',
+          // boxSizing: 'border-box',
           ...getStylesForColumn(
             cell.column,
             columnMeasurements,
