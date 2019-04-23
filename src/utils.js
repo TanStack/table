@@ -144,7 +144,7 @@ function groupBy (xs, key) {
 
 function asPx (value) {
   value = Number(value)
-  return isNaN(value) ? null : `${value}px`
+  return Number.isNaN(value) ? null : `${value}px`
 }
 
 function isArray (a) {
@@ -204,9 +204,5 @@ function isSortingDesc (d) {
 }
 
 function normalizeComponent (Comp, params = {}, fallback = Comp) {
-  return typeof Comp === 'function' ? (
-    <Comp {...params} />
-  ) : (
-    fallback
-  )
+  return typeof Comp === 'function' ? <Comp {...params} /> : fallback
 }

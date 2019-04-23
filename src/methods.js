@@ -127,8 +127,8 @@ export default Base =>
 
       visibleColumns = visibleColumns.map(column => {
         if (column.columns) {
-          const visibleSubColumns = column.columns.filter(
-            d => (pivotBy.indexOf(d.id) > -1 ? false : _.getFirstDefined(d.show, true))
+          const visibleSubColumns = column.columns.filter(d =>
+            pivotBy.indexOf(d.id) > -1 ? false : _.getFirstDefined(d.show, true)
           )
           return {
             ...column,
@@ -138,13 +138,12 @@ export default Base =>
         return column
       })
 
-      visibleColumns = visibleColumns.filter(
-        column =>
-          column.columns
-            ? column.columns.length
-            : pivotBy.indexOf(column.id) > -1
-              ? false
-              : _.getFirstDefined(column.show, true)
+      visibleColumns = visibleColumns.filter(column =>
+        column.columns
+          ? column.columns.length
+          : pivotBy.indexOf(column.id) > -1
+            ? false
+            : _.getFirstDefined(column.show, true)
       )
 
       // Find any custom pivot location
@@ -308,15 +307,16 @@ export default Base =>
         filtered,
         defaultFilterMethod,
         resolvedData,
-        allVisibleColumns,
         allDecoratedColumns,
       } = resolvedState
 
       const sortMethodsByColumnID = {}
 
-      allDecoratedColumns.filter(col => col.sortMethod).forEach(col => {
-        sortMethodsByColumnID[col.id] = col.sortMethod
-      })
+      allDecoratedColumns
+        .filter(col => col.sortMethod)
+        .forEach(col => {
+          sortMethodsByColumnID[col.id] = col.sortMethod
+        })
 
       // Resolve the data from either manual data or sorted data
       return {
@@ -337,7 +337,7 @@ export default Base =>
         page: this.getStateOrProp('page'),
         pageSize: this.getStateOrProp('pageSize'),
         filter: this.getStateOrProp('filter'),
-      };
+      }
 
       this.props.onFetchData(currentState, this)
     }
@@ -626,8 +626,13 @@ export default Base =>
       event.stopPropagation()
       const { onResizedChange, column } = this.props
       const { resized, currentlyResizing, columns } = this.getResolvedState()
-      const currentColumn = columns.find(c => c.accessor === currentlyResizing.id || c.id === currentlyResizing.id)
-      const minResizeWidth = currentColumn && currentColumn.minResizeWidth != null ? currentColumn.minResizeWidth : column.minResizeWidth
+      const currentColumn = columns.find(
+        c => c.accessor === currentlyResizing.id || c.id === currentlyResizing.id
+      )
+      const minResizeWidth =
+        currentColumn && currentColumn.minResizeWidth != null
+          ? currentColumn.minResizeWidth
+          : column.minResizeWidth
 
       // Delete old value
       const newResized = resized.filter(x => x.id !== currentlyResizing.id)
