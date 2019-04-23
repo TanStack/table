@@ -124,7 +124,7 @@ Looking for v6 information?
 ## Table of Contents
 
 - [Installation](#installation)
-- [Example](#example)
+- [Example](#examples)
 - [Contributing](#contributing)
 
 ## Installation
