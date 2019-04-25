@@ -27,8 +27,21 @@ export const useRows = props => {
         original,
         index: i,
         subRows,
-        depth
+        depth,
+        cells: [{}] // This is a dummy cell
       }
+
+      // Override common array functions (and the dummy cell's getCellProps function)
+      // to show an error if it is accessed without calling prepareRow
+      const unpreparedAccessWarning = () => {
+        throw new Error(
+          'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
+        )
+      }
+      row.cells.map = unpreparedAccessWarning
+      row.cells.filter = unpreparedAccessWarning
+      row.cells.forEach = unpreparedAccessWarning
+      row.cells[0].getCellProps = unpreparedAccessWarning
 
       // Create the cells and values
       row.values = {}

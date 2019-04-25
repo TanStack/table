@@ -136,8 +136,9 @@ export const useTable = (props, ...plugins) => {
   api.rows = applyHooks(api.hooks.rows, api.rows, api)
   if (debug) console.timeEnd('hooks.rows')
 
-  // This function is absolutely necessary and MUST be called on
+  // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
+
   api.prepareRow = row => {
     const { path } = row
     row.getRowProps = props =>
@@ -150,14 +151,15 @@ export const useTable = (props, ...plugins) => {
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(api.hooks.row, row, api)
 
-    row.cells = row.cells.filter(cell => cell.column.visible)
+    const visibleColumns = api.columns.filter(column => column.visible)
 
-    row.cells.forEach(cell => {
-      if (!cell) {
-        return
+    // Build the cells for each row
+    row.cells = visibleColumns.map(column => {
+      const cell = {
+        column,
+        row,
+        value: row.values[column.id]
       }
-
-      const { column } = cell
 
       cell.getCellProps = props => {
         const columnPathStr = [path, column.id].join('_')
@@ -182,6 +184,8 @@ export const useTable = (props, ...plugins) => {
           ...userProps
         })
       }
+
+      return cell
     })
   }
 
