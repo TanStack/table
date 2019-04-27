@@ -22,10 +22,13 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <br />
 
 ## ⚠️ Version 7
+
 This documentation is for Version 7, which is under active development and currently in an alpha state.
 
 ## Version 6
+
 Looking for v6 information?
+
 - [Documentation](https://github.com/tannerlinsley/react-table/tree/v6)
 - [HOC Documentation](https://github.com/tannerlinsley/react-table/tree/v6#hoc-extensions)
 - [Examples](https://github.com/tannerlinsley/react-table/tree/v6#codesandbox-examples)
@@ -86,8 +89,8 @@ Looking for v6 information?
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png">
+        <a href="https://zappi.com/web" target="_blank">
+          <img width="300" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
     </tr>
@@ -103,17 +106,17 @@ Looking for v6 information?
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
+        <a href="https://patreon.com/tannerlinsley" target="_blank">
           <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
+        <a href="https://patreon.com/tannerlinsley" target="_blank">
           <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
+        <a href="https://patreon.com/tannerlinsley" target="_blank">
           <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
         </a>
       </td>
@@ -142,7 +145,7 @@ $ npm install react-table
 2.  Import the `react-table` module
 
 ```javascript
-import { useReactTable } from "react-table";
+import { useReactTable } from 'react-table'
 ```
 
 ## Examples
