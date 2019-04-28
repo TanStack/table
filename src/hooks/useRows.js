@@ -26,6 +26,7 @@ export const useRows = props => {
       const row = {
         original,
         index: i,
+        path: [i],
         subRows,
         depth,
         cells: [{}] // This is a dummy cell
