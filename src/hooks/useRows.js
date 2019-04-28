@@ -26,7 +26,7 @@ export const useRows = props => {
       const row = {
         original,
         index: i,
-        path: [i],
+        path: [i], // used to create a key for each row even if not nested
         subRows,
         depth,
         cells: [{}] // This is a dummy cell
