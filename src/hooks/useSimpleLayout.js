@@ -9,10 +9,9 @@ export const useSimpleLayout = props => {
   } = props
 
   columnsHooks.push((columns, api) => {
-    columns.filter(column => {
+    columns.forEach(column => {
       column.visible =
         typeof column.show === 'function' ? column.show(api) : !!column.show
-      return column.visible
     })
 
     getHeaderProps.push(column => ({
