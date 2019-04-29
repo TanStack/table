@@ -124,6 +124,8 @@ export const usePagination = props => {
     gotoPage,
     previousPage,
     nextPage,
-    setPageSize
+    setPageSize,
+    pageIndex,
+    pageSize
   }
 }
