@@ -179,6 +179,8 @@ $ yarn add react-table
 $ npm install react-table
 ```
 
+## Usage
+
 2.  Import the `react-table` module
 
 ```javascript
@@ -196,6 +198,8 @@ import 'react-table/react-table.css'
 // Old-school
 <link rel="stylesheet" href="node_modules/react-table/react-table.css">
 ```
+
+See the example below for further usage.
 
 ##### CDN
 
@@ -219,6 +223,7 @@ import 'react-table/react-table.css'
 
 ```javascript
 import ReactTable from 'react-table'
+import 'react-table/react-table.css'
 
 render() {
   const data = [{
