@@ -1,7 +1,7 @@
-node_modules/
-lib/
-dist/
-es/
+node_modules
+lib
+dist
+es
 docs/build
 react-table.js
 react-table.min.js
