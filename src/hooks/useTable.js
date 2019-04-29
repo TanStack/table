@@ -143,7 +143,7 @@ export const useTable = (props, ...plugins) => {
     const { path } = row
     row.getRowProps = props =>
       mergeProps(
-        { key: ['row', path].join('_') },
+        { key: ['row', ...path].join('_') },
         applyHooks(api.hooks.getRowProps, row, api),
         props
       )
