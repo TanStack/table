@@ -62,6 +62,11 @@ export const useTable = (props, ...plugins) => {
   applyHooks(api.hooks.beforeRender, undefined, api)
   if (debug) console.timeEnd('hooks.beforeRender')
 
+  api.columns.forEach(column => {
+    column.visible =
+      typeof column.show === 'function' ? column.show(api) : !!column.show
+  })
+
   if (debug) console.time('hooks.columns')
   api.columns = applyHooks(api.hooks.columns, api.columns, api)
   if (debug) console.timeEnd('hooks.columns')
