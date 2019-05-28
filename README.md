@@ -1159,7 +1159,7 @@ Fortunately, ReactTable exposes a LOT of functionality as props to the component
 props to keep track of and that is where HOCs come in.
 
 You can write a HOC that just focusses on the additional functionality you want to enhance and keep those enhancements to
-reuse over and over again when you need them. You don't have to edit the ReactSource code, just wrap ReactTable in one or
+reuse over and over again when you need them. You don't have to edit the ReactTable source code, just wrap ReactTable in one or
 more HOCs (more on some issues related to chaining HOCs later) that provide the additional functionality you want to expose.
 
 The most obvious HOC is one that can add `checkbox` or select functionality. The HOC included provides `select` functionality
