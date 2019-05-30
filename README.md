@@ -270,7 +270,7 @@ Simply pass the `data` prop anything that resembles an array or object. Client-s
 />
 ```
 
-**Pro Tip: Using the `resolveData` prop** - Any time the `data` prop value changes (using a `===` comparison), the table will update, but sometimes you need to materialize, alter, or shape this data before it enters the table. To do this, you can use the `resolveData` prop! It recieves the `data` prop as the only parameter and returns the resolved data.
+**Pro Tip: Using the `resolveData` prop** - Any time the `data` prop value changes (using a `===` comparison), the table will update, but sometimes you need to materialize, alter, or shape this data before it enters the table. To do this, you can use the `resolveData` prop! It receives the `data` prop as the only parameter and returns the resolved data.
 
 ```javascript
 <ReactTable
