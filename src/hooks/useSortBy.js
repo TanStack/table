@@ -22,7 +22,7 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       sortByFn: PropTypes.func,
-      efaultSortDesc: PropTypes.bool
+      defaultSortDesc: PropTypes.bool
     })
   ),
   sortByFn: PropTypes.func,
