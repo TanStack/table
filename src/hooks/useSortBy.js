@@ -82,8 +82,7 @@ export const useSortBy = props => {
 
       if (!multi) {
         if (sortBy.length <= 1 && existingSortBy) {
-          if ((existingSortBy.desc && !resolvedDefaultSortDesc) ||
-            (!existingSortBy.desc && resolvedDefaultSortDesc)) {
+          if (existingSortBy.desc) {
             action = 'remove'
           } else {
             action = 'toggle'
