@@ -1,19 +1,9 @@
-
 export const useSimpleLayout = props => {
   const {
-    hooks: {
-      columns: columnsHooks,
-      getHeaderProps,
-      getCellProps
-    }
+    hooks: { columns: columnsHooks, getHeaderProps, getCellProps }
   } = props
 
-  columnsHooks.push((columns, api) => {
-    columns.forEach(column => {
-      column.visible =
-        typeof column.show === 'function' ? column.show(api) : !!column.show
-    })
-
+  columnsHooks.push(columns => {
     getHeaderProps.push(column => ({
       style: {
         boxSizing: 'border-box',
@@ -25,7 +15,8 @@ export const useSimpleLayout = props => {
       return {
         style: {
           boxSizing: 'border-box',
-          width: cell.column.width !== undefined ? `${cell.column.width}px` : 'auto'
+          width:
+            cell.column.width !== undefined ? `${cell.column.width}px` : 'auto'
         }
       }
     })
