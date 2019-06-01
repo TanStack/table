@@ -62,17 +62,6 @@ export const useExpanded = props => {
       row.isExpanded =
         (row.original && row.original[expandedKey]) || getBy(expanded, path)
 
-      row.cells = columns.map(column => {
-        const cell = {
-          column,
-          row,
-          state: null,
-          value: row.values[column.id]
-        }
-
-        return cell
-      })
-
       expandedRows.push(row)
 
       if (row.isExpanded && row.subRows && row.subRows.length) {

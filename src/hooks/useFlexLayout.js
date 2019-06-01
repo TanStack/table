@@ -23,12 +23,7 @@ export const useFlexLayout = props => {
   } = props
 
   columnsHooks.push((columns, api) => {
-    const visibleColumns = columns.filter(column => {
-      column.visible =
-        typeof column.show === 'function' ? column.show(api) : !!column.show
-      return column.visible
-    })
-
+    const visibleColumns = columns.filter(column => column.visible)
     const columnMeasurements = {}
 
     let sumWidth = 0
@@ -77,8 +72,8 @@ export const useFlexLayout = props => {
     getCellProps.push(cell => {
       return {
         style: {
-          display: 'block',
-          boxSizing: 'border-box',
+          // display: 'block',
+          // boxSizing: 'border-box',
           ...getStylesForColumn(
             cell.column,
             columnMeasurements,

@@ -37,8 +37,8 @@
   ],
   "peerDependencies": {
     "prop-types": "^15.5.0",
-    "react": "^16.7.0-alpha.0 || ^16.8.x",
-    "react-dom": "^16.7.0-alpha.0 || ^16.8.x"
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.2.1",
