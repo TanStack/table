@@ -15,8 +15,7 @@ const propTypes = {
     PropTypes.shape({
       width: PropTypes.number
     })
-  ),
-  onResizedChange: PropTypes.func
+  )
 };
 
 export const useResizer = props => {
@@ -26,8 +25,7 @@ export const useResizer = props => {
     columns,
     hooks: { headers: headerHooks },
     state: [{ resizedColumns }, setState],
-    getResizerProps,
-    onResizedChange
+    getResizerProps
   } = props;
   const currentlyResizingInfo = useRef(undefined);
 
@@ -87,10 +85,6 @@ export const useResizer = props => {
       let newResizedColumns = { ...old.resizedColumns };
 
       newResizedColumns[index] = updatedWidth;
-
-      if (onResizedChange) {
-        onResizedChange(resizedColumns, e);
-      }
 
       return {
         ...old,
