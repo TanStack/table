@@ -52,10 +52,10 @@ export const useSortBy = props => {
     const { accessor, canSortBy } = column
     column.canSortBy = accessor
       ? getFirstDefined(
-        canSortBy,
-        disableSorting === true ? false : undefined,
-        true
-      )
+          canSortBy,
+          disableSorting === true ? false : undefined,
+          true
+        )
       : false
   })
 
@@ -168,12 +168,12 @@ export const useSortBy = props => {
           {
             onClick: canSortBy
               ? e => {
-                e.persist()
-                column.toggleSortBy(
-                  undefined,
-                  !api.disableMultiSort && e.shiftKey
-                )
-              }
+                  e.persist()
+                  column.toggleSortBy(
+                    undefined,
+                    !api.disableMultiSort && e.shiftKey
+                  )
+                }
               : undefined,
             style: {
               cursor: canSortBy ? 'pointer' : undefined
@@ -247,7 +247,7 @@ export const useSortBy = props => {
     }
 
     return sortData(rows)
-  }, [rows, columns, sortBy, manualSorting])
+  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, sortByFn])
 
   return {
     ...props,

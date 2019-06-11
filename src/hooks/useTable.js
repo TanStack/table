@@ -91,7 +91,8 @@ export const useTable = (props, ...plugins) => {
     column.getHeaderProps = props =>
       mergeProps(
         {
-          key: ['header', column.id].join('_')
+          key: ['header', column.id].join('_'),
+          colSpan: column.columns ? column.columns.length : 1
         },
         applyPropHooks(api.hooks.getHeaderProps, column, api),
         props
