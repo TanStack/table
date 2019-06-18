@@ -143,13 +143,13 @@ export const useTable = (props, ...plugins) => {
     row.getRowProps = props =>
       mergeProps(
         { key: ['row', path].join('_') },
-        applyHooks(api.hooks.getRowProps, row, api),
+        applyPropHooks(api.hooks.getRowProps, row, api),
         props
       )
 
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(api.hooks.row, row, api)
-    
+
     row.cells = row.cells.filter(cell => cell.column.visible)
 
     row.cells.forEach(cell => {
