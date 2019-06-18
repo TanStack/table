@@ -1,4 +1,4 @@
-import { useMemo, useLayoutEffect } from 'react'
+import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 //
@@ -36,16 +36,6 @@ export const usePagination = props => {
       setState
     ]
   } = props
-
-  useLayoutEffect(() => {
-    setState(
-      old => ({
-        ...old,
-        pageIndex: 0
-      }),
-      actions.pageChange
-    )
-  }, [rows, filters, groupBy, sortBy])
 
   const { pages, pageCount } = useMemo(() => {
     if (manualPagination) {
