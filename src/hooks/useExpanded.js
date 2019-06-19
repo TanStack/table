@@ -21,7 +21,6 @@ export const useExpanded = props => {
 
   const {
     debug,
-    columns,
     rows,
     expandedKey = 'expanded',
     hooks,
@@ -48,8 +47,6 @@ export const useExpanded = props => {
   const expandedRows = useMemo(() => {
     if (debug) console.info('getExpandedRows')
 
-    const expandedRows = []
-
     // Here we do some mutation, but it's the last stage in the
     // immutable process so this is safe
     const handleRow = (row, index, depth = 0, parentPath = []) => {
@@ -62,17 +59,15 @@ export const useExpanded = props => {
       row.isExpanded =
         (row.original && row.original[expandedKey]) || getBy(expanded, path)
 
-      expandedRows.push(row)
-
       if (row.isExpanded && row.subRows && row.subRows.length) {
         row.subRows.forEach((row, i) => handleRow(row, i, depth + 1, path))
       }
+
+      return row
     }
 
-    rows.forEach((row, i) => handleRow(row, i))
-
-    return expandedRows
-  }, [rows, expanded, columns])
+    return rows.map((row, i) => handleRow(row, i))
+  }, [debug, rows, expandedKey, expanded])
 
   const expandedDepth = findExpandedDepth(expanded)
 
