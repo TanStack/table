@@ -37,6 +37,8 @@ export const usePagination = props => {
     ]
   } = props
 
+  const pageOptions = useMemo(() => [...new Array(userPageCount)].map((d, i) => i), [userPageCount])
+
   useLayoutEffect(() => {
     setState(
       old => ({
@@ -45,7 +47,7 @@ export const usePagination = props => {
       }),
       actions.pageChange
     )
-  }, [rows, filters, groupBy, sortBy])
+  }, [rows, filters, groupBy, sortBy, setState])
 
   const { pages, pageCount } = useMemo(() => {
     if (manualPagination) {
@@ -74,9 +76,8 @@ export const usePagination = props => {
       pageCount,
       pageOptions
     }
-  }, [rows, pageSize, userPageCount])
+  }, [manualPagination, debug, rows, pageOptions, userPageCount, pageSize])
 
-  const pageOptions = [...new Array(pageCount)].map((d, i) => i)
   const page = manualPagination ? rows : pages[pageIndex] || []
   const canPreviousPage = pageIndex > 0
   const canNextPage = pageIndex < pageCount - 1

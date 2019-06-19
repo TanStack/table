@@ -24,7 +24,8 @@
     "start": "rollup -c -w",
     "prepare": "yarn build",
     "release": "yarn publish",
-    "releaseNext": "yarn publish --tag next"
+    "releaseNext": "yarn publish --tag next",
+    "lint": "eslint 'src/**/*.js'"
   },
   "files": [
     "src/",

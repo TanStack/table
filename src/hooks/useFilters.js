@@ -150,7 +150,7 @@ export const useFilters = props => {
     }
 
     return filterRows(rows)
-  }, [rows, filters, manualFilters])
+  }, [manualFilters, filters, debug, rows, columns, filterFn])
 
   return {
     ...props,

@@ -21,7 +21,6 @@ export const useExpanded = props => {
 
   const {
     debug,
-    columns,
     rows,
     expandedKey = 'expanded',
     hooks,
@@ -72,7 +71,7 @@ export const useExpanded = props => {
     rows.forEach((row, i) => handleRow(row, i))
 
     return expandedRows
-  }, [rows, expanded, columns])
+  }, [debug, rows, expandedKey, expanded])
 
   const expandedDepth = findExpandedDepth(expanded)
 

@@ -57,7 +57,7 @@ export const useRows = props => {
 
     // Use the resolved data
     return data.map((d, i) => accessRow(d, i))
-  }, [data, columns])
+  }, [debug, data, subRowsKey, columns])
 
   return {
     ...props,
