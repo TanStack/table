@@ -29,7 +29,8 @@ const propTypes = {
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   defaultSortDesc: PropTypes.bool,
-  disableMultiSort: PropTypes.bool
+  disableMultiSort: PropTypes.bool,
+  disableSortRemove: PropTypes.bool
 }
 
 export const useSortBy = props => {
@@ -44,6 +45,7 @@ export const useSortBy = props => {
     manualSorting,
     disableSorting,
     defaultSortDesc,
+    disableSortRemove,
     hooks,
     state: [{ sortBy }, setState]
   } = props
@@ -84,7 +86,7 @@ export const useSortBy = props => {
         if (sortBy.length <= 1 && existingSortBy) {
           if ((existingSortBy.desc && !resolvedDefaultSortDesc) ||
             (!existingSortBy.desc && resolvedDefaultSortDesc)) {
-            action = 'remove'
+            action = disableSortRemove? 'toggle' : 'remove'
           } else {
             action = 'toggle'
           }
