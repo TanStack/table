@@ -62,6 +62,11 @@ export const useTable = (props, ...plugins) => {
   applyHooks(api.hooks.beforeRender, undefined, api)
   if (debug) console.timeEnd('hooks.beforeRender')
 
+  api.columns.forEach(column => {
+    column.visible =
+      typeof column.show === 'function' ? column.show(api) : !!column.show
+  })
+
   if (debug) console.time('hooks.columns')
   api.columns = applyHooks(api.hooks.columns, api.columns, api)
   if (debug) console.timeEnd('hooks.columns')
@@ -86,7 +91,8 @@ export const useTable = (props, ...plugins) => {
     column.getHeaderProps = props =>
       mergeProps(
         {
-          key: ['header', column.id].join('_')
+          key: ['header', column.id].join('_'),
+          colSpan: column.columns ? column.columns.length : 1
         },
         applyPropHooks(api.hooks.getHeaderProps, column, api),
         props
@@ -136,13 +142,14 @@ export const useTable = (props, ...plugins) => {
   api.rows = applyHooks(api.hooks.rows, api.rows, api)
   if (debug) console.timeEnd('hooks.rows')
 
-  // This function is absolutely necessary and MUST be called on
+  // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
+
   api.prepareRow = row => {
     const { path } = row
     row.getRowProps = props =>
       mergeProps(
-        { key: ['row', path].join('_') },
+        { key: ['row', ...path].join('_') },
         applyPropHooks(api.hooks.getRowProps, row, api),
         props
       )
@@ -150,14 +157,15 @@ export const useTable = (props, ...plugins) => {
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(api.hooks.row, row, api)
 
-    row.cells = row.cells.filter(cell => cell.column.visible)
+    const visibleColumns = api.columns.filter(column => column.visible)
 
-    row.cells.forEach(cell => {
-      if (!cell) {
-        return
+    // Build the cells for each row
+    row.cells = visibleColumns.map(column => {
+      const cell = {
+        column,
+        row,
+        value: row.values[column.id]
       }
-
-      const { column } = cell
 
       cell.getCellProps = props => {
         const columnPathStr = [path, column.id].join('_')
@@ -169,7 +177,6 @@ export const useTable = (props, ...plugins) => {
           props
         )
       }
-
 
       cell.render = (type, userProps = {}) => {
         if (!type) {
@@ -183,6 +190,8 @@ export const useTable = (props, ...plugins) => {
           ...userProps
         })
       }
+
+      return cell
     })
   }
 

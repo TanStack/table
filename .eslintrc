@@ -1,10 +1,9 @@
 {
   "parser": "babel-eslint",
-  "extends": ["standard", "standard-react"],
+  "extends": ["react-app", "prettier"],
   "env": {
     "es6": true
   },
-  "plugins": ["react"],
   "parserOptions": {
     "sourceType": "module"
   },

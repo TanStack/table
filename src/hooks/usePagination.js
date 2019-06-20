@@ -45,7 +45,7 @@ export const usePagination = props => {
       }),
       actions.pageChange
     )
-  }, [filters, groupBy, sortBy])
+  }, [rows, filters, groupBy, sortBy])
 
   const { pages, pageCount } = useMemo(() => {
     if (manualPagination) {
@@ -124,6 +124,8 @@ export const usePagination = props => {
     gotoPage,
     previousPage,
     nextPage,
-    setPageSize
+    setPageSize,
+    pageIndex,
+    pageSize
   }
 }

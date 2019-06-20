@@ -22,7 +22,7 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       sortByFn: PropTypes.func,
-      efaultSortDesc: PropTypes.bool
+      defaultSortDesc: PropTypes.bool
     })
   ),
   sortByFn: PropTypes.func,
@@ -52,10 +52,10 @@ export const useSortBy = props => {
     const { accessor, canSortBy } = column
     column.canSortBy = accessor
       ? getFirstDefined(
-        canSortBy,
-        disableSorting === true ? false : undefined,
-        true
-      )
+          canSortBy,
+          disableSorting === true ? false : undefined,
+          true
+        )
       : false
   })
 
@@ -82,7 +82,8 @@ export const useSortBy = props => {
 
       if (!multi) {
         if (sortBy.length <= 1 && existingSortBy) {
-          if (existingSortBy.desc) {
+          if ((existingSortBy.desc && !resolvedDefaultSortDesc) ||
+            (!existingSortBy.desc && resolvedDefaultSortDesc)) {
             action = 'remove'
           } else {
             action = 'toggle'
@@ -168,12 +169,12 @@ export const useSortBy = props => {
           {
             onClick: canSortBy
               ? e => {
-                e.persist()
-                column.toggleSortBy(
-                  undefined,
-                  !api.disableMultiSort && e.shiftKey
-                )
-              }
+                  e.persist()
+                  column.toggleSortBy(
+                    undefined,
+                    !api.disableMultiSort && e.shiftKey
+                  )
+                }
               : undefined,
             style: {
               cursor: canSortBy ? 'pointer' : undefined
@@ -247,7 +248,7 @@ export const useSortBy = props => {
     }
 
     return sortData(rows)
-  }, [rows, columns, sortBy, manualSorting])
+  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, sortByFn])
 
   return {
     ...props,
