@@ -96,6 +96,7 @@ export const useResizer = props => {
   const onDragStart = (e, column, index) => {
     e.preventDefault();
 
+
     currentlyResizingInfo.current = {
       index,
       initialWidth: column.width || 0,
@@ -104,12 +105,14 @@ export const useResizer = props => {
 
     document.addEventListener("mousemove", resizeColumn);
     document.addEventListener("mouseup", onDragEnd);
+    document.body.style.cursor = "col-resize";
   };
 
   const onDragEnd = () => {
     currentlyResizingInfo.current = null;
     document.removeEventListener("mousemove", resizeColumn);
     document.removeEventListener("mouseup", onDragEnd);
+    document.body.style.cursor = "";
   };
 
   return {
