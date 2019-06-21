@@ -13,7 +13,8 @@ addActions({
 })
 
 const propTypes = {
-  expandedKey: PropTypes.string
+  expandedKey: PropTypes.string,
+  paginateSubRows: PropTypes.bool
 }
 
 export const useExpanded = props => {
@@ -24,7 +25,8 @@ export const useExpanded = props => {
     rows,
     expandedKey = 'expanded',
     hooks,
-    state: [{ expanded }, setState]
+    state: [{ expanded }, setState],
+    paginateSubRows = true
   } = props
 
   const toggleExpandedByPath = (path, set) => {
@@ -47,6 +49,8 @@ export const useExpanded = props => {
   const expandedRows = useMemo(() => {
     if (debug) console.info('getExpandedRows')
 
+    const expandedRows = []
+
     // Here we do some mutation, but it's the last stage in the
     // immutable process so this is safe
     const handleRow = (row, index, depth = 0, parentPath = []) => {
@@ -59,6 +63,10 @@ export const useExpanded = props => {
       row.isExpanded =
         (row.original && row.original[expandedKey]) || getBy(expanded, path)
 
+      if (paginateSubRows || (!paginateSubRows && row.depth === 0)) {
+        expandedRows.push(row)
+      }
+
       if (row.isExpanded && row.subRows && row.subRows.length) {
         row.subRows.forEach((row, i) => handleRow(row, i, depth + 1, path))
       }
@@ -66,8 +74,10 @@ export const useExpanded = props => {
       return row
     }
 
-    return rows.map((row, i) => handleRow(row, i))
-  }, [debug, rows, expandedKey, expanded])
+    rows.forEach((row, i) => handleRow(row, i))
+
+    return expandedRows
+  }, [debug, rows, expandedKey, expanded, paginateSubRows])
 
   const expandedDepth = findExpandedDepth(expanded)
 
