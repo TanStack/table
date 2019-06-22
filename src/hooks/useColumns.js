@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { getBy } from '../utils'
+import { getBy, flattenBy } from '../utils'
 
 const propTypes = {
   // General
@@ -108,23 +108,6 @@ export const useColumns = props => {
     })
   }
 
-  function flattenBy(columns, childKey) {
-    const flatColumns = []
-
-    const recurse = columns => {
-      columns.forEach(d => {
-        if (!d[childKey]) {
-          flatColumns.push(d)
-        } else {
-          recurse(d[childKey])
-        }
-      })
-    }
-
-    recurse(columns)
-
-    return flatColumns
-  }
 
   // Build the header groups from the bottom up
   function makeHeaderGroups(columns, maxDepth) {

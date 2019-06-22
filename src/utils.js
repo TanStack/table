@@ -120,8 +120,8 @@ export function flexRender(Comp, props) {
     return Object.getPrototypeOf(Comp).isReactComponent ? (
       <Comp {...props} />
     ) : (
-      Comp(props)
-    )
+        Comp(props)
+      )
   }
   return Comp
 }
@@ -179,4 +179,22 @@ function flattenDeep(arr, newArr = []) {
     }
   }
   return newArr
+}
+
+export function flattenBy(columns, childKey) {
+  const flatColumns = []
+
+  const recurse = columns => {
+    columns.forEach(d => {
+      if (!d[childKey]) {
+        flatColumns.push(d)
+      } else {
+        recurse(d[childKey])
+      }
+    })
+  }
+
+  recurse(columns)
+
+  return flatColumns
 }
