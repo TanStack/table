@@ -36,27 +36,14 @@ export const useResizer = props => {
   }, [resizedColumns]);
 
   const addResizer = (columns, api) => {
-    let bottomLevelColumnCount = 0;
-
     columns.forEach(column => {
-      if (!column.columns) {
-        const index = bottomLevelColumnCount;
+      column.getResizerProps = ({ ...overrides }) => ({
+        ...((column.resizable === true || column.resizable === undefined) && {
+          onMouseDown: e => onDragStart(e, column),
 
-        column.isBottomLevel = true;
-
-        column.resizable = column.resizable !== undefined ? column.resizable : true;
-
-        column.getResizerProps = () => ({
-          ...(column.resizable && {
-            onMouseDown: e => onDragStart(e, column, index),
-
-            // prop overrides
-            ...(getResizerProps && getResizerProps)
-          })
-        });
-
-        bottomLevelColumnCount++;
-      }
+          ...overrides
+        })
+      });
     });
 
     return columns;
