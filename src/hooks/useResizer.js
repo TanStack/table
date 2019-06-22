@@ -22,18 +22,22 @@ export const useResizer = props => {
   PropTypes.checkPropTypes(propTypes, props, "property", "useResizer");
 
   const {
-    columns,
+    columns: columnsProps,
     hooks: { headers: headerHooks },
-    state: [{ resizedColumns }, setState],
-    getResizerProps
+    state: [{ resizedColumns }, setState]
   } = props;
   const currentlyResizingInfo = useRef(undefined);
 
+  const getColumnIndexByAccessor = accessor => {
+    const foundColumn = columnsProps.find(c => c.id === accessor);
+    return foundColumn ? columnsProps.indexOf(foundColumn) : null;
+  };
+
   useEffect(() => {
-    if (resizedColumns) {
-      Object.keys(resizedColumns).forEach(index => (columns[index].width = resizedColumns[index]));
-    }
-  }, [resizedColumns]);
+    Object.keys(resizedColumns).forEach(index => {
+      columnsProps[index].width = resizedColumns[index];
+    });
+  }, [resizedColumns, columnsProps]);
 
   const addResizer = (columns, api) => {
     columns.forEach(column => {
@@ -52,44 +56,75 @@ export const useResizer = props => {
   headerHooks.push(addResizer);
 
   const resizeColumn = e => {
+    e.stopPropagation();
     const { clientX: currentPosition } = e;
-    const { index, initialPosition, initialWidth } = currentlyResizingInfo.current;
-    const positionXDelta = currentPosition - initialPosition;
-    const minWidth = columns[index].minWidth || 10;
-    const maxWidth = columns[index].maxWidth || null;
+    const { initialPosition, columns } = currentlyResizingInfo.current;
 
-    let updatedWidth = initialWidth + positionXDelta > 0 ? initialWidth + positionXDelta : 0;
+    const updatedCols = [];
 
-    if (updatedWidth < minWidth) {
-      updatedWidth = minWidth;
+    columns.forEach(col => {
+      const { index, initialWidth } = col;
+      const {
+        width: currentWidth,
+        minWidth: minWidthProp,
+        maxWidth
+      } = columnsProps[index];
+
+      const positionXDelta =
+        (currentPosition - initialPosition) / columns.length;
+
+      let updatedWidth =
+        initialWidth + positionXDelta > 0 ? initialWidth + positionXDelta : 0;
+      const minWidth = minWidthProp || 20;
+
+
+      if (updatedWidth < minWidth) {
+        updatedWidth = minWidth;
+      }
+
+      if (maxWidth && updatedWidth > maxWidth) {
+        updatedWidth = maxWidth;
+      }
+
+      if (currentWidth !== updatedWidth)
+        updatedCols.push({ index, updatedWidth });
+    });
+
+    if (updatedCols.length > 0) {
+      setState(old => {
+        let newResizedColumns = { ...old.resizedColumns };
+
+        updatedCols.forEach(
+          col => (newResizedColumns[col.index] = col.updatedWidth)
+        );
+
+        return {
+          ...old,
+          resizedColumns: newResizedColumns
+        };
+      }, actions.resizeColumn);
     }
-
-    if (maxWidth && updatedWidth > maxWidth) {
-      updatedWidth = maxWidth;
-    }
-
-    setState(old => {
-      let newResizedColumns = { ...old.resizedColumns };
-
-      newResizedColumns[index] = updatedWidth;
-
-      return {
-        ...old,
-        resizedColumns: newResizedColumns
-      };
-    }, actions.resizeColumn);
   };
 
   const onDragStart = (e, column, index) => {
     e.preventDefault();
 
+    // checks for child columns, if so flatten to get the bottom level columns or push current column
+    const columns = column.columns
+      ? flattenBy(column.columns, "columns")
+      : [column];
 
     currentlyResizingInfo.current = {
-      index,
-      initialWidth: column.width || 0,
-      initialPosition: e.clientX
+      initialPosition: e.clientX,
+      columns: columns
+        .filter(col => col.resizable || col.resizable === undefined)
+        .map(col => {
+          return {
+            index: getColumnIndexByAccessor(col.id),
+            initialWidth: col.width || 0
+          };
+        })
     };
-
     document.addEventListener("mousemove", resizeColumn);
     document.addEventListener("mouseup", onDragEnd);
     document.body.style.cursor = "col-resize";
