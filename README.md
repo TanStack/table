@@ -106,7 +106,7 @@
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://zappi.com/web" target="_blank">
+        <a href="https://zappi.io/web" target="_blank">
           <img width="300" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
