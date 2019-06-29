@@ -114,7 +114,7 @@ export const useColumns = props => {
     const recurse = columns => {
       columns.forEach(d => {
         if (!d[childKey]) {
-          flatColumns.push(d)
+          if (d.show === undefined || d.show) flatColumns.push(d)
         } else {
           recurse(d[childKey])
         }
