@@ -7,8 +7,8 @@ module.exports = {
      * make 'test/utils' available in tests, e.g.
      *
      * const {myModule} = require('utils/my-test-helper')
-     * */
-    // __dirname,
+     */
+    __dirname,
   ],
 
   rootDir: path.resolve(__dirname, '../..'),
