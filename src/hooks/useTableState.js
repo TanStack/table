@@ -11,12 +11,12 @@ export const useTableState = (
 ) => {
   let [state, setState] = userUseState({
     ...defaultState,
-    ...initialState
+    ...initialState,
   })
 
   const overriddenState = React.useMemo(() => {
     const newState = {
-      ...state
+      ...state,
     }
     if (overrides) {
       Object.keys(overrides).forEach(key => {
@@ -38,6 +38,6 @@ export const useTableState = (
 
   return React.useMemo(() => [overriddenState, reducedSetState], [
     overriddenState,
-    reducedSetState
+    reducedSetState,
   ])
 }
