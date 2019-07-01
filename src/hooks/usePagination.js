@@ -38,7 +38,10 @@ export const usePagination = props => {
     ]
   } = props
 
+  const pageOptions = useMemo(() => [...new Array(userPageCount)].map((d, i) => i), [userPageCount])
+
   const rowDep = disablePageResetOnDataChange ? null : rows
+  
   useLayoutEffect(() => {
     setState(
       old => ({
@@ -76,9 +79,8 @@ export const usePagination = props => {
       pageCount,
       pageOptions
     }
-  }, [rows, pageSize, userPageCount])
+  }, [manualPagination, debug, rows, pageOptions, userPageCount, pageSize])
 
-  const pageOptions = [...new Array(pageCount)].map((d, i) => i)
   const page = manualPagination ? rows : pages[pageIndex] || []
   const canPreviousPage = pageIndex > 0
   const canNextPage = pageIndex < pageCount - 1

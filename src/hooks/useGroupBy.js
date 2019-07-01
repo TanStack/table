@@ -180,7 +180,7 @@ export const useGroupBy = props => {
 
     // Assign the new data
     return groupRecursively(rows, groupBy)
-  }, [rows, groupBy, columns, manualGroupBy])
+  }, [manualGroupBy, groupBy, debug, rows, columns, userAggregations, groupByFn])
 
   return {
     ...props,

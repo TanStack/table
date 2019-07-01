@@ -1,14 +1,19 @@
 {
-  "parser": "babel-eslint",
-  "extends": ["react-app", "prettier"],
-  "env": {
-    "es6": true
-  },
-  "parserOptions": {
-    "sourceType": "module"
-  },
-  "rules": {
-    "space-before-function-paren": 0,
-    "react/jsx-boolean-value": 0
-  }
+    "parser": "babel-eslint",
+    "extends": ["react-app", "prettier"],
+    "env": {
+        "es6": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "space-before-function-paren": 0,
+        "react/jsx-boolean-value": 0
+    },
+    "settings": {
+        "react": {
+            "version": "latest"
+        }
+    }
 }
