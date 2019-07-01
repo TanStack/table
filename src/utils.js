@@ -70,8 +70,8 @@ export function defaultGroupByFn(rows, grouper) {
 export function defaultFilterFn(row, id, value, column) {
   return row.values[id] !== undefined
     ? String(row.values[id])
-      .toLowerCase()
-      .includes(String(value).toLowerCase())
+        .toLowerCase()
+        .includes(String(value).toLowerCase())
     : true
 }
 
@@ -83,7 +83,7 @@ export function setBy(obj = {}, path, value) {
       depth === path.length - 1 ? value : recurse(target, depth + 1)
     return {
       ...obj,
-      [key]: subValue
+      [key]: subValue,
     }
   }
 
@@ -95,11 +95,11 @@ export function getElementDimensions(element) {
   const style = window.getComputedStyle(element)
   const margins = {
     left: parseInt(style.marginLeft),
-    right: parseInt(style.marginRight)
+    right: parseInt(style.marginRight),
   }
   const padding = {
     left: parseInt(style.paddingLeft),
-    right: parseInt(style.paddingRight)
+    right: parseInt(style.paddingRight),
   }
   return {
     left: Math.ceil(rect.left),
@@ -111,7 +111,7 @@ export function getElementDimensions(element) {
     marginRight: margins.right,
     paddingLeft: padding.left,
     paddingRight: padding.right,
-    scrollWidth: element.scrollWidth
+    scrollWidth: element.scrollWidth,
   }
 }
 
@@ -134,9 +134,9 @@ export const mergeProps = (...groups) => {
       ...rest,
       style: {
         ...(props.style || {}),
-        ...style
+        ...style,
       },
-      className: [props.className, className].filter(Boolean).join(' ')
+      className: [props.className, className].filter(Boolean).join(' '),
     }
   })
   return props
@@ -152,7 +152,7 @@ export const warnUnknownProps = props => {
   if (Object.keys(props).length) {
     throw new Error(
       `Unknown options passed to useReactTable:
-      
+
 ${JSON.stringify(props, null, 2)}`
     )
   }

@@ -8,9 +8,9 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       Cell: PropTypes.any,
-      Header: PropTypes.any
+      Header: PropTypes.any,
     })
-  )
+  ),
 }
 
 // Find the depth of the columns
@@ -50,7 +50,7 @@ function decorateColumn(column, parent) {
     ...column,
     id,
     accessor,
-    parent
+    parent,
   }
 
   return column
@@ -81,7 +81,7 @@ function makeHeaderGroups(columns, maxDepth) {
 
   const buildGroup = (columns, depth = 0) => {
     const headerGroup = {
-      headers: []
+      headers: [],
     }
 
     const parentColumns = []
@@ -98,7 +98,7 @@ function makeHeaderGroups(columns, maxDepth) {
           parentColumns.push({
             ...column.parent,
             originalID: column.parent.id,
-            id: [column.parent.id, parentColumns.length].join('_')
+            id: [column.parent.id, parentColumns.length].join('_'),
           })
         }
       } else if (hasParents) {
@@ -109,8 +109,8 @@ function makeHeaderGroups(columns, maxDepth) {
             column.id,
             'placeholder',
             maxDepth - depth,
-            parentColumns.length
-          ].join('_')
+            parentColumns.length,
+          ].join('_'),
         })
         if (
           isFirst ||
@@ -148,7 +148,7 @@ export const useColumns = props => {
   const {
     debug,
     columns: userColumns,
-    state: [{ groupBy }]
+    state: [{ groupBy }],
   } = props
 
   PropTypes.checkPropTypes(propTypes, props, 'property', 'useColumns')
@@ -164,7 +164,7 @@ export const useColumns = props => {
 
     columns = [
       ...groupBy.map(g => columns.find(col => col.id === g)),
-      ...columns.filter(col => !groupBy.includes(col.id))
+      ...columns.filter(col => !groupBy.includes(col.id)),
     ]
 
     // Get headerGroups
@@ -174,7 +174,7 @@ export const useColumns = props => {
     return {
       columns,
       headerGroups,
-      headers
+      headers,
     }
   }, [debug, groupBy, userColumns])
 
@@ -182,7 +182,7 @@ export const useColumns = props => {
     ...props,
     columns,
     headerGroups,
-    headers
+    headers,
   }
 
   function flattenBy(columns, childKey) {
@@ -202,5 +202,4 @@ export const useColumns = props => {
 
     return flatColumns
   }
-
 }
