@@ -18,14 +18,14 @@
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
   "scripts": {
-    "test": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
+    "test": "is-ci 'test:ci' 'test:dev'",
+    "test:dev": "jest --watch",
+    "test:ci": "jest",
     "build": "rollup -c",
     "start": "rollup -c -w",
     "prepare": "yarn build",
     "release": "yarn publish",
-    "releaseNext": "yarn publish --tag next",
-    "lint": "eslint 'src/**/*.js'"
+    "releaseNext": "yarn publish --tag next"
   },
   "files": [
     "src/",
