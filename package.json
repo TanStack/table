@@ -64,6 +64,8 @@
     "eslint-plugin-react": "7.x",
     "eslint-plugin-react-hooks": "1.5.0",
     "eslint-plugin-standard": "^4.0.0",
+    "husky": "^3.0.0",
+    "lint-staged": "^9.0.0",
     "rollup": "^0.68.0",
     "rollup-plugin-babel": "^4.1.0",
     "rollup-plugin-commonjs": "^9.1.3",
