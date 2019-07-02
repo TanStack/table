@@ -46,6 +46,6 @@ export const useTokenPagination = () => {
     nextPage,
     canPreviousPage,
     canNextPage,
-    resetPagination
+    resetPagination,
   }
 }

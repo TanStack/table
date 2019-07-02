@@ -9,12 +9,12 @@ defaultState.expanded = {}
 
 addActions({
   toggleExpanded: '__toggleExpanded__',
-  useExpanded: '__useExpanded__'
+  useExpanded: '__useExpanded__',
 })
 
 const propTypes = {
   expandedKey: PropTypes.string,
-  paginateSubRows: PropTypes.bool
+  paginateSubRows: PropTypes.bool,
 }
 
 export const useExpanded = props => {
@@ -26,7 +26,7 @@ export const useExpanded = props => {
     expandedKey = 'expanded',
     hooks,
     state: [{ expanded }, setState],
-    paginateSubRows = true
+    paginateSubRows = true,
   } = props
 
   const toggleExpandedByPath = (path, set) => {
@@ -36,7 +36,7 @@ export const useExpanded = props => {
       set = getFirstDefined(set, !existing)
       return {
         ...old,
-        expanded: setBy(expanded, path, set)
+        expanded: setBy(expanded, path, set),
       }
     }, actions.toggleExpanded)
   }
@@ -85,7 +85,7 @@ export const useExpanded = props => {
     ...props,
     toggleExpandedByPath,
     expandedDepth,
-    rows: expandedRows
+    rows: expandedRows,
   }
 }
 
