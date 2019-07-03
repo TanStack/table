@@ -386,7 +386,6 @@ These are all of the available props (and their default values) for the main `<R
   getTbodyProps: () => ({}),
   getTrGroupProps: () => ({}),
   getTrProps: () => ({}),
-  getThProps: () => ({}),
   getTdProps: () => ({}),
   getTfootProps: () => ({}),
   getTfootTrProps: () => ({}),
@@ -752,7 +751,6 @@ Every single built-in component's props can be dynamically extended using any on
   getTbodyProps={fn}
   getTrGroupProps={fn}
   getTrProps={fn}
-  getThProps={fn}
   getTdProps={fn}
   getPaginationProps={fn}
   getLoadingProps={fn}
