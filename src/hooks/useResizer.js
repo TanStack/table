@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import PropTypes from "prop-types";
 
 import { addActions, actions } from "../actions";
@@ -18,6 +18,7 @@ const propTypes = {
   )
 };
 
+
 export const useResizer = props => {
   PropTypes.checkPropTypes(propTypes, props, "property", "useResizer");
 
@@ -33,11 +34,14 @@ export const useResizer = props => {
     return foundColumn ? columnsProps.indexOf(foundColumn) : null;
   };
 
-  useEffect(() => {
-    Object.keys(resizedColumns).forEach(index => {
-      columnsProps[index].width = resizedColumns[index];
-    });
-  }, [resizedColumns, columnsProps]);
+  const applyResizedColumns = useMemo(() => {
+    const updatedColumns = [...columns];
+    Object.keys(resizedColumns).forEach(
+      index => (updatedColumns[index].width = resizedColumns[index])
+    );
+  
+    return updatedColumns;
+  }, [resizedColumns]);
 
   const addResizer = (columns, api) => {
     columns.forEach(column => {
@@ -138,6 +142,7 @@ export const useResizer = props => {
   };
 
   return {
-    ...props
+    ...props,
+    columns: applyResizedColumns
   };
 };
