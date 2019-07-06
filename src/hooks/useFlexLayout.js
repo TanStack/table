@@ -5,7 +5,7 @@ import { getFirstDefined, sum } from '../utils'
 export const actions = {}
 
 const propTypes = {
-  defaultFlex: PropTypes.number
+  defaultFlex: PropTypes.number,
 }
 
 export const useFlexLayout = props => {
@@ -18,8 +18,8 @@ export const useFlexLayout = props => {
       getRowProps,
       getHeaderRowProps,
       getHeaderProps,
-      getCellProps
-    }
+      getCellProps,
+    },
   } = props
 
   columnsHooks.push((columns, api) => {
@@ -47,8 +47,8 @@ export const useFlexLayout = props => {
     const rowStyles = {
       style: {
         display: 'flex',
-        minWidth: `${sumWidth}px`
-      }
+        minWidth: `${sumWidth}px`,
+      },
     }
 
     api.rowStyles = rowStyles
@@ -59,8 +59,8 @@ export const useFlexLayout = props => {
     getHeaderProps.push(column => ({
       style: {
         boxSizing: 'border-box',
-        ...getStylesForColumn(column, columnMeasurements, defaultFlex, api)
-      }
+        ...getStylesForColumn(column, columnMeasurements, defaultFlex, api),
+      },
       // [refKey]: el => {
       //   renderedCellInfoRef.current[key] = {
       //     column,
@@ -80,8 +80,8 @@ export const useFlexLayout = props => {
             defaultFlex,
             undefined,
             api
-          )
-        }
+          ),
+        },
         // [refKey]: el => {
         //   renderedCellInfoRef.current[columnPathStr] = {
         //     column,
@@ -110,7 +110,7 @@ function getStylesForColumn(column, columnMeasurements, defaultFlex, api) {
   return {
     flex: `${flex} 0 auto`,
     width: `${width}px`,
-    maxWidth: `${maxWidth}px`
+    maxWidth: `${maxWidth}px`,
   }
 }
 
@@ -138,7 +138,7 @@ function getSizesForColumn(
     return {
       flex,
       width,
-      maxWidth
+      maxWidth,
     }
   }
 
@@ -148,7 +148,7 @@ function getSizesForColumn(
       width === 'auto'
         ? columnMeasurements[id] || defaultFlex
         : getFirstDefined(width, minWidth, defaultFlex),
-    maxWidth
+    maxWidth,
   }
 }
 

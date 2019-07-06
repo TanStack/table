@@ -8,13 +8,13 @@ import {
   applyPropHooks,
   getFirstDefined,
   defaultOrderByFn,
-  defaultSortByFn
+  defaultSortByFn,
 } from '../utils'
 
 defaultState.sortBy = []
 
 addActions({
-  sortByChange: '__sortByChange__'
+  sortByChange: '__sortByChange__',
 })
 
 const propTypes = {
@@ -22,14 +22,15 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       sortByFn: PropTypes.func,
-      defaultSortDesc: PropTypes.bool
+      defaultSortDesc: PropTypes.bool,
     })
   ),
   sortByFn: PropTypes.func,
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   defaultSortDesc: PropTypes.bool,
-  disableMultiSort: PropTypes.bool
+  disableMultiSort: PropTypes.bool,
+  disableSortRemove: PropTypes.bool,
 }
 
 export const useSortBy = props => {
@@ -44,18 +45,19 @@ export const useSortBy = props => {
     manualSorting,
     disableSorting,
     defaultSortDesc,
+    disableSortRemove,
     hooks,
-    state: [{ sortBy }, setState]
+    state: [{ sortBy }, setState],
   } = props
 
   columns.forEach(column => {
     const { accessor, canSortBy } = column
     column.canSortBy = accessor
       ? getFirstDefined(
-        canSortBy,
-        disableSorting === true ? false : undefined,
-        true
-      )
+          canSortBy,
+          disableSorting === true ? false : undefined,
+          true
+        )
       : false
   })
 
@@ -82,9 +84,11 @@ export const useSortBy = props => {
 
       if (!multi) {
         if (sortBy.length <= 1 && existingSortBy) {
-          if ((existingSortBy.desc && !resolvedDefaultSortDesc) ||
-            (!existingSortBy.desc && resolvedDefaultSortDesc)) {
-            action = 'remove'
+          if (
+            (existingSortBy.desc && !resolvedDefaultSortDesc) ||
+            (!existingSortBy.desc && resolvedDefaultSortDesc)
+          ) {
+            action = disableSortRemove ? 'toggle' : 'remove'
           } else {
             action = 'toggle'
           }
@@ -107,23 +111,23 @@ export const useSortBy = props => {
         newSortBy = [
           {
             id: columnID,
-            desc: hasDescDefined ? desc : resolvedDefaultSortDesc
-          }
+            desc: hasDescDefined ? desc : resolvedDefaultSortDesc,
+          },
         ]
       } else if (action === 'add') {
         newSortBy = [
           ...sortBy,
           {
             id: columnID,
-            desc: hasDescDefined ? desc : resolvedDefaultSortDesc
-          }
+            desc: hasDescDefined ? desc : resolvedDefaultSortDesc,
+          },
         ]
       } else if (action === 'set') {
         newSortBy = sortBy.map(d => {
           if (d.id === columnID) {
             return {
               ...d,
-              desc
+              desc,
             }
           }
           return d
@@ -133,7 +137,7 @@ export const useSortBy = props => {
           if (d.id === columnID) {
             return {
               ...d,
-              desc: !existingSortBy.desc
+              desc: !existingSortBy.desc,
             }
           }
           return d
@@ -144,7 +148,7 @@ export const useSortBy = props => {
 
       return {
         ...old,
-        sortBy: newSortBy
+        sortBy: newSortBy,
       }
     }, actions.sortByChange)
   }
@@ -169,17 +173,17 @@ export const useSortBy = props => {
           {
             onClick: canSortBy
               ? e => {
-                e.persist()
-                column.toggleSortBy(
-                  undefined,
-                  !api.disableMultiSort && e.shiftKey
-                )
-              }
+                  e.persist()
+                  column.toggleSortBy(
+                    undefined,
+                    !api.disableMultiSort && e.shiftKey
+                  )
+                }
               : undefined,
             style: {
-              cursor: canSortBy ? 'pointer' : undefined
+              cursor: canSortBy ? 'pointer' : undefined,
             },
-            title: 'Toggle SortBy'
+            title: 'Toggle SortBy',
           },
           applyPropHooks(api.hooks.getSortByToggleProps, column, api),
           props
@@ -248,10 +252,10 @@ export const useSortBy = props => {
     }
 
     return sortData(rows)
-  }, [rows, columns, sortBy, manualSorting])
+  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, sortByFn])
 
   return {
     ...props,
-    rows: sortedRows
+    rows: sortedRows,
   }
 }

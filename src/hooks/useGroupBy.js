@@ -8,13 +8,13 @@ import {
   mergeProps,
   applyPropHooks,
   defaultGroupByFn,
-  getFirstDefined
+  getFirstDefined,
 } from '../utils'
 
 defaultState.groupBy = []
 
 addActions({
-  toggleGroupBy: '__toggleGroupBy__'
+  toggleGroupBy: '__toggleGroupBy__',
 })
 
 const propTypes = {
@@ -23,12 +23,12 @@ const propTypes = {
     PropTypes.shape({
       aggregate: PropTypes.func,
       canGroupBy: PropTypes.bool,
-      Aggregated: PropTypes.any
+      Aggregated: PropTypes.any,
     })
   ),
   groupByFn: PropTypes.func,
   manualGrouping: PropTypes.bool,
-  aggregations: PropTypes.object
+  aggregations: PropTypes.object,
 }
 
 export const useGroupBy = props => {
@@ -43,7 +43,7 @@ export const useGroupBy = props => {
     disableGrouping,
     aggregations: userAggregations = {},
     hooks,
-    state: [{ groupBy }, setState]
+    state: [{ groupBy }, setState],
   } = props
 
   columns.forEach(column => {
@@ -52,10 +52,10 @@ export const useGroupBy = props => {
 
     column.canGroupBy = accessor
       ? getFirstDefined(
-        canGroupBy,
-        disableGrouping === true ? false : undefined,
-        true
-      )
+          canGroupBy,
+          disableGrouping === true ? false : undefined,
+          true
+        )
       : false
 
     column.Aggregated = column.Aggregated || column.Cell
@@ -68,12 +68,12 @@ export const useGroupBy = props => {
       if (resolvedToggle) {
         return {
           ...old,
-          groupBy: [...groupBy, id]
+          groupBy: [...groupBy, id],
         }
       }
       return {
         ...old,
-        groupBy: groupBy.filter(d => d !== id)
+        groupBy: groupBy.filter(d => d !== id),
       }
     }, actions.toggleGroupBy)
   }
@@ -97,14 +97,14 @@ export const useGroupBy = props => {
           {
             onClick: canGroupBy
               ? e => {
-                e.persist()
-                column.toggleGroupBy()
-              }
+                  e.persist()
+                  column.toggleGroupBy()
+                }
               : undefined,
             style: {
-              cursor: canGroupBy ? 'pointer' : undefined
+              cursor: canGroupBy ? 'pointer' : undefined,
             },
-            title: 'Toggle GroupBy'
+            title: 'Toggle GroupBy',
           },
           applyPropHooks(api.hooks.getGroupByToggleProps, column, api),
           props
@@ -169,7 +169,7 @@ export const useGroupBy = props => {
             values,
             subRows,
             depth,
-            index
+            index,
           }
           return row
         }
@@ -180,10 +180,18 @@ export const useGroupBy = props => {
 
     // Assign the new data
     return groupRecursively(rows, groupBy)
-  }, [rows, groupBy, columns, manualGroupBy])
+  }, [
+    manualGroupBy,
+    groupBy,
+    debug,
+    rows,
+    columns,
+    userAggregations,
+    groupByFn,
+  ])
 
   return {
     ...props,
-    rows: groupedRows
+    rows: groupedRows,
   }
 }

@@ -8,7 +8,7 @@ import { defaultState } from './useTableState'
 defaultState.filters = {}
 addActions({
   setFilter: '__setFilter__',
-  setAllFilters: '__setAllFilters__'
+  setAllFilters: '__setAllFilters__',
 })
 
 const propTypes = {
@@ -18,12 +18,12 @@ const propTypes = {
       filterFn: PropTypes.func,
       filterAll: PropTypes.bool,
       canFilter: PropTypes.bool,
-      Filter: PropTypes.any
+      Filter: PropTypes.any,
     })
   ),
 
   filterFn: PropTypes.func,
-  manualFilters: PropTypes.bool
+  manualFilters: PropTypes.bool,
 }
 
 export const useFilters = props => {
@@ -37,17 +37,17 @@ export const useFilters = props => {
     manualFilters,
     disableFilters,
     hooks,
-    state: [{ filters }, setState]
+    state: [{ filters }, setState],
   } = props
 
   columns.forEach(column => {
     const { id, accessor, canFilter } = column
     column.canFilter = accessor
       ? getFirstDefined(
-        canFilter,
-        disableFilters === true ? false : undefined,
-        true
-      )
+          canFilter,
+          disableFilters === true ? false : undefined,
+          true
+        )
       : false
     // Was going to add this to the filter hook
     column.filterValue = filters[id]
@@ -60,8 +60,8 @@ export const useFilters = props => {
         return {
           ...old,
           filters: {
-            ...rest
-          }
+            ...rest,
+          },
         }
       }
 
@@ -69,8 +69,8 @@ export const useFilters = props => {
         ...old,
         filters: {
           ...filters,
-          [id]: val
-        }
+          [id]: val,
+        },
       }
     }, actions.setFilter)
   }
@@ -79,7 +79,7 @@ export const useFilters = props => {
     return setState(old => {
       return {
         ...old,
-        filters
+        filters,
       }
     }, actions.setAllFilters)
   }
@@ -134,7 +134,7 @@ export const useFilters = props => {
         }
         return {
           ...row,
-          subRows: filterRows(row.subRows)
+          subRows: filterRows(row.subRows),
         }
       })
 
@@ -150,12 +150,12 @@ export const useFilters = props => {
     }
 
     return filterRows(rows)
-  }, [rows, filters, manualFilters])
+  }, [manualFilters, filters, debug, rows, columns, filterFn])
 
   return {
     ...props,
     setFilter,
     setAllFilters,
-    rows: filteredRows
+    rows: filteredRows,
   }
 }
