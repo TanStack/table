@@ -122,6 +122,7 @@ function getSizesForColumn(
 ) {
   if (columns) {
     columns = columns
+      .filter(col => col.show || col.visible)
       .map(column =>
         getSizesForColumn(column, columnMeasurements, defaultFlex, api)
       )
