@@ -199,7 +199,7 @@ export const useTable = (props, ...plugins) => {
     mergeProps(applyPropHooks(api.hooks.getTableProps, api), userProps)
 
   api.getRowProps = userProps =>
-    mergeProps(applyPropHooks(api.hooks.getRowProps, api), userProps)
+    mergeProps(applyPropHooks(api.hooks.getRowProps, undefined, api), userProps)
 
   return api
 }
