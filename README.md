@@ -21,34 +21,21 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <br />
 <br />
 
-## ⚠️ Version 7
-
-This documentation is for Version 7, which is under active development and currently in an alpha state.
-
-## Version 6
-
-Looking for v6 information?
-
-- [Documentation](https://github.com/tannerlinsley/react-table/tree/v6)
-- [HOC Documentation](https://github.com/tannerlinsley/react-table/tree/v6#hoc-extensions)
-- [Examples](https://github.com/tannerlinsley/react-table/tree/v6#codesandbox-examples)
-- [HOC Examples](https://github.com/tannerlinsley/react-table/tree/v6/docs/src/examples)
-
 ## Features
 
 - Lightweight
-- Headless (Fully customizable)
-- Client-side & Server-side pagination
-- Multi-sort
+- Headless (100% customizable, Bring-your-own-UI)
+- Client-side & Server-side pagination support
+- Sorting (Multi and Stable)
 - Filters
 - Pivoting & Aggregation
 - Fully controllable
-- Extensible
+- Extensible via hooks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
 ## Versions
 
-- This documentation is for version 7 of react-table.
+- This documentation is for version 7.
 - [View the Changelog](https://github.com/tannerlinsley/react-table/blob/master/CHANGELOG.md)
 - Previous versions:
   - [6.x.x Readme](https://github.com/tannerlinsley/react-table/tree/v6/)
@@ -56,7 +43,7 @@ Looking for v6 information?
 
 ## Sponsors
 
-**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and continue to maintain it. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley).
+**React Table v7** is being built and maintained by me, @tannerlinsley and I am always in need of more Patreon support to keep this project afloat. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley).
 
 <table>
   <tbody>
@@ -69,6 +56,11 @@ Looking for v6 information?
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
           <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://patreon.com/tannerlinsley" target="_blank">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum-placeholder.png">
         </a>
       </td>
     </tr>
@@ -93,6 +85,11 @@ Looking for v6 information?
           <img width="300" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
+      <td align="center" valign="middle">
+        <a href="https://patreon.com/tannerlinsley" target="_blank">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png">
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -103,6 +100,11 @@ Looking for v6 information?
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
           <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://patreon.com/tannerlinsley" target="_blank">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
         </a>
       </td>
       <td align="center" valign="middle">
