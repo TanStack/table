@@ -6,27 +6,36 @@ import { uglify } from 'rollup-plugin-uglify'
 
 import pkg from './package.json'
 
-export default {
-  input: 'src/index.js',
-  output: [
-    {
+export default [
+  {
+    input: 'src/index.js',
+    output: {
       file: pkg.main,
       format: 'cjs',
       sourcemap: true
-    }
-    // {
-    //   file: pkg.module,
-    //   format: "es",
-    //   sourcemap: true
-    // }
-  ],
-  plugins: [
-    external(),
-    babel({
-      exclude: 'node_modules/**'
-    }),
-    resolve(),
-    commonjs(),
-    uglify()
-  ]
-}
+    },
+    plugins: [
+      external(),
+      babel({
+        exclude: 'node_modules/**'
+      }),
+      resolve(),
+      commonjs(),
+      uglify()
+    ]
+  },
+  {
+    input: 'src/index.js',
+    external: Object.keys(pkg.peerDependencies),
+    output: {
+      file: pkg.module,
+      format: 'es',
+      sourcemap: true
+    },
+    plugins: [
+      babel({
+        exclude: ['/**/node_modules/**']
+      })
+    ]
+  }
+]

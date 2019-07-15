@@ -1,14 +1,14 @@
 export const useSimpleLayout = props => {
   const {
-    hooks: { columns: columnsHooks, getHeaderProps, getCellProps }
+    hooks: { columns: columnsHooks, getHeaderProps, getCellProps },
   } = props
 
   columnsHooks.push(columns => {
     getHeaderProps.push(column => ({
       style: {
         boxSizing: 'border-box',
-        width: column.width !== undefined ? `${column.width}px` : 'auto'
-      }
+        width: column.width !== undefined ? `${column.width}px` : 'auto',
+      },
     }))
 
     getCellProps.push(cell => {
@@ -16,8 +16,8 @@ export const useSimpleLayout = props => {
         style: {
           boxSizing: 'border-box',
           width:
-            cell.column.width !== undefined ? `${cell.column.width}px` : 'auto'
-        }
+            cell.column.width !== undefined ? `${cell.column.width}px` : 'auto',
+        },
       }
     })
 

@@ -9,11 +9,12 @@ defaultState.expanded = {}
 
 addActions({
   toggleExpanded: '__toggleExpanded__',
-  useExpanded: '__useExpanded__'
+  useExpanded: '__useExpanded__',
 })
 
 const propTypes = {
-  expandedKey: PropTypes.string
+  expandedKey: PropTypes.string,
+  paginateSubRows: PropTypes.bool,
 }
 
 export const useExpanded = props => {
@@ -21,11 +22,11 @@ export const useExpanded = props => {
 
   const {
     debug,
-    columns,
     rows,
     expandedKey = 'expanded',
     hooks,
-    state: [{ expanded }, setState]
+    state: [{ expanded }, setState],
+    paginateSubRows = true,
   } = props
 
   const toggleExpandedByPath = (path, set) => {
@@ -35,7 +36,7 @@ export const useExpanded = props => {
       set = getFirstDefined(set, !existing)
       return {
         ...old,
-        expanded: setBy(expanded, path, set)
+        expanded: setBy(expanded, path, set),
       }
     }, actions.toggleExpanded)
   }
@@ -62,17 +63,21 @@ export const useExpanded = props => {
       row.isExpanded =
         (row.original && row.original[expandedKey]) || getBy(expanded, path)
 
-      expandedRows.push(row)
+      if (paginateSubRows || (!paginateSubRows && row.depth === 0)) {
+        expandedRows.push(row)
+      }
 
       if (row.isExpanded && row.subRows && row.subRows.length) {
         row.subRows.forEach((row, i) => handleRow(row, i, depth + 1, path))
       }
+
+      return row
     }
 
     rows.forEach((row, i) => handleRow(row, i))
 
     return expandedRows
-  }, [rows, expanded, columns])
+  }, [debug, rows, expandedKey, expanded, paginateSubRows])
 
   const expandedDepth = findExpandedDepth(expanded)
 
@@ -80,7 +85,7 @@ export const useExpanded = props => {
     ...props,
     toggleExpandedByPath,
     expandedDepth,
-    rows: expandedRows
+    rows: expandedRows,
   }
 }
 

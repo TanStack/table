@@ -9,12 +9,12 @@ defaultState.pageSize = 10
 defaultState.pageIndex = 0
 
 addActions({
-  pageChange: '__pageChange__'
+  pageChange: '__pageChange__',
 })
 
 const propTypes = {
   // General
-  manualPagination: PropTypes.bool
+  manualPagination: PropTypes.bool,
 }
 
 export const usePagination = props => {
@@ -23,6 +23,7 @@ export const usePagination = props => {
   const {
     rows,
     manualPagination,
+    disablePageResetOnDataChange,
     debug,
     state: [
       {
@@ -31,27 +32,34 @@ export const usePagination = props => {
         pageCount: userPageCount,
         filters,
         groupBy,
-        sortBy
+        sortBy,
       },
-      setState
-    ]
+      setState,
+    ],
   } = props
+
+  const pageOptions = useMemo(
+    () => [...new Array(userPageCount)].map((d, i) => i),
+    [userPageCount]
+  )
+
+  const rowDep = disablePageResetOnDataChange ? null : rows
 
   useLayoutEffect(() => {
     setState(
       old => ({
         ...old,
-        pageIndex: 0
+        pageIndex: 0,
       }),
       actions.pageChange
     )
-  }, [rows, filters, groupBy, sortBy])
+  }, [setState, rowDep, filters, groupBy, sortBy])
 
   const { pages, pageCount } = useMemo(() => {
     if (manualPagination) {
       return {
         pages: [rows],
-        pageCount: userPageCount
+        pageCount: userPageCount,
       }
     }
     if (debug) console.info('getPages')
@@ -72,11 +80,10 @@ export const usePagination = props => {
     return {
       pages,
       pageCount,
-      pageOptions
+      pageOptions,
     }
-  }, [rows, pageSize, userPageCount])
+  }, [manualPagination, debug, rows, pageOptions, userPageCount, pageSize])
 
-  const pageOptions = [...new Array(pageCount)].map((d, i) => i)
   const page = manualPagination ? rows : pages[pageIndex] || []
   const canPreviousPage = pageIndex > 0
   const canNextPage = pageIndex < pageCount - 1
@@ -89,7 +96,7 @@ export const usePagination = props => {
       }
       return {
         ...old,
-        pageIndex
+        pageIndex,
       }
     }, actions.pageChange)
   }
@@ -109,7 +116,7 @@ export const usePagination = props => {
       return {
         ...old,
         pageIndex,
-        pageSize
+        pageSize,
       }
     }, actions.setPageSize)
   }
@@ -126,6 +133,6 @@ export const usePagination = props => {
     nextPage,
     setPageSize,
     pageIndex,
-    pageSize
+    pageSize,
   }
 }

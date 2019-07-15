@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 const propTypes = {
-  subRowsKey: PropTypes.string
+  subRowsKey: PropTypes.string,
 }
 
 export const useRows = props => {
@@ -29,7 +29,7 @@ export const useRows = props => {
         path: [i], // used to create a key for each row even if not nested
         subRows,
         depth,
-        cells: [{}] // This is a dummy cell
+        cells: [{}], // This is a dummy cell
       }
 
       // Override common array functions (and the dummy cell's getCellProps function)
@@ -57,10 +57,10 @@ export const useRows = props => {
 
     // Use the resolved data
     return data.map((d, i) => accessRow(d, i))
-  }, [data, columns])
+  }, [debug, data, subRowsKey, columns])
 
   return {
     ...props,
-    rows: accessedRows
+    rows: accessedRows,
   }
 }

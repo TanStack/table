@@ -10,7 +10,7 @@ const renderErr =
 const propTypes = {
   // General
   data: PropTypes.array.isRequired,
-  debug: PropTypes.bool
+  debug: PropTypes.bool,
 }
 
 export const useTable = (props, ...plugins) => {
@@ -41,7 +41,7 @@ export const useTable = (props, ...plugins) => {
     getRowProps: [],
     getHeaderRowProps: [],
     getHeaderProps: [],
-    getCellProps: []
+    getCellProps: [],
   }
 
   // The initial api
@@ -49,7 +49,7 @@ export const useTable = (props, ...plugins) => {
     ...props,
     data,
     state,
-    hooks
+    hooks,
   }
 
   if (debug) console.time('hooks')
@@ -83,7 +83,7 @@ export const useTable = (props, ...plugins) => {
       return flexRender(column[type], {
         ...api,
         ...column,
-        ...userProps
+        ...userProps,
       })
     }
 
@@ -92,7 +92,7 @@ export const useTable = (props, ...plugins) => {
       mergeProps(
         {
           key: ['header', column.id].join('_'),
-          colSpan: column.columns ? column.columns.length : 1
+          colSpan: column.columns ? column.columns.length : 1,
         },
         applyPropHooks(api.hooks.getHeaderProps, column, api),
         props
@@ -125,7 +125,7 @@ export const useTable = (props, ...plugins) => {
       headerGroup.getRowProps = (props = {}) =>
         mergeProps(
           {
-            key: [`header${i}`].join('_')
+            key: [`header${i}`].join('_'),
           },
           applyPropHooks(api.hooks.getHeaderRowProps, headerGroup, api),
           props
@@ -164,14 +164,14 @@ export const useTable = (props, ...plugins) => {
       const cell = {
         column,
         row,
-        value: row.values[column.id]
+        value: row.values[column.id],
       }
 
       cell.getCellProps = props => {
         const columnPathStr = [path, column.id].join('_')
         return mergeProps(
           {
-            key: ['cell', columnPathStr].join('_')
+            key: ['cell', columnPathStr].join('_'),
           },
           applyPropHooks(api.hooks.getCellProps, cell, api),
           props
@@ -187,7 +187,7 @@ export const useTable = (props, ...plugins) => {
         return flexRender(column[type], {
           ...api,
           ...cell,
-          ...userProps
+          ...userProps,
         })
       }
 
