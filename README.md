@@ -389,7 +389,7 @@ These are all of the available props (and their default values) for the main `<R
   getTdProps: () => ({}),
   getTfootProps: () => ({}),
   getTfootTrProps: () => ({}),
-  getTfootThProps: () => ({}),
+  getTfootTdProps: () => ({}),
   getPaginationProps: () => ({}),
   getLoadingProps: () => ({}),
   getNoDataProps: () => ({}),
