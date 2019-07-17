@@ -44,6 +44,7 @@ export const useExpanded = props => {
   hooks.row.push(row => {
     const { path } = row
     row.toggleExpanded = set => toggleExpandedByPath(path, set)
+    return row;
   })
 
   const expandedRows = useMemo(() => {
