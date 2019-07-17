@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { defaultFilterFn, getFirstDefined } from '../utils'
+import { getFirstDefined } from '../utils'
+import * as filterTypes from '../filterTypes'
 import { addActions, actions } from '../actions'
 import { defaultState } from './useTableState'
 
@@ -33,25 +34,13 @@ export const useFilters = props => {
     debug,
     rows,
     columns,
-    filterFn = defaultFilterFn,
+    filterTypes: userFilterTypes = {},
+    defaultFilter = filterTypes.text,
     manualFilters,
     disableFilters,
     hooks,
     state: [{ filters }, setState],
   } = props
-
-  columns.forEach(column => {
-    const { id, accessor, canFilter } = column
-    column.canFilter = accessor
-      ? getFirstDefined(
-          canFilter,
-          disableFilters === true ? false : undefined,
-          true
-        )
-      : false
-    // Was going to add this to the filter hook
-    column.filterValue = filters[id]
-  })
 
   const setFilter = (id, val) => {
     return setState(old => {
@@ -86,10 +75,25 @@ export const useFilters = props => {
 
   hooks.columns.push(columns => {
     columns.forEach(column => {
-      if (column.canFilter) {
-        column.setFilter = val => setFilter(column.id, val)
-      }
+      const { id, accessor, canFilter } = column
+
+      // Determine if a column is filterable
+      column.canFilter = accessor
+        ? getFirstDefined(
+            canFilter,
+            disableFilters === true ? false : undefined,
+            true
+          )
+        : false
+
+      // Provide the column a way of updating the filter value
+      column.setFilter = val => setFilter(column.id, val)
+
+      // Provide the current filter value to the column for
+      // convenience
+      column.filterValue = filters[id]
     })
+
     return columns
   })
 
@@ -114,15 +118,33 @@ export const useFilters = props => {
             return filteredSoFar
           }
 
-          const filterMethod = column.filterMethod || filterFn
+          // Look up filter functions in this order:
+          // column function
+          // column string lookup on user filters
+          // column string lookup on built-in filters
+          // default function
+          // default string lookup on user filters
+          // default string lookup on built-in filters
+          const filterMethod =
+            getFunctionalFilter(column.filter) ||
+            userFilterTypes[column.filter] ||
+            filterTypes[column.filter] ||
+            getFunctionalFilter(defaultFilter) ||
+            userFilterTypes[defaultFilter] ||
+            filterTypes[defaultFilter]
 
-          // If 'filterAll' is set to true, pass the entire dataset to the filter method
-          if (column.filterAll) {
-            return filterMethod(filteredSoFar, columnID, filterValue, column)
+          if (!filterMethod) {
+            console.warn(
+              `Could not find a valid 'column.filter' for column with the ID: ${
+                column.id
+              }.`
+            )
+            return filteredSoFar
           }
-          return filteredSoFar.filter(row =>
-            filterMethod(row, columnID, filterValue, column)
-          )
+
+          // Pass the rows, id, filterValue and column to the filterMethod
+          // to get the filtered rows back
+          return filterMethod(filteredSoFar, columnID, filterValue, column)
         },
         rows
       )
@@ -150,12 +172,26 @@ export const useFilters = props => {
     }
 
     return filterRows(rows)
-  }, [manualFilters, filters, debug, rows, columns, filterFn])
+  }, [
+    manualFilters,
+    filters,
+    debug,
+    rows,
+    columns,
+    userFilterTypes,
+    defaultFilter,
+  ])
 
   return {
     ...props,
     setFilter,
     setAllFilters,
     rows: filteredRows,
+  }
+}
+
+function getFunctionalFilter(filter) {
+  if (typeof filter === 'function') {
+    return filter
   }
 }

@@ -67,14 +67,6 @@ export function defaultGroupByFn(rows, grouper) {
   }, {})
 }
 
-export function defaultFilterFn(row, id, value, column) {
-  return row.values[id] !== undefined
-    ? String(row.values[id])
-        .toLowerCase()
-        .includes(String(value).toLowerCase())
-    : true
-}
-
 export function setBy(obj = {}, path, value) {
   const recurse = (obj, depth = 0) => {
     const key = path[depth]
