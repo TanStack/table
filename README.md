@@ -248,7 +248,7 @@ This multi-stage process is the secret sauce that allows React Table plugin hook
 
 The order and usage of plugin hooks must follow [The Laws of Hooks](TODO), just like any other custom hook. They must always be unconditionally called in the same order.
 
-**Note: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSorting`**
+> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSorting`**
 
 ### Option Memoization
 
@@ -296,6 +296,7 @@ const instance = useTable(
 
 ## `useColumns`
 
+- Plugin Hook
 - Required
 
 `useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
@@ -350,6 +351,7 @@ const { columns, headerGroups, headers } = useTable(
 
 ## `useRows`
 
+- Plugin Hook
 - Required
 
 `useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
@@ -426,6 +428,7 @@ const { rows } = useTable(
 
 ## `useGroupBy`
 
+- Plugin Hook
 - Optional
 
 `useGroupBy` is the hook that implements **row grouping and aggregation**.
@@ -440,7 +443,8 @@ const { rows } = useTable(
   - Defaults to [`defaultGroupByFn`](TODO)
   - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
 - `manualGroupBy: Bool`
-  - Enables groupBy detection and functionality, but does not automatically perform row grouping. Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
+  - Enables groupBy detection and functionality, but does not automatically perform row grouping.
+  - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableGrouping: Bool`
   - Disables groupBy for the entire table.
 - `aggregations: Object<aggregationKey: aggregationFn>`
@@ -478,37 +482,36 @@ const { rows } = useTable(
 
 ## `useFilters`
 
+- Plugin Hook
 - Optional
 
 `useFilters` is the hook that implements **row filtering**.
 
 ### Options
 
-- `state[0].filters: <Object<columnID: filterValue>`
+- `state[0].filters: Object<columnID: filterValue>`
   - Must be **memoized**
   - An object of columnID's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `defaultFilter: String | Function`
   - If a **function** is passed, it must be **memoized**
   - Defaults to [`text`](TODO)
   - The function (or resolved function from the string) will be used as the default/fallback filter method for every column that has filtering enabled.
-    - If a `string` is passd functionality, but does not automatically perform row filtering. Turn this on if you wish to ied, the function with that name located on the `filterTypes` option object will be used.
+    - If a `string` is passed, the function with that name located on the `filterTypes` option object will be used.
     - If a `function` is passed, it will be used.
-  - For mor information on filter functions, see [Filtering](TODO)
+  - For mor information on filter types, see [Filtering](TODO)
 - `manualFilters: Bool`
-  - Enables filter detection anmplement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
+  - Enables filter detection functionality, but does not automatically perform row filtering.
+  - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableFilters: Bool`
   - Disables filtering for every column in the entire table.
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
-  - Read more about [Filter Types](TODO)
+  - For mor information on filter types, see [Filtering](TODO)
 
 ### Output
 
 The following values are provided to the table `instance`:
-
-setFilter,
-setAllFilters,
 
 - `rows: Array<Row>`
   - An array of **filtered** rows.
@@ -559,6 +562,284 @@ const { rows } = useTable(
   useRows,
   useFilters
 )
+```
+
+## `useSortBy`
+
+- Plugin Hook
+- Optional
+
+`useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
+
+### Options
+
+- `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
+  - Must be **memoized**
+  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `defaultSortType: String | Function`
+  - If a **function** is passed, it must be **memoized**
+  - Defaults to [`alphanumeric`](TODO)
+  - The function (or resolved function from the string) will be used as the default/fallback sort method for every column that has sorting enabled.
+    - If a `string` is passed, the function with that name located on the `sortTypes` option object will be used.
+    - If a `function` is passed, it will be used.
+  - For mor information on sort types, see [Sorting](TODO)
+- `manualSorting: Bool`
+  - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
+- `disableSorting: Bool`
+  - Disables sorting for every column in the entire table.
+- `disableMultiSort: Bool`
+  - Disables multi-sorting for the entire table.
+- `defaultSortDesc: Bool`
+  - If true, the first default direction for sorting will be descending. This may also be overridden at the column level.
+- `disableSortRemove: Bool`
+  - If true, the un-sorted state will not be available to columns once they have been sorted.
+- `orderByFn: Function`
+  - Must be **memoizd**
+  - Defaults to the built-in [default orderBy function](TODO)
+  - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
+- `sortTypes: Object<sortKey: sortType>`
+  - Must be **memoized**
+  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
+  - For mor information on sort types, see [Sorting](TODO)
+
+### Output
+
+The following values are provided to the table `instance`:
+
+- `rows: Array<Row>`
+  - An array of **sorted** rows.
+
+### Example
+
+```js
+const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
+
+const { rows } = useTable(
+  {
+    // state[0].sortBy === [{ id: 'firstName', desc: true }]
+    state,
+  },
+  useColumns,
+  useRows,
+  useSortBy
+)
+```
+
+## `useExpanded`
+
+- Plugin Hook
+- Optional
+
+`useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows, but is not limited to that use-case. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
+
+### Options
+
+- `state[0].expanded: Object<[pathIndex]: Boolean | ExpandedStateObject>`
+  - Must be **memoized**
+  - An nested object of expanded paths.
+  - A `pathIndex` can be set as the key and its value set to `true` to expand that row's subRows into view. For example, if `{ '3': true }` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
+  - For nested expansion, you may **use another object** instead of a Boolean to expand sub rows. For example, if `{ '3': { '5' : true }}` was passed as the `expanded` state, then the **6th subRow of the 4th row and the 4th row of the original data array** would be expanded.
+  - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `paginateSubRows: Bool`
+  - Defaults to `true`
+  - If set to `false`, expanded rows will not be paginated. Thus, any expanded subrows would potentially increase the size of any given page by the amount of total expanded subrows on the page.
+- `manualExpandedKey: String`
+  - Defaults to `expanded`
+  - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would be forcibly expanded, regardless of state.
+
+### Output
+
+The following values are provided to the table `instance`:
+
+- `rows: Array<Row>`
+  - An array of **sorted** rows.
+
+### Example
+
+```js
+const state = useTableState({ expanded: { '3': true, '5': { '2': true } } })
+
+const { rows } = useTable(
+  {
+    // state[0].sortBy === { '3': true, '5': { '2': true } }
+    state,
+  },
+  useColumns,
+  useRows,
+  useExpanded
+)
+```
+
+## `usePagination`
+
+- Plugin Hook
+- Optional
+
+`usePagination` is the hook that implements **row pagination**. It can be used for both client-side pagination or server-side pagination. For more information on pagination, see [Pagination](TODO)
+
+> **NOTE** Some server-side pagination implementations do not use page index and instead use **token based pagination**! If that's the case, please use the `useTokenPagination` plugin instead.
+
+### Options
+
+- `state[0].pageSize: Int`
+  - **Required**
+  - Defaults to `10`
+  - Determines the amount of rows on any given page
+- `state[0].pageIndex: Int`
+  - **Required**
+  - Defaults to `0`
+  - The index of the page that should be displayed via the `page` instance value
+- `pageCount: Int`
+  - **Required if `manualPagination` is set to `true`**
+  - If `manualPagination` is `true`, then this value used to determine the amount of pages available. This amount is then used to materialize the `pageOptions` and also compute the `canNextPage` values on the table instance.
+- `manualPagination: Bool`
+  - Enables pagination functionality, but does not automatically perform row pagination.
+  - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
+- `disablePageResetOnDataChange`
+  - Defaults to `false`
+  - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
+  - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
+
+### Output
+
+The following values are provided to the table `instance`:
+
+- `pages: Array<page>`
+  - An array of every generated `page`, each containing its respective rows.
+- `page: Array<row>`
+  - An array of rows for the **current** page, determined by the current `pageIndex` value.
+- `pageCount: Int`
+  - If `manualPagination` is set to `false`, this is the total amount of pages available in the table based on the current `pageSize` value
+  - if `manualPagination` is set to `true`, this is merely the same `pageCount` option that was passed in the table options.
+- `pageOptions: Array<Int>`
+  - An array of zero-based index integers corresponding to available pages in the table.
+  - This can be useful for generating things like select interfaces for the user to select a page from a list, instead of manually paginating to the desired page.
+- `canPreviousPage: Bool`
+  - If there are pages and the current `pageIndex` is greater than `0`, this will be `true`
+- `canNextPage:`
+  - If there are pages and the current `pageIndex` is less than `pageCount`, this will be `true`
+- `gotoPage: Function(pageIndex)`
+  - This function, when called with a valid `pageIndex`, will set `pageIndex` to that value.
+  - If the passed index is outside of the valid `pageIndex` range, then this function will do nothing.
+- `previousPage: Function`
+  - This function decreases `state.pageIndex` by one.
+  - If there are no pages or `canPreviousPage` is false, this function will do nothing.
+- `nextPage: Function`
+  - This function increases `state.pageIndex` by one.
+  - If there are no pages or `canNextPage` is false, this function will do nothing.
+- `setPageSize: Function(pageSize)`
+  - This function sets `state.pageSize` to the new value.
+  - As a result of a pageSize change, a new `state.pageIndex` is also calculated. It is calculated via `Math.floor(currentTopRowIndex / newPageSize)`
+- `pageIndex: Int`
+  - This is the resolved `state.pageIndex` value.
+- `pageSize: Int`
+  - This is the resolved `state.pageSize` value.
+
+### Example
+
+```js
+const state = useTableState({ pageSize: 20, pageIndex: 1 })
+
+const { rows } = useTable(
+  {
+    // state[0] === { pageSize: 20, pageIndex: 1 }
+    state,
+  },
+  useColumns,
+  useRows,
+  usePagination
+)
+```
+
+## `useTokenPagination`
+
+- Plugin Hook
+- Optional
+
+`useTokenPagination` is the hook that **aids in implementing row pagination using tokens**. It is useful for server-side pagination implementations that use **tokens** instead of page index. For more information on pagination, see [Pagination](TODO)
+
+> Documentation Coming Soon...
+
+## `useTableState`
+
+- Optional
+
+`useTableState` is a hook that allows you to hoist the table state out of the table into your own code. You should use this hook if you need to:
+
+- Know about the internal table state
+- React to changes to the internal table state
+- Manually control or override the internal table state
+
+Some common use cases for this hook are:
+
+- Reacting to `pageIndex` and `pageSize` changes for server-side pagination to fetch new data
+- Disallowing specific states via a custom state reducer
+- Enabling parent/unrelated components to manipulate the table state
+
+### Options
+
+- `initialState: Object`
+  - Optional
+  - The initial state object for the table.
+  - This object is **merged over the `defaultState` object** (eg. `{...defaultState, ...initialState}`) that React Table and its hooks use to register default state to produce the final initial state object passed to the resolved `useState` hook.
+- `overrides: Object`
+  - Optional
+  - Must be **memoized**
+  - This object is **merged over the current table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options
+- `options: Object`
+  - `reducer: Function(oldState, newState) => finalState`
+    - Optional
+    - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
+    - With every `setState` call to a table state (even internally), this reducer is called and is allowed to modify the final state object for updating.
+    - It is passed the `oldState`, the `newState`, and an action `type`.
+  - `useState`
+    - Optional
+    - Defaults to `React.useState`
+    - This function, if defined will be used as the state hook internally instead of the default `React.useState`. This can be useful for implementing custom state storage hooks like useLocalStorage, etc.
+
+### Output
+
+- `tableStateTuple: [tableState, setTableState]`
+  - Similar in structure to the result of `React.useState`
+  - **Memoized**. This tuple array will not change between renders unless state or `useTableState` options change.
+  - `tableState: Object`
+    - This is the final state object of the table, which is the product of the `initialState`, `overrides` and the `reducer` options (if applicable)
+  - `setTableState: Function(updater, type) => void`
+    - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
+    - `updater: Function`
+      - This function signature is **almost** (see next point) identical to the functional API exposed by `React.setState`. It is passed the previous state and is expected to return a new version of the state.
+      - **NOTE: `updater` must be a function. Passing a replacement object is not supported as it is with React.useState**
+    - `type: String`
+      - The [action type](TODO) corresponding to what action being taken against the state.
+
+### Example
+
+```js
+export default function MyTable({ manualPageIndex }) {
+  // This is the initial state for our table
+  const initialState = { pageSize: 10, pageIndex: 0 }
+
+  // Here, we can override the pageIndex
+  // regardless of the internal table state
+  const overrides = React.useMemo(() => ({
+    pageIndex: manualPageIndex,
+  }))
+
+  const state = useTableState(initialState, overrides)
+
+  // You can use effects to observe changes to the state
+  React.useEffect(() => {
+    console.log('Page Size Changed!', initialState.pageSize)
+  }, [initialState.pageSize])
+
+  const { rows } = useTable(
+    {
+      state,
+    },
+    useColumns,
+    useRows
+  )
+}
 ```
 
 # Guides
