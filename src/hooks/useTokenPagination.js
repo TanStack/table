@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import React from 'react'
 
 // Token pagination behaves a bit differently from
 // index based pagination. This hook aids in that process.
 
 export const useTokenPagination = () => {
-  const [pageToken, setPageToken] = useState()
-  const [nextPageToken, setNextPageToken] = useState()
-  const [previousPageTokens, setPreviousPageTokens] = useState([])
-  const [pageIndex, setPageIndex] = useState(0)
+  const [pageToken, setPageToken] = React.useState()
+  const [nextPageToken, setNextPageToken] = React.useState()
+  const [previousPageTokens, setPreviousPageTokens] = React.useState([])
+  const [pageIndex, setPageIndex] = React.useState(0)
 
   // Since we're using pagination tokens intead of index, we need
   // to be a bit clever with page-like navigation here.
