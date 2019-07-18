@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { getFirstDefined } from '../utils'
+import { getFirstDefined, isFunction } from '../utils'
 import * as filterTypes from '../filterTypes'
 import { addActions, actions } from '../actions'
 import { defaultState } from './useTableState'
@@ -126,10 +126,10 @@ export const useFilters = props => {
           // default string lookup on user filters
           // default string lookup on built-in filters
           const filterMethod =
-            getFunctionalFilter(column.filter) ||
+            isFunction(column.filter) ||
             userFilterTypes[column.filter] ||
             filterTypes[column.filter] ||
-            getFunctionalFilter(defaultFilter) ||
+            isFunction(defaultFilter) ||
             userFilterTypes[defaultFilter] ||
             filterTypes[defaultFilter]
 
@@ -187,11 +187,5 @@ export const useFilters = props => {
     setFilter,
     setAllFilters,
     rows: filteredRows,
-  }
-}
-
-function getFunctionalFilter(filter) {
-  if (typeof filter === 'function') {
-    return filter
   }
 }

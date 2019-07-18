@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
 import { defaultState } from './useTableState'
+import * as sortTypes from '../sortTypes'
 import {
   mergeProps,
   applyPropHooks,
   getFirstDefined,
   defaultOrderByFn,
-  defaultSortByFn,
+  isFunction,
 } from '../utils'
 
 defaultState.sortBy = []
@@ -21,11 +22,13 @@ const propTypes = {
   // General
   columns: PropTypes.arrayOf(
     PropTypes.shape({
-      sortByFn: PropTypes.func,
+      sortBy: PropTypes.func,
       defaultSortDesc: PropTypes.bool,
     })
   ),
-  sortByFn: PropTypes.func,
+  orderByFn: PropTypes.func,
+  sortTypes: PropTypes.object,
+  defaultSortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   defaultSortDesc: PropTypes.bool,
@@ -41,11 +44,13 @@ export const useSortBy = props => {
     rows,
     columns,
     orderByFn = defaultOrderByFn,
-    sortByFn = defaultSortByFn,
+    defaultSort = 'alphanumeric',
+    sortTypes: userSortTypes = {},
     manualSorting,
     disableSorting,
     defaultSortDesc,
     disableSortRemove,
+    disableMultiSort,
     hooks,
     state: [{ sortBy }, setState],
   } = props
@@ -82,7 +87,7 @@ export const useSortBy = props => {
       // What should we do with this filter?
       let action
 
-      if (!multi) {
+      if (disableMultiSort || !multi) {
         if (sortBy.length <= 1 && existingSortBy) {
           if (
             (existingSortBy.desc && !resolvedDefaultSortDesc) ||
@@ -210,13 +215,11 @@ export const useSortBy = props => {
     }
     if (debug) console.info('getSortedRows')
 
-    const sortMethodsByColumnID = {}
+    const sortTypesByColumnID = {}
 
-    columns
-      .filter(col => col.sortMethod)
-      .forEach(col => {
-        sortMethodsByColumnID[col.id] = col.sortMethod
-      })
+    columns.forEach(col => {
+      sortTypesByColumnID[col.id] = col.sortBy
+    })
 
     const sortData = rows => {
       // Use the orderByFn to compose multiple sortBy's together.
@@ -226,21 +229,32 @@ export const useSortBy = props => {
         rows,
         sortBy.map(sort => {
           // Support custom sorting methods for each column
-          const columnSortBy = sortMethodsByColumnID[sort.id]
+          const columnSort = sortTypesByColumnID[sort.id]
+
+          // Look up sortBy functions in this order:
+          // column function
+          // column string lookup on user sortType
+          // column string lookup on built-in sortType
+          // default function
+          // default string lookup on user sortType
+          // default string lookup on built-in sortType
+          const sortMethod =
+            isFunction(columnSort) ||
+            userSortTypes[columnSort] ||
+            sortTypes[columnSort] ||
+            isFunction(defaultSort) ||
+            userSortTypes[defaultSort] ||
+            sortTypes[defaultSort]
 
           // Return the correct sortFn
           return (a, b) =>
-            (columnSortBy || sortByFn)(
-              a.values[sort.id],
-              b.values[sort.id],
-              sort.desc
-            )
+            sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
         }),
         // Map the directions
         sortBy.map(d => !d.desc)
       )
 
-      // TODO: this should be optimized. Not good to loop again
+      // If there are sub-rows, sort them
       sortedData.forEach(row => {
         if (!row.subRows) {
           return
@@ -252,7 +266,16 @@ export const useSortBy = props => {
     }
 
     return sortData(rows)
-  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, sortByFn])
+  }, [
+    manualSorting,
+    sortBy,
+    debug,
+    columns,
+    rows,
+    orderByFn,
+    userSortTypes,
+    defaultSort,
+  ])
 
   return {
     ...props,
