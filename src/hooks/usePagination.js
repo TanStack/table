@@ -125,6 +125,7 @@ export const usePagination = props => {
     ...props,
     pages,
     pageOptions,
+    pageCount,
     page,
     canPreviousPage,
     canNextPage,
