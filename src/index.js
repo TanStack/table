@@ -1,7 +1,6 @@
 export { useTable } from './hooks/useTable'
 export { useColumns } from './hooks/useColumns'
 export { useRows } from './hooks/useRows'
-export { useSimpleLayout } from './hooks/useSimpleLayout'
 export { useExpanded } from './hooks/useExpanded'
 export { useFilters } from './hooks/useFilters'
 export { useGroupBy } from './hooks/useGroupBy'

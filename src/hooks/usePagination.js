@@ -10,6 +10,7 @@ defaultState.pageIndex = 0
 
 addActions({
   pageChange: '__pageChange__',
+  pageSizeChange: '__pageSizeChange__',
 })
 
 const propTypes = {
@@ -118,7 +119,7 @@ export const usePagination = props => {
         pageIndex,
         pageSize,
       }
-    }, actions.setPageSize)
+    }, actions.pageSizeChange)
   }
 
   return {

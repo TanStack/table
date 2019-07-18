@@ -40,7 +40,7 @@ function decorateColumn(column, parent) {
   if (!id) {
     // Accessor, but no column id? This is bad.
     console.error(column)
-    throw new Error('A column id is required!')
+    throw new Error('A column ID (or string accessor) is required!')
   }
 
   column = {

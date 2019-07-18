@@ -239,7 +239,7 @@ const instance = useTable(
 1. `useTable` is called. A table instance is created.
 1. The `instance.state` is resolved from either a custom user state or an automatically generated one.
 1. A collection of plugin points is created at `instance.hooks`. These plugin points don't run until after all of the plugins have run.
-1. The instance is reduced through each plugin hook in the order they were called. Each hook receives the result of the previous hook, is able to manipulate the `instance`, use plugin points, use their own React hooks internally and eventually return a new one `instance`. This happens until the last instance object is returned from the last hook.
+1. The instance is reduced through each plugin hook in the order they were called. Each hook receives the result of the previous hook, is able to manipulate the `instance`, use plugin points, use their own React hooks internally and eventually return a new `instance`. This happens until the last instance object is returned from the last hook.
 1. Lastly, the plugin points that were registered and populated during hook reduction are run to produce the final instance object that is returned from `useTable`
 
 This multi-stage process is the secret sauce that allows React Table plugin hooks to work together and compose nicely, while not stepping on each others toes.
@@ -264,11 +264,11 @@ React Table relies on memoization to determine when state and side effects shoul
 
 ### Options
 
-- `state: [stateObject, stateUpdater]`
-  - Must be **memoized**
+- `state: TableStateTuple[stateObject, stateUpdater]`
+  - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
   - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
   - Defaults to using an internal `useTableState()` instance if not defined.
-  - See [Controlling and Hoisting Table State](#controlling-and-hoistin-table-state)
+  - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
 - `debug: Bool`
   - A flag to turn on debug mode.
   - Defaults to `false`
