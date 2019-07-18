@@ -61,19 +61,11 @@ export const useFlexLayout = props => {
         boxSizing: 'border-box',
         ...getStylesForColumn(column, columnMeasurements, defaultFlex, api),
       },
-      // [refKey]: el => {
-      //   renderedCellInfoRef.current[key] = {
-      //     column,
-      //     el
-      //   };
-      // },
     }))
 
     getCellProps.push(cell => {
       return {
         style: {
-          // display: 'block',
-          // boxSizing: 'border-box',
           ...getStylesForColumn(
             cell.column,
             columnMeasurements,
@@ -82,12 +74,6 @@ export const useFlexLayout = props => {
             api
           ),
         },
-        // [refKey]: el => {
-        //   renderedCellInfoRef.current[columnPathStr] = {
-        //     column,
-        //     el
-        //   };
-        // }
       }
     })
 
