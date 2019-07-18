@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useTable, useColumns, useRows } from 'react-table'
 
-import olympicWinnersSmall from './data/olympicWinnersSmall.json'
+import makeData from './makeData'
 
 const Styles = styled.div`
   padding: 1rem;
@@ -33,21 +33,45 @@ const Styles = styled.div`
   }
 `
 
-const data = olympicWinnersSmall.slice(0, 100)
+const data = makeData(20)
 
 function Table() {
   const columns = React.useMemo(
     () => [
-      { Header: 'Athlete', accessor: 'athlete' },
-      { Header: 'Country', accessor: 'country' },
-      { Header: 'Age', accessor: 'age' },
-      { Header: 'Bronze', accessor: 'bronze' },
-      { Header: 'Date', accessor: 'date' },
-      { Header: 'Gold', accessor: 'gold' },
-      { Header: 'Silver', accessor: 'silver' },
-      { Header: 'Sport', accessor: 'sport' },
-      { Header: 'Total', accessor: 'total' },
-      { Header: 'Year', accessor: 'year' },
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
+      },
     ],
     []
   )
