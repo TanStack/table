@@ -842,7 +842,11 @@ export default function MyTable({ manualPageIndex }) {
 }
 ```
 
-# Guides
+# Examples
+
+- [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+
+<!-- # Guides
 
 ## Client Side Pagination
 
@@ -948,9 +952,9 @@ To implement server-side pagination, use the `useTableState` and `usePagination`
 
 ```diff
 
-```
+``` -->
 
-# Setup
+<!-- # Setup
 
 To begin using React Table you will need to start with a UI to render it. Below is a very basic component that should serve as a good starting point for most projects:
 
@@ -1106,7 +1110,7 @@ function MyApp () {
   }]
 
   return <MyTable columns={columns} data={data} />
-```
+``` -->
 
 ## Contributing
 
