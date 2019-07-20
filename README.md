@@ -171,9 +171,9 @@ import {
 
 React Table is a headless utility, which means out of the box, it doesn't render or supply any actual UI elements. You are in charge of utilizing the state and callbacks of the hooks provided by this library to render your own table markup. [Read this article to understand why React Table is built this way.](https://medium.com/merrickchristensen/headless-user-interface-components-565b0c0f2e18). If you don't want to, then here's a quick rundown anyway:
 
-- Separation of Concern - Not that superficial kind you read about all the time. The real kind. React Table as a library honestly has no business being in charge of your UI. The look, feel, and overall experience of your table is what makes your app or product great. The less React Table gets in the way of that, the better!
+- Separation of Concerns - Not that superficial kind you read about all the time. The real kind. React Table as a library honestly has no business being in charge of your UI. The look, feel, and overall experience of your table is what makes your app or product great. The less React Table gets in the way of that, the better!
 - Maintenance - By removing the massive (and seemingly endless) API surface area required to support every UI use-case, React Table can remain small, easy-to-use and simple to update/maintain.
-- Extensibility - UI present countless edge cases for a library simply because it's a creative medium, and one where every developer does things differently. By drawing a line between
+- Extensibility - UI presents countless edge cases for a library simply because it's a creative medium, and one where every developer does things differently. By not dictating UI concerns, React Table empowers the developer to design and extend the UI based on their unique use-case.
 
 ## The React Table API
 
@@ -190,7 +190,7 @@ At the heart of every React Table is a table `instance` object. This object cont
 
 ## Using Hooks for configuration, state and lifecycle
 
-React Table uses React Hooks both internally and externally for 100% of it's configuration and lifecycle management. Naturally, this is what allows React Table to be headless and lightweight while still having a concise and simple API.
+React Table uses React Hooks both internally and externally for 100% of its configuration and lifecycle management. Naturally, this is what allows React Table to be headless and lightweight while still having a concise and simple API.
 
 React Table is essentially a compatible collection of **custom React hooks**:
 
