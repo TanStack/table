@@ -165,6 +165,10 @@ import {
 } from 'react-table'
 ```
 
+# Examples
+
+- [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+
 # Concepts
 
 ## React Table is a "headless" library
@@ -841,10 +845,6 @@ export default function MyTable({ manualPageIndex }) {
   )
 }
 ```
-
-# Examples
-
-- [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
 
 <!-- # Guides
 
