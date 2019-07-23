@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable } from 'react-table'
+import { useTable, useSortBy } from 'react-table'
 
 import makeData from './makeData'
 
@@ -34,20 +34,29 @@ const Styles = styled.div`
 `
 
 function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  )
 
-  // Render the UI for your table
   return (
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getRowProps()}>
             {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              // Add the sorting props to control sorting. For this example
+              // we can add them into the header props
+              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
+                {/* Add a sort direction indicator */}
+                <span>
+                  {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
+                </span>
+              </th>
             ))}
           </tr>
         ))}

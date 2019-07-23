@@ -166,6 +166,7 @@ import {
 # Examples
 
 - [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+- [Sorting with `useSortBy`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-with-useSortBy)
 
 # Concepts
 
