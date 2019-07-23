@@ -34,6 +34,7 @@ const propTypes = {
   defaultSortDesc: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
   disableSortRemove: PropTypes.bool,
+  disableMultiRemove: PropTypes.bool,
 }
 
 export const useSortBy = props => {
@@ -50,6 +51,7 @@ export const useSortBy = props => {
     disableSorting,
     defaultSortDesc,
     disableSortRemove,
+    disableMultiRemove,
     disableMultiSort,
     hooks,
     state: [{ sortBy }, setState],
@@ -80,36 +82,42 @@ export const useSortBy = props => {
 
       // Find any existing sortBy for this column
       const existingSortBy = sortBy.find(d => d.id === columnID)
+      const existingIndex = sortBy.findIndex(d => d.id == columnID)
       const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
       let newSortBy = []
 
-      // What should we do with this filter?
+      // What should we do with this sort action?
       let action
 
-      if (disableMultiSort || !multi) {
-        if (sortBy.length <= 1 && existingSortBy) {
-          if (
-            (existingSortBy.desc && !resolvedDefaultSortDesc) ||
-            (!existingSortBy.desc && resolvedDefaultSortDesc)
-          ) {
-            action = disableSortRemove ? 'toggle' : 'remove'
-          } else {
-            action = 'toggle'
-          }
+      if (!disableMultiSort && multi) {
+        if (existingSortBy) {
+          action = 'toggle'
+        } else {
+          action = 'add'
+        }
+      } else {
+        // Normal mode
+        if (existingIndex !== sortBy.length - 1) {
+          action = 'replace'
+        } else if (existingSortBy) {
+          action = 'toggle'
         } else {
           action = 'replace'
         }
-      } else {
-        if (!existingSortBy) {
-          action = 'add'
-        } else {
-          if (hasDescDefined) {
-            action = 'set'
-          } else {
-            action = 'toggle'
-          }
-        }
+      }
+
+      // Handle toggle states that will remove the sortBy
+      if (
+        action === 'toggle' && // Must be toggling
+        !disableSortRemove && // If disableSortRemove, disable in general
+        !hasDescDefined && // Must not be setting desc
+        (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
+        ((existingSortBy && // Finally, detect if it should indeed be removed
+          (existingSortBy.desc && !resolvedDefaultSortDesc)) ||
+          (!existingSortBy.desc && resolvedDefaultSortDesc))
+      ) {
+        action = 'remove'
       }
 
       if (action === 'replace') {
@@ -127,28 +135,19 @@ export const useSortBy = props => {
             desc: hasDescDefined ? desc : resolvedDefaultSortDesc,
           },
         ]
-      } else if (action === 'set') {
-        newSortBy = sortBy.map(d => {
-          if (d.id === columnID) {
-            return {
-              ...d,
-              desc,
-            }
-          }
-          return d
-        })
       } else if (action === 'toggle') {
+        // This flips (or sets) the
         newSortBy = sortBy.map(d => {
           if (d.id === columnID) {
             return {
               ...d,
-              desc: !existingSortBy.desc,
+              desc: hasDescDefined ? desc : !existingSortBy.desc,
             }
           }
           return d
         })
       } else if (action === 'remove') {
-        newSortBy = []
+        newSortBy = sortBy.filter(d => d.id !== columnID)
       }
 
       return {

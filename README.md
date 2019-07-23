@@ -524,6 +524,8 @@ The following options are supported via the main options object passed to `useTa
   - If true, the first default direction for sorting will be descending. This may also be overridden at the column level.
 - `disableSortRemove: Bool`
   - If true, the un-sorted state will not be available to columns once they have been sorted.
+- `disableMultiRemove: Bool`
+  - If true, the un-sorted state will not be available to multi-sorted columns.
 - `orderByFn: Function`
   - Must be **memoizd**
   - Defaults to the built-in [default orderBy function](TODO)
