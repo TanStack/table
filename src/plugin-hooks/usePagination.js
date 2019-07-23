@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 //
 import { addActions, actions } from '../actions'
-import { defaultState } from './useTableState'
+import { defaultState } from '../hooks/useTableState'
 
 defaultState.pageSize = 10
 defaultState.pageIndex = 0

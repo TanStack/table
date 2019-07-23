@@ -154,8 +154,6 @@ To import React Table:
 ```js
 import {
   useTable,
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -201,9 +199,6 @@ React Table is essentially a compatible collection of **custom React hooks**:
 - The primary React Table hook
   - [`useTable`](#usetable)
 - Plugin Hooks
-  - Required Plugin Hooks
-    - [`useColumns`](#useColumns)
-    - [`useRows`](#useRows)
   - Core Plugin Hooks
     - [`useTableState`](#useTableState)
     - [`useGroupBy`](#useGroupBy)
@@ -228,8 +223,6 @@ const instance = useTable(
     data: [...],
     columns: [...],
   },
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -258,131 +251,60 @@ The order and usage of plugin hooks must follow [The Laws of Hooks](TODO), just 
 
 React Table relies on memoization to determine when state and side effects should update or be calculated. This means that every option you pass to `useTable` should be memoized either via `React.useMemo` (for objects) or `React.useCallback` (for functions).
 
-# React Table Hooks API
+# API
 
 ## `useTable`
 
 - Required
 
-`useTable` is the root hook for React Table. To use it, call it with an options object, followed by any React Table compatible hooks you want to use.
+`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `rows` value, followed by any React Table compatible hooks you want to use.
 
 ### Options
 
-- `state: TableStateTuple[stateObject, stateUpdater]`
-  - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
-  - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
-  - Defaults to using an internal `useTableState()` instance if not defined.
-  - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
-- `debug: Bool`
-  - A flag to turn on debug mode.
-  - Defaults to `false`
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `options: Object`
+  - `columns: Array<Column>`
+    - Required
+    - Must be **memoized**
+    - The core columns configuration object for the entire table.
+  - `data: Array<any>`
+    - Required
+    - Must be **memoized**
+    - The data array that you want to display on the table.
+  - `state: TableStateTuple[stateObject, stateUpdater]`
+    - Optional
+    - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
+    - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
+    - Defaults to using an internal `useTableState()` instance if not defined.
+    - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
+  - `useColumns: Function`
+    - Optional
+    - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
+  - `useRows: Function`
+    - Optional
+    - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
+  - `debug: Bool`
+    - Optional
+    - A flag to turn on debug mode.
+    - Defaults to `false`
 
 ### Output
 
 - `instance` - The instance object for the React Table
+  - `columns: Array<Column>`
+    - A flat array of all final column objects computed from the original columns configuration option.
+  - `headerGroups: Array<Array<Column>>`
+    - An array of normalized header groups, each containing a flattened array of final column objects for that row.
+  - `headers[] Array<Column>`
+    - An array of nested final column objects, similar in structure to the original columns configuration option.
+  - `rows: Array<Row>`
+    - An array of rows **materialized** from the original `data` array and `columns` passed into the table options
 
 ### Example
 
 ```js
-const instance = useTable(
-  {
-    // Options
-  },
-  useColumns,
-  useRows,
-  useGroupBy,
-  useFilters,
-  useSortBy,
-  useExpanded,
-  usePagination
-)
-```
-
-## `useColumns`
-
-- Plugin Hook
-- Required
-
-`useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
-
-### Options
-
-- `columns: Array<Column>`
-  - Required
-  - Must be **memoized**
-  - The core columns configuration object for the entire table.
-
-### Output
-
-The following values are provided to the table `instance`:
-
-- `columns: Array<Column>`
-  - A flat array of all final column objects computed from the original columns configuration option.
-- `headerGroups: Array<Array<Column>>`
-  - An array of normalized header groups, each containing a flattened array of final column objects for that row.
-- `headers[] Array<Column>`
-  - An array of nested final column objects, similar in structure to the original columns configuration option.
-
-### Example
-
-```js
-const myColumns = React.useMemo(
-  () => [
-    {
-      Header: 'Name',
-      columns: [
-        {
-          Header: 'First Name',
-          accessor: 'firstName',
-        },
-        {
-          Header: 'Last Name',
-          accessor: 'lastName',
-        },
-      ],
-    },
-  ],
-  []
-)
-
-const { columns, headerGroups, headers } = useTable(
-  {
-    columns: myColumns,
-  },
-  useColumns
-)
-```
-
-## `useRows`
-
-- Plugin Hook
-- Required
-
-`useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
-
-### Options
-
-- `data: Array<any>`
-  - Required
-  - Must be **memoized**
-  - The data array that you want to display on the table.
-- `subRowsKey: String`
-  - Required
-  - Defaults to `subRows`
-  - React Table will use this key when materializing the final row object. It also uses this key to infer sub-rows from the raw data.
-  - See [Grouping and Aggregation](#grouping-and-aggregation) for more information
-
-### Output
-
-The following values are provided to the table `instance`:
-
-- `rows: Array<Row>`
-  - An array of rows **materialized** from the original `data` array and `columns` passed into the table options
-
-### Example
-
-```js
-const myColumns = React.useMemo(
+const columns = React.useMemo(
   () => [
     {
       Header: 'Name',
@@ -420,13 +342,16 @@ const data = [
   },
 ]
 
-const { rows } = useTable(
+const instance = useTable(
   {
-    columns: myColumns,
+    columns,
     data,
   },
-  useColumns,
-  useRows
+  useGroupBy,
+  useFilters,
+  useSortBy,
+  useExpanded,
+  usePagination
 )
 ```
 
@@ -437,7 +362,9 @@ const { rows } = useTable(
 
 `useGroupBy` is the hook that implements **row grouping and aggregation**.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].groupBy: Array<String>`
   - Must be **memoized**
@@ -455,7 +382,7 @@ const { rows } = useTable(
   - Must be **memoized**
   - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -478,8 +405,6 @@ const { rows } = useTable(
     disableGrouping: false,
     aggregations,
   },
-  useColumns,
-  useRows,
   useGroupBy
 )
 ```
@@ -491,7 +416,9 @@ const { rows } = useTable(
 
 `useFilters` is the hook that implements **row filtering**.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].filters: Object<columnID: filterValue>`
   - Must be **memoized**
@@ -513,7 +440,7 @@ const { rows } = useTable(
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
   - For mor information on filter types, see [Filtering](TODO)
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -562,8 +489,6 @@ const { rows } = useTable(
     // Pass our custom filter types
     filterTypes,
   },
-  useColumns,
-  useRows,
   useFilters
 )
 ```
@@ -575,7 +500,9 @@ const { rows } = useTable(
 
 `useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
   - Must be **memoized**
@@ -606,7 +533,7 @@ const { rows } = useTable(
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
   - For mor information on sort types, see [Sorting](TODO)
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -623,8 +550,6 @@ const { rows } = useTable(
     // state[0].sortBy === [{ id: 'firstName', desc: true }]
     state,
   },
-  useColumns,
-  useRows,
   useSortBy
 )
 ```
@@ -636,7 +561,9 @@ const { rows } = useTable(
 
 `useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows, but is not limited to that use-case. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].expanded: Object<[pathIndex]: Boolean | ExpandedStateObject>`
   - Must be **memoized**
@@ -644,6 +571,11 @@ const { rows } = useTable(
   - A `pathIndex` can be set as the key and its value set to `true` to expand that row's subRows into view. For example, if `{ '3': true }` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
   - For nested expansion, you may **use another object** instead of a Boolean to expand sub rows. For example, if `{ '3': { '5' : true }}` was passed as the `expanded` state, then the **6th subRow of the 4th row and the 4th row of the original data array** would be expanded.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `subRowsKey: String`
+  - Required
+  - Defaults to `subRows`
+  - React Table will use this key when materializing the final row object. It also uses this key to infer sub-rows from the raw data.
+  - See [Grouping and Aggregation](#grouping-and-aggregation) for more information
 - `paginateSubRows: Bool`
   - Defaults to `true`
   - If set to `false`, expanded rows will not be paginated. Thus, any expanded subrows would potentially increase the size of any given page by the amount of total expanded subrows on the page.
@@ -651,7 +583,7 @@ const { rows } = useTable(
   - Defaults to `expanded`
   - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would be forcibly expanded, regardless of state.
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -668,8 +600,6 @@ const { rows } = useTable(
     // state[0].sortBy === { '3': true, '5': { '2': true } }
     state,
   },
-  useColumns,
-  useRows,
   useExpanded
 )
 ```
@@ -683,7 +613,9 @@ const { rows } = useTable(
 
 > **NOTE** Some server-side pagination implementations do not use page index and instead use **token based pagination**! If that's the case, please use the `useTokenPagination` plugin instead.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].pageSize: Int`
   - **Required**
@@ -704,7 +636,7 @@ const { rows } = useTable(
   - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
   - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -749,8 +681,6 @@ const { rows } = useTable(
     // state[0] === { pageSize: 20, pageIndex: 1 }
     state,
   },
-  useColumns,
-  useRows,
   usePagination
 )
 ```
@@ -780,7 +710,9 @@ Some common use cases for this hook are:
 - Disallowing specific states via a custom state reducer
 - Enabling parent/unrelated components to manipulate the table state
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `initialState: Object`
   - Optional
@@ -801,7 +733,7 @@ Some common use cases for this hook are:
     - Defaults to `React.useState`
     - This function, if defined will be used as the state hook internally instead of the default `React.useState`. This can be useful for implementing custom state storage hooks like useLocalStorage, etc.
 
-### Output
+### Instance Variables
 
 - `tableStateTuple: [tableState, setTableState]`
   - Similar in structure to the result of `React.useState`
@@ -836,13 +768,9 @@ export default function MyTable({ manualPageIndex }) {
     console.log('Page Size Changed!', initialState.pageSize)
   }, [initialState.pageSize])
 
-  const { rows } = useTable(
-    {
-      state,
-    },
-    useColumns,
-    useRows
-  )
+  const { rows } = useTable({
+    state,
+  })
 }
 ```
 
@@ -859,8 +787,6 @@ import React from 'react'
 // Import React Table
 import {
   useTable,
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -873,8 +799,6 @@ function MyTable(props) {
   // Use the useTable hook to create your table configuration
   const instance = useTable(
     props,
-    useColumns,
-    useRows,
     useGroupBy,
     useFilters,
     useSortBy,
@@ -965,8 +889,6 @@ import React from 'react'
 // Import React Table
 import {
   useTable,
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -979,8 +901,6 @@ export default function MyTable(props) {
   // Use the useTable hook to create your table configuration
   const instance = useTable(
     props,
-    useColumns,
-    useRows,
     useGroupBy,
     useFilters,
     useSortBy,

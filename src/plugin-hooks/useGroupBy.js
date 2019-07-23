@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
-import { defaultState } from './useTableState'
+import { defaultState } from '../hooks/useTableState'
 import {
   mergeProps,
   applyPropHooks,
