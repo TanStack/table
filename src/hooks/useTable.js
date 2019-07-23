@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { flexRender, applyHooks, applyPropHooks, mergeProps } from '../utils'
 
 import { useTableState } from './useTableState'
+import { useColumns } from './useColumns'
+import { useRows } from './useRows'
 
 const renderErr =
   'You must specify a render "type". This could be "Header", "Filter", or any other custom renderers you have set on your column.'
@@ -18,7 +20,13 @@ export const useTable = (props, ...plugins) => {
   PropTypes.checkPropTypes(propTypes, props, 'property', 'useTable')
 
   // Destructure props
-  let { data = [], state: userState, debug } = props
+  let {
+    data = [],
+    state: userState,
+    useColumns: userUseColumns = useColumns,
+    useRows: userUseRows = useRows,
+    debug,
+  } = props
 
   debug = process.env.NODE_ENV === 'production' ? false : debug
 
@@ -54,23 +62,23 @@ export const useTable = (props, ...plugins) => {
 
   if (debug) console.time('hooks')
   // Loop through plugins to build the api out
-  api = plugins.filter(Boolean).reduce((prev, next) => next(prev), api)
+  api = [userUseColumns, userUseRows, ...plugins]
+    .filter(Boolean)
+    .reduce((prev, next) => next(prev), api)
   if (debug) console.timeEnd('hooks')
 
-  // Run the beforeRender hook
-  if (debug) console.time('hooks.beforeRender')
-  applyHooks(api.hooks.beforeRender, undefined, api)
-  if (debug) console.timeEnd('hooks.beforeRender')
-
+  // Determine column visibility
   api.columns.forEach(column => {
     column.visible =
       typeof column.show === 'function' ? column.show(api) : !!column.show
   })
 
+  // Allow hooks to decorate columns
   if (debug) console.time('hooks.columns')
   api.columns = applyHooks(api.hooks.columns, api.columns, api)
   if (debug) console.timeEnd('hooks.columns')
 
+  // Allow hooks to decorate headers
   if (debug) console.time('hooks.headers')
   api.headers = applyHooks(api.hooks.headers, api.headers, api)
   if (debug) console.timeEnd('hooks.headers')
@@ -87,7 +95,7 @@ export const useTable = (props, ...plugins) => {
       })
     }
 
-    // Give columns/headers getHeaderProps
+    // Give columns/headers a default getHeaderProps
     column.getHeaderProps = props =>
       mergeProps(
         {
@@ -99,6 +107,7 @@ export const useTable = (props, ...plugins) => {
       )
   })
 
+  // Allow hooks to decorate headerGroups
   if (debug) console.time('hooks.headerGroups')
   api.headerGroups = applyHooks(
     api.hooks.headerGroups,
@@ -167,6 +176,7 @@ export const useTable = (props, ...plugins) => {
         value: row.values[column.id],
       }
 
+      // Give each cell a getCellProps base
       cell.getCellProps = props => {
         const columnPathStr = [path, column.id].join('_')
         return mergeProps(
@@ -178,6 +188,7 @@ export const useTable = (props, ...plugins) => {
         )
       }
 
+      // Give each cell a renderer function (supports multiple renderers)
       cell.render = (type, userProps = {}) => {
         if (!type) {
           throw new Error(

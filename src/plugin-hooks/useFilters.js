@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { getFirstDefined, isFunction } from '../utils'
 import * as filterTypes from '../filterTypes'
 import { addActions, actions } from '../actions'
-import { defaultState } from './useTableState'
+import { defaultState } from '../hooks/useTableState'
 
 defaultState.filters = {}
 addActions({
