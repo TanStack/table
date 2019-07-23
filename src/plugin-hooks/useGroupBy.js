@@ -13,9 +13,7 @@ import {
 
 defaultState.groupBy = []
 
-addActions({
-  toggleGroupBy: '__toggleGroupBy__',
-})
+addActions('toggleGroupBy')
 
 const propTypes = {
   // General

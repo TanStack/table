@@ -7,10 +7,7 @@ import { defaultState } from '../hooks/useTableState'
 
 defaultState.expanded = {}
 
-addActions({
-  toggleExpanded: '__toggleExpanded__',
-  useExpanded: '__useExpanded__',
-})
+addActions('toggleExpanded', 'useExpanded')
 
 const propTypes = {
   manualExpandedKey: PropTypes.string,

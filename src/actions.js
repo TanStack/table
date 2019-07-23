@@ -1,11 +1,18 @@
 const actions = {}
-const types = new Set()
 
-export { actions, types }
+export { actions }
 
-export const addActions = acts => {
-  Object.keys(acts).forEach(key => {
-    types.add(acts[key])
-    actions[key] = acts[key]
+export const addActions = (...acts) => {
+  acts.forEach(action => {
+    if (actions[action]) {
+      throw new Error(
+        `An React Table action type called ${action} has already been registered!`
+      )
+    }
+    // Action values are formatted this way to discourage
+    // you (the dev) from interacting with them in any way
+    // other than importing `{ actions } from 'react-table'`
+    // and referencing an action via `actions[actionName]`
+    actions[action] = `React Table Action: ${action}`
   })
 }

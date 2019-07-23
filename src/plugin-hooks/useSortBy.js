@@ -14,9 +14,7 @@ import {
 
 defaultState.sortBy = []
 
-addActions({
-  sortByChange: '__sortByChange__',
-})
+addActions('sortByChange')
 
 const propTypes = {
   // General

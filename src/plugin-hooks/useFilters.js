@@ -7,10 +7,7 @@ import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 
 defaultState.filters = {}
-addActions({
-  setFilter: '__setFilter__',
-  setAllFilters: '__setAllFilters__',
-})
+addActions('setFilter', 'setAllFilters')
 
 const propTypes = {
   // General

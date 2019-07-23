@@ -8,10 +8,7 @@ import { defaultState } from '../hooks/useTableState'
 defaultState.pageSize = 10
 defaultState.pageIndex = 0
 
-addActions({
-  pageChange: '__pageChange__',
-  pageSizeChange: '__pageSizeChange__',
-})
+addActions('pageChange', 'pageSizeChange')
 
 const propTypes = {
   // General

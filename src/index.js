@@ -1,5 +1,5 @@
-import * as utils from './utils';
-export { utils };
+import * as utils from './utils'
+export { utils }
 export { useTable } from './hooks/useTable'
 export { useColumns } from './hooks/useColumns'
 export { useRows } from './hooks/useRows'
