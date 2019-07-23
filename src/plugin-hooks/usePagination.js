@@ -1,4 +1,4 @@
-import { useMemo, useLayoutEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 //
@@ -17,6 +17,10 @@ const propTypes = {
   // General
   manualPagination: PropTypes.bool,
 }
+
+// SSR has issues with useLayoutEffect still, so pony-fill with useEffect during SSR
+let useLayoutEffect =
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
 export const usePagination = props => {
   PropTypes.checkPropTypes(propTypes, props, 'property', 'usePagination')
@@ -39,7 +43,7 @@ export const usePagination = props => {
     ],
   } = props
 
-  const pageOptions = useMemo(
+  const pageOptions = React.useMemo(
     () => [...new Array(userPageCount)].map((d, i) => i),
     [userPageCount]
   )
@@ -56,7 +60,7 @@ export const usePagination = props => {
     )
   }, [setState, rowDep, filters, groupBy, sortBy])
 
-  const { pages, pageCount } = useMemo(() => {
+  const { pages, pageCount } = React.useMemo(() => {
     if (manualPagination) {
       return {
         pages: [rows],
