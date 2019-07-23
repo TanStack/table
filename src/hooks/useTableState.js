@@ -1,6 +1,6 @@
 import React from 'react'
 //
-import { actions } from '../actions'
+import { types } from '../actions'
 
 export const defaultState = {}
 
@@ -32,7 +32,7 @@ export const useTableState = (
   const reducedSetState = React.useCallback(
     (updater, type) => {
       return setState(old => {
-        if (!actions[type]) {
+        if (!types.has(type)) {
           console.info({
             stateUpdaterFn: updater,
             actionType: type,
