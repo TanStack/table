@@ -358,7 +358,7 @@ const { columns, headerGroups, headers } = useTable(
 - Plugin Hook
 - Required
 
-`useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
+`useRows` is the hook responsible for supporting columns in React Table. It's required for every React Table.
 
 ### Options
 
@@ -401,24 +401,27 @@ const myColumns = React.useMemo(
   []
 )
 
-const data = [
-  {
-    firstName: 'Tanner',
-    lastName: 'Linsley',
-  },
-  {
-    firstName: 'Shawn',
-    lastName: 'Wang',
-  },
-  {
-    firstName: 'Kent C.',
-    lastName: 'Dodds',
-  },
-  {
-    firstName: 'Ryan',
-    lastName: 'Florence',
-  },
-]
+const data = React.useMemo(
+  () => [
+    {
+      firstName: 'Tanner',
+      lastName: 'Linsley',
+    },
+    {
+      firstName: 'Shawn',
+      lastName: 'Wang',
+    },
+    {
+      firstName: 'Kent C.',
+      lastName: 'Dodds',
+    },
+    {
+      firstName: 'Ryan',
+      lastName: 'Florence',
+    },
+  ],
+  []
+)
 
 const { rows } = useTable(
   {
