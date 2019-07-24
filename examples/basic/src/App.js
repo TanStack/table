@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable } from 'react-table'
+import { useTable, useColumns, useRows } from 'react-table'
 
 import makeData from './makeData'
 
@@ -38,7 +38,10 @@ function Table({ columns, data }) {
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data,
-  })
+  },
+    useColumns,
+    useRows,
+  )
 
   // Render the UI for your table
   return (
