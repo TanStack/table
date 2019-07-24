@@ -1,6 +1,6 @@
 import React from 'react'
 //
-import { actions } from '../actions'
+import { types } from '../actions'
 
 export const defaultState = {}
 
@@ -32,12 +32,11 @@ export const useTableState = (
   const reducedSetState = React.useCallback(
     (updater, type) => {
       return setState(old => {
-        if (!actions[type]) {
+        if (!types[type]) {
           console.info({
-            currentState: old,
             stateUpdaterFn: updater,
             actionType: type,
-            supportedActions: actions,
+            currentState: old,
           })
           throw new Error('Detected an unknown table action! (Details Above)')
         }
