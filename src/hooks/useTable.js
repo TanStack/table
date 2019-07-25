@@ -21,7 +21,7 @@ export const useTable = (props, ...plugins) => {
 
   // Destructure props
   let {
-    data = [],
+    data,
     state: userState,
     useColumns: userUseColumns = useColumns,
     useRows: userUseRows = useRows,
@@ -44,10 +44,9 @@ export const useTable = (props, ...plugins) => {
     headerGroups: [],
     rows: [],
     row: [],
-    renderableRows: [],
     getTableProps: [],
     getRowProps: [],
-    getHeaderRowProps: [],
+    getHeaderGroupProps: [],
     getHeaderProps: [],
     getCellProps: [],
   }
@@ -87,7 +86,7 @@ export const useTable = (props, ...plugins) => {
     column.render = (type, userProps = {}) => {
       const Comp = typeof type === 'string' ? column[type] : type
 
-      if (!Comp) {
+      if (typeof Comp === 'undefined') {
         throw new Error(renderErr)
       }
 
@@ -134,12 +133,12 @@ export const useTable = (props, ...plugins) => {
 
     // Give headerGroups getRowProps
     if (headerGroup.headers.length) {
-      headerGroup.getRowProps = (props = {}) =>
+      headerGroup.getHeaderGroupProps = (props = {}) =>
         mergeProps(
           {
             key: [`header${i}`].join('_'),
           },
-          applyPropHooks(api.hooks.getHeaderRowProps, headerGroup, api),
+          applyPropHooks(api.hooks.getHeaderGroupProps, headerGroup, api),
           props
         )
       return true
@@ -195,7 +194,7 @@ export const useTable = (props, ...plugins) => {
       cell.render = (type, userProps = {}) => {
         const Comp = typeof type === 'string' ? column[type] : type
 
-        if (!Comp) {
+        if (typeof Comp === 'undefined') {
           throw new Error(renderErr)
         }
 
