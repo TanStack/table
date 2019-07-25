@@ -16,7 +16,7 @@ export const useFlexLayout = props => {
     hooks: {
       columns: columnsHooks,
       getRowProps,
-      getHeaderRowProps,
+      getHeaderGroupProps,
       getHeaderProps,
       getCellProps,
     },
@@ -54,7 +54,7 @@ export const useFlexLayout = props => {
     api.rowStyles = rowStyles
 
     getRowProps.push(() => rowStyles)
-    getHeaderRowProps.push(() => rowStyles)
+    getHeaderGroupProps.push(() => rowStyles)
 
     getHeaderProps.push(column => ({
       style: {
