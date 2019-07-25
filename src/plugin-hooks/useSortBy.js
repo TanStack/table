@@ -44,7 +44,7 @@ export const useSortBy = props => {
     columns,
     orderByFn = defaultOrderByFn,
     defaultSort = 'alphanumeric',
-    sortTypes: userSortTypes = {},
+    sortTypes: userSortTypes,
     manualSorting,
     disableSorting,
     defaultSortDesc,
@@ -237,10 +237,10 @@ export const useSortBy = props => {
           // default string lookup on built-in sortType
           const sortMethod =
             isFunction(columnSort) ||
-            userSortTypes[columnSort] ||
+            (userSortTypes || {})[columnSort] ||
             sortTypes[columnSort] ||
             isFunction(defaultSort) ||
-            userSortTypes[defaultSort] ||
+            (userSortTypes || {})[defaultSort] ||
             sortTypes[defaultSort]
 
           // Return the correct sortFn

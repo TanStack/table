@@ -32,7 +32,7 @@ export const useFilters = props => {
     debug,
     rows,
     columns,
-    filterTypes: userFilterTypes = {},
+    filterTypes: userFilterTypes,
     defaultFilter = filterTypes.text,
     manualFilters,
     disableFilters,
@@ -125,10 +125,10 @@ export const useFilters = props => {
           // default string lookup on built-in filters
           const filterMethod =
             isFunction(column.filter) ||
-            userFilterTypes[column.filter] ||
+            (userFilterTypes || {})[column.filter] ||
             filterTypes[column.filter] ||
             isFunction(defaultFilter) ||
-            userFilterTypes[defaultFilter] ||
+            (userFilterTypes || {})[defaultFilter] ||
             filterTypes[defaultFilter]
 
           if (!filterMethod) {
