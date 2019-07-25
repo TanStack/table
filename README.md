@@ -279,6 +279,12 @@ The following options are supported via the main options object passed to `useTa
   - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
   - Defaults to using an internal `useTableState()` instance if not defined.
   - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
+- `defaultColumn: Object`
+  - Optional
+  - Defaults to `{}`
+  - The default column object for every column passed to React Table.
+  - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
+  - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
 - `useColumns: Function`
   - Optional
   - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
@@ -347,6 +353,10 @@ The following properties are available on the table instance returned from `useT
   - **Required**
   - This function is used to resolve any props needed for your table wrapper.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `prepareRow: Function(Row)`
+  - **Required**
+  - This function is responsible for lazily preparing a row for rendering. Any row that you intend to render in your table needs to be passed to this function **before every render**.
+  - **Why?** Since table data could potentially be very large, it can become very expensive to compute all of the necessary state for every row to be rendered regardless if it actually is rendered or not (for example if you are paginating or virtualizing the rows, you may only have a few rows visible at any given moment). This function allows only the rows you intend to display to be computed and prepped with the correct state.
 
 ### `HeaderGroup` Properties
 
@@ -355,10 +365,10 @@ Header Groups are The following additional properties are available on every `he
 - `headers: Array<Column>`
   - **Required**
   - The columns in this header group.
-- `getRowProps: Function(?props)`
+- `getHeaderGroupProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for this header group's row.
-  - You can use the `getHeaderRowProps` hook to extend its functionality.
+  - You can use the `getHeaderGroupProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 
 ### `Column` Properties
@@ -418,55 +428,80 @@ The following additional properties are available on every `Cell` object returne
 ### Example
 
 ```js
-const columns = React.useMemo(
-  () => [
+function App() {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+    ],
+    []
+  )
+
+  const data = [
     {
-      Header: 'Name',
-      columns: [
-        {
-          Header: 'First Name',
-          accessor: 'firstName',
-        },
-        {
-          Header: 'Last Name',
-          accessor: 'lastName',
-        },
-      ],
+      firstName: 'Tanner',
+      lastName: 'Linsley',
     },
-  ],
-  []
-)
+    {
+      firstName: 'Shawn',
+      lastName: 'Wang',
+    },
+    {
+      firstName: 'Kent C.',
+      lastName: 'Dodds',
+    },
+    {
+      firstName: 'Ryan',
+      lastName: 'Florence',
+    },
+  ]
 
-const data = [
-  {
-    firstName: 'Tanner',
-    lastName: 'Linsley',
-  },
-  {
-    firstName: 'Shawn',
-    lastName: 'Wang',
-  },
-  {
-    firstName: 'Kent C.',
-    lastName: 'Dodds',
-  },
-  {
-    firstName: 'Ryan',
-    lastName: 'Florence',
-  },
-]
+  return <MyTable columns={columns} data={data} />
+}
 
-const instance = useTable(
-  {
+function MyTable({ columns, data }) {
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data,
-  },
-  useGroupBy,
-  useFilters,
-  useSortBy,
-  useExpanded,
-  usePagination
-)
+  })
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getRowProps()}>
+            {headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
 ```
 
 ## `useGroupBy`
