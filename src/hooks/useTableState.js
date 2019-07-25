@@ -28,13 +28,16 @@ export const useTableState = (
     return newState
   }, [overrides, state])
 
+  const overriddenStateRef = React.useRef()
+  overriddenStateRef.current = overriddenState
+
   const reducedSetState = React.useCallback(
     (updater, type) => {
       if (!types[type]) {
         console.info({
           stateUpdaterFn: updater,
           actionType: type,
-          currentState: overriddenState,
+          currentState: overriddenStateRef.current,
         })
         throw new Error('Detected an unknown table action! (Details Above)')
       }
@@ -43,7 +46,6 @@ export const useTableState = (
         return reducer(old, newState, type)
       })
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [reducer, setState]
   )
 
