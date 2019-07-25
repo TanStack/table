@@ -17,7 +17,9 @@ const propTypes = {
 
 // SSR has issues with useLayoutEffect still, so pony-fill with useEffect during SSR
 let useLayoutEffect =
-  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
+  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+    ? React.useLayoutEffect
+    : React.useEffect
 
 export const usePagination = props => {
   PropTypes.checkPropTypes(propTypes, props, 'property', 'usePagination')
