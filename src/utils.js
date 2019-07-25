@@ -89,12 +89,8 @@ export function getElementDimensions(element) {
 }
 
 export function flexRender(Comp, props) {
-  if (typeof Comp === 'function') {
-    return Object.getPrototypeOf(Comp).isReactComponent ? (
-      <Comp {...props} />
-    ) : (
-      Comp(props)
-    )
+  if (typeof Comp === 'function' || typeof Comp === 'object') {
+    return <Comp {...props} />
   }
   return Comp
 }

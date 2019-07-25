@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types'
 //
-import { flexRender, applyHooks, applyPropHooks, mergeProps } from '../utils'
+import { applyHooks, applyPropHooks, mergeProps, flexRender } from '../utils'
 
 import { useTableState } from './useTableState'
 import { useColumns } from './useColumns'
 import { useRows } from './useRows'
-
-const renderErr =
-  'You must specify a render "type". This could be "Header", "Filter", or any other custom renderers you have set on your column.'
 
 const propTypes = {
   // General
   data: PropTypes.array.isRequired,
   debug: PropTypes.bool,
 }
+
+const renderErr =
+  'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
 
 export const useTable = (props, ...plugins) => {
   // Validate props
@@ -85,10 +85,13 @@ export const useTable = (props, ...plugins) => {
   ;[...api.columns, ...api.headers].forEach(column => {
     // Give columns/headers rendering power
     column.render = (type, userProps = {}) => {
-      if (!type) {
+      const Comp = typeof type === 'string' ? column[type] : type
+
+      if (!Comp) {
         throw new Error(renderErr)
       }
-      return flexRender(column[type], {
+
+      return flexRender(Comp, {
         ...api,
         ...column,
         ...userProps,
@@ -190,12 +193,13 @@ export const useTable = (props, ...plugins) => {
 
       // Give each cell a renderer function (supports multiple renderers)
       cell.render = (type, userProps = {}) => {
-        if (!type) {
-          throw new Error(
-            'You must specify a render "type". This could be "Cell", "Header", "Filter", "Aggregated" or any other custom renderers you have set on your column.'
-          )
+        const Comp = typeof type === 'string' ? column[type] : type
+
+        if (!Comp) {
+          throw new Error(renderErr)
         }
-        return flexRender(column[type], {
+
+        return flexRender(Comp, {
           ...api,
           ...cell,
           ...userProps,
@@ -208,9 +212,6 @@ export const useTable = (props, ...plugins) => {
 
   api.getTableProps = userProps =>
     mergeProps(applyPropHooks(api.hooks.getTableProps, api), userProps)
-
-  api.getRowProps = userProps =>
-    mergeProps(applyPropHooks(api.hooks.getRowProps, undefined, api), userProps)
 
   return api
 }

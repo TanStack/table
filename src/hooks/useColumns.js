@@ -23,7 +23,7 @@ function findMaxDepth(columns, depth = 0) {
   }, 0)
 }
 
-function decorateColumn(column, parent) {
+function decorateColumn(column, parent, depth, index) {
   // First check for string accessor
   let { id, accessor, Header } = column
 
@@ -37,20 +37,26 @@ function decorateColumn(column, parent) {
     id = Header
   }
 
+  if (!id && column.columns) {
+    console.error(column)
+    throw new Error('A column ID (or unique "Header" value) is required!')
+  }
+
   if (!id) {
-    // Accessor, but no column id? This is bad.
     console.error(column)
     throw new Error('A column ID (or string accessor) is required!')
   }
 
   column = {
-    Header: '',
-    Cell: cell => cell.value,
+    Header: ({ id }) => id,
+    Cell: ({ value }) => value,
     show: true,
     ...column,
     id,
     accessor,
     parent,
+    depth,
+    index,
   }
 
   return column
@@ -58,8 +64,8 @@ function decorateColumn(column, parent) {
 
 // Build the visible columns, headers and flat column list
 function decorateColumnTree(columns, parent, depth = 0) {
-  return columns.map(column => {
-    column = decorateColumn(column, parent)
+  return columns.map((column, columnIndex) => {
+    column = decorateColumn(column, parent, depth, columnIndex)
     if (column.columns) {
       column.columns = decorateColumnTree(column.columns, column, depth + 1)
     }

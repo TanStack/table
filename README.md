@@ -294,17 +294,126 @@ The following options are supported via the main options object passed to `useTa
 
 The following options are supported on any column object you can pass to `columns`.
 
+- `accessor: String | Function`
+  - **Required**
+  - This string/function is used to build the data model for your column.
+  - The data returned by an accessor should be **primitive** and sortable.
+  - If a string is passed, the column's value will be looked up on the original row via that key, eg. If your column's accessor is `firstName` then its value would be read from `row['firstName']`. You can also specify deeply nested values with accessors like `info.hobbies` or even `address[0].street`
+  - If a function is passed, the column's value will be looked up on the original row using this accessor function, eg. If your column's accessor is `row => row.firstName`, then its value would be determined by passing the row to this function and using the resulting value.
+- `id: String`
+  - **Required if `accessor` is a function**
+  - This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.
+  - If a **string** accessor is used, it defaults as the column ID, but can be overridden if necessary.
+- `columns: Array<Column>`
+  - Optional
+  - A nested array of columns.
+  - If defined, the column will act as a header group. Columns can be recursively nested as much as needed.
+- `show: Boolean | Function`
+  - Optional
+  - Defaults to `true`
+  - If set to `false`, the column will be hidden.
+  - If set to a `function`, it will be called with the current table instance and can then return `true` or `false`.
+  - The data model for hidden columns is still calculated including sorting, filters, and grouping.
+- `Header: String | Function | React.Component => JSX`
+  - Optional
+  - Defaults to `({ id }) => id`
+  - Receives the table instance and column model as props
+  - Must either be a **string or return valid JSX**
+  - If a function/component is passed, it will be used for formatting the header value, eg. You can use a `Header` function to dynamically format the header using any table or column state.
+- `Cell: Function | React.Component => JSX`
+  - Optional
+  - Defaults to `({ value }) => value`
+  - Receives the table instance and cell model as props
+  - Must return valid JSX
+  - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
+
 ### Table Output
 
-- `columns: Array<Column>`
-  - A flat array of all final column objects computed from the original columns configuration option.
-- `columns[].`
-- `headerGroups: Array<Array<Column>>`
+The following properties are available on the table instance returned from `useTable`
+
+- `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.
+  - See [Header Group Properties](#header-group-properties) for more information
+- `columns: Array<Column>`
+  - A **flat** array of all final column objects computed from the original columns configuration option.
+  - See [Column Properties](#column-properties) for more information
 - `headers[] Array<Column>`
-  - An array of nested final column objects, similar in structure to the original columns configuration option.
+  - A **nested** array of final column objects, similar in structure to the original columns configuration option.
+  - See [Column Properties](#column-properties) for more information
 - `rows: Array<Row>`
-  - An array of rows **materialized** from the original `data` array and `columns` passed into the table options
+  - An array of **materialized row objects** from theriginal `dat oa` array and `columns` passed into the table options
+  - See [Row Properties](#row-properties) for more information
+- `getTableProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for your table wrapper.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `HeaderGroup` Properties
+
+Header Groups are The following additional properties are available on all `headerGroup`'s, returned by the table instance.
+
+- `headers: Array<Column>`
+  - **Required**
+  - The columns in this header group.
+- `getRowProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this header group's row.
+  - You can use the `getHeaderRowProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `Column` Properties
+
+The following properties are available on all columns returned by the table instance.
+
+- `id: String`
+  - The resolved column ID from either the column's `accessor` or the column's hard-coded `id` property
+- `visible: Boolean`
+  - The resolved visible state for the column, derived from the column's `show` property
+- `render: Function(type: String | Function | Component, ?props)`
+  - This function is used to render content in context of a column.
+  - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` renderers. Other renderers like `Filter` are available via hooks like `useFilters`.
+  - If a function or component is passed instead of a string, it will be be passed the table instance and column model as props and is expected to return any valid JSX.
+- `getHeaderProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this column's header cell.
+  - You can use the `getHeaderProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `Row` Properties
+
+The following additional properties are available on all `row`'s, returned by the table instance.
+
+- `cells: Array<Cell>`
+  - An array of `Cell` objects containing properties and functions specific to the row and column it belongs to.
+  - See [Cell Properties](#cell-properties) for more information
+- `values: Object<columnID: any>`
+  - A map of this row's **resolved** values by columnID, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`
+- `getRowProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this row.
+  - You can use the `getRowProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `Cell` Properties
+
+The following additional properties are available on every `Cell` object, returned in an array of `cells` on every row object.
+
+- `column: Column`
+  - The corresponding column object for this cell
+- `row: Row`
+  - The corresponding row object for this cell
+- `value: any`
+  - The **resolved** value for this cell.
+  - By default, this value is displayed on the table via the default `Cell` renderer. To override the way a cell displays
+- `getCellProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this cell.
+  - You can use the `getCellProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `render: Function(type: String | Function | Component, ?props)`
+  - This function is used to render content in context of a cell.
+  - If `type` is a string, will render using the `column[type]` renderer. React Table ships with a default `Cell` renderer. Other renderers like `Aggregated` are available via hooks like `useFilters`.
+  - If a function or component is passed instead of a string, it will be be passed the table instance and cell model as props and is expected to return any valid JSX.
 
 ### Example
 
