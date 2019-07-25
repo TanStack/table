@@ -350,7 +350,7 @@ The following properties are available on the table instance returned from `useT
 
 ### `HeaderGroup` Properties
 
-Header Groups are The following additional properties are available on all `headerGroup`'s, returned by the table instance.
+Header Groups are The following additional properties are available on every `headerGroup` object returned by the table instance.
 
 - `headers: Array<Column>`
   - **Required**
@@ -363,7 +363,7 @@ Header Groups are The following additional properties are available on all `head
 
 ### `Column` Properties
 
-The following properties are available on all columns returned by the table instance.
+The following properties are available on every `Column` object returned by the table instance.
 
 - `id: String`
   - The resolved column ID from either the column's `accessor` or the column's hard-coded `id` property
@@ -381,7 +381,7 @@ The following properties are available on all columns returned by the table inst
 
 ### `Row` Properties
 
-The following additional properties are available on all `row`'s, returned by the table instance.
+The following additional properties are available on every `row` object returned by the table instance.
 
 - `cells: Array<Cell>`
   - An array of `Cell` objects containing properties and functions specific to the row and column it belongs to.
@@ -396,7 +396,7 @@ The following additional properties are available on all `row`'s, returned by th
 
 ### `Cell` Properties
 
-The following additional properties are available on every `Cell` object, returned in an array of `cells` on every row object.
+The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
 
 - `column: Column`
   - The corresponding column object for this cell
