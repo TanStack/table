@@ -260,47 +260,51 @@ React Table relies on memoization to determine when state and side effects shoul
 
 `useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `rows` value, followed by any React Table compatible hooks you want to use.
 
-### Options
+### Table Options
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `options: Object`
-  - `columns: Array<Column>`
-    - Required
-    - Must be **memoized**
-    - The core columns configuration object for the entire table.
-  - `data: Array<any>`
-    - Required
-    - Must be **memoized**
-    - The data array that you want to display on the table.
-  - `state: TableStateTuple[stateObject, stateUpdater]`
-    - Optional
-    - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
-    - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
-    - Defaults to using an internal `useTableState()` instance if not defined.
-    - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
-  - `useColumns: Function`
-    - Optional
-    - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
-  - `useRows: Function`
-    - Optional
-    - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
-  - `debug: Bool`
-    - Optional
-    - A flag to turn on debug mode.
-    - Defaults to `false`
+- `columns: Array<Column>`
+  - Required
+  - Must be **memoized**
+  - The core columns configuration object for the entire table.
+  - Supports nested `columns` arrays via the `column.children` key
+- `data: Array<any>`
+  - Required
+  - Must be **memoized**
+  - The data array that you want to display on the table.
+- `state: TableStateTuple[stateObject, stateUpdater]`
+  - Optional
+  - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
+  - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
+  - Defaults to using an internal `useTableState()` instance if not defined.
+  - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
+- `useColumns: Function`
+  - Optional
+  - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
+- `useRows: Function`
+  - Optional
+  - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
+- `debug: Bool`
+  - Optional
+  - A flag to turn on debug mode.
+  - Defaults to `false`
 
-### Output
+### `column` Options
 
-- `instance` - The instance object for the React Table
-  - `columns: Array<Column>`
-    - A flat array of all final column objects computed from the original columns configuration option.
-  - `headerGroups: Array<Array<Column>>`
-    - An array of normalized header groups, each containing a flattened array of final column objects for that row.
-  - `headers[] Array<Column>`
-    - An array of nested final column objects, similar in structure to the original columns configuration option.
-  - `rows: Array<Row>`
-    - An array of rows **materialized** from the original `data` array and `columns` passed into the table options
+The following options are supported on any column object you can pass to `columns`.
+
+### Table Output
+
+- `columns: Array<Column>`
+  - A flat array of all final column objects computed from the original columns configuration option.
+- `columns[].`
+- `headerGroups: Array<Array<Column>>`
+  - An array of normalized header groups, each containing a flattened array of final column objects for that row.
+- `headers[] Array<Column>`
+  - An array of nested final column objects, similar in structure to the original columns configuration option.
+- `rows: Array<Row>`
+  - An array of rows **materialized** from the original `data` array and `columns` passed into the table options
 
 ### Example
 
