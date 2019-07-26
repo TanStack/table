@@ -57,6 +57,7 @@ export const useTable = (props, ...plugins) => {
     data,
     state,
     hooks,
+    plugins,
   }
 
   if (debug) console.time('hooks')

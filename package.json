@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0-alpha.7",
+  "version": "7.0.0-alpha.12",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -18,7 +18,7 @@
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
   "scripts": {
-    "commit": "git-cz",
+    "commit": "git commit",
     "test": "is-ci 'test:ci' 'test:dev'",
     "test:dev": "jest --watch",
     "test:ci": "jest",

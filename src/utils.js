@@ -137,6 +137,8 @@ export function isFunction(a) {
   }
 }
 
+//
+
 function makePathArray(obj) {
   return flattenDeep(obj)
     .join('.')
