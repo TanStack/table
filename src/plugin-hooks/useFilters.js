@@ -48,14 +48,12 @@ export const useFilters = props => {
       filterTypes
     )
 
-    const { autoRemove } = filterMethod
-
     return setState(old => {
       const newFilter =
         typeof updater === 'function' ? updater(old.filters[id]) : updater
 
       //
-      if (shouldAutoRemove(autoRemove, newFilter)) {
+      if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
         const { [id]: remove, ...newFilters } = old.filters
         return {
           ...old,
@@ -81,13 +79,13 @@ export const useFilters = props => {
       Object.keys(newFilters).forEach(id => {
         const newFilter = newFilters[id]
         const column = columns.find(d => d.id === id)
-        const autoRemove = getFilterMethod(
+        const filterMethod = getFilterMethod(
           column.filter,
           userFilterTypes || {},
           filterTypes
         )
 
-        if (shouldAutoRemove(autoRemove, newFilter)) {
+        if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
           delete newFilters[id]
         }
       })
@@ -220,5 +218,10 @@ function shouldAutoRemove(autoRemove, value) {
 }
 
 function getFilterMethod(filter, userFilterTypes, filterTypes) {
-  return isFunction(filter) || userFilterTypes[filter] || filterTypes[filter]
+  return (
+    isFunction(filter) ||
+    userFilterTypes[filter] ||
+    filterTypes[filter] ||
+    filterTypes.text
+  )
 }
