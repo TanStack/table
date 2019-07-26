@@ -166,8 +166,8 @@ import {
 # Examples
 
 - [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
-- [Sorting with `useSortBy`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-with-useSortBy)
-- [Filtering with `useFilters`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-with-useFilters)
+- [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
+- [Filtering - Client Side`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
 
 # Concepts
 
@@ -948,6 +948,8 @@ export default function MyTable({ manualPageIndex }) {
 ## Sorting
 
 ### Client-Side Sorting
+
+- [Example]()
 
 Client-side sorting can be accomplished by using the `useSortBy` plugin hook. Start by importing the hook from `react-table`:
 
