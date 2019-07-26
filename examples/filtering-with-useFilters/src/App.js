@@ -153,7 +153,6 @@ function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
 }
 
 function fuzzyText(rows, id, filterValue) {
-  console.log(rows, filterValue)
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
 }
 
