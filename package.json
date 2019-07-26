@@ -18,7 +18,7 @@
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
   "scripts": {
-    "commit": "git-cz",
+    "commit": "git commit",
     "test": "is-ci 'test:ci' 'test:dev'",
     "test:dev": "jest --watch",
     "test:ci": "jest",

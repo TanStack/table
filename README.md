@@ -1198,14 +1198,11 @@ If you would like to help develop a suggested feature follow these steps:
 
 - Fork this repo
 - Install dependencies with `$ yarn`
-- Auto-build files as you edit with `$ yarn run watch`
-- Implement your changes to files in the `src/` directory
-- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`
+- Link `react-table` locally with `$ yarn link`
+- Auto-build files as you edit with `$ yarn start`
+- Implement your changes and tests to files in the `src/` directory
+- In any example directory, link to the local `react-table` with `$ yarn link react-table`
+- Follow example directions for running. Usually just `$ yarn && yarn start`
+- Document your changes in the root `README.md`
+- To stage a commit, run `yarn commit`
 - Submit PR for review
-
-#### Package Utilities
-
-- `$ yarn run watch` Watches files and builds via babel
-- `$ yarn run docs` Runs the storybook server
-- `$ yarn run test` Runs the test suite
