@@ -20,16 +20,14 @@ const propTypes = {
   // General
   columns: PropTypes.arrayOf(
     PropTypes.shape({
-      sortBy: PropTypes.func,
-      defaultSortDesc: PropTypes.bool,
+      sortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+      sortDescFirst: PropTypes.bool,
     })
   ),
   orderByFn: PropTypes.func,
   sortTypes: PropTypes.object,
-  defaultSortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
-  defaultSortDesc: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
   disableSortRemove: PropTypes.bool,
   disableMultiRemove: PropTypes.bool,
@@ -43,11 +41,9 @@ export const useSortBy = props => {
     rows,
     columns,
     orderByFn = defaultOrderByFn,
-    defaultSort = 'alphanumeric',
     sortTypes: userSortTypes,
     manualSorting,
     disableSorting,
-    defaultSortDesc,
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
@@ -88,10 +84,7 @@ export const useSortBy = props => {
 
       // Find the column for this columnID
       const column = columns.find(d => d.id === columnID)
-      const resolvedDefaultSortDesc = getFirstDefined(
-        column.defaultSortDesc,
-        defaultSortDesc
-      )
+      const { sortDescFirst } = column
 
       // Find any existing sortBy for this column
       const existingSortBy = sortBy.find(d => d.id === columnID)
@@ -127,8 +120,8 @@ export const useSortBy = props => {
         !hasDescDefined && // Must not be setting desc
         (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
         ((existingSortBy && // Finally, detect if it should indeed be removed
-          (existingSortBy.desc && !resolvedDefaultSortDesc)) ||
-          (!existingSortBy.desc && resolvedDefaultSortDesc))
+          (existingSortBy.desc && !sortDescFirst)) ||
+          (!existingSortBy.desc && sortDescFirst))
       ) {
         action = 'remove'
       }
@@ -137,7 +130,7 @@ export const useSortBy = props => {
         newSortBy = [
           {
             id: columnID,
-            desc: hasDescDefined ? desc : resolvedDefaultSortDesc,
+            desc: hasDescDefined ? desc : sortDescFirst,
           },
         ]
       } else if (action === 'add') {
@@ -145,7 +138,7 @@ export const useSortBy = props => {
           ...sortBy,
           {
             id: columnID,
-            desc: hasDescDefined ? desc : resolvedDefaultSortDesc,
+            desc: hasDescDefined ? desc : sortDescFirst,
           },
         ]
       } else if (action === 'toggle') {
@@ -221,73 +214,68 @@ export const useSortBy = props => {
     column.sortedDesc = column.sorted ? column.sorted.desc : undefined
   })
 
-  const sortedRows = useMemo(() => {
-    if (manualSorting || !sortBy.length) {
-      return rows
-    }
-    if (debug) console.info('getSortedRows')
+  const sortedRows = useMemo(
+    () => {
+      if (manualSorting || !sortBy.length) {
+        return rows
+      }
+      if (debug) console.info('getSortedRows')
 
-    const sortTypesByColumnID = {}
+      const sortData = rows => {
+        // Use the orderByFn to compose multiple sortBy's together.
+        // This will also perform a stable sorting using the row index
+        // if needed.
+        const sortedData = orderByFn(
+          rows,
+          sortBy.map(sort => {
+            // Support custom sorting methods for each column
+            const { sortType } = columns.find(d => d.id === sort.id)
 
-    columns.forEach(col => {
-      sortTypesByColumnID[col.id] = col.sortBy
-    })
+            // Look up sortBy functions in this order:
+            // column function
+            // column string lookup on user sortType
+            // column string lookup on built-in sortType
+            // default function
+            // default string lookup on user sortType
+            // default string lookup on built-in sortType
+            const sortMethod =
+              isFunction(sortType) ||
+              (userSortTypes || {})[sortType] ||
+              sortTypes[sortType] ||
+              sortTypes.alphanumeric
 
-    const sortData = rows => {
-      // Use the orderByFn to compose multiple sortBy's together.
-      // This will also perform a stable sorting using the row index
-      // if needed.
-      const sortedData = orderByFn(
-        rows,
-        sortBy.map(sort => {
-          // Support custom sorting methods for each column
-          const columnSort = sortTypesByColumnID[sort.id]
+            // Return the correct sortFn
+            return (a, b) =>
+              sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
+          }),
+          // Map the directions
+          sortBy.map(sort => {
+            // Detect and use the sortInverted option
+            const { sortInverted } = columns.find(d => d.id === sort.id)
 
-          // Look up sortBy functions in this order:
-          // column function
-          // column string lookup on user sortType
-          // column string lookup on built-in sortType
-          // default function
-          // default string lookup on user sortType
-          // default string lookup on built-in sortType
-          const sortMethod =
-            isFunction(columnSort) ||
-            (userSortTypes || {})[columnSort] ||
-            sortTypes[columnSort] ||
-            isFunction(defaultSort) ||
-            (userSortTypes || {})[defaultSort] ||
-            sortTypes[defaultSort]
+            if (sortInverted) {
+              return sort.desc
+            }
 
-          // Return the correct sortFn
-          return (a, b) =>
-            sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
-        }),
-        // Map the directions
-        sortBy.map(d => !d.desc)
-      )
+            return !sort.desc
+          })
+        )
 
-      // If there are sub-rows, sort them
-      sortedData.forEach(row => {
-        if (!row.subRows) {
-          return
-        }
-        row.subRows = sortData(row.subRows)
-      })
+        // If there are sub-rows, sort them
+        sortedData.forEach(row => {
+          if (!row.subRows) {
+            return
+          }
+          row.subRows = sortData(row.subRows)
+        })
 
-      return sortedData
-    }
+        return sortedData
+      }
 
-    return sortData(rows)
-  }, [
-    manualSorting,
-    sortBy,
-    debug,
-    columns,
-    rows,
-    orderByFn,
-    userSortTypes,
-    defaultSort,
-  ])
+      return sortData(rows)
+    },
+    [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes]
+  )
 
   return {
     ...props,

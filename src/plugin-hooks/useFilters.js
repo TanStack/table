@@ -150,10 +150,8 @@ export const useFilters = props => {
               return filteredSoFar
             }
 
-            const columnFilter = column.filter || 'text'
-
             const filterMethod = getFilterMethod(
-              columnFilter,
+              column.filter,
               userFilterTypes || {},
               filterTypes
             )
