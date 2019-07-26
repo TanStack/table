@@ -53,7 +53,22 @@ export const useSortBy = props => {
     disableMultiSort,
     hooks,
     state: [{ sortBy }, setState],
+    plugins,
   } = props
+
+  // If useSortBy should probably come after useFilters for
+  // the best performance, so let's hint to the user about that...
+  const pluginIndex = plugins.indexOf(useSortBy)
+
+  const useFiltersIndex = plugins.findIndex(
+    plugin => plugin.name === 'useFilters'
+  )
+
+  if (useFiltersIndex > pluginIndex) {
+    console.warn(
+      'React Table: useSortBy should be placed before useFilters in your plugin list for better performance!'
+    )
+  }
 
   columns.forEach(column => {
     const { accessor, canSortBy } = column

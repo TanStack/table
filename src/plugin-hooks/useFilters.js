@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import { getFirstDefined, isFunction } from '../utils'
@@ -33,40 +33,68 @@ export const useFilters = props => {
     rows,
     columns,
     filterTypes: userFilterTypes,
-    defaultFilter = filterTypes.text,
     manualFilters,
     disableFilters,
     hooks,
     state: [{ filters }, setState],
   } = props
 
-  const setFilter = (id, val) => {
+  const setFilter = (id, updater) => {
+    const column = columns.find(d => d.id === id)
+
+    const filterMethod = getFilterMethod(
+      column.filter,
+      userFilterTypes || {},
+      filterTypes
+    )
+
+    const { autoRemove } = filterMethod
+
     return setState(old => {
-      if (typeof val === 'undefined') {
-        const { [id]: prev, ...rest } = filters
+      const newFilter =
+        typeof updater === 'function' ? updater(old.filters[id]) : updater
+
+      //
+      if (shouldAutoRemove(autoRemove, newFilter)) {
+        const { [id]: remove, ...newFilters } = old.filters
         return {
           ...old,
-          filters: {
-            ...rest,
-          },
+          filters: newFilters,
         }
       }
 
       return {
         ...old,
         filters: {
-          ...filters,
-          [id]: val,
+          ...old.filters,
+          [id]: newFilter,
         },
       }
     }, actions.setFilter)
   }
 
-  const setAllFilters = filters => {
+  const setAllFilters = updater => {
     return setState(old => {
+      const newFilters = typeof updater === 'function' ? updater(old) : updater
+
+      // Filter out undefined values
+      Object.keys(newFilters).forEach(id => {
+        const newFilter = newFilters[id]
+        const column = columns.find(d => d.id === id)
+        const autoRemove = getFilterMethod(
+          column.filter,
+          userFilterTypes || {},
+          filterTypes
+        )
+
+        if (shouldAutoRemove(autoRemove, newFilter)) {
+          delete newFilters[id]
+        }
+      })
+
       return {
         ...old,
-        filters,
+        filters: newFilters,
       }
     }, actions.setAllFilters)
   }
@@ -95,7 +123,12 @@ export const useFilters = props => {
     return columns
   })
 
-  const filteredRows = useMemo(() => {
+  // TODO: Create a filter cache for incremental high speed multi-filtering
+  // This gets pretty complicated pretty fast, since you have to maintain a
+  // cache for each row group (top-level rows, and each row's recursive subrows)
+  // This would make multi-filtering a lot faster though. Too far?
+
+  const filteredRows = React.useMemo(() => {
     if (manualFilters || !Object.keys(filters).length) {
       return rows
     }
@@ -111,10 +144,14 @@ export const useFilters = props => {
           // Find the filters column
           const column = columns.find(d => d.id === columnID)
 
+          column.preFilteredRows = filteredSoFar
+
           // Don't filter hidden columns or columns that have had their filters disabled
           if (!column || column.filterable === false) {
             return filteredSoFar
           }
+
+          const columnFilter = column.filter || filterTypes.text
 
           // Look up filter functions in this order:
           // column function
@@ -123,13 +160,11 @@ export const useFilters = props => {
           // default function
           // default string lookup on user filters
           // default string lookup on built-in filters
-          const filterMethod =
-            isFunction(column.filter) ||
-            (userFilterTypes || {})[column.filter] ||
-            filterTypes[column.filter] ||
-            isFunction(defaultFilter) ||
-            (userFilterTypes || {})[defaultFilter] ||
-            filterTypes[defaultFilter]
+          const filterMethod = getFilterMethod(
+            columnFilter,
+            userFilterTypes || {},
+            filterTypes
+          )
 
           if (!filterMethod) {
             console.warn(
@@ -148,6 +183,9 @@ export const useFilters = props => {
       )
 
       // Apply the filter to any subRows
+      // We technically could do this recursively in the above loop,
+      // but that would severely hinder the API for the user, since they
+      // would be required to do that recursion in some scenarios
       filteredRows = filteredRows.map(row => {
         if (!row.subRows) {
           return row
@@ -170,20 +208,21 @@ export const useFilters = props => {
     }
 
     return filterRows(rows)
-  }, [
-    manualFilters,
-    filters,
-    debug,
-    rows,
-    columns,
-    userFilterTypes,
-    defaultFilter,
-  ])
+  }, [manualFilters, filters, debug, rows, columns, userFilterTypes])
 
   return {
     ...props,
     setFilter,
     setAllFilters,
+    preFilteredRows: rows,
     rows: filteredRows,
   }
+}
+
+function shouldAutoRemove(autoRemove, value) {
+  return autoRemove ? autoRemove(value) : typeof value === 'undefined'
+}
+
+function getFilterMethod(filter, userFilterTypes, filterTypes) {
+  return isFunction(filter) || userFilterTypes[filter] || filterTypes[filter]
 }

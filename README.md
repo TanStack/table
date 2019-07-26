@@ -333,7 +333,7 @@ The following options are supported on any column object you can pass to `column
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
 
-### Table Output
+### `Instance` Properties
 
 The following properties are available on the table instance returned from `useTable`
 
@@ -531,7 +531,7 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
 
-### Instance Variables
+### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
@@ -589,12 +589,15 @@ The following options are supported via the main options object passed to `useTa
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
   - For mor information on filter types, see [Filtering](TODO)
 
-### Instance Variables
+### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
 - `rows: Array<Row>`
   - An array of **filtered** rows.
+- `preFilteredRows: Array<Row>`
+  - The array of rows **used right before filtering**.
+  - Among many other use-cases, these rows are directly useful for building option lists in filters, since the resulting filtered `rows` do not contain every possible option.
 - `setFilter: Function(columnID, filterValue) => void`
   - An instance-level function used to update the filter value for a specific column.
 - `setAllFilters: Function(filtersObject) => void`
@@ -627,16 +630,20 @@ const filterTypes = React.useMemo(() => ({
   }
 }), [matchSorter])
 
+// Override the default column filter to be our new `fuzzyText` filter type
+const defaultColumn = React.useMemo(() => ({
+  filter: 'fuzzyText'
+}))
+
 const { rows } = useTable(
   {
     // state[0].groupBy === ['firstName']
     state,
-    // Override the default filter to be our new `fuzzyText` filter type
-    defaultFilter: 'fuzzyText',
     manualFilters: false,
     disableFilters: false,
     // Pass our custom filter types
     filterTypes,
+    defaultColumn
   },
   useFilters
 )
