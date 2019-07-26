@@ -53,13 +53,16 @@ function DefaultColumnFilter({ filterValue, setFilter }) {
 function SelectColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
   // Calculate the options for filtering
   // using the preFilteredRows
-  const options = React.useMemo(() => {
-    const options = new Set()
-    preFilteredRows.forEach(row => {
-      options.add(row.values[id])
-    })
-    return [...options.values()]
-  }, [id, preFilteredRows])
+  const options = React.useMemo(
+    () => {
+      const options = new Set()
+      preFilteredRows.forEach(row => {
+        options.add(row.values[id])
+      })
+      return [...options.values()]
+    },
+    [id, preFilteredRows]
+  )
 
   // Render a multi-select box
   return (
@@ -85,15 +88,18 @@ function SelectColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
 function SliderColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
   // Calculate the min and max
   // using the preFilteredRows
-  const [min, max] = React.useMemo(() => {
-    let min = 0
-    let max = 0
-    preFilteredRows.forEach(row => {
-      min = Math.min(row.values[id], min)
-      max = Math.max(row.values[id], max)
-    })
-    return [min, max]
-  }, [id, preFilteredRows])
+  const [min, max] = React.useMemo(
+    () => {
+      let min = 0
+      let max = 0
+      preFilteredRows.forEach(row => {
+        min = Math.min(row.values[id], min)
+        max = Math.max(row.values[id], max)
+      })
+      return [min, max]
+    },
+    [id, preFilteredRows]
+  )
 
   return (
     <>
@@ -152,19 +158,19 @@ function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
   )
 }
 
-function fuzzyText(rows, id, filterValue) {
+function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
 }
 
 // Let the table remove the filter if the string is empty
-fuzzyText.autoRemove = val => !val
+fuzzyTextFilterFn.autoRemove = val => !val
 
 // Our table component
 function Table({ columns, data }) {
   const filterTypes = React.useMemo(
     () => ({
-      // Add a new fuzzyText filter type.
-      fuzzyText,
+      // Add a new fuzzyTextFilterFn filter type.
+      fuzzyText: fuzzyTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
