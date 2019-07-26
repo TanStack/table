@@ -2,35 +2,37 @@ import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
-import { defaultState } from './useTableState'
+import { defaultState } from '../hooks/useTableState'
+import * as sortTypes from '../sortTypes'
 import {
   mergeProps,
   applyPropHooks,
   getFirstDefined,
   defaultOrderByFn,
-  defaultSortByFn,
+  isFunction,
 } from '../utils'
 
 defaultState.sortBy = []
 
-addActions({
-  sortByChange: '__sortByChange__',
-})
+addActions('sortByChange')
 
 const propTypes = {
   // General
   columns: PropTypes.arrayOf(
     PropTypes.shape({
-      sortByFn: PropTypes.func,
+      sortBy: PropTypes.func,
       defaultSortDesc: PropTypes.bool,
     })
   ),
-  sortByFn: PropTypes.func,
+  orderByFn: PropTypes.func,
+  sortTypes: PropTypes.object,
+  defaultSortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   defaultSortDesc: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
   disableSortRemove: PropTypes.bool,
+  disableMultiRemove: PropTypes.bool,
 }
 
 export const useSortBy = props => {
@@ -41,11 +43,14 @@ export const useSortBy = props => {
     rows,
     columns,
     orderByFn = defaultOrderByFn,
-    sortByFn = defaultSortByFn,
+    defaultSort = 'alphanumeric',
+    sortTypes: userSortTypes,
     manualSorting,
     disableSorting,
     defaultSortDesc,
     disableSortRemove,
+    disableMultiRemove,
+    disableMultiSort,
     hooks,
     state: [{ sortBy }, setState],
   } = props
@@ -75,36 +80,42 @@ export const useSortBy = props => {
 
       // Find any existing sortBy for this column
       const existingSortBy = sortBy.find(d => d.id === columnID)
+      const existingIndex = sortBy.findIndex(d => d.id == columnID)
       const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
       let newSortBy = []
 
-      // What should we do with this filter?
+      // What should we do with this sort action?
       let action
 
-      if (!multi) {
-        if (sortBy.length <= 1 && existingSortBy) {
-          if (
-            (existingSortBy.desc && !resolvedDefaultSortDesc) ||
-            (!existingSortBy.desc && resolvedDefaultSortDesc)
-          ) {
-            action = disableSortRemove ? 'toggle' : 'remove'
-          } else {
-            action = 'toggle'
-          }
+      if (!disableMultiSort && multi) {
+        if (existingSortBy) {
+          action = 'toggle'
+        } else {
+          action = 'add'
+        }
+      } else {
+        // Normal mode
+        if (existingIndex !== sortBy.length - 1) {
+          action = 'replace'
+        } else if (existingSortBy) {
+          action = 'toggle'
         } else {
           action = 'replace'
         }
-      } else {
-        if (!existingSortBy) {
-          action = 'add'
-        } else {
-          if (hasDescDefined) {
-            action = 'set'
-          } else {
-            action = 'toggle'
-          }
-        }
+      }
+
+      // Handle toggle states that will remove the sortBy
+      if (
+        action === 'toggle' && // Must be toggling
+        !disableSortRemove && // If disableSortRemove, disable in general
+        !hasDescDefined && // Must not be setting desc
+        (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
+        ((existingSortBy && // Finally, detect if it should indeed be removed
+          (existingSortBy.desc && !resolvedDefaultSortDesc)) ||
+          (!existingSortBy.desc && resolvedDefaultSortDesc))
+      ) {
+        action = 'remove'
       }
 
       if (action === 'replace') {
@@ -122,28 +133,19 @@ export const useSortBy = props => {
             desc: hasDescDefined ? desc : resolvedDefaultSortDesc,
           },
         ]
-      } else if (action === 'set') {
-        newSortBy = sortBy.map(d => {
-          if (d.id === columnID) {
-            return {
-              ...d,
-              desc,
-            }
-          }
-          return d
-        })
       } else if (action === 'toggle') {
+        // This flips (or sets) the
         newSortBy = sortBy.map(d => {
           if (d.id === columnID) {
             return {
               ...d,
-              desc: !existingSortBy.desc,
+              desc: hasDescDefined ? desc : !existingSortBy.desc,
             }
           }
           return d
         })
       } else if (action === 'remove') {
-        newSortBy = []
+        newSortBy = sortBy.filter(d => d.id !== columnID)
       }
 
       return {
@@ -210,13 +212,11 @@ export const useSortBy = props => {
     }
     if (debug) console.info('getSortedRows')
 
-    const sortMethodsByColumnID = {}
+    const sortTypesByColumnID = {}
 
-    columns
-      .filter(col => col.sortMethod)
-      .forEach(col => {
-        sortMethodsByColumnID[col.id] = col.sortMethod
-      })
+    columns.forEach(col => {
+      sortTypesByColumnID[col.id] = col.sortBy
+    })
 
     const sortData = rows => {
       // Use the orderByFn to compose multiple sortBy's together.
@@ -226,21 +226,32 @@ export const useSortBy = props => {
         rows,
         sortBy.map(sort => {
           // Support custom sorting methods for each column
-          const columnSortBy = sortMethodsByColumnID[sort.id]
+          const columnSort = sortTypesByColumnID[sort.id]
+
+          // Look up sortBy functions in this order:
+          // column function
+          // column string lookup on user sortType
+          // column string lookup on built-in sortType
+          // default function
+          // default string lookup on user sortType
+          // default string lookup on built-in sortType
+          const sortMethod =
+            isFunction(columnSort) ||
+            (userSortTypes || {})[columnSort] ||
+            sortTypes[columnSort] ||
+            isFunction(defaultSort) ||
+            (userSortTypes || {})[defaultSort] ||
+            sortTypes[defaultSort]
 
           // Return the correct sortFn
           return (a, b) =>
-            (columnSortBy || sortByFn)(
-              a.values[sort.id],
-              b.values[sort.id],
-              sort.desc
-            )
+            sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
         }),
         // Map the directions
         sortBy.map(d => !d.desc)
       )
 
-      // TODO: this should be optimized. Not good to loop again
+      // If there are sub-rows, sort them
       sortedData.forEach(row => {
         if (!row.subRows) {
           return
@@ -252,7 +263,16 @@ export const useSortBy = props => {
     }
 
     return sortData(rows)
-  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, sortByFn])
+  }, [
+    manualSorting,
+    sortBy,
+    debug,
+    columns,
+    rows,
+    orderByFn,
+    userSortTypes,
+    defaultSort,
+  ])
 
   return {
     ...props,

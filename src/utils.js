@@ -28,25 +28,6 @@ export function defaultOrderByFn(arr, funcs, dirs) {
   })
 }
 
-export function defaultSortByFn(a, b, desc) {
-  // force null and undefined to the bottom
-  a = a === null || a === undefined ? '' : a
-  b = b === null || b === undefined ? '' : b
-  // force any string values to lowercase
-  a = typeof a === 'string' ? a.toLowerCase() : a
-  b = typeof b === 'string' ? b.toLowerCase() : b
-  // Return either 1 or -1 to indicate a sort priority
-  if (a > b) {
-    return 1
-  }
-  if (a < b) {
-    return -1
-  }
-  // returning 0, undefined or any falsey value will defer to the next
-  // sorting mechanism or eventually the columns index via the orderByFn
-  return 0
-}
-
 export function getFirstDefined(...args) {
   for (let i = 0; i < args.length; i += 1) {
     if (typeof args[i] !== 'undefined') {
@@ -65,14 +46,6 @@ export function defaultGroupByFn(rows, grouper) {
     prev[resKey].push(row)
     return prev
   }, {})
-}
-
-export function defaultFilterFn(row, id, value, column) {
-  return row.values[id] !== undefined
-    ? String(row.values[id])
-        .toLowerCase()
-        .includes(String(value).toLowerCase())
-    : true
 }
 
 export function setBy(obj = {}, path, value) {
@@ -116,12 +89,8 @@ export function getElementDimensions(element) {
 }
 
 export function flexRender(Comp, props) {
-  if (typeof Comp === 'function') {
-    return Object.getPrototypeOf(Comp).isReactComponent ? (
-      <Comp {...props} />
-    ) : (
-      Comp(props)
-    )
+  if (typeof Comp === 'function' || typeof Comp === 'object') {
+    return <Comp {...props} />
   }
   return Comp
 }
@@ -160,6 +129,12 @@ ${JSON.stringify(props, null, 2)}`
 
 export function sum(arr) {
   return arr.reduce((prev, curr) => prev + curr, 0)
+}
+
+export function isFunction(a) {
+  if (typeof a === 'function') {
+    return a
+  }
 }
 
 function makePathArray(obj) {

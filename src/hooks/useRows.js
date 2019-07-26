@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 const propTypes = {
@@ -10,7 +10,7 @@ export const useRows = props => {
 
   const { debug, columns, subRowsKey = 'subRows', data } = props
 
-  const accessedRows = useMemo(() => {
+  const accessedRows = React.useMemo(() => {
     if (debug) console.info('getAccessedRows')
 
     // Access the row's data

@@ -16,7 +16,7 @@ export const useFlexLayout = props => {
     hooks: {
       columns: columnsHooks,
       getRowProps,
-      getHeaderRowProps,
+      getHeaderGroupProps,
       getHeaderProps,
       getCellProps,
     },
@@ -54,26 +54,18 @@ export const useFlexLayout = props => {
     api.rowStyles = rowStyles
 
     getRowProps.push(() => rowStyles)
-    getHeaderRowProps.push(() => rowStyles)
+    getHeaderGroupProps.push(() => rowStyles)
 
     getHeaderProps.push(column => ({
       style: {
         boxSizing: 'border-box',
         ...getStylesForColumn(column, columnMeasurements, defaultFlex, api),
       },
-      // [refKey]: el => {
-      //   renderedCellInfoRef.current[key] = {
-      //     column,
-      //     el
-      //   };
-      // },
     }))
 
     getCellProps.push(cell => {
       return {
         style: {
-          // display: 'block',
-          // boxSizing: 'border-box',
           ...getStylesForColumn(
             cell.column,
             columnMeasurements,
@@ -82,12 +74,6 @@ export const useFlexLayout = props => {
             api
           ),
         },
-        // [refKey]: el => {
-        //   renderedCellInfoRef.current[columnPathStr] = {
-        //     column,
-        //     el
-        //   };
-        // }
       }
     })
 
@@ -122,6 +108,7 @@ function getSizesForColumn(
 ) {
   if (columns) {
     columns = columns
+      .filter(col => col.show || col.visible)
       .map(column =>
         getSizesForColumn(column, columnMeasurements, defaultFlex, api)
       )
@@ -151,60 +138,3 @@ function getSizesForColumn(
     maxWidth,
   }
 }
-
-// const resetRefs = () => {
-//   if (debug) console.info("resetRefs");
-//   renderedCellInfoRef.current = {};
-// };
-
-// const calculateAutoWidths = () => {
-//   RAF(() => {
-//     const newColumnMeasurements = {};
-//     Object.values(renderedCellInfoRef.current).forEach(({ column, el }) => {
-//       if (!el) {
-//         return;
-//       }
-
-//       let measurement = 0;
-
-//       const measureChildren = children => {
-//         if (children) {
-//           [].slice.call(children).forEach(child => {
-//             measurement = Math.max(
-//               measurement,
-//               Math.ceil(child.offsetWidth) || 0
-//             );
-//             measureChildren(child.children);
-//           });
-//         }
-//         return measurement;
-//       };
-
-//       const parentDims = getElementDimensions(el);
-//       measureChildren(el.children);
-
-//       newColumnMeasurements[column.id] = Math.max(
-//         newColumnMeasurements[column.id] || 0,
-//         measurement + parentDims.paddingLeft + parentDims.paddingRight
-//       );
-//     });
-
-//     const oldKeys = Object.keys(columnMeasurements);
-//     const newKeys = Object.keys(newColumnMeasurements);
-
-//     const needsUpdate =
-//       oldKeys.length !== newKeys.length ||
-//       oldKeys.some(key => {
-//         return columnMeasurements[key] !== newColumnMeasurements[key];
-//       });
-
-//     if (needsUpdate) {
-//       setState(old => {
-//         return {
-//           ...old,
-//           columnMeasurements: newColumnMeasurements
-//         };
-//       }, actions.updateAutoWidth);
-//     }
-//   });
-// };

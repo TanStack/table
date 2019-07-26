@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
-import { defaultState } from './useTableState'
+import { defaultState } from '../hooks/useTableState'
 import {
   mergeProps,
   applyPropHooks,
@@ -13,9 +13,7 @@ import {
 
 defaultState.groupBy = []
 
-addActions({
-  toggleGroupBy: '__toggleGroupBy__',
-})
+addActions('toggleGroupBy')
 
 const propTypes = {
   // General

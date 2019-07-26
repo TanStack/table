@@ -1,6 +1,9 @@
 {
     "parser": "babel-eslint",
     "extends": ["react-app", "prettier"],
+    "plugins": [
+      "react-hooks"
+    ],
     "env": {
         "es6": true
     },

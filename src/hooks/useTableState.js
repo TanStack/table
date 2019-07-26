@@ -1,4 +1,6 @@
 import React from 'react'
+//
+import { types } from '../actions'
 
 export const defaultState = {}
 
@@ -24,15 +26,26 @@ export const useTableState = (
       })
     }
     return newState
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overrides, state])
 
+  const overriddenStateRef = React.useRef()
+  overriddenStateRef.current = overriddenState
+
   const reducedSetState = React.useCallback(
-    (updater, type) =>
-      setState(old => {
+    (updater, type) => {
+      if (!types[type]) {
+        console.info({
+          stateUpdaterFn: updater,
+          actionType: type,
+          currentState: overriddenStateRef.current,
+        })
+        throw new Error('Detected an unknown table action! (Details Above)')
+      }
+      return setState(old => {
         const newState = updater(old)
         return reducer(old, newState, type)
-      }),
+      })
+    },
     [reducer, setState]
   )
 
