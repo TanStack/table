@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import useTable from './useTable'
+import { useTable } from '../useTable'
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
