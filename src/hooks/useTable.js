@@ -9,6 +9,7 @@ import {
   decorateColumnTree,
   makeHeaderGroups,
   findMaxDepth,
+  flattenBy,
 } from '../utils'
 
 import { useTableState } from './useTableState'
@@ -52,34 +53,36 @@ export const useTable = (props, ...plugins) => {
   // But use the users state if provided
   const state = userState || defaultState
 
-  // These are hooks that plugins can use right before render
-  const hooks = {
-    beforeRender: [],
-    columns: [],
-    headers: [],
-    headerGroups: [],
-    rows: [],
-    row: [],
-    getTableProps: [],
-    getRowProps: [],
-    getHeaderGroupProps: [],
-    getHeaderProps: [],
-    getCellProps: [],
-  }
-
   // The initial api
-  let api = {
+  let instanceRef = React.useRef({})
+
+  Object.assign(instanceRef.current, {
     ...props,
     data,
     state,
-    hooks,
     plugins,
-  }
+    hooks: {
+      columnsBeforeHeaderGroups: [],
+      useMain: [],
+      useColumns: [],
+      useHeaders: [],
+      useHeaderGroups: [],
+      useRows: [],
+      prepareRow: [],
+      getTableProps: [],
+      getRowProps: [],
+      getHeaderGroupProps: [],
+      getHeaderProps: [],
+      getCellProps: [],
+    },
+  })
 
-  if (debug) console.time('hooks')
-  // Loop through plugins to build the api out
-  api = plugins.filter(Boolean).reduce((prev, next) => next(prev), api)
-  if (debug) console.timeEnd('hooks')
+  // Allow plugins to register hooks
+  if (debug) console.time('plugins')
+  plugins.filter(Boolean).forEach(plugin => {
+    plugin(instanceRef.current.hooks)
+  })
+  if (debug) console.timeEnd('plugins')
 
   // Compute columns, headerGroups and headers
   const columnInfo = React.useMemo(
@@ -93,7 +96,11 @@ export const useTable = (props, ...plugins) => {
 
       // Allow hooks to decorate columns
       if (debug) console.time('hooks.columnsBeforeHeaderGroups')
-      columns = applyHooks(api.hooks.columnsBeforeHeaderGroups, columns, api)
+      columns = applyHooks(
+        instanceRef.current.hooks.columnsBeforeHeaderGroups,
+        columns,
+        instanceRef.current
+      )
       if (debug) console.timeEnd('hooks.columnsBeforeHeaderGroups')
 
       // Make the headerGroups
@@ -111,17 +118,16 @@ export const useTable = (props, ...plugins) => {
         headers,
       }
     },
-    [api, debug, defaultColumn, userColumns]
+    [debug, defaultColumn, userColumns]
   )
 
   // Place the columns, headerGroups and headers on the api
-  Object.assign(api, columnInfo)
+  Object.assign(instanceRef.current, columnInfo)
 
   // Access the row model
-  api.rows = React.useMemo(
+  instanceRef.current.rows = React.useMemo(
     () => {
-      if (debug) console.info('getAccessedRows')
-
+      if (debug) console.time('getAccessedRows')
       // Access the row's data
       const accessRow = (originalRow, i, depth = 0) => {
         // Keep the original reference around
@@ -155,7 +161,7 @@ export const useTable = (props, ...plugins) => {
 
         // Create the cells and values
         row.values = {}
-        api.columns.forEach(column => {
+        instanceRef.current.columns.forEach(column => {
           row.values[column.id] = column.accessor
             ? column.accessor(originalRow, i, { subRows, depth, data })
             : undefined
@@ -165,61 +171,89 @@ export const useTable = (props, ...plugins) => {
       }
 
       // Use the resolved data
-      return data.map((d, i) => accessRow(d, i))
+      const accessedData = data.map((d, i) => accessRow(d, i))
+      if (debug) console.timeEnd('getAccessedRows')
+      return accessedData
     },
-    [debug, data, subRowsKey, api.columns]
+    [debug, data, subRowsKey]
   )
 
   // Determine column visibility
-  api.columns.forEach(column => {
+  instanceRef.current.columns.forEach(column => {
     column.visible =
-      typeof column.show === 'function' ? column.show(api) : !!column.show
+      typeof column.show === 'function'
+        ? column.show(instanceRef.current)
+        : !!column.show
   })
 
-  // Allow hooks to decorate columns
-  if (debug) console.time('hooks.columns')
-  api.columns = applyHooks(api.hooks.columns, api.columns, api)
-  if (debug) console.timeEnd('hooks.columns')
+  if (debug) console.time('hooks.useMain')
+  instanceRef.current = applyHooks(
+    instanceRef.current.hooks.useMain,
+    instanceRef.current
+  )
+  if (debug)
+    console.timeEnd('hooks.useMain')
 
-  // Allow hooks to decorate headers
-  if (debug) console.time('hooks.headers')
-  api.headers = applyHooks(api.hooks.headers, api.headers, api)
-  if (debug) console.timeEnd('hooks.headers')
-  ;[...api.columns, ...api.headers].forEach(column => {
-    // Give columns/headers rendering power
-    column.render = (type, userProps = {}) => {
-      const Comp = typeof type === 'string' ? column[type] : type
+    // // Allow hooks to decorate columns
+    // if (debug) console.time('hooks.useColumns')
+    // instanceRef.current.columns = applyHooks(
+    //   instanceRef.current.hooks.useColumns,
+    //   instanceRef.current.columns,
+    //   instanceRef.current
+    // )
+    // if (debug) console.timeEnd('hooks.useColumns')
 
-      if (typeof Comp === 'undefined') {
-        throw new Error(renderErr)
+    // // Allow hooks to decorate headers
+    // if (debug) console.time('hooks.useHeaders')
+    // instanceRef.current.headers = applyHooks(
+    //   instanceRef.current.hooks.useHeaders,
+    //   instanceRef.current.headers,
+    //   instanceRef.current
+    // )
+    // if (debug) console.timeEnd('hooks.useHeaders')
+  ;[...instanceRef.current.columns, ...instanceRef.current.headers].forEach(
+    column => {
+      // Give columns/headers rendering power
+      column.render = (type, userProps = {}) => {
+        const Comp = typeof type === 'string' ? column[type] : type
+
+        if (typeof Comp === 'undefined') {
+          throw new Error(renderErr)
+        }
+
+        return flexRender(Comp, {
+          ...instanceRef.current,
+          ...column,
+          ...userProps,
+        })
       }
 
-      return flexRender(Comp, {
-        ...api,
-        ...column,
-        ...userProps,
-      })
+      // Give columns/headers a default getHeaderProps
+      column.getHeaderProps = props =>
+        mergeProps(
+          {
+            key: ['header', column.id].join('_'),
+            colSpan: column.columns ? column.columns.length : 1,
+          },
+          applyPropHooks(
+            instanceRef.current.hooks.getHeaderProps,
+            column,
+            instanceRef.current
+          ),
+          props
+        )
     }
+  )
 
-    // Give columns/headers a default getHeaderProps
-    column.getHeaderProps = props =>
-      mergeProps(
-        {
-          key: ['header', column.id].join('_'),
-          colSpan: column.columns ? column.columns.length : 1,
-        },
-        applyPropHooks(api.hooks.getHeaderProps, column, api),
-        props
-      )
-  })
+  // // Allow hooks to decorate headerGroups
+  // if (debug) console.time('hooks.useHeaderGroups')
+  // instanceRef.current.headerGroups = applyHooks(
+  //   instanceRef.current.hooks.useHeaderGroups,
+  //   instanceRef.current.headerGroups,
+  //   instanceRef.current
+  // )
 
-  // Allow hooks to decorate headerGroups
-  if (debug) console.time('hooks.headerGroups')
-  api.headerGroups = applyHooks(
-    api.hooks.headerGroups,
-    api.headerGroups,
-    api
-  ).filter((headerGroup, i) => {
+  instanceRef.current.headerGroups.filter((headerGroup, i) => {
     // Filter out any headers and headerGroups that don't have visible columns
     headerGroup.headers = headerGroup.headers.filter(header => {
       const recurse = columns =>
@@ -242,7 +276,11 @@ export const useTable = (props, ...plugins) => {
           {
             key: [`header${i}`].join('_'),
           },
-          applyPropHooks(api.hooks.getHeaderGroupProps, headerGroup, api),
+          applyPropHooks(
+            instanceRef.current.hooks.getHeaderGroupProps,
+            headerGroup,
+            instanceRef.current
+          ),
           props
         )
       return true
@@ -250,29 +288,39 @@ export const useTable = (props, ...plugins) => {
 
     return false
   })
-  if (debug) console.timeEnd('hooks.headerGroups')
+  // if (debug) console.timeEnd('hooks.useHeaderGroups')
 
   // Run the rows (this could be a dangerous hook with a ton of data)
-  if (debug) console.time('hooks.rows')
-  api.rows = applyHooks(api.hooks.rows, api.rows, api)
-  if (debug) console.timeEnd('hooks.rows')
+  if (debug) console.time('hooks.useRows')
+  instanceRef.current.rows = applyHooks(
+    instanceRef.current.hooks.useRows,
+    instanceRef.current.rows,
+    instanceRef.current
+  )
+  if (debug) console.timeEnd('hooks.useRows')
 
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
 
-  api.prepareRow = row => {
+  instanceRef.current.prepareRow = row => {
     const { path } = row
     row.getRowProps = props =>
       mergeProps(
         { key: ['row', ...path].join('_') },
-        applyPropHooks(api.hooks.getRowProps, row, api),
+        applyPropHooks(
+          instanceRef.current.hooks.getRowProps,
+          row,
+          instanceRef.current
+        ),
         props
       )
 
     // need to apply any row specific hooks (useExpanded requires this)
-    applyHooks(api.hooks.row, row, api)
+    applyHooks(instanceRef.current.hooks.prepareRow, row, instanceRef.current)
 
-    const visibleColumns = api.columns.filter(column => column.visible)
+    const visibleColumns = instanceRef.current.columns.filter(
+      column => column.visible
+    )
 
     // Build the cells for each row
     row.cells = visibleColumns.map(column => {
@@ -289,7 +337,11 @@ export const useTable = (props, ...plugins) => {
           {
             key: ['cell', columnPathStr].join('_'),
           },
-          applyPropHooks(api.hooks.getCellProps, cell, api),
+          applyPropHooks(
+            instanceRef.current.hooks.getCellProps,
+            cell,
+            instanceRef.current
+          ),
           props
         )
       }
@@ -303,7 +355,7 @@ export const useTable = (props, ...plugins) => {
         }
 
         return flexRender(Comp, {
-          ...api,
+          ...instanceRef.current,
           ...cell,
           ...userProps,
         })
@@ -313,26 +365,14 @@ export const useTable = (props, ...plugins) => {
     })
   }
 
-  api.getTableProps = userProps =>
-    mergeProps(applyPropHooks(api.hooks.getTableProps, api), userProps)
+  instanceRef.current.getTableProps = userProps =>
+    mergeProps(
+      applyPropHooks(
+        instanceRef.current.hooks.getTableProps,
+        instanceRef.current
+      ),
+      userProps
+    )
 
-  return api
-}
-
-function flattenBy(columns, childKey) {
-  const flatColumns = []
-
-  const recurse = columns => {
-    columns.forEach(d => {
-      if (!d[childKey]) {
-        flatColumns.push(d)
-      } else {
-        recurse(d[childKey])
-      }
-    })
-  }
-
-  recurse(columns)
-
-  return flatColumns
+  return instanceRef.current
 }

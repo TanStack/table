@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
@@ -34,8 +34,12 @@ const propTypes = {
   disableMultiRemove: PropTypes.bool,
 }
 
-export const useSortBy = props => {
-  PropTypes.checkPropTypes(propTypes, props, 'property', 'useSortBy')
+export const useSortBy = hooks => {
+  hooks.useMain.push(useMain)
+}
+
+function useMain(instance) {
+  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useSortBy')
 
   const {
     debug,
@@ -51,7 +55,7 @@ export const useSortBy = props => {
     hooks,
     state: [{ sortBy }, setState],
     plugins,
-  } = props
+  } = instance
 
   // If useSortBy should probably come after useFilters for
   // the best performance, so let's hint to the user about that...
@@ -67,16 +71,8 @@ export const useSortBy = props => {
     )
   }
 
-  columns.forEach(column => {
-    const { accessor, disableSorting: columnDisableSorting } = column
-    column.canSortBy = accessor
-      ? getFirstDefined(
-          columnDisableSorting,
-          disableSorting === true ? false : undefined,
-          true
-        )
-      : false
-  })
+  // Add custom hooks
+  hooks.getSortByToggleProps = []
 
   // Updates sorting based on a columnID, desc flag and multi flag
   const toggleSortBy = (columnID, desc, multi) => {
@@ -164,63 +160,58 @@ export const useSortBy = props => {
     }, actions.sortByChange)
   }
 
-  hooks.columns.push(columns => {
-    columns.forEach(column => {
-      if (column.canSortBy) {
-        column.toggleSortBy = (desc, multi) =>
-          toggleSortBy(column.id, desc, multi)
-      }
-    })
-    return columns
-  })
+  // Add the getSortByToggleProps method to columns and headers
+  ;[...instance.columns, ...instance.headers].forEach(column => {
+    const { accessor, disableSorting: columnDisableSorting, id } = column
 
-  hooks.getSortByToggleProps = []
-
-  const addSortByToggleProps = (columns, api) => {
-    columns.forEach(column => {
-      const { canSortBy } = column
-      column.getSortByToggleProps = props => {
-        return mergeProps(
-          {
-            onClick: canSortBy
-              ? e => {
-                  e.persist()
-                  column.toggleSortBy(
-                    undefined,
-                    !api.disableMultiSort && e.shiftKey
-                  )
-                }
-              : undefined,
-            style: {
-              cursor: canSortBy ? 'pointer' : undefined,
-            },
-            title: 'Toggle SortBy',
-          },
-          applyPropHooks(api.hooks.getSortByToggleProps, column, api),
-          props
+    const canSort = accessor
+      ? getFirstDefined(
+          columnDisableSorting,
+          disableSorting === true ? false : undefined,
+          true
         )
-      }
-    })
-    return columns
-  }
+      : false
 
-  hooks.columns.push(addSortByToggleProps)
-  hooks.headers.push(addSortByToggleProps)
+    column.canSort = canSort
 
-  // Mutate columns to reflect sorting state
-  columns.forEach(column => {
-    const { id } = column
+    if (column.canSort) {
+      column.toggleSortBy = (desc, multi) =>
+        toggleSortBy(column.id, desc, multi)
+    }
+
+    column.getSortByToggleProps = props => {
+      return mergeProps(
+        {
+          onClick: canSort
+            ? e => {
+                e.persist()
+                column.toggleSortBy(
+                  undefined,
+                  !instance.disableMultiSort && e.shiftKey
+                )
+              }
+            : undefined,
+          style: {
+            cursor: canSort ? 'pointer' : undefined,
+          },
+          title: 'Toggle SortBy',
+        },
+        applyPropHooks(instance.hooks.getSortByToggleProps, column, instance),
+        props
+      )
+    }
+
     column.sorted = sortBy.find(d => d.id === id)
     column.sortedIndex = sortBy.findIndex(d => d.id === id)
     column.sortedDesc = column.sorted ? column.sorted.desc : undefined
   })
 
-  const sortedRows = useMemo(
+  const sortedRows = React.useMemo(
     () => {
       if (manualSorting || !sortBy.length) {
         return rows
       }
-      if (debug) console.info('getSortedRows')
+      if (debug) console.time('getSortedRows')
 
       const sortData = rows => {
         // Use the orderByFn to compose multiple sortBy's together.
@@ -270,6 +261,8 @@ export const useSortBy = props => {
           row.subRows = sortData(row.subRows)
         })
 
+        if (debug) console.timeEnd('getSortedRows')
+
         return sortedData
       }
 
@@ -279,7 +272,7 @@ export const useSortBy = props => {
   )
 
   return {
-    ...props,
+    ...instance,
     toggleSortBy,
     rows: sortedRows,
     preSortedRows: rows,
