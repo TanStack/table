@@ -154,8 +154,6 @@ To import React Table:
 ```js
 import {
   useTable,
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -168,6 +166,8 @@ import {
 # Examples
 
 - [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+- [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
+- [Filtering - Client Side`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
 
 # Concepts
 
@@ -201,9 +201,6 @@ React Table is essentially a compatible collection of **custom React hooks**:
 - The primary React Table hook
   - [`useTable`](#usetable)
 - Plugin Hooks
-  - Required Plugin Hooks
-    - [`useColumns`](#useColumns)
-    - [`useRows`](#useRows)
   - Core Plugin Hooks
     - [`useTableState`](#useTableState)
     - [`useGroupBy`](#useGroupBy)
@@ -228,8 +225,6 @@ const instance = useTable(
     data: [...],
     columns: [...],
   },
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -258,175 +253,328 @@ The order and usage of plugin hooks must follow [The Laws of Hooks](TODO), just 
 
 React Table relies on memoization to determine when state and side effects should update or be calculated. This means that every option you pass to `useTable` should be memoized either via `React.useMemo` (for objects) or `React.useCallback` (for functions).
 
-# React Table Hooks API
+# API
 
 ## `useTable`
 
 - Required
 
-`useTable` is the root hook for React Table. To use it, call it with an options object, followed by any React Table compatible hooks you want to use.
+`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `rows` value, followed by any React Table compatible hooks you want to use.
 
-### Options
+### Table Options
 
-- `state: TableStateTuple[stateObject, stateUpdater]`
-  - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
-  - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
-  - Defaults to using an internal `useTableState()` instance if not defined.
-  - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
-- `debug: Bool`
-  - A flag to turn on debug mode.
-  - Defaults to `false`
-
-### Output
-
-- `instance` - The instance object for the React Table
-
-### Example
-
-```js
-const instance = useTable(
-  {
-    // Options
-  },
-  useColumns,
-  useRows,
-  useGroupBy,
-  useFilters,
-  useSortBy,
-  useExpanded,
-  usePagination
-)
-```
-
-## `useColumns`
-
-- Plugin Hook
-- Required
-
-`useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
-
-### Options
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `columns: Array<Column>`
   - Required
   - Must be **memoized**
   - The core columns configuration object for the entire table.
-
-### Output
-
-The following values are provided to the table `instance`:
-
-- `columns: Array<Column>`
-  - A flat array of all final column objects computed from the original columns configuration option.
-- `headerGroups: Array<Array<Column>>`
-  - An array of normalized header groups, each containing a flattened array of final column objects for that row.
-- `headers[] Array<Column>`
-  - An array of nested final column objects, similar in structure to the original columns configuration option.
-
-### Example
-
-```js
-const myColumns = React.useMemo(
-  () => [
-    {
-      Header: 'Name',
-      columns: [
-        {
-          Header: 'First Name',
-          accessor: 'firstName',
-        },
-        {
-          Header: 'Last Name',
-          accessor: 'lastName',
-        },
-      ],
-    },
-  ],
-  []
-)
-
-const { columns, headerGroups, headers } = useTable(
-  {
-    columns: myColumns,
-  },
-  useColumns
-)
-```
-
-## `useRows`
-
-- Plugin Hook
-- Required
-
-`useColumns` is the hook responsible for supporting columns in React Table. It's required for every React Table.
-
-### Options
-
+  - Supports nested `columns` arrays via the `column.children` key
 - `data: Array<any>`
   - Required
   - Must be **memoized**
   - The data array that you want to display on the table.
-- `subRowsKey: String`
-  - Required
-  - Defaults to `subRows`
-  - React Table will use this key when materializing the final row object. It also uses this key to infer sub-rows from the raw data.
-  - See [Grouping and Aggregation](#grouping-and-aggregation) for more information
+- `state: TableStateTuple[stateObject, stateUpdater]`
+  - Optional
+  - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
+  - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
+  - Defaults to using an internal `useTableState()` instance if not defined.
+  - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
+- `defaultColumn: Object`
+  - Optional
+  - Defaults to `{}`
+  - The default column object for every column passed to React Table.
+  - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
+  - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
+- `useColumns: Function`
+  - Optional
+  - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
+- `useRows: Function`
+  - Optional
+  - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
+- `debug: Bool`
+  - Optional
+  - A flag to turn on debug mode.
+  - Defaults to `false`
 
-### Output
+### `column` Options
 
-The following values are provided to the table `instance`:
+The following options are supported on any column object you can pass to `columns`.
 
+- `accessor: String | Function`
+  - **Required**
+  - This string/function is used to build the data model for your column.
+  - The data returned by an accessor should be **primitive** and sortable.
+  - If a string is passed, the column's value will be looked up on the original row via that key, eg. If your column's accessor is `firstName` then its value would be read from `row['firstName']`. You can also specify deeply nested values with accessors like `info.hobbies` or even `address[0].street`
+  - If a function is passed, the column's value will be looked up on the original row using this accessor function, eg. If your column's accessor is `row => row.firstName`, then its value would be determined by passing the row to this function and using the resulting value.
+- `id: String`
+  - **Required if `accessor` is a function**
+  - This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.
+  - If a **string** accessor is used, it defaults as the column ID, but can be overridden if necessary.
+- `columns: Array<Column>`
+  - Optional
+  - A nested array of columns.
+  - If defined, the column will act as a header group. Columns can be recursively nested as much as needed.
+- `show: Boolean | Function`
+  - Optional
+  - Defaults to `true`
+  - If set to `false`, the column will be hidden.
+  - If set to a `function`, it will be called with the current table instance and can then return `true` or `false`.
+  - The data model for hidden columns is still calculated including sorting, filters, and grouping.
+- `Header: String | Function | React.Component => JSX`
+  - Optional
+  - Defaults to `({ id }) => id`
+  - Receives the table instance and column model as props
+  - Must either be a **string or return valid JSX**
+  - If a function/component is passed, it will be used for formatting the header value, eg. You can use a `Header` function to dynamically format the header using any table or column state.
+- `Cell: Function | React.Component => JSX`
+  - Optional
+  - Defaults to `({ value }) => value`
+  - Receives the table instance and cell model as props
+  - Must return valid JSX
+  - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
+
+### `Instance` Properties
+
+The following properties are available on the table instance returned from `useTable`
+
+- `headerGroups: Array<HeaderGroup>`
+  - An array of normalized header groups, each containing a flattened array of final column objects for that row.
+  - See [Header Group Properties](#header-group-properties) for more information
+- `columns: Array<Column>`
+  - A **flat** array of all final column objects computed from the original columns configuration option.
+  - See [Column Properties](#column-properties) for more information
+- `headers[] Array<Column>`
+  - A **nested** array of final column objects, similar in structure to the original columns configuration option.
+  - See [Column Properties](#column-properties) for more information
 - `rows: Array<Row>`
-  - An array of rows **materialized** from the original `data` array and `columns` passed into the table options
+  - An array of **materialized row objects** from theriginal `dat oa` array and `columns` passed into the table options
+  - See [Row Properties](#row-properties) for more information
+- `getTableProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for your table wrapper.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `prepareRow: Function(Row)`
+  - **Required**
+  - This function is responsible for lazily preparing a row for rendering. Any row that you intend to render in your table needs to be passed to this function **before every render**.
+  - **Why?** Since table data could potentially be very large, it can become very expensive to compute all of the necessary state for every row to be rendered regardless if it actually is rendered or not (for example if you are paginating or virtualizing the rows, you may only have a few rows visible at any given moment). This function allows only the rows you intend to display to be computed and prepped with the correct state.
+
+### `HeaderGroup` Properties
+
+Header Groups are The following additional properties are available on every `headerGroup` object returned by the table instance.
+
+- `headers: Array<Column>`
+  - **Required**
+  - The columns in this header group.
+- `getHeaderGroupProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this header group's row.
+  - You can use the `getHeaderGroupProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `id: String`
+  - The resolved column ID from either the column's `accessor` or the column's hard-coded `id` property
+- `visible: Boolean`
+  - The resolved visible state for the column, derived from the column's `show` property
+- `render: Function(type: String | Function | Component, ?props)`
+  - This function is used to render content in context of a column.
+  - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` renderers. Other renderers like `Filter` are available via hooks like `useFilters`.
+  - If a function or component is passed instead of a string, it will be be passed the table instance and column model as props and is expected to return any valid JSX.
+- `getHeaderProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this column's header cell.
+  - You can use the `getHeaderProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `Row` Properties
+
+The following additional properties are available on every `row` object returned by the table instance.
+
+- `cells: Array<Cell>`
+  - An array of `Cell` objects containing properties and functions specific to the row and column it belongs to.
+  - See [Cell Properties](#cell-properties) for more information
+- `values: Object<columnID: any>`
+  - A map of this row's **resolved** values by columnID, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`
+- `getRowProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this row.
+  - You can use the `getRowProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+
+### `Cell` Properties
+
+The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
+
+- `column: Column`
+  - The corresponding column object for this cell
+- `row: Row`
+  - The corresponding row object for this cell
+- `value: any`
+  - The **resolved** value for this cell.
+  - By default, this value is displayed on the table via the default `Cell` renderer. To override the way a cell displays
+- `getCellProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this cell.
+  - You can use the `getCellProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `render: Function(type: String | Function | Component, ?props)`
+  - This function is used to render content in context of a cell.
+  - If `type` is a string, will render using the `column[type]` renderer. React Table ships with a default `Cell` renderer. Other renderers like `Aggregated` are available via hooks like `useFilters`.
+  - If a function or component is passed instead of a string, it will be be passed the table instance and cell model as props and is expected to return any valid JSX.
 
 ### Example
 
 ```js
-const myColumns = React.useMemo(
-  () => [
-    {
-      Header: 'Name',
-      columns: [
-        {
-          Header: 'First Name',
-          accessor: 'firstName',
-        },
-        {
-          Header: 'Last Name',
-          accessor: 'lastName',
-        },
-      ],
-    },
-  ],
-  []
-)
+function App() {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+    ],
+    []
+  )
 
-const data = [
-  {
-    firstName: 'Tanner',
-    lastName: 'Linsley',
-  },
-  {
-    firstName: 'Shawn',
-    lastName: 'Wang',
-  },
-  {
-    firstName: 'Kent C.',
-    lastName: 'Dodds',
-  },
-  {
-    firstName: 'Ryan',
-    lastName: 'Florence',
-  },
-]
+  const data = [
+    {
+      firstName: 'Tanner',
+      lastName: 'Linsley',
+    },
+    {
+      firstName: 'Shawn',
+      lastName: 'Wang',
+    },
+    {
+      firstName: 'Kent C.',
+      lastName: 'Dodds',
+    },
+    {
+      firstName: 'Ryan',
+      lastName: 'Florence',
+    },
+  ]
+
+  return <MyTable columns={columns} data={data} />
+}
+
+function MyTable({ columns, data }) {
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data,
+  })
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
+```
+
+## `useSortBy`
+
+- Plugin Hook
+- Optional
+
+`useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
+
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
+  - Must be **memoized**
+  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `manualSorting: Bool`
+  - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
+- `disableSorting: Bool`
+  - Disables sorting for every column in the entire table.
+- `disableMultiSort: Bool`
+  - Disables multi-sorting for the entire table.
+- `disableSortRemove: Bool`
+  - If true, the un-sorted state will not be available to columns once they have been sorted.
+- `disableMultiRemove: Bool`
+  - If true, the un-sorted state will not be available to multi-sorted columns.
+- `orderByFn: Function`
+  - Must be **memoizd**
+  - Defaults to the built-in [default orderBy function](TODO)
+  - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
+- `sortTypes: Object<sortKey: sortType>`
+  - Must be **memoized**
+  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
+  - For mor information on sort types, see [Sorting](TODO)
+
+### `Column` Options
+
+- `sortDescFirst: Bool`
+  - Optional
+  - Defaults to `false`
+  - If true, the first sort direction for this column will be descending instead of ascending
+- `sortInverted: Bool`
+  - Optional
+  - Defaults to `false`
+  - If true, the underlying sorting direction will be inverted, but the UI will not.
+  - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
+- `sortType: String | Function`
+  - If a **function** is passed, it must be **memoized**
+  - Defaults to [`alphanumeric`](TODO)
+  - The resolved function from the this string/function will be used to sort the this column's data.
+    - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used. If
+    - If a `function` is passed, it will be used.
+  - For mor information on sort types, see [Sorting](TODO)
+
+### Instance Variables
+
+The following values are provided to the table `instance`:
+
+- `rows: Array<Row>`
+  - An array of **sorted** rows.
+
+### Example
+
+```js
+const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
 
 const { rows } = useTable(
   {
-    columns: myColumns,
-    data,
+    // state[0].sortBy === [{ id: 'firstName', desc: true }]
+    state,
   },
-  useColumns,
-  useRows
+  useSortBy
 )
 ```
 
@@ -437,7 +585,9 @@ const { rows } = useTable(
 
 `useGroupBy` is the hook that implements **row grouping and aggregation**.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].groupBy: Array<String>`
   - Must be **memoized**
@@ -455,7 +605,7 @@ const { rows } = useTable(
   - Must be **memoized**
   - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
 
-### Output
+### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
@@ -478,8 +628,6 @@ const { rows } = useTable(
     disableGrouping: false,
     aggregations,
   },
-  useColumns,
-  useRows,
   useGroupBy
 )
 ```
@@ -491,7 +639,9 @@ const { rows } = useTable(
 
 `useFilters` is the hook that implements **row filtering**.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].filters: Object<columnID: filterValue>`
   - Must be **memoized**
@@ -513,12 +663,15 @@ const { rows } = useTable(
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
   - For mor information on filter types, see [Filtering](TODO)
 
-### Output
+### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
 - `rows: Array<Row>`
   - An array of **filtered** rows.
+- `preFilteredRows: Array<Row>`
+  - The array of rows **used right before filtering**.
+  - Among many other use-cases, these rows are directly useful for building option lists in filters, since the resulting filtered `rows` do not contain every possible option.
 - `setFilter: Function(columnID, filterValue) => void`
   - An instance-level function used to update the filter value for a specific column.
 - `setAllFilters: Function(filtersObject) => void`
@@ -551,81 +704,22 @@ const filterTypes = React.useMemo(() => ({
   }
 }), [matchSorter])
 
+// Override the default column filter to be our new `fuzzyText` filter type
+const defaultColumn = React.useMemo(() => ({
+  filter: 'fuzzyText'
+}))
+
 const { rows } = useTable(
   {
     // state[0].groupBy === ['firstName']
     state,
-    // Override the default filter to be our new `fuzzyText` filter type
-    defaultFilter: 'fuzzyText',
     manualFilters: false,
     disableFilters: false,
     // Pass our custom filter types
     filterTypes,
+    defaultColumn
   },
-  useColumns,
-  useRows,
   useFilters
-)
-```
-
-## `useSortBy`
-
-- Plugin Hook
-- Optional
-
-`useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
-
-### Options
-
-- `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
-  - Must be **memoized**
-  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
-- `defaultSortType: String | Function`
-  - If a **function** is passed, it must be **memoized**
-  - Defaults to [`alphanumeric`](TODO)
-  - The function (or resolved function from the string) will be used as the default/fallback sort method for every column that has sorting enabled.
-    - If a `string` is passed, the function with that name located on the `sortTypes` option object will be used.
-    - If a `function` is passed, it will be used.
-  - For mor information on sort types, see [Sorting](TODO)
-- `manualSorting: Bool`
-  - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableSorting: Bool`
-  - Disables sorting for every column in the entire table.
-- `disableMultiSort: Bool`
-  - Disables multi-sorting for the entire table.
-- `defaultSortDesc: Bool`
-  - If true, the first default direction for sorting will be descending. This may also be overridden at the column level.
-- `disableSortRemove: Bool`
-  - If true, the un-sorted state will not be available to columns once they have been sorted.
-- `orderByFn: Function`
-  - Must be **memoizd**
-  - Defaults to the built-in [default orderBy function](TODO)
-  - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
-- `sortTypes: Object<sortKey: sortType>`
-  - Must be **memoized**
-  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
-  - For mor information on sort types, see [Sorting](TODO)
-
-### Output
-
-The following values are provided to the table `instance`:
-
-- `rows: Array<Row>`
-  - An array of **sorted** rows.
-
-### Example
-
-```js
-const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
-
-const { rows } = useTable(
-  {
-    // state[0].sortBy === [{ id: 'firstName', desc: true }]
-    state,
-  },
-  useColumns,
-  useRows,
-  useSortBy
 )
 ```
 
@@ -636,7 +730,9 @@ const { rows } = useTable(
 
 `useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows, but is not limited to that use-case. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].expanded: Object<[pathIndex]: Boolean | ExpandedStateObject>`
   - Must be **memoized**
@@ -644,6 +740,11 @@ const { rows } = useTable(
   - A `pathIndex` can be set as the key and its value set to `true` to expand that row's subRows into view. For example, if `{ '3': true }` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
   - For nested expansion, you may **use another object** instead of a Boolean to expand sub rows. For example, if `{ '3': { '5' : true }}` was passed as the `expanded` state, then the **6th subRow of the 4th row and the 4th row of the original data array** would be expanded.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `subRowsKey: String`
+  - Required
+  - Defaults to `subRows`
+  - React Table will use this key when materializing the final row object. It also uses this key to infer sub-rows from the raw data.
+  - See [Grouping and Aggregation](#grouping-and-aggregation) for more information
 - `paginateSubRows: Bool`
   - Defaults to `true`
   - If set to `false`, expanded rows will not be paginated. Thus, any expanded subrows would potentially increase the size of any given page by the amount of total expanded subrows on the page.
@@ -651,7 +752,7 @@ const { rows } = useTable(
   - Defaults to `expanded`
   - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would be forcibly expanded, regardless of state.
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -668,8 +769,6 @@ const { rows } = useTable(
     // state[0].sortBy === { '3': true, '5': { '2': true } }
     state,
   },
-  useColumns,
-  useRows,
   useExpanded
 )
 ```
@@ -683,7 +782,9 @@ const { rows } = useTable(
 
 > **NOTE** Some server-side pagination implementations do not use page index and instead use **token based pagination**! If that's the case, please use the `useTokenPagination` plugin instead.
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].pageSize: Int`
   - **Required**
@@ -704,7 +805,7 @@ const { rows } = useTable(
   - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
   - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
 
-### Output
+### Instance Variables
 
 The following values are provided to the table `instance`:
 
@@ -749,8 +850,6 @@ const { rows } = useTable(
     // state[0] === { pageSize: 20, pageIndex: 1 }
     state,
   },
-  useColumns,
-  useRows,
   usePagination
 )
 ```
@@ -780,7 +879,9 @@ Some common use cases for this hook are:
 - Disallowing specific states via a custom state reducer
 - Enabling parent/unrelated components to manipulate the table state
 
-### Options
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
 
 - `initialState: Object`
   - Optional
@@ -801,7 +902,7 @@ Some common use cases for this hook are:
     - Defaults to `React.useState`
     - This function, if defined will be used as the state hook internally instead of the default `React.useState`. This can be useful for implementing custom state storage hooks like useLocalStorage, etc.
 
-### Output
+### Instance Variables
 
 - `tableStateTuple: [tableState, setTableState]`
   - Similar in structure to the result of `React.useState`
@@ -836,17 +937,143 @@ export default function MyTable({ manualPageIndex }) {
     console.log('Page Size Changed!', initialState.pageSize)
   }, [initialState.pageSize])
 
-  const { rows } = useTable(
+  const { rows } = useTable({
+    state,
+  })
+}
+```
+
+# Guides
+
+## Sorting
+
+### Client-Side Sorting
+
+- [Example]()
+
+Client-side sorting can be accomplished by using the `useSortBy` plugin hook. Start by importing the hook from `react-table`:
+
+```diff
+-import { useTable } from 'react-table'
++import { useTable, useSortBy } from 'react-table'
+```
+
+Next, add the `useSortBy` hook to your `useTable` hook and add the necessary UI pieces we need to make sorting work:
+
+```diff
+function MyTable() {
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
     {
-      state,
+      data,
+      columns,
     },
-    useColumns,
-    useRows
+-   useSortBy
++   useSortBy
+  )
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+-             <th {...column.getHeaderProps()}>
++             <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
++               <span>
++                 {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
++               </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
   )
 }
 ```
 
-<!-- # Guides
+### Server-Side Sorting
+
+Server-side sorting can be accomplished by using the `useSortBy` plugin hook in **controlled** mode along with the `useTableState` hook. Start by importing these hooks from `react-table`:
+
+```diff
+-import { useTable } from 'react-table'
++import { useTable, useSortBy, useTableState } from 'react-table'
+```
+
+Next, add the `useSortBy` and `useTableState` hooks to your `useTable` hook, configure the table state, then add the necessary UI pieces we need to make sorting work:
+
+```diff
+function MyTable(data, columns, fetchData) {
+
++ const state = useTableState()
++ const [{ sortBy }] = state
+
++ React.useEffect(() => {
++   // When sorting changes, trigger your parent component
++   // or hook to fetch new data with the table state
++   fetchData(state[0])
++ }, [sortBy])
+
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      data,
+      columns,
++     state,
++     manualSorting: true
+    },
+-   useSortBy
++   useSortBy
+  )
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+-             <th {...column.getHeaderProps()}>
++             <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
++               <span>
++                 {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
++               </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
+```
+
+<!--
 
 ## Client Side Pagination
 
@@ -859,8 +1086,6 @@ import React from 'react'
 // Import React Table
 import {
   useTable,
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -873,8 +1098,6 @@ function MyTable(props) {
   // Use the useTable hook to create your table configuration
   const instance = useTable(
     props,
-    useColumns,
-    useRows,
     useGroupBy,
     useFilters,
     useSortBy,
@@ -965,8 +1188,6 @@ import React from 'react'
 // Import React Table
 import {
   useTable,
-  useColumns,
-  useRows,
   useGroupBy,
   useFilters,
   useSortBy,
@@ -979,8 +1200,6 @@ export default function MyTable(props) {
   // Use the useTable hook to create your table configuration
   const instance = useTable(
     props,
-    useColumns,
-    useRows,
     useGroupBy,
     useFilters,
     useSortBy,
@@ -1119,14 +1338,11 @@ If you would like to help develop a suggested feature follow these steps:
 
 - Fork this repo
 - Install dependencies with `$ yarn`
-- Auto-build files as you edit with `$ yarn run watch`
-- Implement your changes to files in the `src/` directory
-- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`
+- Link `react-table` locally with `$ yarn link`
+- Auto-build files as you edit with `$ yarn start`
+- Implement your changes and tests to files in the `src/` directory
+- In any example directory, link to the local `react-table` with `$ yarn link react-table`
+- Follow example directions for running. Usually just `$ yarn && yarn start`
+- Document your changes in the root `README.md`
+- To stage a commit, run `yarn commit`
 - Submit PR for review
-
-#### Package Utilities
-
-- `$ yarn run watch` Watches files and builds via babel
-- `$ yarn run docs` Runs the storybook server
-- `$ yarn run test` Runs the test suite

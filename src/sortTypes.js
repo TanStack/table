@@ -3,7 +3,7 @@ const reSplitAlphaNumeric = /([0-9]+)/gm
 // Mixed sorting is slow, but very inclusive of many edge cases.
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
-export const alphaNumeric = (a, b) => {
+export const alphanumeric = (a, b) => {
   // Force to strings (or "" for unsupported types)
   a = toString(a)
   b = toString(b)

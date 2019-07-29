@@ -3,14 +3,11 @@ import PropTypes from 'prop-types'
 
 import { getBy, getFirstDefined, setBy } from '../utils'
 import { addActions, actions } from '../actions'
-import { defaultState } from './useTableState'
+import { defaultState } from '../hooks/useTableState'
 
 defaultState.expanded = {}
 
-addActions({
-  toggleExpanded: '__toggleExpanded__',
-  useExpanded: '__useExpanded__',
-})
+addActions('toggleExpanded', 'useExpanded')
 
 const propTypes = {
   manualExpandedKey: PropTypes.string,
