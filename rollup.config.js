@@ -12,17 +12,17 @@ export default [
     output: {
       file: pkg.main,
       format: 'cjs',
-      sourcemap: true
+      sourcemap: true,
     },
     plugins: [
       external(),
       babel({
-        exclude: 'node_modules/**'
+        exclude: 'node_modules/**',
       }),
       resolve(),
       commonjs(),
-      uglify()
-    ]
+      uglify(),
+    ],
   },
   {
     input: 'src/index.js',
@@ -30,12 +30,12 @@ export default [
     output: {
       file: pkg.module,
       format: 'es',
-      sourcemap: true
+      sourcemap: true,
     },
     plugins: [
       babel({
-        exclude: ['/**/node_modules/**']
-      })
-    ]
-  }
+        exclude: ['/**/node_modules/**'],
+      }),
+    ],
+  },
 ]

@@ -1086,9 +1086,12 @@ export default function MyTable({ manualPageIndex }) {
   const state = useTableState(initialState, overrides)
 
   // You can use effects to observe changes to the state
-  React.useEffect(() => {
-    console.log('Page Size Changed!', initialState.pageSize)
-  }, [initialState.pageSize])
+  React.useEffect(
+    () => {
+      console.log('Page Size Changed!', initialState.pageSize)
+    },
+    [initialState.pageSize]
+  )
 
   const { rows } = useTable({
     state,
