@@ -340,7 +340,7 @@ The following properties are available on the table instance returned from `useT
 
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.
-  - See [Header Group Properties](#header-group-properties) for more information
+  - See [Header Group Properties](#headergroup-properties) for more information
 - `columns: Array<Column>`
   - A **flat** array of all final column objects computed from the original columns configuration option.
   - See [Column Properties](#column-properties) for more information
@@ -348,7 +348,7 @@ The following properties are available on the table instance returned from `useT
   - A **nested** array of final column objects, similar in structure to the original columns configuration option.
   - See [Column Properties](#column-properties) for more information
 - `rows: Array<Row>`
-  - An array of **materialized row objects** from theriginal `dat oa` array and `columns` passed into the table options
+  - An array of **materialized row objects** from the original `data` array and `columns` passed into the table options
   - See [Row Properties](#row-properties) for more information
 - `getTableProps: Function(?props)`
   - **Required**
