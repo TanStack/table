@@ -12,7 +12,6 @@ import {
 } from '../utils'
 
 import { useTableState } from './useTableState'
-import { useRows } from './useRows'
 
 const propTypes = {
   // General
@@ -39,7 +38,6 @@ export const useTable = (props, ...plugins) => {
   let {
     data,
     state: userState,
-    useRows: userUseRows = useRows,
     columns: userColumns,
     defaultColumn = {},
     subRowsKey = 'subRows',
@@ -80,9 +78,7 @@ export const useTable = (props, ...plugins) => {
 
   if (debug) console.time('hooks')
   // Loop through plugins to build the api out
-  api = [userUseRows, ...plugins]
-    .filter(Boolean)
-    .reduce((prev, next) => next(prev), api)
+  api = plugins.filter(Boolean).reduce((prev, next) => next(prev), api)
   if (debug) console.timeEnd('hooks')
 
   // Compute columns, headerGroups and headers

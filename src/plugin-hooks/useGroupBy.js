@@ -1,3 +1,4 @@
+import React from 'react'
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
@@ -48,10 +49,14 @@ export const useGroupBy = props => {
   // Sort grouped columns to the start of the column list
   // before the headers are built
   hooks.columnsBeforeHeaderGroups.push(columns => {
-    return [
-      ...groupBy.map(g => columns.find(col => col.id === g)),
-      ...columns.filter(col => !groupBy.includes(col.id)),
-    ]
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return React.useMemo(
+      () => [
+        ...groupBy.map(g => columns.find(col => col.id === g)),
+        ...columns.filter(col => !groupBy.includes(col.id)),
+      ],
+      [columns]
+    )
   })
 
   columns.forEach(column => {
