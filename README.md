@@ -166,8 +166,8 @@ import {
 # Examples
 
 - [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
-- [Sorting with `useSortBy`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-with-useSortBy)
-- [Filtering with `useFilters`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-with-useFilters)
+- [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
+- [Filtering - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
 
 # Concepts
 
@@ -286,9 +286,6 @@ The following options are supported via the main options object passed to `useTa
   - The default column object for every column passed to React Table.
   - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
   - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
-- `useColumns: Function`
-  - Optional
-  - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
 - `useRows: Function`
   - Optional
   - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
@@ -340,7 +337,7 @@ The following properties are available on the table instance returned from `useT
 
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.
-  - See [Header Group Properties](#header-group-properties) for more information
+  - See [Header Group Properties](#headergroup-properties) for more information
 - `columns: Array<Column>`
   - A **flat** array of all final column objects computed from the original columns configuration option.
   - See [Column Properties](#column-properties) for more information
@@ -348,7 +345,7 @@ The following properties are available on the table instance returned from `useT
   - A **nested** array of final column objects, similar in structure to the original columns configuration option.
   - See [Column Properties](#column-properties) for more information
 - `rows: Array<Row>`
-  - An array of **materialized row objects** from theriginal `dat oa` array and `columns` passed into the table options
+  - An array of **materialized row objects** from the original `data` array and `columns` passed into the table options
   - See [Row Properties](#row-properties) for more information
 - `getTableProps: Function(?props)`
   - **Required**
@@ -361,7 +358,7 @@ The following properties are available on the table instance returned from `useT
 
 ### `HeaderGroup` Properties
 
-Header Groups are The following additional properties are available on every `headerGroup` object returned by the table instance.
+The following additional properties are available on every `headerGroup` object returned by the table instance.
 
 - `headers: Array<Column>`
   - **Required**
@@ -481,7 +478,7 @@ function MyTable({ columns, data }) {
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getRowProps()}>
+          <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th {...column.getHeaderProps()}>{column.render('Header')}</th>
             ))}
@@ -505,58 +502,158 @@ function MyTable({ columns, data }) {
 }
 ```
 
-## `useGroupBy`
+## `useSortBy`
 
 - Plugin Hook
 - Optional
 
-`useGroupBy` is the hook that implements **row grouping and aggregation**.
+`useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
+
+- Multi-sort is enabled by default
+- To sort the table via UI, attach the props generated from each column's `getSortByToggleProps()`, then click any of those elements.
+- To multi-sort the table via UI, hold `shift` while clicking on any of those same elements that have the props from `getSortByToggleProps()` attached.
+- To programmatically sort (or multi-sort) any column, use the `toggleSortBy` method located on the instance or each individual column.
 
 ### Table Options
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].groupBy: Array<String>`
+- `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
   - Must be **memoized**
-  - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
-- `groupByFn: Function`
+  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `manualSorting: Bool`
+  - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
+- `disableSorting: Bool`
+  - Disables sorting for every column in the entire table.
+- `disableMultiSort: Bool`
+  - Disables multi-sorting for the entire table.
+- `disableSortRemove: Bool`
+  - If true, the un-sorted state will not be available to columns once they have been sorted.
+- `disableMultiRemove: Bool`
+  - If true, the un-sorted state will not be available to multi-sorted columns.
+- `orderByFn: Function`
+  - Must be **memoizd**
+  - Defaults to the built-in [default orderBy function](TODO)
+  - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
+- `sortTypes: Object<sortKey: sortType>`
   - Must be **memoized**
-  - Defaults to [`defaultGroupByFn`](TODO)
-  - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
-- `manualGroupBy: Bool`
-  - Enables groupBy detection and functionality, but does not automatically perform row grouping.
-  - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableGrouping: Bool`
-  - Disables groupBy for the entire table.
-- `aggregations: Object<aggregationKey: aggregationFn>`
-  - Must be **memoized**
-  - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
+  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
+  - For mor information on sort types, see [Sorting](TODO)
+
+### `Column` Options
+
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `disableSorting: Bool`
+  - Optional
+  - Defualts to `false`
+  - If set to `true`, the sorting for this column will be disabled
+- `sortDescFirst: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, the first sort direction for this column will be descending instead of ascending
+- `sortInverted: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, the underlying sorting direction will be inverted, but the UI will not.
+  - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
+- `sortType: String | Function`
+  - If a **function** is passed, it must be **memoized**
+  - Defaults to [`alphanumeric`](TODO)
+  - The resolved function from the this string/function will be used to sort the this column's data.
+    - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used. If
+    - If a `function` is passed, it will be used.
+  - For mor information on sort types, see [Sorting](TODO)
 
 ### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
 - `rows: Array<Row>`
-  - An array of **grouped and aggregated** rows.
+  - An array of **sorted** rows.
+- `preSortedRows: Array<Row>`
+  - The array of rows that were originally sorted.
+- `toggleSortBy: Function(ColumnID: String, descending: Bool, isMulti: Bool) => void`
+  - This function can be used to programmatically toggle the sorting for any specific column
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canSortBy: Bool`
+  - Denotes whether a column is sortable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
+- `toggleSortBy: Function(descending, multi) => void`
+  - This function can be used to programmatically toggle the sorting for this column.
+  - This function is similar to the `instance`-level `toggleSortBy`, however, passing a columnID is not required since it is located on a `Column` object already.
+- `getSortByToggleProps: Function(props) => props`
+  - **Required**
+  - This function is used to resolve any props needed for this column's UI that is responsible for toggling the sort direction when the user clicks it.
+  - You can use the `getSortByToggleProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
+- `sorted: Boolean`
+  - Denotes whether this column is currently being sorted
+- `sortedIndex: Int`
+  - If the column is currently sorted, this integer will be the index in the `sortBy` array from state that corresponds to this column.
+  - If this column is not sorted, the index will always be `-1`
+- `sortedDesc: Bool`
+  - If the column is currently sorted, this denotes whether the column's sort direction is descending or not.
+  - If `true`, the column is sorted `descending`
+  - If `false`, the column is sorted `ascending`
+  - If `undefined`, the column is not currently being sorted.
 
 ### Example
 
 ```js
-const state = useTableState({ groupBy: ['firstName'] })
+function Table({ columns, data }) {
+  // Set some default sorting state
+  const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
 
-const aggregations = React.useMemo(() => ({
-  customSum: (values, rows) => values.reduce((sum, next) => sum + next, 0),
-}))
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy // Use the sortBy hook
+  )
 
-const { rows } = useTable(
-  {
-    state, // state[0].groupBy === ['firstName']
-    manualGroupBy: false,
-    disableGrouping: false,
-    aggregations,
-  },
-  useGroupBy
-)
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              // Add the sorting props to control sorting. For this example
+              // we can add them into the header props
+              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
+                <span>
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
+                  </span>
+                  {/* Add a sort index indicator */}
+                  <span>({column.sorted ? column.sortedIndex + 1 : ''})</span>
+                </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
 ```
 
 ## `useFilters`
@@ -590,6 +687,27 @@ The following options are supported via the main options object passed to `useTa
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
   - For mor information on filter types, see [Filtering](TODO)
 
+### `Column` Options
+
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `Filter: Function | React.Component => JSX`
+  - **Required**
+  - Receives the table instance and column model as props
+  - Must return valid JSX
+  - This function (or component) is used to render this column's filter UI, eg.
+- `disableFilters: Bool`
+  - Optional
+  - If set to `true`, will disable filtering for this column
+- `filter: String | Function`
+  - Optional
+  - Defaults to [`text`](TODO)
+  - The resolved function from the this string/function will be used to filter the this column's data.
+    - If a `string` is passed, the function with that name located on either the custom `filterTypes` option or the built-in filtering types object will be used. If
+    - If a `function` is passed, it will be used directly.
+  - For mor information on filter types, see [Filtering](TODO)
+  - If a **function** is passed, it must be **memoized**
+
 ### `Instance` Properties
 
 The following values are provided to the table `instance`:
@@ -603,6 +721,20 @@ The following values are provided to the table `instance`:
   - An instance-level function used to update the filter value for a specific column.
 - `setAllFilters: Function(filtersObject) => void`
   - An instance-level function used to update the values for **all** filters on the table, all at once.
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canFilter: Bool`
+  - Denotes whether a column is filterable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
+- `setFilter: Function(filterValue) => void`
+  - An column-level function used to update the filter value for this column
+- `filterValue: any`
+  - The current filter value for this column, resolved from the table state's `filters` object
+- `preFilteredRows: Array<row>`
+  - The array of rows that were originally passed to this columns filter **before** they were filtered.
+  - This array of rows can be useful if building faceted filter options.
 
 ### Example
 
@@ -650,66 +782,97 @@ const { rows } = useTable(
 )
 ```
 
-## `useSortBy`
+## `useGroupBy`
 
 - Plugin Hook
 - Optional
 
-`useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
+`useGroupBy` is the hook that implements **row grouping and aggregation**.
+
+- Each column's `getGroupByToggleProps()` function can be used to generate the props needed to make a clickable UI element that will toggle the grouping on or off for a specific column.
+- Instance and column-level `toggleGroupBy` functions are also made available for programmatic grouping.
 
 ### Table Options
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
+- `state[0].groupBy: Array<String>`
   - Must be **memoized**
-  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
-- `defaultSortType: String | Function`
-  - If a **function** is passed, it must be **memoized**
-  - Defaults to [`alphanumeric`](TODO)
-  - The function (or resolved function from the string) will be used as the default/fallback sort method for every column that has sorting enabled.
-    - If a `string` is passed, the function with that name located on the `sortTypes` option object will be used.
-    - If a `function` is passed, it will be used.
-  - For mor information on sort types, see [Sorting](TODO)
-- `manualSorting: Bool`
-  - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableSorting: Bool`
-  - Disables sorting for every column in the entire table.
-- `disableMultiSort: Bool`
-  - Disables multi-sorting for the entire table.
-- `defaultSortDesc: Bool`
-  - If true, the first default direction for sorting will be descending. This may also be overridden at the column level.
-- `disableSortRemove: Bool`
-  - If true, the un-sorted state will not be available to columns once they have been sorted.
-- `disableMultiRemove: Bool`
-  - If true, the un-sorted state will not be available to multi-sorted columns.
-- `orderByFn: Function`
-  - Must be **memoizd**
-  - Defaults to the built-in [default orderBy function](TODO)
-  - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
-- `sortTypes: Object<sortKey: sortType>`
+  - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
+- `groupByFn: Function`
   - Must be **memoized**
-  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
-  - For mor information on sort types, see [Sorting](TODO)
+  - Defaults to [`defaultGroupByFn`](TODO)
+  - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
+- `manualGroupBy: Bool`
+  - Enables groupBy detection and functionality, but does not automatically perform row grouping.
+  - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
+- `disableGrouping: Bool`
+  - Disables groupBy for the entire table.
+- `aggregations: Object<aggregationKey: aggregationFn>`
+  - Must be **memoized**
+  - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
 
-### Instance Variables
+### `Column` Options
+
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `Aggregated: Function | React.Component => JSX`
+  - Optional
+  - Defaults to this column's `Cell` formatter
+  - Receives the table instance and cell model as props
+  - Must return valid JSX
+  - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
+- `disableGrouping: Boolean`
+  - Defaults to `true`
+  - If `true`, this column is able to be grouped.
+
+### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
 - `rows: Array<Row>`
-  - An array of **sorted** rows.
+  - An array of **grouped and aggregated** rows.
+- `preGroupedRows: Array<Row>`
+  - The array of rows originally used to create the grouped rows.
+- `toggleGroupBy: Function(columnID: String, ?set: Bool) => void`
+  - This function can be used to programmatically set or toggle the groupBy state for a specific column.
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canGroupBy: Boolean`
+  - If `true`, this column is able to be grouped.
+  - This is resolved from the column having a valid accessor / data model, and not being manually disabled via other `useGroupBy` related options
+- `grouped: Boolean`
+  - If `true`, this column is currently being grouped
+- `groupedIndex: Int`
+  - If this column is currently being grouped, this integer is the index of this column's ID in the table state's `groupBy` array.
+- `toggleGroupBy: Function(?set: Bool) => void`
+  - This function can be used to programmatically set or toggle the groupBy state fo this column.
+- `getGroupByToggleProps: Function(props) => props`
+  - **Required**
+  - This function is used to resolve any props needed for this column's UI that is responsible for toggling grouping when the user clicks it.
+  - You can use the `getGroupByToggleProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
 
 ### Example
 
 ```js
-const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
+const state = useTableState({ groupBy: ['firstName'] })
+
+const aggregations = React.useMemo(() => ({
+  customSum: (values, rows) => values.reduce((sum, next) => sum + next, 0),
+}))
 
 const { rows } = useTable(
   {
-    // state[0].sortBy === [{ id: 'firstName', desc: true }]
-    state,
+    state, // state[0].groupBy === ['firstName']
+    manualGroupBy: false,
+    disableGrouping: false,
+    aggregations,
   },
-  useSortBy
+  useGroupBy
 )
 ```
 
@@ -923,9 +1086,12 @@ export default function MyTable({ manualPageIndex }) {
   const state = useTableState(initialState, overrides)
 
   // You can use effects to observe changes to the state
-  React.useEffect(() => {
-    console.log('Page Size Changed!', initialState.pageSize)
-  }, [initialState.pageSize])
+  React.useEffect(
+    () => {
+      console.log('Page Size Changed!', initialState.pageSize)
+    },
+    [initialState.pageSize]
+  )
 
   const { rows } = useTable({
     state,
@@ -933,7 +1099,137 @@ export default function MyTable({ manualPageIndex }) {
 }
 ```
 
-<!-- # Guides
+# Guides
+
+## Sorting
+
+### Client-Side Sorting
+
+- [Example]()
+
+Client-side sorting can be accomplished by using the `useSortBy` plugin hook. Start by importing the hook from `react-table`:
+
+```diff
+-import { useTable } from 'react-table'
++import { useTable, useSortBy } from 'react-table'
+```
+
+Next, add the `useSortBy` hook to your `useTable` hook and add the necessary UI pieces we need to make sorting work:
+
+```diff
+function MyTable() {
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      data,
+      columns,
+    },
+-   useSortBy
++   useSortBy
+  )
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+-             <th {...column.getHeaderProps()}>
++             <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
++               <span>
++                 {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
++               </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
+```
+
+### Server-Side Sorting
+
+Server-side sorting can be accomplished by using the `useSortBy` plugin hook in **controlled** mode along with the `useTableState` hook. Start by importing these hooks from `react-table`:
+
+```diff
+-import { useTable } from 'react-table'
++import { useTable, useSortBy, useTableState } from 'react-table'
+```
+
+Next, add the `useSortBy` and `useTableState` hooks to your `useTable` hook, configure the table state, then add the necessary UI pieces we need to make sorting work:
+
+```diff
+function MyTable(data, columns, fetchData) {
+
++ const state = useTableState()
++ const [{ sortBy }] = state
+
++ React.useEffect(() => {
++   // When sorting changes, trigger your parent component
++   // or hook to fetch new data with the table state
++   fetchData(state[0])
++ }, [sortBy])
+
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      data,
+      columns,
++     state,
++     manualSorting: true
+    },
+-   useSortBy
++   useSortBy
+  )
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+-             <th {...column.getHeaderProps()}>
++             <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
++               <span>
++                 {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
++               </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
+```
+
+<!--
 
 ## Client Side Pagination
 

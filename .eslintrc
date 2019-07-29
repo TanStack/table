@@ -1,22 +1,3 @@
 {
-    "parser": "babel-eslint",
-    "extends": ["react-app", "prettier"],
-    "plugins": [
-      "react-hooks"
-    ],
-    "env": {
-        "es6": true
-    },
-    "parserOptions": {
-        "sourceType": "module"
-    },
-    "rules": {
-        "space-before-function-paren": 0,
-        "react/jsx-boolean-value": 0
-    },
-    "settings": {
-        "react": {
-            "version": "latest"
-        }
-    }
+  "extends": ["react-app", "prettier"]
 }
