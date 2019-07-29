@@ -7,5 +7,12 @@
       }
     ],
     "@babel/react"
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        "@babel/preset-env"
+      ]
+    }
+  }
 }
