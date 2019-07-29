@@ -49,6 +49,8 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.5.5",
     "@svgr/rollup": "^4.3.2",
+    "@testing-library/dom": "^5.6.0",
+    "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^8.0.7",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.x",

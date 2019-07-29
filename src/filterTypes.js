@@ -63,6 +63,7 @@ exact.autoRemove = val => typeof val === 'undefined'
 export const equals = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id]
+    // eslint-disable-next-line eqeqeq
     return rowValue == filterValue
   })
 }

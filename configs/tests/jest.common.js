@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   moduleDirectories: [
@@ -11,7 +11,9 @@ module.exports = {
     __dirname,
   ],
 
-  rootDir: path.resolve(__dirname, '../..'),
+  rootDir: path.resolve(__dirname, '../../'),
 
   roots: ['<rootDir>/src', __dirname],
-};
+
+  transformIgnorePatterns: ['node_modules'],
+}

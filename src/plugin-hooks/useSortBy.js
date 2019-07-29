@@ -89,7 +89,7 @@ export const useSortBy = props => {
 
       // Find any existing sortBy for this column
       const existingSortBy = sortBy.find(d => d.id === columnID)
-      const existingIndex = sortBy.findIndex(d => d.id == columnID)
+      const existingIndex = sortBy.findIndex(d => d.id === columnID)
       const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
       let newSortBy = []

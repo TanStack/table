@@ -1,4 +1,4 @@
-const commonConfig = require('./jest.common');
+const commonConfig = require('./jest.common')
 
 module.exports = {
   ...commonConfig,
@@ -7,9 +7,9 @@ module.exports = {
 
   coverageDirectory: '../../coverage',
 
-  testMatch: ['<rootDir>/tests/**/*.js'],
+  testMatch: ['<rootDir>/src/**/tests/**/*.js'],
 
   transform: {
-    // '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
+    '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
   },
-};
+}
