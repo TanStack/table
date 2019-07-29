@@ -22,6 +22,7 @@ const propTypes = {
     PropTypes.shape({
       sortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
       sortDescFirst: PropTypes.bool,
+      disableSorting: PropTypes.bool,
     })
   ),
   orderByFn: PropTypes.func,
@@ -67,10 +68,10 @@ export const useSortBy = props => {
   }
 
   columns.forEach(column => {
-    const { accessor, canSortBy } = column
+    const { accessor, disableSorting: columnDisableSorting } = column
     column.canSortBy = accessor
       ? getFirstDefined(
-          canSortBy,
+          columnDisableSorting,
           disableSorting === true ? false : undefined,
           true
         )
@@ -78,7 +79,7 @@ export const useSortBy = props => {
   })
 
   // Updates sorting based on a columnID, desc flag and multi flag
-  const toggleSortByID = (columnID, desc, multi) => {
+  const toggleSortBy = (columnID, desc, multi) => {
     return setState(old => {
       const { sortBy } = old
 
@@ -167,7 +168,7 @@ export const useSortBy = props => {
     columns.forEach(column => {
       if (column.canSortBy) {
         column.toggleSortBy = (desc, multi) =>
-          toggleSortByID(column.id, desc, multi)
+          toggleSortBy(column.id, desc, multi)
       }
     })
     return columns
@@ -279,6 +280,8 @@ export const useSortBy = props => {
 
   return {
     ...props,
+    toggleSortBy,
     rows: sortedRows,
+    preSortedRows: rows,
   }
 }

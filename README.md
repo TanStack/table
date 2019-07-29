@@ -167,7 +167,7 @@ import {
 
 - [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
 - [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
-- [Filtering - Client Side`](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
+- [Filtering - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
 
 # Concepts
 
@@ -286,9 +286,6 @@ The following options are supported via the main options object passed to `useTa
   - The default column object for every column passed to React Table.
   - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
   - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
-- `useColumns: Function`
-  - Optional
-  - This hook overrides the internal `useColumns` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
 - `useRows: Function`
   - Optional
   - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
@@ -512,6 +509,11 @@ function MyTable({ columns, data }) {
 
 `useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
 
+- Multi-sort is enabled by default
+- To sort the table via UI, attach the props generated from each column's `getSortByToggleProps()`, then click any of those elements.
+- To multi-sort the table via UI, hold `shift` while clicking on any of those same elements that have the props from `getSortByToggleProps()` attached.
+- To programmatically sort (or multi-sort) any column, use the `toggleSortBy` method located on the instance or each individual column.
+
 ### Table Options
 
 The following options are supported via the main options object passed to `useTable(options)`
@@ -540,14 +542,20 @@ The following options are supported via the main options object passed to `useTa
 
 ### `Column` Options
 
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `disableSorting: Bool`
+  - Optional
+  - Defualts to `false`
+  - If set to `true`, the sorting for this column will be disabled
 - `sortDescFirst: Bool`
   - Optional
   - Defaults to `false`
-  - If true, the first sort direction for this column will be descending instead of ascending
+  - If set to `true`, the first sort direction for this column will be descending instead of ascending
 - `sortInverted: Bool`
   - Optional
   - Defaults to `false`
-  - If true, the underlying sorting direction will be inverted, but the UI will not.
+  - If set to `true`, the underlying sorting direction will be inverted, but the UI will not.
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
 - `sortType: String | Function`
   - If a **function** is passed, it must be **memoized**
@@ -557,79 +565,95 @@ The following options are supported via the main options object passed to `useTa
     - If a `function` is passed, it will be used.
   - For mor information on sort types, see [Sorting](TODO)
 
-### Instance Variables
-
-The following values are provided to the table `instance`:
-
-- `rows: Array<Row>`
-  - An array of **sorted** rows.
-
-### Example
-
-```js
-const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
-
-const { rows } = useTable(
-  {
-    // state[0].sortBy === [{ id: 'firstName', desc: true }]
-    state,
-  },
-  useSortBy
-)
-```
-
-## `useGroupBy`
-
-- Plugin Hook
-- Optional
-
-`useGroupBy` is the hook that implements **row grouping and aggregation**.
-
-### Table Options
-
-The following options are supported via the main options object passed to `useTable(options)`
-
-- `state[0].groupBy: Array<String>`
-  - Must be **memoized**
-  - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
-- `groupByFn: Function`
-  - Must be **memoized**
-  - Defaults to [`defaultGroupByFn`](TODO)
-  - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
-- `manualGroupBy: Bool`
-  - Enables groupBy detection and functionality, but does not automatically perform row grouping.
-  - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableGrouping: Bool`
-  - Disables groupBy for the entire table.
-- `aggregations: Object<aggregationKey: aggregationFn>`
-  - Must be **memoized**
-  - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
-
 ### `Instance` Properties
 
 The following values are provided to the table `instance`:
 
 - `rows: Array<Row>`
-  - An array of **grouped and aggregated** rows.
+  - An array of **sorted** rows.
+- `preSortedRows: Array<Row>`
+  - The array of rows that were originally sorted.
+- `toggleSortBy: Function(ColumnID: String, descending: Bool, isMulti: Bool) => void`
+  - This function can be used to programmatically toggle the sorting for any specific column
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canSortBy: Bool`
+  - Denotes whether a column is sortable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
+- `toggleSortBy: Function(descending, multi) => void`
+  - This function can be used to programmatically toggle the sorting for this column.
+  - This function is similar to the `instance`-level `toggleSortBy`, however, passing a columnID is not required since it is located on a `Column` object already.
+- `getSortByToggleProps: Function(props) => props`
+  - **Required**
+  - This function is used to resolve any props needed for this column's UI that is responsible for toggling the sort direction when the user clicks it.
+  - You can use the `getSortByToggleProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
+- `sorted: Boolean`
+  - Denotes whether this column is currently being sorted
+- `sortedIndex: Int`
+  - If the column is currently sorted, this integer will be the index in the `sortBy` array from state that corresponds to this column.
+  - If this column is not sorted, the index will always be `-1`
+- `sortedDesc: Bool`
+  - If the column is currently sorted, this denotes whether the column's sort direction is descending or not.
+  - If `true`, the column is sorted `descending`
+  - If `false`, the column is sorted `ascending`
+  - If `undefined`, the column is not currently being sorted.
 
 ### Example
 
 ```js
-const state = useTableState({ groupBy: ['firstName'] })
+function Table({ columns, data }) {
+  // Set some default sorting state
+  const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
 
-const aggregations = React.useMemo(() => ({
-  customSum: (values, rows) => values.reduce((sum, next) => sum + next, 0),
-}))
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy // Use the sortBy hook
+  )
 
-const { rows } = useTable(
-  {
-    state, // state[0].groupBy === ['firstName']
-    manualGroupBy: false,
-    disableGrouping: false,
-    aggregations,
-  },
-  useGroupBy
-)
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              // Add the sorting props to control sorting. For this example
+              // we can add them into the header props
+              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
+                <span>
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
+                  </span>
+                  {/* Add a sort index indicator */}
+                  <span>({column.sorted ? column.sortedIndex + 1 : ''})</span>
+                </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
 ```
 
 ## `useFilters`
@@ -663,6 +687,27 @@ The following options are supported via the main options object passed to `useTa
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
   - For mor information on filter types, see [Filtering](TODO)
 
+### `Column` Options
+
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `Filter: Function | React.Component => JSX`
+  - **Required**
+  - Receives the table instance and column model as props
+  - Must return valid JSX
+  - This function (or component) is used to render this column's filter UI, eg.
+- `disableFilters: Bool`
+  - Optional
+  - If set to `true`, will disable filtering for this column
+- `filter: String | Function`
+  - Optional
+  - Defaults to [`text`](TODO)
+  - The resolved function from the this string/function will be used to filter the this column's data.
+    - If a `string` is passed, the function with that name located on either the custom `filterTypes` option or the built-in filtering types object will be used. If
+    - If a `function` is passed, it will be used directly.
+  - For mor information on filter types, see [Filtering](TODO)
+  - If a **function** is passed, it must be **memoized**
+
 ### `Instance` Properties
 
 The following values are provided to the table `instance`:
@@ -676,6 +721,20 @@ The following values are provided to the table `instance`:
   - An instance-level function used to update the filter value for a specific column.
 - `setAllFilters: Function(filtersObject) => void`
   - An instance-level function used to update the values for **all** filters on the table, all at once.
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canFilter: Bool`
+  - Denotes whether a column is filterable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
+- `setFilter: Function(filterValue) => void`
+  - An column-level function used to update the filter value for this column
+- `filterValue: any`
+  - The current filter value for this column, resolved from the table state's `filters` object
+- `preFilteredRows: Array<row>`
+  - The array of rows that were originally passed to this columns filter **before** they were filtered.
+  - This array of rows can be useful if building faceted filter options.
 
 ### Example
 
@@ -720,6 +779,100 @@ const { rows } = useTable(
     defaultColumn
   },
   useFilters
+)
+```
+
+## `useGroupBy`
+
+- Plugin Hook
+- Optional
+
+`useGroupBy` is the hook that implements **row grouping and aggregation**.
+
+- Each column's `getGroupByToggleProps()` function can be used to generate the props needed to make a clickable UI element that will toggle the grouping on or off for a specific column.
+- Instance and column-level `toggleGroupBy` functions are also made available for programmatic grouping.
+
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `state[0].groupBy: Array<String>`
+  - Must be **memoized**
+  - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
+- `groupByFn: Function`
+  - Must be **memoized**
+  - Defaults to [`defaultGroupByFn`](TODO)
+  - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
+- `manualGroupBy: Bool`
+  - Enables groupBy detection and functionality, but does not automatically perform row grouping.
+  - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
+- `disableGrouping: Bool`
+  - Disables groupBy for the entire table.
+- `aggregations: Object<aggregationKey: aggregationFn>`
+  - Must be **memoized**
+  - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
+
+### `Column` Options
+
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `Aggregated: Function | React.Component => JSX`
+  - Optional
+  - Defaults to this column's `Cell` formatter
+  - Receives the table instance and cell model as props
+  - Must return valid JSX
+  - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
+- `disableGrouping: Boolean`
+  - Defaults to `true`
+  - If `true`, this column is able to be grouped.
+
+### `Instance` Properties
+
+The following values are provided to the table `instance`:
+
+- `rows: Array<Row>`
+  - An array of **grouped and aggregated** rows.
+- `preGroupedRows: Array<Row>`
+  - The array of rows originally used to create the grouped rows.
+- `toggleGroupBy: Function(columnID: String, ?set: Bool) => void`
+  - This function can be used to programmatically set or toggle the groupBy state for a specific column.
+
+### `Column` Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canGroupBy: Boolean`
+  - If `true`, this column is able to be grouped.
+  - This is resolved from the column having a valid accessor / data model, and not being manually disabled via other `useGroupBy` related options
+- `grouped: Boolean`
+  - If `true`, this column is currently being grouped
+- `groupedIndex: Int`
+  - If this column is currently being grouped, this integer is the index of this column's ID in the table state's `groupBy` array.
+- `toggleGroupBy: Function(?set: Bool) => void`
+  - This function can be used to programmatically set or toggle the groupBy state fo this column.
+- `getGroupByToggleProps: Function(props) => props`
+  - **Required**
+  - This function is used to resolve any props needed for this column's UI that is responsible for toggling grouping when the user clicks it.
+  - You can use the `getGroupByToggleProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
+
+### Example
+
+```js
+const state = useTableState({ groupBy: ['firstName'] })
+
+const aggregations = React.useMemo(() => ({
+  customSum: (values, rows) => values.reduce((sum, next) => sum + next, 0),
+}))
+
+const { rows } = useTable(
+  {
+    state, // state[0].groupBy === ['firstName']
+    manualGroupBy: false,
+    disableGrouping: false,
+    aggregations,
+  },
+  useGroupBy
 )
 ```
 

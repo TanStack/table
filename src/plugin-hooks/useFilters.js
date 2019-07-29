@@ -14,14 +14,11 @@ const propTypes = {
   // General
   columns: PropTypes.arrayOf(
     PropTypes.shape({
-      filterFn: PropTypes.func,
-      filterAll: PropTypes.bool,
-      canFilter: PropTypes.bool,
+      disableFilters: PropTypes.bool,
       Filter: PropTypes.any,
     })
   ),
 
-  filterFn: PropTypes.func,
   manualFilters: PropTypes.bool,
 }
 
@@ -99,12 +96,12 @@ export const useFilters = props => {
 
   hooks.columns.push(columns => {
     columns.forEach(column => {
-      const { id, accessor, canFilter } = column
+      const { id, accessor, disableFilters: columnDisableFilters } = column
 
       // Determine if a column is filterable
       column.canFilter = accessor
         ? getFirstDefined(
-            canFilter,
+            columnDisableFilters,
             disableFilters === true ? false : undefined,
             true
           )
@@ -143,12 +140,11 @@ export const useFilters = props => {
             // Find the filters column
             const column = columns.find(d => d.id === columnID)
 
-            column.preFilteredRows = filteredSoFar
-
-            // Don't filter hidden columns or columns that have had their filters disabled
-            if (!column || column.filterable === false) {
+            if (!column) {
               return filteredSoFar
             }
+
+            column.preFilteredRows = filteredSoFar
 
             const filterMethod = getFilterMethod(
               column.filter,

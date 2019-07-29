@@ -20,12 +20,13 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       aggregate: PropTypes.func,
-      canGroupBy: PropTypes.bool,
+      disableGrouping: PropTypes.bool,
       Aggregated: PropTypes.any,
     })
   ),
   groupByFn: PropTypes.func,
   manualGrouping: PropTypes.bool,
+  disableGrouping: PropTypes.bool,
   aggregations: PropTypes.object,
 }
 
@@ -44,13 +45,23 @@ export const useGroupBy = props => {
     state: [{ groupBy }, setState],
   } = props
 
+  // Sort grouped columns to the start of the column list
+  // before the headers are built
+  hooks.columnsBeforeHeaderGroups.push(columns => {
+    return [
+      ...groupBy.map(g => columns.find(col => col.id === g)),
+      ...columns.filter(col => !groupBy.includes(col.id)),
+    ]
+  })
+
   columns.forEach(column => {
-    const { id, accessor, canGroupBy } = column
+    const { id, accessor, disableGrouping: columnDisableGrouping } = column
     column.grouped = groupBy.includes(id)
+    column.groupedIndex = groupBy.indexOf(id)
 
     column.canGroupBy = accessor
       ? getFirstDefined(
-          canGroupBy,
+          columnDisableGrouping,
           disableGrouping === true ? false : undefined,
           true
         )
@@ -115,81 +126,78 @@ export const useGroupBy = props => {
   hooks.columns.push(addGroupByToggleProps)
   hooks.headers.push(addGroupByToggleProps)
 
-  const groupedRows = useMemo(() => {
-    if (manualGroupBy || !groupBy.length) {
-      return rows
-    }
-    if (debug) console.info('getGroupedRows')
-    // Find the columns that can or are aggregating
-
-    // Uses each column to aggregate rows into a single value
-    const aggregateRowsToValues = rows => {
-      const values = {}
-      columns.forEach(column => {
-        const columnValues = rows.map(d => d.values[column.id])
-        let aggregate =
-          userAggregations[column.aggregate] ||
-          aggregations[column.aggregate] ||
-          column.aggregate
-        if (typeof aggregate === 'function') {
-          values[column.id] = aggregate(columnValues, rows)
-        } else if (aggregate) {
-          throw new Error(
-            `Invalid aggregate "${aggregate}" passed to column with ID: "${
-              column.id
-            }"`
-          )
-        } else {
-          values[column.id] = columnValues[0]
-        }
-      })
-      return values
-    }
-
-    // Recursively group the data
-    const groupRecursively = (rows, groupBy, depth = 0) => {
-      // This is the last level, just return the rows
-      if (depth >= groupBy.length) {
+  const groupedRows = useMemo(
+    () => {
+      if (manualGroupBy || !groupBy.length) {
         return rows
       }
+      if (debug) console.info('getGroupedRows')
+      // Find the columns that can or are aggregating
 
-      // Group the rows together for this level
-      let groupedRows = Object.entries(groupByFn(rows, groupBy[depth])).map(
-        ([groupByVal, subRows], index) => {
-          // Recurse to sub rows before aggregation
-          subRows = groupRecursively(subRows, groupBy, depth + 1)
-
-          const values = aggregateRowsToValues(subRows)
-
-          const row = {
-            groupByID: groupBy[depth],
-            groupByVal,
-            values,
-            subRows,
-            depth,
-            index,
+      // Uses each column to aggregate rows into a single value
+      const aggregateRowsToValues = rows => {
+        const values = {}
+        columns.forEach(column => {
+          const columnValues = rows.map(d => d.values[column.id])
+          let aggregate =
+            userAggregations[column.aggregate] ||
+            aggregations[column.aggregate] ||
+            column.aggregate
+          if (typeof aggregate === 'function') {
+            values[column.id] = aggregate(columnValues, rows)
+          } else if (aggregate) {
+            throw new Error(
+              `Invalid aggregate "${aggregate}" passed to column with ID: "${
+                column.id
+              }"`
+            )
+          } else {
+            values[column.id] = columnValues[0]
           }
-          return row
+        })
+        return values
+      }
+
+      // Recursively group the data
+      const groupRecursively = (rows, groupBy, depth = 0) => {
+        // This is the last level, just return the rows
+        if (depth >= groupBy.length) {
+          return rows
         }
-      )
 
-      return groupedRows
-    }
+        // Group the rows together for this level
+        let groupedRows = Object.entries(groupByFn(rows, groupBy[depth])).map(
+          ([groupByVal, subRows], index) => {
+            // Recurse to sub rows before aggregation
+            subRows = groupRecursively(subRows, groupBy, depth + 1)
 
-    // Assign the new data
-    return groupRecursively(rows, groupBy)
-  }, [
-    manualGroupBy,
-    groupBy,
-    debug,
-    rows,
-    columns,
-    userAggregations,
-    groupByFn,
-  ])
+            const values = aggregateRowsToValues(subRows)
+
+            const row = {
+              groupByID: groupBy[depth],
+              groupByVal,
+              values,
+              subRows,
+              depth,
+              index,
+            }
+            return row
+          }
+        )
+
+        return groupedRows
+      }
+
+      // Assign the new data
+      return groupRecursively(rows, groupBy)
+    },
+    [manualGroupBy, groupBy, debug, rows, columns, userAggregations, groupByFn]
+  )
 
   return {
     ...props,
+    toggleGroupBy,
     rows: groupedRows,
+    preGroupedRows: rows,
   }
 }

@@ -1,14 +1,30 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 //
-import { applyHooks, applyPropHooks, mergeProps, flexRender } from '../utils'
+import {
+  applyHooks,
+  applyPropHooks,
+  mergeProps,
+  flexRender,
+  decorateColumnTree,
+  makeHeaderGroups,
+  findMaxDepth,
+} from '../utils'
 
 import { useTableState } from './useTableState'
-import { useColumns } from './useColumns'
 import { useRows } from './useRows'
 
 const propTypes = {
   // General
   data: PropTypes.array.isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      Cell: PropTypes.any,
+      Header: PropTypes.any,
+    })
+  ).isRequired,
+  defaultColumn: PropTypes.object,
+  subRowsKey: PropTypes.string,
   debug: PropTypes.bool,
 }
 
@@ -23,8 +39,10 @@ export const useTable = (props, ...plugins) => {
   let {
     data,
     state: userState,
-    useColumns: userUseColumns = useColumns,
     useRows: userUseRows = useRows,
+    columns: userColumns,
+    defaultColumn = {},
+    subRowsKey = 'subRows',
     debug,
   } = props
 
@@ -62,10 +80,99 @@ export const useTable = (props, ...plugins) => {
 
   if (debug) console.time('hooks')
   // Loop through plugins to build the api out
-  api = [userUseColumns, userUseRows, ...plugins]
+  api = [userUseRows, ...plugins]
     .filter(Boolean)
     .reduce((prev, next) => next(prev), api)
   if (debug) console.timeEnd('hooks')
+
+  // Compute columns, headerGroups and headers
+  const columnInfo = React.useMemo(
+    () => {
+      if (debug) console.info('buildColumns/headerGroup/headers')
+      // Decorate All the columns
+      let columnTree = decorateColumnTree(userColumns, defaultColumn)
+
+      // Get the flat list of all columns
+      let columns = flattenBy(columnTree, 'columns')
+
+      // Allow hooks to decorate columns
+      if (debug) console.time('hooks.columnsBeforeHeaderGroups')
+      columns = applyHooks(api.hooks.columnsBeforeHeaderGroups, columns, api)
+      if (debug) console.timeEnd('hooks.columnsBeforeHeaderGroups')
+
+      // Make the headerGroups
+      const headerGroups = makeHeaderGroups(
+        columns,
+        findMaxDepth(columnTree),
+        defaultColumn
+      )
+
+      const headers = flattenBy(headerGroups, 'headers')
+
+      return {
+        columns,
+        headerGroups,
+        headers,
+      }
+    },
+    [api, debug, defaultColumn, userColumns]
+  )
+
+  // Place the columns, headerGroups and headers on the api
+  Object.assign(api, columnInfo)
+
+  // Access the row model
+  api.rows = React.useMemo(
+    () => {
+      if (debug) console.info('getAccessedRows')
+
+      // Access the row's data
+      const accessRow = (originalRow, i, depth = 0) => {
+        // Keep the original reference around
+        const original = originalRow
+
+        // Process any subRows
+        const subRows = originalRow[subRowsKey]
+          ? originalRow[subRowsKey].map((d, i) => accessRow(d, i, depth + 1))
+          : undefined
+
+        const row = {
+          original,
+          index: i,
+          path: [i], // used to create a key for each row even if not nested
+          subRows,
+          depth,
+          cells: [{}], // This is a dummy cell
+        }
+
+        // Override common array functions (and the dummy cell's getCellProps function)
+        // to show an error if it is accessed without calling prepareRow
+        const unpreparedAccessWarning = () => {
+          throw new Error(
+            'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
+          )
+        }
+        row.cells.map = unpreparedAccessWarning
+        row.cells.filter = unpreparedAccessWarning
+        row.cells.forEach = unpreparedAccessWarning
+        row.cells[0].getCellProps = unpreparedAccessWarning
+
+        // Create the cells and values
+        row.values = {}
+        api.columns.forEach(column => {
+          row.values[column.id] = column.accessor
+            ? column.accessor(originalRow, i, { subRows, depth, data })
+            : undefined
+        })
+
+        return row
+      }
+
+      // Use the resolved data
+      return data.map((d, i) => accessRow(d, i))
+    },
+    [debug, data, subRowsKey, api.columns]
+  )
 
   // Determine column visibility
   api.columns.forEach(column => {
@@ -214,4 +321,22 @@ export const useTable = (props, ...plugins) => {
     mergeProps(applyPropHooks(api.hooks.getTableProps, api), userProps)
 
   return api
+}
+
+function flattenBy(columns, childKey) {
+  const flatColumns = []
+
+  const recurse = columns => {
+    columns.forEach(d => {
+      if (!d[childKey]) {
+        flatColumns.push(d)
+      } else {
+        recurse(d[childKey])
+      }
+    })
+  }
+
+  recurse(columns)
+
+  return flatColumns
 }
