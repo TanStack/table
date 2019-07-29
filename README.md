@@ -361,7 +361,7 @@ The following properties are available on the table instance returned from `useT
 
 ### `HeaderGroup` Properties
 
-Header Groups are The following additional properties are available on every `headerGroup` object returned by the table instance.
+The following additional properties are available on every `headerGroup` object returned by the table instance.
 
 - `headers: Array<Column>`
   - **Required**
