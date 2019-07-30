@@ -166,10 +166,11 @@ import {
 - [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
 - [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
 - [Filtering - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
+- [Grouping - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping-client-side)
 
 # Concepts
 
-## React Table is a "headless" library
+## React Table is a "headless" UI library
 
 React Table is a headless utility, which means out of the box, it doesn't render or supply any actual UI elements. You are in charge of utilizing the state and callbacks of the hooks provided by this library to render your own table markup. [Read this article to understand why React Table is built this way.](https://medium.com/merrickchristensen/headless-user-interface-components-565b0c0f2e18). If you don't want to, then here's a quick rundown anyway:
 
