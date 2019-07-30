@@ -76,7 +76,6 @@ function Table({ columns, data }) {
               pageCount,
               canNextPage,
               canPreviousPage,
-              pageOptions: [...pageOptions.slice(0, 6), '...'],
             },
             null,
             2
