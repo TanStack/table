@@ -331,7 +331,7 @@ The following options are supported on any column object you can pass to `column
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
 
-### `Instance` Properties
+### Instance Properties
 
 The following properties are available on the table instance returned from `useTable`
 
@@ -369,7 +369,7 @@ The following additional properties are available on every `headerGroup` object 
   - You can use the `getHeaderGroupProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 
-### `Column` Properties
+### Column Properties
 
 The following properties are available on every `Column` object returned by the table instance.
 
@@ -387,7 +387,7 @@ The following properties are available on every `Column` object returned by the 
   - You can use the `getHeaderProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 
-### `Row` Properties
+### Row Properties
 
 The following additional properties are available on every `row` object returned by the table instance.
 
@@ -402,7 +402,7 @@ The following additional properties are available on every `row` object returned
   - You can use the `getRowProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 
-### `Cell` Properties
+### Cell Properties
 
 The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
 
@@ -540,7 +540,7 @@ The following options are supported via the main options object passed to `useTa
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
   - For mor information on sort types, see [Sorting](TODO)
 
-### `Column` Options
+### Column Options
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
@@ -565,7 +565,7 @@ The following options are supported on any `Column` object passed to the `column
     - If a `function` is passed, it will be used.
   - For mor information on sort types, see [Sorting](TODO)
 
-### `Instance` Properties
+### Instance Properties
 
 The following values are provided to the table `instance`:
 
@@ -576,7 +576,7 @@ The following values are provided to the table `instance`:
 - `toggleSortBy: Function(ColumnID: String, descending: Bool, isMulti: Bool) => void`
   - This function can be used to programmatically toggle the sorting for any specific column
 
-### `Column` Properties
+### Column Properties
 
 The following properties are available on every `Column` object returned by the table instance.
 
@@ -687,7 +687,7 @@ The following options are supported via the main options object passed to `useTa
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
   - For mor information on filter types, see [Filtering](TODO)
 
-### `Column` Options
+### Column Options
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
@@ -708,7 +708,7 @@ The following options are supported on any `Column` object passed to the `column
   - For mor information on filter types, see [Filtering](TODO)
   - If a **function** is passed, it must be **memoized**
 
-### `Instance` Properties
+### Instance Properties
 
 The following values are provided to the table `instance`:
 
@@ -722,7 +722,7 @@ The following values are provided to the table `instance`:
 - `setAllFilters: Function(filtersObject) => void`
   - An instance-level function used to update the values for **all** filters on the table, all at once.
 
-### `Column` Properties
+### Column Properties
 
 The following properties are available on every `Column` object returned by the table instance.
 
@@ -799,10 +799,6 @@ The following options are supported via the main options object passed to `useTa
 - `state[0].groupBy: Array<String>`
   - Must be **memoized**
   - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
-- `groupByFn: Function`
-  - Must be **memoized**
-  - Defaults to [`defaultGroupByFn`](TODO)
-  - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
 - `manualGroupBy: Bool`
   - Enables groupBy detection and functionality, but does not automatically perform row grouping.
   - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
@@ -811,8 +807,12 @@ The following options are supported via the main options object passed to `useTa
 - `aggregations: Object<aggregationKey: aggregationFn>`
   - Must be **memoized**
   - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
+- `groupByFn: Function`
+  - Must be **memoized**
+  - Defaults to [`defaultGroupByFn`](TODO)
+  - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
 
-### `Column` Options
+### Column Options
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
@@ -826,7 +826,7 @@ The following options are supported on any `Column` object passed to the `column
   - Defaults to `true`
   - If `true`, this column is able to be grouped.
 
-### `Instance` Properties
+### Instance Properties
 
 The following values are provided to the table `instance`:
 
@@ -837,7 +837,7 @@ The following values are provided to the table `instance`:
 - `toggleGroupBy: Function(columnID: String, ?set: Bool) => void`
   - This function can be used to programmatically set or toggle the groupBy state for a specific column.
 
-### `Column` Properties
+### Column Properties
 
 The following properties are available on every `Column` object returned by the table instance.
 
@@ -856,24 +856,201 @@ The following properties are available on every `Column` object returned by the 
   - You can use the `getGroupByToggleProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
 
+### Row Properties
+
+The following properties are available on every `Row` object returned by the table instance.
+
+- `groupByID: String`
+  - The column ID for which this row is being grouped.
+  - Will be `undefined` if the row is an original row from `data` and not a materialized one from the grouping.
+- `groupByVal: any`
+  - If the row is a materialized group row, this will be the grouping value that was used to create it.
+- `values: Object`
+  - Similar to a regular row, a materialized grouping row also has a `values` object
+  - This object contains the **aggregated** values for this row's sub rows
+- `subRows: Array<Row>`
+  - If the row is a materialized group row, this property is the array of materialized subRows that were grouped inside of this row.
+- `depth: Int`
+  - If the row is a materialized group row, this is the grouping depth at which this row was created.
+- `path: Array<String|Int>`
+  - Similar to normal `Row` objects, materialized grouping rows also have a path array. The keys inside it though are not integers like nested normal rows though. Since they are not rows that can be traced back to an original data row, they are given a unique path based on their `groupByVal`
+  - If a row is a grouping row, it will have a path like `['Single']` or `['Complicated', 'Anderson']`, where `Single`, `Complicated`, and `Anderson` would all be derived from their row's `groupByVal`.
+
+### Cell Properties
+
+The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
+
+- `grouped: Bool`
+  - If `true`, this cell is a grouped cell, meaning it contains a grouping value and should usually display and expander.
+- `repeatedValue: Bool`
+  - If `true`, this cell is a repeated value cell, meaning it contains a value that is already being displayed elsewhere (usually by a parent row's cell).
+  - Most of the time, this cell is not required to be displayed and can safely be hidden during rendering
+- `aggregated: Bool`
+  - If `true`, this cell's value has been aggregated and should probably be rendered with the `Aggregated` cell renderer.
+
 ### Example
 
 ```js
-const state = useTableState({ groupBy: ['firstName'] })
+function Table({ columns, data }) {
+  const {
+    getTableProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: [{ groupBy, expanded }],
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useGroupBy,
+    useExpanded // useGroupBy would be pretty useless without useExpanded ;)
+  )
 
-const aggregations = React.useMemo(() => ({
-  customSum: (values, rows) => values.reduce((sum, next) => sum + next, 0),
-}))
+  // We don't want to render all 2000 rows for this example, so cap
+  // it at 20 for this use case
+  const firstPageRows = rows.slice()
 
-const { rows } = useTable(
-  {
-    state, // state[0].groupBy === ['firstName']
-    manualGroupBy: false,
-    disableGrouping: false,
-    aggregations,
-  },
-  useGroupBy
-)
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>
+                {column.canGroupBy ? (
+                  // If the column can be grouped, let's add a toggle
+                  <span {...column.getGroupByToggleProps()}>
+                    {column.grouped ? '🛑' : '👊'}
+                  </span>
+                ) : null}
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {firstPageRows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>
+                      {cell.grouped ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <span
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => row.toggleExpanded()}
+                          >
+                            {row.isExpanded ? '👇' : '👉'}
+                          </span>
+                          {cell.render('Cell')} ({row.subRows.length})
+                        </>
+                      ) : cell.aggregated ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        cell.render('Aggregated')
+                      ) : cell.repeatedValue ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        cell.render('Cell')
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+        )}
+      </tbody>
+    </table>
+  )
+}
+
+// This is a custom aggregator that
+// takes in an array of values and
+// returns the rounded median
+function roundedMedian(values) {
+  let min = values[0] || ''
+  let max = values[0] || ''
+
+  values.forEach(value => {
+    min = Math.min(min, value)
+    max = Math.max(max, value)
+  })
+
+  return Math.round((min + max) / 2)
+}
+
+function App() {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+            // Use a two-stage aggregator here to first
+            // count the total rows being aggregated,
+            // then sum any of those counts if they are
+            // aggregated further
+            aggregate: ['sum', 'count'],
+            Aggregated: ({ value }) => `${value} Names`,
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+            // Use another two-stage aggregator here to
+            // first count the UNIQUE values from the rows
+            // being aggregated, then sum those counts if
+            // they are aggregated further
+            aggregate: ['sum', 'uniqueCount'],
+            Aggregated: ({ value }) => `${value} Unique Names`,
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+            // Aggregate the average age of visitors
+            aggregate: 'average',
+            Aggregated: ({ value }) => `${value} (avg)`,
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+            // Aggregate the sum of all visits
+            aggregate: 'sum',
+            Aggregated: ({ value }) => `${value} (total)`,
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+            // Use our custom roundedMedian aggregator
+            aggregate: roundedMedian,
+            Aggregated: ({ value }) => `${value} (med)`,
+          },
+        ],
+      },
+    ],
+    []
+  )
+
+  const data = React.useMemo(() => makeData(10000), [])
+
+  return <Table columns={columns} data={data} />
+}
 ```
 
 ## `useExpanded`

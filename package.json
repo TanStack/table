@@ -30,13 +30,11 @@
     "format": "prettier ./**{md,js,jsx,tsx} --write"
   },
   "files": [
-    "src/",
-    "es/",
-    "lib/",
-    "react-table.js",
-    "react-table.min.js",
-    "react-table.css",
-    "media/*.png"
+    "CHANGELOG.md",
+    "dist",
+    "LICENCE",
+    "package.json",
+    "README.md"
   ],
   "peerDependencies": {
     "prop-types": "^15.5.0",
