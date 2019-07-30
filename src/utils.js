@@ -260,7 +260,15 @@ export const mergeProps = (...groups) => {
 }
 
 export const applyHooks = (hooks, initial, ...args) =>
-  hooks.reduce((prev, next) => next(prev, ...args), initial)
+  hooks.reduce((prev, next) => {
+    const nextValue = next(prev, ...args)
+    if (typeof nextValue === 'undefined') {
+      throw new Error(
+        'React Table: A hook just returned undefined! This is not allowed.'
+      )
+    }
+    return nextValue
+  }, initial)
 
 export const applyPropHooks = (hooks, ...args) =>
   hooks.reduce((prev, next) => mergeProps(prev, next(...args)), {})
@@ -283,6 +291,24 @@ export function isFunction(a) {
   if (typeof a === 'function') {
     return a
   }
+}
+
+export function flattenBy(columns, childKey) {
+  const flatColumns = []
+
+  const recurse = columns => {
+    columns.forEach(d => {
+      if (!d[childKey]) {
+        flatColumns.push(d)
+      } else {
+        recurse(d[childKey])
+      }
+    })
+  }
+
+  recurse(columns)
+
+  return flatColumns
 }
 
 //

@@ -48,7 +48,7 @@ export const useGroupBy = props => {
 
   // Sort grouped columns to the start of the column list
   // before the headers are built
-  hooks.columnsBeforeHeaderGroups.push(columns => {
+  hooks.useColumnsBeforeHeaderGroups.push(columns => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return React.useMemo(
       () => [
@@ -92,7 +92,7 @@ export const useGroupBy = props => {
     }, actions.toggleGroupBy)
   }
 
-  hooks.columns.push(columns => {
+  hooks.useColumns.push(columns => {
     columns.forEach(column => {
       if (column.canGroupBy) {
         column.toggleGroupBy = () => toggleGroupBy(column.id)
@@ -128,8 +128,8 @@ export const useGroupBy = props => {
     return columns
   }
 
-  hooks.columns.push(addGroupByToggleProps)
-  hooks.headers.push(addGroupByToggleProps)
+  hooks.useColumns.push(addGroupByToggleProps)
+  hooks.useHeaders.push(addGroupByToggleProps)
 
   const groupedRows = useMemo(
     () => {

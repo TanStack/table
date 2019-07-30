@@ -33,9 +33,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Extensible via hooks
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
-## Demos
-
-[React Table v7 Sandbox](https://codesandbox.io/s/m5lxzzpz69)
+## [See Examples](#examples)
 
 ## Versions
 
@@ -237,11 +235,14 @@ const instance = useTable(
 
 1. `useTable` is called. A table instance is created.
 1. The `instance.state` is resolved from either a custom user state or an automatically generated one.
-1. A collection of plugin points is created at `instance.hooks`. These plugin points don't run until after all of the plugins have run.
-1. The instance is reduced through each plugin hook in the order they were called. Each hook receives the result of the previous hook, is able to manipulate the `instance`, use plugin points, use their own React hooks internally and eventually return a new `instance`. This happens until the last instance object is returned from the last hook.
-1. Lastly, the plugin points that were registered and populated during hook reduction are run to produce the final instance object that is returned from `useTable`
+1. A collection of plugin points is created at `instance.hooks`.
+1. Each plugin is given the opportunity to add hooks to `instance.hook`.
+1. As the `useTable` logic proceeds to run, each plugin hook type is used at a specific point in time with each individual hook function being executed the order it was registered.
+1. The final instance object is returned from `useTable`, which the developer then uses to construct their table.
 
 This multi-stage process is the secret sauce that allows React Table plugin hooks to work together and compose nicely, while not stepping on each others toes.
+
+To dive deeper into plugins, see [Plugins](TODO) and the [Plugin Guide](TODO)
 
 ### Plugin Hook Order & Consistency
 
@@ -286,9 +287,6 @@ The following options are supported via the main options object passed to `useTa
   - The default column object for every column passed to React Table.
   - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
   - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
-- `useRows: Function`
-  - Optional
-  - This hook overrides the internal `useRows` hooks used by `useTable`. You probably never want to override this unless you are testing or developing new features for React Table
 - `debug: Bool`
   - Optional
   - A flag to turn on debug mode.
@@ -580,7 +578,7 @@ The following values are provided to the table `instance`:
 
 The following properties are available on every `Column` object returned by the table instance.
 
-- `canSortBy: Bool`
+- `canSort: Bool`
   - Denotes whether a column is sortable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
 - `toggleSortBy: Function(descending, multi) => void`
   - This function can be used to programmatically toggle the sorting for this column.
