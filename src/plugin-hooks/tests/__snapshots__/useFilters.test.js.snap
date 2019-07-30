@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a sortable table 1`] = `
+"Snapshot Diff:
+Compared values have no visual difference."
+`;
+
+exports[`renders a sortable table 2`] = `
+"Snapshot Diff:
+Compared values have no visual difference."
+`;
