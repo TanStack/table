@@ -1,6 +1,5 @@
 import '@testing-library/react/cleanup-after-each'
 import '@testing-library/jest-dom/extend-expect'
-// NOTE: jest-dom adds handy assertions to Jest and is recommended, but not required
 
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'

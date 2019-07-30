@@ -63,6 +63,7 @@ export const useTable = (props, ...plugins) => {
     plugins,
     hooks: {
       columnsBeforeHeaderGroups: [],
+      columnsBeforeHeaderGroupsDeps: [],
       useMain: [],
       useColumns: [],
       useHeaders: [],
@@ -84,45 +85,57 @@ export const useTable = (props, ...plugins) => {
   })
   if (debug) console.timeEnd('plugins')
 
-  // Compute columns, headerGroups and headers
-  const columnInfo = React.useMemo(
+  if (debug) console.info('buildColumns/headerGroup/headers')
+  // Decorate All the columns
+  let columnTree = React.useMemo(
+    () => decorateColumnTree(userColumns, defaultColumn),
+    [defaultColumn, userColumns]
+  )
+
+  // Get the flat list of all columns
+  let columns = React.useMemo(() => flattenBy(columnTree, 'columns'), [
+    columnTree,
+  ])
+
+  // Allow hooks to decorate columns (and trigger this memoization via deps)
+  columns = React.useMemo(
     () => {
-      if (debug) console.info('buildColumns/headerGroup/headers')
-      // Decorate All the columns
-      let columnTree = decorateColumnTree(userColumns, defaultColumn)
-
-      // Get the flat list of all columns
-      let columns = flattenBy(columnTree, 'columns')
-
-      // Allow hooks to decorate columns
       if (debug) console.time('hooks.columnsBeforeHeaderGroups')
-      columns = applyHooks(
+      const newColumns = applyHooks(
         instanceRef.current.hooks.columnsBeforeHeaderGroups,
         columns,
         instanceRef.current
       )
       if (debug) console.timeEnd('hooks.columnsBeforeHeaderGroups')
-
-      // Make the headerGroups
-      const headerGroups = makeHeaderGroups(
-        columns,
-        findMaxDepth(columnTree),
-        defaultColumn
-      )
-
-      const headers = flattenBy(headerGroups, 'headers')
-
-      return {
-        columns,
-        headerGroups,
-        headers,
-      }
+      return newColumns
     },
-    [debug, defaultColumn, userColumns]
+    [
+      columns,
+      debug,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...applyHooks(
+        instanceRef.current.hooks.columnsBeforeHeaderGroupsDeps,
+        [],
+        instanceRef.current
+      ),
+    ]
   )
 
-  // Place the columns, headerGroups and headers on the api
-  Object.assign(instanceRef.current, columnInfo)
+  // Make the headerGroups
+  const headerGroups = React.useMemo(
+    () => makeHeaderGroups(columns, findMaxDepth(columnTree), defaultColumn),
+    [columnTree, columns, defaultColumn]
+  )
+
+  const headers = React.useMemo(() => flattenBy(headerGroups, 'headers'), [
+    headerGroups,
+  ])
+
+  Object.assign(instanceRef.current, {
+    columns,
+    headerGroups,
+    headers,
+  })
 
   // Access the row model
   instanceRef.current.rows = React.useMemo(

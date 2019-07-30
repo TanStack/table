@@ -1,11 +1,203 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a sortable table 1`] = `
+exports[`renders a filterable table 1`] = `
 "Snapshot Diff:
-Compared values have no visual difference."
+- First value
++ Second value
+
+@@ -37,11 +37,11 @@
+            colspan=\\"1\\"
+          >
+            Last Name
+            <input
+              placeholder=\\"Search...\\"
+-             value=\\"\\"
++             value=\\"l\\"
+            />
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+@@ -115,78 +115,10 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            progress: 50
+-         </td>
+-       </tr>
+-       <tr
+-         class=\\"\\"
+-       >
+-         <td
+-           class=\\"\\"
+-         >
+-           firstName: derek
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           lastName: perkins
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           age: 40
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           visits: 40
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           status: Single
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           progress: 80
+-         </td>
+-       </tr>
+-       <tr
+-         class=\\"\\"
+-       >
+-         <td
+-           class=\\"\\"
+-         >
+-           firstName: joe
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           lastName: bergevin
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           age: 45
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           visits: 20
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           status: Complicated
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           progress: 10
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >"
 `;
 
-exports[`renders a sortable table 2`] = `
+exports[`renders a filterable table 2`] = `
 "Snapshot Diff:
-Compared values have no visual difference."
+- First value
++ Second value
+
+@@ -37,11 +37,11 @@
+            colspan=\\"1\\"
+          >
+            Last Name
+            <input
+              placeholder=\\"Search...\\"
+-             value=\\"l\\"
++             value=\\"er\\"
+            />
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+@@ -89,70 +89,70 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           firstName: tanner
++           firstName: derek
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           lastName: linsley
++           lastName: perkins
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           age: 29
++           age: 40
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           visits: 100
++           visits: 40
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           status: In Relationship
++           status: Single
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           progress: 50
++           progress: 80
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           firstName: jaylen
++           firstName: joe
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           lastName: linsley
++           lastName: bergevin
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           age: 26
++           age: 45
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           visits: 99
++           visits: 20
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           status: In Relationship
++           status: Complicated
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           progress: 70
++           progress: 10
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </DocumentFragment>"
 `;

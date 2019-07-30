@@ -38,6 +38,10 @@ const propTypes = {
 
 export const useGroupBy = hooks => {
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
+  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
+    deps.push(instance.state[0].groupBy)
+    return deps
+  })
   hooks.useMain.push(useMain)
 }
 

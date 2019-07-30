@@ -181,14 +181,6 @@ function useMain(instance) {
           }
         })
 
-        // then filter any rows without subcolumns because it would be strange to show
-        filteredRows = filteredRows.filter(row => {
-          if (!row.subRows) {
-            return true
-          }
-          return row.subRows.length > 0
-        })
-
         return filteredRows
       }
 

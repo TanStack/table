@@ -1,12 +1,11 @@
 export const text = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  rows = rows.filter(row => {
     const rowValue = row.values[id]
-    return rowValue !== undefined
-      ? String(rowValue)
-          .toLowerCase()
-          .includes(String(filterValue).toLowerCase())
-      : true
+    return String(rowValue)
+      .toLowerCase()
+      .includes(String(filterValue).toLowerCase())
   })
+  return rows
 }
 
 text.autoRemove = val => !val

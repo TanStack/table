@@ -4,7 +4,8 @@ import '@testing-library/jest-dom/extend-expect'
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
-import { useFilters } from '../useFilters'
+import { useGroupBy } from '../useGroupBy'
+import { useExpanded } from '../useExpanded'
 
 const data = [
   {
@@ -61,7 +62,8 @@ function Table({ columns, data }) {
       data,
       defaultColumn,
     },
-    useFilters
+    useGroupBy,
+    useExpanded
   )
 
   return (
@@ -71,8 +73,13 @@ function Table({ columns, data }) {
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th {...column.getHeaderProps()}>
+                {column.canGroupBy ? (
+                  // If the column can be grouped, let's add a toggle
+                  <span {...column.getGroupByToggleProps()}>
+                    {column.grouped ? '🛑' : '👊'}
+                  </span>
+                ) : null}
                 {column.render('Header')}
-                {column.canFilter ? column.render('Filter') : null}
               </th>
             ))}
           </tr>
@@ -83,15 +90,47 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>
+                      {cell.grouped ? (
+                        <>
+                          <span
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => row.toggleExpanded()}
+                          >
+                            {row.isExpanded ? '👇' : '👉'}
+                          </span>
+                          {cell.render('Cell')} ({row.subRows.length})
+                        </>
+                      ) : cell.aggregated ? (
+                        cell.render('Aggregated')
+                      ) : cell.repeatedValue ? null : (
+                        cell.render('Cell')
+                      )}
+                    </td>
+                  )
+                })}
               </tr>
             )
         )}
       </tbody>
     </table>
   )
+}
+
+function roundedMedian(values) {
+  let min = values[0] || ''
+  let max = values[0] || ''
+
+  values.forEach(value => {
+    min = Math.min(min, value)
+    max = Math.max(max, value)
+  })
+
+  return Math.round((min + max) / 2)
 }
 
 function App() {
@@ -103,10 +142,14 @@ function App() {
           {
             Header: 'First Name',
             accessor: 'firstName',
+            aggregate: ['sum', 'count'],
+            Aggregated: ({ value }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
             accessor: 'lastName',
+            aggregate: ['sum', 'uniqueCount'],
+            Aggregated: ({ value }) => `${value} Unique Names`,
           },
         ],
       },
@@ -116,10 +159,14 @@ function App() {
           {
             Header: 'Age',
             accessor: 'age',
+            aggregate: 'average',
+            Aggregated: ({ value }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
+            aggregate: 'sum',
+            Aggregated: ({ value }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -128,6 +175,8 @@ function App() {
           {
             Header: 'Profile Progress',
             accessor: 'progress',
+            aggregate: roundedMedian,
+            Aggregated: ({ value }) => `${value} (med)`,
           },
         ],
       },
@@ -139,20 +188,20 @@ function App() {
 }
 
 test('renders a filterable table', () => {
-  const { getAllByPlaceholderText, asFragment } = render(<App />)
+  const { getAllByText, asFragment } = render(<App />)
 
-  const filterInputs = getAllByPlaceholderText('Search...')
+  const groupByButtons = getAllByText('👊')
 
-  const beforeFilter = asFragment()
+  const beforeGrouping = asFragment()
 
-  fireEvent.change(filterInputs[1], { target: { value: 'l' } })
+  fireEvent.click(groupByButtons[1])
 
-  const afterFilter1 = asFragment()
+  const afterGrouping1 = asFragment()
 
-  fireEvent.change(filterInputs[1], { target: { value: 'er' } })
+  fireEvent.click(groupByButtons[3])
 
-  const afterFilter2 = asFragment()
+  const afterGrouping2 = asFragment()
 
-  expect(beforeFilter).toMatchDiffSnapshot(afterFilter1)
-  expect(afterFilter1).toMatchDiffSnapshot(afterFilter2)
+  expect(beforeGrouping).toMatchDiffSnapshot(afterGrouping1)
+  expect(afterGrouping1).toMatchDiffSnapshot(afterGrouping2)
 })

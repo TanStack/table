@@ -1,0 +1,371 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a filterable table 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -29,13 +29,13 @@
+            <span
+              class=\\"\\"
+              style=\\"cursor: pointer;\\"
+              title=\\"Toggle GroupBy\\"
+            >
+-             👊
++             🛑
+            </span>
+-           First Name
++           Last Name
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+          >
+@@ -44,11 +44,11 @@
+              style=\\"cursor: pointer;\\"
+              title=\\"Toggle GroupBy\\"
+            >
+              👊
+            </span>
+-           Last Name
++           First Name
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+          >
+@@ -107,138 +107,119 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           firstName: tanner
+-         </td>
+-         <td
+-           class=\\"\\"
++           <span
++             style=\\"cursor: pointer;\\"
+            >
+-           lastName: linsley
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           age: 29
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           visits: 100
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           status: In Relationship
++             👉
++           </span>
++           lastName: linsley (2)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           progress: 50
+-         </td>
+-       </tr>
+-       <tr
+-         class=\\"\\"
+-       >
+-         <td
+-           class=\\"\\"
+-         >
+-           firstName: derek
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+-           lastName: perkins
++           2 Names
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           age: 40
++           27.5 (avg)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           visits: 40
++           199 (total)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           status: Single
++           status: null
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           progress: 80
++           60 (med)
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           firstName: joe
++           <span
++             style=\\"cursor: pointer;\\"
++           >
++             👉
++           </span>
++           lastName: perkins (1)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           lastName: bergevin
++           1 Names
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           age: 45
++           40 (avg)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           visits: 20
++           40 (total)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           status: Complicated
++           status: null
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           progress: 10
++           80 (med)
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           firstName: jaylen
++           <span
++             style=\\"cursor: pointer;\\"
++           >
++             👉
++           </span>
++           lastName: bergevin (1)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           lastName: linsley
++           1 Names
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           age: 26
++           45 (avg)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           visits: 99
++           20 (total)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           status: In Relationship
++           status: null
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           progress: 70
++           10 (med)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </DocumentFragment>"
+`;
+
+exports[`renders a filterable table 2`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -6,17 +6,29 @@
+        <tr
+          class=\\"\\"
+        >
+          <th
+            class=\\"\\"
+-           colspan=\\"2\\"
++           colspan=\\"1\\"
+          >
+            Name
+          </th>
+          <th
+            class=\\"\\"
+-           colspan=\\"4\\"
++           colspan=\\"1\\"
++         >
++           Info
++         </th>
++         <th
++           class=\\"\\"
++           colspan=\\"1\\"
++         >
++           Name
++         </th>
++         <th
++           class=\\"\\"
++           colspan=\\"3\\"
+          >
+            Info
+          </th>
+        </tr>
+        <tr
+@@ -42,13 +54,13 @@
+            <span
+              class=\\"\\"
+              style=\\"cursor: pointer;\\"
+              title=\\"Toggle GroupBy\\"
+            >
+-             👊
++             🛑
+            </span>
+-           First Name
++           Visits
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+          >
+@@ -57,11 +69,11 @@
+              style=\\"cursor: pointer;\\"
+              title=\\"Toggle GroupBy\\"
+            >
+              👊
+            </span>
+-           Age
++           First Name
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+          >
+@@ -70,11 +82,11 @@
+              style=\\"cursor: pointer;\\"
+              title=\\"Toggle GroupBy\\"
+            >
+              👊
+            </span>
+-           Visits
++           Age
+          </th>
+          <th
+            class=\\"\\"
+            colspan=\\"1\\"
+          >
+@@ -114,10 +126,13 @@
+            >
+              👉
+            </span>
+            lastName: linsley (2)
+          </td>
++         <td
++           class=\\"\\"
++         />
+          <td
+            class=\\"\\"
+          >
+            2 Names
+          </td>
+@@ -127,15 +142,10 @@
+            27.5 (avg)
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           199 (total)
+-         </td>
+-         <td
+-           class=\\"\\"
+-         >
+            status: null
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -155,22 +165,20 @@
+            </span>
+            lastName: perkins (1)
+          </td>
+          <td
+            class=\\"\\"
+-         >
+-           1 Names
+-         </td>
++         />
+          <td
+            class=\\"\\"
+          >
+-           40 (avg)
++           1 Names
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           40 (total)
++           40 (avg)
+          </td>
+          <td
+            class=\\"\\"
+          >
+            status: null
+@@ -194,22 +202,20 @@
+            </span>
+            lastName: bergevin (1)
+          </td>
+          <td
+            class=\\"\\"
+-         >
+-           1 Names
+-         </td>
++         />
+          <td
+            class=\\"\\"
+          >
+-           45 (avg)
++           1 Names
+          </td>
+          <td
+            class=\\"\\"
+          >
+-           20 (total)
++           45 (avg)
+          </td>
+          <td
+            class=\\"\\"
+          >
+            status: null"
+`;
