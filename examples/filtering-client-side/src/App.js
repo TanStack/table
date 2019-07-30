@@ -123,9 +123,9 @@ function SliderColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
 function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
   return (
     <div
-      css={`
-        display: flex;
-      `}
+      style={{
+        display: 'flex',
+      }}
     >
       <input
         value={filterValue[0] || ''}
@@ -135,10 +135,10 @@ function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
           setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
         }}
         placeholder="Min"
-        css={`
-          width: 70px;
-          margin-right: 0.5rem;
-        `}
+        style={{
+          width: '70px',
+          marginRight: '0.5rem',
+        }}
       />
       to
       <input
@@ -149,10 +149,10 @@ function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
           setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined])
         }}
         placeholder="Max"
-        css={`
-          width: 70px;
-          margin-left: 0.5rem;
-        `}
+        style={{
+          width: '70px',
+          marginLeft: '0.5rem',
+        }}
       />
     </div>
   )
