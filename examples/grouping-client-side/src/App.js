@@ -46,7 +46,7 @@ function Table({ columns, data }) {
       data,
     },
     useGroupBy,
-    useExpanded
+    useExpanded // useGroupBy would be pretty useless without useExpanded ;)
   )
 
   // We don't want to render all 2000 rows for this example, so cap
@@ -64,19 +64,14 @@ function Table({ columns, data }) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
                 <th {...column.getHeaderProps()}>
                   {column.canGroupBy ? (
+                    // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()}>
                       {column.grouped ? '🛑' : '👊'}
                     </span>
                   ) : null}
                   {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
-                  </span>
                 </th>
               ))}
             </tr>
@@ -90,6 +85,9 @@ function Table({ columns, data }) {
                   {row.cells.map(cell => {
                     return (
                       <td
+                        // For educational purposes, let's color the
+                        // cell depending on what type it is given
+                        // from the useGroupBy hook
                         {...cell.getCellProps()}
                         style={{
                           background: cell.grouped
@@ -102,7 +100,7 @@ function Table({ columns, data }) {
                         }}
                       >
                         {cell.grouped ? (
-                          // Add an expander and row count to the grouped cell
+                          // If it's a grouped cell, add an expander and row count
                           <>
                             <span
                               style={{
@@ -115,8 +113,8 @@ function Table({ columns, data }) {
                             {cell.render('Cell')} ({row.subRows.length})
                           </>
                         ) : cell.aggregated ? (
-                          // Use the Aggregated renderer for cells that have
-                          // aggregated values
+                          // If the cell is aggregated, use the Aggregated
+                          // renderer for cell
                           cell.render('Aggregated')
                         ) : cell.repeatedValue ? null : ( // For cells with repeated values, render null
                           // Otherwise, just render the regular cell
@@ -174,6 +172,9 @@ function Legend() {
   )
 }
 
+// This is a custom aggregator that
+// takes in an array of values and
+// returns the rounded median
 function roundedMedian(values) {
   let min = values[0] || ''
   let max = values[0] || ''
@@ -248,7 +249,7 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(100), [])
+  const data = React.useMemo(() => makeData(10000), [])
 
   return (
     <Styles>
