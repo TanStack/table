@@ -23,7 +23,7 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
     accessor = row => getBy(row, accessorString)
   }
 
-  if (!id && typeof Header === 'string') {
+  if (!id && typeof Header === 'string' && Header) {
     id = Header
   }
 
@@ -38,8 +38,8 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
   }
 
   column = {
-    Header: ({ id }) => id,
-    Cell: ({ value }) => typeof value !== 'undefined' ? value : '',
+    Header: () => null,
+    Cell: ({ value }) => (typeof value !== 'undefined' ? value : ''),
     show: true,
     ...column,
     id,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a filterable table 1`] = `
+exports[`renders a groupable table 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
@@ -207,7 +207,7 @@ exports[`renders a filterable table 1`] = `
   </DocumentFragment>"
 `;
 
-exports[`renders a filterable table 2`] = `
+exports[`renders a groupable table 2`] = `
 "Snapshot Diff:
 - First value
 + Second value

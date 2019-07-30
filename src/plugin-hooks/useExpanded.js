@@ -43,8 +43,7 @@ function useMain(instance) {
   }
 
   hooks.prepareRow.push(row => {
-    const { path } = row
-    row.toggleExpanded = set => toggleExpandedByPath(path, set)
+    row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
     return row
   })
 
@@ -68,13 +67,13 @@ function useMain(instance) {
         row.canExpand = row.subRows && !!row.subRows.length
 
         if (row.isExpanded && row.subRows && row.subRows.length) {
-          row.subRows.forEach((row, i) => handleRow(row))
+          row.subRows.forEach(handleRow)
         }
 
         return row
       }
 
-      rows.forEach(row => handleRow(row))
+      rows.forEach(handleRow)
 
       return expandedRows
     },

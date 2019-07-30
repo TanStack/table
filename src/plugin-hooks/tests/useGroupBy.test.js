@@ -187,7 +187,7 @@ function App() {
   return <Table columns={columns} data={data} />
 }
 
-test('renders a filterable table', () => {
+test('renders a groupable table', () => {
   const { getAllByText, asFragment } = render(<App />)
 
   const groupByButtons = getAllByText('👊')

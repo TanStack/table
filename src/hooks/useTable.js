@@ -142,19 +142,24 @@ export const useTable = (props, ...plugins) => {
     () => {
       if (debug) console.time('getAccessedRows')
       // Access the row's data
-      const accessRow = (originalRow, i, depth = 0) => {
+      const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
         // Keep the original reference around
         const original = originalRow
 
+        // Make the new path for the row
+        const path = [...parentPath, i]
+
         // Process any subRows
         const subRows = originalRow[subRowsKey]
-          ? originalRow[subRowsKey].map((d, i) => accessRow(d, i, depth + 1))
+          ? originalRow[subRowsKey].map((d, i) =>
+              accessRow(d, i, depth + 1, path)
+            )
           : []
 
         const row = {
           original,
           index: i,
-          path: [i], // used to create a key for each row even if not nested
+          path, // used to create a key for each row even if not nested
           subRows,
           depth,
           cells: [{}], // This is a dummy cell
@@ -316,10 +321,9 @@ export const useTable = (props, ...plugins) => {
   // any rows the user wishes to be displayed.
 
   instanceRef.current.prepareRow = row => {
-    const { path } = row
     row.getRowProps = props =>
       mergeProps(
-        { key: ['row', ...path].join('_') },
+        { key: ['row', ...row.path].join('_') },
         applyPropHooks(
           instanceRef.current.hooks.getRowProps,
           row,
@@ -342,7 +346,7 @@ export const useTable = (props, ...plugins) => {
 
       // Give each cell a getCellProps base
       cell.getCellProps = props => {
-        const columnPathStr = [...path, column.id].join('_')
+        const columnPathStr = [...row.path, column.id].join('_')
         return mergeProps(
           {
             key: ['cell', columnPathStr].join('_'),
