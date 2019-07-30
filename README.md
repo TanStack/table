@@ -167,6 +167,7 @@ import {
 - [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
 - [Filtering - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
 - [Grouping - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping-client-side)
+- [Pagination - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-client-side)
 
 # Concepts
 
