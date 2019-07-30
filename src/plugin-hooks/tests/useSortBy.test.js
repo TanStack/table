@@ -3,39 +3,36 @@ import '@testing-library/jest-dom/extend-expect'
 // NOTE: jest-dom adds handy assertions to Jest and is recommended, but not required
 
 import React from 'react'
-import { render } from '@testing-library/react'
-import useTable from '../../hooks/useTable'
-import useSortBy from '../useSortBy'
+import { render, fireEvent } from '@testing-library/react'
+import { useTable } from '../../hooks/useTable'
+import { useSortBy } from '../useSortBy'
 
-const data = React.useMemo(
-  () => [
-    {
-      firstName: 'tanner',
-      lastName: 'linsley',
-      age: 29,
-      visits: 100,
-      status: 'In Relationship',
-      progress: 50,
-    },
-    {
-      firstName: 'derek',
-      lastName: 'perkins',
-      age: 40,
-      visits: 40,
-      status: 'Single',
-      progress: 80,
-    },
-    {
-      firstName: 'joe',
-      lastName: 'bergevin',
-      age: 45,
-      visits: 20,
-      status: 'Complicated',
-      progress: 10,
-    },
-  ],
-  []
-)
+const data = [
+  {
+    firstName: 'tanner',
+    lastName: 'linsley',
+    age: 29,
+    visits: 100,
+    status: 'In Relationship',
+    progress: 50,
+  },
+  {
+    firstName: 'derek',
+    lastName: 'perkins',
+    age: 40,
+    visits: 40,
+    status: 'Single',
+    progress: 80,
+  },
+  {
+    firstName: 'joe',
+    lastName: 'bergevin',
+    age: 45,
+    visits: 20,
+    status: 'Complicated',
+    progress: 10,
+  },
+]
 
 const defaultColumn = {
   Cell: ({ value, column: { id } }) => `${id}: ${value}`,
@@ -131,16 +128,18 @@ function App() {
 }
 
 test('renders a sortable table', () => {
-  const { getAllByText } = render(<App />)
+  const { getByText, asFragment } = render(<App />)
 
-  const firstNames = getAllByText('firstName')
+  const beforeSort = asFragment()
 
-  console.log(firstNames)
+  fireEvent.click(getByText('First Name'))
 
-  // expect(getByText('tanner')).toBeInTheDocument()
-  // expect(getByText('linsley')).toBeInTheDocument()
-  // expect(getByText('29')).toBeInTheDocument()
-  // expect(getByText('100')).toBeInTheDocument()
-  // expect(getByText('In Relationship')).toBeInTheDocument()
-  // expect(getByText('50')).toBeInTheDocument()
+  const afterSort1 = asFragment()
+
+  fireEvent.click(getByText('First Name'))
+
+  const afterSort2 = asFragment()
+
+  expect(beforeSort).toMatchDiffSnapshot(afterSort1)
+  expect(afterSort1).toMatchDiffSnapshot(afterSort2)
 })

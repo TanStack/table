@@ -143,7 +143,7 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(1000), [])
+  const data = React.useMemo(() => makeData(2000), [])
 
   return (
     <Styles>

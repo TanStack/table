@@ -184,12 +184,11 @@ export function getFirstDefined(...args) {
   }
 }
 
-export function defaultGroupByFn(rows, grouper) {
+export function defaultGroupByFn(rows, columnID) {
   return rows.reduce((prev, row, i) => {
-    const resKey =
-      typeof grouper === 'function'
-        ? grouper(row.values, i)
-        : row.values[grouper]
+    // TODO: Might want to implement a key serializer here so
+    // irregular column values can still be grouped if needed?
+    const resKey = `${row.values[columnID]}`
     prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
     prev[resKey].push(row)
     return prev

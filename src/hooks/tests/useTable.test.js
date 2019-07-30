@@ -4,7 +4,34 @@ import '@testing-library/jest-dom/extend-expect'
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import useTable from './useTable'
+import { useTable } from '../useTable'
+
+const data = [
+  {
+    firstName: 'tanner',
+    lastName: 'linsley',
+    age: 29,
+    visits: 100,
+    status: 'In Relationship',
+    progress: 50,
+  },
+  {
+    firstName: 'derek',
+    lastName: 'perkins',
+    age: 40,
+    visits: 40,
+    status: 'Single',
+    progress: 80,
+  },
+  {
+    firstName: 'joe',
+    lastName: 'bergevin',
+    age: 45,
+    visits: 20,
+    status: 'Complicated',
+    progress: 10,
+  },
+]
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
@@ -82,25 +109,11 @@ function App() {
     []
   )
 
-  const data = React.useMemo(
-    () => [
-      {
-        firstName: 'tanner',
-        lastName: 'linsley',
-        age: 29,
-        visits: 100,
-        status: 'In Relationship',
-        progress: 50,
-      },
-    ],
-    []
-  )
-
   return <Table columns={columns} data={data} />
 }
 
 test('renders a basic table', () => {
-  const { getByText } = render(<App />)
+  const { getByText, asFragment } = render(<App />)
 
   expect(getByText('tanner')).toBeInTheDocument()
   expect(getByText('linsley')).toBeInTheDocument()
@@ -108,4 +121,6 @@ test('renders a basic table', () => {
   expect(getByText('100')).toBeInTheDocument()
   expect(getByText('In Relationship')).toBeInTheDocument()
   expect(getByText('50')).toBeInTheDocument()
+
+  expect(asFragment()).toMatchSnapshot()
 })

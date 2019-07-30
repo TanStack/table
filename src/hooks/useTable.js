@@ -136,7 +136,7 @@ export const useTable = (props, ...plugins) => {
         // Process any subRows
         const subRows = originalRow[subRowsKey]
           ? originalRow[subRowsKey].map((d, i) => accessRow(d, i, depth + 1))
-          : undefined
+          : []
 
         const row = {
           original,
@@ -315,9 +315,6 @@ export const useTable = (props, ...plugins) => {
         props
       )
 
-    // need to apply any row specific hooks (useExpanded requires this)
-    applyHooks(instanceRef.current.hooks.prepareRow, row, instanceRef.current)
-
     const visibleColumns = instanceRef.current.columns.filter(
       column => column.visible
     )
@@ -332,7 +329,7 @@ export const useTable = (props, ...plugins) => {
 
       // Give each cell a getCellProps base
       cell.getCellProps = props => {
-        const columnPathStr = [path, column.id].join('_')
+        const columnPathStr = [...path, column.id].join('_')
         return mergeProps(
           {
             key: ['cell', columnPathStr].join('_'),
@@ -363,6 +360,9 @@ export const useTable = (props, ...plugins) => {
 
       return cell
     })
+
+    // need to apply any row specific hooks (useExpanded requires this)
+    applyHooks(instanceRef.current.hooks.prepareRow, row, instanceRef.current)
   }
 
   instanceRef.current.getTableProps = userProps =>
