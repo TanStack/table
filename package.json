@@ -31,6 +31,7 @@
   },
   "files": [
     "CHANGELOG.md",
+    "src/**/*.js",
     "dist",
     "LICENCE",
     "package.json",

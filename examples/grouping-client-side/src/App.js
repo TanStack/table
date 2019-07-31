@@ -49,9 +49,9 @@ function Table({ columns, data }) {
     useExpanded // useGroupBy would be pretty useless without useExpanded ;)
   )
 
-  // We don't want to render all 2000 rows for this example, so cap
+  // We don't want to render all of the rows for this example, so cap
   // it at 20 for this use case
-  const firstPageRows = rows.slice()
+  const firstPageRows = rows.slice(0, 100)
 
   return (
     <>
@@ -68,7 +68,7 @@ function Table({ columns, data }) {
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()}>
-                      {column.grouped ? '🛑' : '👊'}
+                      {column.grouped ? '🛑 ' : '👊 '}
                     </span>
                   ) : null}
                   {column.render('Header')}
@@ -109,7 +109,7 @@ function Table({ columns, data }) {
                               onClick={() => row.toggleExpanded()}
                             >
                               {row.isExpanded ? '👇' : '👉'}
-                            </span>
+                            </span>{' '}
                             {cell.render('Cell')} ({row.subRows.length})
                           </>
                         ) : cell.aggregated ? (
@@ -129,7 +129,7 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <br />
-      <div>Showing the first 20 results of {rows.length} rows</div>
+      <div>Showing the first 100 results of {rows.length} rows</div>
     </>
   )
 }
