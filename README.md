@@ -272,7 +272,7 @@ The following options are supported via the main options object passed to `useTa
   - Required
   - Must be **memoized**
   - The core columns configuration object for the entire table.
-  - Supports nested `columns` arrays via the `column.children` key
+  - Supports nested `columns` arrays via the column's `columns` key, eg. `[{ Header: 'My Group', columns: [...] }]`
 - `data: Array<any>`
   - Required
   - Must be **memoized**
