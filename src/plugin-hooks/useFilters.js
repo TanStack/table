@@ -103,7 +103,7 @@ function useMain(instance) {
     // Determine if a column is filterable
     column.canFilter = accessor
       ? getFirstDefined(
-          columnDisableFilters,
+          columnDisableFilters === true ? false : undefined,
           disableFilters === true ? false : undefined,
           true
         )
