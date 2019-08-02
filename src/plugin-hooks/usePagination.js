@@ -33,6 +33,7 @@ function useMain(instance) {
     manualPagination,
     disablePageResetOnDataChange,
     debug,
+    plugins,
     state: [
       {
         pageSize,
@@ -45,6 +46,40 @@ function useMain(instance) {
       setState,
     ],
   } = instance
+
+  // If usePagination should probably come after useFilters for
+  // the best performance, so let's hint to the user about that...
+  const pluginIndex = plugins.indexOf(usePagination)
+
+  if (process.env.NODE_ENV === 'development') {
+    const useFiltersIndex = plugins.findIndex(
+      plugin => plugin.name === 'useFilters'
+    )
+    const useGroupByIndex = plugins.findIndex(
+      plugin => plugin.name === 'useGroupBy'
+    )
+    const useSortByIndex = plugins.findIndex(
+      plugin => plugin.name === 'useSortBy'
+    )
+
+    if (useFiltersIndex > pluginIndex) {
+      throw new Error(
+        'React Table: The usePagination plugin hook must be placed before the useFilters plugin hook!'
+      )
+    }
+
+    if (useGroupByIndex > pluginIndex) {
+      throw new Error(
+        'React Table: The usePagination plugin hook must be placed before the useGroupBy plugin hook!'
+      )
+    }
+
+    if (useSortByIndex > pluginIndex) {
+      throw new Error(
+        'React Table: The usePagination plugin hook must be placed before the useSortBy plugin hook!'
+      )
+    }
+  }
 
   const rowDep = disablePageResetOnDataChange ? null : rows
 
@@ -69,7 +104,8 @@ function useMain(instance) {
           pageCount: userPageCount,
         }
       }
-      if (debug) console.info('getPages')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getPages')
 
       // Create a new pages with the first page ready to go.
       const pages = rows.length ? [] : [[]]
@@ -102,7 +138,8 @@ function useMain(instance) {
   const canNextPage = pageIndex < pageCount - 1
 
   const gotoPage = pageIndex => {
-    if (debug) console.info('gotoPage')
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('gotoPage')
     return setState(old => {
       if (pageIndex < 0 || pageIndex > pageCount - 1) {
         return old

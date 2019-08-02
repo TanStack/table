@@ -1,0 +1,520 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a paginated table 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -65,11 +65,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 1
++           tanner 11
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -99,11 +99,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 2
++           tanner 12
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -133,11 +133,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 3
++           tanner 13
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -167,11 +167,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 4
++           tanner 14
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -201,11 +201,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 5
++           tanner 15
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -235,11 +235,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 6
++           tanner 16
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -269,11 +269,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 7
++           tanner 17
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -303,11 +303,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 8
++           tanner 18
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -337,11 +337,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 9
++           tanner 19
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -371,11 +371,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 10
++           tanner 20
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -404,19 +404,15 @@
+      </tbody>
+    </table>
+    <div
+      class=\\"pagination\\"
+    >
+-     <button
+-       disabled=\\"\\"
+-     >
++     <button>
+        &lt;&lt;
+      </button>
+       
+-     <button
+-       disabled=\\"\\"
+-     >
++     <button>
+        &lt;
+      </button>
+       
+      <button>
+        &gt;
+@@ -427,20 +423,20 @@
+      </button>
+       
+      <span>
+        Page 
+        <strong>
+-         1 of 10
++         2 of 10
+        </strong>
+         
+      </span>
+      <span>
+        | Go to page: 
+        <input
+          style=\\"width: 100px;\\"
+          type=\\"number\\"
+-         value=\\"1\\"
++         value=\\"2\\"
+        />
+      </span>
+       
+      <select>
+        <option"
+`;
+
+exports[`renders a paginated table 2`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -65,11 +65,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 11
++           tanner 21
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -99,11 +99,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 12
++           tanner 22
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -133,11 +133,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 13
++           tanner 23
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -167,11 +167,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 14
++           tanner 24
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -201,11 +201,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 15
++           tanner 25
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -235,11 +235,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 16
++           tanner 26
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -269,11 +269,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 17
++           tanner 27
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -303,11 +303,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 18
++           tanner 28
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -337,11 +337,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 19
++           tanner 29
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -371,11 +371,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 20
++           tanner 30
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -423,20 +423,20 @@
+      </button>
+       
+      <span>
+        Page 
+        <strong>
+-         2 of 10
++         3 of 10
+        </strong>
+         
+      </span>
+      <span>
+        | Go to page: 
+        <input
+          style=\\"width: 100px;\\"
+          type=\\"number\\"
+-         value=\\"2\\"
++         value=\\"3\\"
+        />
+      </span>
+       
+      <select>
+        <option"
+`;
+
+exports[`renders a paginated table 3`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -65,11 +65,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 21
++           tanner 91
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -99,11 +99,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 22
++           tanner 92
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -133,11 +133,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 23
++           tanner 93
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -167,11 +167,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 24
++           tanner 94
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -201,11 +201,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 25
++           tanner 95
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -235,11 +235,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 26
++           tanner 96
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -269,11 +269,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 27
++           tanner 97
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -303,11 +303,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 28
++           tanner 98
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -337,11 +337,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 29
++           tanner 99
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -371,11 +371,11 @@
+          class=\\"\\"
+        >
+          <td
+            class=\\"\\"
+          >
+-           tanner 30
++           tanner 100
+          </td>
+          <td
+            class=\\"\\"
+          >
+            linsley
+@@ -412,31 +412,35 @@
+       
+      <button>
+        &lt;
+      </button>
+       
+-     <button>
++     <button
++       disabled=\\"\\"
++     >
+        &gt;
+      </button>
+       
+-     <button>
++     <button
++       disabled=\\"\\"
++     >
+        &gt;&gt;
+      </button>
+       
+      <span>
+        Page 
+        <strong>
+-         3 of 10
++         10 of 10
+        </strong>
+         
+      </span>
+      <span>
+        | Go to page: 
+        <input
+          style=\\"width: 100px;\\"
+          type=\\"number\\"
+-         value=\\"3\\"
++         value=\\"10\\"
+        />
+      </span>
+       
+      <select>
+        <option"
+`;

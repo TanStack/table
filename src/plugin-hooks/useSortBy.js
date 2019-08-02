@@ -57,18 +57,20 @@ function useMain(instance) {
     plugins,
   } = instance
 
-  // If useSortBy should probably come after useFilters for
-  // the best performance, so let's hint to the user about that...
-  const pluginIndex = plugins.indexOf(useSortBy)
+  if (process.env.NODE_ENV === 'development') {
+    // If useSortBy should probably come after useFilters for
+    // the best performance, so let's hint to the user about that...
+    const pluginIndex = plugins.indexOf(useSortBy)
 
-  const useFiltersIndex = plugins.findIndex(
-    plugin => plugin.name === 'useFilters'
-  )
-
-  if (useFiltersIndex > pluginIndex) {
-    console.warn(
-      'React Table: useSortBy should be placed before useFilters in your plugin list for better performance!'
+    const useFiltersIndex = plugins.findIndex(
+      plugin => plugin.name === 'useFilters'
     )
+
+    if (useFiltersIndex > pluginIndex) {
+      console.warn(
+        'React Table: useSortBy should be placed before useFilters in your plugin list for better performance!'
+      )
+    }
   }
 
   // Add custom hooks
@@ -211,7 +213,8 @@ function useMain(instance) {
       if (manualSorting || !sortBy.length) {
         return rows
       }
-      if (debug) console.time('getSortedRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.time('getSortedRows')
 
       const sortData = rows => {
         // Use the orderByFn to compose multiple sortBy's together.
@@ -261,7 +264,8 @@ function useMain(instance) {
           row.subRows = sortData(row.subRows)
         })
 
-        if (debug) console.timeEnd('getSortedRows')
+        if (process.env.NODE_ENV === 'development' && debug)
+          console.timeEnd('getSortedRows')
 
         return sortedData
       }

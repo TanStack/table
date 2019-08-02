@@ -401,6 +401,15 @@ The following additional properties are available on every `row` object returned
   - This function is used to resolve any props needed for this row.
   - You can use the `getRowProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `index: Int`
+  - The index of the original row in the `data` array that was passed to `useTable`. If this row is a subRow, it is the original index within the parent row's subRows array
+- `original: Object`
+  - The original row object from the `data` array that was used to materialize this row.
+- `path: Array<string>`
+  - This array is the sequential path of indices one could use to navigate to it, eg. a row path of `[3, 1, 0]` would mean that it is the **first** subRow of a parent that is the **second** subRow of a parent that is the **fourth** row in the original `data` array.
+  - This array is used with plugin hooks like `useExpanded` and `useGroupBy` to compute expanded states for individual rows.
+- `subRows: Array<Row>`
+  - If subRows were detect on the original data object, this will be an array of those materialized row objects.
 
 ### Cell Properties
 
@@ -419,6 +428,7 @@ The following additional properties are available on every `Cell` object returne
   - You can use the `getCellProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 - `render: Function(type: String | Function | Component, ?props)`
+  - **Required**
   - This function is used to render content in context of a cell.
   - If `type` is a string, will render using the `column[type]` renderer. React Table ships with a default `Cell` renderer. Other renderers like `Aggregated` are available via hooks like `useFilters`.
   - If a function or component is passed instead of a string, it will be be passed the table instance and cell model as props and is expected to return any valid JSX.
@@ -1058,49 +1068,169 @@ function App() {
 - Plugin Hook
 - Optional
 
-`useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows, but is not limited to that use-case. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
+`useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows or on its own with nested `subRows` in tree-li,ke `data` sets, but is not limited to these use-cases. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
 
 ### Table Options
 
 The following options are supported via the main options object passed to `useTable(options)`
 
 - `state[0].expanded: Object<[pathIndex]: Boolean | ExpandedStateObject>`
+  - Optional
   - Must be **memoized**
   - An nested object of expanded paths.
   - A `pathIndex` can be set as the key and its value set to `true` to expand that row's subRows into view. For example, if `{ '3': true }` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
   - For nested expansion, you may **use another object** instead of a Boolean to expand sub rows. For example, if `{ '3': { '5' : true }}` was passed as the `expanded` state, then the **6th subRow of the 4th row and the 4th row of the original data array** would be expanded.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `subRowsKey: String`
-  - Required
-  - Defaults to `subRows`
-  - React Table will use this key when materializing the final row object. It also uses this key to infer sub-rows from the raw data.
-  - See [Grouping and Aggregation](#grouping-and-aggregation) for more information
-- `paginateSubRows: Bool`
-  - Defaults to `true`
+  - Optional
+  - See the [useTable hook](#table-options) for more details
+- `nestExpandedRows: Bool`
+  - Optional
+  - Defaults to `false`
   - If set to `false`, expanded rows will not be paginated. Thus, any expanded subrows would potentially increase the size of any given page by the amount of total expanded subrows on the page.
 - `manualExpandedKey: String`
+  - Optional
   - Defaults to `expanded`
-  - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would be forcibly expanded, regardless of state.
+  - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would always be expanded, regardless of state.
 
-### Instance Variables
+### Instance Properties
 
-The following values are provided to the table `instance`:
+The following properties are available on the table instance returned from `useTable`
 
 - `rows: Array<Row>`
   - An array of **sorted** rows.
 
+### Row Properties
+
+The following additional properties are available on every `row` object returned by the table instance.
+
+- `isExpanded: Bool`
+  - If `true`, this row is in an expanded state.
+- `toggleExpanded: Function(?isExpanded: Bool) => void`
+  - This function will toggle the expanded state of a row between `true` and `false` or, if an `isExpanded` boolean is passed to the function, it will be set as the new `isExpanded` value.
+  - Rows with a hard-coded `manualExpandedKey` (defaults to `expanded`) set to `true` are not affected by this function or the internal expanded state.
+
 ### Example
 
 ```js
-const state = useTableState({ expanded: { '3': true, '5': { '2': true } } })
+function Table({ columns: userColumns, data }) {
+  const {
+    getTableProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: [{ expanded }],
+  } = useTable(
+    {
+      columns: userColumns,
+      data,
+    },
+    useExpanded // Use the useExpanded plugin hook
+  )
 
-const { rows } = useTable(
-  {
-    // state[0].sortBy === { '3': true, '5': { '2': true } }
-    state,
-  },
-  useExpanded
-)
+  return (
+    <>
+      <pre>
+        <code>{JSON.stringify({ expanded }, null, 2)}</code>
+      </pre>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {rows.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+      <br />
+      <div>Showing the first 20 results of {rows.length} rows</div>
+    </>
+  )
+}
+
+function App() {
+  const columns = React.useMemo(
+    () => [
+      {
+        // Build our expander column
+        Header: () => null, // No header, please
+        id: 'expander', // Make sure it has an ID
+        Cell: ({ row }) =>
+          // Use the row.canExpand and row.getExpandedToggleProps prop getter
+          // to build the toggle for expanding a row
+          row.canExpand ? (
+            <span
+              {...row.getExpandedToggleProps({
+                style: {
+                  // We can even use the row.depth property
+                  // and paddingLeft to indicate the depth
+                  // of the row
+                  paddingLeft: `${row.depth * 2}rem`,
+                },
+              })}
+            >
+              {row.isExpanded ? '👇' : '👉'}
+            </span>
+          ) : null,
+      },
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
+      },
+    ],
+    []
+  )
+
+  const data = React.useMemo(() => makeData(5, 5, 5), [])
+
+  return <Table columns={columns} data={data} />
+}
 ```
 
 ## `usePagination`
@@ -1173,18 +1303,179 @@ The following values are provided to the table `instance`:
 ### Example
 
 ```js
-const state = useTableState({ pageSize: 20, pageIndex: 1 })
+function Table({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    page, // Instead of using 'rows', we'll use page,
+    // which has only the rows for the active page
 
-const { rows } = useTable(
-  {
-    // state[0] === { pageSize: 20, pageIndex: 1 }
-    state,
-  },
-  usePagination
-)
+    // The rest of these things are super handy, too ;)
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: [{ pageIndex, pageSize }],
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    usePagination
+  )
+
+  // Render the UI for your table
+  return (
+    <>
+      <pre>
+        <code>
+          {JSON.stringify(
+            {
+              pageIndex,
+              pageSize,
+              pageCount,
+              canNextPage,
+              canPreviousPage,
+            },
+            null,
+            2
+          )}
+        </code>
+      </pre>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {page.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+      {/* 
+        Pagination can be built however you'd like. 
+        This is just a very basic UI implementation:
+      */}
+      <div className="pagination">
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </button>{' '}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </button>{' '}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </button>{' '}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              gotoPage(page)
+            }}
+            style={{ width: '100px' }}
+          />
+        </span> <select
+          value={pageSize}
+          onChange={e => {
+            setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+    </>
+  )
+}
+
+function App() {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
+      },
+    ],
+    []
+  )
+
+  const data = React.useMemo(() => makeData(100000), [])
+
+  return (
+    <Styles>
+      <Table columns={columns} data={data} />
+    </Styles>
+  )
+}
 ```
 
-## `useTokenPagination`
+## `useTokenPagination (Coming Soon)`
 
 - Plugin Hook
 - Optional
@@ -1209,7 +1500,7 @@ Some common use cases for this hook are:
 - Disallowing specific states via a custom state reducer
 - Enabling parent/unrelated components to manipulate the table state
 
-### Table Options
+### Hook Options
 
 The following options are supported via the main options object passed to `useTable(options)`
 
@@ -1232,14 +1523,16 @@ The following options are supported via the main options object passed to `useTa
     - Defaults to `React.useState`
     - This function, if defined will be used as the state hook internally instead of the default `React.useState`. This can be useful for implementing custom state storage hooks like useLocalStorage, etc.
 
-### Instance Variables
+### Output
 
 - `tableStateTuple: [tableState, setTableState]`
   - Similar in structure to the result of `React.useState`
-  - **Memoized**. This tuple array will not change between renders unless state or `useTableState` options change.
+  - **Memoized** - This tuple array will not change between renders unless the state or `useTableState` options change.
   - `tableState: Object`
+    - **Memoized** - This object reference will not change unless the state changes.
     - This is the final state object of the table, which is the product of the `initialState`, `overrides` and the `reducer` options (if applicable)
   - `setTableState: Function(updater, type) => void`
+    - **Memoized** - This function reference will not change unless the internal state `reducer` is changed
     - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
     - `updater: Function`
       - This function signature is **almost** (see next point) identical to the functional API exposed by `React.setState`. It is passed the previous state and is expected to return a new version of the state.

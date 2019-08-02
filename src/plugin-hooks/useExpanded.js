@@ -1,7 +1,13 @@
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { getBy, getFirstDefined, setBy } from '../utils'
+import {
+  getBy,
+  getFirstDefined,
+  setBy,
+  mergeProps,
+  applyPropHooks,
+} from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 
@@ -11,10 +17,11 @@ addActions('toggleExpanded', 'useExpanded')
 
 const propTypes = {
   manualExpandedKey: PropTypes.string,
-  paginateSubRows: PropTypes.bool,
+  nestExpandedRows: PropTypes.bool,
 }
 
 export const useExpanded = hooks => {
+  hooks.getExpandedToggleProps = []
   hooks.useMain.push(useMain)
 }
 
@@ -27,7 +34,7 @@ function useMain(instance) {
     manualExpandedKey = 'expanded',
     hooks,
     state: [{ expanded }, setState],
-    paginateSubRows = true,
+    nestExpandedRows,
   } = instance
 
   const toggleExpandedByPath = (path, set) => {
@@ -44,12 +51,29 @@ function useMain(instance) {
 
   hooks.prepareRow.push(row => {
     row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
+    row.getExpandedToggleProps = props => {
+      return mergeProps(
+        {
+          onClick: e => {
+            e.persist()
+            row.toggleExpanded()
+          },
+          style: {
+            cursor: 'pointer',
+          },
+          title: 'Toggle Expanded',
+        },
+        applyPropHooks(instance.hooks.getExpandedToggleProps, row, instance),
+        props
+      )
+    }
     return row
   })
 
   const expandedRows = useMemo(
     () => {
-      if (debug) console.info('getExpandedRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getExpandedRows')
 
       const expandedRows = []
 
@@ -60,7 +84,7 @@ function useMain(instance) {
           (row.original && row.original[manualExpandedKey]) ||
           getBy(expanded, row.path)
 
-        if (paginateSubRows || (!paginateSubRows && row.depth === 0)) {
+        if (!nestExpandedRows || (nestExpandedRows && row.depth === 0)) {
           expandedRows.push(row)
         }
 
@@ -77,7 +101,7 @@ function useMain(instance) {
 
       return expandedRows
     },
-    [debug, rows, manualExpandedKey, expanded, paginateSubRows]
+    [debug, rows, manualExpandedKey, expanded, nestExpandedRows]
   )
 
   const expandedDepth = findExpandedDepth(expanded)

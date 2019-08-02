@@ -53,6 +53,8 @@ function Table({ columns, data }) {
   // it at 20 for this use case
   const firstPageRows = rows.slice(0, 100)
 
+  console.log(firstPageRows)
+
   return (
     <>
       <pre>
@@ -102,12 +104,7 @@ function Table({ columns, data }) {
                         {cell.grouped ? (
                           // If it's a grouped cell, add an expander and row count
                           <>
-                            <span
-                              style={{
-                                cursor: 'pointer',
-                              }}
-                              onClick={() => row.toggleExpanded()}
-                            >
+                            <span {...row.getExpandedToggleProps()}>
                               {row.isExpanded ? '👇' : '👉'}
                             </span>{' '}
                             {cell.render('Cell')} ({row.subRows.length})

@@ -150,7 +150,8 @@ function useMain(instance) {
         return rows
       }
 
-      if (debug) console.info('getGroupedRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getGroupedRows')
       // Find the columns that can or are aggregating
 
       // Uses each column to aggregate rows into a single value
