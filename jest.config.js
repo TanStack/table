@@ -1,7 +1,7 @@
-const path = require('path');
+const path = require('path')
 
-const lintProject = require('./configs/tests/jest.lint');
-const unitProject = require('./configs/tests/jest.unit');
+const lintProject = require('./configs/tests/jest.lint')
+const unitProject = require('./configs/tests/jest.unit')
 
 module.exports = {
   ...require('./configs/tests/jest.common'),
@@ -13,4 +13,4 @@ module.exports = {
     'jest-watch-typeahead/testname',
     'jest-watch-select-projects',
   ],
-};
+}

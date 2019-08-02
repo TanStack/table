@@ -1,0 +1,714 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders an expandable table 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,10 +1,12 @@
+  <DocumentFragment>
+    <pre>
+      <code>
+        {
+-   \\"expanded\\": {}
++   \\"expanded\\": {
++     \\"0\\": true
++   }
+  }
+      </code>
+    </pre>
+    <table
+      class=\\"\\"
+@@ -82,10 +84,53 @@
+          <td
+            class=\\"\\"
+          >
+            <span
+              style=\\"cursor: pointer; padding-left: 0rem;\\"
++           >
++             👇
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           tanner
++         </td>
++         <td
++           class=\\"\\"
++         >
++           linsley
++         </td>
++         <td
++           class=\\"\\"
++         >
++           29
++         </td>
++         <td
++           class=\\"\\"
++         >
++           100
++         </td>
++         <td
++           class=\\"\\"
++         >
++           In Relationship
++         </td>
++         <td
++           class=\\"\\"
++         >
++           50
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 2rem;\\"
+            >
+              👉
+            </span>
+          </td>
+          <td
+@@ -115,10 +160,139 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            50
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 2rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           derek
++         </td>
++         <td
++           class=\\"\\"
++         >
++           perkins
++         </td>
++         <td
++           class=\\"\\"
++         >
++           40
++         </td>
++         <td
++           class=\\"\\"
++         >
++           40
++         </td>
++         <td
++           class=\\"\\"
++         >
++           Single
++         </td>
++         <td
++           class=\\"\\"
++         >
++           80
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 2rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           joe
++         </td>
++         <td
++           class=\\"\\"
++         >
++           bergevin
++         </td>
++         <td
++           class=\\"\\"
++         >
++           45
++         </td>
++         <td
++           class=\\"\\"
++         >
++           20
++         </td>
++         <td
++           class=\\"\\"
++         >
++           Complicated
++         </td>
++         <td
++           class=\\"\\"
++         >
++           10
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 2rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           jaylen
++         </td>
++         <td
++           class=\\"\\"
++         >
++           linsley
++         </td>
++         <td
++           class=\\"\\"
++         >
++           26
++         </td>
++         <td
++           class=\\"\\"
++         >
++           99
++         </td>
++         <td
++           class=\\"\\"
++         >
++           In Relationship
++         </td>
++         <td
++           class=\\"\\"
++         >
++           70
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >"
+`;
+
+exports[`renders an expandable table 2`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,11 +1,13 @@
+  <DocumentFragment>
+    <pre>
+      <code>
+        {
+    \\"expanded\\": {
+-     \\"0\\": true
++     \\"0\\": {
++       \\"0\\": true
++     }
+    }
+  }
+      </code>
+    </pre>
+    <table
+@@ -127,10 +129,53 @@
+          <td
+            class=\\"\\"
+          >
+            <span
+              style=\\"cursor: pointer; padding-left: 2rem;\\"
++           >
++             👇
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           tanner
++         </td>
++         <td
++           class=\\"\\"
++         >
++           linsley
++         </td>
++         <td
++           class=\\"\\"
++         >
++           29
++         </td>
++         <td
++           class=\\"\\"
++         >
++           100
++         </td>
++         <td
++           class=\\"\\"
++         >
++           In Relationship
++         </td>
++         <td
++           class=\\"\\"
++         >
++           50
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 4rem;\\"
+            >
+              👉
+            </span>
+          </td>
+          <td
+@@ -160,10 +205,139 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            50
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 4rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           derek
++         </td>
++         <td
++           class=\\"\\"
++         >
++           perkins
++         </td>
++         <td
++           class=\\"\\"
++         >
++           40
++         </td>
++         <td
++           class=\\"\\"
++         >
++           40
++         </td>
++         <td
++           class=\\"\\"
++         >
++           Single
++         </td>
++         <td
++           class=\\"\\"
++         >
++           80
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 4rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           joe
++         </td>
++         <td
++           class=\\"\\"
++         >
++           bergevin
++         </td>
++         <td
++           class=\\"\\"
++         >
++           45
++         </td>
++         <td
++           class=\\"\\"
++         >
++           20
++         </td>
++         <td
++           class=\\"\\"
++         >
++           Complicated
++         </td>
++         <td
++           class=\\"\\"
++         >
++           10
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 4rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           jaylen
++         </td>
++         <td
++           class=\\"\\"
++         >
++           linsley
++         </td>
++         <td
++           class=\\"\\"
++         >
++           26
++         </td>
++         <td
++           class=\\"\\"
++         >
++           99
++         </td>
++         <td
++           class=\\"\\"
++         >
++           In Relationship
++         </td>
++         <td
++           class=\\"\\"
++         >
++           70
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >"
+`;
+
+exports[`renders an expandable table 3`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -2,11 +2,13 @@
+    <pre>
+      <code>
+        {
+    \\"expanded\\": {
+      \\"0\\": {
+-       \\"0\\": true
++       \\"0\\": {
++         \\"0\\": true
++       }
+      }
+    }
+  }
+      </code>
+    </pre>
+@@ -172,10 +174,53 @@
+          <td
+            class=\\"\\"
+          >
+            <span
+              style=\\"cursor: pointer; padding-left: 4rem;\\"
++           >
++             👇
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           tanner
++         </td>
++         <td
++           class=\\"\\"
++         >
++           linsley
++         </td>
++         <td
++           class=\\"\\"
++         >
++           29
++         </td>
++         <td
++           class=\\"\\"
++         >
++           100
++         </td>
++         <td
++           class=\\"\\"
++         >
++           In Relationship
++         </td>
++         <td
++           class=\\"\\"
++         >
++           50
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 6rem;\\"
+            >
+              👉
+            </span>
+          </td>
+          <td
+@@ -205,10 +250,139 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            50
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 6rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           derek
++         </td>
++         <td
++           class=\\"\\"
++         >
++           perkins
++         </td>
++         <td
++           class=\\"\\"
++         >
++           40
++         </td>
++         <td
++           class=\\"\\"
++         >
++           40
++         </td>
++         <td
++           class=\\"\\"
++         >
++           Single
++         </td>
++         <td
++           class=\\"\\"
++         >
++           80
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 6rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           joe
++         </td>
++         <td
++           class=\\"\\"
++         >
++           bergevin
++         </td>
++         <td
++           class=\\"\\"
++         >
++           45
++         </td>
++         <td
++           class=\\"\\"
++         >
++           20
++         </td>
++         <td
++           class=\\"\\"
++         >
++           Complicated
++         </td>
++         <td
++           class=\\"\\"
++         >
++           10
++         </td>
++       </tr>
++       <tr
++         class=\\"\\"
++       >
++         <td
++           class=\\"\\"
++         >
++           <span
++             style=\\"cursor: pointer; padding-left: 6rem;\\"
++           >
++             👉
++           </span>
++         </td>
++         <td
++           class=\\"\\"
++         >
++           jaylen
++         </td>
++         <td
++           class=\\"\\"
++         >
++           linsley
++         </td>
++         <td
++           class=\\"\\"
++         >
++           26
++         </td>
++         <td
++           class=\\"\\"
++         >
++           99
++         </td>
++         <td
++           class=\\"\\"
++         >
++           In Relationship
++         </td>
++         <td
++           class=\\"\\"
++         >
++           70
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >"
+`;
+
+exports[`renders an expandable table 4`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -3,11 +3,13 @@
+      <code>
+        {
+    \\"expanded\\": {
+      \\"0\\": {
+        \\"0\\": {
+-         \\"0\\": true
++         \\"0\\": {
++           \\"0\\": true
++         }
+        }
+      }
+    }
+  }
+      </code>
+@@ -218,11 +220,11 @@
+            class=\\"\\"
+          >
+            <span
+              style=\\"cursor: pointer; padding-left: 6rem;\\"
+            >
+-             👉
++             👇
+            </span>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -250,10 +252,30 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            50
++         </td>
++       </tr>
++       <tr>
++         <td
++           colspan=\\"7\\"
++         >
++           <pre>
++             <code>
++               {
++   \\"values\\": {
++     \\"firstName\\": \\"tanner\\",
++     \\"lastName\\": \\"linsley\\",
++     \\"age\\": 29,
++     \\"visits\\": 100,
++     \\"status\\": \\"In Relationship\\",
++     \\"progress\\": 50
++   }
++ }
++             </code>
++           </pre>
+          </td>
+        </tr>
+        <tr
+          class=\\"\\"
+        >"
+`;

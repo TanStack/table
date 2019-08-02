@@ -15,14 +15,18 @@ const propTypes = {
   manualPagination: PropTypes.bool,
 }
 
-// SSR has issues with useLayoutEffect still, so pony-fill with useEffect during SSR
+// SSR has issues with useLayoutEffect still, so use useEffect during SSR
 let useLayoutEffect =
   typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
     ? React.useLayoutEffect
     : React.useEffect
 
-export const usePagination = props => {
-  PropTypes.checkPropTypes(propTypes, props, 'property', 'usePagination')
+export const usePagination = hooks => {
+  hooks.useMain.push(useMain)
+}
+
+function useMain(instance) {
+  PropTypes.checkPropTypes(propTypes, instance, 'property', 'usePagination')
 
   const {
     rows,
@@ -40,53 +44,58 @@ export const usePagination = props => {
       },
       setState,
     ],
-  } = props
-
-  const pageOptions = React.useMemo(
-    () => [...new Array(userPageCount)].map((d, i) => i),
-    [userPageCount]
-  )
+  } = instance
 
   const rowDep = disablePageResetOnDataChange ? null : rows
 
-  useLayoutEffect(() => {
-    setState(
-      old => ({
-        ...old,
-        pageIndex: 0,
-      }),
-      actions.pageChange
-    )
-  }, [setState, rowDep, filters, groupBy, sortBy])
+  useLayoutEffect(
+    () => {
+      setState(
+        old => ({
+          ...old,
+          pageIndex: 0,
+        }),
+        actions.pageChange
+      )
+    },
+    [setState, rowDep, filters, groupBy, sortBy]
+  )
 
-  const { pages, pageCount } = React.useMemo(() => {
-    if (manualPagination) {
-      return {
-        pages: [rows],
-        pageCount: userPageCount,
+  const { pages, pageCount } = React.useMemo(
+    () => {
+      if (manualPagination) {
+        return {
+          pages: [rows],
+          pageCount: userPageCount,
+        }
       }
-    }
-    if (debug) console.info('getPages')
+      if (debug) console.info('getPages')
 
-    // Create a new pages with the first page ready to go.
-    const pages = rows.length ? [] : [[]]
+      // Create a new pages with the first page ready to go.
+      const pages = rows.length ? [] : [[]]
 
-    // Start the pageIndex and currentPage cursors
-    let cursor = 0
-    while (cursor < rows.length) {
-      const end = cursor + pageSize
-      pages.push(rows.slice(cursor, end))
-      cursor = end
-    }
+      // Start the pageIndex and currentPage cursors
+      let cursor = 0
+      while (cursor < rows.length) {
+        const end = cursor + pageSize
+        pages.push(rows.slice(cursor, end))
+        cursor = end
+      }
 
-    const pageCount = pages.length
+      const pageCount = pages.length
 
-    return {
-      pages,
-      pageCount,
-      pageOptions,
-    }
-  }, [manualPagination, debug, rows, pageOptions, userPageCount, pageSize])
+      return {
+        pages,
+        pageCount,
+      }
+    },
+    [manualPagination, debug, rows, userPageCount, pageSize]
+  )
+
+  const pageOptions = React.useMemo(
+    () => [...new Array(pageCount)].map((d, i) => i),
+    [pageCount]
+  )
 
   const page = manualPagination ? rows : pages[pageIndex] || []
   const canPreviousPage = pageIndex > 0
@@ -126,7 +135,7 @@ export const usePagination = props => {
   }
 
   return {
-    ...props,
+    ...instance,
     pages,
     pageOptions,
     pageCount,

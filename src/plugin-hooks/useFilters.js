@@ -14,19 +14,20 @@ const propTypes = {
   // General
   columns: PropTypes.arrayOf(
     PropTypes.shape({
-      filterFn: PropTypes.func,
-      filterAll: PropTypes.bool,
-      canFilter: PropTypes.bool,
+      disableFilters: PropTypes.bool,
       Filter: PropTypes.any,
     })
   ),
 
-  filterFn: PropTypes.func,
   manualFilters: PropTypes.bool,
 }
 
-export const useFilters = props => {
-  PropTypes.checkPropTypes(propTypes, props, 'property', 'useFilters')
+export const useFilters = hooks => {
+  hooks.useMain.push(useMain)
+}
+
+function useMain(instance) {
+  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFilters')
 
   const {
     debug,
@@ -35,9 +36,8 @@ export const useFilters = props => {
     filterTypes: userFilterTypes,
     manualFilters,
     disableFilters,
-    hooks,
     state: [{ filters }, setState],
-  } = props
+  } = instance
 
   const setFilter = (id, updater) => {
     const column = columns.find(d => d.id === id)
@@ -97,28 +97,24 @@ export const useFilters = props => {
     }, actions.setAllFilters)
   }
 
-  hooks.columns.push(columns => {
-    columns.forEach(column => {
-      const { id, accessor, canFilter } = column
+  columns.forEach(column => {
+    const { id, accessor, disableFilters: columnDisableFilters } = column
 
-      // Determine if a column is filterable
-      column.canFilter = accessor
-        ? getFirstDefined(
-            canFilter,
-            disableFilters === true ? false : undefined,
-            true
-          )
-        : false
+    // Determine if a column is filterable
+    column.canFilter = accessor
+      ? getFirstDefined(
+          columnDisableFilters,
+          disableFilters === true ? false : undefined,
+          true
+        )
+      : false
 
-      // Provide the column a way of updating the filter value
-      column.setFilter = val => setFilter(column.id, val)
+    // Provide the column a way of updating the filter value
+    column.setFilter = val => setFilter(column.id, val)
 
-      // Provide the current filter value to the column for
-      // convenience
-      column.filterValue = filters[id]
-    })
-
-    return columns
+    // Provide the current filter value to the column for
+    // convenience
+    column.filterValue = filters[id]
   })
 
   // TODO: Create a filter cache for incremental high speed multi-filtering
@@ -143,12 +139,11 @@ export const useFilters = props => {
             // Find the filters column
             const column = columns.find(d => d.id === columnID)
 
-            column.preFilteredRows = filteredSoFar
-
-            // Don't filter hidden columns or columns that have had their filters disabled
-            if (!column || column.filterable === false) {
+            if (!column) {
               return filteredSoFar
             }
+
+            column.preFilteredRows = filteredSoFar
 
             const filterMethod = getFilterMethod(
               column.filter,
@@ -186,14 +181,6 @@ export const useFilters = props => {
           }
         })
 
-        // then filter any rows without subcolumns because it would be strange to show
-        filteredRows = filteredRows.filter(row => {
-          if (!row.subRows) {
-            return true
-          }
-          return row.subRows.length > 0
-        })
-
         return filteredRows
       }
 
@@ -203,7 +190,7 @@ export const useFilters = props => {
   )
 
   return {
-    ...props,
+    ...instance,
     setFilter,
     setAllFilters,
     preFilteredRows: rows,

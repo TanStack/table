@@ -1,15 +1,12 @@
-const commonConfig = require('./jest.common');
+const commonConfig = require('./jest.common')
 
 module.exports = {
   ...commonConfig,
-
   displayName: 'unit',
-
   coverageDirectory: '../../coverage',
-
-  testMatch: ['<rootDir>/tests/**/*.js'],
-
+  testMatch: ['<rootDir>/src/**/*.test.js'],
   transform: {
-    // '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
+    '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
   },
-};
+  setupFilesAfterEnv: ['./configs/tests/setup.common.js'],
+}

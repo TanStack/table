@@ -1,6 +1,6 @@
 module.exports = {
   hooks: {
-    'pre-commit': 'lint-staged',
-    // 'prepare-commit-msg': 'exec < /dev/tty && git cz --hook',
+    'pre-commit': 'lint-staged && yarn test:ci',
+    'commit-msg': 'commitlint -E HUSKY_GIT_PARAMS',
   },
 }

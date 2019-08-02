@@ -1,12 +1,11 @@
 export const text = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  rows = rows.filter(row => {
     const rowValue = row.values[id]
-    return rowValue !== undefined
-      ? String(rowValue)
-          .toLowerCase()
-          .includes(String(filterValue).toLowerCase())
-      : true
+    return String(rowValue)
+      .toLowerCase()
+      .includes(String(filterValue).toLowerCase())
   })
+  return rows
 }
 
 text.autoRemove = val => !val
@@ -63,6 +62,7 @@ exact.autoRemove = val => typeof val === 'undefined'
 export const equals = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id]
+    // eslint-disable-next-line eqeqeq
     return rowValue == filterValue
   })
 }
@@ -88,6 +88,4 @@ export const between = (rows, id, filterValue) => {
 }
 
 between.autoRemove = val =>
-  console.log(val) ||
-  !val ||
-  (typeof val[0] !== 'number' && typeof val[1] !== 'number')
+  !val || (typeof val[0] !== 'number' && typeof val[1] !== 'number')
