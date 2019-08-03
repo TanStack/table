@@ -163,11 +163,14 @@ import {
 
 # Examples
 
-- [Basic](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+- [Basic - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic-client-side)
 - [Sorting - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting-client-side)
 - [Filtering - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering-client-side)
 - [Grouping - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping-client-side)
 - [Pagination - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-client-side)
+- [Row Selection - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-client-side)
+- [Expanding - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding-client-side)
+- [Sub Components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sub-components)
 
 # Concepts
 
