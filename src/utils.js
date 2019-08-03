@@ -310,6 +310,32 @@ export function flattenBy(columns, childKey) {
   return flatColumns
 }
 
+export function ensurePluginOrder(plugins, befores, plugin, afters) {
+  const pluginIndex = plugins.findIndex(
+    plugin => plugin.pluginName === 'useFilters'
+  )
+
+  befores.forEach(before => {
+    const beforeIndex = plugins.findIndex(
+      plugin => plugin.pluginName === before
+    )
+    if (beforeIndex > pluginIndex) {
+      throw new Error(
+        `React Table: The ${plugin} plugin hook must be placed after the ${before} plugin hook!`
+      )
+    }
+  })
+
+  afters.forEach(after => {
+    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
+    if (afterIndex < pluginIndex) {
+      throw new Error(
+        `React Table: The ${plugin} plugin hook must be placed before the ${after} plugin hook!`
+      )
+    }
+  })
+}
+
 //
 
 function makePathArray(obj) {

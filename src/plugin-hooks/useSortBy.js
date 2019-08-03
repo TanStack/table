@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { ensurePluginOrder } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 import * as sortTypes from '../sortTypes'
@@ -38,6 +39,8 @@ export const useSortBy = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useSortBy.pluginName = 'useSortBy'
+
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useSortBy')
 
@@ -56,6 +59,8 @@ function useMain(instance) {
     state: [{ sortBy }, setState],
     plugins,
   } = instance
+
+  ensurePluginOrder(plugins, [], 'useSortBy', ['useFilters'])
 
   if (process.env.NODE_ENV === 'development') {
     // If useSortBy should probably come after useFilters for

@@ -25,6 +25,8 @@ export const usePagination = hooks => {
   hooks.useMain.push(useMain)
 }
 
+usePagination.pluginName = 'usePagination'
+
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'usePagination')
 

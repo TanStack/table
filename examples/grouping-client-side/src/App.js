@@ -53,8 +53,6 @@ function Table({ columns, data }) {
   // it at 20 for this use case
   const firstPageRows = rows.slice(0, 100)
 
-  console.log(firstPageRows)
-
   return (
     <>
       <pre>

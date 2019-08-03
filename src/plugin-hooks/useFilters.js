@@ -26,6 +26,8 @@ export const useFilters = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useFilters.pluginName = 'useFilters'
+
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFilters')
 

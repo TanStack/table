@@ -142,10 +142,14 @@ export const useTable = (props, ...plugins) => {
   })
 
   // Access the row model
-  instanceRef.current.rows = React.useMemo(
+  const [rows, rowPaths, flatRows] = React.useMemo(
     () => {
       if (process.env.NODE_ENV === 'development' && debug)
         console.time('getAccessedRows')
+
+      let flatRows = 0
+      const rowPaths = []
+
       // Access the row's data
       const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
         // Keep the original reference around
@@ -153,6 +157,9 @@ export const useTable = (props, ...plugins) => {
 
         // Make the new path for the row
         const path = [...parentPath, i]
+
+        flatRows++
+        rowPaths.push(path.join('.'))
 
         // Process any subRows
         const subRows = originalRow[subRowsKey]
@@ -197,10 +204,14 @@ export const useTable = (props, ...plugins) => {
       const accessedData = data.map((d, i) => accessRow(d, i))
       if (process.env.NODE_ENV === 'development' && debug)
         console.timeEnd('getAccessedRows')
-      return accessedData
+      return [accessedData, rowPaths, flatRows]
     },
     [debug, data, subRowsKey]
   )
+
+  instanceRef.current.rows = rows
+  instanceRef.current.rowPaths = rowPaths
+  instanceRef.current.flatRows = flatRows
 
   // Determine column visibility
   instanceRef.current.columns.forEach(column => {
@@ -216,26 +227,8 @@ export const useTable = (props, ...plugins) => {
     instanceRef.current.hooks.useMain,
     instanceRef.current
   )
-  if (debug)
+  if (process.env.NODE_ENV === 'development' && debug)
     console.timeEnd('hooks.useMain')
-
-    // // Allow hooks to decorate columns
-    // if (process.env.NODE_ENV === 'development' && debug) console.time('hooks.useColumns')
-    // instanceRef.current.columns = applyHooks(
-    //   instanceRef.current.hooks.useColumns,
-    //   instanceRef.current.columns,
-    //   instanceRef.current
-    // )
-    // if (process.env.NODE_ENV === 'development' && debug) console.timeEnd('hooks.useColumns')
-
-    // // Allow hooks to decorate headers
-    // if (process.env.NODE_ENV === 'development' && debug) console.time('hooks.useHeaders')
-    // instanceRef.current.headers = applyHooks(
-    //   instanceRef.current.hooks.useHeaders,
-    //   instanceRef.current.headers,
-    //   instanceRef.current
-    // )
-    // if (process.env.NODE_ENV === 'development' && debug) console.timeEnd('hooks.useHeaders')
   ;[...instanceRef.current.columns, ...instanceRef.current.headers].forEach(
     column => {
       // Give columns/headers rendering power
@@ -269,14 +262,6 @@ export const useTable = (props, ...plugins) => {
         )
     }
   )
-
-  // // Allow hooks to decorate headerGroups
-  // if (process.env.NODE_ENV === 'development' && debug) console.time('hooks.useHeaderGroups')
-  // instanceRef.current.headerGroups = applyHooks(
-  //   instanceRef.current.hooks.useHeaderGroups,
-  //   instanceRef.current.headerGroups,
-  //   instanceRef.current
-  // )
 
   instanceRef.current.headerGroups.filter((headerGroup, i) => {
     // Filter out any headers and headerGroups that don't have visible columns
@@ -313,7 +298,6 @@ export const useTable = (props, ...plugins) => {
 
     return false
   })
-  // if (process.env.NODE_ENV === 'development' && debug) console.timeEnd('hooks.useHeaderGroups')
 
   // Run the rows (this could be a dangerous hook with a ton of data)
   if (process.env.NODE_ENV === 'development' && debug)

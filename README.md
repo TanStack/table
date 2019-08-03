@@ -355,6 +355,13 @@ The following properties are available on the table instance returned from `useT
   - **Required**
   - This function is responsible for lazily preparing a row for rendering. Any row that you intend to render in your table needs to be passed to this function **before every render**.
   - **Why?** Since table data could potentially be very large, it can become very expensive to compute all of the necessary state for every row to be rendered regardless if it actually is rendered or not (for example if you are paginating or virtualizing the rows, you may only have a few rows visible at any given moment). This function allows only the rows you intend to display to be computed and prepped with the correct state.
+- `rowPaths: Array<string>`
+  - An array containing the stringified `path` of every original row in the table. eg. If a row has a path of `[0, 3, 2]`, its stringified path would be `0.3.2`.
+  - This array is used by many plugin hooks including `useRowSelect` to manage row selection state
+  - Only rows that exist on the original `data` array will have a path in this array. Rows created by `useGroupBy`'s aggregations and grouping are not included in this array, since they do not reference an original data row.
+- `flatRows: Array<Row>`
+  - An array of all rows, including subRows which have been flattened into the order in which they were detected (depth first)
+  - This can be helpful in calculating total row counts that must include subRows
 
 ### `HeaderGroup` Properties
 

@@ -25,6 +25,8 @@ export const useExpanded = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useExpanded.pluginName = 'useExpanded'
+
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useExpanded')
 

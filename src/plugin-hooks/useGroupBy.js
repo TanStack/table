@@ -45,6 +45,8 @@ export const useGroupBy = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useGroupBy.pluginName = 'useGroupBy'
+
 function columnsBeforeHeaderGroups(columns, { state: [{ groupBy }] }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
