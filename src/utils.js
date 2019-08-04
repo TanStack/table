@@ -310,9 +310,9 @@ export function flattenBy(columns, childKey) {
   return flatColumns
 }
 
-export function ensurePluginOrder(plugins, befores, plugin, afters) {
+export function ensurePluginOrder(plugins, befores, pluginName, afters) {
   const pluginIndex = plugins.findIndex(
-    plugin => plugin.pluginName === 'useFilters'
+    plugin => plugin.pluginName === pluginName
   )
 
   befores.forEach(before => {
@@ -321,7 +321,7 @@ export function ensurePluginOrder(plugins, befores, plugin, afters) {
     )
     if (beforeIndex > pluginIndex) {
       throw new Error(
-        `React Table: The ${plugin} plugin hook must be placed after the ${before} plugin hook!`
+        `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
       )
     }
   })
@@ -330,7 +330,7 @@ export function ensurePluginOrder(plugins, befores, plugin, afters) {
     const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
     if (afterIndex < pluginIndex) {
       throw new Error(
-        `React Table: The ${plugin} plugin hook must be placed before the ${after} plugin hook!`
+        `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
       )
     }
   })
