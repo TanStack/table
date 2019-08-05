@@ -31,6 +31,8 @@ const propTypes = {
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
+  enableMultiSortWithoutShift: PropTypes.bool,
+  maxMultiSortColCount: PropTypes.number, 
   disableSortRemove: PropTypes.bool,
   disableMultiRemove: PropTypes.bool,
 }
@@ -55,6 +57,8 @@ function useMain(instance) {
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
+    enableMultiSortWithoutShift = false,
+    maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
     hooks,
     state: [{ sortBy }, setState],
     plugins,
@@ -145,6 +149,8 @@ function useMain(instance) {
             desc: hasDescDefined ? desc : sortDescFirst,
           },
         ]
+        // Take latest n columns
+        newSortBy.splice(0, newSortBy.length - maxMultiSortColCount);
       } else if (action === 'toggle') {
         // This flips (or sets) the
         newSortBy = sortBy.map(d => {
@@ -194,7 +200,7 @@ function useMain(instance) {
                 e.persist()
                 column.toggleSortBy(
                   undefined,
-                  !instance.disableMultiSort && e.shiftKey
+                  !instance.disableMultiSort && (enableMultiSortWithoutShift || e.shiftKey)
                 )
               }
             : undefined,
