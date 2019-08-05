@@ -17,6 +17,11 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <a href="https://twitter.com/tannerlinsley" target="\_parent">
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
+<br />
+<br />
+<a href="https://patreon.com/tannerlinsley">
+  <img width="180" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
+</a>
 
 <br />
 <br />
@@ -46,17 +51,12 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum-placeholder.png">
+          <img width='480' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
         </a>
       </td>
     </tr>
@@ -68,22 +68,17 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width="300" src="https://nozzle.io/img/logo-blue.png">
+          <img width='230' src="https://nozzle.io/img/logo-blue.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://zappi.com/web" target="_blank">
-          <img width="300" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png">
+          <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
     </tr>
@@ -95,22 +90,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -121,6 +101,51 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     </tr>
   </tbody>
 </table>
+
+<table>
+  <tbody>
+    <tr>
+      <td valign="top">
+        <a href="https://patreon.com/tannerlinsley">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
+        </a>
+      </td>
+      <td>
+        <ul>
+          <li>Nicholas Kaufmann</li>
+          <li>Pekka</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td valign="top">
+        <a href="https://patreon.com/tannerlinsley">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
+        </a>
+      </td>
+      <td>
+        <ul>
+          <li>Sortmy.games</li>
+          <li>Hugo Meissner</li>
+          <li>Benoit Leger-Derville</li>
+          <li>Thomas Funk</li>
+          <li>Dan Houle</li>
+          <li>David Pickut</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<a href="https://patreon.com/tannerlinsley">
+  <img width="150" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
+</a>
+
 
 # Documentation
 
@@ -552,7 +577,7 @@ The following options are supported via the main options object passed to `useTa
 - `sortTypes: Object<sortKey: sortType>`
   - Must be **memoized**
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
-  - For mor information on sort types, see [Sorting](TODO)
+  - For more information on sort types, see [Sorting](TODO)
 
 ### Column Options
 
