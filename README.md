@@ -46,7 +46,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img width='215' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -63,17 +63,17 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img width='215' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width='215' src="https://nozzle.io/img/logo-blue.png">
+          <img width='230' src="https://nozzle.io/img/logo-blue.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://zappi.com/web" target="_blank">
-          <img width='215' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
+          <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
     </tr>
@@ -85,7 +85,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img width='215' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -102,7 +102,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td valign="top">
         <a href="https://patreon.com/tannerlinsley">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
         </a>
       </td>
       <td>
@@ -120,7 +120,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
     <tr>
       <td valign="top">
         <a href="https://patreon.com/tannerlinsley">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
+          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
         </a>
       </td>
       <td>
