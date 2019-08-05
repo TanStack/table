@@ -79,13 +79,15 @@ export const useTable = (props, ...plugins) => {
   })
 
   // Allow plugins to register hooks
-  if (debug) console.time('plugins')
+  if (process.env.NODE_ENV === 'development' && debug) console.time('plugins')
   plugins.filter(Boolean).forEach(plugin => {
     plugin(instanceRef.current.hooks)
   })
-  if (debug) console.timeEnd('plugins')
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.timeEnd('plugins')
 
-  if (debug) console.info('buildColumns/headerGroup/headers')
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.info('buildColumns/headerGroup/headers')
   // Decorate All the columns
   let columnTree = React.useMemo(
     () => decorateColumnTree(userColumns, defaultColumn),
@@ -100,13 +102,15 @@ export const useTable = (props, ...plugins) => {
   // Allow hooks to decorate columns (and trigger this memoization via deps)
   columns = React.useMemo(
     () => {
-      if (debug) console.time('hooks.columnsBeforeHeaderGroups')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.time('hooks.columnsBeforeHeaderGroups')
       const newColumns = applyHooks(
         instanceRef.current.hooks.columnsBeforeHeaderGroups,
         columns,
         instanceRef.current
       )
-      if (debug) console.timeEnd('hooks.columnsBeforeHeaderGroups')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('hooks.columnsBeforeHeaderGroups')
       return newColumns
     },
     [
@@ -138,9 +142,14 @@ export const useTable = (props, ...plugins) => {
   })
 
   // Access the row model
-  instanceRef.current.rows = React.useMemo(
+  const [rows, rowPaths, flatRows] = React.useMemo(
     () => {
-      if (debug) console.time('getAccessedRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.time('getAccessedRows')
+
+      let flatRows = 0
+      const rowPaths = []
+
       // Access the row's data
       const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
         // Keep the original reference around
@@ -148,6 +157,9 @@ export const useTable = (props, ...plugins) => {
 
         // Make the new path for the row
         const path = [...parentPath, i]
+
+        flatRows++
+        rowPaths.push(path.join('.'))
 
         // Process any subRows
         const subRows = originalRow[subRowsKey]
@@ -190,11 +202,16 @@ export const useTable = (props, ...plugins) => {
 
       // Use the resolved data
       const accessedData = data.map((d, i) => accessRow(d, i))
-      if (debug) console.timeEnd('getAccessedRows')
-      return accessedData
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('getAccessedRows')
+      return [accessedData, rowPaths, flatRows]
     },
     [debug, data, subRowsKey]
   )
+
+  instanceRef.current.rows = rows
+  instanceRef.current.rowPaths = rowPaths
+  instanceRef.current.flatRows = flatRows
 
   // Determine column visibility
   instanceRef.current.columns.forEach(column => {
@@ -204,31 +221,14 @@ export const useTable = (props, ...plugins) => {
         : !!column.show
   })
 
-  if (debug) console.time('hooks.useMain')
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.time('hooks.useMain')
   instanceRef.current = applyHooks(
     instanceRef.current.hooks.useMain,
     instanceRef.current
   )
-  if (debug)
+  if (process.env.NODE_ENV === 'development' && debug)
     console.timeEnd('hooks.useMain')
-
-    // // Allow hooks to decorate columns
-    // if (debug) console.time('hooks.useColumns')
-    // instanceRef.current.columns = applyHooks(
-    //   instanceRef.current.hooks.useColumns,
-    //   instanceRef.current.columns,
-    //   instanceRef.current
-    // )
-    // if (debug) console.timeEnd('hooks.useColumns')
-
-    // // Allow hooks to decorate headers
-    // if (debug) console.time('hooks.useHeaders')
-    // instanceRef.current.headers = applyHooks(
-    //   instanceRef.current.hooks.useHeaders,
-    //   instanceRef.current.headers,
-    //   instanceRef.current
-    // )
-    // if (debug) console.timeEnd('hooks.useHeaders')
   ;[...instanceRef.current.columns, ...instanceRef.current.headers].forEach(
     column => {
       // Give columns/headers rendering power
@@ -262,14 +262,6 @@ export const useTable = (props, ...plugins) => {
         )
     }
   )
-
-  // // Allow hooks to decorate headerGroups
-  // if (debug) console.time('hooks.useHeaderGroups')
-  // instanceRef.current.headerGroups = applyHooks(
-  //   instanceRef.current.hooks.useHeaderGroups,
-  //   instanceRef.current.headerGroups,
-  //   instanceRef.current
-  // )
 
   instanceRef.current.headerGroups.filter((headerGroup, i) => {
     // Filter out any headers and headerGroups that don't have visible columns
@@ -306,16 +298,17 @@ export const useTable = (props, ...plugins) => {
 
     return false
   })
-  // if (debug) console.timeEnd('hooks.useHeaderGroups')
 
   // Run the rows (this could be a dangerous hook with a ton of data)
-  if (debug) console.time('hooks.useRows')
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.time('hooks.useRows')
   instanceRef.current.rows = applyHooks(
     instanceRef.current.hooks.useRows,
     instanceRef.current.rows,
     instanceRef.current
   )
-  if (debug) console.timeEnd('hooks.useRows')
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.timeEnd('hooks.useRows')
 
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.

@@ -310,6 +310,40 @@ export function flattenBy(columns, childKey) {
   return flatColumns
 }
 
+export function ensurePluginOrder(plugins, befores, pluginName, afters) {
+  const pluginIndex = plugins.findIndex(
+    plugin => plugin.pluginName === pluginName
+  )
+
+  if (pluginIndex === -1) {
+    throw new Error(`The plugin ${pluginName} was not found in the plugin list!
+This usually means you need to need to name your plugin hook by setting the 'pluginName' property of the hook function, eg:
+
+  ${pluginName}.pluginName = '${pluginName}'
+`)
+  }
+
+  befores.forEach(before => {
+    const beforeIndex = plugins.findIndex(
+      plugin => plugin.pluginName === before
+    )
+    if (beforeIndex > -1 && beforeIndex > pluginIndex) {
+      throw new Error(
+        `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
+      )
+    }
+  })
+
+  afters.forEach(after => {
+    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
+    if (afterIndex > -1 && afterIndex < pluginIndex) {
+      throw new Error(
+        `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
+      )
+    }
+  })
+}
+
 //
 
 function makePathArray(obj) {

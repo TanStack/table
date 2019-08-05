@@ -33,20 +33,19 @@ const Styles = styled.div`
   }
 `
 
-function Table({ columns: userColumns, data, SubComponent }) {
+function Table({ columns: userColumns, data }) {
   const {
     getTableProps,
     headerGroups,
     rows,
     prepareRow,
-    columns,
     state: [{ expanded }],
   } = useTable(
     {
       columns: userColumns,
       data,
     },
-    useExpanded
+    useExpanded // Use the useExpanded plugin hook
   )
 
   return (
@@ -68,20 +67,13 @@ function Table({ columns: userColumns, data, SubComponent }) {
           {rows.map(
             (row, i) =>
               prepareRow(row) || (
-                <>
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                  {!row.subRows.length && row.isExpanded ? (
-                    <tr>
-                      <td colSpan={columns.length}>{SubComponent({ row })}</td>
-                    </tr>
-                  ) : null}
-                </>
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
               )
           )}
         </tbody>
@@ -96,19 +88,26 @@ function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: () => null,
-        id: 'expander',
-        Cell: ({ row }) => (
-          <span
-            style={{
-              cursor: 'pointer',
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-            onClick={() => row.toggleExpanded()}
-          >
-            {row.isExpanded ? '👇' : '👉'}
-          </span>
-        ),
+        // Build our expander column
+        Header: () => null, // No header, please
+        id: 'expander', // Make sure it has an ID
+        Cell: ({ row }) =>
+          // Use the row.canExpand and row.getExpandedToggleProps prop getter
+          // to build the toggle for expanding a row
+          row.canExpand ? (
+            <span
+              {...row.getExpandedToggleProps({
+                style: {
+                  // We can even use the row.depth property
+                  // and paddingLeft to indicate the depth
+                  // of the row
+                  paddingLeft: `${row.depth * 2}rem`,
+                },
+              })}
+            >
+              {row.isExpanded ? '👇' : '👉'}
+            </span>
+          ) : null,
       },
       {
         Header: 'Name',
@@ -152,15 +151,7 @@ function App() {
 
   return (
     <Styles>
-      <Table
-        columns={columns}
-        data={data}
-        SubComponent={({ row }) => (
-          <pre>
-            <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
-          </pre>
-        )}
-      />
+      <Table columns={columns} data={data} />
     </Styles>
   )
 }

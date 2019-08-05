@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { ensurePluginOrder } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 import * as sortTypes from '../sortTypes'
@@ -38,6 +39,8 @@ export const useSortBy = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useSortBy.pluginName = 'useSortBy'
+
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useSortBy')
 
@@ -57,18 +60,22 @@ function useMain(instance) {
     plugins,
   } = instance
 
-  // If useSortBy should probably come after useFilters for
-  // the best performance, so let's hint to the user about that...
-  const pluginIndex = plugins.indexOf(useSortBy)
+  ensurePluginOrder(plugins, [], 'useSortBy', ['useFilters'])
 
-  const useFiltersIndex = plugins.findIndex(
-    plugin => plugin.name === 'useFilters'
-  )
+  if (process.env.NODE_ENV === 'development') {
+    // If useSortBy should probably come after useFilters for
+    // the best performance, so let's hint to the user about that...
+    const pluginIndex = plugins.indexOf(useSortBy)
 
-  if (useFiltersIndex > pluginIndex) {
-    console.warn(
-      'React Table: useSortBy should be placed before useFilters in your plugin list for better performance!'
+    const useFiltersIndex = plugins.findIndex(
+      plugin => plugin.name === 'useFilters'
     )
+
+    if (useFiltersIndex > pluginIndex) {
+      console.warn(
+        'React Table: useSortBy should be placed before useFilters in your plugin list for better performance!'
+      )
+    }
   }
 
   // Add custom hooks
@@ -211,7 +218,8 @@ function useMain(instance) {
       if (manualSorting || !sortBy.length) {
         return rows
       }
-      if (debug) console.time('getSortedRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.time('getSortedRows')
 
       const sortData = rows => {
         // Use the orderByFn to compose multiple sortBy's together.
@@ -261,10 +269,11 @@ function useMain(instance) {
           row.subRows = sortData(row.subRows)
         })
 
-        if (debug) console.timeEnd('getSortedRows')
-
         return sortedData
       }
+
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('getSortedRows')
 
       return sortData(rows)
     },

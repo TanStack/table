@@ -102,12 +102,7 @@ function Table({ columns, data }) {
                         {cell.grouped ? (
                           // If it's a grouped cell, add an expander and row count
                           <>
-                            <span
-                              style={{
-                                cursor: 'pointer',
-                              }}
-                              onClick={() => row.toggleExpanded()}
-                            >
+                            <span {...row.getExpandedToggleProps()}>
                               {row.isExpanded ? '👇' : '👉'}
                             </span>{' '}
                             {cell.render('Cell')} ({row.subRows.length})

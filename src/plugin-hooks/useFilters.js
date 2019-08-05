@@ -26,6 +26,8 @@ export const useFilters = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useFilters.pluginName = 'useFilters'
+
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFilters')
 
@@ -128,7 +130,8 @@ function useMain(instance) {
         return rows
       }
 
-      if (debug) console.info('getFilteredRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getFilteredRows')
 
       // Filters top level and nested rows
       const filterRows = rows => {

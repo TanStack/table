@@ -1,0 +1,219 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a table with seletable rows 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -109,11 +109,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Not Selected
++             Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -165,11 +165,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Not Selected
++             Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -221,11 +221,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Not Selected
++             Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -277,11 +277,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Not Selected
++             Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -314,15 +314,20 @@
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+-     Selected Rows: 0
++     Selected Rows: 4
+    </p>
+    <pre>
+      <code>
+        {
+-   \\"selectedRows\\": []
++   \\"selectedRows\\": [
++     \\"0\\",
++     \\"1\\",
++     \\"2\\",
++     \\"3\\"
++   ]
+  }
+      </code>
+    </pre>
+  </DocumentFragment>"
+`;
+
+exports[`renders a table with seletable rows 2`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -109,11 +109,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Selected
++             Not Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -165,11 +165,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Selected
++             Not Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -221,11 +221,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Selected
++             Not Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -277,11 +277,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Selected
++             Not Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -314,20 +314,15 @@
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+-     Selected Rows: 4
++     Selected Rows: 0
+    </p>
+    <pre>
+      <code>
+        {
+-   \\"selectedRows\\": [
+-     \\"0\\",
+-     \\"1\\",
+-     \\"2\\",
+-     \\"3\\"
+-   ]
++   \\"selectedRows\\": []
+  }
+      </code>
+    </pre>
+  </DocumentFragment>"
+`;
+
+exports[`renders a table with seletable rows 3`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -109,11 +109,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Not Selected
++             Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -221,11 +221,11 @@
+          </td>
+          <td
+            class=\\"\\"
+          >
+            <div>
+-             Not Selected
++             Selected
+            </div>
+          </td>
+          <td
+            class=\\"\\"
+          >
+@@ -314,15 +314,18 @@
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+-     Selected Rows: 0
++     Selected Rows: 2
+    </p>
+    <pre>
+      <code>
+        {
+-   \\"selectedRows\\": []
++   \\"selectedRows\\": [
++     \\"0\\",
++     \\"2\\"
++   ]
+  }
+      </code>
+    </pre>
+  </DocumentFragment>"
+`;

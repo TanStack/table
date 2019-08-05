@@ -45,6 +45,8 @@ export const useGroupBy = hooks => {
   hooks.useMain.push(useMain)
 }
 
+useGroupBy.pluginName = 'useGroupBy'
+
 function columnsBeforeHeaderGroups(columns, { state: [{ groupBy }] }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
@@ -150,7 +152,8 @@ function useMain(instance) {
         return rows
       }
 
-      if (debug) console.info('getGroupedRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getGroupedRows')
       // Find the columns that can or are aggregating
 
       // Uses each column to aggregate rows into a single value
