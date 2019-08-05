@@ -122,6 +122,46 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
   </tbody>
 </table>
 
+<table>
+  <tbody>
+    <tr>
+      <td valign="top">
+        <a href="https://patreon.com/tannerlinsley">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
+        </a>
+      </td>
+      <td>
+        <ul>
+          <li>Nicholas Kaufmann</li>
+          <li>Pekka</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td valign="top">
+        <a href="https://patreon.com/tannerlinsley">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
+        </a>
+      </td>
+      <td>
+        <ul>
+          <li>Sortmy.games</li>
+          <li>Hugo Meissner</li>
+          <li>Benoit Leger-Derville</li>
+          <li>Thomas Funk</li>
+          <li>Dan Houle</li>
+          <li>David Pickut</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 # Documentation
 
 - [Installation](#installation)
