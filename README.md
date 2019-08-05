@@ -577,7 +577,7 @@ The following options are supported via the main options object passed to `useTa
 - `sortTypes: Object<sortKey: sortType>`
   - Must be **memoized**
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
-  - For mor information on sort types, see [Sorting](TODO)
+  - For more information on sort types, see [Sorting](TODO)
 
 ### Column Options
 
