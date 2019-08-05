@@ -269,11 +269,11 @@ function useMain(instance) {
           row.subRows = sortData(row.subRows)
         })
 
-        if (process.env.NODE_ENV === 'development' && debug)
-          console.timeEnd('getSortedRows')
-
         return sortedData
       }
+
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('getSortedRows')
 
       return sortData(rows)
     },

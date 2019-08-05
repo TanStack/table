@@ -43,7 +43,6 @@ function Table({ columns, data }) {
       columns,
       data,
       defaultColumn,
-      debug: true,
     },
     useSortBy
   )
