@@ -73,12 +73,12 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width="250" src="https://nozzle.io/img/logo-blue.png">
+          <img src="https://nozzle.io/img/logo-blue.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://zappi.com/web" target="_blank">
-          <img width="250" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -100,7 +100,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
       </td>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img width="200" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
+          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
         </a>
       </td>
       <td align="center" valign="middle">
