@@ -18,6 +18,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
 <br />
+<br />
 <a href="https://patreon.com/tannerlinsley">
   <img width="180" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
 </a>
