@@ -566,6 +566,10 @@ The following options are supported via the main options object passed to `useTa
   - Disables sorting for every column in the entire table.
 - `disableMultiSort: Bool`
   - Disables multi-sorting for the entire table.
+- `enableMultiSortWithoutShift: Bool`
+  - Setting this flag to true makes pressing shift key as optional for multi-sorting.
+- `maxMultiSortColCount: Number`
+  - Limit on max number of columns for multisort, e.g. if set to 3, and suppose table is sorted by `[A, B, C]` and then clicking `D` for sorting should result in table sorted by `[B, C , D]`
 - `disableSortRemove: Bool`
   - If true, the un-sorted state will not be available to columns once they have been sorted.
 - `disableMultiRemove: Bool`
