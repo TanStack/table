@@ -37,17 +37,8 @@ function useMain(instance) {
     disablePageResetOnDataChange,
     debug,
     plugins,
-    state: [
-      {
-        pageSize,
-        pageIndex,
-        pageCount: userPageCount,
-        filters,
-        groupBy,
-        sortBy,
-      },
-      setState,
-    ],
+    pageCount: userPageCount,
+    state: [{ pageSize, pageIndex, filters, groupBy, sortBy }, setState],
   } = instance
 
   ensurePluginOrder(
@@ -57,7 +48,7 @@ function useMain(instance) {
     []
   )
 
-  const rowDep = disablePageResetOnDataChange ? null : rows
+  const rowDep = manualPagination || disablePageResetOnDataChange ? null : rows
 
   useLayoutEffect(
     () => {
@@ -72,13 +63,10 @@ function useMain(instance) {
     [setState, rowDep, filters, groupBy, sortBy]
   )
 
-  const { pages, pageCount } = React.useMemo(
+  const pages = React.useMemo(
     () => {
       if (manualPagination) {
-        return {
-          pages: [rows],
-          pageCount: userPageCount,
-        }
+        return undefined
       }
       if (process.env.NODE_ENV === 'development' && debug)
         console.info('getPages')
@@ -88,30 +76,28 @@ function useMain(instance) {
 
       // Start the pageIndex and currentPage cursors
       let cursor = 0
+
       while (cursor < rows.length) {
         const end = cursor + pageSize
         pages.push(rows.slice(cursor, end))
         cursor = end
       }
 
-      const pageCount = pages.length
-
-      return {
-        pages,
-        pageCount,
-      }
+      return pages
     },
-    [manualPagination, debug, rows, userPageCount, pageSize]
+    [debug, manualPagination, pageSize, rows]
   )
 
+  const pageCount = manualPagination ? userPageCount : pages.length
+
   const pageOptions = React.useMemo(
-    () => [...new Array(pageCount)].map((d, i) => i),
+    () => (pageCount > 0 ? [...new Array(pageCount)].map((d, i) => i) : []),
     [pageCount]
   )
 
-  const page = manualPagination ? rows : pages[pageIndex] || []
+  const page = manualPagination ? rows : pages[pageIndex]
   const canPreviousPage = pageIndex > 0
-  const canNextPage = pageIndex < pageCount - 1
+  const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
 
   const gotoPage = pageIndex => {
     if (process.env.NODE_ENV === 'development' && debug)
