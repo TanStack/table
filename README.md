@@ -146,7 +146,6 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
   <img width="150" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
 </a>
 
-
 # Documentation
 
 - [Installation](#installation)
@@ -190,6 +189,7 @@ import {
 - [Row Selection - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-client-side)
 - [Expanding - Client Side](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding-client-side)
 - [Sub Components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sub-components)
+- [Editable Data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/editable-cells)
 
 # Concepts
 
@@ -311,6 +311,11 @@ The following options are supported via the main options object passed to `useTa
   - The default column object for every column passed to React Table.
   - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
   - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
+- `initialRowStateKey: String`
+  - Optional
+  - Defaults to `initialState`
+  - This key is used to look for the initial state of a row when initializing the `rowState` for a`data` array.
+  - If the value located at `row[initialRowStateKey]` is falsey, `{}` will be used instead.
 - `debug: Bool`
   - Optional
   - A flag to turn on debug mode.
@@ -384,6 +389,14 @@ The following properties are available on the table instance returned from `useT
 - `flatRows: Array<Row>`
   - An array of all rows, including subRows which have been flattened into the order in which they were detected (depth first)
   - This can be helpful in calculating total row counts that must include subRows
+- `setRowState: Function(rowPath, updater: Function | any) => void`
+  - This function can be used to update the internal state for any row.
+  - Pass it a valid `rowPath` array and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
+  - If `updater` is a function, it will be passed the previous value
+- `setCellState: Function(rowPath, columnID, updater: Function | any) => void`
+  - This function can be used to update the internal state for any cell.
+  - Pass it a valid `rowPath` array, `columnID` and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
+  - If `updater` is a function, it will be passed the previous value
 
 ### `HeaderGroup` Properties
 
@@ -439,6 +452,10 @@ The following additional properties are available on every `row` object returned
   - This array is used with plugin hooks like `useExpanded` and `useGroupBy` to compute expanded states for individual rows.
 - `subRows: Array<Row>`
   - If subRows were detect on the original data object, this will be an array of those materialized row objects.
+- `state: Object`
+
+  - The current state of the row. It's lifespan is attached to that of the original `data` array. When the raw `data` is changed, this state value is reset to the row's initial value (using the `initialRowStateKey` option).
+  - Can be updated via `instance.setRowState` or the row's `setState` function.
 
 ### Cell Properties
 
@@ -1294,7 +1311,7 @@ The following options are supported via the main options object passed to `useTa
   - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
   - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
 
-### Instance Variables
+### Instance Properties
 
 The following values are provided to the table `instance`:
 
@@ -1512,6 +1529,225 @@ function App() {
 `useTokenPagination` is the hook that **aids in implementing row pagination using tokens**. It is useful for server-side pagination implementations that use **tokens** instead of page index. For more information on pagination, see [Pagination](TODO)
 
 > Documentation Coming Soon...
+
+## `useRowSelect`
+
+- Plugin Hook
+- Optional
+
+`useRowSelect` is the hook that implements **basic row selection**. For more information on row selection, see [Row Selection](TODO)
+
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `state[0].selectedRows: Array<RowPathKey>`
+  - Optional
+  - Defaults to `[]`
+  - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
+- `manualRowSelectedKey: String`
+  - Optional
+  - Defaults to `selected`
+  - If this key is found on the **original** data row, and it is true, this row will be manually selected
+
+### Instance Properties
+
+The following values are provided to the table `instance`:
+
+- `toggleRowSelected: Function(rowPath: String, ?set: Bool) => void`
+  - Use this function to toggle a row's selected state.
+  - Optionally pass `true` or `false` to set it to that state
+- `toggleRowSelectedAll: Function(?set: Bool) => void`
+  - Use this function to toggle all rows as select or not
+  - Optionally pass `true` or `false` to set all rows to that state
+- `getToggleAllRowsSelectedProps: Function(props) => props`
+  - Use this function to get the props needed for a **select all checkbox**.
+  - Props:
+    - `onChange: Function()`
+    - `style.cursor: 'pointer'`
+    - `checked: Bool`
+    - `title: 'Toggle All Rows Selected'`
+- `allRowsSelected: Bool`
+  - Will be `true` if all rows are selected.
+  - If at least one row is not selected, will be `false`
+
+### Example
+
+```js
+function Table({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    getTableProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: [{ selectedRows }],
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useRowSelect
+  )
+
+  // Render the UI for your table
+  return (
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {rows.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+      <p>Selected Rows: {selectedRows.length}</p>
+      <pre>
+        <code>{JSON.stringify({ selectedRows }, null, 2)}</code>
+      </pre>
+    </>
+  )
+}
+
+function App() {
+  const columns = React.useMemo(
+    () => [
+      // Let's make a column for selection
+      {
+        id: 'selection',
+        // The header can use the table's getToggleAllRowsSelectedProps method
+        // to render a checkbox
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        // The cell can use the individual row's getToggleRowSelectedProps method
+        // to the render a checkbox
+        Cell: ({ row }) => (
+          <div>
+            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+      },
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
+      },
+    ],
+    []
+  )
+
+  const data = React.useMemo(() => makeData(10), [])
+
+  return <Table columns={columns} data={data} />
+}
+```
+
+## `useRowState`
+
+- Plugin Hook
+- Optional
+
+`useRowState` is a plugin hook that implements **basic state management for _prepared_ rows and their cells**.
+
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `state[0].rowState: Object<RowPathKey:Object<any, cellState: {columnID: Object}>>`
+  - Optional
+  - Defaults to `{}`
+  - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have the state of the value corresponding to that key.
+  - Individual row states can contain anything, but they also contain a `cellState` key, which provides cell-level state based on column ID's to every
+    **prepared** cell in the table.
+- `initialRowStateAccessor: Function`
+  - Optional
+  - This function may optionally return the initial state for a row.
+  - If this function is defined, it will be passed a `Row` object, from which you can return a value to use as the initial state, eg. `row => row.original.initialState`
+
+### Instance Properties
+
+The following values are provided to the table `instance`:
+
+- `setRowState: Function(rowPath: Array<string>, updater: Function | Any) => void`
+  - Use this function to programmatically update the state of a row.
+  - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+- `setCellState: Function(rowPath: Array<string>, columnID: String, updater: Function | Any) => void`
+  - Use this function to programmatically update the cell of a row.
+  - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+
+### Row Properties
+
+The following additional properties are available on every **prepared** `row` object returned by the table instance.
+
+- `state: Object`
+  - This is the state object for each row, pre-mapped to the row from the table state's `rowState` object via `rowState[row.path.join('.')]`
+  - May also contain a `cellState` key/value pair, which is used to provide individual cell states to this row's cells
+- `setState: Function(updater: Function | any)`
+  - Use this function to programmatically update the state of a row.
+  - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+
+### Cell Properties
+
+The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
+
+- `state: Object`
+  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.path.join('.')].cellState[columnID]`
+- `setState: Function(updater: Function | any)`
+  - Use this function to programmatically update the state of a cell.
+  - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+
+### Example
+
+> Have an example of using useRowState? Submit a PR to add it here!
 
 ## `useTableState`
 

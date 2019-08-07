@@ -50,7 +50,9 @@ function useMain(instance) {
     }, actions.toggleRowSelectedAll)
   }
 
-  const toggleRowSelected = (key, set) => {
+  const toggleRowSelected = (path, set) => {
+    const key = path.join('.')
+
     return setState(old => {
       // Join the paths of deep rows
       // to make a key, then manage all of the keys
@@ -72,10 +74,6 @@ function useMain(instance) {
         selectedRows: [...newSelectedRows.values()],
       }
     }, actions.toggleRowSelected)
-  }
-
-  const toggleRowSelectedByPath = (path, set) => {
-    return toggleRowSelected(path.join('.'), set)
   }
 
   const getToggleAllRowsSelectedProps = props => {
@@ -100,7 +98,7 @@ function useMain(instance) {
 
     if (row.canSelect) {
       row.selected = selectedRows.includes(row.path.join('.'))
-      row.toggleRowSelected = set => toggleRowSelectedByPath(row.path, set)
+      row.toggleRowSelected = set => toggleRowSelected(row.path, set)
       row.getToggleRowSelectedProps = props => {
         let checked = false
 
@@ -137,7 +135,6 @@ function useMain(instance) {
   return {
     ...instance,
     toggleRowSelected,
-    toggleRowSelectedByPath,
     toggleRowSelectedAll,
     getToggleAllRowsSelectedProps,
     allRowsSelected,

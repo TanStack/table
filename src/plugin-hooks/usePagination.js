@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 //
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
+import { ensurePluginOrder } from '../utils'
 
 defaultState.pageSize = 10
 defaultState.pageIndex = 0
@@ -49,39 +50,12 @@ function useMain(instance) {
     ],
   } = instance
 
-  // If usePagination should probably come after useFilters for
-  // the best performance, so let's hint to the user about that...
-  const pluginIndex = plugins.indexOf(usePagination)
-
-  if (process.env.NODE_ENV === 'development') {
-    const useFiltersIndex = plugins.findIndex(
-      plugin => plugin.name === 'useFilters'
-    )
-    const useGroupByIndex = plugins.findIndex(
-      plugin => plugin.name === 'useGroupBy'
-    )
-    const useSortByIndex = plugins.findIndex(
-      plugin => plugin.name === 'useSortBy'
-    )
-
-    if (useFiltersIndex > pluginIndex) {
-      throw new Error(
-        'React Table: The usePagination plugin hook must be placed before the useFilters plugin hook!'
-      )
-    }
-
-    if (useGroupByIndex > pluginIndex) {
-      throw new Error(
-        'React Table: The usePagination plugin hook must be placed before the useGroupBy plugin hook!'
-      )
-    }
-
-    if (useSortByIndex > pluginIndex) {
-      throw new Error(
-        'React Table: The usePagination plugin hook must be placed before the useSortBy plugin hook!'
-      )
-    }
-  }
+  ensurePluginOrder(
+    plugins,
+    ['useFilters', 'useGroupBy', 'useSortBy'],
+    'usePagination',
+    []
+  )
 
   const rowDep = disablePageResetOnDataChange ? null : rows
 
