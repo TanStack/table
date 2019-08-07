@@ -156,7 +156,7 @@ function useMain(instance) {
 
     const canSort = accessor
       ? getFirstDefined(
-          columnDisableSorting,
+          columnDisableSorting === true ? false : undefined,
           disableSorting === true ? false : undefined,
           true
         )

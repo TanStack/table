@@ -114,6 +114,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         <ul>
           <li>Nicholas Kaufmann</li>
           <li>Pekka</li>
+          <li>Jon Eickmeier</li>
         </ul>
       </td>
     </tr>
