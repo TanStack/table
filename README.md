@@ -191,7 +191,7 @@ import {
   - [Row Selection](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
   - [Expanding](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding)
   - [Sub Components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sub-components)
-  - [Editable Data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/editable-cells)
+  - [Editable Data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/editable-data)
 - Controlled
   - [Pagination (Controlled)](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
 
