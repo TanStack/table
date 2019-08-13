@@ -52,13 +52,14 @@ function useMain(instance) {
 
   useLayoutEffect(
     () => {
-      setState(
-        old => ({
-          ...old,
-          pageIndex: 0,
-        }),
-        actions.pageChange
-      )
+      if (pageIndex !== 0)
+        setState(
+          old => ({
+            ...old,
+            pageIndex: 0,
+          }),
+          actions.pageChange
+        )
     },
     [setState, rowDep, filters, groupBy, sortBy]
   )
