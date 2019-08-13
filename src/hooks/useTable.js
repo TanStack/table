@@ -206,7 +206,7 @@ export const useTable = (props, ...plugins) => {
         console.timeEnd('getAccessedRows')
       return [accessedData, rowPaths, flatRows]
     },
-    [debug, data, subRowsKey]
+    [debug, data, columns, subRowsKey]
   )
 
   instanceRef.current.rows = rows
