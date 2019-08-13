@@ -62,9 +62,13 @@ function useMain(instance) {
       let newSelectedRows = new Set(selectedRows)
 
       if (!exists && shouldExist) {
-        newSelectedRows.add(key)
+        rowPaths.forEach((rowPath) => {
+          if (rowPath.startsWith(key)) newSelectedRows.add(rowPath)
+        })
       } else if (exists && !shouldExist) {
-        newSelectedRows.delete(key)
+        rowPaths.forEach((rowPath) => {
+          if (rowPath.startsWith(key)) newSelectedRows.delete(rowPath)
+        })
       } else {
         return old
       }
