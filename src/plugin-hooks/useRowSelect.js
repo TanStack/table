@@ -50,6 +50,20 @@ function useMain(instance) {
     }, actions.toggleRowSelectedAll)
   }
 
+  const updateParentRow = (selectedRows, path) => {
+    const parentPath = path.slice(0, path.length - 1)
+    const parentKey = parentPath.join(".")
+    const selected = rowPaths.filter(path =>
+      path !== parentKey && path.startsWith(parentKey) && !selectedRows.has(path)
+    ).length === 0
+    if (selected) {
+      selectedRows.add(parentKey)
+    } else {
+      selectedRows.delete(parentKey)
+    }
+    if (parentPath.length > 1) updateParentRow(selectedRows, parentPath)
+  }
+
   const toggleRowSelected = (path, set) => {
     const key = path.join('.')
 
@@ -72,6 +86,10 @@ function useMain(instance) {
       } else {
         return old
       }
+
+      // If the row is a subRow update
+      // its parent row to reflect changes
+      if (path.length > 1) updateParentRow(newSelectedRows, path)
 
       return {
         ...old,
