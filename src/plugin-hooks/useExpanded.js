@@ -72,39 +72,36 @@ function useMain(instance) {
     return row
   })
 
-  const expandedRows = useMemo(
-    () => {
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getExpandedRows')
+  const expandedRows = useMemo(() => {
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('getExpandedRows')
 
-      const expandedRows = []
+    const expandedRows = []
 
-      // Here we do some mutation, but it's the last stage in the
-      // immutable process so this is safe
-      const handleRow = row => {
-        row.isExpanded =
-          (row.original && row.original[manualExpandedKey]) ||
-          getBy(expanded, row.path)
+    // Here we do some mutation, but it's the last stage in the
+    // immutable process so this is safe
+    const handleRow = row => {
+      row.isExpanded =
+        (row.original && row.original[manualExpandedKey]) ||
+        getBy(expanded, row.path)
 
-        if (!nestExpandedRows || (nestExpandedRows && row.depth === 0)) {
-          expandedRows.push(row)
-        }
-
-        row.canExpand = row.subRows && !!row.subRows.length
-
-        if (row.isExpanded && row.subRows && row.subRows.length) {
-          row.subRows.forEach(handleRow)
-        }
-
-        return row
+      if (!nestExpandedRows || (nestExpandedRows && row.depth === 0)) {
+        expandedRows.push(row)
       }
 
-      rows.forEach(handleRow)
+      row.canExpand = row.subRows && !!row.subRows.length
 
-      return expandedRows
-    },
-    [debug, rows, manualExpandedKey, expanded, nestExpandedRows]
-  )
+      if (row.isExpanded && row.subRows && row.subRows.length) {
+        row.subRows.forEach(handleRow)
+      }
+
+      return row
+    }
+
+    rows.forEach(handleRow)
+
+    return expandedRows
+  }, [debug, rows, manualExpandedKey, expanded, nestExpandedRows])
 
   const expandedDepth = findExpandedDepth(expanded)
 

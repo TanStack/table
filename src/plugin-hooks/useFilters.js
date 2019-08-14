@@ -124,73 +124,68 @@ function useMain(instance) {
   // cache for each row group (top-level rows, and each row's recursive subrows)
   // This would make multi-filtering a lot faster though. Too far?
 
-  const filteredRows = React.useMemo(
-    () => {
-      if (manualFilters || !Object.keys(filters).length) {
-        return rows
-      }
+  const filteredRows = React.useMemo(() => {
+    if (manualFilters || !Object.keys(filters).length) {
+      return rows
+    }
 
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getFilteredRows')
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('getFilteredRows')
 
-      // Filters top level and nested rows
-      const filterRows = rows => {
-        let filteredRows = rows
+    // Filters top level and nested rows
+    const filterRows = rows => {
+      let filteredRows = rows
 
-        filteredRows = Object.entries(filters).reduce(
-          (filteredSoFar, [columnID, filterValue]) => {
-            // Find the filters column
-            const column = columns.find(d => d.id === columnID)
+      filteredRows = Object.entries(filters).reduce(
+        (filteredSoFar, [columnID, filterValue]) => {
+          // Find the filters column
+          const column = columns.find(d => d.id === columnID)
 
-            if (!column) {
-              return filteredSoFar
-            }
+          if (!column) {
+            return filteredSoFar
+          }
 
-            column.preFilteredRows = filteredSoFar
+          column.preFilteredRows = filteredSoFar
 
-            const filterMethod = getFilterMethod(
-              column.filter,
-              userFilterTypes || {},
-              filterTypes
+          const filterMethod = getFilterMethod(
+            column.filter,
+            userFilterTypes || {},
+            filterTypes
+          )
+
+          if (!filterMethod) {
+            console.warn(
+              `Could not find a valid 'column.filter' for column with the ID: ${column.id}.`
             )
-
-            if (!filterMethod) {
-              console.warn(
-                `Could not find a valid 'column.filter' for column with the ID: ${
-                  column.id
-                }.`
-              )
-              return filteredSoFar
-            }
-
-            // Pass the rows, id, filterValue and column to the filterMethod
-            // to get the filtered rows back
-            return filterMethod(filteredSoFar, columnID, filterValue, column)
-          },
-          rows
-        )
-
-        // Apply the filter to any subRows
-        // We technically could do this recursively in the above loop,
-        // but that would severely hinder the API for the user, since they
-        // would be required to do that recursion in some scenarios
-        filteredRows = filteredRows.map(row => {
-          if (!row.subRows) {
-            return row
+            return filteredSoFar
           }
-          return {
-            ...row,
-            subRows: filterRows(row.subRows),
-          }
-        })
 
-        return filteredRows
-      }
+          // Pass the rows, id, filterValue and column to the filterMethod
+          // to get the filtered rows back
+          return filterMethod(filteredSoFar, columnID, filterValue, column)
+        },
+        rows
+      )
 
-      return filterRows(rows)
-    },
-    [manualFilters, filters, debug, rows, columns, userFilterTypes]
-  )
+      // Apply the filter to any subRows
+      // We technically could do this recursively in the above loop,
+      // but that would severely hinder the API for the user, since they
+      // would be required to do that recursion in some scenarios
+      filteredRows = filteredRows.map(row => {
+        if (!row.subRows) {
+          return row
+        }
+        return {
+          ...row,
+          subRows: filterRows(row.subRows),
+        }
+      })
+
+      return filteredRows
+    }
+
+    return filterRows(rows)
+  }, [manualFilters, filters, debug, rows, columns, userFilterTypes])
 
   return {
     ...instance,

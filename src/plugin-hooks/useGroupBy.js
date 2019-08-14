@@ -146,110 +146,115 @@ function useMain(instance) {
     return row
   })
 
-  const groupedRows = useMemo(
-    () => {
-      if (manualGroupBy || !groupBy.length) {
+  const groupedRows = useMemo(() => {
+    if (manualGroupBy || !groupBy.length) {
+      return rows
+    }
+
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('getGroupedRows')
+    // Find the columns that can or are aggregating
+
+    // Uses each column to aggregate rows into a single value
+    const aggregateRowsToValues = (rows, isSourceRows) => {
+      const values = {}
+
+      columns.forEach(column => {
+        // Don't aggregate columns that are in the groupBy
+        if (groupBy.includes(column.id)) {
+          values[column.id] = rows[0] ? rows[0].values[column.id] : null
+          return
+        }
+
+        const columnValues = rows.map(d => d.values[column.id])
+
+        let aggregator = column.aggregate
+
+        if (Array.isArray(aggregator)) {
+          if (aggregator.length !== 2) {
+            console.info({ column })
+            throw new Error(
+              `React Table: Complex aggregators must have 2 values, eg. aggregate: ['sum', 'count']. More info above...`
+            )
+          }
+          if (isSourceRows) {
+            aggregator = aggregator[1]
+          } else {
+            aggregator = aggregator[0]
+          }
+        }
+
+        let aggregateFn =
+          typeof aggregator === 'function'
+            ? aggregator
+            : userAggregations[aggregator] || aggregations[aggregator]
+
+        if (aggregateFn) {
+          values[column.id] = aggregateFn(columnValues, rows)
+        } else if (aggregator) {
+          console.info({ column })
+          throw new Error(
+            `React Table: Invalid aggregate option for column listed above`
+          )
+        } else {
+          values[column.id] = null
+        }
+      })
+      return values
+    }
+
+    // Recursively group the data
+    const groupRecursively = (rows, depth = 0, parentPath = []) => {
+      // This is the last level, just return the rows
+      if (depth >= groupBy.length) {
         return rows
       }
 
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getGroupedRows')
-      // Find the columns that can or are aggregating
+      const columnID = groupBy[depth]
 
-      // Uses each column to aggregate rows into a single value
-      const aggregateRowsToValues = (rows, isSourceRows) => {
-        const values = {}
+      // Group the rows together for this level
+      let groupedRows = groupByFn(rows, columnID)
 
-        columns.forEach(column => {
-          // Don't aggregate columns that are in the groupBy
-          if (groupBy.includes(column.id)) {
-            values[column.id] = rows[0] ? rows[0].values[column.id] : null
-            return
+      // Recurse to sub rows before aggregation
+      groupedRows = Object.entries(groupedRows).map(
+        ([groupByVal, subRows], index) => {
+          const path = [...parentPath, groupByVal]
+
+          subRows = groupRecursively(subRows, depth + 1, path)
+
+          const values = aggregateRowsToValues(
+            subRows,
+            depth + 1 >= groupBy.length
+          )
+
+          const row = {
+            groupByID: columnID,
+            groupByVal,
+            values,
+            subRows,
+            depth,
+            index,
+            path,
           }
 
-          const columnValues = rows.map(d => d.values[column.id])
-
-          let aggregator = column.aggregate
-
-          if (Array.isArray(aggregator)) {
-            if (aggregator.length !== 2) {
-              console.info({ column })
-              throw new Error(
-                `React Table: Complex aggregators must have 2 values, eg. aggregate: ['sum', 'count']. More info above...`
-              )
-            }
-            if (isSourceRows) {
-              aggregator = aggregator[1]
-            } else {
-              aggregator = aggregator[0]
-            }
-          }
-
-          let aggregateFn =
-            typeof aggregator === 'function'
-              ? aggregator
-              : userAggregations[aggregator] || aggregations[aggregator]
-
-          if (aggregateFn) {
-            values[column.id] = aggregateFn(columnValues, rows)
-          } else if (aggregator) {
-            console.info({ column })
-            throw new Error(
-              `React Table: Invalid aggregate option for column listed above`
-            )
-          } else {
-            values[column.id] = null
-          }
-        })
-        return values
-      }
-
-      // Recursively group the data
-      const groupRecursively = (rows, depth = 0, parentPath = []) => {
-        // This is the last level, just return the rows
-        if (depth >= groupBy.length) {
-          return rows
+          return row
         }
+      )
 
-        const columnID = groupBy[depth]
+      return groupedRows
+    }
 
-        // Group the rows together for this level
-        let groupedRows = groupByFn(rows, columnID)
-
-        // Recurse to sub rows before aggregation
-        groupedRows = Object.entries(groupedRows).map(
-          ([groupByVal, subRows], index) => {
-            const path = [...parentPath, groupByVal]
-
-            subRows = groupRecursively(subRows, depth + 1, path)
-
-            const values = aggregateRowsToValues(
-              subRows,
-              depth + 1 >= groupBy.length
-            )
-
-            const row = {
-              groupByID: columnID,
-              groupByVal,
-              values,
-              subRows,
-              depth,
-              index,
-              path,
-            }
-
-            return row
-          }
-        )
-
-        return groupedRows
-      }
-
-      // Assign the new data
-      return groupRecursively(rows)
-    },
-    [manualGroupBy, groupBy, debug, rows, columns, userAggregations, groupByFn]
-  )
+    // Assign the new data
+    return groupRecursively(rows)
+  }, [
+    manualGroupBy,
+    groupBy,
+    debug,
+    rows,
+    columns,
+    userAggregations,
+    groupByFn,
+  ])
 
   return {
     ...instance,
