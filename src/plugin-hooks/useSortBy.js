@@ -31,7 +31,7 @@ const propTypes = {
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
-  enableMultiSortWithoutShift: PropTypes.bool,
+  isMultiSortEvent: PropTypes.func,
   maxMultiSortColCount: PropTypes.number, 
   disableSortRemove: PropTypes.bool,
   disableMultiRemove: PropTypes.bool,
@@ -57,7 +57,7 @@ function useMain(instance) {
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
-    enableMultiSortWithoutShift = false,
+    isMultiSortEvent = (e) => e.shiftKey,
     maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
     hooks,
     state: [{ sortBy }, setState],
@@ -200,7 +200,7 @@ function useMain(instance) {
                 e.persist()
                 column.toggleSortBy(
                   undefined,
-                  !instance.disableMultiSort && (enableMultiSortWithoutShift || e.shiftKey)
+                  !instance.disableMultiSort && isMultiSortEvent(e)
                 )
               }
             : undefined,
