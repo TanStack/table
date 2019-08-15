@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders an expandable table 1`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
@@ -10,64 +10,64 @@ exports[`renders an expandable table 1`] = `
     <pre>
       <code>
         {
--   \\"expanded\\": {}
-+   \\"expanded\\": {
-+     \\"0\\": true
+-   "expanded": {}
++   "expanded": {
++     "0": true
 +   }
   }
       </code>
     </pre>
     <table
-      class=\\"\\"
+      class=""
 @@ -82,10 +84,53 @@
           <td
-            class=\\"\\"
+            class=""
           >
             <span
-              style=\\"cursor: pointer; padding-left: 0rem;\\"
+              style="cursor: pointer; padding-left: 0rem;"
 +           >
 +             👇
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           tanner
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           linsley
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           29
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           100
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           In Relationship
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           50
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 2rem;\\"
++             style="cursor: pointer; padding-left: 2rem;"
             >
               👉
             </span>
@@ -76,147 +76,147 @@ exports[`renders an expandable table 1`] = `
 @@ -115,10 +160,139 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             50
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 2rem;\\"
++             style="cursor: pointer; padding-left: 2rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           derek
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           perkins
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           40
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           40
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           Single
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           80
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 2rem;\\"
++             style="cursor: pointer; padding-left: 2rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           joe
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           bergevin
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           45
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           20
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           Complicated
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           10
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 2rem;\\"
++             style="cursor: pointer; padding-left: 2rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           jaylen
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           linsley
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           26
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           99
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           In Relationship
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           70
           </td>
         </tr>
         <tr
-          class=\\"\\"
-        >"
+          class=""
+        >
 `;
 
 exports[`renders an expandable table 2`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
@@ -225,10 +225,10 @@ exports[`renders an expandable table 2`] = `
     <pre>
       <code>
         {
-    \\"expanded\\": {
--     \\"0\\": true
-+     \\"0\\": {
-+       \\"0\\": true
+    "expanded": {
+-     "0": true
++     "0": {
++       "0": true
 +     }
     }
   }
@@ -237,53 +237,53 @@ exports[`renders an expandable table 2`] = `
     <table
 @@ -127,10 +129,53 @@
           <td
-            class=\\"\\"
+            class=""
           >
             <span
-              style=\\"cursor: pointer; padding-left: 2rem;\\"
+              style="cursor: pointer; padding-left: 2rem;"
 +           >
 +             👇
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           tanner
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           linsley
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           29
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           100
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           In Relationship
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           50
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 4rem;\\"
++             style="cursor: pointer; padding-left: 4rem;"
             >
               👉
             </span>
@@ -292,147 +292,147 @@ exports[`renders an expandable table 2`] = `
 @@ -160,10 +205,139 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             50
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 4rem;\\"
++             style="cursor: pointer; padding-left: 4rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           derek
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           perkins
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           40
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           40
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           Single
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           80
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 4rem;\\"
++             style="cursor: pointer; padding-left: 4rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           joe
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           bergevin
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           45
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           20
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           Complicated
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           10
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 4rem;\\"
++             style="cursor: pointer; padding-left: 4rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           jaylen
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           linsley
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           26
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           99
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           In Relationship
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           70
           </td>
         </tr>
         <tr
-          class=\\"\\"
-        >"
+          class=""
+        >
 `;
 
 exports[`renders an expandable table 3`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
@@ -440,11 +440,11 @@ exports[`renders an expandable table 3`] = `
     <pre>
       <code>
         {
-    \\"expanded\\": {
-      \\"0\\": {
--       \\"0\\": true
-+       \\"0\\": {
-+         \\"0\\": true
+    "expanded": {
+      "0": {
+-       "0": true
++       "0": {
++         "0": true
 +       }
       }
     }
@@ -453,53 +453,53 @@ exports[`renders an expandable table 3`] = `
     </pre>
 @@ -172,10 +174,53 @@
           <td
-            class=\\"\\"
+            class=""
           >
             <span
-              style=\\"cursor: pointer; padding-left: 4rem;\\"
+              style="cursor: pointer; padding-left: 4rem;"
 +           >
 +             👇
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           tanner
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           linsley
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           29
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           100
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           In Relationship
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           50
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 6rem;\\"
++             style="cursor: pointer; padding-left: 6rem;"
             >
               👉
             </span>
@@ -508,159 +508,159 @@ exports[`renders an expandable table 3`] = `
 @@ -205,10 +250,139 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             50
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 6rem;\\"
++             style="cursor: pointer; padding-left: 6rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           derek
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           perkins
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           40
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           40
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           Single
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           80
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 6rem;\\"
++             style="cursor: pointer; padding-left: 6rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           joe
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           bergevin
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           45
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           20
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           Complicated
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           10
 +         </td>
 +       </tr>
 +       <tr
-+         class=\\"\\"
++         class=""
 +       >
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           <span
-+             style=\\"cursor: pointer; padding-left: 6rem;\\"
++             style="cursor: pointer; padding-left: 6rem;"
 +           >
 +             👉
 +           </span>
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           jaylen
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           linsley
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           26
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           99
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           In Relationship
 +         </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         >
 +           70
           </td>
         </tr>
         <tr
-          class=\\"\\"
-        >"
+          class=""
+        >
 `;
 
 exports[`renders an expandable table 4`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -3,11 +3,13 @@
       <code>
         {
-    \\"expanded\\": {
-      \\"0\\": {
-        \\"0\\": {
--         \\"0\\": true
-+         \\"0\\": {
-+           \\"0\\": true
+    "expanded": {
+      "0": {
+        "0": {
+-         "0": true
++         "0": {
++           "0": true
 +         }
         }
       }
@@ -668,40 +668,40 @@ exports[`renders an expandable table 4`] = `
   }
       </code>
 @@ -218,11 +220,11 @@
-            class=\\"\\"
+            class=""
           >
             <span
-              style=\\"cursor: pointer; padding-left: 6rem;\\"
+              style="cursor: pointer; padding-left: 6rem;"
             >
 -             👉
 +             👇
             </span>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -250,10 +252,30 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             50
 +         </td>
 +       </tr>
 +       <tr>
 +         <td
-+           colspan=\\"7\\"
++           colspan="7"
 +         >
 +           <pre>
 +             <code>
 +               {
-+   \\"values\\": {
-+     \\"firstName\\": \\"tanner\\",
-+     \\"lastName\\": \\"linsley\\",
-+     \\"age\\": 29,
-+     \\"visits\\": 100,
-+     \\"status\\": \\"In Relationship\\",
-+     \\"progress\\": 50
++   "values": {
++     "firstName": "tanner",
++     "lastName": "linsley",
++     "age": 29,
++     "visits": 100,
++     "status": "In Relationship",
++     "progress": 50
 +   }
 + }
 +             </code>
@@ -709,6 +709,6 @@ exports[`renders an expandable table 4`] = `
           </td>
         </tr>
         <tr
-          class=\\"\\"
-        >"
+          class=""
+        >
 `;

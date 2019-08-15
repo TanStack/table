@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, usePagination } from 'react-table'
+import { useTable, usePagination, useTableState } from 'react-table'
 
 import makeData from './makeData'
 
@@ -38,6 +38,8 @@ const Styles = styled.div`
 `
 
 function Table({ columns, data }) {
+  const tableState = useTableState({ pageIndex: 2 })
+
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -60,6 +62,7 @@ function Table({ columns, data }) {
     {
       columns,
       data,
+      state: tableState,
     },
     usePagination
   )

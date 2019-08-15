@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a table with seletable rows 1`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -109,11 +109,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Not Selected
@@ -16,12 +16,12 @@ exports[`renders a table with seletable rows 1`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -165,11 +165,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Not Selected
@@ -29,12 +29,12 @@ exports[`renders a table with seletable rows 1`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -221,11 +221,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Not Selected
@@ -42,12 +42,12 @@ exports[`renders a table with seletable rows 1`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -277,11 +277,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Not Selected
@@ -55,7 +55,7 @@ exports[`renders a table with seletable rows 1`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -314,15 +314,20 @@
           </td>
@@ -69,28 +69,28 @@ exports[`renders a table with seletable rows 1`] = `
     <pre>
       <code>
         {
--   \\"selectedRows\\": []
-+   \\"selectedRows\\": [
-+     \\"0\\",
-+     \\"1\\",
-+     \\"2\\",
-+     \\"3\\"
+-   "selectedRows": []
++   "selectedRows": [
++     "0",
++     "1",
++     "2",
++     "3"
 +   ]
   }
       </code>
     </pre>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;
 
 exports[`renders a table with seletable rows 2`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -109,11 +109,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Selected
@@ -98,12 +98,12 @@ exports[`renders a table with seletable rows 2`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -165,11 +165,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Selected
@@ -111,12 +111,12 @@ exports[`renders a table with seletable rows 2`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -221,11 +221,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Selected
@@ -124,12 +124,12 @@ exports[`renders a table with seletable rows 2`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -277,11 +277,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Selected
@@ -137,7 +137,7 @@ exports[`renders a table with seletable rows 2`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -314,20 +314,15 @@
           </td>
@@ -151,28 +151,28 @@ exports[`renders a table with seletable rows 2`] = `
     <pre>
       <code>
         {
--   \\"selectedRows\\": [
--     \\"0\\",
--     \\"1\\",
--     \\"2\\",
--     \\"3\\"
+-   "selectedRows": [
+-     "0",
+-     "1",
+-     "2",
+-     "3"
 -   ]
-+   \\"selectedRows\\": []
++   "selectedRows": []
   }
       </code>
     </pre>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;
 
 exports[`renders a table with seletable rows 3`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -109,11 +109,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Not Selected
@@ -180,12 +180,12 @@ exports[`renders a table with seletable rows 3`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -221,11 +221,11 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             <div>
 -             Not Selected
@@ -193,7 +193,7 @@ exports[`renders a table with seletable rows 3`] = `
             </div>
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -314,15 +314,18 @@
           </td>
@@ -207,13 +207,13 @@ exports[`renders a table with seletable rows 3`] = `
     <pre>
       <code>
         {
--   \\"selectedRows\\": []
-+   \\"selectedRows\\": [
-+     \\"0\\",
-+     \\"2\\"
+-   "selectedRows": []
++   "selectedRows": [
++     "0",
++     "2"
 +   ]
   }
       </code>
     </pre>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;
