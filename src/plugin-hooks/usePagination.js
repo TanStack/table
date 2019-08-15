@@ -50,43 +50,37 @@ function useMain(instance) {
 
   const rowDep = manualPagination || disablePageResetOnDataChange ? null : rows
 
-  useLayoutEffect(
-    () => {
-      setState(
-        old => ({
-          ...old,
-          pageIndex: 0,
-        }),
-        actions.pageChange
-      )
-    },
-    [setState, rowDep, filters, groupBy, sortBy]
-  )
+  useLayoutEffect(() => {
+    setState(
+      old => ({
+        ...old,
+        pageIndex: 0,
+      }),
+      actions.pageChange
+    )
+  }, [setState, rowDep, filters, groupBy, sortBy])
 
-  const pages = React.useMemo(
-    () => {
-      if (manualPagination) {
-        return undefined
-      }
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getPages')
+  const pages = React.useMemo(() => {
+    if (manualPagination) {
+      return undefined
+    }
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('getPages')
 
-      // Create a new pages with the first page ready to go.
-      const pages = rows.length ? [] : [[]]
+    // Create a new pages with the first page ready to go.
+    const pages = rows.length ? [] : [[]]
 
-      // Start the pageIndex and currentPage cursors
-      let cursor = 0
+    // Start the pageIndex and currentPage cursors
+    let cursor = 0
 
-      while (cursor < rows.length) {
-        const end = cursor + pageSize
-        pages.push(rows.slice(cursor, end))
-        cursor = end
-      }
+    while (cursor < rows.length) {
+      const end = cursor + pageSize
+      pages.push(rows.slice(cursor, end))
+      cursor = end
+    }
 
-      return pages
-    },
-    [debug, manualPagination, pageSize, rows]
-  )
+    return pages
+  }, [debug, manualPagination, pageSize, rows])
 
   const pageCount = manualPagination ? userPageCount : pages.length
 

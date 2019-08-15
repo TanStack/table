@@ -70,17 +70,14 @@ function useMain(instance) {
   )
 
   // When data changes, reset row and cell state
-  React.useEffect(
-    () => {
-      setState(old => {
-        return {
-          ...old,
-          rowState: {},
-        }
-      }, actions.setRowState)
-    },
-    [rows, setState]
-  )
+  React.useEffect(() => {
+    setState(old => {
+      return {
+        ...old,
+        rowState: {},
+      }
+    }, actions.setRowState)
+  }, [rows, setState])
 
   hooks.prepareRow.push(row => {
     const pathKey = row.path.join('.')

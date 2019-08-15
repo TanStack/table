@@ -255,19 +255,27 @@ function useMain(instance) {
           if (!row.subRows || row.subRows.length <= 1) {
             return
           }
-          row.subRows = sortData(row.subRows)
+
+          return !sort.desc
         })
+      )
 
-        return sortedData
-      }
+      // If there are sub-rows, sort them
+      sortedData.forEach(row => {
+        if (!row.subRows) {
+          return
+        }
+        row.subRows = sortData(row.subRows)
+      })
 
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.timeEnd('getSortedRows')
+      return sortedData
+    }
 
-      return sortData(rows)
-    },
-    [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes]
-  )
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.timeEnd('getSortedRows')
+
+    return sortData(rows)
+  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes])
 
   return {
     ...instance,
