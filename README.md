@@ -46,7 +46,8 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
 - [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
 - [API](./docs/api.md) - Get to know React Table's API, how to use it and how to extend its functionality
-- [Contributing](./CONTRIBUTORS.md) - Become familiar with how to contribute back to React Table
+- [Contributing](./CONTRIBUTING.md) - Become familiar with how to contribute back to React Table
+- [Code of Conduct](./CODE_OF_CONDUCT.md) - Be a good React Table citizen by following these repository rules
 
 ## Sponsors
 
