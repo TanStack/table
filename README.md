@@ -77,7 +77,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://zappi.com/web" target="_blank">
+        <a href="https://zappi.io/web/" target="_blank">
           <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
