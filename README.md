@@ -40,7 +40,13 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
-## [See Examples](#examples)
+## Documentation
+
+- [Installation](./docs/installation.md) - Walk through how to install React Table
+- [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
+- [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
+- [API](./docs/api.md) - Get to know React Table's API, how to use it and how to extend its functionality
+- [Contributing](#./CONTRIBUTORS.md) - Become familiar with how to contribute back to React Table
 
 ## Sponsors
 
@@ -142,11 +148,3 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <a href="https://patreon.com/tannerlinsley">
   <img width="150" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
 </a>
-
-# Documentation
-
-- [Installation](./docs/installation.md) - Walk through how to install React Table
-- [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
-- [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
-- [API](./docs/api.md) - Get to know React Table's API, how to use it and how to extend its functionality
-- [Contributing](#./CONTRIBUTORS.md) - Become familiar with how to contribute back to React Table
