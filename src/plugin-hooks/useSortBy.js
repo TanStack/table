@@ -32,7 +32,7 @@ const propTypes = {
   disableSorting: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
   isMultiSortEvent: PropTypes.func,
-  maxMultiSortColCount: PropTypes.number, 
+  maxMultiSortColCount: PropTypes.number,
   disableSortRemove: PropTypes.bool,
   disableMultiRemove: PropTypes.bool,
 }
@@ -57,7 +57,7 @@ function useMain(instance) {
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
-    isMultiSortEvent = (e) => e.shiftKey,
+    isMultiSortEvent = e => e.shiftKey,
     maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
     hooks,
     state: [{ sortBy }, setState],
@@ -133,7 +133,7 @@ function useMain(instance) {
           },
         ]
         // Take latest n columns
-        newSortBy.splice(0, newSortBy.length - maxMultiSortColCount);
+        newSortBy.splice(0, newSortBy.length - maxMultiSortColCount)
       } else if (action === 'toggle') {
         // This flips (or sets) the
         newSortBy = sortBy.map(d => {
@@ -255,27 +255,19 @@ function useMain(instance) {
           if (!row.subRows || row.subRows.length <= 1) {
             return
           }
-
-          return !sort.desc
+          row.subRows = sortData(row.subRows)
         })
-      )
 
-      // If there are sub-rows, sort them
-      sortedData.forEach(row => {
-        if (!row.subRows) {
-          return
-        }
-        row.subRows = sortData(row.subRows)
-      })
+        return sortedData
+      }
 
-      return sortedData
-    }
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('getSortedRows')
 
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.timeEnd('getSortedRows')
-
-    return sortData(rows)
-  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes])
+      return sortData(rows)
+    },
+    [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes]
+  )
 
   return {
     ...instance,
