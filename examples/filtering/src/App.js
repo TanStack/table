@@ -36,14 +36,16 @@ const Styles = styled.div`
 `
 
 // Define a default UI for filtering
-function DefaultColumnFilter({ filterValue, setFilter }) {
+function DefaultColumnFilter({ filterValue, preFilteredRows, setFilter }) {
+  const count = preFilteredRows.length
+
   return (
     <input
       value={filterValue || ''}
       onChange={e => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
-      placeholder="Search..."
+      placeholder={`Search ${count} records...`}
     />
   )
 }
@@ -88,6 +90,7 @@ function SelectColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
 function SliderColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
   // Calculate the min and max
   // using the preFilteredRows
+
   const [min, max] = React.useMemo(
     () => {
       let min = 0
@@ -120,7 +123,25 @@ function SliderColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
 // This is a custom UI for our 'between' or number range
 // filter. It uses two number boxes and filters rows to
 // ones that have values between the two
-function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
+function NumberRangeColumnFilter({
+  filterValue = [],
+  preFilteredRows,
+  setFilter,
+  id,
+}) {
+  const [min, max] = React.useMemo(
+    () => {
+      let min = 0
+      let max = 0
+      preFilteredRows.forEach(row => {
+        min = Math.min(row.values[id], min)
+        max = Math.max(row.values[id], max)
+      })
+      return [min, max]
+    },
+    [id, preFilteredRows]
+  )
+
   return (
     <div
       style={{
@@ -134,7 +155,7 @@ function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
           const val = e.target.value
           setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
         }}
-        placeholder="Min"
+        placeholder={`Min (${min})`}
         style={{
           width: '70px',
           marginRight: '0.5rem',
@@ -148,7 +169,7 @@ function NumberRangeColumnFilter({ filterValue = [], setFilter }) {
           const val = e.target.value
           setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined])
         }}
-        placeholder="Max"
+        placeholder={`Max (${max})`}
         style={{
           width: '70px',
           marginLeft: '0.5rem',

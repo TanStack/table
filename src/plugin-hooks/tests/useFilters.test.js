@@ -39,8 +39,8 @@ const data = [
 ]
 
 const defaultColumn = {
-  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
-  Filter: ({ filterValue, setFilter }) => (
+  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
+  Filter: ({ column: { filterValue, setFilter } }) => (
     <input
       value={filterValue || ''}
       onChange={e => {

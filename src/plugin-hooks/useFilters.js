@@ -11,7 +11,6 @@ defaultState.filters = {}
 addActions('setFilter', 'setAllFilters')
 
 const propTypes = {
-  // General
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       disableFilters: PropTypes.bool,
@@ -41,8 +40,14 @@ function useMain(instance) {
     state: [{ filters }, setState],
   } = instance
 
+  const preFilteredRows = rows
+
   const setFilter = (id, updater) => {
     const column = columns.find(d => d.id === id)
+
+    if (!column) {
+      throw new Error(`React-Table: Could not find a column with id: ${id}`)
+    }
 
     const filterMethod = getFilterMethod(
       column.filter,
@@ -124,74 +129,98 @@ function useMain(instance) {
   // cache for each row group (top-level rows, and each row's recursive subrows)
   // This would make multi-filtering a lot faster though. Too far?
 
-  const filteredRows = React.useMemo(() => {
-    if (manualFilters || !Object.keys(filters).length) {
-      return rows
-    }
+  const filteredRows = React.useMemo(
+    () => {
+      if (manualFilters || !Object.keys(filters).length) {
+        return rows
+      }
 
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.info('getFilteredRows')
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getFilteredRows')
 
-    // Filters top level and nested rows
-    const filterRows = rows => {
-      let filteredRows = rows
+      // Filters top level and nested rows
+      const filterRows = (rows, depth = 0) => {
+        let filteredRows = rows
 
-      filteredRows = Object.entries(filters).reduce(
-        (filteredSoFar, [columnID, filterValue]) => {
-          // Find the filters column
-          const column = columns.find(d => d.id === columnID)
+        filteredRows = Object.entries(filters).reduce(
+          (filteredSoFar, [columnID, filterValue]) => {
+            // Find the filters column
+            const column = columns.find(d => d.id === columnID)
 
-          if (!column) {
-            return filteredSoFar
-          }
+            if (depth === 0) {
+              column.preFilteredRows = filteredSoFar
+            }
 
-          column.preFilteredRows = filteredSoFar
+            if (!column) {
+              return filteredSoFar
+            }
 
-          const filterMethod = getFilterMethod(
-            column.filter,
-            userFilterTypes || {},
-            filterTypes
-          )
-
-          if (!filterMethod) {
-            console.warn(
-              `Could not find a valid 'column.filter' for column with the ID: ${column.id}.`
+            const filterMethod = getFilterMethod(
+              column.filter,
+              userFilterTypes || {},
+              filterTypes
             )
-            return filteredSoFar
-          }
 
-          // Pass the rows, id, filterValue and column to the filterMethod
-          // to get the filtered rows back
-          return filterMethod(filteredSoFar, columnID, filterValue, column)
-        },
-        rows
+            if (!filterMethod) {
+              console.warn(
+                `Could not find a valid 'column.filter' for column with the ID: ${
+                  column.id
+                }.`
+              )
+              return filteredSoFar
+            }
+
+            // Pass the rows, id, filterValue and column to the filterMethod
+            // to get the filtered rows back
+            return filterMethod(filteredSoFar, columnID, filterValue, column)
+          },
+          rows
+        )
+
+        // Apply the filter to any subRows
+        // We technically could do this recursively in the above loop,
+        // but that would severely hinder the API for the user, since they
+        // would be required to do that recursion in some scenarios
+        filteredRows = filteredRows.map(row => {
+          if (!row.subRows) {
+            return row
+          }
+          return {
+            ...row,
+            subRows:
+              row.subRows && row.subRows.length > 0
+                ? filterRows(row.subRows, depth + 1)
+                : row.subRows,
+          }
+        })
+
+        return filteredRows
+      }
+
+      const filteredRows = filterRows(rows)
+
+      // Now that each filtered column has it's partially filtered rows,
+      // lets assign the final filtered rows to all of the other columns
+      const nonFilteredColumns = columns.filter(
+        column => !Object.keys(filters).includes(column.id)
       )
 
-      // Apply the filter to any subRows
-      // We technically could do this recursively in the above loop,
-      // but that would severely hinder the API for the user, since they
-      // would be required to do that recursion in some scenarios
-      filteredRows = filteredRows.map(row => {
-        if (!row.subRows) {
-          return row
-        }
-        return {
-          ...row,
-          subRows: filterRows(row.subRows),
-        }
+      // This essentially enables faceted filter options to be built easily
+      // using every column's preFilteredRows value
+      nonFilteredColumns.forEach(column => {
+        column.preFilteredRows = filteredRows
       })
 
       return filteredRows
-    }
-
-    return filterRows(rows)
-  }, [manualFilters, filters, debug, rows, columns, userFilterTypes])
+    },
+    [manualFilters, filters, debug, rows, columns, userFilterTypes]
+  )
 
   return {
     ...instance,
     setFilter,
     setAllFilters,
-    preFilteredRows: rows,
+    preFilteredRows,
     rows: filteredRows,
   }
 }

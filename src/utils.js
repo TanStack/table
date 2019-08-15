@@ -39,7 +39,7 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
 
   column = {
     Header: () => null,
-    Cell: ({ value = '' }) => value,
+    Cell: ({ cell: { value = '' } }) => value,
     show: true,
     ...column,
     id,

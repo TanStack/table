@@ -351,13 +351,13 @@ The following options are supported on any column object you can pass to `column
   - The data model for hidden columns is still calculated including sorting, filters, and grouping.
 - `Header: String | Function | React.Component => JSX`
   - Optional
-  - Defaults to `({ id }) => id`
+  - Defaults to `() => null`
   - Receives the table instance and column model as props
   - Must either be a **string or return valid JSX**
   - If a function/component is passed, it will be used for formatting the header value, eg. You can use a `Header` function to dynamically format the header using any table or column state.
 - `Cell: Function | React.Component => JSX`
   - Optional
-  - Defaults to `({ value }) => value`
+  - Defaults to `({ cell: { value } }) => value`
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
@@ -424,7 +424,8 @@ The following properties are available on every `Column` object returned by the 
 - `visible: Boolean`
   - The resolved visible state for the column, derived from the column's `show` property
 - `render: Function(type: String | Function | Component, ?props)`
-  - This function is used to render content in context of a column.
+  - This function is used to render content with the added context of a column.
+  - The entire table `instance` will be passed to the renderer with the addition of a `column` property, containing a reference to the column
   - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` renderers. Other renderers like `Filter` are available via hooks like `useFilters`.
   - If a function or component is passed instead of a string, it will be be passed the table instance and column model as props and is expected to return any valid JSX.
 - `getHeaderProps: Function(?props)`
@@ -479,7 +480,8 @@ The following additional properties are available on every `Cell` object returne
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 - `render: Function(type: String | Function | Component, ?props)`
   - **Required**
-  - This function is used to render content in context of a cell.
+  - This function is used to render content with the added context of a cell.
+  - The entire table `instance` will be passed to the renderer with the addition of `column`, `row` and `cell` properties, containing a reference to each respective item.
   - If `type` is a string, will render using the `column[type]` renderer. React Table ships with a default `Cell` renderer. Other renderers like `Aggregated` are available via hooks like `useFilters`.
   - If a function or component is passed instead of a string, it will be be passed the table instance and cell model as props and is expected to return any valid JSX.
 
@@ -797,7 +799,7 @@ The following properties are available on every `Column` object returned by the 
   - An column-level function used to update the filter value for this column
 - `filterValue: any`
   - The current filter value for this column, resolved from the table state's `filters` object
-- `preFilteredRows: Array<row>`
+- `preFilteredColumnRows: Array<row>`
   - The array of rows that were originally passed to this columns filter **before** they were filtered.
   - This array of rows can be useful if building faceted filter options.
 
@@ -1064,7 +1066,7 @@ function App() {
             // then sum any of those counts if they are
             // aggregated further
             aggregate: ['sum', 'count'],
-            Aggregated: ({ value }) => `${value} Names`,
+            Aggregated: ({ cell: { value } }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -1074,7 +1076,7 @@ function App() {
             // being aggregated, then sum those counts if
             // they are aggregated further
             aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ value }) => `${value} Unique Names`,
+            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
           },
         ],
       },
@@ -1086,14 +1088,14 @@ function App() {
             accessor: 'age',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ value }) => `${value} (avg)`,
+            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             // Aggregate the sum of all visits
             aggregate: 'sum',
-            Aggregated: ({ value }) => `${value} (total)`,
+            Aggregated: ({ cell: { value } }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -1104,7 +1106,7 @@ function App() {
             accessor: 'progress',
             // Use our custom roundedMedian aggregator
             aggregate: roundedMedian,
-            Aggregated: ({ value }) => `${value} (med)`,
+            Aggregated: ({ cell: { value } }) => `${value} (med)`,
           },
         ],
       },

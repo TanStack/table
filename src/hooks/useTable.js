@@ -102,27 +102,30 @@ export const useTable = (props, ...plugins) => {
   ])
 
   // Allow hooks to decorate columns (and trigger this memoization via deps)
-  columns = React.useMemo(() => {
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.time('hooks.columnsBeforeHeaderGroups')
-    const newColumns = applyHooks(
-      instanceRef.current.hooks.columnsBeforeHeaderGroups,
+  columns = React.useMemo(
+    () => {
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.time('hooks.columnsBeforeHeaderGroups')
+      const newColumns = applyHooks(
+        instanceRef.current.hooks.columnsBeforeHeaderGroups,
+        columns,
+        instanceRef.current
+      )
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('hooks.columnsBeforeHeaderGroups')
+      return newColumns
+    },
+    [
       columns,
-      instanceRef.current
-    )
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.timeEnd('hooks.columnsBeforeHeaderGroups')
-    return newColumns
-  }, [
-    columns,
-    debug,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ...applyHooks(
-      instanceRef.current.hooks.columnsBeforeHeaderGroupsDeps,
-      [],
-      instanceRef.current
-    ),
-  ])
+      debug,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...applyHooks(
+        instanceRef.current.hooks.columnsBeforeHeaderGroupsDeps,
+        [],
+        instanceRef.current
+      ),
+    ]
+  )
 
   // Make the headerGroups
   const headerGroups = React.useMemo(
@@ -141,69 +144,72 @@ export const useTable = (props, ...plugins) => {
   })
 
   // Access the row model
-  const [rows, rowPaths, flatRows] = React.useMemo(() => {
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.time('getAccessedRows')
+  const [rows, rowPaths, flatRows] = React.useMemo(
+    () => {
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.time('getAccessedRows')
 
-    let flatRows = 0
-    const rowPaths = []
+      let flatRows = 0
+      const rowPaths = []
 
-    // Access the row's data
-    const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
-      // Keep the original reference around
-      const original = originalRow
+      // Access the row's data
+      const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
+        // Keep the original reference around
+        const original = originalRow
 
-      // Make the new path for the row
-      const path = [...parentPath, i]
+        // Make the new path for the row
+        const path = [...parentPath, i]
 
-      flatRows++
-      rowPaths.push(path.join('.'))
+        flatRows++
+        rowPaths.push(path.join('.'))
 
-      // Process any subRows
-      const subRows = originalRow[subRowsKey]
-        ? originalRow[subRowsKey].map((d, i) =>
-            accessRow(d, i, depth + 1, path)
+        // Process any subRows
+        const subRows = originalRow[subRowsKey]
+          ? originalRow[subRowsKey].map((d, i) =>
+              accessRow(d, i, depth + 1, path)
+            )
+          : []
+
+        const row = {
+          original,
+          index: i,
+          path, // used to create a key for each row even if not nested
+          subRows,
+          depth,
+          cells: [{}], // This is a dummy cell
+        }
+
+        // Override common array functions (and the dummy cell's getCellProps function)
+        // to show an error if it is accessed without calling prepareRow
+        const unpreparedAccessWarning = () => {
+          throw new Error(
+            'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
           )
-        : []
+        }
+        row.cells.map = unpreparedAccessWarning
+        row.cells.filter = unpreparedAccessWarning
+        row.cells.forEach = unpreparedAccessWarning
+        row.cells[0].getCellProps = unpreparedAccessWarning
 
-      const row = {
-        original,
-        index: i,
-        path, // used to create a key for each row even if not nested
-        subRows,
-        depth,
-        cells: [{}], // This is a dummy cell
+        // Create the cells and values
+        row.values = {}
+        instanceRef.current.columns.forEach(column => {
+          row.values[column.id] = column.accessor
+            ? column.accessor(originalRow, i, { subRows, depth, data })
+            : undefined
+        })
+
+        return row
       }
 
-      // Override common array functions (and the dummy cell's getCellProps function)
-      // to show an error if it is accessed without calling prepareRow
-      const unpreparedAccessWarning = () => {
-        throw new Error(
-          'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
-        )
-      }
-      row.cells.map = unpreparedAccessWarning
-      row.cells.filter = unpreparedAccessWarning
-      row.cells.forEach = unpreparedAccessWarning
-      row.cells[0].getCellProps = unpreparedAccessWarning
-
-      // Create the cells and values
-      row.values = {}
-      instanceRef.current.columns.forEach(column => {
-        row.values[column.id] = column.accessor
-          ? column.accessor(originalRow, i, { subRows, depth, data })
-          : undefined
-      })
-
-      return row
-    }
-
-    // Use the resolved data
-    const accessedData = data.map((d, i) => accessRow(d, i))
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.timeEnd('getAccessedRows')
-    return [accessedData, rowPaths, flatRows]
-  }, [debug, data, subRowsKey])
+      // Use the resolved data
+      const accessedData = data.map((d, i) => accessRow(d, i))
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.timeEnd('getAccessedRows')
+      return [accessedData, rowPaths, flatRows]
+    },
+    [debug, data, subRowsKey]
+  )
 
   instanceRef.current.rows = rows
   instanceRef.current.rowPaths = rowPaths
@@ -237,7 +243,7 @@ export const useTable = (props, ...plugins) => {
 
         return flexRender(Comp, {
           ...instanceRef.current,
-          ...column,
+          column,
           ...userProps,
         })
       }
@@ -361,7 +367,9 @@ export const useTable = (props, ...plugins) => {
 
         return flexRender(Comp, {
           ...instanceRef.current,
-          ...cell,
+          column,
+          row,
+          cell,
           ...userProps,
         })
       }
