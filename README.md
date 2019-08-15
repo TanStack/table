@@ -113,7 +113,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
       <td>
         <ul>
           <li>Nicholas Kaufmann</li>
-          <li>Pekka</li>
+          <li><a href="https://www.metso.com/">Pekka</a></li>
           <li>Jon Eickmeier</li>
         </ul>
       </td>
@@ -226,6 +226,8 @@ React Table is essentially a compatible collection of **custom React hooks**:
 
 - The primary React Table hook
   - [`useTable`](#usetable)
+- Utility Hooks
+  - [`useTableState`](#useTableState)
 - Plugin Hooks
   - Core Plugin Hooks
     - [`useTableState`](#useTableState)
@@ -235,6 +237,8 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`useExpanded`](#useExpanded)
     - [`usePagination`](#usePagination)
     - [`useTokenPagination`](#useTokenPagination)
+    - [`useRowSelect`](#useRowSelect)
+    - [`useRowState`](#useRowState)
   - Layout Plugin Hooks
     - [`useFlexLayout`](#useFlexLayout)
     - [`useAbsoluteLayout`](#useAbsoluteLayout) (coming soon!)
