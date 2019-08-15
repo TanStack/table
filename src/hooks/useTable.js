@@ -31,6 +31,8 @@ const propTypes = {
 const renderErr =
   'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
 
+const defaultColumnInstance = {}
+
 export const useTable = (props, ...plugins) => {
   // Validate props
   PropTypes.checkPropTypes(propTypes, props, 'property', 'useTable')
@@ -40,7 +42,7 @@ export const useTable = (props, ...plugins) => {
     data,
     state: userState,
     columns: userColumns,
-    defaultColumn = {},
+    defaultColumn = defaultColumnInstance,
     subRowsKey = 'subRows',
     debug,
   } = props
