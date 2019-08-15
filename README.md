@@ -111,11 +111,9 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td>
-        <ul>
-          <li>Nicholas Kaufmann</li>
-          <li><a href="https://www.metso.com/">Pekka</a></li>
-          <li>Jon Eickmeier</li>
-        </ul>
+        <div>Nicholas Kaufmann</div>
+        <div><a href="https://www.metso.com/">Pekka</a></div>
+        <div>Jon Eickmeier</div>
       </td>
     </tr>
   </tbody>
@@ -130,14 +128,12 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td>
-        <ul>
-          <li>Sortmy.games</li>
-          <li>Hugo Meissner</li>
-          <li>Benoit Leger-Derville</li>
-          <li>Thomas Funk</li>
-          <li>Dan Houle</li>
-          <li>David Pickut</li>
-        </ul>
+        <div>Sortmy.games</div>
+        <div>Hugo Meissner</div>
+        <div>Benoit Leger-Derville</div>
+        <div>Thomas Funk</div>
+        <div>Dan Houle</div>
+        <div>David Pickut</div>
       </td>
     </tr>
   </tbody>

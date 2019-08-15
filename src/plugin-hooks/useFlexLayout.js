@@ -8,8 +8,12 @@ const propTypes = {
   defaultFlex: PropTypes.number,
 }
 
-export const useFlexLayout = props => {
-  PropTypes.checkPropTypes(propTypes, props, 'property', 'useFlexLayout')
+export const useFlexLayout = hooks => {
+  hooks.useMain.push(useMain)
+}
+
+function useMain(instance) {
+  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFlexLayout')
 
   const {
     defaultFlex = 1,
@@ -20,7 +24,7 @@ export const useFlexLayout = props => {
       getHeaderProps,
       getCellProps,
     },
-  } = props
+  } = instance
 
   columnsHooks.push((columns, api) => {
     const visibleColumns = columns.filter(column => column.visible)
@@ -80,7 +84,7 @@ export const useFlexLayout = props => {
     return columns
   })
 
-  return props
+  return instance
 }
 
 // Utils
