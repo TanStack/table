@@ -252,7 +252,7 @@ function useMain(instance) {
 
         // If there are sub-rows, sort them
         sortedData.forEach(row => {
-          if (!row.subRows) {
+          if (!row.subRows || row.subRows.length <= 1) {
             return
           }
           row.subRows = sortData(row.subRows)
