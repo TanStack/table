@@ -1,0 +1,40 @@
+# Examples
+
+- **Simple** - All of these examples use automatic state management, meaning, they don't hoist any state out of the table or manually control anything. Start here for understanding the basics about how to build your table UI.
+  - Basic
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/basic)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+  - Sorting
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/sorting)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting)
+  - Filtering
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/filtering)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering)
+  - Grouping
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping)
+  - Pagination
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
+  - Row Selection
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
+  - Expanding
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/expanding)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding)
+  - Sub Components
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/sub-components)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sub-components)
+  - Editable Data
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/editable-data)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/editable-data)
+- **Controlled via `useTableState`** - These examples are more advanced because they demonstrate how to manually control and respond to the state of the table using the `useTableState` hook.
+  - Pagination (Controlled)
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
+    - [Open in CodeSandobx](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
+- **UI** - These examples demonstrate how to use React Table with your favorite UI libraries or tools!
+  - [] Styled-Components
+  - [] CSS
+  - [] Material-UI
+  - [] Bootstrap
+- Want to write one of these examples or add another? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
