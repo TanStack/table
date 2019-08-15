@@ -77,7 +77,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://zappi.com/web" target="_blank">
+        <a href="https://zappi.io/web/" target="_blank">
           <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
@@ -111,11 +111,9 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td>
-        <ul>
-          <li>Nicholas Kaufmann</li>
-          <li>Pekka</li>
-          <li>Jon Eickmeier</li>
-        </ul>
+        <div>Nicholas Kaufmann</div>
+        <div><a href="https://www.metso.com/">Pekka</a></div>
+        <div>Jon Eickmeier</div>
       </td>
     </tr>
   </tbody>
@@ -130,14 +128,12 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td>
-        <ul>
-          <li>Sortmy.games</li>
-          <li>Hugo Meissner</li>
-          <li>Benoit Leger-Derville</li>
-          <li>Thomas Funk</li>
-          <li>Dan Houle</li>
-          <li>David Pickut</li>
-        </ul>
+        <div>Sortmy.games</div>
+        <div>Hugo Meissner</div>
+        <div>Benoit Leger-Derville</div>
+        <div>Thomas Funk</div>
+        <div>Dan Houle</div>
+        <div>David Pickut</div>
       </td>
     </tr>
   </tbody>
@@ -226,6 +222,8 @@ React Table is essentially a compatible collection of **custom React hooks**:
 
 - The primary React Table hook
   - [`useTable`](#usetable)
+- Utility Hooks
+  - [`useTableState`](#useTableState)
 - Plugin Hooks
   - Core Plugin Hooks
     - [`useTableState`](#useTableState)
@@ -235,6 +233,8 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`useExpanded`](#useExpanded)
     - [`usePagination`](#usePagination)
     - [`useTokenPagination`](#useTokenPagination)
+    - [`useRowSelect`](#useRowSelect)
+    - [`useRowState`](#useRowState)
   - Layout Plugin Hooks
     - [`useFlexLayout`](#useFlexLayout)
     - [`useAbsoluteLayout`](#useAbsoluteLayout) (coming soon!)
@@ -587,6 +587,11 @@ The following options are supported via the main options object passed to `useTa
   - Disables sorting for every column in the entire table.
 - `disableMultiSort: Bool`
   - Disables multi-sorting for the entire table.
+- `isMultiSortEvent: Function`
+  - Allows to override default multisort behaviour(i.e. multisort applies when shift key is presssed), if this function is provided then returned boolean value from this function will make decision whether newly applied sort action will be considered as multisort or not.
+  - Receives `event` as argument.
+- `maxMultiSortColCount: Number`
+  - Limit on max number of columns for multisort, e.g. if set to 3, and suppose table is sorted by `[A, B, C]` and then clicking `D` for sorting should result in table sorted by `[B, C , D]`
 - `disableSortRemove: Bool`
   - If true, the un-sorted state will not be available to columns once they have been sorted.
 - `disableMultiRemove: Bool`
