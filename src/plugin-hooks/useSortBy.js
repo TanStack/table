@@ -202,24 +202,25 @@ function useMain(instance) {
     column.sortedDesc = column.sorted ? column.sorted.desc : undefined
   })
 
-  const sortedRows = React.useMemo(
-    () => {
-      if (manualSorting || !sortBy.length) {
-        return rows
-      }
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.time('getSortedRows')
+  const sortedRows = React.useMemo(() => {
+    if (manualSorting || !sortBy.length) {
+      return rows
+    }
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.time('getSortedRows')
 
-      const sortData = rows => {
-        // Use the orderByFn to compose multiple sortBy's together.
-        // This will also perform a stable sorting using the row index
-        // if needed.
-        const sortedData = orderByFn(
-          rows,
-          sortBy.map(sort => {
-            // Support custom sorting methods for each column
-            const { sortType } = columns.find(d => d.id === sort.id)
+    const sortData = rows => {
+      // Use the orderByFn to compose multiple sortBy's together.
+      // This will also perform a stable sorting using the row index
+      // if needed.
+      const sortedData = orderByFn(
+        rows,
+        sortBy.map(sort => {
+          // Support custom sorting methods for each column
+          const column = columns.find(d => d.id === sort.id)
 
+          if (column) {
+            const { sortType } = column
             // Look up sortBy functions in this order:
             // column function
             // column string lookup on user sortType
@@ -236,38 +237,41 @@ function useMain(instance) {
             // Return the correct sortFn
             return (a, b) =>
               sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
-          }),
-          // Map the directions
-          sortBy.map(sort => {
-            // Detect and use the sortInverted option
-            const { sortInverted } = columns.find(d => d.id === sort.id)
-
-            if (sortInverted) {
-              return sort.desc
-            }
-
-            return !sort.desc
-          })
-        )
-
-        // If there are sub-rows, sort them
-        sortedData.forEach(row => {
-          if (!row.subRows || row.subRows.length <= 1) {
-            return
+          } else {
+            // if a column with id from sortBy state doesn't exist,
+            // return sorting function that keeps items in its original place
+            return () => 0
           }
-          row.subRows = sortData(row.subRows)
+        }),
+        // Map the directions
+        sortBy.map(sort => {
+          // Detect and use the sortInverted option
+          const column = columns.find(d => d.id === sort.id)
+
+          if (column && column.sortInverted) {
+            return sort.desc
+          }
+
+          return !sort.desc
         })
+      )
 
-        return sortedData
-      }
+      // If there are sub-rows, sort them
+      sortedData.forEach(row => {
+        if (!row.subRows || row.subRows.length <= 1) {
+          return
+        }
+        row.subRows = sortData(row.subRows)
+      })
 
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.timeEnd('getSortedRows')
+      return sortedData
+    }
 
-      return sortData(rows)
-    },
-    [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes]
-  )
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.timeEnd('getSortedRows')
+
+    return sortData(rows)
+  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes])
 
   return {
     ...instance,
