@@ -146,12 +146,12 @@ function useMain(instance) {
           // Find the filters column
           const column = columns.find(d => d.id === columnID)
 
-          if (depth === 0) {
-            column.preFilteredRows = filteredSoFar
-          }
-
           if (!column) {
             return filteredSoFar
+          }
+
+          if (depth === 0) {
+            column.preFilteredRows = filteredSoFar
           }
 
           const filterMethod = getFilterMethod(
