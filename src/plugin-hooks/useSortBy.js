@@ -209,42 +209,48 @@ function useMain(instance) {
     if (process.env.NODE_ENV === 'development' && debug)
       console.time('getSortedRows')
 
+    // Filter out sortBys that correspond to non existing columns
+    const availableSortBy = sortBy.filter(sort =>
+      columns.find(col => col.id === sort.id)
+    )
+
     const sortData = rows => {
       // Use the orderByFn to compose multiple sortBy's together.
       // This will also perform a stable sorting using the row index
       // if needed.
       const sortedData = orderByFn(
         rows,
-        sortBy.map(sort => {
+        availableSortBy.map(sort => {
           // Support custom sorting methods for each column
           const column = columns.find(d => d.id === sort.id)
 
-          if (column) {
-            const { sortType } = column
-            // Look up sortBy functions in this order:
-            // column function
-            // column string lookup on user sortType
-            // column string lookup on built-in sortType
-            // default function
-            // default string lookup on user sortType
-            // default string lookup on built-in sortType
-            const sortMethod =
-              isFunction(sortType) ||
-              (userSortTypes || {})[sortType] ||
-              sortTypes[sortType] ||
-              sortTypes.alphanumeric
-
-            // Return the correct sortFn
-            return (a, b) =>
-              sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
-          } else {
-            // if a column with id from sortBy state doesn't exist,
-            // return sorting function that keeps items in its original place
-            return () => 0
+          if (!column) {
+            throw new Error(
+              `React-Table: Could not find a column with id: ${sort.id} while sorting`
+            )
           }
+
+          const { sortType } = column
+
+          // Look up sortBy functions in this order:
+          // column function
+          // column string lookup on user sortType
+          // column string lookup on built-in sortType
+          // default function
+          // default string lookup on user sortType
+          // default string lookup on built-in sortType
+          const sortMethod =
+            isFunction(sortType) ||
+            (userSortTypes || {})[sortType] ||
+            sortTypes[sortType] ||
+            sortTypes.alphanumeric
+
+          // Return the correct sortFn
+          return (a, b) =>
+            sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
         }),
         // Map the directions
-        sortBy.map(sort => {
+        availableSortBy.map(sort => {
           // Detect and use the sortInverted option
           const column = columns.find(d => d.id === sort.id)
 
