@@ -80,6 +80,7 @@
     "jest-watch-select-projects": "^0.1.2",
     "jest-watch-typeahead": "^0.3.1",
     "lint-staged": "^9.2.1",
+    "prettier": "^1.18.2",
     "prop-types": "^15.5.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

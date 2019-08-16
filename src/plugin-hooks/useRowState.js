@@ -72,21 +72,18 @@ function useMain(instance) {
   const rowsMountedRef = React.useRef()
 
   // When data changes, reset row and cell state
-  React.useEffect(
-    () => {
-      if (rowsMountedRef.current) {
-        setState(old => {
-          return {
-            ...old,
-            rowState: {},
-          }
-        }, actions.setRowState)
-      }
+  React.useEffect(() => {
+    if (rowsMountedRef.current) {
+      setState(old => {
+        return {
+          ...old,
+          rowState: {},
+        }
+      }, actions.setRowState)
+    }
 
-      rowsMountedRef.current = true
-    },
-    [rows, setState]
-  )
+    rowsMountedRef.current = true
+  }, [rows, setState])
 
   hooks.prepareRow.push(row => {
     const pathKey = row.path.join('.')
