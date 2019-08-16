@@ -36,7 +36,9 @@ const Styles = styled.div`
 `
 
 // Define a default UI for filtering
-function DefaultColumnFilter({ filterValue, preFilteredRows, setFilter }) {
+function DefaultColumnFilter({
+  column: { filterValue, preFilteredRows, setFilter },
+}) {
   const count = preFilteredRows.length
 
   return (
@@ -52,19 +54,18 @@ function DefaultColumnFilter({ filterValue, preFilteredRows, setFilter }) {
 
 // This is a custom filter UI for selecting
 // a unique option from a list
-function SelectColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
+function SelectColumnFilter({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) {
   // Calculate the options for filtering
   // using the preFilteredRows
-  const options = React.useMemo(
-    () => {
-      const options = new Set()
-      preFilteredRows.forEach(row => {
-        options.add(row.values[id])
-      })
-      return [...options.values()]
-    },
-    [id, preFilteredRows]
-  )
+  const options = React.useMemo(() => {
+    const options = new Set()
+    preFilteredRows.forEach(row => {
+      options.add(row.values[id])
+    })
+    return [...options.values()]
+  }, [id, preFilteredRows])
 
   // Render a multi-select box
   return (
@@ -87,22 +88,21 @@ function SelectColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
 // This is a custom filter UI that uses a
 // slider to set the filter value between a column's
 // min and max values
-function SliderColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
+function SliderColumnFilter({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) {
   // Calculate the min and max
   // using the preFilteredRows
 
-  const [min, max] = React.useMemo(
-    () => {
-      let min = 0
-      let max = 0
-      preFilteredRows.forEach(row => {
-        min = Math.min(row.values[id], min)
-        max = Math.max(row.values[id], max)
-      })
-      return [min, max]
-    },
-    [id, preFilteredRows]
-  )
+  const [min, max] = React.useMemo(() => {
+    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    preFilteredRows.forEach(row => {
+      min = Math.min(row.values[id], min)
+      max = Math.max(row.values[id], max)
+    })
+    return [min, max]
+  }, [id, preFilteredRows])
 
   return (
     <>
@@ -124,23 +124,17 @@ function SliderColumnFilter({ filterValue, setFilter, preFilteredRows, id }) {
 // filter. It uses two number boxes and filters rows to
 // ones that have values between the two
 function NumberRangeColumnFilter({
-  filterValue = [],
-  preFilteredRows,
-  setFilter,
-  id,
+  column: { filterValue = [], preFilteredRows, setFilter, id },
 }) {
-  const [min, max] = React.useMemo(
-    () => {
-      let min = 0
-      let max = 0
-      preFilteredRows.forEach(row => {
-        min = Math.min(row.values[id], min)
-        max = Math.max(row.values[id], max)
-      })
-      return [min, max]
-    },
-    [id, preFilteredRows]
-  )
+  const [min, max] = React.useMemo(() => {
+    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    preFilteredRows.forEach(row => {
+      min = Math.min(row.values[id], min)
+      max = Math.max(row.values[id], max)
+    })
+    return [min, max]
+  }, [id, preFilteredRows])
 
   return (
     <div
@@ -226,9 +220,9 @@ function Table({ columns, data }) {
     useFilters // useFilters!
   )
 
-  // We don't want to render all 2000 rows for this example, so cap
-  // it at 20 for this use case
-  const firstPageRows = rows.slice(0, 20)
+  // We don't want to render all of the rows for this example, so cap
+  // it for this use case
+  const firstPageRows = rows.slice(0, 10)
 
   return (
     <>
@@ -337,7 +331,7 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(10000), [])
+  const data = React.useMemo(() => makeData(100000), [])
 
   return (
     <Styles>
