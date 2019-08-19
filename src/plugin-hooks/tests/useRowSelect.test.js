@@ -2,6 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
 import { useRowSelect } from '../useRowSelect'
+import { useExpanded } from '../useExpanded'
 
 const data = [
   {
@@ -27,6 +28,25 @@ const data = [
     visits: 20,
     status: 'Complicated',
     progress: 10,
+    expanded: true,
+    subRows: [
+      {
+        firstName: 'bob',
+        lastName: 'ross',
+        age: 52,
+        visits: 40,
+        status: 'In Relationship',
+        progress: 30,
+      },
+      {
+        firstName: 'john',
+        lastName: 'smith',
+        age: 21,
+        visits: 30,
+        status: 'Single',
+        progress: 60,
+      },
+    ],
   },
   {
     firstName: 'jaylen',
@@ -51,7 +71,8 @@ function Table({ columns, data }) {
       columns,
       data,
     },
-    useRowSelect
+    useRowSelect,
+    useExpanded
   )
 
   // Render the UI for your table
@@ -164,7 +185,7 @@ function App() {
   return <Table columns={columns} data={data} />
 }
 
-test('renders a table with seletable rows', () => {
+test('renders a table with selectable rows', () => {
   const { getByLabelText, getAllByLabelText, asFragment } = render(<App />)
 
   const fragment1 = asFragment()
@@ -182,7 +203,27 @@ test('renders a table with seletable rows', () => {
 
   const fragment4 = asFragment()
 
+  fireEvent.click(getAllByLabelText('Select Row')[2])
+
+  const fragment5 = asFragment()
+
+  fireEvent.click(getAllByLabelText('Select Row')[3])
+
+  const fragment6 = asFragment()
+  fireEvent.click(getAllByLabelText('Select Row')[4])
+
+  const fragment7 = asFragment()
+
+  fireEvent.click(getAllByLabelText('Select Row')[4])
+
+  const fragment8 = asFragment()
+
+
   expect(fragment1).toMatchDiffSnapshot(fragment2)
   expect(fragment2).toMatchDiffSnapshot(fragment3)
   expect(fragment3).toMatchDiffSnapshot(fragment4)
+  expect(fragment4).toMatchDiffSnapshot(fragment5)
+  expect(fragment5).toMatchDiffSnapshot(fragment6)
+  expect(fragment6).toMatchDiffSnapshot(fragment7)
+  expect(fragment7).toMatchDiffSnapshot(fragment8)
 })

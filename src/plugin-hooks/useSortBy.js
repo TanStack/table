@@ -210,15 +210,28 @@ function useMain(instance) {
     if (process.env.NODE_ENV === 'development' && debug)
       console.time('getSortedRows')
 
+    // Filter out sortBys that correspond to non existing columns
+    const availableSortBy = sortBy.filter(sort =>
+      columns.find(col => col.id === sort.id)
+    )
+
     const sortData = rows => {
       // Use the orderByFn to compose multiple sortBy's together.
       // This will also perform a stable sorting using the row index
       // if needed.
       const sortedData = orderByFn(
         rows,
-        sortBy.map(sort => {
+        availableSortBy.map(sort => {
           // Support custom sorting methods for each column
-          const { sortType } = columns.find(d => d.id === sort.id)
+          const column = columns.find(d => d.id === sort.id)
+
+          if (!column) {
+            throw new Error(
+              `React-Table: Could not find a column with id: ${sort.id} while sorting`
+            )
+          }
+
+          const { sortType } = column
 
           // Look up sortBy functions in this order:
           // column function
@@ -238,11 +251,11 @@ function useMain(instance) {
             sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
         }),
         // Map the directions
-        sortBy.map(sort => {
+        availableSortBy.map(sort => {
           // Detect and use the sortInverted option
-          const { sortInverted } = columns.find(d => d.id === sort.id)
+          const column = columns.find(d => d.id === sort.id)
 
-          if (sortInverted) {
+          if (column && column.sortInverted) {
             return sort.desc
           }
 

@@ -189,7 +189,7 @@ export const useTable = (props, ...plugins) => {
 
       // Create the cells and values
       row.values = {}
-      instanceRef.current.columns.forEach(column => {
+      columns.forEach(column => {
         row.values[column.id] = column.accessor
           ? column.accessor(originalRow, i, { subRows, depth, data })
           : undefined
@@ -203,7 +203,7 @@ export const useTable = (props, ...plugins) => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.timeEnd('getAccessedRows')
     return [accessedData, rowPaths, flatRows]
-  }, [debug, data, subRowsKey])
+  }, [debug, data, columns, subRowsKey])
 
   instanceRef.current.rows = rows
   instanceRef.current.rowPaths = rowPaths
