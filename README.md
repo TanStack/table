@@ -63,7 +63,12 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
       </td>
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='480' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+          <img width='350' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="http://bjntech.com/index.html&utm_campaign=react_table" target="_blank">
+          <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
         </a>
       </td>
     </tr>
