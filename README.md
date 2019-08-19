@@ -123,7 +123,6 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td>
-        <div>Nicholas Kaufmann</div>
         <div><a href="https://www.metso.com/">Pekka</a></div>
         <div>Jon Eickmeier</div>
       </td>
