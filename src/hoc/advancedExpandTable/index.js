@@ -66,7 +66,7 @@ export const advancedExpandTableHOC = TableComponent =>
     // after initial render if we get new
     // data, columns, page changes, etc.
     // we reset expanded state.
-    componentWillReceiveProps () {
+    UNSAFE_componentWillReceiveProps () {
       this.setState({
         expanded: {},
       })
