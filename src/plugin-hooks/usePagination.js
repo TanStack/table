@@ -14,6 +14,7 @@ addActions('pageChange', 'pageSizeChange')
 const propTypes = {
   // General
   manualPagination: PropTypes.bool,
+  paginateExpandedRows: PropTypes.bool,
 }
 
 // SSR has issues with useLayoutEffect still, so use useEffect during SSR
@@ -32,28 +33,30 @@ function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'usePagination')
 
   const {
+    data,
     rows,
     manualPagination,
     disablePageResetOnDataChange,
     debug,
     plugins,
     pageCount: userPageCount,
+    paginateExpandedRows = true,
     state: [{ pageSize, pageIndex, filters, groupBy, sortBy }, setState],
   } = instance
 
   ensurePluginOrder(
     plugins,
-    ['useFilters', 'useGroupBy', 'useSortBy'],
+    ['useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
     'usePagination',
     []
   )
 
-  const rowDep = manualPagination || disablePageResetOnDataChange ? null : rows
+  const rowDep = manualPagination ? null : data
 
   const isPageIndexMountedRef = React.useRef()
 
   useLayoutEffect(() => {
-    if (isPageIndexMountedRef.current) {
+    if (isPageIndexMountedRef.current && !disablePageResetOnDataChange) {
       setState(
         old => ({
           ...old,
@@ -63,38 +66,51 @@ function useMain(instance) {
       )
     }
     isPageIndexMountedRef.current = true
-  }, [setState, rowDep, filters, groupBy, sortBy])
+  }, [setState, rowDep, filters, groupBy, sortBy, disablePageResetOnDataChange])
 
-  const pages = React.useMemo(() => {
-    if (manualPagination) {
-      return undefined
-    }
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.info('getPages')
-
-    // Create a new pages with the first page ready to go.
-    const pages = rows.length ? [] : [[]]
-
-    // Start the pageIndex and currentPage cursors
-    let cursor = 0
-
-    while (cursor < rows.length) {
-      const end = cursor + pageSize
-      pages.push(rows.slice(cursor, end))
-      cursor = end
-    }
-
-    return pages
-  }, [debug, manualPagination, pageSize, rows])
-
-  const pageCount = manualPagination ? userPageCount : pages.length
+  const pageCount = manualPagination
+    ? userPageCount
+    : Math.ceil(rows.length / pageSize)
 
   const pageOptions = React.useMemo(
     () => (pageCount > 0 ? [...new Array(pageCount)].map((d, i) => i) : []),
     [pageCount]
   )
 
-  const page = manualPagination ? rows : pages[pageIndex]
+  const page = React.useMemo(() => {
+    let page
+
+    if (manualPagination) {
+      page = rows
+    } else {
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getPage')
+
+      const pageStart = pageSize * pageIndex
+      const pageEnd = pageStart + pageSize
+
+      page = rows.slice(pageStart, pageEnd)
+    }
+
+    if (paginateExpandedRows) {
+      return page
+    }
+
+    const expandedPage = []
+
+    const handleRow = row => {
+      expandedPage.push(row)
+
+      if (row.subRows && row.subRows.length && row.isExpanded) {
+        row.subRows.forEach(handleRow)
+      }
+    }
+
+    page.forEach(handleRow)
+
+    return expandedPage
+  }, [debug, manualPagination, pageIndex, pageSize, paginateExpandedRows, rows])
+
   const canPreviousPage = pageIndex > 0
   const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
 
@@ -134,7 +150,6 @@ function useMain(instance) {
 
   return {
     ...instance,
-    pages,
     pageOptions,
     pageCount,
     page,

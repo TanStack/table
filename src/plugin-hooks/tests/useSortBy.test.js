@@ -56,7 +56,7 @@ function Table({ columns, data }) {
                 {column.render('Header')}
                 {/* Add a sort direction indicator */}
                 <span>
-                  {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
+                  {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
                 </span>
               </th>
             ))}

@@ -25,7 +25,7 @@ function useMain(instance) {
 
   const {
     hooks,
-    manualRowSelectedKey = 'selected',
+    manualRowSelectedKey = 'isSelected',
     plugins,
     rowPaths,
     state: [{ selectedRows }, setState],
@@ -59,7 +59,7 @@ function useMain(instance) {
       // in a flat object
       const exists = old.selectedRows.includes(key)
       const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newSelectedRows = new Set(selectedRows)
+      let newSelectedRows = new Set(old.selectedRows)
 
       if (!exists && shouldExist) {
         newSelectedRows.add(key)
@@ -94,10 +94,49 @@ function useMain(instance) {
   }
 
   hooks.prepareRow.push(row => {
-    row.canSelect = !!row.original
+    // Aggregate rows have entirely different select logic
+    if (row.isAggregated) {
+      const subRowPaths = row.subRows.map(row => row.path)
+      row.isSelected = subRowPaths.every(path =>
+        selectedRows.includes(path.join('.'))
+      )
+      row.toggleRowSelected = set => {
+        set = typeof set !== 'undefined' ? set : !row.isSelected
+        console.log(subRowPaths)
+        subRowPaths.forEach(path => {
+          toggleRowSelected(path, set)
+        })
+      }
+      row.getToggleRowSelectedProps = props => {
+        let checked = false
 
-    if (row.canSelect) {
-      row.selected = selectedRows.includes(row.path.join('.'))
+        if (row.original && row.original[manualRowSelectedKey]) {
+          checked = true
+        } else {
+          checked = row.isSelected
+        }
+
+        return mergeProps(
+          {
+            onChange: e => {
+              row.toggleRowSelected(e.target.checked)
+            },
+            style: {
+              cursor: 'pointer',
+            },
+            checked,
+            title: 'Toggle Row Selected',
+          },
+          applyPropHooks(
+            instance.hooks.getToggleRowSelectedProps,
+            row,
+            instance
+          ),
+          props
+        )
+      }
+    } else {
+      row.isSelected = selectedRows.includes(row.path.join('.'))
       row.toggleRowSelected = set => toggleRowSelected(row.path, set)
       row.getToggleRowSelectedProps = props => {
         let checked = false
@@ -105,7 +144,7 @@ function useMain(instance) {
         if (row.original && row.original[manualRowSelectedKey]) {
           checked = true
         } else {
-          checked = selectedRows.includes(row.path.join('.'))
+          checked = row.isSelected
         }
 
         return mergeProps(

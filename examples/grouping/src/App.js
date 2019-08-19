@@ -68,7 +68,7 @@ function Table({ columns, data }) {
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()}>
-                      {column.grouped ? '🛑 ' : '👊 '}
+                      {column.isGrouped ? '🛑 ' : '👊 '}
                     </span>
                   ) : null}
                   {column.render('Header')}
@@ -90,16 +90,16 @@ function Table({ columns, data }) {
                         // from the useGroupBy hook
                         {...cell.getCellProps()}
                         style={{
-                          background: cell.grouped
+                          background: cell.isGrouped
                             ? '#0aff0082'
-                            : cell.aggregated
+                            : cell.isAggregated
                             ? '#ffa50078'
-                            : cell.repeatedValue
+                            : cell.isRepeatedValue
                             ? '#ff000042'
                             : 'white',
                         }}
                       >
-                        {cell.grouped ? (
+                        {cell.isGrouped ? (
                           // If it's a grouped cell, add an expander and row count
                           <>
                             <span {...row.getExpandedToggleProps()}>
@@ -107,11 +107,11 @@ function Table({ columns, data }) {
                             </span>{' '}
                             {cell.render('Cell')} ({row.subRows.length})
                           </>
-                        ) : cell.aggregated ? (
+                        ) : cell.isAggregated ? (
                           // If the cell is aggregated, use the Aggregated
                           // renderer for cell
                           cell.render('Aggregated')
-                        ) : cell.repeatedValue ? null : ( // For cells with repeated values, render null
+                        ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
                           // Otherwise, just render the regular cell
                           cell.render('Cell')
                         )}
@@ -196,7 +196,7 @@ function App() {
             // then sum any of those counts if they are
             // aggregated further
             aggregate: ['sum', 'count'],
-            Aggregated: ({ value }) => `${value} Names`,
+            Aggregated: ({ cell: { value } }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -206,7 +206,7 @@ function App() {
             // being aggregated, then sum those counts if
             // they are aggregated further
             aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ value }) => `${value} Unique Names`,
+            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
           },
         ],
       },
@@ -218,14 +218,14 @@ function App() {
             accessor: 'age',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ value }) => `${value} (avg)`,
+            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             // Aggregate the sum of all visits
             aggregate: 'sum',
-            Aggregated: ({ value }) => `${value} (total)`,
+            Aggregated: ({ cell: { value } }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -236,7 +236,7 @@ function App() {
             accessor: 'progress',
             // Use our custom roundedMedian aggregator
             aggregate: roundedMedian,
-            Aggregated: ({ value }) => `${value} (med)`,
+            Aggregated: ({ cell: { value } }) => `${value} (med)`,
           },
         ],
       },

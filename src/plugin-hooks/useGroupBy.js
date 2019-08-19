@@ -9,6 +9,7 @@ import {
   applyPropHooks,
   defaultGroupByFn,
   getFirstDefined,
+  ensurePluginOrder,
 } from '../utils'
 
 defaultState.groupBy = []
@@ -50,9 +51,18 @@ useGroupBy.pluginName = 'useGroupBy'
 function columnsBeforeHeaderGroups(columns, { state: [{ groupBy }] }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
+
+  const groupByColumns = groupBy.map(g => columns.find(col => col.id === g))
+  const nonGroupByColumns = columns.filter(col => !groupBy.includes(col.id))
+
+  // If a groupByBoundary column is found, place the groupBy's after it
+  const groupByBoundaryColumnIndex =
+    columns.findIndex(column => column.groupByBoundary) + 1
+
   return [
-    ...groupBy.map(g => columns.find(col => col.id === g)),
-    ...columns.filter(col => !groupBy.includes(col.id)),
+    ...nonGroupByColumns.slice(0, groupByBoundaryColumnIndex),
+    ...groupByColumns,
+    ...nonGroupByColumns.slice(groupByBoundaryColumnIndex),
   ]
 }
 
@@ -69,12 +79,15 @@ function useMain(instance) {
     disableGrouping,
     aggregations: userAggregations = {},
     hooks,
+    plugins,
     state: [{ groupBy }, setState],
   } = instance
 
+  ensurePluginOrder(plugins, [], 'useGroupBy', ['useExpanded'])
+
   columns.forEach(column => {
     const { id, accessor, disableGrouping: columnDisableGrouping } = column
-    column.grouped = groupBy.includes(id)
+    column.isGrouped = groupBy.includes(id)
     column.groupedIndex = groupBy.indexOf(id)
 
     column.canGroupBy = accessor
@@ -137,11 +150,12 @@ function useMain(instance) {
   hooks.prepareRow.push(row => {
     row.cells.forEach(cell => {
       // Grouped cells are in the groupBy and the pivot cell for the row
-      cell.grouped = cell.column.grouped && cell.column.id === row.groupByID
+      cell.isGrouped = cell.column.isGrouped && cell.column.id === row.groupByID
       // Repeated cells are any columns in the groupBy that are not grouped
-      cell.repeatedValue = !cell.grouped && cell.column.grouped
+      cell.isRepeatedValue = !cell.isGrouped && cell.column.isGrouped
       // Aggregated cells are not grouped, not repeated, but still have subRows
-      cell.aggregated = !cell.grouped && !cell.repeatedValue && row.canExpand
+      cell.isAggregated =
+        !cell.isGrouped && !cell.isRepeatedValue && row.canExpand
     })
     return row
   })
@@ -218,7 +232,7 @@ function useMain(instance) {
       // Recurse to sub rows before aggregation
       groupedRows = Object.entries(groupedRows).map(
         ([groupByVal, subRows], index) => {
-          const path = [...parentPath, groupByVal]
+          const path = [...parentPath, `${columnID}:${groupByVal}`]
 
           subRows = groupRecursively(subRows, depth + 1, path)
 
@@ -228,6 +242,7 @@ function useMain(instance) {
           )
 
           const row = {
+            isAggregated: true,
             groupByID: columnID,
             groupByVal,
             values,

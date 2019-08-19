@@ -688,7 +688,7 @@ The following properties are available on every `Column` object returned by the 
 - `canGroupBy: Boolean`
   - If `true`, this column is able to be grouped.
   - This is resolved from the column having a valid accessor / data model, and not being manually disabled via other `useGroupBy` related options
-- `grouped: Boolean`
+- `isGrouped: Boolean`
   - If `true`, this column is currently being grouped
 - `groupedIndex: Int`
   - If this column is currently being grouped, this integer is the index of this column's ID in the table state's `groupBy` array.
@@ -719,17 +719,19 @@ The following properties are available on every `Row` object returned by the tab
 - `path: Array<String|Int>`
   - Similar to normal `Row` objects, materialized grouping rows also have a path array. The keys inside it though are not integers like nested normal rows though. Since they are not rows that can be traced back to an original data row, they are given a unique path based on their `groupByVal`
   - If a row is a grouping row, it will have a path like `['Single']` or `['Complicated', 'Anderson']`, where `Single`, `Complicated`, and `Anderson` would all be derived from their row's `groupByVal`.
+- `isAggregated: Bool`
+  - Will be `true` if the row is an aggregated row
 
 ### Cell Properties
 
 The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
 
-- `grouped: Bool`
+- `isGrouped: Bool`
   - If `true`, this cell is a grouped cell, meaning it contains a grouping value and should usually display and expander.
-- `repeatedValue: Bool`
+- `isRepeatedValue: Bool`
   - If `true`, this cell is a repeated value cell, meaning it contains a value that is already being displayed elsewhere (usually by a parent row's cell).
   - Most of the time, this cell is not required to be displayed and can safely be hidden during rendering
-- `aggregated: Bool`
+- `isAggregated: Bool`
   - If `true`, this cell's value has been aggregated and should probably be rendered with the `Aggregated` cell renderer.
 
 ### Example
@@ -918,10 +920,6 @@ The following options are supported via the main options object passed to `useTa
 - `subRowsKey: String`
   - Optional
   - See the [useTable hook](#table-options) for more details
-- `nestExpandedRows: Bool`
-  - Optional
-  - Defaults to `false`
-  - If set to `false`, expanded rows will not be paginated. Thus, any expanded subrows would potentially increase the size of any given page by the amount of total expanded subrows on the page.
 - `manualExpandedKey: String`
   - Optional
   - Defaults to `expanded`
@@ -1098,13 +1096,17 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `false`
   - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
   - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
+- `paginateExpandedRows: Bool`
+  - Optional
+  - Only applies when using the `useExpanded` plugin hook simultaneously
+  - Defaults to `true`
+  - If set to `true`, expanded rows are paginated along with normal rows. This results in stable page sizes across every page.
+  - If set to `false`, expanded rows will be spliced in after pagination. This means that the total number of rows in a page can potentially be larger than the page size, depending on how many subrows are expanded.
 
 ### Instance Properties
 
 The following values are provided to the table `instance`:
 
-- `pages: Array<page>`
-  - An array of every generated `page`, each containing its respective rows.
 - `page: Array<row>`
   - An array of rows for the **current** page, determined by the current `pageIndex` value.
 - `pageCount: Int`
@@ -1119,7 +1121,7 @@ The following values are provided to the table `instance`:
   - If there are pages and the current `pageIndex` is less than `pageCount`, this will be `true`
 - `gotoPage: Function(pageIndex)`
   - This function, when called with a valid `pageIndex`, will set `pageIndex` to that value.
-  - If the passed index is outside of the valid `pageIndex` range, then this function will do nothing.
+  - If the aginateassed index is outside of the valid `pageIndex` range, then this function will do nothing.
 - `previousPage: Function`
   - This function decreases `state.pageIndex` by one.
   - If there are no pages or `canPreviousPage` is false, this function will do nothing.
@@ -1335,7 +1337,7 @@ The following options are supported via the main options object passed to `useTa
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
 - `manualRowSelectedKey: String`
   - Optional
-  - Defaults to `selected`
+  - Defaults to `isSelected`
   - If this key is found on the **original** data row, and it is true, this row will be manually selected
 
 ### Instance Properties
@@ -1358,6 +1360,16 @@ The following values are provided to the table `instance`:
 - `allRowsSelected: Bool`
   - Will be `true` if all rows are selected.
   - If at least one row is not selected, will be `false`
+
+### Row Properties
+
+The following additional properties are available on every **prepared** `row` object returned by the table instance.
+
+- `isSelected: Bool`
+  - Will be `true` if the row is currently selected
+- `toggleRowSelected: Function(?set)`
+  - Use this function to toggle this row's selected state.
+  - Optionally pass `true` or `false` to set it to that state
 
 ### Example
 
@@ -1609,12 +1621,9 @@ export default function MyTable({ manualPageIndex }) {
   const state = useTableState(initialState, overrides)
 
   // You can use effects to observe changes to the state
-  React.useEffect(
-    () => {
-      console.log('Page Size Changed!', initialState.pageSize)
-    },
-    [initialState.pageSize]
-  )
+  React.useEffect(() => {
+    console.log('Page Size Changed!', initialState.pageSize)
+  }, [initialState.pageSize])
 
   const { rows } = useTable({
     state,

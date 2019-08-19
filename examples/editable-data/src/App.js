@@ -46,20 +46,28 @@ const Styles = styled.div`
 
 // Create an editable cell renderer
 const EditableCell = ({
-  value: initialValue,
+  cell: { value: initialValue },
   row: { index },
   column: { id },
   updateMyData, // This is a custom function that we supplied to our table instance
 }) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue)
+
   const onChange = e => {
     setValue(e.target.value)
   }
+
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
     updateMyData(index, id, value)
   }
+
+  // If the initialValue is changed externall, sync it up with our state
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
   return <input value={value} onChange={onChange} onBlur={onBlur} />
 }
 
@@ -221,6 +229,7 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(20))
+  const [originalData] = React.useState(data)
 
   // We need to keep the table from resetting the pageIndex when we
   // Update data. So we can keep track of that flag with a ref.
@@ -232,8 +241,8 @@ function App() {
   const updateMyData = (rowIndex, columnID, value) => {
     // We also turn on the flag to not reset the page
     skipPageResetRef.current = true
-    setData(old => {
-      return old.filter((row, index) => {
+    setData(old =>
+      old.map((row, index) => {
         if (index === rowIndex) {
           return {
             ...old[rowIndex],
@@ -242,22 +251,19 @@ function App() {
         }
         return row
       })
-    })
+    )
   }
 
   // After data chagnes, we turn the flag back off
   // so that if data actually changes when we're not
   // editing it, the page is reset
-  React.useEffect(
-    () => {
-      skipPageResetRef.current = false
-    },
-    [data]
-  )
+  React.useEffect(() => {
+    skipPageResetRef.current = false
+  }, [data])
 
   // Let's add a data resetter/randomizer to help
   // illustrate that flow...
-  const resetData = () => setData(makeData(20))
+  const resetData = () => setData(originalData)
 
   return (
     <Styles>

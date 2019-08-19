@@ -196,6 +196,7 @@ export function defaultGroupByFn(rows, columnID) {
 }
 
 export function setBy(obj = {}, path, value) {
+  path = makePathArray(path)
   const recurse = (obj, depth = 0) => {
     const key = path[depth]
     const target = typeof obj[key] !== 'object' ? {} : obj[key]
@@ -347,11 +348,18 @@ This usually means you need to need to name your plugin hook by setting the 'plu
 //
 
 function makePathArray(obj) {
-  return flattenDeep(obj)
-    .join('.')
-    .replace(/\[/g, '.')
-    .replace(/\]/g, '')
-    .split('.')
+  return (
+    flattenDeep(obj)
+      // remove all periods in parts
+      .map(d => String(d).replace('.', '_'))
+      // join parts using period
+      .join('.')
+      // replace brackets with periods
+      .replace(/\[/g, '.')
+      .replace(/\]/g, '')
+      // split it back out on periods
+      .split('.')
+  )
 }
 
 function flattenDeep(arr, newArr = []) {

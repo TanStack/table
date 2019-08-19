@@ -120,7 +120,7 @@ function App() {
       {
         id: 'selectedStatus',
         Cell: ({ row }) => (
-          <div>{row.selected ? 'Selected' : 'Not Selected'}</div>
+          <div>{row.isSelected ? 'Selected' : 'Not Selected'}</div>
         ),
       },
       {

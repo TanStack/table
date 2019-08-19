@@ -37,7 +37,7 @@ function MyTable() {
 +             <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                 {column.render('Header')}
 +               <span>
-+                 {column.sorted ? (column.sortedDesc ? ' 🔽' : ' 🔼') : ''}
++                 {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
 +               </span>
               </th>
             ))}

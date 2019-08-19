@@ -73,7 +73,7 @@ function Table({ columns, data }) {
                 {column.canGroupBy ? (
                   // If the column can be grouped, let's add a toggle
                   <span {...column.getGroupByToggleProps()}>
-                    {column.grouped ? '🛑' : '👊'}
+                    {column.isGrouped ? '🛑' : '👊'}
                   </span>
                 ) : null}
                 {column.render('Header')}
@@ -90,7 +90,7 @@ function Table({ columns, data }) {
                 {row.cells.map(cell => {
                   return (
                     <td {...cell.getCellProps()}>
-                      {cell.grouped ? (
+                      {cell.isGrouped ? (
                         <>
                           <span
                             style={{
@@ -102,9 +102,9 @@ function Table({ columns, data }) {
                           </span>
                           {cell.render('Cell')} ({row.subRows.length})
                         </>
-                      ) : cell.aggregated ? (
+                      ) : cell.isAggregated ? (
                         cell.render('Aggregated')
-                      ) : cell.repeatedValue ? null : (
+                      ) : cell.isRepeatedValue ? null : (
                         cell.render('Cell')
                       )}
                     </td>

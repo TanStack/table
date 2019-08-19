@@ -64,7 +64,7 @@ function useMain(instance) {
     plugins,
   } = instance
 
-  ensurePluginOrder(plugins, [], 'useSortBy', ['useFilters'])
+  ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
   // Add custom hooks
   hooks.getSortByToggleProps = []
 
@@ -197,9 +197,10 @@ function useMain(instance) {
       )
     }
 
-    column.sorted = sortBy.find(d => d.id === id)
+    const columnSort = sortBy.find(d => d.id === id)
+    column.isSorted = !!columnSort
     column.sortedIndex = sortBy.findIndex(d => d.id === id)
-    column.sortedDesc = column.sorted ? column.sorted.desc : undefined
+    column.isSortedDesc = column.isSorted ? columnSort.desc : undefined
   })
 
   const sortedRows = React.useMemo(() => {
