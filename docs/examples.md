@@ -28,6 +28,10 @@
   - Editable Data
     - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/editable-data)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/editable-data)
+- **Complex**
+  - The "Kitchen Sink"
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/kitchen-sink)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/kitchen-sink)
 - **Controlled via `useTableState`** - These examples are more advanced because they demonstrate how to manually control and respond to the state of the table using the `useTableState` hook.
   - Pagination (Controlled)
     - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
