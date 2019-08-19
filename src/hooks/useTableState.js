@@ -16,20 +16,17 @@ export const useTableState = (
     ...initialState,
   })
 
-  const overriddenState = React.useMemo(
-    () => {
-      const newState = {
-        ...state,
-      }
-      if (overrides) {
-        Object.keys(overrides).forEach(key => {
-          newState[key] = overrides[key]
-        })
-      }
-      return newState
-    },
-    [overrides, state]
-  )
+  const overriddenState = React.useMemo(() => {
+    const newState = {
+      ...state,
+    }
+    if (overrides) {
+      Object.keys(overrides).forEach(key => {
+        newState[key] = overrides[key]
+      })
+    }
+    return newState
+  }, [overrides, state])
 
   const overriddenStateRef = React.useRef()
   overriddenStateRef.current = overriddenState

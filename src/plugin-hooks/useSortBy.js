@@ -31,6 +31,8 @@ const propTypes = {
   manualSorting: PropTypes.bool,
   disableSorting: PropTypes.bool,
   disableMultiSort: PropTypes.bool,
+  isMultiSortEvent: PropTypes.func,
+  maxMultiSortColCount: PropTypes.number,
   disableSortRemove: PropTypes.bool,
   disableMultiRemove: PropTypes.bool,
 }
@@ -55,6 +57,8 @@ function useMain(instance) {
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
+    isMultiSortEvent = e => e.shiftKey,
+    maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
     hooks,
     state: [{ sortBy }, setState],
     plugins,
@@ -128,6 +132,8 @@ function useMain(instance) {
             desc: hasDescDefined ? desc : sortDescFirst,
           },
         ]
+        // Take latest n columns
+        newSortBy.splice(0, newSortBy.length - maxMultiSortColCount)
       } else if (action === 'toggle') {
         // This flips (or sets) the
         newSortBy = sortBy.map(d => {
@@ -177,7 +183,7 @@ function useMain(instance) {
                 e.persist()
                 column.toggleSortBy(
                   undefined,
-                  !instance.disableMultiSort && e.shiftKey
+                  !instance.disableMultiSort && isMultiSortEvent(e)
                 )
               }
             : undefined,
@@ -196,72 +202,82 @@ function useMain(instance) {
     column.sortedDesc = column.sorted ? column.sorted.desc : undefined
   })
 
-  const sortedRows = React.useMemo(
-    () => {
-      if (manualSorting || !sortBy.length) {
-        return rows
-      }
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.time('getSortedRows')
+  const sortedRows = React.useMemo(() => {
+    if (manualSorting || !sortBy.length) {
+      return rows
+    }
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.time('getSortedRows')
 
-      const sortData = rows => {
-        // Use the orderByFn to compose multiple sortBy's together.
-        // This will also perform a stable sorting using the row index
-        // if needed.
-        const sortedData = orderByFn(
-          rows,
-          sortBy.map(sort => {
-            // Support custom sorting methods for each column
-            const { sortType } = columns.find(d => d.id === sort.id)
+    // Filter out sortBys that correspond to non existing columns
+    const availableSortBy = sortBy.filter(sort =>
+      columns.find(col => col.id === sort.id)
+    )
 
-            // Look up sortBy functions in this order:
-            // column function
-            // column string lookup on user sortType
-            // column string lookup on built-in sortType
-            // default function
-            // default string lookup on user sortType
-            // default string lookup on built-in sortType
-            const sortMethod =
-              isFunction(sortType) ||
-              (userSortTypes || {})[sortType] ||
-              sortTypes[sortType] ||
-              sortTypes.alphanumeric
+    const sortData = rows => {
+      // Use the orderByFn to compose multiple sortBy's together.
+      // This will also perform a stable sorting using the row index
+      // if needed.
+      const sortedData = orderByFn(
+        rows,
+        availableSortBy.map(sort => {
+          // Support custom sorting methods for each column
+          const column = columns.find(d => d.id === sort.id)
 
-            // Return the correct sortFn
-            return (a, b) =>
-              sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
-          }),
-          // Map the directions
-          sortBy.map(sort => {
-            // Detect and use the sortInverted option
-            const { sortInverted } = columns.find(d => d.id === sort.id)
-
-            if (sortInverted) {
-              return sort.desc
-            }
-
-            return !sort.desc
-          })
-        )
-
-        // If there are sub-rows, sort them
-        sortedData.forEach(row => {
-          if (!row.subRows) {
-            return
+          if (!column) {
+            throw new Error(
+              `React-Table: Could not find a column with id: ${sort.id} while sorting`
+            )
           }
-          row.subRows = sortData(row.subRows)
+
+          const { sortType } = column
+
+          // Look up sortBy functions in this order:
+          // column function
+          // column string lookup on user sortType
+          // column string lookup on built-in sortType
+          // default function
+          // default string lookup on user sortType
+          // default string lookup on built-in sortType
+          const sortMethod =
+            isFunction(sortType) ||
+            (userSortTypes || {})[sortType] ||
+            sortTypes[sortType] ||
+            sortTypes.alphanumeric
+
+          // Return the correct sortFn
+          return (a, b) =>
+            sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
+        }),
+        // Map the directions
+        availableSortBy.map(sort => {
+          // Detect and use the sortInverted option
+          const column = columns.find(d => d.id === sort.id)
+
+          if (column && column.sortInverted) {
+            return sort.desc
+          }
+
+          return !sort.desc
         })
+      )
 
-        return sortedData
-      }
+      // If there are sub-rows, sort them
+      sortedData.forEach(row => {
+        if (!row.subRows || row.subRows.length <= 1) {
+          return
+        }
+        row.subRows = sortData(row.subRows)
+      })
 
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.timeEnd('getSortedRows')
+      return sortedData
+    }
 
-      return sortData(rows)
-    },
-    [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes]
-  )
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.timeEnd('getSortedRows')
+
+    return sortData(rows)
+  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes])
 
   return {
     ...instance,

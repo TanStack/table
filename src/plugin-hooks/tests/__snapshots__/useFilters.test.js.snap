@@ -1,197 +1,197 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a filterable table 1`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -37,11 +37,11 @@
-            colspan=\\"1\\"
+            colspan="1"
           >
             Last Name
             <input
-              placeholder=\\"Search...\\"
--             value=\\"\\"
-+             value=\\"l\\"
+              placeholder="Search..."
+-             value=""
++             value="l"
             />
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
 @@ -115,78 +115,10 @@
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             progress: 50
 -         </td>
 -       </tr>
 -       <tr
--         class=\\"\\"
+-         class=""
 -       >
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           firstName: derek
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           lastName: perkins
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           age: 40
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           visits: 40
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           status: Single
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           progress: 80
 -         </td>
 -       </tr>
 -       <tr
--         class=\\"\\"
+-         class=""
 -       >
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           firstName: joe
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           lastName: bergevin
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           age: 45
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           visits: 20
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           status: Complicated
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           progress: 10
           </td>
         </tr>
         <tr
-          class=\\"\\"
-        >"
+          class=""
+        >
 `;
 
 exports[`renders a filterable table 2`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -37,11 +37,11 @@
-            colspan=\\"1\\"
+            colspan="1"
           >
             Last Name
             <input
-              placeholder=\\"Search...\\"
--             value=\\"l\\"
-+             value=\\"er\\"
+              placeholder="Search..."
+-             value="l"
++             value="er"
             />
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
 @@ -89,70 +89,70 @@
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: tanner
 +           firstName: derek
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: linsley
 +           lastName: perkins
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 29
 +           age: 40
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 100
 +           visits: 40
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: In Relationship
 +           status: Single
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 50
 +           progress: 80
           </td>
         </tr>
         <tr
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: jaylen
 +           firstName: joe
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: linsley
 +           lastName: bergevin
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 26
 +           age: 45
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 99
 +           visits: 20
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: In Relationship
 +           status: Complicated
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 70
 +           progress: 10
@@ -199,5 +199,5 @@ exports[`renders a filterable table 2`] = `
         </tr>
       </tbody>
     </table>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;
