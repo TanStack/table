@@ -1,14 +1,16 @@
 # Installation
 
-Install React Table as a dependency using `npm` or `yarn`
+Install the React Table v7 Alpha as a dependency using `npm` or `yarn`
 
 ```bash
 # NPM
-$ npm install react-table
+$ npm install react-table@next
 
 # Yarn
-$ yarn add react-table
+$ yarn add react-table@next
 ```
+
+> NOTE: `@next` is only required tempororarily while work on the alpha and beta versions are still shifting.
 
 To import React Table:
 
