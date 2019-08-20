@@ -26,7 +26,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <br />
 <br />
 
-![React Table Logo](https://github.com/tannerlinsley/react-table/tree/master/media/logo.png)
+![React Table Logo](https://github.com/tannerlinsley/react-table/raw/master/media/logo.png)
 
 ## Features
 
