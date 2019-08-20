@@ -38,11 +38,11 @@ function useMain(instance) {
     []
   )
 
-  const allRowsSelected = rowPaths.length === selectedRows.length
+  const isAllRowsSelected = rowPaths.length === selectedRows.length
 
   const toggleRowSelectedAll = set => {
     setState(old => {
-      const selectAll = typeof set !== 'undefined' ? set : !allRowsSelected
+      const selectAll = typeof set !== 'undefined' ? set : !isAllRowsSelected
       return {
         ...old,
         selectedRows: selectAll ? [...rowPaths] : [],
@@ -52,10 +52,14 @@ function useMain(instance) {
 
   const updateParentRow = (selectedRows, path) => {
     const parentPath = path.slice(0, path.length - 1)
-    const parentKey = parentPath.join(".")
-    const selected = rowPaths.filter(path =>
-      path !== parentKey && path.startsWith(parentKey) && !selectedRows.has(path)
-    ).length === 0
+    const parentKey = parentPath.join('.')
+    const selected =
+      rowPaths.filter(
+        path =>
+          path !== parentKey &&
+          path.startsWith(parentKey) &&
+          !selectedRows.has(path)
+      ).length === 0
     if (selected) {
       selectedRows.add(parentKey)
     } else {
@@ -76,11 +80,11 @@ function useMain(instance) {
       let newSelectedRows = new Set(old.selectedRows)
 
       if (!exists && shouldExist) {
-        rowPaths.forEach((rowPath) => {
+        rowPaths.forEach(rowPath => {
           if (rowPath.startsWith(key)) newSelectedRows.add(rowPath)
         })
       } else if (exists && !shouldExist) {
-        rowPaths.forEach((rowPath) => {
+        rowPaths.forEach(rowPath => {
           if (rowPath.startsWith(key)) newSelectedRows.delete(rowPath)
         })
       } else {
@@ -107,7 +111,7 @@ function useMain(instance) {
         style: {
           cursor: 'pointer',
         },
-        checked: allRowsSelected,
+        checked: isAllRowsSelected,
         title: 'Toggle All Rows Selected',
       },
       applyPropHooks(instance.hooks.getToggleAllRowsSelectedProps, instance),
@@ -198,6 +202,6 @@ function useMain(instance) {
     toggleRowSelected,
     toggleRowSelectedAll,
     getToggleAllRowsSelectedProps,
-    allRowsSelected,
+    isAllRowsSelected,
   }
 }

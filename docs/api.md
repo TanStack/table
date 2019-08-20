@@ -198,7 +198,7 @@ The following properties are available on every `Column` object returned by the 
 
 - `id: String`
   - The resolved column ID from either the column's `accessor` or the column's hard-coded `id` property
-- `visible: Boolean`
+- `isVisible: Boolean`
   - The resolved visible state for the column, derived from the column's `show` property
 - `render: Function(type: String | Function | Component, ?props)`
   - This function is used to render content with the added context of a column.
@@ -1357,7 +1357,7 @@ The following values are provided to the table `instance`:
     - `style.cursor: 'pointer'`
     - `checked: Bool`
     - `title: 'Toggle All Rows Selected'`
-- `allRowsSelected: Bool`
+- `isAllRowsSelected: Bool`
   - Will be `true` if all rows are selected.
   - If at least one row is not selected, will be `false`
 

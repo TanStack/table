@@ -26,6 +26,8 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <br />
 <br />
 
+![React Table Logo](https://github.com/tannerlinsley/react-table/tree/master/media/logo.png)
+
 ## Features
 
 - Lightweight (4kb - 10kb depending on features and tree-shaking)

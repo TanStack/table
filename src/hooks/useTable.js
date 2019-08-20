@@ -211,7 +211,7 @@ export const useTable = (props, ...plugins) => {
 
   // Determine column visibility
   instanceRef.current.columns.forEach(column => {
-    column.visible =
+    column.isVisible =
       typeof column.show === 'function'
         ? column.show(instanceRef.current)
         : !!column.show
@@ -248,7 +248,7 @@ export const useTable = (props, ...plugins) => {
           {
             key: ['header', column.id].join('_'),
             colSpan: column.columns
-              ? column.columns.filter(column => column.visible).length
+              ? column.columns.filter(column => column.isVisible).length
               : 1,
           },
           applyPropHooks(
@@ -269,12 +269,12 @@ export const useTable = (props, ...plugins) => {
           if (column.columns) {
             return recurse(column.columns)
           }
-          return column.visible
+          return column.isVisible
         }).length
       if (header.columns) {
         return recurse(header.columns)
       }
-      return header.visible
+      return header.isVisible
     })
 
     // Give headerGroups getRowProps
@@ -324,7 +324,7 @@ export const useTable = (props, ...plugins) => {
       )
 
     const visibleColumns = instanceRef.current.columns.filter(
-      column => column.visible
+      column => column.isVisible
     )
 
     // Build the cells for each row
