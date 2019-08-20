@@ -1,6 +1,6 @@
-![React Table Logo](https://github.com/tannerlinsley/react-table/raw/master/media/logo.png)
+![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/header.png)
 
-# React Table
+<img src='https://github.com/tannerlinsley/react-table/raw/master/media/logo.png' width='300'/>
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
