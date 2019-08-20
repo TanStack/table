@@ -19,8 +19,8 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
 
   if (typeof accessor === 'string') {
     id = id || accessor
-    const accessorString = accessor
-    accessor = row => getBy(row, accessorString)
+    const accessorPath = accessor.split('.')
+    accessor = row => getBy(row, accessorPath)
   }
 
   if (!id && typeof Header === 'string' && Header) {
