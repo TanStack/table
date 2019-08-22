@@ -72,14 +72,6 @@ export function decorateColumnTree(columns, defaultColumn, parent, depth = 0) {
 export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
   const headerGroups = []
 
-  const removeChildColumns = column => {
-    delete column.columns
-    if (column.parent) {
-      removeChildColumns(column.parent)
-    }
-  }
-  columns.forEach(removeChildColumns)
-
   const buildGroup = (columns, depth = 0) => {
     const headerGroup = {
       headers: [],
@@ -124,14 +116,21 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
         }
       }
 
-      // Establish the new columns[] relationship on the parent
+      // Establish the new headers[] relationship on the parent
       if (column.parent || hasParents) {
         latestParentColumn = [...parentColumns].reverse()[0]
-        latestParentColumn.columns = latestParentColumn.columns || []
-        if (!latestParentColumn.columns.includes(column)) {
-          latestParentColumn.columns.push(column)
+        latestParentColumn.headers = latestParentColumn.headers || []
+        if (!latestParentColumn.headers.includes(column)) {
+          latestParentColumn.headers.push(column)
         }
       }
+
+      column.totalHeaderCount = column.headers
+        ? column.headers.reduce(
+            (sum, header) => sum + header.totalHeaderCount,
+            0
+          )
+        : 1 // Leaf node columns take up at least one count
 
       headerGroup.headers.push(column)
     })
@@ -146,6 +145,25 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
   buildGroup(columns)
 
   return headerGroups.reverse()
+}
+
+export function determineColumnVisibility(instance) {
+  const { headers } = instance
+
+  const handleColumn = (column, parentVisible) => {
+    column.isVisible = parentVisible
+      ? typeof column.show === 'function'
+        ? column.show(instance)
+        : !!column.show
+      : false
+    if (column.columns && column.columns.length) {
+      column.columns.forEach(subColumn =>
+        handleColumn(subColumn, column.isVisible)
+      )
+    }
+  }
+
+  headers.forEach(subColumn => handleColumn(subColumn, true))
 }
 
 export function getBy(obj, path, def) {

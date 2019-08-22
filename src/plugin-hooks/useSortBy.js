@@ -59,6 +59,7 @@ function useMain(instance) {
     disableMultiSort,
     isMultiSortEvent = e => e.shiftKey,
     maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+    flatHeaders,
     hooks,
     state: [{ sortBy }, setState],
     plugins,
@@ -157,7 +158,7 @@ function useMain(instance) {
   }
 
   // Add the getSortByToggleProps method to columns and headers
-  ;[...instance.columns, ...instance.headers].forEach(column => {
+  flatHeaders.forEach(column => {
     const { accessor, disableSorting: columnDisableSorting, id } = column
 
     const canSort = accessor
@@ -246,9 +247,9 @@ function useMain(instance) {
             sortTypes[sortType] ||
             sortTypes.alphanumeric
 
-          // Return the correct sortFn
-          return (a, b) =>
-            sortMethod(a.values[sort.id], b.values[sort.id], sort.desc)
+          // Return the correct sortFn.
+          // This function should always return in ascending order
+          return (a, b) => sortMethod(a, b, sort.id)
         }),
         // Map the directions
         availableSortBy.map(sort => {

@@ -10,6 +10,7 @@ import {
   makeHeaderGroups,
   findMaxDepth,
   flattenBy,
+  determineColumnVisibility,
 } from '../utils'
 
 import { useTableState } from './useTableState'
@@ -49,27 +50,24 @@ export const useTable = (props, ...plugins) => {
 
   debug = process.env.NODE_ENV === 'production' ? false : debug
 
-  // Always provide a default state
+  // Always provide a default table state
   const defaultState = useTableState()
 
-  // But use the users state if provided
+  // But use the users table state if provided
   const state = userState || defaultState
 
-  // The initial api
+  // The table instance ref
   let instanceRef = React.useRef({})
 
   Object.assign(instanceRef.current, {
     ...props,
-    data,
-    state,
-    plugins,
+    data, // The raw data
+    state, // The resolved table state
+    plugins, // All resolved plugins
     hooks: {
       columnsBeforeHeaderGroups: [],
       columnsBeforeHeaderGroupsDeps: [],
       useMain: [],
-      useColumns: [],
-      useHeaders: [],
-      useHeaderGroups: [],
       useRows: [],
       prepareRow: [],
       getTableProps: [],
@@ -82,34 +80,34 @@ export const useTable = (props, ...plugins) => {
 
   // Allow plugins to register hooks
   if (process.env.NODE_ENV === 'development' && debug) console.time('plugins')
+
   plugins.filter(Boolean).forEach(plugin => {
     plugin(instanceRef.current.hooks)
   })
+
   if (process.env.NODE_ENV === 'development' && debug)
     console.timeEnd('plugins')
 
-  if (process.env.NODE_ENV === 'development' && debug)
-    console.info('buildColumns/headerGroup/headers')
   // Decorate All the columns
-  let columnTree = React.useMemo(
+  let headers = React.useMemo(
     () => decorateColumnTree(userColumns, defaultColumn),
     [defaultColumn, userColumns]
   )
 
   // Get the flat list of all columns
-  let columns = React.useMemo(() => flattenBy(columnTree, 'columns'), [
-    columnTree,
-  ])
+  let columns = React.useMemo(() => flattenBy(headers, 'columns'), [headers])
 
   // Allow hooks to decorate columns (and trigger this memoization via deps)
   columns = React.useMemo(() => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.time('hooks.columnsBeforeHeaderGroups')
-    const newColumns = applyHooks(
+
+    let newColumns = applyHooks(
       instanceRef.current.hooks.columnsBeforeHeaderGroups,
       columns,
       instanceRef.current
     )
+
     if (process.env.NODE_ENV === 'development' && debug)
       console.timeEnd('hooks.columnsBeforeHeaderGroups')
     return newColumns
@@ -126,13 +124,9 @@ export const useTable = (props, ...plugins) => {
 
   // Make the headerGroups
   const headerGroups = React.useMemo(
-    () => makeHeaderGroups(columns, findMaxDepth(columnTree), defaultColumn),
-    [columnTree, columns, defaultColumn]
+    () => makeHeaderGroups(columns, findMaxDepth(headers), defaultColumn),
+    [columns, defaultColumn, headers]
   )
-
-  const headers = React.useMemo(() => flattenBy(headerGroups, 'headers'), [
-    headerGroups,
-  ])
 
   Object.assign(instanceRef.current, {
     columns,
@@ -210,12 +204,13 @@ export const useTable = (props, ...plugins) => {
   instanceRef.current.flatRows = flatRows
 
   // Determine column visibility
-  instanceRef.current.columns.forEach(column => {
-    column.isVisible =
-      typeof column.show === 'function'
-        ? column.show(instanceRef.current)
-        : !!column.show
-  })
+  determineColumnVisibility(instanceRef.current)
+
+  // Provide a flat header list for utilities
+  instanceRef.current.flatHeaders = headerGroups.reduce(
+    (all, headerGroup) => [...all, ...headerGroup.headers],
+    []
+  )
 
   if (process.env.NODE_ENV === 'development' && debug)
     console.time('hooks.useMain')
@@ -225,43 +220,42 @@ export const useTable = (props, ...plugins) => {
   )
   if (process.env.NODE_ENV === 'development' && debug)
     console.timeEnd('hooks.useMain')
-  ;[...instanceRef.current.columns, ...instanceRef.current.headers].forEach(
-    column => {
-      // Give columns/headers rendering power
-      column.render = (type, userProps = {}) => {
-        const Comp = typeof type === 'string' ? column[type] : type
 
-        if (typeof Comp === 'undefined') {
-          throw new Error(renderErr)
-        }
+  // Each materialized header needs to be assigned a render function and other
+  // prop getter properties here.
+  instanceRef.current.flatHeaders.forEach(column => {
+    // Give columns/headers rendering power
+    column.render = (type, userProps = {}) => {
+      const Comp = typeof type === 'string' ? column[type] : type
 
-        return flexRender(Comp, {
-          ...instanceRef.current,
-          column,
-          ...userProps,
-        })
+      if (typeof Comp === 'undefined') {
+        throw new Error(renderErr)
       }
 
-      // Give columns/headers a default getHeaderProps
-      column.getHeaderProps = props =>
-        mergeProps(
-          {
-            key: ['header', column.id].join('_'),
-            colSpan: column.columns
-              ? column.columns.filter(column => column.isVisible).length
-              : 1,
-          },
-          applyPropHooks(
-            instanceRef.current.hooks.getHeaderProps,
-            column,
-            instanceRef.current
-          ),
-          props
-        )
+      return flexRender(Comp, {
+        ...instanceRef.current,
+        column,
+        ...userProps,
+      })
     }
-  )
 
-  instanceRef.current.headerGroups.filter((headerGroup, i) => {
+    // Give columns/headers a default getHeaderProps
+    column.getHeaderProps = props =>
+      mergeProps(
+        {
+          key: ['header', column.id].join('_'),
+          colSpan: column.totalHeaderCount,
+        },
+        applyPropHooks(
+          instanceRef.current.hooks.getHeaderProps,
+          column,
+          instanceRef.current
+        ),
+        props
+      )
+  })
+
+  instanceRef.current.headerGroups.forEach((headerGroup, i) => {
     // Filter out any headers and headerGroups that don't have visible columns
     headerGroup.headers = headerGroup.headers.filter(header => {
       const recurse = columns =>
@@ -291,10 +285,9 @@ export const useTable = (props, ...plugins) => {
           ),
           props
         )
+
       return true
     }
-
-    return false
   })
 
   // Run the rows (this could be a dangerous hook with a ton of data)

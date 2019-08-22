@@ -143,14 +143,17 @@ The following options are supported on any column object you can pass to `column
 
 The following properties are available on the table instance returned from `useTable`
 
-- `headerGroups: Array<HeaderGroup>`
-  - An array of normalized header groups, each containing a flattened array of final column objects for that row.
-  - See [Header Group Properties](#headergroup-properties) for more information
+- `headers[] Array<Column>`
+  - A **nested** array of final column objects, similar in structure to the original columns configuration option.
+  - See [Column Properties](#column-properties) for more information
 - `columns: Array<Column>`
   - A **flat** array of all final column objects computed from the original columns configuration option.
   - See [Column Properties](#column-properties) for more information
-- `headers[] Array<Column>`
-  - A **nested** array of final column objects, similar in structure to the original columns configuration option.
+- `headerGroups: Array<HeaderGroup>`
+  - An array of normalized header groups, each containing a flattened array of final column objects for that row.
+  - See [Header Group Properties](#headergroup-properties) for more information
+- `flatHeaders[] Array<Column>`
+  - A **flat** array of final header objects found in each header group. Columns may be duplicated (if columns are not adjacent)
   - See [Column Properties](#column-properties) for more information
 - `rows: Array<Row>`
   - An array of **materialized row objects** from the original `data` array and `columns` passed into the table options
@@ -402,12 +405,13 @@ The following options are supported on any `Column` object passed to the `column
   - If set to `true`, the underlying sorting direction will be inverted, but the UI will not.
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
 - `sortType: String | Function`
+  - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
   - Defaults to [`alphanumeric`](TODO)
   - The resolved function from the this string/function will be used to sort the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used. If
     - If a `function` is passed, it will be used.
-  - For mor information on sort types, see [Sorting](TODO)
+  - For more information on sort types, see [Sorting](TODO)
 
 ### Instance Properties
 
@@ -520,7 +524,7 @@ The following options are supported via the main options object passed to `useTa
   - The function (or resolved function from the string) will be used as the default/fallback filter method for every column that has filtering enabled.
     - If a `string` is passed, the function with that name located on the `filterTypes` option object will be used.
     - If a `function` is passed, it will be used.
-  - For mor information on filter types, see [Filtering](TODO)
+  - For more information on filter types, see [Filtering](TODO)
 - `manualFilters: Bool`
   - Enables filter detection functionality, but does not automatically perform row filtering.
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
@@ -529,7 +533,7 @@ The following options are supported via the main options object passed to `useTa
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
-  - For mor information on filter types, see [Filtering](TODO)
+  - For more information on filter types, see [Filtering](TODO)
 
 ### Column Options
 
@@ -549,7 +553,7 @@ The following options are supported on any `Column` object passed to the `column
   - The resolved function from the this string/function will be used to filter the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `filterTypes` option or the built-in filtering types object will be used. If
     - If a `function` is passed, it will be used directly.
-  - For mor information on filter types, see [Filtering](TODO)
+  - For more information on filter types, see [Filtering](TODO)
   - If a **function** is passed, it must be **memoized**
 
 ### Instance Properties

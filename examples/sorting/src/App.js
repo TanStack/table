@@ -33,17 +33,11 @@ const Styles = styled.div`
   }
 `
 
-const defaultColumn = {
-  sort: 'numeric',
-}
-
 function Table({ columns, data }) {
   const { getTableProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
       data,
-      defaultColumn,
-      debug: true,
     },
     useSortBy
   )
