@@ -4,7 +4,7 @@ import { useTable } from '../../hooks/useTable'
 import { useRowSelect } from '../useRowSelect'
 import { useExpanded } from '../useExpanded'
 
-const data = [
+const dataPiece = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -56,6 +56,15 @@ const data = [
     status: 'In Relationship',
     progress: 70,
   },
+]
+
+const data = [
+  ...dataPiece,
+  ...dataPiece,
+  ...dataPiece,
+  ...dataPiece,
+  ...dataPiece,
+  ...dataPiece,
 ]
 
 function Table({ columns, data }) {
@@ -141,7 +150,10 @@ function App() {
       {
         id: 'selectedStatus',
         Cell: ({ row }) => (
-          <div>{row.isSelected ? 'Selected' : 'Not Selected'}</div>
+          <div>
+            Row {row.path.join('.')}{' '}
+            {row.isSelected ? 'Selected' : 'Not Selected'}
+          </div>
         ),
       },
       {
@@ -217,7 +229,6 @@ test('renders a table with selectable rows', () => {
   fireEvent.click(getAllByLabelText('Select Row')[4])
 
   const fragment8 = asFragment()
-
 
   expect(fragment1).toMatchDiffSnapshot(fragment2)
   expect(fragment2).toMatchDiffSnapshot(fragment3)

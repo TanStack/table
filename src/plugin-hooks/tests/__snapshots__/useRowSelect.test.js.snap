@@ -11,8 +11,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 0 Not Selected
++             Row 0 Selected
             </div>
           </td>
           <td
@@ -24,8 +24,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 1 Not Selected
++             Row 1 Selected
             </div>
           </td>
           <td
@@ -37,8 +37,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2 Not Selected
++             Row 2 Selected
             </div>
           </td>
           <td
@@ -50,8 +50,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2.0 Not Selected
++             Row 2.0 Selected
             </div>
           </td>
           <td
@@ -63,8 +63,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2.1 Not Selected
++             Row 2.1 Selected
             </div>
           </td>
           <td
@@ -76,21 +76,411 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 3 Not Selected
++             Row 3 Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,15 +418,22 @@
+@@ -437,11 +437,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 4 Not Selected
++             Row 4 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -493,11 +493,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 5 Not Selected
++             Row 5 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -549,11 +549,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 6 Not Selected
++             Row 6 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -605,11 +605,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 6.0 Not Selected
++             Row 6.0 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -661,11 +661,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 6.1 Not Selected
++             Row 6.1 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -717,11 +717,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 7 Not Selected
++             Row 7 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -773,11 +773,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 8 Not Selected
++             Row 8 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -829,11 +829,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 9 Not Selected
++             Row 9 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -885,11 +885,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 10 Not Selected
++             Row 10 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -941,11 +941,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 10.0 Not Selected
++             Row 10.0 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -997,11 +997,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 10.1 Not Selected
++             Row 10.1 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1053,11 +1053,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 11 Not Selected
++             Row 11 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1109,11 +1109,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 12 Not Selected
++             Row 12 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1165,11 +1165,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 13 Not Selected
++             Row 13 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1221,11 +1221,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 14 Not Selected
++             Row 14 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1277,11 +1277,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 14.0 Not Selected
++             Row 14.0 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1333,11 +1333,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 14.1 Not Selected
++             Row 14.1 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1389,11 +1389,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 15 Not Selected
++             Row 15 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1445,11 +1445,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 16 Not Selected
++             Row 16 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1501,11 +1501,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 17 Not Selected
++             Row 17 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1557,11 +1557,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 18 Not Selected
++             Row 18 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1613,11 +1613,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 18.0 Not Selected
++             Row 18.0 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1669,11 +1669,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 18.1 Not Selected
++             Row 18.1 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1725,11 +1725,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 19 Not Selected
++             Row 19 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1781,11 +1781,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 20 Not Selected
++             Row 20 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1837,11 +1837,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 21 Not Selected
++             Row 21 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1893,11 +1893,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 22 Not Selected
++             Row 22 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1949,11 +1949,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 22.0 Not Selected
++             Row 22.0 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -2005,11 +2005,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 22.1 Not Selected
++             Row 22.1 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -2061,11 +2061,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 23 Not Selected
++             Row 23 Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -2098,15 +2098,52 @@
           </td>
         </tr>
       </tbody>
     </table>
     <p>
 -     Selected Rows: 0
-+     Selected Rows: 6
++     Selected Rows: 36
     </p>
     <pre>
       <code>
@@ -102,7 +492,37 @@ Snapshot Diff:
 +     "2",
 +     "2.0",
 +     "2.1",
-+     "3"
++     "3",
++     "4",
++     "5",
++     "6",
++     "6.0",
++     "6.1",
++     "7",
++     "8",
++     "9",
++     "10",
++     "10.0",
++     "10.1",
++     "11",
++     "12",
++     "13",
++     "14",
++     "14.0",
++     "14.1",
++     "15",
++     "16",
++     "17",
++     "18",
++     "18.0",
++     "18.1",
++     "19",
++     "20",
++     "21",
++     "22",
++     "22.0",
++     "22.1",
++     "23"
 +   ]
   }
       </code>
@@ -121,8 +541,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 0 Selected
++             Row 0 Not Selected
             </div>
           </td>
           <td
@@ -134,8 +554,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 1 Selected
++             Row 1 Not Selected
             </div>
           </td>
           <td
@@ -147,8 +567,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2 Selected
++             Row 2 Not Selected
             </div>
           </td>
           <td
@@ -160,8 +580,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2.0 Selected
++             Row 2.0 Not Selected
             </div>
           </td>
           <td
@@ -173,8 +593,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2.1 Selected
++             Row 2.1 Not Selected
             </div>
           </td>
           <td
@@ -186,20 +606,410 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 3 Selected
++             Row 3 Not Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,22 +418,15 @@
+@@ -437,11 +437,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 4 Selected
++             Row 4 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -493,11 +493,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 5 Selected
++             Row 5 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -549,11 +549,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 6 Selected
++             Row 6 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -605,11 +605,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 6.0 Selected
++             Row 6.0 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -661,11 +661,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 6.1 Selected
++             Row 6.1 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -717,11 +717,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 7 Selected
++             Row 7 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -773,11 +773,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 8 Selected
++             Row 8 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -829,11 +829,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 9 Selected
++             Row 9 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -885,11 +885,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 10 Selected
++             Row 10 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -941,11 +941,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 10.0 Selected
++             Row 10.0 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -997,11 +997,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 10.1 Selected
++             Row 10.1 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1053,11 +1053,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 11 Selected
++             Row 11 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1109,11 +1109,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 12 Selected
++             Row 12 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1165,11 +1165,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 13 Selected
++             Row 13 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1221,11 +1221,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 14 Selected
++             Row 14 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1277,11 +1277,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 14.0 Selected
++             Row 14.0 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1333,11 +1333,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 14.1 Selected
++             Row 14.1 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1389,11 +1389,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 15 Selected
++             Row 15 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1445,11 +1445,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 16 Selected
++             Row 16 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1501,11 +1501,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 17 Selected
++             Row 17 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1557,11 +1557,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 18 Selected
++             Row 18 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1613,11 +1613,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 18.0 Selected
++             Row 18.0 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1669,11 +1669,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 18.1 Selected
++             Row 18.1 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1725,11 +1725,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 19 Selected
++             Row 19 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1781,11 +1781,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 20 Selected
++             Row 20 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1837,11 +1837,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 21 Selected
++             Row 21 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1893,11 +1893,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 22 Selected
++             Row 22 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -1949,11 +1949,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 22.0 Selected
++             Row 22.0 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -2005,11 +2005,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 22.1 Selected
++             Row 22.1 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -2061,11 +2061,11 @@
+          </td>
+          <td
+            class=""
+          >
+            <div>
+-             Row 23 Selected
++             Row 23 Not Selected
+            </div>
+          </td>
+          <td
+            class=""
+          >
+@@ -2098,52 +2098,15 @@
           </td>
         </tr>
       </tbody>
     </table>
     <p>
--     Selected Rows: 6
+-     Selected Rows: 36
 +     Selected Rows: 0
     </p>
     <pre>
@@ -211,7 +1021,37 @@ Snapshot Diff:
 -     "2",
 -     "2.0",
 -     "2.1",
--     "3"
+-     "3",
+-     "4",
+-     "5",
+-     "6",
+-     "6.0",
+-     "6.1",
+-     "7",
+-     "8",
+-     "9",
+-     "10",
+-     "10.0",
+-     "10.1",
+-     "11",
+-     "12",
+-     "13",
+-     "14",
+-     "14.0",
+-     "14.1",
+-     "15",
+-     "16",
+-     "17",
+-     "18",
+-     "18.0",
+-     "18.1",
+-     "19",
+-     "20",
+-     "21",
+-     "22",
+-     "22.0",
+-     "22.1",
+-     "23"
 -   ]
 +   "selectedRows": []
   }
@@ -231,8 +1071,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 0 Not Selected
++             Row 0 Selected
             </div>
           </td>
           <td
@@ -244,8 +1084,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2 Not Selected
++             Row 2 Selected
             </div>
           </td>
           <td
@@ -257,8 +1097,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2.0 Not Selected
++             Row 2.0 Selected
             </div>
           </td>
           <td
@@ -270,14 +1110,14 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2.1 Not Selected
++             Row 2.1 Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,15 +418,20 @@
+@@ -2098,15 +2098,20 @@
           </td>
         </tr>
       </tbody>
@@ -313,8 +1153,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2 Selected
++             Row 2 Not Selected
             </div>
           </td>
           <td
@@ -326,8 +1166,8 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2.0 Selected
++             Row 2.0 Not Selected
             </div>
           </td>
           <td
@@ -339,14 +1179,14 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2.1 Selected
++             Row 2.1 Not Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,20 +418,17 @@
+@@ -2098,20 +2098,17 @@
           </td>
         </tr>
       </tbody>
@@ -382,14 +1222,14 @@ Snapshot Diff:
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2.0 Not Selected
++             Row 2.0 Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,17 +418,18 @@
+@@ -2098,17 +2098,18 @@
           </td>
         </tr>
       </tbody>
@@ -417,40 +1257,27 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -213,11 +213,11 @@
-          </td>
-          <td
-            class=""
-          >
-            <div>
--             Not Selected
-+             Selected
-            </div>
-          </td>
-          <td
-            class=""
-          >
 @@ -325,11 +325,11 @@
           </td>
           <td
             class=""
           >
             <div>
--             Not Selected
-+             Selected
+-             Row 2.1 Not Selected
++             Row 2.1 Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,18 +418,20 @@
+@@ -2098,18 +2098,19 @@
           </td>
         </tr>
       </tbody>
     </table>
     <p>
 -     Selected Rows: 2
-+     Selected Rows: 4
++     Selected Rows: 3
     </p>
     <pre>
       <code>
@@ -459,8 +1286,7 @@ Snapshot Diff:
       "0",
 -     "2.0"
 +     "2.0",
-+     "2.1",
-+     "2"
++     "2.1"
     ]
   }
       </code>
@@ -473,39 +1299,26 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -213,11 +213,11 @@
-          </td>
-          <td
-            class=""
-          >
-            <div>
--             Selected
-+             Not Selected
-            </div>
-          </td>
-          <td
-            class=""
-          >
 @@ -325,11 +325,11 @@
           </td>
           <td
             class=""
           >
             <div>
--             Selected
-+             Not Selected
+-             Row 2.1 Selected
++             Row 2.1 Not Selected
             </div>
           </td>
           <td
             class=""
           >
-@@ -418,20 +418,18 @@
+@@ -2098,19 +2098,18 @@
           </td>
         </tr>
       </tbody>
     </table>
     <p>
--     Selected Rows: 4
+-     Selected Rows: 3
 +     Selected Rows: 2
     </p>
     <pre>
@@ -514,8 +1327,7 @@ Snapshot Diff:
     "selectedRows": [
       "0",
 -     "2.0",
--     "2.1",
--     "2"
+-     "2.1"
 +     "2.0"
     ]
   }

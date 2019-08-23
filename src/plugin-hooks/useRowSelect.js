@@ -70,6 +70,7 @@ function useMain(instance) {
 
   const toggleRowSelected = (path, set) => {
     const key = path.join('.')
+    const childRowPrefixKey = [key, '.'].join('')
 
     return setState(old => {
       // Join the paths of deep rows
@@ -81,11 +82,15 @@ function useMain(instance) {
 
       if (!exists && shouldExist) {
         rowPaths.forEach(rowPath => {
-          if (rowPath.startsWith(key)) newSelectedRows.add(rowPath)
+          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+            newSelectedRows.add(rowPath)
+          }
         })
       } else if (exists && !shouldExist) {
         rowPaths.forEach(rowPath => {
-          if (rowPath.startsWith(key)) newSelectedRows.delete(rowPath)
+          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+            newSelectedRows.delete(rowPath)
+          }
         })
       } else {
         return old
@@ -128,7 +133,6 @@ function useMain(instance) {
       )
       row.toggleRowSelected = set => {
         set = typeof set !== 'undefined' ? set : !row.isSelected
-        console.log(subRowPaths)
         subRowPaths.forEach(path => {
           toggleRowSelected(path, set)
         })
