@@ -19,8 +19,8 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
 
   if (typeof accessor === 'string') {
     id = id || accessor
-    const accessorString = accessor
-    accessor = row => getBy(row, accessorString)
+    const accessorPath = accessor.split('.')
+    accessor = row => getBy(row, accessorPath)
   }
 
   if (!id && typeof Header === 'string' && Header) {
@@ -39,7 +39,7 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
 
   column = {
     Header: () => null,
-    Cell: ({ value = '' }) => value,
+    Cell: ({ cell: { value = '' } }) => value,
     show: true,
     ...column,
     id,
@@ -71,14 +71,6 @@ export function decorateColumnTree(columns, defaultColumn, parent, depth = 0) {
 // Build the header groups from the bottom up
 export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
   const headerGroups = []
-
-  const removeChildColumns = column => {
-    delete column.columns
-    if (column.parent) {
-      removeChildColumns(column.parent)
-    }
-  }
-  columns.forEach(removeChildColumns)
 
   const buildGroup = (columns, depth = 0) => {
     const headerGroup = {
@@ -124,14 +116,21 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
         }
       }
 
-      // Establish the new columns[] relationship on the parent
+      // Establish the new headers[] relationship on the parent
       if (column.parent || hasParents) {
         latestParentColumn = [...parentColumns].reverse()[0]
-        latestParentColumn.columns = latestParentColumn.columns || []
-        if (!latestParentColumn.columns.includes(column)) {
-          latestParentColumn.columns.push(column)
+        latestParentColumn.headers = latestParentColumn.headers || []
+        if (!latestParentColumn.headers.includes(column)) {
+          latestParentColumn.headers.push(column)
         }
       }
+
+      column.totalHeaderCount = column.headers
+        ? column.headers.reduce(
+            (sum, header) => sum + header.totalHeaderCount,
+            0
+          )
+        : 1 // Leaf node columns take up at least one count
 
       headerGroup.headers.push(column)
     })
@@ -146,6 +145,25 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
   buildGroup(columns)
 
   return headerGroups.reverse()
+}
+
+export function determineColumnVisibility(instance) {
+  const { headers } = instance
+
+  const handleColumn = (column, parentVisible) => {
+    column.isVisible = parentVisible
+      ? typeof column.show === 'function'
+        ? column.show(instance)
+        : !!column.show
+      : false
+    if (column.columns && column.columns.length) {
+      column.columns.forEach(subColumn =>
+        handleColumn(subColumn, column.isVisible)
+      )
+    }
+  }
+
+  headers.forEach(subColumn => handleColumn(subColumn, true))
 }
 
 export function getBy(obj, path, def) {
@@ -196,6 +214,7 @@ export function defaultGroupByFn(rows, columnID) {
 }
 
 export function setBy(obj = {}, path, value) {
+  path = makePathArray(path)
   const recurse = (obj, depth = 0) => {
     const key = path[depth]
     const target = typeof obj[key] !== 'object' ? {} : obj[key]
@@ -347,11 +366,18 @@ This usually means you need to need to name your plugin hook by setting the 'plu
 //
 
 function makePathArray(obj) {
-  return flattenDeep(obj)
-    .join('.')
-    .replace(/\[/g, '.')
-    .replace(/\]/g, '')
-    .split('.')
+  return (
+    flattenDeep(obj)
+      // remove all periods in parts
+      .map(d => String(d).replace('.', '_'))
+      // join parts using period
+      .join('.')
+      // replace brackets with periods
+      .replace(/\[/g, '.')
+      .replace(/\]/g, '')
+      // split it back out on periods
+      .split('.')
+  )
 }
 
 function flattenDeep(arr, newArr = []) {

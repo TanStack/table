@@ -17,7 +17,7 @@ addActions('toggleExpanded', 'useExpanded')
 
 const propTypes = {
   manualExpandedKey: PropTypes.string,
-  nestExpandedRows: PropTypes.bool,
+  paginateExpandedRows: PropTypes.bool,
 }
 
 export const useExpanded = hooks => {
@@ -34,16 +34,16 @@ function useMain(instance) {
     debug,
     rows,
     manualExpandedKey = 'expanded',
+    paginateExpandedRows = true,
     hooks,
     state: [{ expanded }, setState],
-    nestExpandedRows,
   } = instance
 
   const toggleExpandedByPath = (path, set) => {
     return setState(old => {
       const { expanded } = old
       const existing = getBy(expanded, path)
-      set = getFirstDefined(set, !existing)
+      set = getFirstDefined(set, existing ? undefined : true)
       return {
         ...old,
         expanded: setBy(expanded, path, set),
@@ -72,39 +72,39 @@ function useMain(instance) {
     return row
   })
 
-  const expandedRows = useMemo(
-    () => {
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getExpandedRows')
+  const expandedRows = useMemo(() => {
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('getExpandedRows')
 
-      const expandedRows = []
+    const expandedRows = []
 
-      // Here we do some mutation, but it's the last stage in the
-      // immutable process so this is safe
-      const handleRow = row => {
-        row.isExpanded =
-          (row.original && row.original[manualExpandedKey]) ||
-          getBy(expanded, row.path)
+    // Here we do some mutation, but it's the last stage in the
+    // immutable process so this is safe
+    const handleRow = row => {
+      row.isExpanded =
+        (row.original && row.original[manualExpandedKey]) ||
+        getBy(expanded, row.path)
 
-        if (!nestExpandedRows || (nestExpandedRows && row.depth === 0)) {
-          expandedRows.push(row)
-        }
+      expandedRows.push(row)
 
-        row.canExpand = row.subRows && !!row.subRows.length
+      row.canExpand = row.subRows && !!row.subRows.length
 
-        if (row.isExpanded && row.subRows && row.subRows.length) {
-          row.subRows.forEach(handleRow)
-        }
-
-        return row
+      if (
+        paginateExpandedRows &&
+        row.isExpanded &&
+        row.subRows &&
+        row.subRows.length
+      ) {
+        row.subRows.forEach(handleRow)
       }
 
-      rows.forEach(handleRow)
+      return row
+    }
 
-      return expandedRows
-    },
-    [debug, rows, manualExpandedKey, expanded, nestExpandedRows]
-  )
+    rows.forEach(handleRow)
+
+    return expandedRows
+  }, [debug, rows, manualExpandedKey, expanded, paginateExpandedRows])
 
   const expandedDepth = findExpandedDepth(expanded)
 

@@ -1,6 +1,3 @@
-import '@testing-library/react/cleanup-after-each'
-import '@testing-library/jest-dom/extend-expect'
-
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
@@ -43,7 +40,7 @@ const data = [
 ]
 
 const defaultColumn = {
-  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
+  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
   Filter: ({ filterValue, setFilter }) => (
     <input
       value={filterValue || ''}
@@ -76,7 +73,7 @@ function Table({ columns, data }) {
                 {column.canGroupBy ? (
                   // If the column can be grouped, let's add a toggle
                   <span {...column.getGroupByToggleProps()}>
-                    {column.grouped ? '🛑' : '👊'}
+                    {column.isGrouped ? '🛑' : '👊'}
                   </span>
                 ) : null}
                 {column.render('Header')}
@@ -93,7 +90,7 @@ function Table({ columns, data }) {
                 {row.cells.map(cell => {
                   return (
                     <td {...cell.getCellProps()}>
-                      {cell.grouped ? (
+                      {cell.isGrouped ? (
                         <>
                           <span
                             style={{
@@ -105,9 +102,9 @@ function Table({ columns, data }) {
                           </span>
                           {cell.render('Cell')} ({row.subRows.length})
                         </>
-                      ) : cell.aggregated ? (
+                      ) : cell.isAggregated ? (
                         cell.render('Aggregated')
-                      ) : cell.repeatedValue ? null : (
+                      ) : cell.isRepeatedValue ? null : (
                         cell.render('Cell')
                       )}
                     </td>
@@ -143,13 +140,13 @@ function App() {
             Header: 'First Name',
             accessor: 'firstName',
             aggregate: ['sum', 'count'],
-            Aggregated: ({ value }) => `${value} Names`,
+            Aggregated: ({ cell: { value } }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
             accessor: 'lastName',
             aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ value }) => `${value} Unique Names`,
+            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
           },
         ],
       },
@@ -160,13 +157,13 @@ function App() {
             Header: 'Age',
             accessor: 'age',
             aggregate: 'average',
-            Aggregated: ({ value }) => `${value} (avg)`,
+            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             aggregate: 'sum',
-            Aggregated: ({ value }) => `${value} (total)`,
+            Aggregated: ({ cell: { value } }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -176,7 +173,7 @@ function App() {
             Header: 'Profile Progress',
             accessor: 'progress',
             aggregate: roundedMedian,
-            Aggregated: ({ value }) => `${value} (med)`,
+            Aggregated: ({ cell: { value } }) => `${value} (med)`,
           },
         ],
       },

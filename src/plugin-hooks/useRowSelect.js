@@ -25,7 +25,7 @@ function useMain(instance) {
 
   const {
     hooks,
-    manualRowSelectedKey = 'selected',
+    manualRowSelectedKey = 'isSelected',
     plugins,
     rowPaths,
     state: [{ selectedRows }, setState],
@@ -38,11 +38,11 @@ function useMain(instance) {
     []
   )
 
-  const allRowsSelected = rowPaths.length === selectedRows.length
+  const isAllRowsSelected = rowPaths.length === selectedRows.length
 
   const toggleRowSelectedAll = set => {
     setState(old => {
-      const selectAll = typeof set !== 'undefined' ? set : !allRowsSelected
+      const selectAll = typeof set !== 'undefined' ? set : !isAllRowsSelected
       return {
         ...old,
         selectedRows: selectAll ? [...rowPaths] : [],
@@ -50,32 +50,61 @@ function useMain(instance) {
     }, actions.toggleRowSelectedAll)
   }
 
-  const toggleRowSelected = (key, set) => {
+  const updateParentRow = (selectedRows, path) => {
+    const parentPath = path.slice(0, path.length - 1)
+    const parentKey = parentPath.join('.')
+    const selected =
+      rowPaths.filter(
+        path =>
+          path !== parentKey &&
+          path.startsWith(parentKey) &&
+          !selectedRows.has(path)
+      ).length === 0
+    if (selected) {
+      selectedRows.add(parentKey)
+    } else {
+      selectedRows.delete(parentKey)
+    }
+    if (parentPath.length > 1) updateParentRow(selectedRows, parentPath)
+  }
+
+  const toggleRowSelected = (path, set) => {
+    const key = path.join('.')
+    const childRowPrefixKey = [key, '.'].join('')
+
     return setState(old => {
       // Join the paths of deep rows
       // to make a key, then manage all of the keys
       // in a flat object
       const exists = old.selectedRows.includes(key)
       const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newSelectedRows = new Set(selectedRows)
+      let newSelectedRows = new Set(old.selectedRows)
 
       if (!exists && shouldExist) {
-        newSelectedRows.add(key)
+        rowPaths.forEach(rowPath => {
+          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+            newSelectedRows.add(rowPath)
+          }
+        })
       } else if (exists && !shouldExist) {
-        newSelectedRows.delete(key)
+        rowPaths.forEach(rowPath => {
+          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+            newSelectedRows.delete(rowPath)
+          }
+        })
       } else {
         return old
       }
+
+      // If the row is a subRow update
+      // its parent row to reflect changes
+      if (path.length > 1) updateParentRow(newSelectedRows, path)
 
       return {
         ...old,
         selectedRows: [...newSelectedRows.values()],
       }
     }, actions.toggleRowSelected)
-  }
-
-  const toggleRowSelectedByPath = (path, set) => {
-    return toggleRowSelected(path.join('.'), set)
   }
 
   const getToggleAllRowsSelectedProps = props => {
@@ -87,7 +116,7 @@ function useMain(instance) {
         style: {
           cursor: 'pointer',
         },
-        checked: allRowsSelected,
+        checked: isAllRowsSelected,
         title: 'Toggle All Rows Selected',
       },
       applyPropHooks(instance.hooks.getToggleAllRowsSelectedProps, instance),
@@ -96,18 +125,56 @@ function useMain(instance) {
   }
 
   hooks.prepareRow.push(row => {
-    row.canSelect = !!row.original
-
-    if (row.canSelect) {
-      row.selected = selectedRows.includes(row.path.join('.'))
-      row.toggleRowSelected = set => toggleRowSelectedByPath(row.path, set)
+    // Aggregate rows have entirely different select logic
+    if (row.isAggregated) {
+      const subRowPaths = row.subRows.map(row => row.path)
+      row.isSelected = subRowPaths.every(path =>
+        selectedRows.includes(path.join('.'))
+      )
+      row.toggleRowSelected = set => {
+        set = typeof set !== 'undefined' ? set : !row.isSelected
+        subRowPaths.forEach(path => {
+          toggleRowSelected(path, set)
+        })
+      }
       row.getToggleRowSelectedProps = props => {
         let checked = false
 
         if (row.original && row.original[manualRowSelectedKey]) {
           checked = true
         } else {
-          checked = selectedRows.includes(row.path.join('.'))
+          checked = row.isSelected
+        }
+
+        return mergeProps(
+          {
+            onChange: e => {
+              row.toggleRowSelected(e.target.checked)
+            },
+            style: {
+              cursor: 'pointer',
+            },
+            checked,
+            title: 'Toggle Row Selected',
+          },
+          applyPropHooks(
+            instance.hooks.getToggleRowSelectedProps,
+            row,
+            instance
+          ),
+          props
+        )
+      }
+    } else {
+      row.isSelected = selectedRows.includes(row.path.join('.'))
+      row.toggleRowSelected = set => toggleRowSelected(row.path, set)
+      row.getToggleRowSelectedProps = props => {
+        let checked = false
+
+        if (row.original && row.original[manualRowSelectedKey]) {
+          checked = true
+        } else {
+          checked = row.isSelected
         }
 
         return mergeProps(
@@ -137,9 +204,8 @@ function useMain(instance) {
   return {
     ...instance,
     toggleRowSelected,
-    toggleRowSelectedByPath,
     toggleRowSelectedAll,
     getToggleAllRowsSelectedProps,
-    allRowsSelected,
+    isAllRowsSelected,
   }
 }

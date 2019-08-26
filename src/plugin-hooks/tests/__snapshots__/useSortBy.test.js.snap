@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a sortable table 1`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -31,11 +31,13 @@
-            colspan=\\"1\\"
-            style=\\"cursor: pointer;\\"
-            title=\\"Toggle SortBy\\"
+            colspan="1"
+            style="cursor: pointer;"
+            title="Toggle SortBy"
           >
             First Name
 -           <span />
@@ -17,124 +17,124 @@ exports[`renders a sortable table 1`] = `
 +           </span>
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
-            style=\\"cursor: pointer;\\"
+            class=""
+            colspan="1"
+            style="cursor: pointer;"
 @@ -87,104 +89,104 @@
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: tanner
 +           firstName: derek
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: linsley
 +           lastName: perkins
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 29
 +           age: 40
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 100
 +           visits: 40
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: In Relationship
 +           status: Single
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 50
 +           progress: 80
           </td>
         </tr>
         <tr
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: derek
 +           firstName: joe
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: perkins
 +           lastName: bergevin
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 40
 +           age: 45
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 40
 +           visits: 20
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: Single
 +           status: Complicated
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 80
 +           progress: 10
           </td>
         </tr>
         <tr
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: joe
 +           firstName: tanner
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: bergevin
 +           lastName: linsley
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 45
 +           age: 29
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 20
 +           visits: 100
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: Complicated
 +           status: In Relationship
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 10
 +           progress: 50
@@ -142,17 +142,17 @@ exports[`renders a sortable table 1`] = `
         </tr>
       </tbody>
     </table>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;
 
 exports[`renders a sortable table 2`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -32,11 +32,11 @@
-            style=\\"cursor: pointer;\\"
-            title=\\"Toggle SortBy\\"
+            style="cursor: pointer;"
+            title="Toggle SortBy"
           >
             First Name
             <span>
@@ -161,86 +161,86 @@ exports[`renders a sortable table 2`] = `
             </span>
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
 @@ -89,36 +89,36 @@
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: derek
 +           firstName: tanner
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: perkins
 +           lastName: linsley
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 40
 +           age: 29
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 40
 +           visits: 100
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: Single
 +           status: In Relationship
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 80
 +           progress: 50
           </td>
         </tr>
         <tr
-          class=\\"\\"
+          class=""
         >
 @@ -157,36 +157,36 @@
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: tanner
 +           firstName: derek
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: linsley
 +           lastName: perkins
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 29
 +           age: 40
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 100
 +           visits: 40
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: In Relationship
 +           status: Single
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 50
 +           progress: 80
@@ -248,5 +248,5 @@ exports[`renders a sortable table 2`] = `
         </tr>
       </tbody>
     </table>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;

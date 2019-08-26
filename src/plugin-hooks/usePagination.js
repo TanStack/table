@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 //
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
+import { ensurePluginOrder } from '../utils'
 
 defaultState.pageSize = 10
 defaultState.pageIndex = 0
@@ -13,6 +14,7 @@ addActions('pageChange', 'pageSizeChange')
 const propTypes = {
   // General
   manualPagination: PropTypes.bool,
+  paginateExpandedRows: PropTypes.bool,
 }
 
 // SSR has issues with useLayoutEffect still, so use useEffect during SSR
@@ -31,62 +33,30 @@ function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'usePagination')
 
   const {
+    data,
     rows,
     manualPagination,
     disablePageResetOnDataChange,
     debug,
     plugins,
-    state: [
-      {
-        pageSize,
-        pageIndex,
-        pageCount: userPageCount,
-        filters,
-        groupBy,
-        sortBy,
-      },
-      setState,
-    ],
+    pageCount: userPageCount,
+    paginateExpandedRows = true,
+    state: [{ pageSize, pageIndex, filters, groupBy, sortBy }, setState],
   } = instance
 
-  // If usePagination should probably come after useFilters for
-  // the best performance, so let's hint to the user about that...
-  const pluginIndex = plugins.indexOf(usePagination)
+  ensurePluginOrder(
+    plugins,
+    ['useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
+    'usePagination',
+    []
+  )
 
-  if (process.env.NODE_ENV === 'development') {
-    const useFiltersIndex = plugins.findIndex(
-      plugin => plugin.name === 'useFilters'
-    )
-    const useGroupByIndex = plugins.findIndex(
-      plugin => plugin.name === 'useGroupBy'
-    )
-    const useSortByIndex = plugins.findIndex(
-      plugin => plugin.name === 'useSortBy'
-    )
+  const rowDep = manualPagination ? null : data
 
-    if (useFiltersIndex > pluginIndex) {
-      throw new Error(
-        'React Table: The usePagination plugin hook must be placed before the useFilters plugin hook!'
-      )
-    }
+  const isPageIndexMountedRef = React.useRef()
 
-    if (useGroupByIndex > pluginIndex) {
-      throw new Error(
-        'React Table: The usePagination plugin hook must be placed before the useGroupBy plugin hook!'
-      )
-    }
-
-    if (useSortByIndex > pluginIndex) {
-      throw new Error(
-        'React Table: The usePagination plugin hook must be placed before the useSortBy plugin hook!'
-      )
-    }
-  }
-
-  const rowDep = disablePageResetOnDataChange ? null : rows
-
-  useLayoutEffect(
-    () => {
+  useLayoutEffect(() => {
+    if (isPageIndexMountedRef.current && !disablePageResetOnDataChange) {
       setState(
         old => ({
           ...old,
@@ -94,50 +64,55 @@ function useMain(instance) {
         }),
         actions.pageChange
       )
-    },
-    [setState, rowDep, filters, groupBy, sortBy]
-  )
+    }
+    isPageIndexMountedRef.current = true
+  }, [setState, rowDep, filters, groupBy, sortBy, disablePageResetOnDataChange])
 
-  const { pages, pageCount } = React.useMemo(
-    () => {
-      if (manualPagination) {
-        return {
-          pages: [rows],
-          pageCount: userPageCount,
-        }
-      }
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getPages')
-
-      // Create a new pages with the first page ready to go.
-      const pages = rows.length ? [] : [[]]
-
-      // Start the pageIndex and currentPage cursors
-      let cursor = 0
-      while (cursor < rows.length) {
-        const end = cursor + pageSize
-        pages.push(rows.slice(cursor, end))
-        cursor = end
-      }
-
-      const pageCount = pages.length
-
-      return {
-        pages,
-        pageCount,
-      }
-    },
-    [manualPagination, debug, rows, userPageCount, pageSize]
-  )
+  const pageCount = manualPagination
+    ? userPageCount
+    : Math.ceil(rows.length / pageSize)
 
   const pageOptions = React.useMemo(
-    () => [...new Array(pageCount)].map((d, i) => i),
+    () => (pageCount > 0 ? [...new Array(pageCount)].map((d, i) => i) : []),
     [pageCount]
   )
 
-  const page = manualPagination ? rows : pages[pageIndex] || []
+  const page = React.useMemo(() => {
+    let page
+
+    if (manualPagination) {
+      page = rows
+    } else {
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('getPage')
+
+      const pageStart = pageSize * pageIndex
+      const pageEnd = pageStart + pageSize
+
+      page = rows.slice(pageStart, pageEnd)
+    }
+
+    if (paginateExpandedRows) {
+      return page
+    }
+
+    const expandedPage = []
+
+    const handleRow = row => {
+      expandedPage.push(row)
+
+      if (row.subRows && row.subRows.length && row.isExpanded) {
+        row.subRows.forEach(handleRow)
+      }
+    }
+
+    page.forEach(handleRow)
+
+    return expandedPage
+  }, [debug, manualPagination, pageIndex, pageSize, paginateExpandedRows, rows])
+
   const canPreviousPage = pageIndex > 0
-  const canNextPage = pageIndex < pageCount - 1
+  const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
 
   const gotoPage = pageIndex => {
     if (process.env.NODE_ENV === 'development' && debug)
@@ -175,7 +150,6 @@ function useMain(instance) {
 
   return {
     ...instance,
-    pages,
     pageOptions,
     pageCount,
     page,

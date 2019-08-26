@@ -1,9 +1,7 @@
-import '@testing-library/react/cleanup-after-each'
-import '@testing-library/jest-dom/extend-expect'
-
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
+import { useTableState } from '../../hooks/useTableState'
 import { usePagination } from '../usePagination'
 
 const data = [...new Array(100)].map((d, i) => ({
@@ -16,6 +14,8 @@ const data = [...new Array(100)].map((d, i) => ({
 }))
 
 function Table({ columns, data }) {
+  const tableState = useTableState({ pageIndex: 2 })
+
   const {
     getTableProps,
     headerGroups,
@@ -34,6 +34,7 @@ function Table({ columns, data }) {
     {
       columns,
       data,
+      state: tableState,
     },
     usePagination
   )
@@ -160,21 +161,21 @@ function App() {
 test('renders a paginated table', () => {
   const { getByText, asFragment } = render(<App />)
 
-  const beforeSort = asFragment()
+  const fragment1 = asFragment()
 
   fireEvent.click(getByText('>'))
 
-  const afterSort1 = asFragment()
+  const fragment2 = asFragment()
 
   fireEvent.click(getByText('>'))
 
-  const afterSort2 = asFragment()
+  const fragment3 = asFragment()
 
   fireEvent.click(getByText('>>'))
 
-  const afterSort3 = asFragment()
+  const fragment4 = asFragment()
 
-  expect(beforeSort).toMatchDiffSnapshot(afterSort1)
-  expect(afterSort1).toMatchDiffSnapshot(afterSort2)
-  expect(afterSort2).toMatchDiffSnapshot(afterSort3)
+  expect(fragment1).toMatchDiffSnapshot(fragment2)
+  expect(fragment2).toMatchDiffSnapshot(fragment3)
+  expect(fragment3).toMatchDiffSnapshot(fragment4)
 })

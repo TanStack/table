@@ -9,6 +9,7 @@ import {
   applyPropHooks,
   defaultGroupByFn,
   getFirstDefined,
+  ensurePluginOrder,
 } from '../utils'
 
 defaultState.groupBy = []
@@ -50,9 +51,18 @@ useGroupBy.pluginName = 'useGroupBy'
 function columnsBeforeHeaderGroups(columns, { state: [{ groupBy }] }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
+
+  const groupByColumns = groupBy.map(g => columns.find(col => col.id === g))
+  const nonGroupByColumns = columns.filter(col => !groupBy.includes(col.id))
+
+  // If a groupByBoundary column is found, place the groupBy's after it
+  const groupByBoundaryColumnIndex =
+    columns.findIndex(column => column.groupByBoundary) + 1
+
   return [
-    ...groupBy.map(g => columns.find(col => col.id === g)),
-    ...columns.filter(col => !groupBy.includes(col.id)),
+    ...nonGroupByColumns.slice(0, groupByBoundaryColumnIndex),
+    ...groupByColumns,
+    ...nonGroupByColumns.slice(groupByBoundaryColumnIndex),
   ]
 }
 
@@ -69,12 +79,15 @@ function useMain(instance) {
     disableGrouping,
     aggregations: userAggregations = {},
     hooks,
+    plugins,
     state: [{ groupBy }, setState],
   } = instance
 
+  ensurePluginOrder(plugins, [], 'useGroupBy', ['useExpanded'])
+
   columns.forEach(column => {
     const { id, accessor, disableGrouping: columnDisableGrouping } = column
-    column.grouped = groupBy.includes(id)
+    column.isGrouped = groupBy.includes(id)
     column.groupedIndex = groupBy.indexOf(id)
 
     column.canGroupBy = accessor
@@ -137,119 +150,126 @@ function useMain(instance) {
   hooks.prepareRow.push(row => {
     row.cells.forEach(cell => {
       // Grouped cells are in the groupBy and the pivot cell for the row
-      cell.grouped = cell.column.grouped && cell.column.id === row.groupByID
+      cell.isGrouped = cell.column.isGrouped && cell.column.id === row.groupByID
       // Repeated cells are any columns in the groupBy that are not grouped
-      cell.repeatedValue = !cell.grouped && cell.column.grouped
+      cell.isRepeatedValue = !cell.isGrouped && cell.column.isGrouped
       // Aggregated cells are not grouped, not repeated, but still have subRows
-      cell.aggregated = !cell.grouped && !cell.repeatedValue && row.canExpand
+      cell.isAggregated =
+        !cell.isGrouped && !cell.isRepeatedValue && row.canExpand
     })
     return row
   })
 
-  const groupedRows = useMemo(
-    () => {
-      if (manualGroupBy || !groupBy.length) {
+  const groupedRows = useMemo(() => {
+    if (manualGroupBy || !groupBy.length) {
+      return rows
+    }
+
+    if (process.env.NODE_ENV === 'development' && debug)
+      console.info('getGroupedRows')
+    // Find the columns that can or are aggregating
+
+    // Uses each column to aggregate rows into a single value
+    const aggregateRowsToValues = (rows, isSourceRows) => {
+      const values = {}
+
+      columns.forEach(column => {
+        // Don't aggregate columns that are in the groupBy
+        if (groupBy.includes(column.id)) {
+          values[column.id] = rows[0] ? rows[0].values[column.id] : null
+          return
+        }
+
+        const columnValues = rows.map(d => d.values[column.id])
+
+        let aggregator = column.aggregate
+
+        if (Array.isArray(aggregator)) {
+          if (aggregator.length !== 2) {
+            console.info({ column })
+            throw new Error(
+              `React Table: Complex aggregators must have 2 values, eg. aggregate: ['sum', 'count']. More info above...`
+            )
+          }
+          if (isSourceRows) {
+            aggregator = aggregator[1]
+          } else {
+            aggregator = aggregator[0]
+          }
+        }
+
+        let aggregateFn =
+          typeof aggregator === 'function'
+            ? aggregator
+            : userAggregations[aggregator] || aggregations[aggregator]
+
+        if (aggregateFn) {
+          values[column.id] = aggregateFn(columnValues, rows)
+        } else if (aggregator) {
+          console.info({ column })
+          throw new Error(
+            `React Table: Invalid aggregate option for column listed above`
+          )
+        } else {
+          values[column.id] = null
+        }
+      })
+      return values
+    }
+
+    // Recursively group the data
+    const groupRecursively = (rows, depth = 0, parentPath = []) => {
+      // This is the last level, just return the rows
+      if (depth >= groupBy.length) {
         return rows
       }
 
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('getGroupedRows')
-      // Find the columns that can or are aggregating
+      const columnID = groupBy[depth]
 
-      // Uses each column to aggregate rows into a single value
-      const aggregateRowsToValues = (rows, isSourceRows) => {
-        const values = {}
+      // Group the rows together for this level
+      let groupedRows = groupByFn(rows, columnID)
 
-        columns.forEach(column => {
-          // Don't aggregate columns that are in the groupBy
-          if (groupBy.includes(column.id)) {
-            values[column.id] = rows[0] ? rows[0].values[column.id] : null
-            return
+      // Recurse to sub rows before aggregation
+      groupedRows = Object.entries(groupedRows).map(
+        ([groupByVal, subRows], index) => {
+          const path = [...parentPath, `${columnID}:${groupByVal}`]
+
+          subRows = groupRecursively(subRows, depth + 1, path)
+
+          const values = aggregateRowsToValues(
+            subRows,
+            depth + 1 >= groupBy.length
+          )
+
+          const row = {
+            isAggregated: true,
+            groupByID: columnID,
+            groupByVal,
+            values,
+            subRows,
+            depth,
+            index,
+            path,
           }
 
-          const columnValues = rows.map(d => d.values[column.id])
-
-          let aggregator = column.aggregate
-
-          if (Array.isArray(aggregator)) {
-            if (aggregator.length !== 2) {
-              console.info({ column })
-              throw new Error(
-                `React Table: Complex aggregators must have 2 values, eg. aggregate: ['sum', 'count']. More info above...`
-              )
-            }
-            if (isSourceRows) {
-              aggregator = aggregator[1]
-            } else {
-              aggregator = aggregator[0]
-            }
-          }
-
-          let aggregateFn =
-            typeof aggregator === 'function'
-              ? aggregator
-              : userAggregations[aggregator] || aggregations[aggregator]
-
-          if (aggregateFn) {
-            values[column.id] = aggregateFn(columnValues, rows)
-          } else if (aggregator) {
-            console.info({ column })
-            throw new Error(
-              `React Table: Invalid aggregate option for column listed above`
-            )
-          } else {
-            values[column.id] = null
-          }
-        })
-        return values
-      }
-
-      // Recursively group the data
-      const groupRecursively = (rows, depth = 0, parentPath = []) => {
-        // This is the last level, just return the rows
-        if (depth >= groupBy.length) {
-          return rows
+          return row
         }
+      )
 
-        const columnID = groupBy[depth]
+      return groupedRows
+    }
 
-        // Group the rows together for this level
-        let groupedRows = groupByFn(rows, columnID)
-
-        // Recurse to sub rows before aggregation
-        groupedRows = Object.entries(groupedRows).map(
-          ([groupByVal, subRows], index) => {
-            const path = [...parentPath, groupByVal]
-
-            subRows = groupRecursively(subRows, depth + 1, path)
-
-            const values = aggregateRowsToValues(
-              subRows,
-              depth + 1 >= groupBy.length
-            )
-
-            const row = {
-              groupByID: columnID,
-              groupByVal,
-              values,
-              subRows,
-              depth,
-              index,
-              path,
-            }
-
-            return row
-          }
-        )
-
-        return groupedRows
-      }
-
-      // Assign the new data
-      return groupRecursively(rows)
-    },
-    [manualGroupBy, groupBy, debug, rows, columns, userAggregations, groupByFn]
-  )
+    // Assign the new data
+    return groupRecursively(rows)
+  }, [
+    manualGroupBy,
+    groupBy,
+    debug,
+    rows,
+    columns,
+    userAggregations,
+    groupByFn,
+  ])
 
   return {
     ...instance,

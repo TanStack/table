@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a groupable table 1`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -29,13 +29,13 @@
             <span
-              class=\\"\\"
-              style=\\"cursor: pointer;\\"
-              title=\\"Toggle GroupBy\\"
+              class=""
+              style="cursor: pointer;"
+              title="Toggle GroupBy"
             >
 -             👊
 +             🛑
@@ -18,12 +18,12 @@ exports[`renders a groupable table 1`] = `
 +           Last Name
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
           >
 @@ -44,11 +44,11 @@
-              style=\\"cursor: pointer;\\"
-              title=\\"Toggle GroupBy\\"
+              style="cursor: pointer;"
+              title="Toggle GroupBy"
             >
               👊
             </span>
@@ -31,36 +31,36 @@ exports[`renders a groupable table 1`] = `
 +           First Name
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
           >
 @@ -107,138 +107,119 @@
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: tanner
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 +           <span
-+             style=\\"cursor: pointer;\\"
++             style="cursor: pointer;"
             >
 -           lastName: linsley
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           age: 29
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           visits: 100
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           status: In Relationship
 +             👉
@@ -68,135 +68,135 @@ exports[`renders a groupable table 1`] = `
 +           lastName: linsley (2)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 50
 -         </td>
 -       </tr>
 -       <tr
--         class=\\"\\"
+-         class=""
 -       >
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           firstName: derek
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
 -           lastName: perkins
 +           2 Names
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 40
 +           27.5 (avg)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 40
 +           199 (total)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: Single
 +           status: null
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 80
 +           60 (med)
           </td>
         </tr>
         <tr
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: joe
 +           <span
-+             style=\\"cursor: pointer;\\"
++             style="cursor: pointer;"
 +           >
 +             👉
 +           </span>
 +           lastName: perkins (1)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: bergevin
 +           1 Names
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 45
 +           40 (avg)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 20
 +           40 (total)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: Complicated
 +           status: null
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 10
 +           80 (med)
           </td>
         </tr>
         <tr
-          class=\\"\\"
+          class=""
         >
           <td
-            class=\\"\\"
+            class=""
           >
 -           firstName: jaylen
 +           <span
-+             style=\\"cursor: pointer;\\"
++             style="cursor: pointer;"
 +           >
 +             👉
 +           </span>
 +           lastName: bergevin (1)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           lastName: linsley
 +           1 Names
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           age: 26
 +           45 (avg)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           visits: 99
 +           20 (total)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           status: In Relationship
 +           status: null
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           progress: 70
 +           10 (med)
@@ -204,41 +204,41 @@ exports[`renders a groupable table 1`] = `
         </tr>
       </tbody>
     </table>
-  </DocumentFragment>"
+  </DocumentFragment>
 `;
 
 exports[`renders a groupable table 2`] = `
-"Snapshot Diff:
+Snapshot Diff:
 - First value
 + Second value
 
 @@ -6,17 +6,29 @@
         <tr
-          class=\\"\\"
+          class=""
         >
           <th
-            class=\\"\\"
--           colspan=\\"2\\"
-+           colspan=\\"1\\"
+            class=""
+-           colspan="2"
++           colspan="1"
           >
             Name
           </th>
           <th
-            class=\\"\\"
--           colspan=\\"4\\"
-+           colspan=\\"1\\"
+            class=""
+-           colspan="4"
++           colspan="1"
 +         >
 +           Info
 +         </th>
 +         <th
-+           class=\\"\\"
-+           colspan=\\"1\\"
++           class=""
++           colspan="1"
 +         >
 +           Name
 +         </th>
 +         <th
-+           class=\\"\\"
-+           colspan=\\"3\\"
++           class=""
++           colspan="3"
           >
             Info
           </th>
@@ -246,9 +246,9 @@ exports[`renders a groupable table 2`] = `
         <tr
 @@ -42,13 +54,13 @@
             <span
-              class=\\"\\"
-              style=\\"cursor: pointer;\\"
-              title=\\"Toggle GroupBy\\"
+              class=""
+              style="cursor: pointer;"
+              title="Toggle GroupBy"
             >
 -             👊
 +             🛑
@@ -257,12 +257,12 @@ exports[`renders a groupable table 2`] = `
 +           Visits
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
           >
 @@ -57,11 +69,11 @@
-              style=\\"cursor: pointer;\\"
-              title=\\"Toggle GroupBy\\"
+              style="cursor: pointer;"
+              title="Toggle GroupBy"
             >
               👊
             </span>
@@ -270,12 +270,12 @@ exports[`renders a groupable table 2`] = `
 +           First Name
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
           >
 @@ -70,11 +82,11 @@
-              style=\\"cursor: pointer;\\"
-              title=\\"Toggle GroupBy\\"
+              style="cursor: pointer;"
+              title="Toggle GroupBy"
             >
               👊
             </span>
@@ -283,8 +283,8 @@ exports[`renders a groupable table 2`] = `
 +           Age
           </th>
           <th
-            class=\\"\\"
-            colspan=\\"1\\"
+            class=""
+            colspan="1"
           >
 @@ -114,10 +126,13 @@
             >
@@ -293,10 +293,10 @@ exports[`renders a groupable table 2`] = `
             lastName: linsley (2)
           </td>
 +         <td
-+           class=\\"\\"
++           class=""
 +         />
           <td
-            class=\\"\\"
+            class=""
           >
             2 Names
           </td>
@@ -304,42 +304,42 @@ exports[`renders a groupable table 2`] = `
             27.5 (avg)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           199 (total)
 -         </td>
 -         <td
--           class=\\"\\"
+-           class=""
 -         >
             status: null
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 @@ -155,22 +165,20 @@
             </span>
             lastName: perkins (1)
           </td>
           <td
-            class=\\"\\"
+            class=""
 -         >
 -           1 Names
 -         </td>
 +         />
           <td
-            class=\\"\\"
+            class=""
           >
 -           40 (avg)
 +           1 Names
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           40 (total)
 +           40 (avg)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
             status: null
 @@ -194,22 +202,20 @@
@@ -347,25 +347,25 @@ exports[`renders a groupable table 2`] = `
             lastName: bergevin (1)
           </td>
           <td
-            class=\\"\\"
+            class=""
 -         >
 -           1 Names
 -         </td>
 +         />
           <td
-            class=\\"\\"
+            class=""
           >
 -           45 (avg)
 +           1 Names
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
 -           20 (total)
 +           45 (avg)
           </td>
           <td
-            class=\\"\\"
+            class=""
           >
-            status: null"
+            status: null
 `;
