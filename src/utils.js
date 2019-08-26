@@ -1,5 +1,11 @@
 import React from 'react'
 
+const columnFallbacks = {
+  Header: () => null,
+  Cell: ({ cell: { value = '' } }) => value,
+  show: true,
+}
+
 // Find the depth of the columns
 export function findMaxDepth(columns, depth = 0) {
   return columns.reduce((prev, curr) => {
@@ -38,9 +44,7 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
   }
 
   column = {
-    Header: () => null,
-    Cell: ({ cell: { value = '' } }) => value,
-    show: true,
+    ...columnFallbacks,
     ...column,
     id,
     accessor,
@@ -69,20 +73,27 @@ export function decorateColumnTree(columns, defaultColumn, parent, depth = 0) {
 }
 
 // Build the header groups from the bottom up
-export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
+export function makeHeaderGroups(flatColumns, columns, defaultColumn) {
   const headerGroups = []
 
-  const buildGroup = (columns, depth = 0) => {
+  const maxDepth = findMaxDepth(columns)
+
+  // Build each header group from the bottom up
+  const buildGroup = (columns, depth) => {
     const headerGroup = {
       headers: [],
     }
 
     const parentColumns = []
 
+    // Do any of these columns have parents?
     const hasParents = columns.some(col => col.parent)
 
     columns.forEach(column => {
+      // Are we the first column in this group?
       const isFirst = !parentColumns.length
+
+      // What is the latest (last) parent column?
       let latestParentColumn = [...parentColumns].reverse()[0]
 
       // If the column has a parent, add it if necessary
@@ -95,7 +106,7 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
           })
         }
       } else if (hasParents) {
-        // If other columns have parents, add a place holder if necessary
+        // If other columns have parents, we'll need to add a place holder if necessary
         const placeholderColumn = decorateColumn(
           {
             originalID: [column.id, 'placeholder', maxDepth - depth].join('_'),
@@ -131,23 +142,22 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
             0
           )
         : 1 // Leaf node columns take up at least one count
-
       headerGroup.headers.push(column)
     })
 
     headerGroups.push(headerGroup)
 
     if (parentColumns.length) {
-      buildGroup(parentColumns)
+      buildGroup(parentColumns, depth + 1)
     }
   }
 
-  buildGroup(columns)
+  buildGroup(flatColumns, 0)
 
   return headerGroups.reverse()
 }
 
-export function determineColumnVisibility(instance) {
+export function determineHeaderVisibility(instance) {
   const { headers } = instance
 
   const handleColumn = (column, parentVisible) => {
@@ -156,14 +166,15 @@ export function determineColumnVisibility(instance) {
         ? column.show(instance)
         : !!column.show
       : false
-    if (column.columns && column.columns.length) {
-      column.columns.forEach(subColumn =>
+
+    if (column.headers && column.headers.length) {
+      column.headers.forEach(subColumn =>
         handleColumn(subColumn, column.isVisible)
       )
     }
   }
 
-  headers.forEach(subColumn => handleColumn(subColumn, true))
+  headers.forEach(subHeader => handleColumn(subHeader, true))
 }
 
 export function getBy(obj, path, def) {

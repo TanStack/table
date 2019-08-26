@@ -48,16 +48,16 @@ export const useGroupBy = hooks => {
 
 useGroupBy.pluginName = 'useGroupBy'
 
-function columnsBeforeHeaderGroups(columns, { state: [{ groupBy }] }) {
+function columnsBeforeHeaderGroups(flatColumns, { state: [{ groupBy }] }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
 
-  const groupByColumns = groupBy.map(g => columns.find(col => col.id === g))
-  const nonGroupByColumns = columns.filter(col => !groupBy.includes(col.id))
+  const groupByColumns = groupBy.map(g => flatColumns.find(col => col.id === g))
+  const nonGroupByColumns = flatColumns.filter(col => !groupBy.includes(col.id))
 
   // If a groupByBoundary column is found, place the groupBy's after it
   const groupByBoundaryColumnIndex =
-    columns.findIndex(column => column.groupByBoundary) + 1
+    flatColumns.findIndex(column => column.groupByBoundary) + 1
 
   return [
     ...nonGroupByColumns.slice(0, groupByBoundaryColumnIndex),
@@ -72,8 +72,8 @@ function useMain(instance) {
   const {
     debug,
     rows,
-    columns,
-    headers,
+    flatColumns,
+    flatHeaders,
     groupByFn = defaultGroupByFn,
     manualGroupBy,
     disableGrouping,
@@ -85,7 +85,7 @@ function useMain(instance) {
 
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useExpanded'])
 
-  columns.forEach(column => {
+  flatColumns.forEach(column => {
     const { id, accessor, disableGrouping: columnDisableGrouping } = column
     column.isGrouped = groupBy.includes(id)
     column.groupedIndex = groupBy.indexOf(id)
@@ -124,16 +124,15 @@ function useMain(instance) {
 
   hooks.getGroupByToggleProps = []
 
-  //
-  ;[...columns, ...headers].forEach(column => {
-    const { canGroupBy } = column
-    column.getGroupByToggleProps = props => {
+  flatHeaders.forEach(header => {
+    const { canGroupBy } = header
+    header.getGroupByToggleProps = props => {
       return mergeProps(
         {
           onClick: canGroupBy
             ? e => {
                 e.persist()
-                column.toggleGroupBy()
+                header.toggleGroupBy()
               }
             : undefined,
           style: {
@@ -141,7 +140,7 @@ function useMain(instance) {
           },
           title: 'Toggle GroupBy',
         },
-        applyPropHooks(instance.hooks.getGroupByToggleProps, column, instance),
+        applyPropHooks(instance.hooks.getGroupByToggleProps, header, instance),
         props
       )
     }
@@ -173,7 +172,7 @@ function useMain(instance) {
     const aggregateRowsToValues = (rows, isSourceRows) => {
       const values = {}
 
-      columns.forEach(column => {
+      flatColumns.forEach(column => {
         // Don't aggregate columns that are in the groupBy
         if (groupBy.includes(column.id)) {
           values[column.id] = rows[0] ? rows[0].values[column.id] : null
@@ -266,7 +265,7 @@ function useMain(instance) {
     groupBy,
     debug,
     rows,
-    columns,
+    flatColumns,
     userAggregations,
     groupByFn,
   ])

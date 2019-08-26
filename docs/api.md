@@ -97,6 +97,19 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `initialState`
   - This key is used to look for the initial state of a row when initializing the `rowState` for a`data` array.
   - If the value located at `row[initialRowStateKey]` is falsey, `{}` will be used instead.
+- `getSubRows: Function(row, relativeIndex) => Rows[]`
+  - Optional
+  - Must be **memoized**
+  - Defaults to `(row) => row.subRows || []`
+  - Use this function to change how React Table detects subrows. You could even use this function to generate sub rows if you want.
+  - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
+- `getRowPathID: Function(row, relativeIndex) => string`
+  - Optional
+  - Must be **memoized**
+  - Defaults to `(row, relativeIndex) => relativeIndex`
+  - Use this function to change how React Table constructs each row's underlying `path` property.
+  - You may want to change this function if
+  - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
 - `debug: Bool`
   - Optional
   - A flag to turn on debug mode.
@@ -143,17 +156,24 @@ The following options are supported on any column object you can pass to `column
 
 The following properties are available on the table instance returned from `useTable`
 
-- `headers[] Array<Column>`
-  - A **nested** array of final column objects, similar in structure to the original columns configuration option.
-  - See [Column Properties](#column-properties) for more information
 - `columns: Array<Column>`
-  - A **flat** array of all final column objects computed from the original columns configuration option.
+  - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
+  - See [Column Properties](#column-properties) for more information
+- `flatColumns: Array<Column>`
+  - A **flat** array of all final column objects.
   - See [Column Properties](#column-properties) for more information
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.
+  - **Some of these headers may be materialized as placeholders**
   - See [Header Group Properties](#headergroup-properties) for more information
+- `headers: Array<Column>`
+  - An **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
+  - Each contains the headers that are displayed underneath it.
+  - **Some of these headers may be materialized as placeholders**
+  - See [Column Properties](#column-properties) for more information
 - `flatHeaders[] Array<Column>`
-  - A **flat** array of final header objects found in each header group. Columns may be duplicated (if columns are not adjacent)
+  - A **flat** array of final header objects found in each header group.
+  - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information
 - `rows: Array<Row>`
   - An array of **materialized row objects** from the original `data` array and `columns` passed into the table options
@@ -182,7 +202,7 @@ The following properties are available on the table instance returned from `useT
   - Pass it a valid `rowPath` array, `columnID` and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
   - If `updater` is a function, it will be passed the previous value
 
-### `HeaderGroup` Properties
+### HeaderGroup Properties
 
 The following additional properties are available on every `headerGroup` object returned by the table instance.
 
@@ -477,7 +497,11 @@ function Table({ columns, data }) {
                 <span>
                   {/* Add a sort direction indicator */}
                   <span>
-                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
                   </span>
                   {/* Add a sort index indicator */}
                   <span>({column.isSorted ? column.sortedIndex + 1 : ''})</span>
@@ -921,7 +945,7 @@ The following options are supported via the main options object passed to `useTa
   - A `pathIndex` can be set as the key and its value set to `true` to expand that row's subRows into view. For example, if `{ '3': true }` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
   - For nested expansion, you may **use another object** instead of a Boolean to expand sub rows. For example, if `{ '3': { '5' : true }}` was passed as the `expanded` state, then the **6th subRow of the 4th row and the 4th row of the original data array** would be expanded.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
-- `subRowsKey: String`
+- `getSubRows: Function(row, relativeIndex) => Rows[]`
   - Optional
   - See the [useTable hook](#table-options) for more details
 - `manualExpandedKey: String`

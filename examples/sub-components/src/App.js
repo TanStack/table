@@ -42,7 +42,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
     headerGroups,
     rows,
     prepareRow,
-    columns,
+    flatColumns,
     state: [{ expanded }],
   } = useTable(
     {
@@ -87,7 +87,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
                   */}
                   {row.isExpanded ? (
                     <tr>
-                      <td colSpan={columns.length}>
+                      <td colSpan={flatColumns.length}>
                         {/*
                           Inside it, call our renderRowSubComponent function. In reality,
                           you coul pass whatever you want as props to

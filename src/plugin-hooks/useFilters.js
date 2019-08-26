@@ -33,7 +33,7 @@ function useMain(instance) {
   const {
     debug,
     rows,
-    columns,
+    flatColumns,
     filterTypes: userFilterTypes,
     manualFilters,
     disableFilters,
@@ -43,7 +43,7 @@ function useMain(instance) {
   const preFilteredRows = rows
 
   const setFilter = (id, updater) => {
-    const column = columns.find(d => d.id === id)
+    const column = flatColumns.find(d => d.id === id)
 
     if (!column) {
       throw new Error(`React-Table: Could not find a column with id: ${id}`)
@@ -85,7 +85,7 @@ function useMain(instance) {
       // Filter out undefined values
       Object.keys(newFilters).forEach(id => {
         const newFilter = newFilters[id]
-        const column = columns.find(d => d.id === id)
+        const column = flatColumns.find(d => d.id === id)
         const filterMethod = getFilterMethod(
           column.filter,
           userFilterTypes || {},
@@ -104,7 +104,7 @@ function useMain(instance) {
     }, actions.setAllFilters)
   }
 
-  columns.forEach(column => {
+  flatColumns.forEach(column => {
     const { id, accessor, disableFilters: columnDisableFilters } = column
 
     // Determine if a column is filterable
@@ -144,7 +144,7 @@ function useMain(instance) {
       filteredRows = Object.entries(filters).reduce(
         (filteredSoFar, [columnID, filterValue]) => {
           // Find the filters column
-          const column = columns.find(d => d.id === columnID)
+          const column = flatColumns.find(d => d.id === columnID)
 
           if (!column) {
             return filteredSoFar
@@ -195,12 +195,12 @@ function useMain(instance) {
     }
 
     return filterRows(rows)
-  }, [manualFilters, filters, debug, rows, columns, userFilterTypes])
+  }, [manualFilters, filters, debug, rows, flatColumns, userFilterTypes])
 
   React.useMemo(() => {
     // Now that each filtered column has it's partially filtered rows,
     // lets assign the final filtered rows to all of the other columns
-    const nonFilteredColumns = columns.filter(
+    const nonFilteredColumns = flatColumns.filter(
       column => !Object.keys(filters).includes(column.id)
     )
 
@@ -209,7 +209,7 @@ function useMain(instance) {
     nonFilteredColumns.forEach(column => {
       column.preFilteredRows = filteredRows
     })
-  }, [columns, filteredRows, filters])
+  }, [filteredRows, filters, flatColumns])
 
   return {
     ...instance,

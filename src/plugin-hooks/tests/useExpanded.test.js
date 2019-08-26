@@ -50,7 +50,7 @@ function Table({ columns: userColumns, data, SubComponent }) {
     headerGroups,
     rows,
     prepareRow,
-    columns,
+    flatColumns,
     state: [{ expanded }],
   } = useTable(
     {
@@ -90,7 +90,9 @@ function Table({ columns: userColumns, data, SubComponent }) {
                 </tr>
                 {!row.subRows.length && row.isExpanded ? (
                   <tr>
-                    <td colSpan={columns.length}>{SubComponent({ row })}</td>
+                    <td colSpan={flatColumns.length}>
+                      {SubComponent({ row })}
+                    </td>
                   </tr>
                 ) : null}
               </React.Fragment>

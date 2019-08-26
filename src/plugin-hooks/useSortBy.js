@@ -49,7 +49,7 @@ function useMain(instance) {
   const {
     debug,
     rows,
-    columns,
+    flatColumns,
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
     manualSorting,
@@ -75,7 +75,7 @@ function useMain(instance) {
       const { sortBy } = old
 
       // Find the column for this columnID
-      const column = columns.find(d => d.id === columnID)
+      const column = flatColumns.find(d => d.id === columnID)
       const { sortDescFirst } = column
 
       // Find any existing sortBy for this column
@@ -213,7 +213,7 @@ function useMain(instance) {
 
     // Filter out sortBys that correspond to non existing columns
     const availableSortBy = sortBy.filter(sort =>
-      columns.find(col => col.id === sort.id)
+      flatColumns.find(col => col.id === sort.id)
     )
 
     const sortData = rows => {
@@ -224,7 +224,7 @@ function useMain(instance) {
         rows,
         availableSortBy.map(sort => {
           // Support custom sorting methods for each column
-          const column = columns.find(d => d.id === sort.id)
+          const column = flatColumns.find(d => d.id === sort.id)
 
           if (!column) {
             throw new Error(
@@ -254,7 +254,7 @@ function useMain(instance) {
         // Map the directions
         availableSortBy.map(sort => {
           // Detect and use the sortInverted option
-          const column = columns.find(d => d.id === sort.id)
+          const column = flatColumns.find(d => d.id === sort.id)
 
           if (column && column.sortInverted) {
             return sort.desc
@@ -279,7 +279,15 @@ function useMain(instance) {
       console.timeEnd('getSortedRows')
 
     return sortData(rows)
-  }, [manualSorting, sortBy, debug, columns, rows, orderByFn, userSortTypes])
+  }, [
+    manualSorting,
+    sortBy,
+    debug,
+    rows,
+    flatColumns,
+    orderByFn,
+    userSortTypes,
+  ])
 
   return {
     ...instance,
