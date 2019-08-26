@@ -103,13 +103,13 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `(row) => row.subRows || []`
   - Use this function to change how React Table detects subrows. You could even use this function to generate sub rows if you want.
   - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
-- `getRowPathID: Function(row, relativeIndex) => string`
+- `getRowID: Function(row, relativeIndex) => string`
+  - Use this function to change how React Table detects unique rows and also how it constructs each row's underlying `path` property.
   - Optional
   - Must be **memoized**
   - Defaults to `(row, relativeIndex) => relativeIndex`
-  - Use this function to change how React Table constructs each row's underlying `path` property.
   - You may want to change this function if
-  - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
+  - By default, it will use the `index` of the row within it's original array.
 - `debug: Bool`
   - Optional
   - A flag to turn on debug mode.

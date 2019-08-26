@@ -20,7 +20,7 @@ const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   defaultColumn: PropTypes.object,
   getSubRows: PropTypes.func,
-  getRowPathID: PropTypes.func,
+  getRowID: PropTypes.func,
   debug: PropTypes.bool,
 }
 
@@ -30,7 +30,7 @@ const renderErr =
 const defaultColumnInstance = {}
 
 const defaultGetSubRows = (row, index) => row.subRows || []
-const defaultGetRowPathID = (row, index) => index
+const defaultGetRowID = (row, index) => index
 
 export const useTable = (props, ...plugins) => {
   // Validate props
@@ -43,7 +43,7 @@ export const useTable = (props, ...plugins) => {
     columns: userColumns,
     defaultColumn = defaultColumnInstance,
     getSubRows = defaultGetSubRows,
-    getRowPathID = defaultGetRowPathID,
+    getRowID = defaultGetRowID,
     debug,
   } = props
 
@@ -147,7 +147,7 @@ export const useTable = (props, ...plugins) => {
       // Keep the original reference around
       const original = originalRow
 
-      const rowID = getRowPathID(originalRow, i)
+      const rowID = getRowID(originalRow, i)
 
       // Make the new path for the row
       const path = [...parentPath, rowID]
@@ -199,7 +199,7 @@ export const useTable = (props, ...plugins) => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.timeEnd('getAccessedRows')
     return [accessedData, rowPaths, flatRows]
-  }, [debug, data, getRowPathID, getSubRows, flatColumns])
+  }, [debug, data, getRowID, getSubRows, flatColumns])
 
   instanceRef.current.rows = rows
   instanceRef.current.rowPaths = rowPaths
