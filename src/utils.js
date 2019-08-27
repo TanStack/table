@@ -98,24 +98,28 @@ export function makeHeaderGroups(flatColumns, columns, defaultColumn) {
 
       // If the column has a parent, add it if necessary
       if (column.parent) {
+        const similarParentColumns = parentColumns.filter(
+          d => d.originalID === column.parent.id
+        )
         if (isFirst || latestParentColumn.originalID !== column.parent.id) {
           parentColumns.push({
             ...column.parent,
             originalID: column.parent.id,
-            id: [column.parent.id, parentColumns.length].join('_'),
+            id: [column.parent.id, similarParentColumns.length].join('_'),
           })
         }
       } else if (hasParents) {
         // If other columns have parents, we'll need to add a place holder if necessary
+        const originalID = [column.id, 'placeholder'].join('_')
+        const similarParentColumns = parentColumns.filter(
+          d => d.originalID === originalID
+        )
         const placeholderColumn = decorateColumn(
           {
-            originalID: [column.id, 'placeholder', maxDepth - depth].join('_'),
-            id: [
-              column.id,
-              'placeholder',
-              maxDepth - depth,
-              parentColumns.length,
-            ].join('_'),
+            originalID,
+            id: [column.id, 'placeholder', similarParentColumns.length].join(
+              '_'
+            ),
           },
           defaultColumn
         )
