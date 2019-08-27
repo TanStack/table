@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, useSortBy, useFilters, useColumnOrder } from 'react-table'
-import { motion, AnimatePresence } from 'framer-motion'
-import matchSorter from 'match-sorter'
+import { useTable, useColumnOrder } from 'react-table'
 
 import makeData from './makeData'
 

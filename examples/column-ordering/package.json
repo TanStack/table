@@ -7,13 +7,10 @@
     "eject": "rescripts eject"
   },
   "dependencies": {
-    "framer-motion": "^1.6.3",
-    "match-sorter": "^4.0.1",
     "namor": "^1.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "react-spring": "^8.0.27",
     "react-table": "next",
     "styled-components": "^4.3.2"
   },
