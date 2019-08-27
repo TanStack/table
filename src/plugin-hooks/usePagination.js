@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 //
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
-import { ensurePluginOrder } from '../utils'
+import { ensurePluginOrder, safeUseLayoutEffect } from '../utils'
 
 defaultState.pageSize = 10
 defaultState.pageIndex = 0
@@ -16,12 +16,6 @@ const propTypes = {
   manualPagination: PropTypes.bool,
   paginateExpandedRows: PropTypes.bool,
 }
-
-// SSR has issues with useLayoutEffect still, so use useEffect during SSR
-let useLayoutEffect =
-  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
-    ? React.useLayoutEffect
-    : React.useEffect
 
 export const usePagination = hooks => {
   hooks.useMain.push(useMain)
@@ -55,7 +49,7 @@ function useMain(instance) {
 
   const isPageIndexMountedRef = React.useRef()
 
-  useLayoutEffect(() => {
+  safeUseLayoutEffect(() => {
     if (isPageIndexMountedRef.current && !disablePageResetOnDataChange) {
       setState(
         old => ({

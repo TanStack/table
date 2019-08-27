@@ -6,6 +6,12 @@ const columnFallbacks = {
   show: true,
 }
 
+// SSR has issues with useLayoutEffect still, so use useEffect during SSR
+export const safeUseLayoutEffect =
+  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+    ? React.useLayoutEffect
+    : React.useEffect
+
 // Find the depth of the columns
 export function findMaxDepth(columns, depth = 0) {
   return columns.reduce((prev, curr) => {

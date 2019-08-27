@@ -1573,9 +1573,29 @@ The following additional properties are available on every `Cell` object returne
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
-### Example
+# `useColumnOrder`
 
-> Have an example of using useRowState? Submit a PR to add it here!
+- Plugin Hook
+- Optional
+
+`useColumnOrder` is a plugin hook that implements **basic column reordering**. As columns are reordered, their header groups are reverse-engineered so as to never have orphaned header groups.
+
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `state[0].columnOrder: Array<ColumnID>`
+  - Optional
+  - Defaults to `[]`
+  - Any column ID's not represented in this array will be naturally ordered based on their position in the original table's `column` structure
+
+### Instance Properties
+
+The following values are provided to the table `instance`:
+
+- `setColumnOrder: Function(updater: Function | Array<ColumnID>) => void`
+  - Use this function to programmatically update the columnOrder.
+  - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
 # `useTableState`
 
