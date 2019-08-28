@@ -173,7 +173,18 @@ function useMain(instance) {
 
     if (column.canSort) {
       column.toggleSortBy = (desc, multi) =>
-        toggleSortBy(column.id, desc, multi)
+        toggleSortBy(column.id, desc, multi);
+      
+      column.clearSorting = () => {
+        return setState(old => {
+          const { sortBy } = old;
+          const newSortBy = sortBy.filter(d => d.id !== column.id);
+          return {
+            ...old,
+            sortBy: newSortBy,
+          }
+        }, actions.sortByChange);
+      };
     }
 
     column.getSortByToggleProps = props => {
