@@ -458,6 +458,8 @@ The following properties are available on every `Column` object returned by the 
   - This function is used to resolve any props needed for this column's UI that is responsible for toggling the sort direction when the user clicks it.
   - You can use the `getSortByToggleProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
+- `clearSorting: Function() => void`
+  - This function can be used to programmatically clear the sorting for this column.
 - `isSorted: Boolean`
   - Denotes whether this column is currently being sorted
 - `sortedIndex: Int`
