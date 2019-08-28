@@ -121,8 +121,8 @@ export const useTable = (props, ...plugins) => {
 
   // Make the headerGroups
   const headerGroups = React.useMemo(
-    () => makeHeaderGroups(flatColumns, columns, defaultColumn),
-    [columns, defaultColumn, flatColumns]
+    () => makeHeaderGroups(flatColumns, defaultColumn),
+    [defaultColumn, flatColumns]
   )
 
   const headers = React.useMemo(() => headerGroups[0].headers, [headerGroups])

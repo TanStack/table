@@ -2,7 +2,7 @@ import React from 'react'
 
 const columnFallbacks = {
   Header: () => null,
-  Cell: ({ cell: { value = '' } }) => value,
+  Cell: ({ cell: { value = '' } }) => String(value),
   show: true,
 }
 
@@ -79,10 +79,8 @@ export function decorateColumnTree(columns, defaultColumn, parent, depth = 0) {
 }
 
 // Build the header groups from the bottom up
-export function makeHeaderGroups(flatColumns, columns, defaultColumn) {
+export function makeHeaderGroups(flatColumns, defaultColumn) {
   const headerGroups = []
-
-  const maxDepth = findMaxDepth(columns)
 
   // Build each header group from the bottom up
   const buildGroup = (columns, depth) => {

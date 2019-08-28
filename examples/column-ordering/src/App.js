@@ -79,20 +79,18 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody>
-          <AnimatePresence>
-            {rows.slice(0, 10).map(
-              (row, i) =>
-                prepareRow(row) || (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell, i) => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-            )}
-          </AnimatePresence>
+          {rows.slice(0, 10).map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell, i) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+          )}
         </tbody>
       </table>
       <pre>
