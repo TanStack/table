@@ -940,12 +940,12 @@ function App() {
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].expanded: Object<[pathIndex]: Boolean | ExpandedStateObject>`
+- `state[0].expanded: Array<pathKey: String>`
   - Optional
   - Must be **memoized**
-  - An nested object of expanded paths.
-  - A `pathIndex` can be set as the key and its value set to `true` to expand that row's subRows into view. For example, if `{ '3': true }` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
-  - For nested expansion, you may **use another object** instead of a Boolean to expand sub rows. For example, if `{ '3': { '5' : true }}` was passed as the `expanded` state, then the **6th subRow of the 4th row and the 4th row of the original data array** would be expanded.
+  - An array of expanded path keys.
+  - If a row's path key (`row.path.join('.')`) is present in this array, that row will have an expanded state. For example, if `['3']` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
+  - For nested expansion, you may **join the row path with a `.`** to expand sub rows. For example, if `['3', '3.5']` was passed as the `expanded` state, then the **6th subRow of the 4th row and also the 4th row of the original data array** would be expanded.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `getSubRows: Function(row, relativeIndex) => Rows[]`
   - Optional

@@ -178,29 +178,37 @@ test('renders an expandable table', () => {
 
   let expandButtons = getAllByText('👉')
 
-  const beforeGrouping = asFragment()
+  const before = asFragment()
 
   fireEvent.click(expandButtons[0])
 
-  const afterGrouping1 = asFragment()
+  const after1 = asFragment()
 
   expandButtons = getAllByText('👉')
   fireEvent.click(expandButtons[0])
 
-  const afterGrouping2 = asFragment()
+  const after2 = asFragment()
 
   expandButtons = getAllByText('👉')
   fireEvent.click(expandButtons[0])
 
-  const afterGrouping3 = asFragment()
+  const after3 = asFragment()
 
   expandButtons = getAllByText('👉')
   fireEvent.click(expandButtons[0])
 
-  const afterGrouping4 = asFragment()
+  const after4 = asFragment()
 
-  expect(beforeGrouping).toMatchDiffSnapshot(afterGrouping1)
-  expect(afterGrouping1).toMatchDiffSnapshot(afterGrouping2)
-  expect(afterGrouping2).toMatchDiffSnapshot(afterGrouping3)
-  expect(afterGrouping3).toMatchDiffSnapshot(afterGrouping4)
+  expandButtons = getAllByText('👇')
+  expandButtons.reverse().forEach(button => {
+    fireEvent.click(button)
+  })
+
+  const after5 = asFragment()
+
+  expect(before).toMatchDiffSnapshot(after1)
+  expect(after1).toMatchDiffSnapshot(after2)
+  expect(after2).toMatchDiffSnapshot(after3)
+  expect(after3).toMatchDiffSnapshot(after4)
+  expect(after4).toMatchDiffSnapshot(after5)
 })

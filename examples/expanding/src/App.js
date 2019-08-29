@@ -50,9 +50,6 @@ function Table({ columns: userColumns, data }) {
 
   return (
     <>
-      <pre>
-        <code>{JSON.stringify({ expanded }, null, 2)}</code>
-      </pre>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -80,6 +77,9 @@ function Table({ columns: userColumns, data }) {
       </table>
       <br />
       <div>Showing the first 20 results of {rows.length} rows</div>
+      <pre>
+        <code>{JSON.stringify({ expanded }, null, 2)}</code>
+      </pre>
     </>
   )
 }

@@ -10,10 +10,10 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "expanded": {}
-+   "expanded": {
-+     "0": true
-+   }
+-   "expanded": []
++   "expanded": [
++     "0"
++   ]
   }
       </code>
     </pre>
@@ -220,22 +220,21 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -1,11 +1,13 @@
+@@ -1,11 +1,12 @@
   <DocumentFragment>
     <pre>
       <code>
         {
-    "expanded": {
--     "0": true
-+     "0": {
-+       "0": true
-+     }
-    }
+    "expanded": [
+-     "0"
++     "0",
++     "0.0"
+    ]
   }
       </code>
     </pre>
     <table
-@@ -127,10 +129,53 @@
+@@ -127,11 +128,54 @@
           <td
             class=""
           >
@@ -281,15 +280,16 @@ Snapshot Diff:
 +       >
 +         <td
 +           class=""
-+         >
+          >
 +           <span
 +             style="cursor: pointer; padding-left: 4rem;"
-            >
++           >
               👉
             </span>
           </td>
           <td
-@@ -160,10 +205,139 @@
+            class=""
+@@ -160,10 +204,139 @@
           </td>
           <td
             class=""
@@ -436,22 +436,21 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -2,11 +2,13 @@
+@@ -2,11 +2,12 @@
     <pre>
       <code>
         {
-    "expanded": {
-      "0": {
--       "0": true
-+       "0": {
-+         "0": true
-+       }
-      }
-    }
+    "expanded": [
+      "0",
+-     "0.0"
++     "0.0",
++     "0.0.0"
+    ]
   }
       </code>
     </pre>
-@@ -172,10 +174,53 @@
+    <table
+@@ -171,11 +172,54 @@
           <td
             class=""
           >
@@ -497,15 +496,16 @@ Snapshot Diff:
 +       >
 +         <td
 +           class=""
-+         >
+          >
 +           <span
 +             style="cursor: pointer; padding-left: 6rem;"
-            >
++           >
               👉
             </span>
           </td>
           <td
-@@ -205,10 +250,139 @@
+            class=""
+@@ -204,10 +248,139 @@
           </td>
           <td
             class=""
@@ -652,22 +652,21 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -3,11 +3,13 @@
+@@ -3,11 +3,12 @@
       <code>
         {
-    "expanded": {
-      "0": {
-        "0": {
--         "0": true
-+         "0": {
-+           "0": true
-+         }
-        }
-      }
-    }
+    "expanded": [
+      "0",
+      "0.0",
+-     "0.0.0"
++     "0.0.0",
++     "0.0.0.0"
+    ]
   }
       </code>
-@@ -218,11 +220,11 @@
+    </pre>
+    <table
+@@ -216,11 +217,11 @@
             class=""
           >
             <span
@@ -680,7 +679,7 @@ Snapshot Diff:
           <td
             class=""
           >
-@@ -250,10 +252,30 @@
+@@ -248,10 +249,30 @@
           </td>
           <td
             class=""
@@ -706,6 +705,590 @@ Snapshot Diff:
 + }
 +             </code>
 +           </pre>
+          </td>
+        </tr>
+        <tr
+          class=""
+        >
+`;
+
+exports[`renders an expandable table 5`] = `
+Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,15 +1,10 @@
+  <DocumentFragment>
+    <pre>
+      <code>
+        {
+-   "expanded": [
+-     "0",
+-     "0.0",
+-     "0.0.0",
+-     "0.0.0.0"
+-   ]
++   "expanded": []
+  }
+      </code>
+    </pre>
+    <table
+      class=""
+@@ -88,140 +83,11 @@
+            class=""
+          >
+            <span
+              style="cursor: pointer; padding-left: 0rem;"
+            >
+-             👇
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           tanner
+-         </td>
+-         <td
+-           class=""
+-         >
+-           linsley
+-         </td>
+-         <td
+-           class=""
+-         >
+-           29
+-         </td>
+-         <td
+-           class=""
+-         >
+-           100
+-         </td>
+-         <td
+-           class=""
+-         >
+-           In Relationship
+-         </td>
+-         <td
+-           class=""
+-         >
+-           50
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 2rem;"
+-           >
+-             👇
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           tanner
+-         </td>
+-         <td
+-           class=""
+-         >
+-           linsley
+-         </td>
+-         <td
+-           class=""
+-         >
+-           29
+-         </td>
+-         <td
+-           class=""
+-         >
+-           100
+-         </td>
+-         <td
+-           class=""
+-         >
+-           In Relationship
+-         </td>
+-         <td
+-           class=""
+-         >
+-           50
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 4rem;"
+-           >
+-             👇
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           tanner
+-         </td>
+-         <td
+-           class=""
+-         >
+-           linsley
+-         </td>
+-         <td
+-           class=""
+-         >
+-           29
+-         </td>
+-         <td
+-           class=""
+-         >
+-           100
+-         </td>
+-         <td
+-           class=""
+-         >
+-           In Relationship
+-         </td>
+-         <td
+-           class=""
+-         >
+-           50
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 6rem;"
+-           >
+-             👇
++             👉
+            </span>
+          </td>
+          <td
+            class=""
+          >
+@@ -249,417 +115,10 @@
+          </td>
+          <td
+            class=""
+          >
+            50
+-         </td>
+-       </tr>
+-       <tr>
+-         <td
+-           colspan="7"
+-         >
+-           <pre>
+-             <code>
+-               {
+-   "values": {
+-     "firstName": "tanner",
+-     "lastName": "linsley",
+-     "age": 29,
+-     "visits": 100,
+-     "status": "In Relationship",
+-     "progress": 50
+-   }
+- }
+-             </code>
+-           </pre>
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 6rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           derek
+-         </td>
+-         <td
+-           class=""
+-         >
+-           perkins
+-         </td>
+-         <td
+-           class=""
+-         >
+-           40
+-         </td>
+-         <td
+-           class=""
+-         >
+-           40
+-         </td>
+-         <td
+-           class=""
+-         >
+-           Single
+-         </td>
+-         <td
+-           class=""
+-         >
+-           80
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 6rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           joe
+-         </td>
+-         <td
+-           class=""
+-         >
+-           bergevin
+-         </td>
+-         <td
+-           class=""
+-         >
+-           45
+-         </td>
+-         <td
+-           class=""
+-         >
+-           20
+-         </td>
+-         <td
+-           class=""
+-         >
+-           Complicated
+-         </td>
+-         <td
+-           class=""
+-         >
+-           10
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 6rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           jaylen
+-         </td>
+-         <td
+-           class=""
+-         >
+-           linsley
+-         </td>
+-         <td
+-           class=""
+-         >
+-           26
+-         </td>
+-         <td
+-           class=""
+-         >
+-           99
+-         </td>
+-         <td
+-           class=""
+-         >
+-           In Relationship
+-         </td>
+-         <td
+-           class=""
+-         >
+-           70
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 4rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           derek
+-         </td>
+-         <td
+-           class=""
+-         >
+-           perkins
+-         </td>
+-         <td
+-           class=""
+-         >
+-           40
+-         </td>
+-         <td
+-           class=""
+-         >
+-           40
+-         </td>
+-         <td
+-           class=""
+-         >
+-           Single
+-         </td>
+-         <td
+-           class=""
+-         >
+-           80
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 4rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           joe
+-         </td>
+-         <td
+-           class=""
+-         >
+-           bergevin
+-         </td>
+-         <td
+-           class=""
+-         >
+-           45
+-         </td>
+-         <td
+-           class=""
+-         >
+-           20
+-         </td>
+-         <td
+-           class=""
+-         >
+-           Complicated
+-         </td>
+-         <td
+-           class=""
+-         >
+-           10
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 4rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           jaylen
+-         </td>
+-         <td
+-           class=""
+-         >
+-           linsley
+-         </td>
+-         <td
+-           class=""
+-         >
+-           26
+-         </td>
+-         <td
+-           class=""
+-         >
+-           99
+-         </td>
+-         <td
+-           class=""
+-         >
+-           In Relationship
+-         </td>
+-         <td
+-           class=""
+-         >
+-           70
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 2rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           derek
+-         </td>
+-         <td
+-           class=""
+-         >
+-           perkins
+-         </td>
+-         <td
+-           class=""
+-         >
+-           40
+-         </td>
+-         <td
+-           class=""
+-         >
+-           40
+-         </td>
+-         <td
+-           class=""
+-         >
+-           Single
+-         </td>
+-         <td
+-           class=""
+-         >
+-           80
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 2rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           joe
+-         </td>
+-         <td
+-           class=""
+-         >
+-           bergevin
+-         </td>
+-         <td
+-           class=""
+-         >
+-           45
+-         </td>
+-         <td
+-           class=""
+-         >
+-           20
+-         </td>
+-         <td
+-           class=""
+-         >
+-           Complicated
+-         </td>
+-         <td
+-           class=""
+-         >
+-           10
+-         </td>
+-       </tr>
+-       <tr
+-         class=""
+-       >
+-         <td
+-           class=""
+-         >
+-           <span
+-             style="cursor: pointer; padding-left: 2rem;"
+-           >
+-             👉
+-           </span>
+-         </td>
+-         <td
+-           class=""
+-         >
+-           jaylen
+-         </td>
+-         <td
+-           class=""
+-         >
+-           linsley
+-         </td>
+-         <td
+-           class=""
+-         >
+-           26
+-         </td>
+-         <td
+-           class=""
+-         >
+-           99
+-         </td>
+-         <td
+-           class=""
+-         >
+-           In Relationship
+-         </td>
+-         <td
+-           class=""
+-         >
+-           70
           </td>
         </tr>
         <tr

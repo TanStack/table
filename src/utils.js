@@ -232,22 +232,6 @@ export function defaultGroupByFn(rows, columnID) {
   }, {})
 }
 
-export function setBy(obj = {}, path, value) {
-  path = makePathArray(path)
-  const recurse = (obj, depth = 0) => {
-    const key = path[depth]
-    const target = typeof obj[key] !== 'object' ? {} : obj[key]
-    const subValue =
-      depth === path.length - 1 ? value : recurse(target, depth + 1)
-    return {
-      ...obj,
-      [key]: subValue,
-    }
-  }
-
-  return recurse(obj)
-}
-
 export function getElementDimensions(element) {
   const rect = element.getBoundingClientRect()
   const style = window.getComputedStyle(element)
