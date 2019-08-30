@@ -1,17 +1,11 @@
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import {
-  getBy,
-  getFirstDefined,
-  setBy,
-  mergeProps,
-  applyPropHooks,
-} from '../utils'
+import { mergeProps, applyPropHooks } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 
-defaultState.expanded = {}
+defaultState.expanded = []
 
 addActions('toggleExpanded', 'useExpanded')
 
@@ -40,13 +34,24 @@ function useMain(instance) {
   } = instance
 
   const toggleExpandedByPath = (path, set) => {
+    const key = path.join('.')
+
     return setState(old => {
-      const { expanded } = old
-      const existing = getBy(expanded, path)
-      set = getFirstDefined(set, existing ? undefined : true)
+      const exists = old.expanded.includes(key)
+      const shouldExist = typeof set !== 'undefined' ? set : !exists
+      let newExpanded = new Set(old.expanded)
+
+      if (!exists && shouldExist) {
+        newExpanded.add(key)
+      } else if (exists && !shouldExist) {
+        newExpanded.delete(key)
+      } else {
+        return old
+      }
+
       return {
         ...old,
-        expanded: setBy(expanded, path, set),
+        expanded: [...newExpanded.values()],
       }
     }, actions.toggleExpanded)
   }
@@ -81,9 +86,10 @@ function useMain(instance) {
     // Here we do some mutation, but it's the last stage in the
     // immutable process so this is safe
     const handleRow = row => {
+      const key = row.path.join('.')
       row.isExpanded =
         (row.original && row.original[manualExpandedKey]) ||
-        getBy(expanded, row.path)
+        expanded.includes(key)
 
       expandedRows.push(row)
 
@@ -116,11 +122,13 @@ function useMain(instance) {
   }
 }
 
-function findExpandedDepth(obj, depth = 1) {
-  return Object.values(obj).reduce((prev, curr) => {
-    if (typeof curr === 'object') {
-      return Math.max(prev, findExpandedDepth(curr, depth + 1))
-    }
-    return depth
-  }, 0)
+function findExpandedDepth(expanded) {
+  let maxDepth = 0
+
+  expanded.forEach(key => {
+    const path = key.split('.')
+    maxDepth = Math.max(maxDepth, path.length)
+  })
+
+  return maxDepth
 }

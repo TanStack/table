@@ -1,5 +1,17 @@
 import React from 'react'
 
+const columnFallbacks = {
+  Header: () => null,
+  Cell: ({ cell: { value = '' } }) => String(value),
+  show: true,
+}
+
+// SSR has issues with useLayoutEffect still, so use useEffect during SSR
+export const safeUseLayoutEffect =
+  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+    ? React.useLayoutEffect
+    : React.useEffect
+
 // Find the depth of the columns
 export function findMaxDepth(columns, depth = 0) {
   return columns.reduce((prev, curr) => {
@@ -38,9 +50,7 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
   }
 
   column = {
-    Header: () => null,
-    Cell: ({ cell: { value = '' } }) => value,
-    show: true,
+    ...columnFallbacks,
     ...column,
     id,
     accessor,
@@ -69,42 +79,51 @@ export function decorateColumnTree(columns, defaultColumn, parent, depth = 0) {
 }
 
 // Build the header groups from the bottom up
-export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
+export function makeHeaderGroups(flatColumns, defaultColumn) {
   const headerGroups = []
 
-  const buildGroup = (columns, depth = 0) => {
+  // Build each header group from the bottom up
+  const buildGroup = (columns, depth) => {
     const headerGroup = {
       headers: [],
     }
 
     const parentColumns = []
 
+    // Do any of these columns have parents?
     const hasParents = columns.some(col => col.parent)
 
     columns.forEach(column => {
+      // Are we the first column in this group?
       const isFirst = !parentColumns.length
+
+      // What is the latest (last) parent column?
       let latestParentColumn = [...parentColumns].reverse()[0]
 
       // If the column has a parent, add it if necessary
       if (column.parent) {
+        const similarParentColumns = parentColumns.filter(
+          d => d.originalID === column.parent.id
+        )
         if (isFirst || latestParentColumn.originalID !== column.parent.id) {
           parentColumns.push({
             ...column.parent,
             originalID: column.parent.id,
-            id: [column.parent.id, parentColumns.length].join('_'),
+            id: [column.parent.id, similarParentColumns.length].join('_'),
           })
         }
       } else if (hasParents) {
-        // If other columns have parents, add a place holder if necessary
+        // If other columns have parents, we'll need to add a place holder if necessary
+        const originalID = [column.id, 'placeholder'].join('_')
+        const similarParentColumns = parentColumns.filter(
+          d => d.originalID === originalID
+        )
         const placeholderColumn = decorateColumn(
           {
-            originalID: [column.id, 'placeholder', maxDepth - depth].join('_'),
-            id: [
-              column.id,
-              'placeholder',
-              maxDepth - depth,
-              parentColumns.length,
-            ].join('_'),
+            originalID,
+            id: [column.id, 'placeholder', similarParentColumns.length].join(
+              '_'
+            ),
           },
           defaultColumn
         )
@@ -131,23 +150,22 @@ export function makeHeaderGroups(columns, maxDepth, defaultColumn) {
             0
           )
         : 1 // Leaf node columns take up at least one count
-
       headerGroup.headers.push(column)
     })
 
     headerGroups.push(headerGroup)
 
     if (parentColumns.length) {
-      buildGroup(parentColumns)
+      buildGroup(parentColumns, depth + 1)
     }
   }
 
-  buildGroup(columns)
+  buildGroup(flatColumns, 0)
 
   return headerGroups.reverse()
 }
 
-export function determineColumnVisibility(instance) {
+export function determineHeaderVisibility(instance) {
   const { headers } = instance
 
   const handleColumn = (column, parentVisible) => {
@@ -156,14 +174,15 @@ export function determineColumnVisibility(instance) {
         ? column.show(instance)
         : !!column.show
       : false
-    if (column.columns && column.columns.length) {
-      column.columns.forEach(subColumn =>
+
+    if (column.headers && column.headers.length) {
+      column.headers.forEach(subColumn =>
         handleColumn(subColumn, column.isVisible)
       )
     }
   }
 
-  headers.forEach(subColumn => handleColumn(subColumn, true))
+  headers.forEach(subHeader => handleColumn(subHeader, true))
 }
 
 export function getBy(obj, path, def) {
@@ -211,22 +230,6 @@ export function defaultGroupByFn(rows, columnID) {
     prev[resKey].push(row)
     return prev
   }, {})
-}
-
-export function setBy(obj = {}, path, value) {
-  path = makePathArray(path)
-  const recurse = (obj, depth = 0) => {
-    const key = path[depth]
-    const target = typeof obj[key] !== 'object' ? {} : obj[key]
-    const subValue =
-      depth === path.length - 1 ? value : recurse(target, depth + 1)
-    return {
-      ...obj,
-      [key]: subValue,
-    }
-  }
-
-  return recurse(obj)
 }
 
 export function getElementDimensions(element) {

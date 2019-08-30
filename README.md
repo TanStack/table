@@ -30,15 +30,17 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 ## Features
 
-- Lightweight (4kb - 10kb depending on features and tree-shaking)
+- Lightweight (4kb - 11kb depending on features and tree-shaking)
 - Headless (100% customizable, Bring-your-own-UI)
-- Client-side & Server-side pagination support
+- Auto out of the box, fully controllable API
 - Sorting (Multi and Stable)
 - Filters
 - Pivoting & Aggregation
 - Row Selection
 - Row Expansion
-- Fully controllable
+- Column Ordering
+- Animatable
+- Server-side/controlled data/state
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
