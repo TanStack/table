@@ -23,7 +23,6 @@ function MyTable() {
       data,
       columns,
     },
--   useSortBy
 +   useSortBy
   )
 
@@ -60,3 +59,54 @@ function MyTable() {
   )
 }
 ```
+
+By default, the sorting will be `alphanumeric`. This can be changed in your `column` object.
+Other options include `basic` and `datettime`.
+Note that if you're planning on sorting numbers between 0 and 1, `basic` sorting will be more accurate.
+
+More information can be found in the [API Docs](/docs/api.md#useSortBy)
+
+````diff
+const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
++           sortType: 'basic'
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
++           sortType: 'basic'
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
++           sortType: 'basic'
+          },
+        ],
+      },
+    ],
+    []
+  )```
+````
