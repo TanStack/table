@@ -390,7 +390,7 @@ The following options are supported via the main options object passed to `useTa
 - `disableMultiSort: Bool`
   - Disables multi-sorting for the entire table.
 - `isMultiSortEvent: Function`
-  - Allows to override default multisort behaviour(i.e. multisort applies when shift key is presssed), if this function is provided then returned boolean value from this function will make decision whether newly applied sort action will be considered as multisort or not.
+  - Allows to override default multisort behaviour(i.e. multisort applies when shift key is pressed), if this function is provided then returned boolean value from this function will make decision whether newly applied sort action will be considered as multisort or not.
   - Receives `event` as argument.
 - `maxMultiSortColCount: Number`
   - Limit on max number of columns for multisort, e.g. if set to 3, and suppose table is sorted by `[A, B, C]` and then clicking `D` for sorting should result in table sorted by `[B, C , D]`
@@ -399,7 +399,7 @@ The following options are supported via the main options object passed to `useTa
 - `disableMultiRemove: Bool`
   - If true, the un-sorted state will not be available to multi-sorted columns.
 - `orderByFn: Function`
-  - Must be **memoizd**
+  - Must be **memoized**
   - Defaults to the built-in [default orderBy function](TODO)
   - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
 - `sortTypes: Object<sortKey: sortType>`
@@ -413,7 +413,7 @@ The following options are supported on any `Column` object passed to the `column
 
 - `disableSorting: Bool`
   - Optional
-  - Defualts to `false`
+  - Defaults to `false`
   - If set to `true`, the sorting for this column will be disabled
 - `sortDescFirst: Bool`
   - Optional
@@ -427,9 +427,9 @@ The following options are supported on any `Column` object passed to the `column
 - `sortType: String | Function`
   - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
-  - Defaults to [`alphanumeric`](TODO)
+  - String options: `basic`, `datettime`, `alphanumeric`. Defaults to [`alphanumeric`](TODO).
   - The resolved function from the this string/function will be used to sort the this column's data.
-    - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used. If
+    - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used.
     - If a `function` is passed, it will be used.
   - For more information on sort types, see [Sorting](TODO)
 
@@ -934,7 +934,7 @@ function App() {
 - Plugin Hook
 - Optional
 
-`useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows or on its own with nested `subRows` in tree-li,ke `data` sets, but is not limited to these use-cases. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
+`useExpanded` is the hook that implements **row expanding**. It is most often used with `useGroupBy` to expand grouped rows or on its own with nested `subRows` in tree-like `data` sets, but is not limited to these use-cases. It supports expanding rows both via internal table state and also via a hard-coded key on the raw row model.
 
 ### Table Options
 
