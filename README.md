@@ -149,6 +149,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         <div>Thomas Funk</div>
         <div>Dan Houle</div>
         <div>David Pickut</div>
+        <div>Jordan Soltman</div>
       </td>
     </tr>
   </tbody>
