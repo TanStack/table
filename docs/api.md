@@ -147,7 +147,7 @@ The following options are supported on any column object you can pass to `column
   - If a function/component is passed, it will be used for formatting the header value, eg. You can use a `Header` function to dynamically format the header using any table or column state.
 - `Cell: Function | React.Component => JSX`
   - Optional
-  - Defaults to `({ cell: { value } }) => value`
+  - Defaults to `({ cell: { value } }) => String(value)`
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
