@@ -44,7 +44,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
-## News
+## News / Q&A
 
 #### What is the current state of React Table?
 
@@ -54,9 +54,13 @@ React Table v7 is still under active development, and its API is still changing,
 
 You can use it production as long as you lock in the alpha version in your package.json and also accept that the API will likely change before it's official release.
 
-#### I'm still using v6@latest, what should I do?
+#### I'm still using v6, what should I do?
 
 v6 is a great library and is still the default install for `react-table`, however, I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
+
+#### Where are the docs for the older v6 version?
+
+Please [visit the v6 branch](https://github.com/tannerlinsley/react-table/tree/v6)
 
 #### I want to migrate from v6 to v7. How do I do that?
 
