@@ -1,6 +1,6 @@
 export default Base =>
   class extends Base {
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
       this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
     }
 
@@ -8,7 +8,7 @@ export default Base =>
       this.fireFetchData()
     }
 
-    componentWillReceiveProps (nextProps, nextState) {
+    UNSAFE_componentWillReceiveProps (nextProps, nextState) {
       const oldState = this.getResolvedState()
       const newState = this.getResolvedState(nextProps, nextState)
 
