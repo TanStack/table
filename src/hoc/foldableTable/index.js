@@ -41,7 +41,7 @@ export default ReactTable => {
       }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
       if (this.state.resized !== newProps.resized) {
         this.setState(p => ({ resized: newProps.resized }))
       }
