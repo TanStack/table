@@ -63,7 +63,7 @@ export default class ReactTablePagination extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.props.page !== nextProps.page) {
       this.setState({ page: nextProps.page })
     }
