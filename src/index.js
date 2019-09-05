@@ -1,5 +1,6 @@
 import * as utils from './utils'
 export { utils }
+export { defaultColumn } from './utils'
 export { useTable } from './hooks/useTable'
 export { useTableState, defaultState } from './hooks/useTableState'
 export { useExpanded } from './plugin-hooks/useExpanded'

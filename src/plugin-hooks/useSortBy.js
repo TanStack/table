@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ensurePluginOrder } from '../utils'
+import { ensurePluginOrder, defaultColumn } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 import * as sortTypes from '../sortTypes'
@@ -14,6 +14,8 @@ import {
 } from '../utils'
 
 defaultState.sortBy = []
+defaultColumn.sortType = 'alphanumeric'
+defaultColumn.sortDescFirst = false
 
 addActions('sortByChange')
 
@@ -173,18 +175,18 @@ function useMain(instance) {
 
     if (column.canSort) {
       column.toggleSortBy = (desc, multi) =>
-        toggleSortBy(column.id, desc, multi);
-      
+        toggleSortBy(column.id, desc, multi)
+
       column.clearSorting = () => {
         return setState(old => {
-          const { sortBy } = old;
-          const newSortBy = sortBy.filter(d => d.id !== column.id);
+          const { sortBy } = old
+          const newSortBy = sortBy.filter(d => d.id !== column.id)
           return {
             ...old,
             sortBy: newSortBy,
           }
-        }, actions.sortByChange);
-      };
+        }, actions.sortByChange)
+      }
     }
 
     column.getSortByToggleProps = props => {
@@ -255,8 +257,13 @@ function useMain(instance) {
           const sortMethod =
             isFunction(sortType) ||
             (userSortTypes || {})[sortType] ||
-            sortTypes[sortType] ||
-            sortTypes.alphanumeric
+            sortTypes[sortType]
+
+          if (!sortMethod) {
+            throw new Error(
+              `React-Table: Could not find a valid sortType of '${sortType}' for column '${sort.id}'.`
+            )
+          }
 
           // Return the correct sortFn.
           // This function should always return in ascending order
