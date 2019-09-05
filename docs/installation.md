@@ -10,7 +10,7 @@ $ npm install react-table@next
 $ yarn add react-table@next
 ```
 
-> NOTE: `@next` is only required tempororarily while work on the alpha and beta versions are still shifting.
+> NOTE: `@next` is only required temporarily while work on the alpha and beta versions are still shifting.
 
 To import React Table:
 
