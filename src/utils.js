@@ -218,7 +218,7 @@ function normalizeComponent (Comp, params = {}, fallback = Comp) {
 function isClassComponent (component) {
   return !!((
     typeof component === 'function' &&
-      !!component.prototype.isReactComponent
+      !!Object.getPrototypeOf(component).isReactComponent
   ))
 }
 
