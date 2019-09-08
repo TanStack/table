@@ -38,7 +38,7 @@ function useMain(instance) {
     []
   )
 
-  const isAllRowsSelected = rowPaths.length === selectedRows.length
+  const isAllRowsSelected = rowPaths.length > 0 && rowPaths.length === selectedRows.length
 
   const toggleRowSelectedAll = set => {
     setState(old => {
