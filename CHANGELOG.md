@@ -1,3 +1,7 @@
+## 6.10.3
+
+- Further improve `normalizeComponent` function
+
 ## 6.10.2
 
 - Fixed regression found in `normalizeComponent` function fix
