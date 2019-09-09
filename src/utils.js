@@ -203,35 +203,25 @@ function isSortingDesc (d) {
   return !!(d.sort === 'desc' || d.desc === true || d.asc === false)
 }
 
-function normalizeComponent (Comp, params = {}, fallback = Comp) {
-  return typeof Comp === 'function' ? (
-    isReactComponent(Comp) ? (
-      <Comp {...params} />
-    ) : (
-      Comp(params)
-    )
-  ) : (
-    fallback
+function normalizeComponent(Comp, props, fallback = Comp) {
+  return isReactComponent(Comp) ? <Comp {...props} /> : typeof Comp === 'function' ? Comp(props) : fallback
+}
+
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' &&
+    !!Object.getPrototypeOf(component).isReactComponent
   )
 }
 
-function isClassComponent (component) {
-  return !!((
+function isFunctionComponent(component) {
+  return (
     typeof component === 'function' &&
-      !!Object.getPrototypeOf(component).isReactComponent
-  ))
+    String(component).includes('.createElement')
+  )
 }
 
-function isFunctionComponent (component) {
-  return !!((
-    typeof component === 'function' &&
-      String(component).includes('return React.createElement')
-  ))
+function isReactComponent(component) {
+  return isClassComponent(component) || isFunctionComponent(component)
 }
 
-function isReactComponent (component) {
-  return !!((
-    isClassComponent(component) ||
-      isFunctionComponent(component)
-  ))
-}
