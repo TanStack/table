@@ -265,10 +265,22 @@ export function getElementDimensions(element) {
 }
 
 export function flexRender(Comp, props) {
-  if (typeof Comp === 'function' || typeof Comp === 'object') {
-    return <Comp {...props} />
-  }
-  return Comp
+  return isReactComponent(Comp) ? <Comp {...props} /> : Comp
+}
+
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' &&
+    !!Object.getPrototypeOf(component).isReactComponent
+  )
+}
+
+function isFunctionComponent(component) {
+  return typeof component === 'function'
+}
+
+function isReactComponent(component) {
+  return isClassComponent(component) || isFunctionComponent(component)
 }
 
 export const mergeProps = (...groups) => {
