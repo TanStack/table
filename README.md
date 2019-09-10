@@ -93,7 +93,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="http://bjntech.com/index.html&utm_campaign=react_table" target="_blank">
+        <a href="http://bjntech.com/index.html?utm_campaign=react_table" target="_blank">
           <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
         </a>
       </td>
