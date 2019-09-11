@@ -304,8 +304,8 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
       disablePageResetOnDataChange,
     },
     useFilters,
-    useSortBy,
     useGroupBy,
+    useSortBy,
     useExpanded,
     usePagination,
     useRowSelect

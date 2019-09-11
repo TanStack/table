@@ -83,7 +83,7 @@ function useMain(instance) {
     state: [{ groupBy }, setState],
   } = instance
 
-  ensurePluginOrder(plugins, [], 'useGroupBy', ['useExpanded'])
+  ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
 
   flatColumns.forEach(column => {
     const { id, accessor, disableGrouping: columnDisableGrouping } = column

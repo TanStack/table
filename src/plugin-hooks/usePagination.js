@@ -49,8 +49,15 @@ function useMain(instance) {
 
   const isPageIndexMountedRef = React.useRef()
 
+  // Bypass any effects from firing when this changes
+  const disablePageResetOnDataChangeRef = React.useRef()
+  disablePageResetOnDataChangeRef.current = disablePageResetOnDataChange
+
   safeUseLayoutEffect(() => {
-    if (isPageIndexMountedRef.current && !disablePageResetOnDataChange) {
+    if (
+      isPageIndexMountedRef.current &&
+      !disablePageResetOnDataChangeRef.current
+    ) {
       setState(
         old => ({
           ...old,
@@ -60,7 +67,7 @@ function useMain(instance) {
       )
     }
     isPageIndexMountedRef.current = true
-  }, [setState, rowDep, filters, groupBy, sortBy, disablePageResetOnDataChange])
+  }, [setState, rowDep, filters, groupBy, sortBy])
 
   const pageCount = manualPagination
     ? userPageCount

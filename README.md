@@ -44,6 +44,28 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
 
+## News / Q&A
+
+#### What is the current state of React Table?
+
+React Table v7 is still under active development, and its API is still changing, albeit only slightly. For this reason, it is currently in an **alpha** release state. It's estimated that it will be out of alpha and into **beta** sometime during September 2019. It will then remain in beta for a short time before being released sometime in Q4 of 2019.
+
+#### Should I use v7@alpha in production?
+
+You can use it production as long as you lock in the alpha version in your package.json and also accept that the API will likely change before it's official release.
+
+#### I'm still using v6, what should I do?
+
+v6 is a great library and is still the default install for `react-table`, however, I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
+
+#### Where are the docs for the older v6 version?
+
+Please [visit the v6 branch](https://github.com/tannerlinsley/react-table/tree/v6)
+
+#### I want to migrate from v6 to v7. How do I do that?
+
+The differences between the 2 versions are incredibly massive. Unfortunately, I cannot write a one-to-one upgrade guide for any of v6's API, simply because much of it is irrelevant with v7's headless approach. The best approach for migrating to v7 is to learn its API by reading the documentation and then following some of the examples to begin building your own table component.
+
 ## Documentation
 
 - [Installation](./docs/installation.md) - Walk through how to install React Table
@@ -71,7 +93,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="http://bjntech.com/index.html&utm_campaign=react_table" target="_blank">
+        <a href="http://bjntech.com/index.html?utm_campaign=react_table" target="_blank">
           <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
         </a>
       </td>
@@ -149,6 +171,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
         <div>Thomas Funk</div>
         <div>Dan Houle</div>
         <div>David Pickut</div>
+        <div>Jordan Soltman</div>
       </td>
     </tr>
   </tbody>

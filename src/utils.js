@@ -1,7 +1,6 @@
 import React from 'react'
 
-const columnFallbacks = {
-  Header: () => null,
+export const defaultColumn = {
   Cell: ({ cell: { value = '' } }) => String(value),
   show: true,
 }
@@ -22,9 +21,15 @@ export function findMaxDepth(columns, depth = 0) {
   }, 0)
 }
 
-export function decorateColumn(column, defaultColumn, parent, depth, index) {
-  // Apply the defaultColumn
-  column = { ...defaultColumn, ...column }
+export function decorateColumn(
+  column,
+  userDefaultColumn,
+  parent,
+  depth,
+  index
+) {
+  // Apply the userDefaultColumn
+  column = { ...defaultColumn, ...userDefaultColumn, ...column }
 
   // First check for string accessor
   let { id, accessor, Header } = column
@@ -50,8 +55,10 @@ export function decorateColumn(column, defaultColumn, parent, depth, index) {
   }
 
   column = {
-    ...columnFallbacks,
+    // Make sure there is a fallback header, just in case
+    Header: () => null,
     ...column,
+    // Materialize and override this stuff
     id,
     accessor,
     parent,
@@ -258,10 +265,22 @@ export function getElementDimensions(element) {
 }
 
 export function flexRender(Comp, props) {
-  if (typeof Comp === 'function' || typeof Comp === 'object') {
-    return <Comp {...props} />
-  }
-  return Comp
+  return isReactComponent(Comp) ? <Comp {...props} /> : Comp
+}
+
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' &&
+    !!Object.getPrototypeOf(component).isReactComponent
+  )
+}
+
+function isFunctionComponent(component) {
+  return typeof component === 'function'
+}
+
+function isReactComponent(component) {
+  return isClassComponent(component) || isFunctionComponent(component)
 }
 
 export const mergeProps = (...groups) => {
