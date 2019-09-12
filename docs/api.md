@@ -1680,3 +1680,53 @@ export default function MyTable({ manualPageIndex }) {
   })
 }
 ```
+
+# useStream
+
+`useStream` allows to fetch all the pages of data from your server.
+
+### Hook options
+
+`useStream` take the following options.
+
+- `getPage: Function(page) -> response`
+
+  - required
+  - This function accepts a page number and should return the page data fetched from your server.
+  - The returned response must contain the row data for this page and the total record count.
+
+- `totalRecordsLocation: String`
+
+  - optional
+  - defaults to `total`
+  - This option is passed to `_.get` to retrieve the total record count from the response returned by the `getPage`.
+
+- `dataLocation: String`
+  - optional
+  - defaults to `data`
+  - This option is passed to `_.get` to retrieve the row data from the response returned by the `getPage`.
+
+### Returns
+
+The an object containing data retrieved and some additional meta.
+
+- `rows`: The rows fetched
+- `isStreaming`: Boolean indicating if we are still fetching data
+- `totalRecords`: The total record count as returned in the response of first page
+- `isLoading`: Boolean indicating if we are still loading the first page
+
+### Example
+
+```js
+const { rows: data, isStreaming, totalRecords, isLoading } = useStream(
+  useCallback(page => fetchDataFromServer(page), [])
+)
+
+return (
+  <Table
+    columns={columns}
+    data={data}
+    streamInfo={{ isStreaming, totalRecords, isLoading }}
+  />
+)
+```
