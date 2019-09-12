@@ -15,6 +15,7 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`usePagination`](#usePagination)
     - [`useRowSelect`](#useRowSelect)
     - [`useRowState`](#useRowState)
+    - [`usePinColumns`](#usePinColumns)
   - Utility Hooks
     - [`useTableState`](#useTableState)
 - 3rd Party Plugin Hooks
@@ -1598,6 +1599,68 @@ The following values are provided to the table `instance`:
 - `setColumnOrder: Function(updater: Function | Array<ColumnID>) => void`
   - Use this function to programmatically update the columnOrder.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+  
+
+# `usePinColumns`
+
+- Plugin Hook
+- Optional
+
+`usePinColumns` is the hook that implements **pinning/freezing** of columns.
+
+- To programmatically pin any column, use the `toggleColumnPin` method located on the instance or each individual column.
+- `pinType` value corresponds to `-1 for LEFT`, `1 for RIGHT` and `0(or any other value) for CENTER/CLEAR`
+
+### Table Options
+
+The following options are supported via the main options object passed to `useTable(options)`
+
+- `state[0].pinnedColumns: <Object<[columnID]: pinType>`
+  - Must be **memoized**
+- `disablePinning: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, any column in table cannot be pinned
+
+### Column Options
+
+The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
+
+- `disablePinning: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, the given column cannot be pinned
+
+### Instance Properties
+
+The following values are provided to the table `instance`:
+
+- `setColumnPin: Function(<Object<[columnID]: pinType>) => void`
+  - This function can be used to programmatically set pinning of all the provided columns.
+  - **NOTE: This will replace(not merge) the exisitng pinning information**
+
+### Column Properties
+
+The following properties are available on every `Column` object returned by the table instance.
+
+- `canPin: Bool`
+  - Denotes whether a column is pinnable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
+- `toggleColumnPin: Function(pinType) => void`
+
+  - This function can be used to programmatically `toggle` the pinning for this column.
+
+* `setColumnPin: Function(pinType) => void`
+
+  - This function can be used to programmatically `set` the pinning for this column.
+
+- `pinType: -1|0|1`
+  - This integer conveys that the given column is pinned to left(-1), right(1) or center (0)
+
+### Example
+
+```js
+TODO
+```
 
 # `useTableState`
 
