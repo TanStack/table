@@ -37,7 +37,7 @@ export default function useStream(
       while (currentPage < totalPages) {
         setIsStreaming(true)
         currentPage += 1
-        await fetchPage(currentPage)
+        await fetchPage()
       }
 
       setIsStreaming(false)
