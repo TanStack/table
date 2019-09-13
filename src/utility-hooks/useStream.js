@@ -30,7 +30,7 @@ export default function useStream(
     }
 
     ;(async () => {
-      await fetchPage(1)
+      await fetchPage()
 
       setIsLoading(false)
 
