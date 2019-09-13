@@ -1,3 +1,7 @@
+## 7.0.0-beta.0
+
+- Massive changes to the entire project and library. Please consult the README and documentation for more information regarding these changes.
+
 ## 6.8.6
 
 #### Fixes & Optimizations
