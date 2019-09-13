@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { mergeProps, applyPropHooks } from '../utils'
+import { mergeProps, applyPropHooks, expandRows } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 
@@ -81,36 +81,12 @@ function useMain(instance) {
     if (process.env.NODE_ENV === 'development' && debug)
       console.info('getExpandedRows')
 
-    const expandedRows = []
-
-    // Here we do some mutation, but it's the last stage in the
-    // immutable process so this is safe
-    const handleRow = row => {
-      const key = row.path.join('.')
-      row.isExpanded =
-        (row.original && row.original[manualExpandedKey]) ||
-        expanded.includes(key)
-
-      expandedRows.push(row)
-
-      row.canExpand = row.subRows && !!row.subRows.length
-
-      if (
-        paginateExpandedRows &&
-        row.isExpanded &&
-        row.subRows &&
-        row.subRows.length
-      ) {
-        row.subRows.forEach(handleRow)
-      }
-
-      return row
+    if (paginateExpandedRows) {
+      return expandRows(rows, { manualExpandedKey, expanded })
     }
 
-    rows.forEach(handleRow)
-
-    return expandedRows
-  }, [debug, rows, manualExpandedKey, expanded, paginateExpandedRows])
+    return rows
+  }, [debug, paginateExpandedRows, rows, manualExpandedKey, expanded])
 
   const expandedDepth = findExpandedDepth(expanded)
 

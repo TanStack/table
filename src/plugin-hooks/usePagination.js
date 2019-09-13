@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 //
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
-import { ensurePluginOrder, safeUseLayoutEffect } from '../utils'
+import { ensurePluginOrder, safeUseLayoutEffect, expandRows } from '../utils'
 
 defaultState.pageSize = 10
 defaultState.pageIndex = 0
@@ -31,11 +31,15 @@ function useMain(instance) {
     rows,
     manualPagination,
     disablePageResetOnDataChange,
+    manualExpandedKey = 'expanded',
     debug,
     plugins,
     pageCount: userPageCount,
     paginateExpandedRows = true,
-    state: [{ pageSize, pageIndex, filters, groupBy, sortBy }, setState],
+    state: [
+      { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
+      setState,
+    ],
   } = instance
 
   ensurePluginOrder(
@@ -97,20 +101,17 @@ function useMain(instance) {
       return page
     }
 
-    const expandedPage = []
-
-    const handleRow = row => {
-      expandedPage.push(row)
-
-      if (row.subRows && row.subRows.length && row.isExpanded) {
-        row.subRows.forEach(handleRow)
-      }
-    }
-
-    page.forEach(handleRow)
-
-    return expandedPage
-  }, [debug, manualPagination, pageIndex, pageSize, paginateExpandedRows, rows])
+    return expandRows(page, { manualExpandedKey, expanded })
+  }, [
+    debug,
+    expanded,
+    manualExpandedKey,
+    manualPagination,
+    pageIndex,
+    pageSize,
+    paginateExpandedRows,
+    rows,
+  ])
 
   const canPreviousPage = pageIndex > 0
   const canNextPage = pageCount === -1 || pageIndex < pageCount - 1

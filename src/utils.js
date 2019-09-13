@@ -385,6 +385,30 @@ This usually means you need to need to name your plugin hook by setting the 'plu
   })
 }
 
+export function expandRows(rows, { manualExpandedKey, expanded }) {
+  const expandedRows = []
+
+  const handleRow = row => {
+    const key = row.path.join('.')
+
+    row.isExpanded =
+      (row.original && row.original[manualExpandedKey]) ||
+      expanded.includes(key)
+
+    row.canExpand = row.subRows && !!row.subRows.length
+
+    expandedRows.push(row)
+
+    if (row.subRows && row.subRows.length && row.isExpanded) {
+      row.subRows.forEach(handleRow)
+    }
+  }
+
+  rows.forEach(handleRow)
+
+  return expandedRows
+}
+
 //
 
 function makePathArray(obj) {
