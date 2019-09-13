@@ -48,11 +48,11 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 #### What is the current state of React Table?
 
-React Table v7 is still under active development, and its API is still changing, albeit only slightly. For this reason, it is currently in an **alpha** release state. It's estimated that it will be out of alpha and into **beta** sometime during September 2019. It will then remain in beta for a short time before being released sometime in Q4 of 2019.
+React Table v7 is still under active development, and its API is still changing, albeit only slightly. For this reason, it is currently in an **beta** release state. It's estimated that it will be fully released as a stable version sometime during October 2019.
 
-#### Should I use v7@alpha in production?
+#### Should I use v7@beta in production?
 
-You can use it production as long as you lock in the alpha version in your package.json and also accept that the API will likely change before it's official release.
+You can use it production as long as you lock in the beta version in your package.json and also accept that there may be unlikely, but possible bug fixes and/or API changes before it's official release.
 
 #### I'm still using v6, what should I do?
 
