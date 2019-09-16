@@ -131,6 +131,7 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
             id: [column.id, 'placeholder', similarParentColumns.length].join(
               '_'
             ),
+            "placeholderOf": column
           },
           defaultColumn
         )
