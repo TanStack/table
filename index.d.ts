@@ -237,7 +237,7 @@ declare module 'react-table-hooks' {
   ): TableOptions<D> & {
     toggleExpandedByPath: () => any
     expandedDepth: []
-    rows: T[]
+    rows: Row<D>[]
   }
 
   export function useTableState<D = any>(
