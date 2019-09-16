@@ -1,4 +1,4 @@
-declare module 'react-table{
+declare module 'react-table' {
   import { ReactNode, ReactText, Dispatch, SetStateAction } from 'react'
     export type SortingRule<D> = {
     id: keyof D
@@ -144,7 +144,7 @@ declare module 'react-table{
   }
 
   export interface UseFiltersValues<D> {
-    setFilter: (columnID: keyof T, value: string) => void
+    setFilter: (columnID: keyof D, value: string) => void
     setAllFilters: (values: Filters<D>) => void
     disableFilters: boolean
   }
