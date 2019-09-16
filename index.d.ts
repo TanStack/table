@@ -1,4 +1,4 @@
-declare module 'react-table-hooks' {
+declare module 'react-table{
   import { ReactNode, ReactText, Dispatch, SetStateAction } from 'react'
     export type SortingRule<D> = {
     id: keyof D
