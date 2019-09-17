@@ -30,7 +30,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 ## Features
 
-- Lightweight (4kb - 11kb depending on features and tree-shaking)
+- Lightweight (4kb - 9kb depending on features and tree-shaking)
 - Headless (100% customizable, Bring-your-own-UI)
 - Auto out of the box, fully controllable API
 - Sorting (Multi and Stable)
