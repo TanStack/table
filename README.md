@@ -7,6 +7,9 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
   <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
 </a>
+<a href="https://bundlephobia.com/result?p=react-table@next" target="\_parent">
+  <img alt="" src="https://badgen.net/bundlephobia/minzip/react-table@next" />
+</a>
 <a href="https://npmjs.com/package/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
 </a>
