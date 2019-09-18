@@ -48,8 +48,8 @@ declare module 'react-table' {
         render: (type: string) => any;
         getHeaderProps: (userProps?: any) => any;
         getSortByToggleProps: (userProps?: any) => any;
-        sorted: boolean;
-        sortedDesc: boolean;
+        isSorted: boolean;
+        isSortedDesc: boolean;
         sortedIndex: number;
     }
 
