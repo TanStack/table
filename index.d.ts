@@ -2,9 +2,10 @@ declare module 'react-table' {
   import { ReactNode, useState } from 'react'
 
   type StringKey<D> = Extract<keyof D, string>
+  type IdType<D> = StringKey<D> | string
 
-  type SortingRule<D, K extends StringKey<D> = StringKey<D>> = {
-    id: K
+  type SortingRule<D> = {
+    id: IdType<D>
     desc: boolean
   }
 
@@ -12,9 +13,7 @@ declare module 'react-table' {
 
   export type SortByFn = (a: any, b: any, desc: boolean) => 0 | 1 | -1
 
-  export type Filters<D> = {
-    [key: StringKey<D>]: string
-  }
+  export type Filters<D> = Record<IdType<D>, string>
 
   export interface Cell<D = {}> extends TableInstance<D> {
     cell: { value: any }
@@ -55,18 +54,18 @@ declare module 'react-table' {
     }
   ) => unknown
 
-  export interface HeaderColumn<D, K extends StringKey<D> = StringKey<D>> {
+  export interface HeaderColumn<D> {
     /**
      * This string/function is used to build the data model for your column.
      */
-    accessor: K | string | AccessorFn<D>
+    accessor: IdType<D> | AccessorFn<D>
     Header?: ReactNode | ((props: TableInstance<D>) => ReactNode)
     Filter?: ReactNode | ((props: TableInstance<D>) => ReactNode)
     Cell?: ReactNode | ((cell: Cell<D>) => ReactNode)
     /**
      * This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.
      */
-    id?: K | string
+    id?: IdType<D>
     minWidth?: string | number
     maxWidth?: string | number
     width?: string | number
@@ -84,10 +83,10 @@ declare module 'react-table' {
 
   export type Page<D = {}> = Row<D>[]
 
-  export interface EnhancedColumn<D, K extends StringKey<D> = StringKey<D>>
+  export interface EnhancedColumn<D>
     extends Omit<Column<D>, 'columns'>,
       TableInstance<D> {
-    id: K | string
+    id: IdType<D>
     column: Column<D>
     render: (type: 'Header' | 'Filter', userProps?: any) => any
     getHeaderProps: (userProps?: any) => any
