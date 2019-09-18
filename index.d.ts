@@ -1,17 +1,22 @@
 declare module 'react-table' {
-  import { ReactNode, ReactText, Dispatch, SetStateAction } from 'react'
-    export type SortingRule<D> = {
-    id: keyof D
+  import { ReactNode, useState } from 'react'
+
+  type StringKey<D> = Extract<keyof D, string>
+
+  type SortingRule<D, K extends StringKey<D> = StringKey<D>> = {
+    id: K
     desc: boolean
   }
 
   export type SortingRules<D> = SortingRule<D>[]
 
+  export type SortByFn = (a: any, b: any, desc: boolean) => 0 | 1 | -1
+
   export type Filters<D> = {
-    [key: keyof D]: string
+    [key: StringKey<D>]: string
   }
 
-  export interface Cell<D = any> extends TableInstance<D> {
+  export interface Cell<D = {}> extends TableInstance<D> {
     cell: { value: any }
     column: Column<D>
     row: Row<D>
@@ -22,7 +27,7 @@ declare module 'react-table' {
     getCellProps: () => any
   }
 
-  export interface Row<D = any> {
+  export interface Row<D = {}> {
     index: number
     cells: Cell<D>[]
     getRowProps: (userProps?: any) => any
@@ -32,7 +37,7 @@ declare module 'react-table' {
     depth: number
   }
 
-  export interface UseExpandedRow<D = any> {
+  export interface UseExpandedRow<D = {}> {
     subRows?: D[]
     groupByID?: string | number
     toggleExpanded?: () => any
@@ -40,37 +45,49 @@ declare module 'react-table' {
     isAggregated?: boolean
   }
 
-  export interface HeaderColumn<D> {
+  export type AccessorFn<D> = (
+    originalRow: D,
+    index: number,
+    sub: {
+      subRows: [D]
+      depth: number
+      data: [D]
+    }
+  ) => unknown
+
+  export interface HeaderColumn<D, K extends StringKey<D> = StringKey<D>> {
     /**
      * This string/function is used to build the data model for your column.
      */
-    accessor: string | ((originalRow: D) => string)
-    Header?: ReactText | ((props: TableInstance<D>) => ReactNode)
-    Filter?: ReactText | ((props: TableInstance<D>) => ReactNode)
-    Cell?: ReactText | ((cell: Cell<D>) => ReactNode)
+    accessor: K | string | AccessorFn<D>
+    Header?: ReactNode | ((props: TableInstance<D>) => ReactNode)
+    Filter?: ReactNode | ((props: TableInstance<D>) => ReactNode)
+    Cell?: ReactNode | ((cell: Cell<D>) => ReactNode)
     /**
      * This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.
      */
-    id?: string | number
+    id?: K | string
     minWidth?: string | number
     maxWidth?: string | number
     width?: string | number
     disableSorting?: boolean
     canSortBy?: boolean
-    sortByFn?: (a: any, b: any, desc: boolean) => 0 | 1 | -1
+    sortByFn?: SortByFn
     defaultSortDesc?: boolean
     isAggregated?: any
   }
 
   export interface Column<D> extends HeaderColumn<D> {
-    id?: string | number
     show?: boolean | ((instance: TableInstance<D>) => boolean)
     columns?: Column<D>[]
   }
 
-  export type Page<D = any> = Row<D>[]
+  export type Page<D = {}> = Row<D>[]
 
-  export interface EnhancedColumn<D> extends Pick<Column<D>, Exclude<keyof Column<D>, 'columns'>>, TableInstance<D> {
+  export interface EnhancedColumn<D, K extends StringKey<D> = StringKey<D>>
+    extends Omit<Column<D>, 'columns'>,
+      TableInstance<D> {
+    id: K | string
     column: Column<D>
     render: (type: 'Header' | 'Filter', userProps?: any) => any
     getHeaderProps: (userProps?: any) => any
@@ -82,7 +99,7 @@ declare module 'react-table' {
     canSort?: boolean
   }
 
-  export interface HeaderGroup<D = any> {
+  export interface HeaderGroup<D = {}> {
     headers: EnhancedColumn<D>[]
     getHeaderGroupProps: (userProps?: any) => any
   }
@@ -122,7 +139,7 @@ declare module 'react-table' {
     rowCount: number
   }
 
-  export interface UsePaginationValues<D = any> {
+  export interface UsePaginationValues<D = {}> {
     page: Page<D>
     pageIndex: number // yes, this is on instance and state
     pageSize: number // yes, this is on instance and state
@@ -166,7 +183,7 @@ declare module 'react-table' {
   }
 
   export interface UseSortbyOptions {
-    sortByFn?: (a: any, b: any, desc: boolean) => 0 | 1 | -1
+    sortByFn?: SortByFn
     manualSorting?: boolean
     disableSorting?: boolean
     defaultSortDesc?: boolean
@@ -177,7 +194,7 @@ declare module 'react-table' {
     sortBy?: SortingRules<D>
   }
 
-  export interface TableInstance<D = any> extends TableOptions<D> {
+  export interface TableInstance<D = {}> extends TableOptions<D> {
     hooks: Hooks
     rows: Row<D>[]
     columns: EnhancedColumn<D>[]
@@ -188,7 +205,7 @@ declare module 'react-table' {
     prepareRow: (row: Row<D>) => any
   }
 
-  export interface TableOptions<D = any> {
+  export interface TableOptions<D = {}> {
     data: D[]
     columns: HeaderColumn<D>[]
     state: State<D>
@@ -197,8 +214,19 @@ declare module 'react-table' {
     defaultColumn?: Partial<Column<D>>
   }
 
+  // The empty definition of TableState is not an error. It provides a definition
+  // for the state, that can then be extended in the users code.
+  //
+  // e.g.
+  //
+  // export interface TableState<D = {}}>
+  //     extends UsePaginationState,
+  //       UseGroupByState,
+  //       UseSortbyState<D>,
+  //       UseFiltersState<D> {}
+
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  export interface TableState<D = any> {}
+  export interface TableState<D = {}> {}
 
   export type SetState<D> = (
     updater: (old: TableState<D>) => TableState<D>,
@@ -207,32 +235,32 @@ declare module 'react-table' {
 
   export type State<D> = [TableState<D>, SetState<D>]
 
-  export function useTable<D = any>(
+  export function useTable<D = {}>(
     props: TableOptions<D>,
     ...plugins: any[]
   ): TableInstance<D>
 
-  export function useFilters<D = any>(
+  export function useFilters<D = {}>(
     props: TableOptions<D>
   ): TableOptions<D> & {
     rows: Row<D>[]
   }
 
-  export function useSortBy<D = any>(
+  export function useSortBy<D = {}>(
     props: TableOptions<D>
   ): TableOptions<D> & {
     rows: Row<D>[]
   }
 
-  export function useGroupBy<D = any>(
+  export function useGroupBy<D = {}>(
     props: TableOptions<D>
   ): TableOptions<D> & { rows: Row<D>[] }
 
-  export function usePagination<D = any>(
+  export function usePagination<D = {}>(
     props: TableOptions<D>
   ): UsePaginationValues<D>
 
-  export function useExpanded<D = any>(
+  export function useExpanded<D = {}>(
     props: TableOptions<D>
   ): TableOptions<D> & {
     toggleExpandedByPath: () => any
@@ -240,22 +268,22 @@ declare module 'react-table' {
     rows: Row<D>[]
   }
 
-  export function useTableState<D = any>(
+  export function useTableState<D = {}>(
     initialState?: Partial<TableState<D>>,
-    overriddenState?:  Partial<TableState<D>>,
+    overriddenState?: Partial<TableState<D>>,
     options?: {
       reducer?: (
         oldState: TableState<D>,
         newState: TableState<D>,
         type: string
       ) => any
-      useState?: Dispatch<SetStateAction<any>>
+      useState?: typeof useState
     }
   ): State<D>
 
-  export const actions: any
+  export const actions: Record<string, string>
 
   export function addActions(...actions: string[]): void
 
-  export const defaultState: any
+  export const defaultState: Record<string, any>
 }
