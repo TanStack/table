@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0-alpha.35",
+  "version": "7.0.0-beta.0",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -32,6 +32,7 @@
   "files": [
     "CHANGELOG.md",
     "src/**/*.js",
+    "index.d.ts",
     "dist",
     "LICENCE",
     "package.json",

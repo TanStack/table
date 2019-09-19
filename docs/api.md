@@ -427,7 +427,7 @@ The following options are supported on any `Column` object passed to the `column
 - `sortType: String | Function`
   - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
-  - String options: `basic`, `datettime`, `alphanumeric`. Defaults to [`alphanumeric`](TODO).
+  - String options: `basic`, `datetime`, `alphanumeric`. Defaults to [`alphanumeric`](TODO).
   - The resolved function from the this string/function will be used to sort the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used.
     - If a `function` is passed, it will be used.

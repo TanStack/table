@@ -7,6 +7,9 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 <a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
   <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
 </a>
+<a href="https://bundlephobia.com/result?p=react-table@next" target="\_parent">
+  <img alt="" src="https://badgen.net/bundlephobia/minzip/react-table@next" />
+</a>
 <a href="https://npmjs.com/package/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
 </a>
@@ -30,7 +33,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 ## Features
 
-- Lightweight (4kb - 11kb depending on features and tree-shaking)
+- Lightweight (4kb - 9kb depending on features and tree-shaking)
 - Headless (100% customizable, Bring-your-own-UI)
 - Auto out of the box, fully controllable API
 - Sorting (Multi and Stable)
@@ -48,11 +51,11 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 #### What is the current state of React Table?
 
-React Table v7 is still under active development, and its API is still changing, albeit only slightly. For this reason, it is currently in an **alpha** release state. It's estimated that it will be out of alpha and into **beta** sometime during September 2019. It will then remain in beta for a short time before being released sometime in Q4 of 2019.
+React Table v7 is still under active development, and its API is still changing, albeit only slightly. For this reason, it is currently in an **beta** release state. It's estimated that it will be fully released as a stable version sometime during October 2019.
 
-#### Should I use v7@alpha in production?
+#### Should I use v7@beta in production?
 
-You can use it production as long as you lock in the alpha version in your package.json and also accept that the API will likely change before it's official release.
+You can use it production as long as you lock in the beta version in your package.json and also accept that there may be unlikely, but possible bug fixes and/or API changes before it's official release.
 
 #### I'm still using v6, what should I do?
 

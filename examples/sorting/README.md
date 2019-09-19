@@ -61,7 +61,7 @@ function MyTable() {
 ```
 
 By default, the sorting will be `alphanumeric`. This can be changed in your `column` object.
-Other options include `basic` and `datettime`.
+Other options include `basic` and `datetime`.
 Note that if you're planning on sorting numbers between 0 and 1, `basic` sorting will be more accurate.
 
 More information can be found in the [API Docs](/docs/api.md#useSortBy)
