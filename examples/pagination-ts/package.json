@@ -1,0 +1,45 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
+    "eject": "rescripts eject",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "@types/jest": "24.0.18",
+    "@types/node": "12.7.5",
+    "@types/react": "16.9.2",
+    "@types/react-dom": "16.9.0",
+    "namor": "^1.1.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.1.2",
+    "react-table": "next",
+    "styled-components": "^4.3.2",
+    "typescript": "3.6.3"
+  },
+  "devDependencies": {
+    "@rescripts/cli": "^0.0.12",
+    "@rescripts/rescript-use-babel-config": "^0.0.8",
+    "@rescripts/rescript-use-eslint-config": "^0.0.9",
+    "@types/styled-components": "^4.1.19",
+    "@typescript-eslint/eslint-plugin": "^2.3.0",
+    "@typescript-eslint/parser": "^2.3.0",
+    "babel-eslint": "10.0.1",
+    "patch-package": "^6.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
