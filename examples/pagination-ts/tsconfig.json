@@ -15,11 +15,5 @@
     "noEmit": true,
     "jsx": "react"
   },
-  "include": ["src"],
-  "baseUrl": ".",
-  "paths": {
-      "react-table": [
-        "../../index.d.ts"
-      ]
-    }
+  "include": ["src"]
 }
