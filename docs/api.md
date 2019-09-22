@@ -606,7 +606,7 @@ The following properties are available on every `Column` object returned by the 
   - An column-level function used to update the filter value for this column
 - `filterValue: any`
   - The current filter value for this column, resolved from the table state's `filters` object
-- `preFilteredColumnRows: Array<row>`
+- `preFilteredRows: Array<row>`
   - The array of rows that were originally passed to this columns filter **before** they were filtered.
   - This array of rows can be useful if building faceted filter options.
 
