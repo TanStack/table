@@ -1,7 +1,12 @@
 export default Base =>
   class extends Base {
-    componentDidMount () {
+    constructor(props) {
+      super(props);
+
       this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
+    }
+
+    componentDidMount () {
       this.fireFetchData()
     }
 
