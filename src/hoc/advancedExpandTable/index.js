@@ -4,7 +4,7 @@ import set from 'lodash.set'
 import get from 'lodash.get'
 
 /*
-  AvancedExpandTableHOC for ReactTable
+  AdvancedExpandTableHOC for ReactTable
 
   HOC which allows any Cell in the row to toggle the row's
   SubComponent. Also allows the SubComponent to toggle itself.
@@ -46,6 +46,15 @@ export const columnsWithToggle = (columns, expandFuncs) =>
 
 export const advancedExpandTableHOC = TableComponent =>
   class AdvancedExpandTable extends Component {
+    // after initial render if we get new
+    // data, columns, page changes, etc.
+    // we reset expanded state.
+    static getDerivedStateFromProps () {
+      return {
+        expanded: {},
+      }
+    }
+
     constructor (props) {
       super(props)
       this.state = {
@@ -61,15 +70,6 @@ export const advancedExpandTableHOC = TableComponent =>
         showRowSubComponent: this.showRowSubComponent,
         hideRowSubComponent: this.hideRowSubComponent,
       }
-    }
-
-    // after initial render if we get new
-    // data, columns, page changes, etc.
-    // we reset expanded state.
-    UNSAFE_componentWillReceiveProps () {
-      this.setState({
-        expanded: {},
-      })
     }
 
     static propTypes = {

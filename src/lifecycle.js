@@ -1,6 +1,8 @@
 export default Base =>
   class extends Base {
-    UNSAFE_componentWillMount () {
+    constructor(props) {
+      super(props);
+
       this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
     }
 
@@ -8,9 +10,9 @@ export default Base =>
       this.fireFetchData()
     }
 
-    UNSAFE_componentWillReceiveProps (nextProps, nextState) {
-      const oldState = this.getResolvedState()
-      const newState = this.getResolvedState(nextProps, nextState)
+    componentDidUpdate (prevProps, prevState) {
+      const oldState = this.getResolvedState(prevProps, prevState)
+      const newState = this.getResolvedState(this.props, this.state)
 
       // Do a deep compare of new and old `defaultOption` and
       // if they are different reset `option = defaultOption`

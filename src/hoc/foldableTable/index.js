@@ -32,18 +32,22 @@ const defaultFoldButtonComponent = ({ header, collapsed, icon, onClick }) => {
 
 export default ReactTable => {
   const wrapper = class RTFoldableTable extends React.Component {
+    static getDerivedStateFromProps(props, state) {
+      if (state.resized !== props.resized) {
+        return {
+          resized: props.resized || [],
+        };
+      }
+
+      return null;
+    }
+
     constructor(props, context) {
       super(props, context)
 
       this.state = {
         folded: props.onFoldChange ? undefined : {},
         resized: props.resized || [],
-      }
-    }
-
-    UNSAFE_componentWillReceiveProps(newProps) {
-      if (this.state.resized !== newProps.resized) {
-        this.setState(p => ({ resized: newProps.resized }))
       }
     }
 
