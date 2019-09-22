@@ -51,6 +51,12 @@ export default class ReactTablePagination extends Component {
     ),
   }
 
+  static getDerivedStateFromProps (props) {
+    return {
+      page: props.page,
+    }
+  }
+
   constructor (props) {
     super(props)
 
@@ -60,12 +66,6 @@ export default class ReactTablePagination extends Component {
 
     this.state = {
       page: props.page,
-    }
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (this.props.page !== nextProps.page) {
-      this.setState({ page: nextProps.page })
     }
   }
 

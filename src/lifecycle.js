@@ -1,16 +1,13 @@
 export default Base =>
   class extends Base {
-    UNSAFE_componentWillMount () {
-      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
-    }
-
     componentDidMount () {
+      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
       this.fireFetchData()
     }
 
-    UNSAFE_componentWillReceiveProps (nextProps, nextState) {
-      const oldState = this.getResolvedState()
-      const newState = this.getResolvedState(nextProps, nextState)
+    componentDidUpdate (prevProps, prevState) {
+      const oldState = this.getResolvedState(prevProps, prevState)
+      const newState = this.getResolvedState(this.props, this.state)
 
       // Do a deep compare of new and old `defaultOption` and
       // if they are different reset `option = defaultOption`
