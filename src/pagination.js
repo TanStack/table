@@ -51,12 +51,6 @@ export default class ReactTablePagination extends Component {
     ),
   }
 
-  static getDerivedStateFromProps (props) {
-    return {
-      page: props.page,
-    }
-  }
-
   constructor (props) {
     super(props)
 
@@ -66,6 +60,16 @@ export default class ReactTablePagination extends Component {
 
     this.state = {
       page: props.page,
+    }
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.page !== this.props.page && prevState.page !== this.state.page) {
+      // this is probably safe because we only update when old/new state.page are different
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        page: this.props.page,
+      })
     }
   }
 
