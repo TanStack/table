@@ -100,8 +100,8 @@ declare module 'react-table' {
     }>
 
   export interface UseTableInstanceProps<D extends object> {
-    columns: Column<D>[]
-    flatColumns: Column<D>[]
+    columns: ColumnInstance<D>[]
+    flatColumns: ColumnInstance<D>[]
     headerGroups: HeaderGroup<D>[]
     headers: HeaderGroup<D>[]
     flatHeaders: HeaderGroup<D>[]
@@ -119,7 +119,7 @@ declare module 'react-table' {
   }
 
   export interface UseTableHeaderGroupProps<D extends object> {
-    headers: Column<D>[]
+    headers: ColumnInstance<D>[]
     getHeaderGroupProps: (props?: object) => object
   }
 
@@ -142,7 +142,7 @@ declare module 'react-table' {
   }
 
   export interface UseTableCellProps<D extends object> {
-    column: Column<D>
+    column: ColumnInstance<D>
     row: Row<D>
     value: unknown
     getCellProps: (props?: object) => object
@@ -150,10 +150,10 @@ declare module 'react-table' {
   }
 
   type HeaderProps<D extends object> = TableInstance<D> & {
-    column: Column<D>
+    column: ColumnInstance<D>
   } & Record<string, any>
   type CellProps<D extends object> = TableInstance<D> & {
-    column: Column<D>
+    column: ColumnInstance<D>
     row: Row<D>
     cell: Cell<D>
   } & Record<string, any>
@@ -176,7 +176,9 @@ declare module 'react-table' {
     id: IdType<D>
   }
 
-  export type Accessor<D extends object> = StringAccessor<D> | FunctionAccessor<D>
+  export type Accessor<D extends object> =
+    | StringAccessor<D>
+    | FunctionAccessor<D>
   /* #endregion */
 
   // Plugins
@@ -221,6 +223,7 @@ declare module 'react-table' {
   export interface UseExpandedRowProps<D extends object> {
     isExpanded: boolean
     toggleExpanded: (isExpanded?: boolean) => void
+    getExpandedToggleProps: (props?: object) => object
   }
   /* #endregion */
 
@@ -238,7 +241,7 @@ declare module 'react-table' {
   }
 
   export type UseFiltersColumnOptions<D extends object> = Partial<{
-    Filter: ComponentType<TableInstance<D>> | ReactNode
+    Filter: ComponentType<HeaderProps<D>> | ReactNode
     disableFilters: boolean
     filter: string | FilterType<D>
   }>
@@ -292,7 +295,7 @@ declare module 'react-table' {
   }
 
   export type UseGroupByColumnOptions<D extends object> = Partial<{
-    Aggregated: Function | ComponentType<any> // FIXME
+    Aggregated: ComponentType<CellProps<D>> | Function
     disableGrouping: boolean
   }>
 
@@ -380,7 +383,7 @@ declare module 'react-table' {
   export interface UseRowSelectInstanceProps<D extends object> {
     toggleRowSelected: (rowPath: IdType<D>, set?: boolean) => void
     toggleRowSelectedAll: (set?: boolean) => void
-    getToggleAllRowsSelectedProps: (props: object) => object
+    getToggleAllRowsSelectedProps: (props?: object) => object
     isAllRowsSelected: boolean
   }
 
@@ -479,7 +482,7 @@ declare module 'react-table' {
   export interface UseSortByColumnProps<D extends object> {
     canSort: boolean
     toggleSortBy: (descending: boolean, multi: boolean) => void
-    getSortByToggleProps: (props: object) => object
+    getSortByToggleProps: (props?: object) => object
     clearSorting: () => void
     isSorted: boolean
     sortedIndex: number
