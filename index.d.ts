@@ -295,7 +295,7 @@ declare module 'react-table' {
   }
 
   export type UseGroupByColumnOptions<D extends object> = Partial<{
-    Aggregated: ComponentType<CellProps<D>> | Function
+    Aggregated: ComponentType<CellProps<D>> | Function // FIXME
     disableGrouping: boolean
   }>
 
