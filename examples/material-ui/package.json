@@ -9,7 +9,6 @@
   "dependencies": {
     "@material-ui/core": "^4.4.3",
     "eslint-config-prettier": "^6.3.0",
-    "material-ui": "^0.20.2",
     "namor": "^1.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
