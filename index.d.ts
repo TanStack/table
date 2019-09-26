@@ -38,10 +38,10 @@ declare module 'react-table' {
 
   export type Cell<D extends object = {}> = UseTableCellProps<D>
 
-  export type Column<D extends object = {}> = UseTableColumnOptions<D>
+  export type Column<D extends object = {}> = UseTableColumnOptions<D> //& UseGroupByColumnOptions<D> & UseFiltersColumnOptions<D>
 
   export type ColumnInstance<D extends object = {}> = Column<D> &
-    UseTableColumnProps<D>
+    UseTableColumnProps<D> //& UseGroupByColumnProps<D> & UseFiltersColumnProps<D>
 
   export type HeaderGroup<D extends object = {}> = UseTableHeaderGroupProps<D>
 
@@ -93,7 +93,7 @@ declare module 'react-table' {
 
   export type UseTableColumnOptions<D extends object> = Accessor<D> &
     Partial<{
-      columns: Column<D>
+      columns: Column<D>[]
       show: boolean | ((instance: TableInstance<D>) => boolean)
       Header: ComponentType<HeaderProps<D>> | ReactNode
       Cell: ComponentType<CellProps<D>> | ReactNode
@@ -132,10 +132,10 @@ declare module 'react-table' {
 
   export interface UseTableRowProps<D extends object> {
     cells: Cell<D>[]
-    values: Record<IdType<D>, D>
+    values: Record<IdType<D>, any>
     getRowProps: (props?: object) => object
     index: number
-    original: D
+    original: D[StringKey<D>]
     path: IdType<D>[]
     subRows: Row<D>[]
     state: object
@@ -159,12 +159,12 @@ declare module 'react-table' {
   } & Record<string, any>
 
   interface StringAccessor<D extends object> {
-    accessor: IdType<D>
+    accessor?: IdType<D>
     id?: IdType<D>
   }
 
   interface FunctionAccessor<D extends object> {
-    accessor: (
+    accessor?: (
       originalRow: D,
       index: number,
       sub: {
@@ -176,9 +176,11 @@ declare module 'react-table' {
     id: IdType<D>
   }
 
+  // TODO: Fix, currently not properly recognizing optional `id`
+  // TODO: Fix, accessor is optional on columns?
   export type Accessor<D extends object> =
-    | StringAccessor<D>
     | FunctionAccessor<D>
+    | StringAccessor<D>
   /* #endregion */
 
   // Plugins
@@ -241,9 +243,9 @@ declare module 'react-table' {
   }
 
   export type UseFiltersColumnOptions<D extends object> = Partial<{
-    Filter: ComponentType<HeaderProps<D>> | ReactNode
     disableFilters: boolean
-    filter: string | FilterType<D>
+    Filter: ComponentType<HeaderProps<D>> | ReactNode
+    filter: DefaultFilterTypes | FilterType<D> | string // TODO: string added so you don't have to use `as const` cast
   }>
 
   export interface UseFiltersInstanceProps<D extends object> {
@@ -260,13 +262,22 @@ declare module 'react-table' {
 
   export interface UseFiltersColumnProps<D extends object> {
     canFilter: boolean
-    setFilter: (filterValue: FilterType<D>) => void
-    filterValue: FilterType<D>
+    setFilter: (filterValue: unknown) => void
+    filterValue: any
     preFilteredRows: Row<D>[]
   }
 
   type Filters<D extends object> = Record<IdType<D>, FilterType<D>> // QUESTION: Should the value be a string?
 
+  export type DefaultFilterTypes =
+    | 'text'
+    | 'exactText'
+    | 'exactTextCase'
+    | 'includes'
+    | 'includesAll'
+    | 'exact'
+    | 'equals'
+    | 'between'
   export interface FilterType<D extends object> {
     (rows: Row<D>[], id: IdType<D>, filterValue: unknown): Row<D>[]
     autoRemove: (filterValue: unknown) => boolean
@@ -279,7 +290,7 @@ declare module 'react-table' {
   export type UseGroupByOptions<D extends object> = Partial<{
     manualGroupBy: boolean
     disableGrouping: boolean
-    aggregations: Record<string, (values: unknown[], rows: Row<D>[]) => number>
+    aggregations: Record<string, Aggregator<D>>
     groupByFn: (rows: Row<D>[], columnId: IdType<D>) => Row<D>[]
   }>
 
@@ -295,8 +306,12 @@ declare module 'react-table' {
   }
 
   export type UseGroupByColumnOptions<D extends object> = Partial<{
-    Aggregated: ComponentType<CellProps<D>> | Function // FIXME
+    aggregate:
+      | (DefaultAggregators | Aggregator<D> | string)
+      | (DefaultAggregators | Aggregator<D> | string)[]
+    Aggregated: ComponentType<CellProps<D>> | ReactNode
     disableGrouping: boolean
+    groupByBoundary: boolean
   }>
 
   export interface UseGroupByInstanceProps<D extends object> {
@@ -328,6 +343,17 @@ declare module 'react-table' {
     isRepeatedValued: boolean
     isAggregated: boolean
   }
+
+  export type DefaultAggregators =
+    | 'sum'
+    | 'average'
+    | 'median'
+    | 'uniqueCount'
+    | 'count'
+  export type Aggregator<D extends object> = (
+    columnValues: unknown[],
+    rows: Row<D>[]
+  ) => unknown
   /* #endregion */
 
   /* #region usePagination */
