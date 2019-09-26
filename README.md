@@ -175,6 +175,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
         <div>Dan Houle</div>
         <div>David Pickut</div>
         <div>Jordan Soltman</div>
+        <div>Robert Tajnšek</div>
       </td>
     </tr>
   </tbody>
