@@ -59,20 +59,20 @@ declare module 'react-table' {
      * This string/function is used to build the data model for your column.
      */
     accessor: IdType<D> | AccessorFn<D>
-    Header?: ReactNode | ((props: TableInstance<D>) => ReactNode)
-    Filter?: ReactNode | ((props: TableInstance<D>) => ReactNode)
-    Cell?: ReactNode | ((cell: Cell<D>) => ReactNode)
     /**
      * This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.
      */
     id?: IdType<D>
+    Header?: ReactNode | ((props: TableInstance<D>) => ReactNode)
+    Filter?: ReactNode | ((props: TableInstance<D>) => ReactNode)
+    Cell?: ReactNode | ((cell: Cell<D>) => ReactNode)
     minWidth?: string | number
     maxWidth?: string | number
     width?: string | number
     disableSorting?: boolean
-    canSortBy?: boolean
-    sortByFn?: SortByFn
-    defaultSortDesc?: boolean
+    sortDescFirst?: boolean
+    sortInverted?: boolean
+    sortType?: string | ((rowA: Row<D>, rowB: Row<D>, columnId: IdType<D>) => number)
     isAggregated?: any
   }
 
