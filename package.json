@@ -27,7 +27,8 @@
     "prepare": "yarn build",
     "release": "yarn publish",
     "releaseNext": "yarn publish --tag next",
-    "format": "prettier ./src/**/*.{md,js,jsx,tsx} --write"
+    "format": "prettier ./src/**/*.{md,js,jsx,tsx} --write",
+    "dtslint": "dtslint"
   },
   "files": [
     "CHANGELOG.md",
@@ -59,6 +60,7 @@
     "commitizen": "^4.0.3",
     "core-js": "3.2.1",
     "cross-env": "^5.2.0",
+    "dtslint": "^0.9.8",
     "eslint": "5.x",
     "eslint-config-prettier": "^4.3.0",
     "eslint-config-react-app": "^4.0.1",

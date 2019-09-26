@@ -1,3 +1,5 @@
+// TypeScript Version: 3.0
+
 declare module 'react-table' {
   import { ReactNode, useState } from 'react'
 
@@ -27,12 +29,33 @@ declare module 'react-table' {
   }
 
   export interface Row<D = {}> {
+    /**
+     * The index of the original row in the data array that was passed to useTable.
+     */
     index: number
     cells: Cell<D>[]
     getRowProps: (userProps?: any) => any
+
+    /**
+     * The original row object from the data array that was used to materialize this row.
+     */
     original: D
-    path: any[]
+
+    /**
+     * This array is the sequential path of indices one could use to navigate to it,
+     * eg. a row path of [3, 1, 0] would mean that it is the first subRow of a parent that is the second subRow of a parent that is the fourth row in the original data array
+     */
+    path: Array<string | number>
+
+    /**
+     * This object contains the aggregated values for this row's sub rows
+     */
     values: any[]
+
+    /**
+     * If the row is a materialized group row,
+     * this is the grouping depth at which this row was created.
+     */
     depth: number
   }
 
@@ -62,6 +85,7 @@ declare module 'react-table' {
     Header?: ReactNode | ((props: TableInstance<D>) => ReactNode)
     Filter?: ReactNode | ((props: TableInstance<D>) => ReactNode)
     Cell?: ReactNode | ((cell: Cell<D>) => ReactNode)
+
     /**
      * This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.
      */
@@ -73,11 +97,19 @@ declare module 'react-table' {
     canSortBy?: boolean
     sortByFn?: SortByFn
     defaultSortDesc?: boolean
-    isAggregated?: any
+    isAggregated?: boolean
   }
 
   export interface Column<D> extends HeaderColumn<D> {
+    /**
+     * @default true
+     */
     show?: boolean | ((instance: TableInstance<D>) => boolean)
+
+    /**
+     * If defined, the column will act as a header group.
+     * Columns can be recursively nested as much as needed.
+     */
     columns?: Column<D>[]
   }
 
@@ -204,12 +236,36 @@ declare module 'react-table' {
     prepareRow: (row: Row<D>) => any
   }
 
+  /**
+   * @typeParam D shape of an item in table data
+   */
   export interface TableOptions<D = {}> {
+    /**
+     * The data array that you want to display on the table.
+     */
     data: D[]
+
+    /**
+     * The core columns configuration object for the entire table.
+     */
     columns: HeaderColumn<D>[]
-    state: State<D>
+
+    /**
+     * The state/updater pair for the table instance.
+     * You would want to override this if you plan on controlling or hoisting table state into your own code.
+     */
+    state?: State<D>
+
+    /**
+     * A flag to turn on debug mode.
+     */
     debug?: boolean
-    loading: boolean
+
+    loading?: boolean
+
+    /**
+     * The default column object for every column passed to React Table.
+     */
     defaultColumn?: Partial<Column<D>>
   }
 
