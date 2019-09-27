@@ -1,7 +1,7 @@
 // TypeScript Version: 3.0
 
 declare module 'react-table' {
-  import { ReactNode, useState, ComponentType, MouseEvent, Props } from 'react'
+  import { ReactNode, useState, ComponentType, MouseEvent } from 'react'
 
   export interface TableOptions<D extends object> extends UseTableOptions<D> {
     //,
@@ -41,17 +41,17 @@ declare module 'react-table' {
   export interface Cell<D extends object = {}> extends UseTableCellProps<D> {}
 
   export interface Column<D extends object = {}>
-    extends UseTableColumnOptions<D> {} //& UseGroupByColumnOptions<D> & UseFiltersColumnOptions<D>
+    extends UseTableColumnOptions<D> {} //, UseGroupByColumnOptions<D>, UseFiltersColumnOptions<D> {}
 
   export interface ColumnInstance<D extends object = {}>
-    extends Column<D>,
-      UseTableColumnProps<D> {} //& UseGroupByColumnProps<D> & UseFiltersColumnProps<D>
+    extends Omit<Column<D>, 'id'>,
+      UseTableColumnProps<D> {} //, UseGroupByColumnProps<D>, UseFiltersColumnProps<D> {}
 
   export interface HeaderGroup<D extends object = {}>
-    extends UseTableHeaderGroupProps<D>,
-      ColumnInstance<D> {}
+    extends ColumnInstance<D>,
+      UseTableHeaderGroupProps<D> {}
 
-  export interface Row<D extends object = {}> extends UseTableRowProps<D> {}
+  export interface Row<D extends object = {}> extends UseTableRowProps<D> {} //, UseRowSelectRowProps<D> {}
 
   /* #region useTable */
   export function useTable<D extends object = {}>(
@@ -127,6 +127,7 @@ declare module 'react-table' {
   }
 
   export interface UseTableColumnProps<D extends object> {
+    id: IdType<D>
     isVisible: boolean
     render: (type: 'Header' | string, props?: object) => ReactNode
     getHeaderProps: (props?: object) => object
@@ -138,10 +139,10 @@ declare module 'react-table' {
 
   export interface UseTableRowProps<D extends object> {
     cells: Cell<D>[]
-    values: Record<IdType<D>, any>
+    values: Record<IdType<D>, CellValue>
     getRowProps: (props?: object) => object
     index: number
-    original: D[StringKey<D>]
+    original: D
     path: IdType<D>[]
     subRows: Row<D>[]
     state: object
@@ -150,7 +151,7 @@ declare module 'react-table' {
   export interface UseTableCellProps<D extends object> {
     column: ColumnInstance<D>
     row: Row<D>
-    value: unknown
+    value: CellValue
     getCellProps: (props?: object) => object
     render: (type: 'Cell' | string, userProps?: object) => ReactNode
   }
@@ -164,7 +165,7 @@ declare module 'react-table' {
     cell: Cell<D>
   } & Record<string, any>
 
-  // NOTE: Atleast one of (id | accessor | Header as string) required
+  // NOTE: At least one of (id | accessor | Header as string) required
   export interface Accessor<D extends object> {
     accessor?:
       | IdType<D>
@@ -581,7 +582,7 @@ declare module 'react-table' {
 
   type SortingRule<D> = {
     id: IdType<D>
-    descending?: boolean
+    desc?: boolean
   }
   /* #endregion */
 
