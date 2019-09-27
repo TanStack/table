@@ -1,5 +1,7 @@
+// TypeScript Version: 3.0
+
 declare module 'react-table' {
-  import { ReactNode, useState, ComponentType, MouseEvent } from 'react'
+  import { ReactNode, useState, ComponentType, MouseEvent, Props } from 'react'
 
   export interface TableOptions<D extends object> extends UseTableOptions<D> {
     //,
@@ -43,7 +45,8 @@ declare module 'react-table' {
   export type ColumnInstance<D extends object = {}> = Column<D> &
     UseTableColumnProps<D> //& UseGroupByColumnProps<D> & UseFiltersColumnProps<D>
 
-  export type HeaderGroup<D extends object = {}> = UseTableHeaderGroupProps<D>
+  export type HeaderGroup<D extends object = {}> = UseTableHeaderGroupProps<D> &
+    ColumnInstance<D>
 
   export type Row<D extends object = {}> = UseTableRowProps<D>
 
@@ -95,21 +98,23 @@ declare module 'react-table' {
     Partial<{
       columns: Column<D>[]
       show: boolean | ((instance: TableInstance<D>) => boolean)
-      Header: ComponentType<HeaderProps<D>> | ReactNode
-      Cell: ComponentType<CellProps<D>> | ReactNode
+      Header: Renderer<HeaderProps<D>>
+      Cell: Renderer<CellProps<D>>
     }>
 
   export interface UseTableInstanceProps<D extends object> {
     columns: ColumnInstance<D>[]
     flatColumns: ColumnInstance<D>[]
     headerGroups: HeaderGroup<D>[]
-    headers: HeaderGroup<D>[]
-    flatHeaders: HeaderGroup<D>[]
+    headers: ColumnInstance<D>[]
+    flatHeaders: ColumnInstance<D>[]
     rows: Row<D>[]
     getTableProps: (props?: object) => object
     prepareRow: (row: Row<D>) => any
     rowPaths: string[]
     flatRows: Row<D>[]
+
+    // Not in useTable
     setRowState: (rowPath: string, updated: Function | any) => void
     setCellState: (
       rowPath: string,
@@ -121,13 +126,19 @@ declare module 'react-table' {
   export interface UseTableHeaderGroupProps<D extends object> {
     headers: ColumnInstance<D>[]
     getHeaderGroupProps: (props?: object) => object
+    // Added by helpers
+    totalHeaderCount: number
   }
 
   export interface UseTableColumnProps<D extends object> {
     id: string
     isVisible: boolean
-    render: (type: 'Header' | 'Filter', props?: object) => any // FIXME
+    render: (type: 'Header' | string, props?: object) => ReactNode
     getHeaderProps: (props?: object) => object
+    // added by default
+    parent: ColumnInstance<D>
+    depth: number
+    index: number
   }
 
   export interface UseTableRowProps<D extends object> {
@@ -146,7 +157,7 @@ declare module 'react-table' {
     row: Row<D>
     value: unknown
     getCellProps: (props?: object) => object
-    render: (type: 'Cell' | 'Aggregated', userProps?: any) => any // FIXME
+    render: (type: 'Cell' | string, userProps?: object) => ReactNode
   }
 
   type HeaderProps<D extends object> = TableInstance<D> & {
@@ -177,7 +188,7 @@ declare module 'react-table' {
   }
 
   // TODO: Fix, currently not properly recognizing optional `id`
-  // TODO: Fix, accessor is optional on columns?
+  // TODO: Fix, Atleast one of (id | accessor | Header as string) required
   export type Accessor<D extends object> =
     | FunctionAccessor<D>
     | StringAccessor<D>
@@ -187,24 +198,33 @@ declare module 'react-table' {
 
   /* #region useColumnOrder */
   export function useColumnOrder<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useColumnOrder {
+    export const pluginName = 'useColumnOrder'
+  }
 
   export interface UseColumnOrderState<D extends object> {
     columnOrder: IdType<D>[]
   }
 
   export interface UseColumnOrderInstanceProps<D extends object> {
-    setColumnOrder: (
-      updater: (columnOrder: IdType<D>[]) => IdType<D>[] | IdType<D>[]
-    ) => void
+    setColumnOrder: (updater: (columnOrder: IdType<D>[]) => IdType<D>[]) => void
   }
   /* #endregion */
 
   /* #region useExpanded */
   export function useExpanded<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useExpanded {
+    export const pluginName = 'useExpanded'
+  }
 
   export type UseExpandedOptions<D extends object> = Partial<{
     getSubRows: (row: Row<D>, relativeIndex: number) => Row<D>[]
     manualExpandedKey: IdType<D>
+    paginateExpandedRows: boolean
   }>
 
   export interface UseExpandedHooks<D extends object> {
@@ -220,10 +240,14 @@ declare module 'react-table' {
 
   export interface UseExpandedInstanceProps<D extends object> {
     rows: Row<D>[]
+    toggleExpandedByPath: (path: IdType<D>[], isExpanded: boolean) => void
+    expandedDepth: number
   }
 
   export interface UseExpandedRowProps<D extends object> {
     isExpanded: boolean
+    canExpand: boolean
+    subRows: Row<D>[]
     toggleExpanded: (isExpanded?: boolean) => void
     getExpandedToggleProps: (props?: object) => object
   }
@@ -231,6 +255,11 @@ declare module 'react-table' {
 
   /* #region useFilters */
   export function useFilters<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useFilters {
+    export const pluginName = 'useFilters'
+  }
 
   export type UseFiltersOptions<D extends object> = Partial<{
     manualFilters: boolean
@@ -244,8 +273,8 @@ declare module 'react-table' {
 
   export type UseFiltersColumnOptions<D extends object> = Partial<{
     disableFilters: boolean
-    Filter: ComponentType<HeaderProps<D>> | ReactNode
-    filter: DefaultFilterTypes | FilterType<D> | string // TODO: string added so you don't have to use `as const` cast
+    Filter: Renderer<HeaderProps<D>>
+    filter: FilterType<D> | DefaultFilterTypes | keyof Filters<D> // TODO: Check that this doesn't lose the DefaultFilterTypes intellisense
   }>
 
   export interface UseFiltersInstanceProps<D extends object> {
@@ -253,7 +282,7 @@ declare module 'react-table' {
     preFilteredRows: Row<D>[]
     setFilter: (
       columnId: IdType<D>,
-      updater: FilterType<D> | ((filter: FilterType<D>) => FilterType<D>)
+      updater: ((filterValue: FilterValue) => FilterValue) | FilterValue
     ) => void
     setAllFilters: (
       updater: Filters<D> | ((filters: Filters<D>) => Filters<D>)
@@ -262,12 +291,13 @@ declare module 'react-table' {
 
   export interface UseFiltersColumnProps<D extends object> {
     canFilter: boolean
-    setFilter: (filterValue: unknown) => void
-    filterValue: any
+    setFilter: (filterValue: FilterValue) => void
+    filterValue: FilterValue
     preFilteredRows: Row<D>[]
   }
 
-  type Filters<D extends object> = Record<IdType<D>, FilterType<D>> // QUESTION: Should the value be a string?
+  type FilterValue = unknown
+  type Filters<D extends object> = Record<IdType<D>, FilterValue>
 
   export type DefaultFilterTypes =
     | 'text'
@@ -278,20 +308,31 @@ declare module 'react-table' {
     | 'exact'
     | 'equals'
     | 'between'
+
   export interface FilterType<D extends object> {
-    (rows: Row<D>[], id: IdType<D>, filterValue: unknown): Row<D>[]
-    autoRemove: (filterValue: unknown) => boolean
+    (
+      rows: Row<D>[],
+      columnId: IdType<D>,
+      filterValue: FilterValue,
+      column: ColumnInstance<D>
+    ): Row<D>[]
+    autoRemove?: (filterValue: FilterValue) => boolean
   }
   /* #endregion */
 
   /* #region useGroupBy */
   export function useGroupBy<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useGroupBy {
+    export const pluginName = 'useGroupBy'
+  }
 
   export type UseGroupByOptions<D extends object> = Partial<{
     manualGroupBy: boolean
     disableGrouping: boolean
-    aggregations: Record<string, Aggregator<D>>
-    groupByFn: (rows: Row<D>[], columnId: IdType<D>) => Row<D>[]
+    aggregations: Record<string, AggregatorFn<D>>
+    groupByFn: (rows: Row<D>[], columnId: IdType<D>) => Record<string, Row<D>>
   }>
 
   export interface UseGroupByHooks<D extends object> {
@@ -306,10 +347,8 @@ declare module 'react-table' {
   }
 
   export type UseGroupByColumnOptions<D extends object> = Partial<{
-    aggregate:
-      | (DefaultAggregators | Aggregator<D> | string)
-      | (DefaultAggregators | Aggregator<D> | string)[]
-    Aggregated: ComponentType<CellProps<D>> | ReactNode
+    aggregate: Aggregator<D> | Aggregator<D>[]
+    Aggregated: Renderer<CellProps<D>>
     disableGrouping: boolean
     groupByBoundary: boolean
   }>
@@ -317,25 +356,29 @@ declare module 'react-table' {
   export interface UseGroupByInstanceProps<D extends object> {
     rows: Row<D>[]
     preGroupedRows: Row<D>[]
-    toggleGroupBy: (columnId: IdType<D>, set: boolean) => void
+    toggleGroupBy: (columnId: IdType<D>, toggle: boolean) => void
   }
 
   export interface UseGroupByColumnProps<D extends object> {
     canGroupBy: boolean
     isGrouped: boolean
     groupedIndex: number
-    toggleGroupBy: (set: boolean) => void
+    toggleGroupBy: () => void
+  }
+
+  export interface UseGroupByHeaderProps<D extends object> {
     getGroupByToggleProps: (props?: object) => object
   }
 
   export interface UseGroupByRowProps<D extends object> {
+    isAggregated: boolean
     groupByID: IdType<D>
-    groupByVal: unknown
-    values: Record<IdType<D>, unknown>
+    groupByVal: string
+    values: Record<IdType<D>, AggregatedValue>
     subRows: Row<D>[]
     depth: number
-    path: (IdType<D> | number)[]
-    isAggregated: boolean
+    path: IdType<D>[]
+    index: number
   }
 
   export interface UseGroupByCellProps<D extends object> {
@@ -350,14 +393,25 @@ declare module 'react-table' {
     | 'median'
     | 'uniqueCount'
     | 'count'
-  export type Aggregator<D extends object> = (
-    columnValues: unknown[],
+
+  export type AggregatorFn<D extends object> = (
+    columnValues: CellValue[],
     rows: Row<D>[]
-  ) => unknown
+  ) => AggregatedValue
+  type Aggregator<D extends object> =
+    | AggregatorFn<D>
+    | DefaultAggregators
+    | string // TODO: Check that DefaultAggregators works
+  type AggregatedValue = unknown
   /* #endregion */
 
   /* #region usePagination */
   export function usePagination<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace usePagination {
+    export const pluginName = 'usePagination'
+  }
 
   export type UsePaginationOptions<D extends object> = Partial<{
     pageCount: number
@@ -377,7 +431,7 @@ declare module 'react-table' {
     pageOptions: number[]
     canPreviousPage: boolean
     canNextPage: boolean
-    gotoPage: (pageIndex: number) => void
+    gotoPage: (updater: ((pageIndex: number) => number) | number) => void
     previousPage: () => void
     nextPage: () => void
     setPageSize: (pageSize: number) => void
@@ -388,6 +442,11 @@ declare module 'react-table' {
 
   /* #region useRowSelect */
   export function useRowSelect<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useRowSelect {
+    export const pluginName = 'useRowSelect'
+  }
 
   export type UseRowSelectOptions<D extends object> = Partial<{
     manualRowSelectedKey: IdType<D>
@@ -403,7 +462,6 @@ declare module 'react-table' {
 
   export interface UseRowSelectState<D extends object> {
     selectedRows: IdType<D>[]
-    manualRowSelectedKey: IdType<D>
   }
 
   export interface UseRowSelectInstanceProps<D extends object> {
@@ -416,14 +474,20 @@ declare module 'react-table' {
   export interface UseRowSelectRowProps<D extends object> {
     isSelected: boolean
     toggleRowSelected: (set?: boolean) => void
+    getToggleRowSelectedProps: (props?: object) => object
   }
   /* #endregion */
 
   /* #region useRowState */
   export function useRowState<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useRowState {
+    export const pluginName = 'useRowState'
+  }
 
   export type UseRowStateOptions<D extends object> = Partial<{
-    initialRowStateAccessor: (row: Row<D>) => object
+    initialRowStateAccessor: (row: Row<D>) => UseRowStateLocalState<D>
   }>
 
   export interface UseRowStateState<D extends object> {
@@ -434,7 +498,7 @@ declare module 'react-table' {
   }
 
   export interface UseRowStateInstanceProps<D extends object> {
-    setRowState: (rowPath: string[], updater: UseRowUpdater) => void
+    setRowState: (rowPath: string[], updater: UseRowUpdater) => void // Purposely not exposing action
     setCellState: (
       rowPath: string[],
       columnID: IdType<D>,
@@ -443,7 +507,7 @@ declare module 'react-table' {
   }
 
   export interface UseRowStateRowProps<D extends object> {
-    state: unknown
+    state: UseRowStateLocalState<D>
     setState: (updater: UseRowUpdater) => void
   }
   export interface UseRowStateCellProps<D extends object> {
@@ -460,6 +524,11 @@ declare module 'react-table' {
 
   /* #region useSortBy */
   export function useSortBy<D extends object = {}>(hooks: Hooks<D>): void
+  // I _THINK_ this will work
+  // TODO: Double-check
+  export namespace useSortBy {
+    export const pluginName = 'useSortBy'
+  }
 
   export type UseSortByOptions<D extends object> = Partial<{
     manualSorting: boolean
@@ -471,10 +540,10 @@ declare module 'react-table' {
     disabledMultiRemove: boolean
     orderByFn: (
       rows: Row<D>[],
-      sortFns: SortByFn[],
+      sortFns: SortByFn<D>[],
       directions: boolean[]
-    ) => Row<D>[]
-    sortTypes: Record<string, SortByFn<Row<D>>>
+    ) => Row<D>[] // CHECK
+    sortTypes: Record<string, SortByFn<D>>
   }>
 
   export interface UseSortByHooks<D extends object> {
@@ -492,12 +561,12 @@ declare module 'react-table' {
     disableSorting: boolean
     sortDescFirst: boolean
     sortInverted: boolean
-    sortType: string | Function // FIXME
+    sortType: SortByFn<D> | DefaultSortTypes | string // TODO: Check this works
   }>
 
   export interface UseSortByInstanceProps<D extends object> {
-    rows: Row<D>
-    preSortedRows: Row<D>
+    rows: Row<D>[]
+    preSortedRows: Row<D>[]
     toggleSortBy: (
       columnId: IdType<D>,
       descending: boolean,
@@ -512,14 +581,21 @@ declare module 'react-table' {
     clearSorting: () => void
     isSorted: boolean
     sortedIndex: number
-    isSortedDesc: boolean
+    isSortedDesc: boolean | undefined
   }
+
+  export type SortByFn<D extends object> = (
+    a: Row<D>,
+    b: Row<D>,
+    id: IdType<D>
+  ) => 0 | 1 | -1
+
+  export type DefaultSortTypes = 'alphanumeric' | 'datetime' | 'basic'
 
   type SortingRule<D> = {
     id: IdType<D>
-    desc?: boolean
+    descending?: boolean
   }
-
   /* #endregion */
 
   // Additional API
@@ -531,28 +607,30 @@ declare module 'react-table' {
         oldState: TableState<D>,
         newState: TableState<D>,
         type: string
-      ) => unknown
+      ) => TableState<D>
       useState?: typeof useState
     }
   ): TableStateTuple<D>
 
   export const actions: Record<string, string>
-
   export function addActions(...actions: string[]): void
 
-  export const defaultState: Record<string, unknown>
+  // QUESTION: Does this actually need exposed?
+  // QUESTION: Should we create a type for the cell value? (any?)
+  const defaultState: Record<string, unknown>
 
   // Helpers
   type StringKey<D> = Extract<keyof D, string>
   type IdType<D> = StringKey<D> | string
+  export type CellValue = any
 
-  export type SortByFn<T = unknown> = (a: T, b: T, desc: boolean) => 0 | 1 | -1
+  type Renderer<Props> = ComponentType<Props> | ReactNode
 
   export type PluginHook<D extends object> = (hooks: Hooks<D>) => void
 
   export type SetState<D extends object> = (
     updater: (old: TableState<D>) => TableState<D>,
-    actions: any
+    type: keyof typeof actions
   ) => void
 
   export type TableStateTuple<D extends object> = [TableState<D>, SetState<D>]
