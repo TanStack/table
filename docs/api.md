@@ -475,13 +475,14 @@ The following properties are available on every `Column` object returned by the 
 
 ```js
 function Table({ columns, data }) {
-  // Set some default sorting state
+  // Set some default sorting state. For this an additional import of useTableState is needed
   const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
 
   const { getTableProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
       data,
+      state,
     },
     useSortBy // Use the sortBy hook
   )
