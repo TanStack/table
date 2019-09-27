@@ -572,9 +572,9 @@ declare module 'react-table' {
   }
 
   export type SortByFn<D extends object> = (
-    a: Row<D>,
-    b: Row<D>,
-    id: IdType<D>
+    rowA: Row<D>,
+    rowB: Row<D>,
+    columnId: IdType<D>
   ) => 0 | 1 | -1
 
   export type DefaultSortTypes = 'alphanumeric' | 'datetime' | 'basic'
