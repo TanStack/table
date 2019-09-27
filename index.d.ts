@@ -32,23 +32,26 @@ declare module 'react-table' {
    */
   export interface TableState<D extends object = {}> {} // eslint-disable-line @typescript-eslint/no-empty-interface
 
-  export type Hooks<D extends object = {}> = UseTableHooks<D> //&
+  export interface Hooks<D extends object = {}> extends UseTableHooks<D> {} //&
   // UseSortByHooks<D> &
   // UseGroupByHooks<D> &
   // UseExpandedHooks<D> &
   // UseRowSelectHooks<D>
 
-  export type Cell<D extends object = {}> = UseTableCellProps<D>
+  export interface Cell<D extends object = {}> extends UseTableCellProps<D> {}
 
-  export type Column<D extends object = {}> = UseTableColumnOptions<D> //& UseGroupByColumnOptions<D> & UseFiltersColumnOptions<D>
+  export interface Column<D extends object = {}>
+    extends UseTableColumnOptions<D> {} //& UseGroupByColumnOptions<D> & UseFiltersColumnOptions<D>
 
-  export type ColumnInstance<D extends object = {}> = Column<D> &
-    UseTableColumnProps<D> //& UseGroupByColumnProps<D> & UseFiltersColumnProps<D>
+  export interface ColumnInstance<D extends object = {}>
+    extends Column<D>,
+      UseTableColumnProps<D> {} //& UseGroupByColumnProps<D> & UseFiltersColumnProps<D>
 
-  export type HeaderGroup<D extends object = {}> = UseTableHeaderGroupProps<D> &
-    ColumnInstance<D>
+  export interface HeaderGroup<D extends object = {}>
+    extends UseTableHeaderGroupProps<D>,
+      ColumnInstance<D> {}
 
-  export type Row<D extends object = {}> = UseTableRowProps<D>
+  export interface Row<D extends object = {}> extends UseTableRowProps<D> {}
 
   /* #region useTable */
   export function useTable<D extends object = {}>(
@@ -94,13 +97,14 @@ declare module 'react-table' {
     getCellProps: ((cell: Cell<D>, instance: TableInstance<D>) => object)[]
   }
 
-  export type UseTableColumnOptions<D extends object> = Accessor<D> &
-    Partial<{
-      columns: Column<D>[]
-      show: boolean | ((instance: TableInstance<D>) => boolean)
-      Header: Renderer<HeaderProps<D>>
-      Cell: Renderer<CellProps<D>>
-    }>
+  export interface UseTableColumnOptions<D extends object>
+    extends Accessor<D>,
+      Partial<{
+        columns: Column<D>[]
+        show: boolean | ((instance: TableInstance<D>) => boolean)
+        Header: Renderer<HeaderProps<D>>
+        Cell: Renderer<CellProps<D>>
+      }> {}
 
   export interface UseTableInstanceProps<D extends object> {
     columns: ColumnInstance<D>[]
@@ -113,14 +117,6 @@ declare module 'react-table' {
     prepareRow: (row: Row<D>) => any
     rowPaths: string[]
     flatRows: Row<D>[]
-
-    // Not in useTable
-    setRowState: (rowPath: string, updated: Function | any) => void
-    setCellState: (
-      rowPath: string,
-      columnID: IdType<D>,
-      updater: Function | any
-    ) => void
   }
 
   export interface UseTableHeaderGroupProps<D extends object> {
@@ -131,7 +127,6 @@ declare module 'react-table' {
   }
 
   export interface UseTableColumnProps<D extends object> {
-    id: string
     isVisible: boolean
     render: (type: 'Header' | string, props?: object) => ReactNode
     getHeaderProps: (props?: object) => object
@@ -169,29 +164,21 @@ declare module 'react-table' {
     cell: Cell<D>
   } & Record<string, any>
 
-  interface StringAccessor<D extends object> {
-    accessor?: IdType<D>
+  // NOTE: Atleast one of (id | accessor | Header as string) required
+  export interface Accessor<D extends object> {
+    accessor?:
+      | IdType<D>
+      | ((
+          originalRow: D,
+          index: number,
+          sub: {
+            subRows: D[]
+            depth: number
+            data: D[]
+          }
+        ) => string)
     id?: IdType<D>
   }
-
-  interface FunctionAccessor<D extends object> {
-    accessor?: (
-      originalRow: D,
-      index: number,
-      sub: {
-        subRows: D[]
-        depth: number
-        data: D[]
-      }
-    ) => string
-    id: IdType<D>
-  }
-
-  // TODO: Fix, currently not properly recognizing optional `id`
-  // TODO: Fix, Atleast one of (id | accessor | Header as string) required
-  export type Accessor<D extends object> =
-    | FunctionAccessor<D>
-    | StringAccessor<D>
   /* #endregion */
 
   // Plugins
