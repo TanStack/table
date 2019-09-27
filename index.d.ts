@@ -186,8 +186,6 @@ declare module 'react-table' {
 
   /* #region useColumnOrder */
   export function useColumnOrder<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useColumnOrder {
     export const pluginName = 'useColumnOrder'
   }
@@ -203,8 +201,6 @@ declare module 'react-table' {
 
   /* #region useExpanded */
   export function useExpanded<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useExpanded {
     export const pluginName = 'useExpanded'
   }
@@ -243,8 +239,6 @@ declare module 'react-table' {
 
   /* #region useFilters */
   export function useFilters<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useFilters {
     export const pluginName = 'useFilters'
   }
@@ -261,7 +255,7 @@ declare module 'react-table' {
 
   export type UseFiltersColumnOptions<D extends object> = Partial<{
     disableFilters: boolean
-    Filter: Renderer<HeaderProps<D>>
+    Filter: Renderer<FilterProps<D>>
     filter: FilterType<D> | DefaultFilterTypes | keyof Filters<D> // TODO: Check that this doesn't lose the DefaultFilterTypes intellisense
   }>
 
@@ -270,7 +264,7 @@ declare module 'react-table' {
     preFilteredRows: Row<D>[]
     setFilter: (
       columnId: IdType<D>,
-      updater: ((filterValue: FilterValue) => FilterValue) | FilterValue
+      updater: ((filterValue: FilterValue) => FilterValue) | FilterValue // NOTE: `| FilterValue` makes this evaluate to `any`
     ) => void
     setAllFilters: (
       updater: Filters<D> | ((filters: Filters<D>) => Filters<D>)
@@ -279,12 +273,19 @@ declare module 'react-table' {
 
   export interface UseFiltersColumnProps<D extends object> {
     canFilter: boolean
-    setFilter: (filterValue: FilterValue) => void
+    setFilter: UseFiltersSetFilter
     filterValue: FilterValue
     preFilteredRows: Row<D>[]
   }
 
-  type FilterValue = unknown
+  // Necessary to provide both options
+  interface UseFiltersSetFilter {
+    (updater: (filterValue: FilterValue) => FilterValue): void
+    (updater: FilterValue): void
+  }
+
+  export type FilterProps<D extends object> = HeaderProps<D>
+  type FilterValue = any
   type Filters<D extends object> = Record<IdType<D>, FilterValue>
 
   export type DefaultFilterTypes =
@@ -310,8 +311,6 @@ declare module 'react-table' {
 
   /* #region useGroupBy */
   export function useGroupBy<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useGroupBy {
     export const pluginName = 'useGroupBy'
   }
@@ -395,8 +394,6 @@ declare module 'react-table' {
 
   /* #region usePagination */
   export function usePagination<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace usePagination {
     export const pluginName = 'usePagination'
   }
@@ -430,8 +427,6 @@ declare module 'react-table' {
 
   /* #region useRowSelect */
   export function useRowSelect<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useRowSelect {
     export const pluginName = 'useRowSelect'
   }
@@ -468,8 +463,6 @@ declare module 'react-table' {
 
   /* #region useRowState */
   export function useRowState<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useRowState {
     export const pluginName = 'useRowState'
   }
@@ -512,8 +505,6 @@ declare module 'react-table' {
 
   /* #region useSortBy */
   export function useSortBy<D extends object = {}>(hooks: Hooks<D>): void
-  // I _THINK_ this will work
-  // TODO: Double-check
   export namespace useSortBy {
     export const pluginName = 'useSortBy'
   }
@@ -610,7 +601,10 @@ declare module 'react-table' {
 
   type Renderer<Props> = ComponentType<Props> | ReactNode
 
-  export type PluginHook<D extends object> = (hooks: Hooks<D>) => void
+  export interface PluginHook<D extends object> {
+    (hooks: Hooks<D>): void
+    pluginName: string
+  }
 
   export type SetState<D extends object> = (
     updater: (old: TableState<D>) => TableState<D>,
