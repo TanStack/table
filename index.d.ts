@@ -114,7 +114,7 @@ declare module 'react-table' {
     flatHeaders: ColumnInstance<D>[]
     rows: Row<D>[]
     getTableProps: (props?: object) => object
-    prepareRow: (row: Row<D>) => any
+    prepareRow: (row: Row<D>) => void
     rowPaths: string[]
     flatRows: Row<D>[]
   }
@@ -601,10 +601,6 @@ declare module 'react-table' {
 
   export const actions: Record<string, string>
   export function addActions(...actions: string[]): void
-
-  // QUESTION: Does this actually need exposed?
-  // QUESTION: Should we create a type for the cell value? (any?)
-  const defaultState: Record<string, unknown>
 
   // Helpers
   type StringKey<D> = Extract<keyof D, string>
