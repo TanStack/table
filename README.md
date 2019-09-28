@@ -55,7 +55,7 @@ React Table v7 is still under active development, and its API is still changing,
 
 #### Should I use v7@beta in production?
 
-You can use it production as long as you lock in the beta version in your package.json and also accept that there may be unlikely, but possible bug fixes and/or API changes before it's official release.
+You can use it in production as long as you lock in the beta version in your package.json and also accept that there may be unlikely, but possible bug fixes and/or API changes before it's official release.
 
 #### I'm still using v6, what should I do?
 
