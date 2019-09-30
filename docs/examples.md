@@ -40,11 +40,13 @@
     - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
     - [Open in CodeSandobx](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
 - **UI** - These examples demonstrate how to use React Table with your favorite UI libraries or tools!
-  - Animated (Framer-Motion)
+  - [x] Animated (Framer-Motion)
     - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/animated-framer-motion)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/animated-framer-motion)
   - [ ] Styled-Components
   - [ ] CSS
-  - [ ] Material-UI
+  - [x] Material-UI
+    - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/material-UI-components)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/material-UI-components)
   - [ ] Bootstrap
 - Want to write one of these examples or add another? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
