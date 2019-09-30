@@ -3,55 +3,40 @@
 declare module 'react-table' {
   import { ReactNode, useState, ComponentType, MouseEvent } from 'react'
 
-  export interface TableOptions<D extends object> extends UseTableOptions<D> {
-    //,
-    // UseSortByOptions<D>,
-    // UseFiltersOptions<D>,
-    // UseGroupByOptions<D>,
-    // UseExpandedOptions<D>,
-    // UsePaginationOptions<D>,
-    // UseRowSelectOptions<D>,
-    // UseRowStateOptions<D> {
-    // columns: [] // FIXME
-    // state: [] //FIXME
-  }
-
-  export interface TableInstance<D extends object = {}>
-    extends TableOptions<D>,
-      UseTableInstanceProps<D> {}
-
   /**
-   * The empty definition of TableState provides a definition for the state, that can then be extended in the users code.
+   * The empty definitions of below provides a base definition for the parts used by useTable, that can then be extended in the users code.
    *
    * @example
-   *  export interface TableState<D extends object = {}}>
-   *    extends UsePaginationState,
-   *      UseGroupByState,
-   *      UseSortbyState<D>,
-   *      UseFiltersState<D> {}
+   *  export interface TableOptions<D extends object = {}}>
+   *    extends
+   *      UseExpandedOptions<D>,
+   *      UseFiltersOptions<D> {}
    */
-  export interface TableState<D extends object = {}> {} // eslint-disable-line @typescript-eslint/no-empty-interface
+  export interface TableOptions<D extends object> extends UseTableOptions<D> {}
 
-  export interface Hooks<D extends object = {}> extends UseTableHooks<D> {} //&
-  // UseSortByHooks<D> &
-  // UseGroupByHooks<D> &
-  // UseExpandedHooks<D> &
-  // UseRowSelectHooks<D>
+  export interface TableInstance<D extends object = {}>
+    extends Omit<TableOptions<D>, 'columns'>,
+      UseTableInstanceProps<D> {}
+
+  export interface TableState<D extends object = {}> {}
+
+  export interface Hooks<D extends object = {}> extends UseTableHooks<D> {}
 
   export interface Cell<D extends object = {}> extends UseTableCellProps<D> {}
 
   export interface Column<D extends object = {}>
-    extends UseTableColumnOptions<D> {} //, UseGroupByColumnOptions<D>, UseFiltersColumnOptions<D> {}
+    extends UseTableColumnOptions<D> {}
 
   export interface ColumnInstance<D extends object = {}>
     extends Omit<Column<D>, 'id'>,
-      UseTableColumnProps<D> {} //, UseGroupByColumnProps<D>, UseFiltersColumnProps<D> {}
+      UseTableColumnProps<D> {}
 
   export interface HeaderGroup<D extends object = {}>
     extends ColumnInstance<D>,
       UseTableHeaderGroupProps<D> {}
 
-  export interface Row<D extends object = {}> extends UseTableRowProps<D> {} //, UseRowSelectRowProps<D> {}
+  export interface Row<D extends object = {}> extends UseTableRowProps<D> {}
+
 
   /* #region useTable */
   export function useTable<D extends object = {}>(
@@ -60,15 +45,15 @@ declare module 'react-table' {
   ): TableInstance<D>
 
   export type UseTableOptions<D extends object> = Partial<{
-    // columns: Column<D>[] // FIXME
-    // state: TableStateTuple<D> // FIXME
+    columns: Column<D>[]
+    state: TableStateTuple<D>
     data: D[]
     defaultColumn: Partial<Column<D>>
     initialRowStateKey: IdType<D>
     getSubRows: (row: Row<D>, relativeIndex: number) => Row<D>[]
     getRowID: (row: Row<D>, relativeIndex: number) => string
     debug: boolean
-  }>
+  }> & Record<string, any>
 
   export interface UseTableHooks<D extends object> {
     columnsBeforeHeaderGroups: ((
