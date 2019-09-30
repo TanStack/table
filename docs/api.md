@@ -15,6 +15,8 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`usePagination`](#usePagination)
     - [`useRowSelect`](#useRowSelect)
     - [`useRowState`](#useRowState)
+    - [`useAbsoluteLayout`](#useAbsoluteLayout)
+    - [`useColumnOrder`](#useColumnOrder)
   - Utility Hooks
     - [`useTableState`](#useTableState)
 - 3rd Party Plugin Hooks
@@ -1575,6 +1577,48 @@ The following additional properties are available on every `Cell` object returne
 - `setState: Function(updater: Function | any)`
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+
+# `useAbsoluteLayout`
+
+- Plugin Hook
+- Optional
+
+`useAbsoluteLayout` is a plugin hook that helps you to form layout of table based on absolute arranegment of cells.
+
+### Table Options
+
+No table options needed
+
+### Column Options
+
+- `width: Number`
+  - `Required`, used to calulate width of the given column header and cell
+- `minWidth: Number`
+  - `Optional`, defaults to 0
+  - Used to set width of the given column if the provided, `width` < `minWidth`
+- `maxWidth: Number`
+  - `Optional`, defaults to Number.MAX_SAFE_INTEGER
+  - Used to limit width of the given column when `width` > `maxWidth`
+
+### Instance Properties
+
+NA
+
+### Row Properties
+ - `getRowProps`
+  - Used to return styles needed to enable absolute layout for rows
+
+### Cell Properties
+ - `getCellProps`
+  - Used to return styles needed to enable absolute layout for rows cells
+
+### Header Properties
+ - `getHeaderProps`
+  - Used to return styles needed to enable absolute layout for headers 
+
+### Example
+  - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
 
 # `useColumnOrder`
 
