@@ -37,7 +37,6 @@ declare module 'react-table' {
 
   export interface Row<D extends object = {}> extends UseTableRowProps<D> {}
 
-
   /* #region useTable */
   export function useTable<D extends object = {}>(
     options: TableOptions<D>,
@@ -53,7 +52,8 @@ declare module 'react-table' {
     getSubRows: (row: Row<D>, relativeIndex: number) => Row<D>[]
     getRowID: (row: Row<D>, relativeIndex: number) => string
     debug: boolean
-  }> & Record<string, any>
+  }> &
+    Record<string, any>
 
   export interface UseTableHooks<D extends object> {
     columnsBeforeHeaderGroups: ((
