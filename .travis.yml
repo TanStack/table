@@ -1,7 +1,14 @@
 language: node_js
+
 node_js:
-  - "10"
+  - 10
+  - 12
+
+os:
+  - linux
+  - osx
+  - windows
 
 cache: yarn
 
-script: npm test
+script: yarn test
