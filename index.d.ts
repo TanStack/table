@@ -1,4 +1,4 @@
-// TypeScript Version: 3.0
+// TypeScript Version: 3.5
 
 declare module 'react-table' {
   import { ReactNode, useState, ComponentType, MouseEvent } from 'react'
