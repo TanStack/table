@@ -43,6 +43,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Row Expansion
 - Column Ordering
 - Animatable
+- Virtualizable
 - Server-side/controlled data/state
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
