@@ -17,7 +17,9 @@ export interface TableInstance<D extends object = {}>
   extends Omit<TableOptions<D>, 'columns'>,
     UseTableInstanceProps<D> {}
 
-export interface TableState<D extends object = {}> {} /* tslint:disable-line no-empty-interface */ // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface TableState<
+  D extends object = {}
+> {} /* tslint:disable-line no-empty-interface */ // eslint-disable-line @typescript-eslint/no-empty-interface
 
 export interface Hooks<D extends object = {}> extends UseTableHooks<D> {}
 
@@ -347,7 +349,7 @@ export interface UseGroupByRowProps<D extends object> {
 
 export interface UseGroupByCellProps<D extends object> {
   isGrouped: boolean
-  isRepeatedValued: boolean
+  isRepeatedValue: boolean
   isAggregated: boolean
 }
 
