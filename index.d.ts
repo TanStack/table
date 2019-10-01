@@ -573,6 +573,8 @@ export function useTableState<D extends object = {}>(
 export const actions: Record<string, string>
 export function addActions(...actions: string[]): void
 
+export const defaultState: Record<string, any>
+
 // Helpers
 export type StringKey<D> = Extract<keyof D, string>
 export type IdType<D> = StringKey<D> | string
