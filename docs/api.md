@@ -317,82 +317,8 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-```js
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = [
-    {
-      firstName: 'Tanner',
-      lastName: 'Linsley',
-    },
-    {
-      firstName: 'Shawn',
-      lastName: 'Wang',
-    },
-    {
-      firstName: 'Kent C.',
-      lastName: 'Dodds',
-    },
-    {
-      firstName: 'Ryan',
-      lastName: 'Florence',
-    },
-  ]
-
-  return <MyTable columns={columns} data={data} />
-}
-
-function MyTable({ columns, data }) {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/basic)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
 
 # `useSortBy`
 
@@ -503,63 +429,8 @@ The following properties are available on every `Column` object returned by the 
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  // Set some default sorting state. For this an additional import of useTableState is needed
-  const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
-
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
-    {
-      columns,
-      data,
-      state,
-    },
-    useSortBy // Use the sortBy hook
-  )
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              // Add the sorting props to control sorting. For this example
-              // we can add them into the header props
-              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                {column.render('Header')}
-                <span>
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
-                  {/* Add a sort index indicator */}
-                  <span>({column.isSorted ? column.sortedIndex + 1 : ''})</span>
-                </span>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/sorting)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting)
 
 # `useFilters`
 
@@ -643,49 +514,8 @@ The following properties are available on every `Column` object returned by the 
 
 ### Example
 
-```js
-// A great library for fuzzy filtering/sorting items
-import matchSorter from 'match-sorter'
-
-const state = useTableState({ filters: { firstName: 'tanner' } })
-
-const filterTypes = React.useMemo(() => ({
-  // Add a new fuzzyText filter type.
-  fuzzyText: (rows, id, filterValue) => {
-    return matchSorter(rows, filterValue, { keys: [row => row[id] })
-  },
-  // Or, override the default text filter to use
-  // "startWith"
-  text: (rows, id, filterValue) => {
-    return rows.filter(row => {
-      const rowValue = row.values[id]
-      return rowValue !== undefined
-        ? String(rowValue)
-            .toLowerCase()
-            .startsWith(String(filterValue).toLowerCase())
-        : true
-    })
-  }
-}), [matchSorter])
-
-// Override the default column filter to be our new `fuzzyText` filter type
-const defaultColumn = React.useMemo(() => ({
-  filter: 'fuzzyText'
-}))
-
-const { rows } = useTable(
-  {
-    // state[0].groupBy === ['firstName']
-    state,
-    manualFilters: false,
-    disableFilters: false,
-    // Pass our custom filter types
-    filterTypes,
-    defaultColumn
-  },
-  useFilters
-)
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/filtering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering)
 
 # `useGroupBy`
 
@@ -797,168 +627,8 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state: [{ groupBy, expanded }],
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useGroupBy,
-    useExpanded // useGroupBy would be pretty useless without useExpanded ;)
-  )
-
-  // We don't want to render all 2000 rows for this example, so cap
-  // it at 20 for this use case
-  const firstPageRows = rows.slice()
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.canGroupBy ? (
-                  // If the column can be grouped, let's add a toggle
-                  <span {...column.getGroupByToggleProps()}>
-                    {column.grouped ? '🛑' : '👊'}
-                  </span>
-                ) : null}
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {firstPageRows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td {...cell.getCellProps()}>
-                      {cell.grouped ? (
-                        // If it's a grouped cell, add an expander and row count
-                        <>
-                          <span
-                            style={{
-                              cursor: 'pointer',
-                            }}
-                            onClick={() => row.toggleExpanded()}
-                          >
-                            {row.isExpanded ? '👇' : '👉'}
-                          </span>
-                          {cell.render('Cell')} ({row.subRows.length})
-                        </>
-                      ) : cell.aggregated ? (
-                        // If the cell is aggregated, use the Aggregated
-                        // renderer for cell
-                        cell.render('Aggregated')
-                      ) : cell.repeatedValue ? null : ( // For cells with repeated values, render null
-                        // Otherwise, just render the regular cell
-                        cell.render('Cell')
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-
-// This is a custom aggregator that
-// takes in an array of values and
-// returns the rounded median
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
-
-  values.forEach(value => {
-    min = Math.min(min, value)
-    max = Math.max(max, value)
-  })
-
-  return Math.round((min + max) / 2)
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-            // Use a two-stage aggregator here to first
-            // count the total rows being aggregated,
-            // then sum any of those counts if they are
-            // aggregated further
-            aggregate: ['sum', 'count'],
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-            // Use another two-stage aggregator here to
-            // first count the UNIQUE values from the rows
-            // being aggregated, then sum those counts if
-            // they are aggregated further
-            aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-            // Aggregate the average age of visitors
-            aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-            // Aggregate the sum of all visits
-            aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-            // Use our custom roundedMedian aggregator
-            aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(10000), [])
-
-  return <Table columns={columns} data={data} />
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping)
 
 # `useExpanded`
 
@@ -1005,126 +675,8 @@ The following additional properties are available on every `row` object returned
 
 ### Example
 
-```js
-function Table({ columns: userColumns, data }) {
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state: [{ expanded }],
-  } = useTable(
-    {
-      columns: userColumns,
-      data,
-    },
-    useExpanded // Use the useExpanded plugin hook
-  )
-
-  return (
-    <>
-      <pre>
-        <code>{JSON.stringify({ expanded }, null, 2)}</code>
-      </pre>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-      <br />
-      <div>Showing the first 20 results of {rows.length} rows</div>
-    </>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        // Build our expander column
-        Header: () => null, // No header, please
-        id: 'expander', // Make sure it has an ID
-        Cell: ({ row }) =>
-          // Use the row.canExpand and row.getExpandedToggleProps prop getter
-          // to build the toggle for expanding a row
-          row.canExpand ? (
-            <span
-              {...row.getExpandedToggleProps({
-                style: {
-                  // We can even use the row.depth property
-                  // and paddingLeft to indicate the depth
-                  // of the row
-                  paddingLeft: `${row.depth * 2}rem`,
-                },
-              })}
-            >
-              {row.isExpanded ? '👇' : '👉'}
-            </span>
-          ) : null,
-      },
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(5, 5, 5), [])
-
-  return <Table columns={columns} data={data} />
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/expanding)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding)
 
 # `usePagination`
 
@@ -1199,178 +751,12 @@ The following values are provided to the table `instance`:
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: [{ pageIndex, pageSize }],
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    usePagination
-  )
-
-  // Render the UI for your table
-  return (
-    <>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-      {/* 
-        Pagination can be built however you'd like. 
-        This is just a very basic UI implementation:
-      */}
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
-        <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
-            }}
-            style={{ width: '100px' }}
-          />
-        </span> <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-    </>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(100000), [])
-
-  return (
-    <Styles>
-      <Table columns={columns} data={data} />
-    </Styles>
-  )
-}
-```
+- Basic Pagination
+  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
+- Controlled Pagination
+  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
 
 # `useTokenPagination (Coming Soon)`
 
@@ -1434,123 +820,8 @@ The following additional properties are available on every **prepared** `row` ob
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state: [{ selectedRows }],
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useRowSelect
-  )
-
-  // Render the UI for your table
-  return (
-    <>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-      <p>Selected Rows: {selectedRows.length}</p>
-      <pre>
-        <code>{JSON.stringify({ selectedRows }, null, 2)}</code>
-      </pre>
-    </>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      // Let's make a column for selection
-      {
-        id: 'selection',
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(10), [])
-
-  return <Table columns={columns} data={data} />
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
 
 # `useRowState`
 
@@ -1635,7 +906,7 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-- [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/block-layout)
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/block-layout)
 - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/block-layout)
 
 # `useAbsoluteLayout`
@@ -1673,7 +944,7 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-- [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
 - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
 
 # `useColumnOrder`
@@ -1697,8 +968,12 @@ The following options are supported via the main options object passed to `useTa
 The following values are provided to the table `instance`:
 
 - `setColumnOrder: Function(updater: Function | Array<ColumnID>) => void`
+
   - Use this function to programmatically update the columnOrder.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
+
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-ordering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-ordering)
 
 # `useTableState`
 
@@ -1758,26 +1033,6 @@ The following options are supported via the main options object passed to `useTa
 
 ### Example
 
-```js
-export default function MyTable({ manualPageIndex }) {
-  // This is the initial state for our table
-  const initialState = { pageSize: 10, pageIndex: 0 }
-
-  // Here, we can override the pageIndex
-  // regardless of the internal table state
-  const overrides = React.useMemo(() => ({
-    pageIndex: manualPageIndex,
-  }))
-
-  const state = useTableState(initialState, overrides)
-
-  // You can use effects to observe changes to the state
-  React.useEffect(() => {
-    console.log('Page Size Changed!', initialState.pageSize)
-  }, [initialState.pageSize])
-
-  const { rows } = useTable({
-    state,
-  })
-}
-```
+- As used in Controlled Pagination
+  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
