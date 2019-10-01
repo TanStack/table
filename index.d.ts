@@ -105,7 +105,6 @@ export interface UseTableInstanceProps<D extends object> {
 export interface UseTableHeaderGroupProps<D extends object> {
   headers: ColumnInstance<D>[]
   getHeaderGroupProps: (props?: object) => object
-  // Added by helpers
   totalHeaderCount: number
 }
 
@@ -114,7 +113,6 @@ export interface UseTableColumnProps<D extends object> {
   isVisible: boolean
   render: (type: 'Header' | string, props?: object) => ReactNode
   getHeaderProps: (props?: object) => object
-  // added by default
   parent: ColumnInstance<D>
   depth: number
   index: number
@@ -239,7 +237,7 @@ export interface UseFiltersState<D extends object> {
 export type UseFiltersColumnOptions<D extends object> = Partial<{
   disableFilters: boolean
   Filter: Renderer<FilterProps<D>>
-  filter: FilterType<D> | DefaultFilterTypes | keyof Filters<D> // TODO: Check that this doesn't lose the DefaultFilterTypes intellisense
+  filter: FilterType<D> | DefaultFilterTypes | keyof Filters<D>
 }>
 
 export interface UseFiltersInstanceProps<D extends object> {
@@ -247,7 +245,7 @@ export interface UseFiltersInstanceProps<D extends object> {
   preFilteredRows: Row<D>[]
   setFilter: (
     columnId: IdType<D>,
-    updater: ((filterValue: FilterValue) => FilterValue) | FilterValue // NOTE: `| FilterValue` makes this evaluate to `any`
+    updater: ((filterValue: FilterValue) => FilterValue) | FilterValue
   ) => void
   setAllFilters: (
     updater: Filters<D> | ((filters: Filters<D>) => Filters<D>)
@@ -367,8 +365,8 @@ export type AggregatorFn<D extends object> = (
 export type Aggregator<D extends object> =
   | AggregatorFn<D>
   | DefaultAggregators
-  | string // TODO: Check that DefaultAggregators works
-export type AggregatedValue = unknown
+  | string
+export type AggregatedValue = any
 /* #endregion */
 
 /* #region usePagination */
@@ -519,7 +517,7 @@ export type UseSortByColumnOptions<D extends object> = Partial<{
   disableSorting: boolean
   sortDescFirst: boolean
   sortInverted: boolean
-  sortType: SortByFn<D> | DefaultSortTypes | string // TODO: Check this works
+  sortType: SortByFn<D> | DefaultSortTypes | string
 }>
 
 export interface UseSortByInstanceProps<D extends object> {
