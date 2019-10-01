@@ -246,7 +246,7 @@ export const useTable = (props, ...plugins) => {
       mergeProps(
         {
           key: ['header', column.id].join('_'),
-          colSpan: column.totalHeaderCount,
+          colSpan: column.totalVisibleHeaderCount,
         },
         applyPropHooks(
           instanceRef.current.hooks.getHeaderProps,

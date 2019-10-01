@@ -131,6 +131,7 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
             id: [column.id, 'placeholder', similarParentColumns.length].join(
               '_'
             ),
+            "placeholderOf": column
           },
           defaultColumn
         )
@@ -182,14 +183,27 @@ export function determineHeaderVisibility(instance) {
         : !!column.show
       : false
 
+    let totalVisibleHeaderCount = 0
+
     if (column.headers && column.headers.length) {
-      column.headers.forEach(subColumn =>
-        handleColumn(subColumn, column.isVisible)
+      column.headers.forEach(
+        subColumn =>
+          (totalVisibleHeaderCount += handleColumn(subColumn, column.isVisible))
       )
+    } else {
+      totalVisibleHeaderCount = column.isVisible ? 1 : 0
     }
+
+    column.totalVisibleHeaderCount = totalVisibleHeaderCount
+
+    return totalVisibleHeaderCount
   }
 
-  headers.forEach(subHeader => handleColumn(subHeader, true))
+  let totalVisibleHeaderCount = 0
+
+  headers.forEach(
+    subHeader => (totalVisibleHeaderCount += handleColumn(subHeader, true))
+  )
 }
 
 export function getBy(obj, path, def) {

@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0-beta.0",
+  "version": "7.0.0-beta.2",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -27,7 +27,7 @@
     "prepare": "yarn build",
     "release": "yarn publish",
     "releaseNext": "yarn publish --tag next",
-    "format": "prettier ./src/**/*.{md,js,jsx,tsx} --write"
+    "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write"
   },
   "files": [
     "CHANGELOG.md",
