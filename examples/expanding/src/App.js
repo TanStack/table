@@ -36,6 +36,7 @@ const Styles = styled.div`
 function Table({ columns: userColumns, data }) {
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
@@ -60,7 +61,7 @@ function Table({ columns: userColumns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {rows.map(
             (row, i) =>
               prepareRow(row) || (

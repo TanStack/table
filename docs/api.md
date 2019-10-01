@@ -15,8 +15,10 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`usePagination`](#usePagination)
     - [`useRowSelect`](#useRowSelect)
     - [`useRowState`](#useRowState)
-    - [`useAbsoluteLayout`](#useAbsoluteLayout)
     - [`useColumnOrder`](#useColumnOrder)
+  - Layout Hooks
+    - [`useBlockLayout`](#useBlockLayout)
+    - [`useAbsoluteLayout`](#useAbsoluteLayout)
   - Utility Hooks
     - [`useTableState`](#useTableState)
 - 3rd Party Plugin Hooks
@@ -153,6 +155,20 @@ The following options are supported on any column object you can pass to `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
+- `width: Int`
+  - Optional
+  - Defaults to `150`
+  - Specifies the width for the column (when using non-table-element layouts)
+- `minWidth: Int`
+  - Optional
+  - Defaults to `0`
+  - Specifies the minimum width for the column (when using non-table-element layouts)
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
+- `maxWidth: Int`
+  - Optional
+  - Defaults to `0`
+  - Specifies the maximum width for the column (when using non-table-element layouts)
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
 
 ### Instance Properties
 
@@ -184,6 +200,10 @@ The following properties are available on the table instance returned from `useT
   - **Required**
   - This function is used to resolve any props needed for your table wrapper.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `getTableBodyProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for your table body wrapper.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table body props, so be careful!**
 - `prepareRow: Function(Row)`
   - **Required**
   - This function is responsible for lazily preparing a row for rendering. Any row that you intend to render in your table needs to be passed to this function **before every render**.
@@ -195,6 +215,8 @@ The following properties are available on the table instance returned from `useT
 - `flatRows: Array<Row>`
   - An array of all rows, including subRows which have been flattened into the order in which they were detected (depth first)
   - This can be helpful in calculating total row counts that must include subRows
+- `totalColumnsWidth: Int`
+  - This is the total width of all visible columns (when using non-table-element layouts)
 - `setRowState: Function(rowPath, updater: Function | any) => void`
   - This function can be used to update the internal state for any row.
   - Pass it a valid `rowPath` array and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
@@ -230,6 +252,12 @@ The following properties are available on every `Column` object returned by the 
   - The entire table `instance` will be passed to the renderer with the addition of a `column` property, containing a reference to the column
   - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` renderers. Other renderers like `Filter` are available via hooks like `useFilters`.
   - If a function or component is passed instead of a string, it will be be passed the table instance and column model as props and is expected to return any valid JSX.
+- `totalLeft: Int`
+  - This is the total width in pixels of all columns to the left of this column
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
+- `totalWidth: Int`
+  - This is the total width in pixels for this column (if it is a leaf-column) or or all of it's sub-columns (if it is a column group)
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
 - `getHeaderProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for this column's header cell.
@@ -349,7 +377,7 @@ function MyTable({ columns, data }) {
           </tr>
         ))}
       </thead>
-      <tbody>
+      <tbody {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (
@@ -516,7 +544,7 @@ function Table({ columns, data }) {
           </tr>
         ))}
       </thead>
-      <tbody>
+      <tbody {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (
@@ -809,7 +837,7 @@ function Table({ columns, data }) {
           </tr>
         ))}
       </thead>
-      <tbody>
+      <tbody {...getTableBodyProps()}>
         {firstPageRows.map(
           (row, i) =>
             prepareRow(row) || (
@@ -1008,7 +1036,7 @@ function Table({ columns: userColumns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {rows.map(
             (row, i) =>
               prepareRow(row) || (
@@ -1227,7 +1255,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {page.map(
             (row, i) =>
               prepareRow(row) || (
@@ -1436,7 +1464,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {rows.map(
             (row, i) =>
               prepareRow(row) || (
@@ -1578,47 +1606,75 @@ The following additional properties are available on every `Cell` object returne
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
+# `useBlocklayout`
+
+- Plugin Hook
+- Optional
+
+`useBlocklayout` is a plugin hook that adds support for headers and cells to be rendered as `inline-block` `div`s (or other non-table elements) with explicit `width`. Similar to the `useAbsoluteLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
+
+**NOTE:** Although no additional options are needed, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+
+### Row Properties
+
+- `getRowProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows
+
+### Cell Properties
+
+- `getCellProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows cells
+
+### Header Properties
+
+- `getHeaderProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
+
+### Example
+
+- [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/block-layout)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/block-layout)
+
 # `useAbsoluteLayout`
 
 - Plugin Hook
 - Optional
 
-`useAbsoluteLayout` is a plugin hook that helps you to form layout of table based on absolute arranegment of cells.
+`useAbsoluteLayout` is a plugin hook that adds support for headers and cells to be rendered as absolutely positioned `div`s (or other non-table elements) with explicit `width`. Similar to the `useBlockLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
 
-### Table Options
-
-No table options needed
-
-### Column Options
-
-- `width: Number`
-  - `Required`, used to calulate width of the given column header and cell
-- `minWidth: Number`
-  - `Optional`, defaults to 0
-  - Used to set width of the given column if the provided, `width` < `minWidth`
-- `maxWidth: Number`
-  - `Optional`, defaults to Number.MAX_SAFE_INTEGER
-  - Used to limit width of the given column when `width` > `maxWidth`
+**NOTE:** Although no additional options are needed, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
 
 ### Instance Properties
 
-NA
+- `getTableBodyProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for the table body
 
 ### Row Properties
- - `getRowProps`
-  - Used to return styles needed to enable absolute layout for rows
+
+- `getRowProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows
 
 ### Cell Properties
- - `getCellProps`
-  - Used to return styles needed to enable absolute layout for rows cells
+
+- `getCellProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows cells
 
 ### Header Properties
- - `getHeaderProps`
-  - Used to return styles needed to enable absolute layout for headers 
+
+- `getHeaderProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
 
 ### Example
-  - [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
-  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+
+- [Source + Guide](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
 
 # `useColumnOrder`
 

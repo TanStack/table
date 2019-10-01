@@ -34,7 +34,13 @@ const Styles = styled.div`
 `
 
 function Table({ columns, data }) {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
     {
       columns,
       data,
@@ -70,7 +76,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {firstPageRows.map(
             (row, i) =>
               prepareRow(row) || (

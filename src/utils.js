@@ -3,6 +3,9 @@ import React from 'react'
 export const defaultColumn = {
   Cell: ({ cell: { value = '' } }) => String(value),
   show: true,
+  width: 150,
+  minWidth: 0,
+  maxWidth: Number.MAX_SAFE_INTEGER,
 }
 
 // SSR has issues with useLayoutEffect still, so use useEffect during SSR
@@ -56,7 +59,7 @@ export function decorateColumn(
 
   column = {
     // Make sure there is a fallback header, just in case
-    Header: () => null,
+    Header: () => <>&nbsp;</>,
     ...column,
     // Materialize and override this stuff
     id,
@@ -131,7 +134,7 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
             id: [column.id, 'placeholder', similarParentColumns.length].join(
               '_'
             ),
-            "placeholderOf": column
+            placeholderOf: column,
           },
           defaultColumn
         )

@@ -20,7 +20,7 @@ Snapshot Diff:
             class=""
             colspan="1"
             style="cursor: pointer;"
-@@ -87,104 +89,104 @@
+@@ -89,104 +91,104 @@
           class=""
         >
           <td
@@ -163,7 +163,7 @@ Snapshot Diff:
           <th
             class=""
             colspan="1"
-@@ -89,36 +89,36 @@
+@@ -91,36 +91,36 @@
           class=""
         >
           <td
@@ -206,7 +206,7 @@ Snapshot Diff:
         <tr
           class=""
         >
-@@ -157,36 +157,36 @@
+@@ -159,36 +159,36 @@
           class=""
         >
           <td

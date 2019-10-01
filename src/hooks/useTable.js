@@ -70,6 +70,7 @@ export const useTable = (props, ...plugins) => {
       useRows: [],
       prepareRow: [],
       getTableProps: [],
+      getTableBodyProps: [],
       getRowProps: [],
       getHeaderGroupProps: [],
       getHeaderProps: [],
@@ -214,6 +215,8 @@ export const useTable = (props, ...plugins) => {
     []
   )
 
+  calculateDimensions(instanceRef.current)
+
   if (process.env.NODE_ENV === 'development' && debug)
     console.time('hooks.useMain')
   instanceRef.current = applyHooks(
@@ -306,7 +309,7 @@ export const useTable = (props, ...plugins) => {
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
 
-  instanceRef.current.prepareRow = row => {
+  instanceRef.current.prepareRow = React.useCallback(row => {
     row.getRowProps = props =>
       mergeProps(
         { key: ['row', ...row.path].join('_') },
@@ -366,7 +369,7 @@ export const useTable = (props, ...plugins) => {
 
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(instanceRef.current.hooks.prepareRow, row, instanceRef.current)
-  }
+  }, [])
 
   instanceRef.current.getTableProps = userProps =>
     mergeProps(
@@ -377,5 +380,44 @@ export const useTable = (props, ...plugins) => {
       userProps
     )
 
+  instanceRef.current.getTableBodyProps = userProps =>
+    mergeProps(
+      applyPropHooks(
+        instanceRef.current.hooks.getTableBodyProps,
+        instanceRef.current
+      ),
+      userProps
+    )
+
   return instanceRef.current
+}
+
+function calculateDimensions(instance) {
+  const { headers } = instance
+
+  instance.totalColumnsWidth = calculateHeaderWidths(headers)
+}
+
+function calculateHeaderWidths(headers, left = 0) {
+  let sumTotalWidth = 0
+
+  headers.forEach(header => {
+    let { headers: subHeaders } = header
+
+    header.totalLeft = left
+
+    if (subHeaders && subHeaders.length) {
+      header.totalWidth = calculateHeaderWidths(subHeaders, left)
+    } else {
+      header.totalWidth = Math.min(
+        Math.max(header.minWidth, header.width),
+        header.maxWidth
+      )
+    }
+
+    left += header.totalWidth
+    sumTotalWidth += header.totalWidth
+  })
+
+  return sumTotalWidth
 }

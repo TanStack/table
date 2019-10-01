@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
 import { useAbsoluteLayout } from '../useAbsoluteLayout'
 
@@ -38,7 +38,13 @@ const defaultColumn = {
 }
 
 function Table({ columns, data }) {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
     {
       columns,
       data,
@@ -61,7 +67,7 @@ function Table({ columns, data }) {
         ))}
       </div>
 
-      <div>
+      <div {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (

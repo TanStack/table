@@ -47,6 +47,7 @@ data[0].subRows[0].subRows[0].subRows = makeData()
 function Table({ columns: userColumns, data, SubComponent }) {
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
@@ -75,7 +76,7 @@ function Table({ columns: userColumns, data, SubComponent }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {rows.map((row, i) => {
             prepareRow(row)
             const { key, ...rowProps } = row.getRowProps()

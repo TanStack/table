@@ -83,7 +83,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
 **React Table v7** is being built and maintained by me, @tannerlinsley and I am always in need of more Patreon support to keep this project afloat. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley)
 
 <table>
-  <tbody>
+  <tbody {...getTableBodyProps()}>
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
@@ -105,7 +105,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
 </table>
 
 <table>
-  <tbody>
+  <tbody {...getTableBodyProps()}>
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
@@ -127,7 +127,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
 </table>
 
 <table>
-  <tbody>
+  <tbody {...getTableBodyProps()}>
     <tr>
       <td align="center" valign="middle">
         <a href="https://patreon.com/tannerlinsley" target="_blank">
@@ -144,7 +144,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
 </table>
 
 <table>
-  <tbody>
+  <tbody {...getTableBodyProps()}>
     <tr>
       <td valign="top">
         <a href="https://patreon.com/tannerlinsley">
@@ -160,7 +160,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
 </table>
 
 <table>
-  <tbody>
+  <tbody {...getTableBodyProps()}>
     <tr>
       <td valign="top">
         <a href="https://patreon.com/tannerlinsley">

@@ -54,15 +54,13 @@ function Table({
   const [{ pageIndex, pageSize }] = tableState
 
   // Listen for changes in pagination and use the state to fetch our new data
-  React.useEffect(
-    () => {
-      fetchData({ pageIndex, pageSize })
-    },
-    [fetchData, pageIndex, pageSize]
-  )
+  React.useEffect(() => {
+    fetchData({ pageIndex, pageSize })
+  }, [fetchData, pageIndex, pageSize])
 
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     prepareRow,
     page,
@@ -116,7 +114,7 @@ function Table({
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {page.map(
             (row, i) =>
               prepareRow(row) || (

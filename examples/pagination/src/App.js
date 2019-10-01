@@ -43,6 +43,7 @@ function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     prepareRow,
     page, // Instead of using 'rows', we'll use page,
@@ -95,7 +96,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {page.map(
             (row, i) =>
               prepareRow(row) || (

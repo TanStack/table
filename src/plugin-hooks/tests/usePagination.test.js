@@ -18,6 +18,7 @@ function Table({ columns, data }) {
 
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     prepareRow,
     page,
@@ -51,7 +52,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {page.map(
             (row, i) =>
               prepareRow(row) || (

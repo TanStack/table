@@ -18,7 +18,7 @@ Next, add the `useSortBy` hook to your `useTable` hook and add the necessary UI 
 
 ```diff
 function MyTable() {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       data,
       columns,
@@ -43,7 +43,7 @@ function MyTable() {
           </tr>
         ))}
       </thead>
-      <tbody>
+      <tbody {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (

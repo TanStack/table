@@ -31,7 +31,13 @@ const data = [
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
     columns,
     data,
   })
@@ -48,7 +54,7 @@ function Table({ columns, data }) {
           </tr>
         ))}
       </thead>
-      <tbody>
+      <tbody {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (
