@@ -36,6 +36,7 @@ function useMain(instance) {
     plugins,
     pageCount: userPageCount,
     paginateExpandedRows = true,
+    expandSubRows = true,
     state: [
       { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
       setState,
@@ -101,7 +102,7 @@ function useMain(instance) {
       return page
     }
 
-    return expandRows(page, { manualExpandedKey, expanded })
+    return expandRows(page, { manualExpandedKey, expanded, expandSubRows })
   }, [
     debug,
     expanded,

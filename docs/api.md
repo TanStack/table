@@ -655,6 +655,11 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `expanded`
   - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would always be expanded, regardless of state.
+- `expandSubRows: Bool`
+  - Optional
+  - Defaults to `true`
+  - If set to `true`, expanded rows are rendered along with normal rows.
+  - If set to `false`, expanded rows will only be available through their parent row. This could be useful if you are implementing a custom expanded row view.
 
 ### Instance Properties
 
