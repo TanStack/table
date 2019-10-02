@@ -1,7 +1,5 @@
 import React from 'react'
 //
-import { types } from '../actions'
-
 export const defaultState = {}
 
 const defaultReducer = (old, newState) => newState
