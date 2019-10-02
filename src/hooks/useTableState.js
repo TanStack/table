@@ -33,14 +33,6 @@ export const useTableState = (
 
   const reducedSetState = React.useCallback(
     (updater, type) => {
-      if (!types[type]) {
-        console.info({
-          stateUpdaterFn: updater,
-          actionType: type,
-          currentState: overriddenStateRef.current,
-        })
-        throw new Error('Detected an unknown table action! (Details Above)')
-      }
       return setState(old => {
         const newState = updater(old)
         return reducer(old, newState, type)

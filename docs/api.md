@@ -1008,7 +1008,7 @@ The following options are supported via the main options object passed to `useTa
     - Optional
     - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
     - With every `setState` call to a table state (even internally), this reducer is called and is allowed to modify the final state object for updating.
-    - It is passed the `oldState`, the `newState`, and an action `type`.
+    - It is passed the `oldState`, the `newState`, and an optional action `type`.
   - `useState`
     - Optional
     - Defaults to `React.useState`
@@ -1029,6 +1029,7 @@ The following options are supported via the main options object passed to `useTa
       - This function signature is **almost** (see next point) identical to the functional API exposed by `React.setState`. It is passed the previous state and is expected to return a new version of the state.
       - **NOTE: `updater` must be a function. Passing a replacement object is not supported as it is with React.useState**
     - `type: String`
+      - Optional
       - The [action type](TODO) corresponding to what action being taken against the state.
 
 ### Example

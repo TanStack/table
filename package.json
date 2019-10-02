@@ -17,6 +17,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "sideEffects": false,
   "scripts": {
     "commit": "git add . && git-cz",
     "test": "is-ci 'test:ci' 'test:dev'",
