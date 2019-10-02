@@ -29,6 +29,7 @@ function useMain(instance) {
     rows,
     manualExpandedKey = 'expanded',
     paginateExpandedRows = true,
+    expandSubRows = true,
     hooks,
     state: [{ expanded }, setState],
   } = instance
@@ -82,7 +83,7 @@ function useMain(instance) {
       console.info('getExpandedRows')
 
     if (paginateExpandedRows) {
-      return expandRows(rows, { manualExpandedKey, expanded })
+      return expandRows(rows, { manualExpandedKey, expanded, expandSubRows })
     }
 
     return rows
