@@ -137,12 +137,11 @@ export const useTable = (props, ...plugins) => {
   })
 
   // Access the row model
-  const [rows, rowPaths, flatRows] = React.useMemo(() => {
+  const [rows, flatRows] = React.useMemo(() => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.time('getAccessedRows')
 
-    let flatRows = 0
-    const rowPaths = []
+    let flatRows = []
 
     // Access the row's data
     const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
@@ -154,23 +153,21 @@ export const useTable = (props, ...plugins) => {
       // Make the new path for the row
       const path = [...parentPath, rowID]
 
-      flatRows++
-      rowPaths.push(path.join('.'))
+      const row = {
+        original,
+        index: i,
+        path, // used to create a key for each row even if not nested
+        depth,
+        cells: [{}], // This is a dummy cell
+      }
+
+      flatRows.push(row)
 
       // Process any subRows
       let subRows = getSubRows(originalRow, i)
 
       if (subRows) {
-        subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, path))
-      }
-
-      const row = {
-        original,
-        index: i,
-        path, // used to create a key for each row even if not nested
-        subRows,
-        depth,
-        cells: [{}], // This is a dummy cell
+        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, path))
       }
 
       // Override common array functions (and the dummy cell's getCellProps function)
@@ -200,11 +197,10 @@ export const useTable = (props, ...plugins) => {
     const accessedData = data.map((d, i) => accessRow(d, i))
     if (process.env.NODE_ENV === 'development' && debug)
       console.timeEnd('getAccessedRows')
-    return [accessedData, rowPaths, flatRows]
+    return [accessedData, flatRows]
   }, [debug, data, getRowID, getSubRows, flatColumns])
 
   instanceRef.current.rows = rows
-  instanceRef.current.rowPaths = rowPaths
   instanceRef.current.flatRows = flatRows
 
   // Determine column visibility

@@ -33,6 +33,7 @@ function useMain(instance) {
   const {
     debug,
     rows,
+    flatRows,
     flatColumns,
     filterTypes: userFilterTypes,
     manualFilters,
@@ -41,6 +42,7 @@ function useMain(instance) {
   } = instance
 
   const preFilteredRows = rows
+  const preFilteredFlatRows = flatRows
 
   const setFilter = (id, updater) => {
     const column = flatColumns.find(d => d.id === id)
@@ -129,10 +131,15 @@ function useMain(instance) {
   // cache for each row group (top-level rows, and each row's recursive subrows)
   // This would make multi-filtering a lot faster though. Too far?
 
-  const filteredRows = React.useMemo(() => {
+  const { filteredRows, filteredFlatRows } = React.useMemo(() => {
     if (manualFilters || !Object.keys(filters).length) {
-      return rows
+      return {
+        filteredRows: rows,
+        filteredFlatRows: flatRows,
+      }
     }
+
+    const filteredFlatRows = []
 
     if (process.env.NODE_ENV === 'development' && debug)
       console.info('getFilteredRows')
@@ -179,6 +186,7 @@ function useMain(instance) {
       // but that would severely hinder the API for the user, since they
       // would be required to do that recursion in some scenarios
       filteredRows = filteredRows.map(row => {
+        filteredFlatRows.push(row)
         if (!row.subRows) {
           return row
         }
@@ -194,8 +202,19 @@ function useMain(instance) {
       return filteredRows
     }
 
-    return filterRows(rows)
-  }, [manualFilters, filters, debug, rows, flatColumns, userFilterTypes])
+    return {
+      filteredRows: filterRows(rows),
+      filteredFlatRows,
+    }
+  }, [
+    manualFilters,
+    filters,
+    debug,
+    rows,
+    flatRows,
+    flatColumns,
+    userFilterTypes,
+  ])
 
   React.useMemo(() => {
     // Now that each filtered column has it's partially filtered rows,
@@ -216,7 +235,9 @@ function useMain(instance) {
     setFilter,
     setAllFilters,
     preFilteredRows,
+    preFilteredFlatRows,
     rows: filteredRows,
+    flatRows: filteredFlatRows,
   }
 }
 

@@ -105,6 +105,7 @@ function useMain(instance) {
     return expandRows(page, { manualExpandedKey, expanded, expandSubRows })
   }, [
     debug,
+    expandSubRows,
     expanded,
     manualExpandedKey,
     manualPagination,

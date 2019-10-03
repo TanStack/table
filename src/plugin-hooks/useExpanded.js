@@ -87,7 +87,14 @@ function useMain(instance) {
     }
 
     return rows
-  }, [debug, paginateExpandedRows, rows, manualExpandedKey, expanded])
+  }, [
+    debug,
+    paginateExpandedRows,
+    rows,
+    manualExpandedKey,
+    expanded,
+    expandSubRows,
+  ])
 
   const expandedDepth = findExpandedDepth(expanded)
 

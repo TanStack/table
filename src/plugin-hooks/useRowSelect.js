@@ -27,7 +27,7 @@ function useMain(instance) {
     hooks,
     manualRowSelectedKey = 'isSelected',
     plugins,
-    rowPaths,
+    flatRows,
     state: [{ selectedRows }, setState],
   } = instance
 
@@ -38,14 +38,22 @@ function useMain(instance) {
     []
   )
 
-  const isAllRowsSelected = rowPaths.length > 0 && rowPaths.length === selectedRows.length
+  const flatRowPaths = flatRows.map(d => d.path.join('.'))
+
+  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRows.length
+
+  if (isAllRowsSelected) {
+    if (flatRowPaths.some(d => !selectedRows.includes(d))) {
+      isAllRowsSelected = false
+    }
+  }
 
   const toggleRowSelectedAll = set => {
     setState(old => {
       const selectAll = typeof set !== 'undefined' ? set : !isAllRowsSelected
       return {
         ...old,
-        selectedRows: selectAll ? [...rowPaths] : [],
+        selectedRows: selectAll ? flatRowPaths : [],
       }
     }, actions.toggleRowSelectedAll)
   }
@@ -54,12 +62,14 @@ function useMain(instance) {
     const parentPath = path.slice(0, path.length - 1)
     const parentKey = parentPath.join('.')
     const selected =
-      rowPaths.filter(
-        path =>
+      flatRowPaths.filter(rowPath => {
+        const path = rowPath
+        return (
           path !== parentKey &&
           path.startsWith(parentKey) &&
           !selectedRows.has(path)
-      ).length === 0
+        )
+      }).length === 0
     if (selected) {
       selectedRows.add(parentKey)
     } else {
@@ -81,13 +91,13 @@ function useMain(instance) {
       let newSelectedRows = new Set(old.selectedRows)
 
       if (!exists && shouldExist) {
-        rowPaths.forEach(rowPath => {
+        flatRowPaths.forEach(rowPath => {
           if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
             newSelectedRows.add(rowPath)
           }
         })
       } else if (exists && !shouldExist) {
-        rowPaths.forEach(rowPath => {
+        flatRowPaths.forEach(rowPath => {
           if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
             newSelectedRows.delete(rowPath)
           }
