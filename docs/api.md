@@ -780,7 +780,7 @@ The following values are provided to the table `instance`:
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].selectedRows: Array<RowPathKey>`
+- `state[0].selectedRowsPaths: Array<RowPathKey>`
   - Optional
   - Defaults to `[]`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
@@ -809,6 +809,8 @@ The following values are provided to the table `instance`:
 - `isAllRowsSelected: Bool`
   - Will be `true` if all rows are selected.
   - If at least one row is not selected, will be `false`
+- `selectedFlatRows: Array<Row>`
+  - The flat array of rows that are currently selected
 
 ### Row Properties
 

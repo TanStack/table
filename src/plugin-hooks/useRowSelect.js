@@ -1,10 +1,11 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import { mergeProps, applyPropHooks, ensurePluginOrder } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTableState'
 
-defaultState.selectedRows = []
+defaultState.selectedRowPaths = []
 
 addActions('toggleRowSelected', 'toggleRowSelectedAll')
 
@@ -15,10 +16,40 @@ const propTypes = {
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = []
   hooks.getToggleAllRowsSelectedProps = []
+  hooks.useRows.push(useRows)
   hooks.useMain.push(useMain)
 }
 
 useRowSelect.pluginName = 'useRowSelect'
+
+function useRows(rows, instance) {
+  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
+
+  const {
+    state: [{ selectedRowPaths }],
+  } = instance
+
+  instance.selectedFlatRows = React.useMemo(() => {
+    const selectedFlatRows = []
+    rows.forEach(row => {
+      if (row.isAggregated) {
+        const subRowPaths = row.subRows.map(row => row.path)
+        row.isSelected = subRowPaths.every(path =>
+          selectedRowPaths.includes(path.join('.'))
+        )
+      } else {
+        row.isSelected = selectedRowPaths.includes(row.path.join('.'))
+      }
+      if (row.isSelected) {
+        selectedFlatRows.push(row)
+      }
+    })
+
+    return selectedFlatRows
+  }, [rows, selectedRowPaths])
+
+  return rows
+}
 
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
@@ -28,7 +59,7 @@ function useMain(instance) {
     manualRowSelectedKey = 'isSelected',
     plugins,
     flatRows,
-    state: [{ selectedRows }, setState],
+    state: [{ selectedRowPaths }, setState],
   } = instance
 
   ensurePluginOrder(
@@ -40,10 +71,10 @@ function useMain(instance) {
 
   const flatRowPaths = flatRows.map(d => d.path.join('.'))
 
-  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRows.length
+  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRowPaths.length
 
   if (isAllRowsSelected) {
-    if (flatRowPaths.some(d => !selectedRows.includes(d))) {
+    if (flatRowPaths.some(d => !selectedRowPaths.includes(d))) {
       isAllRowsSelected = false
     }
   }
@@ -53,12 +84,12 @@ function useMain(instance) {
       const selectAll = typeof set !== 'undefined' ? set : !isAllRowsSelected
       return {
         ...old,
-        selectedRows: selectAll ? flatRowPaths : [],
+        selectedRowPaths: selectAll ? flatRowPaths : [],
       }
     }, actions.toggleRowSelectedAll)
   }
 
-  const updateParentRow = (selectedRows, path) => {
+  const updateParentRow = (selectedRowPaths, path) => {
     const parentPath = path.slice(0, path.length - 1)
     const parentKey = parentPath.join('.')
     const selected =
@@ -67,15 +98,15 @@ function useMain(instance) {
         return (
           path !== parentKey &&
           path.startsWith(parentKey) &&
-          !selectedRows.has(path)
+          !selectedRowPaths.has(path)
         )
       }).length === 0
     if (selected) {
-      selectedRows.add(parentKey)
+      selectedRowPaths.add(parentKey)
     } else {
-      selectedRows.delete(parentKey)
+      selectedRowPaths.delete(parentKey)
     }
-    if (parentPath.length > 1) updateParentRow(selectedRows, parentPath)
+    if (parentPath.length > 1) updateParentRow(selectedRowPaths, parentPath)
   }
 
   const toggleRowSelected = (path, set) => {
@@ -86,9 +117,9 @@ function useMain(instance) {
       // Join the paths of deep rows
       // to make a key, then manage all of the keys
       // in a flat object
-      const exists = old.selectedRows.includes(key)
+      const exists = old.selectedRowPaths.includes(key)
       const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newSelectedRows = new Set(old.selectedRows)
+      let newSelectedRows = new Set(old.selectedRowPaths)
 
       if (!exists && shouldExist) {
         flatRowPaths.forEach(rowPath => {
@@ -112,7 +143,7 @@ function useMain(instance) {
 
       return {
         ...old,
-        selectedRows: [...newSelectedRows.values()],
+        selectedRowPaths: [...newSelectedRows.values()],
       }
     }, actions.toggleRowSelected)
   }
@@ -138,9 +169,6 @@ function useMain(instance) {
     // Aggregate rows have entirely different select logic
     if (row.isAggregated) {
       const subRowPaths = row.subRows.map(row => row.path)
-      row.isSelected = subRowPaths.every(path =>
-        selectedRows.includes(path.join('.'))
-      )
       row.toggleRowSelected = set => {
         set = typeof set !== 'undefined' ? set : !row.isSelected
         subRowPaths.forEach(path => {
@@ -176,7 +204,6 @@ function useMain(instance) {
         )
       }
     } else {
-      row.isSelected = selectedRows.includes(row.path.join('.'))
       row.toggleRowSelected = set => toggleRowSelected(row.path, set)
       row.getToggleRowSelectedProps = props => {
         let checked = false

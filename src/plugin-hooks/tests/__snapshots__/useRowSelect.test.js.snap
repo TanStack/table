@@ -485,8 +485,8 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "selectedRows": []
-+   "selectedRows": [
+-   "selectedRowPaths": []
++   "selectedRowPaths": [
 +     "0",
 +     "1",
 +     "2",
@@ -1015,7 +1015,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "selectedRows": [
+-   "selectedRowPaths": [
 -     "0",
 -     "1",
 -     "2",
@@ -1053,7 +1053,7 @@ Snapshot Diff:
 -     "22.1",
 -     "23"
 -   ]
-+   "selectedRows": []
++   "selectedRowPaths": []
   }
       </code>
     </pre>
@@ -1129,8 +1129,8 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "selectedRows": []
-+   "selectedRows": [
+-   "selectedRowPaths": []
++   "selectedRowPaths": [
 +     "0",
 +     "2",
 +     "2.0",
@@ -1198,7 +1198,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRows": [
+    "selectedRowPaths": [
 -     "0",
 -     "2",
 -     "2.0",
@@ -1241,7 +1241,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRows": [
+    "selectedRowPaths": [
 -     "0"
 +     "0",
 +     "2.0"
@@ -1282,7 +1282,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRows": [
+    "selectedRowPaths": [
       "0",
 -     "2.0"
 +     "2.0",
@@ -1324,7 +1324,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRows": [
+    "selectedRowPaths": [
       "0",
 -     "2.0",
 -     "2.1"
