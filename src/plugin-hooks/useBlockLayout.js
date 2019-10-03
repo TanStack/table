@@ -18,7 +18,7 @@ const useMain = instance => {
 
   const rowStyles = {
     style: {
-      display: 'block',
+      display: 'flex',
       width: `${totalColumnsWidth}px`,
     },
   }

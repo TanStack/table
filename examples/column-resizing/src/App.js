@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, useBlockLayout } from 'react-table'
-import { FixedSizeList } from 'react-window'
+import { useTable, useBlockLayout, useResizeColumns } from 'react-table'
 
 import makeData from './makeData'
 
@@ -28,19 +27,41 @@ const Styles = styled.div`
       border-bottom: 1px solid black;
       border-right: 1px solid black;
 
+      ${'' /* In this example we use an absolutely position resizer,
+       so this is required. */}
+      position: relative;
+
       :last-child {
         border-right: 0;
+      }
+
+      ${'' /* The resizer styles! */}
+
+      .resizer {
+        display: inline-block;
+        background: blue;
+        width: 5px;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translateX(50%);
+        z-index: 1;
+
+        &.isResizing {
+          background: red;
+        }
       }
     }
   }
 `
 
 function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-
   const defaultColumn = React.useMemo(
     () => ({
+      minWidth: 20,
       width: 150,
+      maxWidth: 500,
     }),
     []
   )
@@ -50,7 +71,6 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    totalColumnsWidth,
     prepareRow,
   } = useTable(
     {
@@ -58,34 +78,10 @@ function Table({ columns, data }) {
       data,
       defaultColumn,
     },
-    useBlockLayout
+    useBlockLayout,
+    useResizeColumns
   )
 
-  const RenderRow = React.useCallback(
-    ({ index, style }) => {
-      const row = rows[index]
-      prepareRow(row)
-      return (
-        <div
-          {...row.getRowProps({
-            style,
-          })}
-          className="tr"
-        >
-          {row.cells.map(cell => {
-            return (
-              <div {...cell.getCellProps()} className="td">
-                {cell.render('Cell')}
-              </div>
-            )
-          })}
-        </div>
-      )
-    },
-    [prepareRow, rows]
-  )
-
-  // Render the UI for your table
   return (
     <div {...getTableProps()} className="table">
       <div>
@@ -94,6 +90,11 @@ function Table({ columns, data }) {
             {headerGroup.headers.map(column => (
               <div {...column.getHeaderProps()} className="th">
                 {column.render('Header')}
+                {/* Use column.getResizerProps to hook up the events correctly */}
+                <div
+                  {...column.getResizerProps()}
+                  className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
+                />
               </div>
             ))}
           </div>
@@ -101,14 +102,20 @@ function Table({ columns, data }) {
       </div>
 
       <div {...getTableBodyProps()}>
-        <FixedSizeList
-          height={400}
-          itemCount={rows.length}
-          itemSize={35}
-          width={totalColumnsWidth}
-        >
-          {RenderRow}
-        </FixedSizeList>
+        {rows.map(
+          (row, i) =>
+            prepareRow(row) || (
+              <div {...row.getRowProps()} className="tr">
+                {row.cells.map(cell => {
+                  return (
+                    <div {...cell.getCellProps()} className="td">
+                      {cell.render('Cell')}
+                    </div>
+                  )
+                })}
+              </div>
+            )
+        )}
       </div>
     </div>
   )
@@ -117,10 +124,6 @@ function Table({ columns, data }) {
 function App() {
   const columns = React.useMemo(
     () => [
-      {
-        Header: 'Row Index',
-        accessor: (row, i) => i,
-      },
       {
         Header: 'Name',
         columns: [
@@ -161,7 +164,7 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(100000), [])
+  const data = React.useMemo(() => makeData(20), [])
 
   return (
     <Styles>

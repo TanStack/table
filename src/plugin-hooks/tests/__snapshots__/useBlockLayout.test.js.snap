@@ -8,7 +8,7 @@ exports[`renders a table 1`] = `
     <div>
       <div
         class="row"
-        style="display: block; width: 1400px;"
+        style="display: flex; width: 1400px;"
       >
         <div
           class="cell header"
@@ -27,7 +27,7 @@ exports[`renders a table 1`] = `
       </div>
       <div
         class="row"
-        style="display: block; width: 1400px;"
+        style="display: flex; width: 1400px;"
       >
         <div
           class="cell header"
@@ -78,7 +78,7 @@ exports[`renders a table 1`] = `
     >
       <div
         class="row"
-        style="display: block; width: 1400px;"
+        style="display: flex; width: 1400px;"
       >
         <div
           class="cell"
@@ -119,7 +119,7 @@ exports[`renders a table 1`] = `
       </div>
       <div
         class="row"
-        style="display: block; width: 1400px;"
+        style="display: flex; width: 1400px;"
       >
         <div
           class="cell"
@@ -160,7 +160,7 @@ exports[`renders a table 1`] = `
       </div>
       <div
         class="row"
-        style="display: block; width: 1400px;"
+        style="display: flex; width: 1400px;"
       >
         <div
           class="cell"

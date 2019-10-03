@@ -66,6 +66,7 @@ export const useTable = (props, ...plugins) => {
     hooks: {
       columnsBeforeHeaderGroups: [],
       columnsBeforeHeaderGroupsDeps: [],
+      useBeforeDimensions: [],
       useMain: [],
       useRows: [],
       prepareRow: [],
@@ -214,6 +215,15 @@ export const useTable = (props, ...plugins) => {
     (all, headerGroup) => [...all, ...headerGroup.headers],
     []
   )
+
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.time('hooks.useBeforeDimensions')
+  instanceRef.current = applyHooks(
+    instanceRef.current.hooks.useBeforeDimensions,
+    instanceRef.current
+  )
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.timeEnd('hooks.useBeforeDimensions')
 
   calculateDimensions(instanceRef.current)
 

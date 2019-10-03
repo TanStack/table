@@ -19,6 +19,7 @@ React Table is essentially a compatible collection of **custom React hooks**:
   - Layout Hooks
     - [`useBlockLayout`](#useBlockLayout)
     - [`useAbsoluteLayout`](#useAbsoluteLayout)
+    - [`useResizeColumns`](#useResizeColumns)
   - Utility Hooks
     - [`useTableState`](#useTableState)
 - 3rd Party Plugin Hooks
@@ -119,7 +120,7 @@ The following options are supported via the main options object passed to `useTa
   - A flag to turn on debug mode.
   - Defaults to `false`
 
-### `column` Options
+### Column Options
 
 The following options are supported on any column object you can pass to `columns`.
 
@@ -884,7 +885,7 @@ The following additional properties are available on every `Cell` object returne
 
 `useBlocklayout` is a plugin hook that adds support for headers and cells to be rendered as `inline-block` `div`s (or other non-table elements) with explicit `width`. Similar to the `useAbsoluteLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
 
-**NOTE:** Although no additional options are needed, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+**NOTE:** Although no additional options are needed for this plugin to work, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
 
 ### Row Properties
 
@@ -916,7 +917,7 @@ The following additional properties are available on every `Cell` object returne
 
 `useAbsoluteLayout` is a plugin hook that adds support for headers and cells to be rendered as absolutely positioned `div`s (or other non-table elements) with explicit `width`. Similar to the `useBlockLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
 
-**NOTE:** Although no additional options are needed, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+**NOTE:** Although no additional options are needed for this plugin to work, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
 
 ### Instance Properties
 
@@ -946,6 +947,42 @@ The following additional properties are available on every `Cell` object returne
 
 - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
 - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+
+# `useResizeColumns`
+
+- Plugin Hook
+- Optional
+
+`useResizeColumns` is a plugin hook that adds support for resizing headers and cells when using non-table elements for layout eg. the `useBlockLayout` and `useAbsoluteLayout` hooks. It even supports resizing column groups!
+
+### Table Options
+
+- `disableResizing: Bool`
+  - Defaults to `false`
+  - When set to `true`, resizing is disabled across the entire table
+
+### Column Options
+
+The core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+
+- `disableResizing: Bool`
+  - Defaults to `false`
+  - When set to `true`, resizing is disabled for this column
+
+### Header Properties
+
+- `getResizerProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
+- `canResize: Bool`
+  - Will be `true` if this column can be resized
+- `isResizing: Bool`
+  - Will be `true` if this column is currently being resized
+
+### Example
+
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-resizing)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-resizing)
 
 # `useColumnOrder`
 
