@@ -158,7 +158,7 @@ export interface Accessor<D extends object> {
           depth: number
           data: D[]
         }
-      ) => string)
+      ) => CellValue)
   id?: IdType<D>
 }
 /* #endregion */
