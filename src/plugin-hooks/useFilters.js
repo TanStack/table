@@ -107,16 +107,23 @@ function useMain(instance) {
   }
 
   flatColumns.forEach(column => {
-    const { id, accessor, disableFilters: columnDisableFilters } = column
+    const {
+      id,
+      accessor,
+      canFilter,
+      disableFilters: columnDisableFilters,
+    } = column
 
     // Determine if a column is filterable
-    column.canFilter = accessor
-      ? getFirstDefined(
-          columnDisableFilters === true ? false : undefined,
-          disableFilters === true ? false : undefined,
-          true
-        )
-      : false
+    if (canFilter === undefined) {
+      column.canFilter = accessor
+        ? getFirstDefined(
+            columnDisableFilters === true ? false : undefined,
+            disableFilters === true ? false : undefined,
+            true
+          )
+        : false
+    }
 
     // Provide the column a way of updating the filter value
     column.setFilter = val => setFilter(column.id, val)

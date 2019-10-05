@@ -161,17 +161,22 @@ function useMain(instance) {
 
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
-    const { accessor, disableSorting: columnDisableSorting, id } = column
+    const {
+      accessor,
+      canSort,
+      disableSorting: columnDisableSorting,
+      id,
+    } = column
 
-    const canSort = accessor
-      ? getFirstDefined(
-          columnDisableSorting === true ? false : undefined,
-          disableSorting === true ? false : undefined,
-          true
-        )
-      : false
-
-    column.canSort = canSort
+    if (canSort === undefined) {
+      column.canSort = accessor
+        ? getFirstDefined(
+            columnDisableSorting === true ? false : undefined,
+            disableSorting === true ? false : undefined,
+            true
+          )
+        : false
+    }
 
     if (column.canSort) {
       column.toggleSortBy = (desc, multi) =>
@@ -192,7 +197,7 @@ function useMain(instance) {
     column.getSortByToggleProps = props => {
       return mergeProps(
         {
-          onClick: canSort
+          onClick: column.canSort
             ? e => {
                 e.persist()
                 column.toggleSortBy(
@@ -202,7 +207,7 @@ function useMain(instance) {
               }
             : undefined,
           style: {
-            cursor: canSort ? 'pointer' : undefined,
+            cursor: column.canSort ? 'pointer' : undefined,
           },
           title: 'Toggle SortBy',
         },
