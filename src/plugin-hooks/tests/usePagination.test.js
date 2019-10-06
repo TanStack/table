@@ -1,7 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
-import { useTableState } from '../../hooks/useTableState'
 import { usePagination } from '../usePagination'
 
 const data = [...new Array(100)].map((d, i) => ({
@@ -14,8 +13,6 @@ const data = [...new Array(100)].map((d, i) => ({
 }))
 
 function Table({ columns, data }) {
-  const tableState = useTableState({ pageIndex: 2 })
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -30,12 +27,12 @@ function Table({ columns, data }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: [{ pageIndex, pageSize }],
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      state: tableState,
+      initialState: { pageIndex: 2 },
     },
     usePagination
   )

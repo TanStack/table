@@ -40,7 +40,7 @@ function Table({ columns: userColumns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: [{ expanded }],
+    state: { expanded },
   } = useTable(
     {
       columns: userColumns,

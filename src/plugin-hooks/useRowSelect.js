@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { mergeProps, applyPropHooks, ensurePluginOrder } from '../utils'
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 
 defaultState.selectedRowPaths = []
 
@@ -26,7 +26,7 @@ function useRows(rows, instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
 
   const {
-    state: [{ selectedRowPaths }],
+    state: { selectedRowPaths },
   } = instance
 
   instance.selectedFlatRows = React.useMemo(() => {
@@ -59,7 +59,8 @@ function useMain(instance) {
     manualRowSelectedKey = 'isSelected',
     plugins,
     flatRows,
-    state: [{ selectedRowPaths }, setState],
+    state: { selectedRowPaths },
+    setState,
   } = instance
 
   ensurePluginOrder(

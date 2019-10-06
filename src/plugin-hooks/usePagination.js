@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 //
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 import { ensurePluginOrder, safeUseLayoutEffect, expandRows } from '../utils'
 
 defaultState.pageSize = 10
@@ -37,10 +37,8 @@ function useMain(instance) {
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: [
-      { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
-      setState,
-    ],
+    state: { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
+    setState,
   } = instance
 
   ensurePluginOrder(

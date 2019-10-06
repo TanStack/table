@@ -44,7 +44,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
     rows,
     prepareRow,
     flatColumns,
-    state: [{ expanded }],
+    state: { expanded },
   } = useTable(
     {
       columns: userColumns,

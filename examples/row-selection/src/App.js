@@ -42,7 +42,7 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     selectedFlatRows,
-    state: [{ selectedRowPaths }],
+    state: { selectedRowPaths },
   } = useTable(
     {
       columns,

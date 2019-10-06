@@ -1,8 +1,7 @@
 import * as utils from './utils'
 export { utils }
 export { defaultColumn } from './utils'
-export { useTable } from './hooks/useTable'
-export { useTableState, defaultState } from './hooks/useTableState'
+export { useTable, defaultState } from './hooks/useTable'
 export { useExpanded } from './plugin-hooks/useExpanded'
 export { useFilters } from './plugin-hooks/useFilters'
 export { useGroupBy } from './plugin-hooks/useGroupBy'

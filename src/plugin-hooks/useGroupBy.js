@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 import {
   mergeProps,
   applyPropHooks,
@@ -40,7 +40,7 @@ const propTypes = {
 export const useGroupBy = hooks => {
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
   hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
-    deps.push(instance.state[0].groupBy)
+    deps.push(instance.state.groupBy)
     return deps
   })
   hooks.useMain.push(useMain)
@@ -48,7 +48,7 @@ export const useGroupBy = hooks => {
 
 useGroupBy.pluginName = 'useGroupBy'
 
-function columnsBeforeHeaderGroups(flatColumns, { state: [{ groupBy }] }) {
+function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
 
@@ -80,7 +80,8 @@ function useMain(instance) {
     aggregations: userAggregations = {},
     hooks,
     plugins,
-    state: [{ groupBy }, setState],
+    state: { groupBy },
+    setState,
   } = instance
 
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])

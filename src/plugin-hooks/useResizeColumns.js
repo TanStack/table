@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 //
 
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 import { defaultColumn, getFirstDefined } from '../utils'
 import { mergeProps, applyPropHooks } from '../utils'
 
@@ -29,7 +29,8 @@ const useBeforeDimensions = instance => {
     flatHeaders,
     disableResizing,
     hooks: { getHeaderProps },
-    state: [{ columnResizing }, setState],
+    state: { columnResizing },
+    setState,
   } = instance
 
   getHeaderProps.push(() => {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { getFirstDefined, isFunction } from '../utils'
 import * as filterTypes from '../filterTypes'
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 
 defaultState.filters = {}
 
@@ -38,7 +38,8 @@ function useMain(instance) {
     filterTypes: userFilterTypes,
     manualFilters,
     disableFilters,
-    state: [{ filters }, setState],
+    state: { filters },
+    setState,
   } = instance
 
   const preFilteredRows = rows

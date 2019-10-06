@@ -95,7 +95,7 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: [{ pageIndex, pageSize }],
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,

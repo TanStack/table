@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { ensurePluginOrder, defaultColumn } from '../utils'
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 import * as sortTypes from '../sortTypes'
 import {
   mergeProps,
@@ -63,7 +63,8 @@ function useMain(instance) {
     maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
     flatHeaders,
     hooks,
-    state: [{ sortBy }, setState],
+    state: { sortBy },
+    setState,
     plugins,
   } = instance
 

@@ -12,8 +12,6 @@ import {
   determineHeaderVisibility,
 } from '../utils'
 
-import { useTableState } from './useTableState'
-
 const propTypes = {
   // General
   data: PropTypes.array.isRequired,
@@ -27,8 +25,11 @@ const propTypes = {
 const renderErr =
   'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
 
-const defaultColumnInstance = {}
+export const defaultState = {}
 
+const defaultInitialState = {}
+const defaultColumnInstance = {}
+const defaultReducer = (old, newState) => newState
 const defaultGetSubRows = (row, index) => row.subRows || []
 const defaultGetRowID = (row, index) => index
 
@@ -39,21 +40,46 @@ export const useTable = (props, ...plugins) => {
   // Destructure props
   let {
     data,
-    state: userState,
     columns: userColumns,
+    initialState = defaultInitialState,
+    state: userState,
     defaultColumn = defaultColumnInstance,
     getSubRows = defaultGetSubRows,
     getRowID = defaultGetRowID,
+    reducer = defaultReducer,
     debug,
   } = props
 
   debug = process.env.NODE_ENV === 'production' ? false : debug
 
-  // Always provide a default table state
-  const defaultState = useTableState()
-
   // But use the users table state if provided
-  const state = userState || defaultState
+  let [originalState, originalSetState] = React.useState({
+    ...defaultState,
+    ...initialState,
+  })
+
+  const state = React.useMemo(() => {
+    if (userState) {
+      const newState = {
+        ...originalState,
+      }
+      Object.keys(userState).forEach(key => {
+        newState[key] = userState[key]
+      })
+      return newState
+    }
+    return originalState
+  }, [originalState, userState])
+
+  const setState = React.useCallback(
+    (updater, type) => {
+      return originalSetState(old => {
+        const newState = typeof updater === 'function' ? updater(old) : updater
+        return reducer(old, newState, type)
+      })
+    },
+    [reducer]
+  )
 
   // The table instance ref
   let instanceRef = React.useRef({})
@@ -61,7 +87,8 @@ export const useTable = (props, ...plugins) => {
   Object.assign(instanceRef.current, {
     ...props,
     data, // The raw data
-    state, // The resolved table state
+    state,
+    setState, // The resolved table state
     plugins, // All resolved plugins
     hooks: {
       columnsBeforeHeaderGroups: [],

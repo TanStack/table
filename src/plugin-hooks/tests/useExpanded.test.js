@@ -52,7 +52,7 @@ function Table({ columns: userColumns, data, SubComponent }) {
     rows,
     prepareRow,
     flatColumns,
-    state: [{ expanded }],
+    state: { expanded },
   } = useTable(
     {
       columns: userColumns,

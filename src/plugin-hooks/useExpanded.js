@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { mergeProps, applyPropHooks, expandRows } from '../utils'
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 
 defaultState.expanded = []
 
@@ -31,7 +31,8 @@ function useMain(instance) {
     paginateExpandedRows = true,
     expandSubRows = true,
     hooks,
-    state: [{ expanded }, setState],
+    state: { expanded },
+    setState,
   } = instance
 
   const toggleExpandedByPath = (path, set) => {

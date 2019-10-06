@@ -202,15 +202,23 @@ declare module 'react-table' {
     getTableProps: (userProps?: any) => any
     getRowProps: (userProps?: any) => any
     prepareRow: (row: Row<D>) => any
+    state: TableState<D>
+    setState: SetState<D>
   }
 
   export interface TableOptions<D = {}> {
     data: D[]
     columns: HeaderColumn<D>[]
-    state: State<D>
     debug?: boolean
     loading: boolean
     defaultColumn?: Partial<Column<D>>
+    initialState?: Partial<TableState<D>>
+    state?: Partial<TableState<D>>
+    reducer?: (
+      oldState: TableState<D>,
+      newState: TableState<D>,
+      type: string
+    ) => any
   }
 
   // The empty definition of TableState is not an error. It provides a definition
@@ -231,8 +239,6 @@ declare module 'react-table' {
     updater: (old: TableState<D>) => TableState<D>,
     actions: any
   ) => void
-
-  export type State<D> = [TableState<D>, SetState<D>]
 
   export function useTable<D = {}>(
     props: TableOptions<D>,
@@ -266,19 +272,6 @@ declare module 'react-table' {
     expandedDepth: []
     rows: Row<D>[]
   }
-
-  export function useTableState<D = {}>(
-    initialState?: Partial<TableState<D>>,
-    overriddenState?: Partial<TableState<D>>,
-    options?: {
-      reducer?: (
-        oldState: TableState<D>,
-        newState: TableState<D>,
-        type: string
-      ) => any
-      useState?: typeof useState
-    }
-  ): State<D>
 
   export const actions: Record<string, string>
 

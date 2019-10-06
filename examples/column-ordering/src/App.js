@@ -95,7 +95,7 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <pre>
-        <code>{JSON.stringify(state[0], null, 2)}</code>
+        <code>{JSON.stringify(state, null, 2)}</code>
       </pre>
     </>
   )

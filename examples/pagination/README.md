@@ -42,7 +42,7 @@ function MyTable(props) {
     prepareRow,
 +   pageOptions,
 +   page,
-+   state: [{ pageIndex, pageSize }],
++   state: { pageIndex, pageSize },
 +   gotoPage,
 +   previousPage,
 +   nextPage,

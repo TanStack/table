@@ -40,7 +40,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: [{ groupBy, expanded }],
+    state: { groupBy, expanded },
   } = useTable(
     {
       columns,

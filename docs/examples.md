@@ -38,7 +38,7 @@
   - The "Kitchen Sink"
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/kitchen-sink)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/kitchen-sink)
-- **Controlled via `useTableState`** - These examples are more advanced because they demonstrate how to manually control and respond to the state of the table using the `useTableState` hook.
+- **Controlled** - These examples are more advanced because they demonstrate how to manually control and respond to the state of the table.
   - Pagination (Controlled)
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
     - [Open in CodeSandobx](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)

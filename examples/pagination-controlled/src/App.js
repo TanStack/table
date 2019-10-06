@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, useTableState, usePagination } from 'react-table'
+import { useTable, usePagination } from 'react-table'
 
 import makeData from './makeData'
 
@@ -47,17 +47,6 @@ function Table({
   loading,
   pageCount: controlledPageCount,
 }) {
-  // Use useTableState to hoist the state (and state updater) out of the table and control it
-  const tableState = useTableState({ pageIndex: 0 })
-
-  // Now we can get our table state from the hoisted table state tuple
-  const [{ pageIndex, pageSize }] = tableState
-
-  // Listen for changes in pagination and use the state to fetch our new data
-  React.useEffect(() => {
-    fetchData({ pageIndex, pageSize })
-  }, [fetchData, pageIndex, pageSize])
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -72,11 +61,13 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
+    // Get the state from the instance
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      state: tableState, // Pass our hoisted table state
+      state: { pageIndex: 0 }, // Pass our hoisted table state
       manualPagination: true, // Tell the usePagination
       // hook that we'll handle our own data fetching
       // This means we'll also have to provide our own
@@ -85,6 +76,13 @@ function Table({
     },
     usePagination
   )
+
+  // Now we can get our table state from the hoisted table state tuple
+
+  // Listen for changes in pagination and use the state to fetch our new data
+  React.useEffect(() => {
+    fetchData({ pageIndex, pageSize })
+  }, [fetchData, pageIndex, pageSize])
 
   // Render the UI for your table
   return (

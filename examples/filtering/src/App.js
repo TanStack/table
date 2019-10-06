@@ -235,7 +235,7 @@ function Table({ columns, data }) {
     <>
       <div>
         <pre>
-          <code>{JSON.stringify(state[0].filters, null, 2)}</code>
+          <code>{JSON.stringify(state.filters, null, 2)}</code>
         </pre>
       </div>
       <table {...getTableProps()}>
