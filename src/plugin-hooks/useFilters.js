@@ -177,7 +177,14 @@ function useMain(instance) {
 
           // Pass the rows, id, filterValue and column to the filterMethod
           // to get the filtered rows back
-          return filterMethod(filteredSoFar, columnID, filterValue, column)
+          column.filteredRows = filterMethod(
+            filteredSoFar,
+            columnID,
+            filterValue,
+            column
+          )
+
+          return column.filteredRows
         },
         rows
       )
@@ -228,6 +235,7 @@ function useMain(instance) {
     // using every column's preFilteredRows value
     nonFilteredColumns.forEach(column => {
       column.preFilteredRows = filteredRows
+      column.filteredRows = filteredRows
     })
   }, [filteredRows, filters, flatColumns])
 

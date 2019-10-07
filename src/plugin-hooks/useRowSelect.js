@@ -1,7 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { mergeProps, applyPropHooks, ensurePluginOrder } from '../utils'
+import {
+  mergeProps,
+  applyPropHooks,
+  ensurePluginOrder,
+  safeUseLayoutEffect,
+} from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
 
@@ -57,8 +62,10 @@ function useMain(instance) {
   const {
     hooks,
     manualRowSelectedKey = 'isSelected',
+    disableSelectedRowsResetOnDataChange,
     plugins,
     flatRows,
+    data,
     state: { selectedRowPaths },
     setState,
   } = instance
@@ -79,6 +86,28 @@ function useMain(instance) {
       isAllRowsSelected = false
     }
   }
+
+  const isRowSelectedMountedRef = React.useRef()
+
+  // Bypass any effects from firing when this changes
+  const disableSelectedRowsResetOnDataChangeRef = React.useRef()
+  disableSelectedRowsResetOnDataChangeRef.current = disableSelectedRowsResetOnDataChange
+
+  safeUseLayoutEffect(() => {
+    if (
+      isRowSelectedMountedRef.current &&
+      !disableSelectedRowsResetOnDataChangeRef.current
+    ) {
+      setState(
+        old => ({
+          ...old,
+          selectedRowPaths: [],
+        }),
+        actions.pageChange
+      )
+    }
+    isRowSelectedMountedRef.current = true
+  }, [setState, data])
 
   const toggleRowSelectedAll = set => {
     setState(old => {

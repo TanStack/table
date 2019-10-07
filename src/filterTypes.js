@@ -44,7 +44,11 @@ includes.autoRemove = val => !val || !val.length
 export const includesAll = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id]
-    return filterValue.every(val => rowValue.includes(val))
+    return (
+      rowValue &&
+      rowValue.length &&
+      filterValue.every(val => rowValue.includes(val))
+    )
   })
 }
 
