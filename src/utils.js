@@ -288,7 +288,10 @@ export function flexRender(Comp, props) {
 function isClassComponent(component) {
   return (
     typeof component === 'function' &&
-    !!Object.getPrototypeOf(component).isReactComponent
+    !!(() => {
+      let proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isReactComponent
+    })()
   )
 }
 
