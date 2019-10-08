@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useTable, usePagination } from 'react-table'
+import React from "react";
+import styled from "styled-components";
+import { useTable, usePagination } from "react-table";
 
-import makeData from './makeData'
+import makeData from "./makeData";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -35,7 +35,7 @@ const Styles = styled.div`
   .pagination {
     padding: 0.5rem;
   }
-`
+`;
 
 // Let's add a fetchData method to our Table component that will be used to fetch
 // new data when pagination state changes
@@ -45,7 +45,7 @@ function Table({
   data,
   fetchData,
   loading,
-  pageCount: controlledPageCount,
+  pageCount: controlledPageCount
 }) {
   const {
     getTableProps,
@@ -61,28 +61,30 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
+    rows,
     // Get the state from the instance
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize }
   } = useTable(
     {
       columns,
       data,
-      state: { pageIndex: 0 }, // Pass our hoisted table state
+      initialState: { pageIndex: 0 }, // Pass our hoisted table state
       manualPagination: true, // Tell the usePagination
       // hook that we'll handle our own data fetching
       // This means we'll also have to provide our own
       // pageCount.
-      pageCount: controlledPageCount,
+      pageCount: controlledPageCount
     },
     usePagination
-  )
+  );
 
   // Now we can get our table state from the hoisted table state tuple
 
   // Listen for changes in pagination and use the state to fetch our new data
   React.useEffect(() => {
-    fetchData({ pageIndex, pageSize })
-  }, [fetchData, pageIndex, pageSize])
+    console.log(pageIndex);
+    fetchData({ pageIndex, pageSize });
+  }, [fetchData, pageIndex, pageSize]);
 
   // Render the UI for your table
   return (
@@ -95,7 +97,7 @@ function Table({
               pageSize,
               pageCount,
               canNextPage,
-              canPreviousPage,
+              canPreviousPage
             },
             null,
             2
@@ -107,7 +109,7 @@ function Table({
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
               ))}
             </tr>
           ))}
@@ -119,18 +121,23 @@ function Table({
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
                   })}
                 </tr>
               )
           )}
-          {loading ? (
-            // Use our custom loading state to show a loading indicator
-            <tr>
+          <tr>
+            {loading ? (
+              // Use our custom loading state to show a loading indicator
               <td>Loading...</td>
-            </tr>
-          ) : null}
+            ) : (
+              <td>
+                Showing {page.length} of ~{controlledPageCount * pageSize}{" "}
+                results
+              </td>
+            )}
+          </tr>
         </tbody>
       </table>
       {/* 
@@ -139,39 +146,39 @@ function Table({
       */}
       <div className="pagination">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
+          {"<<"}
+        </button>{" "}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
+          {"<"}
+        </button>{" "}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
+          {">"}
+        </button>{" "}
         <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
+          {">>"}
+        </button>{" "}
         <span>
-          Page{' '}
+          Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          </strong>{" "}
         </span>
         <span>
-          | Go to page:{' '}
+          | Go to page:{" "}
           <input
             type="number"
             defaultValue={pageIndex + 1}
             onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
             }}
-            style={{ width: '100px' }}
+            style={{ width: "100px" }}
           />
-        </span>{' '}
+        </span>{" "}
         <select
           value={pageSize}
           onChange={e => {
-            setPageSize(Number(e.target.value))
+            setPageSize(Number(e.target.value));
           }}
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
@@ -182,57 +189,57 @@ function Table({
         </select>
       </div>
     </>
-  )
+  );
 }
 
 // Let's simulate a large dataset on the server (outside of our component)
-const serverData = makeData(10000)
+const serverData = makeData(10000);
 
 function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: "Name",
         columns: [
           {
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: "First Name",
+            accessor: "firstName"
           },
           {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
+            Header: "Last Name",
+            accessor: "lastName"
+          }
+        ]
       },
       {
-        Header: 'Info',
+        Header: "Info",
         columns: [
           {
-            Header: 'Age',
-            accessor: 'age',
+            Header: "Age",
+            accessor: "age"
           },
           {
-            Header: 'Visits',
-            accessor: 'visits',
+            Header: "Visits",
+            accessor: "visits"
           },
           {
-            Header: 'Status',
-            accessor: 'status',
+            Header: "Status",
+            accessor: "status"
           },
           {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
+            Header: "Profile Progress",
+            accessor: "progress"
+          }
+        ]
+      }
     ],
     []
-  )
+  );
 
   // We'll start our table without any data
-  const [data, setData] = React.useState([])
-  const [loading, setLoading] = React.useState(false)
-  const [pageCount, setPageCount] = React.useState(0)
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [pageCount, setPageCount] = React.useState(0);
 
   const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
     // This will get called when the table needs new data
@@ -240,21 +247,21 @@ function App() {
     // even a server. But for this example, we'll just fake it.
 
     // Set the loading state
-    setLoading(true)
+    setLoading(true);
 
     // We'll even set a delay to simulate a server here
     setTimeout(() => {
-      const startRow = pageSize * pageIndex
-      const endRow = startRow + pageSize
-      setData(serverData.slice(startRow, endRow))
+      const startRow = pageSize * pageIndex;
+      const endRow = startRow + pageSize;
+      setData(serverData.slice(startRow, endRow));
 
       // Your server could send back total page count.
       // For now we'll just fake it, too
-      setPageCount(Math.ceil(serverData.length / pageSize))
+      setPageCount(Math.ceil(serverData.length / pageSize));
 
-      setLoading(false)
-    }, 1000)
-  }, [])
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   return (
     <Styles>
@@ -266,7 +273,7 @@ function App() {
         pageCount={pageCount}
       />
     </Styles>
-  )
+  );
 }
 
-export default App
+export default App;
