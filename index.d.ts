@@ -200,6 +200,7 @@ declare module 'react-table' {
     headerGroups: HeaderGroup<D>[]
     headers: HeaderGroup<D>[]
     getTableProps: (userProps?: any) => any
+    getTableBodyProps: (userProps?: any) => any
     getRowProps: (userProps?: any) => any
     prepareRow: (row: Row<D>) => any
     state: TableState<D>
@@ -210,7 +211,7 @@ declare module 'react-table' {
     data: D[]
     columns: HeaderColumn<D>[]
     debug?: boolean
-    loading: boolean
+    loading?: boolean
     defaultColumn?: Partial<Column<D>>
     initialState?: Partial<TableState<D>>
     state?: Partial<TableState<D>>
