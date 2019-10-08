@@ -156,7 +156,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
       <td>
         <div><a href="https://www.metso.com/">Pekka</a></div>
         <div>Jon Eickmeier</div>
-        <div>Syed Hussain</div>
+        <div><a href="https://github.com/Shah-Sahab">Syed Hussain<a></div>
       </td>
     </tr>
   </tbody>
