@@ -1,6 +1,6 @@
 // TypeScript Version: 3.5
 
-import { ReactNode, useState, ComponentType, MouseEvent } from 'react'
+import { ReactNode, ComponentType, MouseEvent } from 'react'
 
 /**
  * The empty definitions of below provides a base definition for the parts used by useTable, that can then be extended in the users code.
@@ -14,7 +14,7 @@ import { ReactNode, useState, ComponentType, MouseEvent } from 'react'
 export interface TableOptions<D extends object> extends UseTableOptions<D> {}
 
 export interface TableInstance<D extends object = {}>
-  extends Omit<TableOptions<D>, 'columns'>,
+  extends Omit<TableOptions<D>, 'columns' | 'state'>,
     UseTableInstanceProps<D> {}
 
 export interface TableState<
@@ -97,6 +97,9 @@ export interface UseTableColumnOptions<D extends object>
       show: boolean | ((instance: TableInstance<D>) => boolean)
       Header: Renderer<HeaderProps<D>>
       Cell: Renderer<CellProps<D>>
+      width?: number
+      minWidth?: number
+      maxWidth?: number
     }> {}
 
 export interface UseTableInstanceProps<D extends object> {
@@ -111,7 +114,9 @@ export interface UseTableInstanceProps<D extends object> {
   prepareRow: (row: Row<D>) => void
   rowPaths: string[]
   flatRows: Row<D>[]
+  state: TableState<D>
   setState: SetState<D>
+  totalColumnsWidth: number
 }
 
 export interface UseTableHeaderGroupProps<D extends object> {
@@ -270,6 +275,7 @@ export interface UseFiltersColumnProps<D extends object> {
   ) => void
   filterValue: FilterValue
   preFilteredRows: Row<D>[]
+  filteredRows: Row<D>[]
 }
 
 export type FilterProps<D extends object> = HeaderProps<D>
@@ -562,6 +568,41 @@ export type DefaultSortTypes = 'alphanumeric' | 'datetime' | 'basic'
 export interface SortingRule<D> {
   id: IdType<D>
   desc?: boolean
+}
+/* #endregion */
+
+/* #region useAbsoluteLayout */
+export function useAbsoluteLayout<D extends object = {}>(hooks: Hooks<D>): void
+export namespace useAbsoluteLayout {
+  const pluginName = 'useAbsoluteLayout'
+}
+/* #endregion */
+
+/* #region useBlockLayout */
+export function useBlockLayout<D extends object = {}>(hooks: Hooks<D>): void
+export namespace useBlockLayout {
+  const pluginName = 'useBlockLayout'
+}
+/* #endregion */
+
+/* #region useResizeColumns */
+export function useResizeColumns<D extends object = {}>(hooks: Hooks<D>): void
+export namespace useResizeColumns {
+  const pluginName = 'useResizeColumns'
+}
+
+export interface UseResizeColumnsOptions<D extends object> {
+  disableResizing?: boolean
+}
+
+export interface UseResizeColumnsColumnOptions<D extends object> {
+  disableResizing?: boolean
+}
+
+export interface UseResizeColumnsHeaderProps<D extends object> {
+  getResizerProps: (props?: object) => object
+  canResize: boolean
+  isResizing: boolean
 }
 /* #endregion */
 
