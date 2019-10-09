@@ -4,24 +4,13 @@
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
-<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
-</a>
-<a href="https://bundlephobia.com/result?p=react-table@next" target="\_parent">
-  <img alt="" src="https://badgen.net/bundlephobia/minzip/react-table@next" />
-</a>
-<a href="https://npmjs.com/package/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
-</a>
-<a href="https://spectrum.chat/react-table">
-  <img alt="Join the community on Spectrum" src="https://withspectrum.github.io/badge/badge.svg" />
-</a>
-<a href="https://github.com/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star" />
-</a>
-<a href="https://twitter.com/tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
-</a>
+[![GitHub Actions CI](https://github.com/tannerlinsley/react-table/workflows/CI/badge.svg)](https://github.com/tannerlinsley/react-table/actions)
+[![Bundlephobia](https://badgen.net/bundlephobia/minzip/react-table@next)](https://bundlephobia.com/result?p=react-table@next)
+[![NPM Package](https://img.shields.io/npm/dm/react-table.svg)](https://npmjs.com/package/react-table)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-table)
+[![GitHub Stars](https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star)](https://github.com/tannerlinsley/react-table)
+[![Twitter Followers](https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow)](https://twitter.com/tannerlinsley)
+
 <br />
 <br />
 <a href="https://patreon.com/tannerlinsley">
