@@ -10,17 +10,18 @@ To bring the resulting types into better alignment with your plugins, you should
 
 e.g.
 
-if you are only using `useSortBy` and `usePagination` then you should take this:
+if you are only using `useSortBy` and `usePagination` then you would take this:
 
 ```tsx
-export interface TableOptions<D extends object>
-  extends UseExpandedOptions<D>,
-    UseFiltersOptions<D>,
-    UseGroupByOptions<D>,
-    UsePaginationOptions<D>,
-    UseRowSelectOptions<D>,
-    UseSortByOptions<D>,
-    UseFiltersOptions<D> {}
+extends UseExpandedOptions<D>,
+  UseFiltersOptions<D>,
+  UseGroupByOptions<D>,
+  UsePaginationOptions<D>,
+  UseRowSelectOptions<D>,
+  UseSortByOptions<D>,
+  UseFiltersOptions<D>,
+  UseResizeColumnsOptions<D>,
+  Record<string, any> {}
 ```
 
 and convert it to this:
@@ -31,7 +32,7 @@ export interface TableOptions<D extends object>
     UseSortByOptions<D> {}
 ```
 
-Then follow the same pattern for all of the other interfaces in the file. You'll notice that some plugins don't extends all of the top level interfaces.
+Then follow the same pattern for all of the other interfaces in the file. You'll notice that many plugins don't extends all of the top level interfaces.
 
 ## Caveat
 
