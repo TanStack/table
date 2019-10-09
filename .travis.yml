@@ -9,6 +9,10 @@ os:
   - osx
   - windows
 
+env:
+  global:
+    - YARN_GPG=no
+
 cache: yarn
 
 script: yarn test
