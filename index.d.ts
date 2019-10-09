@@ -47,8 +47,10 @@ export function useTable<D extends object = {}>(
 /**
  * NOTE: To use custom options, use "Interface Merging" to add the custom options
  */
-export type UseTableOptions<D extends object> = Partial<{
+export type UseTableOptions<D extends object> = {
   columns: Column<D>[]
+  data: D[]
+} & Partial<{
   initialState: Partial<TableState<D>>
   state: Partial<TableState<D>>
   reducer: (
@@ -56,7 +58,6 @@ export type UseTableOptions<D extends object> = Partial<{
     newState: TableState<D>,
     type: string
   ) => TableState<D>
-  data: D[]
   defaultColumn: Partial<Column<D>>
   initialRowStateKey: IdType<D>
   getSubRows: (row: Row<D>, relativeIndex: number) => Row<D>[]
@@ -79,6 +80,7 @@ export interface UseTableHooks<D extends object> {
 
   // Prop Hooks
   getTableProps: ((instance: TableInstance<D>) => object)[]
+  getTableBodyProps: ((instance: TableInstance<D>) => object)[]
   getRowProps: ((row: Row<D>, instance: TableInstance<D>) => object)[]
   getHeaderGroupProps: ((
     headerGroup: HeaderGroup<D>,
@@ -105,6 +107,7 @@ export interface UseTableInstanceProps<D extends object> {
   flatHeaders: ColumnInstance<D>[]
   rows: Row<D>[]
   getTableProps: (props?: object) => object
+  getTableBodyProps: (props?: object) => object
   prepareRow: (row: Row<D>) => void
   rowPaths: string[]
   flatRows: Row<D>[]
@@ -135,7 +138,6 @@ export interface UseTableRowProps<D extends object> {
   original: D
   path: IdType<D>[]
   subRows: Row<D>[]
-  state: object
 }
 
 export interface UseTableCellProps<D extends object> {
@@ -585,4 +587,3 @@ export type SetState<D extends object> = (
   updater: (old: TableState<D>) => TableState<D>,
   type: keyof typeof actions
 ) => void
-
