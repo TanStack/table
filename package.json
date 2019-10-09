@@ -20,7 +20,7 @@
   "sideEffects": false,
   "scripts": {
     "commit": "git add . && git-cz",
-    "test": "is-ci 'test:ci' 'test:dev'",
+    "test": "is-ci \"test:ci\" \"test:dev\"",
     "test:dev": "jest --watch",
     "test:ci": "jest",
     "build": "rollup -c",
