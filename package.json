@@ -20,7 +20,7 @@
   "sideEffects": false,
   "scripts": {
     "commit": "git add . && git-cz",
-    "test": "is-ci 'test:ci' 'test:dev'",
+    "test": "is-ci \"test:ci\" \"test:dev\"",
     "test:dev": "jest --watch",
     "test:ci": "jest",
     "build": "rollup -c",
@@ -75,7 +75,7 @@
     "eslint-plugin-react-hooks": "1.7.0",
     "eslint-plugin-standard": "^4.0.0",
     "husky": "^3.0.3",
-    "is-ci-cli": "^1.1.1",
+    "is-ci-cli": "^2.0.0",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
     "jest-runner-eslint": "^0.7.4",
