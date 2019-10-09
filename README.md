@@ -5,7 +5,6 @@
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
 [![GitHub Actions CI](https://github.com/tannerlinsley/react-table/workflows/CI/badge.svg)](https://github.com/tannerlinsley/react-table/actions)
-[![Travis CI](https://travis-ci.org/tannerlinsley/react-table.svg?branch=master)](https://travis-ci.org/tannerlinsley/react-table)
 [![Bundlephobia](https://badgen.net/bundlephobia/minzip/react-table@next)](https://bundlephobia.com/result?p=react-table@next)
 [![NPM Package](https://img.shields.io/npm/dm/react-table.svg)](https://npmjs.com/package/react-table)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-table)
