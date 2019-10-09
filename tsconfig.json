@@ -2,11 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "lib": ["es6"],
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "types": [],
+    "strict": true,
     "noEmit": true,
     "forceConsistentCasingInFileNames": true
   },
