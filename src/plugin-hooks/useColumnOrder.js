@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 
 defaultState.columnOrder = []
 
@@ -14,7 +14,7 @@ const propTypes = {
 
 export const useColumnOrder = hooks => {
   hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
-    return [...deps, instance.state[0].columnOrder]
+    return [...deps, instance.state.columnOrder]
   })
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
   hooks.useMain.push(useMain)
@@ -24,7 +24,7 @@ useColumnOrder.pluginName = 'useColumnOrder'
 
 function columnsBeforeHeaderGroups(columns, instance) {
   const {
-    state: [{ columnOrder }],
+    state: { columnOrder },
   } = instance
 
   // If there is no order, return the normal columns
@@ -56,9 +56,7 @@ function columnsBeforeHeaderGroups(columns, instance) {
 function useMain(instance) {
   PropTypes.checkPropTypes(propTypes, instance, 'property', 'useColumnOrder')
 
-  const {
-    state: [, setState],
-  } = instance
+  const { setState } = instance
 
   const setColumnOrder = React.useCallback(
     updater => {

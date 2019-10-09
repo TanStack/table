@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { mergeProps, applyPropHooks, expandRows } from '../utils'
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 
 defaultState.expanded = []
 
@@ -29,8 +29,10 @@ function useMain(instance) {
     rows,
     manualExpandedKey = 'expanded',
     paginateExpandedRows = true,
+    expandSubRows = true,
     hooks,
-    state: [{ expanded }, setState],
+    state: { expanded },
+    setState,
   } = instance
 
   const toggleExpandedByPath = (path, set) => {
@@ -82,11 +84,18 @@ function useMain(instance) {
       console.info('getExpandedRows')
 
     if (paginateExpandedRows) {
-      return expandRows(rows, { manualExpandedKey, expanded })
+      return expandRows(rows, { manualExpandedKey, expanded, expandSubRows })
     }
 
     return rows
-  }, [debug, paginateExpandedRows, rows, manualExpandedKey, expanded])
+  }, [
+    debug,
+    paginateExpandedRows,
+    rows,
+    manualExpandedKey,
+    expanded,
+    expandSubRows,
+  ])
 
   const expandedDepth = findExpandedDepth(expanded)
 

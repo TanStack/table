@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0-beta.0",
+  "version": "7.0.0-beta.10",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -17,6 +17,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "sideEffects": false,
   "scripts": {
     "commit": "git add . && git-cz",
     "test": "is-ci 'test:ci' 'test:dev'",
@@ -27,7 +28,7 @@
     "prepare": "yarn build",
     "release": "yarn publish",
     "releaseNext": "yarn publish --tag next",
-    "format": "prettier ./src/**/*.{md,js,jsx,tsx} --write"
+    "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write"
   },
   "files": [
     "CHANGELOG.md",
@@ -90,7 +91,7 @@
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
-    "rollup-plugin-uglify": "^6.0.2",
+    "rollup-plugin-terser": "^5.1.2",
     "snapshot-diff": "^0.5.2"
   },
   "config": {

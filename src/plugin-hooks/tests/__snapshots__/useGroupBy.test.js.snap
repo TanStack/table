@@ -34,7 +34,7 @@ Snapshot Diff:
             class=""
             colspan="1"
           >
-@@ -107,138 +107,119 @@
+@@ -109,138 +109,119 @@
           class=""
         >
           <td
@@ -286,7 +286,7 @@ Snapshot Diff:
             class=""
             colspan="1"
           >
-@@ -114,10 +126,13 @@
+@@ -116,10 +128,13 @@
             >
               👉
             </span>
@@ -300,7 +300,7 @@ Snapshot Diff:
           >
             2 Names
           </td>
-@@ -127,15 +142,10 @@
+@@ -129,15 +144,10 @@
             27.5 (avg)
           </td>
           <td
@@ -316,7 +316,7 @@ Snapshot Diff:
           <td
             class=""
           >
-@@ -155,22 +165,20 @@
+@@ -157,22 +167,20 @@
             </span>
             lastName: perkins (1)
           </td>
@@ -342,7 +342,7 @@ Snapshot Diff:
             class=""
           >
             status: null
-@@ -194,22 +202,20 @@
+@@ -196,22 +204,20 @@
             </span>
             lastName: bergevin (1)
           </td>

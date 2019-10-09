@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 //
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 import { ensurePluginOrder, safeUseLayoutEffect, expandRows } from '../utils'
 
 defaultState.pageSize = 10
@@ -36,10 +36,9 @@ function useMain(instance) {
     plugins,
     pageCount: userPageCount,
     paginateExpandedRows = true,
-    state: [
-      { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
-      setState,
-    ],
+    expandSubRows = true,
+    state: { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
+    setState,
   } = instance
 
   ensurePluginOrder(
@@ -101,9 +100,10 @@ function useMain(instance) {
       return page
     }
 
-    return expandRows(page, { manualExpandedKey, expanded })
+    return expandRows(page, { manualExpandedKey, expanded, expandSubRows })
   }, [
     debug,
+    expandSubRows,
     expanded,
     manualExpandedKey,
     manualPagination,
@@ -116,39 +116,48 @@ function useMain(instance) {
   const canPreviousPage = pageIndex > 0
   const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
 
-  const gotoPage = pageIndex => {
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.info('gotoPage')
-    return setState(old => {
-      if (pageIndex < 0 || pageIndex > pageCount - 1) {
-        return old
-      }
-      return {
-        ...old,
-        pageIndex,
-      }
-    }, actions.pageChange)
-  }
+  const gotoPage = React.useCallback(
+    updater => {
+      if (process.env.NODE_ENV === 'development' && debug)
+        console.info('gotoPage')
+      return setState(old => {
+        const newPageIndex =
+          typeof updater === 'function' ? updater(old.pageIndex) : updater
 
-  const previousPage = () => {
-    return gotoPage(pageIndex - 1)
-  }
+        if (newPageIndex < 0 || newPageIndex > pageCount - 1) {
+          return old
+        }
+        return {
+          ...old,
+          pageIndex: newPageIndex,
+        }
+      }, actions.pageChange)
+    },
+    [debug, pageCount, setState]
+  )
 
-  const nextPage = () => {
-    return gotoPage(pageIndex + 1)
-  }
+  const previousPage = React.useCallback(() => {
+    return gotoPage(old => old - 1)
+  }, [gotoPage])
 
-  const setPageSize = pageSize => {
-    setState(old => {
-      const topRowIndex = old.pageSize * old.pageIndex
-      const pageIndex = Math.floor(topRowIndex / pageSize)
-      return {
-        ...old,
-        pageIndex,
-        pageSize,
-      }
-    }, actions.pageSizeChange)
-  }
+  const nextPage = React.useCallback(() => {
+    return gotoPage(old => old + 1)
+  }, [gotoPage])
+
+  const setPageSize = React.useCallback(
+    pageSize => {
+      setState(old => {
+        const topRowIndex = old.pageSize * old.pageIndex
+        const pageIndex = Math.floor(topRowIndex / pageSize)
+        return {
+          ...old,
+          pageIndex,
+          pageSize,
+        }
+      }, actions.pageSizeChange)
+    },
+    [setState]
+  )
 
   return {
     ...instance,

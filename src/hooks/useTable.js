@@ -12,8 +12,6 @@ import {
   determineHeaderVisibility,
 } from '../utils'
 
-import { useTableState } from './useTableState'
-
 const propTypes = {
   // General
   data: PropTypes.array.isRequired,
@@ -27,8 +25,11 @@ const propTypes = {
 const renderErr =
   'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
 
-const defaultColumnInstance = {}
+export const defaultState = {}
 
+const defaultInitialState = {}
+const defaultColumnInstance = {}
+const defaultReducer = (old, newState) => newState
 const defaultGetSubRows = (row, index) => row.subRows || []
 const defaultGetRowID = (row, index) => index
 
@@ -39,21 +40,46 @@ export const useTable = (props, ...plugins) => {
   // Destructure props
   let {
     data,
-    state: userState,
     columns: userColumns,
+    initialState = defaultInitialState,
+    state: userState,
     defaultColumn = defaultColumnInstance,
     getSubRows = defaultGetSubRows,
     getRowID = defaultGetRowID,
+    reducer = defaultReducer,
     debug,
   } = props
 
   debug = process.env.NODE_ENV === 'production' ? false : debug
 
-  // Always provide a default table state
-  const defaultState = useTableState()
-
   // But use the users table state if provided
-  const state = userState || defaultState
+  let [originalState, originalSetState] = React.useState({
+    ...defaultState,
+    ...initialState,
+  })
+
+  const state = React.useMemo(() => {
+    if (userState) {
+      const newState = {
+        ...originalState,
+      }
+      Object.keys(userState).forEach(key => {
+        newState[key] = userState[key]
+      })
+      return newState
+    }
+    return originalState
+  }, [originalState, userState])
+
+  const setState = React.useCallback(
+    (updater, type) => {
+      return originalSetState(old => {
+        const newState = typeof updater === 'function' ? updater(old) : updater
+        return reducer(old, newState, type)
+      })
+    },
+    [reducer]
+  )
 
   // The table instance ref
   let instanceRef = React.useRef({})
@@ -61,15 +87,18 @@ export const useTable = (props, ...plugins) => {
   Object.assign(instanceRef.current, {
     ...props,
     data, // The raw data
-    state, // The resolved table state
+    state,
+    setState, // The resolved table state
     plugins, // All resolved plugins
     hooks: {
       columnsBeforeHeaderGroups: [],
       columnsBeforeHeaderGroupsDeps: [],
+      useBeforeDimensions: [],
       useMain: [],
       useRows: [],
       prepareRow: [],
       getTableProps: [],
+      getTableBodyProps: [],
       getRowProps: [],
       getHeaderGroupProps: [],
       getHeaderProps: [],
@@ -135,12 +164,11 @@ export const useTable = (props, ...plugins) => {
   })
 
   // Access the row model
-  const [rows, rowPaths, flatRows] = React.useMemo(() => {
+  const [rows, flatRows] = React.useMemo(() => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.time('getAccessedRows')
 
-    let flatRows = 0
-    const rowPaths = []
+    let flatRows = []
 
     // Access the row's data
     const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
@@ -152,23 +180,21 @@ export const useTable = (props, ...plugins) => {
       // Make the new path for the row
       const path = [...parentPath, rowID]
 
-      flatRows++
-      rowPaths.push(path.join('.'))
+      const row = {
+        original,
+        index: i,
+        path, // used to create a key for each row even if not nested
+        depth,
+        cells: [{}], // This is a dummy cell
+      }
+
+      flatRows.push(row)
 
       // Process any subRows
       let subRows = getSubRows(originalRow, i)
 
       if (subRows) {
-        subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, path))
-      }
-
-      const row = {
-        original,
-        index: i,
-        path, // used to create a key for each row even if not nested
-        subRows,
-        depth,
-        cells: [{}], // This is a dummy cell
+        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, path))
       }
 
       // Override common array functions (and the dummy cell's getCellProps function)
@@ -198,11 +224,10 @@ export const useTable = (props, ...plugins) => {
     const accessedData = data.map((d, i) => accessRow(d, i))
     if (process.env.NODE_ENV === 'development' && debug)
       console.timeEnd('getAccessedRows')
-    return [accessedData, rowPaths, flatRows]
+    return [accessedData, flatRows]
   }, [debug, data, getRowID, getSubRows, flatColumns])
 
   instanceRef.current.rows = rows
-  instanceRef.current.rowPaths = rowPaths
   instanceRef.current.flatRows = flatRows
 
   // Determine column visibility
@@ -213,6 +238,17 @@ export const useTable = (props, ...plugins) => {
     (all, headerGroup) => [...all, ...headerGroup.headers],
     []
   )
+
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.time('hooks.useBeforeDimensions')
+  instanceRef.current = applyHooks(
+    instanceRef.current.hooks.useBeforeDimensions,
+    instanceRef.current
+  )
+  if (process.env.NODE_ENV === 'development' && debug)
+    console.timeEnd('hooks.useBeforeDimensions')
+
+  calculateDimensions(instanceRef.current)
 
   if (process.env.NODE_ENV === 'development' && debug)
     console.time('hooks.useMain')
@@ -246,7 +282,7 @@ export const useTable = (props, ...plugins) => {
       mergeProps(
         {
           key: ['header', column.id].join('_'),
-          colSpan: column.totalHeaderCount,
+          colSpan: column.totalVisibleHeaderCount,
         },
         applyPropHooks(
           instanceRef.current.hooks.getHeaderProps,
@@ -306,7 +342,7 @@ export const useTable = (props, ...plugins) => {
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
 
-  instanceRef.current.prepareRow = row => {
+  instanceRef.current.prepareRow = React.useCallback(row => {
     row.getRowProps = props =>
       mergeProps(
         { key: ['row', ...row.path].join('_') },
@@ -366,7 +402,7 @@ export const useTable = (props, ...plugins) => {
 
     // need to apply any row specific hooks (useExpanded requires this)
     applyHooks(instanceRef.current.hooks.prepareRow, row, instanceRef.current)
-  }
+  }, [])
 
   instanceRef.current.getTableProps = userProps =>
     mergeProps(
@@ -377,5 +413,44 @@ export const useTable = (props, ...plugins) => {
       userProps
     )
 
+  instanceRef.current.getTableBodyProps = userProps =>
+    mergeProps(
+      applyPropHooks(
+        instanceRef.current.hooks.getTableBodyProps,
+        instanceRef.current
+      ),
+      userProps
+    )
+
   return instanceRef.current
+}
+
+function calculateDimensions(instance) {
+  const { headers } = instance
+
+  instance.totalColumnsWidth = calculateHeaderWidths(headers)
+}
+
+function calculateHeaderWidths(headers, left = 0) {
+  let sumTotalWidth = 0
+
+  headers.forEach(header => {
+    let { headers: subHeaders } = header
+
+    header.totalLeft = left
+
+    if (subHeaders && subHeaders.length) {
+      header.totalWidth = calculateHeaderWidths(subHeaders, left)
+    } else {
+      header.totalWidth = Math.min(
+        Math.max(header.minWidth, header.width),
+        header.maxWidth
+      )
+    }
+
+    left += header.totalWidth
+    sumTotalWidth += header.totalWidth
+  })
+
+  return sumTotalWidth
 }

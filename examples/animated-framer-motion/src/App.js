@@ -202,6 +202,7 @@ function Table({ columns, data }) {
 
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     rows,
     flatColumns,
@@ -264,7 +265,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           <AnimatePresence>
             {rows.slice(0, 10).map(
               (row, i) =>
@@ -293,7 +294,7 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <pre>
-        <code>{JSON.stringify(state[0], null, 2)}</code>
+        <code>{JSON.stringify(state, null, 2)}</code>
       </pre>
     </>
   )

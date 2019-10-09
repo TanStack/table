@@ -44,17 +44,25 @@ export function useTable<D extends object = {}>(
   ...plugins: PluginHook<D>[]
 ): TableInstance<D>
 
+/**
+ * NOTE: To use custom options, use "Interface Merging" to add the custom options
+ */
 export type UseTableOptions<D extends object> = Partial<{
   columns: Column<D>[]
-  state: TableStateTuple<D>
+  initialState: Partial<TableState<D>>
+  state: Partial<TableState<D>>
+  reducer: (
+    oldState: TableState<D>,
+    newState: TableState<D>,
+    type: string
+  ) => TableState<D>
   data: D[]
   defaultColumn: Partial<Column<D>>
   initialRowStateKey: IdType<D>
   getSubRows: (row: Row<D>, relativeIndex: number) => Row<D>[]
   getRowID: (row: Row<D>, relativeIndex: number) => string
   debug: boolean
-}> &
-  Record<string, any>
+}>
 
 export interface UseTableHooks<D extends object> {
   columnsBeforeHeaderGroups: ((
@@ -100,6 +108,7 @@ export interface UseTableInstanceProps<D extends object> {
   prepareRow: (row: Row<D>) => void
   rowPaths: string[]
   flatRows: Row<D>[]
+  setState: SetState<D>
 }
 
 export interface UseTableHeaderGroupProps<D extends object> {
@@ -555,19 +564,6 @@ export interface SortingRule<D> {
 /* #endregion */
 
 // Additional API
-export function useTableState<D extends object = {}>(
-  initialState?: Partial<TableState<D>>,
-  overrides?: Partial<TableState<D>>,
-  options?: {
-    reducer?: (
-      oldState: TableState<D>,
-      newState: TableState<D>,
-      type: string
-    ) => TableState<D>
-    useState?: typeof useState
-  }
-): TableStateTuple<D>
-
 export const actions: Record<string, string>
 export function addActions(...actions: string[]): void
 
@@ -590,4 +586,3 @@ export type SetState<D extends object> = (
   type: keyof typeof actions
 ) => void
 
-export type TableStateTuple<D extends object> = [TableState<D>, SetState<D>]

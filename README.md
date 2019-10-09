@@ -43,6 +43,8 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Row Expansion
 - Column Ordering
 - Animatable
+- Virtualizable
+- Resizable
 - Server-side/controlled data/state
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
@@ -55,7 +57,7 @@ React Table v7 is still under active development, and its API is still changing,
 
 #### Should I use v7@beta in production?
 
-You can use it production as long as you lock in the beta version in your package.json and also accept that there may be unlikely, but possible bug fixes and/or API changes before it's official release.
+You can use it in production as long as you lock in the beta version in your package.json and also accept that there may be unlikely, but possible bug fixes and/or API changes before it's official release.
 
 #### I'm still using v6, what should I do?
 
@@ -154,6 +156,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
       <td>
         <div><a href="https://www.metso.com/">Pekka</a></div>
         <div>Jon Eickmeier</div>
+        <div><a href="https://github.com/Shah-Sahab">Syed Hussain<a></div>
       </td>
     </tr>
   </tbody>
@@ -175,6 +178,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
         <div>Dan Houle</div>
         <div>David Pickut</div>
         <div>Jordan Soltman</div>
+        <div>Robert Tajnšek</div>
       </td>
     </tr>
   </tbody>

@@ -15,8 +15,11 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`usePagination`](#usePagination)
     - [`useRowSelect`](#useRowSelect)
     - [`useRowState`](#useRowState)
-  - Utility Hooks
-    - [`useTableState`](#useTableState)
+    - [`useColumnOrder`](#useColumnOrder)
+  - Layout Hooks
+    - [`useBlockLayout`](#useBlockLayout)
+    - [`useAbsoluteLayout`](#useAbsoluteLayout)
+    - [`useResizeColumns`](#useResizeColumns)
 - 3rd Party Plugin Hooks
   - Want your custom plugin hook listed here? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
 
@@ -49,11 +52,11 @@ const instance = useTable(
 
 This multi-stage process is the secret sauce that allows React Table plugin hooks to work together and compose nicely, while not stepping on each others toes.
 
-To dive deeper into plugins, see [Plugins](TODO) and the [Plugin Guide](TODO)
+To dive deeper into plugins, see Plugins](TODO) and the [Plugin Guide
 
 ### Plugin Hook Order & Consistency
 
-The order and usage of plugin hooks must follow [The Laws of Hooks](TODO), just like any other custom hook. They must always be unconditionally called in the same order.
+The order and usage of plugin hooks must follow The Laws of Hooks, just like any other custom hook. They must always be unconditionally called in the same order.
 
 > **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSorting`**
 
@@ -80,12 +83,19 @@ The following options are supported via the main options object passed to `useTa
   - Required
   - Must be **memoized**
   - The data array that you want to display on the table.
-- `state: TableStateTuple[stateObject, stateUpdater]`
+- `initialState: Object`
   - Optional
-  - Must be **memoized** table state tuple. See [`useTableState`](#usetablestate) for more information.
-  - The state/updater pair for the table instance. You would want to override this if you plan on controlling or hoisting table state into your own code.
-  - Defaults to using an internal `useTableState()` instance if not defined.
-  - See [Controlling and Hoisting Table State](#controlling-and-hoisting-table-state)
+  - The initial state object for the table.
+  - Upon table initialization, this object is **merged over the table's `defaultState` object** (eg. `{...defaultState, ...initialState}`) that React Table and its hooks use to register default state to produce the final initial state object passed to the `React.useState` hook internally.
+- `state: Object`
+  - Optional
+  - Must be **memoized**
+  - When either the internal `state` or this `state` object change, this object is **always merged over the internal table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options.
+- `reducer: Function(oldState, newState) => finalState`
+  - Optional
+  - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
+  - With every `setState` call to the table's internal `React.useState` instance, this reducer is called and is allowed to modify the final state object for updating.
+  - It is passed the `oldState`, the `newState`, and when provided, an optional action `type`.
 - `defaultColumn: Object`
   - Optional
   - Defaults to `{}`
@@ -115,7 +125,7 @@ The following options are supported via the main options object passed to `useTa
   - A flag to turn on debug mode.
   - Defaults to `false`
 
-### `column` Options
+### Column Options
 
 The following options are supported on any column object you can pass to `columns`.
 
@@ -151,11 +161,38 @@ The following options are supported on any column object you can pass to `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
+- `width: Int`
+  - Optional
+  - Defaults to `150`
+  - Specifies the width for the column (when using non-table-element layouts)
+- `minWidth: Int`
+  - Optional
+  - Defaults to `0`
+  - Specifies the minimum width for the column (when using non-table-element layouts)
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
+- `maxWidth: Int`
+  - Optional
+  - Defaults to `0`
+  - Specifies the maximum width for the column (when using non-table-element layouts)
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
 
 ### Instance Properties
 
 The following properties are available on the table instance returned from `useTable`
 
+- `state: Object`
+  - **Memoized** - This object reference will not change unless either the internal state or the `state` overrides option provided change.
+  - This is the final state object of the table, which is the product of the `initialState`, internal state, optional `state` overrides option and the `reducer` option (if applicable).
+- `setState: Function(updater, type) => void`
+  - **Memoized** - This function reference will not change unless the internal state `reducer` is changed
+  - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
+  - `updater: Function`
+    - This parameter is identical to the `setState` API exposed by `React.useState`.
+      - If a function is passed, that function will be called with the previous state and is expected to return a new version of the state.
+      - If a value is passed, it will replace the state entirely.
+  - `type: String`
+    - Optional
+    - The action type corresponding to what action being taken against the state.
 - `columns: Array<Column>`
   - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
   - See [Column Properties](#column-properties) for more information
@@ -182,17 +219,19 @@ The following properties are available on the table instance returned from `useT
   - **Required**
   - This function is used to resolve any props needed for your table wrapper.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `getTableBodyProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for your table body wrapper.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table body props, so be careful!**
 - `prepareRow: Function(Row)`
   - **Required**
   - This function is responsible for lazily preparing a row for rendering. Any row that you intend to render in your table needs to be passed to this function **before every render**.
   - **Why?** Since table data could potentially be very large, it can become very expensive to compute all of the necessary state for every row to be rendered regardless if it actually is rendered or not (for example if you are paginating or virtualizing the rows, you may only have a few rows visible at any given moment). This function allows only the rows you intend to display to be computed and prepped with the correct state.
-- `rowPaths: Array<string>`
-  - An array containing the stringified `path` of every original row in the table. eg. If a row has a path of `[0, 3, 2]`, its stringified path would be `0.3.2`.
-  - This array is used by many plugin hooks including `useRowSelect` to manage row selection state
-  - Only rows that exist on the original `data` array will have a path in this array. Rows created by `useGroupBy`'s aggregations and grouping are not included in this array, since they do not reference an original data row.
 - `flatRows: Array<Row>`
   - An array of all rows, including subRows which have been flattened into the order in which they were detected (depth first)
   - This can be helpful in calculating total row counts that must include subRows
+- `totalColumnsWidth: Int`
+  - This is the total width of all visible columns (when using non-table-element layouts)
 - `setRowState: Function(rowPath, updater: Function | any) => void`
   - This function can be used to update the internal state for any row.
   - Pass it a valid `rowPath` array and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
@@ -228,6 +267,12 @@ The following properties are available on every `Column` object returned by the 
   - The entire table `instance` will be passed to the renderer with the addition of a `column` property, containing a reference to the column
   - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` renderers. Other renderers like `Filter` are available via hooks like `useFilters`.
   - If a function or component is passed instead of a string, it will be be passed the table instance and column model as props and is expected to return any valid JSX.
+- `totalLeft: Int`
+  - This is the total width in pixels of all columns to the left of this column
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
+- `totalWidth: Int`
+  - This is the total width in pixels for this column (if it is a leaf-column) or or all of it's sub-columns (if it is a column group)
+  - Specifically useful when using plugin hooks that allow the user to resize column widths
 - `getHeaderProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for this column's header cell.
@@ -287,82 +332,8 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-```js
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = [
-    {
-      firstName: 'Tanner',
-      lastName: 'Linsley',
-    },
-    {
-      firstName: 'Shawn',
-      lastName: 'Wang',
-    },
-    {
-      firstName: 'Kent C.',
-      lastName: 'Dodds',
-    },
-    {
-      firstName: 'Ryan',
-      lastName: 'Florence',
-    },
-  ]
-
-  return <MyTable columns={columns} data={data} />
-}
-
-function MyTable({ columns, data }) {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/basic)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
 
 # `useSortBy`
 
@@ -380,9 +351,11 @@ function MyTable({ columns, data }) {
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].sortBy: Array<Object<id: columnID, desc: Bool>>`
+- `state.sortBy: Array<Object<id: columnID, desc: Bool>>`
   - Must be **memoized**
   - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `initialState.sortBy`
+  - Identical to the `state.sortBy` option above
 - `manualSorting: Bool`
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableSorting: Bool`
@@ -400,12 +373,12 @@ The following options are supported via the main options object passed to `useTa
   - If true, the un-sorted state will not be available to multi-sorted columns.
 - `orderByFn: Function`
   - Must be **memoized**
-  - Defaults to the built-in [default orderBy function](TODO)
+  - Defaults to the built-in default orderBy function
   - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
 - `sortTypes: Object<sortKey: sortType>`
   - Must be **memoized**
-  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the [built-in sort types](TODO).
-  - For more information on sort types, see [Sorting](TODO)
+  - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the built-in sort types.
+  - For more information on sort types, see Sorting
 
 ### Column Options
 
@@ -427,11 +400,11 @@ The following options are supported on any `Column` object passed to the `column
 - `sortType: String | Function`
   - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
-  - String options: `basic`, `datetime`, `alphanumeric`. Defaults to [`alphanumeric`](TODO).
+  - String options: `basic`, `datetime`, `alphanumeric`. Defaults to `alphanumeric`.
   - The resolved function from the this string/function will be used to sort the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used.
     - If a `function` is passed, it will be used.
-  - For more information on sort types, see [Sorting](TODO)
+  - For more information on sort types, see Sorting
 
 ### Instance Properties
 
@@ -473,62 +446,8 @@ The following properties are available on every `Column` object returned by the 
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  // Set some default sorting state
-  const state = useTableState({ sortBy: [{ id: 'firstName', desc: true }] })
-
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy // Use the sortBy hook
-  )
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              // Add the sorting props to control sorting. For this example
-              // we can add them into the header props
-              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                {column.render('Header')}
-                <span>
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
-                  {/* Add a sort index indicator */}
-                  <span>({column.isSorted ? column.sortedIndex + 1 : ''})</span>
-                </span>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/sorting)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting)
 
 # `useFilters`
 
@@ -541,9 +460,11 @@ function Table({ columns, data }) {
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].filters: Object<columnID: filterValue>`
+- `state.filters: Object<columnID: filterValue>`
   - Must be **memoized**
   - An object of columnID's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `initialState.filters`
+  - Identical to the `state.filters` option above
 - `manualFilters: Bool`
   - Enables filter detection functionality, but does not automatically perform row filtering.
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
@@ -551,8 +472,8 @@ The following options are supported via the main options object passed to `useTa
   - Disables filtering for every column in the entire table.
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
-  - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the [built-in filter types](TODO).
-  - For more information on filter types, see [Filtering](TODO)
+  - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
+  - For more information on filter types, see Filtering
 
 ### Column Options
 
@@ -568,11 +489,11 @@ The following options are supported on any `Column` object passed to the `column
   - If set to `true`, will disable filtering for this column
 - `filter: String | Function`
   - Optional
-  - Defaults to [`text`](TODO)
+  - Defaults to `text`
   - The resolved function from the this string/function will be used to filter the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `filterTypes` option or the built-in filtering types object will be used. If
     - If a `function` is passed, it will be used directly.
-  - For more information on filter types, see [Filtering](TODO)
+  - For more information on filter types, see Filtering
   - If a **function** is passed, it must be **memoized**
 
 ### Instance Properties
@@ -602,52 +523,14 @@ The following properties are available on every `Column` object returned by the 
 - `preFilteredRows: Array<row>`
   - The array of rows that were originally passed to this columns filter **before** they were filtered.
   - This array of rows can be useful if building faceted filter options.
+- `filteredRows: Array<row>`
+  - The resulting array of rows received from this columns filter **after** they were filtered.
+  - This array of rows can be useful if building faceted filter options.
 
 ### Example
 
-```js
-// A great library for fuzzy filtering/sorting items
-import matchSorter from 'match-sorter'
-
-const state = useTableState({ filters: { firstName: 'tanner' } })
-
-const filterTypes = React.useMemo(() => ({
-  // Add a new fuzzyText filter type.
-  fuzzyText: (rows, id, filterValue) => {
-    return matchSorter(rows, filterValue, { keys: [row => row[id] })
-  },
-  // Or, override the default text filter to use
-  // "startWith"
-  text: (rows, id, filterValue) => {
-    return rows.filter(row => {
-      const rowValue = row.values[id]
-      return rowValue !== undefined
-        ? String(rowValue)
-            .toLowerCase()
-            .startsWith(String(filterValue).toLowerCase())
-        : true
-    })
-  }
-}), [matchSorter])
-
-// Override the default column filter to be our new `fuzzyText` filter type
-const defaultColumn = React.useMemo(() => ({
-  filter: 'fuzzyText'
-}))
-
-const { rows } = useTable(
-  {
-    // state[0].groupBy === ['firstName']
-    state,
-    manualFilters: false,
-    disableFilters: false,
-    // Pass our custom filter types
-    filterTypes,
-    defaultColumn
-  },
-  useFilters
-)
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/filtering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering)
 
 # `useGroupBy`
 
@@ -663,9 +546,11 @@ const { rows } = useTable(
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].groupBy: Array<String>`
+- `state.groupBy: Array<String>`
   - Must be **memoized**
   - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
+- `initialState.groupBy`
+  - Identical to the `state.groupBy` option above
 - `manualGroupBy: Bool`
   - Enables groupBy detection and functionality, but does not automatically perform row grouping.
   - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
@@ -673,10 +558,10 @@ The following options are supported via the main options object passed to `useTa
   - Disables groupBy for the entire table.
 - `aggregations: Object<aggregationKey: aggregationFn>`
   - Must be **memoized**
-  - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the [built-in aggregation functions](TODO)
+  - Allows overriding or adding additional aggregation functions for use when grouping/aggregating row values. If an aggregation key isn't found on this object, it will default to using the built-in aggregation functions
 - `groupByFn: Function`
   - Must be **memoized**
-  - Defaults to [`defaultGroupByFn`](TODO)
+  - Defaults to `defaultGroupByFn`
   - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
 
 ### Column Options
@@ -759,168 +644,8 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state: [{ groupBy, expanded }],
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useGroupBy,
-    useExpanded // useGroupBy would be pretty useless without useExpanded ;)
-  )
-
-  // We don't want to render all 2000 rows for this example, so cap
-  // it at 20 for this use case
-  const firstPageRows = rows.slice()
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.canGroupBy ? (
-                  // If the column can be grouped, let's add a toggle
-                  <span {...column.getGroupByToggleProps()}>
-                    {column.grouped ? '🛑' : '👊'}
-                  </span>
-                ) : null}
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {firstPageRows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td {...cell.getCellProps()}>
-                      {cell.grouped ? (
-                        // If it's a grouped cell, add an expander and row count
-                        <>
-                          <span
-                            style={{
-                              cursor: 'pointer',
-                            }}
-                            onClick={() => row.toggleExpanded()}
-                          >
-                            {row.isExpanded ? '👇' : '👉'}
-                          </span>
-                          {cell.render('Cell')} ({row.subRows.length})
-                        </>
-                      ) : cell.aggregated ? (
-                        // If the cell is aggregated, use the Aggregated
-                        // renderer for cell
-                        cell.render('Aggregated')
-                      ) : cell.repeatedValue ? null : ( // For cells with repeated values, render null
-                        // Otherwise, just render the regular cell
-                        cell.render('Cell')
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-
-// This is a custom aggregator that
-// takes in an array of values and
-// returns the rounded median
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
-
-  values.forEach(value => {
-    min = Math.min(min, value)
-    max = Math.max(max, value)
-  })
-
-  return Math.round((min + max) / 2)
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-            // Use a two-stage aggregator here to first
-            // count the total rows being aggregated,
-            // then sum any of those counts if they are
-            // aggregated further
-            aggregate: ['sum', 'count'],
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-            // Use another two-stage aggregator here to
-            // first count the UNIQUE values from the rows
-            // being aggregated, then sum those counts if
-            // they are aggregated further
-            aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-            // Aggregate the average age of visitors
-            aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-            // Aggregate the sum of all visits
-            aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-            // Use our custom roundedMedian aggregator
-            aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(10000), [])
-
-  return <Table columns={columns} data={data} />
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping)
 
 # `useExpanded`
 
@@ -933,13 +658,15 @@ function App() {
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].expanded: Array<pathKey: String>`
+- `state.expanded: Array<pathKey: String>`
   - Optional
   - Must be **memoized**
   - An array of expanded path keys.
   - If a row's path key (`row.path.join('.')`) is present in this array, that row will have an expanded state. For example, if `['3']` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
   - For nested expansion, you may **join the row path with a `.`** to expand sub rows. For example, if `['3', '3.5']` was passed as the `expanded` state, then the **6th subRow of the 4th row and also the 4th row of the original data array** would be expanded.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+- `initialState.expanded`
+  - Identical to the `state.expanded` option above
 - `getSubRows: Function(row, relativeIndex) => Rows[]`
   - Optional
   - See the [useTable hook](#table-options) for more details
@@ -947,6 +674,11 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `expanded`
   - This string is used as the key to detect manual expanded state on any given row. For example, if a raw data row like `{ name: 'Tanner Linsley', friends: [...], expanded: true}` was detected, it would always be expanded, regardless of state.
+- `expandSubRows: Bool`
+  - Optional
+  - Defaults to `true`
+  - If set to `true`, expanded rows are rendered along with normal rows.
+  - If set to `false`, expanded rows will only be available through their parent row. This could be useful if you are implementing a custom expanded row view.
 
 ### Instance Properties
 
@@ -967,133 +699,15 @@ The following additional properties are available on every `row` object returned
 
 ### Example
 
-```js
-function Table({ columns: userColumns, data }) {
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state: [{ expanded }],
-  } = useTable(
-    {
-      columns: userColumns,
-      data,
-    },
-    useExpanded // Use the useExpanded plugin hook
-  )
-
-  return (
-    <>
-      <pre>
-        <code>{JSON.stringify({ expanded }, null, 2)}</code>
-      </pre>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {rows.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-      <br />
-      <div>Showing the first 20 results of {rows.length} rows</div>
-    </>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        // Build our expander column
-        Header: () => null, // No header, please
-        id: 'expander', // Make sure it has an ID
-        Cell: ({ row }) =>
-          // Use the row.canExpand and row.getExpandedToggleProps prop getter
-          // to build the toggle for expanding a row
-          row.canExpand ? (
-            <span
-              {...row.getExpandedToggleProps({
-                style: {
-                  // We can even use the row.depth property
-                  // and paddingLeft to indicate the depth
-                  // of the row
-                  paddingLeft: `${row.depth * 2}rem`,
-                },
-              })}
-            >
-              {row.isExpanded ? '👇' : '👉'}
-            </span>
-          ) : null,
-      },
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(5, 5, 5), [])
-
-  return <Table columns={columns} data={data} />
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/expanding)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding)
 
 # `usePagination`
 
 - Plugin Hook
 - Optional
 
-`usePagination` is the hook that implements **row pagination**. It can be used for both client-side pagination or server-side pagination. For more information on pagination, see [Pagination](TODO)
+`usePagination` is the hook that implements **row pagination**. It can be used for both client-side pagination or server-side pagination. For more information on pagination, see Pagination
 
 > **NOTE** Some server-side pagination implementations do not use page index and instead use **token based pagination**! If that's the case, please use the `useTokenPagination` plugin instead.
 
@@ -1101,14 +715,18 @@ function App() {
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].pageSize: Int`
+- `state.pageSize: Int`
   - **Required**
   - Defaults to `10`
   - Determines the amount of rows on any given page
-- `state[0].pageIndex: Int`
+- `initialState.pageSize`
+  - Identical to the `state.pageSize` option above
+- `state.pageIndex: Int`
   - **Required**
   - Defaults to `0`
   - The index of the page that should be displayed via the `page` instance value
+- `initialState.pageIndex`
+  - Identical to the `state.pageIndex` option above
 - `pageCount: Int`
   - **Required if `manualPagination` is set to `true`**
   - If `manualPagination` is `true`, then this value used to determine the amount of pages available. This amount is then used to materialize the `pageOptions` and also compute the `canNextPage` values on the table instance.
@@ -1161,185 +779,19 @@ The following values are provided to the table `instance`:
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: [{ pageIndex, pageSize }],
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    usePagination
-  )
-
-  // Render the UI for your table
-  return (
-    <>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {page.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-      {/* 
-        Pagination can be built however you'd like. 
-        This is just a very basic UI implementation:
-      */}
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
-        <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
-            }}
-            style={{ width: '100px' }}
-          />
-        </span> <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-    </>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(100000), [])
-
-  return (
-    <Styles>
-      <Table columns={columns} data={data} />
-    </Styles>
-  )
-}
-```
+- Basic Pagination
+  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
+- Controlled Pagination
+  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
 
 # `useTokenPagination (Coming Soon)`
 
 - Plugin Hook
 - Optional
 
-`useTokenPagination` is the hook that **aids in implementing row pagination using tokens**. It is useful for server-side pagination implementations that use **tokens** instead of page index. For more information on pagination, see [Pagination](TODO)
+`useTokenPagination` is the hook that **aids in implementing row pagination using tokens**. It is useful for server-side pagination implementations that use **tokens** instead of page index. For more information on pagination, see Pagination
 
 > Documentation Coming Soon...
 
@@ -1348,16 +800,18 @@ function App() {
 - Plugin Hook
 - Optional
 
-`useRowSelect` is the hook that implements **basic row selection**. For more information on row selection, see [Row Selection](TODO)
+`useRowSelect` is the hook that implements **basic row selection**. For more information on row selection, see Row Selection
 
 ### Table Options
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].selectedRows: Array<RowPathKey>`
+- `state.selectedRowPaths: Array<RowPathKey>`
   - Optional
   - Defaults to `[]`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
+- `initialState.selectedRowPaths`
+  - Identical to the `state.selectedRowPaths` option above
 - `manualRowSelectedKey: String`
   - Optional
   - Defaults to `isSelected`
@@ -1383,6 +837,8 @@ The following values are provided to the table `instance`:
 - `isAllRowsSelected: Bool`
   - Will be `true` if all rows are selected.
   - If at least one row is not selected, will be `false`
+- `selectedFlatRows: Array<Row>`
+  - The flat array of rows that are currently selected
 
 ### Row Properties
 
@@ -1396,123 +852,8 @@ The following additional properties are available on every **prepared** `row` ob
 
 ### Example
 
-```js
-function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state: [{ selectedRows }],
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useRowSelect
-  )
-
-  // Render the UI for your table
-  return (
-    <>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {rows.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-      <p>Selected Rows: {selectedRows.length}</p>
-      <pre>
-        <code>{JSON.stringify({ selectedRows }, null, 2)}</code>
-      </pre>
-    </>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
-      // Let's make a column for selection
-      {
-        id: 'selection',
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(10), [])
-
-  return <Table columns={columns} data={data} />
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
 
 # `useRowState`
 
@@ -1525,12 +866,14 @@ function App() {
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].rowState: Object<RowPathKey:Object<any, cellState: {columnID: Object}>>`
+- `state.rowState: Object<RowPathKey:Object<any, cellState: {columnID: Object}>>`
   - Optional
   - Defaults to `{}`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have the state of the value corresponding to that key.
   - Individual row states can contain anything, but they also contain a `cellState` key, which provides cell-level state based on column ID's to every
     **prepared** cell in the table.
+- `initialState.rowState`
+  - Identical to the `state.rowState` option above
 - `initialRowStateAccessor: Function`
   - Optional
   - This function may optionally return the initial state for a row.
@@ -1568,6 +911,112 @@ The following additional properties are available on every `Cell` object returne
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
+# `useBlocklayout`
+
+- Plugin Hook
+- Optional
+
+`useBlocklayout` is a plugin hook that adds support for headers and cells to be rendered as `inline-block` `div`s (or other non-table elements) with explicit `width`. Similar to the `useAbsoluteLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
+
+**NOTE:** Although no additional options are needed for this plugin to work, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+
+### Row Properties
+
+- `getRowProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows
+
+### Cell Properties
+
+- `getCellProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows cells
+
+### Header Properties
+
+- `getHeaderProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
+
+### Example
+
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/block-layout)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/block-layout)
+
+# `useAbsoluteLayout`
+
+- Plugin Hook
+- Optional
+
+`useAbsoluteLayout` is a plugin hook that adds support for headers and cells to be rendered as absolutely positioned `div`s (or other non-table elements) with explicit `width`. Similar to the `useBlockLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
+
+**NOTE:** Although no additional options are needed for this plugin to work, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+
+### Instance Properties
+
+- `getTableBodyProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for the table body
+
+### Row Properties
+
+- `getRowProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows
+
+### Cell Properties
+
+- `getCellProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for rows cells
+
+### Header Properties
+
+- `getHeaderProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
+
+### Example
+
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+
+# `useResizeColumns`
+
+- Plugin Hook
+- Optional
+
+`useResizeColumns` is a plugin hook that adds support for resizing headers and cells when using non-table elements for layout eg. the `useBlockLayout` and `useAbsoluteLayout` hooks. It even supports resizing column groups!
+
+### Table Options
+
+- `disableResizing: Bool`
+  - Defaults to `false`
+  - When set to `true`, resizing is disabled across the entire table
+
+### Column Options
+
+The core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+
+- `disableResizing: Bool`
+  - Defaults to `false`
+  - When set to `true`, resizing is disabled for this column
+
+### Header Properties
+
+- `getResizerProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
+- `canResize: Bool`
+  - Will be `true` if this column can be resized
+- `isResizing: Bool`
+  - Will be `true` if this column is currently being resized
+
+### Example
+
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-resizing)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-resizing)
+
 # `useColumnOrder`
 
 - Plugin Hook
@@ -1579,97 +1028,21 @@ The following additional properties are available on every `Cell` object returne
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state[0].columnOrder: Array<ColumnID>`
+- `state.columnOrder: Array<ColumnID>`
   - Optional
   - Defaults to `[]`
   - Any column ID's not represented in this array will be naturally ordered based on their position in the original table's `column` structure
+- `initialState.columnOrder`
+  - Identical to the `state.columnOrder` option above
 
 ### Instance Properties
 
 The following values are provided to the table `instance`:
 
 - `setColumnOrder: Function(updater: Function | Array<ColumnID>) => void`
+
   - Use this function to programmatically update the columnOrder.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
-# `useTableState`
-
-- Optional
-
-`useTableState` is a hook that allows you to hoist the table state out of the table into your own code. You should use this hook if you need to:
-
-- Know about the internal table state
-- React to changes to the internal table state
-- Manually control or override the internal table state
-
-Some common use cases for this hook are:
-
-- Reacting to `pageIndex` and `pageSize` changes for server-side pagination to fetch new data
-- Disallowing specific states via a custom state reducer
-- Enabling parent/unrelated components to manipulate the table state
-
-### Hook Options
-
-The following options are supported via the main options object passed to `useTable(options)`
-
-- `initialState: Object`
-  - Optional
-  - The initial state object for the table.
-  - This object is **merged over the `defaultState` object** (eg. `{...defaultState, ...initialState}`) that React Table and its hooks use to register default state to produce the final initial state object passed to the resolved `useState` hook.
-- `overrides: Object`
-  - Optional
-  - Must be **memoized**
-  - This object is **merged over the current table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options
-- `options: Object`
-  - `reducer: Function(oldState, newState) => finalState`
-    - Optional
-    - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
-    - With every `setState` call to a table state (even internally), this reducer is called and is allowed to modify the final state object for updating.
-    - It is passed the `oldState`, the `newState`, and an action `type`.
-  - `useState`
-    - Optional
-    - Defaults to `React.useState`
-    - This function, if defined will be used as the state hook internally instead of the default `React.useState`. This can be useful for implementing custom state storage hooks like useLocalStorage, etc.
-
-### Output
-
-- `tableStateTuple: [tableState, setTableState]`
-  - Similar in structure to the result of `React.useState`
-  - **Memoized** - This tuple array will not change between renders unless the state or `useTableState` options change.
-  - `tableState: Object`
-    - **Memoized** - This object reference will not change unless the state changes.
-    - This is the final state object of the table, which is the product of the `initialState`, `overrides` and the `reducer` options (if applicable)
-  - `setTableState: Function(updater, type) => void`
-    - **Memoized** - This function reference will not change unless the internal state `reducer` is changed
-    - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
-    - `updater: Function`
-      - This function signature is **almost** (see next point) identical to the functional API exposed by `React.setState`. It is passed the previous state and is expected to return a new version of the state.
-      - **NOTE: `updater` must be a function. Passing a replacement object is not supported as it is with React.useState**
-    - `type: String`
-      - The [action type](TODO) corresponding to what action being taken against the state.
-
-### Example
-
-```js
-export default function MyTable({ manualPageIndex }) {
-  // This is the initial state for our table
-  const initialState = { pageSize: 10, pageIndex: 0 }
-
-  // Here, we can override the pageIndex
-  // regardless of the internal table state
-  const overrides = React.useMemo(() => ({
-    pageIndex: manualPageIndex,
-  }))
-
-  const state = useTableState(initialState, overrides)
-
-  // You can use effects to observe changes to the state
-  React.useEffect(() => {
-    console.log('Page Size Changed!', initialState.pageSize)
-  }, [initialState.pageSize])
-
-  const { rows } = useTable({
-    state,
-  })
-}
-```
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-ordering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-ordering)

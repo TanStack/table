@@ -63,7 +63,9 @@ exports[`renders a basic table 1`] = `
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody
+      class=""
+    >
       <tr
         class=""
       >
