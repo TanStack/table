@@ -13,14 +13,14 @@ exports[`renders a table 1`] = `
         <div
           class="cell header"
           colspan="2"
-          style="position: absolute; top: 0px; width: 550px; left: 0px;"
+          style="position: absolute; top: 0px; left: 0px; width: 550px;"
         >
           Name
         </div>
         <div
           class="cell header"
           colspan="4"
-          style="position: absolute; top: 0px; width: 850px; left: 550px;"
+          style="position: absolute; top: 0px; left: 550px; width: 850px;"
         >
           Info
         </div>
@@ -32,85 +32,88 @@ exports[`renders a table 1`] = `
         <div
           class="cell header"
           colspan="1"
-          style="position: absolute; top: 0px; width: 250px; left: 0px;"
+          style="position: absolute; top: 0px; left: 0px; width: 250px;"
         >
           First Name
         </div>
         <div
           class="cell header"
           colspan="1"
-          style="position: absolute; top: 0px; width: 300px; left: 250px;"
+          style="position: absolute; top: 0px; left: 250px; width: 300px;"
         >
           Last Name
         </div>
         <div
           class="cell header"
           colspan="1"
-          style="position: absolute; top: 0px; width: 300px; left: 550px;"
+          style="position: absolute; top: 0px; left: 550px; width: 300px;"
         >
           Age
         </div>
         <div
           class="cell header"
           colspan="1"
-          style="position: absolute; top: 0px; width: 150px; left: 850px;"
+          style="position: absolute; top: 0px; left: 850px; width: 150px;"
         >
           Visits
         </div>
         <div
           class="cell header"
           colspan="1"
-          style="position: absolute; top: 0px; width: 200px; left: 1000px;"
+          style="position: absolute; top: 0px; left: 1000px; width: 200px;"
         >
           Status
         </div>
         <div
           class="cell header"
           colspan="1"
-          style="position: absolute; top: 0px; width: 200px; left: 1200px;"
+          style="position: absolute; top: 0px; left: 1200px; width: 200px;"
         >
           Profile Progress
         </div>
       </div>
     </div>
-    <div>
+    <div
+      class=""
+      style="position: relative; width: 1400px;"
+    >
       <div
         class="row"
         style="position: relative; width: 1400px;"
       >
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 250px; left: 0px;"
+          style="position: absolute; top: 0px; left: 0px; width: 250px;"
         >
           firstName: tanner
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 300px; left: 250px;"
+          style="position: absolute; top: 0px; left: 250px; width: 300px;"
         >
           lastName: linsley
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 300px; left: 550px;"
+          style="position: absolute; top: 0px; left: 550px; width: 300px;"
         >
           age: 29
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 150px; left: 850px;"
+          style="position: absolute; top: 0px; left: 850px; width: 150px;"
         >
           visits: 100
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 200px; left: 1000px;"
+          style="position: absolute; top: 0px; left: 1000px; width: 200px;"
         >
           status: In Relationship
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 200px; left: 1200px;"
+          style="position: absolute; top: 0px; left: 1200px; width: 200px;"
         >
           progress: 50
         </div>
@@ -121,37 +124,37 @@ exports[`renders a table 1`] = `
       >
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 250px; left: 0px;"
+          style="position: absolute; top: 0px; left: 0px; width: 250px;"
         >
           firstName: derek
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 300px; left: 250px;"
+          style="position: absolute; top: 0px; left: 250px; width: 300px;"
         >
           lastName: perkins
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 300px; left: 550px;"
+          style="position: absolute; top: 0px; left: 550px; width: 300px;"
         >
           age: 30
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 150px; left: 850px;"
+          style="position: absolute; top: 0px; left: 850px; width: 150px;"
         >
           visits: 40
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 200px; left: 1000px;"
+          style="position: absolute; top: 0px; left: 1000px; width: 200px;"
         >
           status: Single
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 200px; left: 1200px;"
+          style="position: absolute; top: 0px; left: 1200px; width: 200px;"
         >
           progress: 80
         </div>
@@ -162,37 +165,37 @@ exports[`renders a table 1`] = `
       >
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 250px; left: 0px;"
+          style="position: absolute; top: 0px; left: 0px; width: 250px;"
         >
           firstName: joe
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 300px; left: 250px;"
+          style="position: absolute; top: 0px; left: 250px; width: 300px;"
         >
           lastName: bergevin
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 300px; left: 550px;"
+          style="position: absolute; top: 0px; left: 550px; width: 300px;"
         >
           age: 45
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 150px; left: 850px;"
+          style="position: absolute; top: 0px; left: 850px; width: 150px;"
         >
           visits: 20
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 200px; left: 1000px;"
+          style="position: absolute; top: 0px; left: 1000px; width: 200px;"
         >
           status: Complicated
         </div>
         <div
           class="cell"
-          style="position: absolute; top: 0px; width: 200px; left: 1200px;"
+          style="position: absolute; top: 0px; left: 1200px; width: 200px;"
         >
           progress: 10
         </div>

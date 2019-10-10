@@ -210,7 +210,14 @@ function Table({ columns, data }) {
     []
   )
 
-  const { getTableProps, headerGroups, rows, prepareRow, state } = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+  } = useTable(
     {
       columns,
       data,
@@ -228,7 +235,7 @@ function Table({ columns, data }) {
     <>
       <div>
         <pre>
-          <code>{JSON.stringify(state[0].filters, null, 2)}</code>
+          <code>{JSON.stringify(state.filters, null, 2)}</code>
         </pre>
       </div>
       <table {...getTableProps()}>
@@ -245,7 +252,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {firstPageRows.map(
             (row, i) =>
               prepareRow(row) || (

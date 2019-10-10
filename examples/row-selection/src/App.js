@@ -37,10 +37,12 @@ function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-    state: [{ selectedRows }],
+    selectedFlatRows,
+    state: { selectedRowPaths },
   } = useTable(
     {
       columns,
@@ -62,7 +64,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {rows.map(
             (row, i) =>
               prepareRow(row) || (
@@ -77,9 +79,20 @@ function Table({ columns, data }) {
           )}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRows.length}</p>
+      <p>Selected Rows: {selectedRowPaths.length}</p>
       <pre>
-        <code>{JSON.stringify({ selectedRows }, null, 2)}</code>
+        <code>
+          {JSON.stringify(
+            {
+              selectedRowPaths,
+              'selectedFlatRows[].original': selectedFlatRows.map(
+                d => d.original
+              ),
+            },
+            null,
+            2
+          )}
+        </code>
       </pre>
     </>
   )

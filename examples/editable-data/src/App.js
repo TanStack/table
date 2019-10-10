@@ -83,6 +83,7 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
   // Otherwise, nothing is different here.
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     prepareRow,
     page,
@@ -94,7 +95,7 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: [{ pageIndex, pageSize }],
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -124,7 +125,7 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {page.map(
             (row, i) =>
               prepareRow(row) || (

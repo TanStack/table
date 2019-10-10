@@ -3,6 +3,9 @@ import React from 'react'
 export const defaultColumn = {
   Cell: ({ cell: { value = '' } }) => String(value),
   show: true,
+  width: 150,
+  minWidth: 0,
+  maxWidth: Number.MAX_SAFE_INTEGER,
 }
 
 // SSR has issues with useLayoutEffect still, so use useEffect during SSR
@@ -56,7 +59,7 @@ export function decorateColumn(
 
   column = {
     // Make sure there is a fallback header, just in case
-    Header: () => null,
+    Header: () => <>&nbsp;</>,
     ...column,
     // Materialize and override this stuff
     id,
@@ -131,7 +134,7 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
             id: [column.id, 'placeholder', similarParentColumns.length].join(
               '_'
             ),
-            "placeholderOf": column
+            placeholderOf: column,
           },
           defaultColumn
         )
@@ -285,7 +288,10 @@ export function flexRender(Comp, props) {
 function isClassComponent(component) {
   return (
     typeof component === 'function' &&
-    !!Object.getPrototypeOf(component).isReactComponent
+    !!(() => {
+      let proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isReactComponent
+    })()
   )
 }
 
@@ -399,7 +405,10 @@ This usually means you need to need to name your plugin hook by setting the 'plu
   })
 }
 
-export function expandRows(rows, { manualExpandedKey, expanded }) {
+export function expandRows(
+  rows,
+  { manualExpandedKey, expanded, expandSubRows = true }
+) {
   const expandedRows = []
 
   const handleRow = row => {
@@ -413,7 +422,7 @@ export function expandRows(rows, { manualExpandedKey, expanded }) {
 
     expandedRows.push(row)
 
-    if (row.subRows && row.subRows.length && row.isExpanded) {
+    if (expandSubRows && row.subRows && row.subRows.length && row.isExpanded) {
       row.subRows.forEach(handleRow)
     }
   }

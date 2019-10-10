@@ -13,7 +13,13 @@ import makeData from './makeData'
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
+  const {
+    getTableProps,
+    getTableHeaderProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
     columns,
     data,
   })

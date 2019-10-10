@@ -47,6 +47,7 @@ function shuffle(arr) {
 function Table({ columns, data }) {
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     rows,
     flatColumns,
@@ -78,7 +79,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {rows.slice(0, 10).map(
             (row, i) =>
               prepareRow(row) || (
@@ -94,7 +95,7 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <pre>
-        <code>{JSON.stringify(state[0], null, 2)}</code>
+        <code>{JSON.stringify(state, null, 2)}</code>
       </pre>
     </>
   )

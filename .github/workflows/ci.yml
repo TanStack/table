@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  build-and-test:
+    name: '${{ matrix.platform }}: node.js ${{ matrix.node-version }}'
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [10, 12]
+    runs-on: ${{ matrix.platform }}
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Build and test
+        run: |
+          yarn install
+          yarn test

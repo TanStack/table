@@ -13,18 +13,27 @@ const Styles = styled.div`
 
   .table {
     border: 1px solid #000;
-    overflow: auto;
     max-width: 700px;
-    max-height: 600px;
+    overflow-x: auto;
   }
 
   .header {
     font-weight: bold;
   }
 
+  .rows {
+    overflow-y: auto;
+  }
+
   .row {
     border-bottom: 1px solid #000;
     height: 32px;
+
+    &.body {
+      :last-child {
+        border: 0;
+      }
+    }
   }
 
   .cell {
@@ -32,6 +41,7 @@ const Styles = styled.div`
     line-height: 30px;
     border-right: 1px solid #000;
     padding-left: 5px;
+
     :last-child {
       border: 0;
     }
@@ -43,14 +53,18 @@ function Table({ columns, data }) {
 
   const defaultColumn = React.useMemo(
     () => ({
-      minWidth: 100,
-      maxWidth: 1000,
       width: 150,
     }),
     []
   )
 
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
     {
       columns,
       data,
@@ -64,7 +78,10 @@ function Table({ columns, data }) {
     <div {...getTableProps()} className="table">
       <div>
         {headerGroups.map(headerGroup => (
-          <div {...headerGroup.getHeaderGroupProps()} className="row">
+          <div
+            {...headerGroup.getHeaderGroupProps()}
+            className="row header-group"
+          >
             {headerGroup.headers.map(column => (
               <div {...column.getHeaderProps()} className="cell header">
                 {column.render('Header')}
@@ -74,11 +91,11 @@ function Table({ columns, data }) {
         ))}
       </div>
 
-      <div>
+      <div className="rows" {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (
-              <div {...row.getRowProps()} className="row">
+              <div {...row.getRowProps()} className="row body">
                 {row.cells.map(cell => {
                   return (
                     <div {...cell.getCellProps()} className="cell">
@@ -117,11 +134,11 @@ function App() {
             Header: 'Age',
             accessor: 'age',
             width: 50,
-            minWidth: 50,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
+            width: 60,
           },
           {
             Header: 'Status',

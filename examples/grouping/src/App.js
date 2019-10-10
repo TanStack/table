@@ -36,10 +36,11 @@ const Styles = styled.div`
 function Table({ columns, data }) {
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-    state: [{ groupBy, expanded }],
+    state: { groupBy, expanded },
   } = useTable(
     {
       columns,
@@ -77,7 +78,7 @@ function Table({ columns, data }) {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody {...getTableBodyProps()}>
           {firstPageRows.map(
             (row, i) =>
               prepareRow(row) || (

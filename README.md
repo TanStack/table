@@ -4,24 +4,13 @@
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
-<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=master" />
-</a>
-<a href="https://bundlephobia.com/result?p=react-table@next" target="\_parent">
-  <img alt="" src="https://badgen.net/bundlephobia/minzip/react-table@next" />
-</a>
-<a href="https://npmjs.com/package/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
-</a>
-<a href="https://spectrum.chat/react-table">
-  <img alt="Join the community on Spectrum" src="https://withspectrum.github.io/badge/badge.svg" />
-</a>
-<a href="https://github.com/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star" />
-</a>
-<a href="https://twitter.com/tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
-</a>
+[![GitHub Actions CI](https://github.com/tannerlinsley/react-table/workflows/CI/badge.svg)](https://github.com/tannerlinsley/react-table/actions)
+[![Bundlephobia](https://badgen.net/bundlephobia/minzip/react-table@next)](https://bundlephobia.com/result?p=react-table@next)
+[![NPM Package](https://img.shields.io/npm/dm/react-table.svg)](https://npmjs.com/package/react-table)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-table)
+[![GitHub Stars](https://img.shields.io/github/stars/tannerlinsley/react-table.svg?style=social&label=Star)](https://github.com/tannerlinsley/react-table)
+[![Twitter Followers](https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow)](https://twitter.com/tannerlinsley)
+
 <br />
 <br />
 <a href="https://patreon.com/tannerlinsley">
@@ -43,6 +32,8 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 - Row Expansion
 - Column Ordering
 - Animatable
+- Virtualizable
+- Resizable
 - Server-side/controlled data/state
 - Extensible via hook-based plugin system
 - <a href="https://medium.com/@tannerlinsley/why-i-wrote-react-table-and-the-problems-it-has-solved-for-nozzle-others-445c4e93d4a8#.axza4ixba" target="\_parent">"Why I wrote React Table and the problems it has solved for Nozzle.io"</a> by Tanner Linsley
@@ -154,6 +145,7 @@ The differences between the 2 versions are incredibly massive. Unfortunately, I 
       <td>
         <div><a href="https://www.metso.com/">Pekka</a></div>
         <div>Jon Eickmeier</div>
+        <div><a href="https://github.com/Shah-Sahab">Syed Hussain<a></div>
       </td>
     </tr>
   </tbody>

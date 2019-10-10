@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTableState'
+import { defaultState } from '../hooks/useTable'
 
 defaultState.rowState = {}
 
@@ -25,7 +25,8 @@ function useMain(instance) {
     hooks,
     rows,
     initialRowStateAccessor,
-    state: [{ rowState }, setState],
+    state: { rowState },
+    setState,
   } = instance
 
   const setRowState = React.useCallback(

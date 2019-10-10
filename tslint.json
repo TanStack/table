@@ -1,0 +1,10 @@
+{
+  "extends": "dtslint/dtslint.json",
+  "rules": {
+    "array-type": false,
+    "no-empty-interface": false,
+    "no-unnecessary-generics": false,
+    "semicolon": false,
+    "whitespace": false
+  }
+}
