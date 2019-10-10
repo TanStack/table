@@ -438,7 +438,7 @@ export interface UseRowSelectHooks<D extends object> {
 }
 
 export interface UseRowSelectState<D extends object> {
-  selectedRows: IdType<D>[]
+  selectedRowPaths: IdType<D>[]
 }
 
 export interface UseRowSelectInstanceProps<D extends object> {
