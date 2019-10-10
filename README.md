@@ -60,6 +60,8 @@ Please [visit the v6 branch](https://github.com/tannerlinsley/react-table/tree/v
 
 The differences between the 2 versions are incredibly massive. Unfortunately, I cannot write a one-to-one upgrade guide for any of v6's API, simply because much of it is irrelevant with v7's headless approach. The best approach for migrating to v7 is to learn its API by reading the documentation and then following some of the examples to begin building your own table component.
 
+In case you would need to have both v6 and v7 in one app during the migration process (large codebase, complex use cases), you can install an official [`react-table-v6` package](https://www.npmjs.com/package/react-table-v6) alongside the `react-table`.
+
 ## Documentation
 
 - [Installation](./docs/installation.md) - Walk through how to install React Table
