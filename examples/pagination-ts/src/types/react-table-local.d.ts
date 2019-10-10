@@ -1,6 +1,16 @@
-declare module 'react-table' {
-  import { UsePaginationState, UsePaginationValues } from 'react-table'
+import {
+  UsePaginationInstanceProps,
+  UsePaginationOptions,
+  UsePaginationState,
+} from 'react-table'
 
-  export interface TableInstance<D = any> extends UsePaginationValues<D> {}
-  export interface TableState<D = any> extends UsePaginationState {}
+declare module 'react-table' {
+  export interface TableOptions<D extends object>
+    extends UsePaginationOptions<D> {}
+
+  export interface TableInstance<D extends object = {}>
+    extends UsePaginationInstanceProps<D> {}
+
+  export interface TableState<D extends object = {}>
+    extends UsePaginationState<D> {}
 }

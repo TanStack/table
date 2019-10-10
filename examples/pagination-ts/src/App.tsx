@@ -1,5 +1,5 @@
 import React from 'react'
-import { Column, usePagination, useTable, useTableState } from 'react-table'
+import { Column, usePagination, useTable } from 'react-table'
 import styled from 'styled-components'
 
 import makeData, { PersonData } from './makeData'
@@ -43,11 +43,10 @@ interface ITable {
 }
 
 function Table({ columns, data }: ITable) {
-  const tableState = useTableState<PersonData>({ pageIndex: 2 })
-
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
     prepareRow,
     page, // Instead of using 'rows', we'll use page,
@@ -62,12 +61,12 @@ function Table({ columns, data }: ITable) {
     nextPage,
     previousPage,
     setPageSize,
-    state: [{ pageIndex, pageSize }],
+    state: { pageIndex, pageSize },
   } = useTable<PersonData>(
     {
       columns,
       data,
-      state: tableState,
+      initialState: { pageIndex: 2 },
     },
     usePagination
   )
@@ -100,19 +99,17 @@ function Table({ columns, data }: ITable) {
             </tr>
           ))}
         </thead>
-        <tbody>
-          {page.map(
-            (row, i) =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
+        <tbody {...getTableBodyProps()}>
+          {page.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       {/*
@@ -129,7 +126,10 @@ function Table({ columns, data }: ITable) {
         <button onClick={() => nextPage()} disabled={!canNextPage}>
           {'>'}
         </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <button
+          onClick={() => gotoPage(pageCount! - 1)}
+          disabled={!canNextPage}
+        >
           {'>>'}
         </button>{' '}
         <span>
