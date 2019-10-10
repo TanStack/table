@@ -1,12 +1,12 @@
 {
-  "name": "react-table",
-  "version": "6.10.3",
+  "name": "react-table-v6",
+  "version": "6.11.0",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
-  "homepage": "https://github.com/react-tools/react-table#readme",
+  "homepage": "https://github.com/tannerlinsley/react-table/tree/v6#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-tools/react-table.git"
+    "url": "git+https://github.com/tannerlinsley/react-table.git"
   },
   "keywords": [
     "react",
