@@ -3,8 +3,17 @@
     "module": "commonjs",
     "lib": ["es6"],
     "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "noEmit": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "react-table": ["index.d.ts"]
+    }
   },
-  "files": ["index.d.ts"]
+  "files": ["index.d.ts", "types/basic.test.tsx"]
 }
