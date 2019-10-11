@@ -96,13 +96,11 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <div {...row.getRowProps()} className="row body">
-                {row.cells.map(cell => {
-                  return (
-                    <div {...cell.getCellProps()} className="cell">
-                      {cell.render('Cell')}
-                    </div>
-                  )
-                })}
+                {row.cells.map((cell,index) => (
+                  <div {...cell.getCellProps()} key={index} className="cell">
+                    {cell.render('Cell')}
+                  </div>
+                ))}
               </div>
             )
         )}
