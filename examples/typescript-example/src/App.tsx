@@ -136,7 +136,7 @@ const Table: FC<Props> = ({ columns, data }) => {
     useSortBy,
     useBlockLayout,
     useResizeColumns
-  ) as TableInstance<object>
+  )
   // Render the UI for your table
   return (
     <TableWrap {...getTableProps()}>
