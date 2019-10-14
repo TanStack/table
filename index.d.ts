@@ -452,6 +452,7 @@ export interface UseRowSelectInstanceProps<D extends object> {
   toggleRowSelectedAll: (set?: boolean) => void
   getToggleAllRowsSelectedProps: (props?: object) => object
   isAllRowsSelected: boolean
+  selectedFlatRows: Array<Row<D>>
 }
 
 export interface UseRowSelectRowProps<D extends object> {
@@ -521,7 +522,7 @@ export type UseSortByOptions<D extends object> = Partial<{
     rows: Array<Row<D>>,
     sortFns: Array<SortByFn<D>>,
     directions: boolean[]
-  ) => Array<Row<D>> // CHECK
+  ) => Array<Row<D>>
   sortTypes: Record<string, SortByFn<D>>
 }>
 
