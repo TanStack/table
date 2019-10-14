@@ -93,7 +93,7 @@ function useMain(instance) {
 
     column.canGroupBy = accessor
       ? getFirstDefined(
-          columnDisableGrouping,
+          columnDisableGrouping === true ? false : undefined,
           disableGrouping === true ? false : undefined,
           true
         )
