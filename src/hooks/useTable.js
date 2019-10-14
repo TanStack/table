@@ -447,9 +447,10 @@ function calculateHeaderWidths(headers, left = 0) {
         header.maxWidth
       )
     }
-
-    left += header.totalWidth
-    sumTotalWidth += header.totalWidth
+    if (header.isVisible) {
+      left += header.totalWidth
+      sumTotalWidth += header.totalWidth
+    }
   })
 
   return sumTotalWidth
