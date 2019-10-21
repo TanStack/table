@@ -46,9 +46,10 @@
     "classnames": "^2.2.5"
   },
   "peerDependencies": {
-    "prop-types": "^15.5.0",
+    "prop-types": "^15.7.0",
     "react": "^16.x.x",
-    "react-dom": "^16.x.x"
+    "react-dom": "^16.x.x",
+    "react-is": "^16.8.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
