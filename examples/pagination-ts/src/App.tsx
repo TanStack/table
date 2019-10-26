@@ -37,12 +37,12 @@ const Styles = styled.div`
   }
 `
 
-interface ITable {
-  columns: Column<PersonData>[]
-  data: PersonData[]
+interface ITable<T extends object> {
+  columns: Column<T>[]
+  data: T[]
 }
 
-function Table({ columns, data }: ITable) {
+function Table<T extends object>({ columns, data }: ITable<T>) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -62,7 +62,7 @@ function Table({ columns, data }: ITable) {
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize },
-  } = useTable<PersonData>(
+  } = useTable<T>(
     {
       columns,
       data,
@@ -212,7 +212,7 @@ function App() {
 
   return (
     <Styles>
-      <Table columns={columns} data={data} />
+      <Table<PersonData> columns={columns} data={data} />
     </Styles>
   )
 }
