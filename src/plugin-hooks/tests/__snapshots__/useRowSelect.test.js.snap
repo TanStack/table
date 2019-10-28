@@ -7,472 +7,328 @@ Snapshot Diff:
 
 @@ -117,11 +117,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 0 Not Selected
 +             Row 0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -173,11 +173,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 1 Not Selected
 +             Row 1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -229,11 +229,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2 Not Selected
 +             Row 2 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -285,11 +285,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.0 Not Selected
 +             Row 2.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -341,11 +341,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.1 Not Selected
 +             Row 2.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -397,11 +397,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 3 Not Selected
 +             Row 3 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -453,11 +453,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 4 Not Selected
 +             Row 4 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -509,11 +509,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 5 Not Selected
 +             Row 5 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -565,11 +565,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 6 Not Selected
 +             Row 6 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -621,11 +621,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 6.0 Not Selected
 +             Row 6.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -677,11 +677,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 6.1 Not Selected
 +             Row 6.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -733,11 +733,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 7 Not Selected
 +             Row 7 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -789,11 +789,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 8 Not Selected
 +             Row 8 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -845,11 +845,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 9 Not Selected
 +             Row 9 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -901,11 +901,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 10 Not Selected
 +             Row 10 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -957,11 +957,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 10.0 Not Selected
 +             Row 10.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1013,11 +1013,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 10.1 Not Selected
 +             Row 10.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1069,11 +1069,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 11 Not Selected
 +             Row 11 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1125,11 +1125,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 12 Not Selected
 +             Row 12 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1181,11 +1181,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 13 Not Selected
 +             Row 13 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1237,11 +1237,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 14 Not Selected
 +             Row 14 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1293,11 +1293,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 14.0 Not Selected
 +             Row 14.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1349,11 +1349,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 14.1 Not Selected
 +             Row 14.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1405,11 +1405,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 15 Not Selected
 +             Row 15 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1461,11 +1461,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 16 Not Selected
 +             Row 16 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1517,11 +1517,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 17 Not Selected
 +             Row 17 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1573,11 +1573,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 18 Not Selected
 +             Row 18 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1629,11 +1629,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 18.0 Not Selected
 +             Row 18.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1685,11 +1685,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 18.1 Not Selected
 +             Row 18.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1741,11 +1741,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 19 Not Selected
 +             Row 19 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1797,11 +1797,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 20 Not Selected
 +             Row 20 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1853,11 +1853,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 21 Not Selected
 +             Row 21 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1909,11 +1909,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 22 Not Selected
 +             Row 22 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1965,11 +1965,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 22.0 Not Selected
 +             Row 22.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2021,11 +2021,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 22.1 Not Selected
 +             Row 22.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2077,11 +2077,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 23 Not Selected
 +             Row 23 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,15 +2114,52 @@
           </td>
         </tr>
@@ -537,472 +393,328 @@ Snapshot Diff:
 
 @@ -117,11 +117,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 0 Selected
 +             Row 0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -173,11 +173,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 1 Selected
 +             Row 1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -229,11 +229,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2 Selected
 +             Row 2 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -285,11 +285,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.0 Selected
 +             Row 2.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -341,11 +341,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.1 Selected
 +             Row 2.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -397,11 +397,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 3 Selected
 +             Row 3 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -453,11 +453,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 4 Selected
 +             Row 4 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -509,11 +509,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 5 Selected
 +             Row 5 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -565,11 +565,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 6 Selected
 +             Row 6 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -621,11 +621,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 6.0 Selected
 +             Row 6.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -677,11 +677,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 6.1 Selected
 +             Row 6.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -733,11 +733,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 7 Selected
 +             Row 7 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -789,11 +789,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 8 Selected
 +             Row 8 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -845,11 +845,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 9 Selected
 +             Row 9 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -901,11 +901,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 10 Selected
 +             Row 10 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -957,11 +957,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 10.0 Selected
 +             Row 10.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1013,11 +1013,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 10.1 Selected
 +             Row 10.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1069,11 +1069,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 11 Selected
 +             Row 11 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1125,11 +1125,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 12 Selected
 +             Row 12 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1181,11 +1181,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 13 Selected
 +             Row 13 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1237,11 +1237,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 14 Selected
 +             Row 14 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1293,11 +1293,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 14.0 Selected
 +             Row 14.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1349,11 +1349,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 14.1 Selected
 +             Row 14.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1405,11 +1405,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 15 Selected
 +             Row 15 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1461,11 +1461,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 16 Selected
 +             Row 16 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1517,11 +1517,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 17 Selected
 +             Row 17 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1573,11 +1573,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 18 Selected
 +             Row 18 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1629,11 +1629,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 18.0 Selected
 +             Row 18.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1685,11 +1685,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 18.1 Selected
 +             Row 18.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1741,11 +1741,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 19 Selected
 +             Row 19 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1797,11 +1797,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 20 Selected
 +             Row 20 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1853,11 +1853,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 21 Selected
 +             Row 21 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1909,11 +1909,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 22 Selected
 +             Row 22 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -1965,11 +1965,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 22.0 Selected
 +             Row 22.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2021,11 +2021,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 22.1 Selected
 +             Row 22.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2077,11 +2077,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 23 Selected
 +             Row 23 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,52 +2114,15 @@
           </td>
         </tr>
@@ -1067,56 +779,40 @@ Snapshot Diff:
 
 @@ -117,11 +117,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 0 Not Selected
 +             Row 0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -229,11 +229,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2 Not Selected
 +             Row 2 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -285,11 +285,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.0 Not Selected
 +             Row 2.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -341,11 +341,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.1 Not Selected
 +             Row 2.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,15 +2114,20 @@
           </td>
         </tr>
@@ -1149,43 +845,31 @@ Snapshot Diff:
 
 @@ -229,11 +229,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2 Selected
 +             Row 2 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -285,11 +285,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.0 Selected
 +             Row 2.0 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -341,11 +341,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.1 Selected
 +             Row 2.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,20 +2114,17 @@
           </td>
         </tr>
@@ -1218,17 +902,13 @@ Snapshot Diff:
 
 @@ -285,11 +285,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.0 Not Selected
 +             Row 2.0 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,17 +2114,18 @@
           </td>
         </tr>
@@ -1259,17 +939,13 @@ Snapshot Diff:
 
 @@ -341,11 +341,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.1 Not Selected
 +             Row 2.1 Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,18 +2114,19 @@
           </td>
         </tr>
@@ -1301,17 +977,13 @@ Snapshot Diff:
 
 @@ -341,11 +341,11 @@
           </td>
-          <td
-            class=""
-          >
+          <td>
             <div>
 -             Row 2.1 Selected
 +             Row 2.1 Not Selected
             </div>
           </td>
-          <td
-            class=""
-          >
+          <td>
 @@ -2114,19 +2114,18 @@
           </td>
         </tr>

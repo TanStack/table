@@ -316,6 +316,9 @@ export const mergeProps = (...groups) => {
       className: [props.className, className].filter(Boolean).join(' '),
     }
   })
+  if (props.className === '') {
+    delete props.className
+  }
   return props
 }
 

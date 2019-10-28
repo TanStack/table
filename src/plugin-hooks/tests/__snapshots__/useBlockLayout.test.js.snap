@@ -73,9 +73,7 @@ exports[`renders a table 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class=""
-    >
+    <div>
       <div
         class="row"
         style="display: flex; width: 1400px;"
