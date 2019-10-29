@@ -1,6 +1,6 @@
 export default Base =>
   class extends Base {
-    constructor(props) {
+    constructor (props) {
       super(props)
 
       this.state = this.calculateNewResolvedState(this.getDataModel(this.getResolvedState(), true))
@@ -117,7 +117,10 @@ export default Base =>
     }
 
     setStateWithData (dataModel, cb) {
-      return this.setState(this.calculateNewResolvedState(dataModel), () => {
+      const oldState = this.getResolvedState()
+      const newResolvedState = this.calculateNewResolvedState(dataModel)
+
+      return this.setState(newResolvedState, () => {
         if (cb) {
           cb()
         }
