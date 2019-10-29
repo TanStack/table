@@ -1,9 +1,9 @@
 export default Base =>
   class extends Base {
     constructor(props) {
-      super(props);
+      super(props)
 
-      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
+      this.state = this.calculateNewResolvedState(this.getDataModel(this.getResolvedState(), true))
     }
 
     componentDidMount () {
@@ -50,9 +50,9 @@ export default Base =>
       }
     }
 
-    setStateWithData (newState, cb) {
+    calculateNewResolvedState (dataModel) {
       const oldState = this.getResolvedState()
-      const newResolvedState = this.getResolvedState({}, newState)
+      const newResolvedState = this.getResolvedState({}, dataModel)
       const { freezeWhenExpanded } = newResolvedState
 
       // Default to unfrozen state
@@ -113,7 +113,11 @@ export default Base =>
         )
       }
 
-      return this.setState(newResolvedState, () => {
+      return newResolvedState
+    }
+
+    setStateWithData (dataModel, cb) {
+      return this.setState(this.calculateNewResolvedState(dataModel), () => {
         if (cb) {
           cb()
         }
