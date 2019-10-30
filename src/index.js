@@ -14,7 +14,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   static defaultProps = defaultProps
 
   constructor (props) {
-    super()
+    super(props)
 
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
