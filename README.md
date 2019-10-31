@@ -79,7 +79,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
           <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/diamond.png">
         </a>
       </td>
