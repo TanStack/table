@@ -160,7 +160,6 @@ In case you would need to have both v6 and v7 in one app during the migration pr
         </a>
       </td>
       <td>
-        <div><a href="https://www.metso.com/">Pekka</a></div>
         <div>Jon Eickmeier</div>
         <div><a href="https://github.com/Shah-Sahab">Syed Hussain<a></div>
       </td>
@@ -185,6 +184,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
         <div>David Pickut</div>
         <div>Jordan Soltman</div>
         <div>Robert Tajnšek</div>
+        <div>Pekka</div>
       </td>
     </tr>
   </tbody>
