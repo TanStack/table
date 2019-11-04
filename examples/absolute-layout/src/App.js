@@ -94,7 +94,7 @@ function Table({ columns, data }) {
       <div className="rows" {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
-            prepareRow(row) || (
+            (prepareRow(row), (
               <div {...row.getRowProps()} className="row body">
                 {row.cells.map((cell,index) => (
                   <div {...cell.getCellProps()} key={index} className="cell">
@@ -102,7 +102,7 @@ function Table({ columns, data }) {
                   </div>
                 ))}
               </div>
-            )
+            ))
         )}
       </div>
     </div>

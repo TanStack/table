@@ -72,7 +72,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
         <tbody {...getTableBodyProps()}>
           {rows.map(
             (row, i) =>
-              prepareRow(row) || (
+              (prepareRow(row), (
                 // Use a React.Fragment here so the table markup is still valid
                 <>
                   <tr {...row.getRowProps()}>
@@ -101,7 +101,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
                     </tr>
                   ) : null}
                 </>
-              )
+              ))
           )}
         </tbody>
       </table>

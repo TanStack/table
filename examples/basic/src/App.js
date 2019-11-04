@@ -61,13 +61,13 @@ function Table({ columns, data }) {
       <tbody {...getTableBodyProps()}>
         {rows.map(
           (row, i) =>
-            prepareRow(row) || (
+            (prepareRow(row), (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 })}
               </tr>
-            )
+            ))
         )}
       </tbody>
     </table>

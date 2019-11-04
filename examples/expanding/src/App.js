@@ -64,7 +64,7 @@ function Table({ columns: userColumns, data }) {
         <tbody {...getTableBodyProps()}>
           {rows.map(
             (row, i) =>
-              prepareRow(row) || (
+              (prepareRow(row), (
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
@@ -72,7 +72,7 @@ function Table({ columns: userColumns, data }) {
                     )
                   })}
                 </tr>
-              )
+              ))
           )}
         </tbody>
       </table>

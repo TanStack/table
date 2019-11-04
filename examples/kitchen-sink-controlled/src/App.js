@@ -352,7 +352,7 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
         <tbody {...getTableBodyProps()}>
           {page.map(
             row =>
-              prepareRow(row) || (
+              (prepareRow(row), (
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
@@ -378,7 +378,7 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
                     )
                   })}
                 </tr>
-              )
+              ))
           )}
         </tbody>
       </table>

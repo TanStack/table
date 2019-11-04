@@ -117,7 +117,7 @@ function Table({
         <tbody {...getTableBodyProps()}>
           {page.map(
             (row, i) =>
-              prepareRow(row) || (
+              (prepareRow(row), (
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
@@ -125,7 +125,7 @@ function Table({
                     );
                   })}
                 </tr>
-              )
+              ))
           )}
           <tr>
             {loading ? (

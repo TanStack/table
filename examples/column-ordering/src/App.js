@@ -82,7 +82,7 @@ function Table({ columns, data }) {
         <tbody {...getTableBodyProps()}>
           {rows.slice(0, 10).map(
             (row, i) =>
-              prepareRow(row) || (
+              (prepareRow(row), (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell, i) => {
                     return (
@@ -90,7 +90,7 @@ function Table({ columns, data }) {
                     )
                   })}
                 </tr>
-              )
+              ))
           )}
         </tbody>
       </table>
