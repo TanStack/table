@@ -184,7 +184,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
         <div>David Pickut</div>
         <div>Jordan Soltman</div>
         <div>Robert Tajnšek</div>
-        <div>Pekka</div>
+        <div>Pekka Tapani</div>
       </td>
     </tr>
   </tbody>
