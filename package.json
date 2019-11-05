@@ -20,6 +20,7 @@
     "src/",
     "es/",
     "lib/",
+    "index.d.ts",
     "react-table.js",
     "react-table.min.js",
     "react-table.css",
