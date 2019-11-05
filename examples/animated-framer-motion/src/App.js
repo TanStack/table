@@ -268,8 +268,9 @@ function Table({ columns, data }) {
         <tbody {...getTableBodyProps()}>
           <AnimatePresence>
             {rows.slice(0, 10).map(
-              (row, i) =>
-                prepareRow(row) || (
+              (row, i) => {
+                prepareRow(row);
+                return (
                   <motion.tr
                     {...row.getRowProps({
                       layoutTransition: spring,
@@ -288,7 +289,7 @@ function Table({ columns, data }) {
                       )
                     })}
                   </motion.tr>
-                )
+                )}
             )}
           </AnimatePresence>
         </tbody>

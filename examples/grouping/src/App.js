@@ -80,8 +80,9 @@ function Table({ columns, data }) {
         </thead>
         <tbody {...getTableBodyProps()}>
           {firstPageRows.map(
-            (row, i) =>
-              prepareRow(row) || (
+            (row, i) => {
+              prepareRow(row);
+              return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
@@ -120,7 +121,7 @@ function Table({ columns, data }) {
                     )
                   })}
                 </tr>
-              )
+              )}
           )}
         </tbody>
       </table>
