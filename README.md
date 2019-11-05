@@ -205,6 +205,4 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   </tbody>
 </table>
 
-<a href="https://github.com/sponsors/tannerlinsley/">
-  <img width="150" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
-</a>
+### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
