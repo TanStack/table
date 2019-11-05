@@ -2,7 +2,7 @@
 
 React-table is a very flexible library, because of this, the shape of data at almost every contact point is defined by the specific set of plugins that you choose to pass to `useTable`.
 
-Tto get started, copy the file `react-table-config.d.ts` into your source tree (e.g. into a types folder). This expands the default types with all of the plugin extensions currently in the type definitions.
+To get started, copy the file `react-table-config.d.ts` into your source tree (e.g. into a types folder). This expands the default types with all of the plugin extensions currently in the type definitions.
 
 You can stop here if you like, but while this is simple, it's a bit misleading. Out of the box, these types will suggest that you have access to values that come from plugins that you aren't using, i.e. the error checking is weakened.
 
@@ -32,7 +32,7 @@ export interface TableOptions<D extends object>
     UseSortByOptions<D> {}
 ```
 
-Then follow the same pattern for all of the other interfaces in the file. You'll notice that many plugins don't extends all of the top level interfaces.
+Then follow the same pattern for all of the other interfaces in the file. You'll notice that many plugins don't extend all of the top-level interfaces.
 
 ## Caveat
 

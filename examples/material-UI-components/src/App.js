@@ -40,8 +40,9 @@ function Table({ columns, data }) {
       </TableHead>
       <TableBody>
         {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
+          (row, i) => {
+            prepareRow(row);
+            return (
               <TableRow {...row.getRowProps()}>
                 {row.cells.map(cell => {
                   return (
@@ -51,7 +52,7 @@ function Table({ columns, data }) {
                   )
                 })}
               </TableRow>
-            )
+            )}
         )}
       </TableBody>
     </MaUTable>

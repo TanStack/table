@@ -575,8 +575,8 @@ The following options are supported on any `Column` object passed to the `column
   - Must return valid JSX
   - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
 - `disableGrouping: Boolean`
-  - Defaults to `true`
-  - If `true`, this column is able to be grouped.
+  - Defaults to `false`
+  - If `true`, will disable grouping for this column.
 
 ### Instance Properties
 
