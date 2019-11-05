@@ -93,6 +93,7 @@ The following options are supported via the main options object passed to `useTa
   - When either the internal `state` or this `state` object change, this object is **always merged over the internal table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options.
 - `reducer: Function(oldState, newState) => finalState`
   - Optional
+  - Must be **memoized**
   - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
   - With every `setState` call to the table's internal `React.useState` instance, this reducer is called and is allowed to modify the final state object for updating.
   - It is passed the `oldState`, the `newState`, and when provided, an optional action `type`.
