@@ -122,7 +122,7 @@ export const useTable = (props, ...plugins) => {
     [defaultColumn, userColumns]
   )
 
-  // Get the flat list of all columns andllow hooks to decorate
+  // Get the flat list of all columns and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
   let flatColumns = React.useMemo(() => {
     if (process.env.NODE_ENV === 'development' && debug)

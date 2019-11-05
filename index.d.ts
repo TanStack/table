@@ -159,12 +159,13 @@ export interface UseTableCellProps<D extends object> {
 
 export type HeaderProps<D extends object> = TableInstance<D> & {
   column: ColumnInstance<D>
-} & Record<string, any>
+}
+
 export type CellProps<D extends object> = TableInstance<D> & {
   column: ColumnInstance<D>
   row: Row<D>
   cell: Cell<D>
-} & Record<string, any>
+}
 
 // NOTE: At least one of (id | accessor | Header as string) required
 export interface Accessor<D extends object> {
