@@ -95,12 +95,12 @@ In case you would need to have both v6 and v7 in one app during the migration pr
       </td>
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="http://bjntech.com/index.html?utm_campaign=react_table" target="_blank">
-          <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
+          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -122,12 +122,12 @@ In case you would need to have both v6 and v7 in one app during the migration pr
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width='250' src="https://nozzle.io/img/logo-blue.png">
+          <img width='225' src="https://nozzle.io/img/logo-blue.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://zappi.io/web/" target="_blank">
-          <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
+          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
       <td align="center" valign="middle">
