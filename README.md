@@ -73,7 +73,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/diamond.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/diamond.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -90,12 +90,12 @@ In case you would need to have both v6 and v7 in one app during the migration pr
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='350' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+          <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -117,17 +117,17 @@ In case you would need to have both v6 and v7 in one app during the migration pr
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width='230' src="https://nozzle.io/img/logo-blue.png">
+          <img width='250' src="https://nozzle.io/img/logo-blue.png">
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://zappi.io/web/" target="_blank">
-          <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
+          <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -144,7 +144,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -161,12 +161,14 @@ In case you would need to have both v6 and v7 in one app during the migration pr
     <tr>
       <td valign="top">
         <a href="https://github.com/sponsors/tannerlinsley/">
-          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
         </a>
       </td>
       <td>
-        <div>Jon Eickmeier</div>
-        <div><a href="https://github.com/Shah-Sahab">Syed Hussain<a></div>
+        <ul>
+        <li>Jon Eickmeier</li>
+        <li><a href="https://github.com/Shah-Sahab">Syed Hussain<a></li>
+        </ul>
       </td>
       <td>
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
@@ -182,19 +184,21 @@ In case you would need to have both v6 and v7 in one app during the migration pr
     <tr>
       <td valign="top">
         <a href="https://github.com/sponsors/tannerlinsley/">
-          <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
         </a>
       </td>
       <td>
-        <div>Sortmy.games</div>
-        <div>Hugo Meissner</div>
-        <div>Benoit Leger-Derville</div>
-        <div>Thomas Funk</div>
-        <div>Dan Houle</div>
-        <div>David Pickut</div>
-        <div>Jordan Soltman</div>
-        <div>Robert Tajnšek</div>
-        <div>Pekka Tapani</div>
+        <ul>
+        <li>Sortmy.games</li>
+        <li>Hugo Meissner</li>
+        <li>Benoit Leger-Derville</li>
+        <li>Thomas Funk</li>
+        <li>Dan Houle</li>
+        <li>David Pickut</li>
+        <li>Jordan Soltman</li>
+        <li>Robert Tajnšek</li>
+        <li>Pekka Tapani</li>
+        </ul>
       </td>
       <td>
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
