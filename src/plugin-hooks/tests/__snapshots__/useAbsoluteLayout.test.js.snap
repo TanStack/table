@@ -74,7 +74,6 @@ exports[`renders a table 1`] = `
       </div>
     </div>
     <div
-      class=""
       style="position: relative; width: 1400px;"
     >
       <div
