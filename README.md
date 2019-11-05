@@ -66,7 +66,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
 
 ## Sponsors
 
-**React Table v7** is being built and maintained by me, @tannerlinsley and I am always in need of more Patreon support to keep this project afloat. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley)
+**React Table v7** is being built and maintained by me, @tannerlinsley and I am always in need of more Patreon support to keep this project afloat. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://github.com/sponsors/tannerlinsley/)
 
 <table>
   <tbody>
@@ -77,7 +77,9 @@ In case you would need to have both v6 and v7 in one app during the migration pr
         </a>
       </td>
       <td align="center" valign="middle">
-        Coming Soon!
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Become a Sponsor!
+        </a>
       </td>
     </tr>
   </tbody>
@@ -87,7 +89,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
+        <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
           <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
         </a>
       </td>
@@ -101,6 +103,11 @@ In case you would need to have both v6 and v7 in one app during the migration pr
           <img width='250' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
         </a>
       </td>
+      <td align="center" valign="middle">
+       <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Become a Sponsor!
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -109,7 +116,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
+        <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
           <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
         </a>
       </td>
@@ -123,6 +130,11 @@ In case you would need to have both v6 and v7 in one app during the migration pr
           <img width='230' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
+      <td align="center" valign="middle">
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Become a Sponsor!
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -131,13 +143,13 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
+        <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
           <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Become a Sponsor!
         </a>
       </td>
     </tr>
@@ -148,7 +160,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   <tbody>
     <tr>
       <td valign="top">
-        <a href="https://patreon.com/tannerlinsley">
+        <a href="https://github.com/sponsors/tannerlinsley/">
           <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
         </a>
       </td>
@@ -156,6 +168,11 @@ In case you would need to have both v6 and v7 in one app during the migration pr
         <div>Jon Eickmeier</div>
         <div><a href="https://github.com/Shah-Sahab">Syed Hussain<a></div>
       </td>
+      <td>
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Become a Supporter!
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -164,7 +181,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
   <tbody>
     <tr>
       <td valign="top">
-        <a href="https://patreon.com/tannerlinsley">
+        <a href="https://github.com/sponsors/tannerlinsley/">
           <img width='200' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
         </a>
       </td>
@@ -179,10 +196,15 @@ In case you would need to have both v6 and v7 in one app during the migration pr
         <div>Robert Tajnšek</div>
         <div>Pekka Tapani</div>
       </td>
+      <td>
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Become a Fan!
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
 
-<a href="https://patreon.com/tannerlinsley">
+<a href="https://github.com/sponsors/tannerlinsley/">
   <img width="150" alt="" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/become-a-patron.png" />
 </a>
