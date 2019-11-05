@@ -66,7 +66,7 @@ In case you would need to have both v6 and v7 in one app during the migration pr
 
 ## Sponsors
 
-**React Table v7** is being built and maintained by me, @tannerlinsley and I am always in need of more Patreon support to keep this project afloat. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://github.com/sponsors/tannerlinsley/)
+This library is being built and maintained by me, @tannerlinsley and I am always in need of more support to keep this project afloat. If you would like to get additional support, add your logo or name on this README, or simply just contribute to my open source Sponsorship goal, [visit my Github Sponsors page!](https://github.com/sponsors/tannerlinsley/)
 
 <table>
   <tbody>
