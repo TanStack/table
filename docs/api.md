@@ -68,7 +68,7 @@ React Table relies on memoization to determine when state and side effects shoul
 
 - Required
 
-`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `rows` value, followed by any React Table compatible hooks you want to use.
+`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `data` value, followed by any React Table compatible hooks you want to use.
 
 ### Table Options
 
