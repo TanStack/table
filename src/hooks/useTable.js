@@ -8,8 +8,7 @@ import {
   flexRender,
   decorateColumnTree,
   makeHeaderGroups,
-  flattenBy,
-  determineHeaderVisibility,
+  flattenBy
 } from '../utils'
 
 const propTypes = {
@@ -229,9 +228,6 @@ export const useTable = (props, ...plugins) => {
 
   instanceRef.current.rows = rows
   instanceRef.current.flatRows = flatRows
-
-  // Determine column visibility
-  determineHeaderVisibility(instanceRef.current)
 
   // Provide a flat header list for utilities
   instanceRef.current.flatHeaders = headerGroups.reduce(
