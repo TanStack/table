@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { defaultState } from '..//hooks/useTable';
+import { defaultState } from '../hooks/useTable';
 import { addActions, actions } from '../actions';
 import { determineHeaderVisibility } from '../utils';
 
