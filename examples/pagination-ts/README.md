@@ -7,10 +7,13 @@
 
 This is a direct port of the pagination example to typescript. It demonstrates how to extend the default types to reflect the plugins used by useTable. See `./src/types/react-table-local.d.ts`. In this case, the usePagination plugin is used, and so those related types are merged with the defaults.
 
-Note that there are some settings in this project that should change as soon as the final types are available, but they might be a hint to anyone using these types in ths short term.
+### Important:
 
-1.  This package uses `patch-package` to remove`node_modules/react-table/index.d.ts`, since tsc was finding it despite my best efforts.
-2.  The desired types have been copied into `src/types/react-table.d.ts`
+Configuring types to reflect the plugins used requires configuring the types referred to by most of the react-table apis. This is done by extending the referenced types.
+
+See [TYPESCRIPT.md](../../TYPESCRIPT.md) for more details.
+
+In this example, the desired types have been copied into `src/types/react-table.d.ts` and then edited to reflect the plugin used.
 
 ## Guide
 
