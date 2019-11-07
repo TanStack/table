@@ -2,7 +2,6 @@ import React from 'react'
 
 export const defaultColumn = {
   Cell: ({ cell: { value = '' } }) => String(value),
-  show: true,
   width: 150,
   minWidth: 0,
   maxWidth: Number.MAX_SAFE_INTEGER,
