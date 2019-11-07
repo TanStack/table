@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { defaultState } from '../../react-table/hooks/useTable';
-import { addActions, actions } from '../../react-table/actions';
-import { determineHeaderVisibility } from '../../react-table/utils';
+import { defaultState } from '..//hooks/useTable';
+import { addActions, actions } from '../actions';
+import { determineHeaderVisibility } from '../utils';
 
 addActions('setColumnVisibility');
 
@@ -12,6 +12,9 @@ defaultState.hiddenColumns = [];
 const propTypes = {};
 
 export const useColumnVisibility = (hooks) => {
+  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
+    return [...deps, instance.state.hiddenColumns];
+  });
   hooks.useBeforeDimensions.push(useBeforeDimensions);
 };
 
@@ -31,7 +34,6 @@ function useBeforeDimensions(instance) {
       return setState((old) => {
         return {
           ...old,
-          columnOrder: [...old.columnOrder], // FixMe: hack
           hiddenColumns: typeof updater === 'function' ? updater(old.hiddenColumns) : updater
         };
       }, actions.setColumnVisibility);
