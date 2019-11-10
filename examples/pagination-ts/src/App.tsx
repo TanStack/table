@@ -37,13 +37,24 @@ const Styles = styled.div`
   }
 `
 
+const plugins = [usePagination]
+
 interface ITable<T extends object> {
-  columns: Column<T>[]
+  columns: Column<T, typeof plugins>[]
   data: T[]
 }
 
 function Table<T extends object>({ columns, data }: ITable<T>) {
   // Use the state and functions returned from useTable to build your UI
+  const instance = useTable<T, typeof plugins>(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 2 },
+    },
+    ...plugins
+  )
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -62,14 +73,7 @@ function Table<T extends object>({ columns, data }: ITable<T>) {
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize },
-  } = useTable<T>(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 2 },
-    },
-    usePagination
-  )
+  } = instance
 
   // Render the UI for your table
   return (
@@ -168,7 +172,7 @@ function Table<T extends object>({ columns, data }: ITable<T>) {
 }
 
 function App() {
-  const columns: Column<PersonData>[] = React.useMemo(
+  const columns: Column<PersonData, typeof plugins>[] = React.useMemo(
     () => [
       {
         Header: 'Name',
