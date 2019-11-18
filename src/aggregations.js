@@ -7,13 +7,8 @@ export function average(values, rows) {
 }
 
 export function median(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
-
-  values.forEach(value => {
-    min = Math.min(min, value)
-    max = Math.max(max, value)
-  })
+  let min = Math.min(...values)
+  let max = Math.max(...values)
 
   return (min + max) / 2
 }
