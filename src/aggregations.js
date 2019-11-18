@@ -7,6 +7,7 @@ export function average(values, rows) {
 }
 
 export function median(values) {
+  values = values.length ? values : [0]
   let min = Math.min(...values)
   let max = Math.max(...values)
 
