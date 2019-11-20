@@ -1,12 +1,5 @@
 ## 7.0.0-beta.14
 
-- Renamed
-  - `disableSorting` to `disableSortBy`
-  - `disableGroupBy` to `disableGroupBy`
-  - `column.disableSorting` to `column.disableSortBy`
-  - `column.disableGroupBy` to `column.disableGroupBy`
-- Removed propType definitions. Since types are now being maintained, it makes little sense to also maintain these. Cooincidentally, this also saves some bundle size in some scenarios where they may not be removed properly by a developer's bundler.
-
 ## 7.0.0-beta.13
 
 - Added options
@@ -18,7 +11,12 @@
   - `column.defaultCanGroupBy`
 - Renamed
   - `disableGrouping` to `disableGroupBy`
+  - `disableSorting` to `disableSortBy`
+  - `disableGroupBy` to `disableGroupBy`
   - `column.disableGrouping` to `column.disableGroupBy`
+  - `column.disableSorting` to `column.disableSortBy`
+  - `column.disableGroupBy` to `column.disableGroupBy`
+- Removed propType definitions. Since types are now being maintained, it makes little sense to also maintain these. Cooincidentally, this also saves some bundle size in some scenarios where they may not be removed properly by a developer's bundler.
 
 ## 7.0.0-beta.0
 
