@@ -16,19 +16,24 @@ export const usePagination = hooks => {
 
 usePagination.pluginName = 'usePagination'
 
+const defaultGetResetPageDeps = ({
+  rows,
+  manualPagination,
+  state: { filters, groupBy, sortBy },
+}) => [manualPagination ? null : rows, filters, groupBy, sortBy]
+
 function useMain(instance) {
   const {
-    data,
     rows,
     manualPagination,
-    disablePageResetOnDataChange,
+    getResetPageDeps = defaultGetResetPageDeps,
     manualExpandedKey = 'expanded',
     debug,
     plugins,
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
+    state: { pageSize, pageIndex, expanded },
     setState,
   } = instance
 
@@ -39,19 +44,10 @@ function useMain(instance) {
     []
   )
 
-  const rowDep = manualPagination ? null : data
-
-  const isPageIndexMountedRef = React.useRef()
-
   // Bypass any effects from firing when this changes
-  const disablePageResetOnDataChangeRef = React.useRef()
-  disablePageResetOnDataChangeRef.current = disablePageResetOnDataChange
-
+  const isMountedRef = React.useRef()
   safeUseLayoutEffect(() => {
-    if (
-      isPageIndexMountedRef.current &&
-      !disablePageResetOnDataChangeRef.current
-    ) {
+    if (isMountedRef.current) {
       setState(
         old => ({
           ...old,
@@ -60,8 +56,8 @@ function useMain(instance) {
         actions.pageChange
       )
     }
-    isPageIndexMountedRef.current = true
-  }, [setState, rowDep, filters, groupBy, sortBy])
+    isMountedRef.current = true
+  }, [setState, ...(getResetPageDeps ? getResetPageDeps(instance) : [])])
 
   const pageCount = manualPagination
     ? userPageCount

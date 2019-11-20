@@ -232,8 +232,8 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val
 
-// Be sure to pass our updateMyData and the disablePageResetOnDataChange option
-function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
+// Be sure to pass our updateMyData and the skipPageReset option
+function Table({ columns, data, updateMyData, skipPageReset }) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -305,8 +305,8 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
       // cell renderer!
       updateMyData,
       // We also need to pass this so the page doesn't change
-      // when we edit the data
-      disablePageResetOnDataChange,
+      // when we edit the data, undefined means using the default
+      getResetPageDeps: skipPageReset ? false : undefined,
     },
     useFilters,
     useSortBy,
@@ -350,37 +350,36 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(
-            row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>
-                        {cell.isGrouped ? (
-                          // If it's a grouped cell, add an expander and row count
-                          <>
-                            <span {...row.getExpandedToggleProps()}>
-                              {row.isExpanded ? '👇' : '👉'}
-                            </span>{' '}
-                            {cell.render('Cell', { editable: false })} (
-                            {row.subRows.length})
-                          </>
-                        ) : cell.isAggregated ? (
-                          // If the cell is aggregated, use the Aggregated
-                          // renderer for cell
-                          cell.render('Aggregated')
-                        ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
-                          // Otherwise, just render the regular cell
-                          cell.render('Cell', { editable: true })
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
+          {page.map(row => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>
+                      {cell.isGrouped ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <span {...row.getExpandedToggleProps()}>
+                            {row.isExpanded ? '👇' : '👉'}
+                          </span>{' '}
+                          {cell.render('Cell', { editable: false })} (
+                          {row.subRows.length})
+                        </>
+                      ) : cell.isAggregated ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        cell.render('Aggregated')
+                      ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        cell.render('Cell', { editable: true })
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       {/* 
@@ -623,7 +622,7 @@ function App() {
         columns={columns}
         data={data}
         updateMyData={updateMyData}
-        disablePageResetOnDataChange={skipPageResetRef.current}
+        skipPageReset={skipPageResetRef.current}
       />
     </Styles>
   )

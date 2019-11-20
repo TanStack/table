@@ -76,8 +76,8 @@ const defaultColumn = {
   Cell: EditableCell,
 }
 
-// Be sure to pass our updateMyData and the disablePageResetOnDataChange option
-function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
+// Be sure to pass our updateMyData and the skipPageReset option
+function Table({ columns, data, updateMyData, skipPageReset }) {
   // For this example, we're using pagination to illustrate how to stop
   // the current page from resetting when our data changes
   // Otherwise, nothing is different here.
@@ -101,7 +101,8 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
       columns,
       data,
       defaultColumn,
-      disablePageResetOnDataChange,
+      // use the skipPageReset option to disable page resetting temporarily
+      getResetPageDeps: skipPageReset ? false : undefined,
       // updateMyData isn't part of the API, but
       // anything we put into these options will
       // automatically be available on the instance.
@@ -126,19 +127,16 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
+          {page.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       <div className="pagination">
@@ -274,7 +272,7 @@ function App() {
         columns={columns}
         data={data}
         updateMyData={updateMyData}
-        disablePageResetOnDataChange={skipPageReset}
+        skipPageReset={skipPageReset}
       />
     </Styles>
   )

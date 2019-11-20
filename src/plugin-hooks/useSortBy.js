@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ensurePluginOrder, defaultColumn } from '../utils'
+import { ensurePluginOrder, defaultColumn, safeUseLayoutEffect } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
 import * as sortTypes from '../sortTypes'
@@ -44,11 +44,27 @@ function useMain(instance) {
     state: { sortBy },
     setState,
     plugins,
+    getResetSortByDeps = false,
   } = instance
 
   ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
   // Add custom hooks
   hooks.getSortByToggleProps = []
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      setState(
+        old => ({
+          ...old,
+          sortBy: [],
+        }),
+        actions.pageChange
+      )
+    }
+    isMountedRef.current = true
+  }, [setState, ...(getResetSortByDeps ? getResetSortByDeps(instance) : [])])
 
   // Updates sorting based on a columnID, desc flag and multi flag
   const toggleSortBy = (columnID, desc, multi) => {
@@ -93,7 +109,8 @@ function useMain(instance) {
         !hasDescDefined && // Must not be setting desc
         (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
         ((existingSortBy && // Finally, detect if it should indeed be removed
-          (existingSortBy.desc && !sortDescFirst)) ||
+          existingSortBy.desc &&
+          !sortDescFirst) ||
           (!existingSortBy.desc && sortDescFirst))
       ) {
         action = 'remove'

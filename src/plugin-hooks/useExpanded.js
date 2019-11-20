@@ -1,6 +1,11 @@
 import React from 'react'
 
-import { mergeProps, applyPropHooks, expandRows } from '../utils'
+import {
+  mergeProps,
+  applyPropHooks,
+  expandRows,
+  safeUseLayoutEffect,
+} from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
 
@@ -15,6 +20,8 @@ export const useExpanded = hooks => {
 
 useExpanded.pluginName = 'useExpanded'
 
+const defaultGetResetExpandedDeps = instance => [instance.data]
+
 function useMain(instance) {
   const {
     debug,
@@ -25,7 +32,26 @@ function useMain(instance) {
     hooks,
     state: { expanded },
     setState,
+    getResetExpandedDeps = defaultGetResetExpandedDeps,
   } = instance
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      setState(
+        old => ({
+          ...old,
+          expanded: [],
+        }),
+        actions.pageChange
+      )
+    }
+    isMountedRef.current = true
+  }, [
+    setState,
+    ...(getResetExpandedDeps ? getResetExpandedDeps(instance) : []),
+  ])
 
   const toggleExpandedByPath = (path, set) => {
     const key = path.join('.')

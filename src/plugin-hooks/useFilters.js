@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getFirstDefined, isFunction } from '../utils'
+import { getFirstDefined, isFunction, safeUseLayoutEffect } from '../utils'
 import * as filterTypes from '../filterTypes'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
@@ -27,10 +27,26 @@ function useMain(instance) {
     disableFilters,
     state: { filters },
     setState,
+    getResetFiltersDeps = false,
   } = instance
 
   const preFilteredRows = rows
   const preFilteredFlatRows = flatRows
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      setState(
+        old => ({
+          ...old,
+          filters: {},
+        }),
+        actions.pageChange
+      )
+    }
+    isMountedRef.current = true
+  }, [setState, ...(getResetFiltersDeps ? getResetFiltersDeps(instance) : [])])
 
   const setFilter = (id, updater) => {
     const column = flatColumns.find(d => d.id === id)

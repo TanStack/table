@@ -1,5 +1,14 @@
 ## 7.0.0-beta.14
 
+- Removed
+  - `disablePageResetOnDataChange` option. use the `getResetPageDeps` option now.
+- Added
+  - `getResetPageDeps` option
+  - `getResetFilterDeps` option
+  - `getResetSortByDeps` option
+  - `getResetGroupByDeps` option
+  - `getResetExpandedDeps` option
+
 ## 7.0.0-beta.13
 
 - Added options
