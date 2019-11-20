@@ -21,7 +21,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 ## Features
 
-- Lightweight (4kb - 9kb depending on features and tree-shaking)
+- Lightweight (4kb - 10kb depending on features and tree-shaking)
 - Headless (100% customizable, Bring-your-own-UI)
 - Auto out of the box, fully controllable API
 - Sorting (Multi and Stable)
