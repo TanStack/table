@@ -22,7 +22,7 @@
     "test:dev": "jest --watch",
     "test:ci": "yarn test:jest && yarn test:types",
     "test:jest": "jest",
-    "test:types": "echo TODO: Re-enable dtslint",
+    "test:types": "echo '\n****\nTODO: Re-enable dtslint\n****\n'",
     "build": "rollup -c",
     "start": "rollup -c -w",
     "prepare": "yarn build",
