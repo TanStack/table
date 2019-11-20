@@ -305,6 +305,7 @@ function isReactComponent(component) {
 
 export const mergeProps = (...groups) => {
   let props = {}
+
   groups.forEach(({ style = {}, className, ...rest } = {}) => {
     props = {
       ...props,
@@ -316,9 +317,11 @@ export const mergeProps = (...groups) => {
       className: [props.className, className].filter(Boolean).join(' '),
     }
   })
+
   if (props.className === '') {
     delete props.className
   }
+
   return props
 }
 
