@@ -37,6 +37,7 @@ function useMain(instance) {
     flatColumns,
     filterTypes: userFilterTypes,
     manualFilters,
+    defaultCanFilter = false,
     disableFilters,
     state: { filters },
     setState,
@@ -108,7 +109,12 @@ function useMain(instance) {
   }
 
   flatColumns.forEach(column => {
-    const { id, accessor, disableFilters: columnDisableFilters } = column
+    const {
+      id,
+      accessor,
+      defaultCanFilter: columnDefaultCanFilter,
+      disableFilters: columnDisableFilters,
+    } = column
 
     // Determine if a column is filterable
     column.canFilter = accessor
@@ -117,7 +123,7 @@ function useMain(instance) {
           disableFilters === true ? false : undefined,
           true
         )
-      : false
+      : getFirstDefined(columnDefaultCanFilter, defaultCanFilter, false)
 
     // Provide the column a way of updating the filter value
     column.setFilter = val => setFilter(column.id, val)

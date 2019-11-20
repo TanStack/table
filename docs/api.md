@@ -361,6 +361,10 @@ The following options are supported via the main options object passed to `useTa
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableSorting: Bool`
   - Disables sorting for every column in the entire table.
+- `defaultCanSort: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, all columns will be sortable, regardless if they have a valid `accessor`
 - `disableMultiSort: Bool`
   - Disables multi-sorting for the entire table.
 - `isMultiSortEvent: Function`
@@ -385,6 +389,10 @@ The following options are supported via the main options object passed to `useTa
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
+- `defaultCanSort: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, this column will be sortable, regardless if it has a valid `accessor`
 - `disableSorting: Bool`
   - Optional
   - Defaults to `false`
@@ -471,6 +479,10 @@ The following options are supported via the main options object passed to `useTa
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableFilters: Bool`
   - Disables filtering for every column in the entire table.
+- `defaultCanFilter: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, all columns will be filterable, regardless if they have a valid `accessor`
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
@@ -488,6 +500,10 @@ The following options are supported on any `Column` object passed to the `column
 - `disableFilters: Bool`
   - Optional
   - If set to `true`, will disable filtering for this column
+- `defaultCanFilter: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, this column will be filterable, regardless if it has a valid `accessor`
 - `filter: String | Function`
   - Optional
   - Defaults to `text`

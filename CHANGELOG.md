@@ -1,3 +1,16 @@
+## 7.0.0-beta.13
+
+- Added options
+  - `defaultCanSort`
+  - `defaultCanFilter`
+  - `defaultCanGroupBy`
+  - `column.defaultCanSort`
+  - `column.defaultCanFilter`
+  - `column.defaultCanGroupBy`
+- Renamed
+  - `disableGrouping` to `disableGroupBy`
+  - `column.disableGrouping` to `column.disableGroupBy`
+
 ## 7.0.0-beta.0
 
 - Massive changes to the entire project and library. Please consult the README and documentation for more information regarding these changes.

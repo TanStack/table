@@ -27,13 +27,13 @@ const propTypes = {
           PropTypes.oneOfType([PropTypes.func, PropTypes.string])
         ),
       ]),
-      disableGrouping: PropTypes.bool,
+      disableGroupBy: PropTypes.bool,
       Aggregated: PropTypes.any,
     })
   ),
   groupByFn: PropTypes.func,
   manualGrouping: PropTypes.bool,
-  disableGrouping: PropTypes.bool,
+  disableGroupBy: PropTypes.bool,
   aggregations: PropTypes.object,
 }
 
@@ -76,7 +76,8 @@ function useMain(instance) {
     flatHeaders,
     groupByFn = defaultGroupByFn,
     manualGroupBy,
-    disableGrouping,
+    defaultCanGroupBy,
+    disableGroupBy,
     aggregations: userAggregations = {},
     hooks,
     plugins,
@@ -87,17 +88,22 @@ function useMain(instance) {
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
 
   flatColumns.forEach(column => {
-    const { id, accessor, disableGrouping: columnDisableGrouping } = column
+    const {
+      id,
+      accessor,
+      defaultGroupBy: defaultColumnGroupBy,
+      disableGroupBy: columnDisableGrouping,
+    } = column
     column.isGrouped = groupBy.includes(id)
     column.groupedIndex = groupBy.indexOf(id)
 
     column.canGroupBy = accessor
       ? getFirstDefined(
           columnDisableGrouping === true ? false : undefined,
-          disableGrouping === true ? false : undefined,
+          disableGroupBy === true ? false : undefined,
           true
         )
-      : false
+      : getFirstDefined(defaultColumnGroupBy, defaultCanGroupBy, false)
 
     if (column.canGroupBy) {
       column.toggleGroupBy = () => toggleGroupBy(column.id)

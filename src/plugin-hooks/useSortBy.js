@@ -55,6 +55,7 @@ function useMain(instance) {
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
     manualSorting,
+    defaultCanSort,
     disableSorting,
     disableSortRemove,
     disableMultiRemove,
@@ -162,7 +163,12 @@ function useMain(instance) {
 
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
-    const { accessor, disableSorting: columnDisableSorting, id } = column
+    const {
+      accessor,
+      canSort: defaultColumnCanSort,
+      disableSorting: columnDisableSorting,
+      id,
+    } = column
 
     const canSort = accessor
       ? getFirstDefined(
@@ -170,7 +176,7 @@ function useMain(instance) {
           disableSorting === true ? false : undefined,
           true
         )
-      : false
+      : getFirstDefined(defaultCanSort, defaultColumnCanSort, false)
 
     column.canSort = canSort
 
