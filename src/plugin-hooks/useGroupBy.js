@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import PropTypes from 'prop-types'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
@@ -15,27 +14,6 @@ import {
 defaultState.groupBy = []
 
 addActions('toggleGroupBy')
-
-const propTypes = {
-  // General
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      aggregate: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.string,
-        PropTypes.arrayOf(
-          PropTypes.oneOfType([PropTypes.func, PropTypes.string])
-        ),
-      ]),
-      disableGroupBy: PropTypes.bool,
-      Aggregated: PropTypes.any,
-    })
-  ),
-  groupByFn: PropTypes.func,
-  manualGrouping: PropTypes.bool,
-  disableGroupBy: PropTypes.bool,
-  aggregations: PropTypes.object,
-}
 
 export const useGroupBy = hooks => {
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
@@ -67,8 +45,6 @@ function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
 }
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useGroupBy')
-
   const {
     debug,
     rows,
@@ -92,14 +68,14 @@ function useMain(instance) {
       id,
       accessor,
       defaultGroupBy: defaultColumnGroupBy,
-      disableGroupBy: columnDisableGrouping,
+      disableGroupBy: columnDisableGroupBy,
     } = column
     column.isGrouped = groupBy.includes(id)
     column.groupedIndex = groupBy.indexOf(id)
 
     column.canGroupBy = accessor
       ? getFirstDefined(
-          columnDisableGrouping === true ? false : undefined,
+          columnDisableGroupBy === true ? false : undefined,
           disableGroupBy === true ? false : undefined,
           true
         )

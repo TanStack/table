@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import {
   mergeProps,
@@ -14,10 +13,6 @@ defaultState.selectedRowPaths = []
 
 addActions('toggleRowSelected', 'toggleRowSelectedAll')
 
-const propTypes = {
-  manualRowSelectedKey: PropTypes.string,
-}
-
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = []
   hooks.getToggleAllRowsSelectedProps = []
@@ -28,8 +23,6 @@ export const useRowSelect = hooks => {
 useRowSelect.pluginName = 'useRowSelect'
 
 function useRows(rows, instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
-
   const {
     state: { selectedRowPaths },
   } = instance
@@ -57,8 +50,6 @@ function useRows(rows, instance) {
 }
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
-
   const {
     hooks,
     manualRowSelectedKey = 'isSelected',

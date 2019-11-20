@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import { ensurePluginOrder, defaultColumn } from '../utils'
 import { addActions, actions } from '../actions'
@@ -19,26 +18,6 @@ defaultColumn.sortDescFirst = false
 
 addActions('sortByChange')
 
-const propTypes = {
-  // General
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      sortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-      sortDescFirst: PropTypes.bool,
-      disableSorting: PropTypes.bool,
-    })
-  ),
-  orderByFn: PropTypes.func,
-  sortTypes: PropTypes.object,
-  manualSorting: PropTypes.bool,
-  disableSorting: PropTypes.bool,
-  disableMultiSort: PropTypes.bool,
-  isMultiSortEvent: PropTypes.func,
-  maxMultiSortColCount: PropTypes.number,
-  disableSortRemove: PropTypes.bool,
-  disableMultiRemove: PropTypes.bool,
-}
-
 export const useSortBy = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -46,8 +25,6 @@ export const useSortBy = hooks => {
 useSortBy.pluginName = 'useSortBy'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useSortBy')
-
   const {
     debug,
     rows,
@@ -56,7 +33,7 @@ function useMain(instance) {
     sortTypes: userSortTypes,
     manualSorting,
     defaultCanSort,
-    disableSorting,
+    disableSortBy,
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
@@ -166,14 +143,14 @@ function useMain(instance) {
     const {
       accessor,
       canSort: defaultColumnCanSort,
-      disableSorting: columnDisableSorting,
+      disableSortBy: columnDisableSortBy,
       id,
     } = column
 
     const canSort = accessor
       ? getFirstDefined(
-          columnDisableSorting === true ? false : undefined,
-          disableSorting === true ? false : undefined,
+          columnDisableSortBy === true ? false : undefined,
+          disableSortBy === true ? false : undefined,
           true
         )
       : getFirstDefined(defaultCanSort, defaultColumnCanSort, false)

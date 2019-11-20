@@ -58,7 +58,7 @@ To dive deeper into plugins, see Plugins](TODO) and the [Plugin Guide
 
 The order and usage of plugin hooks must follow The Laws of Hooks, just like any other custom hook. They must always be unconditionally called in the same order.
 
-> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSorting`**
+> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSortBy`**
 
 ### Option Memoization
 
@@ -359,7 +359,7 @@ The following options are supported via the main options object passed to `useTa
   - Identical to the `state.sortBy` option above
 - `manualSorting: Bool`
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableSorting: Bool`
+- `disableSortBy: Bool`
   - Disables sorting for every column in the entire table.
 - `defaultCanSort: Bool`
   - Optional
@@ -393,7 +393,7 @@ The following options are supported on any `Column` object passed to the `column
   - Optional
   - Defaults to `false`
   - If set to `true`, this column will be sortable, regardless if it has a valid `accessor`
-- `disableSorting: Bool`
+- `disableSortBy: Bool`
   - Optional
   - Defaults to `false`
   - If set to `true`, the sorting for this column will be disabled
@@ -571,7 +571,7 @@ The following options are supported via the main options object passed to `useTa
 - `manualGroupBy: Bool`
   - Enables groupBy detection and functionality, but does not automatically perform row grouping.
   - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableGrouping: Bool`
+- `disableGroupBy: Bool`
   - Disables groupBy for the entire table.
 - `aggregations: Object<aggregationKey: aggregationFn>`
   - Must be **memoized**
@@ -591,7 +591,7 @@ The following options are supported on any `Column` object passed to the `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
-- `disableGrouping: Boolean`
+- `disableGroupBy: Boolean`
   - Defaults to `false`
   - If `true`, will disable grouping for this column.
 

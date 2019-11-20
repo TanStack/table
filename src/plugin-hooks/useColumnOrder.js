@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
@@ -7,10 +6,6 @@ import { defaultState } from '../hooks/useTable'
 defaultState.columnOrder = []
 
 addActions('setColumnOrder')
-
-const propTypes = {
-  initialRowStateAccessor: PropTypes.func,
-}
 
 export const useColumnOrder = hooks => {
   hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
@@ -54,8 +49,6 @@ function columnsBeforeHeaderGroups(columns, instance) {
 }
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useColumnOrder')
-
   const { setState } = instance
 
   const setColumnOrder = React.useCallback(

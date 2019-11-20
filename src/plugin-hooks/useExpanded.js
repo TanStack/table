@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import PropTypes from 'prop-types'
 
 import { mergeProps, applyPropHooks, expandRows } from '../utils'
 import { addActions, actions } from '../actions'
@@ -9,11 +8,6 @@ defaultState.expanded = []
 
 addActions('toggleExpanded', 'useExpanded')
 
-const propTypes = {
-  manualExpandedKey: PropTypes.string,
-  paginateExpandedRows: PropTypes.bool,
-}
-
 export const useExpanded = hooks => {
   hooks.getExpandedToggleProps = []
   hooks.useMain.push(useMain)
@@ -22,8 +16,6 @@ export const useExpanded = hooks => {
 useExpanded.pluginName = 'useExpanded'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useExpanded')
-
   const {
     debug,
     rows,

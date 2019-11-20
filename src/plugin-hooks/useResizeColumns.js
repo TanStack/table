@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-
 //
 
 import { defaultState } from '../hooks/useTable'
@@ -12,8 +10,6 @@ defaultState.columnResizing = {
 
 defaultColumn.canResize = true
 
-const propTypes = {}
-
 export const useResizeColumns = hooks => {
   hooks.useBeforeDimensions.push(useBeforeDimensions)
 }
@@ -21,8 +17,6 @@ export const useResizeColumns = hooks => {
 useResizeColumns.pluginName = 'useResizeColumns'
 
 const useBeforeDimensions = instance => {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useResizeColumns')
-
   instance.hooks.getResizerProps = []
 
   const {

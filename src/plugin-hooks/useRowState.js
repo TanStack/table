@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
@@ -8,10 +7,6 @@ defaultState.rowState = {}
 
 addActions('setRowState', 'setCellState')
 
-const propTypes = {
-  initialRowStateAccessor: PropTypes.func,
-}
-
 export const useRowState = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -19,8 +14,6 @@ export const useRowState = hooks => {
 useRowState.pluginName = 'useRowState'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowState')
-
   const {
     hooks,
     rows,

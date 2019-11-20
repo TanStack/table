@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types'
-
-const propTypes = {}
-
 export const useBlockLayout = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -9,8 +5,6 @@ export const useBlockLayout = hooks => {
 useBlockLayout.pluginName = 'useBlockLayout'
 
 const useMain = instance => {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useBlockLayout')
-
   const {
     totalColumnsWidth,
     hooks: { getRowProps, getHeaderGroupProps, getHeaderProps, getCellProps },

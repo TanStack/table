@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+
 //
 import {
   applyHooks,
@@ -11,16 +11,6 @@ import {
   flattenBy,
   determineHeaderVisibility,
 } from '../utils'
-
-const propTypes = {
-  // General
-  data: PropTypes.array.isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  defaultColumn: PropTypes.object,
-  getSubRows: PropTypes.func,
-  getRowID: PropTypes.func,
-  debug: PropTypes.bool,
-}
 
 const renderErr =
   'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
@@ -34,9 +24,6 @@ const defaultGetSubRows = (row, index) => row.subRows || []
 const defaultGetRowID = (row, index) => index
 
 export const useTable = (props, ...plugins) => {
-  // Validate props
-  PropTypes.checkPropTypes(propTypes, props, 'property', 'useTable')
-
   // Destructure props
   let {
     data,

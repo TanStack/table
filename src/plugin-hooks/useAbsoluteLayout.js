@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types'
-
-const propTypes = {}
-
 export const useAbsoluteLayout = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -9,8 +5,6 @@ export const useAbsoluteLayout = hooks => {
 useAbsoluteLayout.pluginName = 'useAbsoluteLayout'
 
 const useMain = instance => {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useAbsoluteLayout')
-
   const {
     totalColumnsWidth,
     hooks: {

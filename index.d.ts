@@ -317,7 +317,7 @@ export namespace useGroupBy {
 
 export type UseGroupByOptions<D extends object> = Partial<{
   manualGroupBy: boolean
-  disableGrouping: boolean
+  disableGroupBy: boolean
   aggregations: Record<string, AggregatorFn<D>>
   groupByFn: (
     rows: Array<Row<D>>,
@@ -338,7 +338,7 @@ export interface UseGroupByState<D extends object> {
 export type UseGroupByColumnOptions<D extends object> = Partial<{
   aggregate: Aggregator<D> | Array<Aggregator<D>>
   Aggregated: Renderer<CellProps<D>>
-  disableGrouping: boolean
+  disableGroupBy: boolean
   groupByBoundary: boolean
 }>
 
@@ -513,7 +513,7 @@ export namespace useSortBy {
 
 export type UseSortByOptions<D extends object> = Partial<{
   manualSorting: boolean
-  disableSorting: boolean
+  disableSortBy: boolean
   disableMultiSort: boolean
   isMultiSortEvent: (e: MouseEvent) => boolean
   maxMultiSortColCount: number
@@ -538,7 +538,7 @@ export interface UseSortByState<D extends object> {
 }
 
 export type UseSortByColumnOptions<D extends object> = Partial<{
-  disableSorting: boolean
+  disableSortBy: boolean
   sortDescFirst: boolean
   sortInverted: boolean
   sortType: SortByFn<D> | DefaultSortTypes | string

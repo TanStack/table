@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 //
 import { addActions, actions } from '../actions'
@@ -11,12 +10,6 @@ defaultState.pageIndex = 0
 
 addActions('pageChange', 'pageSizeChange')
 
-const propTypes = {
-  // General
-  manualPagination: PropTypes.bool,
-  paginateExpandedRows: PropTypes.bool,
-}
-
 export const usePagination = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -24,8 +17,6 @@ export const usePagination = hooks => {
 usePagination.pluginName = 'usePagination'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'usePagination')
-
   const {
     data,
     rows,

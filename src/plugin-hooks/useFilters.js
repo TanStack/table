@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import { getFirstDefined, isFunction } from '../utils'
 import * as filterTypes from '../filterTypes'
@@ -10,17 +9,6 @@ defaultState.filters = {}
 
 addActions('setFilter', 'setAllFilters')
 
-const propTypes = {
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      disableFilters: PropTypes.bool,
-      Filter: PropTypes.any,
-    })
-  ),
-
-  manualFilters: PropTypes.bool,
-}
-
 export const useFilters = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -28,8 +16,6 @@ export const useFilters = hooks => {
 useFilters.pluginName = 'useFilters'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFilters')
-
   const {
     debug,
     rows,
