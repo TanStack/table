@@ -17,8 +17,8 @@
   - `column.defaultCanFilter`
   - `column.defaultCanGroupBy`
 - Renamed
-  - `disableGroupBy` to `disableGroupBy`
-  - `column.disableGroupBy` to `column.disableGroupBy`
+  - `disableGrouping` to `disableGroupBy`
+  - `column.disableGrouping` to `column.disableGroupBy`
 
 ## 7.0.0-beta.0
 
