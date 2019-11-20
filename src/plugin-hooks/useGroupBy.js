@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React from 'react'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
@@ -142,7 +142,7 @@ function useMain(instance) {
     return row
   })
 
-  const groupedRows = useMemo(() => {
+  const groupedRows = React.useMemo(() => {
     if (manualGroupBy || !groupBy.length) {
       return rows
     }

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { useTable } from 'react-table'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
@@ -37,9 +37,9 @@ const Styles = styled.div`
 `
 
 const Table = ({ columns, data }) => {
-  const [records, setRecords] = useState(data)
+  const [records, setRecords] = React.useState(data)
 
-  const getRowID = useCallback(row => {
+  const getRowID = React.useCallback(row => {
     return row.id
   }, [])
 
@@ -59,7 +59,10 @@ const Table = ({ columns, data }) => {
     const dragRecord = records[dragIndex]
     setRecords(
       update(records, {
-        $splice: [[dragIndex, 1], [hoverIndex, 0, dragRecord]],
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragRecord],
+        ],
       })
     )
   }
@@ -98,8 +101,8 @@ const Table = ({ columns, data }) => {
 const DND_ITEM_TYPE = 'row'
 
 const Row = ({ row, index, moveRow }) => {
-  const dropRef = useRef(null)
-  const dragRef = useRef(null)
+  const dropRef = React.useRef(null)
+  const dragRef = React.useRef(null)
 
   const [, drop] = useDrop({
     accept: DND_ITEM_TYPE,
@@ -166,7 +169,7 @@ const Row = ({ row, index, moveRow }) => {
 }
 
 const App = () => {
-  const columns = useMemo(
+  const columns = React.useMemo(
     () => [
       {
         Header: 'ID',

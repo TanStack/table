@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React from 'react'
 
 import { mergeProps, applyPropHooks, expandRows } from '../utils'
 import { addActions, actions } from '../actions'
@@ -71,7 +71,7 @@ function useMain(instance) {
     return row
   })
 
-  const expandedRows = useMemo(() => {
+  const expandedRows = React.useMemo(() => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.info('getExpandedRows')
 
