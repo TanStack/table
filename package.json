@@ -44,10 +44,11 @@
     "docs:build": "yarn build && cd docs && yarn && yarn build"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "react-is": "^16.8.1"
   },
   "peerDependencies": {
-    "prop-types": "^15.5.0",
+    "prop-types": "^15.7.0",
     "react": "^16.x.x",
     "react-dom": "^16.x.x"
   },

@@ -1,5 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
+import * as ReactIs from 'react-is'
+
 //
 export default {
   get,
@@ -204,24 +206,12 @@ function isSortingDesc (d) {
 }
 
 function normalizeComponent (Comp, props, fallback = Comp) {
-  return isReactComponent(Comp) ? <Comp {...props} /> : typeof Comp === 'function' ? Comp(props) : fallback
-}
+  if (ReactIs.isElement(Comp) || typeof Comp === 'string') {
+    return Comp
+  } else if (ReactIs.isValidElementType(Comp)) {
+    return <Comp {...props} />
+  }
 
-function isClassComponent (component) {
-  return (
-    typeof component === 'function' &&
-    !!Object.getPrototypeOf(component).isReactComponent
-  )
-}
-
-function isFunctionComponent (component) {
-  return (
-    typeof component === 'function' &&
-    String(component).includes('.createElement')
-  )
-}
-
-function isReactComponent (component) {
-  return isClassComponent(component) || isFunctionComponent(component)
+  return fallback
 }
 

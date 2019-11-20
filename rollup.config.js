@@ -26,7 +26,11 @@ const config = {
     replace({
       'process.env.NODE_ENV': JSON.stringify(env),
     }),
-    commonjs(),
+    commonjs({
+      namedExports: {
+        'react-is': ['isValidElementType', 'isElement'],
+      },
+    }),
   ],
 }
 
