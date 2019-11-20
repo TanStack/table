@@ -70,40 +70,39 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                // Use a React.Fragment here so the table markup is still valid
-                <>
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                  {/*
+          {rows.map((row, i) => {
+            prepareRow(row)
+            return (
+              // Use a React.Fragment here so the table markup is still valid
+              <>
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+                {/*
                     If the row is in an expanded state, render a row with a
-                    column that spands the entire length of the table.
+                    column that fills the entire length of the table.
                   */}
-                  {row.isExpanded ? (
-                    <tr>
-                      <td colSpan={flatColumns.length}>
-                        {/*
+                {row.isExpanded ? (
+                  <tr>
+                    <td colSpan={flatColumns.length}>
+                      {/*
                           Inside it, call our renderRowSubComponent function. In reality,
-                          you coul pass whatever you want as props to
+                          you could pass whatever you want as props to
                           a component like this, including the entire
                           table instance. But for this example, we'll just
                           pass the row
                         */}
-                        {renderRowSubComponent({ row })}
-                      </td>
-                    </tr>
-                  ) : null}
-                </>
-              )}
-          )}
+                      {renderRowSubComponent({ row })}
+                    </td>
+                  </tr>
+                ) : null}
+              </>
+            )
+          })}
         </tbody>
       </table>
       <br />

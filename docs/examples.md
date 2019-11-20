@@ -37,6 +37,9 @@
   - Data-Driven Classes and Styles
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/data-driven-classes-and-styles)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/data-driven-classes-and-styles)
+  - Row DnD
+    - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-dnd)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-dnd)
 - **Complex**
   - The "Kitchen Sink"
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/kitchen-sink)
