@@ -2,7 +2,7 @@ import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
 import external from 'rollup-plugin-peer-deps-external'
 import resolve from 'rollup-plugin-node-resolve'
-import { terser } from 'rollup-plugin-terser'
+import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
 import pkg from './package.json'
 
@@ -14,7 +14,7 @@ export default [
       format: 'cjs',
       sourcemap: true,
     },
-    plugins: [external(), babel(), resolve(), commonjs(), terser()],
+    plugins: [external(), babel(), resolve(), commonjs(), sizeSnapshot()],
   },
   {
     input: 'src/index.js',
@@ -23,6 +23,6 @@ export default [
       format: 'es',
       sourcemap: true,
     },
-    plugins: [external(), babel()],
+    plugins: [external(), babel(), sizeSnapshot()],
   },
 ]
