@@ -1,34 +1,8 @@
-<div style="text-align:center;">
-  <a href="https://github.com/tannerlinsley/react-table" target="\_parent"><img src="https://github.com/react-tools/media/raw/master/logo-react-table.png" alt="React Table Logo" style="width:450px;"/></a>
-</div>
-
 # React Table v6
 
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
-<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=v6" />
-</a>
-<a href="https://npmjs.com/package/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
-</a>
-<a href="https://spectrum.chat/react-table">
-  <img alt="Join the community on Spectrum" src="https://withspectrum.github.io/badge/badge.svg" />
-</a>
-<a href="https://github.com/react-tools/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/github/stars/react-tools/react-table.svg?style=social&label=Star" />
-</a>
-<a href="https://twitter.com/tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
-</a>
-<a href="https://cash.me/$tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
-</a>
-
-<br />
-<br />
-
-## v6
+## Important! This is not the most recent version of React Table and is no longer receiving long-term support.
 
 This is a v6 of react-table, due to the incredibly massive differences from v7 this branch exists as a way to access its docs and source. I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React. Otherwise, look into using [the most recent version](https://github.com/tannerlinsley/react-table) of react-table!
 
@@ -46,107 +20,27 @@ This is a v6 of react-table, due to the incredibly massive differences from v7 t
 
 ## CodeSandbox Examples
 
-- [100k-rows-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-100k-rows-aggregation)
-- [cell-renderers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-cell-renderers)
-- [controlled-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-controlled-table)
-- [custom-column-widths](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-column-widths)
-- [custom-component-props](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-component-props)
-- [custom-expander-position](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-expander-position)
-- [custom-filtering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-filtering)
-- [custom-no-data-text](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-no-data-text)
-- [custom-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-sorting)
-- [default-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-default-sorting)
-- [editable-content](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-editable-content)
-- [fixed-header-vertical-scroll](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-fixed-header-vertical-scroll)
-- [footers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-footers)
-- [functional-rendering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-functional-rendering)
-- [multiple-pagination-bars](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-multiple-pagination-bars)
-- [pivoting-and-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-and-aggregation)
-- [pivoting-options](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-options)
-- [pivoting-sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-sub-components)
-- [server-side-data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-server-side-data)
-- [simple-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-simple-table)
-- [sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-sub-components)
-
-## Versions
-
-- [The most recent version](https://github.com/tannerlinsley/react-table)
-- This documentation is for version 6 of react-table.
-- [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
-- Previous versions:
-  - [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
-
-## Sponsors
-
-**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and continue to maintain it. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley).
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://nozzle.io" target="_blank">
-          <img width="300" src="https://nozzle.io/img/logo-blue.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://zappi.io/web" target="_blank">
-          <img width="300" src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and maintain it. If you would like to contribute to my Patreon goal for v7, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley). Gold
+- [100k-rows-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-100k-rows-aggregation)
+- [cell-renderers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-cell-renderers)
+- [controlled-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-controlled-table)
+- [custom-column-widths](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-custom-column-widths)
+- [custom-component-props](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-custom-component-props)
+- [custom-expander-position](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-custom-expander-position)
+- [custom-filtering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-custom-filtering)
+- [custom-no-data-text](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-custom-no-data-text)
+- [custom-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-custom-sorting)
+- [default-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-default-sorting)
+- [editable-content](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-editable-content)
+- [fixed-header-vertical-scroll](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-fixed-header-vertical-scroll)
+- [footers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-footers)
+- [functional-rendering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-functional-rendering)
+- [multiple-pagination-bars](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-multiple-pagination-bars)
+- [pivoting-and-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-pivoting-and-aggregation)
+- [pivoting-options](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-pivoting-options)
+- [pivoting-sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-pivoting-sub-components)
+- [server-side-data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-server-side-data)
+- [simple-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-simple-table)
+- [sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/cdcf11b4b06848946c7a4393d4ef5193f6800867/archives/v6-examples/react-table-sub-components)
 
 ## Table of Contents
 
@@ -1461,28 +1355,3 @@ Essentially this will walk down the chain (if there are chained HOCs) and stop w
 Finally, sometimes the chains need to be in a specific order to function correctly. It is not clear if this is just an architectural
 issue or if it would be better solved using a library like `recompose`. Anyone who is able to contribute a reliable solution to this
 is welcome to submit a PR.
-
-## Contributing
-
-To suggest a feature, create an issue if it does not already exist.
-If you would like to help develop a suggested feature follow these steps:
-
-- Fork this repo
-- Install dependencies with `$ yarn`
-- Auto-build files as you edit with `$ yarn run watch`
-- Implement your changes to files in the `src/` directory
-- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`
-- Submit PR for review
-
-#### Scripts
-
-- `$ yarn run watch` Watches files and builds via babel
-- `$ yarn run docs` Runs the storybook server
-- `$ yarn run test` Runs the test suite
-
-## Used By
-
-<a href='https://nozzle.io' target="\_parent">
-  <img src='https://nozzle.io/img/logo-blue.png' alt='Nozzle Logo' style='width:300px;'/>
-</a>
