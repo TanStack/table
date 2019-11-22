@@ -356,9 +356,6 @@ export interface UseGroupByColumnProps<D extends object> {
   isGrouped: boolean
   groupedIndex: number
   toggleGroupBy: () => void
-}
-
-export interface UseGroupByHeaderProps<D extends object> {
   getGroupByToggleProps: (props?: object) => object
 }
 
