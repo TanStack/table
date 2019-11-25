@@ -152,13 +152,13 @@ function useMain(instance) {
     // Find the columns that can or are aggregating
 
     // Uses each column to aggregate rows into a single value
-    const aggregateRowsToValues = (rows, isSourceRows) => {
+    const aggregateRowsToValues = (rows, isSourceRows, groupByVal) => {
       const values = {}
 
       flatColumns.forEach(column => {
         // Don't aggregate columns that are in the groupBy
         if (groupBy.includes(column.id)) {
-          values[column.id] = rows[0] ? rows[0].values[column.id] : null
+          values[column.id] = groupByVal
           return
         }
 
@@ -220,7 +220,8 @@ function useMain(instance) {
 
           const values = aggregateRowsToValues(
             subRows,
-            depth + 1 >= groupBy.length
+            depth + 1 >= groupBy.length,
+            groupByVal
           )
 
           const row = {
