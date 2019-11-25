@@ -1,3 +1,7 @@
+## 7.0.0-beta.15
+
+- Fixed an issue where `defaultGetResetPageDeps` was using `data` instead of `rows`
+
 ## 7.0.0-beta.14
 
 - Removed
