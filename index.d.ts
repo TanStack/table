@@ -60,8 +60,8 @@ export type UseTableOptions<D extends object> = {
   ) => TableState<D>
   defaultColumn: Partial<Column<D>>
   initialRowStateKey: IdType<D>
-  getSubRows: (row: Row<D>, relativeIndex: number) => Array<Row<D>>
-  getRowID: (row: Row<D>, relativeIndex: number) => string
+  getSubRows: (originalRow: D, relativeIndex: number) => Array<D>
+  getRowID: (originalRow: D, relativeIndex: number) => IdType<D>
   debug: boolean
 }>
 
@@ -210,7 +210,6 @@ export namespace useExpanded {
 }
 
 export type UseExpandedOptions<D extends object> = Partial<{
-  getSubRows: (row: Row<D>, relativeIndex: number) => Array<Row<D>>
   manualExpandedKey: IdType<D>
   paginateExpandedRows: boolean
   getResetExpandedDeps: (i: TableInstance) => Array<any>
