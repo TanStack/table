@@ -17,10 +17,10 @@ export const usePagination = hooks => {
 usePagination.pluginName = 'usePagination'
 
 const defaultGetResetPageDeps = ({
-  rows,
+  data,
   manualPagination,
   state: { filters, groupBy, sortBy },
-}) => [manualPagination ? null : rows, filters, groupBy, sortBy]
+}) => [manualPagination ? null : data, filters, groupBy, sortBy]
 
 function useMain(instance) {
   const {
