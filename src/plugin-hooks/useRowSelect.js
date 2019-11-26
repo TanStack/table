@@ -49,7 +49,7 @@ function useRows(rows, instance) {
   return rows
 }
 
-const defaultGetResetSelectedRowPathsDeps = ({ rows }) => [rows]
+const defaultGetResetSelectedRowPathsDeps = ({ data }) => [data]
 
 function useMain(instance) {
   const {

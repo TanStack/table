@@ -20,7 +20,7 @@ export const useExpanded = hooks => {
 
 useExpanded.pluginName = 'useExpanded'
 
-const defaultGetResetExpandedDeps = instance => [instance.data]
+const defaultGetResetExpandedDeps = ({ data }) => [data]
 
 function useMain(instance) {
   const {
