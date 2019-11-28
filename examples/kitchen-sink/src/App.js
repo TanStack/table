@@ -296,8 +296,6 @@ function Table({ columns, data, updateMyData, skipReset }) {
       data,
       defaultColumn,
       filterTypes,
-      // nestExpandedRows: true,
-      initialState: { pageIndex: 2 },
       // updateMyData isn't part of the API, but
       // anything we put into these options will
       // automatically be available on the instance.
