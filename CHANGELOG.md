@@ -1,4 +1,17 @@
+## 7.0.0-beta.15
+
+- Fixed an issue where `defaultGetResetPageDeps` was using `data` instead of `rows`
+
 ## 7.0.0-beta.14
+
+- Removed
+  - `disablePageResetOnDataChange` option. use the `getResetPageDeps` option now.
+- Added
+  - `getResetPageDeps` option
+  - `getResetFilterDeps` option
+  - `getResetSortByDeps` option
+  - `getResetGroupByDeps` option
+  - `getResetExpandedDeps` option
 
 ## 7.0.0-beta.13
 

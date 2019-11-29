@@ -60,8 +60,8 @@ export type UseTableOptions<D extends object> = {
   ) => TableState<D>
   defaultColumn: Partial<Column<D>>
   initialRowStateKey: IdType<D>
-  getSubRows: (row: Row<D>, relativeIndex: number) => Array<Row<D>>
-  getRowID: (row: Row<D>, relativeIndex: number) => string
+  getSubRows: (originalRow: D, relativeIndex: number) => Array<D>
+  getRowID: (originalRow: D, relativeIndex: number) => IdType<D>
   debug: boolean
 }>
 
@@ -210,9 +210,9 @@ export namespace useExpanded {
 }
 
 export type UseExpandedOptions<D extends object> = Partial<{
-  getSubRows: (row: Row<D>, relativeIndex: number) => Array<Row<D>>
   manualExpandedKey: IdType<D>
   paginateExpandedRows: boolean
+  getResetExpandedDeps: (i: TableInstance) => Array<any>
 }>
 
 export interface UseExpandedHooks<D extends object> {
@@ -250,6 +250,7 @@ export type UseFiltersOptions<D extends object> = Partial<{
   manualFilters: boolean
   disableFilters: boolean
   filterTypes: Filters<D>
+  getResetFiltersDeps: (i: TableInstance) => Array<any>
 }>
 
 export interface UseFiltersState<D extends object> {
@@ -323,6 +324,7 @@ export type UseGroupByOptions<D extends object> = Partial<{
     rows: Array<Row<D>>,
     columnId: IdType<D>
   ) => Record<string, Row<D>>
+  getResetGroupByDeps: (i: TableInstance) => Array<any>
 }>
 
 export interface UseGroupByHooks<D extends object> {
@@ -353,9 +355,6 @@ export interface UseGroupByColumnProps<D extends object> {
   isGrouped: boolean
   groupedIndex: number
   toggleGroupBy: () => void
-}
-
-export interface UseGroupByHeaderProps<D extends object> {
   getGroupByToggleProps: (props?: object) => object
 }
 
@@ -403,7 +402,7 @@ export namespace usePagination {
 export type UsePaginationOptions<D extends object> = Partial<{
   pageCount: number
   manualPagination: boolean
-  disablePageResetOnDataChange: boolean
+  getResetPageDeps: (i: TableInstance) => Array<any>
   paginateExpandedRows: boolean
 }>
 
@@ -435,6 +434,7 @@ export namespace useRowSelect {
 
 export type UseRowSelectOptions<D extends object> = Partial<{
   manualRowSelectedKey: IdType<D>
+  getResetSelectedRowPathsDeps: (i: TableInstance) => Array<any>
 }>
 
 export interface UseRowSelectHooks<D extends object> {
@@ -525,6 +525,7 @@ export type UseSortByOptions<D extends object> = Partial<{
     directions: boolean[]
   ) => Array<Row<D>>
   sortTypes: Record<string, SortByFn<D>>
+  getResetSortByDeps: (i: TableInstance) => Array<any>
 }>
 
 export interface UseSortByHooks<D extends object> {

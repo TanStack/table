@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import React from 'react'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
@@ -108,7 +108,7 @@ function useMain(instance) {
   hooks.getGroupByToggleProps = []
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = useRef()
+  const instanceRef = React.useRef()
   instanceRef.current = instance
 
   flatHeaders.forEach(header => {
@@ -150,7 +150,7 @@ function useMain(instance) {
     return row
   })
 
-  const groupedRows = useMemo(() => {
+  const groupedRows = React.useMemo(() => {
     if (manualGroupBy || !groupBy.length) {
       return rows
     }

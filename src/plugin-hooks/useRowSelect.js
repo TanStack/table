@@ -49,14 +49,15 @@ function useRows(rows, instance) {
   return rows
 }
 
+const defaultGetResetSelectedRowPathsDeps = ({ rows }) => [rows]
+
 function useMain(instance) {
   const {
     hooks,
     manualRowSelectedKey = 'isSelected',
-    disableSelectedRowsResetOnDataChange,
     plugins,
     flatRows,
-    data,
+    getResetSelectedRowPathsDeps = defaultGetResetSelectedRowPathsDeps,
     state: { selectedRowPaths },
     setState,
   } = instance
@@ -78,17 +79,10 @@ function useMain(instance) {
     }
   }
 
-  const isRowSelectedMountedRef = React.useRef()
-
   // Bypass any effects from firing when this changes
-  const disableSelectedRowsResetOnDataChangeRef = React.useRef()
-  disableSelectedRowsResetOnDataChangeRef.current = disableSelectedRowsResetOnDataChange
-
+  const isMountedRef = React.useRef()
   safeUseLayoutEffect(() => {
-    if (
-      isRowSelectedMountedRef.current &&
-      !disableSelectedRowsResetOnDataChangeRef.current
-    ) {
+    if (isMountedRef.current) {
       setState(
         old => ({
           ...old,
@@ -97,8 +91,13 @@ function useMain(instance) {
         actions.pageChange
       )
     }
-    isRowSelectedMountedRef.current = true
-  }, [setState, data])
+    isMountedRef.current = true
+  }, [
+    setState,
+    ...(getResetSelectedRowPathsDeps
+      ? getResetSelectedRowPathsDeps(instance)
+      : []),
+  ])
 
   const toggleRowSelectedAll = set => {
     setState(old => {

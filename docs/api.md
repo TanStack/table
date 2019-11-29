@@ -384,6 +384,11 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the built-in sort types.
   - For more information on sort types, see Sorting
+- `getResetSortByDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to `false`
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `sortBy` state is fired.
+  - To disable, set to `false`
 
 ### Column Options
 
@@ -487,6 +492,11 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
   - For more information on filter types, see Filtering
+- `getResetFiltersDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to `false`
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `filters` state is fired.
+  - To disable, set to `false`
 
 ### Column Options
 
@@ -696,6 +706,14 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `true`
   - If set to `true`, expanded rows are rendered along with normal rows.
   - If set to `false`, expanded rows will only be available through their parent row. This could be useful if you are implementing a custom expanded row view.
+- `getResetExpandedDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
+    - ```js
+      const getResetExpandedDeps = ({ data }) => [data]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `expanded` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
@@ -750,10 +768,19 @@ The following options are supported via the main options object passed to `useTa
 - `manualPagination: Bool`
   - Enables pagination functionality, but does not automatically perform row pagination.
   - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
-- `disablePageResetOnDataChange`
-  - Defaults to `false`
-  - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
-  - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
+- `getResetPageDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `pageIndex` to `0` when the dependencies below change
+    - ```js
+      const getResetPageDeps = ({
+        rows,
+        manualPagination,
+        state: { filters, groupBy, sortBy },
+      }) => [manualPagination ? null : rows, filters, groupBy, sortBy]
+      ```
+    - Note that if `manualPagination` is set to `true`, then the pageIndex should not be reset when `rows` change
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `pageIndex` state is fired.
+  - To disable, set to `false`
 - `paginateExpandedRows: Bool`
   - Optional
   - Only applies when using the `useExpanded` plugin hook simultaneously
@@ -833,6 +860,14 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `isSelected`
   - If this key is found on the **original** data row, and it is true, this row will be manually selected
+- `getResetSelectedRowPathsDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
+    - ```js
+      const getResetSelectedRowPathsDeps = ({ rows }) => [rows]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `selectedRowPaths` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
