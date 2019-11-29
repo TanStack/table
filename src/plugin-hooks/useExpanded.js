@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 
 import { mergeProps, applyPropHooks, expandRows } from '../utils'
 import { addActions, actions } from '../actions'
@@ -50,6 +50,10 @@ function useMain(instance) {
     }, actions.toggleExpanded)
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = useRef()
+  instanceRef.current = instance
+
   hooks.prepareRow.push(row => {
     row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
     row.getExpandedToggleProps = props => {
@@ -64,7 +68,11 @@ function useMain(instance) {
           },
           title: 'Toggle Expanded',
         },
-        applyPropHooks(instance.hooks.getExpandedToggleProps, row, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getExpandedToggleProps,
+          row,
+          instanceRef.current
+        ),
         props
       )
     }

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 
 import * as aggregations from '../aggregations'
 import { addActions, actions } from '../actions'
@@ -107,6 +107,10 @@ function useMain(instance) {
 
   hooks.getGroupByToggleProps = []
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = useRef()
+  instanceRef.current = instance
+
   flatHeaders.forEach(header => {
     const { canGroupBy } = header
     header.getGroupByToggleProps = props => {
@@ -123,7 +127,11 @@ function useMain(instance) {
           },
           title: 'Toggle GroupBy',
         },
-        applyPropHooks(instance.hooks.getGroupByToggleProps, header, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getGroupByToggleProps,
+          header,
+          instanceRef.current
+        ),
         props
       )
     }
