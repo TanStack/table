@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import React from 'react'
+
 import { defaultState } from '../hooks/useTable'
 import { defaultColumn, getFirstDefined } from '../utils'
 import { mergeProps, applyPropHooks } from '../utils'
@@ -93,7 +94,7 @@ const useBeforeDimensions = instance => {
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = useRef()
+  const instanceRef = React.useRef()
   instanceRef.current = instance
 
   flatHeaders.forEach(header => {

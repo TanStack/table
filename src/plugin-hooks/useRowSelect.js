@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 
 import {
   mergeProps,
@@ -169,7 +169,7 @@ function useMain(instance) {
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = useRef()
+  const instanceRef = React.useRef()
   instanceRef.current = instance
 
   const getToggleAllRowsSelectedProps = props => {

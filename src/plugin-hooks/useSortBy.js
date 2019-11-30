@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 
 import { ensurePluginOrder, defaultColumn, safeUseLayoutEffect } from '../utils'
 import { addActions, actions } from '../actions'
@@ -156,7 +156,7 @@ function useMain(instance) {
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = useRef()
+  const instanceRef = React.useRef()
   instanceRef.current = instance
 
   // Add the getSortByToggleProps method to columns and headers
