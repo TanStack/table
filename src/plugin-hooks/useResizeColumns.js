@@ -1,4 +1,4 @@
-//
+import React from 'react'
 
 import { defaultState } from '../hooks/useTable'
 import { defaultColumn, getFirstDefined } from '../utils'
@@ -93,6 +93,10 @@ const useBeforeDimensions = instance => {
     }))
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
+
   flatHeaders.forEach(header => {
     const canResize = getFirstDefined(
       header.disableResizing === true ? false : undefined,
@@ -114,7 +118,11 @@ const useBeforeDimensions = instance => {
             },
             draggable: false,
           },
-          applyPropHooks(instance.hooks.getResizerProps, header, instance),
+          applyPropHooks(
+            instanceRef.current.hooks.getResizerProps,
+            header,
+            instanceRef.current
+          ),
           userProps
         )
       }

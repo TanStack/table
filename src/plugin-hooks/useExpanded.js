@@ -76,6 +76,10 @@ function useMain(instance) {
     }, actions.toggleExpanded)
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
+
   hooks.prepareRow.push(row => {
     row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
     row.getExpandedToggleProps = props => {
@@ -90,7 +94,11 @@ function useMain(instance) {
           },
           title: 'Toggle Expanded',
         },
-        applyPropHooks(instance.hooks.getExpandedToggleProps, row, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getExpandedToggleProps,
+          row,
+          instanceRef.current
+        ),
         props
       )
     }
