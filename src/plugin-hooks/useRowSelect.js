@@ -168,6 +168,10 @@ function useMain(instance) {
     }, actions.toggleRowSelected)
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
+
   const getToggleAllRowsSelectedProps = props => {
     return mergeProps(
       {
@@ -180,7 +184,10 @@ function useMain(instance) {
         checked: isAllRowsSelected,
         title: 'Toggle All Rows Selected',
       },
-      applyPropHooks(instance.hooks.getToggleAllRowsSelectedProps, instance),
+      applyPropHooks(
+        instanceRef.current.hooks.getToggleAllRowsSelectedProps,
+        instanceRef.current
+      ),
       props
     )
   }
@@ -216,9 +223,9 @@ function useMain(instance) {
             title: 'Toggle Row Selected',
           },
           applyPropHooks(
-            instance.hooks.getToggleRowSelectedProps,
+            instanceRef.current.hooks.getToggleRowSelectedProps,
             row,
-            instance
+            instanceRef.current
           ),
           props
         )
@@ -246,9 +253,9 @@ function useMain(instance) {
             title: 'Toggle Row Selected',
           },
           applyPropHooks(
-            instance.hooks.getToggleRowSelectedProps,
+            instanceRef.current.hooks.getToggleRowSelectedProps,
             row,
-            instance
+            instanceRef.current
           ),
           props
         )

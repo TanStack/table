@@ -155,6 +155,10 @@ function useMain(instance) {
     }, actions.sortByChange)
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
+
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
     const {
@@ -198,7 +202,7 @@ function useMain(instance) {
                 e.persist()
                 column.toggleSortBy(
                   undefined,
-                  !instance.disableMultiSort && isMultiSortEvent(e)
+                  !instanceRef.current.disableMultiSort && isMultiSortEvent(e)
                 )
               }
             : undefined,
@@ -207,7 +211,11 @@ function useMain(instance) {
           },
           title: 'Toggle SortBy',
         },
-        applyPropHooks(instance.hooks.getSortByToggleProps, column, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getSortByToggleProps,
+          column,
+          instanceRef.current
+        ),
         props
       )
     }
