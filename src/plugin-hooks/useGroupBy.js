@@ -44,6 +44,8 @@ function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
   ]
 }
 
+const defaultUserAggregations = {}
+
 function useMain(instance) {
   const {
     debug,
@@ -54,7 +56,7 @@ function useMain(instance) {
     manualGroupBy,
     defaultCanGroupBy,
     disableGroupBy,
-    aggregations: userAggregations = {},
+    aggregations: userAggregations = defaultUserAggregations,
     hooks,
     plugins,
     state: { groupBy },

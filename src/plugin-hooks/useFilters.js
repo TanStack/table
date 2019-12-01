@@ -42,7 +42,7 @@ function useMain(instance) {
           ...old,
           filters: {},
         }),
-        actions.pageChange
+        actions.setAllFilters
       )
     }
     isMountedRef.current = true

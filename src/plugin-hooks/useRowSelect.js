@@ -11,7 +11,7 @@ import { defaultState } from '../hooks/useTable'
 
 defaultState.selectedRowPaths = []
 
-addActions('toggleRowSelected', 'toggleRowSelectedAll')
+addActions('toggleRowSelected', 'toggleRowSelectedAll', 'setSelectedRowPaths')
 
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = []
@@ -49,7 +49,7 @@ function useRows(rows, instance) {
   return rows
 }
 
-const defaultGetResetSelectedRowPathsDeps = ({ rows }) => [rows]
+const defaultGetResetSelectedRowPathsDeps = ({ data }) => [data]
 
 function useMain(instance) {
   const {
@@ -88,7 +88,7 @@ function useMain(instance) {
           ...old,
           selectedRowPaths: [],
         }),
-        actions.pageChange
+        actions.setSelectedRowPaths
       )
     }
     isMountedRef.current = true

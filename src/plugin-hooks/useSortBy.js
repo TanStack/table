@@ -60,7 +60,7 @@ function useMain(instance) {
           ...old,
           sortBy: [],
         }),
-        actions.pageChange
+        actions.sortByChange
       )
     }
     isMountedRef.current = true

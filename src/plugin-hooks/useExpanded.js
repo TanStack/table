@@ -11,7 +11,7 @@ import { defaultState } from '../hooks/useTable'
 
 defaultState.expanded = []
 
-addActions('toggleExpanded', 'useExpanded')
+addActions('toggleExpanded', 'setExpanded')
 
 export const useExpanded = hooks => {
   hooks.getExpandedToggleProps = []
@@ -44,7 +44,7 @@ function useMain(instance) {
           ...old,
           expanded: [],
         }),
-        actions.pageChange
+        actions.setExpanded
       )
     }
     isMountedRef.current = true
