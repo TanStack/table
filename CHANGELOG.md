@@ -1,3 +1,14 @@
+## 7.0.0-beta.19
+
+- Added an `isAggregated` boolean parameter to the `aggregate` function signature
+
+## 7.0.0-beta.16
+
+- Removed service workers from examples
+- Fixed a memory leak when `instance` was referenced in function closures
+- Fixed an issue where the table would infinitely rerender due to incorrect effect dependencies
+- Fixed an issue where row grouping and row selection would not work properly together.
+
 ## 7.0.0-beta.15
 
 - Fixed an issue where `defaultGetResetPageDeps` was using `data` instead of `rows`

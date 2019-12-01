@@ -163,7 +163,7 @@ function useMain(instance) {
     // Find the columns that can or are aggregating
 
     // Uses each column to aggregate rows into a single value
-    const aggregateRowsToValues = (rows, isSourceRows) => {
+    const aggregateRowsToValues = (rows, isAggregated) => {
       const values = {}
 
       flatColumns.forEach(column => {
@@ -184,7 +184,7 @@ function useMain(instance) {
               `React Table: Complex aggregators must have 2 values, eg. aggregate: ['sum', 'count']. More info above...`
             )
           }
-          if (isSourceRows) {
+          if (isAggregated) {
             aggregator = aggregator[1]
           } else {
             aggregator = aggregator[0]
@@ -197,7 +197,7 @@ function useMain(instance) {
             : userAggregations[aggregator] || aggregations[aggregator]
 
         if (aggregateFn) {
-          values[column.id] = aggregateFn(columnValues, rows)
+          values[column.id] = aggregateFn(columnValues, rows, isAggregated)
         } else if (aggregator) {
           console.info({ column })
           throw new Error(
@@ -235,10 +235,7 @@ function useMain(instance) {
 
           subRows = groupRecursively(subRows, depth + 1, path)
 
-          const values = aggregateRowsToValues(
-            subRows,
-            depth + 1 >= groupBy.length
-          )
+          const values = aggregateRowsToValues(subRows, depth < groupBy.length)
 
           const row = {
             isAggregated: true,

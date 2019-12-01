@@ -601,6 +601,12 @@ The following options are supported on any `Column` object passed to the `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
+- `aggregate: String | [String, String] | Function(values, rows, isAggregated: Bool) => any`
+  - If a single `String` is passed, it must be the key of either a user defined or predefined `aggregations` function.
+  - If a tuple array of `[String, String]` is passed, both must be a key of either a user defined or predefined `aggregations` function.
+    - The first is used to aggregate raw values, eg. `sum`-ing raw values together
+    - The second is used to aggregate values that have already been aggregated, eg. `average`-ing the sums produced by the raw aggregation level
+  - If a `Function` is passed, this function will receive the `values`, original `rows` of those values, and an `isAggregated` `Bool` of whether or not the values and rows have already been aggregated.
 - `disableGroupBy: Boolean`
   - Defaults to `false`
   - If `true`, will disable grouping for this column.
