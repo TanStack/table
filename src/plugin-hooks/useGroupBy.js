@@ -50,6 +50,7 @@ function useMain(instance) {
   const {
     debug,
     rows,
+    flatRows,
     flatColumns,
     flatHeaders,
     groupByFn = defaultGroupByFn,
@@ -152,9 +153,9 @@ function useMain(instance) {
     return row
   })
 
-  const groupedRows = React.useMemo(() => {
+  const [groupedRows, groupedFlatRows] = React.useMemo(() => {
     if (manualGroupBy || !groupBy.length) {
-      return rows
+      return [rows, flatRows]
     }
 
     if (process.env.NODE_ENV === 'development' && debug)
@@ -209,10 +210,16 @@ function useMain(instance) {
       return values
     }
 
+    let groupedFlatRows = []
+
     // Recursively group the data
     const groupRecursively = (rows, depth = 0, parentPath = []) => {
       // This is the last level, just return the rows
       if (depth >= groupBy.length) {
+        rows.forEach(row => {
+          row.path = [...parentPath, ...row.path]
+        })
+        groupedFlatRows = groupedFlatRows.concat(rows)
         return rows
       }
 
@@ -244,6 +251,8 @@ function useMain(instance) {
             path,
           }
 
+          groupedFlatRows.push(row)
+
           return row
         }
       )
@@ -251,13 +260,16 @@ function useMain(instance) {
       return groupedRows
     }
 
+    const groupedRows = groupRecursively(rows)
+
     // Assign the new data
-    return groupRecursively(rows)
+    return [groupedRows, groupedFlatRows]
   }, [
     manualGroupBy,
     groupBy,
     debug,
     rows,
+    flatRows,
     flatColumns,
     userAggregations,
     groupByFn,
@@ -267,6 +279,7 @@ function useMain(instance) {
     ...instance,
     toggleGroupBy,
     rows: groupedRows,
+    flatRows: groupedFlatRows,
     preGroupedRows: rows,
   }
 }

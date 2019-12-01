@@ -82,7 +82,6 @@ function Table({
 
   // Listen for changes in pagination and use the state to fetch our new data
   React.useEffect(() => {
-    console.log(pageIndex)
     fetchData({ pageIndex, pageSize })
   }, [fetchData, pageIndex, pageSize])
 

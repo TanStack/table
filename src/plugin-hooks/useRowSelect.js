@@ -29,15 +29,10 @@ function useRows(rows, instance) {
 
   instance.selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows = []
+
     rows.forEach(row => {
-      if (row.isAggregated) {
-        const subRowPaths = row.subRows.map(row => row.path)
-        row.isSelected = subRowPaths.every(path =>
-          selectedRowPaths.includes(path.join('.'))
-        )
-      } else {
-        row.isSelected = selectedRowPaths.includes(row.path.join('.'))
-      }
+      row.isSelected = getRowIsSelected(row, selectedRowPaths)
+
       if (row.isSelected) {
         selectedFlatRows.push(row)
       }
@@ -193,74 +188,36 @@ function useMain(instance) {
   }
 
   hooks.prepareRow.push(row => {
-    // Aggregate rows have entirely different select logic
-    if (row.isAggregated) {
-      const subRowPaths = row.subRows.map(row => row.path)
-      row.toggleRowSelected = set => {
-        set = typeof set !== 'undefined' ? set : !row.isSelected
-        subRowPaths.forEach(path => {
-          toggleRowSelected(path, set)
-        })
+    row.toggleRowSelected = set => toggleRowSelected(row.path, set)
+    row.getToggleRowSelectedProps = props => {
+      let checked = false
+
+      if (row.original && row.original[manualRowSelectedKey]) {
+        checked = true
+      } else {
+        checked = row.isSelected
       }
-      row.getToggleRowSelectedProps = props => {
-        let checked = false
 
-        if (row.original && row.original[manualRowSelectedKey]) {
-          checked = true
-        } else {
-          checked = row.isSelected
-        }
-
-        return mergeProps(
-          {
-            onChange: e => {
-              row.toggleRowSelected(e.target.checked)
-            },
-            style: {
-              cursor: 'pointer',
-            },
-            checked,
-            title: 'Toggle Row Selected',
+      return mergeProps(
+        {
+          onChange: e => {
+            row.toggleRowSelected(e.target.checked)
           },
-          applyPropHooks(
-            instanceRef.current.hooks.getToggleRowSelectedProps,
-            row,
-            instanceRef.current
-          ),
-          props
-        )
-      }
-    } else {
-      row.toggleRowSelected = set => toggleRowSelected(row.path, set)
-      row.getToggleRowSelectedProps = props => {
-        let checked = false
-
-        if (row.original && row.original[manualRowSelectedKey]) {
-          checked = true
-        } else {
-          checked = row.isSelected
-        }
-
-        return mergeProps(
-          {
-            onChange: e => {
-              row.toggleRowSelected(e.target.checked)
-            },
-            style: {
-              cursor: 'pointer',
-            },
-            checked,
-            title: 'Toggle Row Selected',
+          style: {
+            cursor: 'pointer',
           },
-          applyPropHooks(
-            instanceRef.current.hooks.getToggleRowSelectedProps,
-            row,
-            instanceRef.current
-          ),
-          props
-        )
-      }
+          checked,
+          title: 'Toggle Row Selected',
+        },
+        applyPropHooks(
+          instanceRef.current.hooks.getToggleRowSelectedProps,
+          row,
+          instanceRef.current
+        ),
+        props
+      )
     }
+    // }
 
     return row
   })
@@ -272,4 +229,14 @@ function useMain(instance) {
     getToggleAllRowsSelectedProps,
     isAllRowsSelected,
   }
+}
+
+function getRowIsSelected(row, selectedRowPaths) {
+  if (row.isAggregated) {
+    return row.subRows.every(subRow =>
+      getRowIsSelected(subRow, selectedRowPaths)
+    )
+  }
+
+  return selectedRowPaths.includes(row.path.join('.'))
 }
