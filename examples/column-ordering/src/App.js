@@ -81,8 +81,9 @@ function Table({ columns, data }) {
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.slice(0, 10).map(
-            (row, i) =>
-              prepareRow(row) || (
+            (row, i) => {
+              prepareRow(row);
+              return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell, i) => {
                     return (
@@ -90,7 +91,7 @@ function Table({ columns, data }) {
                     )
                   })}
                 </tr>
-              )
+              )}
           )}
         </tbody>
       </table>

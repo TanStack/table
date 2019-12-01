@@ -1,7 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { getFirstDefined, isFunction } from '../utils'
+import { getFirstDefined, isFunction, safeUseLayoutEffect } from '../utils'
 import * as filterTypes from '../filterTypes'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
@@ -10,17 +9,6 @@ defaultState.filters = {}
 
 addActions('setFilter', 'setAllFilters')
 
-const propTypes = {
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      disableFilters: PropTypes.bool,
-      Filter: PropTypes.any,
-    })
-  ),
-
-  manualFilters: PropTypes.bool,
-}
-
 export const useFilters = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -28,8 +16,6 @@ export const useFilters = hooks => {
 useFilters.pluginName = 'useFilters'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFilters')
-
   const {
     debug,
     rows,
@@ -37,13 +23,30 @@ function useMain(instance) {
     flatColumns,
     filterTypes: userFilterTypes,
     manualFilters,
+    defaultCanFilter = false,
     disableFilters,
     state: { filters },
     setState,
+    getResetFiltersDeps = false,
   } = instance
 
   const preFilteredRows = rows
   const preFilteredFlatRows = flatRows
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      setState(
+        old => ({
+          ...old,
+          filters: {},
+        }),
+        actions.setAllFilters
+      )
+    }
+    isMountedRef.current = true
+  }, [setState, ...(getResetFiltersDeps ? getResetFiltersDeps(instance) : [])])
 
   const setFilter = (id, updater) => {
     const column = flatColumns.find(d => d.id === id)
@@ -108,7 +111,12 @@ function useMain(instance) {
   }
 
   flatColumns.forEach(column => {
-    const { id, accessor, disableFilters: columnDisableFilters } = column
+    const {
+      id,
+      accessor,
+      defaultCanFilter: columnDefaultCanFilter,
+      disableFilters: columnDisableFilters,
+    } = column
 
     // Determine if a column is filterable
     column.canFilter = accessor
@@ -117,7 +125,7 @@ function useMain(instance) {
           disableFilters === true ? false : undefined,
           true
         )
-      : false
+      : getFirstDefined(columnDefaultCanFilter, defaultCanFilter, false)
 
     // Provide the column a way of updating the filter value
     column.setFilter = val => setFilter(column.id, val)

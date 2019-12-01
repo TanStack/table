@@ -58,7 +58,7 @@ To dive deeper into plugins, see Plugins](TODO) and the [Plugin Guide
 
 The order and usage of plugin hooks must follow The Laws of Hooks, just like any other custom hook. They must always be unconditionally called in the same order.
 
-> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSorting`**
+> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSortBy`**
 
 ### Option Memoization
 
@@ -68,7 +68,7 @@ React Table relies on memoization to determine when state and side effects shoul
 
 - Required
 
-`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `rows` value, followed by any React Table compatible hooks you want to use.
+`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `data` value, followed by any React Table compatible hooks you want to use.
 
 ### Table Options
 
@@ -93,6 +93,7 @@ The following options are supported via the main options object passed to `useTa
   - When either the internal `state` or this `state` object change, this object is **always merged over the internal table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options.
 - `reducer: Function(oldState, newState) => finalState`
   - Optional
+  - Must be **memoized**
   - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
   - With every `setState` call to the table's internal `React.useState` instance, this reducer is called and is allowed to modify the final state object for updating.
   - It is passed the `oldState`, the `newState`, and when provided, an optional action `type`.
@@ -358,8 +359,12 @@ The following options are supported via the main options object passed to `useTa
   - Identical to the `state.sortBy` option above
 - `manualSorting: Bool`
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableSorting: Bool`
+- `disableSortBy: Bool`
   - Disables sorting for every column in the entire table.
+- `defaultCanSort: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, all columns will be sortable, regardless if they have a valid `accessor`
 - `disableMultiSort: Bool`
   - Disables multi-sorting for the entire table.
 - `isMultiSortEvent: Function`
@@ -379,12 +384,21 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the built-in sort types.
   - For more information on sort types, see Sorting
+- `getResetSortByDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to `false`
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `sortBy` state is fired.
+  - To disable, set to `false`
 
 ### Column Options
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
-- `disableSorting: Bool`
+- `defaultCanSort: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, this column will be sortable, regardless if it has a valid `accessor`
+- `disableSortBy: Bool`
   - Optional
   - Defaults to `false`
   - If set to `true`, the sorting for this column will be disabled
@@ -470,10 +484,19 @@ The following options are supported via the main options object passed to `useTa
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableFilters: Bool`
   - Disables filtering for every column in the entire table.
+- `defaultCanFilter: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, all columns will be filterable, regardless if they have a valid `accessor`
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
   - For more information on filter types, see Filtering
+- `getResetFiltersDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to `false`
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `filters` state is fired.
+  - To disable, set to `false`
 
 ### Column Options
 
@@ -487,6 +510,10 @@ The following options are supported on any `Column` object passed to the `column
 - `disableFilters: Bool`
   - Optional
   - If set to `true`, will disable filtering for this column
+- `defaultCanFilter: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, this column will be filterable, regardless if it has a valid `accessor`
 - `filter: String | Function`
   - Optional
   - Defaults to `text`
@@ -554,7 +581,7 @@ The following options are supported via the main options object passed to `useTa
 - `manualGroupBy: Bool`
   - Enables groupBy detection and functionality, but does not automatically perform row grouping.
   - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableGrouping: Bool`
+- `disableGroupBy: Bool`
   - Disables groupBy for the entire table.
 - `aggregations: Object<aggregationKey: aggregationFn>`
   - Must be **memoized**
@@ -574,9 +601,15 @@ The following options are supported on any `Column` object passed to the `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
-- `disableGrouping: Boolean`
-  - Defaults to `true`
-  - If `true`, this column is able to be grouped.
+- `aggregate: String | [String, String] | Function(values, rows, isAggregated: Bool) => any`
+  - If a single `String` is passed, it must be the key of either a user defined or predefined `aggregations` function.
+  - If a tuple array of `[String, String]` is passed, both must be a key of either a user defined or predefined `aggregations` function.
+    - The first is used to aggregate raw values, eg. `sum`-ing raw values together
+    - The second is used to aggregate values that have already been aggregated, eg. `average`-ing the sums produced by the raw aggregation level
+  - If a `Function` is passed, this function will receive the `values`, original `rows` of those values, and an `isAggregated` `Bool` of whether or not the values and rows have already been aggregated.
+- `disableGroupBy: Boolean`
+  - Defaults to `false`
+  - If `true`, will disable grouping for this column.
 
 ### Instance Properties
 
@@ -679,6 +712,14 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `true`
   - If set to `true`, expanded rows are rendered along with normal rows.
   - If set to `false`, expanded rows will only be available through their parent row. This could be useful if you are implementing a custom expanded row view.
+- `getResetExpandedDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
+    - ```js
+      const getResetExpandedDeps = ({ data }) => [data]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `expanded` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
@@ -733,10 +774,19 @@ The following options are supported via the main options object passed to `useTa
 - `manualPagination: Bool`
   - Enables pagination functionality, but does not automatically perform row pagination.
   - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
-- `disablePageResetOnDataChange`
-  - Defaults to `false`
-  - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
-  - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
+- `getResetPageDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `pageIndex` to `0` when the dependencies below change
+    - ```js
+      const getResetPageDeps = ({
+        rows,
+        manualPagination,
+        state: { filters, groupBy, sortBy },
+      }) => [manualPagination ? null : rows, filters, groupBy, sortBy]
+      ```
+    - Note that if `manualPagination` is set to `true`, then the pageIndex should not be reset when `rows` change
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `pageIndex` state is fired.
+  - To disable, set to `false`
 - `paginateExpandedRows: Bool`
   - Optional
   - Only applies when using the `useExpanded` plugin hook simultaneously
@@ -816,6 +866,14 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `isSelected`
   - If this key is found on the **original** data row, and it is true, this row will be manually selected
+- `getResetSelectedRowPathsDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
+    - ```js
+      const getResetSelectedRowPathsDeps = ({ rows }) => [rows]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `selectedRowPaths` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 

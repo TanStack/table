@@ -5,9 +5,9 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -29,13 +29,13 @@
+@@ -19,24 +19,24 @@
+          >
             <span
-              class=""
               style="cursor: pointer;"
               title="Toggle GroupBy"
             >
@@ -18,10 +18,9 @@ Snapshot Diff:
 +           Last Name
           </th>
           <th
-            class=""
             colspan="1"
           >
-@@ -44,11 +44,11 @@
+            <span
               style="cursor: pointer;"
               title="Toggle GroupBy"
             >
@@ -31,93 +30,66 @@ Snapshot Diff:
 +           First Name
           </th>
           <th
-            class=""
             colspan="1"
           >
-@@ -109,138 +109,119 @@
-          class=""
-        >
-          <td
-            class=""
-          >
+            <span
+@@ -83,86 +83,81 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
 -           firstName: tanner
--         </td>
--         <td
--           class=""
 +           <span
 +             style="cursor: pointer;"
-            >
--           lastName: linsley
--         </td>
--         <td
--           class=""
--         >
--           age: 29
--         </td>
--         <td
--           class=""
--         >
--           visits: 100
--         </td>
--         <td
--           class=""
--         >
--           status: In Relationship
++           >
 +             👉
 +           </span>
 +           lastName: linsley (2)
           </td>
-          <td
-            class=""
-          >
+          <td>
+-           lastName: linsley
++           2 Names
+          </td>
+          <td>
+-           age: 29
++           27.5 (avg)
+          </td>
+          <td>
+-           visits: 100
+-         </td>
+-         <td>
+-           status: In Relationship
+-         </td>
+-         <td>
 -           progress: 50
 -         </td>
 -       </tr>
--       <tr
--         class=""
--       >
--         <td
--           class=""
--         >
+-       <tr>
+-         <td>
 -           firstName: derek
--         </td>
--         <td
--           class=""
--         >
--           lastName: perkins
-+           2 Names
-          </td>
-          <td
-            class=""
-          >
--           age: 40
-+           27.5 (avg)
-          </td>
-          <td
-            class=""
-          >
--           visits: 40
 +           199 (total)
           </td>
-          <td
-            class=""
-          >
+          <td>
+-           lastName: perkins
+-         </td>
+-         <td>
+-           age: 40
+-         </td>
+-         <td>
+-           visits: 40
+-         </td>
+-         <td>
 -           status: Single
 +           status: null
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           progress: 80
 +           60 (med)
           </td>
         </tr>
-        <tr
-          class=""
-        >
-          <td
-            class=""
-          >
+        <tr>
+          <td>
 -           firstName: joe
 +           <span
 +             style="cursor: pointer;"
@@ -126,43 +98,29 @@ Snapshot Diff:
 +           </span>
 +           lastName: perkins (1)
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           lastName: bergevin
 +           1 Names
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           age: 45
 +           40 (avg)
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           visits: 20
 +           40 (total)
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           status: Complicated
 +           status: null
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           progress: 10
 +           80 (med)
           </td>
         </tr>
-        <tr
-          class=""
-        >
-          <td
-            class=""
-          >
+        <tr>
+          <td>
 -           firstName: jaylen
 +           <span
 +             style="cursor: pointer;"
@@ -171,33 +129,23 @@ Snapshot Diff:
 +           </span>
 +           lastName: bergevin (1)
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           lastName: linsley
 +           1 Names
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           age: 26
 +           45 (avg)
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           visits: 99
 +           20 (total)
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           status: In Relationship
 +           status: null
           </td>
-          <td
-            class=""
-          >
+          <td>
 -           progress: 70
 +           10 (med)
           </td>
@@ -212,41 +160,38 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -6,17 +6,29 @@
-        <tr
-          class=""
-        >
+@@ -1,16 +1,26 @@
+  <DocumentFragment>
+    <table>
+      <thead>
+        <tr>
           <th
-            class=""
 -           colspan="2"
-+           colspan="1"
-          >
-            Name
-          </th>
-          <th
-            class=""
--           colspan="4"
-+           colspan="1"
-+         >
-+           Info
-+         </th>
-+         <th
-+           class=""
 +           colspan="1"
 +         >
 +           Name
 +         </th>
 +         <th
-+           class=""
++           colspan="1"
++         >
++           Info
++         </th>
++         <th
++           colspan="1"
+          >
+            Name
+          </th>
+          <th
+-           colspan="4"
 +           colspan="3"
           >
             Info
           </th>
         </tr>
-        <tr
-@@ -42,13 +54,13 @@
+        <tr>
+@@ -30,35 +40,35 @@
+          >
             <span
-              class=""
               style="cursor: pointer;"
               title="Toggle GroupBy"
             >
@@ -257,10 +202,9 @@ Snapshot Diff:
 +           Visits
           </th>
           <th
-            class=""
             colspan="1"
           >
-@@ -57,11 +69,11 @@
+            <span
               style="cursor: pointer;"
               title="Toggle GroupBy"
             >
@@ -270,10 +214,9 @@ Snapshot Diff:
 +           First Name
           </th>
           <th
-            class=""
             colspan="1"
           >
-@@ -70,11 +82,11 @@
+            <span
               style="cursor: pointer;"
               title="Toggle GroupBy"
             >
@@ -283,89 +226,69 @@ Snapshot Diff:
 +           Age
           </th>
           <th
-            class=""
             colspan="1"
           >
-@@ -116,10 +128,13 @@
+            <span
+@@ -90,18 +100,16 @@
             >
               👉
             </span>
             lastName: linsley (2)
           </td>
-+         <td
-+           class=""
-+         />
-          <td
-            class=""
-          >
++         <td />
+          <td>
             2 Names
           </td>
-@@ -129,15 +144,10 @@
+          <td>
             27.5 (avg)
-          </td>
-          <td
-            class=""
-          >
--           199 (total)
 -         </td>
--         <td
--           class=""
--         >
+-         <td>
+-           199 (total)
+          </td>
+          <td>
             status: null
           </td>
-          <td
-            class=""
-          >
-@@ -157,22 +167,20 @@
+          <td>
+@@ -115,20 +123,18 @@
+            >
+              👉
             </span>
             lastName: perkins (1)
           </td>
-          <td
-            class=""
--         >
--           1 Names
--         </td>
-+         />
-          <td
-            class=""
-          >
--           40 (avg)
-+           1 Names
++         <td />
+          <td>
+            1 Names
           </td>
-          <td
-            class=""
-          >
+          <td>
+            40 (avg)
+          </td>
+          <td>
 -           40 (total)
-+           40 (avg)
-          </td>
-          <td
-            class=""
-          >
+-         </td>
+-         <td>
             status: null
-@@ -196,22 +204,20 @@
+          </td>
+          <td>
+            80 (med)
+          </td>
+@@ -140,18 +146,16 @@
+            >
+              👉
             </span>
             lastName: bergevin (1)
           </td>
-          <td
-            class=""
--         >
--           1 Names
++         <td />
+          <td>
+            1 Names
+          </td>
+          <td>
+            45 (avg)
 -         </td>
-+         />
-          <td
-            class=""
-          >
--           45 (avg)
-+           1 Names
-          </td>
-          <td
-            class=""
-          >
+-         <td>
 -           20 (total)
-+           45 (avg)
           </td>
-          <td
-            class=""
-          >
+          <td>
             status: null
+          </td>
+          <td>
 `;

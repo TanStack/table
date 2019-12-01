@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 //
 import { addActions, actions } from '../actions'
@@ -11,33 +10,30 @@ defaultState.pageIndex = 0
 
 addActions('pageChange', 'pageSizeChange')
 
-const propTypes = {
-  // General
-  manualPagination: PropTypes.bool,
-  paginateExpandedRows: PropTypes.bool,
-}
-
 export const usePagination = hooks => {
   hooks.useMain.push(useMain)
 }
 
 usePagination.pluginName = 'usePagination'
 
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'usePagination')
+const defaultGetResetPageDeps = ({
+  data,
+  manualPagination,
+  state: { filters, groupBy, sortBy },
+}) => [manualPagination ? null : data, filters, groupBy, sortBy]
 
+function useMain(instance) {
   const {
-    data,
     rows,
     manualPagination,
-    disablePageResetOnDataChange,
+    getResetPageDeps = defaultGetResetPageDeps,
     manualExpandedKey = 'expanded',
     debug,
     plugins,
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: { pageSize, pageIndex, filters, groupBy, sortBy, expanded },
+    state: { pageSize, pageIndex, expanded },
     setState,
   } = instance
 
@@ -48,19 +44,10 @@ function useMain(instance) {
     []
   )
 
-  const rowDep = manualPagination ? null : data
-
-  const isPageIndexMountedRef = React.useRef()
-
   // Bypass any effects from firing when this changes
-  const disablePageResetOnDataChangeRef = React.useRef()
-  disablePageResetOnDataChangeRef.current = disablePageResetOnDataChange
-
+  const isMountedRef = React.useRef()
   safeUseLayoutEffect(() => {
-    if (
-      isPageIndexMountedRef.current &&
-      !disablePageResetOnDataChangeRef.current
-    ) {
+    if (isMountedRef.current) {
       setState(
         old => ({
           ...old,
@@ -69,8 +56,8 @@ function useMain(instance) {
         actions.pageChange
       )
     }
-    isPageIndexMountedRef.current = true
-  }, [setState, rowDep, filters, groupBy, sortBy])
+    isMountedRef.current = true
+  }, [setState, ...(getResetPageDeps ? getResetPageDeps(instance) : [])])
 
   const pageCount = manualPagination
     ? userPageCount

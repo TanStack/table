@@ -1,7 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { ensurePluginOrder, defaultColumn } from '../utils'
+import { ensurePluginOrder, defaultColumn, safeUseLayoutEffect } from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
 import * as sortTypes from '../sortTypes'
@@ -19,26 +18,6 @@ defaultColumn.sortDescFirst = false
 
 addActions('sortByChange')
 
-const propTypes = {
-  // General
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      sortType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-      sortDescFirst: PropTypes.bool,
-      disableSorting: PropTypes.bool,
-    })
-  ),
-  orderByFn: PropTypes.func,
-  sortTypes: PropTypes.object,
-  manualSorting: PropTypes.bool,
-  disableSorting: PropTypes.bool,
-  disableMultiSort: PropTypes.bool,
-  isMultiSortEvent: PropTypes.func,
-  maxMultiSortColCount: PropTypes.number,
-  disableSortRemove: PropTypes.bool,
-  disableMultiRemove: PropTypes.bool,
-}
-
 export const useSortBy = hooks => {
   hooks.useMain.push(useMain)
 }
@@ -46,8 +25,6 @@ export const useSortBy = hooks => {
 useSortBy.pluginName = 'useSortBy'
 
 function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useSortBy')
-
   const {
     debug,
     rows,
@@ -55,7 +32,8 @@ function useMain(instance) {
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
     manualSorting,
-    disableSorting,
+    defaultCanSort,
+    disableSortBy,
     disableSortRemove,
     disableMultiRemove,
     disableMultiSort,
@@ -66,11 +44,27 @@ function useMain(instance) {
     state: { sortBy },
     setState,
     plugins,
+    getResetSortByDeps = false,
   } = instance
 
   ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
   // Add custom hooks
   hooks.getSortByToggleProps = []
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      setState(
+        old => ({
+          ...old,
+          sortBy: [],
+        }),
+        actions.sortByChange
+      )
+    }
+    isMountedRef.current = true
+  }, [setState, ...(getResetSortByDeps ? getResetSortByDeps(instance) : [])])
 
   // Updates sorting based on a columnID, desc flag and multi flag
   const toggleSortBy = (columnID, desc, multi) => {
@@ -115,7 +109,8 @@ function useMain(instance) {
         !hasDescDefined && // Must not be setting desc
         (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
         ((existingSortBy && // Finally, detect if it should indeed be removed
-          (existingSortBy.desc && !sortDescFirst)) ||
+          existingSortBy.desc &&
+          !sortDescFirst) ||
           (!existingSortBy.desc && sortDescFirst))
       ) {
         action = 'remove'
@@ -160,17 +155,26 @@ function useMain(instance) {
     }, actions.sortByChange)
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
+
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
-    const { accessor, disableSorting: columnDisableSorting, id } = column
+    const {
+      accessor,
+      canSort: defaultColumnCanSort,
+      disableSortBy: columnDisableSortBy,
+      id,
+    } = column
 
     const canSort = accessor
       ? getFirstDefined(
-          columnDisableSorting === true ? false : undefined,
-          disableSorting === true ? false : undefined,
+          columnDisableSortBy === true ? false : undefined,
+          disableSortBy === true ? false : undefined,
           true
         )
-      : false
+      : getFirstDefined(defaultCanSort, defaultColumnCanSort, false)
 
     column.canSort = canSort
 
@@ -198,7 +202,7 @@ function useMain(instance) {
                 e.persist()
                 column.toggleSortBy(
                   undefined,
-                  !instance.disableMultiSort && isMultiSortEvent(e)
+                  !instanceRef.current.disableMultiSort && isMultiSortEvent(e)
                 )
               }
             : undefined,
@@ -207,7 +211,11 @@ function useMain(instance) {
           },
           title: 'Toggle SortBy',
         },
-        applyPropHooks(instance.hooks.getSortByToggleProps, column, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getSortByToggleProps,
+          column,
+          instanceRef.current
+        ),
         props
       )
     }

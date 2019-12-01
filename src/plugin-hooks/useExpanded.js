@@ -1,18 +1,17 @@
-import { useMemo } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 
-import { mergeProps, applyPropHooks, expandRows } from '../utils'
+import {
+  mergeProps,
+  applyPropHooks,
+  expandRows,
+  safeUseLayoutEffect,
+} from '../utils'
 import { addActions, actions } from '../actions'
 import { defaultState } from '../hooks/useTable'
 
 defaultState.expanded = []
 
-addActions('toggleExpanded', 'useExpanded')
-
-const propTypes = {
-  manualExpandedKey: PropTypes.string,
-  paginateExpandedRows: PropTypes.bool,
-}
+addActions('toggleExpanded', 'setExpanded')
 
 export const useExpanded = hooks => {
   hooks.getExpandedToggleProps = []
@@ -21,9 +20,9 @@ export const useExpanded = hooks => {
 
 useExpanded.pluginName = 'useExpanded'
 
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useExpanded')
+const defaultGetResetExpandedDeps = ({ data }) => [data]
 
+function useMain(instance) {
   const {
     debug,
     rows,
@@ -33,7 +32,26 @@ function useMain(instance) {
     hooks,
     state: { expanded },
     setState,
+    getResetExpandedDeps = defaultGetResetExpandedDeps,
   } = instance
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      setState(
+        old => ({
+          ...old,
+          expanded: [],
+        }),
+        actions.setExpanded
+      )
+    }
+    isMountedRef.current = true
+  }, [
+    setState,
+    ...(getResetExpandedDeps ? getResetExpandedDeps(instance) : []),
+  ])
 
   const toggleExpandedByPath = (path, set) => {
     const key = path.join('.')
@@ -58,6 +76,10 @@ function useMain(instance) {
     }, actions.toggleExpanded)
   }
 
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
+
   hooks.prepareRow.push(row => {
     row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
     row.getExpandedToggleProps = props => {
@@ -72,14 +94,18 @@ function useMain(instance) {
           },
           title: 'Toggle Expanded',
         },
-        applyPropHooks(instance.hooks.getExpandedToggleProps, row, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getExpandedToggleProps,
+          row,
+          instanceRef.current
+        ),
         props
       )
     }
     return row
   })
 
-  const expandedRows = useMemo(() => {
+  const expandedRows = React.useMemo(() => {
     if (process.env.NODE_ENV === 'development' && debug)
       console.info('getExpandedRows')
 

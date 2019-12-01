@@ -232,8 +232,8 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val
 
-// Be sure to pass our updateMyData and the disablePageResetOnDataChange option
-function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
+// Be sure to pass our updateMyData and the skipReset option
+function Table({ columns, data, updateMyData, skipReset }) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -296,8 +296,6 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
       data,
       defaultColumn,
       filterTypes,
-      // nestExpandedRows: true,
-      initialState: { pageIndex: 2 },
       // updateMyData isn't part of the API, but
       // anything we put into these options will
       // automatically be available on the instance.
@@ -305,8 +303,9 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
       // cell renderer!
       updateMyData,
       // We also need to pass this so the page doesn't change
-      // when we edit the data
-      disablePageResetOnDataChange,
+      // when we edit the data. Undefined tells it to use the default
+      getResetPageDeps: skipReset ? false : undefined,
+      getResetSelectedRowPathsDeps: skipReset ? false : undefined,
     },
     useFilters,
     useGroupBy,
@@ -350,36 +349,36 @@ function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(
-            row =>
-              prepareRow(row) || (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>
-                        {cell.isGrouped ? (
-                          // If it's a grouped cell, add an expander and row count
-                          <>
-                            <span {...row.getExpandedToggleProps()}>
-                              {row.isExpanded ? '👇' : '👉'}
-                            </span>{' '}
-                            {cell.render('Cell', { editable: false })} (
-                            {row.subRows.length})
-                          </>
-                        ) : cell.isAggregated ? (
-                          // If the cell is aggregated, use the Aggregated
-                          // renderer for cell
-                          cell.render('Aggregated')
-                        ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
-                          // Otherwise, just render the regular cell
-                          cell.render('Cell', { editable: true })
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-          )}
+          {page.map(row => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>
+                      {cell.isGrouped ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <span {...row.getExpandedToggleProps()}>
+                            {row.isExpanded ? '👇' : '👉'}
+                          </span>{' '}
+                          {cell.render('Cell', { editable: false })} (
+                          {row.subRows.length})
+                        </>
+                      ) : cell.isAggregated ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        cell.render('Aggregated')
+                      ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        cell.render('Cell', { editable: true })
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       {/* 
@@ -579,14 +578,14 @@ function App() {
 
   // We need to keep the table from resetting the pageIndex when we
   // Update data. So we can keep track of that flag with a ref.
-  const skipPageResetRef = React.useRef(false)
+  const skipResetRef = React.useRef(false)
 
   // When our cell renderer calls updateMyData, we'll use
   // the rowIndex, columnID and new value to update the
   // original data
   const updateMyData = (rowIndex, columnID, value) => {
     // We also turn on the flag to not reset the page
-    skipPageResetRef.current = true
+    skipResetRef.current = true
     setData(old =>
       old.map((row, index) => {
         if (index === rowIndex) {
@@ -604,14 +603,14 @@ function App() {
   // so that if data actually changes when we're not
   // editing it, the page is reset
   React.useEffect(() => {
-    skipPageResetRef.current = false
+    skipResetRef.current = false
   }, [data])
 
   // Let's add a data resetter/randomizer to help
   // illustrate that flow...
   const resetData = () => {
     // Don't reset the page when we do this
-    skipPageResetRef.current = true
+    skipResetRef.current = true
     setData(originalData)
   }
 
@@ -622,7 +621,7 @@ function App() {
         columns={columns}
         data={data}
         updateMyData={updateMyData}
-        disablePageResetOnDataChange={skipPageResetRef.current}
+        skipReset={skipResetRef.current}
       />
     </Styles>
   )
