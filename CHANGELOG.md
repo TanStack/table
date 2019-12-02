@@ -1,3 +1,7 @@
+## 7.0.0-beta.21
+
+- Removed deprecated `defaultState` export
+
 ## 7.0.0-beta.20
 
 - Internals have been reworked to use `useReducer` instead of `useState` for stability and architecture

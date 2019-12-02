@@ -18,7 +18,6 @@ const renderErr =
 export const actions = {
   init: 'init',
 }
-export const defaultState = {}
 export const reducerHandlers = {}
 
 const defaultInitialState = {}
