@@ -30,14 +30,15 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.columnStartResizing) {
-    const { startX, columnId, headerIdWidths } = action
+    const { clientX, columnId, columnWidth, headerIdWidths } = action
 
     return {
       ...state,
       columnResizing: {
         ...state.columnResizing,
-        startX,
+        startX: clientX,
         headerIdWidths,
+        columnWidth,
         isResizingColumn: columnId,
       },
     }
@@ -45,14 +46,18 @@ reducerHandlers[pluginName] = (state, action) => {
 
   if (action.type === actions.columnResizing) {
     const { clientX } = action
-    const { startX, headerIdWidths } = state.columnResizing
+    const { startX, columnWidth, headerIdWidths } = state.columnResizing
 
     const deltaX = clientX - startX
-    const percentageDeltaX = deltaX / headerIdWidths.length
+    const percentageDeltaX = deltaX / columnWidth
 
     const newColumnWidths = {}
-    headerIdWidths.forEach(([headerId, headerWidth], index) => {
-      newColumnWidths[headerId] = Math.max(headerWidth + percentageDeltaX, 0)
+
+    headerIdWidths.forEach(([headerId, headerWidth]) => {
+      newColumnWidths[headerId] = Math.max(
+        headerWidth + headerWidth * percentageDeltaX,
+        0
+      )
     })
 
     return {
@@ -61,7 +66,7 @@ reducerHandlers[pluginName] = (state, action) => {
         ...state.columnResizing,
         columnWidths: {
           ...state.columnResizing.columnWidths,
-          ...action.columnWidths,
+          ...newColumnWidths,
         },
       },
     }
@@ -129,6 +134,7 @@ const useInstanceBeforeDimensions = instance => {
     dispatch({
       type: actions.columnStartResizing,
       columnId: header.id,
+      columnWidth: header.totalWidth,
       headerIdWidths,
       clientX,
     })
