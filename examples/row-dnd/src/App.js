@@ -39,7 +39,7 @@ const Styles = styled.div`
 const Table = ({ columns, data }) => {
   const [records, setRecords] = React.useState(data)
 
-  const getRowID = React.useCallback(row => {
+  const getRowId = React.useCallback(row => {
     return row.id
   }, [])
 
@@ -52,7 +52,7 @@ const Table = ({ columns, data }) => {
   } = useTable({
     data: records,
     columns,
-    getRowID,
+    getRowId,
   })
 
   const moveRow = (dragIndex, hoverIndex) => {

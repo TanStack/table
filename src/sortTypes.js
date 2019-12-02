@@ -3,9 +3,9 @@ const reSplitAlphaNumeric = /([0-9]+)/gm
 // Mixed sorting is slow, but very inclusive of many edge cases.
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
-export const alphanumeric = (rowA, rowB, columnID) => {
-  let a = getRowValueByColumnID(rowA, columnID)
-  let b = getRowValueByColumnID(rowB, columnID)
+export const alphanumeric = (rowA, rowB, columnId) => {
+  let a = getRowValueByColumnID(rowA, columnId)
+  let b = getRowValueByColumnID(rowB, columnId)
   // Force to strings (or "" for unsupported types)
   a = toString(a)
   b = toString(b)
@@ -53,9 +53,9 @@ export const alphanumeric = (rowA, rowB, columnID) => {
   return a.length - b.length
 }
 
-export function datetime(rowA, rowB, columnID) {
-  let a = getRowValueByColumnID(rowA, columnID)
-  let b = getRowValueByColumnID(rowB, columnID)
+export function datetime(rowA, rowB, columnId) {
+  let a = getRowValueByColumnID(rowA, columnId)
+  let b = getRowValueByColumnID(rowB, columnId)
 
   a = a.getTime()
   b = b.getTime()
@@ -63,9 +63,9 @@ export function datetime(rowA, rowB, columnID) {
   return compareBasic(a, b)
 }
 
-export function basic(rowA, rowB, columnID) {
-  let a = getRowValueByColumnID(rowA, columnID)
-  let b = getRowValueByColumnID(rowB, columnID)
+export function basic(rowA, rowB, columnId) {
+  let a = getRowValueByColumnID(rowA, columnId)
+  let b = getRowValueByColumnID(rowB, columnId)
 
   return compareBasic(a, b)
 }
@@ -76,8 +76,8 @@ function compareBasic(a, b) {
   return a === b ? 0 : a > b ? 1 : -1
 }
 
-function getRowValueByColumnID(row, columnID) {
-  return row.values[columnID]
+function getRowValueByColumnID(row, columnId) {
+  return row.values[columnId]
 }
 
 function toString(a) {

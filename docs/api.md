@@ -87,16 +87,11 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - The initial state object for the table.
   - Upon table initialization, this object is **merged over the table's `defaultState` object** (eg. `{...defaultState, ...initialState}`) that React Table and its hooks use to register default state to produce the final initial state object passed to the `React.useState` hook internally.
-- `state: Object`
+- `reducer: Function(newState, action, prevState) => newState`
   - Optional
-  - Must be **memoized**
-  - When either the internal `state` or this `state` object change, this object is **always merged over the internal table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options.
-- `reducer: Function(oldState, newState) => finalState`
-  - Optional
-  - Must be **memoized**
-  - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
-  - With every `setState` call to the table's internal `React.useState` instance, this reducer is called and is allowed to modify the final state object for updating.
-  - It is passed the `oldState`, the `newState`, and when provided, an optional action `type`.
+  - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
+  - It is passed the `newState`, `action`, and `prevState` and is expected to either return the `newState` or a modified version of the `newState`
+  - May also be used to "control" the state of the table, by overriding certain pieces of state regardless of the action.
 - `defaultColumn: Object`
   - Optional
   - Defaults to `{}`
@@ -114,7 +109,7 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `(row) => row.subRows || []`
   - Use this function to change how React Table detects subrows. You could even use this function to generate sub rows if you want.
   - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
-- `getRowID: Function(row, relativeIndex) => string`
+- `getRowId: Function(row, relativeIndex) => string`
   - Use this function to change how React Table detects unique rows and also how it constructs each row's underlying `path` property.
   - Optional
   - Must be **memoized**
@@ -182,18 +177,14 @@ The following options are supported on any column object you can pass to `column
 The following properties are available on the table instance returned from `useTable`
 
 - `state: Object`
-  - **Memoized** - This object reference will not change unless either the internal state or the `state` overrides option provided change.
-  - This is the final state object of the table, which is the product of the `initialState`, internal state, optional `state` overrides option and the `reducer` option (if applicable).
-- `setState: Function(updater, type) => void`
-  - **Memoized** - This function reference will not change unless the internal state `reducer` is changed
+  - **Memoized** - This object reference will not change unless the internal table state is modified.
+  - This is the final state object of the table, which is the product of the `initialState`, internal table reducer and (optionally) a custom `reducer` supplied by the user.
+- `dispatch: Function({ type: Actions[type], ...payload }) => void`
   - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
-  - `updater: Function`
-    - This parameter is identical to the `setState` API exposed by `React.useState`.
-      - If a function is passed, that function will be called with the previous state and is expected to return a new version of the state.
-      - If a value is passed, it will replace the state entirely.
-  - `type: String`
-    - Optional
+  - `type: Actions[type] | String`
     - The action type corresponding to what action being taken against the state.
+  - `...payload`
+    - Any other action data that is associated with the action
 - `columns: Array<Column>`
   - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
   - See [Column Properties](#column-properties) for more information
@@ -237,9 +228,9 @@ The following properties are available on the table instance returned from `useT
   - This function can be used to update the internal state for any row.
   - Pass it a valid `rowPath` array and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
   - If `updater` is a function, it will be passed the previous value
-- `setCellState: Function(rowPath, columnID, updater: Function | any) => void`
+- `setCellState: Function(rowPath, columnId, updater: Function | any) => void`
   - This function can be used to update the internal state for any cell.
-  - Pass it a valid `rowPath` array, `columnID` and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
+  - Pass it a valid `rowPath` array, `columnId` and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
   - If `updater` is a function, it will be passed the previous value
 
 ### HeaderGroup Properties
@@ -287,8 +278,8 @@ The following additional properties are available on every `row` object returned
 - `cells: Array<Cell>`
   - An array of `Cell` objects containing properties and functions specific to the row and column it belongs to.
   - See [Cell Properties](#cell-properties) for more information
-- `values: Object<columnID: any>`
-  - A map of this row's **resolved** values by columnID, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`
+- `values: Object<columnId: any>`
+  - A map of this row's **resolved** values by columnId, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`
 - `getRowProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for this row.
@@ -352,7 +343,7 @@ The following additional properties are available on every `Cell` object returne
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.sortBy: Array<Object<id: columnID, desc: Bool>>`
+- `state.sortBy: Array<Object<id: columnId, desc: Bool>>`
   - Must be **memoized**
   - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `initialState.sortBy`
@@ -428,7 +419,7 @@ The following values are provided to the table `instance`:
   - An array of **sorted** rows.
 - `preSortedRows: Array<Row>`
   - The array of rows that were originally sorted.
-- `toggleSortBy: Function(ColumnID: String, descending: Bool, isMulti: Bool) => void`
+- `toggleSortBy: Function(ColumnId: String, descending: Bool, isMulti: Bool) => void`
   - This function can be used to programmatically toggle the sorting for any specific column
 
 ### Column Properties
@@ -439,7 +430,7 @@ The following properties are available on every `Column` object returned by the 
   - Denotes whether a column is sortable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
 - `toggleSortBy: Function(descending, multi) => void`
   - This function can be used to programmatically toggle the sorting for this column.
-  - This function is similar to the `instance`-level `toggleSortBy`, however, passing a columnID is not required since it is located on a `Column` object already.
+  - This function is similar to the `instance`-level `toggleSortBy`, however, passing a columnId is not required since it is located on a `Column` object already.
 - `getSortByToggleProps: Function(props) => props`
   - **Required**
   - This function is used to resolve any props needed for this column's UI that is responsible for toggling the sort direction when the user clicks it.
@@ -474,9 +465,9 @@ The following properties are available on every `Column` object returned by the 
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.filters: Object<columnID: filterValue>`
+- `state.filters: Object<columnId: filterValue>`
   - Must be **memoized**
-  - An object of columnID's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+  - An object of columnId's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `initialState.filters`
   - Identical to the `state.filters` option above
 - `manualFilters: Bool`
@@ -532,7 +523,7 @@ The following values are provided to the table `instance`:
 - `preFilteredRows: Array<Row>`
   - The array of rows **used right before filtering**.
   - Among many other use-cases, these rows are directly useful for building option lists in filters, since the resulting filtered `rows` do not contain every possible option.
-- `setFilter: Function(columnID, filterValue) => void`
+- `setFilter: Function(columnId, filterValue) => void`
   - An instance-level function used to update the filter value for a specific column.
 - `setAllFilters: Function(filtersObject) => void`
   - An instance-level function used to update the values for **all** filters on the table, all at once.
@@ -619,7 +610,7 @@ The following values are provided to the table `instance`:
   - An array of **grouped and aggregated** rows.
 - `preGroupedRows: Array<Row>`
   - The array of rows originally used to create the grouped rows.
-- `toggleGroupBy: Function(columnID: String, ?set: Bool) => void`
+- `toggleGroupBy: Function(columnId: String, ?set: Bool) => void`
   - This function can be used to programmatically set or toggle the groupBy state for a specific column.
 
 ### Column Properties
@@ -645,7 +636,7 @@ The following properties are available on every `Column` object returned by the 
 
 The following properties are available on every `Row` object returned by the table instance.
 
-- `groupByID: String`
+- `groupById: String`
   - The column ID for which this row is being grouped.
   - Will be `undefined` if the row is an original row from `data` and not a materialized one from the grouping.
 - `groupByVal: any`
@@ -924,7 +915,7 @@ The following additional properties are available on every **prepared** `row` ob
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.rowState: Object<RowPathKey:Object<any, cellState: {columnID: Object}>>`
+- `state.rowState: Object<RowPathKey:Object<any, cellState: {columnId: Object}>>`
   - Optional
   - Defaults to `{}`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have the state of the value corresponding to that key.
@@ -936,6 +927,14 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - This function may optionally return the initial state for a row.
   - If this function is defined, it will be passed a `Row` object, from which you can return a value to use as the initial state, eg. `row => row.original.initialState`
+- `getResetRowStateDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `rowState` state to `{}` when the dependencies below change
+    - ```js
+      const getResetRowStateDeps = ({ data }) => [data]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `rowState` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
@@ -944,7 +943,7 @@ The following values are provided to the table `instance`:
 - `setRowState: Function(rowPath: Array<string>, updater: Function | Any) => void`
   - Use this function to programmatically update the state of a row.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
-- `setCellState: Function(rowPath: Array<string>, columnID: String, updater: Function | Any) => void`
+- `setCellState: Function(rowPath: Array<string>, columnId: String, updater: Function | Any) => void`
   - Use this function to programmatically update the cell of a row.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
@@ -964,7 +963,7 @@ The following additional properties are available on every **prepared** `row` ob
 The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
 
 - `state: Object`
-  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.path.join('.')].cellState[columnID]`
+  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.path.join('.')].cellState[columnId]`
 - `setState: Function(updater: Function | any)`
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
@@ -1086,7 +1085,7 @@ The core column options `width`, `minWidth` and `maxWidth` are used to calculate
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.columnOrder: Array<ColumnID>`
+- `state.columnOrder: Array<ColumnId>`
   - Optional
   - Defaults to `[]`
   - Any column ID's not represented in this array will be naturally ordered based on their position in the original table's `column` structure
@@ -1097,7 +1096,7 @@ The following options are supported via the main options object passed to `useTa
 
 The following values are provided to the table `instance`:
 
-- `setColumnOrder: Function(updater: Function | Array<ColumnID>) => void`
+- `setColumnOrder: Function(updater: Function | Array<ColumnId>) => void`
 
   - Use this function to programmatically update the columnOrder.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.

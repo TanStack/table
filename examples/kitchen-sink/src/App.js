@@ -581,9 +581,9 @@ function App() {
   const skipResetRef = React.useRef(false)
 
   // When our cell renderer calls updateMyData, we'll use
-  // the rowIndex, columnID and new value to update the
+  // the rowIndex, columnId and new value to update the
   // original data
-  const updateMyData = (rowIndex, columnID, value) => {
+  const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     skipResetRef.current = true
     setData(old =>
@@ -591,7 +591,7 @@ function App() {
         if (index === rowIndex) {
           return {
             ...row,
-            [columnID]: value,
+            [columnId]: value,
           }
         }
         return row

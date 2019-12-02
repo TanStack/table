@@ -6,12 +6,113 @@ import {
   ensurePluginOrder,
   safeUseLayoutEffect,
 } from '../utils'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import { actions, reducerHandlers } from '../hooks/useTable'
 
-defaultState.selectedRowPaths = []
+const pluginName = 'useRowSelect'
 
-addActions('toggleRowSelected', 'toggleRowSelectedAll', 'setSelectedRowPaths')
+// Actions
+actions.resetSelectedRows = 'resetSelectedRows'
+actions.toggleRowSelectedAll = 'toggleRowSelectedAll'
+actions.toggleRowSelected = 'toggleRowSelected'
+
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      selectedRowPaths: [],
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetSelectedRows) {
+    return {
+      ...state,
+      selectedRowPaths: [],
+    }
+  }
+
+  if (action.type === actions.toggleRowSelectedAll) {
+    const {
+      selected,
+      instanceRef: {
+        current: { isAllRowsSelected, flatRowPaths },
+      },
+    } = action
+
+    const selectAll =
+      typeof selected !== 'undefined' ? selected : !isAllRowsSelected
+
+    return {
+      ...state,
+      selectedRowPaths: selectAll ? flatRowPaths : [],
+    }
+  }
+
+  if (action.type === actions.toggleRowSelected) {
+    const {
+      path,
+      selected,
+      instanceRef: {
+        current: { flatRowPaths },
+      },
+    } = action
+
+    const key = path.join('.')
+    const childRowPrefixKey = [key, '.'].join('')
+
+    // Join the paths of deep rows
+    // to make a key, then manage all of the keys
+    // in a flat object
+    const exists = state.selectedRowPaths.includes(key)
+    const shouldExist = typeof set !== 'undefined' ? selected : !exists
+    let newSelectedRows = new Set(state.selectedRowPaths)
+
+    if (!exists && shouldExist) {
+      flatRowPaths.forEach(rowPath => {
+        if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+          newSelectedRows.add(rowPath)
+        }
+      })
+    } else if (exists && !shouldExist) {
+      flatRowPaths.forEach(rowPath => {
+        if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+          newSelectedRows.delete(rowPath)
+        }
+      })
+    } else {
+      return state
+    }
+
+    const updateParentRow = (selectedRowPaths, path) => {
+      const parentPath = path.slice(0, path.length - 1)
+      const parentKey = parentPath.join('.')
+      const selected =
+        flatRowPaths.filter(rowPath => {
+          const path = rowPath
+          return (
+            path !== parentKey &&
+            path.startsWith(parentKey) &&
+            !selectedRowPaths.has(path)
+          )
+        }).length === 0
+      if (selected) {
+        selectedRowPaths.add(parentKey)
+      } else {
+        selectedRowPaths.delete(parentKey)
+      }
+      if (parentPath.length > 1) updateParentRow(selectedRowPaths, parentPath)
+    }
+
+    // If the row is a subRow update
+    // its parent row to reflect changes
+    if (path.length > 1) updateParentRow(newSelectedRows, path)
+
+    return {
+      ...state,
+      selectedRowPaths: [...newSelectedRows.values()],
+    }
+  }
+}
 
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = []
@@ -20,7 +121,7 @@ export const useRowSelect = hooks => {
   hooks.useMain.push(useMain)
 }
 
-useRowSelect.pluginName = 'useRowSelect'
+useRowSelect.pluginName = pluginName
 
 function useRows(rows, instance) {
   const {
@@ -54,7 +155,7 @@ function useMain(instance) {
     flatRows,
     getResetSelectedRowPathsDeps = defaultGetResetSelectedRowPathsDeps,
     state: { selectedRowPaths },
-    setState,
+    dispatch,
   } = instance
 
   ensurePluginOrder(
@@ -78,90 +179,21 @@ function useMain(instance) {
   const isMountedRef = React.useRef()
   safeUseLayoutEffect(() => {
     if (isMountedRef.current) {
-      setState(
-        old => ({
-          ...old,
-          selectedRowPaths: [],
-        }),
-        actions.setSelectedRowPaths
-      )
+      dispatch({ type: actions.resetSelectedRows })
     }
     isMountedRef.current = true
   }, [
-    setState,
+    dispatch,
     ...(getResetSelectedRowPathsDeps
       ? getResetSelectedRowPathsDeps(instance)
       : []),
   ])
 
-  const toggleRowSelectedAll = set => {
-    setState(old => {
-      const selectAll = typeof set !== 'undefined' ? set : !isAllRowsSelected
-      return {
-        ...old,
-        selectedRowPaths: selectAll ? flatRowPaths : [],
-      }
-    }, actions.toggleRowSelectedAll)
-  }
+  const toggleRowSelectedAll = selected =>
+    dispatch({ type: actions.toggleRowSelectedAll, selected })
 
-  const updateParentRow = (selectedRowPaths, path) => {
-    const parentPath = path.slice(0, path.length - 1)
-    const parentKey = parentPath.join('.')
-    const selected =
-      flatRowPaths.filter(rowPath => {
-        const path = rowPath
-        return (
-          path !== parentKey &&
-          path.startsWith(parentKey) &&
-          !selectedRowPaths.has(path)
-        )
-      }).length === 0
-    if (selected) {
-      selectedRowPaths.add(parentKey)
-    } else {
-      selectedRowPaths.delete(parentKey)
-    }
-    if (parentPath.length > 1) updateParentRow(selectedRowPaths, parentPath)
-  }
-
-  const toggleRowSelected = (path, set) => {
-    const key = path.join('.')
-    const childRowPrefixKey = [key, '.'].join('')
-
-    return setState(old => {
-      // Join the paths of deep rows
-      // to make a key, then manage all of the keys
-      // in a flat object
-      const exists = old.selectedRowPaths.includes(key)
-      const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newSelectedRows = new Set(old.selectedRowPaths)
-
-      if (!exists && shouldExist) {
-        flatRowPaths.forEach(rowPath => {
-          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
-            newSelectedRows.add(rowPath)
-          }
-        })
-      } else if (exists && !shouldExist) {
-        flatRowPaths.forEach(rowPath => {
-          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
-            newSelectedRows.delete(rowPath)
-          }
-        })
-      } else {
-        return old
-      }
-
-      // If the row is a subRow update
-      // its parent row to reflect changes
-      if (path.length > 1) updateParentRow(newSelectedRows, path)
-
-      return {
-        ...old,
-        selectedRowPaths: [...newSelectedRows.values()],
-      }
-    }, actions.toggleRowSelected)
-  }
+  const toggleRowSelected = (path, selected) =>
+    dispatch({ type: actions.toggleRowSelected, path, selected })
 
   // use reference to avoid memory leak in #1608
   const instanceRef = React.useRef()
@@ -217,13 +249,13 @@ function useMain(instance) {
         props
       )
     }
-    // }
 
     return row
   })
 
   return {
     ...instance,
+    flatRowPaths,
     toggleRowSelected,
     toggleRowSelectedAll,
     getToggleAllRowsSelectedProps,

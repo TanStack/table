@@ -1,20 +1,70 @@
 import React from 'react'
 
 //
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
-import { ensurePluginOrder, safeUseLayoutEffect, expandRows } from '../utils'
 
-defaultState.pageSize = 10
-defaultState.pageIndex = 0
+import { actions, reducerHandlers } from '../hooks/useTable'
+import {
+  ensurePluginOrder,
+  safeUseLayoutEffect,
+  expandRows,
+  functionalUpdate,
+} from '../utils'
 
-addActions('pageChange', 'pageSizeChange')
+const pluginName = 'usePagination'
+
+// Actions
+actions.resetPage = 'resetPage'
+actions.gotoPage = 'gotoPage'
+actions.setPageSize = 'setPageSize'
+
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      pageSize: 10,
+      pageIndex: 0,
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetPage) {
+    return {
+      ...state,
+      pageIndex: 0,
+    }
+  }
+
+  if (action.type === actions.gotoPage) {
+    const { pageCount } = action.instanceRef.current
+    const newPageIndex = functionalUpdate(action.pageIndex, state.pageIndex)
+
+    if (newPageIndex < 0 || newPageIndex > pageCount - 1) {
+      return state
+    }
+    return {
+      ...state,
+      pageIndex: newPageIndex,
+    }
+  }
+
+  if (action.type === actions.setPageSize) {
+    const { pageSize } = action
+    const topRowIndex = state.pageSize * state.pageIndex
+    const pageIndex = Math.floor(topRowIndex / pageSize)
+
+    return {
+      ...state,
+      pageIndex,
+      pageSize,
+    }
+  }
+}
 
 export const usePagination = hooks => {
   hooks.useMain.push(useMain)
 }
 
-usePagination.pluginName = 'usePagination'
+usePagination.pluginName = pluginName
 
 const defaultGetResetPageDeps = ({
   data,
@@ -34,7 +84,7 @@ function useMain(instance) {
     paginateExpandedRows = true,
     expandSubRows = true,
     state: { pageSize, pageIndex, expanded },
-    setState,
+    dispatch,
   } = instance
 
   ensurePluginOrder(
@@ -48,16 +98,10 @@ function useMain(instance) {
   const isMountedRef = React.useRef()
   safeUseLayoutEffect(() => {
     if (isMountedRef.current) {
-      setState(
-        old => ({
-          ...old,
-          pageIndex: 0,
-        }),
-        actions.pageChange
-      )
+      dispatch({ type: actions.resetPage })
     }
     isMountedRef.current = true
-  }, [setState, ...(getResetPageDeps ? getResetPageDeps(instance) : [])])
+  }, [dispatch, ...(getResetPageDeps ? getResetPageDeps(instance) : [])])
 
   const pageCount = manualPagination
     ? userPageCount
@@ -74,7 +118,7 @@ function useMain(instance) {
     if (manualPagination) {
       page = rows
     } else {
-      if (process.env.NODE_ENV === 'development' && debug)
+      if (process.env.NODE_ENV !== 'production' && debug)
         console.info('getPage')
 
       const pageStart = pageSize * pageIndex
@@ -104,23 +148,10 @@ function useMain(instance) {
   const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
 
   const gotoPage = React.useCallback(
-    updater => {
-      if (process.env.NODE_ENV === 'development' && debug)
-        console.info('gotoPage')
-      return setState(old => {
-        const newPageIndex =
-          typeof updater === 'function' ? updater(old.pageIndex) : updater
-
-        if (newPageIndex < 0 || newPageIndex > pageCount - 1) {
-          return old
-        }
-        return {
-          ...old,
-          pageIndex: newPageIndex,
-        }
-      }, actions.pageChange)
+    pageIndex => {
+      dispatch({ type: actions.gotoPage, pageIndex })
     },
-    [debug, pageCount, setState]
+    [dispatch]
   )
 
   const previousPage = React.useCallback(() => {
@@ -133,17 +164,9 @@ function useMain(instance) {
 
   const setPageSize = React.useCallback(
     pageSize => {
-      setState(old => {
-        const topRowIndex = old.pageSize * old.pageIndex
-        const pageIndex = Math.floor(topRowIndex / pageSize)
-        return {
-          ...old,
-          pageIndex,
-          pageSize,
-        }
-      }, actions.pageSizeChange)
+      dispatch({ type: actions.setPageSize, pageSize })
     },
-    [setState]
+    [dispatch]
   )
 
   return {

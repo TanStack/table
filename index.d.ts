@@ -484,7 +484,7 @@ export interface UseRowStateInstanceProps<D extends object> {
   setRowState: (rowPath: string[], updater: UseRowUpdater) => void // Purposely not exposing action
   setCellState: (
     rowPath: string[],
-    columnID: IdType<D>,
+    columnId: IdType<D>,
     updater: UseRowUpdater
   ) => void
 }

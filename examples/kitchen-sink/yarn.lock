@@ -918,7 +918,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.5.5":
   version "7.7.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.4.tgz#b23a856751e4bf099262f867767889c0e3fe175b"
   integrity sha512-r24eVUUr0QqNZa+qrImUk8fn5SPhHq+IfYvIoIMg0do3GdK9sMdiLKP3GYVVaxpPKORgm8KRKaNTEhAjgIpLMw==
@@ -8218,10 +8218,10 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
-react-table@^7.0.0-beta.15:
-  version "7.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-beta.15.tgz#66dc4c71f9e77f5c92ac65a307341d6d3e045d33"
-  integrity sha512-Qr0HjVkYIPLi7BJiHm6ZfRIH00Ziu/bdonwouwKY10hsaqQi9AyH9kF4cXJChBQuspfjsnqnP9kQAjsEIoAeUQ==
+react-table@next:
+  version "7.0.0-beta.19"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-beta.19.tgz#8563ae56f693cbffa10060772ba1f1cd4e926bb2"
+  integrity sha512-BRt7zW7PGyg67fR2CK9M2fwP6BocjQN870w3P+K+vDJMkpewGjSPDscCU5sJMBqCEjKWg85k2pVkiwQPg9ofgQ==
 
 react@^16.8.6:
   version "16.12.0"
@@ -9092,13 +9092,6 @@ stealthy-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
-
-stop-runaway-react-effects@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/stop-runaway-react-effects/-/stop-runaway-react-effects-1.2.1.tgz#ffc9df565021c69cd2c04171e7f0e4a6c7eb2b21"
-  integrity sha512-56AK/rkH+/Y1ZUF+QYsl/7Z/caSnF46RmkbF6AemYWue2tZpAlOOj+VdcLdhFGo5Vg7ajDP2Lqq+3UhbdWQRmQ==
-  dependencies:
-    "@babel/runtime" "^7.4.4"
 
 stream-browserify@^2.0.1:
   version "2.0.2"

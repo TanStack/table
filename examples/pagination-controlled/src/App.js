@@ -61,7 +61,6 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
-    rows,
     // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable(
@@ -245,7 +244,7 @@ function App() {
     // even a server. But for this example, we'll just fake it.
 
     // Give this fetch an ID
-    const fetchID = ++fetchIdRef.current
+    const fetchId = ++fetchIdRef.current
 
     // Set the loading state
     setLoading(true)
@@ -253,7 +252,7 @@ function App() {
     // We'll even set a delay to simulate a server here
     setTimeout(() => {
       // Only update the data if this is the latest fetch
-      if (fetchID === fetchIdRef.current) {
+      if (fetchId === fetchIdRef.current) {
         const startRow = pageSize * pageIndex
         const endRow = startRow + pageSize
         setData(serverData.slice(startRow, endRow))

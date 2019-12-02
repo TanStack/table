@@ -1,8 +1,7 @@
 import React from 'react'
 
 import * as aggregations from '../aggregations'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import { actions, reducerHandlers } from '../hooks/useTable'
 import {
   mergeProps,
   applyPropHooks,
@@ -11,9 +10,47 @@ import {
   ensurePluginOrder,
 } from '../utils'
 
-defaultState.groupBy = []
+const pluginName = 'useGroupBy'
 
-addActions('toggleGroupBy')
+// Actions
+actions.resetGroupBy = 'resetGroupBy'
+actions.toggleGroupBy = 'toggleGroupBy'
+
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      groupBy: [],
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetGroupBy) {
+    return {
+      ...state,
+      groupBy: [],
+    }
+  }
+
+  if (action.type === actions.toggleGroupBy) {
+    const { columnId, toggle } = action
+
+    const resolvedToggle =
+      typeof toggle !== 'undefined' ? toggle : !state.groupBy.includes(columnId)
+
+    if (resolvedToggle) {
+      return {
+        ...state,
+        groupBy: [...state.groupBy, columnId],
+      }
+    }
+
+    return {
+      ...state,
+      groupBy: state.groupBy.filter(d => d !== columnId),
+    }
+  }
+}
 
 export const useGroupBy = hooks => {
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
@@ -24,7 +61,7 @@ export const useGroupBy = hooks => {
   hooks.useMain.push(useMain)
 }
 
-useGroupBy.pluginName = 'useGroupBy'
+useGroupBy.pluginName = pluginName
 
 function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
   // Sort grouped columns to the start of the column list
@@ -61,7 +98,7 @@ function useMain(instance) {
     hooks,
     plugins,
     state: { groupBy },
-    setState,
+    dispatch,
   } = instance
 
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
@@ -91,21 +128,8 @@ function useMain(instance) {
     column.Aggregated = column.Aggregated || column.Cell
   })
 
-  const toggleGroupBy = (id, toggle) => {
-    return setState(old => {
-      const resolvedToggle =
-        typeof toggle !== 'undefined' ? toggle : !groupBy.includes(id)
-      if (resolvedToggle) {
-        return {
-          ...old,
-          groupBy: [...groupBy, id],
-        }
-      }
-      return {
-        ...old,
-        groupBy: groupBy.filter(d => d !== id),
-      }
-    }, actions.toggleGroupBy)
+  const toggleGroupBy = (columnId, toggle) => {
+    dispatch({ type: actions.toggleGroupBy, columnId, toggle })
   }
 
   hooks.getGroupByToggleProps = []
@@ -158,7 +182,7 @@ function useMain(instance) {
       return [rows, flatRows]
     }
 
-    if (process.env.NODE_ENV === 'development' && debug)
+    if (process.env.NODE_ENV !== 'production' && debug)
       console.info('getGroupedRows')
     // Find the columns that can or are aggregating
 
@@ -223,15 +247,15 @@ function useMain(instance) {
         return rows
       }
 
-      const columnID = groupBy[depth]
+      const columnId = groupBy[depth]
 
       // Group the rows together for this level
-      let groupedRows = groupByFn(rows, columnID)
+      let groupedRows = groupByFn(rows, columnId)
 
       // Recurse to sub rows before aggregation
       groupedRows = Object.entries(groupedRows).map(
         ([groupByVal, subRows], index) => {
-          const path = [...parentPath, `${columnID}:${groupByVal}`]
+          const path = [...parentPath, `${columnId}:${groupByVal}`]
 
           subRows = groupRecursively(subRows, depth + 1, path)
 
@@ -239,7 +263,7 @@ function useMain(instance) {
 
           const row = {
             isAggregated: true,
-            groupByID: columnID,
+            groupByID: columnId,
             groupByVal,
             values,
             subRows,

@@ -1,3 +1,13 @@
+## 7.0.0-beta.20
+
+- Internals have been reworked to use `useReducer` instead of `useState` for stability and architecture
+- The `state` option has been removed in favor of using a custom reducer
+- The `reducer` option has been changed to a new function signature: `function (newState, action, oldState) => newState`
+- The `setState` table instance method is no longer supported
+- The `dispatch` table instanced method was added
+- The `ReactTable.actions` export is now a plain object of action types mapped to identically named action strings
+- The `ReactTable.reducerHandlers` export was added, which is a plain object of plugin hook names mapped to their respective reducer functions
+
 ## 7.0.0-beta.19
 
 - Added an `isAggregated` boolean parameter to the `aggregate` function signature
