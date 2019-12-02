@@ -198,7 +198,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 #### I'm still using v6, what should I do?
 
-v6 is a great library and is still the default install for `react-table`, however, I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
+v6 is a great library and while it is still available for use, I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
 
 #### Where are the docs for the older v6 version?
 

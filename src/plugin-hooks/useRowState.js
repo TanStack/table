@@ -36,7 +36,7 @@ reducerHandlers[pluginName] = (state, action) => {
       ...state,
       rowState: {
         ...state.rowState,
-        [pathKey]: functionalUpdate(value, state.rowState[pathKey]),
+        [pathKey]: functionalUpdate(value, state.rowState[pathKey] || {}),
       },
     }
   }
@@ -71,7 +71,7 @@ function useMain(instance) {
   )
 
   const setCellState = React.useCallback(
-    (rowPath, columnId, updater) => {
+    (rowPath, columnId, value) => {
       return setRowState(
         rowPath,
         old => {
@@ -79,10 +79,10 @@ function useMain(instance) {
             ...old,
             cellState: {
               ...old.cellState,
-              [columnId]:
-                typeof updater === 'function'
-                  ? updater(old.cellState[columnId])
-                  : updater,
+              [columnId]: functionalUpdate(
+                value,
+                old.cellState[columnId] || {}
+              ),
             },
           }
         },

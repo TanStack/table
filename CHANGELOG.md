@@ -1,3 +1,7 @@
+## 7.0.0-beta.22
+
+- Fixed an issue where `useRowState` would crash due to invalid initial state attempting to spread into the new state
+
 ## 7.0.0-beta.21
 
 - Removed deprecated `defaultState` export
