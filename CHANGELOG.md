@@ -2,6 +2,7 @@
 
 - The internal `useMain` hook has been renamed to `useInstance`
 - The internal `useBeforeDimensions` hook has been renamed to `useInstanceBeforeDimensions`
+- Fixed an issue where `useResizeColumns` wasn't working properly
 
 ## 7.0.0-beta.22
 
