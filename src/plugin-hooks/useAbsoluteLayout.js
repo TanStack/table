@@ -1,10 +1,10 @@
 export const useAbsoluteLayout = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useAbsoluteLayout.pluginName = 'useAbsoluteLayout'
 
-const useMain = instance => {
+const useInstance = instance => {
   const {
     totalColumnsWidth,
     hooks: {

@@ -149,12 +149,12 @@ defaultColumn.sortType = 'alphanumeric'
 defaultColumn.sortDescFirst = false
 
 export const useSortBy = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useSortBy.pluginName = pluginName
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     debug,
     rows,

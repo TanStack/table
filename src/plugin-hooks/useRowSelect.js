@@ -118,7 +118,7 @@ export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = []
   hooks.getToggleAllRowsSelectedProps = []
   hooks.useRows.push(useRows)
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useRowSelect.pluginName = pluginName
@@ -147,7 +147,7 @@ function useRows(rows, instance) {
 
 const defaultGetResetSelectedRowPathsDeps = ({ data }) => [data]
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     hooks,
     manualRowSelectedKey = 'isSelected',

@@ -54,14 +54,14 @@ reducerHandlers[pluginName] = (state, action) => {
 
 export const useExpanded = hooks => {
   hooks.getExpandedToggleProps = []
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useExpanded.pluginName = pluginName
 
 const defaultGetResetExpandedDeps = ({ data }) => [data]
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     debug,
     rows,

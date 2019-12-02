@@ -38,7 +38,7 @@ export const useColumnOrder = hooks => {
     return [...deps, instance.state.columnOrder]
   })
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useColumnOrder.pluginName = pluginName
@@ -74,7 +74,7 @@ function columnsBeforeHeaderGroups(columns, instance) {
   return [...columnsInOrder, ...columnsCopy]
 }
 
-function useMain(instance) {
+function useInstance(instance) {
   const { dispatch } = instance
 
   const setColumnOrder = React.useCallback(

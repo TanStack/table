@@ -61,7 +61,7 @@ reducerHandlers[pluginName] = (state, action) => {
 }
 
 export const usePagination = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 usePagination.pluginName = pluginName
@@ -72,7 +72,7 @@ const defaultGetResetPageDeps = ({
   state: { filters, groupBy, sortBy },
 }) => [manualPagination ? null : data, filters, groupBy, sortBy]
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     rows,
     manualPagination,

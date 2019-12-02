@@ -1,10 +1,10 @@
 export const useBlockLayout = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useBlockLayout.pluginName = 'useBlockLayout'
 
-const useMain = instance => {
+const useInstance = instance => {
   const {
     totalColumnsWidth,
     hooks: { getRowProps, getHeaderGroupProps, getHeaderProps, getCellProps },

@@ -75,7 +75,7 @@ export interface UseTableHooks<D extends object> {
   columnsBeforeHeaderGroupsDeps: Array<
     (deps: any[], instance: TableInstance<D>) => any[]
   >
-  useMain: Array<(instance: TableInstance<D>) => TableInstance<D>>
+  useInstance: Array<(instance: TableInstance<D>) => TableInstance<D>>
   useRows: Array<
     (rows: Array<Row<D>>, instance: TableInstance<D>) => Array<Row<D>>
   >

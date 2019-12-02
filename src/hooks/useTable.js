@@ -84,8 +84,8 @@ export const useTable = (props, ...plugins) => {
     hooks: {
       columnsBeforeHeaderGroups: [],
       columnsBeforeHeaderGroupsDeps: [],
-      useBeforeDimensions: [],
-      useMain: [],
+      useInstanceBeforeDimensions: [],
+      useInstance: [],
       useRows: [],
       prepareRow: [],
       getTableProps: [],
@@ -230,24 +230,24 @@ export const useTable = (props, ...plugins) => {
   )
 
   if (process.env.NODE_ENV !== 'production' && debug)
-    console.time('hooks.useBeforeDimensions')
+    console.time('hooks.useInstanceBeforeDimensions')
   instanceRef.current = applyHooks(
-    instanceRef.current.hooks.useBeforeDimensions,
+    instanceRef.current.hooks.useInstanceBeforeDimensions,
     instanceRef.current
   )
   if (process.env.NODE_ENV !== 'production' && debug)
-    console.timeEnd('hooks.useBeforeDimensions')
+    console.timeEnd('hooks.useInstanceBeforeDimensions')
 
   calculateDimensions(instanceRef.current)
 
   if (process.env.NODE_ENV !== 'production' && debug)
-    console.time('hooks.useMain')
+    console.time('hooks.useInstance')
   instanceRef.current = applyHooks(
-    instanceRef.current.hooks.useMain,
+    instanceRef.current.hooks.useInstance,
     instanceRef.current
   )
   if (process.env.NODE_ENV !== 'production' && debug)
-    console.timeEnd('hooks.useMain')
+    console.timeEnd('hooks.useInstance')
 
   // Each materialized header needs to be assigned a render function and other
   // prop getter properties here.

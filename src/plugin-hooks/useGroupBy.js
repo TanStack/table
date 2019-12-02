@@ -58,7 +58,7 @@ export const useGroupBy = hooks => {
     deps.push(instance.state.groupBy)
     return deps
   })
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useGroupBy.pluginName = pluginName
@@ -83,7 +83,7 @@ function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
 
 const defaultUserAggregations = {}
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     debug,
     rows,

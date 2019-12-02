@@ -109,12 +109,12 @@ reducerHandlers[pluginName] = (state, action) => {
 }
 
 export const useFilters = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useFilters.pluginName = pluginName
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     debug,
     rows,

@@ -43,14 +43,14 @@ reducerHandlers[pluginName] = (state, action) => {
 }
 
 export const useRowState = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
 useRowState.pluginName = pluginName
 
 const defaultGetResetRowStateDeps = ({ data }) => [data]
 
-function useMain(instance) {
+function useInstance(instance) {
   const {
     hooks,
     initialRowStateAccessor,

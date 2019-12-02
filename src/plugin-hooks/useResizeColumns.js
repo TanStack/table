@@ -80,12 +80,12 @@ reducerHandlers[pluginName] = (state, action) => {
 }
 
 export const useResizeColumns = hooks => {
-  hooks.useBeforeDimensions.push(useBeforeDimensions)
+  hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
 
 useResizeColumns.pluginName = pluginName
 
-const useBeforeDimensions = instance => {
+const useInstanceBeforeDimensions = instance => {
   instance.hooks.getResizerProps = []
 
   const {
