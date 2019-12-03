@@ -30,7 +30,7 @@ reducerHandlers[pluginName] = (state, action) => {
   if (action.type === actions.resetSortBy) {
     return {
       ...state,
-      sortBy: {},
+      sortBy: [],
     }
   }
 
