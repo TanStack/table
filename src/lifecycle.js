@@ -1,13 +1,7 @@
 export default Base =>
   class extends Base {
-    constructor (props) {
-      super(props)
-
-      this.state = this.calculateNewResolvedState(this.getDataModel(this.getResolvedState(), true))
-    }
-
-    componentDidMount () {
-      this.fireFetchData()
+    UNSAFE_componentWillMount () {
+      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
     }
 
     componentDidUpdate (prevProps, prevState) {
