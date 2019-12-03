@@ -196,7 +196,7 @@ The following properties are available on the table instance returned from `useT
   - **Some of these headers may be materialized as placeholders**
   - See [Header Group Properties](#headergroup-properties) for more information
 - `headers: Array<Column>`
-  - An **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
+  - A **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
   - Each contains the headers that are displayed underneath it.
   - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information
@@ -535,7 +535,7 @@ The following properties are available on every `Column` object returned by the 
 - `canFilter: Bool`
   - Denotes whether a column is filterable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
 - `setFilter: Function(filterValue) => void`
-  - An column-level function used to update the filter value for this column
+  - A column-level function used to update the filter value for this column
 - `filterValue: any`
   - The current filter value for this column, resolved from the table state's `filters` object
 - `preFilteredRows: Array<row>`
