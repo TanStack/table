@@ -308,9 +308,9 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
       // when we edit the data, undefined means using the default
       getResetPageDeps: skipPageReset ? false : undefined,
     },
+    useGroupBy,
     useFilters,
     useSortBy,
-    useGroupBy,
     useExpanded,
     usePagination,
     useRowSelect
