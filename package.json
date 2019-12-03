@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0-beta.23",
+  "version": "7.0.0-beta.24",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -94,7 +94,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
-    "snapshot-diff": "^0.6.1"
+    "snapshot-diff": "^0.6.1",
+    "typescript": "^3.7.2"
   },
   "config": {
     "commitizen": {
