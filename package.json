@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0-beta.24",
+  "version": "7.0.0-beta.25",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -20,9 +20,8 @@
     "commit": "git add . && git-cz",
     "test": "is-ci \"test:ci\" \"test:dev\"",
     "test:dev": "jest --watch",
-    "test:ci": "yarn test:jest && yarn test:types",
+    "test:ci": "yarn test:jest",
     "test:jest": "jest",
-    "test:types": "echo '\n****\nTODO: Re-enable dtslint\n****\n'",
     "build": "cross-env NODE_ENV=production rollup -c",
     "start": "rollup -c -w",
     "prepare": "yarn build",
@@ -40,7 +39,6 @@
     "README.md"
   ],
   "peerDependencies": {
-    "prop-types": "^15.5.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3"
   },
@@ -95,8 +93,7 @@
     "rollup-plugin-size": "^0.2.1",
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
-    "snapshot-diff": "^0.6.1",
-    "typescript": "^3.7.2"
+    "snapshot-diff": "^0.6.1"
   },
   "config": {
     "commitizen": {
