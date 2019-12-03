@@ -1,3 +1,7 @@
+## 7.0.0-beta.24
+
+- Fixed an issue where `useRowState` would crash due to invalid initial state of previous cell state on `columnId` lookup
+
 ## 7.0.0-beta.23
 
 - The internal `useMain` hook has been renamed to `useInstance`
