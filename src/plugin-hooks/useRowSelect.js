@@ -19,7 +19,7 @@ actions.toggleRowSelected = 'toggleRowSelected'
 reducerHandlers[pluginName] = (state, action) => {
   if (action.type === actions.init) {
     return {
-      selectedRowPaths: [],
+      selectedRowPaths: new Set(),
       ...state,
     }
   }
@@ -27,7 +27,7 @@ reducerHandlers[pluginName] = (state, action) => {
   if (action.type === actions.resetSelectedRows) {
     return {
       ...state,
-      selectedRowPaths: [],
+      selectedRowPaths: new Set(),
     }
   }
 
@@ -44,7 +44,7 @@ reducerHandlers[pluginName] = (state, action) => {
 
     return {
       ...state,
-      selectedRowPaths: selectAll ? flatRowPaths : [],
+      selectedRowPaths: selectAll ? new Set(flatRowPaths) : new Set(),
     }
   }
 
@@ -63,20 +63,21 @@ reducerHandlers[pluginName] = (state, action) => {
     // Join the paths of deep rows
     // to make a key, then manage all of the keys
     // in a flat object
-    const exists = state.selectedRowPaths.includes(key)
+    const exists = state.selectedRowPaths.has(key)
     const shouldExist = typeof set !== 'undefined' ? selected : !exists
-    let newSelectedRows = new Set(state.selectedRowPaths)
+
+    let newSelectedRowPaths = new Set(state.selectedRowPaths)
 
     if (!exists && shouldExist) {
       flatRowPaths.forEach(rowPath => {
         if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
-          newSelectedRows.add(rowPath)
+          newSelectedRowPaths.add(rowPath)
         }
       })
     } else if (exists && !shouldExist) {
       flatRowPaths.forEach(rowPath => {
         if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
-          newSelectedRows.delete(rowPath)
+          newSelectedRowPaths.delete(rowPath)
         }
       })
     } else {
@@ -105,11 +106,11 @@ reducerHandlers[pluginName] = (state, action) => {
 
     // If the row is a subRow update
     // its parent row to reflect changes
-    if (path.length > 1) updateParentRow(newSelectedRows, path)
+    if (path.length > 1) updateParentRow(newSelectedRowPaths, path)
 
     return {
       ...state,
-      selectedRowPaths: [...newSelectedRows.values()],
+      selectedRowPaths: newSelectedRowPaths,
     }
   }
 }
@@ -167,10 +168,10 @@ function useInstance(instance) {
 
   const flatRowPaths = flatRows.map(d => d.path.join('.'))
 
-  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRowPaths.length
+  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRowPaths.size
 
   if (isAllRowsSelected) {
-    if (flatRowPaths.some(d => !selectedRowPaths.includes(d))) {
+    if (flatRowPaths.some(d => !selectedRowPaths.has(d))) {
       isAllRowsSelected = false
     }
   }
@@ -270,5 +271,5 @@ function getRowIsSelected(row, selectedRowPaths) {
     )
   }
 
-  return selectedRowPaths.includes(row.path.join('.'))
+  return selectedRowPaths.has(row.path.join('.'))
 }

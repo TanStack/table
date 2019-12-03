@@ -847,9 +847,9 @@ The following values are provided to the table `instance`:
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.selectedRowPaths: Array<RowPathKey>`
+- `state.selectedRowPaths: Set<RowPathKey>`
   - Optional
-  - Defaults to `[]`
+  - Defaults to `new Set()`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
 - `initialState.selectedRowPaths`
   - Identical to the `state.selectedRowPaths` option above

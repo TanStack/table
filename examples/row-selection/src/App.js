@@ -66,7 +66,7 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {rows.slice(0, 10).map((row, i) => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
@@ -79,11 +79,11 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <p>Selected Rows: {selectedRowPaths.length}</p>
-      <pre>
+      {/* <pre>
         <code>
           {JSON.stringify(
             {
-              selectedRowPaths,
+              selectedRowPaths: [...selectedRowPaths.values()],
               'selectedFlatRows[].original': selectedFlatRows.map(
                 d => d.original
               ),
@@ -92,7 +92,7 @@ function Table({ columns, data }) {
             2
           )}
         </code>
-      </pre>
+      </pre> */}
     </>
   )
 }

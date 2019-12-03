@@ -113,9 +113,15 @@ function Table({ columns, data }) {
           )}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.length}</p>
+      <p>Selected Rows: {selectedRowPaths.size}</p>
       <pre>
-        <code>{JSON.stringify({ selectedRowPaths }, null, 2)}</code>
+        <code>
+          {JSON.stringify(
+            { selectedRowPaths: [...selectedRowPaths.values()] },
+            null,
+            2
+          )}
+        </code>
       </pre>
     </>
   )
