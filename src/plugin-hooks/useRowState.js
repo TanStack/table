@@ -81,7 +81,7 @@ function useInstance(instance) {
               ...old.cellState,
               [columnId]: functionalUpdate(
                 value,
-                old.cellState[columnId] || {}
+                (old.cellState || {})[columnId] || {}
               ),
             },
           }
