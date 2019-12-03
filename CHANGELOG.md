@@ -1,3 +1,8 @@
+## 7.0.0-beta.26
+
+- Fixed an issue where the table would crash if useSortBy was reset via the resetSortBy action
+- Updated all of the examples to use the "react-table@latest" tag.
+
 ## 7.0.0-beta.25
 
 - Fixed an issue where `useRowState` would crash due to invalid initial state of previous cell state on `columnId` lookup
