@@ -4,6 +4,10 @@ export default Base =>
       this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
     }
 
+    componentDidMount () {
+      this.fireFetchData()
+    }
+
     componentDidUpdate (prevProps, prevState) {
       const oldState = this.getResolvedState(prevProps, prevState)
       const newState = this.getResolvedState(this.props, this.state)
