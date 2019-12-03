@@ -1,7 +1,11 @@
+## 7.0.0-beta.25
+
+- Fixed an issue where `useRowState` would crash due to invalid initial state of previous cell state on `columnId` lookup
+
 ## 7.0.0-beta.24
 
-- Removed types and related files from the repo. The community will now maintain types externally on Definitely Typed
 - Changed `selectedRowPaths` to use a `Set()` instead of an array for performance.
+- Removed types and related files from the repo. The community will now maintain types externally on Definitely Typed
 
 ## 7.0.0-beta.23
 

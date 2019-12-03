@@ -1,0 +1,22 @@
+[
+  {
+    "timestamp": 1575345027852,
+    "files": [
+      {
+        "filename": "index.es.js",
+        "size": 20369,
+        "delta": 4
+      }
+    ]
+  },
+  {
+    "timestamp": 1575331668355,
+    "files": [
+      {
+        "filename": "index.es.js",
+        "size": 20365,
+        "delta": 20365
+      }
+    ]
+  }
+]
