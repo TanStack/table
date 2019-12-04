@@ -2,8 +2,9 @@ import React from 'react'
 
 //
 
-import { actions, reducerHandlers } from '../hooks/useTable'
 import {
+  actions,
+  reducerHandlers,
   ensurePluginOrder,
   safeUseLayoutEffect,
   expandRows,

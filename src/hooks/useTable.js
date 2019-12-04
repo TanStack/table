@@ -2,22 +2,21 @@ import React from 'react'
 
 //
 import {
+  actions,
+  reducerHandlers,
   applyHooks,
   applyPropHooks,
   mergeProps,
   flexRender,
   decorateColumnTree,
   makeHeaderGroups,
-  flattenBy
+  flattenBy,
 } from '../utils'
+
+import { useColumnVisibility } from './useColumnVisibility'
 
 const renderErr =
   'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
-
-export const actions = {
-  init: 'init',
-}
-export const reducerHandlers = {}
 
 const defaultInitialState = {}
 const defaultColumnInstance = {}
@@ -37,6 +36,8 @@ export const useTable = (props, ...plugins) => {
     reducer: userReducer = defaultReducer,
     debug,
   } = props
+
+  plugins = [useColumnVisibility, ...plugins]
 
   debug = process.env.NODE_ENV === 'production' ? false : debug
 
@@ -234,6 +235,7 @@ export const useTable = (props, ...plugins) => {
   if (process.env.NODE_ENV !== 'production' && debug)
     console.timeEnd('hooks.useInstanceBeforeDimensions')
 
+  // Header Visibility is needed by this point
   calculateDimensions(instanceRef.current)
 
   if (process.env.NODE_ENV !== 'production' && debug)

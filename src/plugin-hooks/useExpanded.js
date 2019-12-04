@@ -1,12 +1,13 @@
 import React from 'react'
 
 import {
+  actions,
+  reducerHandlers,
   mergeProps,
   applyPropHooks,
   expandRows,
   safeUseLayoutEffect,
 } from '../utils'
-import { actions, reducerHandlers } from '../hooks/useTable'
 
 const pluginName = 'useExpanded'
 

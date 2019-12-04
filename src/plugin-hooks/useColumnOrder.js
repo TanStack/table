@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { actions, reducerHandlers } from '../hooks/useTable'
-import { functionalUpdate } from '../utils'
+import { reducerHandlers, functionalUpdate, actions } from '../utils'
 
 const pluginName = 'useColumnOrder'
 

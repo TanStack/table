@@ -139,12 +139,6 @@ The following options are supported on any column object you can pass to `column
   - Optional
   - A nested array of columns.
   - If defined, the column will act as a header group. Columns can be recursively nested as much as needed.
-- `show: Boolean | Function`
-  - Optional
-  - Defaults to `true`
-  - If set to `false`, the column will be hidden.
-  - If set to a `function`, it will be called with the current table instance and can then return `true` or `false`.
-  - The data model for hidden columns is still calculated including sorting, filters, and grouping.
 - `Header: String | Function | React.Component => JSX`
   - Optional
   - Defaults to `() => null`
@@ -253,7 +247,8 @@ The following properties are available on every `Column` object returned by the 
 - `id: String`
   - The resolved column ID from either the column's `accessor` or the column's hard-coded `id` property
 - `isVisible: Boolean`
-  - The resolved visible state for the column, derived from the column's `show` property
+  - Whether the column should be currently visible or not.
+  - Columns that are not visible are still used for sorting, filtering, etc.
 - `render: Function(type: String | Function | Component, ?props)`
   - This function is used to render content with the added context of a column.
   - The entire table `instance` will be passed to the renderer with the addition of a `column` property, containing a reference to the column

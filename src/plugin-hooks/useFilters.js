@@ -1,13 +1,14 @@
 import React from 'react'
 
 import {
+  actions,
+  reducerHandlers,
   getFirstDefined,
   isFunction,
   safeUseLayoutEffect,
   functionalUpdate,
 } from '../utils'
 import * as filterTypes from '../filterTypes'
-import { actions, reducerHandlers } from '../hooks/useTable'
 
 const pluginName = 'useFilters'
 

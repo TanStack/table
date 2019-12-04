@@ -1,12 +1,13 @@
 import React from 'react'
 
 import {
+  actions,
+  reducerHandlers,
   mergeProps,
   applyPropHooks,
   ensurePluginOrder,
   safeUseLayoutEffect,
 } from '../utils'
-import { actions, reducerHandlers } from '../hooks/useTable'
 
 const pluginName = 'useRowSelect'
 
