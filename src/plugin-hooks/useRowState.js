@@ -1,55 +1,77 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+//
 
-defaultState.rowState = {}
+import { actions, reducerHandlers } from '../hooks/useTable'
+import { functionalUpdate, safeUseLayoutEffect } from '../utils'
 
-addActions('setRowState', 'setCellState')
+const pluginName = 'useRowState'
 
-const propTypes = {
-  initialRowStateAccessor: PropTypes.func,
+// Actions
+actions.setRowState = 'setRowState'
+actions.resetRowState = 'resetRowState'
+
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      rowState: {},
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetRowState) {
+    return {
+      ...state,
+      rowState: {},
+    }
+  }
+
+  if (action.type === actions.setRowState) {
+    const { path, value } = action
+
+    const pathKey = path.join('.')
+
+    return {
+      ...state,
+      rowState: {
+        ...state.rowState,
+        [pathKey]: functionalUpdate(value, state.rowState[pathKey] || {}),
+      },
+    }
+  }
 }
 
 export const useRowState = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
-useRowState.pluginName = 'useRowState'
+useRowState.pluginName = pluginName
 
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowState')
+const defaultGetResetRowStateDeps = ({ data }) => [data]
 
+function useInstance(instance) {
   const {
     hooks,
-    rows,
     initialRowStateAccessor,
+    getResetRowStateDeps = defaultGetResetRowStateDeps,
     state: { rowState },
-    setState,
+    dispatch,
   } = instance
 
   const setRowState = React.useCallback(
-    (path, updater, action = actions.setRowState) => {
-      const pathKey = path.join('.')
-      return setState(old => {
-        return {
-          ...old,
-          rowState: {
-            ...old.rowState,
-            [pathKey]:
-              typeof updater === 'function'
-                ? updater(old.rowState[pathKey])
-                : updater,
-          },
-        }
-      }, action)
-    },
-    [setState]
+    (path, value, columnId) =>
+      dispatch({
+        type: actions.setRowState,
+        path,
+        value,
+        columnId,
+      }),
+    [dispatch]
   )
 
   const setCellState = React.useCallback(
-    (rowPath, columnID, updater) => {
+    (rowPath, columnId, value) => {
       return setRowState(
         rowPath,
         old => {
@@ -57,14 +79,14 @@ function useMain(instance) {
             ...old,
             cellState: {
               ...old.cellState,
-              [columnID]:
-                typeof updater === 'function'
-                  ? updater(old.cellState[columnID])
-                  : updater,
+              [columnId]: functionalUpdate(
+                value,
+                (old.cellState || {})[columnId] || {}
+              ),
             },
           }
         },
-        actions.setCellState
+        columnId
       )
     },
     [setRowState]
@@ -73,18 +95,16 @@ function useMain(instance) {
   const rowsMountedRef = React.useRef()
 
   // When data changes, reset row and cell state
-  React.useEffect(() => {
+  safeUseLayoutEffect(() => {
     if (rowsMountedRef.current) {
-      setState(old => {
-        return {
-          ...old,
-          rowState: {},
-        }
-      }, actions.setRowState)
+      dispatch({ type: actions.resetRowState })
     }
 
     rowsMountedRef.current = true
-  }, [rows, setState])
+  }, [
+    dispatch,
+    ...(getResetRowStateDeps ? getResetRowStateDeps(instance) : []),
+  ])
 
   hooks.prepareRow.push(row => {
     const pathKey = row.path.join('.')

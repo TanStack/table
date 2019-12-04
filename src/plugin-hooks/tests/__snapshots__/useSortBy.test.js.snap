@@ -5,7 +5,7 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -31,11 +31,13 @@
+@@ -22,11 +22,13 @@
             colspan="1"
             style="cursor: pointer;"
             title="Toggle SortBy"
@@ -19,8 +19,12 @@ Snapshot Diff:
           <th
             colspan="1"
             style="cursor: pointer;"
-@@ -89,104 +91,104 @@
-        >
+            title="Toggle SortBy"
+@@ -69,66 +71,66 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
           <td>
 -           firstName: tanner
 +           firstName: derek
@@ -108,7 +112,7 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -32,11 +32,11 @@
+@@ -23,11 +23,11 @@
             style="cursor: pointer;"
             title="Toggle SortBy"
           >
@@ -120,8 +124,12 @@ Snapshot Diff:
           </th>
           <th
             colspan="1"
-@@ -91,36 +91,36 @@
-        >
+            style="cursor: pointer;"
+@@ -71,26 +71,26 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
           <td>
 -           firstName: derek
 +           firstName: tanner
@@ -148,8 +156,13 @@ Snapshot Diff:
           </td>
         </tr>
         <tr>
-@@ -159,36 +159,36 @@
-        >
+          <td>
+            firstName: joe
+@@ -111,26 +111,26 @@
+            progress: 10
+          </td>
+        </tr>
+        <tr>
           <td>
 -           firstName: tanner
 +           firstName: derek

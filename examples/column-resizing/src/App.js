@@ -59,9 +59,9 @@ const Styles = styled.div`
 function Table({ columns, data }) {
   const defaultColumn = React.useMemo(
     () => ({
-      minWidth: 20,
+      minWidth: 30,
       width: 150,
-      maxWidth: 500,
+      maxWidth: 400,
     }),
     []
   )
@@ -102,21 +102,20 @@ function Table({ columns, data }) {
       </div>
 
       <div {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) => {
-            prepareRow(row);
-            return (
-              <div {...row.getRowProps()} className="tr">
-                {row.cells.map(cell => {
-                  return (
-                    <div {...cell.getCellProps()} className="td">
-                      {cell.render('Cell')}
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-        )}
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <div {...row.getRowProps()} className="tr">
+              {row.cells.map(cell => {
+                return (
+                  <div {...cell.getCellProps()} className="td">
+                    {cell.render('Cell')}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

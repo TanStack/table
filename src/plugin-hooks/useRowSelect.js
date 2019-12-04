@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import {
   mergeProps,
@@ -7,44 +6,135 @@ import {
   ensurePluginOrder,
   safeUseLayoutEffect,
 } from '../utils'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import { actions, reducerHandlers } from '../hooks/useTable'
 
-defaultState.selectedRowPaths = []
+const pluginName = 'useRowSelect'
 
-addActions('toggleRowSelected', 'toggleRowSelectedAll')
+// Actions
+actions.resetSelectedRows = 'resetSelectedRows'
+actions.toggleRowSelectedAll = 'toggleRowSelectedAll'
+actions.toggleRowSelected = 'toggleRowSelected'
 
-const propTypes = {
-  manualRowSelectedKey: PropTypes.string,
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      selectedRowPaths: new Set(),
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetSelectedRows) {
+    return {
+      ...state,
+      selectedRowPaths: new Set(),
+    }
+  }
+
+  if (action.type === actions.toggleRowSelectedAll) {
+    const {
+      selected,
+      instanceRef: {
+        current: { isAllRowsSelected, flatRowPaths },
+      },
+    } = action
+
+    const selectAll =
+      typeof selected !== 'undefined' ? selected : !isAllRowsSelected
+
+    return {
+      ...state,
+      selectedRowPaths: selectAll ? new Set(flatRowPaths) : new Set(),
+    }
+  }
+
+  if (action.type === actions.toggleRowSelected) {
+    const {
+      path,
+      selected,
+      instanceRef: {
+        current: { flatRowPaths },
+      },
+    } = action
+
+    const key = path.join('.')
+    const childRowPrefixKey = [key, '.'].join('')
+
+    // Join the paths of deep rows
+    // to make a key, then manage all of the keys
+    // in a flat object
+    const exists = state.selectedRowPaths.has(key)
+    const shouldExist = typeof set !== 'undefined' ? selected : !exists
+
+    let newSelectedRowPaths = new Set(state.selectedRowPaths)
+
+    if (!exists && shouldExist) {
+      flatRowPaths.forEach(rowPath => {
+        if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+          newSelectedRowPaths.add(rowPath)
+        }
+      })
+    } else if (exists && !shouldExist) {
+      flatRowPaths.forEach(rowPath => {
+        if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
+          newSelectedRowPaths.delete(rowPath)
+        }
+      })
+    } else {
+      return state
+    }
+
+    const updateParentRow = (selectedRowPaths, path) => {
+      const parentPath = path.slice(0, path.length - 1)
+      const parentKey = parentPath.join('.')
+      const selected =
+        flatRowPaths.filter(rowPath => {
+          const path = rowPath
+          return (
+            path !== parentKey &&
+            path.startsWith(parentKey) &&
+            !selectedRowPaths.has(path)
+          )
+        }).length === 0
+      if (selected) {
+        selectedRowPaths.add(parentKey)
+      } else {
+        selectedRowPaths.delete(parentKey)
+      }
+      if (parentPath.length > 1) updateParentRow(selectedRowPaths, parentPath)
+    }
+
+    // If the row is a subRow update
+    // its parent row to reflect changes
+    if (path.length > 1) updateParentRow(newSelectedRowPaths, path)
+
+    return {
+      ...state,
+      selectedRowPaths: newSelectedRowPaths,
+    }
+  }
 }
 
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = []
   hooks.getToggleAllRowsSelectedProps = []
   hooks.useRows.push(useRows)
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
-useRowSelect.pluginName = 'useRowSelect'
+useRowSelect.pluginName = pluginName
 
 function useRows(rows, instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
-
   const {
     state: { selectedRowPaths },
   } = instance
 
   instance.selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows = []
+
     rows.forEach(row => {
-      if (row.isAggregated) {
-        const subRowPaths = row.subRows.map(row => row.path)
-        row.isSelected = subRowPaths.every(path =>
-          selectedRowPaths.includes(path.join('.'))
-        )
-      } else {
-        row.isSelected = selectedRowPaths.includes(row.path.join('.'))
-      }
+      row.isSelected = getRowIsSelected(row, selectedRowPaths)
+
       if (row.isSelected) {
         selectedFlatRows.push(row)
       }
@@ -56,18 +146,17 @@ function useRows(rows, instance) {
   return rows
 }
 
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useRowSelect')
+const defaultGetResetSelectedRowPathsDeps = ({ data }) => [data]
 
+function useInstance(instance) {
   const {
     hooks,
     manualRowSelectedKey = 'isSelected',
-    disableSelectedRowsResetOnDataChange,
     plugins,
     flatRows,
-    data,
+    getResetSelectedRowPathsDeps = defaultGetResetSelectedRowPathsDeps,
     state: { selectedRowPaths },
-    setState,
+    dispatch,
   } = instance
 
   ensurePluginOrder(
@@ -79,104 +168,37 @@ function useMain(instance) {
 
   const flatRowPaths = flatRows.map(d => d.path.join('.'))
 
-  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRowPaths.length
+  let isAllRowsSelected = !!flatRowPaths.length && !!selectedRowPaths.size
 
   if (isAllRowsSelected) {
-    if (flatRowPaths.some(d => !selectedRowPaths.includes(d))) {
+    if (flatRowPaths.some(d => !selectedRowPaths.has(d))) {
       isAllRowsSelected = false
     }
   }
 
-  const isRowSelectedMountedRef = React.useRef()
-
   // Bypass any effects from firing when this changes
-  const disableSelectedRowsResetOnDataChangeRef = React.useRef()
-  disableSelectedRowsResetOnDataChangeRef.current = disableSelectedRowsResetOnDataChange
-
+  const isMountedRef = React.useRef()
   safeUseLayoutEffect(() => {
-    if (
-      isRowSelectedMountedRef.current &&
-      !disableSelectedRowsResetOnDataChangeRef.current
-    ) {
-      setState(
-        old => ({
-          ...old,
-          selectedRowPaths: [],
-        }),
-        actions.pageChange
-      )
+    if (isMountedRef.current) {
+      dispatch({ type: actions.resetSelectedRows })
     }
-    isRowSelectedMountedRef.current = true
-  }, [setState, data])
+    isMountedRef.current = true
+  }, [
+    dispatch,
+    ...(getResetSelectedRowPathsDeps
+      ? getResetSelectedRowPathsDeps(instance)
+      : []),
+  ])
 
-  const toggleRowSelectedAll = set => {
-    setState(old => {
-      const selectAll = typeof set !== 'undefined' ? set : !isAllRowsSelected
-      return {
-        ...old,
-        selectedRowPaths: selectAll ? flatRowPaths : [],
-      }
-    }, actions.toggleRowSelectedAll)
-  }
+  const toggleRowSelectedAll = selected =>
+    dispatch({ type: actions.toggleRowSelectedAll, selected })
 
-  const updateParentRow = (selectedRowPaths, path) => {
-    const parentPath = path.slice(0, path.length - 1)
-    const parentKey = parentPath.join('.')
-    const selected =
-      flatRowPaths.filter(rowPath => {
-        const path = rowPath
-        return (
-          path !== parentKey &&
-          path.startsWith(parentKey) &&
-          !selectedRowPaths.has(path)
-        )
-      }).length === 0
-    if (selected) {
-      selectedRowPaths.add(parentKey)
-    } else {
-      selectedRowPaths.delete(parentKey)
-    }
-    if (parentPath.length > 1) updateParentRow(selectedRowPaths, parentPath)
-  }
+  const toggleRowSelected = (path, selected) =>
+    dispatch({ type: actions.toggleRowSelected, path, selected })
 
-  const toggleRowSelected = (path, set) => {
-    const key = path.join('.')
-    const childRowPrefixKey = [key, '.'].join('')
-
-    return setState(old => {
-      // Join the paths of deep rows
-      // to make a key, then manage all of the keys
-      // in a flat object
-      const exists = old.selectedRowPaths.includes(key)
-      const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newSelectedRows = new Set(old.selectedRowPaths)
-
-      if (!exists && shouldExist) {
-        flatRowPaths.forEach(rowPath => {
-          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
-            newSelectedRows.add(rowPath)
-          }
-        })
-      } else if (exists && !shouldExist) {
-        flatRowPaths.forEach(rowPath => {
-          if (rowPath === key || rowPath.startsWith(childRowPrefixKey)) {
-            newSelectedRows.delete(rowPath)
-          }
-        })
-      } else {
-        return old
-      }
-
-      // If the row is a subRow update
-      // its parent row to reflect changes
-      if (path.length > 1) updateParentRow(newSelectedRows, path)
-
-      return {
-        ...old,
-        selectedRowPaths: [...newSelectedRows.values()],
-      }
-    }, actions.toggleRowSelected)
-  }
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
 
   const getToggleAllRowsSelectedProps = props => {
     return mergeProps(
@@ -190,79 +212,43 @@ function useMain(instance) {
         checked: isAllRowsSelected,
         title: 'Toggle All Rows Selected',
       },
-      applyPropHooks(instance.hooks.getToggleAllRowsSelectedProps, instance),
+      applyPropHooks(
+        instanceRef.current.hooks.getToggleAllRowsSelectedProps,
+        instanceRef.current
+      ),
       props
     )
   }
 
   hooks.prepareRow.push(row => {
-    // Aggregate rows have entirely different select logic
-    if (row.isAggregated) {
-      const subRowPaths = row.subRows.map(row => row.path)
-      row.toggleRowSelected = set => {
-        set = typeof set !== 'undefined' ? set : !row.isSelected
-        subRowPaths.forEach(path => {
-          toggleRowSelected(path, set)
-        })
+    row.toggleRowSelected = set => toggleRowSelected(row.path, set)
+    row.getToggleRowSelectedProps = props => {
+      let checked = false
+
+      if (row.original && row.original[manualRowSelectedKey]) {
+        checked = true
+      } else {
+        checked = row.isSelected
       }
-      row.getToggleRowSelectedProps = props => {
-        let checked = false
 
-        if (row.original && row.original[manualRowSelectedKey]) {
-          checked = true
-        } else {
-          checked = row.isSelected
-        }
-
-        return mergeProps(
-          {
-            onChange: e => {
-              row.toggleRowSelected(e.target.checked)
-            },
-            style: {
-              cursor: 'pointer',
-            },
-            checked,
-            title: 'Toggle Row Selected',
+      return mergeProps(
+        {
+          onChange: e => {
+            row.toggleRowSelected(e.target.checked)
           },
-          applyPropHooks(
-            instance.hooks.getToggleRowSelectedProps,
-            row,
-            instance
-          ),
-          props
-        )
-      }
-    } else {
-      row.toggleRowSelected = set => toggleRowSelected(row.path, set)
-      row.getToggleRowSelectedProps = props => {
-        let checked = false
-
-        if (row.original && row.original[manualRowSelectedKey]) {
-          checked = true
-        } else {
-          checked = row.isSelected
-        }
-
-        return mergeProps(
-          {
-            onChange: e => {
-              row.toggleRowSelected(e.target.checked)
-            },
-            style: {
-              cursor: 'pointer',
-            },
-            checked,
-            title: 'Toggle Row Selected',
+          style: {
+            cursor: 'pointer',
           },
-          applyPropHooks(
-            instance.hooks.getToggleRowSelectedProps,
-            row,
-            instance
-          ),
-          props
-        )
-      }
+          checked,
+          title: 'Toggle Row Selected',
+        },
+        applyPropHooks(
+          instanceRef.current.hooks.getToggleRowSelectedProps,
+          row,
+          instanceRef.current
+        ),
+        props
+      )
     }
 
     return row
@@ -270,9 +256,20 @@ function useMain(instance) {
 
   return {
     ...instance,
+    flatRowPaths,
     toggleRowSelected,
     toggleRowSelectedAll,
     getToggleAllRowsSelectedProps,
     isAllRowsSelected,
   }
+}
+
+function getRowIsSelected(row, selectedRowPaths) {
+  if (row.isAggregated) {
+    return row.subRows.every(subRow =>
+      getRowIsSelected(subRow, selectedRowPaths)
+    )
+  }
+
+  return selectedRowPaths.has(row.path.join('.'))
 }

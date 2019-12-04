@@ -1,29 +1,67 @@
-import { useMemo } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 
-import { mergeProps, applyPropHooks, expandRows } from '../utils'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import {
+  mergeProps,
+  applyPropHooks,
+  expandRows,
+  safeUseLayoutEffect,
+} from '../utils'
+import { actions, reducerHandlers } from '../hooks/useTable'
 
-defaultState.expanded = []
+const pluginName = 'useExpanded'
 
-addActions('toggleExpanded', 'useExpanded')
+// Actions
+actions.toggleExpandedByPath = 'toggleExpandedByPath'
+actions.resetExpanded = 'resetExpanded'
 
-const propTypes = {
-  manualExpandedKey: PropTypes.string,
-  paginateExpandedRows: PropTypes.bool,
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      expanded: [],
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetExpanded) {
+    return {
+      ...state,
+      expanded: [],
+    }
+  }
+
+  if (action.type === actions.toggleExpandedByPath) {
+    const { path, expanded } = action
+    const key = path.join('.')
+    const exists = state.expanded.includes(key)
+    const shouldExist = typeof set !== 'undefined' ? expanded : !exists
+    let newExpanded = new Set(state.expanded)
+
+    if (!exists && shouldExist) {
+      newExpanded.add(key)
+    } else if (exists && !shouldExist) {
+      newExpanded.delete(key)
+    } else {
+      return state
+    }
+
+    return {
+      ...state,
+      expanded: [...newExpanded.values()],
+    }
+  }
 }
 
 export const useExpanded = hooks => {
   hooks.getExpandedToggleProps = []
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
-useExpanded.pluginName = 'useExpanded'
+useExpanded.pluginName = pluginName
 
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useExpanded')
+const defaultGetResetExpandedDeps = ({ data }) => [data]
 
+function useInstance(instance) {
   const {
     debug,
     rows,
@@ -32,31 +70,29 @@ function useMain(instance) {
     expandSubRows = true,
     hooks,
     state: { expanded },
-    setState,
+    dispatch,
+    getResetExpandedDeps = defaultGetResetExpandedDeps,
   } = instance
 
-  const toggleExpandedByPath = (path, set) => {
-    const key = path.join('.')
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      dispatch({ type: actions.resetExpanded })
+    }
+    isMountedRef.current = true
+  }, [
+    dispatch,
+    ...(getResetExpandedDeps ? getResetExpandedDeps(instance) : []),
+  ])
 
-    return setState(old => {
-      const exists = old.expanded.includes(key)
-      const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newExpanded = new Set(old.expanded)
-
-      if (!exists && shouldExist) {
-        newExpanded.add(key)
-      } else if (exists && !shouldExist) {
-        newExpanded.delete(key)
-      } else {
-        return old
-      }
-
-      return {
-        ...old,
-        expanded: [...newExpanded.values()],
-      }
-    }, actions.toggleExpanded)
+  const toggleExpandedByPath = (path, expanded) => {
+    dispatch({ type: actions.toggleExpandedByPath, path, expanded })
   }
+
+  // use reference to avoid memory leak in #1608
+  const instanceRef = React.useRef()
+  instanceRef.current = instance
 
   hooks.prepareRow.push(row => {
     row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
@@ -72,15 +108,19 @@ function useMain(instance) {
           },
           title: 'Toggle Expanded',
         },
-        applyPropHooks(instance.hooks.getExpandedToggleProps, row, instance),
+        applyPropHooks(
+          instanceRef.current.hooks.getExpandedToggleProps,
+          row,
+          instanceRef.current
+        ),
         props
       )
     }
     return row
   })
 
-  const expandedRows = useMemo(() => {
-    if (process.env.NODE_ENV === 'development' && debug)
+  const expandedRows = React.useMemo(() => {
+    if (process.env.NODE_ENV !== 'production' && debug)
       console.info('getExpandedRows')
 
     if (paginateExpandedRows) {

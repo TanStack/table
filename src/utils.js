@@ -112,24 +112,24 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
       // If the column has a parent, add it if necessary
       if (column.parent) {
         const similarParentColumns = parentColumns.filter(
-          d => d.originalID === column.parent.id
+          d => d.originalId === column.parent.id
         )
-        if (isFirst || latestParentColumn.originalID !== column.parent.id) {
+        if (isFirst || latestParentColumn.originalId !== column.parent.id) {
           parentColumns.push({
             ...column.parent,
-            originalID: column.parent.id,
+            originalId: column.parent.id,
             id: [column.parent.id, similarParentColumns.length].join('_'),
           })
         }
       } else if (hasParents) {
         // If other columns have parents, we'll need to add a place holder if necessary
-        const originalID = [column.id, 'placeholder'].join('_')
+        const originalId = [column.id, 'placeholder'].join('_')
         const similarParentColumns = parentColumns.filter(
-          d => d.originalID === originalID
+          d => d.originalId === originalId
         )
         const placeholderColumn = decorateColumn(
           {
-            originalID,
+            originalId,
             id: [column.id, 'placeholder', similarParentColumns.length].join(
               '_'
             ),
@@ -139,7 +139,7 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
         )
         if (
           isFirst ||
-          latestParentColumn.originalID !== placeholderColumn.originalID
+          latestParentColumn.originalId !== placeholderColumn.originalId
         ) {
           parentColumns.push(placeholderColumn)
         }
@@ -244,11 +244,11 @@ export function getFirstDefined(...args) {
   }
 }
 
-export function defaultGroupByFn(rows, columnID) {
+export function defaultGroupByFn(rows, columnId) {
   return rows.reduce((prev, row, i) => {
     // TODO: Might want to implement a key serializer here so
     // irregular column values can still be grouped if needed?
-    const resKey = `${row.values[columnID]}`
+    const resKey = `${row.values[columnId]}`
     prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
     prev[resKey].push(row)
     return prev
@@ -304,6 +304,7 @@ function isReactComponent(component) {
 
 export const mergeProps = (...groups) => {
   let props = {}
+
   groups.forEach(({ style = {}, className, ...rest } = {}) => {
     props = {
       ...props,
@@ -315,9 +316,11 @@ export const mergeProps = (...groups) => {
       className: [props.className, className].filter(Boolean).join(' '),
     }
   })
+
   if (props.className === '') {
     delete props.className
   }
+
   return props
 }
 
@@ -432,6 +435,10 @@ export function expandRows(
   rows.forEach(handleRow)
 
   return expandedRows
+}
+
+export function functionalUpdate(updater, old) {
+  return typeof updater === 'function' ? updater(old) : updater
 }
 
 //

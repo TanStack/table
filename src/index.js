@@ -1,7 +1,7 @@
 import * as utils from './utils'
 export { utils }
 export { defaultColumn } from './utils'
-export { useTable, defaultState } from './hooks/useTable'
+export { useTable, actions, reducerHandlers } from './hooks/useTable'
 export { useExpanded } from './plugin-hooks/useExpanded'
 export { useFilters } from './plugin-hooks/useFilters'
 export { useGroupBy } from './plugin-hooks/useGroupBy'
@@ -13,4 +13,3 @@ export { useColumnOrder } from './plugin-hooks/useColumnOrder'
 export { useResizeColumns } from './plugin-hooks/useResizeColumns'
 export { useAbsoluteLayout } from './plugin-hooks/useAbsoluteLayout'
 export { useBlockLayout } from './plugin-hooks/useBlockLayout'
-export { actions, addActions } from './actions'

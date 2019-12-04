@@ -5,94 +5,146 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -67,11 +67,11 @@
-        >
+@@ -47,11 +47,11 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
           <td>
 -           tanner 21
 +           tanner 31
           </td>
           <td>
             linsley
-@@ -101,11 +101,11 @@
-        >
+          </td>
+          <td>
+@@ -67,11 +67,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 22
 +           tanner 32
           </td>
           <td>
             linsley
-@@ -135,11 +135,11 @@
-        >
+          </td>
+          <td>
+@@ -87,11 +87,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 23
 +           tanner 33
           </td>
           <td>
             linsley
-@@ -169,11 +169,11 @@
-        >
+          </td>
+          <td>
+@@ -107,11 +107,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 24
 +           tanner 34
           </td>
           <td>
             linsley
-@@ -203,11 +203,11 @@
-        >
+          </td>
+          <td>
+@@ -127,11 +127,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 25
 +           tanner 35
           </td>
           <td>
             linsley
-@@ -237,11 +237,11 @@
-        >
+          </td>
+          <td>
+@@ -147,11 +147,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 26
 +           tanner 36
           </td>
           <td>
             linsley
-@@ -271,11 +271,11 @@
-        >
+          </td>
+          <td>
+@@ -167,11 +167,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 27
 +           tanner 37
           </td>
           <td>
             linsley
-@@ -305,11 +305,11 @@
-        >
+          </td>
+          <td>
+@@ -187,11 +187,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 28
 +           tanner 38
           </td>
           <td>
             linsley
-@@ -339,11 +339,11 @@
-        >
+          </td>
+          <td>
+@@ -207,11 +207,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 29
 +           tanner 39
           </td>
           <td>
             linsley
-@@ -373,11 +373,11 @@
-        >
+          </td>
+          <td>
+@@ -227,11 +227,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 30
 +           tanner 40
           </td>
           <td>
             linsley
-@@ -425,20 +425,20 @@
+          </td>
+          <td>
+@@ -269,20 +269,20 @@
       </button>
+       
       <span>
         Page 
         <strong>
 -         3 of 10
 +         4 of 10
         </strong>
+         
       </span>
       <span>
         | Go to page: 
@@ -103,6 +155,7 @@ Snapshot Diff:
 +         value="4"
         />
       </span>
+       
       <select>
         <option
 `;
@@ -112,94 +165,146 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -67,11 +67,11 @@
-        >
+@@ -47,11 +47,11 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
           <td>
 -           tanner 31
 +           tanner 41
           </td>
           <td>
             linsley
-@@ -101,11 +101,11 @@
-        >
+          </td>
+          <td>
+@@ -67,11 +67,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 32
 +           tanner 42
           </td>
           <td>
             linsley
-@@ -135,11 +135,11 @@
-        >
+          </td>
+          <td>
+@@ -87,11 +87,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 33
 +           tanner 43
           </td>
           <td>
             linsley
-@@ -169,11 +169,11 @@
-        >
+          </td>
+          <td>
+@@ -107,11 +107,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 34
 +           tanner 44
           </td>
           <td>
             linsley
-@@ -203,11 +203,11 @@
-        >
+          </td>
+          <td>
+@@ -127,11 +127,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 35
 +           tanner 45
           </td>
           <td>
             linsley
-@@ -237,11 +237,11 @@
-        >
+          </td>
+          <td>
+@@ -147,11 +147,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 36
 +           tanner 46
           </td>
           <td>
             linsley
-@@ -271,11 +271,11 @@
-        >
+          </td>
+          <td>
+@@ -167,11 +167,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 37
 +           tanner 47
           </td>
           <td>
             linsley
-@@ -305,11 +305,11 @@
-        >
+          </td>
+          <td>
+@@ -187,11 +187,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 38
 +           tanner 48
           </td>
           <td>
             linsley
-@@ -339,11 +339,11 @@
-        >
+          </td>
+          <td>
+@@ -207,11 +207,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 39
 +           tanner 49
           </td>
           <td>
             linsley
-@@ -373,11 +373,11 @@
-        >
+          </td>
+          <td>
+@@ -227,11 +227,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 40
 +           tanner 50
           </td>
           <td>
             linsley
-@@ -425,20 +425,20 @@
+          </td>
+          <td>
+@@ -269,20 +269,20 @@
       </button>
+       
       <span>
         Page 
         <strong>
 -         4 of 10
 +         5 of 10
         </strong>
+         
       </span>
       <span>
         | Go to page: 
@@ -210,6 +315,7 @@ Snapshot Diff:
 +         value="5"
         />
       </span>
+       
       <select>
         <option
 `;
@@ -219,108 +325,163 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -67,11 +67,11 @@
-        >
+@@ -47,11 +47,11 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
           <td>
 -           tanner 41
 +           tanner 91
           </td>
           <td>
             linsley
-@@ -101,11 +101,11 @@
-        >
+          </td>
+          <td>
+@@ -67,11 +67,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 42
 +           tanner 92
           </td>
           <td>
             linsley
-@@ -135,11 +135,11 @@
-        >
+          </td>
+          <td>
+@@ -87,11 +87,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 43
 +           tanner 93
           </td>
           <td>
             linsley
-@@ -169,11 +169,11 @@
-        >
+          </td>
+          <td>
+@@ -107,11 +107,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 44
 +           tanner 94
           </td>
           <td>
             linsley
-@@ -203,11 +203,11 @@
-        >
+          </td>
+          <td>
+@@ -127,11 +127,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 45
 +           tanner 95
           </td>
           <td>
             linsley
-@@ -237,11 +237,11 @@
-        >
+          </td>
+          <td>
+@@ -147,11 +147,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 46
 +           tanner 96
           </td>
           <td>
             linsley
-@@ -271,11 +271,11 @@
-        >
+          </td>
+          <td>
+@@ -167,11 +167,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 47
 +           tanner 97
           </td>
           <td>
             linsley
-@@ -305,11 +305,11 @@
-        >
+          </td>
+          <td>
+@@ -187,11 +187,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 48
 +           tanner 98
           </td>
           <td>
             linsley
-@@ -339,11 +339,11 @@
-        >
+          </td>
+          <td>
+@@ -207,11 +207,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 49
 +           tanner 99
           </td>
           <td>
             linsley
-@@ -373,11 +373,11 @@
-        >
+          </td>
+          <td>
+@@ -227,11 +227,11 @@
+            50
+          </td>
+        </tr>
+        <tr>
           <td>
 -           tanner 50
 +           tanner 100
           </td>
           <td>
             linsley
-@@ -414,31 +414,35 @@
+          </td>
+          <td>
+@@ -258,31 +258,35 @@
+       
       <button>
         &lt;
       </button>
+       
 -     <button>
 +     <button
 +       disabled=""
 +     >
         &gt;
       </button>
+       
 -     <button>
 +     <button
 +       disabled=""
 +     >
         &gt;&gt;
       </button>
+       
       <span>
         Page 
         <strong>
 -         5 of 10
 +         10 of 10
         </strong>
+         
       </span>
       <span>
         | Go to page: 
@@ -331,6 +492,7 @@ Snapshot Diff:
 +         value="10"
         />
       </span>
+       
       <select>
         <option
 `;

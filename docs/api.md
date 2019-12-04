@@ -25,7 +25,7 @@ React Table is essentially a compatible collection of **custom React hooks**:
 
 ### Hook Usage
 
-`useTable` is the **primary** hook used to build a React Table. It serves as the starting point for **every option and every plugin hook** that React Table supports. The options passed into `useTable` are supplied to every plugin hook after it in the order they are supplied, eventually resulting a final `instance` object that you can use to build your table UI and interact with the table's state.
+`useTable` is the **primary** hook used to build a React Table. It serves as the starting point for **every option and every plugin hook** that React Table supports. The options passed into `useTable` are supplied to every plugin hook after it in the order they are supplied, eventually resulting in a final `instance` object that you can use to build your table UI and interact with the table's state.
 
 ```js
 const instance = useTable(
@@ -58,7 +58,7 @@ To dive deeper into plugins, see Plugins](TODO) and the [Plugin Guide
 
 The order and usage of plugin hooks must follow The Laws of Hooks, just like any other custom hook. They must always be unconditionally called in the same order.
 
-> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSorting`**
+> **NOTE: In the event that you want to programmatically enable or disable plugin hooks, most of them provide options to disable their functionality, eg. `options.disableSortBy`**
 
 ### Option Memoization
 
@@ -68,7 +68,7 @@ React Table relies on memoization to determine when state and side effects shoul
 
 - Required
 
-`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `rows` value, followed by any React Table compatible hooks you want to use.
+`useTable` is the root hook for React Table. To use it, pass it with an options object with at least a `columns` and `data` value, followed by any React Table compatible hooks you want to use.
 
 ### Table Options
 
@@ -87,16 +87,11 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - The initial state object for the table.
   - Upon table initialization, this object is **merged over the table's `defaultState` object** (eg. `{...defaultState, ...initialState}`) that React Table and its hooks use to register default state to produce the final initial state object passed to the `React.useState` hook internally.
-- `state: Object`
+- `reducer: Function(newState, action, prevState) => newState`
   - Optional
-  - Must be **memoized**
-  - When either the internal `state` or this `state` object change, this object is **always merged over the internal table state** (eg. `{...state, ...overrides}`) to produce the final state object that is then passed to the `useTable` options.
-- `reducer: Function(oldState, newState) => finalState`
-  - Optional
-  - Must be **memoized**
-  - Inspired by Kent C. Dodd's [State Reducer Pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks)
-  - With every `setState` call to the table's internal `React.useState` instance, this reducer is called and is allowed to modify the final state object for updating.
-  - It is passed the `oldState`, the `newState`, and when provided, an optional action `type`.
+  - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
+  - It is passed the `newState`, `action`, and `prevState` and is expected to either return the `newState` or a modified version of the `newState`
+  - May also be used to "control" the state of the table, by overriding certain pieces of state regardless of the action.
 - `defaultColumn: Object`
   - Optional
   - Defaults to `{}`
@@ -114,7 +109,7 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `(row) => row.subRows || []`
   - Use this function to change how React Table detects subrows. You could even use this function to generate sub rows if you want.
   - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
-- `getRowID: Function(row, relativeIndex) => string`
+- `getRowId: Function(row, relativeIndex) => string`
   - Use this function to change how React Table detects unique rows and also how it constructs each row's underlying `path` property.
   - Optional
   - Must be **memoized**
@@ -182,18 +177,14 @@ The following options are supported on any column object you can pass to `column
 The following properties are available on the table instance returned from `useTable`
 
 - `state: Object`
-  - **Memoized** - This object reference will not change unless either the internal state or the `state` overrides option provided change.
-  - This is the final state object of the table, which is the product of the `initialState`, internal state, optional `state` overrides option and the `reducer` option (if applicable).
-- `setState: Function(updater, type) => void`
-  - **Memoized** - This function reference will not change unless the internal state `reducer` is changed
+  - **Memoized** - This object reference will not change unless the internal table state is modified.
+  - This is the final state object of the table, which is the product of the `initialState`, internal table reducer and (optionally) a custom `reducer` supplied by the user.
+- `dispatch: Function({ type: Actions[type], ...payload }) => void`
   - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
-  - `updater: Function`
-    - This parameter is identical to the `setState` API exposed by `React.useState`.
-      - If a function is passed, that function will be called with the previous state and is expected to return a new version of the state.
-      - If a value is passed, it will replace the state entirely.
-  - `type: String`
-    - Optional
+  - `type: Actions[type] | String`
     - The action type corresponding to what action being taken against the state.
+  - `...payload`
+    - Any other action data that is associated with the action
 - `columns: Array<Column>`
   - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
   - See [Column Properties](#column-properties) for more information
@@ -205,7 +196,7 @@ The following properties are available on the table instance returned from `useT
   - **Some of these headers may be materialized as placeholders**
   - See [Header Group Properties](#headergroup-properties) for more information
 - `headers: Array<Column>`
-  - An **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
+  - A **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
   - Each contains the headers that are displayed underneath it.
   - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information
@@ -237,9 +228,9 @@ The following properties are available on the table instance returned from `useT
   - This function can be used to update the internal state for any row.
   - Pass it a valid `rowPath` array and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
   - If `updater` is a function, it will be passed the previous value
-- `setCellState: Function(rowPath, columnID, updater: Function | any) => void`
+- `setCellState: Function(rowPath, columnId, updater: Function | any) => void`
   - This function can be used to update the internal state for any cell.
-  - Pass it a valid `rowPath` array, `columnID` and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
+  - Pass it a valid `rowPath` array, `columnId` and `updater`. The `updater` may be a value or function, similar to `React.useState`'s usage.
   - If `updater` is a function, it will be passed the previous value
 
 ### HeaderGroup Properties
@@ -287,8 +278,8 @@ The following additional properties are available on every `row` object returned
 - `cells: Array<Cell>`
   - An array of `Cell` objects containing properties and functions specific to the row and column it belongs to.
   - See [Cell Properties](#cell-properties) for more information
-- `values: Object<columnID: any>`
-  - A map of this row's **resolved** values by columnID, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`
+- `values: Object<columnId: any>`
+  - A map of this row's **resolved** values by columnId, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`
 - `getRowProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for this row.
@@ -352,15 +343,19 @@ The following additional properties are available on every `Cell` object returne
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.sortBy: Array<Object<id: columnID, desc: Bool>>`
+- `state.sortBy: Array<Object<id: columnId, desc: Bool>>`
   - Must be **memoized**
   - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `initialState.sortBy`
   - Identical to the `state.sortBy` option above
 - `manualSorting: Bool`
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableSorting: Bool`
+- `disableSortBy: Bool`
   - Disables sorting for every column in the entire table.
+- `defaultCanSort: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, all columns will be sortable, regardless if they have a valid `accessor`
 - `disableMultiSort: Bool`
   - Disables multi-sorting for the entire table.
 - `isMultiSortEvent: Function`
@@ -380,12 +375,21 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the built-in sort types.
   - For more information on sort types, see Sorting
+- `getResetSortByDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to `false`
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `sortBy` state is fired.
+  - To disable, set to `false`
 
 ### Column Options
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
-- `disableSorting: Bool`
+- `defaultCanSort: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, this column will be sortable, regardless if it has a valid `accessor`
+- `disableSortBy: Bool`
   - Optional
   - Defaults to `false`
   - If set to `true`, the sorting for this column will be disabled
@@ -415,7 +419,7 @@ The following values are provided to the table `instance`:
   - An array of **sorted** rows.
 - `preSortedRows: Array<Row>`
   - The array of rows that were originally sorted.
-- `toggleSortBy: Function(ColumnID: String, descending: Bool, isMulti: Bool) => void`
+- `toggleSortBy: Function(ColumnId: String, descending: Bool, isMulti: Bool) => void`
   - This function can be used to programmatically toggle the sorting for any specific column
 
 ### Column Properties
@@ -426,7 +430,7 @@ The following properties are available on every `Column` object returned by the 
   - Denotes whether a column is sortable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
 - `toggleSortBy: Function(descending, multi) => void`
   - This function can be used to programmatically toggle the sorting for this column.
-  - This function is similar to the `instance`-level `toggleSortBy`, however, passing a columnID is not required since it is located on a `Column` object already.
+  - This function is similar to the `instance`-level `toggleSortBy`, however, passing a columnId is not required since it is located on a `Column` object already.
 - `getSortByToggleProps: Function(props) => props`
   - **Required**
   - This function is used to resolve any props needed for this column's UI that is responsible for toggling the sort direction when the user clicks it.
@@ -461,9 +465,9 @@ The following properties are available on every `Column` object returned by the 
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.filters: Object<columnID: filterValue>`
+- `state.filters: Object<columnId: filterValue>`
   - Must be **memoized**
-  - An object of columnID's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+  - An object of columnId's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `initialState.filters`
   - Identical to the `state.filters` option above
 - `manualFilters: Bool`
@@ -471,10 +475,19 @@ The following options are supported via the main options object passed to `useTa
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableFilters: Bool`
   - Disables filtering for every column in the entire table.
+- `defaultCanFilter: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, all columns will be filterable, regardless if they have a valid `accessor`
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
   - For more information on filter types, see Filtering
+- `getResetFiltersDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to `false`
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `filters` state is fired.
+  - To disable, set to `false`
 
 ### Column Options
 
@@ -488,6 +501,10 @@ The following options are supported on any `Column` object passed to the `column
 - `disableFilters: Bool`
   - Optional
   - If set to `true`, will disable filtering for this column
+- `defaultCanFilter: Bool`
+  - Optional
+  - Defaults to `false`
+  - If set to `true`, this column will be filterable, regardless if it has a valid `accessor`
 - `filter: String | Function`
   - Optional
   - Defaults to `text`
@@ -506,7 +523,7 @@ The following values are provided to the table `instance`:
 - `preFilteredRows: Array<Row>`
   - The array of rows **used right before filtering**.
   - Among many other use-cases, these rows are directly useful for building option lists in filters, since the resulting filtered `rows` do not contain every possible option.
-- `setFilter: Function(columnID, filterValue) => void`
+- `setFilter: Function(columnId, filterValue) => void`
   - An instance-level function used to update the filter value for a specific column.
 - `setAllFilters: Function(filtersObject) => void`
   - An instance-level function used to update the values for **all** filters on the table, all at once.
@@ -518,7 +535,7 @@ The following properties are available on every `Column` object returned by the 
 - `canFilter: Bool`
   - Denotes whether a column is filterable or not depending on if it has a valid accessor/data model or is manually disabled via an option.
 - `setFilter: Function(filterValue) => void`
-  - An column-level function used to update the filter value for this column
+  - A column-level function used to update the filter value for this column
 - `filterValue: any`
   - The current filter value for this column, resolved from the table state's `filters` object
 - `preFilteredRows: Array<row>`
@@ -555,7 +572,7 @@ The following options are supported via the main options object passed to `useTa
 - `manualGroupBy: Bool`
   - Enables groupBy detection and functionality, but does not automatically perform row grouping.
   - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)
-- `disableGrouping: Bool`
+- `disableGroupBy: Bool`
   - Disables groupBy for the entire table.
 - `aggregations: Object<aggregationKey: aggregationFn>`
   - Must be **memoized**
@@ -575,7 +592,13 @@ The following options are supported on any `Column` object passed to the `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
-- `disableGrouping: Boolean`
+- `aggregate: String | [String, String] | Function(values, rows, isAggregated: Bool) => any`
+  - If a single `String` is passed, it must be the key of either a user defined or predefined `aggregations` function.
+  - If a tuple array of `[String, String]` is passed, both must be a key of either a user defined or predefined `aggregations` function.
+    - The first is used to aggregate raw values, eg. `sum`-ing raw values together
+    - The second is used to aggregate values that have already been aggregated, eg. `average`-ing the sums produced by the raw aggregation level
+  - If a `Function` is passed, this function will receive the `values`, original `rows` of those values, and an `isAggregated` `Bool` of whether or not the values and rows have already been aggregated.
+- `disableGroupBy: Boolean`
   - Defaults to `false`
   - If `true`, will disable grouping for this column.
 
@@ -587,7 +610,7 @@ The following values are provided to the table `instance`:
   - An array of **grouped and aggregated** rows.
 - `preGroupedRows: Array<Row>`
   - The array of rows originally used to create the grouped rows.
-- `toggleGroupBy: Function(columnID: String, ?set: Bool) => void`
+- `toggleGroupBy: Function(columnId: String, ?set: Bool) => void`
   - This function can be used to programmatically set or toggle the groupBy state for a specific column.
 
 ### Column Properties
@@ -613,7 +636,7 @@ The following properties are available on every `Column` object returned by the 
 
 The following properties are available on every `Row` object returned by the table instance.
 
-- `groupByID: String`
+- `groupById: String`
   - The column ID for which this row is being grouped.
   - Will be `undefined` if the row is an original row from `data` and not a materialized one from the grouping.
 - `groupByVal: any`
@@ -680,6 +703,14 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `true`
   - If set to `true`, expanded rows are rendered along with normal rows.
   - If set to `false`, expanded rows will only be available through their parent row. This could be useful if you are implementing a custom expanded row view.
+- `getResetExpandedDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
+    - ```js
+      const getResetExpandedDeps = ({ data }) => [data]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `expanded` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
@@ -734,10 +765,19 @@ The following options are supported via the main options object passed to `useTa
 - `manualPagination: Bool`
   - Enables pagination functionality, but does not automatically perform row pagination.
   - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
-- `disablePageResetOnDataChange`
-  - Defaults to `false`
-  - Normally, any changes detected to `rows`, `state.filters`, `state.groupBy`, or `state.sortBy` will trigger the `pageIndex` to be reset to `0`
-  - If set to `true`, the `pageIndex` will not be automatically set to `0` when these dependencies change.
+- `getResetPageDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `pageIndex` to `0` when the dependencies below change
+    - ```js
+      const getResetPageDeps = ({
+        rows,
+        manualPagination,
+        state: { filters, groupBy, sortBy },
+      }) => [manualPagination ? null : rows, filters, groupBy, sortBy]
+      ```
+    - Note that if `manualPagination` is set to `true`, then the pageIndex should not be reset when `rows` change
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `pageIndex` state is fired.
+  - To disable, set to `false`
 - `paginateExpandedRows: Bool`
   - Optional
   - Only applies when using the `useExpanded` plugin hook simultaneously
@@ -807,9 +847,9 @@ The following values are provided to the table `instance`:
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.selectedRowPaths: Array<RowPathKey>`
+- `state.selectedRowPaths: Set<RowPathKey>`
   - Optional
-  - Defaults to `[]`
+  - Defaults to `new Set()`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
 - `initialState.selectedRowPaths`
   - Identical to the `state.selectedRowPaths` option above
@@ -817,6 +857,14 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `isSelected`
   - If this key is found on the **original** data row, and it is true, this row will be manually selected
+- `getResetSelectedRowPathsDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
+    - ```js
+      const getResetSelectedRowPathsDeps = ({ rows }) => [rows]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `selectedRowPaths` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
@@ -867,7 +915,7 @@ The following additional properties are available on every **prepared** `row` ob
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.rowState: Object<RowPathKey:Object<any, cellState: {columnID: Object}>>`
+- `state.rowState: Object<RowPathKey:Object<any, cellState: {columnId: Object}>>`
   - Optional
   - Defaults to `{}`
   - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have the state of the value corresponding to that key.
@@ -879,6 +927,14 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - This function may optionally return the initial state for a row.
   - If this function is defined, it will be passed a `Row` object, from which you can return a value to use as the initial state, eg. `row => row.original.initialState`
+- `getResetRowStateDeps: Function(instance) => [...useEffectDependencies]`
+  - Optional
+  - Defaults to resetting the `rowState` state to `{}` when the dependencies below change
+    - ```js
+      const getResetRowStateDeps = ({ data }) => [data]
+      ```
+  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `rowState` state is fired.
+  - To disable, set to `false`
 
 ### Instance Properties
 
@@ -887,7 +943,7 @@ The following values are provided to the table `instance`:
 - `setRowState: Function(rowPath: Array<string>, updater: Function | Any) => void`
   - Use this function to programmatically update the state of a row.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
-- `setCellState: Function(rowPath: Array<string>, columnID: String, updater: Function | Any) => void`
+- `setCellState: Function(rowPath: Array<string>, columnId: String, updater: Function | Any) => void`
   - Use this function to programmatically update the cell of a row.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
@@ -907,7 +963,7 @@ The following additional properties are available on every **prepared** `row` ob
 The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
 
 - `state: Object`
-  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.path.join('.')].cellState[columnID]`
+  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.path.join('.')].cellState[columnId]`
 - `setState: Function(updater: Function | any)`
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
@@ -1029,7 +1085,7 @@ The core column options `width`, `minWidth` and `maxWidth` are used to calculate
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.columnOrder: Array<ColumnID>`
+- `state.columnOrder: Array<ColumnId>`
   - Optional
   - Defaults to `[]`
   - Any column ID's not represented in this array will be naturally ordered based on their position in the original table's `column` structure
@@ -1040,7 +1096,7 @@ The following options are supported via the main options object passed to `useTa
 
 The following values are provided to the table `instance`:
 
-- `setColumnOrder: Function(updater: Function | Array<ColumnID>) => void`
+- `setColumnOrder: Function(updater: Function | Array<ColumnId>) => void`
 
   - Use this function to programmatically update the columnOrder.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.

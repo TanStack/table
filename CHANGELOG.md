@@ -1,3 +1,85 @@
+## 7.0.0-beta.26
+
+- Fixed an issue where the table would crash if useSortBy was reset via the resetSortBy action
+- Updated all of the examples to use the "react-table@latest" tag.
+
+## 7.0.0-beta.25
+
+- Fixed an issue where `useRowState` would crash due to invalid initial state of previous cell state on `columnId` lookup
+
+## 7.0.0-beta.24
+
+- Changed `selectedRowPaths` to use a `Set()` instead of an array for performance.
+- Removed types and related files from the repo. The community will now maintain types externally on Definitely Typed
+
+## 7.0.0-beta.23
+
+- The internal `useMain` hook has been renamed to `useInstance`
+- The internal `useBeforeDimensions` hook has been renamed to `useInstanceBeforeDimensions`
+- Fixed an issue where `useResizeColumns` wasn't working properly
+
+## 7.0.0-beta.22
+
+- Fixed an issue where `useRowState` would crash due to invalid initial state attempting to spread into the new state
+
+## 7.0.0-beta.21
+
+- Removed deprecated `defaultState` export
+
+## 7.0.0-beta.20
+
+- Internals have been reworked to use `useReducer` instead of `useState` for stability and architecture
+- The `state` option has been removed in favor of using a custom reducer
+- The `reducer` option has been changed to a new function signature: `function (newState, action, oldState) => newState`
+- The `setState` table instance method is no longer supported
+- The `dispatch` table instanced method was added
+- The `ReactTable.actions` export is now a plain object of action types mapped to identically named action strings
+- The `ReactTable.reducerHandlers` export was added, which is a plain object of plugin hook names mapped to their respective reducer functions
+
+## 7.0.0-beta.19
+
+- Added an `isAggregated` boolean parameter to the `aggregate` function signature
+
+## 7.0.0-beta.16
+
+- Removed service workers from examples
+- Fixed a memory leak when `instance` was referenced in function closures
+- Fixed an issue where the table would infinitely rerender due to incorrect effect dependencies
+- Fixed an issue where row grouping and row selection would not work properly together.
+
+## 7.0.0-beta.15
+
+- Fixed an issue where `defaultGetResetPageDeps` was using `data` instead of `rows`
+
+## 7.0.0-beta.14
+
+- Removed
+  - `disablePageResetOnDataChange` option. use the `getResetPageDeps` option now.
+- Added
+  - `getResetPageDeps` option
+  - `getResetFilterDeps` option
+  - `getResetSortByDeps` option
+  - `getResetGroupByDeps` option
+  - `getResetExpandedDeps` option
+
+## 7.0.0-beta.13
+
+- Added options
+  - `defaultCanSort`
+  - `defaultCanFilter`
+  - `defaultCanGroupBy`
+  - `column.defaultCanSort`
+  - `column.defaultCanFilter`
+  - `column.defaultCanGroupBy`
+- Renamed
+  - `disableGrouping` to `disableGroupBy`
+  - `disableSorting` to `disableSortBy`
+  - `disableGroupBy` to `disableGroupBy`
+  - `column.disableGrouping` to `column.disableGroupBy`
+  - `column.disableSorting` to `column.disableSortBy`
+  - `column.disableGroupBy` to `column.disableGroupBy`
+- Removed propType definitions. Since types are now being maintained, it makes little sense to also maintain these. Cooincidentally, this also saves some bundle size in some scenarios where they may not be removed properly by a developer's bundler.
+
 ## 7.0.0-beta.0
 
 - Massive changes to the entire project and library. Please consult the README and documentation for more information regarding these changes.

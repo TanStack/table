@@ -1,55 +1,52 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { getFirstDefined, isFunction } from '../utils'
+import {
+  getFirstDefined,
+  isFunction,
+  safeUseLayoutEffect,
+  functionalUpdate,
+} from '../utils'
 import * as filterTypes from '../filterTypes'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import { actions, reducerHandlers } from '../hooks/useTable'
 
-defaultState.filters = {}
+const pluginName = 'useFilters'
 
-addActions('setFilter', 'setAllFilters')
+// Actions
+actions.resetFilters = 'resetFilters'
+actions.setFilter = 'setFilter'
+actions.setAllFilters = 'setAllFilters'
 
-const propTypes = {
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      disableFilters: PropTypes.bool,
-      Filter: PropTypes.any,
-    })
-  ),
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      filters: {},
+      ...state,
+    }
+  }
 
-  manualFilters: PropTypes.bool,
-}
+  if (action.type === actions.resetFilters) {
+    return {
+      ...state,
+      filters: {},
+    }
+  }
 
-export const useFilters = hooks => {
-  hooks.useMain.push(useMain)
-}
+  if (action.type === actions.setFilter) {
+    const {
+      columnId,
+      filterValue,
+      instanceRef: {
+        current: { flatColumns, userFilterTypes },
+      },
+    } = action
 
-useFilters.pluginName = 'useFilters'
-
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useFilters')
-
-  const {
-    debug,
-    rows,
-    flatRows,
-    flatColumns,
-    filterTypes: userFilterTypes,
-    manualFilters,
-    disableFilters,
-    state: { filters },
-    setState,
-  } = instance
-
-  const preFilteredRows = rows
-  const preFilteredFlatRows = flatRows
-
-  const setFilter = (id, updater) => {
-    const column = flatColumns.find(d => d.id === id)
+    const column = flatColumns.find(d => d.id === columnId)
 
     if (!column) {
-      throw new Error(`React-Table: Could not find a column with id: ${id}`)
+      throw new Error(
+        `React-Table: Could not find a column with id: ${columnId}`
+      )
     }
 
     const filterMethod = getFilterMethod(
@@ -58,57 +55,110 @@ function useMain(instance) {
       filterTypes
     )
 
-    return setState(old => {
-      const newFilter =
-        typeof updater === 'function' ? updater(old.filters[id]) : updater
+    const newFilter = functionalUpdate(filterValue, state.filters[columnId])
 
-      //
-      if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
-        const { [id]: remove, ...newFilters } = old.filters
-        return {
-          ...old,
-          filters: newFilters,
-        }
-      }
+    //
+    if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
+      const { [columnId]: remove, ...newFilters } = state.filters
 
       return {
-        ...old,
-        filters: {
-          ...old.filters,
-          [id]: newFilter,
-        },
-      }
-    }, actions.setFilter)
-  }
-
-  const setAllFilters = updater => {
-    return setState(old => {
-      const newFilters = typeof updater === 'function' ? updater(old) : updater
-
-      // Filter out undefined values
-      Object.keys(newFilters).forEach(id => {
-        const newFilter = newFilters[id]
-        const column = flatColumns.find(d => d.id === id)
-        const filterMethod = getFilterMethod(
-          column.filter,
-          userFilterTypes || {},
-          filterTypes
-        )
-
-        if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
-          delete newFilters[id]
-        }
-      })
-
-      return {
-        ...old,
+        ...state,
         filters: newFilters,
       }
-    }, actions.setAllFilters)
+    }
+
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        [columnId]: newFilter,
+      },
+    }
+  }
+
+  if (action.type === actions.setAllFilters) {
+    const {
+      filters,
+      instanceRef: {
+        current: { flatColumns, filterTypes: userFilterTypes },
+      },
+    } = action
+
+    const newFilters = functionalUpdate(filters, state.filters)
+
+    // Filter out undefined values
+    Object.keys(newFilters).forEach(id => {
+      const newFilter = newFilters[id]
+      const column = flatColumns.find(d => d.id === id)
+      const filterMethod = getFilterMethod(
+        column.filter,
+        userFilterTypes || {},
+        filterTypes
+      )
+
+      if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
+        delete newFilters[id]
+      }
+    })
+
+    return {
+      ...state,
+      filters: newFilters,
+    }
+  }
+}
+
+export const useFilters = hooks => {
+  hooks.useInstance.push(useInstance)
+}
+
+useFilters.pluginName = pluginName
+
+function useInstance(instance) {
+  const {
+    debug,
+    rows,
+    flatRows,
+    flatColumns,
+    filterTypes: userFilterTypes,
+    manualFilters,
+    defaultCanFilter = false,
+    disableFilters,
+    state: { filters },
+    dispatch,
+    getResetFiltersDeps = false,
+  } = instance
+
+  const preFilteredRows = rows
+  const preFilteredFlatRows = flatRows
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      dispatch({ type: actions.resetFilters })
+    }
+    isMountedRef.current = true
+  }, [dispatch, ...(getResetFiltersDeps ? getResetFiltersDeps(instance) : [])])
+
+  const setFilter = (columnId, filterValue) => {
+    dispatch({ type: actions.setFilter, columnId, filterValue })
+  }
+
+  const setAllFilters = filters => {
+    dispatch({
+      type: actions.setAllFilters,
+      filters,
+    })
   }
 
   flatColumns.forEach(column => {
-    const { id, accessor, disableFilters: columnDisableFilters } = column
+    const {
+      id,
+      accessor,
+      defaultCanFilter: columnDefaultCanFilter,
+      disableFilters: columnDisableFilters,
+    } = column
 
     // Determine if a column is filterable
     column.canFilter = accessor
@@ -117,7 +167,7 @@ function useMain(instance) {
           disableFilters === true ? false : undefined,
           true
         )
-      : false
+      : getFirstDefined(columnDefaultCanFilter, defaultCanFilter, false)
 
     // Provide the column a way of updating the filter value
     column.setFilter = val => setFilter(column.id, val)
@@ -142,7 +192,7 @@ function useMain(instance) {
 
     const filteredFlatRows = []
 
-    if (process.env.NODE_ENV === 'development' && debug)
+    if (process.env.NODE_ENV !== 'production' && debug)
       console.info('getFilteredRows')
 
     // Filters top level and nested rows
@@ -150,9 +200,9 @@ function useMain(instance) {
       let filteredRows = rows
 
       filteredRows = Object.entries(filters).reduce(
-        (filteredSoFar, [columnID, filterValue]) => {
+        (filteredSoFar, [columnId, filterValue]) => {
           // Find the filters column
-          const column = flatColumns.find(d => d.id === columnID)
+          const column = flatColumns.find(d => d.id === columnId)
 
           if (!column) {
             return filteredSoFar
@@ -179,7 +229,7 @@ function useMain(instance) {
           // to get the filtered rows back
           column.filteredRows = filterMethod(
             filteredSoFar,
-            columnID,
+            columnId,
             filterValue,
             column
           )

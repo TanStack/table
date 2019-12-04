@@ -5,7 +5,7 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -37,11 +37,11 @@
+@@ -27,11 +27,11 @@
             colspan="1"
           >
             Last Name
@@ -17,7 +17,10 @@ Snapshot Diff:
           </th>
           <th
             colspan="1"
-@@ -117,78 +117,10 @@
+          >
+@@ -87,50 +87,10 @@
+          <td>
+            status: In Relationship
           </td>
           <td>
             progress: 50
@@ -64,6 +67,8 @@ Snapshot Diff:
           </td>
         </tr>
         <tr>
+          <td>
+            firstName: jaylen
 `;
 
 exports[`renders a filterable table 2`] = `
@@ -71,7 +76,7 @@ Snapshot Diff:
 - First value
 + Second value
 
-@@ -37,11 +37,11 @@
+@@ -27,11 +27,11 @@
             colspan="1"
           >
             Last Name
@@ -83,8 +88,12 @@ Snapshot Diff:
           </th>
           <th
             colspan="1"
-@@ -91,70 +91,70 @@
-        >
+          >
+@@ -71,46 +71,46 @@
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
           <td>
 -           firstName: tanner
 +           firstName: derek

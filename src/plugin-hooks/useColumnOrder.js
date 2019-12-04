@@ -1,15 +1,36 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import { actions, reducerHandlers } from '../hooks/useTable'
+import { functionalUpdate } from '../utils'
 
-defaultState.columnOrder = []
+const pluginName = 'useColumnOrder'
 
-addActions('setColumnOrder')
+// Actions
+actions.resetColumnOrder = 'resetColumnOrder'
+actions.setColumnOrder = 'setColumnOrder'
 
-const propTypes = {
-  initialRowStateAccessor: PropTypes.func,
+// Reducer
+reducerHandlers[pluginName] = (state, action) => {
+  if (action.type === actions.init) {
+    return {
+      columnOrder: [],
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetColumnOrder) {
+    return {
+      ...state,
+      columnOrder: [],
+    }
+  }
+
+  if (action.type === actions.setColumnOrder) {
+    return {
+      ...state,
+      columnOrder: functionalUpdate(action.columnOrder, state.columnOrder),
+    }
+  }
 }
 
 export const useColumnOrder = hooks => {
@@ -17,10 +38,10 @@ export const useColumnOrder = hooks => {
     return [...deps, instance.state.columnOrder]
   })
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
-  hooks.useMain.push(useMain)
+  hooks.useInstance.push(useInstance)
 }
 
-useColumnOrder.pluginName = 'useColumnOrder'
+useColumnOrder.pluginName = pluginName
 
 function columnsBeforeHeaderGroups(columns, instance) {
   const {
@@ -42,8 +63,8 @@ function columnsBeforeHeaderGroups(columns, instance) {
 
   // Loop over the columns and place them in order into the new array
   while (columnsCopy.length && columnOrderCopy.length) {
-    const targetColumnID = columnOrderCopy.shift()
-    const foundIndex = columnsCopy.findIndex(d => d.id === targetColumnID)
+    const targetColumnId = columnOrderCopy.shift()
+    const foundIndex = columnsCopy.findIndex(d => d.id === targetColumnId)
     if (foundIndex > -1) {
       columnsInOrder.push(columnsCopy.splice(foundIndex, 1)[0])
     }
@@ -53,22 +74,14 @@ function columnsBeforeHeaderGroups(columns, instance) {
   return [...columnsInOrder, ...columnsCopy]
 }
 
-function useMain(instance) {
-  PropTypes.checkPropTypes(propTypes, instance, 'property', 'useColumnOrder')
-
-  const { setState } = instance
+function useInstance(instance) {
+  const { dispatch } = instance
 
   const setColumnOrder = React.useCallback(
-    updater => {
-      return setState(old => {
-        return {
-          ...old,
-          columnOrder:
-            typeof updater === 'function' ? updater(old.columnOrder) : updater,
-        }
-      }, actions.setColumnOrder)
+    columnOrder => {
+      return dispatch({ type: actions.setColumnOrder, columnOrder })
     },
-    [setState]
+    [dispatch]
   )
 
   return {
