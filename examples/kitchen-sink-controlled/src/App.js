@@ -442,7 +442,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
               groupBy,
               expanded,
               filters,
-              selectedRowPaths,
+              selectedRowPaths: [...selectedRowPaths.values()],
             },
             null,
             2
