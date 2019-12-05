@@ -1,13 +1,13 @@
 {
   "dist/index.js": {
-    "bundled": 98780,
-    "minified": 48107,
-    "gzipped": 12496
+    "bundled": 97093,
+    "minified": 46881,
+    "gzipped": 12344
   },
   "dist/index.es.js": {
-    "bundled": 97724,
-    "minified": 47164,
-    "gzipped": 12312,
+    "bundled": 96528,
+    "minified": 46389,
+    "gzipped": 12228,
     "treeshaked": {
       "rollup": {
         "code": 78,

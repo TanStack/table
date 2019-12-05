@@ -78,8 +78,8 @@ function Table({ columns, data }) {
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.length}</p>
-      {/* <pre>
+      <p>Selected Rows: {selectedRowPaths.size}</p>
+      <pre>
         <code>
           {JSON.stringify(
             {
@@ -92,7 +92,7 @@ function Table({ columns, data }) {
             2
           )}
         </code>
-      </pre> */}
+      </pre>
     </>
   )
 }
