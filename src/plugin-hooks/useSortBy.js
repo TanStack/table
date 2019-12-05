@@ -1,15 +1,19 @@
 import React from 'react'
 
-import { ensurePluginOrder, defaultColumn, safeUseLayoutEffect } from '../utils'
-import { actions, reducerHandlers } from '../hooks/useTable'
-import * as sortTypes from '../sortTypes'
 import {
+  actions,
+  reducerHandlers,
+  ensurePluginOrder,
+  defaultColumn,
+  safeUseLayoutEffect,
   mergeProps,
   applyPropHooks,
   getFirstDefined,
   defaultOrderByFn,
   isFunction,
 } from '../utils'
+
+import * as sortTypes from '../sortTypes'
 
 const pluginName = 'useSortBy'
 

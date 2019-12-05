@@ -1,8 +1,13 @@
 import React from 'react'
 
+export const actions = {
+  init: 'init',
+}
+
+export const reducerHandlers = {}
+
 export const defaultColumn = {
   Cell: ({ cell: { value = '' } }) => String(value),
-  show: true,
   width: 150,
   minWidth: 0,
   maxWidth: Number.MAX_SAFE_INTEGER,
@@ -174,39 +179,6 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
   buildGroup(flatColumns, 0)
 
   return headerGroups.reverse()
-}
-
-export function determineHeaderVisibility(instance) {
-  const { headers } = instance
-
-  const handleColumn = (column, parentVisible) => {
-    column.isVisible = parentVisible
-      ? typeof column.show === 'function'
-        ? column.show(instance)
-        : !!column.show
-      : false
-
-    let totalVisibleHeaderCount = 0
-
-    if (column.headers && column.headers.length) {
-      column.headers.forEach(
-        subColumn =>
-          (totalVisibleHeaderCount += handleColumn(subColumn, column.isVisible))
-      )
-    } else {
-      totalVisibleHeaderCount = column.isVisible ? 1 : 0
-    }
-
-    column.totalVisibleHeaderCount = totalVisibleHeaderCount
-
-    return totalVisibleHeaderCount
-  }
-
-  let totalVisibleHeaderCount = 0
-
-  headers.forEach(
-    subHeader => (totalVisibleHeaderCount += handleColumn(subHeader, true))
-  )
 }
 
 export function getBy(obj, path, def) {

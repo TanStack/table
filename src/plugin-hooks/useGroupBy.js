@@ -1,8 +1,9 @@
 import React from 'react'
 
 import * as aggregations from '../aggregations'
-import { actions, reducerHandlers } from '../hooks/useTable'
 import {
+  actions,
+  reducerHandlers,
   mergeProps,
   applyPropHooks,
   defaultGroupByFn,

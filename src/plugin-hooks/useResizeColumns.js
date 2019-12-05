@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { actions, reducerHandlers } from '../hooks/useTable'
 import {
+  actions,
+  reducerHandlers,
   defaultColumn,
   getFirstDefined,
   mergeProps,

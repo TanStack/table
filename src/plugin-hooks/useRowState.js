@@ -1,9 +1,11 @@
 import React from 'react'
 
-//
-
-import { actions, reducerHandlers } from '../hooks/useTable'
-import { functionalUpdate, safeUseLayoutEffect } from '../utils'
+import {
+  actions,
+  reducerHandlers,
+  functionalUpdate,
+  safeUseLayoutEffect,
+} from '../utils'
 
 const pluginName = 'useRowState'
 

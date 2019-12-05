@@ -13,12 +13,7 @@ import makeData from './makeData'
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data,
   })
@@ -38,21 +33,20 @@ function Table({ columns, data }) {
         ))}
       </TableHead>
       <TableBody>
-        {rows.map(
-          (row, i) => {
-            prepareRow(row);
-            return (
-              <TableRow {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <TableCell {...cell.getCellProps()}>
-                      {cell.render('Cell')}
-                    </TableCell>
-                  )
-                })}
-              </TableRow>
-            )}
-        )}
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <TableRow {...row.getRowProps()}>
+              {row.cells.map(cell => {
+                return (
+                  <TableCell {...cell.getCellProps()}>
+                    {cell.render('Cell')}
+                  </TableCell>
+                )
+              })}
+            </TableRow>
+          )
+        })}
       </TableBody>
     </MaUTable>
   )
