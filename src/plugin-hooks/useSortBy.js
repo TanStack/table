@@ -233,7 +233,7 @@ function useInstance(instance) {
           style: {
             cursor: canSort ? 'pointer' : undefined,
           },
-          title: 'Toggle SortBy',
+          title: canSort ? 'Toggle SortBy' : undefined,
         },
         applyPropHooks(
           instanceRef.current.hooks.getSortByToggleProps,
