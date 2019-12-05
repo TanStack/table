@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, utils } from 'react-table'
+import { useTable, mergeProps } from 'react-table'
 
 import makeData from './makeData'
 
@@ -69,7 +69,7 @@ function Table({
             {headerGroup.headers.map(column => (
               <th
                 // Merge all of the header Props
-                {...utils.mergeProps(
+                {...mergeProps(
                   column.getHeaderProps(),
                   {
                     className: column.className,
@@ -90,12 +90,12 @@ function Table({
           prepareRow(row)
           return (
             // Merge row props
-            <tr {...utils.mergeProps(row.getRowProps(), getRowProps(row))}>
+            <tr {...mergeProps(row.getRowProps(), getRowProps(row))}>
               {row.cells.map(cell => {
                 return (
                   <td
                     // Merge cell props
-                    {...utils.mergeProps(
+                    {...mergeProps(
                       cell.getCellProps(),
                       {
                         className: cell.column.className,

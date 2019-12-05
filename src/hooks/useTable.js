@@ -51,9 +51,9 @@ export const useTable = (props, ...plugins) => {
     nextState = userReducer(nextState, action, state)
 
     if (process.env.NODE_ENV !== 'production' && debug) {
-      console.log('')
-      console.log('React Table Action: ', action)
-      console.log('New State: ', nextState)
+      console.info('')
+      console.info('React Table Action: ', action)
+      console.info('New State: ', nextState)
     }
     return nextState
   }
@@ -150,7 +150,10 @@ export const useTable = (props, ...plugins) => {
     [defaultColumn, flatColumns]
   )
 
-  const headers = React.useMemo(() => headerGroups[0].headers, [headerGroups])
+  const headers = React.useMemo(
+    () => (headerGroups.length ? headerGroups[0].headers : []),
+    [headerGroups]
+  )
 
   Object.assign(instanceRef.current, {
     columns,
@@ -287,40 +290,44 @@ export const useTable = (props, ...plugins) => {
       )
   })
 
-  instanceRef.current.headerGroups.forEach((headerGroup, i) => {
-    // Filter out any headers and headerGroups that don't have visible columns
-    headerGroup.headers = headerGroup.headers.filter(header => {
-      const recurse = headers =>
-        headers.filter(header => {
-          if (header.headers) {
-            return recurse(header.headers)
-          }
-          return header.isVisible
-        }).length
-      if (header.headers) {
-        return recurse(header.headers)
+  instanceRef.current.headerGroups = instanceRef.current.headerGroups.filter(
+    (headerGroup, i) => {
+      // Filter out any headers and headerGroups that don't have visible columns
+      headerGroup.headers = headerGroup.headers.filter(header => {
+        const recurse = headers =>
+          headers.filter(header => {
+            if (header.headers) {
+              return recurse(header.headers)
+            }
+            return header.isVisible
+          }).length
+        if (header.headers) {
+          return recurse(header.headers)
+        }
+        return header.isVisible
+      })
+
+      // Give headerGroups getRowProps
+      if (headerGroup.headers.length) {
+        headerGroup.getHeaderGroupProps = (props = {}) =>
+          mergeProps(
+            {
+              key: [`header${i}`].join('_'),
+            },
+            applyPropHooks(
+              instanceRef.current.hooks.getHeaderGroupProps,
+              headerGroup,
+              instanceRef.current
+            ),
+            props
+          )
+
+        return true
       }
-      return header.isVisible
-    })
 
-    // Give headerGroups getRowProps
-    if (headerGroup.headers.length) {
-      headerGroup.getHeaderGroupProps = (props = {}) =>
-        mergeProps(
-          {
-            key: [`header${i}`].join('_'),
-          },
-          applyPropHooks(
-            instanceRef.current.hooks.getHeaderGroupProps,
-            headerGroup,
-            instanceRef.current
-          ),
-          props
-        )
-
-      return true
+      return false
     }
-  })
+  )
 
   // Run the rows (this could be a dangerous hook with a ton of data)
   if (process.env.NODE_ENV !== 'production' && debug)

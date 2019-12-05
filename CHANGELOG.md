@@ -1,3 +1,8 @@
+## 7.0.0-beta.28
+
+- Added the `useColumnVisibility` plugin as a core plugin along with several new instance and column-level methods to control column visibility
+- Added the "column-hiding" example
+
 ## 7.0.0-beta.27
 
 - Added the `useControlledState` option, which allows for hook-context control of the resolved internal table state
@@ -6,6 +11,7 @@
 
 - Fixed an issue where the table would crash if useSortBy was reset via the resetSortBy action
 - Updated all of the examples to use the "react-table@latest" tag.
+- `utils` is no longer an exported variable and instead, all of the individual util methods are exported at the root level of the library.
 
 ## 7.0.0-beta.25
 
