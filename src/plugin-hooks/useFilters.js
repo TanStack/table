@@ -132,15 +132,6 @@ function useInstance(instance) {
   const preFilteredRows = rows
   const preFilteredFlatRows = flatRows
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
-      dispatch({ type: actions.resetFilters })
-    }
-    isMountedRef.current = true
-  }, [dispatch, ...(getResetFiltersDeps ? getResetFiltersDeps(instance) : [])])
-
   const setFilter = (columnId, filterValue) => {
     dispatch({ type: actions.setFilter, columnId, filterValue })
   }
@@ -288,6 +279,26 @@ function useInstance(instance) {
       column.filteredRows = filteredRows
     })
   }, [filteredRows, filters, flatColumns])
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      dispatch({ type: actions.resetFilters })
+    }
+    isMountedRef.current = true
+  }, [
+    dispatch,
+    ...(getResetFiltersDeps
+      ? getResetFiltersDeps({
+          ...instance,
+          preFilteredRows,
+          preFilteredFlatRows,
+          rows: filteredRows,
+          flatRows: filteredFlatRows,
+        })
+      : []),
+  ])
 
   return {
     ...instance,

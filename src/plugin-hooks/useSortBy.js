@@ -177,15 +177,6 @@ function useInstance(instance) {
   // Add custom hooks
   hooks.getSortByToggleProps = []
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
-      dispatch({ type: actions.resetSortBy })
-    }
-    isMountedRef.current = true
-  }, [dispatch, ...(getResetSortByDeps ? getResetSortByDeps(instance) : [])])
-
   // Updates sorting based on a columnId, desc flag and multi flag
   const toggleSortBy = (columnId, desc, multi) => {
     dispatch({ type: actions.toggleSortBy, columnId, desc, multi })
@@ -343,6 +334,25 @@ function useInstance(instance) {
     flatColumns,
     orderByFn,
     userSortTypes,
+  ])
+
+  // Bypass any effects from firing when this changes
+  const isMountedRef = React.useRef()
+  safeUseLayoutEffect(() => {
+    if (isMountedRef.current) {
+      dispatch({ type: actions.resetSortBy })
+    }
+    isMountedRef.current = true
+  }, [
+    dispatch,
+    ...(getResetSortByDeps
+      ? getResetSortByDeps({
+          ...instance,
+          toggleSortBy,
+          rows: sortedRows,
+          preSortedRows: rows,
+        })
+      : []),
   ])
 
   return {
