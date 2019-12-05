@@ -17,7 +17,6 @@ export default Base =>
       const dataModel = this.getDataModel(resolvedState, true)
 
       this.state = this.calculateNewResolvedState(dataModel)
-      console.log(this.state)
     }
 
     componentDidMount () {
