@@ -92,6 +92,12 @@ The following options are supported via the main options object passed to `useTa
   - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
   - It is passed the `newState`, `action`, and `prevState` and is expected to either return the `newState` or a modified version of the `newState`
   - May also be used to "control" the state of the table, by overriding certain pieces of state regardless of the action.
+- `useControlledState: HookFunction(state) => controlledState`
+  - Optional
+  - If you need to control part of the table state, this is the place to do it.
+  - This function is run on every single render, just like a hook and allows you to alter the final state of the table if necessary.
+  - You can use hooks inside of this function, but most of the time, we just suggest using `React.useMemo` to memoize your state overrides.
+  - See the FAQ ["How can I manually control the table state?"](./faq.md#how-can-i-manually-control-the-table-state) for a an example.
 - `defaultColumn: Object`
   - Optional
   - Defaults to `{}`

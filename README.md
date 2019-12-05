@@ -42,8 +42,9 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - [Installation](./docs/installation.md) - Walk through how to install React Table
 - [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
 - [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
-- [API](./docs/api.md) - Get to know React Table's API, how to use it and how to extend its functionality
-- [Using V6 Still?](#v6-info)
+- [API](./docs/api.md) - Get to know React Table's API
+- [FAQ](./docs/faq.md) - Learn how to use React Table for specific challenges and tasks
+- [Previous Versions](#previous-versions)
 - [Contributing](./CONTRIBUTING.md) - Become familiar with how to contribute back to React Table
 - [Code of Conduct](./CODE_OF_CONDUCT.md) - Be a good React Table citizen by following these repository rules
 
@@ -194,11 +195,11 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
-## v6 Info
+## Previous Versions
 
-#### I'm still using v6, what should I do?
+### Version 6
 
-v6 is a great library and while it is still available for use, I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
+v6 is a great library and while it is still available to install and use, I am no longer offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
 
 #### Where are the docs for the older v6 version?
 
@@ -208,4 +209,4 @@ Please [visit the v6 branch](https://github.com/tannerlinsley/react-table/tree/v
 
 The differences between the 2 versions are incredibly massive. Unfortunately, I cannot write a one-to-one upgrade guide for any of v6's API, simply because much of it is irrelevant with v7's headless approach. The best approach for migrating to v7 is to learn its API by reading the documentation and then following some of the examples to begin building your own table component.
 
-In case you would need to have both v6 and v7 in one app during the migration process (large codebase, complex use cases), you can install an official [`react-table-6` package](https://www.npmjs.com/package/react-table-6) alongside the `react-table`.
+In case you would need to have both v6 and v7 in one app during the migration process (large codebase, complex use cases), you can either (1) fork and maintain your own local version of React Table v6 or (2) install the [`react-table-6` alias package](https://www.npmjs.com/package/react-table-6) for use alongside the `react-table` package.

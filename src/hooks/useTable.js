@@ -25,6 +25,7 @@ const defaultColumnInstance = {}
 const defaultReducer = (state, action, prevState) => state
 const defaultGetSubRows = (row, index) => row.subRows || []
 const defaultGetRowId = (row, index) => index
+const defaultUseControlledState = d => d
 
 export const useTable = (props, ...plugins) => {
   // Destructure props
@@ -36,6 +37,7 @@ export const useTable = (props, ...plugins) => {
     getSubRows = defaultGetSubRows,
     getRowId = defaultGetRowId,
     reducer: userReducer = defaultReducer,
+    useControlledState = defaultUseControlledState,
     debug,
   } = props
 
@@ -57,9 +59,13 @@ export const useTable = (props, ...plugins) => {
   }
 
   // But use the users table state if provided
-  const [state, originalDispatch] = React.useReducer(reducer, undefined, () =>
-    reducer(initialState, { type: actions.init })
+  const [reducerState, originalDispatch] = React.useReducer(
+    reducer,
+    undefined,
+    () => reducer(initialState, { type: actions.init })
   )
+
+  const state = useControlledState(reducerState)
 
   // The table instance ref
   let instanceRef = React.useRef({})

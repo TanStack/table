@@ -1,3 +1,7 @@
+## 7.0.0-beta.27
+
+- Added the `useControlledState` option, which allows for hook-context control of the resolved internal table state
+
 ## 7.0.0-beta.26
 
 - Fixed an issue where the table would crash if useSortBy was reset via the resetSortBy action
