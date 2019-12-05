@@ -1,7 +1,22 @@
 export default Base =>
   class extends Base {
-    UNSAFE_componentWillMount () {
-      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
+    constructor (props) {
+      super(props)
+
+      const defaultState = {
+        page: props.defaultPage,
+        pageSize: props.defaultPageSize,
+        sorted: props.defaultSorted,
+        expanded: props.defaultExpanded,
+        filtered: props.defaultFiltered,
+        resized: props.defaultResized,
+        currentlyResizing: false,
+        skipNextSort: false,
+      }
+      const resolvedState = this.getResolvedState(props, defaultState)
+      const dataModel = this.getDataModel(resolvedState, true)
+
+      this.state = this.calculateNewResolvedState(dataModel)
     }
 
     componentDidMount () {
