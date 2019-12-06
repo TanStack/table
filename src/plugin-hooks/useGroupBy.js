@@ -3,22 +3,33 @@ import React from 'react'
 import * as aggregations from '../aggregations'
 import {
   actions,
-  reducerHandlers,
   mergeProps,
   applyPropHooks,
   defaultGroupByFn,
   getFirstDefined,
   ensurePluginOrder,
+  useMountedLayoutEffect,
+  useGetLatest,
 } from '../utils'
-
-const pluginName = 'useGroupBy'
 
 // Actions
 actions.resetGroupBy = 'resetGroupBy'
 actions.toggleGroupBy = 'toggleGroupBy'
 
+export const useGroupBy = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => [
+    ...deps,
+    instance.state.groupBy,
+  ])
+  hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
+  hooks.useInstance.push(useInstance)
+}
+
+useGroupBy.pluginName = 'useGroupBy'
+
 // Reducer
-reducerHandlers[pluginName] = (state, action) => {
+function reducer(state, action) {
   if (action.type === actions.init) {
     return {
       groupBy: [],
@@ -53,17 +64,6 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const useGroupBy = hooks => {
-  hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
-  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
-    deps.push(instance.state.groupBy)
-    return deps
-  })
-  hooks.useInstance.push(useInstance)
-}
-
-useGroupBy.pluginName = pluginName
-
 function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
@@ -86,7 +86,7 @@ const defaultUserAggregations = {}
 
 function useInstance(instance) {
   const {
-    debug,
+    data,
     rows,
     flatRows,
     flatColumns,
@@ -100,6 +100,8 @@ function useInstance(instance) {
     plugins,
     state: { groupBy },
     dispatch,
+    autoResetGroupBy = true,
+    manaulGroupBy,
   } = instance
 
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
@@ -183,10 +185,7 @@ function useInstance(instance) {
       return [rows, flatRows]
     }
 
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.info('getGroupedRows')
     // Find the columns that can or are aggregating
-
     // Uses each column to aggregate rows into a single value
     const aggregateRowsToValues = (rows, isAggregated) => {
       const values = {}
@@ -289,13 +288,20 @@ function useInstance(instance) {
   }, [
     manualGroupBy,
     groupBy,
-    debug,
     rows,
     flatRows,
     flatColumns,
     userAggregations,
     groupByFn,
   ])
+
+  const getAutoResetGroupBy = useGetLatest(autoResetGroupBy)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetGroupBy()) {
+      dispatch({ type: actions.resetGroupBy })
+    }
+  }, [dispatch, manaulGroupBy ? null : data])
 
   return {
     ...instance,

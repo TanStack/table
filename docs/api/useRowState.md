@@ -21,13 +21,10 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - This function may optionally return the initial state for a row.
   - If this function is defined, it will be passed a `Row` object, from which you can return a value to use as the initial state, eg. `row => row.original.initialState`
-- `getResetRowStateDeps: Function(instance) => [...useEffectDependencies]`
-  - Optional
-  - Defaults to resetting the `rowState` state to `{}` when the dependencies below change
-    - ```js
-      const getResetRowStateDeps = ({ data }) => [data]
-      ```
-  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `rowState` state is fired.
+- `autoResetRowState: Boolean`
+  - Defaults to `true`
+  - When `true`, the `rowState` state will automatically reset if any of the following conditions are met:
+    - `data` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 

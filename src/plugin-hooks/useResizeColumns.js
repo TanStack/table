@@ -1,15 +1,11 @@
-import React from 'react'
-
 import {
   actions,
-  reducerHandlers,
   defaultColumn,
   getFirstDefined,
   mergeProps,
   applyPropHooks,
+  useGetLatest,
 } from '../utils'
-
-const pluginName = 'useResizeColumns'
 
 // Default Column
 defaultColumn.canResize = true
@@ -19,8 +15,14 @@ actions.columnStartResizing = 'columnStartResizing'
 actions.columnResizing = 'columnResizing'
 actions.columnDoneResizing = 'columnDoneResizing'
 
-// Reducer
-reducerHandlers[pluginName] = (state, action) => {
+export const useResizeColumns = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
+}
+
+useResizeColumns.pluginName = 'useResizeColumns'
+
+function reducer(state, action) {
   if (action.type === actions.init) {
     return {
       columnResizing: {
@@ -85,12 +87,6 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const useResizeColumns = hooks => {
-  hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
-}
-
-useResizeColumns.pluginName = pluginName
-
 const useInstanceBeforeDimensions = instance => {
   instance.hooks.getResizerProps = []
 
@@ -142,8 +138,7 @@ const useInstanceBeforeDimensions = instance => {
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getInstance = useGetLatest(instance)
 
   flatHeaders.forEach(header => {
     const canResize = getFirstDefined(
@@ -167,9 +162,9 @@ const useInstanceBeforeDimensions = instance => {
             draggable: false,
           },
           applyPropHooks(
-            instanceRef.current.hooks.getResizerProps,
+            getInstance().hooks.getResizerProps,
             header,
-            instanceRef.current
+            getInstance()
           ),
           userProps
         )

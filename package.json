@@ -1,7 +1,7 @@
 {
   "name": "react-table",
-  "version": "7.0.0-rc.1",
-  "description": "A fast, lightweight, opinionated table and datagrid built on React",
+  "version": "7.0.0-rc.2",
+  "description": "Hooks for building lightweight, fast and extendable datagrids for React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
   "repository": {

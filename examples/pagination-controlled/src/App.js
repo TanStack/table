@@ -77,8 +77,6 @@ function Table({
     usePagination
   )
 
-  // Now we can get our table state from the hoisted table state tuple
-
   // Listen for changes in pagination and use the state to fetch our new data
   React.useEffect(() => {
     fetchData({ pageIndex, pageSize })
@@ -107,7 +105,16 @@ function Table({
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render('Header')}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
+                  </span>
+                </th>
               ))}
             </tr>
           ))}

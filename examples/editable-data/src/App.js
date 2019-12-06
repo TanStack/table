@@ -102,7 +102,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
       data,
       defaultColumn,
       // use the skipPageReset option to disable page resetting temporarily
-      getResetPageDeps: skipPageReset ? false : undefined,
+      autoResetPage: !skipPageReset,
       // updateMyData isn't part of the API, but
       // anything we put into these options will
       // automatically be available on the instance.

@@ -1,3 +1,23 @@
+## 7.0.0-rc.2
+
+- `reducerHandlers` has been deprecated in favor of the new `stateReducers` hook.
+  - The `previousState` and `instanceRef` are now both generally available in state reducers for convenience.
+  - The global action property `action.instanceRef` has been deprecated.
+- The `reducer` option has been renamed to `stateReducer` and in addition to passing a single reducer function now also supports passing an array of reducers
+- Renamed `manualSorting` to be `manualSortBy` to be consistent with other naming conventions
+- Removed the `getResetPageDeps` option in favor of the new `autoResetPage` option.
+- Removed the `getResetFilterDeps` option in favor of the new `autoResetFilters` option.
+- Removed the `getResetSortByDeps` option in favor of the new `autoResetSortBy` option.
+- Removed the `getResetGroupByDeps` option in favor of the new `autoResetGroupBy` option.
+- Removed the `getResetExpandedDeps` option in favor of the new `autoResetExpanded` option.
+- Added a new exported utility called `useAsyncDebounce` to aid with external async side-effects.
+- A new `useGetLatest` hook is used internally to track latest instances in a less ref-driven and verbose way.
+- A new `useMountedLayoutEffect` hooks is now used internally to handle post-mount side-effects, mostly dealing with autoReset functionality
+- Plugin hooks are now "consumed" using an internal `useConsumeHookGetter` hook. When they are consumed, they can no longer be manipulated past that point in the table lifecycle. This should help ensure people are using them in a relatively safe order with consistent expectations.
+- Drastically "reduced" the reducer logic itself to be easier to understand and to be a stable reference for the life of the table. This change also means that the reducer must no longer be double-run/back-compared by React for changes in closure, thus actions and stateReducers (including user state reducers) will only fire once per action.
+- Removed `debug` and related logging. It has been somewhat useful during development, but is now very noisy in the code. We can debug lifecycle and performance as needed from here on out.
+- Removed unnecessary exports from `./utils.js` and moved all intentionally exported utilities to a new `./publicUtils.js` file.
+
 ## 7.0.0-rc.1
 
 - Minor regex optimizations during row path creation

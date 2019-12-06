@@ -3,7 +3,6 @@ import React from 'react'
 //
 import {
   actions,
-  reducerHandlers,
   applyHooks,
   applyPropHooks,
   mergeProps,
@@ -11,16 +10,13 @@ import {
   decorateColumnTree,
   makeHeaderGroups,
   flattenBy,
+  useGetLatest,
+  useConsumeHookGetter,
 } from '../utils'
 
 import { useColumnVisibility } from './useColumnVisibility'
 
 let renderErr = 'Renderer Error'
-
-if (process.env.NODE_ENV !== 'production') {
-  renderErr =
-    'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
-}
 
 const defaultInitialState = {}
 const defaultColumnInstance = {}
@@ -38,60 +34,21 @@ export const useTable = (props, ...plugins) => {
     defaultColumn = defaultColumnInstance,
     getSubRows = defaultGetSubRows,
     getRowId = defaultGetRowId,
-    reducer: userReducer = defaultReducer,
+    stateReducer: userStateReducer = defaultReducer,
     useControlledState = defaultUseControlledState,
-    debug,
   } = props
 
   plugins = [useColumnVisibility, ...plugins]
 
-  debug = process.env.NODE_ENV === 'production' ? false : debug
-
-  const reducer = (state, action) => {
-    let nextState = Object.keys(reducerHandlers)
-      .map(key => reducerHandlers[key])
-      .reduce((state, handler) => handler(state, action) || state, state)
-
-    nextState = userReducer(nextState, action, state)
-
-    if (process.env.NODE_ENV !== 'production' && debug) {
-      console.info('')
-      console.info('React Table Action: ', action)
-      console.info('New State: ', nextState)
-    }
-    return nextState
-  }
-
-  // But use the users table state if provided
-  const [reducerState, originalDispatch] = React.useReducer(
-    reducer,
-    undefined,
-    () => reducer(initialState, { type: actions.init })
-  )
-
-  const state = useControlledState(reducerState)
-
-  // The table instance ref
+  // The table instance
   let instanceRef = React.useRef({})
-
-  const dispatch = React.useCallback(action => {
-    if (!action.type) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.info({ action })
-        throw new Error('Unknown Action Type! 👆')
-      }
-      throw new Error()
-    }
-    originalDispatch({ ...action, instanceRef })
-  }, [])
 
   Object.assign(instanceRef.current, {
     ...props,
-    data, // The raw data
-    state, // The state dispatcher
-    dispatch, // The resolved table state
-    plugins, // All resolved plugins
+    plugins,
+    data,
     hooks: {
+      stateReducers: [],
       columnsBeforeHeaderGroups: [],
       columnsBeforeHeaderGroupsDeps: [],
       useInstanceBeforeDimensions: [],
@@ -109,14 +66,56 @@ export const useTable = (props, ...plugins) => {
     },
   })
 
-  // Allow plugins to register hooks
-  if (process.env.NODE_ENV !== 'production' && debug) console.time('plugins')
-
+  // Allow plugins to register hooks as early as possible
   plugins.filter(Boolean).forEach(plugin => {
     plugin(instanceRef.current.hooks)
   })
 
-  if (process.env.NODE_ENV !== 'production' && debug) console.timeEnd('plugins')
+  // Snapshot hook and disallow more from being added
+  const getStateReducers = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'stateReducers'
+  )
+
+  // Setup user reducer ref
+  const getUserStateReducer = useGetLatest(userStateReducer)
+
+  // Build the reducer
+  const reducer = React.useCallback(
+    (state, action) => {
+      // Detect invalid actions
+      if (!action.type) {
+        console.info({ action })
+        throw new Error('Unknown Action 👆')
+      }
+
+      // Reduce the state from all plugin reducers
+      return [
+        ...getStateReducers(),
+        // Allow the user to add their own state reducer(s)
+        ...(Array.isArray(getUserStateReducer())
+          ? getUserStateReducer()
+          : [getUserStateReducer()]),
+      ].reduce(
+        (s, handler) => handler(s, action, state, instanceRef) || s,
+        state
+      )
+    },
+    [getStateReducers, getUserStateReducer]
+  )
+
+  // Start the reducer
+  const [reducerState, dispatch] = React.useReducer(reducer, undefined, () =>
+    reducer(initialState, { type: actions.init })
+  )
+
+  // Allow the user to control the final state with hooks
+  const state = useControlledState(reducerState)
+
+  Object.assign(instanceRef.current, {
+    state, // The state dispatcher
+    dispatch, // The resolved table state
+  })
 
   // Decorate All the columns
   let columns = React.useMemo(
@@ -124,30 +123,33 @@ export const useTable = (props, ...plugins) => {
     [defaultColumn, userColumns]
   )
 
+  // Snapshot hook and disallow more from being added
+  const getColumnsBeforeHeaderGroups = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'columnsBeforeHeaderGroups'
+  )
+
+  // Snapshot hook and disallow more from being added
+  const getColumnsBeforeHeaderGroupsDeps = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'columnsBeforeHeaderGroupsDeps'
+  )
+
   // Get the flat list of all columns and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
   let flatColumns = React.useMemo(() => {
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.time('hooks.columnsBeforeHeaderGroups')
-
     let newColumns = applyHooks(
-      instanceRef.current.hooks.columnsBeforeHeaderGroups,
+      getColumnsBeforeHeaderGroups(),
       flattenBy(columns, 'columns'),
       instanceRef.current
     )
 
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.timeEnd('hooks.columnsBeforeHeaderGroups')
     return newColumns
   }, [
     columns,
-    debug,
+    getColumnsBeforeHeaderGroups,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    ...applyHooks(
-      instanceRef.current.hooks.columnsBeforeHeaderGroupsDeps,
-      [],
-      instanceRef.current
-    ),
+    ...getColumnsBeforeHeaderGroupsDeps(),
   ])
 
   // Make the headerGroups
@@ -170,9 +172,6 @@ export const useTable = (props, ...plugins) => {
 
   // Access the row model
   const [rows, flatRows] = React.useMemo(() => {
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.time('getAccessedRows')
-
     let flatRows = []
 
     // Access the row's data
@@ -227,10 +226,9 @@ export const useTable = (props, ...plugins) => {
 
     // Use the resolved data
     const accessedData = data.map((d, i) => accessRow(d, i))
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.timeEnd('getAccessedRows')
+
     return [accessedData, flatRows]
-  }, [debug, data, getRowId, getSubRows, flatColumns])
+  }, [data, getRowId, getSubRows, flatColumns])
 
   instanceRef.current.rows = rows
   instanceRef.current.flatRows = flatRows
@@ -241,26 +239,39 @@ export const useTable = (props, ...plugins) => {
     []
   )
 
-  if (process.env.NODE_ENV !== 'production' && debug)
-    console.time('hooks.useInstanceBeforeDimensions')
+  // Snapshot hook and disallow more from being added
+  const getUseInstanceBeforeDimensions = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'useInstanceBeforeDimensions'
+  )
+
   instanceRef.current = applyHooks(
-    instanceRef.current.hooks.useInstanceBeforeDimensions,
+    getUseInstanceBeforeDimensions(),
     instanceRef.current
   )
-  if (process.env.NODE_ENV !== 'production' && debug)
-    console.timeEnd('hooks.useInstanceBeforeDimensions')
 
   // Header Visibility is needed by this point
   calculateDimensions(instanceRef.current)
 
-  if (process.env.NODE_ENV !== 'production' && debug)
-    console.time('hooks.useInstance')
-  instanceRef.current = applyHooks(
-    instanceRef.current.hooks.useInstance,
-    instanceRef.current
+  // Snapshot hook and disallow more from being added
+  const getUseInstance = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'useInstance'
   )
-  if (process.env.NODE_ENV !== 'production' && debug)
-    console.timeEnd('hooks.useInstance')
+
+  instanceRef.current = applyHooks(getUseInstance(), instanceRef.current)
+
+  // Snapshot hook and disallow more from being added
+  const getHeaderPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getHeaderProps'
+  )
+
+  // Snapshot hook and disallow more from being added
+  const getFooterPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getFooterProps'
+  )
 
   // Each materialized header needs to be assigned a render function and other
   // prop getter properties here.
@@ -287,11 +298,7 @@ export const useTable = (props, ...plugins) => {
           key: ['header', column.id].join('_'),
           colSpan: column.totalVisibleHeaderCount,
         },
-        applyPropHooks(
-          instanceRef.current.hooks.getHeaderProps,
-          column,
-          instanceRef.current
-        ),
+        applyPropHooks(getHeaderPropsHooks(), column, instanceRef.current),
         props
       )
 
@@ -302,14 +309,22 @@ export const useTable = (props, ...plugins) => {
           key: ['footer', column.id].join('_'),
           colSpan: column.totalVisibleHeaderCount,
         },
-        applyPropHooks(
-          instanceRef.current.hooks.getFooterProps,
-          column,
-          instanceRef.current
-        ),
+        applyPropHooks(getFooterPropsHooks(), column, instanceRef.current),
         props
       )
   })
+
+  // Snapshot hook and disallow more from being added
+  const getHeaderGroupPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getHeaderGroupProps'
+  )
+
+  // Snapshot hook and disallow more from being added
+  const getFooterGroupsPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getFooterGroupProps'
+  )
 
   instanceRef.current.headerGroups = instanceRef.current.headerGroups.filter(
     (headerGroup, i) => {
@@ -336,7 +351,7 @@ export const useTable = (props, ...plugins) => {
               key: [`header${i}`].join('_'),
             },
             applyPropHooks(
-              instanceRef.current.hooks.getHeaderGroupProps,
+              getHeaderGroupPropsHooks(),
               headerGroup,
               instanceRef.current
             ),
@@ -349,7 +364,7 @@ export const useTable = (props, ...plugins) => {
               key: [`footer${i}`].join('_'),
             },
             applyPropHooks(
-              instanceRef.current.hooks.getFooterGroupProps,
+              getFooterGroupsPropsHooks(),
               headerGroup,
               instanceRef.current
             ),
@@ -368,96 +383,118 @@ export const useTable = (props, ...plugins) => {
   ].reverse()
 
   // Run the rows (this could be a dangerous hook with a ton of data)
-  if (process.env.NODE_ENV !== 'production' && debug)
-    console.time('hooks.useRows')
+
+  // Snapshot hook and disallow more from being added
+  const getUseRowsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'useRows'
+  )
+
   instanceRef.current.rows = applyHooks(
-    instanceRef.current.hooks.useRows,
+    getUseRowsHooks(),
     instanceRef.current.rows,
     instanceRef.current
   )
-  if (process.env.NODE_ENV !== 'production' && debug)
-    console.timeEnd('hooks.useRows')
 
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
 
-  instanceRef.current.prepareRow = React.useCallback(row => {
-    row.getRowProps = props =>
-      mergeProps(
-        { key: ['row', ...row.path].join('_') },
-        applyPropHooks(
-          instanceRef.current.hooks.getRowProps,
-          row,
-          instanceRef.current
-        ),
-        props
-      )
+  // Snapshot hook and disallow more from being added
+  const getPrepareRowHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'prepareRow'
+  )
 
-    // Build the visible cells for each row
-    row.cells = instanceRef.current.flatColumns
-      .filter(d => d.isVisible)
-      .map(column => {
-        const cell = {
-          column,
-          row,
-          value: row.values[column.id],
-        }
+  // Snapshot hook and disallow more from being added
+  const getRowPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getRowProps'
+  )
 
-        // Give each cell a getCellProps base
-        cell.getCellProps = props => {
-          const columnPathStr = [...row.path, column.id].join('_')
-          return mergeProps(
-            {
-              key: ['cell', columnPathStr].join('_'),
-            },
-            applyPropHooks(
-              instanceRef.current.hooks.getCellProps,
-              cell,
-              instanceRef.current
-            ),
-            props
-          )
-        }
+  // Snapshot hook and disallow more from being added
+  const getCellPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getCellProps'
+  )
 
-        // Give each cell a renderer function (supports multiple renderers)
-        cell.render = (type, userProps = {}) => {
-          const Comp = typeof type === 'string' ? column[type] : type
+  instanceRef.current.prepareRow = React.useCallback(
+    row => {
+      row.getRowProps = props =>
+        mergeProps(
+          { key: ['row', ...row.path].join('_') },
+          applyPropHooks(getRowPropsHooks(), row, instanceRef.current),
+          props
+        )
 
-          if (typeof Comp === 'undefined') {
-            throw new Error(renderErr)
-          }
-
-          return flexRender(Comp, {
-            ...instanceRef.current,
+      // Build the visible cells for each row
+      row.cells = instanceRef.current.flatColumns
+        .filter(d => d.isVisible)
+        .map(column => {
+          const cell = {
             column,
             row,
-            cell,
-            ...userProps,
-          })
-        }
+            value: row.values[column.id],
+          }
 
-        return cell
-      })
+          // Give each cell a getCellProps base
+          cell.getCellProps = props => {
+            const columnPathStr = [...row.path, column.id].join('_')
+            return mergeProps(
+              {
+                key: ['cell', columnPathStr].join('_'),
+              },
+              applyPropHooks(getCellPropsHooks(), cell, instanceRef.current),
+              props
+            )
+          }
 
-    // need to apply any row specific hooks (useExpanded requires this)
-    applyHooks(instanceRef.current.hooks.prepareRow, row, instanceRef.current)
-  }, [])
+          // Give each cell a renderer function (supports multiple renderers)
+          cell.render = (type, userProps = {}) => {
+            const Comp = typeof type === 'string' ? column[type] : type
+
+            if (typeof Comp === 'undefined') {
+              throw new Error(renderErr)
+            }
+
+            return flexRender(Comp, {
+              ...instanceRef.current,
+              column,
+              row,
+              cell,
+              ...userProps,
+            })
+          }
+
+          return cell
+        })
+
+      // need to apply any row specific hooks (useExpanded requires this)
+      applyHooks(getPrepareRowHooks(), row, instanceRef.current)
+    },
+    [getCellPropsHooks, getPrepareRowHooks, getRowPropsHooks]
+  )
+
+  // Snapshot hook and disallow more from being added
+  const getTablePropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getTableProps'
+  )
 
   instanceRef.current.getTableProps = userProps =>
     mergeProps(
-      applyPropHooks(
-        instanceRef.current.hooks.getTableProps,
-        instanceRef.current
-      ),
+      applyPropHooks(getTablePropsHooks(), instanceRef.current),
       userProps
     )
 
+  // Snapshot hook and disallow more from being added
+  const getTableBodyPropsHooks = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'getTableBodyProps'
+  )
+
   instanceRef.current.getTableBodyProps = userProps =>
     mergeProps(
-      applyPropHooks(
-        instanceRef.current.hooks.getTableBodyProps,
-        instanceRef.current
-      ),
+      applyPropHooks(getTableBodyPropsHooks(), instanceRef.current),
       userProps
     )
 

@@ -303,9 +303,9 @@ function Table({ columns, data, updateMyData, skipReset }) {
       // cell renderer!
       updateMyData,
       // We also need to pass this so the page doesn't change
-      // when we edit the data. Undefined tells it to use the default
-      getResetPageDeps: skipReset ? false : undefined,
-      getResetSelectedRowPathsDeps: skipReset ? false : undefined,
+      // when we edit the data.
+      autoResetPage: !skipReset,
+      autoResetSelectedRows: !skipReset,
     },
     useFilters,
     useGroupBy,

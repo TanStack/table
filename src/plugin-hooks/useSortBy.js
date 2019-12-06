@@ -2,28 +2,36 @@ import React from 'react'
 
 import {
   actions,
-  reducerHandlers,
   ensurePluginOrder,
   defaultColumn,
-  safeUseLayoutEffect,
   mergeProps,
   applyPropHooks,
   getFirstDefined,
   defaultOrderByFn,
   isFunction,
+  useGetLatest,
+  useMountedLayoutEffect,
 } from '../utils'
 
 import * as sortTypes from '../sortTypes'
-
-const pluginName = 'useSortBy'
 
 // Actions
 actions.resetSortBy = 'resetSortBy'
 actions.toggleSortBy = 'toggleSortBy'
 actions.clearSortBy = 'clearSortBy'
 
+defaultColumn.sortType = 'alphanumeric'
+defaultColumn.sortDescFirst = false
+
+export const useSortBy = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
+}
+
+useSortBy.pluginName = 'useSortBy'
+
 // Reducer
-reducerHandlers[pluginName] = (state, action) => {
+function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.init) {
     return {
       sortBy: [],
@@ -49,20 +57,16 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.toggleSortBy) {
+    const { columnId, desc, multi } = action
+
     const {
-      columnId,
-      desc,
-      multi,
-      instanceRef: {
-        current: {
-          flatColumns,
-          disableMultiSort,
-          disableSortRemove,
-          disableMultiRemove,
-          maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
-        },
-      },
-    } = action
+      flatColumns,
+      disableMultiSort,
+      disableSortRemove,
+      disableMultiRemove,
+      maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+    } = instanceRef.current
+
     const { sortBy } = state
 
     // Find the column for this columnId
@@ -149,23 +153,14 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-defaultColumn.sortType = 'alphanumeric'
-defaultColumn.sortDescFirst = false
-
-export const useSortBy = hooks => {
-  hooks.useInstance.push(useInstance)
-}
-
-useSortBy.pluginName = pluginName
-
 function useInstance(instance) {
   const {
-    debug,
+    data,
     rows,
     flatColumns,
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
-    manualSorting,
+    manualSortBy,
     defaultCanSort,
     disableSortBy,
     isMultiSortEvent = e => e.shiftKey,
@@ -174,7 +169,7 @@ function useInstance(instance) {
     state: { sortBy },
     dispatch,
     plugins,
-    getResetSortByDeps = false,
+    autoResetSortBy = true,
   } = instance
 
   ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
@@ -187,8 +182,7 @@ function useInstance(instance) {
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getInstance = useGetLatest(instance)
 
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
@@ -226,7 +220,7 @@ function useInstance(instance) {
                 e.persist()
                 column.toggleSortBy(
                   undefined,
-                  !instanceRef.current.disableMultiSort && isMultiSortEvent(e)
+                  !getInstance().disableMultiSort && isMultiSortEvent(e)
                 )
               }
             : undefined,
@@ -236,9 +230,9 @@ function useInstance(instance) {
           title: canSort ? 'Toggle SortBy' : undefined,
         },
         applyPropHooks(
-          instanceRef.current.hooks.getSortByToggleProps,
+          getInstance().hooks.getSortByToggleProps,
           column,
-          instanceRef.current
+          getInstance()
         ),
         props
       )
@@ -251,11 +245,9 @@ function useInstance(instance) {
   })
 
   const sortedRows = React.useMemo(() => {
-    if (manualSorting || !sortBy.length) {
+    if (manualSortBy || !sortBy.length) {
       return rows
     }
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.time('getSortedRows')
 
     // Filter out sortBys that correspond to non existing columns
     const availableSortBy = sortBy.filter(sort =>
@@ -326,38 +318,16 @@ function useInstance(instance) {
       return sortedData
     }
 
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.timeEnd('getSortedRows')
-
     return sortData(rows)
-  }, [
-    manualSorting,
-    sortBy,
-    debug,
-    rows,
-    flatColumns,
-    orderByFn,
-    userSortTypes,
-  ])
+  }, [manualSortBy, sortBy, rows, flatColumns, orderByFn, userSortTypes])
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
+  const getAutoResetSortBy = useGetLatest(autoResetSortBy)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetSortBy()) {
       dispatch({ type: actions.resetSortBy })
     }
-    isMountedRef.current = true
-  }, [
-    dispatch,
-    ...(getResetSortByDeps
-      ? getResetSortByDeps({
-          ...instance,
-          toggleSortBy,
-          rows: sortedRows,
-          preSortedRows: rows,
-        })
-      : []),
-  ])
+  }, [manualSortBy ? null : data])
 
   return {
     ...instance,

@@ -19,13 +19,10 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `isSelected`
   - If this key is found on the **original** data row, and it is true, this row will be manually selected
-- `getResetSelectedRowPathsDeps: Function(instance) => [...useEffectDependencies]`
-  - Optional
-  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
-    - ```js
-      const getResetSelectedRowPathsDeps = ({ rows }) => [rows]
-      ```
-  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `selectedRowPaths` state is fired.
+- `autoResetSelectedRows: Boolean`
+  - Defaults to `true`
+  - When `true`, the `expanded` state will automatically reset if any of the following conditions are met:
+    - `data` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 

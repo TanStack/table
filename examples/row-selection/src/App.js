@@ -47,7 +47,6 @@ function Table({ columns, data }) {
     {
       columns,
       data,
-      debug: true,
     },
     useRowSelect
   )

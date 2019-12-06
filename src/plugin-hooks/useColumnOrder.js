@@ -1,15 +1,23 @@
 import React from 'react'
 
-import { reducerHandlers, functionalUpdate, actions } from '../utils'
-
-const pluginName = 'useColumnOrder'
+import { functionalUpdate, actions } from '../utils'
 
 // Actions
 actions.resetColumnOrder = 'resetColumnOrder'
 actions.setColumnOrder = 'setColumnOrder'
 
-// Reducer
-reducerHandlers[pluginName] = (state, action) => {
+export const useColumnOrder = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
+    return [...deps, instance.state.columnOrder]
+  })
+  hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
+  hooks.useInstance.push(useInstance)
+}
+
+useColumnOrder.pluginName = 'useColumnOrder'
+
+function reducer(state, action) {
   if (action.type === actions.init) {
     return {
       columnOrder: [],
@@ -31,16 +39,6 @@ reducerHandlers[pluginName] = (state, action) => {
     }
   }
 }
-
-export const useColumnOrder = hooks => {
-  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
-    return [...deps, instance.state.columnOrder]
-  })
-  hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
-  hooks.useInstance.push(useInstance)
-}
-
-useColumnOrder.pluginName = pluginName
 
 function columnsBeforeHeaderGroups(columns, instance) {
   const {

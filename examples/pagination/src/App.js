@@ -62,7 +62,6 @@ function Table({ columns, data }) {
       columns,
       data,
       initialState: { pageIndex: 2 },
-      debug: true,
     },
     usePagination
   )

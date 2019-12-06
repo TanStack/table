@@ -30,13 +30,10 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `true`
   - If set to `true`, expanded rows are rendered along with normal rows.
   - If set to `false`, expanded rows will only be available through their parent row. This could be useful if you are implementing a custom expanded row view.
-- `getResetExpandedDeps: Function(instance) => [...useEffectDependencies]`
-  - Optional
-  - Defaults to resetting the `expanded` state to `[]` when the dependencies below change
-    - ```js
-      const getResetExpandedDeps = ({ data }) => [data]
-      ```
-  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `expanded` state is fired.
+- `autoResetExpanded: Boolean`
+  - Defaults to `true`
+  - When `true`, the `expanded` state will automatically reset if any of the following conditions are met:
+    - `data` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 

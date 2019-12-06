@@ -2,21 +2,28 @@ import React from 'react'
 
 import {
   actions,
-  reducerHandlers,
   mergeProps,
   applyPropHooks,
   expandRows,
-  safeUseLayoutEffect,
+  useMountedLayoutEffect,
+  useGetLatest,
 } from '../utils'
-
-const pluginName = 'useExpanded'
 
 // Actions
 actions.toggleExpandedByPath = 'toggleExpandedByPath'
 actions.resetExpanded = 'resetExpanded'
 
+export const useExpanded = hooks => {
+  hooks.getExpandedToggleProps = []
+
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
+}
+
+useExpanded.pluginName = 'useExpanded'
+
 // Reducer
-reducerHandlers[pluginName] = (state, action) => {
+function reducer(state, action) {
   if (action.type === actions.init) {
     return {
       expanded: [],
@@ -53,39 +60,27 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const useExpanded = hooks => {
-  hooks.getExpandedToggleProps = []
-  hooks.useInstance.push(useInstance)
-}
-
-useExpanded.pluginName = pluginName
-
-const defaultGetResetExpandedDeps = ({ data }) => [data]
-
 function useInstance(instance) {
   const {
-    debug,
+    data,
     rows,
     manualExpandedKey = 'expanded',
     paginateExpandedRows = true,
     expandSubRows = true,
     hooks,
+    autoResetExpanded = true,
     state: { expanded },
     dispatch,
-    getResetExpandedDeps = defaultGetResetExpandedDeps,
   } = instance
 
+  const getAutoResetExpanded = useGetLatest(autoResetExpanded)
+
   // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
+  useMountedLayoutEffect(() => {
+    if (getAutoResetExpanded()) {
       dispatch({ type: actions.resetExpanded })
     }
-    isMountedRef.current = true
-  }, [
-    dispatch,
-    ...(getResetExpandedDeps ? getResetExpandedDeps(instance) : []),
-  ])
+  }, [dispatch, data])
 
   const toggleExpandedByPath = (path, expanded) => {
     dispatch({ type: actions.toggleExpandedByPath, path, expanded })
@@ -121,22 +116,12 @@ function useInstance(instance) {
   })
 
   const expandedRows = React.useMemo(() => {
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.info('getExpandedRows')
-
     if (paginateExpandedRows) {
       return expandRows(rows, { manualExpandedKey, expanded, expandSubRows })
     }
 
     return rows
-  }, [
-    debug,
-    paginateExpandedRows,
-    rows,
-    manualExpandedKey,
-    expanded,
-    expandSubRows,
-  ])
+  }, [paginateExpandedRows, rows, manualExpandedKey, expanded, expandSubRows])
 
   const expandedDepth = findExpandedDepth(expanded)
 

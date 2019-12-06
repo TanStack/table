@@ -1,23 +1,7 @@
 import React from 'react'
+import { defaultColumn } from './publicUtils'
 
-export const actions = {
-  init: 'init',
-}
-
-export const reducerHandlers = {}
-
-export const defaultColumn = {
-  Cell: ({ cell: { value = '' } }) => String(value),
-  width: 150,
-  minWidth: 0,
-  maxWidth: Number.MAX_SAFE_INTEGER,
-}
-
-// SSR has issues with useLayoutEffect still, so use useEffect during SSR
-export const safeUseLayoutEffect =
-  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
-    ? React.useLayoutEffect
-    : React.useEffect
+export * from './publicUtils'
 
 // Find the depth of the columns
 export function findMaxDepth(columns, depth = 0) {
@@ -29,13 +13,7 @@ export function findMaxDepth(columns, depth = 0) {
   }, 0)
 }
 
-export function decorateColumn(
-  column,
-  userDefaultColumn,
-  parent,
-  depth,
-  index
-) {
+function decorateColumn(column, userDefaultColumn, parent, depth, index) {
   // Apply the userDefaultColumn
   column = { ...defaultColumn, ...userDefaultColumn, ...column }
 
@@ -182,12 +160,24 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
   return headerGroups.reverse()
 }
 
+const pathObjCache = new Map()
+
 export function getBy(obj, path, def) {
   if (!path) {
     return obj
   }
-  const pathObj = makePathArray(path)
+  const cacheKey = typeof path === 'function' ? path : JSON.stringify(path)
+
+  const pathObj =
+    pathObjCache.get(cacheKey) ||
+    (() => {
+      const pathObj = makePathArray(path)
+      pathObjCache.set(cacheKey, pathObj)
+      return pathObj
+    })()
+
   let val
+
   try {
     val = pathObj.reduce((cursor, pathPart) => cursor[pathPart], obj)
   } catch (e) {
@@ -196,37 +186,12 @@ export function getBy(obj, path, def) {
   return typeof val !== 'undefined' ? val : def
 }
 
-export function defaultOrderByFn(arr, funcs, dirs) {
-  return [...arr].sort((rowA, rowB) => {
-    for (let i = 0; i < funcs.length; i += 1) {
-      const sortFn = funcs[i]
-      const desc = dirs[i] === false || dirs[i] === 'desc'
-      const sortInt = sortFn(rowA, rowB)
-      if (sortInt !== 0) {
-        return desc ? -sortInt : sortInt
-      }
-    }
-    return dirs[0] ? rowA.index - rowB.index : rowB.index - rowA.index
-  })
-}
-
 export function getFirstDefined(...args) {
   for (let i = 0; i < args.length; i += 1) {
     if (typeof args[i] !== 'undefined') {
       return args[i]
     }
   }
-}
-
-export function defaultGroupByFn(rows, columnId) {
-  return rows.reduce((prev, row, i) => {
-    // TODO: Might want to implement a key serializer here so
-    // irregular column values can still be grouped if needed?
-    const resKey = `${row.values[columnId]}`
-    prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
-    prev[resKey].push(row)
-    return prev
-  }, {})
 }
 
 export function getElementDimensions(element) {
@@ -276,56 +241,6 @@ function isReactComponent(component) {
   return isClassComponent(component) || isFunctionComponent(component)
 }
 
-export const mergeProps = (...groups) => {
-  let props = {}
-
-  groups.forEach(({ style = {}, className, ...rest } = {}) => {
-    props = {
-      ...props,
-      ...rest,
-      style: {
-        ...(props.style || {}),
-        ...style,
-      },
-      className: [props.className, className].filter(Boolean).join(' '),
-    }
-  })
-
-  if (props.className === '') {
-    delete props.className
-  }
-
-  return props
-}
-
-export const applyHooks = (hooks, initial, ...args) =>
-  hooks.reduce((prev, next) => {
-    const nextValue = next(prev, ...args)
-    if (typeof nextValue === 'undefined') {
-      throw new Error(
-        'React Table: A hook just returned undefined! This is not allowed.'
-      )
-    }
-    return nextValue
-  }, initial)
-
-export const applyPropHooks = (hooks, ...args) =>
-  hooks.reduce((prev, next) => mergeProps(prev, next(...args)), {})
-
-export const warnUnknownProps = props => {
-  if (Object.keys(props).length) {
-    throw new Error(
-      `Unknown options passed to useReactTable:
-
-${JSON.stringify(props, null, 2)}`
-    )
-  }
-}
-
-export function sum(arr) {
-  return arr.reduce((prev, curr) => prev + curr, 0)
-}
-
 export function isFunction(a) {
   if (typeof a === 'function') {
     return a
@@ -348,40 +263,6 @@ export function flattenBy(columns, childKey) {
   recurse(columns)
 
   return flatColumns
-}
-
-export function ensurePluginOrder(plugins, befores, pluginName, afters) {
-  const pluginIndex = plugins.findIndex(
-    plugin => plugin.pluginName === pluginName
-  )
-
-  if (pluginIndex === -1) {
-    throw new Error(`The plugin ${pluginName} was not found in the plugin list!
-This usually means you need to need to name your plugin hook by setting the 'pluginName' property of the hook function, eg:
-
-  ${pluginName}.pluginName = '${pluginName}'
-`)
-  }
-
-  befores.forEach(before => {
-    const beforeIndex = plugins.findIndex(
-      plugin => plugin.pluginName === before
-    )
-    if (beforeIndex > -1 && beforeIndex > pluginIndex) {
-      throw new Error(
-        `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
-      )
-    }
-  })
-
-  afters.forEach(after => {
-    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
-    if (afterIndex > -1 && afterIndex < pluginIndex) {
-      throw new Error(
-        `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
-      )
-    }
-  })
 }
 
 export function expandRows(
@@ -409,10 +290,6 @@ export function expandRows(
   rows.forEach(handleRow)
 
   return expandedRows
-}
-
-export function functionalUpdate(updater, old) {
-  return typeof updater === 'function' ? updater(old) : updater
 }
 
 //

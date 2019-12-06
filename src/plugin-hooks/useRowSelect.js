@@ -2,11 +2,11 @@ import React from 'react'
 
 import {
   actions,
-  reducerHandlers,
   mergeProps,
   applyPropHooks,
   ensurePluginOrder,
-  safeUseLayoutEffect,
+  useGetLatest,
+  useMountedLayoutEffect,
 } from '../utils'
 
 const pluginName = 'useRowSelect'
@@ -16,8 +16,18 @@ actions.resetSelectedRows = 'resetSelectedRows'
 actions.toggleRowSelectedAll = 'toggleRowSelectedAll'
 actions.toggleRowSelected = 'toggleRowSelected'
 
-// Reducer
-reducerHandlers[pluginName] = (state, action) => {
+export const useRowSelect = hooks => {
+  hooks.getToggleRowSelectedProps = []
+  hooks.getToggleAllRowsSelectedProps = []
+
+  hooks.stateReducers.push(reducer)
+  hooks.useRows.push(useRows)
+  hooks.useInstance.push(useInstance)
+}
+
+useRowSelect.pluginName = pluginName
+
+function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.init) {
     return {
       selectedRowPaths: new Set(),
@@ -33,12 +43,8 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.toggleRowSelectedAll) {
-    const {
-      selected,
-      instanceRef: {
-        current: { isAllRowsSelected, flatRowPaths },
-      },
-    } = action
+    const { selected } = action
+    const { isAllRowsSelected, flatRowPaths } = instanceRef.current
 
     const selectAll =
       typeof selected !== 'undefined' ? selected : !isAllRowsSelected
@@ -50,13 +56,8 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.toggleRowSelected) {
-    const {
-      path,
-      selected,
-      instanceRef: {
-        current: { flatRowPaths },
-      },
-    } = action
+    const { path, selected } = action
+    const { flatRowPaths } = instanceRef.current
 
     const key = path.join('.')
     const childRowPrefixKey = [key, '.'].join('')
@@ -116,15 +117,6 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const useRowSelect = hooks => {
-  hooks.getToggleRowSelectedProps = []
-  hooks.getToggleAllRowsSelectedProps = []
-  hooks.useRows.push(useRows)
-  hooks.useInstance.push(useInstance)
-}
-
-useRowSelect.pluginName = pluginName
-
 function useRows(rows, instance) {
   const {
     state: { selectedRowPaths },
@@ -147,15 +139,14 @@ function useRows(rows, instance) {
   return rows
 }
 
-const defaultGetResetSelectedRowPathsDeps = ({ data }) => [data]
-
 function useInstance(instance) {
   const {
+    data,
     hooks,
     manualRowSelectedKey = 'isSelected',
     plugins,
     flatRows,
-    getResetSelectedRowPathsDeps = defaultGetResetSelectedRowPathsDeps,
+    autoResetSelectedRows = true,
     state: { selectedRowPaths },
     dispatch,
   } = instance
@@ -177,19 +168,13 @@ function useInstance(instance) {
     }
   }
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
+  const getAutoResetSelectedRows = useGetLatest(autoResetSelectedRows)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetSelectedRows()) {
       dispatch({ type: actions.resetSelectedRows })
     }
-    isMountedRef.current = true
-  }, [
-    dispatch,
-    ...(getResetSelectedRowPathsDeps
-      ? getResetSelectedRowPathsDeps(instance)
-      : []),
-  ])
+  }, [dispatch, data])
 
   const toggleRowSelectedAll = selected =>
     dispatch({ type: actions.toggleRowSelectedAll, selected })

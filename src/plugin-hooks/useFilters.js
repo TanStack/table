@@ -2,23 +2,27 @@ import React from 'react'
 
 import {
   actions,
-  reducerHandlers,
   getFirstDefined,
   isFunction,
-  safeUseLayoutEffect,
+  useMountedLayoutEffect,
   functionalUpdate,
+  useGetLatest,
 } from '../utils'
 import * as filterTypes from '../filterTypes'
-
-const pluginName = 'useFilters'
 
 // Actions
 actions.resetFilters = 'resetFilters'
 actions.setFilter = 'setFilter'
 actions.setAllFilters = 'setAllFilters'
 
-// Reducer
-reducerHandlers[pluginName] = (state, action) => {
+export const useFilters = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
+}
+
+useFilters.pluginName = 'useFilters'
+
+function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.init) {
     return {
       filters: {},
@@ -34,14 +38,8 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.setFilter) {
-    const {
-      columnId,
-      filterValue,
-      instanceRef: {
-        current: { flatColumns, userFilterTypes },
-      },
-    } = action
-
+    const { columnId, filterValue } = action
+    const { flatColumns, userFilterTypes } = instanceRef.current
     const column = flatColumns.find(d => d.id === columnId)
 
     if (!column) {
@@ -78,13 +76,8 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.setAllFilters) {
-    const {
-      filters,
-      instanceRef: {
-        current: { flatColumns, filterTypes: userFilterTypes },
-      },
-    } = action
-
+    const { filters } = action
+    const { flatColumns, filterTypes: userFilterTypes } = instanceRef.current
     const newFilters = functionalUpdate(filters, state.filters)
 
     // Filter out undefined values
@@ -109,15 +102,9 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const useFilters = hooks => {
-  hooks.useInstance.push(useInstance)
-}
-
-useFilters.pluginName = pluginName
-
 function useInstance(instance) {
   const {
-    debug,
+    data,
     rows,
     flatRows,
     flatColumns,
@@ -127,7 +114,7 @@ function useInstance(instance) {
     disableFilters,
     state: { filters },
     dispatch,
-    getResetFiltersDeps = false,
+    autoResetFilters = true,
   } = instance
 
   const preFilteredRows = rows
@@ -183,9 +170,6 @@ function useInstance(instance) {
     }
 
     const filteredFlatRows = []
-
-    if (process.env.NODE_ENV !== 'production' && debug)
-      console.info('getFilteredRows')
 
     // Filters top level and nested rows
     const filterRows = (rows, depth = 0) => {
@@ -256,15 +240,7 @@ function useInstance(instance) {
       filteredRows: filterRows(rows),
       filteredFlatRows,
     }
-  }, [
-    manualFilters,
-    filters,
-    debug,
-    rows,
-    flatRows,
-    flatColumns,
-    userFilterTypes,
-  ])
+  }, [manualFilters, filters, rows, flatRows, flatColumns, userFilterTypes])
 
   React.useMemo(() => {
     // Now that each filtered column has it's partially filtered rows,
@@ -281,25 +257,13 @@ function useInstance(instance) {
     })
   }, [filteredRows, filters, flatColumns])
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
+  const getAutoResetFilters = useGetLatest(autoResetFilters)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetFilters()) {
       dispatch({ type: actions.resetFilters })
     }
-    isMountedRef.current = true
-  }, [
-    dispatch,
-    ...(getResetFiltersDeps
-      ? getResetFiltersDeps({
-          ...instance,
-          preFilteredRows,
-          preFilteredFlatRows,
-          rows: filteredRows,
-          flatRows: filteredFlatRows,
-        })
-      : []),
-  ])
+  }, [dispatch, manualFilters ? null : data])
 
   return {
     ...instance,

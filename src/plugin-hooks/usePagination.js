@@ -4,11 +4,11 @@ import React from 'react'
 
 import {
   actions,
-  reducerHandlers,
   ensurePluginOrder,
-  safeUseLayoutEffect,
   expandRows,
   functionalUpdate,
+  useMountedLayoutEffect,
+  useGetLatest,
 } from '../utils'
 
 const pluginName = 'usePagination'
@@ -18,8 +18,14 @@ actions.resetPage = 'resetPage'
 actions.gotoPage = 'gotoPage'
 actions.setPageSize = 'setPageSize'
 
-// Reducer
-reducerHandlers[pluginName] = (state, action) => {
+export const usePagination = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
+}
+
+usePagination.pluginName = pluginName
+
+function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.init) {
     return {
       pageSize: 10,
@@ -36,7 +42,7 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 
   if (action.type === actions.gotoPage) {
-    const { pageCount } = action.instanceRef.current
+    const { pageCount } = instanceRef.current
     const newPageIndex = functionalUpdate(action.pageIndex, state.pageIndex)
 
     if (newPageIndex < 0 || newPageIndex > pageCount - 1) {
@@ -61,31 +67,22 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const usePagination = hooks => {
-  hooks.useInstance.push(useInstance)
-}
-
-usePagination.pluginName = pluginName
-
-const defaultGetResetPageDeps = ({
-  data,
-  manualPagination,
-  state: { filters, groupBy, sortBy },
-}) => [manualPagination ? null : data, filters, groupBy, sortBy]
-
 function useInstance(instance) {
   const {
     rows,
-    manualPagination,
-    getResetPageDeps = defaultGetResetPageDeps,
+    autoResetPage = true,
     manualExpandedKey = 'expanded',
-    debug,
     plugins,
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: { pageSize, pageIndex, expanded },
+    state: { pageSize, pageIndex, expanded, filters, groupBy, sortBy },
     dispatch,
+    data,
+    manualPagination,
+    manualFilters,
+    manualGroupBy,
+    manualSortBy,
   } = instance
 
   ensurePluginOrder(
@@ -95,14 +92,19 @@ function useInstance(instance) {
     []
   )
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
+  const getAutoResetPage = useGetLatest(autoResetPage)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetPage()) {
       dispatch({ type: actions.resetPage })
     }
-    isMountedRef.current = true
-  }, [dispatch, ...(getResetPageDeps ? getResetPageDeps(instance) : [])])
+  }, [
+    dispatch,
+    manualPagination ? null : data,
+    manualPagination || manualFilters ? null : filters,
+    manualPagination || manualGroupBy ? null : groupBy,
+    manualPagination || manualSortBy ? null : sortBy,
+  ])
 
   const pageCount = manualPagination
     ? userPageCount
@@ -119,9 +121,6 @@ function useInstance(instance) {
     if (manualPagination) {
       page = rows
     } else {
-      if (process.env.NODE_ENV !== 'production' && debug)
-        console.info('getPage')
-
       const pageStart = pageSize * pageIndex
       const pageEnd = pageStart + pageSize
 
@@ -134,7 +133,6 @@ function useInstance(instance) {
 
     return expandRows(page, { manualExpandedKey, expanded, expandSubRows })
   }, [
-    debug,
     expandSubRows,
     expanded,
     manualExpandedKey,

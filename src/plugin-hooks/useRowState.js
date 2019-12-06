@@ -2,19 +2,23 @@ import React from 'react'
 
 import {
   actions,
-  reducerHandlers,
   functionalUpdate,
-  safeUseLayoutEffect,
+  useMountedLayoutEffect,
+  useGetLatest,
 } from '../utils'
-
-const pluginName = 'useRowState'
 
 // Actions
 actions.setRowState = 'setRowState'
 actions.resetRowState = 'resetRowState'
 
-// Reducer
-reducerHandlers[pluginName] = (state, action) => {
+export const useRowState = hooks => {
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
+}
+
+useRowState.pluginName = 'useRowState'
+
+function reducer(state, action) {
   if (action.type === actions.init) {
     return {
       rowState: {},
@@ -44,20 +48,13 @@ reducerHandlers[pluginName] = (state, action) => {
   }
 }
 
-export const useRowState = hooks => {
-  hooks.useInstance.push(useInstance)
-}
-
-useRowState.pluginName = pluginName
-
-const defaultGetResetRowStateDeps = ({ data }) => [data]
-
 function useInstance(instance) {
   const {
     hooks,
     initialRowStateAccessor,
-    getResetRowStateDeps = defaultGetResetRowStateDeps,
+    autoResetRowState = true,
     state: { rowState },
+    data,
     dispatch,
   } = instance
 
@@ -94,19 +91,13 @@ function useInstance(instance) {
     [setRowState]
   )
 
-  const rowsMountedRef = React.useRef()
+  const getAutoResetRowState = useGetLatest(autoResetRowState)
 
-  // When data changes, reset row and cell state
-  safeUseLayoutEffect(() => {
-    if (rowsMountedRef.current) {
+  useMountedLayoutEffect(() => {
+    if (getAutoResetRowState()) {
       dispatch({ type: actions.resetRowState })
     }
-
-    rowsMountedRef.current = true
-  }, [
-    dispatch,
-    ...(getResetRowStateDeps ? getResetRowStateDeps(instance) : []),
-  ])
+  }, [data])
 
   hooks.prepareRow.push(row => {
     const pathKey = row.path.join('.')

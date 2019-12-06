@@ -29,18 +29,13 @@ The following options are supported via the main options object passed to `useTa
 - `manualPagination: Bool`
   - Enables pagination functionality, but does not automatically perform row pagination.
   - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
-- `getResetPageDeps: Function(instance) => [...useEffectDependencies]`
-  - Optional
-  - Defaults to resetting the `pageIndex` to `0` when the dependencies below change
-    - ```js
-      const getResetPageDeps = ({
-        rows,
-        manualPagination,
-        state: { filters, groupBy, sortBy },
-      }) => [manualPagination ? null : rows, filters, groupBy, sortBy]
-      ```
-    - Note that if `manualPagination` is set to `true`, then the pageIndex should not be reset when `rows` change
-  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `pageIndex` state is fired.
+- `autoResetPage: Boolean`
+  - Defaults to `true`
+  - When `true`, the `expanded` state will automatically reset if `manualPagination` is `false` and any of the following conditions are met:
+    - `data` is changed
+    - `manualSortBy` is `false` and `state.sortBy` is changed
+    - `manualFilters` is `false` and `state.filters` is changed
+    - `manualGroupBy` is `false` and `state.groupBy` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 - `paginateExpandedRows: Bool`

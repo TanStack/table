@@ -1,4 +1,4 @@
-export * from './utils'
+export * from './publicUtils'
 export { useTable } from './hooks/useTable'
 export { useExpanded } from './plugin-hooks/useExpanded'
 export { useFilters } from './plugin-hooks/useFilters'
