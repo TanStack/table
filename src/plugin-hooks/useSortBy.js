@@ -48,7 +48,7 @@ function reducer(state, action, previousState, instanceRef) {
 
   if (action.type === actions.clearSortBy) {
     const { sortBy } = state
-    const newSortBy = sortBy.filter(d => d.id !== action.columnID)
+    const newSortBy = sortBy.filter(d => d.id !== action.columnId)
 
     return {
       ...state,
