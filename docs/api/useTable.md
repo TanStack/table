@@ -132,7 +132,11 @@ The following properties are available on the table instance returned from `useT
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.
   - **Some of these headers may be materialized as placeholders**
-  - See [Header Group Properties](#headergroup-properties) for more information
+  - See [HeaderGroup Properties](#headergroup-properties) for more information
+- `footerGroups: Array<HeaderGroup>`
+  - An array of normalized header groups, but in reverse order, each containing a flattened array of final column objects for that row.
+  - **Some of these headers may be materialized as placeholders**
+  - See [HeaderGroup Properties](#headergroup-properties) for more information
 - `headers: Array<Column>`
   - A **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
   - Each contains the headers that are displayed underneath it.
@@ -190,6 +194,11 @@ The following additional properties are available on every `headerGroup` object 
   - This function is used to resolve any props needed for this header group's row.
   - You can use the `getHeaderGroupProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `getFooterGroupProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this header group's footer row.
+  - You can use the `getFooterGroupProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 
 ### Column Properties
 
@@ -203,7 +212,7 @@ The following properties are available on every `Column` object returned by the 
 - `render: Function(type: String | Function | Component, ?props)`
   - This function is used to render content with the added context of a column.
   - The entire table `instance` will be passed to the renderer with the addition of a `column` property, containing a reference to the column
-  - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` renderers. Other renderers like `Filter` are available via hooks like `useFilters`.
+  - If `type` is a string, will render using the `column[type]` renderer. React Table ships with default `Header` and `Footer` renderers. Other renderers like `Filter` and `Aggregated` are available via plugin hooks.
   - If a function or component is passed instead of a string, it will be be passed the table instance and column model as props and is expected to return any valid JSX.
 - `totalLeft: Int`
   - This is the total width in pixels of all columns to the left of this column
@@ -215,6 +224,11 @@ The following properties are available on every `Column` object returned by the 
   - **Required**
   - This function is used to resolve any props needed for this column's header cell.
   - You can use the `getHeaderProps` hook to extend its functionality.
+  - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
+- `getFooterProps: Function(?props)`
+  - **Required**
+  - This function is used to resolve any props needed for this column's footer cell.
+  - You can use the `getFooterProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props will override built-in table props, so be careful!**
 - `toggleHidden: Function(?hidden: Boolean) => void`
   - This function can be used to hide or show this column.

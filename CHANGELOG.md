@@ -1,3 +1,7 @@
+## 7.0.0-beta.29
+
+- Added the support for the `Footer` renderer, `column.getFooterProps`, `footerGroups` and `footerGroup.getFooterProps`
+
 ## 7.0.0-beta.28
 
 - Added the `useColumnVisibility` plugin as a core plugin along with several new instance and column-level methods to control column visibility

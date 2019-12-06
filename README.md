@@ -182,6 +182,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         <li>Jordan Soltman</li>
         <li>Robert Tajnšek</li>
         <li>Pekka Tapani</li>
+        <li>Eric Lanehart (@pushred)</li>
         </ul>
       </td>
       <td>

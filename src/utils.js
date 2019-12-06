@@ -65,6 +65,7 @@ export function decorateColumn(
   column = {
     // Make sure there is a fallback header, just in case
     Header: () => <>&nbsp;</>,
+    Footer: () => <>&nbsp;</>,
     ...column,
     // Materialize and override this stuff
     id,

@@ -15,8 +15,12 @@ import {
 
 import { useColumnVisibility } from './useColumnVisibility'
 
-const renderErr =
-  'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
+let renderErr = 'Renderer Error'
+
+if (process.env.NODE_ENV !== 'production') {
+  renderErr =
+    'You must specify a valid render component. This could be "column.Cell", "column.Header", "column.Filter", "column.Aggregated" or any other custom renderer component.'
+}
 
 const defaultInitialState = {}
 const defaultColumnInstance = {}
@@ -98,7 +102,9 @@ export const useTable = (props, ...plugins) => {
       getTableBodyProps: [],
       getRowProps: [],
       getHeaderGroupProps: [],
+      getFooterGroupProps: [],
       getHeaderProps: [],
+      getFooterProps: [],
       getCellProps: [],
     },
   })
@@ -288,23 +294,38 @@ export const useTable = (props, ...plugins) => {
         ),
         props
       )
+
+    // Give columns/headers a default getFooterProps
+    column.getFooterProps = props =>
+      mergeProps(
+        {
+          key: ['footer', column.id].join('_'),
+          colSpan: column.totalVisibleHeaderCount,
+        },
+        applyPropHooks(
+          instanceRef.current.hooks.getFooterProps,
+          column,
+          instanceRef.current
+        ),
+        props
+      )
   })
 
   instanceRef.current.headerGroups = instanceRef.current.headerGroups.filter(
     (headerGroup, i) => {
       // Filter out any headers and headerGroups that don't have visible columns
-      headerGroup.headers = headerGroup.headers.filter(header => {
+      headerGroup.headers = headerGroup.headers.filter(column => {
         const recurse = headers =>
-          headers.filter(header => {
-            if (header.headers) {
-              return recurse(header.headers)
+          headers.filter(column => {
+            if (column.headers) {
+              return recurse(column.headers)
             }
-            return header.isVisible
+            return column.isVisible
           }).length
-        if (header.headers) {
-          return recurse(header.headers)
+        if (column.headers) {
+          return recurse(column.headers)
         }
-        return header.isVisible
+        return column.isVisible
       })
 
       // Give headerGroups getRowProps
@@ -322,12 +343,29 @@ export const useTable = (props, ...plugins) => {
             props
           )
 
+        headerGroup.getFooterGroupProps = (props = {}) =>
+          mergeProps(
+            {
+              key: [`footer${i}`].join('_'),
+            },
+            applyPropHooks(
+              instanceRef.current.hooks.getFooterGroupProps,
+              headerGroup,
+              instanceRef.current
+            ),
+            props
+          )
+
         return true
       }
 
       return false
     }
   )
+
+  instanceRef.current.footerGroups = [
+    ...instanceRef.current.headerGroups,
+  ].reverse()
 
   // Run the rows (this could be a dangerous hook with a ton of data)
   if (process.env.NODE_ENV !== 'production' && debug)
