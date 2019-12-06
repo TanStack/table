@@ -1,5 +1,15 @@
 [
   {
+    "timestamp": 1575607054721,
+    "files": [
+      {
+        "filename": "index.js",
+        "size": 21447,
+        "delta": 26
+      }
+    ]
+  },
+  {
     "timestamp": 1575605755429,
     "files": [
       {
