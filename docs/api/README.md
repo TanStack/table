@@ -5,7 +5,7 @@ React Table uses React Hooks both internally and externally for almost all of it
 React Table is essentially a compatible collection of **custom React hooks**:
 
 - The primary React Table hook
-  - [`useTable`](./usetable.md)
+  - [`useTable`](./useTable.md)
 - Plugin Hooks
   - Core Plugin Hooks
     - [`useGroupBy`](./useGroupBy.md)
