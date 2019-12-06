@@ -28,6 +28,29 @@ useTable({
 
 > **It's important that the state override is done within a `useMemo` call to prevent the state variable from changing on every render. It's also extremely important that you always use the `state` in any dependencies to ensure that you do not block normal state updates.**
 
+## How can I use the table state to fetch new data?
+
+When managing your data externally or asynchronously (eg. server-side pagination/sorting/grouping/etc), you will need to fetch new data as the internal table state changes. With React Hooks, this is fantastically easier than it was before now that we have the `React.useEffect` hook. We can use this hook to "watch" the table state for specific changes and use those effects to trigger fetches for new data (or synchronize any other state you may be managing externally from your table component):
+
+```js
+function Table({ data, onFetchData }) {
+  const {
+    state: { pageIndex, pageSize, sortBy, filters },
+  } = useTable({
+    data,
+  })
+
+  // When the these table states change, fetch new data!
+  React.useEffect(() => {
+    onFetchData({ pageIndex, pageSize, sortBy, filters })
+  }, [fetchData, pageIndex, pageSize, sortBy, filters])
+
+  return </>
+}
+```
+
+Using this approach, you can respond and trigger any type of side-effect using the table instance!
+
 ## How can I debounce rapid table state changes?
 
 React Table has a few built-in side-effects of it's own (most of which are meant for resetting parts of the state when `data` changes). By default, these state side-effects are on and when their conditions are met, they immediately fire off actions that will manipulate the table state. Sometimes, this may result in multiple rapid rerenders (usually just 2, or one more than normal), and could cause any side-effects you have watching the table state to also fire multiple times in-a-row. To alleviate this edge-case, React Table exports a `useAsyncDebounce` function that will allow you to debounce rapid side-effects and only use the latest one.
@@ -57,29 +80,6 @@ function Table({ data, onFetchData }) {
   return </>
 }
 ```
-
-## How can I use the table state to fetch new data?
-
-When managing your data externally or asynchronously (eg. server-side pagination/sorting/grouping/etc), you will need to fetch new data as the internal table state changes. With React Hooks, this is fantastically easier than it was before now that we have the `React.useEffect` hook. We can use this hook to "watch" the table state for specific changes and use those effects to trigger fetches for new data (or synchronize any other state you may be managing externally from your table component):
-
-```js
-function Table({ data, onFetchData }) {
-  const {
-    state: { pageIndex, pageSize, sortBy, filters },
-  } = useTable({
-    data,
-  })
-
-  // When the these table states change, fetch new data!
-  React.useEffect(() => {
-    onFetchData({ pageIndex, pageSize, sortBy, filters })
-  }, [fetchData, pageIndex, pageSize, sortBy, filters])
-
-  return </>
-}
-```
-
-Using this approach, you can respond and trigger any type of side-effect using the table instance!
 
 ## How do I stop my table state from automatically resetting when my data changes?
 
@@ -119,5 +119,3 @@ useTable({
 ```
 
 Now, when we update our data, the above table states will not automatically reset!
-
-<!-- ## How can I hide/show columns? -->
