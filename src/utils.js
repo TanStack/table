@@ -417,6 +417,9 @@ export function functionalUpdate(updater, old) {
 
 //
 
+const reOpenBracket = /\[/g
+const reCloseBracket = /\]/g
+
 function makePathArray(obj) {
   return (
     flattenDeep(obj)
@@ -425,8 +428,8 @@ function makePathArray(obj) {
       // join parts using period
       .join('.')
       // replace brackets with periods
-      .replace(/\[/g, '.')
-      .replace(/\]/g, '')
+      .replace(reOpenBracket, '.')
+      .replace(reCloseBracket, '')
       // split it back out on periods
       .split('.')
   )

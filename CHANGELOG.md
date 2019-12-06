@@ -1,4 +1,8 @@
-## 7.0.0-beta.29
+## 7.0.0-rc.1
+
+- Minor regex optimizations during row path creation
+
+## 7.0.0-rc.0
 
 - Added the support for the `Footer` renderer, `column.getFooterProps`, `footerGroups` and `footerGroup.getFooterProps`
 
