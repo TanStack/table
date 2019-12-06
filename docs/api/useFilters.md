@@ -27,10 +27,10 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
   - For more information on filter types, see Filtering
-- `getResetFiltersDeps: Function(instance) => [...useEffectDependencies]`
-  - Optional
-  - Defaults to `false`
-  - If set, the dependencies returned from this function will be used to determine when the effect to reset the `filters` state is fired.
+- `autoResetFilters: Boolean`
+  - Defaults to `true`
+  - When `true`, the `filters` state will automatically reset if any of the following conditions are met:
+    - `data` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 

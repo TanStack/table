@@ -1,3 +1,7 @@
+## 7.0.0-rc.3
+
+- Fixed an issue where `column.clearSortBy` would crash
+
 ## 7.0.0-rc.2
 
 - `reducerHandlers` has been deprecated in favor of the new `stateReducers` hook.
