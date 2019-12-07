@@ -42,7 +42,7 @@ function reducer(state, action) {
     const { path, expanded } = action
     const key = path.join('.')
     const exists = state.expanded.includes(key)
-    const shouldExist = typeof set !== 'undefined' ? expanded : !exists
+    const shouldExist = typeof expanded !== 'undefined' ? expanded : !exists
     let newExpanded = new Set(state.expanded)
 
     if (!exists && shouldExist) {
