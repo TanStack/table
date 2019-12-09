@@ -105,7 +105,7 @@ function Table({
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                <th {...column.getHeaderProps()}>
                   {column.render('Header')}
                   <span>
                     {column.isSorted
