@@ -49,8 +49,12 @@ export const useTable = (props, ...plugins) => {
     data,
     hooks: {
       stateReducers: [],
-      columnsBeforeHeaderGroups: [],
-      columnsBeforeHeaderGroupsDeps: [],
+      columns: [],
+      columnsDeps: [],
+      flatColumns: [],
+      flatColumnsDeps: [],
+      headerGroups: [],
+      headerGroupsDeps: [],
       useInstanceBeforeDimensions: [],
       useInstance: [],
       useRows: [],
@@ -117,58 +121,102 @@ export const useTable = (props, ...plugins) => {
     dispatch, // The resolved table state
   })
 
+  // Snapshot hook and disallow more from being added
+  const getColumns = useConsumeHookGetter(instanceRef.current.hooks, 'columns')
+
+  // Snapshot hook and disallow more from being added
+  const getColumnsDeps = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'columnsDeps'
+  )
+
   // Decorate All the columns
   let columns = React.useMemo(
-    () => decorateColumnTree(userColumns, defaultColumn),
-    [defaultColumn, userColumns]
+    () =>
+      applyHooks(
+        getColumns(),
+        decorateColumnTree(userColumns, defaultColumn),
+        instanceRef.current
+      ),
+    [
+      defaultColumn,
+      getColumns,
+      userColumns,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...getColumnsDeps(instanceRef.current),
+    ]
+  )
+
+  instanceRef.current.columns = columns
+
+  // Snapshot hook and disallow more from being added
+  const getFlatColumns = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'flatColumns'
   )
 
   // Snapshot hook and disallow more from being added
-  const getColumnsBeforeHeaderGroups = useConsumeHookGetter(
+  const getFlatColumnsDeps = useConsumeHookGetter(
     instanceRef.current.hooks,
-    'columnsBeforeHeaderGroups'
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getColumnsBeforeHeaderGroupsDeps = useConsumeHookGetter(
-    instanceRef.current.hooks,
-    'columnsBeforeHeaderGroupsDeps'
+    'flatColumnsDeps'
   )
 
   // Get the flat list of all columns and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
-  let flatColumns = React.useMemo(() => {
-    let newColumns = applyHooks(
-      getColumnsBeforeHeaderGroups(),
-      flattenBy(columns, 'columns'),
-      instanceRef.current
-    )
+  let flatColumns = React.useMemo(
+    () =>
+      applyHooks(
+        getFlatColumns(),
+        flattenBy(columns, 'columns'),
+        instanceRef.current
+      ),
+    [
+      columns,
+      getFlatColumns,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...getFlatColumnsDeps(instanceRef.current),
+    ]
+  )
 
-    return newColumns
-  }, [
-    columns,
-    getColumnsBeforeHeaderGroups,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ...getColumnsBeforeHeaderGroupsDeps(),
-  ])
+  instanceRef.current.flatColumns = flatColumns
+
+  // Snapshot hook and disallow more from being added
+  const getHeaderGroups = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'headerGroups'
+  )
+
+  // Snapshot hook and disallow more from being added
+  const getHeaderGroupsDeps = useConsumeHookGetter(
+    instanceRef.current.hooks,
+    'headerGroupsDeps'
+  )
 
   // Make the headerGroups
   const headerGroups = React.useMemo(
-    () => makeHeaderGroups(flatColumns, defaultColumn),
-    [defaultColumn, flatColumns]
+    () =>
+      applyHooks(
+        getHeaderGroups(),
+        makeHeaderGroups(flatColumns, defaultColumn),
+        instanceRef.current
+      ),
+    [
+      defaultColumn,
+      flatColumns,
+      getHeaderGroups,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...getHeaderGroupsDeps(),
+    ]
   )
+
+  instanceRef.current.headerGroups = headerGroups
 
   const headers = React.useMemo(
     () => (headerGroups.length ? headerGroups[0].headers : []),
     [headerGroups]
   )
 
-  Object.assign(instanceRef.current, {
-    columns,
-    flatColumns,
-    headerGroups,
-    headers,
-  })
+  instanceRef.current.headers = headers
 
   // Access the row model
   const [rows, flatRows] = React.useMemo(() => {

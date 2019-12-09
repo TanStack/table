@@ -19,7 +19,7 @@ export const useColumnVisibility = hooks => {
 
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
-  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => [
+  hooks.headerGroupsDeps.push((deps, instance) => [
     ...deps,
     instance.state.hiddenColumns,
   ])

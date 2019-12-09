@@ -1,3 +1,11 @@
+## 7.0.0-rc.6
+
+- The `columnsBeforeHeaderGroups` and `columnsBeforeHeaderGroupsDeps` hooks have been renamed to `flatColumns` and `flatColumnsDeps` respectively, which better reflects what they are used for, rather than their order, which can remain implicit.
+- Added `headerGroups` and `headerGroupDeps` hooks, which, similar to `flatColumns`, allow you to decorate (and trigger) the memoized header group generation.
+- Added `columns` and `columnsDeps` hooks, which, similar to `flatColumns` and `headerGroups`, allow you to decorate (and trigger) the memoized column generation/decoration.
+- The new hook order is as follows: `columns/columnsDeps` => `flatColumns/flatColumnsDeps` => `headerGroups/headerGroupsDeps`
+- `useColumnVisibility` now uses the new `headerGroupsDeps` hook to trigger header group regeneration when visibility changes
+
 ## 7.0.0-rc.5
 
 - Fixed an issue where the exported `useAsyncDebounce` method would crash if its promise throw an error.

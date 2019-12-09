@@ -18,11 +18,11 @@ actions.toggleGroupBy = 'toggleGroupBy'
 
 export const useGroupBy = hooks => {
   hooks.stateReducers.push(reducer)
-  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => [
+  hooks.flatColumnsDeps.push((deps, instance) => [
     ...deps,
     instance.state.groupBy,
   ])
-  hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
+  hooks.flatColumns.push(flatColumns)
   hooks.useInstance.push(useInstance)
 }
 
@@ -64,7 +64,7 @@ function reducer(state, action) {
   }
 }
 
-function columnsBeforeHeaderGroups(flatColumns, { state: { groupBy } }) {
+function flatColumns(flatColumns, { state: { groupBy } }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
 
