@@ -178,3 +178,107 @@ export function useConsumeHookGetter(hooks, hookName) {
   hooks[hookName] = undefined
   return getter
 }
+
+export function decorateColumn(
+  column,
+  userDefaultColumn,
+  parent,
+  depth,
+  index
+) {
+  // Apply the userDefaultColumn
+  column = { ...defaultColumn, ...userDefaultColumn, ...column }
+
+  // First check for string accessor
+  let { id, accessor, Header } = column
+
+  if (typeof accessor === 'string') {
+    id = id || accessor
+    const accessorPath = accessor.split('.')
+    accessor = row => getBy(row, accessorPath)
+  }
+
+  if (!id && typeof Header === 'string' && Header) {
+    id = Header
+  }
+
+  if (!id && column.columns) {
+    console.error(column)
+    throw new Error('A column ID (or unique "Header" value) is required!')
+  }
+
+  if (!id) {
+    console.error(column)
+    throw new Error('A column ID (or string accessor) is required!')
+  }
+
+  column = {
+    // Make sure there is a fallback header, just in case
+    Header: () => <>&nbsp;</>,
+    Footer: () => <>&nbsp;</>,
+    ...column,
+    // Materialize and override this stuff
+    id,
+    accessor,
+    parent,
+    depth,
+    index,
+  }
+
+  return column
+}
+
+const pathObjCache = new Map()
+
+export function getBy(obj, path, def) {
+  if (!path) {
+    return obj
+  }
+  const cacheKey = typeof path === 'function' ? path : JSON.stringify(path)
+
+  const pathObj =
+    pathObjCache.get(cacheKey) ||
+    (() => {
+      const pathObj = makePathArray(path)
+      pathObjCache.set(cacheKey, pathObj)
+      return pathObj
+    })()
+
+  let val
+
+  try {
+    val = pathObj.reduce((cursor, pathPart) => cursor[pathPart], obj)
+  } catch (e) {
+    // continue regardless of error
+  }
+  return typeof val !== 'undefined' ? val : def
+}
+
+const reOpenBracket = /\[/g
+const reCloseBracket = /\]/g
+
+function makePathArray(obj) {
+  return (
+    flattenDeep(obj)
+      // remove all periods in parts
+      .map(d => String(d).replace('.', '_'))
+      // join parts using period
+      .join('.')
+      // replace brackets with periods
+      .replace(reOpenBracket, '.')
+      .replace(reCloseBracket, '')
+      // split it back out on periods
+      .split('.')
+  )
+}
+
+function flattenDeep(arr, newArr = []) {
+  if (!Array.isArray(arr)) {
+    newArr.push(arr)
+  } else {
+    for (let i = 0; i < arr.length; i += 1) {
+      flattenDeep(arr[i], newArr)
+    }
+  }
+  return newArr
+}
