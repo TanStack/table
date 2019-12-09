@@ -13,16 +13,18 @@ actions.toggleHideColumn = 'toggleHideColumn'
 actions.setHiddenColumns = 'setHiddenColumns'
 actions.toggleHideAllColumns = 'toggleHideAllColumns'
 
+const headerGrpDepsFn = (deps, instance) => [
+  ...deps,
+  instance.state.hiddenColumns,
+]
+
 export const useColumnVisibility = hooks => {
   hooks.getToggleHiddenProps = []
   hooks.getToggleHideAllColumnsProps = []
 
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
-  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => [
-    ...deps,
-    instance.state.hiddenColumns,
-  ])
+  hooks.columnsBeforeHeaderGroupsDeps.push(headerGrpDepsFn)
   hooks.useInstance.push(useInstance)
 }
 
