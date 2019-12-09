@@ -6,11 +6,13 @@ import { functionalUpdate, actions } from '../utils'
 actions.resetColumnOrder = 'resetColumnOrder'
 actions.setColumnOrder = 'setColumnOrder'
 
+const headerGrpDepsFn = (deps, instance) => {
+    return [...deps, instance.state.columnOrder]
+  };
+
 export const useColumnOrder = hooks => {
   hooks.stateReducers.push(reducer)
-  hooks.columnsBeforeHeaderGroupsDeps.push((deps, instance) => {
-    return [...deps, instance.state.columnOrder]
-  })
+  hooks.columnsBeforeHeaderGroupsDeps.push(headerGrpDepsFn)
   hooks.columnsBeforeHeaderGroups.push(columnsBeforeHeaderGroups)
   hooks.useInstance.push(useInstance)
 }
