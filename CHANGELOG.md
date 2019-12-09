@@ -1,3 +1,7 @@
+## 7.0.0-rc.5
+
+- Fixed an issue where the exported `useAsyncDebounce` method would crash if its promise throw an error.
+
 ## 7.0.0-rc.4
 
 - A maintenance release, purely intended to update the @latest tag (which was overwritten by a v6 publish)

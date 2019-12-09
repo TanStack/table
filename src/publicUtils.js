@@ -133,7 +133,7 @@ export function useMountedLayoutEffect(fn, deps) {
   }, deps)
 }
 
-export default function useAsyncDebounce(defaultFn, defaultWait = 0) {
+export function useAsyncDebounce(defaultFn, defaultWait = 0) {
   const debounceRef = React.useRef({})
   debounceRef.current.defaultFn = defaultFn
   debounceRef.current.defaultWait = defaultWait
@@ -144,8 +144,9 @@ export default function useAsyncDebounce(defaultFn, defaultWait = 0) {
       wait = debounceRef.current.defaultWait
     ) => {
       if (!debounceRef.current.promise) {
-        debounceRef.current.promise = new Promise(resolve => {
+        debounceRef.current.promise = new Promise((resolve, reject) => {
           debounceRef.current.resolve = resolve
+          debounceRef.current.reject = reject
         })
       }
 
