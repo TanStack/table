@@ -14,8 +14,8 @@ actions.setHiddenColumns = 'setHiddenColumns'
 actions.toggleHideAllColumns = 'toggleHideAllColumns'
 
 export const useColumnVisibility = hooks => {
-  hooks.getToggleHiddenProps = [defualtGetToggleHiddenProps]
-  hooks.getToggleHideAllColumnsProps = [defualtGetToggleHideAllColumnsProps]
+  hooks.getToggleHiddenProps = [defaultGetToggleHiddenProps]
+  hooks.getToggleHideAllColumnsProps = [defaultGetToggleHideAllColumnsProps]
 
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
@@ -28,7 +28,7 @@ export const useColumnVisibility = hooks => {
 
 useColumnVisibility.pluginName = 'useColumnVisibility'
 
-const defualtGetToggleHiddenProps = (props, instance, column) => [
+const defaultGetToggleHiddenProps = (props, instance, column) => [
   props,
   {
     onChange: e => {
@@ -42,7 +42,7 @@ const defualtGetToggleHiddenProps = (props, instance, column) => [
   },
 ]
 
-const defualtGetToggleHideAllColumnsProps = (props, instance) => [
+const defaultGetToggleHideAllColumnsProps = (props, instance) => [
   props,
   {
     onChange: e => {
