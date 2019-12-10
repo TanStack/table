@@ -203,7 +203,7 @@ const useInstanceBeforeDimensions = instance => {
   const getInstance = useGetLatest(instance)
 
   const getResizerPropsHooks = useConsumeHookGetter(
-    getInstance(),
+    getInstance().hooks,
     'getResizerProps'
   )
 

@@ -1,3 +1,7 @@
+## 7.0.0-rc.8
+
+- Fix an issue where `useResizeColumns` would crash when using the resizer prop getter
+
 ## 7.0.0-rc.7
 
 Removed:
