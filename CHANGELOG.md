@@ -23,9 +23,9 @@ Modified:
 - Converted almost all usages of `instanceRef.current` to use `useGetLatest(instanceRef.current)` to help with avoiding memory leaks and to be more terse.
 - Converted all previous prop-getter definitions to use the new `makePropGetter`
 - Reorganized plugin hooks to declare as many hooks in the main plugin function as opposed to in the `useInstance` hook.
-- Changed the `useInstanceBeforeDimensions` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to discourage mutation of the instance)
-- Changed the `useInstance` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to discourage mutation of the instance)
-- Change the `prepareRow` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to discourage mutation of the row)
+- Changed the `useInstanceBeforeDimensions` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to encourage mutation of the instance)
+- Changed the `useInstance` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to encourage mutation of the instance)
+- Change the `prepareRow` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to encourage mutation of the row)
 
 ## 7.0.0-rc.6
 
