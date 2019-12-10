@@ -52,5 +52,6 @@ export default function makeDefaultPluginHooks() {
     getFooterProps: [defaultGetFooterProps],
     getRowProps: [defaultGetRowProps],
     getCellProps: [defaultGetCellProps],
+    useFinalInstance: [],
   }
 }

@@ -530,6 +530,14 @@ export const useTable = (props, ...plugins) => {
     getInstance()
   )
 
+  // Snapshot hook and disallow more from being added
+  const getUseFinalInstanceHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'useFinalInstance'
+  )
+
+  loopHooks(getUseFinalInstanceHooks(), getInstance())
+
   return getInstance()
 }
 
