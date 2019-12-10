@@ -192,12 +192,10 @@ const useInstanceBeforeDimensions = instance => {
     state: { columnResizing },
   } = instance
 
-  getHeaderProps.push(() => {
-    return {
-      style: {
-        position: 'relative',
-      },
-    }
+  getHeaderProps.push({
+    style: {
+      position: 'relative',
+    },
   })
 
   const getInstance = useGetLatest(instance)

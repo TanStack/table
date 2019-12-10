@@ -1,6 +1,7 @@
 ## 7.0.0-rc.8
 
 - Fix an issue where `useResizeColumns` would crash when using the resizer prop getter
+- Fix an issue where `useBlockLayout` was clobbering props sent to headers
 
 ## 7.0.0-rc.7
 
