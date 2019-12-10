@@ -8218,10 +8218,10 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
-react-table@next:
-  version "7.0.0-beta.19"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-beta.19.tgz#8563ae56f693cbffa10060772ba1f1cd4e926bb2"
-  integrity sha512-BRt7zW7PGyg67fR2CK9M2fwP6BocjQN870w3P+K+vDJMkpewGjSPDscCU5sJMBqCEjKWg85k2pVkiwQPg9ofgQ==
+react-table@latest:
+  version "7.0.0-rc.6"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-rc.6.tgz#3cb43919e31166659d6aa223bd3dfee765981f6b"
+  integrity sha512-iFgxMla6JnxjZwKG3eiHHOlIIANiK/HzvRFWXT8LV78N9bEOGC5A5N44S/xQ1PaZN/1c+NDBz5fBazhx/vG7/A==
 
 react@^16.8.6:
   version "16.12.0"

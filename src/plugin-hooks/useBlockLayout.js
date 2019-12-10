@@ -1,47 +1,41 @@
-export const useBlockLayout = hooks => {
-  hooks.useInstance.push(useInstance)
+const cellStyles = {
+  display: 'inline-block',
+  boxSizing: 'border-box',
 }
 
-useBlockLayout.pluginName = 'useBlockLayout'
-
-const useInstance = instance => {
-  const {
-    totalColumnsWidth,
-    hooks: { getRowProps, getHeaderGroupProps, getHeaderProps, getCellProps },
-  } = instance
-
-  const rowStyles = {
+const getRowStyles = (props, instance) => [
+  props,
+  {
     style: {
       display: 'flex',
-      width: `${totalColumnsWidth}px`,
+      width: `${instance.totalColumnsWidth}px`,
     },
-  }
+  },
+]
 
-  getRowProps.push(() => rowStyles)
-  getHeaderGroupProps.push(() => rowStyles)
+export const useBlockLayout = hooks => {
+  hooks.getRowProps.push(getRowStyles)
+  hooks.getHeaderGroupProps.push(getRowStyles)
 
-  const cellStyles = {
-    display: 'inline-block',
-    boxSizing: 'border-box',
-  }
-
-  getHeaderProps.push(header => {
-    return {
+  hooks.getHeaderProps.push((props, instance, header) => [
+    props,
+    {
       style: {
         ...cellStyles,
         width: `${header.totalWidth}px`,
       },
-    }
-  })
+    },
+  ])
 
-  getCellProps.push(cell => {
-    return {
+  hooks.getCellProps.push((props, instance, cell) => [
+    props,
+    {
       style: {
         ...cellStyles,
         width: `${cell.column.totalWidth}px`,
       },
-    }
-  })
-
-  return instance
+    },
+  ])
 }
+
+useBlockLayout.pluginName = 'useBlockLayout'

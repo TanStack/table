@@ -91,14 +91,6 @@ function useInstance(instance) {
     [setRowState]
   )
 
-  const getAutoResetRowState = useGetLatest(autoResetRowState)
-
-  useMountedLayoutEffect(() => {
-    if (getAutoResetRowState()) {
-      dispatch({ type: actions.resetRowState })
-    }
-  }, [data])
-
   hooks.prepareRow.push(row => {
     const pathKey = row.path.join('.')
 
@@ -120,13 +112,18 @@ function useInstance(instance) {
         }
       })
     }
-
-    return row
   })
 
-  return {
-    ...instance,
+  const getAutoResetRowState = useGetLatest(autoResetRowState)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetRowState()) {
+      dispatch({ type: actions.resetRowState })
+    }
+  }, [data])
+
+  Object.assign(instance, {
     setRowState,
     setCellState,
-  }
+  })
 }

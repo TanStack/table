@@ -4,8 +4,8 @@ import {
   actions,
   ensurePluginOrder,
   defaultColumn,
-  mergeProps,
-  applyPropHooks,
+  makePropGetter,
+  useConsumeHookGetter,
   getFirstDefined,
   defaultOrderByFn,
   isFunction,
@@ -24,11 +24,35 @@ defaultColumn.sortType = 'alphanumeric'
 defaultColumn.sortDescFirst = false
 
 export const useSortBy = hooks => {
+  hooks.getSortByToggleProps = [defaultGetSortByToggleProps]
   hooks.stateReducers.push(reducer)
   hooks.useInstance.push(useInstance)
 }
 
 useSortBy.pluginName = 'useSortBy'
+
+const defaultGetSortByToggleProps = (props, instance, column) => {
+  const { isMultiSortEvent = e => e.shiftKey } = instance
+
+  return [
+    props,
+    {
+      onClick: column.canSort
+        ? e => {
+            e.persist()
+            column.toggleSortBy(
+              undefined,
+              !instance.disableMultiSort && isMultiSortEvent(e)
+            )
+          }
+        : undefined,
+      style: {
+        cursor: column.canSort ? 'pointer' : undefined,
+      },
+      title: column.canSort ? 'Toggle SortBy' : undefined,
+    },
+  ]
+}
 
 // Reducer
 function reducer(state, action, previousState, instanceRef) {
@@ -163,9 +187,7 @@ function useInstance(instance) {
     manualSortBy,
     defaultCanSort,
     disableSortBy,
-    isMultiSortEvent = e => e.shiftKey,
     flatHeaders,
-    hooks,
     state: { sortBy },
     dispatch,
     plugins,
@@ -173,8 +195,6 @@ function useInstance(instance) {
   } = instance
 
   ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
-  // Add custom hooks
-  hooks.getSortByToggleProps = []
 
   // Updates sorting based on a columnId, desc flag and multi flag
   const toggleSortBy = (columnId, desc, multi) => {
@@ -183,6 +203,11 @@ function useInstance(instance) {
 
   // use reference to avoid memory leak in #1608
   const getInstance = useGetLatest(instance)
+
+  const getSortByTogglePropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getSortByToggleProps'
+  )
 
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
@@ -212,31 +237,11 @@ function useInstance(instance) {
       }
     }
 
-    column.getSortByToggleProps = props => {
-      return mergeProps(
-        {
-          onClick: canSort
-            ? e => {
-                e.persist()
-                column.toggleSortBy(
-                  undefined,
-                  !getInstance().disableMultiSort && isMultiSortEvent(e)
-                )
-              }
-            : undefined,
-          style: {
-            cursor: canSort ? 'pointer' : undefined,
-          },
-          title: canSort ? 'Toggle SortBy' : undefined,
-        },
-        applyPropHooks(
-          getInstance().hooks.getSortByToggleProps,
-          column,
-          getInstance()
-        ),
-        props
-      )
-    }
+    column.getSortByToggleProps = makePropGetter(
+      getSortByTogglePropsHooks(),
+      getInstance(),
+      column
+    )
 
     const columnSort = sortBy.find(d => d.id === id)
     column.isSorted = !!columnSort
@@ -329,10 +334,10 @@ function useInstance(instance) {
     }
   }, [manualSortBy ? null : data])
 
-  return {
-    ...instance,
+  Object.assign(instance, {
     toggleSortBy,
-    rows: sortedRows,
     preSortedRows: rows,
-  }
+    sortedRows,
+    rows: sortedRows,
+  })
 }

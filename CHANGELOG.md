@@ -1,3 +1,23 @@
+## 7.0.0-rc.7
+
+- The exported (but undocumented) `applyHooks` function has been deprecated. Please use either `reduceHooks` or `loopHooks` utilities in your custom plugins now.
+- The exported (but undocumented) `applyPropHooks` function has been deprecated. Please use the `makePropGetter` utility in your custom plugins now.
+- Added the `reduceHooks` exported utility which is used to reduce a value through a collection of hooks. Each hook must return a value (mutation is discouraged)
+- Added the `loopHooks` exported utility which is used to loop over a collection of hooks. Hooks are not allowed to return a value (mutation is encouraged)
+- Prop-getter hook functions now support returning an array (in addition to the typical object of props). When an array is returned, each item in the array is smart-merged into a new props object (meaning it will intelligently compose and override styles and className)
+- Added the `makePropGetter` exported utility which is used to create prop getters from a prop getter hook.
+- Prop-getter function supplied to the table have 2 new overloaded options (in addition to the typical object of props):
+  - `Function(props, instance, ...row/col/context) => Array<props> | props` - If a function is passed to a prop getter function, it will receive the previous props, the table instance, and potentially more context arguments. It is then be expected to return either an array of new props (to be smart-merged with styles and classes, the latest values taking priority over the previous values) or a props object (which will replace all previous props)
+  - `Array<props>` - If an array is passed to a prop getter function, each prop object in the array will be smart-merged with styles and classes into the props from previous hooks (with the latest values taking priority over the previous values).
+- Extracted default hooks into separate file.
+- Added the `useOptions` plugin hook, which allows a plugin to reduce/modify the initial options being passed to the table
+- Converted almost all usages of `instanceRef.current` to use `useGetLatest(instanceRef.current)` to help with avoiding memory leaks and to be more terse.
+- Converted all previous prop-getter definitions to use the new `makePropGetter`
+- Reorganized plugin hooks to declare as many hooks in the main plugin function as opposed to in the `useInstance` hook.
+- Changed the `useInstanceBeforeDimensions` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to discourage mutation of the instance)
+- Changed the `useInstance` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to discourage mutation of the instance)
+- Change the `prepareRow` hook to be a `loopHooks` call instead of a reducer. An error will be thrown now if any of these hook functions returns a value (to discourage mutation of the row)
+
 ## 7.0.0-rc.6
 
 - The `columnsBeforeHeaderGroups` and `columnsBeforeHeaderGroupsDeps` hooks have been renamed to `flatColumns` and `flatColumnsDeps` respectively, which better reflects what they are used for, rather than their order, which can remain implicit.

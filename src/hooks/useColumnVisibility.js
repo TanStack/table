@@ -3,9 +3,9 @@ import React from 'react'
 import {
   actions,
   functionalUpdate,
-  mergeProps,
-  applyPropHooks,
   useGetLatest,
+  useConsumeHookGetter,
+  makePropGetter,
 } from '../utils'
 
 actions.resetHiddenColumns = 'resetHiddenColumns'
@@ -14,8 +14,8 @@ actions.setHiddenColumns = 'setHiddenColumns'
 actions.toggleHideAllColumns = 'toggleHideAllColumns'
 
 export const useColumnVisibility = hooks => {
-  hooks.getToggleHiddenProps = []
-  hooks.getToggleHideAllColumnsProps = []
+  hooks.getToggleHiddenProps = [defualtGetToggleHiddenProps]
+  hooks.getToggleHideAllColumnsProps = [defualtGetToggleHideAllColumnsProps]
 
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
@@ -27,6 +27,36 @@ export const useColumnVisibility = hooks => {
 }
 
 useColumnVisibility.pluginName = 'useColumnVisibility'
+
+const defualtGetToggleHiddenProps = (props, instance, column) => [
+  props,
+  {
+    onChange: e => {
+      column.toggleHidden(!e.target.checked)
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    checked: column.isVisible,
+    title: 'Toggle Column Visible',
+  },
+]
+
+const defualtGetToggleHideAllColumnsProps = (props, instance) => [
+  props,
+  {
+    onChange: e => {
+      instance.toggleHideAllColumns(!e.target.checked)
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    checked: !instance.allColumnsHidden && !instance.state.hiddenColumns.length,
+    title: 'Toggle All Columns Hidden',
+    indeterminate:
+      !instance.allColumnsHidden && instance.state.hiddenColumns.length,
+  },
+]
 
 function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.init) {
@@ -111,8 +141,6 @@ function useInstanceBeforeDimensions(instance) {
   headers.forEach(
     subHeader => (totalVisibleHeaderCount += handleColumn(subHeader, true))
   )
-
-  return instance
 }
 
 function useInstance(instance) {
@@ -126,33 +154,6 @@ function useInstance(instance) {
   const getInstance = useGetLatest(instance)
 
   const allColumnsHidden = flatColumns.length === hiddenColumns.length
-
-  flatHeaders.forEach(column => {
-    column.toggleHidden = value => {
-      dispatch({
-        type: actions.toggleHideColumn,
-        columnId: column.id,
-        value,
-      })
-    }
-
-    column.getToggleHiddenProps = props => {
-      return mergeProps(
-        {
-          onChange: e => {
-            column.toggleHidden(!e.target.checked)
-          },
-          style: {
-            cursor: 'pointer',
-          },
-          checked: column.isVisible,
-          title: 'Toggle Column Visible',
-        },
-        applyPropHooks(getInstance().hooks.getToggleHiddenProps, getInstance()),
-        props
-      )
-    }
-  })
 
   const toggleHideColumn = React.useCallback(
     (columnId, value) =>
@@ -170,32 +171,44 @@ function useInstance(instance) {
     [dispatch]
   )
 
-  const getToggleHideAllColumnsProps = props => {
-    return mergeProps(
-      {
-        onChange: e => {
-          toggleHideAllColumns(!e.target.checked)
-        },
-        style: {
-          cursor: 'pointer',
-        },
-        checked: !allColumnsHidden && !hiddenColumns.length,
-        title: 'Toggle All Columns Hidden',
-        indeterminate: !allColumnsHidden && hiddenColumns.length,
-      },
-      applyPropHooks(
-        getInstance().hooks.getToggleHideAllColumnsProps,
-        getInstance()
-      ),
-      props
-    )
-  }
+  // Snapshot hook and disallow more from being added
+  const getToggleHideAllColumnsPropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getToggleHideAllColumnsProps'
+  )
 
-  return {
-    ...instance,
+  const getToggleHideAllColumnsProps = makePropGetter(
+    getToggleHideAllColumnsPropsHooks(),
+    getInstance()
+  )
+
+  // Snapshot hook and disallow more from being added
+  const getToggleHiddenPropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getToggleHiddenProps'
+  )
+
+  flatHeaders.forEach(column => {
+    column.toggleHidden = value => {
+      dispatch({
+        type: actions.toggleHideColumn,
+        columnId: column.id,
+        value,
+      })
+    }
+
+    column.getToggleHiddenProps = makePropGetter(
+      getToggleHiddenPropsHooks(),
+      getInstance(),
+      column
+    )
+  })
+
+  Object.assign(instance, {
+    allColumnsHidden,
     toggleHideColumn,
     setHiddenColumns,
     toggleHideAllColumns,
     getToggleHideAllColumnsProps,
-  }
+  })
 }

@@ -36,41 +36,77 @@ export function defaultGroupByFn(rows, columnId) {
   }, {})
 }
 
-export const mergeProps = (...groups) => {
-  let props = {}
+function mergeProps(...propList) {
+  return propList.reduce((props, next) => {
+    const { style, className, ...rest } = next
 
-  groups.forEach(({ style = {}, className, ...rest } = {}) => {
     props = {
       ...props,
       ...rest,
       style: {
         ...(props.style || {}),
-        ...style,
+        ...(style || {}),
       },
       className: [props.className, className].filter(Boolean).join(' '),
     }
-  })
 
-  if (props.className === '') {
-    delete props.className
-  }
+    if (props.className === '') {
+      delete props.className
+    }
 
-  return props
+    return props
+  }, {})
 }
 
-export const applyHooks = (hooks, initial, ...args) =>
+function handlePropGetter(prevProps, userProps, ...meta) {
+  // Handle a lambda, pass it the previous props
+  if (typeof userProps === 'function') {
+    return handlePropGetter({}, userProps(prevProps, ...meta))
+  }
+
+  // Handle an array, merge each item as separate props
+  if (Array.isArray(userProps)) {
+    return mergeProps(prevProps, ...userProps)
+  }
+
+  // Handle an object by default, merge the two objects
+  return mergeProps(prevProps, userProps)
+}
+
+export const makePropGetter = (hooks, ...meta) => {
+  return (userProps = {}) =>
+    [...hooks, userProps].reduce(
+      (prev, next) => handlePropGetter(prev, next, ...meta),
+      {}
+    )
+}
+
+export const reduceHooks = (hooks, initial, ...args) =>
   hooks.reduce((prev, next) => {
     const nextValue = next(prev, ...args)
-    if (typeof nextValue === 'undefined') {
-      throw new Error(
-        'React Table: A hook just returned undefined! This is not allowed.'
-      )
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof nextValue === 'undefined') {
+        console.info(next)
+        throw new Error(
+          'React Table: A reducer hook ☝️ just returned undefined! This is not allowed.'
+        )
+      }
     }
     return nextValue
   }, initial)
 
-export const applyPropHooks = (hooks, ...args) =>
-  hooks.reduce((prev, next) => mergeProps(prev, next(...args)), {})
+export const loopHooks = (hooks, ...args) =>
+  hooks.forEach(hook => {
+    const nextValue = hook(...args)
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof nextValue !== 'undefined') {
+        console.info(hook, nextValue)
+        throw new Error(
+          'React Table: A loop-type hook ☝️ just returned a value! This is not allowed.'
+        )
+      }
+    }
+  })
 
 export function ensurePluginOrder(plugins, befores, pluginName, afters) {
   const pluginIndex = plugins.findIndex(
@@ -78,11 +114,13 @@ export function ensurePluginOrder(plugins, befores, pluginName, afters) {
   )
 
   if (pluginIndex === -1) {
-    throw new Error(`The plugin ${pluginName} was not found in the plugin list!
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`The plugin "${pluginName}" was not found in the plugin list!
 This usually means you need to need to name your plugin hook by setting the 'pluginName' property of the hook function, eg:
 
   ${pluginName}.pluginName = '${pluginName}'
 `)
+    }
   }
 
   befores.forEach(before => {
@@ -90,18 +128,22 @@ This usually means you need to need to name your plugin hook by setting the 'plu
       plugin => plugin.pluginName === before
     )
     if (beforeIndex > -1 && beforeIndex > pluginIndex) {
-      throw new Error(
-        `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
-      )
+      if (process.env.NODE_ENV !== 'production') {
+        throw new Error(
+          `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
+        )
+      }
     }
   })
 
   afters.forEach(after => {
     const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
-    if (afterIndex > -1 && afterIndex < pluginIndex) {
-      throw new Error(
-        `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
-      )
+    if (process.env.NODE_ENV !== 'production') {
+      if (afterIndex > -1 && afterIndex < pluginIndex) {
+        throw new Error(
+          `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
+        )
+      }
     }
   })
 }

@@ -168,8 +168,7 @@ function useInstance(instance) {
     [dispatch]
   )
 
-  return {
-    ...instance,
+  Object.assign(instance, {
     pageOptions,
     pageCount,
     page,
@@ -179,7 +178,5 @@ function useInstance(instance) {
     previousPage,
     nextPage,
     setPageSize,
-    pageIndex,
-    pageSize,
-  }
+  })
 }

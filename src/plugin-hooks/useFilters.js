@@ -117,9 +117,6 @@ function useInstance(instance) {
     autoResetFilters = true,
   } = instance
 
-  const preFilteredRows = rows
-  const preFilteredFlatRows = flatRows
-
   const setFilter = (columnId, filterValue) => {
     dispatch({ type: actions.setFilter, columnId, filterValue })
   }
@@ -265,15 +262,16 @@ function useInstance(instance) {
     }
   }, [dispatch, manualFilters ? null : data])
 
-  return {
-    ...instance,
+  Object.assign(instance, {
     setFilter,
     setAllFilters,
-    preFilteredRows,
-    preFilteredFlatRows,
+    preFilteredRows: rows,
+    preFilteredFlatRows: flatRows,
+    filteredRows,
+    filteredFlatRows,
     rows: filteredRows,
     flatRows: filteredFlatRows,
-  }
+  })
 }
 
 function shouldAutoRemove(autoRemove, value) {

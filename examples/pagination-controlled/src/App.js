@@ -133,9 +133,9 @@ function Table({
           <tr>
             {loading ? (
               // Use our custom loading state to show a loading indicator
-              <td>Loading...</td>
+              <td colSpan="10000">Loading...</td>
             ) : (
-              <td>
+              <td colSpan="10000">
                 Showing {page.length} of ~{controlledPageCount * pageSize}{' '}
                 results
               </td>

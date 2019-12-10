@@ -3,20 +3,21 @@ import React from 'react'
 import * as aggregations from '../aggregations'
 import {
   actions,
-  mergeProps,
-  applyPropHooks,
+  makePropGetter,
   defaultGroupByFn,
   getFirstDefined,
   ensurePluginOrder,
   useMountedLayoutEffect,
   useGetLatest,
 } from '../utils'
+import { useConsumeHookGetter } from '../publicUtils'
 
 // Actions
 actions.resetGroupBy = 'resetGroupBy'
 actions.toggleGroupBy = 'toggleGroupBy'
 
 export const useGroupBy = hooks => {
+  hooks.getGroupByToggleProps = [defaultGetGroupByToggleProps]
   hooks.stateReducers.push(reducer)
   hooks.flatColumnsDeps.push((deps, instance) => [
     ...deps,
@@ -27,6 +28,22 @@ export const useGroupBy = hooks => {
 }
 
 useGroupBy.pluginName = 'useGroupBy'
+
+const defaultGetGroupByToggleProps = (props, instance, header) => [
+  props,
+  {
+    onClick: header.canGroupBy
+      ? e => {
+          e.persist()
+          header.toggleGroupBy()
+        }
+      : undefined,
+    style: {
+      cursor: header.canGroupBy ? 'pointer' : undefined,
+    },
+    title: 'Toggle GroupBy',
+  },
+]
 
 // Reducer
 function reducer(state, action) {
@@ -106,6 +123,8 @@ function useInstance(instance) {
 
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
 
+  const getInstance = useGetLatest(instance)
+
   flatColumns.forEach(column => {
     const {
       id,
@@ -135,36 +154,17 @@ function useInstance(instance) {
     dispatch({ type: actions.toggleGroupBy, columnId, toggle })
   }
 
-  hooks.getGroupByToggleProps = []
-
-  // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getGroupByTogglePropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getGroupByToggleProps'
+  )
 
   flatHeaders.forEach(header => {
-    const { canGroupBy } = header
-    header.getGroupByToggleProps = props => {
-      return mergeProps(
-        {
-          onClick: canGroupBy
-            ? e => {
-                e.persist()
-                header.toggleGroupBy()
-              }
-            : undefined,
-          style: {
-            cursor: canGroupBy ? 'pointer' : undefined,
-          },
-          title: 'Toggle GroupBy',
-        },
-        applyPropHooks(
-          instanceRef.current.hooks.getGroupByToggleProps,
-          header,
-          instanceRef.current
-        ),
-        props
-      )
-    }
+    header.getGroupByToggleProps = makePropGetter(
+      getGroupByTogglePropsHooks(),
+      getInstance(),
+      header
+    )
   })
 
   hooks.prepareRow.push(row => {
@@ -177,7 +177,6 @@ function useInstance(instance) {
       cell.isAggregated =
         !cell.isGrouped && !cell.isRepeatedValue && row.canExpand
     })
-    return row
   })
 
   const [groupedRows, groupedFlatRows] = React.useMemo(() => {
@@ -303,11 +302,12 @@ function useInstance(instance) {
     }
   }, [dispatch, manaulGroupBy ? null : data])
 
-  return {
-    ...instance,
+  Object.assign(instance, {
+    groupedRows,
+    groupedFlatRows,
     toggleGroupBy,
     rows: groupedRows,
     flatRows: groupedFlatRows,
     preGroupedRows: rows,
-  }
+  })
 }

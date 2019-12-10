@@ -2,11 +2,11 @@ import React from 'react'
 
 import {
   actions,
-  mergeProps,
-  applyPropHooks,
+  makePropGetter,
   ensurePluginOrder,
   useGetLatest,
   useMountedLayoutEffect,
+  useConsumeHookGetter,
 } from '../utils'
 
 const pluginName = 'useRowSelect'
@@ -17,15 +17,53 @@ actions.toggleRowSelectedAll = 'toggleRowSelectedAll'
 actions.toggleRowSelected = 'toggleRowSelected'
 
 export const useRowSelect = hooks => {
-  hooks.getToggleRowSelectedProps = []
-  hooks.getToggleAllRowsSelectedProps = []
-
+  hooks.getToggleRowSelectedProps = [defaultGetToggleRowSelectedProps]
+  hooks.getToggleAllRowsSelectedProps = [defaultGetToggleAllRowsSelectedProps]
   hooks.stateReducers.push(reducer)
   hooks.useRows.push(useRows)
   hooks.useInstance.push(useInstance)
 }
 
 useRowSelect.pluginName = pluginName
+
+const defaultGetToggleRowSelectedProps = (props, instance, row) => {
+  const { manualRowSelectedKey = 'isSelected' } = instance
+  let checked = false
+
+  if (row.original && row.original[manualRowSelectedKey]) {
+    checked = true
+  } else {
+    checked = row.isSelected
+  }
+
+  return [
+    props,
+    {
+      onChange: e => {
+        row.toggleRowSelected(e.target.checked)
+      },
+      style: {
+        cursor: 'pointer',
+      },
+      checked,
+      title: 'Toggle Row Selected',
+    },
+  ]
+}
+
+const defaultGetToggleAllRowsSelectedProps = (props, instance) => [
+  props,
+  {
+    onChange: e => {
+      instance.toggleRowSelectedAll(e.target.checked)
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    checked: instance.isAllRowsSelected,
+    title: 'Toggle All Rows Selected',
+  },
+]
 
 function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.init) {
@@ -143,7 +181,6 @@ function useInstance(instance) {
   const {
     data,
     hooks,
-    manualRowSelectedKey = 'isSelected',
     plugins,
     flatRows,
     autoResetSelectedRows = true,
@@ -183,71 +220,40 @@ function useInstance(instance) {
     dispatch({ type: actions.toggleRowSelected, path, selected })
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getInstance = useGetLatest(instance)
 
-  const getToggleAllRowsSelectedProps = props => {
-    return mergeProps(
-      {
-        onChange: e => {
-          toggleRowSelectedAll(e.target.checked)
-        },
-        style: {
-          cursor: 'pointer',
-        },
-        checked: isAllRowsSelected,
-        title: 'Toggle All Rows Selected',
-      },
-      applyPropHooks(
-        instanceRef.current.hooks.getToggleAllRowsSelectedProps,
-        instanceRef.current
-      ),
-      props
-    )
-  }
+  const getToggleAllRowsSelectedPropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getToggleAllRowsSelectedProps'
+  )
+
+  const getToggleAllRowsSelectedProps = makePropGetter(
+    getToggleAllRowsSelectedPropsHooks(),
+    getInstance()
+  )
+
+  const getToggleRowSelectedPropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getToggleRowSelectedProps'
+  )
 
   hooks.prepareRow.push(row => {
     row.toggleRowSelected = set => toggleRowSelected(row.path, set)
-    row.getToggleRowSelectedProps = props => {
-      let checked = false
 
-      if (row.original && row.original[manualRowSelectedKey]) {
-        checked = true
-      } else {
-        checked = row.isSelected
-      }
-
-      return mergeProps(
-        {
-          onChange: e => {
-            row.toggleRowSelected(e.target.checked)
-          },
-          style: {
-            cursor: 'pointer',
-          },
-          checked,
-          title: 'Toggle Row Selected',
-        },
-        applyPropHooks(
-          instanceRef.current.hooks.getToggleRowSelectedProps,
-          row,
-          instanceRef.current
-        ),
-        props
-      )
-    }
-
-    return row
+    row.getToggleRowSelectedProps = makePropGetter(
+      getToggleRowSelectedPropsHooks(),
+      getInstance(),
+      row
+    )
   })
 
-  return {
-    ...instance,
+  Object.assign(instance, {
     flatRowPaths,
     toggleRowSelected,
     toggleRowSelectedAll,
     getToggleAllRowsSelectedProps,
     isAllRowsSelected,
-  }
+  })
 }
 
 function getRowIsSelected(row, selectedRowPaths) {

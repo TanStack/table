@@ -74,15 +74,10 @@ function flatColumns(columns, instance) {
 function useInstance(instance) {
   const { dispatch } = instance
 
-  const setColumnOrder = React.useCallback(
+  instance.setColumnOrder = React.useCallback(
     columnOrder => {
       return dispatch({ type: actions.setColumnOrder, columnOrder })
     },
     [dispatch]
   )
-
-  return {
-    ...instance,
-    setColumnOrder,
-  }
 }

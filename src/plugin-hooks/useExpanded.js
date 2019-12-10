@@ -2,25 +2,38 @@ import React from 'react'
 
 import {
   actions,
-  mergeProps,
-  applyPropHooks,
+  makePropGetter,
   expandRows,
   useMountedLayoutEffect,
   useGetLatest,
 } from '../utils'
+import { useConsumeHookGetter } from '../publicUtils'
 
 // Actions
 actions.toggleExpandedByPath = 'toggleExpandedByPath'
 actions.resetExpanded = 'resetExpanded'
 
 export const useExpanded = hooks => {
-  hooks.getExpandedToggleProps = []
-
+  hooks.getExpandedToggleProps = [defaultGetExpandedToggleProps]
   hooks.stateReducers.push(reducer)
   hooks.useInstance.push(useInstance)
 }
 
 useExpanded.pluginName = 'useExpanded'
+
+const defaultGetExpandedToggleProps = (props, instance, row) => [
+  props,
+  {
+    onClick: e => {
+      e.persist()
+      row.toggleExpanded()
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    title: 'Toggle Expanded',
+  },
+]
 
 // Reducer
 function reducer(state, action) {
@@ -87,32 +100,21 @@ function useInstance(instance) {
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getInstance = useGetLatest(instance)
+
+  const getExpandedTogglePropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getExpandedToggleProps'
+  )
 
   hooks.prepareRow.push(row => {
-    row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
-    row.getExpandedToggleProps = props => {
-      return mergeProps(
-        {
-          onClick: e => {
-            e.persist()
-            row.toggleExpanded()
-          },
-          style: {
-            cursor: 'pointer',
-          },
-          title: 'Toggle Expanded',
-        },
-        applyPropHooks(
-          instanceRef.current.hooks.getExpandedToggleProps,
-          row,
-          instanceRef.current
-        ),
-        props
-      )
-    }
-    return row
+    row.toggleExpanded = set => instance.toggleExpandedByPath(row.path, set)
+
+    row.getExpandedToggleProps = makePropGetter(
+      getExpandedTogglePropsHooks(),
+      getInstance(),
+      row
+    )
   })
 
   const expandedRows = React.useMemo(() => {
@@ -125,12 +127,13 @@ function useInstance(instance) {
 
   const expandedDepth = findExpandedDepth(expanded)
 
-  return {
-    ...instance,
+  Object.assign(instance, {
     toggleExpandedByPath,
-    expandedDepth,
+    preExpandedRows: rows,
+    expandedRows,
     rows: expandedRows,
-  }
+    expandedDepth,
+  })
 }
 
 function findExpandedDepth(expanded) {

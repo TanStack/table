@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, mergeProps } from 'react-table'
+import { useTable } from 'react-table'
 
 import makeData from './makeData'
 
@@ -68,16 +68,15 @@ function Table({
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th
-                // Merge all of the header Props
-                {...mergeProps(
-                  column.getHeaderProps(),
+                // Return an array of prop objects and react-table will merge them appropriately
+                {...column.getHeaderProps([
                   {
                     className: column.className,
                     style: column.style,
                   },
                   getColumnProps(column),
-                  getHeaderProps(column)
-                )}
+                  getHeaderProps(column),
+                ])}
               >
                 {column.render('Header')}
               </th>
@@ -89,21 +88,20 @@ function Table({
         {rows.map((row, i) => {
           prepareRow(row)
           return (
-            // Merge row props
-            <tr {...mergeProps(row.getRowProps(), getRowProps(row))}>
+            // Merge user row props in
+            <tr {...row.getRowProps(getRowProps(row))}>
               {row.cells.map(cell => {
                 return (
                   <td
-                    // Merge cell props
-                    {...mergeProps(
-                      cell.getCellProps(),
+                    // Return an array of prop objects and react-table will merge them appropriately
+                    {...cell.getCellProps([
                       {
                         className: cell.column.className,
                         style: cell.column.style,
                       },
                       getColumnProps(cell.column),
-                      getCellProps(cell)
-                    )}
+                      getCellProps(cell),
+                    ])}
                   >
                     {cell.render('Cell')}
                   </td>

@@ -2,10 +2,10 @@ import {
   actions,
   defaultColumn,
   getFirstDefined,
-  mergeProps,
-  applyPropHooks,
+  makePropGetter,
   useGetLatest,
 } from '../utils'
+import { useConsumeHookGetter } from '../publicUtils'
 
 // Default Column
 defaultColumn.canResize = true
@@ -16,8 +16,55 @@ actions.columnResizing = 'columnResizing'
 actions.columnDoneResizing = 'columnDoneResizing'
 
 export const useResizeColumns = hooks => {
+  hooks.getResizerProps = [defaultGetResizerProps]
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
+}
+
+const defaultGetResizerProps = (props, instance, header) => {
+  const { dispatch } = instance
+
+  const onMouseDown = (e, header) => {
+    const headersToResize = getLeafHeaders(header)
+    const headerIdWidths = headersToResize.map(d => [d.id, d.totalWidth])
+
+    const clientX = e.clientX
+
+    const onMouseMove = e => {
+      const clientX = e.clientX
+
+      dispatch({ type: actions.columnResizing, clientX })
+    }
+
+    const onMouseUp = e => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+
+      dispatch({ type: actions.columnDoneResizing })
+    }
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+
+    dispatch({
+      type: actions.columnStartResizing,
+      columnId: header.id,
+      columnWidth: header.totalWidth,
+      headerIdWidths,
+      clientX,
+    })
+  }
+
+  return [
+    props,
+    {
+      onMouseDown: e => e.persist() || onMouseDown(e, header),
+      style: {
+        cursor: 'ew-resize',
+      },
+      draggable: false,
+    },
+  ]
 }
 
 useResizeColumns.pluginName = 'useResizeColumns'
@@ -88,14 +135,11 @@ function reducer(state, action) {
 }
 
 const useInstanceBeforeDimensions = instance => {
-  instance.hooks.getResizerProps = []
-
   const {
     flatHeaders,
     disableResizing,
     hooks: { getHeaderProps },
     state: { columnResizing },
-    dispatch,
   } = instance
 
   getHeaderProps.push(() => {
@@ -106,39 +150,12 @@ const useInstanceBeforeDimensions = instance => {
     }
   })
 
-  const onMouseDown = (e, header) => {
-    const headersToResize = getLeafHeaders(header)
-    const headerIdWidths = headersToResize.map(d => [d.id, d.totalWidth])
-
-    const clientX = e.clientX
-
-    const onMouseMove = e => {
-      const clientX = e.clientX
-
-      dispatch({ type: actions.columnResizing, clientX })
-    }
-
-    const onMouseUp = e => {
-      document.removeEventListener('mousemove', onMouseMove)
-      document.removeEventListener('mouseup', onMouseUp)
-
-      dispatch({ type: actions.columnDoneResizing })
-    }
-
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
-
-    dispatch({
-      type: actions.columnStartResizing,
-      columnId: header.id,
-      columnWidth: header.totalWidth,
-      headerIdWidths,
-      clientX,
-    })
-  }
-
-  // use reference to avoid memory leak in #1608
   const getInstance = useGetLatest(instance)
+
+  const getResizerPropsHooks = useConsumeHookGetter(
+    getInstance(),
+    'getResizerProps'
+  )
 
   flatHeaders.forEach(header => {
     const canResize = getFirstDefined(
@@ -152,27 +169,13 @@ const useInstanceBeforeDimensions = instance => {
     header.isResizing = columnResizing.isResizingColumn === header.id
 
     if (canResize) {
-      header.getResizerProps = userProps => {
-        return mergeProps(
-          {
-            onMouseDown: e => e.persist() || onMouseDown(e, header),
-            style: {
-              cursor: 'ew-resize',
-            },
-            draggable: false,
-          },
-          applyPropHooks(
-            getInstance().hooks.getResizerProps,
-            header,
-            getInstance()
-          ),
-          userProps
-        )
-      }
+      header.getResizerProps = makePropGetter(
+        getResizerPropsHooks(),
+        getInstance(),
+        header
+      )
     }
   })
-
-  return instance
 }
 
 function getLeafHeaders(header) {
