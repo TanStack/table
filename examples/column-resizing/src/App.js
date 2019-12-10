@@ -35,18 +35,18 @@ const Styles = styled.div`
         border-right: 0;
       }
 
-      ${'' /* The resizer styles! */}
-
       .resizer {
         display: inline-block;
         background: blue;
-        width: 5px;
+        width: 10px;
         height: 100%;
         position: absolute;
         right: 0;
         top: 0;
         transform: translateX(50%);
         z-index: 1;
+        ${'' /* prevents from scrolling while dragging on touch devices */}
+        touch-action:none;
 
         &.isResizing {
           background: red;

@@ -106,27 +106,76 @@ const useInstanceBeforeDimensions = instance => {
     }
   })
 
-  const onMouseDown = (e, header) => {
+  const onResizeStart = (e, header) => {
+    let isTouchEvent = false
+    if (e.type === 'touchstart') {
+      // lets not respond to multiple touches (e.g. 2 or 3 fingers)
+      if (e.touches && e.touches.length > 1) {
+        return
+      }
+      isTouchEvent = true
+    }
     const headersToResize = getLeafHeaders(header)
     const headerIdWidths = headersToResize.map(d => [d.id, d.totalWidth])
 
-    const clientX = e.clientX
+    const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX
 
-    const onMouseMove = e => {
-      const clientX = e.clientX
+    const dispatchMove = clientXPos => {
+      dispatch({ type: actions.columnResizing, clientX: clientXPos })
+    }
+    const dispatchEnd = () => dispatch({ type: actions.columnDoneResizing })
 
-      dispatch({ type: actions.columnResizing, clientX })
+    const handlersAndEvents = {
+      mouse: {
+        moveEvent: 'mousemove',
+        moveHandler: e => dispatchMove(e.clientX),
+        upEvent: 'mouseup',
+        upHandler: e => {
+          document.removeEventListener(
+            'mousemove',
+            handlersAndEvents.mouse.moveHandler
+          )
+          document.removeEventListener(
+            'mouseup',
+            handlersAndEvents.mouse.upHandler
+          )
+          dispatchEnd()
+        },
+      },
+      touch: {
+        moveEvent: 'touchmove',
+        moveHandler: e => {
+          if (e.cancelable) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+          dispatchMove(e.touches[0].clientX)
+          return false
+        },
+        upEvent: 'touchend',
+        upHandler: e => {
+          document.removeEventListener(
+            handlersAndEvents.touch.moveEvent,
+            handlersAndEvents.touch.moveHandler
+          )
+          document.removeEventListener(
+            handlersAndEvents.touch.upEvent,
+            handlersAndEvents.touch.moveHandler
+          )
+          dispatchEnd()
+        },
+      },
     }
 
-    const onMouseUp = e => {
-      document.removeEventListener('mousemove', onMouseMove)
-      document.removeEventListener('mouseup', onMouseUp)
-
-      dispatch({ type: actions.columnDoneResizing })
-    }
-
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
+    const events = isTouchEvent
+      ? handlersAndEvents.touch
+      : handlersAndEvents.mouse
+    document.addEventListener(events.moveEvent, events.moveHandler, {
+      passive: false,
+    })
+    document.addEventListener(events.upEvent, events.upHandler, {
+      passive: false,
+    })
 
     dispatch({
       type: actions.columnStartResizing,
@@ -155,7 +204,8 @@ const useInstanceBeforeDimensions = instance => {
       header.getResizerProps = userProps => {
         return mergeProps(
           {
-            onMouseDown: e => e.persist() || onMouseDown(e, header),
+            onMouseDown: e => e.persist() || onResizeStart(e, header),
+            onTouchStart: e => e.persist() || onResizeStart(e, header),
             style: {
               cursor: 'ew-resize',
             },

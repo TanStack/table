@@ -17,5 +17,24 @@
         "code": 8444
       }
     }
+  },
+  "dist\\index.js": {
+    "bundled": 105386,
+    "minified": 49565,
+    "gzipped": 13008
+  },
+  "dist\\index.es.js": {
+    "bundled": 104543,
+    "minified": 48815,
+    "gzipped": 12856,
+    "treeshaked": {
+      "rollup": {
+        "code": 80,
+        "import_statements": 21
+      },
+      "webpack": {
+        "code": 8444
+      }
+    }
   }
 }
