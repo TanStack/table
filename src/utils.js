@@ -272,11 +272,9 @@ export function expandRows(
   const expandedRows = []
 
   const handleRow = row => {
-    const key = row.path.join('.')
-
     row.isExpanded =
       (row.original && row.original[manualExpandedKey]) ||
-      expanded.includes(key)
+      expanded.includes(row.id)
 
     row.canExpand = row.subRows && !!row.subRows.length
 

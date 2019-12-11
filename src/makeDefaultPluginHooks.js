@@ -21,13 +21,13 @@ const defaultGetFooterGroupProps = (props, instance, headerGroup, index) => ({
 })
 
 const defaultGetRowProps = (props, instance, row) => ({
-  key: ['row', ...row.path].join('_'),
+  key: ['row', row.id].join('_'),
   ...props,
 })
 
 const defaultGetCellProps = (props, instance, cell) => ({
   ...props,
-  key: ['cell', ...cell.row.path, cell.column.id].join('_'),
+  key: ['cell', cell.row.id, cell.column.id].join('_'),
 })
 
 export default function makeDefaultPluginHooks() {

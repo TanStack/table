@@ -96,9 +96,11 @@ The following properties are available on every `Row` object returned by the tab
   - If the row is a materialized group row, this property is the array of materialized subRows that were grouped inside of this row.
 - `depth: Int`
   - If the row is a materialized group row, this is the grouping depth at which this row was created.
-- `path: Array<String|Int>`
-  - Similar to normal `Row` objects, materialized grouping rows also have a path array. The keys inside it though are not integers like nested normal rows though. Since they are not rows that can be traced back to an original data row, they are given a unique path based on their `groupByVal`
-  - If a row is a grouping row, it will have a path like `['Single']` or `['Complicated', 'Anderson']`, where `Single`, `Complicated`, and `Anderson` would all be derived from their row's `groupByVal`.
+- `id: String`
+  - The unique ID for this row.
+  - This ID is unique across all rows, including sub rows
+  - Derived from the `getRowId` function, which defaults to chaining parent IDs and joining with a `.`
+  - If a row is a materialized grouping row, it will have an ID in the format of `columnId:groupByVal`.
 - `isAggregated: Bool`
   - Will be `true` if the row is an aggregated row
 

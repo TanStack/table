@@ -33,6 +33,23 @@ const Styles = styled.div`
   }
 `
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
+
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -42,7 +59,7 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     selectedFlatRows,
-    state: { selectedRowPaths },
+    state: { selectedRowIds },
   } = useTable(
     {
       columns,
@@ -77,12 +94,12 @@ function Table({ columns, data }) {
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.size}</p>
+      <p>Selected Rows: {selectedRowIds.size}</p>
       <pre>
         <code>
           {JSON.stringify(
             {
-              selectedRowPaths: [...selectedRowPaths.values()],
+              selectedRowIds: [...selectedRowIds.values()],
               'selectedFlatRows[].original': selectedFlatRows.map(
                 d => d.original
               ),
@@ -106,14 +123,14 @@ function App() {
         // to render a checkbox
         Header: ({ getToggleAllRowsSelectedProps }) => (
           <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
           </div>
         ),
         // The cell can use the individual row's getToggleRowSelectedProps method
         // to the render a checkbox
         Cell: ({ row }) => (
           <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
           </div>
         ),
       },
@@ -155,7 +172,7 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(10), [])
+  const data = React.useMemo(() => makeData(10, 3), [])
 
   return (
     <Styles>

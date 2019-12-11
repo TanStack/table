@@ -236,12 +236,9 @@ function useInstance(instance) {
     let groupedFlatRows = []
 
     // Recursively group the data
-    const groupRecursively = (rows, depth = 0, parentPath = []) => {
+    const groupRecursively = (rows, depth = 0) => {
       // This is the last level, just return the rows
       if (depth >= groupBy.length) {
-        rows.forEach(row => {
-          row.path = [...parentPath, ...row.path]
-        })
         groupedFlatRows = groupedFlatRows.concat(rows)
         return rows
       }
@@ -254,13 +251,14 @@ function useInstance(instance) {
       // Recurse to sub rows before aggregation
       groupedRows = Object.entries(groupedRows).map(
         ([groupByVal, subRows], index) => {
-          const path = [...parentPath, `${columnId}:${groupByVal}`]
+          const id = `${columnId}:${groupByVal}`
 
-          subRows = groupRecursively(subRows, depth + 1, path)
+          subRows = groupRecursively(subRows, depth + 1)
 
           const values = aggregateRowsToValues(subRows, depth < groupBy.length)
 
           const row = {
+            id,
             isAggregated: true,
             groupByID: columnId,
             groupByVal,
@@ -268,7 +266,6 @@ function useInstance(instance) {
             subRows,
             depth,
             index,
-            path,
           }
 
           groupedFlatRows.push(row)

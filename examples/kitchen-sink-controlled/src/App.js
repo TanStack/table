@@ -282,14 +282,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: {
-      pageIndex,
-      pageSize,
-      groupBy,
-      expanded,
-      filters,
-      selectedRowPaths,
-    },
+    state: { pageIndex, pageSize, groupBy, expanded, filters, selectedRowIds },
   } = useTable(
     {
       columns,
@@ -442,7 +435,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
               groupBy,
               expanded,
               filters,
-              selectedRowPaths: [...selectedRowPaths.values()],
+              selectedRowIds: [...selectedRowIds.values()],
             },
             null,
             2

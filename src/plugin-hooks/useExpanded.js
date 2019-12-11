@@ -10,7 +10,7 @@ import {
 import { useConsumeHookGetter } from '../publicUtils'
 
 // Actions
-actions.toggleExpandedByPath = 'toggleExpandedByPath'
+actions.toggleExpandedById = 'toggleExpandedById'
 actions.resetExpanded = 'resetExpanded'
 
 export const useExpanded = hooks => {
@@ -51,17 +51,16 @@ function reducer(state, action) {
     }
   }
 
-  if (action.type === actions.toggleExpandedByPath) {
-    const { path, expanded } = action
-    const key = path.join('.')
-    const exists = state.expanded.includes(key)
+  if (action.type === actions.toggleExpandedById) {
+    const { id, expanded } = action
+    const exists = state.expanded.includes(id)
     const shouldExist = typeof expanded !== 'undefined' ? expanded : !exists
     let newExpanded = new Set(state.expanded)
 
     if (!exists && shouldExist) {
-      newExpanded.add(key)
+      newExpanded.add(id)
     } else if (exists && !shouldExist) {
-      newExpanded.delete(key)
+      newExpanded.delete(id)
     } else {
       return state
     }
@@ -95,8 +94,8 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleExpandedByPath = (path, expanded) => {
-    dispatch({ type: actions.toggleExpandedByPath, path, expanded })
+  const toggleExpandedById = (id, expanded) => {
+    dispatch({ type: actions.toggleExpandedById, id, expanded })
   }
 
   // use reference to avoid memory leak in #1608
@@ -108,7 +107,7 @@ function useInstance(instance) {
   )
 
   hooks.prepareRow.push(row => {
-    row.toggleExpanded = set => instance.toggleExpandedByPath(row.path, set)
+    row.toggleExpanded = set => instance.toggleExpandedById(row.id, set)
 
     row.getExpandedToggleProps = makePropGetter(
       getExpandedTogglePropsHooks(),
@@ -128,7 +127,7 @@ function useInstance(instance) {
   const expandedDepth = findExpandedDepth(expanded)
 
   Object.assign(instance, {
-    toggleExpandedByPath,
+    toggleExpandedById,
     preExpandedRows: rows,
     expandedRows,
     rows: expandedRows,
@@ -139,9 +138,9 @@ function useInstance(instance) {
 function findExpandedDepth(expanded) {
   let maxDepth = 0
 
-  expanded.forEach(key => {
-    const path = key.split('.')
-    maxDepth = Math.max(maxDepth, path.length)
+  expanded.forEach(id => {
+    const splitId = id.split('.')
+    maxDepth = Math.max(maxDepth, splitId.length)
   })
 
   return maxDepth

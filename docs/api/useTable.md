@@ -53,13 +53,11 @@ The following options are supported via the main options object passed to `useTa
   - Defaults to `(row) => row.subRows || []`
   - Use this function to change how React Table detects subrows. You could even use this function to generate sub rows if you want.
   - By default, it will attempt to return the `subRows` property on the row, or an empty array if that is not found.
-- `getRowId: Function(row, relativeIndex) => string`
-  - Use this function to change how React Table detects unique rows and also how it constructs each row's underlying `path` property.
+- `getRowId: Function(row, relativeIndex, ?parent) => string`
+  - Use this function to change how React Table detects unique rows and also how it constructs each row's underlying `id` property.
   - Optional
   - Must be **memoized**
-  - Defaults to `(row, relativeIndex) => relativeIndex`
-  - You may want to change this function if
-  - By default, it will use the `index` of the row within it's original array.
+  - Defaults to `(row, relativeIndex, parent) => parent ? [parent.id, relativeIndex].join('.') : relativeIndex`
 - `debug: Bool`
   - Optional
   - A flag to turn on debug mode.
@@ -255,9 +253,6 @@ The following additional properties are available on every `row` object returned
   - The index of the original row in the `data` array that was passed to `useTable`. If this row is a subRow, it is the original index within the parent row's subRows array
 - `original: Object`
   - The original row object from the `data` array that was used to materialize this row.
-- `path: Array<string>`
-  - This array is the sequential path of indices one could use to navigate to it, eg. a row path of `[3, 1, 0]` would mean that it is the **first** subRow of a parent that is the **second** subRow of a parent that is the **fourth** row in the original `data` array.
-  - This array is used with plugin hooks like `useExpanded` and `useGroupBy` to compute expanded states for individual rows.
 - `subRows: Array<Row>`
   - If subRows were detect on the original data object, this will be an array of those materialized row objects.
 - `state: Object`

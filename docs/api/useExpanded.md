@@ -9,12 +9,12 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.expanded: Array<pathKey: String>`
+- `state.expanded: Array<rowId: String>`
   - Optional
   - Must be **memoized**
-  - An array of expanded path keys.
-  - If a row's path key (`row.path.join('.')`) is present in this array, that row will have an expanded state. For example, if `['3']` was passed as the `expanded` state, the **4th row in the original data array** would be expanded.
-  - For nested expansion, you may **join the row path with a `.`** to expand sub rows. For example, if `['3', '3.5']` was passed as the `expanded` state, then the **6th subRow of the 4th row and also the 4th row of the original data array** would be expanded.
+  - An array of expanded row IDs.
+  - If a row's id is present in this array, that row will have an expanded state. For example, if `['3']` was passed as the `expanded` state, by default the **4th row in the original data array** would be expanded, since it would have that ID
+  - For nested expansion, you can **use nested IDs like `1.3`** to expand sub rows. For example, if `['3', '3.5']` was passed as the `expanded` state, then the **the 4th row would be expanded, along with the 6th subRow of the 4th row as well**.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `initialState.expanded`
   - Identical to the `state.expanded` option above

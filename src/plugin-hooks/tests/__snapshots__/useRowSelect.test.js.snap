@@ -485,8 +485,8 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "selectedRowPaths": []
-+   "selectedRowPaths": [
+-   "selectedRowIds": []
++   "selectedRowIds": [
 +     "0",
 +     "1",
 +     "2",
@@ -1015,7 +1015,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "selectedRowPaths": [
+-   "selectedRowIds": [
 -     "0",
 -     "1",
 -     "2",
@@ -1053,7 +1053,7 @@ Snapshot Diff:
 -     "22.1",
 -     "23"
 -   ]
-+   "selectedRowPaths": []
++   "selectedRowIds": []
   }
       </code>
     </pre>
@@ -1129,8 +1129,8 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "selectedRowPaths": []
-+   "selectedRowPaths": [
+-   "selectedRowIds": []
++   "selectedRowIds": [
 +     "0",
 +     "2",
 +     "2.0",
@@ -1198,7 +1198,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRowPaths": [
+    "selectedRowIds": [
 -     "0",
 -     "2",
 -     "2.0",
@@ -1241,7 +1241,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRowPaths": [
+    "selectedRowIds": [
 -     "0"
 +     "0",
 +     "2.0"
@@ -1257,6 +1257,19 @@ Snapshot Diff:
 - First value
 + Second value
 
+@@ -163,11 +163,11 @@
+              </label>
+            </div>
+          </td>
+          <td>
+            <div>
+-             Row 2 Not Selected
++             Row 2 Selected
+            </div>
+          </td>
+          <td>
+            joe
+          </td>
 @@ -237,11 +237,11 @@
               </label>
             </div>
@@ -1282,7 +1295,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRowPaths": [
+    "selectedRowIds": [
       "0",
 -     "2.0"
 +     "2.0",
@@ -1299,6 +1312,19 @@ Snapshot Diff:
 - First value
 + Second value
 
+@@ -163,11 +163,11 @@
+              </label>
+            </div>
+          </td>
+          <td>
+            <div>
+-             Row 2 Selected
++             Row 2 Not Selected
+            </div>
+          </td>
+          <td>
+            joe
+          </td>
 @@ -237,11 +237,11 @@
               </label>
             </div>
@@ -1324,7 +1350,7 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "selectedRowPaths": [
+    "selectedRowIds": [
       "0",
 -     "2.0",
 -     "2.1"

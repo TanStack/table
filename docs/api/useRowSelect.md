@@ -9,12 +9,10 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.selectedRowPaths: Set<RowPathKey>`
+- `initialState.selectedRowIds: Set<RowPathKey>`
   - Optional
   - Defaults to `new Set()`
-  - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have a selected state.
-- `initialState.selectedRowPaths`
-  - Identical to the `state.selectedRowPaths` option above
+  - If a row's ID is found in this array, it will have a selected state.
 - `manualRowSelectedKey: String`
   - Optional
   - Defaults to `isSelected`
@@ -33,7 +31,7 @@ The following values are provided to the table `instance`:
 - `toggleRowSelected: Function(rowPath: String, ?set: Bool) => void`
   - Use this function to toggle a row's selected state.
   - Optionally pass `true` or `false` to set it to that state
-- `toggleRowSelectedAll: Function(?set: Bool) => void`
+- `toggleAllRowsSelected: Function(?set: Bool) => void`
   - Use this function to toggle all rows as select or not
   - Optionally pass `true` or `false` to set all rows to that state
 - `getToggleAllRowsSelectedProps: Function(props) => props`
@@ -55,6 +53,8 @@ The following additional properties are available on every **prepared** `row` ob
 
 - `isSelected: Bool`
   - Will be `true` if the row is currently selected
+- `isSomeSelected: Bool`
+  - Will be `true` if the row has subRows and at least one of them is currently selected
 - `toggleRowSelected: Function(?set)`
   - Use this function to toggle this row's selected state.
   - Optionally pass `true` or `false` to set it to that state

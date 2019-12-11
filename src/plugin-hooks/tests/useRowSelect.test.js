@@ -75,7 +75,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: { selectedRowPaths },
+    state: { selectedRowIds },
   } = useTable(
     {
       columns,
@@ -113,11 +113,11 @@ function Table({ columns, data }) {
           )}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.size}</p>
+      <p>Selected Rows: {selectedRowIds.size}</p>
       <pre>
         <code>
           {JSON.stringify(
-            { selectedRowPaths: [...selectedRowPaths.values()] },
+            { selectedRowIds: [...selectedRowIds.values()] },
             null,
             2
           )}
@@ -126,6 +126,19 @@ function Table({ columns, data }) {
     </>
   )
 }
+
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return <input type="checkbox" ref={resolvedRef} {...rest} />
+  }
+)
 
 function App() {
   const columns = React.useMemo(
@@ -138,7 +151,7 @@ function App() {
         Header: ({ getToggleAllRowsSelectedProps }) => (
           <div>
             <label>
-              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />{' '}
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />{' '}
               Select All
             </label>
           </div>
@@ -148,7 +161,7 @@ function App() {
         Cell: ({ row }) => (
           <div>
             <label>
-              <input type="checkbox" {...row.getToggleRowSelectedProps()} />{' '}
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />{' '}
               Select Row
             </label>
           </div>
@@ -158,8 +171,7 @@ function App() {
         id: 'selectedStatus',
         Cell: ({ row }) => (
           <div>
-            Row {row.path.join('.')}{' '}
-            {row.isSelected ? 'Selected' : 'Not Selected'}
+            Row {row.id} {row.isSelected ? 'Selected' : 'Not Selected'}
           </div>
         ),
       },

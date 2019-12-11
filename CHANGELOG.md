@@ -1,3 +1,17 @@
+## 7.0.0-rc.9
+
+- Fixed an issue where dependency hooks were not being reduced properly, thus the table would rerender unnecessarily
+- Renamed `toggleRowSelectedAll` to `toggleAllRowsSelected`. Duh...
+- Added an `indeterminate` boolean prop to the default props for row selection toggle prop getters
+- Renamed `selectedRowPaths` to `selectedRowIds`, which also no longer contains paths, but row IDs
+- Grouped or nested row selection actions and state are now derived, instead of tracked in state.
+- Rows now have a new property called `id`, which existed before and was derived from the `getRowId` option
+- Rows now also have an `isSomeSelected` prop when using the `useRowSelect` hook, which denotes that at least one subRow is selected (if applicable)
+- Rows' `path` property has been deprecated in favor of `id`
+- Expanded state is now tracked with row IDs instead of paths
+- RowState is now tracked with row IDs instead of paths
+- `toggleExpandedByPath` has been renamed to `toggleExpandedById`, and thus accepts a row ID now, instead of a row path
+
 ## 7.0.0-rc.8
 
 - Fix an issue where `useResizeColumns` would crash when using the resizer prop getter
@@ -101,7 +115,7 @@ Modified:
 
 ## 7.0.0-beta.24
 
-- Changed `selectedRowPaths` to use a `Set()` instead of an array for performance.
+- Changed `selectedRowIds` to use a `Set()` instead of an array for performance.
 - Removed types and related files from the repo. The community will now maintain types externally on Definitely Typed
 
 ## 7.0.0-beta.23

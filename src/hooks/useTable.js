@@ -24,7 +24,8 @@ const defaultInitialState = {}
 const defaultColumnInstance = {}
 const defaultReducer = (state, action, prevState) => state
 const defaultGetSubRows = (row, index) => row.subRows || []
-const defaultGetRowId = (row, index) => index
+const defaultGetRowId = (row, index, parent) =>
+  `${parent ? [parent.id, index].join('.') : index}`
 const defaultUseControlledState = d => d
 
 function applyDefaults(props) {
@@ -165,7 +166,7 @@ export const useTable = (props, ...plugins) => {
       getInstance,
       userColumns,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...getColumnsDepsHooks(getInstance()),
+      ...reduceHooks(getColumnsDepsHooks(), [], getInstance()),
     ]
   )
 
@@ -197,7 +198,7 @@ export const useTable = (props, ...plugins) => {
       getFlatColumns,
       getInstance,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      getFlatColumnsDeps(getInstance()),
+      ...reduceHooks(getFlatColumnsDeps(), [], getInstance()),
     ]
   )
 
@@ -229,7 +230,7 @@ export const useTable = (props, ...plugins) => {
       getHeaderGroups,
       getInstance,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...getHeaderGroupsDeps(getInstance()),
+      ...reduceHooks(getHeaderGroupsDeps(), [], getInstance()),
     ]
   )
 
@@ -247,19 +248,16 @@ export const useTable = (props, ...plugins) => {
     let flatRows = []
 
     // Access the row's data
-    const accessRow = (originalRow, i, depth = 0, parentPath = []) => {
+    const accessRow = (originalRow, i, depth = 0, parent) => {
       // Keep the original reference around
       const original = originalRow
 
-      const rowId = getRowId(originalRow, i)
-
-      // Make the new path for the row
-      const path = [...parentPath, rowId]
+      const id = getRowId(originalRow, i, parent)
 
       const row = {
+        id,
         original,
         index: i,
-        path, // used to create a key for each row even if not nested
         depth,
         cells: [{}], // This is a dummy cell
       }
@@ -270,7 +268,7 @@ export const useTable = (props, ...plugins) => {
       let subRows = getSubRows(originalRow, i)
 
       if (subRows) {
-        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, path))
+        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, row))
       }
 
       // Override common array functions (and the dummy cell's getCellProps function)
@@ -536,7 +534,7 @@ export const useTable = (props, ...plugins) => {
     'useFinalInstance'
   )
 
-  loopHooks(getUseFinalInstanceHooks(), getInstance())
+  loopHooks(getUseFinalInstanceHooks(), [], getInstance())
 
   return getInstance()
 }

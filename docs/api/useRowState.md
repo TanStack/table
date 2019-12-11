@@ -12,7 +12,7 @@ The following options are supported via the main options object passed to `useTa
 - `state.rowState: Object<RowPathKey:Object<any, cellState: {columnId: Object}>>`
   - Optional
   - Defaults to `{}`
-  - If a row's path key (eg. a row path of `[1, 3, 2]` would have a path key of `1.3.2`) is found in this array, it will have the state of the value corresponding to that key.
+  - If a row's ID is found in this array, it will have the state of the value corresponding to that key.
   - Individual row states can contain anything, but they also contain a `cellState` key, which provides cell-level state based on column ID's to every
     **prepared** cell in the table.
 - `initialState.rowState`
@@ -44,7 +44,7 @@ The following values are provided to the table `instance`:
 The following additional properties are available on every **prepared** `row` object returned by the table instance.
 
 - `state: Object`
-  - This is the state object for each row, pre-mapped to the row from the table state's `rowState` object via `rowState[row.path.join('.')]`
+  - This is the state object for each row, pre-mapped to the row from the table state's `rowState` object via `rowState[row.id]`
   - May also contain a `cellState` key/value pair, which is used to provide individual cell states to this row's cells
 - `setState: Function(updater: Function | any)`
   - Use this function to programmatically update the state of a row.
@@ -55,7 +55,7 @@ The following additional properties are available on every **prepared** `row` ob
 The following additional properties are available on every `Cell` object returned in an array of `cells` on every row object.
 
 - `state: Object`
-  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.path.join('.')].cellState[columnId]`
+  - This is the state object for each cell, pre-mapped to the cell from the table state's `rowState` object via `rowState[row.id].cellState[columnId]`
 - `setState: Function(updater: Function | any)`
   - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.

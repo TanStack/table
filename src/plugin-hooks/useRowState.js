@@ -34,15 +34,13 @@ function reducer(state, action) {
   }
 
   if (action.type === actions.setRowState) {
-    const { path, value } = action
-
-    const pathKey = path.join('.')
+    const { id, value } = action
 
     return {
       ...state,
       rowState: {
         ...state.rowState,
-        [pathKey]: functionalUpdate(value, state.rowState[pathKey] || {}),
+        [id]: functionalUpdate(value, state.rowState[id] || {}),
       },
     }
   }
@@ -59,10 +57,10 @@ function useInstance(instance) {
   } = instance
 
   const setRowState = React.useCallback(
-    (path, value, columnId) =>
+    (id, value, columnId) =>
       dispatch({
         type: actions.setRowState,
-        path,
+        id,
         value,
         columnId,
       }),
@@ -92,23 +90,21 @@ function useInstance(instance) {
   )
 
   hooks.prepareRow.push(row => {
-    const pathKey = row.path.join('.')
-
     if (row.original) {
       row.state =
-        (typeof rowState[pathKey] !== 'undefined'
-          ? rowState[pathKey]
+        (typeof rowState[row.id] !== 'undefined'
+          ? rowState[row.id]
           : initialRowStateAccessor && initialRowStateAccessor(row)) || {}
 
       row.setState = updater => {
-        return setRowState(row.path, updater)
+        return setRowState(row.id, updater)
       }
 
       row.cells.forEach(cell => {
         cell.state = row.state.cellState || {}
 
         cell.setState = updater => {
-          return setCellState(row.path, cell.column.id, updater)
+          return setCellState(row.id, cell.column.id, updater)
         }
       })
     }

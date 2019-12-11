@@ -282,14 +282,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: {
-      pageIndex,
-      pageSize,
-      groupBy,
-      expanded,
-      filters,
-      selectedRowPaths,
-    },
+    state: { pageIndex, pageSize, groupBy, expanded, filters, selectedRowIds },
   } = useTable(
     {
       columns,
@@ -441,7 +434,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
               groupBy,
               expanded,
               filters,
-              selectedRowPaths: [...selectedRowPaths.values()],
+              selectedRowIds: [...selectedRowIds.values()],
             },
             null,
             2
@@ -481,6 +474,23 @@ function roundedMedian(values) {
   return Math.round((min + max) / 2)
 }
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
+
 function App() {
   const columns = React.useMemo(
     () => [
@@ -493,14 +503,14 @@ function App() {
         // to render a checkbox
         Header: ({ getToggleAllRowsSelectedProps }) => (
           <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
           </div>
         ),
         // The cell can use the individual row's getToggleRowSelectedProps method
         // to the render a checkbox
         Cell: ({ row }) => (
           <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
           </div>
         ),
       },
