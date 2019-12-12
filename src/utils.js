@@ -237,8 +237,20 @@ function isFunctionComponent(component) {
   return typeof component === 'function'
 }
 
+function isExoticComponent(component) {
+  return (
+    typeof component === 'object' &&
+    typeof component.$$typeof === 'symbol' &&
+    ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
+  )
+}
+
 function isReactComponent(component) {
-  return isClassComponent(component) || isFunctionComponent(component)
+  return (
+    isClassComponent(component) ||
+    isFunctionComponent(component) ||
+    isExoticComponent(component)
+  )
 }
 
 export function isFunction(a) {
