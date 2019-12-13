@@ -306,7 +306,32 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     useSortBy,
     useExpanded,
     usePagination,
-    useRowSelect
+    useRowSelect,
+    hooks => {
+      hooks.flatColumns.push(columns => [
+        {
+          id: 'selection',
+          // Make this column a groupByBoundary. This ensures that groupBy columns
+          // are placed after it
+          groupByBoundary: true,
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   )
 
   // Render the UI for your table
@@ -478,26 +503,6 @@ function roundedMedian(values) {
 function App() {
   const columns = React.useMemo(
     () => [
-      {
-        id: 'selection',
-        // Make this column a groupByBoundary. This ensures that groupBy columns
-        // are placed after it
-        groupByBoundary: true,
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
       {
         Header: 'Name',
         columns: [
