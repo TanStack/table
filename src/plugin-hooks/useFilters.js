@@ -254,7 +254,7 @@ function useInstance(instance) {
     // Now that each filtered column has it's partially filtered rows,
     // lets assign the final filtered rows to all of the other columns
     const nonFilteredColumns = flatColumns.filter(
-      column => !Object.keys(filters).includes(column.id)
+      column => !filters.find(d => d.id === column.id)
     )
 
     // This essentially enables faceted filter options to be built easily
