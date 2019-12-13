@@ -16,6 +16,9 @@
   - Grouping
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping)
+  - Grouping (Single Column)
+    - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping-column)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping-column)
   - Pagination
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
