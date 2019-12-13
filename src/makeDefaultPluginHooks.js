@@ -1,33 +1,35 @@
+const defaultCells = cell => cell.filter(d => d.column.isVisible)
+
 const defaultGetHeaderProps = (props, instance, column) => ({
-  key: ['header', column.id].join('_'),
+  key: `header_${column.id}`,
   colSpan: column.totalVisibleHeaderCount,
   ...props,
 })
 
 const defaultGetFooterProps = (props, instance, column) => ({
-  key: ['footer', column.id].join('_'),
+  key: `footer_${column.id}`,
   colSpan: column.totalVisibleHeaderCount,
   ...props,
 })
 
 const defaultGetHeaderGroupProps = (props, instance, headerGroup, index) => ({
-  key: ['header', index].join('_'),
+  key: `headerGroup_${index}`,
   ...props,
 })
 
 const defaultGetFooterGroupProps = (props, instance, headerGroup, index) => ({
-  key: ['footer', index].join('_'),
+  key: `footerGroup_${index}`,
   ...props,
 })
 
 const defaultGetRowProps = (props, instance, row) => ({
-  key: ['row', row.id].join('_'),
+  key: `row_${row.id}`,
   ...props,
 })
 
 const defaultGetCellProps = (props, instance, cell) => ({
   ...props,
-  key: ['cell', cell.row.id, cell.column.id].join('_'),
+  key: `cell_${cell.row.id}_${cell.column.id}`,
 })
 
 export default function makeDefaultPluginHooks() {
@@ -43,6 +45,7 @@ export default function makeDefaultPluginHooks() {
     useInstanceBeforeDimensions: [],
     useInstance: [],
     useRows: [],
+    cells: [defaultCells],
     prepareRow: [],
     getTableProps: [],
     getTableBodyProps: [],

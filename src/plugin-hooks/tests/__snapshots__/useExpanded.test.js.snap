@@ -10,10 +10,10 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "expanded": []
-+   "expanded": [
-+     "0"
-+   ]
+-   "expanded": {}
++   "expanded": {
++     "0": true
++   }
   }
       </code>
     </pre>
@@ -161,11 +161,11 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "expanded": [
--     "0"
-+     "0",
-+     "0.0"
-    ]
+    "expanded": {
+-     "0": true
++     "0": true,
++     "0.0": true
+    }
   }
       </code>
     </pre>
@@ -311,12 +311,12 @@ Snapshot Diff:
     <pre>
       <code>
         {
-    "expanded": [
-      "0",
--     "0.0"
-+     "0.0",
-+     "0.0.0"
-    ]
+    "expanded": {
+      "0": true,
+-     "0.0": true
++     "0.0": true,
++     "0.0.0": true
+    }
   }
       </code>
     </pre>
@@ -461,13 +461,13 @@ Snapshot Diff:
 @@ -3,11 +3,12 @@
       <code>
         {
-    "expanded": [
-      "0",
-      "0.0",
--     "0.0.0"
-+     "0.0.0",
-+     "0.0.0.0"
-    ]
+    "expanded": {
+      "0": true,
+      "0.0": true,
+-     "0.0.0": true
++     "0.0.0": true,
++     "0.0.0.0": true
+    }
   }
       </code>
     </pre>
@@ -528,13 +528,13 @@ Snapshot Diff:
     <pre>
       <code>
         {
--   "expanded": [
--     "0",
--     "0.0",
--     "0.0.0",
--     "0.0.0.0"
--   ]
-+   "expanded": []
+-   "expanded": {
+-     "0": true,
+-     "0.0": true,
+-     "0.0.0": true,
+-     "0.0.0.0": true
+-   }
++   "expanded": {}
   }
       </code>
     </pre>

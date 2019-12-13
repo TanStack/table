@@ -1,4 +1,5 @@
-// Calculating column/cells widths
+import { ensurePluginOrder } from '../utils'
+
 const cellStyles = {
   position: 'absolute',
   top: 0,
@@ -8,6 +9,7 @@ export const useAbsoluteLayout = hooks => {
   hooks.getTableBodyProps.push(getRowStyles)
   hooks.getRowProps.push(getRowStyles)
   hooks.getHeaderGroupProps.push(getRowStyles)
+  hooks.useInstance.push(useInstance)
 
   hooks.getHeaderProps.push((props, instance, header) => [
     props,
@@ -43,3 +45,9 @@ const getRowStyles = (props, instance) => [
     },
   },
 ]
+
+function useInstance({ plugins }) {
+  ensurePluginOrder(plugins, [], useAbsoluteLayout.pluginName, [
+    'useResizeColumns',
+  ])
+}

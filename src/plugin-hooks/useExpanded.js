@@ -7,10 +7,12 @@ import {
   useMountedLayoutEffect,
   useGetLatest,
 } from '../utils'
-import { useConsumeHookGetter } from '../publicUtils'
+import { useConsumeHookGetter, functionalUpdate } from '../publicUtils'
 
 // Actions
-actions.toggleExpandedById = 'toggleExpandedById'
+actions.toggleExpanded = 'toggleExpanded'
+actions.toggleAllExpanded = 'toggleAllExpanded'
+actions.setExpanded = 'setExpanded'
 actions.resetExpanded = 'resetExpanded'
 
 export const useExpanded = hooks => {
@@ -39,7 +41,7 @@ const defaultGetExpandedToggleProps = (props, instance, row) => [
 function reducer(state, action) {
   if (action.type === actions.init) {
     return {
-      expanded: [],
+      expanded: {},
       ...state,
     }
   }
@@ -47,27 +49,40 @@ function reducer(state, action) {
   if (action.type === actions.resetExpanded) {
     return {
       ...state,
-      expanded: [],
+      expanded: {},
     }
   }
 
-  if (action.type === actions.toggleExpandedById) {
-    const { id, expanded } = action
-    const exists = state.expanded.includes(id)
-    const shouldExist = typeof expanded !== 'undefined' ? expanded : !exists
-    let newExpanded = new Set(state.expanded)
-
-    if (!exists && shouldExist) {
-      newExpanded.add(id)
-    } else if (exists && !shouldExist) {
-      newExpanded.delete(id)
-    } else {
-      return state
-    }
-
+  if (action.type === actions.setExpanded) {
     return {
       ...state,
-      expanded: [...newExpanded.values()],
+      expanded: functionalUpdate(action.expanded, state.expanded),
+    }
+  }
+
+  if (action.type === actions.toggleExpanded) {
+    const { id, expanded: setExpanded } = action
+    const exists = state.expanded[id]
+
+    const shouldExist =
+      typeof setExpanded !== 'undefined' ? setExpanded : !exists
+
+    if (!exists && shouldExist) {
+      return {
+        ...state,
+        expanded: {
+          ...state.expanded,
+          [id]: true,
+        },
+      }
+    } else if (exists && !shouldExist) {
+      const { [id]: _, ...rest } = state.expanded
+      return {
+        ...state,
+        expanded: rest,
+      }
+    } else {
+      return state
     }
   }
 }
@@ -94,8 +109,8 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleExpandedById = (id, expanded) => {
-    dispatch({ type: actions.toggleExpandedById, id, expanded })
+  const toggleExpanded = (id, expanded) => {
+    dispatch({ type: actions.toggleExpanded, id, expanded })
   }
 
   // use reference to avoid memory leak in #1608
@@ -107,7 +122,7 @@ function useInstance(instance) {
   )
 
   hooks.prepareRow.push(row => {
-    row.toggleExpanded = set => instance.toggleExpandedById(row.id, set)
+    row.toggleExpanded = set => instance.toggleExpanded(row.id, set)
 
     row.getExpandedToggleProps = makePropGetter(
       getExpandedTogglePropsHooks(),
@@ -124,13 +139,15 @@ function useInstance(instance) {
     return rows
   }, [paginateExpandedRows, rows, manualExpandedKey, expanded, expandSubRows])
 
-  const expandedDepth = findExpandedDepth(expanded)
+  const expandedDepth = React.useMemo(() => findExpandedDepth(expanded), [
+    expanded,
+  ])
 
   Object.assign(instance, {
-    toggleExpandedById,
     preExpandedRows: rows,
     expandedRows,
     rows: expandedRows,
+    toggleExpanded,
     expandedDepth,
   })
 }
@@ -138,7 +155,7 @@ function useInstance(instance) {
 function findExpandedDepth(expanded) {
   let maxDepth = 0
 
-  expanded.forEach(id => {
+  Object.keys(expanded).forEach(id => {
     const splitId = id.split('.')
     maxDepth = Math.max(maxDepth, splitId.length)
   })

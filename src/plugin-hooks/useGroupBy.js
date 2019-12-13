@@ -88,15 +88,14 @@ function flatColumns(flatColumns, { state: { groupBy } }) {
   const groupByColumns = groupBy.map(g => flatColumns.find(col => col.id === g))
   const nonGroupByColumns = flatColumns.filter(col => !groupBy.includes(col.id))
 
-  // If a groupByBoundary column is found, place the groupBy's after it
-  const groupByBoundaryColumnIndex =
-    flatColumns.findIndex(column => column.groupByBoundary) + 1
+  flatColumns = [...groupByColumns, ...nonGroupByColumns]
 
-  return [
-    ...nonGroupByColumns.slice(0, groupByBoundaryColumnIndex),
-    ...groupByColumns,
-    ...nonGroupByColumns.slice(groupByBoundaryColumnIndex),
-  ]
+  flatColumns.forEach(column => {
+    column.isGrouped = groupBy.includes(column.id)
+    column.groupedIndex = groupBy.indexOf(column.id)
+  })
+
+  return flatColumns
 }
 
 const defaultUserAggregations = {}
@@ -110,8 +109,6 @@ function useInstance(instance) {
     flatHeaders,
     groupByFn = defaultGroupByFn,
     manualGroupBy,
-    defaultCanGroupBy,
-    disableGroupBy,
     aggregations: userAggregations = defaultUserAggregations,
     hooks,
     plugins,
@@ -119,6 +116,8 @@ function useInstance(instance) {
     dispatch,
     autoResetGroupBy = true,
     manaulGroupBy,
+    disableGroupBy,
+    defaultCanGroupBy,
   } = instance
 
   ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
@@ -127,13 +126,10 @@ function useInstance(instance) {
 
   flatColumns.forEach(column => {
     const {
-      id,
       accessor,
       defaultGroupBy: defaultColumnGroupBy,
       disableGroupBy: columnDisableGroupBy,
     } = column
-    column.isGrouped = groupBy.includes(id)
-    column.groupedIndex = groupBy.indexOf(id)
 
     column.canGroupBy = accessor
       ? getFirstDefined(
@@ -144,7 +140,7 @@ function useInstance(instance) {
       : getFirstDefined(defaultColumnGroupBy, defaultCanGroupBy, false)
 
     if (column.canGroupBy) {
-      column.toggleGroupBy = () => toggleGroupBy(column.id)
+      column.toggleGroupBy = () => instance.toggleGroupBy(column.id)
     }
 
     column.Aggregated = column.Aggregated || column.Cell
@@ -168,7 +164,7 @@ function useInstance(instance) {
   })
 
   hooks.prepareRow.push(row => {
-    row.cells.forEach(cell => {
+    row.allCells.forEach(cell => {
       // Grouped cells are in the groupBy and the pivot cell for the row
       cell.isGrouped = cell.column.isGrouped && cell.column.id === row.groupByID
       // Repeated cells are any columns in the groupBy that are not grouped
@@ -236,10 +232,9 @@ function useInstance(instance) {
     let groupedFlatRows = []
 
     // Recursively group the data
-    const groupRecursively = (rows, depth = 0) => {
+    const groupRecursively = (rows, depth = 0, parentId) => {
       // This is the last level, just return the rows
-      if (depth >= groupBy.length) {
-        groupedFlatRows = groupedFlatRows.concat(rows)
+      if (depth === groupBy.length) {
         return rows
       }
 
@@ -251,15 +246,16 @@ function useInstance(instance) {
       // Recurse to sub rows before aggregation
       groupedRows = Object.entries(groupedRows).map(
         ([groupByVal, subRows], index) => {
-          const id = `${columnId}:${groupByVal}`
+          let id = `${columnId}:${groupByVal}`
+          id = parentId ? `${parentId}>${id}` : id
 
-          subRows = groupRecursively(subRows, depth + 1)
+          subRows = groupRecursively(subRows, depth + 1, id)
 
           const values = aggregateRowsToValues(subRows, depth < groupBy.length)
 
           const row = {
             id,
-            isAggregated: true,
+            isGrouped: true,
             groupByID: columnId,
             groupByVal,
             values,
@@ -268,7 +264,7 @@ function useInstance(instance) {
             index,
           }
 
-          groupedFlatRows.push(row)
+          groupedFlatRows.push(row, ...subRows)
 
           return row
         }
@@ -300,11 +296,12 @@ function useInstance(instance) {
   }, [dispatch, manaulGroupBy ? null : data])
 
   Object.assign(instance, {
+    preGroupedRows: rows,
+    preGroupedFlatRow: flatRows,
     groupedRows,
     groupedFlatRows,
-    toggleGroupBy,
     rows: groupedRows,
     flatRows: groupedFlatRows,
-    preGroupedRows: rows,
+    toggleGroupBy,
   })
 }

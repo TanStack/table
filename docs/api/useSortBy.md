@@ -14,11 +14,9 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.sortBy: Array<Object<id: columnId, desc: Bool>>`
+- `initialState.sortBy: Array<Object<id: columnId, desc: Bool>>`
   - Must be **memoized**
   - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
-- `initialState.sortBy`
-  - Identical to the `state.sortBy` option above
 - `manualSorting: Bool`
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableSortBy: Bool`

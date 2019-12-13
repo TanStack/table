@@ -6,7 +6,7 @@ import {
   reduceHooks,
   loopHooks,
   makePropGetter,
-  flexRender,
+  makeRenderer,
   decorateColumnTree,
   makeHeaderGroups,
   flattenBy,
@@ -17,8 +17,6 @@ import {
 import makeDefaultPluginHooks from '../makeDefaultPluginHooks'
 
 import { useColumnVisibility } from './useColumnVisibility'
-
-let renderErr = 'Renderer Error'
 
 const defaultInitialState = {}
 const defaultColumnInstance = {}
@@ -123,11 +121,11 @@ export const useTable = (props, ...plugins) => {
           ? getStateReducer()
           : [getStateReducer()]),
       ].reduce(
-        (s, handler) => handler(s, action, state, instanceRef) || s,
+        (s, handler) => handler(s, action, state, getInstance()) || s,
         state
       )
     },
-    [getStateReducers, getStateReducer]
+    [getStateReducers, getStateReducer, getInstance]
   )
 
   // Start the reducer
@@ -172,33 +170,97 @@ export const useTable = (props, ...plugins) => {
 
   getInstance().columns = columns
 
+  // Get the flat list of all columns and allow hooks to decorate
+  // those columns (and trigger this memoization via deps)
+  let flatColumns = React.useMemo(() => flattenBy(columns, 'columns'), [
+    columns,
+  ])
+
+  getInstance().flatColumns = flatColumns
+
+  // Access the row model
+  const [rows, flatRows] = React.useMemo(() => {
+    let flatRows = []
+
+    // Access the row's data
+    const accessRow = (originalRow, i, depth = 0, parent) => {
+      // Keep the original reference around
+      const original = originalRow
+
+      const id = getRowId(originalRow, i, parent)
+
+      const row = {
+        id,
+        original,
+        index: i,
+        depth,
+        cells: [{}], // This is a dummy cell
+      }
+
+      flatRows.push(row)
+
+      // Process any subRows
+      let subRows = getSubRows(originalRow, i)
+
+      if (subRows) {
+        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, row))
+      }
+
+      // Override common array functions (and the dummy cell's getCellProps function)
+      // to show an error if it is accessed without calling prepareRow
+      const unpreparedAccessWarning = () => {
+        throw new Error(
+          'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
+        )
+      }
+      row.cells.map = unpreparedAccessWarning
+      row.cells.filter = unpreparedAccessWarning
+      row.cells.forEach = unpreparedAccessWarning
+      row.cells[0].getCellProps = unpreparedAccessWarning
+
+      // Create the cells and values
+      row.values = {}
+      flatColumns.forEach(({ id, accessor }) => {
+        row.values[id] = accessor
+          ? accessor(originalRow, i, { subRows, depth, data })
+          : undefined
+      })
+
+      return row
+    }
+
+    // Use the resolved data
+    const accessedData = data.map((d, i) => accessRow(d, i))
+
+    return [accessedData, flatRows]
+  }, [data, flatColumns, getRowId, getSubRows])
+
+  getInstance().rows = rows
+  getInstance().flatRows = flatRows
+
   // Snapshot hook and disallow more from being added
-  const getFlatColumns = useConsumeHookGetter(
+  const flatColumnsHooks = useConsumeHookGetter(
     getInstance().hooks,
     'flatColumns'
   )
 
   // Snapshot hook and disallow more from being added
-  const getFlatColumnsDeps = useConsumeHookGetter(
+  const flatColumnsDepsHooks = useConsumeHookGetter(
     getInstance().hooks,
     'flatColumnsDeps'
   )
 
-  // Get the flat list of all columns and allow hooks to decorate
+  // Get the flat list of all columns AFTER the rows
+  // have been access, and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
-  let flatColumns = React.useMemo(
-    () =>
-      reduceHooks(
-        getFlatColumns(),
-        flattenBy(columns, 'columns'),
-        getInstance()
-      ),
+  flatColumns = React.useMemo(
+    () => reduceHooks(flatColumnsHooks(), flatColumns, getInstance()),
     [
-      columns,
-      getFlatColumns,
+      flatColumns,
+      flatColumnsHooks,
       getInstance,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(getFlatColumnsDeps(), [], getInstance()),
+      ...reduceHooks(flatColumnsDepsHooks(), [], getInstance()),
     ]
   )
 
@@ -243,66 +305,6 @@ export const useTable = (props, ...plugins) => {
 
   getInstance().headers = headers
 
-  // Access the row model
-  const [rows, flatRows] = React.useMemo(() => {
-    let flatRows = []
-
-    // Access the row's data
-    const accessRow = (originalRow, i, depth = 0, parent) => {
-      // Keep the original reference around
-      const original = originalRow
-
-      const id = getRowId(originalRow, i, parent)
-
-      const row = {
-        id,
-        original,
-        index: i,
-        depth,
-        cells: [{}], // This is a dummy cell
-      }
-
-      flatRows.push(row)
-
-      // Process any subRows
-      let subRows = getSubRows(originalRow, i)
-
-      if (subRows) {
-        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, row))
-      }
-
-      // Override common array functions (and the dummy cell's getCellProps function)
-      // to show an error if it is accessed without calling prepareRow
-      const unpreparedAccessWarning = () => {
-        throw new Error(
-          'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
-        )
-      }
-      row.cells.map = unpreparedAccessWarning
-      row.cells.filter = unpreparedAccessWarning
-      row.cells.forEach = unpreparedAccessWarning
-      row.cells[0].getCellProps = unpreparedAccessWarning
-
-      // Create the cells and values
-      row.values = {}
-      flatColumns.forEach(column => {
-        row.values[column.id] = column.accessor
-          ? column.accessor(originalRow, i, { subRows, depth, data })
-          : undefined
-      })
-
-      return row
-    }
-
-    // Use the resolved data
-    const accessedData = data.map((d, i) => accessRow(d, i))
-
-    return [accessedData, flatRows]
-  }, [data, flatColumns, getRowId, getSubRows])
-
-  getInstance().rows = rows
-  getInstance().flatRows = flatRows
-
   // Provide a flat header list for utilities
   getInstance().flatHeaders = headerGroups.reduce(
     (all, headerGroup) => [...all, ...headerGroup.headers],
@@ -342,36 +344,26 @@ export const useTable = (props, ...plugins) => {
 
   // Each materialized header needs to be assigned a render function and other
   // prop getter properties here.
-  getInstance().flatHeaders.forEach(column => {
-    // Give columns/headers rendering power
-    column.render = (type, userProps = {}) => {
-      const Comp = typeof type === 'string' ? column[type] : type
+  ;[...getInstance().flatHeaders, ...getInstance().flatColumns].forEach(
+    column => {
+      // Give columns/headers rendering power
+      column.render = makeRenderer(getInstance(), column)
 
-      if (typeof Comp === 'undefined') {
-        throw new Error(renderErr)
-      }
+      // Give columns/headers a default getHeaderProps
+      column.getHeaderProps = makePropGetter(
+        getHeaderPropsHooks(),
+        getInstance(),
+        column
+      )
 
-      return flexRender(Comp, {
-        ...getInstance(),
-        column,
-        ...userProps,
-      })
+      // Give columns/headers a default getFooterProps
+      column.getFooterProps = makePropGetter(
+        getFooterPropsHooks(),
+        getInstance(),
+        column
+      )
     }
-
-    // Give columns/headers a default getHeaderProps
-    column.getHeaderProps = makePropGetter(
-      getHeaderPropsHooks(),
-      getInstance(),
-      column
-    )
-
-    // Give columns/headers a default getFooterProps
-    column.getFooterProps = makePropGetter(
-      getFooterPropsHooks(),
-      getInstance(),
-      column
-    )
-  })
+  )
 
   // Snapshot hook and disallow more from being added
   const getHeaderGroupPropsHooks = useConsumeHookGetter(
@@ -459,51 +451,50 @@ export const useTable = (props, ...plugins) => {
     'getCellProps'
   )
 
+  // Snapshot hook and disallow more from being added
+  const cellsHooks = useConsumeHookGetter(getInstance().hooks, 'cells')
+
   getInstance().prepareRow = React.useCallback(
     row => {
       row.getRowProps = makePropGetter(getRowPropsHooks(), getInstance(), row)
 
       // Build the visible cells for each row
-      row.cells = getInstance()
-        .flatColumns.filter(d => d.isVisible)
-        .map(column => {
-          const cell = {
-            column,
-            row,
-            value: row.values[column.id],
-          }
+      row.allCells = flatColumns.map(column => {
+        const cell = {
+          column,
+          row,
+          value: row.values[column.id],
+        }
 
-          // Give each cell a getCellProps base
-          cell.getCellProps = makePropGetter(
-            getCellPropsHooks(),
-            getInstance(),
-            cell
-          )
+        // Give each cell a getCellProps base
+        cell.getCellProps = makePropGetter(
+          getCellPropsHooks(),
+          getInstance(),
+          cell
+        )
 
-          // Give each cell a renderer function (supports multiple renderers)
-          cell.render = (type, userProps = {}) => {
-            const Comp = typeof type === 'string' ? column[type] : type
-
-            if (typeof Comp === 'undefined') {
-              throw new Error(renderErr)
-            }
-
-            return flexRender(Comp, {
-              ...getInstance(),
-              column,
-              row,
-              cell,
-              ...userProps,
-            })
-          }
-
-          return cell
+        // Give each cell a renderer function (supports multiple renderers)
+        cell.render = makeRenderer(getInstance(), column, {
+          row,
+          cell,
         })
+
+        return cell
+      })
+
+      row.cells = reduceHooks(cellsHooks(), row.allCells, getInstance())
 
       // need to apply any row specific hooks (useExpanded requires this)
       loopHooks(getPrepareRowHooks(), row, getInstance())
     },
-    [getCellPropsHooks, getInstance, getPrepareRowHooks, getRowPropsHooks]
+    [
+      getRowPropsHooks,
+      getInstance,
+      flatColumns,
+      cellsHooks,
+      getPrepareRowHooks,
+      getCellPropsHooks,
+    ]
   )
 
   // Snapshot hook and disallow more from being added
@@ -534,7 +525,7 @@ export const useTable = (props, ...plugins) => {
     'useFinalInstance'
   )
 
-  loopHooks(getUseFinalInstanceHooks(), [], getInstance())
+  loopHooks(getUseFinalInstanceHooks(), getInstance())
 
   return getInstance()
 }

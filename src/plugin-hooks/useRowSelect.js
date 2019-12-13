@@ -64,15 +64,16 @@ const defaultGetToggleAllRowsSelectedProps = (props, instance) => [
     checked: instance.isAllRowsSelected,
     title: 'Toggle All Rows Selected',
     indeterminate: Boolean(
-      !instance.isAllRowsSelected && instance.state.selectedRowIds.size
+      !instance.isAllRowsSelected &&
+        Object.keys(instance.state.selectedRowIds).length
     ),
   },
 ]
 
-function reducer(state, action, previousState, instanceRef) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
-      selectedRowIds: new Set(),
+      selectedRowIds: {},
       ...state,
     }
   }
@@ -80,48 +81,61 @@ function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.resetSelectedRows) {
     return {
       ...state,
-      selectedRowIds: new Set(),
+      selectedRowIds: {},
     }
   }
 
   if (action.type === actions.toggleAllRowsSelected) {
     const { selected } = action
-    const { isAllRowsSelected, flatRowsById } = instanceRef.current
+    const { isAllRowsSelected, flatRowsById } = instance
 
     const selectAll =
       typeof selected !== 'undefined' ? selected : !isAllRowsSelected
 
+    if (selectAll) {
+      const selectedRowIds = {}
+
+      Object.keys(flatRowsById).forEach(rowId => {
+        selectedRowIds[rowId] = true
+      })
+
+      return {
+        ...state,
+        selectedRowIds,
+      }
+    }
+
     return {
       ...state,
-      selectedRowIds: selectAll ? new Set(flatRowsById.keys()) : new Set(),
+      selectedRowIds: {},
     }
   }
 
   if (action.type === actions.toggleRowSelected) {
     const { id, selected } = action
-    const { flatGroupedRowsById } = instanceRef.current
+    const { flatGroupedRowsById } = instance
 
     // Join the ids of deep rows
     // to make a key, then manage all of the keys
     // in a flat object
-    const row = flatGroupedRowsById.get(id)
+    const row = flatGroupedRowsById[id]
     const isSelected = row.isSelected
-    const shouldExist = typeof set !== 'undefined' ? selected : !isSelected
+    const shouldExist = typeof selected !== 'undefined' ? selected : !isSelected
 
     if (isSelected === shouldExist) {
       return state
     }
 
-    let newSelectedRowPaths = new Set(state.selectedRowIds)
+    let newSelectedRowPaths = { ...state.selectedRowIds }
 
     const handleRowById = id => {
-      const row = flatGroupedRowsById.get(id)
+      const row = flatGroupedRowsById[id]
 
-      if (!row.isAggregated) {
+      if (!row.isGrouped) {
         if (!isSelected && shouldExist) {
-          newSelectedRowPaths.add(id)
+          newSelectedRowPaths[id] = true
         } else if (isSelected && !shouldExist) {
-          newSelectedRowPaths.delete(id)
+          delete newSelectedRowPaths[id]
         }
       }
 
@@ -182,23 +196,25 @@ function useInstance(instance) {
   )
 
   const [flatRowsById, flatGroupedRowsById] = React.useMemo(() => {
-    const map = new Map()
-    const groupedMap = new Map()
+    const all = {}
+    const grouped = {}
 
     flatRows.forEach(row => {
-      if (!row.isAggregated) {
-        map.set(row.id, row)
+      if (!row.isGrouped) {
+        all[row.id] = row
       }
-      groupedMap.set(row.id, row)
+      grouped[row.id] = row
     })
 
-    return [map, groupedMap]
+    return [all, grouped]
   }, [flatRows])
 
-  let isAllRowsSelected = Boolean(flatRowsById.size && selectedRowIds.size)
+  let isAllRowsSelected = Boolean(
+    Object.keys(flatRowsById).length && Object.keys(selectedRowIds).length
+  )
 
   if (isAllRowsSelected) {
-    if ([...flatRowsById.keys()].some(d => !selectedRowIds.has(d))) {
+    if (Object.keys(flatRowsById).some(id => !selectedRowIds[id])) {
       isAllRowsSelected = false
     }
   }
@@ -255,11 +271,11 @@ function useInstance(instance) {
 }
 
 function getRowIsSelected(row, selectedRowIds) {
-  if (selectedRowIds.has(row.id)) {
+  if (selectedRowIds[row.id]) {
     return true
   }
 
-  if (row.isAggregated || (row.subRows && row.subRows.length)) {
+  if (row.subRows && row.subRows.length) {
     let allChildrenSelected = true
     let someSelected = false
 

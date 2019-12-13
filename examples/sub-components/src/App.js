@@ -57,7 +57,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
   return (
     <>
       <pre>
-        <code>{JSON.stringify({ expanded }, null, 2)}</code>
+        <code>{JSON.stringify({ expanded: expanded }, null, 2)}</code>
       </pre>
       <table {...getTableProps()}>
         <thead>

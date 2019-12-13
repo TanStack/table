@@ -94,12 +94,12 @@ function Table({ columns, data }) {
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowIds.size}</p>
+      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
       <pre>
         <code>
           {JSON.stringify(
             {
-              selectedRowIds: [...selectedRowIds.values()],
+              selectedRowIds: selectedRowIds,
               'selectedFlatRows[].original': selectedFlatRows.map(
                 d => d.original
               ),

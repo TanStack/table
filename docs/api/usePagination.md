@@ -11,18 +11,14 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.pageSize: Int`
+- `initialState.pageSize: Int`
   - **Required**
   - Defaults to `10`
   - Determines the amount of rows on any given page
-- `initialState.pageSize`
-  - Identical to the `state.pageSize` option above
-- `state.pageIndex: Int`
+- `initialState.pageIndex: Int`
   - **Required**
   - Defaults to `0`
   - The index of the page that should be displayed via the `page` instance value
-- `initialState.pageIndex`
-  - Identical to the `state.pageIndex` option above
 - `pageCount: Int`
   - **Required if `manualPagination` is set to `true`**
   - If `manualPagination` is `true`, then this value used to determine the amount of pages available. This amount is then used to materialize the `pageOptions` and also compute the `canNextPage` values on the table instance.
@@ -31,7 +27,7 @@ The following options are supported via the main options object passed to `useTa
   - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
 - `autoResetPage: Boolean`
   - Defaults to `true`
-  - When `true`, the `expanded` state will automatically reset if `manualPagination` is `false` and any of the following conditions are met:
+  - When `true`, the `pageIndex` state will automatically reset if `manualPagination` is `false` and any of the following conditions are met:
     - `data` is changed
     - `manualSortBy` is `false` and `state.sortBy` is changed
     - `manualFilters` is `false` and `state.filters` is changed
@@ -49,6 +45,10 @@ The following options are supported via the main options object passed to `useTa
 
 The following values are provided to the table `instance`:
 
+- `state.pageIndex: Int`
+  - This is the current `pageIndex` value, located on the state.
+- `state.pageSize: Int`
+  - This is the current `pageSize` value, located on the state.
 - `page: Array<row>`
   - An array of rows for the **current** page, determined by the current `pageIndex` value.
 - `pageCount: Int`
@@ -73,10 +73,6 @@ The following values are provided to the table `instance`:
 - `setPageSize: Function(pageSize)`
   - This function sets `state.pageSize` to the new value.
   - As a result of a pageSize change, a new `state.pageIndex` is also calculated. It is calculated via `Math.floor(currentTopRowIndex / newPageSize)`
-- `pageIndex: Int`
-  - This is the resolved `state.pageIndex` value.
-- `pageSize: Int`
-  - This is the resolved `state.pageSize` value.
 
 ### Example
 

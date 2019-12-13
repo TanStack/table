@@ -9,17 +9,17 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `initialState.selectedRowIds: Set<RowPathKey>`
+- `initialState.selectedRowIds: Object<rowId: Boolean>`
   - Optional
-  - Defaults to `new Set()`
-  - If a row's ID is found in this array, it will have a selected state.
+  - Defaults to `{}`
+  - If a row's ID is set to `true` in this object, it will have a selected state.
 - `manualRowSelectedKey: String`
   - Optional
   - Defaults to `isSelected`
   - If this key is found on the **original** data row, and it is true, this row will be manually selected
 - `autoResetSelectedRows: Boolean`
   - Defaults to `true`
-  - When `true`, the `expanded` state will automatically reset if any of the following conditions are met:
+  - When `true`, the `selectedRowIds` state will automatically reset if any of the following conditions are met:
     - `data` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)

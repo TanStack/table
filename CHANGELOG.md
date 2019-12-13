@@ -1,3 +1,24 @@
+## 7.0.0-rc.10
+
+- Optimizations made to make accessors, prop getters and other internals much faster. 10x in some cases!
+- Fixed docs for `usePagination` to have `pageIndex` and `pageSize` only available on the state object, not the instance
+- Added a plugin order restriction to make sure `useResizeColumns` always comes before `useAbsoluteLayout`
+- Fixed the `useFinalInstance` hook to not have an empty array as the first meta argument passed.
+- Fixed an issue where memoized or ref-forwarded components could not be used as cell renderers
+- The `toggleExpandedById` action has been renamed to `toggleExpanded`
+- Added the `toggleAllExpanded` action
+- Added the `setExpanded` action
+- Changed `row.isAggregated` to `row.isGrouped`
+- `state.expanded` and `state.selectedRowIds` are now objects (`{[rowId]: Bool}`), not arrays. This should help with mid-to-large size datasets while also being serializable (instead of a Set(), which is not as reliable)
+- `state.filters` is now an array of objects (`{id, value}`). Since filters do have order and can be applied incrementally, it should be an array to ensure correct order.
+- Moved the `flatColumns` and `flatColumnsDeps` hooks to be after row/data materialization. These hooks can then manipulate the `flatColumns` object after all data has been accessed without triggering row materialization again.
+- Added the `row.allCells` property and the `cellColumns` reducer hook to determine which cells to create for each row. These cells are placed into `row.allCells`. The resulting cell array is not meant to be used for display in templating and is only made available for convenience and/or advanced templating.
+- Added the `cells` reducer hook to determine which cells from the `row.allCells` array that should be placed into `row.cells`. The resulting cell array is the one that is intended for display in templating.
+- Reducers are now passed the actual instance variable, not the instanceRef
+- Added the `makeRenderer` utility (also exported)
+- Removed `column.groupByBoundary` functionality. If needed, use the `flatColumns` hook to decorate, reorganize or re-order groupBy columns
+- Fixed grouped row.id's to be truly unique
+
 ## 7.0.0-rc.9
 
 - Fixed an issue where dependency hooks were not being reduced properly, thus the table would rerender unnecessarily

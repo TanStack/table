@@ -9,14 +9,12 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.rowState: Object<RowPathKey:Object<any, cellState: {columnId: Object}>>`
+- `initialState.rowState: Object<RowPathKey:Object<any, cellState: {columnId: Object}>>`
   - Optional
   - Defaults to `{}`
   - If a row's ID is found in this array, it will have the state of the value corresponding to that key.
   - Individual row states can contain anything, but they also contain a `cellState` key, which provides cell-level state based on column ID's to every
     **prepared** cell in the table.
-- `initialState.rowState`
-  - Identical to the `state.rowState` option above
 - `initialRowStateAccessor: Function`
   - Optional
   - This function may optionally return the initial state for a row.

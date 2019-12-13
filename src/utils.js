@@ -219,28 +219,6 @@ export function getElementDimensions(element) {
   }
 }
 
-export function flexRender(Comp, props) {
-  return isReactComponent(Comp) ? <Comp {...props} /> : Comp
-}
-
-function isClassComponent(component) {
-  return (
-    typeof component === 'function' &&
-    !!(() => {
-      let proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isReactComponent
-    })()
-  )
-}
-
-function isFunctionComponent(component) {
-  return typeof component === 'function'
-}
-
-function isReactComponent(component) {
-  return isClassComponent(component) || isFunctionComponent(component)
-}
-
 export function isFunction(a) {
   if (typeof a === 'function') {
     return a
@@ -273,8 +251,7 @@ export function expandRows(
 
   const handleRow = row => {
     row.isExpanded =
-      (row.original && row.original[manualExpandedKey]) ||
-      expanded.includes(row.id)
+      (row.original && row.original[manualExpandedKey]) || expanded[row.id]
 
     row.canExpand = row.subRows && !!row.subRows.length
 

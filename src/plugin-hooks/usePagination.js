@@ -25,7 +25,7 @@ export const usePagination = hooks => {
 
 usePagination.pluginName = pluginName
 
-function reducer(state, action, previousState, instanceRef) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       pageSize: 10,
@@ -42,7 +42,7 @@ function reducer(state, action, previousState, instanceRef) {
   }
 
   if (action.type === actions.gotoPage) {
-    const { pageCount } = instanceRef.current
+    const { pageCount } = instance
     const newPageIndex = functionalUpdate(action.pageIndex, state.pageIndex)
 
     if (newPageIndex < 0 || newPageIndex > pageCount - 1) {

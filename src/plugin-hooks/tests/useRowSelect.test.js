@@ -113,14 +113,10 @@ function Table({ columns, data }) {
           )}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowIds.size}</p>
+      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
       <pre>
         <code>
-          {JSON.stringify(
-            { selectedRowIds: [...selectedRowIds.values()] },
-            null,
-            2
-          )}
+          {JSON.stringify({ selectedRowIds: selectedRowIds }, null, 2)}
         </code>
       </pre>
     </>

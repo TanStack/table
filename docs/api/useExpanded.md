@@ -9,15 +9,13 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.expanded: Array<rowId: String>`
+- `initialState.expanded: Object<rowId: String, expanded: Bool>`
   - Optional
   - Must be **memoized**
-  - An array of expanded row IDs.
-  - If a row's id is present in this array, that row will have an expanded state. For example, if `['3']` was passed as the `expanded` state, by default the **4th row in the original data array** would be expanded, since it would have that ID
-  - For nested expansion, you can **use nested IDs like `1.3`** to expand sub rows. For example, if `['3', '3.5']` was passed as the `expanded` state, then the **the 4th row would be expanded, along with the 6th subRow of the 4th row as well**.
+  - An `object` of expanded row IDs with boolean property values.
+  - If a row's id is set to true in this object, that row will have an expanded state. For example, if `{ '3': true }` was passed as the `expanded` state, by default the **4th row in the original data array** would be expanded, since it would have that ID
+  - For nested expansion, you can **use nested IDs like `1.3`** to expand sub rows. For example, if `{ '3': true, '3.5': true }` was passed as the `expanded` state, then the **the 4th row would be expanded, along with the 6th subRow of the 4th row as well**.
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
-- `initialState.expanded`
-  - Identical to the `state.expanded` option above
 - `getSubRows: Function(row, relativeIndex) => Rows[]`
   - Optional
   - See the [useTable hook](#table-options) for more details
@@ -42,7 +40,7 @@ The following options are supported via the main options object passed to `useTa
 The following properties are available on the table instance returned from `useTable`
 
 - `rows: Array<Row>`
-  - An array of **sorted** rows.
+  - An array of **expanded** rows.
 
 ### Row Properties
 

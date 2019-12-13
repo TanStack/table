@@ -9,11 +9,9 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.filters: Object<columnId: filterValue>`
+- `initialState.filters: Array<Object<id: String, value: any>>`
   - Must be **memoized**
-  - An object of columnId's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
-- `initialState.filters`
-  - Identical to the `state.filters` option above
+  - An array of objects containing columnId's and their corresponding filter values. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `manualFilters: Bool`
   - Enables filter detection functionality, but does not automatically perform row filtering.
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)

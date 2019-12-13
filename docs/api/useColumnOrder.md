@@ -9,12 +9,10 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.columnOrder: Array<ColumnId>`
+- `initialState.columnOrder: Array<ColumnId>`
   - Optional
   - Defaults to `[]`
   - Any column ID's not represented in this array will be naturally ordered based on their position in the original table's `column` structure
-- `initialState.columnOrder`
-  - Identical to the `state.columnOrder` option above
 
 ### Instance Properties
 

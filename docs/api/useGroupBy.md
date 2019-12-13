@@ -12,11 +12,9 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `state.groupBy: Array<String>`
+- `initialState.groupBy: Array<String>`
   - Must be **memoized**
   - An array of groupBy ID strings, controlling which columns are used to calculate row grouping and aggregation. This information is stored in state since the table is allowed to manipulate the groupBy through user interaction.
-- `initialState.groupBy`
-  - Identical to the `state.groupBy` option above
 - `manualGroupBy: Bool`
   - Enables groupBy detection and functionality, but does not automatically perform row grouping.
   - Turn this on if you wish to implement your own row grouping outside of the table (eg. server-side or manual row grouping/nesting)

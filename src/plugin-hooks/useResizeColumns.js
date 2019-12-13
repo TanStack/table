@@ -17,6 +17,11 @@ actions.columnDoneResizing = 'columnDoneResizing'
 
 export const useResizeColumns = hooks => {
   hooks.getResizerProps = [defaultGetResizerProps]
+  hooks.getHeaderProps.push({
+    style: {
+      position: 'relative',
+    },
+  })
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
@@ -188,15 +193,8 @@ const useInstanceBeforeDimensions = instance => {
   const {
     flatHeaders,
     disableResizing,
-    hooks: { getHeaderProps },
     state: { columnResizing },
   } = instance
-
-  getHeaderProps.push({
-    style: {
-      position: 'relative',
-    },
-  })
 
   const getInstance = useGetLatest(instance)
 

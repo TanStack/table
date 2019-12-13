@@ -433,9 +433,9 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
               canNextPage,
               canPreviousPage,
               groupBy,
-              expanded,
+              expanded: expanded,
               filters,
-              selectedRowIds: [...selectedRowIds.values()],
+              selectedRowIds: selectedRowIds,
             },
             null,
             2

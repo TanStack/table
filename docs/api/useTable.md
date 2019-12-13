@@ -93,6 +93,11 @@ The following options are supported on any column object you can pass to `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
+- `show: Bool`
+  - Optional
+  - Defaults to `undefined`
+  - If set to `true`, will take priority over any state in `hiddenColumns` and force this column to be visible at all times.
+  - If set to `false` will take priority over any state in `hiddenColumns` and force this column to be hidden at all times.
 - `width: Int`
   - Optional
   - Defaults to `150`
@@ -240,7 +245,12 @@ The following properties are available on every `Column` object returned by the 
 The following additional properties are available on every `row` object returned by the table instance.
 
 - `cells: Array<Cell>`
-  - An array of `Cell` objects containing properties and functions specific to the row and column it belongs to.
+  - An array of visible `Cell` objects containing properties and functions specific to the row and column it belongs to.
+  - These cells are normally intended for display
+  - See [Cell Properties](#cell-properties) for more information
+- `allCells: Array<Cell>`
+  - An array of all `Cell` objects containing properties and functions specific to the row and column it belongs to.
+  - Not every cell contained here is guaranteed that it should be displayed and is made available here for convenience and advanced templating purposes.
   - See [Cell Properties](#cell-properties) for more information
 - `values: Object<columnId: any>`
   - A map of this row's **resolved** values by columnId, eg. `{ firstName: 'Tanner', lastName: 'Linsley' }`

@@ -1,11 +1,13 @@
 import React from 'react'
 
+let renderErr = 'Renderer Error'
+
 export const actions = {
   init: 'init',
 }
 
 export const defaultColumn = {
-  Cell: ({ cell: { value = '' } }) => String(value),
+  Cell: ({ cell: { value = '' } }) => value,
   width: 150,
   minWidth: 0,
   maxWidth: Number.MAX_SAFE_INTEGER,
@@ -43,11 +45,18 @@ function mergeProps(...propList) {
     props = {
       ...props,
       ...rest,
-      style: {
-        ...(props.style || {}),
-        ...(style || {}),
-      },
-      className: [props.className, className].filter(Boolean).join(' '),
+    }
+
+    if (style) {
+      props.style = props.style
+        ? { ...(props.style || {}), ...(style || {}) }
+        : style
+    }
+
+    if (className) {
+      props.className = props.className
+        ? props.className + ' ' + className
+        : className
     }
 
     if (props.className === '') {
@@ -219,4 +228,38 @@ export function useConsumeHookGetter(hooks, hookName) {
   const getter = useGetLatest(hooks[hookName])
   hooks[hookName] = undefined
   return getter
+}
+
+export function makeRenderer(instance, column, meta = {}) {
+  return (type, userProps = {}) => {
+    const Comp = typeof type === 'string' ? column[type] : type
+
+    if (typeof Comp === 'undefined') {
+      throw new Error(renderErr)
+    }
+
+    return flexRender(Comp, { ...instance, column, ...meta, ...userProps })
+  }
+}
+
+export function flexRender(Comp, props) {
+  return isReactComponent(Comp) ? <Comp {...props} /> : Comp
+}
+
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' &&
+    !!(() => {
+      let proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isReactComponent
+    })()
+  )
+}
+
+function isFunctionComponent(component) {
+  return typeof component === 'function'
+}
+
+function isReactComponent(component) {
+  return isClassComponent(component) || isFunctionComponent(component)
 }

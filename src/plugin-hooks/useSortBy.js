@@ -55,7 +55,7 @@ const defaultGetSortByToggleProps = (props, instance, column) => {
 }
 
 // Reducer
-function reducer(state, action, previousState, instanceRef) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       sortBy: [],
@@ -89,7 +89,7 @@ function reducer(state, action, previousState, instanceRef) {
       disableSortRemove,
       disableMultiRemove,
       maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
-    } = instanceRef.current
+    } = instance
 
     const { sortBy } = state
 
@@ -335,9 +335,9 @@ function useInstance(instance) {
   }, [manualSortBy ? null : data])
 
   Object.assign(instance, {
-    toggleSortBy,
     preSortedRows: rows,
     sortedRows,
     rows: sortedRows,
+    toggleSortBy,
   })
 }

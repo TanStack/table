@@ -117,8 +117,16 @@ function useInstanceBeforeDimensions(instance) {
     state: { hiddenColumns },
   } = instance
 
+  const isMountedRef = React.useRef(false)
+
+  if (!isMountedRef.current) {
+  }
+
   const handleColumn = (column, parentVisible) => {
-    column.isVisible = parentVisible && !hiddenColumns.includes(column.id)
+    column.isVisible =
+      typeof column.isVisible !== 'undefined'
+        ? column.isVisible
+        : parentVisible && !hiddenColumns.includes(column.id)
 
     let totalVisibleHeaderCount = 0
 

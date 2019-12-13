@@ -22,10 +22,10 @@ export const useFilters = hooks => {
 
 useFilters.pluginName = 'useFilters'
 
-function reducer(state, action, previousState, instanceRef) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
-      filters: {},
+      filters: [],
       ...state,
     }
   }
@@ -33,13 +33,14 @@ function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.resetFilters) {
     return {
       ...state,
-      filters: {},
+      filters: [],
     }
   }
 
   if (action.type === actions.setFilter) {
     const { columnId, filterValue } = action
-    const { flatColumns, userFilterTypes } = instanceRef.current
+    const { flatColumns, userFilterTypes } = instance
+
     const column = flatColumns.find(d => d.id === columnId)
 
     if (!column) {
@@ -54,50 +55,59 @@ function reducer(state, action, previousState, instanceRef) {
       filterTypes
     )
 
-    const newFilter = functionalUpdate(filterValue, state.filters[columnId])
+    const previousfilter = state.filters.find(d => d.id === columnId)
+
+    const newFilter = functionalUpdate(
+      filterValue,
+      previousfilter && previousfilter.value
+    )
 
     //
     if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
-      const { [columnId]: remove, ...newFilters } = state.filters
-
       return {
         ...state,
-        filters: newFilters,
+        filters: state.filters.filter(d => d.id !== columnId),
+      }
+    }
+
+    if (previousfilter) {
+      return {
+        ...state,
+        filters: state.filters.map(d => {
+          if (d.id === columnId) {
+            return { id: columnId, value: newFilter }
+          }
+          return d
+        }),
       }
     }
 
     return {
       ...state,
-      filters: {
-        ...state.filters,
-        [columnId]: newFilter,
-      },
+      filters: [...state.filters, { id: columnId, value: newFilter }],
     }
   }
 
   if (action.type === actions.setAllFilters) {
     const { filters } = action
-    const { flatColumns, filterTypes: userFilterTypes } = instanceRef.current
-    const newFilters = functionalUpdate(filters, state.filters)
-
-    // Filter out undefined values
-    Object.keys(newFilters).forEach(id => {
-      const newFilter = newFilters[id]
-      const column = flatColumns.find(d => d.id === id)
-      const filterMethod = getFilterMethod(
-        column.filter,
-        userFilterTypes || {},
-        filterTypes
-      )
-
-      if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
-        delete newFilters[id]
-      }
-    })
+    const { flatColumns, filterTypes: userFilterTypes } = instance
 
     return {
       ...state,
-      filters: newFilters,
+      // Filter out undefined values
+      filters: functionalUpdate(filters, state.filters).filter(filter => {
+        const column = flatColumns.find(d => d.id === filter.id)
+        const filterMethod = getFilterMethod(
+          column.filter,
+          userFilterTypes || {},
+          filterTypes
+        )
+
+        if (shouldAutoRemove(filterMethod.autoRemove, filter.value)) {
+          return false
+        }
+        return true
+      }),
     }
   }
 }
@@ -150,7 +160,8 @@ function useInstance(instance) {
 
     // Provide the current filter value to the column for
     // convenience
-    column.filterValue = filters[id]
+    const found = filters.find(d => d.id === id)
+    column.filterValue = found && found.value
   })
 
   // TODO: Create a filter cache for incremental high speed multi-filtering
@@ -159,7 +170,7 @@ function useInstance(instance) {
   // This would make multi-filtering a lot faster though. Too far?
 
   const { filteredRows, filteredFlatRows } = React.useMemo(() => {
-    if (manualFilters || !Object.keys(filters).length) {
+    if (manualFilters || !filters.length) {
       return {
         filteredRows: rows,
         filteredFlatRows: flatRows,
@@ -172,8 +183,8 @@ function useInstance(instance) {
     const filterRows = (rows, depth = 0) => {
       let filteredRows = rows
 
-      filteredRows = Object.entries(filters).reduce(
-        (filteredSoFar, [columnId, filterValue]) => {
+      filteredRows = filters.reduce(
+        (filteredSoFar, { id: columnId, value: filterValue }) => {
           // Find the filters column
           const column = flatColumns.find(d => d.id === columnId)
 
@@ -263,14 +274,14 @@ function useInstance(instance) {
   }, [dispatch, manualFilters ? null : data])
 
   Object.assign(instance, {
-    setFilter,
-    setAllFilters,
     preFilteredRows: rows,
     preFilteredFlatRows: flatRows,
     filteredRows,
     filteredFlatRows,
     rows: filteredRows,
     flatRows: filteredFlatRows,
+    setFilter,
+    setAllFilters,
   })
 }
 
