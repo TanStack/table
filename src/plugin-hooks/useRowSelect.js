@@ -106,7 +106,7 @@ function reducer(state, action, previousState, instanceRef) {
     // in a flat object
     const row = flatGroupedRowsById.get(id)
     const isSelected = row.isSelected
-    const shouldExist = typeof set !== 'undefined' ? selected : !isSelected
+    const shouldExist = typeof selected !== 'undefined' ? selected : !isSelected
 
     if (isSelected === shouldExist) {
       return state
