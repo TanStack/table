@@ -282,14 +282,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: {
-      pageIndex,
-      pageSize,
-      groupBy,
-      expanded,
-      filters,
-      selectedRowPaths,
-    },
+    state: { pageIndex, pageSize, groupBy, expanded, filters, selectedRowIds },
   } = useTable(
     {
       columns,
@@ -303,16 +296,44 @@ function Table({ columns, data, updateMyData, skipReset }) {
       // cell renderer!
       updateMyData,
       // We also need to pass this so the page doesn't change
-      // when we edit the data. Undefined tells it to use the default
-      getResetPageDeps: skipReset ? false : undefined,
-      getResetSelectedRowPathsDeps: skipReset ? false : undefined,
+      // when we edit the data.
+      autoResetPage: !skipReset,
+      autoResetSelectedRows: !skipReset,
     },
     useFilters,
     useGroupBy,
     useSortBy,
     useExpanded,
     usePagination,
-    useRowSelect
+    useRowSelect,
+    // Here we will use a plugin to add our selection column
+    hooks => {
+      hooks.flatColumns.push(columns => {
+        return [
+          {
+            id: 'selection',
+            // Make this column a groupByBoundary. This ensures that groupBy columns
+            // are placed after it
+            groupByBoundary: true,
+            // The header can use the table's getToggleAllRowsSelectedProps method
+            // to render a checkbox
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+              </div>
+            ),
+            // The cell can use the individual row's getToggleRowSelectedProps method
+            // to the render a checkbox
+            Cell: ({ row }) => (
+              <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+            ),
+          },
+          ...columns,
+        ]
+      })
+    }
   )
 
   // Render the UI for your table
@@ -439,9 +460,9 @@ function Table({ columns, data, updateMyData, skipReset }) {
               canNextPage,
               canPreviousPage,
               groupBy,
-              expanded,
+              expanded: expanded,
               filters,
-              selectedRowPaths,
+              selectedRowIds: selectedRowIds,
             },
             null,
             2
@@ -481,29 +502,26 @@ function roundedMedian(values) {
   return Math.round((min + max) / 2)
 }
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
+
 function App() {
   const columns = React.useMemo(
     () => [
-      {
-        id: 'selection',
-        // Make this column a groupByBoundary. This ensures that groupBy columns
-        // are placed after it
-        groupByBoundary: true,
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
       {
         Header: 'Name',
         columns: [
@@ -581,9 +599,9 @@ function App() {
   const skipResetRef = React.useRef(false)
 
   // When our cell renderer calls updateMyData, we'll use
-  // the rowIndex, columnID and new value to update the
+  // the rowIndex, columnId and new value to update the
   // original data
-  const updateMyData = (rowIndex, columnID, value) => {
+  const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     skipResetRef.current = true
     setData(old =>
@@ -591,7 +609,7 @@ function App() {
         if (index === rowIndex) {
           return {
             ...row,
-            [columnID]: value,
+            [columnId]: value,
           }
         }
         return row

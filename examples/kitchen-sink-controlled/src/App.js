@@ -282,14 +282,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: {
-      pageIndex,
-      pageSize,
-      groupBy,
-      expanded,
-      filters,
-      selectedRowPaths,
-    },
+    state: { pageIndex, pageSize, groupBy, expanded, filters, selectedRowIds },
   } = useTable(
     {
       columns,
@@ -306,14 +299,39 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
       updateMyData,
       // We also need to pass this so the page doesn't change
       // when we edit the data, undefined means using the default
-      getResetPageDeps: skipPageReset ? false : undefined,
+      autoResetPage: !skipPageReset,
     },
+    useGroupBy,
     useFilters,
     useSortBy,
-    useGroupBy,
     useExpanded,
     usePagination,
-    useRowSelect
+    useRowSelect,
+    hooks => {
+      hooks.flatColumns.push(columns => [
+        {
+          id: 'selection',
+          // Make this column a groupByBoundary. This ensures that groupBy columns
+          // are placed after it
+          groupByBoundary: true,
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   )
 
   // Render the UI for your table
@@ -440,9 +458,9 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
               canNextPage,
               canPreviousPage,
               groupBy,
-              expanded,
+              expanded: expanded,
               filters,
-              selectedRowPaths,
+              selectedRowIds: selectedRowIds,
             },
             null,
             2
@@ -485,26 +503,6 @@ function roundedMedian(values) {
 function App() {
   const columns = React.useMemo(
     () => [
-      {
-        id: 'selection',
-        // Make this column a groupByBoundary. This ensures that groupBy columns
-        // are placed after it
-        groupByBoundary: true,
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
       {
         Header: 'Name',
         columns: [
@@ -582,9 +580,9 @@ function App() {
   const skipPageResetRef = React.useRef(false)
 
   // When our cell renderer calls updateMyData, we'll use
-  // the rowIndex, columnID and new value to update the
+  // the rowIndex, columnId and new value to update the
   // original data
-  const updateMyData = (rowIndex, columnID, value) => {
+  const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     skipPageResetRef.current = true
     setData(old =>
@@ -592,7 +590,7 @@ function App() {
         if (index === rowIndex) {
           return {
             ...row,
-            [columnID]: value,
+            [columnId]: value,
           }
         }
         return row

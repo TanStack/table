@@ -1,18 +1,7 @@
 import React from 'react'
+import { defaultColumn } from './publicUtils'
 
-export const defaultColumn = {
-  Cell: ({ cell: { value = '' } }) => String(value),
-  show: true,
-  width: 150,
-  minWidth: 0,
-  maxWidth: Number.MAX_SAFE_INTEGER,
-}
-
-// SSR has issues with useLayoutEffect still, so use useEffect during SSR
-export const safeUseLayoutEffect =
-  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
-    ? React.useLayoutEffect
-    : React.useEffect
+export * from './publicUtils'
 
 // Find the depth of the columns
 export function findMaxDepth(columns, depth = 0) {
@@ -24,13 +13,7 @@ export function findMaxDepth(columns, depth = 0) {
   }, 0)
 }
 
-export function decorateColumn(
-  column,
-  userDefaultColumn,
-  parent,
-  depth,
-  index
-) {
+function decorateColumn(column, userDefaultColumn, parent, depth, index) {
   // Apply the userDefaultColumn
   column = { ...defaultColumn, ...userDefaultColumn, ...column }
 
@@ -60,6 +43,7 @@ export function decorateColumn(
   column = {
     // Make sure there is a fallback header, just in case
     Header: () => <>&nbsp;</>,
+    Footer: () => <>&nbsp;</>,
     ...column,
     // Materialize and override this stuff
     id,
@@ -113,24 +97,24 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
       // If the column has a parent, add it if necessary
       if (column.parent) {
         const similarParentColumns = parentColumns.filter(
-          d => d.originalID === column.parent.id
+          d => d.originalId === column.parent.id
         )
-        if (isFirst || latestParentColumn.originalID !== column.parent.id) {
+        if (isFirst || latestParentColumn.originalId !== column.parent.id) {
           parentColumns.push({
             ...column.parent,
-            originalID: column.parent.id,
+            originalId: column.parent.id,
             id: [column.parent.id, similarParentColumns.length].join('_'),
           })
         }
       } else if (hasParents) {
         // If other columns have parents, we'll need to add a place holder if necessary
-        const originalID = [column.id, 'placeholder'].join('_')
+        const originalId = [column.id, 'placeholder'].join('_')
         const similarParentColumns = parentColumns.filter(
-          d => d.originalID === originalID
+          d => d.originalId === originalId
         )
         const placeholderColumn = decorateColumn(
           {
-            originalID,
+            originalId,
             id: [column.id, 'placeholder', similarParentColumns.length].join(
               '_'
             ),
@@ -140,7 +124,7 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
         )
         if (
           isFirst ||
-          latestParentColumn.originalID !== placeholderColumn.originalID
+          latestParentColumn.originalId !== placeholderColumn.originalId
         ) {
           parentColumns.push(placeholderColumn)
         }
@@ -176,45 +160,24 @@ export function makeHeaderGroups(flatColumns, defaultColumn) {
   return headerGroups.reverse()
 }
 
-export function determineHeaderVisibility(instance) {
-  const { headers } = instance
-
-  const handleColumn = (column, parentVisible) => {
-    column.isVisible = parentVisible
-      ? typeof column.show === 'function'
-        ? column.show(instance)
-        : !!column.show
-      : false
-
-    let totalVisibleHeaderCount = 0
-
-    if (column.headers && column.headers.length) {
-      column.headers.forEach(
-        subColumn =>
-          (totalVisibleHeaderCount += handleColumn(subColumn, column.isVisible))
-      )
-    } else {
-      totalVisibleHeaderCount = column.isVisible ? 1 : 0
-    }
-
-    column.totalVisibleHeaderCount = totalVisibleHeaderCount
-
-    return totalVisibleHeaderCount
-  }
-
-  let totalVisibleHeaderCount = 0
-
-  headers.forEach(
-    subHeader => (totalVisibleHeaderCount += handleColumn(subHeader, true))
-  )
-}
+const pathObjCache = new Map()
 
 export function getBy(obj, path, def) {
   if (!path) {
     return obj
   }
-  const pathObj = makePathArray(path)
+  const cacheKey = typeof path === 'function' ? path : JSON.stringify(path)
+
+  const pathObj =
+    pathObjCache.get(cacheKey) ||
+    (() => {
+      const pathObj = makePathArray(path)
+      pathObjCache.set(cacheKey, pathObj)
+      return pathObj
+    })()
+
   let val
+
   try {
     val = pathObj.reduce((cursor, pathPart) => cursor[pathPart], obj)
   } catch (e) {
@@ -223,37 +186,12 @@ export function getBy(obj, path, def) {
   return typeof val !== 'undefined' ? val : def
 }
 
-export function defaultOrderByFn(arr, funcs, dirs) {
-  return [...arr].sort((rowA, rowB) => {
-    for (let i = 0; i < funcs.length; i += 1) {
-      const sortFn = funcs[i]
-      const desc = dirs[i] === false || dirs[i] === 'desc'
-      const sortInt = sortFn(rowA, rowB)
-      if (sortInt !== 0) {
-        return desc ? -sortInt : sortInt
-      }
-    }
-    return dirs[0] ? rowA.index - rowB.index : rowB.index - rowA.index
-  })
-}
-
 export function getFirstDefined(...args) {
   for (let i = 0; i < args.length; i += 1) {
     if (typeof args[i] !== 'undefined') {
       return args[i]
     }
   }
-}
-
-export function defaultGroupByFn(rows, columnID) {
-  return rows.reduce((prev, row, i) => {
-    // TODO: Might want to implement a key serializer here so
-    // irregular column values can still be grouped if needed?
-    const resKey = `${row.values[columnID]}`
-    prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
-    prev[resKey].push(row)
-    return prev
-  }, {})
 }
 
 export function getElementDimensions(element) {
@@ -281,78 +219,6 @@ export function getElementDimensions(element) {
   }
 }
 
-export function flexRender(Comp, props) {
-  return isReactComponent(Comp) ? <Comp {...props} /> : Comp
-}
-
-function isClassComponent(component) {
-  return (
-    typeof component === 'function' &&
-    !!(() => {
-      let proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isReactComponent
-    })()
-  )
-}
-
-function isFunctionComponent(component) {
-  return typeof component === 'function'
-}
-
-function isReactComponent(component) {
-  return isClassComponent(component) || isFunctionComponent(component)
-}
-
-export const mergeProps = (...groups) => {
-  let props = {}
-
-  groups.forEach(({ style = {}, className, ...rest } = {}) => {
-    props = {
-      ...props,
-      ...rest,
-      style: {
-        ...(props.style || {}),
-        ...style,
-      },
-      className: [props.className, className].filter(Boolean).join(' '),
-    }
-  })
-
-  if (props.className === '') {
-    delete props.className
-  }
-
-  return props
-}
-
-export const applyHooks = (hooks, initial, ...args) =>
-  hooks.reduce((prev, next) => {
-    const nextValue = next(prev, ...args)
-    if (typeof nextValue === 'undefined') {
-      throw new Error(
-        'React Table: A hook just returned undefined! This is not allowed.'
-      )
-    }
-    return nextValue
-  }, initial)
-
-export const applyPropHooks = (hooks, ...args) =>
-  hooks.reduce((prev, next) => mergeProps(prev, next(...args)), {})
-
-export const warnUnknownProps = props => {
-  if (Object.keys(props).length) {
-    throw new Error(
-      `Unknown options passed to useReactTable:
-
-${JSON.stringify(props, null, 2)}`
-    )
-  }
-}
-
-export function sum(arr) {
-  return arr.reduce((prev, curr) => prev + curr, 0)
-}
-
 export function isFunction(a) {
   if (typeof a === 'function') {
     return a
@@ -377,40 +243,6 @@ export function flattenBy(columns, childKey) {
   return flatColumns
 }
 
-export function ensurePluginOrder(plugins, befores, pluginName, afters) {
-  const pluginIndex = plugins.findIndex(
-    plugin => plugin.pluginName === pluginName
-  )
-
-  if (pluginIndex === -1) {
-    throw new Error(`The plugin ${pluginName} was not found in the plugin list!
-This usually means you need to need to name your plugin hook by setting the 'pluginName' property of the hook function, eg:
-
-  ${pluginName}.pluginName = '${pluginName}'
-`)
-  }
-
-  befores.forEach(before => {
-    const beforeIndex = plugins.findIndex(
-      plugin => plugin.pluginName === before
-    )
-    if (beforeIndex > -1 && beforeIndex > pluginIndex) {
-      throw new Error(
-        `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
-      )
-    }
-  })
-
-  afters.forEach(after => {
-    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
-    if (afterIndex > -1 && afterIndex < pluginIndex) {
-      throw new Error(
-        `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
-      )
-    }
-  })
-}
-
 export function expandRows(
   rows,
   { manualExpandedKey, expanded, expandSubRows = true }
@@ -418,11 +250,8 @@ export function expandRows(
   const expandedRows = []
 
   const handleRow = row => {
-    const key = row.path.join('.')
-
     row.isExpanded =
-      (row.original && row.original[manualExpandedKey]) ||
-      expanded.includes(key)
+      (row.original && row.original[manualExpandedKey]) || expanded[row.id]
 
     row.canExpand = row.subRows && !!row.subRows.length
 
@@ -440,6 +269,9 @@ export function expandRows(
 
 //
 
+const reOpenBracket = /\[/g
+const reCloseBracket = /\]/g
+
 function makePathArray(obj) {
   return (
     flattenDeep(obj)
@@ -448,8 +280,8 @@ function makePathArray(obj) {
       // join parts using period
       .join('.')
       // replace brackets with periods
-      .replace(/\[/g, '.')
-      .replace(/\]/g, '')
+      .replace(reOpenBracket, '.')
+      .replace(reCloseBracket, '')
       // split it back out on periods
       .split('.')
   )

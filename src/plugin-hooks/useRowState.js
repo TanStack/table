@@ -1,48 +1,74 @@
 import React from 'react'
 
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import {
+  actions,
+  functionalUpdate,
+  useMountedLayoutEffect,
+  useGetLatest,
+} from '../utils'
 
-defaultState.rowState = {}
-
-addActions('setRowState', 'setCellState')
+// Actions
+actions.setRowState = 'setRowState'
+actions.resetRowState = 'resetRowState'
 
 export const useRowState = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
 }
 
 useRowState.pluginName = 'useRowState'
 
-function useMain(instance) {
+function reducer(state, action) {
+  if (action.type === actions.init) {
+    return {
+      rowState: {},
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetRowState) {
+    return {
+      ...state,
+      rowState: {},
+    }
+  }
+
+  if (action.type === actions.setRowState) {
+    const { id, value } = action
+
+    return {
+      ...state,
+      rowState: {
+        ...state.rowState,
+        [id]: functionalUpdate(value, state.rowState[id] || {}),
+      },
+    }
+  }
+}
+
+function useInstance(instance) {
   const {
     hooks,
-    rows,
     initialRowStateAccessor,
+    autoResetRowState = true,
     state: { rowState },
-    setState,
+    data,
+    dispatch,
   } = instance
 
   const setRowState = React.useCallback(
-    (path, updater, action = actions.setRowState) => {
-      const pathKey = path.join('.')
-      return setState(old => {
-        return {
-          ...old,
-          rowState: {
-            ...old.rowState,
-            [pathKey]:
-              typeof updater === 'function'
-                ? updater(old.rowState[pathKey])
-                : updater,
-          },
-        }
-      }, action)
-    },
-    [setState]
+    (id, value, columnId) =>
+      dispatch({
+        type: actions.setRowState,
+        id,
+        value,
+        columnId,
+      }),
+    [dispatch]
   )
 
   const setCellState = React.useCallback(
-    (rowPath, columnID, updater) => {
+    (rowPath, columnId, value) => {
       return setRowState(
         rowPath,
         old => {
@@ -50,63 +76,50 @@ function useMain(instance) {
             ...old,
             cellState: {
               ...old.cellState,
-              [columnID]:
-                typeof updater === 'function'
-                  ? updater(old.cellState[columnID])
-                  : updater,
+              [columnId]: functionalUpdate(
+                value,
+                (old.cellState || {})[columnId] || {}
+              ),
             },
           }
         },
-        actions.setCellState
+        columnId
       )
     },
     [setRowState]
   )
 
-  const rowsMountedRef = React.useRef()
-
-  // When data changes, reset row and cell state
-  React.useEffect(() => {
-    if (rowsMountedRef.current) {
-      setState(old => {
-        return {
-          ...old,
-          rowState: {},
-        }
-      }, actions.setRowState)
-    }
-
-    rowsMountedRef.current = true
-  }, [rows, setState])
-
   hooks.prepareRow.push(row => {
-    const pathKey = row.path.join('.')
-
     if (row.original) {
       row.state =
-        (typeof rowState[pathKey] !== 'undefined'
-          ? rowState[pathKey]
+        (typeof rowState[row.id] !== 'undefined'
+          ? rowState[row.id]
           : initialRowStateAccessor && initialRowStateAccessor(row)) || {}
 
       row.setState = updater => {
-        return setRowState(row.path, updater)
+        return setRowState(row.id, updater)
       }
 
       row.cells.forEach(cell => {
         cell.state = row.state.cellState || {}
 
         cell.setState = updater => {
-          return setCellState(row.path, cell.column.id, updater)
+          return setCellState(row.id, cell.column.id, updater)
         }
       })
     }
-
-    return row
   })
 
-  return {
-    ...instance,
+  const getAutoResetRowState = useGetLatest(autoResetRowState)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetRowState()) {
+      dispatch({ type: actions.resetRowState })
+    }
+  }, [data])
+
+  Object.assign(instance, {
     setRowState,
     setCellState,
-  }
+  })
 }

@@ -4,6 +4,9 @@
   - Basic
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/basic)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
+  - Footers
+    - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/footers)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/footers)
   - Sorting
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/sorting)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting)
@@ -13,6 +16,9 @@
   - Grouping
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping)
+  - Grouping (Single Column)
+    - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping-column)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping-column)
   - Pagination
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
@@ -31,6 +37,9 @@
   - Column Ordering
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-ordering)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-ordering)
+  - Column Hiding
+    - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-hiding)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-hiding)
   - Column Resizing
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-resizing)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-resizing)

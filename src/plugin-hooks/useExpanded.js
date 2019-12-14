@@ -1,144 +1,163 @@
 import React from 'react'
 
 import {
-  mergeProps,
-  applyPropHooks,
+  actions,
+  makePropGetter,
   expandRows,
-  safeUseLayoutEffect,
+  useMountedLayoutEffect,
+  useGetLatest,
 } from '../utils'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
+import { useConsumeHookGetter, functionalUpdate } from '../publicUtils'
 
-defaultState.expanded = []
-
-addActions('toggleExpanded', 'setExpanded')
+// Actions
+actions.toggleExpanded = 'toggleExpanded'
+actions.toggleAllExpanded = 'toggleAllExpanded'
+actions.setExpanded = 'setExpanded'
+actions.resetExpanded = 'resetExpanded'
 
 export const useExpanded = hooks => {
-  hooks.getExpandedToggleProps = []
-  hooks.useMain.push(useMain)
+  hooks.getExpandedToggleProps = [defaultGetExpandedToggleProps]
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
 }
 
 useExpanded.pluginName = 'useExpanded'
 
-const defaultGetResetExpandedDeps = ({ data }) => [data]
+const defaultGetExpandedToggleProps = (props, instance, row) => [
+  props,
+  {
+    onClick: e => {
+      e.persist()
+      row.toggleExpanded()
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    title: 'Toggle Expanded',
+  },
+]
 
-function useMain(instance) {
+// Reducer
+function reducer(state, action) {
+  if (action.type === actions.init) {
+    return {
+      expanded: {},
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetExpanded) {
+    return {
+      ...state,
+      expanded: {},
+    }
+  }
+
+  if (action.type === actions.setExpanded) {
+    return {
+      ...state,
+      expanded: functionalUpdate(action.expanded, state.expanded),
+    }
+  }
+
+  if (action.type === actions.toggleExpanded) {
+    const { id, expanded: setExpanded } = action
+    const exists = state.expanded[id]
+
+    const shouldExist =
+      typeof setExpanded !== 'undefined' ? setExpanded : !exists
+
+    if (!exists && shouldExist) {
+      return {
+        ...state,
+        expanded: {
+          ...state.expanded,
+          [id]: true,
+        },
+      }
+    } else if (exists && !shouldExist) {
+      const { [id]: _, ...rest } = state.expanded
+      return {
+        ...state,
+        expanded: rest,
+      }
+    } else {
+      return state
+    }
+  }
+}
+
+function useInstance(instance) {
   const {
-    debug,
+    data,
     rows,
     manualExpandedKey = 'expanded',
     paginateExpandedRows = true,
     expandSubRows = true,
     hooks,
+    autoResetExpanded = true,
     state: { expanded },
-    setState,
-    getResetExpandedDeps = defaultGetResetExpandedDeps,
+    dispatch,
   } = instance
 
+  const getAutoResetExpanded = useGetLatest(autoResetExpanded)
+
   // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
-      setState(
-        old => ({
-          ...old,
-          expanded: [],
-        }),
-        actions.setExpanded
-      )
+  useMountedLayoutEffect(() => {
+    if (getAutoResetExpanded()) {
+      dispatch({ type: actions.resetExpanded })
     }
-    isMountedRef.current = true
-  }, [
-    setState,
-    ...(getResetExpandedDeps ? getResetExpandedDeps(instance) : []),
-  ])
+  }, [dispatch, data])
 
-  const toggleExpandedByPath = (path, set) => {
-    const key = path.join('.')
-
-    return setState(old => {
-      const exists = old.expanded.includes(key)
-      const shouldExist = typeof set !== 'undefined' ? set : !exists
-      let newExpanded = new Set(old.expanded)
-
-      if (!exists && shouldExist) {
-        newExpanded.add(key)
-      } else if (exists && !shouldExist) {
-        newExpanded.delete(key)
-      } else {
-        return old
-      }
-
-      return {
-        ...old,
-        expanded: [...newExpanded.values()],
-      }
-    }, actions.toggleExpanded)
+  const toggleExpanded = (id, expanded) => {
+    dispatch({ type: actions.toggleExpanded, id, expanded })
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getInstance = useGetLatest(instance)
+
+  const getExpandedTogglePropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getExpandedToggleProps'
+  )
 
   hooks.prepareRow.push(row => {
-    row.toggleExpanded = set => toggleExpandedByPath(row.path, set)
-    row.getExpandedToggleProps = props => {
-      return mergeProps(
-        {
-          onClick: e => {
-            e.persist()
-            row.toggleExpanded()
-          },
-          style: {
-            cursor: 'pointer',
-          },
-          title: 'Toggle Expanded',
-        },
-        applyPropHooks(
-          instanceRef.current.hooks.getExpandedToggleProps,
-          row,
-          instanceRef.current
-        ),
-        props
-      )
-    }
-    return row
+    row.toggleExpanded = set => instance.toggleExpanded(row.id, set)
+
+    row.getExpandedToggleProps = makePropGetter(
+      getExpandedTogglePropsHooks(),
+      getInstance(),
+      row
+    )
   })
 
   const expandedRows = React.useMemo(() => {
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.info('getExpandedRows')
-
     if (paginateExpandedRows) {
       return expandRows(rows, { manualExpandedKey, expanded, expandSubRows })
     }
 
     return rows
-  }, [
-    debug,
-    paginateExpandedRows,
-    rows,
-    manualExpandedKey,
+  }, [paginateExpandedRows, rows, manualExpandedKey, expanded, expandSubRows])
+
+  const expandedDepth = React.useMemo(() => findExpandedDepth(expanded), [
     expanded,
-    expandSubRows,
   ])
 
-  const expandedDepth = findExpandedDepth(expanded)
-
-  return {
-    ...instance,
-    toggleExpandedByPath,
-    expandedDepth,
+  Object.assign(instance, {
+    preExpandedRows: rows,
+    expandedRows,
     rows: expandedRows,
-  }
+    toggleExpanded,
+    expandedDepth,
+  })
 }
 
 function findExpandedDepth(expanded) {
   let maxDepth = 0
 
-  expanded.forEach(key => {
-    const path = key.split('.')
-    maxDepth = Math.max(maxDepth, path.length)
+  Object.keys(expanded).forEach(id => {
+    const splitId = id.split('.')
+    maxDepth = Math.max(maxDepth, splitId.length)
   })
 
   return maxDepth

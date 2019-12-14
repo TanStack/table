@@ -61,7 +61,6 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
-    rows,
     // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable(
@@ -77,8 +76,6 @@ function Table({
     },
     usePagination
   )
-
-  // Now we can get our table state from the hoisted table state tuple
 
   // Listen for changes in pagination and use the state to fetch our new data
   React.useEffect(() => {
@@ -108,7 +105,16 @@ function Table({
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
+                  </span>
+                </th>
               ))}
             </tr>
           ))}
@@ -127,9 +133,9 @@ function Table({
           <tr>
             {loading ? (
               // Use our custom loading state to show a loading indicator
-              <td>Loading...</td>
+              <td colSpan="10000">Loading...</td>
             ) : (
-              <td>
+              <td colSpan="10000">
                 Showing {page.length} of ~{controlledPageCount * pageSize}{' '}
                 results
               </td>
@@ -245,7 +251,7 @@ function App() {
     // even a server. But for this example, we'll just fake it.
 
     // Give this fetch an ID
-    const fetchID = ++fetchIdRef.current
+    const fetchId = ++fetchIdRef.current
 
     // Set the loading state
     setLoading(true)
@@ -253,7 +259,7 @@ function App() {
     // We'll even set a delay to simulate a server here
     setTimeout(() => {
       // Only update the data if this is the latest fetch
-      if (fetchID === fetchIdRef.current) {
+      if (fetchId === fetchIdRef.current) {
         const startRow = pageSize * pageIndex
         const endRow = startRow + pageSize
         setData(serverData.slice(startRow, endRow))

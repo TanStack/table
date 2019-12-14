@@ -33,6 +33,23 @@ const Styles = styled.div`
   }
 `
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
+
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -42,13 +59,36 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     selectedFlatRows,
-    state: { selectedRowPaths },
+    state: { selectedRowIds },
   } = useTable(
     {
       columns,
       data,
     },
-    useRowSelect
+    useRowSelect,
+    hooks => {
+      hooks.flatColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   )
 
   // Render the UI for your table
@@ -65,27 +105,24 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
+          {rows.slice(0, 10).map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.length}</p>
+      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
       <pre>
         <code>
           {JSON.stringify(
             {
-              selectedRowPaths,
+              selectedRowIds: selectedRowIds,
               'selectedFlatRows[].original': selectedFlatRows.map(
                 d => d.original
               ),
@@ -102,24 +139,6 @@ function Table({ columns, data }) {
 function App() {
   const columns = React.useMemo(
     () => [
-      // Let's make a column for selection
-      {
-        id: 'selection',
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
       {
         Header: 'Name',
         columns: [
@@ -158,7 +177,7 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(10), [])
+  const data = React.useMemo(() => makeData(10, 3), [])
 
   return (
     <Styles>

@@ -75,14 +75,43 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: { selectedRowPaths },
+    state: { selectedRowIds },
   } = useTable(
     {
       columns,
       data,
     },
     useRowSelect,
-    useExpanded
+    useExpanded,
+    hooks => {
+      hooks.flatColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <label>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />{' '}
+                Select All
+              </label>
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <label>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />{' '}
+                Select Row
+              </label>
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   )
 
   // Render the UI for your table
@@ -113,47 +142,37 @@ function Table({ columns, data }) {
           )}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.length}</p>
+      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
       <pre>
-        <code>{JSON.stringify({ selectedRowPaths }, null, 2)}</code>
+        <code>
+          {JSON.stringify({ selectedRowIds: selectedRowIds }, null, 2)}
+        </code>
       </pre>
     </>
   )
 }
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return <input type="checkbox" ref={resolvedRef} {...rest} />
+  }
+)
+
 function App() {
   const columns = React.useMemo(
     () => [
-      // Let's make a column for selection
-      {
-        id: 'selection',
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <label>
-              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />{' '}
-              Select All
-            </label>
-          </div>
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }) => (
-          <div>
-            <label>
-              <input type="checkbox" {...row.getToggleRowSelectedProps()} />{' '}
-              Select Row
-            </label>
-          </div>
-        ),
-      },
       {
         id: 'selectedStatus',
         Cell: ({ row }) => (
           <div>
-            Row {row.path.join('.')}{' '}
-            {row.isSelected ? 'Selected' : 'Not Selected'}
+            Row {row.id} {row.isSelected ? 'Selected' : 'Not Selected'}
           </div>
         ),
       },

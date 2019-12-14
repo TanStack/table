@@ -1,6 +1,6 @@
 import React from 'react'
 
-// Token pagination behaves a bit differently from
+// Token pagination behaves a bit different from
 // index based pagination. This hook aids in that process.
 
 export const useTokenPagination = () => {

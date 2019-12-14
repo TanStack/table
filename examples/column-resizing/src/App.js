@@ -35,18 +35,18 @@ const Styles = styled.div`
         border-right: 0;
       }
 
-      ${'' /* The resizer styles! */}
-
       .resizer {
         display: inline-block;
         background: blue;
-        width: 5px;
+        width: 10px;
         height: 100%;
         position: absolute;
         right: 0;
         top: 0;
         transform: translateX(50%);
         z-index: 1;
+        ${'' /* prevents from scrolling while dragging on touch devices */}
+        touch-action:none;
 
         &.isResizing {
           background: red;
@@ -59,9 +59,9 @@ const Styles = styled.div`
 function Table({ columns, data }) {
   const defaultColumn = React.useMemo(
     () => ({
-      minWidth: 20,
+      minWidth: 30,
       width: 150,
-      maxWidth: 500,
+      maxWidth: 400,
     }),
     []
   )
@@ -102,21 +102,20 @@ function Table({ columns, data }) {
       </div>
 
       <div {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) => {
-            prepareRow(row);
-            return (
-              <div {...row.getRowProps()} className="tr">
-                {row.cells.map(cell => {
-                  return (
-                    <div {...cell.getCellProps()} className="td">
-                      {cell.render('Cell')}
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-        )}
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <div {...row.getRowProps()} className="tr">
+              {row.cells.map(cell => {
+                return (
+                  <div {...cell.getCellProps()} className="td">
+                    {cell.render('Cell')}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

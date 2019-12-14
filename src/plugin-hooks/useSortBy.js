@@ -1,163 +1,213 @@
 import React from 'react'
 
-import { ensurePluginOrder, defaultColumn, safeUseLayoutEffect } from '../utils'
-import { addActions, actions } from '../actions'
-import { defaultState } from '../hooks/useTable'
-import * as sortTypes from '../sortTypes'
 import {
-  mergeProps,
-  applyPropHooks,
+  actions,
+  ensurePluginOrder,
+  defaultColumn,
+  makePropGetter,
+  useConsumeHookGetter,
   getFirstDefined,
   defaultOrderByFn,
   isFunction,
+  useGetLatest,
+  useMountedLayoutEffect,
 } from '../utils'
 
-defaultState.sortBy = []
+import * as sortTypes from '../sortTypes'
+
+// Actions
+actions.resetSortBy = 'resetSortBy'
+actions.toggleSortBy = 'toggleSortBy'
+actions.clearSortBy = 'clearSortBy'
+
 defaultColumn.sortType = 'alphanumeric'
 defaultColumn.sortDescFirst = false
 
-addActions('sortByChange')
-
 export const useSortBy = hooks => {
-  hooks.useMain.push(useMain)
+  hooks.getSortByToggleProps = [defaultGetSortByToggleProps]
+  hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
 }
 
 useSortBy.pluginName = 'useSortBy'
 
-function useMain(instance) {
+const defaultGetSortByToggleProps = (props, instance, column) => {
+  const { isMultiSortEvent = e => e.shiftKey } = instance
+
+  return [
+    props,
+    {
+      onClick: column.canSort
+        ? e => {
+            e.persist()
+            column.toggleSortBy(
+              undefined,
+              !instance.disableMultiSort && isMultiSortEvent(e)
+            )
+          }
+        : undefined,
+      style: {
+        cursor: column.canSort ? 'pointer' : undefined,
+      },
+      title: column.canSort ? 'Toggle SortBy' : undefined,
+    },
+  ]
+}
+
+// Reducer
+function reducer(state, action, previousState, instance) {
+  if (action.type === actions.init) {
+    return {
+      sortBy: [],
+      ...state,
+    }
+  }
+
+  if (action.type === actions.resetSortBy) {
+    return {
+      ...state,
+      sortBy: [],
+    }
+  }
+
+  if (action.type === actions.clearSortBy) {
+    const { sortBy } = state
+    const newSortBy = sortBy.filter(d => d.id !== action.columnId)
+
+    return {
+      ...state,
+      sortBy: newSortBy,
+    }
+  }
+
+  if (action.type === actions.toggleSortBy) {
+    const { columnId, desc, multi } = action
+
+    const {
+      flatColumns,
+      disableMultiSort,
+      disableSortRemove,
+      disableMultiRemove,
+      maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+    } = instance
+
+    const { sortBy } = state
+
+    // Find the column for this columnId
+    const column = flatColumns.find(d => d.id === columnId)
+    const { sortDescFirst } = column
+
+    // Find any existing sortBy for this column
+    const existingSortBy = sortBy.find(d => d.id === columnId)
+    const existingIndex = sortBy.findIndex(d => d.id === columnId)
+    const hasDescDefined = typeof desc !== 'undefined' && desc !== null
+
+    let newSortBy = []
+
+    // What should we do with this sort action?
+    let sortAction
+
+    if (!disableMultiSort && multi) {
+      if (existingSortBy) {
+        sortAction = 'toggle'
+      } else {
+        sortAction = 'add'
+      }
+    } else {
+      // Normal mode
+      if (existingIndex !== sortBy.length - 1) {
+        sortAction = 'replace'
+      } else if (existingSortBy) {
+        sortAction = 'toggle'
+      } else {
+        sortAction = 'replace'
+      }
+    }
+
+    // Handle toggle states that will remove the sortBy
+    if (
+      sortAction === 'toggle' && // Must be toggling
+      !disableSortRemove && // If disableSortRemove, disable in general
+      !hasDescDefined && // Must not be setting desc
+      (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
+      ((existingSortBy && // Finally, detect if it should indeed be removed
+        existingSortBy.desc &&
+        !sortDescFirst) ||
+        (!existingSortBy.desc && sortDescFirst))
+    ) {
+      sortAction = 'remove'
+    }
+
+    if (sortAction === 'replace') {
+      newSortBy = [
+        {
+          id: columnId,
+          desc: hasDescDefined ? desc : sortDescFirst,
+        },
+      ]
+    } else if (sortAction === 'add') {
+      newSortBy = [
+        ...sortBy,
+        {
+          id: columnId,
+          desc: hasDescDefined ? desc : sortDescFirst,
+        },
+      ]
+      // Take latest n columns
+      newSortBy.splice(0, newSortBy.length - maxMultiSortColCount)
+    } else if (sortAction === 'toggle') {
+      // This flips (or sets) the
+      newSortBy = sortBy.map(d => {
+        if (d.id === columnId) {
+          return {
+            ...d,
+            desc: hasDescDefined ? desc : !existingSortBy.desc,
+          }
+        }
+        return d
+      })
+    } else if (sortAction === 'remove') {
+      newSortBy = sortBy.filter(d => d.id !== columnId)
+    }
+
+    return {
+      ...state,
+      sortBy: newSortBy,
+    }
+  }
+}
+
+function useInstance(instance) {
   const {
-    debug,
+    data,
     rows,
     flatColumns,
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
-    manualSorting,
+    manualSortBy,
     defaultCanSort,
     disableSortBy,
-    disableSortRemove,
-    disableMultiRemove,
-    disableMultiSort,
-    isMultiSortEvent = e => e.shiftKey,
-    maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
     flatHeaders,
-    hooks,
     state: { sortBy },
-    setState,
+    dispatch,
     plugins,
-    getResetSortByDeps = false,
+    autoResetSortBy = true,
   } = instance
 
   ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
-  // Add custom hooks
-  hooks.getSortByToggleProps = []
 
-  // Bypass any effects from firing when this changes
-  const isMountedRef = React.useRef()
-  safeUseLayoutEffect(() => {
-    if (isMountedRef.current) {
-      setState(
-        old => ({
-          ...old,
-          sortBy: [],
-        }),
-        actions.sortByChange
-      )
-    }
-    isMountedRef.current = true
-  }, [setState, ...(getResetSortByDeps ? getResetSortByDeps(instance) : [])])
-
-  // Updates sorting based on a columnID, desc flag and multi flag
-  const toggleSortBy = (columnID, desc, multi) => {
-    return setState(old => {
-      const { sortBy } = old
-
-      // Find the column for this columnID
-      const column = flatColumns.find(d => d.id === columnID)
-      const { sortDescFirst } = column
-
-      // Find any existing sortBy for this column
-      const existingSortBy = sortBy.find(d => d.id === columnID)
-      const existingIndex = sortBy.findIndex(d => d.id === columnID)
-      const hasDescDefined = typeof desc !== 'undefined' && desc !== null
-
-      let newSortBy = []
-
-      // What should we do with this sort action?
-      let action
-
-      if (!disableMultiSort && multi) {
-        if (existingSortBy) {
-          action = 'toggle'
-        } else {
-          action = 'add'
-        }
-      } else {
-        // Normal mode
-        if (existingIndex !== sortBy.length - 1) {
-          action = 'replace'
-        } else if (existingSortBy) {
-          action = 'toggle'
-        } else {
-          action = 'replace'
-        }
-      }
-
-      // Handle toggle states that will remove the sortBy
-      if (
-        action === 'toggle' && // Must be toggling
-        !disableSortRemove && // If disableSortRemove, disable in general
-        !hasDescDefined && // Must not be setting desc
-        (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
-        ((existingSortBy && // Finally, detect if it should indeed be removed
-          existingSortBy.desc &&
-          !sortDescFirst) ||
-          (!existingSortBy.desc && sortDescFirst))
-      ) {
-        action = 'remove'
-      }
-
-      if (action === 'replace') {
-        newSortBy = [
-          {
-            id: columnID,
-            desc: hasDescDefined ? desc : sortDescFirst,
-          },
-        ]
-      } else if (action === 'add') {
-        newSortBy = [
-          ...sortBy,
-          {
-            id: columnID,
-            desc: hasDescDefined ? desc : sortDescFirst,
-          },
-        ]
-        // Take latest n columns
-        newSortBy.splice(0, newSortBy.length - maxMultiSortColCount)
-      } else if (action === 'toggle') {
-        // This flips (or sets) the
-        newSortBy = sortBy.map(d => {
-          if (d.id === columnID) {
-            return {
-              ...d,
-              desc: hasDescDefined ? desc : !existingSortBy.desc,
-            }
-          }
-          return d
-        })
-      } else if (action === 'remove') {
-        newSortBy = sortBy.filter(d => d.id !== columnID)
-      }
-
-      return {
-        ...old,
-        sortBy: newSortBy,
-      }
-    }, actions.sortByChange)
+  // Updates sorting based on a columnId, desc flag and multi flag
+  const toggleSortBy = (columnId, desc, multi) => {
+    dispatch({ type: actions.toggleSortBy, columnId, desc, multi })
   }
 
   // use reference to avoid memory leak in #1608
-  const instanceRef = React.useRef()
-  instanceRef.current = instance
+  const getInstance = useGetLatest(instance)
+
+  const getSortByTogglePropsHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'getSortByToggleProps'
+  )
 
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
@@ -182,43 +232,16 @@ function useMain(instance) {
       column.toggleSortBy = (desc, multi) =>
         toggleSortBy(column.id, desc, multi)
 
-      column.clearSorting = () => {
-        return setState(old => {
-          const { sortBy } = old
-          const newSortBy = sortBy.filter(d => d.id !== column.id)
-          return {
-            ...old,
-            sortBy: newSortBy,
-          }
-        }, actions.sortByChange)
+      column.clearSortBy = () => {
+        dispatch({ type: actions.clearSortBy, columnId: column.id })
       }
     }
 
-    column.getSortByToggleProps = props => {
-      return mergeProps(
-        {
-          onClick: canSort
-            ? e => {
-                e.persist()
-                column.toggleSortBy(
-                  undefined,
-                  !instanceRef.current.disableMultiSort && isMultiSortEvent(e)
-                )
-              }
-            : undefined,
-          style: {
-            cursor: canSort ? 'pointer' : undefined,
-          },
-          title: 'Toggle SortBy',
-        },
-        applyPropHooks(
-          instanceRef.current.hooks.getSortByToggleProps,
-          column,
-          instanceRef.current
-        ),
-        props
-      )
-    }
+    column.getSortByToggleProps = makePropGetter(
+      getSortByTogglePropsHooks(),
+      getInstance(),
+      column
+    )
 
     const columnSort = sortBy.find(d => d.id === id)
     column.isSorted = !!columnSort
@@ -227,11 +250,9 @@ function useMain(instance) {
   })
 
   const sortedRows = React.useMemo(() => {
-    if (manualSorting || !sortBy.length) {
+    if (manualSortBy || !sortBy.length) {
       return rows
     }
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.time('getSortedRows')
 
     // Filter out sortBys that correspond to non existing columns
     const availableSortBy = sortBy.filter(sort =>
@@ -302,24 +323,21 @@ function useMain(instance) {
       return sortedData
     }
 
-    if (process.env.NODE_ENV === 'development' && debug)
-      console.timeEnd('getSortedRows')
-
     return sortData(rows)
-  }, [
-    manualSorting,
-    sortBy,
-    debug,
-    rows,
-    flatColumns,
-    orderByFn,
-    userSortTypes,
-  ])
+  }, [manualSortBy, sortBy, rows, flatColumns, orderByFn, userSortTypes])
 
-  return {
-    ...instance,
-    toggleSortBy,
-    rows: sortedRows,
+  const getAutoResetSortBy = useGetLatest(autoResetSortBy)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetSortBy()) {
+      dispatch({ type: actions.resetSortBy })
+    }
+  }, [manualSortBy ? null : data])
+
+  Object.assign(instance, {
     preSortedRows: rows,
-  }
+    sortedRows,
+    rows: sortedRows,
+    toggleSortBy,
+  })
 }

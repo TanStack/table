@@ -1,7 +1,7 @@
 {
   "name": "react-table",
-  "version": "7.0.0-beta.19",
-  "description": "A fast, lightweight, opinionated table and datagrid built on React",
+  "version": "7.0.0-rc.10",
+  "description": "Hooks for building lightweight, fast and extendable datagrids for React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
   "repository": {
@@ -20,10 +20,9 @@
     "commit": "git add . && git-cz",
     "test": "is-ci \"test:ci\" \"test:dev\"",
     "test:dev": "jest --watch",
-    "test:ci": "yarn test:jest && yarn test:types",
+    "test:ci": "yarn test:jest",
     "test:jest": "jest",
-    "test:types": "echo '\n****\nTODO: Re-enable dtslint\n****\n'",
-    "build": "rollup -c",
+    "build": "cross-env NODE_ENV=production rollup -c",
     "start": "rollup -c -w",
     "prepare": "yarn build",
     "release": "yarn publish",
@@ -40,7 +39,6 @@
     "README.md"
   ],
   "peerDependencies": {
-    "prop-types": "^15.5.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3"
   },
@@ -92,6 +90,7 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-size": "^0.2.1",
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
     "snapshot-diff": "^0.6.1"

@@ -30,4 +30,4 @@ As of React Table v7, **you the developer** are responsible for rendering your o
 After reading about React Table's concepts, you should:
 
 - [Check Out Some Examples](./examples.md)
-- [Study the API](./api.md)
+- [Study the API](./api/README.md)

@@ -92,19 +92,18 @@ function Table({ columns, data }) {
       </div>
 
       <div className="rows" {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) => {
-            prepareRow(row);
-            return (
-              <div {...row.getRowProps()} className="row body">
-                {row.cells.map((cell,index) => (
-                  <div {...cell.getCellProps()} key={index} className="cell">
-                    {cell.render('Cell')}
-                  </div>
-                ))}
-              </div>
-            )}
-        )}
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <div {...row.getRowProps()} className="row body">
+              {row.cells.map((cell, index) => (
+                <div {...cell.getCellProps()} key={index} className="cell">
+                  {cell.render('Cell')}
+                </div>
+              ))}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
