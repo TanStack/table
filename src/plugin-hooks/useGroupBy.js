@@ -85,7 +85,9 @@ function flatColumns(flatColumns, { state: { groupBy } }) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
 
-  const groupByColumns = groupBy.map(g => flatColumns.find(col => col.id === g))
+  const groupByColumns = groupBy
+    .map(g => flatColumns.find(col => col.id === g))
+    .filter(col => !!col)
   const nonGroupByColumns = flatColumns.filter(col => !groupBy.includes(col.id))
 
   flatColumns = [...groupByColumns, ...nonGroupByColumns]
@@ -180,6 +182,11 @@ function useInstance(instance) {
       return [rows, flatRows]
     }
 
+    // Ensure that the list of filtered columns exist
+    const existingGroupBy = groupBy.filter(g =>
+      flatColumns.find(col => col.id === g)
+    )
+
     // Find the columns that can or are aggregating
     // Uses each column to aggregate rows into a single value
     const aggregateRowsToValues = (rows, isAggregated) => {
@@ -187,7 +194,7 @@ function useInstance(instance) {
 
       flatColumns.forEach(column => {
         // Don't aggregate columns that are in the groupBy
-        if (groupBy.includes(column.id)) {
+        if (existingGroupBy.includes(column.id)) {
           values[column.id] = rows[0] ? rows[0].values[column.id] : null
           return
         }
@@ -234,11 +241,11 @@ function useInstance(instance) {
     // Recursively group the data
     const groupRecursively = (rows, depth = 0, parentId) => {
       // This is the last level, just return the rows
-      if (depth === groupBy.length) {
+      if (depth === existingGroupBy.length) {
         return rows
       }
 
-      const columnId = groupBy[depth]
+      const columnId = existingGroupBy[depth]
 
       // Group the rows together for this level
       let groupedRows = groupByFn(rows, columnId)
@@ -251,7 +258,10 @@ function useInstance(instance) {
 
           subRows = groupRecursively(subRows, depth + 1, id)
 
-          const values = aggregateRowsToValues(subRows, depth < groupBy.length)
+          const values = aggregateRowsToValues(
+            subRows,
+            depth < existingGroupBy.length
+          )
 
           const row = {
             id,
