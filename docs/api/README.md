@@ -10,6 +10,7 @@ React Table is essentially a compatible collection of **custom React hooks**:
   - Core Plugin Hooks
     - [`useGroupBy`](./useGroupBy.md)
     - [`useFilters`](./useFilters.md)
+    - [`useGlobalFilter`](./useGlobalFilter.md)
     - [`useSortBy`](./useSortBy.md)
     - [`useExpanded`](./useExpanded.md)
     - [`usePagination`](./usePagination.md)
