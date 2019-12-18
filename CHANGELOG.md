@@ -1,6 +1,8 @@
 ## 7.0.0-rc.11
 
 - Fixed an issue where plugins using the `columns` hook were not getting decorated properly
+- Added back a new rendition of the `useFlexLayout` plugin and accompanying example.
+- Fixed all reset actions to use the initial state passed into the table, then fall back to the default initial state for the hook
 
 ## 7.0.0-rc.10
 

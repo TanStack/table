@@ -146,8 +146,6 @@ function reducer(state, action, previousState, instance) {
 
     handleRowById(id)
 
-    console.log(newSelectedRowIds)
-
     return {
       ...state,
       selectedRowIds: newSelectedRowIds,

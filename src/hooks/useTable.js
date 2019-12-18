@@ -319,7 +319,15 @@ export const useTable = (props, ...plugins) => {
   loopHooks(getUseInstanceBeforeDimensions(), getInstance())
 
   // Header Visibility is needed by this point
-  getInstance().totalColumnsWidth = calculateHeaderWidths(headers)
+  const [
+    totalColumnsMinWidth,
+    totalColumnsWidth,
+    totalColumnsMaxWidth,
+  ] = calculateHeaderWidths(headers)
+
+  getInstance().totalColumnsMinWidth = totalColumnsMinWidth
+  getInstance().totalColumnsWidth = totalColumnsWidth
+  getInstance().totalColumnsMaxWidth = totalColumnsMaxWidth
 
   // Snapshot hook and disallow more from being added
   const getUseInstance = useConsumeHookGetter(
@@ -530,7 +538,9 @@ export const useTable = (props, ...plugins) => {
 }
 
 function calculateHeaderWidths(headers, left = 0) {
+  let sumTotalMinWidth = 0
   let sumTotalWidth = 0
+  let sumTotalMaxWidth = 0
 
   headers.forEach(header => {
     let { headers: subHeaders } = header
@@ -538,18 +548,28 @@ function calculateHeaderWidths(headers, left = 0) {
     header.totalLeft = left
 
     if (subHeaders && subHeaders.length) {
-      header.totalWidth = calculateHeaderWidths(subHeaders, left)
+      const [totalMinWidth, totalWidth, totalMaxWidth] = calculateHeaderWidths(
+        subHeaders,
+        left
+      )
+      header.totalMinWidth = totalMinWidth
+      header.totalWidth = totalWidth
+      header.totalMaxWidth = totalMaxWidth
     } else {
+      header.totalMinWidth = header.minWidth
       header.totalWidth = Math.min(
         Math.max(header.minWidth, header.width),
         header.maxWidth
       )
+      header.totalMaxWidth = header.maxWidth
     }
     if (header.isVisible) {
       left += header.totalWidth
+      sumTotalMinWidth += header.totalMinWidth
       sumTotalWidth += header.totalWidth
+      sumTotalMaxWidth += header.totalMaxWidth
     }
   })
 
-  return sumTotalWidth
+  return [sumTotalMinWidth, sumTotalWidth, sumTotalMaxWidth]
 }
