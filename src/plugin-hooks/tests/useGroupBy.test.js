@@ -64,6 +64,9 @@ function Table({ columns, data }) {
       columns,
       data,
       defaultColumn,
+      initialState: {
+        groupBy: ["Column Doesn't Exist"],
+      },
     },
     useGroupBy,
     useExpanded
