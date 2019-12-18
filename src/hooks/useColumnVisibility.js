@@ -19,7 +19,7 @@ export const useColumnVisibility = hooks => {
 
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
-  hooks.headerGroupsDeps.push((deps, instance) => [
+  hooks.headerGroupsDeps.push((deps, { instance }) => [
     ...deps,
     instance.state.hiddenColumns,
   ])
@@ -28,7 +28,7 @@ export const useColumnVisibility = hooks => {
 
 useColumnVisibility.pluginName = 'useColumnVisibility'
 
-const defaultGetToggleHiddenProps = (props, instance, column) => [
+const defaultGetToggleHiddenProps = (props, { column }) => [
   props,
   {
     onChange: e => {
@@ -42,7 +42,7 @@ const defaultGetToggleHiddenProps = (props, instance, column) => [
   },
 ]
 
-const defaultGetToggleHideAllColumnsProps = (props, instance) => [
+const defaultGetToggleHideAllColumnsProps = (props, { instance }) => [
   props,
   {
     onChange: e => {
@@ -184,7 +184,7 @@ function useInstance(instance) {
 
   const getToggleHideAllColumnsProps = makePropGetter(
     getToggleHideAllColumnsPropsHooks(),
-    getInstance()
+    { instance: getInstance() }
   )
 
   // Snapshot hook and disallow more from being added
@@ -202,11 +202,10 @@ function useInstance(instance) {
       })
     }
 
-    column.getToggleHiddenProps = makePropGetter(
-      getToggleHiddenPropsHooks(),
-      getInstance(),
-      column
-    )
+    column.getToggleHiddenProps = makePropGetter(getToggleHiddenPropsHooks(), {
+      instance: getInstance(),
+      column,
+    })
   })
 
   Object.assign(instance, {

@@ -31,7 +31,7 @@ export const useSortBy = hooks => {
 
 useSortBy.pluginName = 'useSortBy'
 
-const defaultGetSortByToggleProps = (props, instance, column) => {
+const defaultGetSortByToggleProps = (props, { instance, column }) => {
   const { isMultiSortEvent = e => e.shiftKey } = instance
 
   return [
@@ -237,11 +237,10 @@ function useInstance(instance) {
       }
     }
 
-    column.getSortByToggleProps = makePropGetter(
-      getSortByTogglePropsHooks(),
-      getInstance(),
-      column
-    )
+    column.getSortByToggleProps = makePropGetter(getSortByTogglePropsHooks(), {
+      instance: getInstance(),
+      column,
+    })
 
     const columnSort = sortBy.find(d => d.id === id)
     column.isSorted = !!columnSort

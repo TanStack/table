@@ -1,3 +1,9 @@
+## 7.0.0-rc.14
+
+- Changed the function signature for all propGetter hooks to accept a single object of named meta properties instead of a variable length of meta arguments. The user props object has also been added as a property to all prop getters. For example, `hooks.getRowProps.push((props, instance, row) => [...])` is now written `hooks.getRowProps.push((props, { instance, row, userProps }) => [...])`
+- Changed the function signature for all reduceHooks accept a single object of named meta properties instead of a variable length of meta arguments. For example, `hooks.flatColumns.push((flatColumns, instance) => flatColumns)` is now written `hooks.flatColumns.push((flatColumns, { instance }) => flatColumns)`
+- Changed the function signature for all loopHooks accept a single object of named meta properties instead of a variable length of meta arguments. For example, `hooks.prepareRow.push((row, instance) => void)` is now written `hooks.prepareRow.push((row { instance }) => void)`
+
 ## 7.0.0-rc.13
 
 - Added the `useControlledState` hook for plugins to manipulate the final state of the table similar to how users can

@@ -67,10 +67,10 @@ function mergeProps(...propList) {
   }, {})
 }
 
-function handlePropGetter(prevProps, userProps, ...meta) {
+function handlePropGetter(prevProps, userProps, meta) {
   // Handle a lambda, pass it the previous props
   if (typeof userProps === 'function') {
-    return handlePropGetter({}, userProps(prevProps, ...meta))
+    return handlePropGetter({}, userProps(prevProps, meta))
   }
 
   // Handle an array, merge each item as separate props
@@ -82,17 +82,21 @@ function handlePropGetter(prevProps, userProps, ...meta) {
   return mergeProps(prevProps, userProps)
 }
 
-export const makePropGetter = (hooks, ...meta) => {
+export const makePropGetter = (hooks, meta = {}) => {
   return (userProps = {}) =>
     [...hooks, userProps].reduce(
-      (prev, next) => handlePropGetter(prev, next, ...meta),
+      (prev, next) =>
+        handlePropGetter(prev, next, {
+          ...meta,
+          userProps,
+        }),
       {}
     )
 }
 
-export const reduceHooks = (hooks, initial, ...args) =>
+export const reduceHooks = (hooks, initial, meta = {}) =>
   hooks.reduce((prev, next) => {
-    const nextValue = next(prev, ...args)
+    const nextValue = next(prev, meta)
     if (process.env.NODE_ENV !== 'production') {
       if (typeof nextValue === 'undefined') {
         console.info(next)
@@ -104,9 +108,9 @@ export const reduceHooks = (hooks, initial, ...args) =>
     return nextValue
   }, initial)
 
-export const loopHooks = (hooks, ...args) =>
+export const loopHooks = (hooks, meta = {}) =>
   hooks.forEach(hook => {
-    const nextValue = hook(...args)
+    const nextValue = hook(meta)
     if (process.env.NODE_ENV !== 'production') {
       if (typeof nextValue !== 'undefined') {
         console.info(hook, nextValue)

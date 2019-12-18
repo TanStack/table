@@ -11,18 +11,18 @@ export const useAbsoluteLayout = hooks => {
   hooks.getHeaderGroupProps.push(getRowStyles)
   hooks.useInstance.push(useInstance)
 
-  hooks.getHeaderProps.push((props, instance, header) => [
+  hooks.getHeaderProps.push((props, { column }) => [
     props,
     {
       style: {
         ...cellStyles,
-        left: `${header.totalLeft}px`,
-        width: `${header.totalWidth}px`,
+        left: `${column.totalLeft}px`,
+        width: `${column.totalWidth}px`,
       },
     },
   ])
 
-  hooks.getCellProps.push((props, instance, cell) => [
+  hooks.getCellProps.push((props, { cell }) => [
     props,
     {
       style: {
@@ -36,7 +36,7 @@ export const useAbsoluteLayout = hooks => {
 
 useAbsoluteLayout.pluginName = 'useAbsoluteLayout'
 
-const getRowStyles = (props, instance) => [
+const getRowStyles = (props, { instance }) => [
   props,
   {
     style: {

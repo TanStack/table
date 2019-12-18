@@ -8,7 +8,7 @@ actions.setColumnOrder = 'setColumnOrder'
 
 export const useColumnOrder = hooks => {
   hooks.stateReducers.push(reducer)
-  hooks.flatColumnsDeps.push((deps, instance) => {
+  hooks.flatColumnsDeps.push((deps, { instance }) => {
     return [...deps, instance.state.columnOrder]
   })
   hooks.flatColumns.push(flatColumns)
@@ -40,11 +40,14 @@ function reducer(state, action, previousState, instance) {
   }
 }
 
-function flatColumns(columns, instance) {
-  const {
-    state: { columnOrder },
-  } = instance
-
+function flatColumns(
+  columns,
+  {
+    instance: {
+      state: { columnOrder },
+    },
+  }
+) {
   // If there is no order, return the normal columns
   if (!columnOrder || !columnOrder.length) {
     return columns

@@ -26,7 +26,7 @@ export const useRowSelect = hooks => {
 
 useRowSelect.pluginName = pluginName
 
-const defaultGetToggleRowSelectedProps = (props, instance, row) => {
+const defaultGetToggleRowSelectedProps = (props, { instance, row }) => {
   const { manualRowSelectedKey = 'isSelected' } = instance
   let checked = false
 
@@ -52,7 +52,7 @@ const defaultGetToggleRowSelectedProps = (props, instance, row) => {
   ]
 }
 
-const defaultGetToggleAllRowsSelectedProps = (props, instance) => [
+const defaultGetToggleAllRowsSelectedProps = (props, { instance }) => [
   props,
   {
     onChange: e => {
@@ -153,7 +153,7 @@ function reducer(state, action, previousState, instance) {
   }
 }
 
-function useRows(rows, instance) {
+function useRows(rows, { instance }) {
   const {
     state: { selectedRowIds },
   } = instance
@@ -242,7 +242,7 @@ function useInstance(instance) {
 
   const getToggleAllRowsSelectedProps = makePropGetter(
     getToggleAllRowsSelectedPropsHooks(),
-    getInstance()
+    { instance: getInstance() }
   )
 
   const getToggleRowSelectedPropsHooks = useConsumeHookGetter(
@@ -255,8 +255,7 @@ function useInstance(instance) {
 
     row.getToggleRowSelectedProps = makePropGetter(
       getToggleRowSelectedPropsHooks(),
-      getInstance(),
-      row
+      { instance: getInstance(), row }
     )
   })
 

@@ -23,7 +23,7 @@ export const useExpanded = hooks => {
 
 useExpanded.pluginName = 'useExpanded'
 
-const defaultGetExpandedToggleProps = (props, instance, row) => [
+const defaultGetExpandedToggleProps = (props, { row }) => [
   props,
   {
     onClick: e => {
@@ -124,11 +124,10 @@ function useInstance(instance) {
   hooks.prepareRow.push(row => {
     row.toggleExpanded = set => instance.toggleExpanded(row.id, set)
 
-    row.getExpandedToggleProps = makePropGetter(
-      getExpandedTogglePropsHooks(),
-      getInstance(),
-      row
-    )
+    row.getExpandedToggleProps = makePropGetter(getExpandedTogglePropsHooks(), {
+      instance: getInstance(),
+      row,
+    })
   })
 
   const expandedRows = React.useMemo(() => {

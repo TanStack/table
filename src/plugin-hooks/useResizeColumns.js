@@ -26,7 +26,7 @@ export const useResizeColumns = hooks => {
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
 
-const defaultGetResizerProps = (props, instance, header) => {
+const defaultGetResizerProps = (props, { instance, header }) => {
   const { dispatch } = instance
 
   const onResizeStart = (e, header) => {
@@ -215,11 +215,10 @@ const useInstanceBeforeDimensions = instance => {
     header.isResizing = columnResizing.isResizingColumn === header.id
 
     if (canResize) {
-      header.getResizerProps = makePropGetter(
-        getResizerPropsHooks(),
-        getInstance(),
-        header
-      )
+      header.getResizerProps = makePropGetter(getResizerPropsHooks(), {
+        instance: getInstance(),
+        header,
+      })
     }
   })
 }

@@ -143,7 +143,7 @@ export const useTable = (props, ...plugins) => {
   const state = reduceHooks(
     [...getUseControlledStateHooks(), useControlledState],
     reducerState,
-    getInstance()
+    { instance: getInstance() }
   )
 
   Object.assign(getInstance(), {
@@ -164,7 +164,9 @@ export const useTable = (props, ...plugins) => {
   let columns = React.useMemo(
     () =>
       decorateColumnTree(
-        reduceHooks(getColumnsHooks(), userColumns, getInstance()),
+        reduceHooks(getColumnsHooks(), userColumns, {
+          instance: getInstance(),
+        }),
         defaultColumn
       ),
     [
@@ -173,7 +175,7 @@ export const useTable = (props, ...plugins) => {
       getInstance,
       userColumns,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(getColumnsDepsHooks(), [], getInstance()),
+      ...reduceHooks(getColumnsDepsHooks(), [], { instance: getInstance() }),
     ]
   )
 
@@ -263,13 +265,14 @@ export const useTable = (props, ...plugins) => {
   // have been access, and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
   flatColumns = React.useMemo(
-    () => reduceHooks(flatColumnsHooks(), flatColumns, getInstance()),
+    () =>
+      reduceHooks(flatColumnsHooks(), flatColumns, { instance: getInstance() }),
     [
       flatColumns,
       flatColumnsHooks,
       getInstance,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(flatColumnsDepsHooks(), [], getInstance()),
+      ...reduceHooks(flatColumnsDepsHooks(), [], { instance: getInstance() }),
     ]
   )
 
@@ -301,7 +304,7 @@ export const useTable = (props, ...plugins) => {
       getHeaderGroups,
       getInstance,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(getHeaderGroupsDeps(), [], getInstance()),
+      ...reduceHooks(getHeaderGroupsDeps(), [], { instance: getInstance() }),
     ]
   )
 
@@ -367,18 +370,16 @@ export const useTable = (props, ...plugins) => {
       column.render = makeRenderer(getInstance(), column)
 
       // Give columns/headers a default getHeaderProps
-      column.getHeaderProps = makePropGetter(
-        getHeaderPropsHooks(),
-        getInstance(),
-        column
-      )
+      column.getHeaderProps = makePropGetter(getHeaderPropsHooks(), {
+        instance: getInstance(),
+        column,
+      })
 
       // Give columns/headers a default getFooterProps
-      column.getFooterProps = makePropGetter(
-        getFooterPropsHooks(),
-        getInstance(),
-        column
-      )
+      column.getFooterProps = makePropGetter(getFooterPropsHooks(), {
+        instance: getInstance(),
+        column,
+      })
     }
   )
 
@@ -415,16 +416,12 @@ export const useTable = (props, ...plugins) => {
       if (headerGroup.headers.length) {
         headerGroup.getHeaderGroupProps = makePropGetter(
           getHeaderGroupPropsHooks(),
-          getInstance(),
-          headerGroup,
-          i
+          { instance: getInstance(), headerGroup, index: i }
         )
 
         headerGroup.getFooterGroupProps = makePropGetter(
           getFooterGroupPropsHooks(),
-          getInstance(),
-          headerGroup,
-          i
+          { instance: getInstance(), headerGroup, index: i }
         )
 
         return true
@@ -441,11 +438,9 @@ export const useTable = (props, ...plugins) => {
   // Snapshot hook and disallow more from being added
   const getUseRowsHooks = useConsumeHookGetter(getInstance().hooks, 'useRows')
 
-  getInstance().rows = reduceHooks(
-    getUseRowsHooks(),
-    getInstance().rows,
-    getInstance()
-  )
+  getInstance().rows = reduceHooks(getUseRowsHooks(), getInstance().rows, {
+    instance: getInstance(),
+  })
 
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
@@ -473,7 +468,10 @@ export const useTable = (props, ...plugins) => {
 
   getInstance().prepareRow = React.useCallback(
     row => {
-      row.getRowProps = makePropGetter(getRowPropsHooks(), getInstance(), row)
+      row.getRowProps = makePropGetter(getRowPropsHooks(), {
+        instance: getInstance(),
+        row,
+      })
 
       // Build the visible cells for each row
       row.allCells = flatColumns.map(column => {
@@ -484,11 +482,10 @@ export const useTable = (props, ...plugins) => {
         }
 
         // Give each cell a getCellProps base
-        cell.getCellProps = makePropGetter(
-          getCellPropsHooks(),
-          getInstance(),
-          cell
-        )
+        cell.getCellProps = makePropGetter(getCellPropsHooks(), {
+          instance: getInstance(),
+          cell,
+        })
 
         // Give each cell a renderer function (supports multiple renderers)
         cell.render = makeRenderer(getInstance(), column, {
@@ -499,10 +496,12 @@ export const useTable = (props, ...plugins) => {
         return cell
       })
 
-      row.cells = reduceHooks(cellsHooks(), row.allCells, getInstance())
+      row.cells = reduceHooks(cellsHooks(), row.allCells, {
+        instance: getInstance(),
+      })
 
       // need to apply any row specific hooks (useExpanded requires this)
-      loopHooks(getPrepareRowHooks(), row, getInstance())
+      loopHooks(getPrepareRowHooks(), row, { instance: getInstance() })
     },
     [
       getRowPropsHooks,
@@ -520,10 +519,9 @@ export const useTable = (props, ...plugins) => {
     'getTableProps'
   )
 
-  getInstance().getTableProps = makePropGetter(
-    getTablePropsHooks(),
-    getInstance()
-  )
+  getInstance().getTableProps = makePropGetter(getTablePropsHooks(), {
+    instance: getInstance(),
+  })
 
   // Snapshot hook and disallow more from being added
   const getTableBodyPropsHooks = useConsumeHookGetter(
@@ -531,10 +529,9 @@ export const useTable = (props, ...plugins) => {
     'getTableBodyProps'
   )
 
-  getInstance().getTableBodyProps = makePropGetter(
-    getTableBodyPropsHooks(),
-    getInstance()
-  )
+  getInstance().getTableBodyProps = makePropGetter(getTableBodyPropsHooks(), {
+    instance: getInstance(),
+  })
 
   // Snapshot hook and disallow more from being added
   const getUseFinalInstanceHooks = useConsumeHookGetter(

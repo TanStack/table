@@ -3,7 +3,7 @@ const cellStyles = {
   boxSizing: 'border-box',
 }
 
-const getRowStyles = (props, instance) => [
+const getRowStyles = (props, { instance }) => [
   props,
   {
     style: {
@@ -17,17 +17,17 @@ export const useBlockLayout = hooks => {
   hooks.getRowProps.push(getRowStyles)
   hooks.getHeaderGroupProps.push(getRowStyles)
 
-  hooks.getHeaderProps.push((props, instance, header) => [
+  hooks.getHeaderProps.push((props, { column }) => [
     props,
     {
       style: {
         ...cellStyles,
-        width: `${header.totalWidth}px`,
+        width: `${column.totalWidth}px`,
       },
     },
   ])
 
-  hooks.getCellProps.push((props, instance, cell) => [
+  hooks.getCellProps.push((props, { cell }) => [
     props,
     {
       style: {

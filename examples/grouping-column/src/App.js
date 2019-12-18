@@ -33,7 +33,7 @@ const Styles = styled.div`
   }
 `
 
-function useControlledState(state, instance) {
+function useControlledState(state, { instance }) {
   return React.useMemo(() => {
     if (state.groupBy.length) {
       return {
@@ -65,7 +65,7 @@ function Table({ columns, data }) {
     // Our custom plugin to add the expander column
     hooks => {
       hooks.useControlledState.push(useControlledState)
-      hooks.flatColumns.push((columns, instance) => {
+      hooks.flatColumns.push((columns, { instance }) => {
         if (!instance.state.groupBy.length) {
           return columns
         }

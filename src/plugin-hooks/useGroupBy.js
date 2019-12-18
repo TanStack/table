@@ -19,7 +19,7 @@ actions.toggleGroupBy = 'toggleGroupBy'
 export const useGroupBy = hooks => {
   hooks.getGroupByToggleProps = [defaultGetGroupByToggleProps]
   hooks.stateReducers.push(reducer)
-  hooks.flatColumnsDeps.push((deps, instance) => [
+  hooks.flatColumnsDeps.push((deps, { instance }) => [
     ...deps,
     instance.state.groupBy,
   ])
@@ -29,7 +29,7 @@ export const useGroupBy = hooks => {
 
 useGroupBy.pluginName = 'useGroupBy'
 
-const defaultGetGroupByToggleProps = (props, instance, header) => [
+const defaultGetGroupByToggleProps = (props, { header }) => [
   props,
   {
     onClick: header.canGroupBy
@@ -81,7 +81,14 @@ function reducer(state, action, previousState, instance) {
   }
 }
 
-function flatColumns(flatColumns, { state: { groupBy } }) {
+function flatColumns(
+  flatColumns,
+  {
+    instance: {
+      state: { groupBy },
+    },
+  }
+) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
 
@@ -160,8 +167,7 @@ function useInstance(instance) {
   flatHeaders.forEach(header => {
     header.getGroupByToggleProps = makePropGetter(
       getGroupByTogglePropsHooks(),
-      getInstance(),
-      header
+      { instance: getInstance(), header }
     )
   })
 
