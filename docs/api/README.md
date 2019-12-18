@@ -20,6 +20,7 @@ React Table is essentially a compatible collection of **custom React hooks**:
   - Layout Hooks
     - [`useBlockLayout`](./useBlockLayout.md)
     - [`useAbsoluteLayout`](./useAbsoluteLayout.md)
+    - [`useFlexLayout`](./useFlexLayout.md)
     - [`useResizeColumns`](./useResizeColumns.md)
 - 3rd Party Plugin Hooks
   - Want your custom plugin hook listed here? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
