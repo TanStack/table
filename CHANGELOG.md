@@ -1,3 +1,7 @@
+## 7.0.0-rc.12
+
+- Fixed an issue where removing a grouped column would result in a crash
+
 ## 7.0.0-rc.11
 
 - Fixed an issue where plugins using the `columns` hook were not getting decorated properly
