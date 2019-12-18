@@ -3,10 +3,11 @@ import React from 'react'
 import {
   actions,
   getFirstDefined,
-  isFunction,
+  getFilterMethod,
   useMountedLayoutEffect,
   functionalUpdate,
   useGetLatest,
+  shouldAutoRemoveFilter,
 } from '../utils'
 import * as filterTypes from '../filterTypes'
 
@@ -63,7 +64,7 @@ function reducer(state, action, previousState, instance) {
     )
 
     //
-    if (shouldAutoRemove(filterMethod.autoRemove, newFilter)) {
+    if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
       return {
         ...state,
         filters: state.filters.filter(d => d.id !== columnId),
@@ -103,7 +104,7 @@ function reducer(state, action, previousState, instance) {
           filterTypes
         )
 
-        if (shouldAutoRemove(filterMethod.autoRemove, filter.value)) {
+        if (shouldAutoRemoveFilter(filterMethod.autoRemove, filter.value)) {
           return false
         }
         return true
@@ -164,17 +165,9 @@ function useInstance(instance) {
     column.filterValue = found && found.value
   })
 
-  // TODO: Create a filter cache for incremental high speed multi-filtering
-  // This gets pretty complicated pretty fast, since you have to maintain a
-  // cache for each row group (top-level rows, and each row's recursive subrows)
-  // This would make multi-filtering a lot faster though. Too far?
-
-  const { filteredRows, filteredFlatRows } = React.useMemo(() => {
+  const [filteredRows, filteredFlatRows] = React.useMemo(() => {
     if (manualFilters || !filters.length) {
-      return {
-        filteredRows: rows,
-        filteredFlatRows: flatRows,
-      }
+      return [rows, flatRows]
     }
 
     const filteredFlatRows = []
@@ -213,9 +206,8 @@ function useInstance(instance) {
           // to get the filtered rows back
           column.filteredRows = filterMethod(
             filteredSoFar,
-            columnId,
-            filterValue,
-            column
+            [columnId],
+            filterValue
           )
 
           return column.filteredRows
@@ -244,10 +236,7 @@ function useInstance(instance) {
       return filteredRows
     }
 
-    return {
-      filteredRows: filterRows(rows),
-      filteredFlatRows,
-    }
+    return [filterRows(rows), filteredFlatRows]
   }, [manualFilters, filters, rows, flatRows, flatColumns, userFilterTypes])
 
   React.useMemo(() => {
@@ -283,17 +272,4 @@ function useInstance(instance) {
     setFilter,
     setAllFilters,
   })
-}
-
-function shouldAutoRemove(autoRemove, value) {
-  return autoRemove ? autoRemove(value) : typeof value === 'undefined'
-}
-
-function getFilterMethod(filter, userFilterTypes, filterTypes) {
-  return (
-    isFunction(filter) ||
-    userFilterTypes[filter] ||
-    filterTypes[filter] ||
-    filterTypes.text
-  )
 }

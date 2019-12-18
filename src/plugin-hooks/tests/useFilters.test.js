@@ -2,6 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
 import { useFilters } from '../useFilters'
+import { useGlobalFilter } from '../useGlobalFilter'
 
 const data = [
   {
@@ -58,13 +59,17 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
+    flatColumns,
+    state,
+    setGlobalFilter,
   } = useTable(
     {
       columns,
       data,
       defaultColumn,
     },
-    useFilters
+    useFilters,
+    useGlobalFilter
   )
 
   return (
@@ -80,6 +85,28 @@ function Table({ columns, data }) {
             ))}
           </tr>
         ))}
+        <tr>
+          <th
+            colSpan={flatColumns.length}
+            style={{
+              textAlign: 'left',
+            }}
+          >
+            <span>
+              <input
+                value={state.globalFilter || ''}
+                onChange={e => {
+                  setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+                }}
+                placeholder={`Global search...`}
+                style={{
+                  fontSize: '1.1rem',
+                  border: '0',
+                }}
+              />
+            </span>
+          </th>
+        </tr>
       </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map(
@@ -142,8 +169,11 @@ function App() {
 }
 
 test('renders a filterable table', () => {
-  const { getAllByPlaceholderText, asFragment } = render(<App />)
+  const { getAllByPlaceholderText, getByPlaceholderText, asFragment } = render(
+    <App />
+  )
 
+  const globalFilterInput = getByPlaceholderText('Global search...')
   const filterInputs = getAllByPlaceholderText('Search...')
 
   const beforeFilter = asFragment()
@@ -156,6 +186,17 @@ test('renders a filterable table', () => {
 
   const afterFilter2 = asFragment()
 
-  expect(beforeFilter).toMatchDiffSnapshot(afterFilter1)
-  expect(afterFilter1).toMatchDiffSnapshot(afterFilter2)
+  fireEvent.change(filterInputs[1], { target: { value: '' } })
+
+  const afterFilter3 = asFragment()
+
+  fireEvent.change(globalFilterInput, { target: { value: 'li' } })
+
+  const afterFilter4 = asFragment()
+
+  expect(beforeFilter).toMatchSnapshot()
+  expect(afterFilter1).toMatchSnapshot()
+  expect(afterFilter2).toMatchSnapshot()
+  expect(afterFilter3).toMatchSnapshot()
+  expect(afterFilter4).toMatchSnapshot()
 })

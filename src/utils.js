@@ -267,6 +267,19 @@ export function expandRows(
   return expandedRows
 }
 
+export function getFilterMethod(filter, userFilterTypes, filterTypes) {
+  return (
+    isFunction(filter) ||
+    userFilterTypes[filter] ||
+    filterTypes[filter] ||
+    filterTypes.text
+  )
+}
+
+export function shouldAutoRemoveFilter(autoRemove, value) {
+  return autoRemove ? autoRemove(value) : typeof value === 'undefined'
+}
+
 //
 
 const reOpenBracket = /\[/g

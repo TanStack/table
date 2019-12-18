@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, useFilters } from 'react-table'
+import { useTable, useFilters, useGlobalFilter } from 'react-table'
 // A great library for fuzzy filtering/sorting items
 import matchSorter from 'match-sorter'
 
@@ -34,6 +34,32 @@ const Styles = styled.div`
     }
   }
 `
+
+// Define a default UI for filtering
+function GlobalFilter({
+  preGlobalFilteredRows,
+  globalFilter,
+  setGlobalFilter,
+}) {
+  const count = preGlobalFilteredRows.length
+
+  return (
+    <span>
+      Search:{' '}
+      <input
+        value={globalFilter || ''}
+        onChange={e => {
+          setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+        }}
+        placeholder={`${count} records...`}
+        style={{
+          fontSize: '1.1rem',
+          border: '0',
+        }}
+      />
+    </span>
+  )
+}
 
 // Define a default UI for filtering
 function DefaultColumnFilter({
@@ -217,6 +243,9 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     state,
+    flatColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
   } = useTable(
     {
       columns,
@@ -224,7 +253,8 @@ function Table({ columns, data }) {
       defaultColumn, // Be sure to pass the defaultColumn option
       filterTypes,
     },
-    useFilters // useFilters!
+    useFilters, // useFilters!
+    useGlobalFilter // useGlobalFilter!
   )
 
   // We don't want to render all of the rows for this example, so cap
@@ -233,11 +263,6 @@ function Table({ columns, data }) {
 
   return (
     <>
-      <div>
-        <pre>
-          <code>{JSON.stringify(state.filters, null, 2)}</code>
-        </pre>
-      </div>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -251,25 +276,41 @@ function Table({ columns, data }) {
               ))}
             </tr>
           ))}
+          <tr>
+            <th
+              colSpan={flatColumns.length}
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              <GlobalFilter
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={state.globalFilter}
+                setGlobalFilter={setGlobalFilter}
+              />
+            </th>
+          </tr>
         </thead>
         <tbody {...getTableBodyProps()}>
-          {firstPageRows.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
+          {firstPageRows.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       <br />
       <div>Showing the first 20 results of {rows.length} rows</div>
+      <div>
+        <pre>
+          <code>{JSON.stringify(state.filters, null, 2)}</code>
+        </pre>
+      </div>
     </>
   )
 }

@@ -79,8 +79,6 @@ function reducer(state, action, previousState, instance) {
         ? action.value
         : !state.hiddenColumns.includes(action.columnId)
 
-    console.log(action, should)
-
     const hiddenColumns = should
       ? [...state.hiddenColumns, action.columnId]
       : state.hiddenColumns.filter(d => d !== action.columnId)

@@ -1,3 +1,10 @@
+## 7.0.0-rc.15
+
+- Added `useGlobalFilter` hook for performing table-wide filtering
+- Filter function signature has changed to supply an array of column IDs (to support both the tranditional single column style and the new multi-column search style introduced with `useGlobalFilter`).
+- Removed the `column` parameter from the filter function signature as it was unused and no longer made sense with the array of IDs change above.
+- Updated the `filtering` example to use a global filter in addition to the column filters
+
 ## 7.0.0-rc.14
 
 - Changed the function signature for all propGetter hooks to accept a single object of named meta properties instead of a variable length of meta arguments. The user props object has also been added as a property to all prop getters. For example, `hooks.getRowProps.push((props, instance, row) => [...])` is now written `hooks.getRowProps.push((props, { instance, row, userProps }) => [...])`
