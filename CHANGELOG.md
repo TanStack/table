@@ -1,3 +1,7 @@
+## 7.0.0-rc.11
+
+- Fixed an issue where plugins using the `columns` hook were not getting decorated properly
+
 ## 7.0.0-rc.10
 
 - Optimizations made to make accessors, prop getters and other internals much faster. 10x in some cases!

@@ -126,16 +126,16 @@ function reducer(state, action, previousState, instance) {
       return state
     }
 
-    let newSelectedRowPaths = { ...state.selectedRowIds }
+    let newSelectedRowIds = { ...state.selectedRowIds }
 
     const handleRowById = id => {
       const row = flatGroupedRowsById[id]
 
       if (!row.isGrouped) {
         if (!isSelected && shouldExist) {
-          newSelectedRowPaths[id] = true
+          newSelectedRowIds[id] = true
         } else if (isSelected && !shouldExist) {
-          delete newSelectedRowPaths[id]
+          delete newSelectedRowIds[id]
         }
       }
 
@@ -146,9 +146,11 @@ function reducer(state, action, previousState, instance) {
 
     handleRowById(id)
 
+    console.log(newSelectedRowIds)
+
     return {
       ...state,
-      selectedRowIds: newSelectedRowPaths,
+      selectedRowIds: newSelectedRowIds,
     }
   }
 }
