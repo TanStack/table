@@ -153,10 +153,9 @@ export const useTable = (props, ...plugins) => {
   // Decorate All the columns
   let columns = React.useMemo(
     () =>
-      reduceHooks(
-        getColumnsHooks(),
-        decorateColumnTree(userColumns, defaultColumn),
-        getInstance()
+      decorateColumnTree(
+        reduceHooks(getColumnsHooks(), userColumns, getInstance()),
+        defaultColumn
       ),
     [
       defaultColumn,
