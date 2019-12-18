@@ -37,7 +37,7 @@
   - **Usage Required**
   - This core prop getter is required to to enable absolute layout for headers
 
-### Example
+### Example (Full Width Resizable Table)
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/block-layout)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/block-layout)
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/full-width-resizable-table)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/full-width-resizable-table)
