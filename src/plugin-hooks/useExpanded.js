@@ -38,7 +38,7 @@ const defaultGetExpandedToggleProps = (props, instance, row) => [
 ]
 
 // Reducer
-function reducer(state, action) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       expanded: {},
@@ -49,7 +49,7 @@ function reducer(state, action) {
   if (action.type === actions.resetExpanded) {
     return {
       ...state,
-      expanded: {},
+      expanded: instance.initialState.expanded || {},
     }
   }
 

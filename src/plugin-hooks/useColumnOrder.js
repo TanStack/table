@@ -17,7 +17,7 @@ export const useColumnOrder = hooks => {
 
 useColumnOrder.pluginName = 'useColumnOrder'
 
-function reducer(state, action) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       columnOrder: [],
@@ -28,7 +28,7 @@ function reducer(state, action) {
   if (action.type === actions.resetColumnOrder) {
     return {
       ...state,
-      columnOrder: [],
+      columnOrder: instance.initialState.columnOrder || [],
     }
   }
 

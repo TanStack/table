@@ -33,7 +33,7 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.resetFilters) {
     return {
       ...state,
-      filters: [],
+      filters: instance.initialState.filters || [],
     }
   }
 

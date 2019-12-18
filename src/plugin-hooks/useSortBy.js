@@ -66,7 +66,7 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.resetSortBy) {
     return {
       ...state,
-      sortBy: [],
+      sortBy: instance.initialState.sortBy || [],
     }
   }
 

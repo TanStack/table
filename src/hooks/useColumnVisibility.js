@@ -58,7 +58,7 @@ const defaultGetToggleHideAllColumnsProps = (props, instance) => [
   },
 ]
 
-function reducer(state, action, previousState, instanceRef) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       hiddenColumns: [],
@@ -69,7 +69,7 @@ function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.resetHiddenColumns) {
     return {
       ...state,
-      hiddenColumns: [],
+      hiddenColumns: instance.initialState.hiddenColumns || [],
     }
   }
 
@@ -104,9 +104,7 @@ function reducer(state, action, previousState, instanceRef) {
 
     return {
       ...state,
-      hiddenColumns: shouldAll
-        ? instanceRef.current.flatColumns.map(d => d.id)
-        : [],
+      hiddenColumns: shouldAll ? instance.flatColumns.map(d => d.id) : [],
     }
   }
 }

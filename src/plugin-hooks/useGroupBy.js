@@ -46,7 +46,7 @@ const defaultGetGroupByToggleProps = (props, instance, header) => [
 ]
 
 // Reducer
-function reducer(state, action) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       groupBy: [],
@@ -57,7 +57,7 @@ function reducer(state, action) {
   if (action.type === actions.resetGroupBy) {
     return {
       ...state,
-      groupBy: [],
+      groupBy: instance.initialState.groupBy || [],
     }
   }
 

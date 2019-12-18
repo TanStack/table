@@ -18,7 +18,7 @@ export const useRowState = hooks => {
 
 useRowState.pluginName = 'useRowState'
 
-function reducer(state, action) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       rowState: {},
@@ -29,7 +29,7 @@ function reducer(state, action) {
   if (action.type === actions.resetRowState) {
     return {
       ...state,
-      rowState: {},
+      rowState: instance.initialState.rowState || {},
     }
   }
 

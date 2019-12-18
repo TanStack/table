@@ -81,7 +81,7 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.resetSelectedRows) {
     return {
       ...state,
-      selectedRowIds: {},
+      selectedRowIds: instance.initialState.selectedRowIds || {},
     }
   }
 
