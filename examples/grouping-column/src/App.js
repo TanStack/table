@@ -33,6 +33,20 @@ const Styles = styled.div`
   }
 `
 
+function useControlledState(state, instance) {
+  return React.useMemo(() => {
+    if (state.groupBy.length) {
+      return {
+        ...state,
+        hiddenColumns: [...state.hiddenColumns, ...state.groupBy].filter(
+          (d, i, all) => all.indexOf(d) === i
+        ),
+      }
+    }
+    return state
+  }, [state])
+}
+
 function Table({ columns, data }) {
   const {
     getTableProps,
@@ -40,7 +54,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: { groupBy, expanded },
+    state,
   } = useTable(
     {
       columns,
@@ -50,6 +64,7 @@ function Table({ columns, data }) {
     useExpanded,
     // Our custom plugin to add the expander column
     hooks => {
+      hooks.useControlledState.push(useControlledState)
       hooks.flatColumns.push((columns, instance) => {
         if (!instance.state.groupBy.length) {
           return columns
@@ -100,7 +115,7 @@ function Table({ columns, data }) {
               return null
             },
           },
-          ...columns.map(d => ({ ...d, isVisible: !d.isGrouped })),
+          ...columns,
         ]
       })
     }
@@ -113,7 +128,7 @@ function Table({ columns, data }) {
   return (
     <>
       <pre>
-        <code>{JSON.stringify({ groupBy, expanded: expanded }, null, 2)}</code>
+        <code>{JSON.stringify({ state }, null, 2)}</code>
       </pre>
       <Legend />
       <table {...getTableProps()}>

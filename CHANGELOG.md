@@ -1,3 +1,8 @@
+## 7.0.0-rc.13
+
+- Added the `useControlledState` hook for plugins to manipulate the final state of the table similar to how users can
+- Fixed an issue where column hiding wasn't working properly.
+
 ## 7.0.0-rc.12
 
 - Fixed an issue where removing a grouped column would result in a crash

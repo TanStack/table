@@ -71,8 +71,10 @@ function Table({ columns, data }) {
         </div>
         {flatColumns.map(column => (
           <div key={column.id}>
-            <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
-            {column.id}
+            <label>
+              <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
+              {column.id}
+            </label>
           </div>
         ))}
         <br />

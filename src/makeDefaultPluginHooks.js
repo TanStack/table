@@ -36,6 +36,7 @@ export default function makeDefaultPluginHooks() {
   return {
     useOptions: [],
     stateReducers: [],
+    useControlledState: [],
     columns: [],
     columnsDeps: [],
     flatColumns: [],

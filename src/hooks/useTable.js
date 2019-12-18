@@ -133,8 +133,18 @@ export const useTable = (props, ...plugins) => {
     reducer(initialState, { type: actions.init })
   )
 
+  // Snapshot hook and disallow more from being added
+  const getUseControlledStateHooks = useConsumeHookGetter(
+    getInstance().hooks,
+    'useControlledState'
+  )
+
   // Allow the user to control the final state with hooks
-  const state = useControlledState(reducerState)
+  const state = reduceHooks(
+    [...getUseControlledStateHooks(), useControlledState],
+    reducerState,
+    getInstance()
+  )
 
   Object.assign(getInstance(), {
     state,
