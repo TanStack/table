@@ -43,8 +43,8 @@ The following values are provided to the table `instance`:
 - `preGlobalFilteredRows: Array<Row>`
   - The array of rows **used right before filtering**.
   - Among many other use-cases, these rows are directly useful for building option lists in filters, since the resulting filtered `rows` do not contain every possible option.
-- `setGlobalFilter: Function(columnId, filterValue) => void`
-  - An instance-level function used to update the filter value for a specific column.
+- `setGlobalFilter: Function(filterValue) => void`
+  - An instance-level function used to update the global filter value.
 
 ### Example
 
