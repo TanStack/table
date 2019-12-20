@@ -195,7 +195,7 @@ export function useAsyncDebounce(defaultFn, defaultWait = 0) {
 
   const debounce = React.useCallback(
     async (
-      fn = debounceRef.current.defaultFn,
+      state = debounceRef.current.defaultFn,
       wait = debounceRef.current.defaultWait
     ) => {
       if (!debounceRef.current.promise) {
@@ -212,7 +212,9 @@ export function useAsyncDebounce(defaultFn, defaultWait = 0) {
       debounceRef.current.timeout = setTimeout(async () => {
         delete debounceRef.current.timeout
         try {
-          debounceRef.current.resolve(await fn())
+          debounceRef.current.resolve(
+            await debounceRef.current.defaultFn(state)
+          )
         } catch (err) {
           debounceRef.current.reject(err)
         } finally {
