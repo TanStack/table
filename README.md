@@ -184,6 +184,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         <li>Eric Lanehart (@pushred)</li>
         <li>Anish P Patel (@anishpatelyaadada)</li>
         <li>Alin Porumb (@alinporumb)</li>
+        <li>Janus Reith (@janus-reith)</li>
         </ul>
       </td>
       <td>
