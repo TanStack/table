@@ -55,7 +55,7 @@ const instance = useTable(
 
 This multi-stage process is the secret sauce that allows React Table plugin hooks to work together and compose nicely, while not stepping on each others toes.
 
-To dive deeper into plugins, see Plugins](TODO) and the [Plugin Guide
+To dive deeper into plugins, see Plugins and the Plugin Guide
 
 ### Plugin Hook Order & Consistency
 
