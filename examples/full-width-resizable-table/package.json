@@ -10,8 +10,8 @@
     "namor": "^1.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
-    "react-table": "latest",
+    "react-scripts": "3.3.0",
+    "react-table": "^7.0.0-rc.15",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {

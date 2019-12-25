@@ -1,6 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, useResizeColumns, useFlexLayout } from 'react-table'
+import {
+  useTable,
+  useResizeColumns,
+  useFlexLayout,
+  useRowSelect,
+} from 'react-table'
 
 import makeData from './makeData'
 
@@ -35,13 +40,13 @@ const Styles = styled.div`
           border-bottom: 0;
         }
       }
+      border-bottom: 1px solid black;
     }
 
     .th,
     .td {
       margin: 0;
       padding: 0.5rem;
-      border-bottom: 1px solid black;
       border-right: 1px solid black;
 
       ${'' /* In this example we use an absolutely position resizer,
@@ -53,12 +58,11 @@ const Styles = styled.div`
       }
 
       .resizer {
-        display: inline-block;
+        right: -5px;
         background: blue;
         width: 10px;
         height: 100%;
         position: absolute;
-        right: 0;
         top: 0;
         z-index: 1;
         ${'' /* prevents from scrolling while dragging on touch devices */}
@@ -69,8 +73,50 @@ const Styles = styled.div`
         }
       }
     }
+
+    .th {
+      &:last-of-type {
+        .resizer {
+          ${'' /* note that the 15 is the scroll width and if also referenced in the getHeaderGroupProps for the header row below */}
+          ${'' /* todo: resolve this value dynamicaly from element.scrollWidth to account for OS/Browser differences  */}
+          right: -15px;
+        }
+      }
+    }
   }
 `
+
+const headerProps = (props, { column }) => getStyles(props, column.align)
+
+const cellProps = (props, { cell }) => getStyles(props, cell.column.align)
+
+const getStyles = (props, align = 'left') => [
+  props,
+  {
+    style: {
+      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+      alignItems: 'flex-start',
+      display: 'flex',
+    },
+  },
+]
+
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
 
 function Table({ columns, data }) {
   const defaultColumn = React.useMemo(
@@ -96,28 +142,69 @@ function Table({ columns, data }) {
       defaultColumn,
     },
     useResizeColumns,
-    useFlexLayout
+    useFlexLayout,
+    useRowSelect,
+    hooks => {
+      hooks.flatColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          disableResizing: true,
+          minWidth: 35,
+          width: 35,
+          maxWidth: 35,
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+      hooks.useInstanceBeforeDimensions.push(({ headerGroups }) => {
+        // fix the parent group of the selection button to not be resizable
+        const selectionGroupHeader = headerGroups[0].headers[0]
+        selectionGroupHeader.canResize = false
+      })
+    }
   )
 
   return (
     <div {...getTableProps()} className="table">
       <div>
         {headerGroups.map(headerGroup => (
-          <div {...headerGroup.getHeaderGroupProps()} className="tr">
+          <div
+            {...headerGroup.getHeaderGroupProps({
+              style: { paddingRight: '15px' },
+            })}
+            className="tr"
+          >
             {headerGroup.headers.map(column => (
-              <div {...column.getHeaderProps()} className="th">
+              <div {...column.getHeaderProps(headerProps)} className="th">
                 {column.render('Header')}
                 {/* Use column.getResizerProps to hook up the events correctly */}
-                <div
-                  {...column.getResizerProps()}
-                  className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
-                />
+                {column.canResize && (
+                  <div
+                    {...column.getResizerProps()}
+                    className={`resizer ${
+                      column.isResizing ? 'isResizing' : ''
+                    }`}
+                  />
+                )}
               </div>
             ))}
           </div>
         ))}
       </div>
-
       <div {...getTableBodyProps()} className="tbody">
         {rows.map((row, i) => {
           prepareRow(row)
@@ -125,7 +212,7 @@ function Table({ columns, data }) {
             <div {...row.getRowProps()} className="tr">
               {row.cells.map(cell => {
                 return (
-                  <div {...cell.getCellProps()} className="td">
+                  <div {...cell.getCellProps(cellProps)} className="td">
                     {cell.render('Cell')}
                   </div>
                 )
@@ -161,11 +248,13 @@ function App() {
             Header: 'Age',
             accessor: 'age',
             width: 50,
+            align: 'right',
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             width: 50,
+            align: 'right',
           },
           {
             Header: 'Status',
