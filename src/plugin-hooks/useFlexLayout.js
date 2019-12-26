@@ -33,7 +33,7 @@ const getHeaderProps = (props, { column }) => [
   {
     style: {
       boxSizing: 'border-box',
-      flex: `${column.totalWidth} 0 auto`,
+      flex: column.totalFlexWidth ? `${column.totalFlexWidth} 0 auto` : undefined,
       minWidth: `${column.totalMinWidth}px`,
       width: `${column.totalWidth}px`,
     },
@@ -45,7 +45,7 @@ const getCellProps = (props, { cell }) => [
   {
     style: {
       boxSizing: 'border-box',
-      flex: `${cell.column.totalWidth} 0 auto`,
+      flex: `${cell.column.totalFlexWidth} 0 auto`,
       minWidth: `${cell.column.totalMinWidth}px`,
       width: `${cell.column.totalWidth}px`,
     },
