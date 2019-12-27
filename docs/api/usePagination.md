@@ -30,6 +30,7 @@ The following options are supported via the main options object passed to `useTa
   - When `true`, the `pageIndex` state will automatically reset if `manualPagination` is `false` and any of the following conditions are met:
     - `data` is changed
     - `manualSortBy` is `false` and `state.sortBy` is changed
+    - `manualGlobalFilter` is `false` and `state.globalFilter` is changed
     - `manualFilters` is `false` and `state.filters` is changed
     - `manualGroupBy` is `false` and `state.groupBy` is changed
   - To disable, set to `false`
