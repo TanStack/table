@@ -40,7 +40,7 @@ function Table({ data, onFetchData }) {
     data,
   })
 
-  // When the these table states change, fetch new data!
+  // When these table states change, fetch new data!
   React.useEffect(() => {
     onFetchData({ pageIndex, pageSize, sortBy, filters })
   }, [fetchData, pageIndex, pageSize, sortBy, filters])
