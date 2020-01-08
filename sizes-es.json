@@ -1,11 +1,11 @@
 [
   {
-    "timestamp": 1577329257716,
+    "timestamp": 1578526878896,
     "files": [
       {
         "filename": "index.es.js",
-        "size": 22889,
-        "delta": 63
+        "size": 22913,
+        "delta": 24
       }
     ]
   }
