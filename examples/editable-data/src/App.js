@@ -63,7 +63,7 @@ const EditableCell = ({
     updateMyData(index, id, value)
   }
 
-  // If the initialValue is changed externall, sync it up with our state
+  // If the initialValue is changed external, sync it up with our state
   React.useEffect(() => {
     setValue(initialValue)
   }, [initialValue])
