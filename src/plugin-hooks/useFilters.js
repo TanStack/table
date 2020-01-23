@@ -90,7 +90,7 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.setAllFilters) {
-    const { filters } = action
+    const filters = action.filters || []
     const { flatColumns, filterTypes: userFilterTypes } = instance
 
     return {
