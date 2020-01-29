@@ -145,7 +145,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       <td>
         <ul>
         <li>Jon Eickmeier</li>
-          <li>Richard Hefner (@rhefner)</li>
+          <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
         </ul>
       </td>
       <td>
