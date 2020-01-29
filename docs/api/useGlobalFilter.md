@@ -27,7 +27,7 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Allows overriding or adding additional filter types for the table to use. If the globalFilter type isn't found on this object, it will default to using the built-in filter types.
   - For more information on filter types, see Filtering
-- `autoResetGlobalFilter: Boolean`
+- `autoResetGlobalFilters: Boolean`
   - Defaults to `true`
   - When `true`, the `globalFilter` state will automatically reset if any of the following conditions are met:
     - `data` is changed
