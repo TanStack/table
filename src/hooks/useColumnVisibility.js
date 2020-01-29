@@ -121,7 +121,10 @@ function useInstanceBeforeDimensions(instance) {
   }
 
   const handleColumn = (column, parentVisible) => {
-    column.isVisible = parentVisible && !hiddenColumns.includes(column.id)
+    column.isVisible =
+      parentVisible &&
+      (column.show || !hiddenColumns.includes(column.id)) &&
+      column.show !== false
 
     let totalVisibleHeaderCount = 0
 
