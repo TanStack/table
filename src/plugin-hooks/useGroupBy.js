@@ -155,9 +155,12 @@ function useInstance(instance) {
     column.Aggregated = column.Aggregated || column.Cell
   })
 
-  const toggleGroupBy = (columnId, toggle) => {
-    dispatch({ type: actions.toggleGroupBy, columnId, toggle })
-  }
+  const toggleGroupBy = React.useCallback(
+    (columnId, toggle) => {
+      dispatch({ type: actions.toggleGroupBy, columnId, toggle })
+    },
+    [dispatch]
+  )
 
   const getGroupByTogglePropsHooks = useConsumeHookGetter(
     getInstance().hooks,

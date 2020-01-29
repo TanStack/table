@@ -109,9 +109,12 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleExpanded = (id, expanded) => {
-    dispatch({ type: actions.toggleExpanded, id, expanded })
-  }
+  const toggleExpanded = React.useCallback(
+    (id, expanded) => {
+      dispatch({ type: actions.toggleExpanded, id, expanded })
+    },
+    [dispatch]
+  )
 
   // use reference to avoid memory leak in #1608
   const getInstance = useGetLatest(instance)

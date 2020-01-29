@@ -197,9 +197,12 @@ function useInstance(instance) {
   ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
 
   // Updates sorting based on a columnId, desc flag and multi flag
-  const toggleSortBy = (columnId, desc, multi) => {
-    dispatch({ type: actions.toggleSortBy, columnId, desc, multi })
-  }
+  const toggleSortBy = React.useCallback(
+    (columnId, desc, multi) => {
+      dispatch({ type: actions.toggleSortBy, columnId, desc, multi })
+    },
+    [dispatch]
+  )
 
   // use reference to avoid memory leak in #1608
   const getInstance = useGetLatest(instance)
