@@ -165,7 +165,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         <li>Hugo Meissner</li>
         <li>Benoit Leger-Derville</li>
         <li>Thomas Funk</li>
-        <li>Dan Houle</li>
         <li>David Pickut</li>
         <li>Jordan Soltman</li>
         <li>Robert Tajnšek</li>
