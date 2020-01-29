@@ -148,6 +148,13 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         </ul>
       </td>
       <td>
+        <ul>
+          <li>
+            Richard Hefner (@rhefner)
+          </li>
+        </ul>
+      </td>
+      <td>
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
           Become a Supporter!
         </a>
