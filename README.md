@@ -104,11 +104,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://zappi.io/web/" target="_blank">
-          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
           Become a Sponsor!
         </a>
