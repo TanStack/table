@@ -113,7 +113,7 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleRowSelected) {
     const { id, selected } = action
-    const { flatGroupedRowsById } = instance
+    const { flatGroupedRowsById, selectSubRows = true } = instance
 
     // Join the ids of deep rows
     // to make a key, then manage all of the keys
@@ -139,7 +139,7 @@ function reducer(state, action, previousState, instance) {
         }
       }
 
-      if (row.subRows) {
+      if (selectSubRows && row.subRows) {
         return row.subRows.forEach(row => handleRowById(row.id))
       }
     }
@@ -156,13 +156,16 @@ function reducer(state, action, previousState, instance) {
 function useRows(rows, { instance }) {
   const {
     state: { selectedRowIds },
+    selectSubRows = true,
   } = instance
 
   instance.selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows = []
 
     rows.forEach(row => {
-      const isSelected = getRowIsSelected(row, selectedRowIds)
+      const isSelected = selectSubRows
+        ? getRowIsSelected(row, selectedRowIds)
+        : !!selectedRowIds[row.id]
       row.isSelected = !!isSelected
       row.isSomeSelected = isSelected === null
 
@@ -227,11 +230,16 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleAllRowsSelected = selected =>
-    dispatch({ type: actions.toggleAllRowsSelected, selected })
+  const toggleAllRowsSelected = React.useCallback(
+    selected => dispatch({ type: actions.toggleAllRowsSelected, selected }),
+    [dispatch]
+  )
 
-  const toggleRowSelected = (id, selected) =>
-    dispatch({ type: actions.toggleRowSelected, id, selected })
+  const toggleRowSelected = React.useCallback(
+    (id, selected) =>
+      dispatch({ type: actions.toggleRowSelected, id, selected }),
+    [dispatch]
+  )
 
   const getInstance = useGetLatest(instance)
 
