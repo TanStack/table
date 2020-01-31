@@ -175,7 +175,7 @@ function useRows(rows, { instance }) {
     })
 
     return selectedFlatRows
-  }, [rows, selectedRowIds])
+  }, [rows, selectSubRows, selectedRowIds])
 
   return rows
 }
