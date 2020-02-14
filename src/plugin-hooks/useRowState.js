@@ -5,20 +5,31 @@ import {
   functionalUpdate,
   useMountedLayoutEffect,
   useGetLatest,
-} from '../utils'
+} from '../publicUtils'
+
+const defaultInitialRowStateAccessor = originalRow => ({})
+const defaultInitialCellStateAccessor = originalRow => ({})
 
 // Actions
 actions.setRowState = 'setRowState'
+actions.setCellState = 'setCellState'
 actions.resetRowState = 'resetRowState'
 
 export const useRowState = hooks => {
   hooks.stateReducers.push(reducer)
   hooks.useInstance.push(useInstance)
+  hooks.prepareRow.push(prepareRow)
 }
 
 useRowState.pluginName = 'useRowState'
 
 function reducer(state, action, previousState, instance) {
+  const {
+    initialRowStateAccessor = defaultInitialRowStateAccessor,
+    initialCellStateAccessor = defaultInitialCellStateAccessor,
+    rowsById,
+  } = instance
+
   if (action.type === actions.init) {
     return {
       rowState: {},
@@ -34,81 +45,74 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.setRowState) {
-    const { id, value } = action
+    const { rowId, value } = action
+
+    const oldRowState =
+      typeof state.rowState[rowId] !== 'undefined'
+        ? state.rowState[rowId]
+        : initialRowStateAccessor(rowsById[rowId].original)
 
     return {
       ...state,
       rowState: {
         ...state.rowState,
-        [id]: functionalUpdate(value, state.rowState[id] || {}),
+        [rowId]: functionalUpdate(value, oldRowState),
+      },
+    }
+  }
+
+  if (action.type === actions.setCellState) {
+    const { rowId, columnId, value } = action
+
+    const oldRowState =
+      typeof state.rowState[rowId] !== 'undefined'
+        ? state.rowState[rowId]
+        : initialRowStateAccessor(rowsById[rowId].original)
+
+    const oldCellState =
+      typeof oldRowState?.cellState?.[columnId] !== 'undefined'
+        ? oldRowState.cellState[columnId]
+        : initialCellStateAccessor(rowsById[rowId].original)
+
+    return {
+      ...state,
+      rowState: {
+        ...state.rowState,
+        [rowId]: {
+          ...oldRowState,
+          cellState: {
+            ...(oldRowState.cellState || {}),
+            [columnId]: functionalUpdate(value, oldCellState),
+          },
+        },
       },
     }
   }
 }
 
 function useInstance(instance) {
-  const {
-    hooks,
-    initialRowStateAccessor,
-    autoResetRowState = true,
-    state: { rowState },
-    data,
-    dispatch,
-  } = instance
+  const { autoResetRowState = true, data, dispatch } = instance
 
   const setRowState = React.useCallback(
-    (id, value, columnId) =>
+    (rowId, value) =>
       dispatch({
         type: actions.setRowState,
-        id,
+        rowId,
         value,
-        columnId,
       }),
     [dispatch]
   )
 
   const setCellState = React.useCallback(
-    (rowPath, columnId, value) => {
-      return setRowState(
-        rowPath,
-        old => {
-          return {
-            ...old,
-            cellState: {
-              ...old.cellState,
-              [columnId]: functionalUpdate(
-                value,
-                (old.cellState || {})[columnId] || {}
-              ),
-            },
-          }
-        },
-        columnId
-      )
-    },
-    [setRowState]
+    (rowId, columnId, value) =>
+      dispatch({
+        type: actions.setCellState,
+        rowId,
+        columnId,
+        value,
+      }),
+    [dispatch]
   )
-
-  hooks.prepareRow.push(row => {
-    if (row.original) {
-      row.state =
-        (typeof rowState[row.id] !== 'undefined'
-          ? rowState[row.id]
-          : initialRowStateAccessor && initialRowStateAccessor(row)) || {}
-
-      row.setState = updater => {
-        return setRowState(row.id, updater)
-      }
-
-      row.cells.forEach(cell => {
-        cell.state = row.state.cellState || {}
-
-        cell.setState = updater => {
-          return setCellState(row.id, cell.column.id, updater)
-        }
-      })
-    }
-  })
 
   const getAutoResetRowState = useGetLatest(autoResetRowState)
 
@@ -122,4 +126,38 @@ function useInstance(instance) {
     setRowState,
     setCellState,
   })
+}
+
+function prepareRow(row, { instance }) {
+  const {
+    initialRowStateAccessor = defaultInitialRowStateAccessor,
+    initialCellStateAccessor = defaultInitialCellStateAccessor,
+    state: { rowState },
+  } = instance
+
+  if (row.original) {
+    row.state =
+      typeof rowState[row.id] !== 'undefined'
+        ? rowState[row.id]
+        : initialRowStateAccessor(row.original)
+
+    row.setState = updater => {
+      return instance.setRowState(row.id, updater)
+    }
+
+    row.cells.forEach(cell => {
+      if (!row.state.cellState) {
+        row.state.cellState = {}
+      }
+
+      cell.state =
+        typeof row.state.cellState[cell.column.id] !== 'undefined'
+          ? row.state.cellState[cell.column.id]
+          : initialCellStateAccessor(row.original)
+
+      cell.setState = updater => {
+        return instance.setCellState(row.id, cell.column.id, updater)
+      }
+    })
+  }
 }

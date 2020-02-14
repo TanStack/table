@@ -1,10 +1,10 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
 import { usePagination } from '../usePagination'
 
-const data = [...new Array(100)].map((d, i) => ({
-  firstName: 'tanner ' + (i + 1),
+const data = [...new Array(1000)].map((d, i) => ({
+  firstName: `tanner ${i + 1}`,
   lastName: 'linsley',
   age: 29,
   visits: 100,
@@ -100,6 +100,7 @@ function Table({ columns, data }) {
           onChange={e => {
             setPageSize(Number(e.target.value))
           }}
+          data-testid="page-size-select"
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
@@ -157,23 +158,30 @@ function App() {
 }
 
 test('renders a paginated table', () => {
-  const { getByText, asFragment } = render(<App />)
+  const rendered = render(<App />)
 
-  const fragment1 = asFragment()
+  expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 21')
 
-  fireEvent.click(getByText('>'))
+  fireEvent.click(rendered.getByText('>'))
+  expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 31')
 
-  const fragment2 = asFragment()
+  fireEvent.click(rendered.getByText('>'))
+  expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 41')
 
-  fireEvent.click(getByText('>'))
+  fireEvent.click(rendered.getByText('>>'))
+  expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 991')
 
-  const fragment3 = asFragment()
+  fireEvent.click(rendered.getByText('<<'))
+  expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 1')
 
-  fireEvent.click(getByText('>>'))
+  fireEvent.change(rendered.getByTestId('page-size-select'), {
+    target: { value: 30 },
+  })
 
-  const fragment4 = asFragment()
-
-  expect(fragment1).toMatchDiffSnapshot(fragment2)
-  expect(fragment2).toMatchDiffSnapshot(fragment3)
-  expect(fragment3).toMatchDiffSnapshot(fragment4)
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .reverse()[0].children[0].textContent
+  ).toEqual('tanner 30')
 })

@@ -205,7 +205,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    flatColumns,
+    visibleColumns,
     prepareRow,
     setColumnOrder,
     state,
@@ -230,7 +230,7 @@ function Table({ columns, data }) {
   )
 
   const randomizeColumns = () => {
-    setColumnOrder(shuffle(flatColumns.map(d => d.id)))
+    setColumnOrder(shuffle(visibleColumns.map(d => d.id)))
   }
 
   return (
@@ -267,30 +267,29 @@ function Table({ columns, data }) {
         </thead>
         <tbody {...getTableBodyProps()}>
           <AnimatePresence>
-            {rows.slice(0, 10).map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <motion.tr
-                    {...row.getRowProps({
-                      layoutTransition: spring,
-                      exit: { opacity: 0, maxHeight: 0 },
-                    })}
-                  >
-                    {row.cells.map((cell, i) => {
-                      return (
-                        <motion.td
-                          {...cell.getCellProps({
-                            layoutTransition: spring,
-                          })}
-                        >
-                          {cell.render('Cell')}
-                        </motion.td>
-                      )
-                    })}
-                  </motion.tr>
-                )}
-            )}
+            {rows.slice(0, 10).map((row, i) => {
+              prepareRow(row)
+              return (
+                <motion.tr
+                  {...row.getRowProps({
+                    layoutTransition: spring,
+                    exit: { opacity: 0, maxHeight: 0 },
+                  })}
+                >
+                  {row.cells.map((cell, i) => {
+                    return (
+                      <motion.td
+                        {...cell.getCellProps({
+                          layoutTransition: spring,
+                        })}
+                      >
+                        {cell.render('Cell')}
+                      </motion.td>
+                    )
+                  })}
+                </motion.tr>
+              )
+            })}
           </AnimatePresence>
         </tbody>
       </table>

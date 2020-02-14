@@ -15,10 +15,16 @@ The following options are supported via the main options object passed to `useTa
   - If a row's ID is found in this array, it will have the state of the value corresponding to that key.
   - Individual row states can contain anything, but they also contain a `cellState` key, which provides cell-level state based on column ID's to every
     **prepared** cell in the table.
-- `initialRowStateAccessor: Function`
+- `initialRowStateAccessor: Function(originalRow) => Object<any>`
   - Optional
-  - This function may optionally return the initial state for a row.
+  - Defaults to: `row => ({})`
+  - This function should return the initial state for a row.
   - If this function is defined, it will be passed a `Row` object, from which you can return a value to use as the initial state, eg. `row => row.original.initialState`
+- `initialCellStateAccessor: Function(originalRow) => Object<any>`
+  - **Optional**
+  - Defaults to: `cell => ({})`
+  - This function should return the initial state for a cell.
+  - If this function is defined, it will be passed a `Cell` object, from which you can return a value to use as the initial state, eg. `cell => cell.row.original.initialCellState[cell.column.id]`
 - `autoResetRowState: Boolean`
   - Defaults to `true`
   - When `true`, the `rowState` state will automatically reset if any of the following conditions are met:

@@ -1,14 +1,15 @@
 import React from 'react'
 
+import { getFilterMethod, shouldAutoRemoveFilter } from '../utils'
+
 import {
   actions,
-  getFilterMethod,
   useMountedLayoutEffect,
   functionalUpdate,
-  useGetLatest,
-  shouldAutoRemoveFilter,
   ensurePluginOrder,
-} from '../utils'
+  useGetLatest,
+} from '../publicUtils'
+
 import * as filterTypes from '../filterTypes'
 
 // Actions
@@ -60,13 +61,13 @@ function useInstance(instance) {
     data,
     rows,
     flatRows,
-    flatColumns,
+    allColumns,
     filterTypes: userFilterTypes,
     globalFilter,
     manualGlobalFilter,
     state: { globalFilter: globalFilterValue },
     dispatch,
-    autoResetGlobalFilters = true,
+    autoResetGlobalFilter = true,
     plugins,
   } = instance
 
@@ -109,7 +110,7 @@ function useInstance(instance) {
     const filterRows = filteredRows => {
       return filterMethod(
         filteredRows,
-        flatColumns.map(d => d.id),
+        allColumns.map(d => d.id),
         globalFilterValue
       ).map(row => {
         filteredFlatRows.push(row)
@@ -131,14 +132,14 @@ function useInstance(instance) {
     userFilterTypes,
     rows,
     flatRows,
-    flatColumns,
+    allColumns,
     globalFilterValue,
   ])
 
-  const getAutoResetGlobalFilters = useGetLatest(autoResetGlobalFilters)
+  const getAutoResetGlobalFilter = useGetLatest(autoResetGlobalFilter)
 
   useMountedLayoutEffect(() => {
-    if (getAutoResetGlobalFilters()) {
+    if (getAutoResetGlobalFilter()) {
       dispatch({ type: actions.resetGlobalFilter })
     }
   }, [dispatch, manualGlobalFilter ? null : data])

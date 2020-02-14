@@ -1,4 +1,4 @@
-import { ensurePluginOrder } from '../utils'
+import { ensurePluginOrder } from '../publicUtils'
 
 const cellStyles = {
   position: 'absolute',
