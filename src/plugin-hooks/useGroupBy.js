@@ -128,7 +128,6 @@ function useInstance(instance) {
     state: { groupBy },
     dispatch,
     autoResetGroupBy = true,
-    manaulGroupBy,
     disableGroupBy,
     defaultCanGroupBy,
     getHooks,
@@ -320,7 +319,7 @@ function useInstance(instance) {
     if (getAutoResetGroupBy()) {
       dispatch({ type: actions.resetGroupBy })
     }
-  }, [dispatch, manaulGroupBy ? null : data])
+  }, [dispatch, manualGroupBy ? null : data])
 
   Object.assign(instance, {
     preGroupedRows: rows,
