@@ -79,50 +79,49 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {firstPageRows.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td
-                        // For educational purposes, let's color the
-                        // cell depending on what type it is given
-                        // from the useGroupBy hook
-                        {...cell.getCellProps()}
-                        style={{
-                          background: cell.isGrouped
-                            ? '#0aff0082'
-                            : cell.isAggregated
-                            ? '#ffa50078'
-                            : cell.isRepeatedValue
-                            ? '#ff000042'
-                            : 'white',
-                        }}
-                      >
-                        {cell.isGrouped ? (
-                          // If it's a grouped cell, add an expander and row count
-                          <>
-                            <span {...row.getExpandedToggleProps()}>
-                              {row.isExpanded ? '👇' : '👉'}
-                            </span>{' '}
-                            {cell.render('Cell')} ({row.subRows.length})
-                          </>
-                        ) : cell.isAggregated ? (
-                          // If the cell is aggregated, use the Aggregated
-                          // renderer for cell
-                          cell.render('Aggregated')
-                        ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
-                          // Otherwise, just render the regular cell
-                          cell.render('Cell')
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
+          {firstPageRows.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    <td
+                      // For educational purposes, let's color the
+                      // cell depending on what type it is given
+                      // from the useGroupBy hook
+                      {...cell.getCellProps()}
+                      style={{
+                        background: cell.isGrouped
+                          ? '#0aff0082'
+                          : cell.isAggregated
+                          ? '#ffa50078'
+                          : cell.isPlaceholder
+                          ? '#ff000042'
+                          : 'white',
+                      }}
+                    >
+                      {cell.isGrouped ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <span {...row.getExpandedToggleProps()}>
+                            {row.isExpanded ? '👇' : '👉'}
+                          </span>{' '}
+                          {cell.render('Cell')} ({row.subRows.length})
+                        </>
+                      ) : cell.isAggregated ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        cell.render('Aggregated')
+                      ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        cell.render('Cell')
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       <br />
@@ -170,13 +169,13 @@ function Legend() {
 }
 
 // This is a custom aggregator that
-// takes in an array of values and
+// takes in an array of leaf values and
 // returns the rounded median
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
+function roundedMedian(leafValues) {
+  let min = leafValues[0] || 0
+  let max = leafValues[0] || 0
 
-  values.forEach(value => {
+  leafValues.forEach(value => {
     min = Math.min(min, value)
     max = Math.max(max, value)
   })
@@ -197,7 +196,7 @@ function App() {
             // count the total rows being aggregated,
             // then sum any of those counts if they are
             // aggregated further
-            aggregate: ['sum', 'count'],
+            aggregate: 'count',
             Aggregated: ({ cell: { value } }) => `${value} Names`,
           },
           {
@@ -207,7 +206,7 @@ function App() {
             // first count the UNIQUE values from the rows
             // being aggregated, then sum those counts if
             // they are aggregated further
-            aggregate: ['sum', 'uniqueCount'],
+            aggregate: 'uniqueCount',
             Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
           },
         ],
@@ -220,7 +219,8 @@ function App() {
             accessor: 'age',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
+            Aggregated: ({ cell: { value } }) =>
+              `${Math.round(value * 100) / 100} (avg)`,
           },
           {
             Header: 'Visits',

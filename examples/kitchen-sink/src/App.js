@@ -308,7 +308,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
     useRowSelect,
     // Here we will use a plugin to add our selection column
     hooks => {
-      hooks.flatColumns.push(columns => {
+      hooks.visibleColumns.push(columns => {
         return [
           {
             id: 'selection',
@@ -390,7 +390,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
                         cell.render('Aggregated')
-                      ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
+                      ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         cell.render('Cell', { editable: true })
                       )}
@@ -488,13 +488,13 @@ function filterGreaterThan(rows, id, filterValue) {
 filterGreaterThan.autoRemove = val => typeof val !== 'number'
 
 // This is a custom aggregator that
-// takes in an array of values and
+// takes in an array of leaf values and
 // returns the rounded median
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
+function roundedMedian(leafValues) {
+  let min = leafValues[0] || 0
+  let max = leafValues[0] || 0
 
-  values.forEach(value => {
+  leafValues.forEach(value => {
     min = Math.min(min, value)
     max = Math.max(max, value)
   })
@@ -532,7 +532,7 @@ function App() {
             // count the total rows being aggregated,
             // then sum any of those counts if they are
             // aggregated further
-            aggregate: ['sum', 'count'],
+            aggregate: 'count',
             Aggregated: ({ cell: { value } }) => `${value} Names`,
           },
           {
@@ -544,7 +544,7 @@ function App() {
             // first count the UNIQUE values from the rows
             // being aggregated, then sum those counts if
             // they are aggregated further
-            aggregate: ['sum', 'uniqueCount'],
+            aggregate: 'uniqueCount',
             Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
           },
         ],

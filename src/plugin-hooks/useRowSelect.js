@@ -6,8 +6,7 @@ import {
   ensurePluginOrder,
   useGetLatest,
   useMountedLayoutEffect,
-  useConsumeHookGetter,
-} from '../utils'
+} from '../publicUtils'
 
 const pluginName = 'useRowSelect'
 
@@ -20,8 +19,8 @@ export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = [defaultGetToggleRowSelectedProps]
   hooks.getToggleAllRowsSelectedProps = [defaultGetToggleAllRowsSelectedProps]
   hooks.stateReducers.push(reducer)
-  hooks.useRows.push(useRows)
   hooks.useInstance.push(useInstance)
+  hooks.prepareRow.push(prepareRow)
 }
 
 useRowSelect.pluginName = pluginName
@@ -86,11 +85,11 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.toggleAllRowsSelected) {
-    const { selected } = action
+    const { value: setSelected } = action
     const { isAllRowsSelected, flatRowsById } = instance
 
     const selectAll =
-      typeof selected !== 'undefined' ? selected : !isAllRowsSelected
+      typeof setSelected !== 'undefined' ? setSelected : !isAllRowsSelected
 
     if (selectAll) {
       const selectedRowIds = {}
@@ -112,7 +111,7 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.toggleRowSelected) {
-    const { id, selected } = action
+    const { id, value: setSelected } = action
     const { flatGroupedRowsById } = instance
 
     // Join the ids of deep rows
@@ -120,7 +119,8 @@ function reducer(state, action, previousState, instance) {
     // in a flat object
     const row = flatGroupedRowsById[id]
     const isSelected = row.isSelected
-    const shouldExist = typeof selected !== 'undefined' ? selected : !isSelected
+    const shouldExist =
+      typeof setSelected !== 'undefined' ? setSelected : !isSelected
 
     if (isSelected === shouldExist) {
       return state
@@ -153,34 +153,11 @@ function reducer(state, action, previousState, instance) {
   }
 }
 
-function useRows(rows, { instance }) {
-  const {
-    state: { selectedRowIds },
-  } = instance
-
-  instance.selectedFlatRows = React.useMemo(() => {
-    const selectedFlatRows = []
-
-    rows.forEach(row => {
-      const isSelected = getRowIsSelected(row, selectedRowIds)
-      row.isSelected = !!isSelected
-      row.isSomeSelected = isSelected === null
-
-      if (isSelected) {
-        selectedFlatRows.push(row)
-      }
-    })
-
-    return selectedFlatRows
-  }, [rows, selectedRowIds])
-
-  return rows
-}
-
 function useInstance(instance) {
   const {
     data,
-    hooks,
+    rows,
+    getHooks,
     plugins,
     flatRows,
     autoResetSelectedRows = true,
@@ -209,6 +186,22 @@ function useInstance(instance) {
     return [all, grouped]
   }, [flatRows])
 
+  const selectedFlatRows = React.useMemo(() => {
+    const selectedFlatRows = []
+
+    rows.forEach(row => {
+      const isSelected = getRowIsSelected(row, selectedRowIds)
+      row.isSelected = !!isSelected
+      row.isSomeSelected = isSelected === null
+
+      if (isSelected) {
+        selectedFlatRows.push(row)
+      }
+    })
+
+    return selectedFlatRows
+  }, [rows, selectedRowIds])
+
   let isAllRowsSelected = Boolean(
     Object.keys(flatRowsById).length && Object.keys(selectedRowIds).length
   )
@@ -227,46 +220,37 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleAllRowsSelected = selected =>
-    dispatch({ type: actions.toggleAllRowsSelected, selected })
+  const toggleAllRowsSelected = value =>
+    dispatch({ type: actions.toggleAllRowsSelected, value })
 
-  const toggleRowSelected = (id, selected) =>
-    dispatch({ type: actions.toggleRowSelected, id, selected })
+  const toggleRowSelected = (id, value) =>
+    dispatch({ type: actions.toggleRowSelected, id, value })
 
   const getInstance = useGetLatest(instance)
 
-  const getToggleAllRowsSelectedPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleAllRowsSelectedProps'
-  )
-
   const getToggleAllRowsSelectedProps = makePropGetter(
-    getToggleAllRowsSelectedPropsHooks(),
+    getHooks().getToggleAllRowsSelectedProps,
     { instance: getInstance() }
   )
-
-  const getToggleRowSelectedPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleRowSelectedProps'
-  )
-
-  hooks.prepareRow.push(row => {
-    row.toggleRowSelected = set => toggleRowSelected(row.id, set)
-
-    row.getToggleRowSelectedProps = makePropGetter(
-      getToggleRowSelectedPropsHooks(),
-      { instance: getInstance(), row }
-    )
-  })
 
   Object.assign(instance, {
     flatRowsById,
     flatGroupedRowsById,
+    selectedFlatRows,
     toggleRowSelected,
     toggleAllRowsSelected,
     getToggleAllRowsSelectedProps,
     isAllRowsSelected,
   })
+}
+
+function prepareRow(row, { instance }) {
+  row.toggleRowSelected = set => instance.toggleRowSelected(row.id, set)
+
+  row.getToggleRowSelectedProps = makePropGetter(
+    instance.getHooks().getToggleRowSelectedProps,
+    { instance: instance, row }
+  )
 }
 
 function getRowIsSelected(row, selectedRowIds) {

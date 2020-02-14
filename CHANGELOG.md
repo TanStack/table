@@ -1,3 +1,24 @@
+## 7.0.0-rc.16
+
+- Moved away from snapshot tests. No more testing implementation details.
+- Added `visibleColumns` and `visibleColumnsDeps` hooks to manipulate columns after all data is processed. Further visibility processing may result in these columns not being visible, such as `hiddenColumn` state
+- The `useRows` hook has been deprecated due to its dangerous nature 💀
+- Added the `instance.rowsById` object
+- Renamed `instance.flatColumns` to `instance.allColumns` which now accumulates ALL columns created for the table, visible or not.
+- Added the `instance.visibleColumns` object
+- Fix an issue where `useAsyncDebounce` would crash when passed arguments
+- Started development on the `usePivotColumns` plugin, which can be tested currently using the `_UNSTABLE_usePivoteColumns` export.
+- Renamed `cell.isRepeatedValue` to `cell.isPlaceholder`
+- Removed `useConsumeHookGetter` as it was inefficient most of the time and noisy
+- All hooks are now "consumed" right after main plugin functions are run. This means that any attempt to add a plugin after that will result in a runtime error (for good reason, since using hook points should not be a conditional or async operation)
+- Added `instance.getHooks` for getting the list of hooks that was captured after plugins are run
+- Normalized all "toggle" actions to use an optional `value` property to set the value instead of toggle. Previously properties like `selected`, `groupBy`, etc. were used, but not any more!
+- Undocument `instance.dispatch`. Both plugins and users should be interacting with the table via methods assigned to the instance and other structures on the table. This should both reduce the surface API that React Table needs to expose and also the amount of documentation that is needed to understand how to use the API.
+- `useRowState`'s `initialRowStateAccessor` and `initialCellStateAccessor` options now have a default of `row => ({})` and `cell => ({})` respectively.
+- Removed the concept of complex aggregations (eg. `column.aggregate = ['sum', 'count']`). Instead, a better aggregation function signature is now used to allow for leaf node aggregation when needed.
+- Added the `column.aggregateValue` option which allows resolving (or pre-aggregating) a cell's value before it is grouped and aggregated across rows. This is useful for cell values that are not primitive, eg. an array of values that you may want to unique and count before summing that count across your groupings
+- The function signature for aggregation functions has changed to be `(leafValues, aggregatedValues) => aggregatedValue` where `leafValues` is a flat array containing all leaf rows currently grouped at the aggregation level and `aggregatedValues` is an array containing the aggregated values from the immediate child sub rows. Each has purpose in the types of aggregations they power where optimizations are made for either accuracy or performance.
+
 ## 7.0.0-rc.15
 
 - Added `useGlobalFilter` hook for performing table-wide filtering
@@ -9,7 +30,7 @@
 
 - Changed the function signature for all propGetter hooks to accept a single object of named meta properties instead of a variable length of meta arguments. The user props object has also been added as a property to all prop getters. For example, `hooks.getRowProps.push((props, instance, row) => [...])` is now written `hooks.getRowProps.push((props, { instance, row, userProps }) => [...])`
 - Changed the function signature for all reduceHooks accept a single object of named meta properties instead of a variable length of meta arguments. For example, `hooks.flatColumns.push((flatColumns, instance) => flatColumns)` is now written `hooks.flatColumns.push((flatColumns, { instance }) => flatColumns)`
-- Changed the function signature for all loopHooks accept a single object of named meta properties instead of a variable length of meta arguments. For example, `hooks.prepareRow.push((row, instance) => void)` is now written `hooks.prepareRow.push((row { instance }) => void)`
+- Changed the function signature for all loopHooks accept a single object of named meta properties instead of a variable length of meta arguments. For example, `hooks.prepareRow.push((row, instance) => void)` is now written `hooks.prepareRow.push((row, { instance }) => void)`
 
 ## 7.0.0-rc.13
 
