@@ -84,7 +84,7 @@ function Table({ columns, data }) {
     useRowSelect,
     useExpanded,
     hooks => {
-      hooks.flatColumns.push(columns => [
+      hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
         {
           id: 'selection',
@@ -142,12 +142,6 @@ function Table({ columns, data }) {
           )}
         </tbody>
       </table>
-      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
-      <pre>
-        <code>
-          {JSON.stringify({ selectedRowIds: selectedRowIds }, null, 2)}
-        </code>
-      </pre>
     </>
   )
 }
@@ -170,11 +164,13 @@ function App() {
     () => [
       {
         id: 'selectedStatus',
-        Cell: ({ row }) => (
-          <div>
-            Row {row.id} {row.isSelected ? 'Selected' : 'Not Selected'}
-          </div>
-        ),
+        Cell: ({ row }) =>
+          row.isSelected ? (
+            <div>
+              <div>Selected</div>
+              <div>Row {row.id}</div>
+            </div>
+          ) : null,
       },
       {
         Header: 'Name',
@@ -218,43 +214,43 @@ function App() {
 }
 
 test('renders a table with selectable rows', () => {
-  const { getByLabelText, getAllByLabelText, asFragment } = render(<App />)
+  const rtl = render(<App />)
 
-  const fragment1 = asFragment()
+  fireEvent.click(rtl.getByLabelText('Select All'))
 
-  fireEvent.click(getByLabelText('Select All'))
+  expect(rtl.getAllByText('Selected').length).toBe(24)
 
-  const fragment2 = asFragment()
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
 
-  fireEvent.click(getByLabelText('Select All'))
+  expect(rtl.queryAllByText('Selected').length).toBe(23)
 
-  const fragment3 = asFragment()
+  fireEvent.click(rtl.getByLabelText('Select All'))
 
-  fireEvent.click(getAllByLabelText('Select Row')[0])
-  fireEvent.click(getAllByLabelText('Select Row')[2])
+  expect(rtl.queryAllByText('Selected').length).toBe(24)
 
-  const fragment4 = asFragment()
+  fireEvent.click(rtl.getByLabelText('Select All'))
 
-  fireEvent.click(getAllByLabelText('Select Row')[2])
+  expect(rtl.queryAllByText('Selected').length).toBe(0)
 
-  const fragment5 = asFragment()
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[0])
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
 
-  fireEvent.click(getAllByLabelText('Select Row')[3])
+  rtl.getByText('Row 0')
+  rtl.getByText('Row 2')
 
-  const fragment6 = asFragment()
-  fireEvent.click(getAllByLabelText('Select Row')[4])
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
 
-  const fragment7 = asFragment()
+  expect(rtl.queryByText('Row 2')).toBeNull()
 
-  fireEvent.click(getAllByLabelText('Select Row')[4])
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[3])
 
-  const fragment8 = asFragment()
+  rtl.queryByText('Row 3')
 
-  expect(fragment1).toMatchDiffSnapshot(fragment2)
-  expect(fragment2).toMatchDiffSnapshot(fragment3)
-  expect(fragment3).toMatchDiffSnapshot(fragment4)
-  expect(fragment4).toMatchDiffSnapshot(fragment5)
-  expect(fragment5).toMatchDiffSnapshot(fragment6)
-  expect(fragment6).toMatchDiffSnapshot(fragment7)
-  expect(fragment7).toMatchDiffSnapshot(fragment8)
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[4])
+
+  rtl.queryByText('Row 4')
+
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[4])
+
+  expect(rtl.queryByText('Row 4')).toBeNull()
 })

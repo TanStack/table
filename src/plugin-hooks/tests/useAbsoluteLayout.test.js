@@ -136,7 +136,22 @@ function App() {
 }
 
 test('renders a table', () => {
-  const { asFragment } = render(<App />)
+  const rtl = render(<App />)
 
-  expect(asFragment()).toMatchSnapshot()
+  expect(
+    rtl.getAllByRole('columnheader').every(d => d.style.position === 'absolute')
+  ).toBe(true)
+
+  expect(
+    rtl.getAllByRole('columnheader').map(d => [d.style.left, d.style.width])
+  ).toStrictEqual([
+    ['0px', '550px'],
+    ['550px', '850px'],
+    ['0px', '250px'],
+    ['250px', '300px'],
+    ['550px', '300px'],
+    ['850px', '150px'],
+    ['1000px', '200px'],
+    ['1200px', '200px'],
+  ])
 })

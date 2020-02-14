@@ -1,10 +1,10 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
 import { useFilters } from '../useFilters'
 import { useGlobalFilter } from '../useGlobalFilter'
 
-const data = [
+const makeData = () => [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -52,79 +52,8 @@ const defaultColumn = {
   ),
 }
 
-function Table({ columns, data }) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    flatColumns,
-    state,
-    setGlobalFilter,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    useFilters,
-    useGlobalFilter
-  )
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.render('Header')}
-                {column.canFilter ? column.render('Filter') : null}
-              </th>
-            ))}
-          </tr>
-        ))}
-        <tr>
-          <th
-            colSpan={flatColumns.length}
-            style={{
-              textAlign: 'left',
-            }}
-          >
-            <span>
-              <input
-                value={state.globalFilter || ''}
-                onChange={e => {
-                  setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-                }}
-                placeholder={`Global search...`}
-                style={{
-                  fontSize: '1.1rem',
-                  border: '0',
-                }}
-              />
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
-  )
-}
-
 function App() {
+  const [data, setData] = React.useState(makeData)
   const columns = React.useMemo(
     () => [
       {
@@ -165,38 +94,152 @@ function App() {
     []
   )
 
-  return <Table columns={columns} data={data} />
-}
-
-test('renders a filterable table', () => {
-  const { getAllByPlaceholderText, getByPlaceholderText, asFragment } = render(
-    <App />
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+    state,
+    setGlobalFilter,
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn,
+    },
+    useFilters,
+    useGlobalFilter
   )
 
-  const globalFilterInput = getByPlaceholderText('Global search...')
-  const filterInputs = getAllByPlaceholderText('Search...')
+  const reset = () => setData(makeData())
 
-  const beforeFilter = asFragment()
+  return (
+    <>
+      <button onClick={reset}>Reset Data</button>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                  {column.canFilter ? column.render('Filter') : null}
+                </th>
+              ))}
+            </tr>
+          ))}
+          <tr>
+            <th
+              colSpan={visibleColumns.length}
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              <span>
+                <input
+                  value={state.globalFilter || ''}
+                  onChange={e => {
+                    setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+                  }}
+                  placeholder={`Global search...`}
+                  style={{
+                    fontSize: '1.1rem',
+                    border: '0',
+                  }}
+                />
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  ))}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+    </>
+  )
+}
+
+test('renders a filterable table', async () => {
+  const rendered = render(<App />)
+
+  const resetButton = rendered.getByText('Reset Data')
+  const globalFilterInput = rendered.getByPlaceholderText('Global search...')
+  const filterInputs = rendered.getAllByPlaceholderText('Search...')
 
   fireEvent.change(filterInputs[1], { target: { value: 'l' } })
-
-  const afterFilter1 = asFragment()
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual(['firstName: tanner', 'firstName: jaylen'])
 
   fireEvent.change(filterInputs[1], { target: { value: 'er' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual(['firstName: derek', 'firstName: joe'])
 
-  const afterFilter2 = asFragment()
+  fireEvent.change(filterInputs[2], { target: { value: 'nothing' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([])
 
   fireEvent.change(filterInputs[1], { target: { value: '' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([])
 
-  const afterFilter3 = asFragment()
+  fireEvent.change(filterInputs[2], { target: { value: '' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: jaylen',
+  ])
 
   fireEvent.change(globalFilterInput, { target: { value: 'li' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: jaylen'])
 
-  const afterFilter4 = asFragment()
-
-  expect(beforeFilter).toMatchSnapshot()
-  expect(afterFilter1).toMatchSnapshot()
-  expect(afterFilter2).toMatchSnapshot()
-  expect(afterFilter3).toMatchSnapshot()
-  expect(afterFilter4).toMatchSnapshot()
+  fireEvent.click(resetButton)
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: jaylen',
+  ])
 })

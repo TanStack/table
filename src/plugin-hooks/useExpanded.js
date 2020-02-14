@@ -1,13 +1,14 @@
 import React from 'react'
 
+import { expandRows } from '../utils'
+
 import {
-  actions,
-  makePropGetter,
-  expandRows,
-  useMountedLayoutEffect,
   useGetLatest,
-} from '../utils'
-import { useConsumeHookGetter, functionalUpdate } from '../publicUtils'
+  actions,
+  functionalUpdate,
+  useMountedLayoutEffect,
+  makePropGetter,
+} from '../publicUtils'
 
 // Actions
 actions.toggleExpanded = 'toggleExpanded'
@@ -19,6 +20,7 @@ export const useExpanded = hooks => {
   hooks.getExpandedToggleProps = [defaultGetExpandedToggleProps]
   hooks.stateReducers.push(reducer)
   hooks.useInstance.push(useInstance)
+  hooks.prepareRow.push(prepareRow)
 }
 
 useExpanded.pluginName = 'useExpanded'
@@ -61,7 +63,7 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.toggleExpanded) {
-    const { id, expanded: setExpanded } = action
+    const { id, value: setExpanded } = action
     const exists = state.expanded[id]
 
     const shouldExist =
@@ -94,7 +96,6 @@ function useInstance(instance) {
     manualExpandedKey = 'expanded',
     paginateExpandedRows = true,
     expandSubRows = true,
-    hooks,
     autoResetExpanded = true,
     state: { expanded },
     dispatch,
@@ -109,26 +110,9 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleExpanded = (id, expanded) => {
-    dispatch({ type: actions.toggleExpanded, id, expanded })
+  const toggleExpanded = (id, value) => {
+    dispatch({ type: actions.toggleExpanded, id, value })
   }
-
-  // use reference to avoid memory leak in #1608
-  const getInstance = useGetLatest(instance)
-
-  const getExpandedTogglePropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getExpandedToggleProps'
-  )
-
-  hooks.prepareRow.push(row => {
-    row.toggleExpanded = set => instance.toggleExpanded(row.id, set)
-
-    row.getExpandedToggleProps = makePropGetter(getExpandedTogglePropsHooks(), {
-      instance: getInstance(),
-      row,
-    })
-  })
 
   const expandedRows = React.useMemo(() => {
     if (paginateExpandedRows) {
@@ -149,6 +133,18 @@ function useInstance(instance) {
     toggleExpanded,
     expandedDepth,
   })
+}
+
+function prepareRow(row, { instance: { getHooks }, instance }) {
+  row.toggleExpanded = set => instance.toggleExpanded(row.id, set)
+
+  row.getExpandedToggleProps = makePropGetter(
+    getHooks().getExpandedToggleProps,
+    {
+      instance,
+      row,
+    }
+  )
 }
 
 function findExpandedDepth(expanded) {

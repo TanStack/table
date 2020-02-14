@@ -13,5 +13,5 @@ module.exports = {
   rootDir: path.resolve(__dirname, '../../'),
   roots: ['<rootDir>/src', __dirname],
   transformIgnorePatterns: ['node_modules'],
-  snapshotSerializers: [require.resolve('snapshot-diff/serializer.js')],
+  collectCoverageFrom: ['src/**/*.js', '!**/*.test.js'],
 }
