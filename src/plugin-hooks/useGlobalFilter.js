@@ -67,7 +67,7 @@ function useInstance(instance) {
     manualGlobalFilter,
     state: { globalFilter: globalFilterValue },
     dispatch,
-    autoResetGlobalFilters = true,
+    autoResetGlobalFilter = true,
     plugins,
   } = instance
 
@@ -136,10 +136,10 @@ function useInstance(instance) {
     globalFilterValue,
   ])
 
-  const getAutoResetGlobalFilters = useGetLatest(autoResetGlobalFilters)
+  const getAutoResetGlobalFilter = useGetLatest(autoResetGlobalFilter)
 
   useMountedLayoutEffect(() => {
-    if (getAutoResetGlobalFilters()) {
+    if (getAutoResetGlobalFilter()) {
       dispatch({ type: actions.resetGlobalFilter })
     }
   }, [dispatch, manualGlobalFilter ? null : data])
