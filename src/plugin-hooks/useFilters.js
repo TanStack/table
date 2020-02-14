@@ -68,7 +68,7 @@ function reducer(state, action, previousState, instance) {
     )
 
     //
-    if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
+    if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)) {
       return {
         ...state,
         filters: state.filters.filter(d => d.id !== columnId),
@@ -108,7 +108,7 @@ function reducer(state, action, previousState, instance) {
           filterTypes
         )
 
-        if (shouldAutoRemoveFilter(filterMethod.autoRemove, filter.value)) {
+        if (shouldAutoRemoveFilter(filterMethod.autoRemove, filter.value, column)) {
           return false
         }
         return true

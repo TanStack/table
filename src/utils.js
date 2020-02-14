@@ -369,8 +369,8 @@ export function getFilterMethod(filter, userFilterTypes, filterTypes) {
   )
 }
 
-export function shouldAutoRemoveFilter(autoRemove, value) {
-  return autoRemove ? autoRemove(value) : typeof value === 'undefined'
+export function shouldAutoRemoveFilter(autoRemove, value, column) {
+  return autoRemove ? autoRemove(value, column) : typeof value === 'undefined'
 }
 
 export function unpreparedAccessWarning() {
