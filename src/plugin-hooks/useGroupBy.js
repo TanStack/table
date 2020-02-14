@@ -165,9 +165,12 @@ function useInstance(instance) {
     column.Aggregated = column.Aggregated || column.Cell
   })
 
-  const toggleGroupBy = (columnId, value) => {
-    dispatch({ type: actions.toggleGroupBy, columnId, value })
-  }
+  const toggleGroupBy = React.useCallback(
+    (columnId, value) => {
+      dispatch({ type: actions.toggleGroupBy, columnId, value })
+    },
+    [dispatch]
+  )
 
   flatHeaders.forEach(header => {
     header.getGroupByToggleProps = makePropGetter(

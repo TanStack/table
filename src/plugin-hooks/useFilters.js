@@ -132,16 +132,22 @@ function useInstance(instance) {
     autoResetFilters = true,
   } = instance
 
-  const setFilter = (columnId, filterValue) => {
-    dispatch({ type: actions.setFilter, columnId, filterValue })
-  }
+  const setFilter = React.useCallback(
+    (columnId, filterValue) => {
+      dispatch({ type: actions.setFilter, columnId, filterValue })
+    },
+    [dispatch]
+  )
 
-  const setAllFilters = filters => {
-    dispatch({
-      type: actions.setAllFilters,
-      filters,
-    })
-  }
+  const setAllFilters = React.useCallback(
+    filters => {
+      dispatch({
+        type: actions.setAllFilters,
+        filters,
+      })
+    },
+    [dispatch]
+  )
 
   allColumns.forEach(column => {
     const {

@@ -220,11 +220,16 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleAllRowsSelected = value =>
-    dispatch({ type: actions.toggleAllRowsSelected, value })
+  const toggleAllRowsSelected = React.useCallback(
+    value => dispatch({ type: actions.toggleAllRowsSelected, value }),
+    [dispatch]
+  )
 
-  const toggleRowSelected = (id, value) =>
-    dispatch({ type: actions.toggleRowSelected, id, value })
+  const toggleRowSelected = React.useCallback(
+    (id, value) =>
+      dispatch({ type: actions.toggleRowSelected, id, value }),
+    [dispatch]
+  )
 
   const getInstance = useGetLatest(instance)
 

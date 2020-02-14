@@ -110,9 +110,12 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleExpanded = (id, value) => {
-    dispatch({ type: actions.toggleExpanded, id, value })
-  }
+  const toggleExpanded = React.useCallback(
+    (id, value) => {
+      dispatch({ type: actions.toggleExpanded, id, value })
+    },
+    [dispatch]
+  )
 
   const expandedRows = React.useMemo(() => {
     if (paginateExpandedRows) {
