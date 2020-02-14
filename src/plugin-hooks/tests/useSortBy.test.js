@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
 import { useSortBy } from '../useSortBy'
 
@@ -10,7 +10,7 @@ const data = [
     age: 29,
     visits: 100,
     status: 'In Relationship',
-    progress: 50,
+    progress: 80,
   },
   {
     firstName: 'derek',
@@ -61,9 +61,9 @@ function Table({ columns, data }) {
               <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                 {column.render('Header')}
                 {/* Add a sort direction indicator */}
-                <span>
-                  {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                </span>
+                {column.isSorted
+                  ? (column.isSortedDesc ? ' 🔽' : ' 🔼') + column.sortedIndex
+                  : ''}
               </th>
             ))}
           </tr>
@@ -130,18 +130,42 @@ function App() {
 }
 
 test('renders a sortable table', () => {
-  const { getByText, asFragment } = render(<App />)
+  const rendered = render(<App />)
 
-  const beforeSort = asFragment()
+  fireEvent.click(rendered.getByText('First Name'))
+  rendered.getByText('First Name 🔼0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: derek', 'firstName: joe', 'firstName: tanner'])
 
-  fireEvent.click(getByText('First Name'))
+  fireEvent.click(rendered.getByText('First Name 🔼0'))
+  rendered.getByText('First Name 🔽0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: derek'])
 
-  const afterSort1 = asFragment()
+  fireEvent.click(rendered.getByText('Profile Progress'))
+  rendered.getByText('Profile Progress 🔼0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: joe', 'firstName: tanner', 'firstName: derek'])
 
-  fireEvent.click(getByText('First Name'))
-
-  const afterSort2 = asFragment()
-
-  expect(beforeSort).toMatchDiffSnapshot(afterSort1)
-  expect(afterSort1).toMatchDiffSnapshot(afterSort2)
+  fireEvent.click(rendered.getByText('First Name'), { shiftKey: true })
+  rendered.getByText('Profile Progress 🔼0')
+  rendered.getByText('First Name 🔼1')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
 })

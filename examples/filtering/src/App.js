@@ -243,7 +243,7 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     state,
-    flatColumns,
+    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(
@@ -278,7 +278,7 @@ function Table({ columns, data }) {
           ))}
           <tr>
             <th
-              colSpan={flatColumns.length}
+              colSpan={visibleColumns.length}
               style={{
                 textAlign: 'left',
               }}

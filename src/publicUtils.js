@@ -1,6 +1,6 @@
 import React from 'react'
 
-let renderErr = 'Renderer Error'
+let renderErr = 'Renderer Error ☝️'
 
 export const actions = {
   init: 'init',
@@ -94,11 +94,11 @@ export const makePropGetter = (hooks, meta = {}) => {
     )
 }
 
-export const reduceHooks = (hooks, initial, meta = {}) =>
+export const reduceHooks = (hooks, initial, meta = {}, allowUndefined) =>
   hooks.reduce((prev, next) => {
     const nextValue = next(prev, meta)
     if (process.env.NODE_ENV !== 'production') {
-      if (typeof nextValue === 'undefined') {
+      if (!allowUndefined && typeof nextValue === 'undefined') {
         console.info(next)
         throw new Error(
           'React Table: A reducer hook ☝️ just returned undefined! This is not allowed.'
@@ -108,9 +108,9 @@ export const reduceHooks = (hooks, initial, meta = {}) =>
     return nextValue
   }, initial)
 
-export const loopHooks = (hooks, meta = {}) =>
+export const loopHooks = (hooks, context, meta = {}) =>
   hooks.forEach(hook => {
-    const nextValue = hook(meta)
+    const nextValue = hook(context, meta)
     if (process.env.NODE_ENV !== 'production') {
       if (typeof nextValue !== 'undefined') {
         console.info(hook, nextValue)
@@ -190,14 +190,12 @@ export function useMountedLayoutEffect(fn, deps) {
 
 export function useAsyncDebounce(defaultFn, defaultWait = 0) {
   const debounceRef = React.useRef({})
-  debounceRef.current.defaultFn = defaultFn
-  debounceRef.current.defaultWait = defaultWait
 
-  const debounce = React.useCallback(
-    async (
-      fn = debounceRef.current.defaultFn,
-      wait = debounceRef.current.defaultWait
-    ) => {
+  const getDefaultFn = useGetLatest(defaultFn)
+  const getDefaultWait = useGetLatest(defaultWait)
+
+  return React.useCallback(
+    async (...args) => {
       if (!debounceRef.current.promise) {
         debounceRef.current.promise = new Promise((resolve, reject) => {
           debounceRef.current.resolve = resolve
@@ -212,26 +210,18 @@ export function useAsyncDebounce(defaultFn, defaultWait = 0) {
       debounceRef.current.timeout = setTimeout(async () => {
         delete debounceRef.current.timeout
         try {
-          debounceRef.current.resolve(await fn())
+          debounceRef.current.resolve(await getDefaultFn()(...args))
         } catch (err) {
           debounceRef.current.reject(err)
         } finally {
           delete debounceRef.current.promise
         }
-      }, wait)
+      }, getDefaultWait())
 
       return debounceRef.current.promise
     },
-    []
+    [getDefaultFn, getDefaultWait]
   )
-
-  return debounce
-}
-
-export function useConsumeHookGetter(hooks, hookName) {
-  const getter = useGetLatest(hooks[hookName])
-  hooks[hookName] = undefined
-  return getter
 }
 
 export function makeRenderer(instance, column, meta = {}) {
@@ -239,6 +229,7 @@ export function makeRenderer(instance, column, meta = {}) {
     const Comp = typeof type === 'string' ? column[type] : type
 
     if (typeof Comp === 'undefined') {
+      console.info(column)
       throw new Error(renderErr)
     }
 

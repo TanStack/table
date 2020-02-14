@@ -141,6 +141,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         <ul>
         <li>Jon Eickmeier</li>
           <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
+          <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
         </ul>
       </td>
       <td>
