@@ -73,6 +73,9 @@
   - Material-UI
     - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/material-UI-components)
     - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/material-UI-components)
+  - Material-UI Enhanced Table
+    - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/material-UI-enhanced-table)
+    - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/material-UI-enhanced-table)
   - [ ] Styled-Components
   - [ ] CSS
   - [ ] Bootstrap
