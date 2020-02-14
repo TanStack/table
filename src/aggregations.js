@@ -18,6 +18,16 @@ export function uniqueCount(values) {
   return new Set(values).size
 }
 
+export function uniqueCountNotEmpty (values) {
+  const filtred = values.filter(el => !!el);
+  return new Set(filtred).size;
+}
+
 export function count(values) {
   return values.length
 }
+
+export function countNotEmpty(values) {
+  return values.reduce((sum, x) => (!x ? sum + 1 : sum), 0)
+}
+
