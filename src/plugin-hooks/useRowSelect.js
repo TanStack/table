@@ -112,7 +112,7 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleRowSelected) {
     const { id, value: setSelected } = action
-    const { flatGroupedRowsById } = instance
+    const { flatGroupedRowsById, selectSubRows = true } = instance
 
     // Join the ids of deep rows
     // to make a key, then manage all of the keys
@@ -139,7 +139,7 @@ function reducer(state, action, previousState, instance) {
         }
       }
 
-      if (row.subRows) {
+      if (selectSubRows && row.subRows) {
         return row.subRows.forEach(row => handleRowById(row.id))
       }
     }
@@ -162,6 +162,7 @@ function useInstance(instance) {
     flatRows,
     autoResetSelectedRows = true,
     state: { selectedRowIds },
+    selectSubRows = true,
     dispatch,
   } = instance
 
@@ -190,7 +191,9 @@ function useInstance(instance) {
     const selectedFlatRows = []
 
     rows.forEach(row => {
-      const isSelected = getRowIsSelected(row, selectedRowIds)
+      const isSelected = selectSubRows
+        ? getRowIsSelected(row, selectedRowIds)
+        : !!selectedRowIds[row.id]
       row.isSelected = !!isSelected
       row.isSomeSelected = isSelected === null
 
@@ -200,7 +203,7 @@ function useInstance(instance) {
     })
 
     return selectedFlatRows
-  }, [rows, selectedRowIds])
+  }, [rows, selectSubRows, selectedRowIds])
 
   let isAllRowsSelected = Boolean(
     Object.keys(flatRowsById).length && Object.keys(selectedRowIds).length
