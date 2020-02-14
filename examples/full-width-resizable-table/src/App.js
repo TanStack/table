@@ -58,7 +58,7 @@ const Styles = styled.div`
       }
 
       .resizer {
-        right: -5px;
+        right: 0;
         background: blue;
         width: 10px;
         height: 100%;
@@ -66,20 +66,10 @@ const Styles = styled.div`
         top: 0;
         z-index: 1;
         ${'' /* prevents from scrolling while dragging on touch devices */}
-        touch-action:none;
+        touch-action :none;
 
         &.isResizing {
           background: red;
-        }
-      }
-    }
-
-    .th {
-      &:last-of-type {
-        .resizer {
-          ${'' /* note that the 15 is the scroll width and if also referenced in the getHeaderGroupProps for the header row below */}
-          ${'' /* todo: resolve this value dynamicaly from element.scrollWidth to account for OS/Browser differences  */}
-          right: -15px;
         }
       }
     }
@@ -145,7 +135,7 @@ function Table({ columns, data }) {
     useFlexLayout,
     useRowSelect,
     hooks => {
-      hooks.flatColumns.push(columns => [
+      hooks.allColumns.push(columns => [
         // Let's make a column for selection
         {
           id: 'selection',
@@ -184,7 +174,7 @@ function Table({ columns, data }) {
         {headerGroups.map(headerGroup => (
           <div
             {...headerGroup.getHeaderGroupProps({
-              style: { paddingRight: '15px' },
+              // style: { paddingRight: '15px' },
             })}
             className="tr"
           >

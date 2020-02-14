@@ -44,9 +44,9 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.setFilter) {
     const { columnId, filterValue } = action
-    const { flatColumns, filterTypes: userFilterTypes } = instance
+    const { allColumns, filterTypes: userFilterTypes } = instance
 
-    const column = flatColumns.find(d => d.id === columnId)
+    const column = allColumns.find(d => d.id === columnId)
 
     if (!column) {
       throw new Error(

@@ -138,7 +138,7 @@ function App() {
 test('renders a table', () => {
   const rendered = render(<App />)
 
-  const [headerRow, firstRow] = rendered.queryAllByRole('row')
+  const [headerRow, , firstRow] = rendered.queryAllByRole('row')
 
   expect(headerRow.getAttribute('style')).toEqual(
     'display: flex; flex: 1 0 auto; min-width: 800px;'
@@ -147,11 +147,11 @@ test('renders a table', () => {
   expect(
     Array.from(firstRow.children).map(d => d.getAttribute('style'))
   ).toEqual([
-    'box-sizing: border-box; flex: 250 0 auto; min-width: 100px; width: 250px;',
-    'box-sizing: border-box; flex: 300 0 auto; min-width: 100px; width: 300px;',
-    'box-sizing: border-box; flex: 300 0 auto; min-width: 300px; width: 300px;',
-    'box-sizing: border-box; flex: 150 0 auto; min-width: 100px; width: 150px;',
-    'box-sizing: border-box; flex: 200 0 auto; min-width: 100px; width: 200px;',
-    'box-sizing: border-box; flex: 200 0 auto; min-width: 100px; width: 200px;',
+    'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 250px;',
+    'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 300px;',
+    'box-sizing: border-box; flex: 0 0 auto; min-width: 300px; width: 300px;',
+    'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 150px;',
+    'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 200px;',
+    'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 200px;',
   ])
 })

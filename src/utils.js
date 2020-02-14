@@ -319,12 +319,12 @@ export function isFunction(a) {
 }
 
 export function flattenBy(arr, key) {
-  const flatColumns = []
+  const flat = []
 
   const recurse = arr => {
     arr.forEach(d => {
       if (!d[key]) {
-        flatColumns.push(d)
+        flat.push(d)
       } else {
         recurse(d[key])
       }
@@ -333,7 +333,7 @@ export function flattenBy(arr, key) {
 
   recurse(arr)
 
-  return flatColumns
+  return flat
 }
 
 export function expandRows(

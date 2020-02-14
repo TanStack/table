@@ -18,6 +18,13 @@
 - Removed the concept of complex aggregations (eg. `column.aggregate = ['sum', 'count']`). Instead, a better aggregation function signature is now used to allow for leaf node aggregation when needed.
 - Added the `column.aggregateValue` option which allows resolving (or pre-aggregating) a cell's value before it is grouped and aggregated across rows. This is useful for cell values that are not primitive, eg. an array of values that you may want to unique and count before summing that count across your groupings
 - The function signature for aggregation functions has changed to be `(leafValues, aggregatedValues) => aggregatedValue` where `leafValues` is a flat array containing all leaf rows currently grouped at the aggregation level and `aggregatedValues` is an array containing the aggregated values from the immediate child sub rows. Each has purpose in the types of aggregations they power where optimizations are made for either accuracy or performance.
+- Fixed an issue where `setGlobalFilter` was not a stable callback
+- Added a Bootstrap UI example
+- Added fixed with column support for useFlexLayout
+- Fixed an issue where `manualGlobalFilter` was not resetting pagination properly
+- Fixed an issue where `useGlobalFilter` could be placed after `usePagination`
+- Added the sort order direction as a parameter to the sortMethod function
+- Fixed an issue where user filter types were not being referenced correctly
 
 ## 7.0.0-rc.15
 
