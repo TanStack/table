@@ -1,14 +1,18 @@
 import React from 'react'
 
 import {
-  actions,
   getFirstDefined,
   getFilterMethod,
-  useMountedLayoutEffect,
-  functionalUpdate,
-  useGetLatest,
   shouldAutoRemoveFilter,
 } from '../utils'
+
+import {
+  actions,
+  useGetLatest,
+  functionalUpdate,
+  useMountedLayoutEffect,
+} from '../publicUtils'
+
 import * as filterTypes from '../filterTypes'
 
 // Actions
@@ -40,9 +44,9 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.setFilter) {
     const { columnId, filterValue } = action
-    const { flatColumns, filterTypes: userFilterTypes } = instance
+    const { allColumns, filterTypes: userFilterTypes } = instance
 
-    const column = flatColumns.find(d => d.id === columnId)
+    const column = allColumns.find(d => d.id === columnId)
 
     if (!column) {
       throw new Error(
@@ -91,13 +95,13 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.setAllFilters) {
     const { filters } = action
-    const { flatColumns, filterTypes: userFilterTypes } = instance
+    const { allColumns, filterTypes: userFilterTypes } = instance
 
     return {
       ...state,
       // Filter out undefined values
       filters: functionalUpdate(filters, state.filters).filter(filter => {
-        const column = flatColumns.find(d => d.id === filter.id)
+        const column = allColumns.find(d => d.id === filter.id)
         const filterMethod = getFilterMethod(
           column.filter,
           userFilterTypes || {},
@@ -118,7 +122,7 @@ function useInstance(instance) {
     data,
     rows,
     flatRows,
-    flatColumns,
+    allColumns,
     filterTypes: userFilterTypes,
     manualFilters,
     defaultCanFilter = false,
@@ -145,7 +149,7 @@ function useInstance(instance) {
     [dispatch]
   )
 
-  flatColumns.forEach(column => {
+  allColumns.forEach(column => {
     const {
       id,
       accessor,
@@ -185,7 +189,7 @@ function useInstance(instance) {
       filteredRows = filters.reduce(
         (filteredSoFar, { id: columnId, value: filterValue }) => {
           // Find the filters column
-          const column = flatColumns.find(d => d.id === columnId)
+          const column = allColumns.find(d => d.id === columnId)
 
           if (!column) {
             return filteredSoFar
@@ -243,12 +247,12 @@ function useInstance(instance) {
     }
 
     return [filterRows(rows), filteredFlatRows]
-  }, [manualFilters, filters, rows, flatRows, flatColumns, userFilterTypes])
+  }, [manualFilters, filters, rows, flatRows, allColumns, userFilterTypes])
 
   React.useMemo(() => {
     // Now that each filtered column has it's partially filtered rows,
     // lets assign the final filtered rows to all of the other columns
-    const nonFilteredColumns = flatColumns.filter(
+    const nonFilteredColumns = allColumns.filter(
       column => !filters.find(d => d.id === column.id)
     )
 
@@ -258,7 +262,7 @@ function useInstance(instance) {
       column.preFilteredRows = filteredRows
       column.filteredRows = filteredRows
     })
-  }, [filteredRows, filters, flatColumns])
+  }, [filteredRows, filters, allColumns])
 
   const getAutoResetFilters = useGetLatest(autoResetFilters)
 

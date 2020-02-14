@@ -5,11 +5,12 @@ import React from 'react'
 import {
   actions,
   ensurePluginOrder,
-  expandRows,
   functionalUpdate,
   useMountedLayoutEffect,
   useGetLatest,
-} from '../utils'
+} from '../publicUtils'
+
+import { expandRows } from '../utils'
 
 const pluginName = 'usePagination'
 

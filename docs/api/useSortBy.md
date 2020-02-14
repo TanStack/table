@@ -72,7 +72,7 @@ The following options are supported on any `Column` object passed to the `column
   - Defaults to `false`
   - If set to `true`, the underlying sorting direction will be inverted, but the UI will not.
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
-- `sortType: String | Function(rowA: <Row>, rowB: <Row>, columnID: String, desc: Bool)`
+- `sortType: String | Function(rowA: <Row>, rowB: <Row>, columnId: String, desc: Bool)`
   - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
   - String options: `basic`, `datetime`, `alphanumeric`. Defaults to `alphanumeric`.
@@ -106,7 +106,7 @@ The following properties are available on every `Column` object returned by the 
   - This function is used to resolve any props needed for this column's UI that is responsible for toggling the sort direction when the user clicks it.
   - You can use the `getSortByToggleProps` hook to extend its functionality.
   - Custom props may be passed. **NOTE: Custom props may override built-in sortBy props, so be careful!**
-- `clearSorting: Function() => void`
+- `clearSortBy: Function() => void`
   - This function can be used to programmatically clear the sorting for this column.
 - `isSorted: Boolean`
   - Denotes whether this column is currently being sorted

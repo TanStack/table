@@ -67,7 +67,7 @@ The following options are supported via the main options object passed to `useTa
 
 The following options are supported on any column object you can pass to `columns`.
 
-- `accessor: String | Function`
+- `accessor: String | Function(originalRow, rowIndex) => any`
   - **Required**
   - This string/function is used to build the data model for your column.
   - The data returned by an accessor should be **primitive** and sortable.
@@ -120,17 +120,14 @@ The following properties are available on the table instance returned from `useT
 - `state: Object`
   - **Memoized** - This object reference will not change unless the internal table state is modified.
   - This is the final state object of the table, which is the product of the `initialState`, internal table reducer and (optionally) a custom `reducer` supplied by the user.
-- `dispatch: Function({ type: Actions[type], ...payload }) => void`
-  - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
-  - `type: Actions[type] | String`
-    - The action type corresponding to what action being taken against the state.
-  - `...payload`
-    - Any other action data that is associated with the action
 - `columns: Array<Column>`
   - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
   - See [Column Properties](#column-properties) for more information
-- `flatColumns: Array<Column>`
+- `allColumns: Array<Column>`
   - A **flat** array of all final column objects.
+  - See [Column Properties](#column-properties) for more information
+- `visibleColumns: Array<Column>`
+  - A **flat** array of all visible column objects derived from `allColumns`.
   - See [Column Properties](#column-properties) for more information
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.

@@ -104,11 +104,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://zappi.io/web/" target="_blank">
-          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
           Become a Sponsor!
         </a>
@@ -145,6 +140,8 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       <td>
         <ul>
         <li>Jon Eickmeier</li>
+          <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
+          <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
         </ul>
       </td>
       <td>
@@ -169,7 +166,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         <li>Hugo Meissner</li>
         <li>Benoit Leger-Derville</li>
         <li>Thomas Funk</li>
-        <li>Dan Houle</li>
         <li>David Pickut</li>
         <li>Jordan Soltman</li>
         <li>Robert Tajnšek</li>

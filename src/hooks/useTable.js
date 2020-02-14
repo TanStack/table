@@ -2,17 +2,23 @@ import React from 'react'
 
 //
 import {
-  actions,
+  linkColumnStructure,
+  flattenColumns,
+  assignColumnAccessor,
+  accessRowsForColumn,
+  makeHeaderGroups,
+  decorateColumn,
+  dedupeBy,
+} from '../utils'
+
+import {
+  useGetLatest,
   reduceHooks,
+  actions,
   loopHooks,
   makePropGetter,
   makeRenderer,
-  decorateColumnTree,
-  makeHeaderGroups,
-  flattenBy,
-  useGetLatest,
-  useConsumeHookGetter,
-} from '../utils'
+} from '../publicUtils'
 
 import makeDefaultPluginHooks from '../makeDefaultPluginHooks'
 
@@ -73,15 +79,15 @@ export const useTable = (props, ...plugins) => {
     plugin(getInstance().hooks)
   })
 
-  const getUseOptionsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'useOptions'
-  )
+  // Consume all hooks and make a getter for them
+  const getHooks = useGetLatest(getInstance().hooks)
+  getInstance().getHooks = getHooks
+  delete getInstance().hooks
 
   // Allow useOptions hooks to modify the options coming into the table
   Object.assign(
     getInstance(),
-    reduceHooks(getUseOptionsHooks(), applyDefaults(props))
+    reduceHooks(getHooks().useOptions, applyDefaults(props))
   )
 
   const {
@@ -94,12 +100,6 @@ export const useTable = (props, ...plugins) => {
     stateReducer,
     useControlledState,
   } = getInstance()
-
-  // Snapshot hook and disallow more from being added
-  const getStateReducers = useConsumeHookGetter(
-    getInstance().hooks,
-    'stateReducers'
-  )
 
   // Setup user reducer ref
   const getStateReducer = useGetLatest(stateReducer)
@@ -115,7 +115,7 @@ export const useTable = (props, ...plugins) => {
 
       // Reduce the state from all plugin reducers
       return [
-        ...getStateReducers(),
+        ...getHooks().stateReducers,
         // Allow the user to add their own state reducer(s)
         ...(Array.isArray(getStateReducer())
           ? getStateReducer()
@@ -125,7 +125,7 @@ export const useTable = (props, ...plugins) => {
         state
       )
     },
-    [getStateReducers, getStateReducer, getInstance]
+    [getHooks, getStateReducer, getInstance]
   )
 
   // Start the reducer
@@ -133,15 +133,9 @@ export const useTable = (props, ...plugins) => {
     reducer(initialState, { type: actions.init })
   )
 
-  // Snapshot hook and disallow more from being added
-  const getUseControlledStateHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'useControlledState'
-  )
-
   // Allow the user to control the final state with hooks
   const state = reduceHooks(
-    [...getUseControlledStateHooks(), useControlledState],
+    [...getHooks().useControlledState, useControlledState],
     reducerState,
     { instance: getInstance() }
   )
@@ -151,170 +145,182 @@ export const useTable = (props, ...plugins) => {
     dispatch,
   })
 
-  // Snapshot hook and disallow more from being added
-  const getColumnsHooks = useConsumeHookGetter(getInstance().hooks, 'columns')
-
-  // Snapshot hook and disallow more from being added
-  const getColumnsDepsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'columnsDeps'
-  )
-
   // Decorate All the columns
-  let columns = React.useMemo(
+  const columns = React.useMemo(
     () =>
-      decorateColumnTree(
-        reduceHooks(getColumnsHooks(), userColumns, {
+      linkColumnStructure(
+        reduceHooks(getHooks().columns, userColumns, {
           instance: getInstance(),
-        }),
-        defaultColumn
+        })
       ),
     [
-      defaultColumn,
-      getColumnsHooks,
+      getHooks,
       getInstance,
       userColumns,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(getColumnsDepsHooks(), [], { instance: getInstance() }),
+      ...reduceHooks(getHooks().columnsDeps, [], { instance: getInstance() }),
     ]
   )
-
   getInstance().columns = columns
 
   // Get the flat list of all columns and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
-  let flatColumns = React.useMemo(() => flattenBy(columns, 'columns'), [
-    columns,
-  ])
+  let allColumns = React.useMemo(
+    () =>
+      reduceHooks(getHooks().allColumns, flattenColumns(columns), {
+        instance: getInstance(),
+      }).map(assignColumnAccessor),
+    [
+      columns,
+      getHooks,
+      getInstance,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...reduceHooks(getHooks().allColumnsDeps, [], {
+        instance: getInstance(),
+      }),
+    ]
+  )
+  getInstance().allColumns = allColumns
 
-  getInstance().flatColumns = flatColumns
-
-  // Access the row model
-  const [rows, flatRows] = React.useMemo(() => {
+  // Access the row model using initial columns
+  const coreDataModel = React.useMemo(() => {
+    let rows = []
     let flatRows = []
+    const rowsById = {}
 
-    // Access the row's data
-    const accessRow = (originalRow, i, depth = 0, parent) => {
-      // Keep the original reference around
-      const original = originalRow
+    const allColumnsQueue = [...allColumns]
 
-      const id = getRowId(originalRow, i, parent)
-
-      const row = {
-        id,
-        original,
-        index: i,
-        depth,
-        cells: [{}], // This is a dummy cell
-      }
-
-      flatRows.push(row)
-
-      // Process any subRows
-      let subRows = getSubRows(originalRow, i)
-
-      if (subRows) {
-        row.subRows = subRows.map((d, i) => accessRow(d, i, depth + 1, row))
-      }
-
-      // Override common array functions (and the dummy cell's getCellProps function)
-      // to show an error if it is accessed without calling prepareRow
-      const unpreparedAccessWarning = () => {
-        throw new Error(
-          'React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.'
-        )
-      }
-      row.cells.map = unpreparedAccessWarning
-      row.cells.filter = unpreparedAccessWarning
-      row.cells.forEach = unpreparedAccessWarning
-      row.cells[0].getCellProps = unpreparedAccessWarning
-
-      // Create the cells and values
-      row.values = {}
-      flatColumns.forEach(({ id, accessor }) => {
-        row.values[id] = accessor
-          ? accessor(originalRow, i, { subRows, depth, data })
-          : undefined
+    while (allColumnsQueue.length) {
+      const column = allColumnsQueue.shift()
+      accessRowsForColumn({
+        data,
+        rows,
+        flatRows,
+        rowsById,
+        column,
+        getRowId,
+        getSubRows,
+        accessValueHooks: getHooks().accessValue,
+        getInstance,
       })
-
-      return row
     }
 
-    // Use the resolved data
-    const accessedData = data.map((d, i) => accessRow(d, i))
+    return { rows, flatRows, rowsById }
+  }, [allColumns, data, getRowId, getSubRows, getHooks, getInstance])
 
-    return [accessedData, flatRows]
-  }, [data, flatColumns, getRowId, getSubRows])
+  // Allow materialized columns to also access data
+  const [rows, flatRows, rowsById, materializedColumns] = React.useMemo(() => {
+    const { rows, flatRows, rowsById } = coreDataModel
+    const materializedColumns = reduceHooks(
+      getHooks().materializedColumns,
+      [],
+      {
+        instance: getInstance(),
+      }
+    )
 
-  getInstance().rows = rows
-  getInstance().flatRows = flatRows
+    materializedColumns.forEach(d => assignColumnAccessor(d))
 
-  // Snapshot hook and disallow more from being added
-  const flatColumnsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'flatColumns'
+    const materializedColumnsQueue = [...materializedColumns]
+
+    while (materializedColumnsQueue.length) {
+      const column = materializedColumnsQueue.shift()
+      accessRowsForColumn({
+        data,
+        rows,
+        flatRows,
+        rowsById,
+        column,
+        getRowId,
+        getSubRows,
+        accessValueHooks: getHooks().accessValue,
+        getInstance,
+      })
+    }
+
+    return [rows, flatRows, rowsById, materializedColumns]
+  }, [
+    coreDataModel,
+    getHooks,
+    getInstance,
+    data,
+    getRowId,
+    getSubRows,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ...reduceHooks(getHooks().materializedColumnsDeps, [], {
+      instance: getInstance(),
+    }),
+  ])
+
+  Object.assign(getInstance(), {
+    rows,
+    flatRows,
+    rowsById,
+    materializedColumns,
+  })
+
+  loopHooks(getHooks().useInstanceAfterData, getInstance())
+
+  // Combine new materialized columns with all columns (dedupe prefers later columns)
+  allColumns = React.useMemo(
+    () => dedupeBy([...allColumns, ...materializedColumns], d => d.id),
+    [allColumns, materializedColumns]
   )
-
-  // Snapshot hook and disallow more from being added
-  const flatColumnsDepsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'flatColumnsDeps'
-  )
+  getInstance().allColumns = allColumns
 
   // Get the flat list of all columns AFTER the rows
   // have been access, and allow hooks to decorate
   // those columns (and trigger this memoization via deps)
-  flatColumns = React.useMemo(
+  let visibleColumns = React.useMemo(
     () =>
-      reduceHooks(flatColumnsHooks(), flatColumns, { instance: getInstance() }),
+      reduceHooks(getHooks().visibleColumns, allColumns, {
+        instance: getInstance(),
+      }).map(d => decorateColumn(d, defaultColumn)),
     [
-      flatColumns,
-      flatColumnsHooks,
+      getHooks,
+      allColumns,
       getInstance,
+      defaultColumn,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(flatColumnsDepsHooks(), [], { instance: getInstance() }),
+      ...reduceHooks(getHooks().visibleColumnsDeps, [], {
+        instance: getInstance(),
+      }),
     ]
   )
 
-  getInstance().flatColumns = flatColumns
-
-  // Snapshot hook and disallow more from being added
-  const getHeaderGroups = useConsumeHookGetter(
-    getInstance().hooks,
-    'headerGroups'
+  // Combine new visible columns with all columns (dedupe prefers later columns)
+  allColumns = React.useMemo(
+    () => dedupeBy([...allColumns, ...visibleColumns], d => d.id),
+    [allColumns, visibleColumns]
   )
-
-  // Snapshot hook and disallow more from being added
-  const getHeaderGroupsDeps = useConsumeHookGetter(
-    getInstance().hooks,
-    'headerGroupsDeps'
-  )
+  getInstance().allColumns = allColumns
 
   // Make the headerGroups
   const headerGroups = React.useMemo(
     () =>
       reduceHooks(
-        getHeaderGroups(),
-        makeHeaderGroups(flatColumns, defaultColumn),
+        getHooks().headerGroups,
+        makeHeaderGroups(visibleColumns, defaultColumn),
         getInstance()
       ),
     [
+      getHooks,
+      visibleColumns,
       defaultColumn,
-      flatColumns,
-      getHeaderGroups,
       getInstance,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      ...reduceHooks(getHeaderGroupsDeps(), [], { instance: getInstance() }),
+      ...reduceHooks(getHooks().headerGroupsDeps, [], {
+        instance: getInstance(),
+      }),
     ]
   )
-
   getInstance().headerGroups = headerGroups
 
+  // Get the first level of headers
   const headers = React.useMemo(
     () => (headerGroups.length ? headerGroups[0].headers : []),
     [headerGroups]
   )
-
   getInstance().headers = headers
 
   // Provide a flat header list for utilities
@@ -323,13 +329,21 @@ export const useTable = (props, ...plugins) => {
     []
   )
 
-  // Snapshot hook and disallow more from being added
-  const getUseInstanceBeforeDimensions = useConsumeHookGetter(
-    getInstance().hooks,
-    'useInstanceBeforeDimensions'
-  )
+  loopHooks(getHooks().useInstanceBeforeDimensions, getInstance())
 
-  loopHooks(getUseInstanceBeforeDimensions(), getInstance())
+  // Filter columns down to visible ones
+  const visibleColumnsDep = visibleColumns
+    .filter(d => d.isVisible)
+    .map(d => d.id)
+    .sort()
+    .join('_')
+
+  visibleColumns = React.useMemo(
+    () => visibleColumns.filter(d => d.isVisible),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [visibleColumns, visibleColumnsDep]
+  )
+  getInstance().visibleColumns = visibleColumns
 
   // Header Visibility is needed by this point
   const [
@@ -342,57 +356,27 @@ export const useTable = (props, ...plugins) => {
   getInstance().totalColumnsWidth = totalColumnsWidth
   getInstance().totalColumnsMaxWidth = totalColumnsMaxWidth
 
-  // Snapshot hook and disallow more from being added
-  const getUseInstance = useConsumeHookGetter(
-    getInstance().hooks,
-    'useInstance'
-  )
-
-  loopHooks(getUseInstance(), getInstance())
-
-  // Snapshot hook and disallow more from being added
-  const getHeaderPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getHeaderProps'
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getFooterPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getFooterProps'
-  )
+  loopHooks(getHooks().useInstance, getInstance())
 
   // Each materialized header needs to be assigned a render function and other
   // prop getter properties here.
-  ;[...getInstance().flatHeaders, ...getInstance().flatColumns].forEach(
+  ;[...getInstance().flatHeaders, ...getInstance().allColumns].forEach(
     column => {
       // Give columns/headers rendering power
       column.render = makeRenderer(getInstance(), column)
 
       // Give columns/headers a default getHeaderProps
-      column.getHeaderProps = makePropGetter(getHeaderPropsHooks(), {
+      column.getHeaderProps = makePropGetter(getHooks().getHeaderProps, {
         instance: getInstance(),
         column,
       })
 
       // Give columns/headers a default getFooterProps
-      column.getFooterProps = makePropGetter(getFooterPropsHooks(), {
+      column.getFooterProps = makePropGetter(getHooks().getFooterProps, {
         instance: getInstance(),
         column,
       })
     }
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getHeaderGroupPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getHeaderGroupProps'
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getFooterGroupPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getFooterGroupProps'
   )
 
   getInstance().headerGroups = getInstance().headerGroups.filter(
@@ -415,12 +399,12 @@ export const useTable = (props, ...plugins) => {
       // Give headerGroups getRowProps
       if (headerGroup.headers.length) {
         headerGroup.getHeaderGroupProps = makePropGetter(
-          getHeaderGroupPropsHooks(),
+          getHooks().getHeaderGroupProps,
           { instance: getInstance(), headerGroup, index: i }
         )
 
         headerGroup.getFooterGroupProps = makePropGetter(
-          getFooterGroupPropsHooks(),
+          getHooks().getFooterGroupProps,
           { instance: getInstance(), headerGroup, index: i }
         )
 
@@ -433,48 +417,18 @@ export const useTable = (props, ...plugins) => {
 
   getInstance().footerGroups = [...getInstance().headerGroups].reverse()
 
-  // Run the rows (this could be a dangerous hook with a ton of data)
-
-  // Snapshot hook and disallow more from being added
-  const getUseRowsHooks = useConsumeHookGetter(getInstance().hooks, 'useRows')
-
-  getInstance().rows = reduceHooks(getUseRowsHooks(), getInstance().rows, {
-    instance: getInstance(),
-  })
-
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
 
-  // Snapshot hook and disallow more from being added
-  const getPrepareRowHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'prepareRow'
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getRowPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getRowProps'
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getCellPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getCellProps'
-  )
-
-  // Snapshot hook and disallow more from being added
-  const cellsHooks = useConsumeHookGetter(getInstance().hooks, 'cells')
-
   getInstance().prepareRow = React.useCallback(
     row => {
-      row.getRowProps = makePropGetter(getRowPropsHooks(), {
+      row.getRowProps = makePropGetter(getHooks().getRowProps, {
         instance: getInstance(),
         row,
       })
 
       // Build the visible cells for each row
-      row.allCells = flatColumns.map(column => {
+      row.allCells = allColumns.map(column => {
         const cell = {
           column,
           row,
@@ -482,7 +436,7 @@ export const useTable = (props, ...plugins) => {
         }
 
         // Give each cell a getCellProps base
-        cell.getCellProps = makePropGetter(getCellPropsHooks(), {
+        cell.getCellProps = makePropGetter(getHooks().getCellProps, {
           instance: getInstance(),
           cell,
         })
@@ -496,50 +450,28 @@ export const useTable = (props, ...plugins) => {
         return cell
       })
 
-      row.cells = reduceHooks(cellsHooks(), row.allCells, {
-        instance: getInstance(),
-      })
+      row.cells = visibleColumns.map(column =>
+        row.allCells.find(cell => cell.column.id === column.id)
+      )
 
       // need to apply any row specific hooks (useExpanded requires this)
-      loopHooks(getPrepareRowHooks(), row, { instance: getInstance() })
+      loopHooks(getHooks().prepareRow, row, { instance: getInstance() })
     },
-    [
-      getRowPropsHooks,
-      getInstance,
-      flatColumns,
-      cellsHooks,
-      getPrepareRowHooks,
-      getCellPropsHooks,
-    ]
+    [getHooks, getInstance, allColumns, visibleColumns]
   )
 
-  // Snapshot hook and disallow more from being added
-  const getTablePropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getTableProps'
-  )
-
-  getInstance().getTableProps = makePropGetter(getTablePropsHooks(), {
+  getInstance().getTableProps = makePropGetter(getHooks().getTableProps, {
     instance: getInstance(),
   })
 
-  // Snapshot hook and disallow more from being added
-  const getTableBodyPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getTableBodyProps'
+  getInstance().getTableBodyProps = makePropGetter(
+    getHooks().getTableBodyProps,
+    {
+      instance: getInstance(),
+    }
   )
 
-  getInstance().getTableBodyProps = makePropGetter(getTableBodyPropsHooks(), {
-    instance: getInstance(),
-  })
-
-  // Snapshot hook and disallow more from being added
-  const getUseFinalInstanceHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'useFinalInstance'
-  )
-
-  loopHooks(getUseFinalInstanceHooks(), getInstance())
+  loopHooks(getHooks().useFinalInstance, getInstance())
 
   return getInstance()
 }
