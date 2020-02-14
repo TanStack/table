@@ -135,7 +135,7 @@ function Table({ columns, data }) {
     useFlexLayout,
     useRowSelect,
     hooks => {
-      hooks.allColumns.push(columns => [
+      hooks.columns.push(columns => [
         // Let's make a column for selection
         {
           id: 'selection',
