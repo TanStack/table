@@ -122,7 +122,7 @@ function Table({ columns, data }) {
   )
 
   // We don't want to render all of the rows for this example, so cap
-  // it at 20 for this use case
+  // it at 100 for this use case
   const firstPageRows = rows.slice(0, 100)
 
   return (

@@ -480,6 +480,7 @@ function calculateHeaderWidths(headers, left = 0) {
   let sumTotalMinWidth = 0
   let sumTotalWidth = 0
   let sumTotalMaxWidth = 0
+  let sumTotalFlexWidth = 0
 
   headers.forEach(header => {
     let { headers: subHeaders } = header
@@ -487,13 +488,14 @@ function calculateHeaderWidths(headers, left = 0) {
     header.totalLeft = left
 
     if (subHeaders && subHeaders.length) {
-      const [totalMinWidth, totalWidth, totalMaxWidth] = calculateHeaderWidths(
+      const [totalMinWidth, totalWidth, totalMaxWidth, totalFlexWidth] = calculateHeaderWidths(
         subHeaders,
         left
       )
       header.totalMinWidth = totalMinWidth
       header.totalWidth = totalWidth
       header.totalMaxWidth = totalMaxWidth
+      header.totalFlexWidth = totalFlexWidth
     } else {
       header.totalMinWidth = header.minWidth
       header.totalWidth = Math.min(
@@ -501,14 +503,16 @@ function calculateHeaderWidths(headers, left = 0) {
         header.maxWidth
       )
       header.totalMaxWidth = header.maxWidth
+      header.totalFlexWidth = header.canResize ? header.totalWidth : 0
     }
     if (header.isVisible) {
       left += header.totalWidth
       sumTotalMinWidth += header.totalMinWidth
       sumTotalWidth += header.totalWidth
       sumTotalMaxWidth += header.totalMaxWidth
+      sumTotalFlexWidth += header.totalFlexWidth
     }
   })
 
-  return [sumTotalMinWidth, sumTotalWidth, sumTotalMaxWidth]
+  return [sumTotalMinWidth, sumTotalWidth, sumTotalMaxWidth, sumTotalFlexWidth]
 }

@@ -76,9 +76,12 @@ function useInstance(instance) {
     'useExpanded',
   ])
 
-  const setGlobalFilter = filterValue => {
-    dispatch({ type: actions.setGlobalFilter, filterValue })
-  }
+  const setGlobalFilter = React.useCallback(
+    filterValue => {
+      dispatch({ type: actions.setGlobalFilter, filterValue })
+    },
+    [dispatch]
+  )
 
   // TODO: Create a filter cache for incremental high speed multi-filtering
   // This gets pretty complicated pretty fast, since you have to maintain a

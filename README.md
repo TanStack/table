@@ -82,11 +82,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="http://bjntech.com/index.html?utm_campaign=react_table" target="_blank">
-          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-bjn.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
           Become a Sponsor!
         </a>
@@ -106,11 +101,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
           <img width='225' src="https://nozzle.io/img/logo-blue.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://zappi.io/web/" target="_blank">
-          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-zappi.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -150,7 +140,8 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       <td>
         <ul>
         <li>Jon Eickmeier</li>
-        <li><a href="https://github.com/Shah-Sahab">Syed Hussain<a></li>
+          <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
+          <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
         </ul>
       </td>
       <td>
@@ -172,18 +163,16 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
       <td>
         <ul>
-        <li>Sortmy.games</li>
         <li>Hugo Meissner</li>
         <li>Benoit Leger-Derville</li>
         <li>Thomas Funk</li>
-        <li>Dan Houle</li>
         <li>David Pickut</li>
         <li>Jordan Soltman</li>
         <li>Robert Tajnšek</li>
-        <li>Pekka Tapani</li>
         <li>Eric Lanehart (@pushred)</li>
         <li>Anish P Patel (@anishpatelyaadada)</li>
         <li>Alin Porumb (@alinporumb)</li>
+        <li>Janus Reith (@janus-reith)</li>
         </ul>
       </td>
       <td>

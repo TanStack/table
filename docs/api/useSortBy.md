@@ -49,7 +49,7 @@ The following options are supported via the main options object passed to `useTa
   - When `true`, the `sortBy` state will automatically reset if any of the following conditions are met:
     - `data` is changed
   - To disable, set to `false`
-  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
+  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq.md#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 
 ### Column Options
 
@@ -72,7 +72,7 @@ The following options are supported on any `Column` object passed to the `column
   - Defaults to `false`
   - If set to `true`, the underlying sorting direction will be inverted, but the UI will not.
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
-- `sortType: String | Function`
+- `sortType: String | Function(rowA: <Row>, rowB: <Row>, columnID: String, desc: Bool)`
   - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
   - String options: `basic`, `datetime`, `alphanumeric`. Defaults to `alphanumeric`.
