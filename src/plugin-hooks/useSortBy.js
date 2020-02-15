@@ -180,6 +180,7 @@ function useInstance(instance) {
   const {
     data,
     rows,
+    flatRows,
     allColumns,
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
@@ -194,7 +195,7 @@ function useInstance(instance) {
     autoResetSortBy = true,
   } = instance
 
-  ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
+  ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', ['useExpanded'])
 
   // Updates sorting based on a columnId, desc flag and multi flag
   const toggleSortBy = React.useCallback(
@@ -249,10 +250,12 @@ function useInstance(instance) {
     column.isSortedDesc = column.isSorted ? columnSort.desc : undefined
   })
 
-  const sortedRows = React.useMemo(() => {
+  const [sortedRows, sortedFlatRows] = React.useMemo(() => {
     if (manualSortBy || !sortBy.length) {
-      return rows
+      return [rows, flatRows]
     }
+
+    const sortedFlatRows = []
 
     // Filter out sortBys that correspond to non existing columns
     const availableSortBy = sortBy.filter(sort =>
@@ -314,6 +317,7 @@ function useInstance(instance) {
 
       // If there are sub-rows, sort them
       sortedData.forEach(row => {
+        sortedFlatRows.push(row)
         if (!row.subRows || row.subRows.length <= 1) {
           return
         }
@@ -323,8 +327,16 @@ function useInstance(instance) {
       return sortedData
     }
 
-    return sortData(rows)
-  }, [manualSortBy, sortBy, rows, allColumns, orderByFn, userSortTypes])
+    return [sortData(rows), sortedFlatRows]
+  }, [
+    manualSortBy,
+    sortBy,
+    rows,
+    flatRows,
+    allColumns,
+    orderByFn,
+    userSortTypes,
+  ])
 
   const getAutoResetSortBy = useGetLatest(autoResetSortBy)
 
@@ -336,8 +348,11 @@ function useInstance(instance) {
 
   Object.assign(instance, {
     preSortedRows: rows,
+    preSortedFlatRows: flatRows,
     sortedRows,
+    sortedFlatRows,
     rows: sortedRows,
+    flatRows: sortedFlatRows,
     toggleSortBy,
   })
 }

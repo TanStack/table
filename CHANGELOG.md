@@ -7,7 +7,7 @@
 - Renamed `instance.flatColumns` to `instance.allColumns` which now accumulates ALL columns created for the table, visible or not.
 - Added the `instance.visibleColumns` object
 - Fix an issue where `useAsyncDebounce` would crash when passed arguments
-- Started development on the `usePivotColumns` plugin, which can be tested currently using the `_UNSTABLE_usePivoteColumns` export.
+- Started development on the `usePivotColumns` plugin, which can be tested currently using the `_UNSTABLE_usePivotColumns` export.
 - Renamed `cell.isRepeatedValue` to `cell.isPlaceholder`
 - Removed `useConsumeHookGetter` as it was inefficient most of the time and noisy
 - All hooks are now "consumed" right after main plugin functions are run. This means that any attempt to add a plugin after that will result in a runtime error (for good reason, since using hook points should not be a conditional or async operation)
@@ -25,6 +25,20 @@
 - Fixed an issue where `useGlobalFilter` could be placed after `usePagination`
 - Added the sort order direction as a parameter to the sortMethod function
 - Fixed an issue where user filter types were not being referenced correctly
+- Renamed the `row.getExpandedToggleProps` to `row.getToggleRowExpandedProps`
+- Renamed the `row.toggleExpanded` method to `row.toggleRowExpanded`
+- Added the `instance.toggleRowExpanded` and `instance.toggleAllRowsExpanded` methods
+- Added the `instance.getToggleAllRowsExpandedProps` prop getter
+- Added the `instance.filteredRowsById` property
+- Added the `instance.preFilteredRowsById` property
+- useFilters now properly updates the `instance.rowsById` property
+- Added the `instance.globalFilteredRowsById` property
+- Added the `instance.preGlobalFilteredRowsById` property
+- useGlobalFilter now properly updates the `instance.rowsById` property
+- Added the `instance.nonGroupedFlatRows` property
+- Added the `instance.nonGroupedRowsById` property
+- Added the `instance.onlyGroupedFlatRows` property
+- Added the `instance.onlyGroupedRowsById` property
 
 ## 7.0.0-rc.15
 

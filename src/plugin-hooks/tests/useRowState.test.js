@@ -2,7 +2,6 @@ import React from 'react'
 import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
 import { useRowState } from '../useRowState'
-import { useGlobalFilter } from '../useGlobalFilter'
 
 const data = [
   {
@@ -67,8 +66,7 @@ function Table({ columns, data }) {
       initialRowStateAccessor: () => ({ count: 0 }),
       initialCellStateAccessor: () => ({ count: 0 }),
     },
-    useRowState,
-    useGlobalFilter
+    useRowState
   )
 
   return (

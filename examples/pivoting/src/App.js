@@ -4,7 +4,7 @@ import {
   useTable,
   useGroupBy,
   useExpanded,
-  _UNSTABLE_usePivoteColumns,
+  _UNSTABLE_usePivotColumns,
 } from 'react-table'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
@@ -98,8 +98,8 @@ function Table({ columns, data }) {
       data,
     },
     useGroupBy,
-    _UNSTABLE_usePivoteColumns,
-    useExpanded // useGroupBy and _UNSTABLE_usePivoteColumns would be pretty useless without useExpanded ;)
+    _UNSTABLE_usePivotColumns,
+    useExpanded // useGroupBy and _UNSTABLE_usePivotColumns would be pretty useless without useExpanded ;)
   )
 
   // We don't want to render all of the rows for this example, so cap
@@ -197,7 +197,7 @@ function Table({ columns, data }) {
                     <td {...cell.getCellProps()}>
                       {cell.isGrouped ? (
                         <>
-                          <span {...row.getExpandedToggleProps()}>
+                          <span {...row.getToggleRowExpandedProps()}>
                             {row.isExpanded ? '👇' : '👉'} {cell.render('Cell')}{' '}
                             ({row.subRows.length})
                           </span>

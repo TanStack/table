@@ -13,6 +13,9 @@ import {
   useGetLatest,
 } from '../publicUtils'
 
+const emptyArray = []
+const emptyObject = {}
+
 // Actions
 actions.resetGroupBy = 'resetGroupBy'
 actions.toggleGroupBy = 'toggleGroupBy'
@@ -119,6 +122,7 @@ function useInstance(instance) {
     data,
     rows,
     flatRows,
+    rowsById,
     allColumns,
     flatHeaders,
     groupByFn = defaultGroupByFn,
@@ -179,9 +183,25 @@ function useInstance(instance) {
     )
   })
 
-  const [groupedRows, groupedFlatRows] = React.useMemo(() => {
+  const [
+    groupedRows,
+    groupedFlatRows,
+    groupedRowsById,
+    onlyGroupedFlatRows,
+    onlyGroupedRowsById,
+    nonGroupedFlatRows,
+    nonGroupedRowsById,
+  ] = React.useMemo(() => {
     if (manualGroupBy || !groupBy.length) {
-      return [rows, flatRows]
+      return [
+        rows,
+        flatRows,
+        rowsById,
+        emptyArray,
+        emptyObject,
+        flatRows,
+        rowsById,
+      ]
     }
 
     // Ensure that the list of filtered columns exist
@@ -252,6 +272,11 @@ function useInstance(instance) {
     }
 
     let groupedFlatRows = []
+    const groupedRowsById = {}
+    const onlyGroupedFlatRows = []
+    const onlyGroupedRowsById = {}
+    const nonGroupedFlatRows = []
+    const nonGroupedRowsById = {}
 
     // Recursively group the data
     const groupUpRecursively = (rows, depth = 0, parentId) => {
@@ -293,7 +318,17 @@ function useInstance(instance) {
             index,
           }
 
-          groupedFlatRows.push(row, ...subRows)
+          subRows.forEach(subRow => {
+            groupedFlatRows.push(subRow)
+            groupedRowsById[subRow.id] = subRow
+            if (subRow.isGrouped) {
+              onlyGroupedFlatRows.push(subRow)
+              onlyGroupedRowsById[subRow.id] = subRow
+            } else {
+              nonGroupedFlatRows.push(subRow)
+              nonGroupedRowsById[subRow.id] = subRow
+            }
+          })
 
           return row
         }
@@ -304,13 +339,34 @@ function useInstance(instance) {
 
     const groupedRows = groupUpRecursively(rows)
 
+    groupedRows.forEach(subRow => {
+      groupedFlatRows.push(subRow)
+      groupedRowsById[subRow.id] = subRow
+      if (subRow.isGrouped) {
+        onlyGroupedFlatRows.push(subRow)
+        onlyGroupedRowsById[subRow.id] = subRow
+      } else {
+        nonGroupedFlatRows.push(subRow)
+        nonGroupedRowsById[subRow.id] = subRow
+      }
+    })
+
     // Assign the new data
-    return [groupedRows, groupedFlatRows]
+    return [
+      groupedRows,
+      groupedFlatRows,
+      groupedRowsById,
+      onlyGroupedFlatRows,
+      onlyGroupedRowsById,
+      nonGroupedFlatRows,
+      nonGroupedRowsById,
+    ]
   }, [
     manualGroupBy,
     groupBy,
     rows,
     flatRows,
+    rowsById,
     allColumns,
     userAggregations,
     groupByFn,
@@ -327,10 +383,17 @@ function useInstance(instance) {
   Object.assign(instance, {
     preGroupedRows: rows,
     preGroupedFlatRow: flatRows,
+    preGroupedRowsById: rowsById,
     groupedRows,
     groupedFlatRows,
+    groupedRowsById,
+    onlyGroupedFlatRows,
+    onlyGroupedRowsById,
+    nonGroupedFlatRows,
+    nonGroupedRowsById,
     rows: groupedRows,
     flatRows: groupedFlatRows,
+    rowsById: groupedRowsById,
     toggleGroupBy,
   })
 }

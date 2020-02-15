@@ -1,11 +1,12 @@
 import React from 'react'
 
 //
+
 import {
   linkColumnStructure,
   flattenColumns,
   assignColumnAccessor,
-  accessRowsForColumn,
+  unpreparedAccessWarning,
   makeHeaderGroups,
   decorateColumn,
   dedupeBy,
@@ -488,10 +489,12 @@ function calculateHeaderWidths(headers, left = 0) {
     header.totalLeft = left
 
     if (subHeaders && subHeaders.length) {
-      const [totalMinWidth, totalWidth, totalMaxWidth, totalFlexWidth] = calculateHeaderWidths(
-        subHeaders,
-        left
-      )
+      const [
+        totalMinWidth,
+        totalWidth,
+        totalMaxWidth,
+        totalFlexWidth,
+      ] = calculateHeaderWidths(subHeaders, left)
       header.totalMinWidth = totalMinWidth
       header.totalWidth = totalWidth
       header.totalMaxWidth = totalMaxWidth
@@ -515,4 +518,95 @@ function calculateHeaderWidths(headers, left = 0) {
   })
 
   return [sumTotalMinWidth, sumTotalWidth, sumTotalMaxWidth, sumTotalFlexWidth]
+}
+
+function accessRowsForColumn({
+  data,
+  rows,
+  flatRows,
+  rowsById,
+  column,
+  getRowId,
+  getSubRows,
+  accessValueHooks,
+  getInstance,
+}) {
+  // Access the row's data column-by-column
+  // We do it this way so we can incrementally add materialized
+  // columns after the first pass and avoid excessive looping
+  const accessRow = (originalRow, rowIndex, depth = 0, parent, parentRows) => {
+    // Keep the original reference around
+    const original = originalRow
+
+    const id = getRowId(originalRow, rowIndex, parent)
+
+    let row = rowsById[id]
+
+    // If the row hasn't been created, let's make it
+    if (!row) {
+      row = {
+        id,
+        original,
+        index: rowIndex,
+        depth,
+        cells: [{}], // This is a dummy cell
+      }
+
+      // Override common array functions (and the dummy cell's getCellProps function)
+      // to show an error if it is accessed without calling prepareRow
+      row.cells.map = unpreparedAccessWarning
+      row.cells.filter = unpreparedAccessWarning
+      row.cells.forEach = unpreparedAccessWarning
+      row.cells[0].getCellProps = unpreparedAccessWarning
+
+      // Create the cells and values
+      row.values = {}
+
+      // Push this row into the parentRows array
+      parentRows.push(row)
+      // Keep track of every row in a flat array
+      flatRows.push(row)
+      // Also keep track of every row by its ID
+      rowsById[id] = row
+
+      // Get the original subrows
+      row.originalSubRows = getSubRows(originalRow, rowIndex)
+
+      // Then recursively access them
+      if (row.originalSubRows) {
+        const subRows = []
+        row.originalSubRows.forEach((d, i) =>
+          accessRow(d, i, depth + 1, row, subRows)
+        )
+        // Keep the new subRows array on the row
+        row.subRows = subRows
+      }
+    } else if (row.subRows) {
+      // If the row exists, then it's already been accessed
+      // Keep recursing, but don't worry about passing the
+      // accumlator array (those rows already exist)
+      row.originalSubRows.forEach((d, i) => accessRow(d, i, depth + 1, row))
+    }
+
+    // If the column has an accessor, use it to get a value
+    if (column.accessor) {
+      row.values[column.id] = column.accessor(originalRow, rowIndex, row)
+    }
+
+    // Allow plugins to manipulate the column value
+    row.values[column.id] = reduceHooks(
+      accessValueHooks,
+      row.values[column.id],
+      {
+        row,
+        column,
+        instance: getInstance(),
+      },
+      true
+    )
+  }
+
+  data.forEach((originalRow, rowIndex) =>
+    accessRow(originalRow, rowIndex, 0, undefined, rows)
+  )
 }

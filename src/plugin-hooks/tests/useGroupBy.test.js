@@ -113,7 +113,7 @@ function Table({ columns, data }) {
                             style={{
                               cursor: 'pointer',
                             }}
-                            onClick={() => row.toggleExpanded()}
+                            onClick={() => row.toggleRowExpanded()}
                           >
                             {row.isExpanded ? '👇' : '👉'}
                           </span>

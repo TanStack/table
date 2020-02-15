@@ -77,7 +77,15 @@ function useInstance(instance) {
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: { pageSize, pageIndex, expanded, globalFilter, filters, groupBy, sortBy },
+    state: {
+      pageSize,
+      pageIndex,
+      expanded,
+      globalFilter,
+      filters,
+      groupBy,
+      sortBy,
+    },
     dispatch,
     data,
     manualPagination,
@@ -103,10 +111,10 @@ function useInstance(instance) {
   }, [
     dispatch,
     manualPagination ? null : data,
-    manualPagination || manualGlobalFilter ? null : globalFilter,
-    manualPagination || manualFilters ? null : filters,
-    manualPagination || manualGroupBy ? null : groupBy,
-    manualPagination || manualSortBy ? null : sortBy,
+    manualGlobalFilter ? null : globalFilter,
+    manualFilters ? null : filters,
+    manualGroupBy ? null : groupBy,
+    manualSortBy ? null : sortBy,
   ])
 
   const pageCount = manualPagination

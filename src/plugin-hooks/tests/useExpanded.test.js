@@ -75,7 +75,7 @@ function App() {
               cursor: 'pointer',
               paddingLeft: `${row.depth * 2}rem`,
             }}
-            onClick={() => row.toggleExpanded()}
+            onClick={() => row.toggleRowExpanded()}
           >
             {row.isExpanded ? 'Collapse' : 'Expand'} Row {row.id}
           </span>

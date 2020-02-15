@@ -380,7 +380,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
                       {cell.isGrouped ? (
                         // If it's a grouped cell, add an expander and row count
                         <>
-                          <span {...row.getExpandedToggleProps()}>
+                          <span {...row.getToggleRowExpandedProps()}>
                             {row.isExpanded ? '👇' : '👉'}
                           </span>{' '}
                           {cell.render('Cell', { editable: false })} (

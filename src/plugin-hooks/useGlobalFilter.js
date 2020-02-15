@@ -61,6 +61,7 @@ function useInstance(instance) {
     data,
     rows,
     flatRows,
+    rowsById,
     allColumns,
     filterTypes: userFilterTypes,
     globalFilter,
@@ -88,12 +89,17 @@ function useInstance(instance) {
   // cache for each row group (top-level rows, and each row's recursive subrows)
   // This would make multi-filtering a lot faster though. Too far?
 
-  const [globalFilteredRows, globalFilteredFlatRows] = React.useMemo(() => {
+  const [
+    globalFilteredRows,
+    globalFilteredFlatRows,
+    globalFilteredRowsById,
+  ] = React.useMemo(() => {
     if (manualGlobalFilter || typeof globalFilterValue === 'undefined') {
-      return [rows, flatRows]
+      return [rows, flatRows, rowsById]
     }
 
     const filteredFlatRows = []
+    const filteredRowsById = {}
 
     const filterMethod = getFilterMethod(
       globalFilter,
@@ -114,6 +120,7 @@ function useInstance(instance) {
         globalFilterValue
       ).map(row => {
         filteredFlatRows.push(row)
+        filteredRowsById[row.id] = row
 
         return {
           ...row,
@@ -125,15 +132,16 @@ function useInstance(instance) {
       })
     }
 
-    return [filterRows(rows), filteredFlatRows]
+    return [filterRows(rows), filteredFlatRows, filteredRowsById]
   }, [
     manualGlobalFilter,
+    globalFilterValue,
     globalFilter,
     userFilterTypes,
     rows,
     flatRows,
+    rowsById,
     allColumns,
-    globalFilterValue,
   ])
 
   const getAutoResetGlobalFilter = useGetLatest(autoResetGlobalFilter)
@@ -147,10 +155,13 @@ function useInstance(instance) {
   Object.assign(instance, {
     preGlobalFilteredRows: rows,
     preGlobalFilteredFlatRows: flatRows,
+    preGlobalFilteredRowsById: rowsById,
     globalFilteredRows,
     globalFilteredFlatRows,
+    globalFilteredRowsById,
     rows: globalFilteredRows,
     flatRows: globalFilteredFlatRows,
+    rowsById: globalFilteredRowsById,
     setGlobalFilter,
   })
 }

@@ -14,7 +14,7 @@ import { flattenColumns, getFirstDefined } from '../utils'
 actions.resetPivot = 'resetPivot'
 actions.togglePivot = 'togglePivot'
 
-export const usePivotColumns = hooks => {
+export const _UNSTABLE_usePivotColumns = hooks => {
   hooks.getPivotToggleProps = [defaultGetPivotToggleProps]
   hooks.stateReducers.push(reducer)
   hooks.useInstanceAfterData.push(useInstanceAfterData)
@@ -28,7 +28,7 @@ export const usePivotColumns = hooks => {
   hooks.prepareRow.push(prepareRow)
 }
 
-usePivotColumns.pluginName = 'usePivotColumns'
+_UNSTABLE_usePivotColumns.pluginName = 'usePivotColumns'
 
 const defaultPivotColumns = []
 

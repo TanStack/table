@@ -86,7 +86,11 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleAllRowsSelected) {
     const { value: setSelected } = action
-    const { isAllRowsSelected, flatRowsById } = instance
+    const {
+      isAllRowsSelected,
+      rowsById,
+      nonGroupedRowsById = rowsById,
+    } = instance
 
     const selectAll =
       typeof setSelected !== 'undefined' ? setSelected : !isAllRowsSelected
@@ -94,7 +98,7 @@ function reducer(state, action, previousState, instance) {
     if (selectAll) {
       const selectedRowIds = {}
 
-      Object.keys(flatRowsById).forEach(rowId => {
+      Object.keys(nonGroupedRowsById).forEach(rowId => {
         selectedRowIds[rowId] = true
       })
 
@@ -112,12 +116,12 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleRowSelected) {
     const { id, value: setSelected } = action
-    const { flatGroupedRowsById, selectSubRows = true } = instance
+    const { rowsById, selectSubRows = true } = instance
 
     // Join the ids of deep rows
     // to make a key, then manage all of the keys
     // in a flat object
-    const row = flatGroupedRowsById[id]
+    const row = rowsById[id]
     const isSelected = row.isSelected
     const shouldExist =
       typeof setSelected !== 'undefined' ? setSelected : !isSelected
@@ -129,7 +133,7 @@ function reducer(state, action, previousState, instance) {
     let newSelectedRowIds = { ...state.selectedRowIds }
 
     const handleRowById = id => {
-      const row = flatGroupedRowsById[id]
+      const row = rowsById[id]
 
       if (!row.isGrouped) {
         if (!isSelected && shouldExist) {
@@ -159,7 +163,8 @@ function useInstance(instance) {
     rows,
     getHooks,
     plugins,
-    flatRows,
+    rowsById,
+    nonGroupedRowsById = rowsById,
     autoResetSelectedRows = true,
     state: { selectedRowIds },
     selectSubRows = true,
@@ -172,20 +177,6 @@ function useInstance(instance) {
     'useRowSelect',
     []
   )
-
-  const [flatRowsById, flatGroupedRowsById] = React.useMemo(() => {
-    const all = {}
-    const grouped = {}
-
-    flatRows.forEach(row => {
-      if (!row.isGrouped) {
-        all[row.id] = row
-      }
-      grouped[row.id] = row
-    })
-
-    return [all, grouped]
-  }, [flatRows])
 
   const selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows = []
@@ -206,11 +197,11 @@ function useInstance(instance) {
   }, [rows, selectSubRows, selectedRowIds])
 
   let isAllRowsSelected = Boolean(
-    Object.keys(flatRowsById).length && Object.keys(selectedRowIds).length
+    Object.keys(nonGroupedRowsById).length && Object.keys(selectedRowIds).length
   )
 
   if (isAllRowsSelected) {
-    if (Object.keys(flatRowsById).some(id => !selectedRowIds[id])) {
+    if (Object.keys(nonGroupedRowsById).some(id => !selectedRowIds[id])) {
       isAllRowsSelected = false
     }
   }
@@ -229,8 +220,7 @@ function useInstance(instance) {
   )
 
   const toggleRowSelected = React.useCallback(
-    (id, value) =>
-      dispatch({ type: actions.toggleRowSelected, id, value }),
+    (id, value) => dispatch({ type: actions.toggleRowSelected, id, value }),
     [dispatch]
   )
 
@@ -242,13 +232,11 @@ function useInstance(instance) {
   )
 
   Object.assign(instance, {
-    flatRowsById,
-    flatGroupedRowsById,
     selectedFlatRows,
+    isAllRowsSelected,
     toggleRowSelected,
     toggleAllRowsSelected,
     getToggleAllRowsSelectedProps,
-    isAllRowsSelected,
   })
 }
 

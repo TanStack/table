@@ -120,9 +120,9 @@ function App() {
         id: 'expander', // It needs an ID
         Cell: ({ row }) => (
           // Use Cell to render an expander for each row.
-          // We can use the getExpandedToggleProps prop-getter
+          // We can use the getToggleRowExpandedProps prop-getter
           // to build the expander.
-          <span {...row.getExpandedToggleProps()}>
+          <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? '👇' : '👉'}
           </span>
         ),

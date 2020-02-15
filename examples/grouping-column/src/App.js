@@ -97,7 +97,7 @@ function Table({ columns, data }) {
 
                 return (
                   <span
-                    {...row.getExpandedToggleProps({
+                    {...row.getToggleRowExpandedProps({
                       style: {
                         // We can even use the row.depth property
                         // and paddingLeft to indicate the depth
