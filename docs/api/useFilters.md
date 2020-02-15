@@ -68,8 +68,10 @@ The following values are provided to the table `instance`:
   - Among many other use-cases, these rows are directly useful for building option lists in filters, since the resulting filtered `rows` do not contain every possible option.
 - `setFilter: Function(columnId, filterValue) => void`
   - An instance-level function used to update the filter value for a specific column.
-- `setAllFilters: Function(filtersObject) => void`
+- `setAllFilters: Function(filtersObjectArray) => void`
   - An instance-level function used to update the values for **all** filters on the table, all at once.
+  - filtersObjectArray is an array of objects with id and value keys. Example: `[{ id: 'columnAccessor', value: 'valueToFilter' }]`
+  - Note: You must call setAllFilters with an array, even if that array is empty. eg: `setAllFilters([])`.
 
 ### Column Properties
 
