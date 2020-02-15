@@ -282,7 +282,15 @@ function Table({ columns, data, updateMyData, skipReset }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize, groupBy, expanded, filters, selectedRowIds },
+    state: {
+      pageIndex,
+      pageSize,
+      sortBy,
+      groupBy,
+      expanded,
+      filters,
+      selectedRowIds,
+    },
   } = useTable(
     {
       columns,
@@ -459,6 +467,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
               pageCount,
               canNextPage,
               canPreviousPage,
+              sortBy,
               groupBy,
               expanded: expanded,
               filters,
