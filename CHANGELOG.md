@@ -39,6 +39,8 @@
 - Added the `instance.nonGroupedRowsById` property
 - Added the `instance.onlyGroupedFlatRows` property
 - Added the `instance.onlyGroupedRowsById` property
+- Improved the api around ensuring plugin ordering
+- Added more plugin order rules to avoid strange plugin integration results
 
 ## 7.0.0-rc.15
 
