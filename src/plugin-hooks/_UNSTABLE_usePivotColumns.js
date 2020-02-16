@@ -227,10 +227,7 @@ function useInstance(instance) {
     defaultCanPivot,
   } = instance
 
-  ensurePluginOrder(plugins, ['useGroupBy'], 'usePivotColumns', [
-    'useSortBy',
-    'useExpanded',
-  ])
+  ensurePluginOrder(plugins, ['useGroupBy'], 'usePivotColumns')
 
   const getInstance = useGetLatest(instance)
 

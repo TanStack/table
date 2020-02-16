@@ -174,8 +174,7 @@ function useInstance(instance) {
   ensurePluginOrder(
     plugins,
     ['useFilters', 'useGroupBy', 'useSortBy'],
-    'useRowSelect',
-    []
+    'useRowSelect'
   )
 
   const selectedFlatRows = React.useMemo(() => {

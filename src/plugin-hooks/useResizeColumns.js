@@ -3,6 +3,7 @@ import {
   defaultColumn,
   makePropGetter,
   useGetLatest,
+  ensurePluginOrder,
 } from '../publicUtils'
 
 import { getFirstDefined } from '../utils'
@@ -23,6 +24,7 @@ export const useResizeColumns = hooks => {
     },
   })
   hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
 
@@ -218,6 +220,10 @@ const useInstanceBeforeDimensions = instance => {
       })
     }
   })
+}
+
+function useInstance({ plugins }) {
+  ensurePluginOrder(plugins, ['useAbsoluteLayout'], 'useResizeColumns')
 }
 
 function getLeafHeaders(header) {

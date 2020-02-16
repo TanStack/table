@@ -195,7 +195,11 @@ function useInstance(instance) {
     autoResetSortBy = true,
   } = instance
 
-  ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', ['useExpanded'])
+  ensurePluginOrder(
+    plugins,
+    ['useFilters', 'useGlobalFilter', 'useGroupBy', 'usePivotColumns'],
+    'useSortBy'
+  )
 
   // Updates sorting based on a columnId, desc flag and multi flag
   const toggleSortBy = React.useCallback(

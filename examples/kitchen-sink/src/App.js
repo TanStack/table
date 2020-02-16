@@ -307,6 +307,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
       // when we edit the data.
       autoResetPage: !skipReset,
       autoResetSelectedRows: !skipReset,
+      disableMultiSort: true,
     },
     useFilters,
     useGroupBy,

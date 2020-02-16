@@ -6,7 +6,6 @@ import {
   actions,
   useMountedLayoutEffect,
   functionalUpdate,
-  ensurePluginOrder,
   useGetLatest,
 } from '../publicUtils'
 
@@ -69,13 +68,7 @@ function useInstance(instance) {
     state: { globalFilter: globalFilterValue },
     dispatch,
     autoResetGlobalFilter = true,
-    plugins,
   } = instance
-
-  ensurePluginOrder(plugins, [], 'useGlobalFilter', [
-    'useSortBy',
-    'useExpanded',
-  ])
 
   const setGlobalFilter = React.useCallback(
     filterValue => {

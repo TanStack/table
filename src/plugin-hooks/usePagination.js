@@ -98,8 +98,7 @@ function useInstance(instance) {
   ensurePluginOrder(
     plugins,
     ['useGlobalFilter', 'useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
-    'usePagination',
-    []
+    'usePagination'
   )
 
   const getAutoResetPage = useGetLatest(autoResetPage)

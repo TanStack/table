@@ -137,7 +137,7 @@ function useInstance(instance) {
     getHooks,
   } = instance
 
-  ensurePluginOrder(plugins, [], 'useGroupBy', ['useSortBy', 'useExpanded'])
+  ensurePluginOrder(plugins, ['useFilters'], 'useGroupBy')
 
   const getInstance = useGetLatest(instance)
 

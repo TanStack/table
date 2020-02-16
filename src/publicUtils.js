@@ -122,6 +122,11 @@ export const loopHooks = (hooks, context, meta = {}) =>
   })
 
 export function ensurePluginOrder(plugins, befores, pluginName, afters) {
+  if (process.env.NODE_ENV !== 'production' && afters) {
+    throw new Error(
+      `Defining plugins in the "after" section of ensurePluginOrder is no longer supported (see plugin ${pluginName})`
+    )
+  }
   const pluginIndex = plugins.findIndex(
     plugin => plugin.pluginName === pluginName
   )
@@ -144,17 +149,6 @@ This usually means you need to need to name your plugin hook by setting the 'plu
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(
           `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
-        )
-      }
-    }
-  })
-
-  afters.forEach(after => {
-    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
-    if (process.env.NODE_ENV !== 'production') {
-      if (afterIndex > -1 && afterIndex < pluginIndex) {
-        throw new Error(
-          `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
         )
       }
     }

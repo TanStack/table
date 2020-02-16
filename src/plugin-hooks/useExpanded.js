@@ -7,6 +7,7 @@ import {
   actions,
   useMountedLayoutEffect,
   makePropGetter,
+  ensurePluginOrder,
 } from '../publicUtils'
 
 // Actions
@@ -128,9 +129,16 @@ function useInstance(instance) {
     expandSubRows = true,
     autoResetExpanded = true,
     getHooks,
+    plugins,
     state: { expanded },
     dispatch,
   } = instance
+
+  ensurePluginOrder(
+    plugins,
+    ['useSortBy', 'useGroupBy', 'usePivotColumns', 'useGlobalFilter'],
+    'useExpanded'
+  )
 
   const getAutoResetExpanded = useGetLatest(autoResetExpanded)
 
