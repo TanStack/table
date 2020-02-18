@@ -380,40 +380,42 @@ export const useTable = (props, ...plugins) => {
     }
   )
 
-  getInstance().headerGroups = getInstance().headerGroups.filter(
-    (headerGroup, i) => {
-      // Filter out any headers and headerGroups that don't have visible columns
-      headerGroup.headers = headerGroup.headers.filter(column => {
-        const recurse = headers =>
-          headers.filter(column => {
-            if (column.headers) {
-              return recurse(column.headers)
-            }
-            return column.isVisible
-          }).length
-        if (column.headers) {
-          return recurse(column.headers)
+  getInstance().headerGroups = React.useMemo(
+    () =>
+      headerGroups.filter((headerGroup, i) => {
+        // Filter out any headers and headerGroups that don't have visible columns
+        headerGroup.headers = headerGroup.headers.filter(column => {
+          const recurse = headers =>
+            headers.filter(column => {
+              if (column.headers) {
+                return recurse(column.headers)
+              }
+              return column.isVisible
+            }).length
+          if (column.headers) {
+            return recurse(column.headers)
+          }
+          return column.isVisible
+        })
+
+        // Give headerGroups getRowProps
+        if (headerGroup.headers.length) {
+          headerGroup.getHeaderGroupProps = makePropGetter(
+            getHooks().getHeaderGroupProps,
+            { instance: getInstance(), headerGroup, index: i }
+          )
+
+          headerGroup.getFooterGroupProps = makePropGetter(
+            getHooks().getFooterGroupProps,
+            { instance: getInstance(), headerGroup, index: i }
+          )
+
+          return true
         }
-        return column.isVisible
-      })
 
-      // Give headerGroups getRowProps
-      if (headerGroup.headers.length) {
-        headerGroup.getHeaderGroupProps = makePropGetter(
-          getHooks().getHeaderGroupProps,
-          { instance: getInstance(), headerGroup, index: i }
-        )
-
-        headerGroup.getFooterGroupProps = makePropGetter(
-          getHooks().getFooterGroupProps,
-          { instance: getInstance(), headerGroup, index: i }
-        )
-
-        return true
-      }
-
-      return false
-    }
+        return false
+      }),
+    [headerGroups, getInstance, getHooks]
   )
 
   getInstance().footerGroups = [...getInstance().headerGroups].reverse()
