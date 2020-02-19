@@ -10,4 +10,5 @@ react-table.css
 .idea
 .DS_Store
 .history
+.vscode
 package-lock.json

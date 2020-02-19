@@ -62,6 +62,7 @@ function Table({ columns, data }) {
     flatColumns,
     state,
     setGlobalFilter,
+    filteredRows,
   } = useTable(
     {
       columns,
@@ -73,54 +74,62 @@ function Table({ columns, data }) {
   )
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.render('Header')}
-                {column.canFilter ? column.render('Filter') : null}
-              </th>
-            ))}
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                  {column.canFilter ? column.render('Filter') : null}
+                </th>
+              ))}
+            </tr>
+          ))}
+          <tr>
+            <th
+              colSpan={flatColumns.length}
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              <span>
+                <input
+                  value={state.globalFilter || ''}
+                  onChange={e => {
+                    setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+                  }}
+                  placeholder={`Global search...`}
+                  style={{
+                    fontSize: '1.1rem',
+                    border: '0',
+                  }}
+                />
+              </span>
+            </th>
           </tr>
-        ))}
-        <tr>
-          <th
-            colSpan={flatColumns.length}
-            style={{
-              textAlign: 'left',
-            }}
-          >
-            <span>
-              <input
-                value={state.globalFilter || ''}
-                onChange={e => {
-                  setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-                }}
-                placeholder={`Global search...`}
-                style={{
-                  fontSize: '1.1rem',
-                  border: '0',
-                }}
-              />
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-              </tr>
-            )
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  ))}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+      <p>
+        Selected Rows:{' '}
+        <span data-testid="selected-count">
+          {Object.keys(filteredRows).length}
+        </span>
+      </p>
+    </>
   )
 }
 
@@ -169,28 +178,36 @@ function App() {
 }
 
 test('renders a filterable table', () => {
-  const { getAllByPlaceholderText, getByPlaceholderText, asFragment } = render(
-    <App />
-  )
+  const {
+    getAllByPlaceholderText,
+    getByPlaceholderText,
+    asFragment,
+    getByTestId,
+  } = render(<App />)
 
   const globalFilterInput = getByPlaceholderText('Global search...')
   const filterInputs = getAllByPlaceholderText('Search...')
+  expect(getByTestId('selected-count').textContent).toBe('4')
 
   const beforeFilter = asFragment()
 
   fireEvent.change(filterInputs[1], { target: { value: 'l' } })
+  expect(getByTestId('selected-count').textContent).toBe('2')
 
   const afterFilter1 = asFragment()
 
   fireEvent.change(filterInputs[1], { target: { value: 'er' } })
+  expect(getByTestId('selected-count').textContent).toBe('2')
 
   const afterFilter2 = asFragment()
 
   fireEvent.change(filterInputs[1], { target: { value: '' } })
+  expect(getByTestId('selected-count').textContent).toBe('4')
 
   const afterFilter3 = asFragment()
 
   fireEvent.change(globalFilterInput, { target: { value: 'li' } })
+  expect(getByTestId('selected-count').textContent).toBe('4')
 
   const afterFilter4 = asFragment()
 

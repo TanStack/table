@@ -170,6 +170,14 @@ exports[`renders a filterable table 1`] = `
       </tr>
     </tbody>
   </table>
+  <p>
+    Selected Rows: 
+    <span
+      data-testid="selected-count"
+    >
+      4
+    </span>
+  </p>
 </DocumentFragment>
 `;
 
@@ -303,6 +311,14 @@ exports[`renders a filterable table 2`] = `
       </tr>
     </tbody>
   </table>
+  <p>
+    Selected Rows: 
+    <span
+      data-testid="selected-count"
+    >
+      2
+    </span>
+  </p>
 </DocumentFragment>
 `;
 
@@ -436,6 +452,14 @@ exports[`renders a filterable table 3`] = `
       </tr>
     </tbody>
   </table>
+  <p>
+    Selected Rows: 
+    <span
+      data-testid="selected-count"
+    >
+      2
+    </span>
+  </p>
 </DocumentFragment>
 `;
 
@@ -609,6 +633,14 @@ exports[`renders a filterable table 4`] = `
       </tr>
     </tbody>
   </table>
+  <p>
+    Selected Rows: 
+    <span
+      data-testid="selected-count"
+    >
+      4
+    </span>
+  </p>
 </DocumentFragment>
 `;
 
@@ -762,5 +794,13 @@ exports[`renders a filterable table 5`] = `
       </tr>
     </tbody>
   </table>
+  <p>
+    Selected Rows: 
+    <span
+      data-testid="selected-count"
+    >
+      4
+    </span>
+  </p>
 </DocumentFragment>
 `;
