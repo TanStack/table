@@ -68,7 +68,7 @@ The following options are supported via the main options object passed to `useTa
 The following options are supported on any column object you can pass to `columns`.
 
 - `accessor: String | Function(originalRow, rowIndex) => any`
-  - **Required**
+  - **Required if using `useSortBy`**
   - This string/function is used to build the data model for your column.
   - The data returned by an accessor should be **primitive** and sortable.
   - If a string is passed, the column's value will be looked up on the original row via that key, eg. If your column's accessor is `firstName` then its value would be read from `row['firstName']`. You can also specify deeply nested values with accessors like `info.hobbies` or even `address[0].street`
