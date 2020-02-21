@@ -138,7 +138,7 @@ function reducer(state, action, previousState, instance) {
       if (!row.isGrouped) {
         if (shouldExist) {
           newSelectedRowIds[id] = true
-        } else if (!shouldExist) {
+        } else {
           delete newSelectedRowIds[id]
         }
       }
