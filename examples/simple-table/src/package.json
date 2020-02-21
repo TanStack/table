@@ -1,0 +1,19 @@
+{
+  "name": "react-table-simple-table",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "react",
+    "react-table",
+    "table",
+    "datagrid",
+    "grid"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "react-table": "6.7.0-alpha-0",
+    "react-dom": "15.5.3",
+    "react": "15.5.3",
+    "namor": "1.0.1"
+  }
+}

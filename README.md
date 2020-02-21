@@ -1,32 +1,10 @@
-<div style="text-align:center;">
-  <a href="https://github.com/react-tools/react-table" target="\_parent"><img src="https://github.com/react-tools/media/raw/master/logo-react-table.png" alt="React Table Logo" style="width:450px;"/></a>
-</div>
-
-# React Table
+# React Table v6
 
 `react-table` is a **lightweight, fast and extendable datagrid** built for React
 
-<a href="https://travis-ci.org/tannerlinsley/react-table" target="\_parent">
-  <img alt="" src="https://travis-ci.org/tannerlinsley/react-table.svg?branch=v6" />
-</a>
-<a href="https://npmjs.com/package/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/npm/dm/react-table.svg" />
-</a>
-<a href="https://spectrum.chat/react-table">
-  <img alt="Join the community on Spectrum" src="https://withspectrum.github.io/badge/badge.svg" />
-</a>
-<a href="https://github.com/react-tools/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/github/stars/react-tools/react-table.svg?style=social&label=Star" />
-</a>
-<a href="https://twitter.com/tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
-</a>
-<a href="https://cash.me/$tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/badge/%24-Donate-brightgreen.svg" />
-</a>
+## Important! This is not the most recent version of React Table and is no longer receiving long-term support.
 
-<br />
-<br />
+This is a v6 of react-table, due to the incredibly massive differences from v7 this branch exists as a way to access its docs and source. I do not intend on offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React. Otherwise, look into using [the most recent version](https://github.com/tannerlinsley/react-table) of react-table!
 
 ## Features
 
@@ -42,106 +20,27 @@
 
 ## CodeSandbox Examples
 
-- [100k-rows-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-100k-rows-aggregation)
-- [cell-renderers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-cell-renderers)
-- [controlled-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-controlled-table)
-- [custom-column-widths](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-column-widths)
-- [custom-component-props](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-component-props)
-- [custom-expander-position](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-expander-position)
-- [custom-filtering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-filtering)
-- [custom-no-data-text](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-no-data-text)
-- [custom-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-custom-sorting)
-- [default-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-default-sorting)
-- [editable-content](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-editable-content)
-- [fixed-header-vertical-scroll](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-fixed-header-vertical-scroll)
-- [footers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-footers)
-- [functional-rendering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-functional-rendering)
-- [multiple-pagination-bars](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-multiple-pagination-bars)
-- [pivoting-and-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-and-aggregation)
-- [pivoting-options](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-options)
-- [pivoting-sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-pivoting-sub-components)
-- [server-side-data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-server-side-data)
-- [simple-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-simple-table)
-- [sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/archives/v6-examples/react-table-sub-components)
-
-## Versions
-
-- This documentation is for version 6 of react-table.
-- [View the Changelog](https://github.com/react-tools/react-table/blob/master/CHANGELOG.md)
-- Previous versions:
-  - [5.x.x Readme](https://github.com/react-tools/react-table/blob/ad7d31cd3978eb45da7c6194dbab93c1e9a8594d/README.md)
-
-## Sponsors
-
-**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and continue to maintain it. If you would like to contribute to my Patreon goal for v7 and beyond, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley).
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold-placeholder.png">
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://patreon.com/tannerlinsley" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver-placeholder.png">
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-**React Table v7** is mostly planned and I (@tannerlinsley) am looking for Patreon support to make it a reality. It will require a decent time commitment on my part to not only implement it, but also help people migrate and maintain it. If you would like to contribute to my Patreon goal for v7, [visit my Patreon and help me out!](https://patreon.com/tannerlinsley). Gold
+- [100k-rows-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/100k-rows-aggregation)
+- [cell-renderers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/cell-renderers)
+- [controlled-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/controlled-table)
+- [custom-column-widths](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-column-widths)
+- [custom-component-props](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-component-props)
+- [custom-expander-position](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-expander-position)
+- [custom-filtering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-filtering)
+- [custom-no-data-text](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-no-data-text)
+- [custom-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-sorting)
+- [default-sorting](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/default-sorting)
+- [editable-content](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/editable-content)
+- [fixed-header-vertical-scroll](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/fixed-header-vertical-scroll)
+- [footers](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/footers)
+- [functional-rendering](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/functional-rendering)
+- [multiple-pagination-bars](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/multiple-pagination-bars)
+- [pivoting-and-aggregation](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/pivoting-and-aggregation)
+- [pivoting-options](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/pivoting-options)
+- [pivoting-sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/pivoting-sub-components)
+- [server-side-data](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/server-side-data)
+- [simple-table](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/simple-table)
+- [sub-components](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/sub-components)
 
 ## Table of Contents
 
@@ -169,33 +68,39 @@
 
 ## Installation
 
+Note that this installation guide uses the `react-table-v6` version of the package; while you could access the earier versions of the package by `react-table` name, in order to provide a better migration workflow from v6 to the most recent version of the 6.x.x exists as `react-table-v6`.
+
 1.  Install React Table as a dependency
 
 ```bash
 # Yarn
-$ yarn add react-table
+$ yarn add react-table-v6
 
 # NPM
-$ npm install react-table
+$ npm install react-table-v6
 ```
 
-2.  Import the `react-table` module
+## Usage
+
+2.  Import the `react-table-v6` module
 
 ```javascript
 // ES6
-import ReactTable from 'react-table'
+import ReactTable from 'react-table-v6'
 // ES5
-var ReactTable = require('react-table').default
+var ReactTable = require('react-table-v6').default
 ```
 
 3.  Import styles by including `react-table.css`
 
 ```javascript
 // JS (Webpack)
-import 'react-table/react-table.css'
+import 'react-table-v6/react-table.css'
 // Old-school
-<link rel="stylesheet" href="node_modules/react-table/react-table.css">
+<link rel="stylesheet" href="node_modules/react-table-v6/react-table.css">
 ```
+
+See the example below for further usage.
 
 ##### CDN
 
@@ -203,12 +108,12 @@ import 'react-table/react-table.css'
 <!-- CSS -->
 <link
   rel="stylesheet"
-  href="https://unpkg.com/react-table@latest/react-table.css"
+  href="https://unpkg.com/react-table-v6@latest/react-table.css"
 />
 
 <!-- JS -->
-<script src="https://unpkg.com/react-table@latest/react-table.js"></script>
-<script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
+<script src="https://unpkg.com/react-table-v6@latest/react-table.js"></script>
+<script src="https://unpkg.com/react-table-v6@latest/react-table.min.js"></script>
 
 <script>
   var ReactTable = window.ReactTable.default
@@ -218,7 +123,8 @@ import 'react-table/react-table.css'
 ## Example
 
 ```javascript
-import ReactTable from 'react-table'
+import ReactTable from 'react-table-v6'
+import 'react-table-v6/react-table.css'
 
 render() {
   const data = [{
@@ -265,7 +171,7 @@ Simply pass the `data` prop anything that resembles an array or object. Client-s
 />
 ```
 
-**Pro Tip: Using the `resolveData` prop** - Any time the `data` prop value changes (using a `===` comparison), the table will update, but sometimes you need to materialize, alter, or shape this data before it enters the table. To do this, you can use the `resolveData` prop! It recieves the `data` prop as the only parameter and returns the resolved data.
+**Pro Tip: Using the `resolveData` prop** - Any time the `data` prop value changes (using a `===` comparison), the table will update, but sometimes you need to materialize, alter, or shape this data before it enters the table. To do this, you can use the `resolveData` prop! It receives the `data` prop as the only parameter and returns the resolved data.
 
 ```javascript
 <ReactTable
@@ -381,11 +287,10 @@ These are all of the available props (and their default values) for the main `<R
   getTbodyProps: () => ({}),
   getTrGroupProps: () => ({}),
   getTrProps: () => ({}),
-  getThProps: () => ({}),
   getTdProps: () => ({}),
   getTfootProps: () => ({}),
   getTfootTrProps: () => ({}),
-  getTfootThProps: () => ({}),
+  getTfootTdProps: () => ({}),
   getPaginationProps: () => ({}),
   getLoadingProps: () => ({}),
   getNoDataProps: () => ({}),
@@ -404,7 +309,7 @@ These are all of the available props (and their default values) for the main `<R
     }) => component
 
   // Global Column Defaults
-  // To override only some values, import { ReactTableDefaults } from 'react-table'
+  // To override only some values, import { ReactTableDefaults } from 'react-table-v6'
   // and construct your overrides (e.g. {...ReactTableDefaults.column, className: 'react-table-cell'})
   column: {
     // Renderers
@@ -441,7 +346,7 @@ These are all of the available props (and their default values) for the main `<R
   },
 
   // Global Expander Column Defaults
-  // To override only some values, import { ReactTableDefaults } from 'react-table'
+  // To override only some values, import { ReactTableDefaults } from 'react-table-v6
   // and construct your overrides (e.g. {...ReactTableDefaults.expanderDefaults, sortable: true})
   expanderDefaults: {
     sortable: false,
@@ -471,7 +376,7 @@ These are all of the available props (and their default values) for the main `<R
 You can easily override the core defaults like so:
 
 ```javascript
-import { ReactTableDefaults } from 'react-table'
+import { ReactTableDefaults } from 'react-table-v6'
 
 Object.assign(ReactTableDefaults, {
   defaultPageSize: 10,
@@ -709,7 +614,7 @@ const columns = [
 ## Styles
 
 - React-table ships with a minimal and clean stylesheet to get you on your feet quickly.
-- The stylesheet is located at `react-table/react-table.css`.
+- The stylesheet is located at `react-table-v6/react-table.css`.
 - There are countless ways to import a stylesheet. If you have questions on how to do so, consult the documentation of your build system.
 
 #### Classes
@@ -747,7 +652,6 @@ Every single built-in component's props can be dynamically extended using any on
   getTbodyProps={fn}
   getTrGroupProps={fn}
   getTrProps={fn}
-  getThProps={fn}
   getTdProps={fn}
   getPaginationProps={fn}
   getLoadingProps={fn}
@@ -1099,7 +1003,7 @@ Though we confidently stand by the markup and architecture behind it, `react-tab
 
 ```javascript
 // Change the global default
-import { ReactTableDefaults } from 'react-table'
+import { ReactTableDefaults } from 'react-table-v6'
 Object.assign(ReactTableDefaults, {
   TableComponent: component,
   TheadComponent: component,
@@ -1130,7 +1034,7 @@ Object.assign(ReactTableDefaults, {
   />
 ```
 
-If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating <a href="https://github.com/react-tools/react-table/blob/master/src/index.js" target="\_parent">the source</a> for the component you wish to replace.
+If you choose to change the core components React-Table uses to render, you must make sure your replacement components consume and utilize all of the supplied and inherited props that are needed for that component to function properly. We would suggest investigating <a href="https://github.com/tannerlinsley/react-table/blob/v6/src/index.js" target="\_parent">the source</a> for the component you wish to replace.
 
 # HOC Extensions
 
@@ -1154,7 +1058,7 @@ Fortunately, ReactTable exposes a LOT of functionality as props to the component
 props to keep track of and that is where HOCs come in.
 
 You can write a HOC that just focusses on the additional functionality you want to enhance and keep those enhancements to
-reuse over and over again when you need them. You don't have to edit the ReactSource code, just wrap ReactTable in one or
+reuse over and over again when you need them. You don't have to edit the ReactTable source code, just wrap ReactTable in one or
 more HOCs (more on some issues related to chaining HOCs later) that provide the additional functionality you want to expose.
 
 The most obvious HOC is one that can add `checkbox` or select functionality. The HOC included provides `select` functionality
@@ -1169,8 +1073,8 @@ But there is more documentation on the `select` HOC below.
 Any of the below HOCs can be imported from react-table like so:
 
 ```javascript
-import ReactTable from "react-table";
-import treeTableHOC from "react-table/lib/hoc/treeTable";
+import ReactTable from "react-table-v6";
+import treeTableHOC from "react-table-v6/lib/hoc/treeTable";
 
 const TreeTable = treeTableHOC(ReactTable);
 ```
@@ -1451,28 +1355,3 @@ Essentially this will walk down the chain (if there are chained HOCs) and stop w
 Finally, sometimes the chains need to be in a specific order to function correctly. It is not clear if this is just an architectural
 issue or if it would be better solved using a library like `recompose`. Anyone who is able to contribute a reliable solution to this
 is welcome to submit a PR.
-
-## Contributing
-
-To suggest a feature, create an issue if it does not already exist.
-If you would like to help develop a suggested feature follow these steps:
-
-- Fork this repo
-- Install dependencies with `$ yarn`
-- Auto-build files as you edit with `$ yarn run watch`
-- Implement your changes to files in the `src/` directory
-- Run the <a href="https://github.com/tannerlinsley/react-story">React Story</a> locally with `$ yarn run docs`
-- View changes as you edit `docs/src`
-- Submit PR for review
-
-#### Scripts
-
-- `$ yarn run watch` Watches files and builds via babel
-- `$ yarn run docs` Runs the storybook server
-- `$ yarn run test` Runs the test suite
-
-## Used By
-
-<a href='https://nozzle.io' target="\_parent">
-  <img src='https://nozzle.io/img/logo-blue.png' alt='Nozzle Logo' style='width:300px;'/>
-</a>

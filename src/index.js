@@ -14,7 +14,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   static defaultProps = defaultProps
 
   constructor (props) {
-    super()
+    super(props)
 
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
@@ -32,17 +32,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.resizeColumnStart = this.resizeColumnStart.bind(this)
     this.resizeColumnEnd = this.resizeColumnEnd.bind(this)
     this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
-
-    this.state = {
-      page: props.defaultPage,
-      pageSize: props.defaultPageSize,
-      sorted: props.defaultSorted,
-      expanded: props.defaultExpanded,
-      filtered: props.defaultFiltered,
-      resized: props.defaultResized,
-      currentlyResizing: false,
-      skipNextSort: false,
-    }
   }
 
   render () {
@@ -736,7 +725,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const show = typeof column.show === 'function' ? column.show() : column.show
       const width = _.getFirstDefined(resizedCol.value, column.width, column.minWidth)
       const maxWidth = _.getFirstDefined(resizedCol.value, column.width, column.maxWidth)
-      const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, undefined, this))
+      const tFootTdProps = _.splitProps(getTfootTdProps(finalState, undefined, column, this))
       const columnProps = _.splitProps(column.getProps(finalState, undefined, column, this))
       const columnFooterProps = _.splitProps(
         column.getFooterProps(finalState, undefined, column, this)

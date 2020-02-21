@@ -1,5 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
+import * as ReactIs from 'react-is'
+
 //
 export default {
   get,
@@ -203,6 +205,13 @@ function isSortingDesc (d) {
   return !!(d.sort === 'desc' || d.desc === true || d.asc === false)
 }
 
-function normalizeComponent (Comp, params = {}, fallback = Comp) {
-  return typeof Comp === 'function' ? <Comp {...params} /> : fallback
+function normalizeComponent (Comp, props, fallback = Comp) {
+  if (ReactIs.isElement(Comp) || typeof Comp === 'string') {
+    return Comp
+  } else if (ReactIs.isValidElementType(Comp)) {
+    return <Comp {...props} />
+  }
+
+  return fallback
 }
+

@@ -1,16 +1,31 @@
 export default Base =>
   class extends Base {
-    componentWillMount () {
-      this.setStateWithData(this.getDataModel(this.getResolvedState(), true))
+    constructor (props) {
+      super(props)
+
+      const defaultState = {
+        page: props.defaultPage,
+        pageSize: props.defaultPageSize,
+        sorted: props.defaultSorted,
+        expanded: props.defaultExpanded,
+        filtered: props.defaultFiltered,
+        resized: props.defaultResized,
+        currentlyResizing: false,
+        skipNextSort: false,
+      }
+      const resolvedState = this.getResolvedState(props, defaultState)
+      const dataModel = this.getDataModel(resolvedState, true)
+
+      this.state = this.calculateNewResolvedState(dataModel)
     }
 
     componentDidMount () {
       this.fireFetchData()
     }
 
-    componentWillReceiveProps (nextProps, nextState) {
-      const oldState = this.getResolvedState()
-      const newState = this.getResolvedState(nextProps, nextState)
+    componentDidUpdate (prevProps, prevState) {
+      const oldState = this.getResolvedState(prevProps, prevState)
+      const newState = this.getResolvedState(this.props, this.state)
 
       // Do a deep compare of new and old `defaultOption` and
       // if they are different reset `option = defaultOption`
@@ -48,9 +63,9 @@ export default Base =>
       }
     }
 
-    setStateWithData (newState, cb) {
+    calculateNewResolvedState (dataModel) {
       const oldState = this.getResolvedState()
-      const newResolvedState = this.getResolvedState({}, newState)
+      const newResolvedState = this.getResolvedState({}, dataModel)
       const { freezeWhenExpanded } = newResolvedState
 
       // Default to unfrozen state
@@ -110,6 +125,13 @@ export default Base =>
           0
         )
       }
+
+      return newResolvedState
+    }
+
+    setStateWithData (dataModel, cb) {
+      const oldState = this.getResolvedState()
+      const newResolvedState = this.calculateNewResolvedState(dataModel)
 
       return this.setState(newResolvedState, () => {
         if (cb) {

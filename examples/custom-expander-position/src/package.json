@@ -1,0 +1,13 @@
+{
+  "name": "react-table-custom-expander-position",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "index.js",
+  "dependencies": {
+    "react-table": "6.5.3",
+    "react-dom": "15.5.3",
+    "react": "15.5.3",
+    "namor": "1.0.1"
+  }
+}

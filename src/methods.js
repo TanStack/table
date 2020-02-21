@@ -336,7 +336,7 @@ export default Base =>
         ...this.getResolvedState(),
         page: this.getStateOrProp('page'),
         pageSize: this.getStateOrProp('pageSize'),
-        filter: this.getStateOrProp('filter'),
+        filtered: this.getStateOrProp('filtered'),
       }
 
       this.props.onFetchData(currentState, this)

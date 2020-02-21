@@ -1,3 +1,15 @@
+## 6.10.3
+
+- Further improve `normalizeComponent` function
+
+## 6.10.2
+
+- Fixed regression found in `normalizeComponent` function fix
+
+## 6.10.1
+
+- Fixed issues with `normalizeComponent` function
+
 ## 6.10.0
 
 - Rebased volatile commits out of 6.9.0

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react'
 import classnames from 'classnames'
 
@@ -63,9 +64,21 @@ export default class ReactTablePagination extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (this.props.page !== nextProps.page) {
-      this.setState({ page: nextProps.page })
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.page !== this.props.page && prevState.page !== this.state.page) {
+      // this is probably safe because we only update when old/new state.page are different
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        page: this.props.page,
+      })
+    }
+    /* when the last page from new props is smaller
+     than the current page in the page box,
+     the current page needs to be the last page. */
+    if (this.props.pages !== prevProps.pages && this.props.pages <= this.state.page) {
+      this.setState({
+        page: this.props.pages - 1,
+      })
     }
   }
 
@@ -144,7 +157,7 @@ export default class ReactTablePagination extends Component {
               if (!canPrevious) return
               this.changePage(page - 1)
             }}
-            disabled={!canPrevious}
+            disabled={!canPrevious || this.state.page < 1}
           >
             {this.props.previousText}
           </PreviousComponent>
@@ -156,13 +169,13 @@ export default class ReactTablePagination extends Component {
             {this.props.ofText} {renderTotalPagesCount(pages)}
           </span>
           {showPageSizeOptions &&
-            renderPageSizeOptions({
-              pageSize,
-              rowsSelectorText: this.props.rowsSelectorText,
-              pageSizeOptions,
-              onPageSizeChange,
-              rowsText: this.props.rowsText,
-            })}
+          renderPageSizeOptions({
+            pageSize,
+            rowsSelectorText: this.props.rowsSelectorText,
+            pageSizeOptions,
+            onPageSizeChange,
+            rowsText: this.props.rowsText,
+          })}
         </div>
         <div className="-next">
           <NextComponent
@@ -170,7 +183,7 @@ export default class ReactTablePagination extends Component {
               if (!canNext) return
               this.changePage(page + 1)
             }}
-            disabled={!canNext}
+            disabled={!canNext || this.state.page >= this.props.pages - 1}
           >
             {this.props.nextText}
           </NextComponent>

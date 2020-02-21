@@ -1,12 +1,12 @@
 {
   "name": "react-table",
-  "version": "6.10.0",
+  "version": "6.11.5",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
-  "homepage": "https://github.com/react-tools/react-table#readme",
+  "homepage": "https://github.com/tannerlinsley/react-table/tree/v6#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-tools/react-table.git"
+    "url": "git+https://github.com/tannerlinsley/react-table.git"
   },
   "keywords": [
     "react",
@@ -43,12 +43,14 @@
     "docs:build": "yarn build && cd docs && yarn && yarn build"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
+    "@types/react-table": "^6.8.5",
+    "classnames": "^2.2.5",
+    "react-is": "^16.8.1"
   },
   "peerDependencies": {
-    "prop-types": "^15.5.0",
-    "react": "^15.x.x || ^16.x.x",
-    "react-dom": "^15.x.x || ^16.x.x"
+    "prop-types": "^15.7.0",
+    "react": "^16.x.x",
+    "react-dom": "^16.x.x"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
@@ -70,7 +72,7 @@
     "npm-run-all": "^4.1.2",
     "onchange": "^3.0.2",
     "postcss-cli": "^2.6.0",
-    "prop-types": "^15.6.0",
+    "prop-types": "^15.7.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-json-tree": "^0.10.9",
