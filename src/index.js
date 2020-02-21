@@ -295,7 +295,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
 
       const classes = [column.headerClassName, theadThProps.className, columnHeaderProps.className]
-      console.log(resizedCol, 'resizedCol')
       const styles = {
         ...column.headerStyle,
         ...theadThProps.style,
@@ -326,7 +325,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             isResizable && 'rt-resizable-header',
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
             !show && '-hidden',
-            resizedCol.value && '-resizing',
+            [...resized].pop().value === column.id && currentlyResizing && '-resizing',
             pivotBy && pivotBy.slice(0, -1).includes(column.id) && 'rt-header-pivot'
           )}
           style={{
