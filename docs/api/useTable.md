@@ -25,6 +25,11 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - The initial state object for hidden columns
   - If a column's ID is contained in this array, it will be hidden
+- `autoResetHiddenColumns: Boolean`
+  - Defaults to `true`
+  - When `true`, the `hiddenColumns` state will automatically reset if any of the following conditions are met:
+    - `columns` is changed
+  - To disable, set to `false`
 - `stateReducer: Function(newState, action, prevState) => newState`
   - Optional
   - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
