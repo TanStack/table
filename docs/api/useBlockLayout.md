@@ -19,6 +19,12 @@
   - **Usage Required**
   - This core prop getter is required to to enable absolute layout for rows cells
 
+### HeaderGroup Properties
+
+- `getHeaderGroupProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
+
 ### Header Properties
 
 - `getHeaderProps`

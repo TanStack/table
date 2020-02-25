@@ -53,7 +53,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    flatColumns,
+    allColumns,
     getToggleHideAllColumnsProps,
     state,
   } = useTable({
@@ -69,10 +69,12 @@ function Table({ columns, data }) {
           <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
           All
         </div>
-        {flatColumns.map(column => (
+        {allColumns.map(column => (
           <div key={column.id}>
-            <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
-            {column.id}
+            <label>
+              <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
+              {column.id}
+            </label>
           </div>
         ))}
         <br />

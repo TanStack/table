@@ -1,54 +1,71 @@
-const defaultCells = cell => cell.filter(d => d.column.isVisible)
-
-const defaultGetHeaderProps = (props, instance, column) => ({
-  key: `header_${column.id}`,
-  colSpan: column.totalVisibleHeaderCount,
+const defaultGetTableProps = props => ({
+  role: 'table',
   ...props,
 })
 
-const defaultGetFooterProps = (props, instance, column) => ({
+const defaultGetTableBodyProps = props => ({
+  role: 'rowgroup',
+  ...props,
+})
+
+const defaultGetHeaderProps = (props, { column }) => ({
+  key: `header_${column.id}`,
+  colSpan: column.totalVisibleHeaderCount,
+  role: 'columnheader',
+  ...props,
+})
+
+const defaultGetFooterProps = (props, { column }) => ({
   key: `footer_${column.id}`,
   colSpan: column.totalVisibleHeaderCount,
   ...props,
 })
 
-const defaultGetHeaderGroupProps = (props, instance, headerGroup, index) => ({
+const defaultGetHeaderGroupProps = (props, { index }) => ({
   key: `headerGroup_${index}`,
+  role: 'row',
   ...props,
 })
 
-const defaultGetFooterGroupProps = (props, instance, headerGroup, index) => ({
+const defaultGetFooterGroupProps = (props, { index }) => ({
   key: `footerGroup_${index}`,
   ...props,
 })
 
-const defaultGetRowProps = (props, instance, row) => ({
+const defaultGetRowProps = (props, { row }) => ({
   key: `row_${row.id}`,
+  role: 'row',
   ...props,
 })
 
-const defaultGetCellProps = (props, instance, cell) => ({
-  ...props,
+const defaultGetCellProps = (props, { cell }) => ({
   key: `cell_${cell.row.id}_${cell.column.id}`,
+  role: 'cell',
+  ...props,
 })
 
 export default function makeDefaultPluginHooks() {
   return {
     useOptions: [],
     stateReducers: [],
+    useControlledState: [],
     columns: [],
     columnsDeps: [],
-    flatColumns: [],
-    flatColumnsDeps: [],
+    allColumns: [],
+    allColumnsDeps: [],
+    accessValue: [],
+    materializedColumns: [],
+    materializedColumnsDeps: [],
+    useInstanceAfterData: [],
+    visibleColumns: [],
+    visibleColumnsDeps: [],
     headerGroups: [],
     headerGroupsDeps: [],
     useInstanceBeforeDimensions: [],
     useInstance: [],
-    useRows: [],
-    cells: [defaultCells],
     prepareRow: [],
-    getTableProps: [],
-    getTableBodyProps: [],
+    getTableProps: [defaultGetTableProps],
+    getTableBodyProps: [defaultGetTableBodyProps],
     getHeaderGroupProps: [defaultGetHeaderGroupProps],
     getFooterGroupProps: [defaultGetFooterGroupProps],
     getHeaderProps: [defaultGetHeaderProps],

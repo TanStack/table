@@ -11,3 +11,4 @@ react-table.css
 .DS_Store
 .history
 package-lock.json
+coverage

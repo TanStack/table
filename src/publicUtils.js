@@ -1,6 +1,6 @@
 import React from 'react'
 
-let renderErr = 'Renderer Error'
+let renderErr = 'Renderer Error ☝️'
 
 export const actions = {
   init: 'init',
@@ -67,10 +67,10 @@ function mergeProps(...propList) {
   }, {})
 }
 
-function handlePropGetter(prevProps, userProps, ...meta) {
+function handlePropGetter(prevProps, userProps, meta) {
   // Handle a lambda, pass it the previous props
   if (typeof userProps === 'function') {
-    return handlePropGetter({}, userProps(prevProps, ...meta))
+    return handlePropGetter({}, userProps(prevProps, meta))
   }
 
   // Handle an array, merge each item as separate props
@@ -82,19 +82,23 @@ function handlePropGetter(prevProps, userProps, ...meta) {
   return mergeProps(prevProps, userProps)
 }
 
-export const makePropGetter = (hooks, ...meta) => {
+export const makePropGetter = (hooks, meta = {}) => {
   return (userProps = {}) =>
     [...hooks, userProps].reduce(
-      (prev, next) => handlePropGetter(prev, next, ...meta),
+      (prev, next) =>
+        handlePropGetter(prev, next, {
+          ...meta,
+          userProps,
+        }),
       {}
     )
 }
 
-export const reduceHooks = (hooks, initial, ...args) =>
+export const reduceHooks = (hooks, initial, meta = {}, allowUndefined) =>
   hooks.reduce((prev, next) => {
-    const nextValue = next(prev, ...args)
+    const nextValue = next(prev, meta)
     if (process.env.NODE_ENV !== 'production') {
-      if (typeof nextValue === 'undefined') {
+      if (!allowUndefined && typeof nextValue === 'undefined') {
         console.info(next)
         throw new Error(
           'React Table: A reducer hook ☝️ just returned undefined! This is not allowed.'
@@ -104,9 +108,9 @@ export const reduceHooks = (hooks, initial, ...args) =>
     return nextValue
   }, initial)
 
-export const loopHooks = (hooks, ...args) =>
+export const loopHooks = (hooks, context, meta = {}) =>
   hooks.forEach(hook => {
-    const nextValue = hook(...args)
+    const nextValue = hook(context, meta)
     if (process.env.NODE_ENV !== 'production') {
       if (typeof nextValue !== 'undefined') {
         console.info(hook, nextValue)
@@ -118,6 +122,11 @@ export const loopHooks = (hooks, ...args) =>
   })
 
 export function ensurePluginOrder(plugins, befores, pluginName, afters) {
+  if (process.env.NODE_ENV !== 'production' && afters) {
+    throw new Error(
+      `Defining plugins in the "after" section of ensurePluginOrder is no longer supported (see plugin ${pluginName})`
+    )
+  }
   const pluginIndex = plugins.findIndex(
     plugin => plugin.pluginName === pluginName
   )
@@ -140,17 +149,6 @@ This usually means you need to need to name your plugin hook by setting the 'plu
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(
           `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
-        )
-      }
-    }
-  })
-
-  afters.forEach(after => {
-    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
-    if (process.env.NODE_ENV !== 'production') {
-      if (afterIndex > -1 && afterIndex < pluginIndex) {
-        throw new Error(
-          `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
         )
       }
     }
@@ -186,14 +184,12 @@ export function useMountedLayoutEffect(fn, deps) {
 
 export function useAsyncDebounce(defaultFn, defaultWait = 0) {
   const debounceRef = React.useRef({})
-  debounceRef.current.defaultFn = defaultFn
-  debounceRef.current.defaultWait = defaultWait
 
-  const debounce = React.useCallback(
-    async (
-      fn = debounceRef.current.defaultFn,
-      wait = debounceRef.current.defaultWait
-    ) => {
+  const getDefaultFn = useGetLatest(defaultFn)
+  const getDefaultWait = useGetLatest(defaultWait)
+
+  return React.useCallback(
+    async (...args) => {
       if (!debounceRef.current.promise) {
         debounceRef.current.promise = new Promise((resolve, reject) => {
           debounceRef.current.resolve = resolve
@@ -208,26 +204,18 @@ export function useAsyncDebounce(defaultFn, defaultWait = 0) {
       debounceRef.current.timeout = setTimeout(async () => {
         delete debounceRef.current.timeout
         try {
-          debounceRef.current.resolve(await fn())
+          debounceRef.current.resolve(await getDefaultFn()(...args))
         } catch (err) {
           debounceRef.current.reject(err)
         } finally {
           delete debounceRef.current.promise
         }
-      }, wait)
+      }, getDefaultWait())
 
       return debounceRef.current.promise
     },
-    []
+    [getDefaultFn, getDefaultWait]
   )
-
-  return debounce
-}
-
-export function useConsumeHookGetter(hooks, hookName) {
-  const getter = useGetLatest(hooks[hookName])
-  hooks[hookName] = undefined
-  return getter
 }
 
 export function makeRenderer(instance, column, meta = {}) {
@@ -235,6 +223,7 @@ export function makeRenderer(instance, column, meta = {}) {
     const Comp = typeof type === 'string' ? column[type] : type
 
     if (typeof Comp === 'undefined') {
+      console.info(column)
       throw new Error(renderErr)
     }
 

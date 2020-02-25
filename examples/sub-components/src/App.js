@@ -43,7 +43,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
     headerGroups,
     rows,
     prepareRow,
-    flatColumns,
+    visibleColumns,
     state: { expanded },
   } = useTable(
     {
@@ -88,7 +88,7 @@ function Table({ columns: userColumns, data, renderRowSubComponent }) {
                   */}
                 {row.isExpanded ? (
                   <tr>
-                    <td colSpan={flatColumns.length}>
+                    <td colSpan={visibleColumns.length}>
                       {/*
                           Inside it, call our renderRowSubComponent function. In reality,
                           you could pass whatever you want as props to
@@ -120,9 +120,9 @@ function App() {
         id: 'expander', // It needs an ID
         Cell: ({ row }) => (
           // Use Cell to render an expander for each row.
-          // We can use the getExpandedToggleProps prop-getter
+          // We can use the getToggleRowExpandedProps prop-getter
           // to build the expander.
-          <span {...row.getExpandedToggleProps()}>
+          <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? '👇' : '👉'}
           </span>
         ),

@@ -25,7 +25,7 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - The initial state object for hidden columns
   - If a column's ID is contained in this array, it will be hidden
-- `reducer: Function(newState, action, prevState) => newState`
+- `stateReducer: Function(newState, action, prevState) => newState`
   - Optional
   - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
   - It is passed the `newState`, `action`, and `prevState` and is expected to either return the `newState` or a modified version of the `newState`
@@ -35,7 +35,7 @@ The following options are supported via the main options object passed to `useTa
   - If you need to control part of the table state, this is the place to do it.
   - This function is run on every single render, just like a hook and allows you to alter the final state of the table if necessary.
   - You can use hooks inside of this function, but most of the time, we just suggest using `React.useMemo` to memoize your state overrides.
-  - See the FAQ ["How can I manually control the table state?"](./faq.md#how-can-i-manually-control-the-table-state) for a an example.
+  - See the FAQ ["How can I manually control the table state?"](../faq.md#how-can-i-manually-control-the-table-state) for a an example.
 - `defaultColumn: Object`
   - Optional
   - Defaults to `{}`
@@ -67,7 +67,7 @@ The following options are supported via the main options object passed to `useTa
 
 The following options are supported on any column object you can pass to `columns`.
 
-- `accessor: String | Function`
+- `accessor: String | Function(originalRow, rowIndex) => any`
   - **Required**
   - This string/function is used to build the data model for your column.
   - The data returned by an accessor should be **primitive** and sortable.
@@ -93,11 +93,6 @@ The following options are supported on any column object you can pass to `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) is primarily used for formatting the column value, eg. If your column accessor returns a date object, you can use a `Cell` function to format that date to a readable format.
-- `show: Bool`
-  - Optional
-  - Defaults to `undefined`
-  - If set to `true`, will take priority over any state in `hiddenColumns` and force this column to be visible at all times.
-  - If set to `false` will take priority over any state in `hiddenColumns` and force this column to be hidden at all times.
 - `width: Int`
   - Optional
   - Defaults to `150`
@@ -120,17 +115,14 @@ The following properties are available on the table instance returned from `useT
 - `state: Object`
   - **Memoized** - This object reference will not change unless the internal table state is modified.
   - This is the final state object of the table, which is the product of the `initialState`, internal table reducer and (optionally) a custom `reducer` supplied by the user.
-- `dispatch: Function({ type: Actions[type], ...payload }) => void`
-  - This function is used both internally by React Table, and optionally by you (the developer) to update the table state programmatically.
-  - `type: Actions[type] | String`
-    - The action type corresponding to what action being taken against the state.
-  - `...payload`
-    - Any other action data that is associated with the action
 - `columns: Array<Column>`
   - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
   - See [Column Properties](#column-properties) for more information
-- `flatColumns: Array<Column>`
+- `allColumns: Array<Column>`
   - A **flat** array of all final column objects.
+  - See [Column Properties](#column-properties) for more information
+- `visibleColumns: Array<Column>`
+  - A **flat** array of all visible column objects derived from `allColumns`.
   - See [Column Properties](#column-properties) for more information
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.

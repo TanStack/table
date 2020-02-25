@@ -5,13 +5,12 @@ import {
   ensurePluginOrder,
   defaultColumn,
   makePropGetter,
-  useConsumeHookGetter,
-  getFirstDefined,
   defaultOrderByFn,
-  isFunction,
   useGetLatest,
   useMountedLayoutEffect,
-} from '../utils'
+} from '../publicUtils'
+
+import { getFirstDefined, isFunction } from '../utils'
 
 import * as sortTypes from '../sortTypes'
 
@@ -31,7 +30,7 @@ export const useSortBy = hooks => {
 
 useSortBy.pluginName = 'useSortBy'
 
-const defaultGetSortByToggleProps = (props, instance, column) => {
+const defaultGetSortByToggleProps = (props, { instance, column }) => {
   const { isMultiSortEvent = e => e.shiftKey } = instance
 
   return [
@@ -66,7 +65,7 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.resetSortBy) {
     return {
       ...state,
-      sortBy: [],
+      sortBy: instance.initialState.sortBy || [],
     }
   }
 
@@ -84,7 +83,7 @@ function reducer(state, action, previousState, instance) {
     const { columnId, desc, multi } = action
 
     const {
-      flatColumns,
+      allColumns,
       disableMultiSort,
       disableSortRemove,
       disableMultiRemove,
@@ -94,7 +93,7 @@ function reducer(state, action, previousState, instance) {
     const { sortBy } = state
 
     // Find the column for this columnId
-    const column = flatColumns.find(d => d.id === columnId)
+    const column = allColumns.find(d => d.id === columnId)
     const { sortDescFirst } = column
 
     // Find any existing sortBy for this column
@@ -181,7 +180,8 @@ function useInstance(instance) {
   const {
     data,
     rows,
-    flatColumns,
+    flatRows,
+    allColumns,
     orderByFn = defaultOrderByFn,
     sortTypes: userSortTypes,
     manualSortBy,
@@ -191,23 +191,26 @@ function useInstance(instance) {
     state: { sortBy },
     dispatch,
     plugins,
+    getHooks,
     autoResetSortBy = true,
   } = instance
 
-  ensurePluginOrder(plugins, ['useFilters'], 'useSortBy', [])
+  ensurePluginOrder(
+    plugins,
+    ['useFilters', 'useGlobalFilter', 'useGroupBy', 'usePivotColumns'],
+    'useSortBy'
+  )
 
   // Updates sorting based on a columnId, desc flag and multi flag
-  const toggleSortBy = (columnId, desc, multi) => {
-    dispatch({ type: actions.toggleSortBy, columnId, desc, multi })
-  }
+  const toggleSortBy = React.useCallback(
+    (columnId, desc, multi) => {
+      dispatch({ type: actions.toggleSortBy, columnId, desc, multi })
+    },
+    [dispatch]
+  )
 
   // use reference to avoid memory leak in #1608
   const getInstance = useGetLatest(instance)
-
-  const getSortByTogglePropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getSortByToggleProps'
-  )
 
   // Add the getSortByToggleProps method to columns and headers
   flatHeaders.forEach(column => {
@@ -238,9 +241,11 @@ function useInstance(instance) {
     }
 
     column.getSortByToggleProps = makePropGetter(
-      getSortByTogglePropsHooks(),
-      getInstance(),
-      column
+      getHooks().getSortByToggleProps,
+      {
+        instance: getInstance(),
+        column,
+      }
     )
 
     const columnSort = sortBy.find(d => d.id === id)
@@ -249,14 +254,16 @@ function useInstance(instance) {
     column.isSortedDesc = column.isSorted ? columnSort.desc : undefined
   })
 
-  const sortedRows = React.useMemo(() => {
+  const [sortedRows, sortedFlatRows] = React.useMemo(() => {
     if (manualSortBy || !sortBy.length) {
-      return rows
+      return [rows, flatRows]
     }
+
+    const sortedFlatRows = []
 
     // Filter out sortBys that correspond to non existing columns
     const availableSortBy = sortBy.filter(sort =>
-      flatColumns.find(col => col.id === sort.id)
+      allColumns.find(col => col.id === sort.id)
     )
 
     const sortData = rows => {
@@ -267,7 +274,7 @@ function useInstance(instance) {
         rows,
         availableSortBy.map(sort => {
           // Support custom sorting methods for each column
-          const column = flatColumns.find(d => d.id === sort.id)
+          const column = allColumns.find(d => d.id === sort.id)
 
           if (!column) {
             throw new Error(
@@ -297,12 +304,12 @@ function useInstance(instance) {
 
           // Return the correct sortFn.
           // This function should always return in ascending order
-          return (a, b) => sortMethod(a, b, sort.id)
+          return (a, b) => sortMethod(a, b, sort.id, sort.desc)
         }),
         // Map the directions
         availableSortBy.map(sort => {
           // Detect and use the sortInverted option
-          const column = flatColumns.find(d => d.id === sort.id)
+          const column = allColumns.find(d => d.id === sort.id)
 
           if (column && column.sortInverted) {
             return sort.desc
@@ -314,6 +321,7 @@ function useInstance(instance) {
 
       // If there are sub-rows, sort them
       sortedData.forEach(row => {
+        sortedFlatRows.push(row)
         if (!row.subRows || row.subRows.length <= 1) {
           return
         }
@@ -323,8 +331,16 @@ function useInstance(instance) {
       return sortedData
     }
 
-    return sortData(rows)
-  }, [manualSortBy, sortBy, rows, flatColumns, orderByFn, userSortTypes])
+    return [sortData(rows), sortedFlatRows]
+  }, [
+    manualSortBy,
+    sortBy,
+    rows,
+    flatRows,
+    allColumns,
+    orderByFn,
+    userSortTypes,
+  ])
 
   const getAutoResetSortBy = useGetLatest(autoResetSortBy)
 
@@ -336,8 +352,11 @@ function useInstance(instance) {
 
   Object.assign(instance, {
     preSortedRows: rows,
+    preSortedFlatRows: flatRows,
     sortedRows,
+    sortedFlatRows,
     rows: sortedRows,
+    flatRows: sortedFlatRows,
     toggleSortBy,
   })
 }

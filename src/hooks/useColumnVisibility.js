@@ -4,9 +4,8 @@ import {
   actions,
   functionalUpdate,
   useGetLatest,
-  useConsumeHookGetter,
   makePropGetter,
-} from '../utils'
+} from '../publicUtils'
 
 actions.resetHiddenColumns = 'resetHiddenColumns'
 actions.toggleHideColumn = 'toggleHideColumn'
@@ -19,7 +18,7 @@ export const useColumnVisibility = hooks => {
 
   hooks.stateReducers.push(reducer)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
-  hooks.headerGroupsDeps.push((deps, instance) => [
+  hooks.headerGroupsDeps.push((deps, { instance }) => [
     ...deps,
     instance.state.hiddenColumns,
   ])
@@ -28,7 +27,7 @@ export const useColumnVisibility = hooks => {
 
 useColumnVisibility.pluginName = 'useColumnVisibility'
 
-const defaultGetToggleHiddenProps = (props, instance, column) => [
+const defaultGetToggleHiddenProps = (props, { column }) => [
   props,
   {
     onChange: e => {
@@ -42,7 +41,7 @@ const defaultGetToggleHiddenProps = (props, instance, column) => [
   },
 ]
 
-const defaultGetToggleHideAllColumnsProps = (props, instance) => [
+const defaultGetToggleHideAllColumnsProps = (props, { instance }) => [
   props,
   {
     onChange: e => {
@@ -58,7 +57,7 @@ const defaultGetToggleHideAllColumnsProps = (props, instance) => [
   },
 ]
 
-function reducer(state, action, previousState, instanceRef) {
+function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       hiddenColumns: [],
@@ -69,7 +68,7 @@ function reducer(state, action, previousState, instanceRef) {
   if (action.type === actions.resetHiddenColumns) {
     return {
       ...state,
-      hiddenColumns: [],
+      hiddenColumns: instance.initialState.hiddenColumns || [],
     }
   }
 
@@ -104,9 +103,7 @@ function reducer(state, action, previousState, instanceRef) {
 
     return {
       ...state,
-      hiddenColumns: shouldAll
-        ? instanceRef.current.flatColumns.map(d => d.id)
-        : [],
+      hiddenColumns: shouldAll ? instance.allColumns.map(d => d.id) : [],
     }
   }
 }
@@ -123,10 +120,7 @@ function useInstanceBeforeDimensions(instance) {
   }
 
   const handleColumn = (column, parentVisible) => {
-    column.isVisible =
-      typeof column.isVisible !== 'undefined'
-        ? column.isVisible
-        : parentVisible && !hiddenColumns.includes(column.id)
+    column.isVisible = parentVisible && !hiddenColumns.includes(column.id)
 
     let totalVisibleHeaderCount = 0
 
@@ -155,13 +149,14 @@ function useInstance(instance) {
   const {
     flatHeaders,
     dispatch,
-    flatColumns,
+    allColumns,
+    getHooks,
     state: { hiddenColumns },
   } = instance
 
   const getInstance = useGetLatest(instance)
 
-  const allColumnsHidden = flatColumns.length === hiddenColumns.length
+  const allColumnsHidden = allColumns.length === hiddenColumns.length
 
   const toggleHideColumn = React.useCallback(
     (columnId, value) =>
@@ -179,21 +174,9 @@ function useInstance(instance) {
     [dispatch]
   )
 
-  // Snapshot hook and disallow more from being added
-  const getToggleHideAllColumnsPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleHideAllColumnsProps'
-  )
-
   const getToggleHideAllColumnsProps = makePropGetter(
-    getToggleHideAllColumnsPropsHooks(),
-    getInstance()
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getToggleHiddenPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleHiddenProps'
+    getHooks().getToggleHideAllColumnsProps,
+    { instance: getInstance() }
   )
 
   flatHeaders.forEach(column => {
@@ -206,9 +189,11 @@ function useInstance(instance) {
     }
 
     column.getToggleHiddenProps = makePropGetter(
-      getToggleHiddenPropsHooks(),
-      getInstance(),
-      column
+      getHooks().getToggleHiddenProps,
+      {
+        instance: getInstance(),
+        column,
+      }
     )
   })
 
