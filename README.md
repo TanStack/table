@@ -168,16 +168,17 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
       <td>
         <ul>
-        <li>Hugo Meissner</li>
-        <li>Benoit Leger-Derville</li>
-        <li>Thomas Funk</li>
-        <li>David Pickut</li>
-        <li>Jordan Soltman</li>
-        <li>Robert Tajnšek</li>
-        <li>Eric Lanehart (@pushred)</li>
-        <li>Anish P Patel (@anishpatelyaadada)</li>
-        <li>Alin Porumb (@alinporumb)</li>
-        <li>Janus Reith (@janus-reith)</li>
+          <li>Hugo Meissner</li>
+          <li>Benoit Leger-Derville</li>
+          <li>Thomas Funk</li>
+          <li>David Pickut</li>
+          <li>Jordan Soltman</li>
+          <li>Robert Tajnšek</li>
+          <li>Eric Lanehart (@pushred)</li>
+          <li>Anish P Patel (@anishpatelyaadada)</li>
+          <li>Alin Porumb (@alinporumb)</li>
+          <li>Janus Reith (@janus-reith)</li>
+          <li>Timo Mämecke (@timomeh)</li>
         </ul>
       </td>
       <td>
