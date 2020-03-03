@@ -179,6 +179,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <li>Alin Porumb (@alinporumb)</li>
           <li>Janus Reith (@janus-reith)</li>
           <li>Timo Mämecke (@timomeh)</li>
+          <li>Tyler Reiff (@reiff12)</li>
         </ul>
       </td>
       <td>
