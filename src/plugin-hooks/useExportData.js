@@ -74,7 +74,7 @@ function useInstance(instance) {
 
       const data = exportableRows.map(row => {
         return colHeader.map(col => {
-          const { getExportCellValue = defaultGetExportCellValue } = col
+          const { getExportCellValue = defaultGetExportCellValue } = col.columnObj
 
           return getExportCellValue(row, col)
         })
