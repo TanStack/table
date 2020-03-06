@@ -23,6 +23,8 @@ The following options are supported via the main options object passed to `useTa
 - `manualGlobalFilter: Bool`
   - Enables filter detection functionality, but does not automatically perform row filtering.
   - Turn this on if you wish to implement your own row filter outside of the table (eg. server-side or manual row grouping/nesting)
+- `disableGlobalFilter: Bool`
+  - Disables global filtering for every column in the entire table.
 - `filterTypes: Object<filterKey: filterType>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for the table to use. If the globalFilter type isn't found on this object, it will default to using the built-in filter types.
@@ -33,6 +35,14 @@ The following options are supported via the main options object passed to `useTa
     - `data` is changed
   - To disable, set to `false`
   - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](./faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
+
+### Column Options
+
+The following options are supported on any `Column` object passed to the `columns` option in `useTable()`
+
+- `disableGlobalFilter: Bool`
+  - Optional
+  - If set to `true`, will disable global filtering for this column
 
 ### Instance Properties
 
