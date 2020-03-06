@@ -95,22 +95,23 @@ function reducer(state, action, previousState, instance) {
     const selectAll =
       typeof setSelected !== 'undefined' ? setSelected : !isAllRowsSelected
 
-    if (selectAll) {
-      const selectedRowIds = {}
+    // Only remove/add the rows that are visible on the screen
+    //  Leave all the other rows that are selected alone.
+    const selectedRowIds = Object.assign({}, state.selectedRowIds)
 
+    if (selectAll) {
       Object.keys(nonGroupedRowsById).forEach(rowId => {
         selectedRowIds[rowId] = true
       })
-
-      return {
-        ...state,
-        selectedRowIds,
-      }
+    } else {
+      Object.keys(flatRowsById).forEach(rowId => {
+        delete selectedRowIds[rowId]
+      })
     }
 
     return {
       ...state,
-      selectedRowIds: {},
+      selectedRowIds,
     }
   }
 
@@ -130,7 +131,7 @@ function reducer(state, action, previousState, instance) {
       return state
     }
 
-    let newSelectedRowIds = { ...state.selectedRowIds }
+    const newSelectedRowIds = { ...state.selectedRowIds }
 
     const handleRowById = id => {
       const row = rowsById[id]
