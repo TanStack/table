@@ -5,6 +5,7 @@ import {
   functionalUpdate,
   useGetLatest,
   makePropGetter,
+  useMountedLayoutEffect,
 } from '../publicUtils'
 
 actions.resetHiddenColumns = 'resetHiddenColumns'
@@ -147,11 +148,13 @@ function useInstanceBeforeDimensions(instance) {
 
 function useInstance(instance) {
   const {
+    columns,
     flatHeaders,
     dispatch,
     allColumns,
     getHooks,
     state: { hiddenColumns },
+    autoResetHiddenColumns = true,
   } = instance
 
   const getInstance = useGetLatest(instance)
@@ -196,6 +199,14 @@ function useInstance(instance) {
       }
     )
   })
+
+  const getAutoResetHiddenColumns = useGetLatest(autoResetHiddenColumns)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetHiddenColumns()) {
+      dispatch({ type: actions.resetHiddenColumns })
+    }
+  }, [dispatch, columns])
 
   Object.assign(instance, {
     allColumnsHidden,
