@@ -360,6 +360,19 @@ test('does not filter columns with GlobalFilter if marked disableGlobalFilter', 
 
   const globalFilterInput = rendered.getByPlaceholderText('Global search...')
 
+  fireEvent.change(globalFilterInput, { target: { value: '' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: jaylen',
+  ])
+
   // global filter shouldn't apply to firstName or lastName
   fireEvent.change(globalFilterInput, { target: { value: 'li' } })
   expect(
