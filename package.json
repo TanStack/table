@@ -14,8 +14,7 @@
     "react-table",
     "datagrid"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
+  "main": "index.js",
   "scripts": {
     "commit": "git add . && git-cz",
     "test": "is-ci \"test:ci\" \"test:dev\"",
