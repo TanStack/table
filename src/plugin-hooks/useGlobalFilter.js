@@ -107,22 +107,23 @@ function useInstance(instance) {
 
     // Filters top level and nested rows
     const filterRows = filteredRows => {
-      return filterMethod(
+      filteredRows = filterMethod(
         filteredRows,
         allColumns.map(d => d.id),
         globalFilterValue
-      ).map(row => {
+      )
+
+      filteredRows.forEach(row => {
         filteredFlatRows.push(row)
         filteredRowsById[row.id] = row
 
-        return {
-          ...row,
-          subRows:
-            row.subRows && row.subRows.length
-              ? filterRows(row.subRows)
-              : row.subRows,
-        }
+        row.subRows =
+          row.subRows && row.subRows.length
+            ? filterRows(row.subRows)
+            : row.subRows
       })
+
+      return filteredRows
     }
 
     return [filterRows(rows), filteredFlatRows, filteredRowsById]
