@@ -104,7 +104,7 @@ function reducer(state, action, previousState, instance) {
         selectedRowIds[rowId] = true
       })
     } else {
-      Object.keys(flatRowsById).forEach(rowId => {
+      Object.keys(nonGroupedRowsById).forEach(rowId => {
         delete selectedRowIds[rowId]
       })
     }
