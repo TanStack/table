@@ -52,10 +52,14 @@ const defaultColumn = {
   ),
 }
 
-function App() {
+function App(props) {
   const [data, setData] = React.useState(makeData)
-  const columns = React.useMemo(
-    () => [
+
+  const columns = React.useMemo(() => {
+    if (props.columns) {
+      return props.columns
+    }
+    return [
       {
         Header: 'Name',
         columns: [
@@ -90,9 +94,8 @@ function App() {
           },
         ],
       },
-    ],
-    []
-  )
+    ]
+  }, [props.columns])
 
   const {
     getTableProps,
@@ -177,6 +180,8 @@ test('renders a filterable table', async () => {
   const globalFilterInput = rendered.getByPlaceholderText('Global search...')
   const filterInputs = rendered.getAllByPlaceholderText('Search...')
 
+  expect(filterInputs).toHaveLength(6)
+
   fireEvent.change(filterInputs[1], { target: { value: 'l' } })
   expect(
     rendered
@@ -242,4 +247,147 @@ test('renders a filterable table', async () => {
     'firstName: joe',
     'firstName: jaylen',
   ])
+})
+
+test('does not filter columns marked as disableFilters', () => {
+  const columns = [
+    {
+      Header: 'Name',
+      columns: [
+        {
+          Header: 'First Name',
+          accessor: 'firstName',
+          disableFilters: true,
+        },
+        {
+          Header: 'Last Name',
+          accessor: 'lastName',
+          disableFilters: true,
+        },
+      ],
+    },
+    {
+      Header: 'Info',
+      columns: [
+        {
+          Header: 'Age',
+          accessor: 'age',
+        },
+        {
+          Header: 'Visits',
+          accessor: 'visits',
+        },
+        {
+          Header: 'Status',
+          accessor: 'status',
+        },
+        {
+          Header: 'Profile Progress',
+          accessor: 'progress',
+        },
+      ],
+    },
+  ]
+  const rendered = render(<App columns={columns} />)
+
+  const filterInputs = rendered.getAllByPlaceholderText('Search...')
+
+  expect(filterInputs).toHaveLength(4)
+
+  // should be Age column
+  fireEvent.change(filterInputs[0], { target: { value: '45' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual(['firstName: joe'])
+
+  fireEvent.change(filterInputs[0], { target: { value: '' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: jaylen',
+  ])
+})
+
+test('does not filter columns with GlobalFilter if marked disableGlobalFilter', () => {
+  const columns = [
+    {
+      Header: 'Name',
+      columns: [
+        {
+          Header: 'First Name',
+          accessor: 'firstName',
+          disableGlobalFilter: true,
+        },
+        {
+          Header: 'Last Name',
+          accessor: 'lastName',
+          disableGlobalFilter: true,
+        },
+      ],
+    },
+    {
+      Header: 'Info',
+      columns: [
+        {
+          Header: 'Age',
+          accessor: 'age',
+        },
+        {
+          Header: 'Visits',
+          accessor: 'visits',
+        },
+        {
+          Header: 'Status',
+          accessor: 'status',
+        },
+        {
+          Header: 'Profile Progress',
+          accessor: 'progress',
+        },
+      ],
+    },
+  ]
+  const rendered = render(<App columns={columns} />)
+
+  const globalFilterInput = rendered.getByPlaceholderText('Global search...')
+
+  fireEvent.change(globalFilterInput, { target: { value: '' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: jaylen',
+  ])
+
+  // global filter shouldn't apply to firstName or lastName
+  fireEvent.change(globalFilterInput, { target: { value: 'li' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual(['firstName: joe'])
+
+  // double check global filter ignore (should ignore joe bergevin)
+  fireEvent.change(globalFilterInput, { target: { value: 'in' } })
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(3)
+      .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual(['firstName: tanner', 'firstName: derek', 'firstName: jaylen'])
 })

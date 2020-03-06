@@ -1,6 +1,10 @@
 import React from 'react'
 
-import { getFilterMethod, shouldAutoRemoveFilter } from '../utils'
+import {
+  getFilterMethod,
+  shouldAutoRemoveFilter,
+  getFirstDefined,
+} from '../utils'
 
 import {
   actions,
@@ -68,6 +72,7 @@ function useInstance(instance) {
     state: { globalFilter: globalFilterValue },
     dispatch,
     autoResetGlobalFilter = true,
+    disableGlobalFilter,
   } = instance
 
   const setGlobalFilter = React.useCallback(
@@ -105,11 +110,23 @@ function useInstance(instance) {
       return rows
     }
 
+    allColumns.forEach(column => {
+      const { disableGlobalFilter: columnDisableGlobalFilter } = column
+
+      column.canFilter = getFirstDefined(
+        columnDisableGlobalFilter === true ? false : undefined,
+        disableGlobalFilter === true ? false : undefined,
+        true
+      )
+    })
+
+    const filterableColumns = allColumns.filter(c => c.canFilter === true)
+
     // Filters top level and nested rows
     const filterRows = filteredRows => {
       filteredRows = filterMethod(
         filteredRows,
-        allColumns.map(d => d.id),
+        filterableColumns.map(d => d.id),
         globalFilterValue
       )
 
@@ -132,10 +149,11 @@ function useInstance(instance) {
     globalFilterValue,
     globalFilter,
     userFilterTypes,
+    allColumns,
     rows,
     flatRows,
     rowsById,
-    allColumns,
+    disableGlobalFilter,
   ])
 
   const getAutoResetGlobalFilter = useGetLatest(autoResetGlobalFilter)
@@ -157,5 +175,6 @@ function useInstance(instance) {
     flatRows: globalFilteredFlatRows,
     rowsById: globalFilteredRowsById,
     setGlobalFilter,
+    disableGlobalFilter,
   })
 }
