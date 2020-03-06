@@ -208,7 +208,3 @@ Please [visit the v6 branch](https://github.com/tannerlinsley/react-table/tree/v
 The differences between the 2 versions are incredibly massive. Unfortunately, I cannot write a one-to-one upgrade guide for any of v6's API, simply because much of it is irrelevant with v7's headless approach. The best approach for migrating to v7 is to learn its API by reading the documentation and then following some of the examples to begin building your own table component.
 
 In case you would need to have both v6 and v7 in one app during the migration process (large codebase, complex use cases), you can either (1) fork and maintain your own local version of React Table v6 or (2) install the [`react-table-6` alias package](https://www.npmjs.com/package/react-table-6) for use alongside the `react-table` package.
-
-#### Additions in this PR
-
-- Added new `disableGlobalFilter` prop at instance and column levels to match functionality in `useFilters` hook and allow for specified columns to be excluded from Global Filter
