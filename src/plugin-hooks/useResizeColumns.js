@@ -1,11 +1,12 @@
 import {
   actions,
   defaultColumn,
-  getFirstDefined,
   makePropGetter,
   useGetLatest,
-} from '../utils'
-import { useConsumeHookGetter } from '../publicUtils'
+  ensurePluginOrder,
+} from '../publicUtils'
+
+import { getFirstDefined } from '../utils'
 
 // Default Column
 defaultColumn.canResize = true
@@ -23,6 +24,7 @@ export const useResizeColumns = hooks => {
     },
   })
   hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
 
@@ -118,6 +120,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
         cursor: 'ew-resize',
       },
       draggable: false,
+      role: 'separator',
     },
   ]
 }
@@ -193,15 +196,11 @@ const useInstanceBeforeDimensions = instance => {
   const {
     flatHeaders,
     disableResizing,
+    getHooks,
     state: { columnResizing },
   } = instance
 
   const getInstance = useGetLatest(instance)
-
-  const getResizerPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getResizerProps'
-  )
 
   flatHeaders.forEach(header => {
     const canResize = getFirstDefined(
@@ -215,12 +214,16 @@ const useInstanceBeforeDimensions = instance => {
     header.isResizing = columnResizing.isResizingColumn === header.id
 
     if (canResize) {
-      header.getResizerProps = makePropGetter(getResizerPropsHooks(), {
+      header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
         instance: getInstance(),
         header,
       })
     }
   })
+}
+
+function useInstance({ plugins }) {
+  ensurePluginOrder(plugins, ['useAbsoluteLayout'], 'useResizeColumns')
 }
 
 function getLeafHeaders(header) {

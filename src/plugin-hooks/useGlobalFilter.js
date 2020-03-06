@@ -1,14 +1,14 @@
 import React from 'react'
 
+import { getFilterMethod, shouldAutoRemoveFilter } from '../utils'
+
 import {
   actions,
-  getFilterMethod,
   useMountedLayoutEffect,
   functionalUpdate,
   useGetLatest,
-  shouldAutoRemoveFilter,
-  ensurePluginOrder,
-} from '../utils'
+} from '../publicUtils'
+
 import * as filterTypes from '../filterTypes'
 
 // Actions
@@ -60,20 +60,15 @@ function useInstance(instance) {
     data,
     rows,
     flatRows,
-    flatColumns,
+    rowsById,
+    allColumns,
     filterTypes: userFilterTypes,
     globalFilter,
     manualGlobalFilter,
     state: { globalFilter: globalFilterValue },
     dispatch,
-    autoResetGlobalFilters = true,
-    plugins,
+    autoResetGlobalFilter = true,
   } = instance
-
-  ensurePluginOrder(plugins, [], 'useGlobalFilter', [
-    'useSortBy',
-    'useExpanded',
-  ])
 
   const setGlobalFilter = React.useCallback(
     filterValue => {
@@ -87,12 +82,17 @@ function useInstance(instance) {
   // cache for each row group (top-level rows, and each row's recursive subrows)
   // This would make multi-filtering a lot faster though. Too far?
 
-  const [globalFilteredRows, globalFilteredFlatRows] = React.useMemo(() => {
+  const [
+    globalFilteredRows,
+    globalFilteredFlatRows,
+    globalFilteredRowsById,
+  ] = React.useMemo(() => {
     if (manualGlobalFilter || typeof globalFilterValue === 'undefined') {
-      return [rows, flatRows]
+      return [rows, flatRows, rowsById]
     }
 
     const filteredFlatRows = []
+    const filteredRowsById = {}
 
     const filterMethod = getFilterMethod(
       globalFilter,
@@ -107,38 +107,41 @@ function useInstance(instance) {
 
     // Filters top level and nested rows
     const filterRows = filteredRows => {
-      return filterMethod(
+      filteredRows = filterMethod(
         filteredRows,
-        flatColumns.map(d => d.id),
+        allColumns.map(d => d.id),
         globalFilterValue
-      ).map(row => {
-        filteredFlatRows.push(row)
+      )
 
-        return {
-          ...row,
-          subRows:
-            row.subRows && row.subRows.length
-              ? filterRows(row.subRows)
-              : row.subRows,
-        }
+      filteredRows.forEach(row => {
+        filteredFlatRows.push(row)
+        filteredRowsById[row.id] = row
+
+        row.subRows =
+          row.subRows && row.subRows.length
+            ? filterRows(row.subRows)
+            : row.subRows
       })
+
+      return filteredRows
     }
 
-    return [filterRows(rows), filteredFlatRows]
+    return [filterRows(rows), filteredFlatRows, filteredRowsById]
   }, [
     manualGlobalFilter,
+    globalFilterValue,
     globalFilter,
     userFilterTypes,
     rows,
     flatRows,
-    flatColumns,
-    globalFilterValue,
+    rowsById,
+    allColumns,
   ])
 
-  const getAutoResetGlobalFilters = useGetLatest(autoResetGlobalFilters)
+  const getAutoResetGlobalFilter = useGetLatest(autoResetGlobalFilter)
 
   useMountedLayoutEffect(() => {
-    if (getAutoResetGlobalFilters()) {
+    if (getAutoResetGlobalFilter()) {
       dispatch({ type: actions.resetGlobalFilter })
     }
   }, [dispatch, manualGlobalFilter ? null : data])
@@ -146,10 +149,13 @@ function useInstance(instance) {
   Object.assign(instance, {
     preGlobalFilteredRows: rows,
     preGlobalFilteredFlatRows: flatRows,
+    preGlobalFilteredRowsById: rowsById,
     globalFilteredRows,
     globalFilteredFlatRows,
+    globalFilteredRowsById,
     rows: globalFilteredRows,
     flatRows: globalFilteredFlatRows,
+    rowsById: globalFilteredRowsById,
     setGlobalFilter,
   })
 }

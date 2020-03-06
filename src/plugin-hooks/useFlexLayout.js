@@ -1,5 +1,5 @@
 export function useFlexLayout(hooks) {
-  hooks.getTableBodyProps.push(getTableBodyProps)
+  hooks.getTableProps.push(getTableProps)
   hooks.getRowProps.push(getRowStyles)
   hooks.getHeaderGroupProps.push(getRowStyles)
   hooks.getHeaderProps.push(getHeaderProps)
@@ -8,7 +8,7 @@ export function useFlexLayout(hooks) {
 
 useFlexLayout.pluginName = 'useFlexLayout'
 
-const getTableBodyProps = (props, { instance }) => [
+const getTableProps = (props, { instance }) => [
   props,
   {
     style: {
@@ -33,7 +33,9 @@ const getHeaderProps = (props, { column }) => [
   {
     style: {
       boxSizing: 'border-box',
-      flex: column.totalFlexWidth ? `${column.totalFlexWidth} 0 auto` : undefined,
+      flex: column.totalFlexWidth
+        ? `${column.totalFlexWidth} 0 auto`
+        : undefined,
       minWidth: `${column.totalMinWidth}px`,
       width: `${column.totalWidth}px`,
     },

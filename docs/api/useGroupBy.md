@@ -38,12 +38,18 @@ The following options are supported on any `Column` object passed to the `column
   - Receives the table instance and cell model as props
   - Must return valid JSX
   - This function (or component) formats this column's value when it is being grouped and aggregated, eg. If this column was showing the number of visits for a user to a website and it was currently being grouped to show an **average** of the values, the `Aggregated` function for this column could format that value to `1,000 Avg. Visits`
-- `aggregate: String | [String, String] | Function(values, rows, isAggregated: Bool) => any`
+- `aggregate: String | Function(leafValues, aggregatedValues) => any`
+  - Optional
+  - Used to aggregate values across rows, eg. `average`-ing the ages of many cells in a table"
   - If a single `String` is passed, it must be the key of either a user defined or predefined `aggregations` function.
-  - If a tuple array of `[String, String]` is passed, both must be a key of either a user defined or predefined `aggregations` function.
-    - The first is used to aggregate raw values, eg. `sum`-ing raw values together
-    - The second is used to aggregate values that have already been aggregated, eg. `average`-ing the sums produced by the raw aggregation level
-  - If a `Function` is passed, this function will receive the `values`, original `rows` of those values, and an `isAggregated` `Bool` of whether or not the values and rows have already been aggregated.
+  - If a `Function` is passed, this function will receive both the leaf-row values and (if the rows have already been aggregated, the previously aggregated values) to be aggregated into a single value.
+  - The function signature for all aggregation functions is `(leafValues, aggregatedValues) => aggregatedValue` where `leafValues` is a flat array containing all leaf rows currently grouped at the aggregation level and `aggregatedValues` is an array containing the aggregated values from the immediate child sub rows. Each has purpose in the types of aggregations they power where optimizations are made for either accuracy or performance.
+  - For examples on how an aggregation functions work, see the source code for the built in aggregations in the [src/aggregations.js](../../src/aggregations.js) file.
+- `aggregateValue: String | Function(values, row, column) => any`
+  - Optional
+  - When attempting to group/aggregate non primitive cell values (eg. arrays of items) you will likely need to resolve a stable primitive value like a number or string to use in normal row aggregations. This property can be used to aggregate or simply access the value to be used in aggregations eg. `count`-ing the unique number of items in a cell's array value before `sum`-ing that count across the table.
+  - If a single `String` is passed, it must be the key of either a user defined or predefined `aggregations` function.
+  - If a `Function` is passed, this function will receive the cell's accessed value, the original `row` object and the `column` associated with the cell
 - `disableGroupBy: Boolean`
   - Defaults to `false`
   - If `true`, will disable grouping for this column.
@@ -92,6 +98,8 @@ The following properties are available on every `Row` object returned by the tab
   - This object contains the **aggregated** values for this row's sub rows
 - `subRows: Array<Row>`
   - If the row is a materialized group row, this property is the array of materialized subRows that were grouped inside of this row.
+- `leafRows: Array<Row>`
+  - If the row is a materialized group row, this property is an array containing all leaf node rows aggregated into this row.
 - `depth: Int`
   - If the row is a materialized group row, this is the grouping depth at which this row was created.
 - `id: String`
@@ -108,7 +116,7 @@ The following additional properties are available on every `Cell` object returne
 
 - `isGrouped: Bool`
   - If `true`, this cell is a grouped cell, meaning it contains a grouping value and should usually display and expander.
-- `isRepeatedValue: Bool`
+- `isPlaceholder: Bool`
   - If `true`, this cell is a repeated value cell, meaning it contains a value that is already being displayed elsewhere (usually by a parent row's cell).
   - Most of the time, this cell is not required to be displayed and can safely be hidden during rendering
 - `isAggregated: Bool`

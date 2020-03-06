@@ -120,6 +120,11 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
         </a>
       </td>
+       <td align="center" valign="middle">
+        <a href="https://tripwire.com" target="_blank">
+          <img width='225' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg">
+        </a>
+      </td>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
           Become a Sponsor!
@@ -163,16 +168,18 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
       <td>
         <ul>
-        <li>Hugo Meissner</li>
-        <li>Benoit Leger-Derville</li>
-        <li>Thomas Funk</li>
-        <li>David Pickut</li>
-        <li>Jordan Soltman</li>
-        <li>Robert Tajnšek</li>
-        <li>Eric Lanehart (@pushred)</li>
-        <li>Anish P Patel (@anishpatelyaadada)</li>
-        <li>Alin Porumb (@alinporumb)</li>
-        <li>Janus Reith (@janus-reith)</li>
+          <li>Hugo Meissner</li>
+          <li>Benoit Leger-Derville</li>
+          <li>Thomas Funk</li>
+          <li>David Pickut</li>
+          <li>Jordan Soltman</li>
+          <li>Robert Tajnšek</li>
+          <li>Eric Lanehart (@pushred)</li>
+          <li>Anish P Patel (@anishpatelyaadada)</li>
+          <li>Alin Porumb (@alinporumb)</li>
+          <li>Janus Reith (@janus-reith)</li>
+          <li>Timo Mämecke (@timomeh)</li>
+          <li>Tyler Reiff (@reiff12)</li>
         </ul>
       </td>
       <td>

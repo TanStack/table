@@ -5,11 +5,12 @@ import React from 'react'
 import {
   actions,
   ensurePluginOrder,
-  expandRows,
   functionalUpdate,
   useMountedLayoutEffect,
   useGetLatest,
-} from '../utils'
+} from '../publicUtils'
+
+import { expandRows } from '../utils'
 
 const pluginName = 'usePagination'
 
@@ -76,7 +77,15 @@ function useInstance(instance) {
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: { pageSize, pageIndex, expanded, globalFilter, filters, groupBy, sortBy },
+    state: {
+      pageSize,
+      pageIndex,
+      expanded,
+      globalFilter,
+      filters,
+      groupBy,
+      sortBy,
+    },
     dispatch,
     data,
     manualPagination,
@@ -89,8 +98,7 @@ function useInstance(instance) {
   ensurePluginOrder(
     plugins,
     ['useGlobalFilter', 'useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
-    'usePagination',
-    []
+    'usePagination'
   )
 
   const getAutoResetPage = useGetLatest(autoResetPage)
@@ -102,10 +110,10 @@ function useInstance(instance) {
   }, [
     dispatch,
     manualPagination ? null : data,
-    manualPagination || manualGlobalFilter ? null : globalFilter,
-    manualPagination || manualFilters ? null : filters,
-    manualPagination || manualGroupBy ? null : groupBy,
-    manualPagination || manualSortBy ? null : sortBy,
+    manualGlobalFilter ? null : globalFilter,
+    manualFilters ? null : filters,
+    manualGroupBy ? null : groupBy,
+    manualSortBy ? null : sortBy,
   ])
 
   const pageCount = manualPagination
