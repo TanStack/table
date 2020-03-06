@@ -38,9 +38,9 @@
     "package.json",
     "README.md"
   ],
+  "browserslist": "> 0.25%, not dead",
   "peerDependencies": {
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3"
+    "react": "^16.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -94,15 +94,7 @@
     "rollup-plugin-size": "^0.2.1",
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
+    "@babel/plugin-transform-runtime": "^7.8.3",
     "serve": "^11.2.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    }
-  },
-  "browserslist": "> 0.25%, not dead",
-  "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.8.3"
   }
 }
