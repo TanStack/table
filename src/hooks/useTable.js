@@ -420,6 +420,22 @@ export const useTable = (props, ...plugins) => {
 
   getInstance().footerGroups = [...getInstance().headerGroups].reverse()
 
+  let columnOrderForCells = React.useMemo(
+    () =>
+      reduceHooks(getHooks().columnOrderForCells, visibleColumns, {
+        instance: getInstance(),
+      }),
+    [
+      getHooks,
+      getInstance,
+      visibleColumns,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...reduceHooks(getHooks().columnOrderForCellsDeps, [], {
+        instance: getInstance(),
+      }),
+    ]
+  )
+
   // The prepareRow function is absolutely necessary and MUST be called on
   // any rows the user wishes to be displayed.
 
@@ -453,14 +469,14 @@ export const useTable = (props, ...plugins) => {
         return cell
       })
 
-      row.cells = visibleColumns.map(column =>
+      row.cells = columnOrderForCells.map(column =>
         row.allCells.find(cell => cell.column.id === column.id)
       )
 
       // need to apply any row specific hooks (useExpanded requires this)
       loopHooks(getHooks().prepareRow, row, { instance: getInstance() })
     },
-    [getHooks, getInstance, allColumns, visibleColumns]
+    [getHooks, getInstance, allColumns, columnOrderForCells]
   )
 
   getInstance().getTableProps = makePropGetter(getHooks().getTableProps, {

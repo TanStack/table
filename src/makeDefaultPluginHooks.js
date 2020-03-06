@@ -59,6 +59,8 @@ export default function makeDefaultPluginHooks() {
     useInstanceAfterData: [],
     visibleColumns: [],
     visibleColumnsDeps: [],
+    columnOrderForCells: [],
+    columnOrderForCellsDeps: [],
     headerGroups: [],
     headerGroupsDeps: [],
     useInstanceBeforeDimensions: [],
