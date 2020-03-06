@@ -124,9 +124,6 @@ function Table({ columns, data }) {
         <pre>
           <code>{JSON.stringify(state.columnPin, null, 2)}</code>
         </pre>
-        <pre>
-          <code>{JSON.stringify(state.columnOrder, null, 2)}</code>
-        </pre>
       </div>
     </>
   )
