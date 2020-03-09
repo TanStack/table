@@ -1,7 +1,9 @@
 import React from 'react'
+import { renderHook, act } from '@testing-library/react-hooks'
 import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
 import { usePagination } from '../usePagination'
+import { useFilters } from '../useFilters'
 
 const data = [...new Array(1000)].map((d, i) => ({
   firstName: `tanner ${i + 1}`,
@@ -11,6 +13,43 @@ const data = [...new Array(1000)].map((d, i) => ({
   status: 'In Relationship',
   progress: 50,
 }))
+
+const columns = [
+  {
+    Header: 'Name',
+    columns: [
+      {
+        Header: 'First Name',
+        accessor: 'firstName',
+      },
+      {
+        Header: 'Last Name',
+        accessor: 'lastName',
+      },
+    ],
+  },
+  {
+    Header: 'Info',
+    columns: [
+      {
+        Header: 'Age',
+        accessor: 'age',
+      },
+      {
+        Header: 'Visits',
+        accessor: 'visits',
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+      },
+      {
+        Header: 'Profile Progress',
+        accessor: 'progress',
+      },
+    ],
+  },
+]
 
 function Table({ columns, data }) {
   const {
@@ -114,46 +153,6 @@ function Table({ columns, data }) {
 }
 
 function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
   return <Table columns={columns} data={data} />
 }
 
@@ -184,4 +183,54 @@ test('renders a paginated table', () => {
       .slice(2)
       .reverse()[0].children[0].textContent
   ).toEqual('tanner 30')
+})
+
+describe('usePagination', () => {
+  test('renders a paginated table', () => {
+    const rendered = render(<App />)
+
+    expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 21')
+
+    fireEvent.click(rendered.getByText('>'))
+    expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 31')
+
+    fireEvent.click(rendered.getByText('>'))
+    expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 41')
+
+    fireEvent.click(rendered.getByText('>>'))
+    expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 991')
+
+    fireEvent.click(rendered.getByText('<<'))
+    expect(rendered.queryAllByRole('cell')[0].textContent).toEqual('tanner 1')
+
+    fireEvent.change(rendered.getByTestId('page-size-select'), {
+      target: { value: 30 },
+    })
+
+    expect(
+      rendered
+        .queryAllByRole('row')
+        .slice(2)
+        .reverse()[0].children[0].textContent
+    ).toEqual('tanner 30')
+  })
+
+  test('changing filters resets pagination', async () => {
+    const { result } = renderHook(() =>
+      useTable(
+        {
+          columns,
+          data,
+        },
+        useFilters,
+        usePagination
+      )
+    )
+
+    act(() => result.current.nextPage())
+    act(() => result.current.nextPage())
+    expect(result.current.state.pageIndex).toEqual(2)
+    act(() => result.current.visibleColumns[0].setFilter('tanner'))
+    expect(result.current.state.pageIndex).toEqual(0)
+  })
 })
