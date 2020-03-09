@@ -5,7 +5,6 @@ import {
   ensurePluginOrder,
   defaultColumn,
   makePropGetter,
-  defaultOrderByFn,
   useGetLatest,
   useMountedLayoutEffect,
 } from '../publicUtils'
@@ -358,5 +357,19 @@ function useInstance(instance) {
     rows: sortedRows,
     flatRows: sortedFlatRows,
     toggleSortBy,
+  })
+}
+
+export function defaultOrderByFn(arr, funcs, dirs) {
+  return [...arr].sort((rowA, rowB) => {
+    for (let i = 0; i < funcs.length; i += 1) {
+      const sortFn = funcs[i]
+      const desc = dirs[i] === false || dirs[i] === 'desc'
+      const sortInt = sortFn(rowA, rowB)
+      if (sortInt !== 0) {
+        return desc ? -sortInt : sortInt
+      }
+    }
+    return dirs[0] ? rowA.index - rowB.index : rowB.index - rowA.index
   })
 }
