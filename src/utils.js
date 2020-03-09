@@ -65,14 +65,6 @@ export function assignColumnAccessor(column) {
   return column
 }
 
-// Find the depth of the columns
-export function dedupeBy(arr, fn) {
-  return [...arr]
-    .reverse()
-    .filter((d, i, all) => all.findIndex(dd => fn(dd) === fn(d)) === i)
-    .reverse()
-}
-
 export function decorateColumn(column, userDefaultColumn) {
   if (!userDefaultColumn) {
     throw new Error()

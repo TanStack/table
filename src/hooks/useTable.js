@@ -9,7 +9,6 @@ import {
   unpreparedAccessWarning,
   makeHeaderGroups,
   decorateColumn,
-  dedupeBy,
 } from '../utils'
 
 import {
@@ -184,7 +183,7 @@ export const useTable = (props, ...plugins) => {
   getInstance().allColumns = allColumns
 
   // Access the row model using initial columns
-  const coreDataModel = React.useMemo(() => {
+  const [rows, flatRows, rowsById] = React.useMemo(() => {
     let rows = []
     let flatRows = []
     const rowsById = {}
@@ -206,68 +205,17 @@ export const useTable = (props, ...plugins) => {
       })
     }
 
-    return { rows, flatRows, rowsById }
+    return [rows, flatRows, rowsById]
   }, [allColumns, data, getRowId, getSubRows, getHooks, getInstance])
-
-  // Allow materialized columns to also access data
-  const [rows, flatRows, rowsById, materializedColumns] = React.useMemo(() => {
-    const { rows, flatRows, rowsById } = coreDataModel
-    const materializedColumns = reduceHooks(
-      getHooks().materializedColumns,
-      [],
-      {
-        instance: getInstance(),
-      }
-    )
-
-    materializedColumns.forEach(d => assignColumnAccessor(d))
-
-    const materializedColumnsQueue = [...materializedColumns]
-
-    while (materializedColumnsQueue.length) {
-      const column = materializedColumnsQueue.shift()
-      accessRowsForColumn({
-        data,
-        rows,
-        flatRows,
-        rowsById,
-        column,
-        getRowId,
-        getSubRows,
-        accessValueHooks: getHooks().accessValue,
-        getInstance,
-      })
-    }
-
-    return [rows, flatRows, rowsById, materializedColumns]
-  }, [
-    coreDataModel,
-    getHooks,
-    getInstance,
-    data,
-    getRowId,
-    getSubRows,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ...reduceHooks(getHooks().materializedColumnsDeps, [], {
-      instance: getInstance(),
-    }),
-  ])
 
   Object.assign(getInstance(), {
     rows,
     flatRows,
     rowsById,
-    materializedColumns,
+    // materializedColumns,
   })
 
   loopHooks(getHooks().useInstanceAfterData, getInstance())
-
-  // Combine new materialized columns with all columns (dedupe prefers later columns)
-  allColumns = React.useMemo(
-    () => dedupeBy([...allColumns, ...materializedColumns], d => d.id),
-    [allColumns, materializedColumns]
-  )
-  getInstance().allColumns = allColumns
 
   // Get the flat list of all columns AFTER the rows
   // have been access, and allow hooks to decorate
@@ -290,11 +238,33 @@ export const useTable = (props, ...plugins) => {
   )
 
   // Combine new visible columns with all columns (dedupe prefers later columns)
-  allColumns = React.useMemo(
-    () => dedupeBy([...allColumns, ...visibleColumns], d => d.id),
-    [allColumns, visibleColumns]
-  )
+  allColumns = React.useMemo(() => {
+    const columns = [...allColumns]
+
+    visibleColumns.forEach(column => {
+      if (!columns.find(d => d.id === column.id)) {
+        columns.push(column)
+      }
+    })
+
+    return columns
+  }, [allColumns, visibleColumns])
   getInstance().allColumns = allColumns
+
+  if (process.env.NODE_ENV !== 'production') {
+    const duplicateColumns = allColumns.filter((column, i) => {
+      return allColumns.findIndex(d => d.id === column.id) !== i
+    })
+
+    if (duplicateColumns.length) {
+      console.info(allColumns)
+      throw new Error(
+        `Duplicate columns were found with ids: "${duplicateColumns
+          .map(d => d.id)
+          .join(', ')}" in the columns array above`
+      )
+    }
+  }
 
   // Make the headerGroups
   const headerGroups = React.useMemo(
