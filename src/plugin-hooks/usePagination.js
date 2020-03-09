@@ -89,10 +89,6 @@ function useInstance(instance) {
     dispatch,
     data,
     manualPagination,
-    manualGlobalFilter,
-    manualFilters,
-    manualGroupBy,
-    manualSortBy,
   } = instance
 
   ensurePluginOrder(
@@ -105,15 +101,16 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetPage()) {
+      console.log('reset')
       dispatch({ type: actions.resetPage })
     }
   }, [
     dispatch,
     manualPagination ? null : data,
-    manualGlobalFilter ? null : globalFilter,
-    manualFilters ? null : filters,
-    manualGroupBy ? null : groupBy,
-    manualSortBy ? null : sortBy,
+    globalFilter,
+    filters,
+    groupBy,
+    sortBy,
   ])
 
   const pageCount = manualPagination

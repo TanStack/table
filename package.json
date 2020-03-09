@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/runtime": "^7.7.2",
@@ -50,6 +51,7 @@
     "@testing-library/dom": "^6.10.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^3.2.1",
     "babel-eslint": "9.x",
     "babel-jest": "^24.9.0",
     "core-js": "3.4.1",
@@ -80,6 +82,7 @@
     "prop-types": "^15.5.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-test-renderer": "^16.13.0",
     "rollup": "^1.27.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -88,7 +91,6 @@
     "rollup-plugin-size": "^0.2.1",
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
-    "@babel/plugin-transform-runtime": "^7.8.3",
     "serve": "^11.2.0"
   }
 }
