@@ -101,7 +101,6 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetPage()) {
-      console.log('reset')
       dispatch({ type: actions.resetPage })
     }
   }, [
