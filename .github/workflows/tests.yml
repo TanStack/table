@@ -1,4 +1,4 @@
-name: react-query tests
+name: react-table tests
 
 on:
   push:
