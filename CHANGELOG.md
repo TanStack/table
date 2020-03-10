@@ -1,3 +1,15 @@
+## 7.0.0 🎉
+
+- Fixed an issue where page options array could be empty
+- Fixed an issue where duplicate columns would be silently deduped. There is now a warning when duplicate columns are found based on their IDs
+- Moved some functions around so they will get treeshaked with their respective plugins that use them.
+- Fixed an issue where filters, sorting, or grouping changes would not reset pagination
+- Added table and column level options for disabling global filters
+- Fixed an issue where row selection was not deselecting rows
+- Fixed an issue where flex table rendering was not giving the table a minimum width with necessary
+- Fixed an issue where row selection would not work when using other row-transformative plugins like filters or grouping
+- Fixed an issue where header groups were not memoized correctly
+
 ## 7.0.0-rc.16
 
 - Moved away from snapshot tests. No more testing implementation details.
