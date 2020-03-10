@@ -5,7 +5,7 @@ import { useTable } from '../../hooks/useTable'
 import { usePagination } from '../usePagination'
 import { useFilters } from '../useFilters'
 
-const data = [...new Array(1000)].map((d, i) => ({
+const data = [...new Array(1000)].fill(null).map((d, i) => ({
   firstName: `tanner ${i + 1}`,
   lastName: 'linsley',
   age: 29,
