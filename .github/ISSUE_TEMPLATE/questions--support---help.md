@@ -1,7 +1,9 @@
 ---
 name: Questions, Support & Help
 about: Looking for help? Need a question answered?
----# STOP
+---
+
+# STOP
 
 We do not use Github to track general support. Please use our public support forum at https://github.com/tannerlinsley/react-table/discussions.
 
