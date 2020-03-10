@@ -117,7 +117,10 @@ function useInstance(instance) {
     : Math.ceil(rows.length / pageSize)
 
   const pageOptions = React.useMemo(
-    () => (pageCount > 0 ? [...new Array(pageCount)].map((d, i) => i) : []),
+    () =>
+      pageCount > 0
+        ? [...new Array(pageCount)].fill(null).map((d, i) => i)
+        : [],
     [pageCount]
   )
 
