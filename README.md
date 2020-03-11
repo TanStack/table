@@ -83,7 +83,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='225' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+          <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
         </a>
       </td>
       <td align="center" valign="middle">
@@ -127,7 +127,12 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
        <td align="center" valign="middle">
         <a href="https://tripwire.com" target="_blank">
-          <img width='225' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg">
+          <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg">
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://www.fream.pl/" target="_blank">
+          <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png">
         </a>
       </td>
       <td align="center" valign="middle">
