@@ -237,11 +237,11 @@ export const useTable = (props, ...plugins) => {
     ]
   )
 
-  // Combine new visible columns with all columns (dedupe prefers later columns)
+  // Combine new visible columns with all columns
   allColumns = React.useMemo(() => {
-    const columns = [...allColumns]
+    const columns = [...visibleColumns]
 
-    visibleColumns.forEach(column => {
+    allColumns.forEach(column => {
       if (!columns.find(d => d.id === column.id)) {
         columns.push(column)
       }
