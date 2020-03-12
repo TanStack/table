@@ -1,7 +1,7 @@
 export function sum(values, aggregatedValues) {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
-  return aggregatedValues.reduce(
+  return (aggregatedValues || values).reduce(
     (sum, next) => sum + (typeof next === 'number' ? next : 0),
     0
   )
