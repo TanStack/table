@@ -47,6 +47,7 @@
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/runtime": "^7.7.2",
+    "@scarf/scarf": "^0.1.1",
     "@svgr/rollup": "^4.3.3",
     "@testing-library/dom": "^6.10.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -92,5 +93,8 @@
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
     "serve": "^11.2.0"
+  },
+  "scarfSettings": {
+    "defaultOptIn": false
   }
 }

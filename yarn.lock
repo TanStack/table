@@ -992,6 +992,11 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@scarf/scarf@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@scarf/scarf/-/scarf-0.1.1.tgz#ab9bdfb4439f7934f616ae9725adb04ff4237784"
+  integrity sha512-ZQVMR79JRFGBhdxyjV15+84T9N2YCw65ilteutQ+/ZV08NUoyaxZZqd2qHGZ0cAMtEYZHtAtBh2OUB7PwhsKbg==
+
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
