@@ -58,6 +58,13 @@ The following additional properties are available on every **prepared** `row` ob
 - `toggleRowSelected: Function(?set)`
   - Use this function to toggle this row's selected state.
   - Optionally pass `true` or `false` to set it to that state
+- `getToggleRowSelectedProps: Function(props) => props`
+  - Use this function to get the props needed for a **select row checkbox**.
+  - Props:
+    - `onChange: Function()`
+    - `style.cursor: 'pointer'`
+    - `checked: Bool`
+    - `title: 'Toggle Row Selected'`
 
 ### Example
 

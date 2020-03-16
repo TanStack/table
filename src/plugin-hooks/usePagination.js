@@ -89,10 +89,6 @@ function useInstance(instance) {
     dispatch,
     data,
     manualPagination,
-    manualGlobalFilter,
-    manualFilters,
-    manualGroupBy,
-    manualSortBy,
   } = instance
 
   ensurePluginOrder(
@@ -110,10 +106,10 @@ function useInstance(instance) {
   }, [
     dispatch,
     manualPagination ? null : data,
-    manualGlobalFilter ? null : globalFilter,
-    manualFilters ? null : filters,
-    manualGroupBy ? null : groupBy,
-    manualSortBy ? null : sortBy,
+    globalFilter,
+    filters,
+    groupBy,
+    sortBy,
   ])
 
   const pageCount = manualPagination
@@ -121,7 +117,10 @@ function useInstance(instance) {
     : Math.ceil(rows.length / pageSize)
 
   const pageOptions = React.useMemo(
-    () => (pageCount > 0 ? [...new Array(pageCount)].map((d, i) => i) : []),
+    () =>
+      pageCount > 0
+        ? [...new Array(pageCount)].fill(null).map((d, i) => i)
+        : [],
     [pageCount]
   )
 

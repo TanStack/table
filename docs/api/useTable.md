@@ -25,6 +25,11 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - The initial state object for hidden columns
   - If a column's ID is contained in this array, it will be hidden
+- `autoResetHiddenColumns: Boolean`
+  - Defaults to `true`
+  - When `true`, the `hiddenColumns` state will automatically reset if any of the following conditions are met:
+    - `columns` is changed
+  - To disable, set to `false`
 - `stateReducer: Function(newState, action, prevState) => newState`
   - Optional
   - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
@@ -73,6 +78,7 @@ The following options are supported on any column object you can pass to `column
   - The data returned by an accessor should be **primitive** and sortable.
   - If a string is passed, the column's value will be looked up on the original row via that key, eg. If your column's accessor is `firstName` then its value would be read from `row['firstName']`. You can also specify deeply nested values with accessors like `info.hobbies` or even `address[0].street`
   - If a function is passed, the column's value will be looked up on the original row using this accessor function, eg. If your column's accessor is `row => row.firstName`, then its value would be determined by passing the row to this function and using the resulting value.
+  - Technically speaking, this field isn't required if you have a unique `id` for a column. This is used for things like expander or row selection columns. **Warning**: Only omit `accessor` if you really know what you're doing.
 - `id: String`
   - **Required if `accessor` is a function**
   - This is the unique ID for the column. It is used by reference in things like sorting, grouping, filtering etc.

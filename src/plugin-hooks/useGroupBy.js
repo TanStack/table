@@ -7,7 +7,6 @@ import { getFirstDefined, flattenBy } from '../utils'
 import {
   actions,
   makePropGetter,
-  defaultGroupByFn,
   ensurePluginOrder,
   useMountedLayoutEffect,
   useGetLatest,
@@ -407,4 +406,15 @@ function prepareRow(row) {
     // Aggregated cells are not grouped, not repeated, but still have subRows
     cell.isAggregated = !cell.isGrouped && !cell.isPlaceholder && row.canExpand
   })
+}
+
+export function defaultGroupByFn(rows, columnId) {
+  return rows.reduce((prev, row, i) => {
+    // TODO: Might want to implement a key serializer here so
+    // irregular column values can still be grouped if needed?
+    const resKey = `${row.values[columnId]}`
+    prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
+    prev[resKey].push(row)
+    return prev
+  }, {})
 }

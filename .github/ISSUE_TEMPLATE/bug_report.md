@@ -3,18 +3,13 @@ name: Bug report
 about: Create a report to help us improve
 ---
 
-# Using v6?
-
-v6 is now considered feature complete to its current abilities and limitations. We are not actively working to fix any issues for v6 any more. We will, however, merge any non-breaking pull requests submitted to fix anything in v6.
-
-# Using v7?
-
-Thanks for using the beta version of React Table v7! We're very excited about it.
-
-**Describe the bug**
+**Describe the bug (required)**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+**Provide an example via Codesandbox! (required)**
+Use a new [react-table codesandbox](https://codesandbox.io/s/m5lxzzpz69) to reproduce the issue.
+
+**Steps To Reproduce (required)**
 Steps to reproduce the behavior:
 
 1. Go to '...'
@@ -22,11 +17,8 @@ Steps to reproduce the behavior:
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+**Expected behavior (Recommended)**
 A clear and concise description of what you expected to happen.
-
-**Codesandbox!**
-Use a new [react-table codesandbox](https://codesandbox.io/s/m5lxzzpz69) to reproduce the issue.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.

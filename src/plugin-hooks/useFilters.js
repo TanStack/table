@@ -237,19 +237,17 @@ function useInstance(instance) {
       // We technically could do this recursively in the above loop,
       // but that would severely hinder the API for the user, since they
       // would be required to do that recursion in some scenarios
-      filteredRows = filteredRows.map(row => {
+      filteredRows.forEach(row => {
         filteredFlatRows.push(row)
         filteredRowsById[row.id] = row
         if (!row.subRows) {
-          return row
+          return
         }
-        return {
-          ...row,
-          subRows:
-            row.subRows && row.subRows.length > 0
-              ? filterRows(row.subRows, depth + 1)
-              : row.subRows,
-        }
+
+        row.subRows =
+          row.subRows && row.subRows.length > 0
+            ? filterRows(row.subRows, depth + 1)
+            : row.subRows
       })
 
       return filteredRows
