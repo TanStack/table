@@ -1,0 +1,12 @@
+{
+  "name": "docz-app",
+  "license": "MIT",
+  "dependencies": {
+    "gatsby": "just-to-fool-cli-never-installed"
+  },
+  "scripts": {
+    "dev": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve"
+  }
+}

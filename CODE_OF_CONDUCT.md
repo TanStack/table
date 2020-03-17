@@ -1,3 +1,8 @@
+---
+name: Code of Conduct
+route: /code-of-conduct
+---
+
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge

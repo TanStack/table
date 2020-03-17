@@ -1,3 +1,8 @@
+---
+name: Contributing
+route: /contributing
+---
+
 # Contributing
 
 ## Questions

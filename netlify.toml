@@ -1,0 +1,5 @@
+# COMMENT: This is a rule for Single Page Apps. Docz site is one...
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200

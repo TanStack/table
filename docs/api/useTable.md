@@ -1,3 +1,9 @@
+---
+name: useTable
+route: /api/useTable
+menu: API
+---
+
 # `useTable`
 
 - Required

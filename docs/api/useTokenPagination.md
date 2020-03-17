@@ -1,3 +1,9 @@
+---
+name: useTokenPagination
+route: /api/useTokenPagination
+menu: API
+---
+
 # `useTokenPagination (Coming Soon)`
 
 - Plugin Hook

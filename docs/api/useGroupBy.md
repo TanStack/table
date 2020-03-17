@@ -1,3 +1,9 @@
+---
+name: useGroupBy
+route: /api/useGroupBy
+menu: API
+---
+
 # `useGroupBy`
 
 - Plugin Hook

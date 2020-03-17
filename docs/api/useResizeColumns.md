@@ -1,3 +1,9 @@
+---
+name: useResizeColumns
+route: /api/useResizeColumns
+menu: API
+---
+
 # `useResizeColumns`
 
 - Plugin Hook

@@ -1,3 +1,9 @@
+---
+name: useExpanded
+route: /api/useExpanded
+menu: API
+---
+
 # `useExpanded`
 
 - Plugin Hook

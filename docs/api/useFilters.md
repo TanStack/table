@@ -1,3 +1,9 @@
+---
+name: useFilters
+route: /api/useFilters
+menu: API
+---
+
 # `useFilters`
 
 - Plugin Hook

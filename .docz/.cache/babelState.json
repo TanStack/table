@@ -1,0 +1,117 @@
+{
+  "stages": {
+    "develop": {
+      "plugins": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@babel/plugin-proposal-object-rest-spread/lib/index.js",
+          "options": {}
+        },
+        {
+          "name": "babel-plugin-export-metadata",
+          "options": {
+            "root": "/Users/jasonclark/Source/react-table"
+          }
+        }
+      ],
+      "presets": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@emotion/babel-preset-css-prop/dist/babel-preset-css-prop.cjs.js",
+          "options": {
+            "sourceMap": false,
+            "autoLabel": false,
+            "plugins": []
+          }
+        }
+      ],
+      "options": {
+        "cacheDirectory": true,
+        "sourceType": "unambiguous"
+      }
+    },
+    "develop-html": {
+      "plugins": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@babel/plugin-proposal-object-rest-spread/lib/index.js",
+          "options": {}
+        },
+        {
+          "name": "babel-plugin-export-metadata",
+          "options": {
+            "root": "/Users/jasonclark/Source/react-table"
+          }
+        }
+      ],
+      "presets": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@emotion/babel-preset-css-prop/dist/babel-preset-css-prop.cjs.js",
+          "options": {
+            "sourceMap": false,
+            "autoLabel": false,
+            "plugins": []
+          }
+        }
+      ],
+      "options": {
+        "cacheDirectory": true,
+        "sourceType": "unambiguous"
+      }
+    },
+    "build-html": {
+      "plugins": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@babel/plugin-proposal-object-rest-spread/lib/index.js",
+          "options": {}
+        },
+        {
+          "name": "babel-plugin-export-metadata",
+          "options": {
+            "root": "/Users/jasonclark/Source/react-table"
+          }
+        }
+      ],
+      "presets": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@emotion/babel-preset-css-prop/dist/babel-preset-css-prop.cjs.js",
+          "options": {
+            "sourceMap": false,
+            "autoLabel": false,
+            "plugins": []
+          }
+        }
+      ],
+      "options": {
+        "cacheDirectory": true,
+        "sourceType": "unambiguous"
+      }
+    },
+    "build-javascript": {
+      "plugins": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@babel/plugin-proposal-object-rest-spread/lib/index.js",
+          "options": {}
+        },
+        {
+          "name": "babel-plugin-export-metadata",
+          "options": {
+            "root": "/Users/jasonclark/Source/react-table"
+          }
+        }
+      ],
+      "presets": [
+        {
+          "name": "/Users/jasonclark/Source/react-table/node_modules/@emotion/babel-preset-css-prop/dist/babel-preset-css-prop.cjs.js",
+          "options": {
+            "sourceMap": false,
+            "autoLabel": false,
+            "plugins": []
+          }
+        }
+      ],
+      "options": {
+        "cacheDirectory": true,
+        "sourceType": "unambiguous"
+      }
+    }
+  },
+  "browserslist": "> 0.25%, not dead"
+}
