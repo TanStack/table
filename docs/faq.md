@@ -108,13 +108,13 @@ React.useEffect(() => {
 
 useTable({
   ...
-  autoResetPage: !skipPageReset,
-  autoResetExpanded: !skipPageReset,
-  autoResetGroupBy: !skipPageReset,
-  autoResetSelectedRows: !skipPageReset,
-  autoResetSortBy: !skipPageReset,
-  autoResetFilters: !skipPageReset,
-  autoResetRowState: !skipPageReset,
+  autoResetPage: !skipPageResetRef.current,
+  autoResetExpanded: !skipPageResetRef.current,
+  autoResetGroupBy: !skipPageResetRef.current,
+  autoResetSelectedRows: !skipPageResetRef.current,
+  autoResetSortBy: !skipPageResetRef.current,
+  autoResetFilters: !skipPageResetRef.current,
+  autoResetRowState: !skipPageResetRef.current,
 })
 ```
 
