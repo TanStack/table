@@ -81,5 +81,5 @@ The following values are provided to the table `instance`:
   - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
   - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
 - Controlled Pagination
-  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
-  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
+  - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
+  - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
