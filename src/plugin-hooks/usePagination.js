@@ -48,7 +48,7 @@ function reducer(state, action, previousState, instance) {
     const cannnotPreviousPage = newPageIndex < 0
     const cannotNextPage =
       pageCount === -1
-        ? page.length < rows.length
+        ? page.length < state.pageSize
         : newPageIndex > pageCount - 1
 
     if (cannnotPreviousPage || cannotNextPage) {
@@ -159,7 +159,8 @@ function useInstance(instance) {
   ])
 
   const canPreviousPage = pageIndex > 0
-  const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
+  const canNextPage =
+    pageCount === -1 ? page.length >= pageSize : pageIndex < pageCount - 1
 
   const gotoPage = React.useCallback(
     pageIndex => {
