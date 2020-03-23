@@ -48,14 +48,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 ## Documentation
 
-- [Installation](./docs/installation) - Walk through how to install React Table
-- [Concepts](./docs/concepts) - Read how React Table works and how you can use it better
-- [Examples](./docs/examples) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
-- [API](./docs/api) - Get to know React Table's API
-- [FAQ](./docs/faq) - Learn how to use React Table for specific challenges and tasks
-- [Previous Versions](#previous-versions)
-- [Contributing](./CONTRIBUTING.md) - Become familiar with how to contribute back to React Table
-- [Code of Conduct](./CODE_OF_CONDUCT.md) - Be a good React Table citizen by following these repository rules
+Visit our new documentation site at https://react-table.tannerlinsley.com
 
 ## Sponsors
 

@@ -2,7 +2,7 @@
 name: Changelog
 route: /changelog
 ---
-# react-table Changelog
+# React Table Changelog
 
 ## 7.0.0 🎉
 
