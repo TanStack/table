@@ -1,3 +1,9 @@
+---
+name: useBlocklayout
+route: /api/useBlocklayout
+menu: API
+---
+
 # `useBlocklayout`
 
 - Plugin Hook

@@ -1,3 +1,9 @@
+---
+name: Changelog
+route: /changelog
+---
+# React Table Changelog
+
 ## 7.0.0 🎉
 
 - Fixed an issue where page options array could be empty

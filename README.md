@@ -1,3 +1,8 @@
+---
+name: Getting Started
+route: /
+---
+
 ![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/header.png)
 
 <img src='https://github.com/tannerlinsley/react-table/raw/master/media/logo.png' width='300'/>
@@ -5,7 +10,7 @@
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
 <a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
-  <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack">
+  <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack" />
 </a><a href="https://github.com/tannerlinsley/react-table/actions?table=workflow%3A%22react-table+tests%22">
 <img src="https://github.com/tannerlinsley/react-table/workflows/react-table%20tests/badge.svg" />
 </a><a href="https://npmjs.com/package/react-table" target="\_parent">
@@ -43,14 +48,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 ## Documentation
 
-- [Installation](./docs/installation.md) - Walk through how to install React Table
-- [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
-- [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
-- [API](./docs/api/README.md) - Get to know React Table's API
-- [FAQ](./docs/faq.md) - Learn how to use React Table for specific challenges and tasks
-- [Previous Versions](#previous-versions)
-- [Contributing](./CONTRIBUTING.md) - Become familiar with how to contribute back to React Table
-- [Code of Conduct](./CODE_OF_CONDUCT.md) - Be a good React Table citizen by following these repository rules
+Visit our new documentation site at https://react-table.tannerlinsley.com
 
 ## Sponsors
 
@@ -61,7 +59,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/diamond.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/diamond.png" />
         </a>
       </td>
       <td align="center" valign="middle">
@@ -78,12 +76,12 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png" />
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png">
+          <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
         </a>
       </td>
       <td align="center" valign="middle">
@@ -100,12 +98,12 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png" />
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width='225' src="https://nozzle.io/img/logo-blue.png">
+          <img width='225' src="https://nozzle.io/img/logo-blue.png" />
         </a>
       </td>
       <td align="center" valign="middle">
@@ -122,17 +120,17 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <tr>
       <td align="center" valign="middle">
         <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png">
+          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png" />
         </a>
       </td>
        <td align="center" valign="middle">
         <a href="https://tripwire.com" target="_blank">
-          <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg">
+          <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
         </a>
       </td>
       <td align="center" valign="middle">
         <a href="https://www.fream.pl/" target="_blank">
-          <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png">
+          <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
         </a>
       </td>
       <td align="center" valign="middle">

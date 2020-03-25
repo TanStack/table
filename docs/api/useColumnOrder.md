@@ -1,3 +1,9 @@
+---
+name: useColumnOrder
+route: /api/useColumnOrder
+menu: API
+---
+
 # `useColumnOrder`
 
 - Plugin Hook

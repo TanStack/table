@@ -26,7 +26,10 @@
     "prepare": "yarn build",
     "release": "yarn publish",
     "releaseNext": "yarn publish --tag next",
-    "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write"
+    "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
+    "docz:build": "docz build",
+    "docz:dev": "docz dev",
+    "docz:serve": "docz build && docz serve"
   },
   "files": [
     "CHANGELOG.md",
@@ -95,5 +98,9 @@
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
     "serve": "^11.2.0"
+  },
+  "dependencies": {
+    "docz": "^2.2.0",
+    "gatsby-theme-docz": "^2.2.0"
   }
 }

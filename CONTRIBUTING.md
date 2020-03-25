@@ -1,3 +1,8 @@
+---
+name: Contributing
+route: /contributing
+---
+
 # Contributing
 
 ## Questions
@@ -23,6 +28,6 @@ If you have been assigned to fix an issue or develop a new feature, please follo
 - Implement your changes and tests to files in the `src/` directory and corresponding test files
 - To run examples, follow their individual directions. Usually this is just `$ yarn && yarn start`.
 - To run examples using your local build, link to the local `react-table` by running `$ yarn link react-table` from the example's directory
-- Document your changes in the root `README.md`
+- Document your changes in the appropriate doc page
 - To stage a commit, run `yarn commit`
 - Submit PR for review

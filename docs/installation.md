@@ -1,3 +1,8 @@
+---
+name: Installation
+route: /installation
+---
+
 # Installation
 
 Install React Table as a dependency using `npm` or `yarn`
@@ -30,4 +35,4 @@ import {
 } from 'react-table'
 ```
 
-Once you've installed React Table, continue to [Concepts](./concepts.md) to read more about how to utilize its API
+Once you've installed React Table, continue to [Concepts](./concepts) to read more about how to utilize its API

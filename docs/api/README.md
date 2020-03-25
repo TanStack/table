@@ -1,3 +1,9 @@
+---
+name: Overview
+route: /api
+menu: API
+---
+
 # API
 
 React Table uses React Hooks both internally and externally for almost all of its configuration and lifecycle management. Naturally, this is what allows React Table to be headless and lightweight while still having a concise and simple API.
@@ -5,24 +11,24 @@ React Table uses React Hooks both internally and externally for almost all of it
 React Table is essentially a compatible collection of **custom React hooks**:
 
 - The primary React Table hook
-  - [`useTable`](./useTable.md)
+  - [`useTable`](./api/useTable)
 - Plugin Hooks
   - Core Plugin Hooks
-    - [`useGroupBy`](./useGroupBy.md)
-    - [`useFilters`](./useFilters.md)
-    - [`useGlobalFilter`](./useGlobalFilter.md)
-    - [`useSortBy`](./useSortBy.md)
-    - [`useExpanded`](./useExpanded.md)
-    - [`usePagination`](./usePagination.md)
-    - [`useTokenPagination` (Coming Soon)](./useTokenPagination.md)
-    - [`useRowSelect`](./useRowSelect.md)
-    - [`useRowState`](./useRowState.md)
-    - [`useColumnOrder`](./useColumnOrder.md)
+    - [`useGroupBy`](./api/useGroupBy)
+    - [`useFilters`](./api/useFilters)
+    - [`useGlobalFilter`](./api/useGlobalFilter)
+    - [`useSortBy`](./api/useSortBy)
+    - [`useExpanded`](./api/useExpanded)
+    - [`usePagination`](./api/usePagination)
+    - [`useTokenPagination` (Coming Soon)](./api/useTokenPagination)
+    - [`useRowSelect`](./api/useRowSelect)
+    - [`useRowState`](./api/useRowState)
+    - [`useColumnOrder`](./api/useColumnOrder)
   - Layout Hooks
-    - [`useBlockLayout`](./useBlockLayout.md)
-    - [`useAbsoluteLayout`](./useAbsoluteLayout.md)
-    - [`useFlexLayout`](./useFlexLayout.md)
-    - [`useResizeColumns`](./useResizeColumns.md)
+    - [`useBlockLayout`](./api/useBlockLayout)
+    - [`useAbsoluteLayout`](./api/useAbsoluteLayout)
+    - [`useFlexLayout`](./api/useFlexLayout)
+    - [`useResizeColumns`](./api/useResizeColumns)
 - 3rd Party Plugin Hooks
   - Want your custom plugin hook listed here? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
 
