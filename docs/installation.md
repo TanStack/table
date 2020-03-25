@@ -1,6 +1,6 @@
 # Installation
 
-Install React Table as a dependency using `npm` or `yarn`. 
+Install React Table as a dependency using `npm` or `yarn`
 
 ```bash
 # NPM
