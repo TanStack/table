@@ -48,7 +48,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 ## Documentation
 
-Visit our new documentation site at https://react-table.tannerlinsley.com
+Visit our new documentation site at https://react-table.js.org
 
 ## Sponsors
 
