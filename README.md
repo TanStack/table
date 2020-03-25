@@ -188,7 +188,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <li>Janus Reith (@janus-reith)</li>
           <li>Timo Mämecke (@timomeh)</li>
           <li>Tyler Reiff (@reiff12)</li>
-          <li>Matt Stvartak (@mattstvartak)</>
+          <li>Matt Stvartak (@mattstvartak)</li>
         </ul>
       </td>
       <td>

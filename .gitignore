@@ -13,7 +13,4 @@ react-table.css
 .vscode
 package-lock.json
 coverage
-.docz/.cache
-.docz/app
-.docz/node_modules
-.docz/public
+.docz
