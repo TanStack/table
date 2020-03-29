@@ -1,5 +1,4 @@
 import React from 'react'
-import Papa from 'papaparse'
 
 import { getFirstDefined } from '../utils'
 
@@ -22,6 +21,10 @@ const defaultGetExportCellValue = (row, col) => {
   return row.values[col.id]
 }
 
+const defaultGetExportFileBlob = () => {
+  throw new Error('React Table: Export Blob is mandatory')
+}
+
 export const useExportData = hooks => {
   hooks.useInstance.push(useInstance)
 }
@@ -35,6 +38,7 @@ function useInstance(instance) {
     allColumns,
     disableExport,
     getExportFileName = defaultGetExportFileName,
+    getExportFileBlob = defaultGetExportFileBlob,
   } = instance
 
   // Adding `canExport` meta data
@@ -74,7 +78,9 @@ function useInstance(instance) {
 
       const data = exportableRows.map(row => {
         return colHeader.map(col => {
-          const { getExportCellValue = defaultGetExportCellValue } = col.columnObj
+          const {
+            getExportCellValue = defaultGetExportCellValue,
+          } = col.columnObj
 
           return getExportCellValue(row, col)
         })
@@ -86,30 +92,16 @@ function useInstance(instance) {
 
       const fileName = getExportFileName({ fileType, all })
 
-      exportFile({ data: exportData, fileName, type: fileType })
+      let fileBlob = getExportFileBlob({ data: exportData, fileName, fileType })
+
+      downloadFileViaBlob(fileBlob, fileName, fileType)
     },
-    [getExportFileName, initialRows, rows, allColumns]
+    [getExportFileBlob, getExportFileName, initialRows, rows, allColumns]
   )
 
   Object.assign(instance, {
     exportData,
   })
-}
-
-function exportFile({ data = [], fileName, type }) {
-  let fileBlob = null
-
-  if (type === 'csv') {
-    fileBlob = getCsvBlob(data)
-  } else if (type === 'xlsx') {
-    // Todo
-  }
-  // keep on adding support for different file types here
-  else {
-    console.warn('Not Supported File Type')
-  }
-
-  downloadFileViaBlob(fileBlob, fileName, type)
 }
 
 function downloadFileViaBlob(fileBlob, fileName, type) {
@@ -120,9 +112,4 @@ function downloadFileViaBlob(fileBlob, fileName, type) {
     link.href = dataUrl
     link.click()
   }
-}
-
-function getCsvBlob(data) {
-  const csvString = Papa.unparse(data)
-  return new Blob([csvString], { type: 'text/csv' })
 }

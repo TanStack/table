@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useTable, useSortBy, useFilters, useExportData } from 'react-table'
+import Papa from 'papaparse'
 
 import makeData from './makeData'
 
@@ -54,6 +55,15 @@ const defaultColumn = {
   Filter: DefaultColumnFilter,
 }
 
+function getExportFileBlob({ data, fileType }) {
+  if (fileType === 'csv') {
+    const csvString = Papa.unparse(data)
+    return new Blob([csvString], { type: 'text/csv' })
+  }
+  // Other formats goes here
+  return null
+}
+
 function Table({ columns, data }) {
   const {
     getTableProps,
@@ -67,6 +77,7 @@ function Table({ columns, data }) {
       columns,
       data,
       defaultColumn,
+      getExportFileBlob,
     },
     useFilters,
     useSortBy,
