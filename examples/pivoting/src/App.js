@@ -233,8 +233,8 @@ function App() {
         accessor: d => new Date(d.date),
         sortType: 'basic',
         aggregate: 'count',
-        Cell: ({ cell: { value } }) => (value ? dayjs(value).format('l') : ''),
-        Aggregated: ({ cell: { value } }) => `${value} Orders`,
+        Cell: ({ value }) => (value ? dayjs(value).format('l') : ''),
+        Aggregated: ({ value }) => `${value} Orders`,
       },
       {
         Header: 'Employee',
@@ -260,7 +260,7 @@ function App() {
         Header: 'Unit Cost',
         accessor: 'unitCost',
         aggregate: 'average',
-        Cell: ({ cell: { value } }) =>
+        Cell: ({ value }) =>
           typeof value !== 'undefined' ? (
             <div
               style={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}
@@ -273,7 +273,7 @@ function App() {
         Header: 'Total',
         accessor: 'total',
         aggregate: 'sum',
-        Cell: ({ cell: { value } }) =>
+        Cell: ({ value }) =>
           typeof value !== 'undefined' ? (
             <div
               style={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}

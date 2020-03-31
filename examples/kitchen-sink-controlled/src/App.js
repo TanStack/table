@@ -57,7 +57,7 @@ const Styles = styled.div`
 
 // Create an editable cell renderer
 const EditableCell = ({
-  cell: { value: initialValue },
+  value: initialValue,
   row: { index },
   column: { id },
   updateMyData, // This is a custom function that we supplied to our table instance
@@ -400,8 +400,8 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
           })}
         </tbody>
       </table>
-      {/* 
-        Pagination can be built however you'd like. 
+      {/*
+        Pagination can be built however you'd like.
         This is just a very basic UI implementation:
       */}
       <div className="pagination">
@@ -514,7 +514,7 @@ function App() {
             // then sum any of those counts if they are
             // aggregated further
             aggregate: 'count',
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
+            Aggregated: ({ value }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -526,7 +526,7 @@ function App() {
             // being aggregated, then sum those counts if
             // they are aggregated further
             aggregate: 'uniqueCount',
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
+            Aggregated: ({ value }) => `${value} Unique Names`,
           },
         ],
       },
@@ -540,7 +540,7 @@ function App() {
             filter: 'equals',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
+            Aggregated: ({ value }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
@@ -549,7 +549,7 @@ function App() {
             filter: 'between',
             // Aggregate the sum of all visits
             aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
+            Aggregated: ({ value }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -564,7 +564,7 @@ function App() {
             filter: filterGreaterThan,
             // Use our custom roundedMedian aggregator
             aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
+            Aggregated: ({ value }) => `${value} (med)`,
           },
         ],
       },

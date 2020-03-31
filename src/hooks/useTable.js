@@ -418,6 +418,7 @@ export const useTable = (props, ...plugins) => {
         cell.render = makeRenderer(getInstance(), column, {
           row,
           cell,
+          value: cell.value,
         })
 
         return cell

@@ -7,7 +7,7 @@ export const actions = {
 }
 
 export const defaultColumn = {
-  Cell: ({ cell: { value = '' } }) => value,
+  Cell: ({ value = '' }) => value,
   width: 150,
   minWidth: 0,
   maxWidth: Number.MAX_SAFE_INTEGER,

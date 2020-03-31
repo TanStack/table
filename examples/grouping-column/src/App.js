@@ -260,7 +260,7 @@ function App() {
             // then sum any of those counts if they are
             // aggregated further
             aggregate: 'count',
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
+            Aggregated: ({ value }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -270,7 +270,7 @@ function App() {
             // being aggregated, then sum those counts if
             // they are aggregated further
             aggregate: 'uniqueCount',
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
+            Aggregated: ({ value }) => `${value} Unique Names`,
           },
         ],
       },
@@ -282,14 +282,14 @@ function App() {
             accessor: 'age',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
+            Aggregated: ({ value }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             // Aggregate the sum of all visits
             aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
+            Aggregated: ({ value }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -300,7 +300,7 @@ function App() {
             accessor: 'progress',
             // Use our custom roundedMedian aggregator
             aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
+            Aggregated: ({ value }) => `${value} (med)`,
           },
         ],
       },

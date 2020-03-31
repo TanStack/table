@@ -31,7 +31,7 @@ const data = [
 ]
 
 const defaultColumn = {
-  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
+  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
   width: 200,
   minWidth: 100,
   maxWidth: 300,
