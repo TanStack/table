@@ -43,7 +43,7 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.gotoPage) {
-    const { pageCount, page, rows } = instance
+    const { pageCount, page } = instance
     const newPageIndex = functionalUpdate(action.pageIndex, state.pageIndex)
     const cannnotPreviousPage = newPageIndex < 0
     const cannotNextPage =
