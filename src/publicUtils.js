@@ -210,18 +210,22 @@ export function flexRender(Comp, props) {
   return isReactComponent(Comp) ? <Comp {...props} /> : Comp
 }
 
-function isClassComponent(component) {
+function isReactComponent(component) {
   return (
-    typeof component === 'function' &&
-    !!(() => {
-      let proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isReactComponent
-    })()
+    isClassComponent(component) ||
+    typeof component === 'function' ||
+    isExoticComponent(component)
   )
 }
 
-function isFunctionComponent(component) {
-  return typeof component === 'function'
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' &&
+    (() => {
+      const proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isReactComponent
+    })()
+  )
 }
 
 function isExoticComponent(component) {
@@ -229,13 +233,5 @@ function isExoticComponent(component) {
     typeof component === 'object' &&
     typeof component.$$typeof === 'symbol' &&
     ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
-  )
-}
-
-function isReactComponent(component) {
-  return (
-    isClassComponent(component) ||
-    isFunctionComponent(component) ||
-    isExoticComponent(component)
   )
 }

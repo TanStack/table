@@ -5,7 +5,11 @@ route: /changelog
 
 # React Table Changelog
 
-## 7.0.1 🎉
+## 7.0.2
+
+- Fixed an issue where the internal flexRenderer would not work correctly in production due to the strangest friggin' minification bug I've ever encountered. 🤷‍♂️
+
+## 7.0.1
 
 - Added the `value` property to cell renderers so that destructurin the value from the `cell` property is now not necessary. This should help with people migrating from v6 and also just to cut down on noise in cell renderers
 - Fixed an issue where rollup would not build correctly
