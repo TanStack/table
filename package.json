@@ -26,7 +26,10 @@
     "prepare": "yarn build",
     "release": "yarn publish",
     "releaseNext": "yarn publish --tag next",
-    "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write"
+    "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
+    "docz:build": "docz build",
+    "docz:dev": "docz dev",
+    "docz:serve": "docz build && docz serve"
   },
   "files": [
     "CHANGELOG.md",
@@ -38,6 +41,9 @@
     "README.md"
   ],
   "browserslist": "> 0.25%, not dead",
+  "dependencies": {
+    "@scarf/scarf": "^0.1.3"
+  },
   "peerDependencies": {
     "react": "^16.8.3"
   },
@@ -92,5 +98,9 @@
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
     "serve": "^11.2.0"
+  },
+  "dependencies": {
+    "docz": "^2.2.0",
+    "gatsby-theme-docz": "^2.2.0"
   }
 }

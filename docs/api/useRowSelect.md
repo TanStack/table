@@ -1,3 +1,9 @@
+---
+name: useRowSelect
+route: /api/useRowSelect
+menu: API
+---
+
 # `useRowSelect`
 
 - Plugin Hook

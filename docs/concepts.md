@@ -1,3 +1,8 @@
+---
+name: Concepts
+route: /concepts
+---
+
 # Concepts
 
 ## React Table is a "headless" UI library
@@ -23,11 +28,11 @@ At the heart of every React Table is the `useTable` hook and the table `instance
 
 ## Rendering your own UI
 
-As of React Table v7, **you the developer** are responsible for rendering your own UI, but don't let that intimidate you! Table UIs are fun and React Table makes it so easy to wire up your own table UI. The easiest way to learn how to build your own table UI is to [see some existing React Table examples](./examples.md)!
+As of React Table v7, **you the developer** are responsible for rendering your own UI, but don't let that intimidate you! Table UIs are fun and React Table makes it so easy to wire up your own table UI. The easiest way to learn how to build your own table UI is to [see some existing React Table examples](./examples)!
 
 ---
 
 After reading about React Table's concepts, you should:
-
-- [Check Out Some Examples](./examples.md)
-- [Study the API](./api/README.md)
+- [Follow the Quick Start](./quickstart)
+- [Check Out Some Examples](./examples)
+- [Study the API](./api)

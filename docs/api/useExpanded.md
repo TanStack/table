@@ -1,3 +1,9 @@
+---
+name: useExpanded
+route: /api/useExpanded
+menu: API
+---
+
 # `useExpanded`
 
 - Plugin Hook
@@ -33,7 +39,7 @@ The following options are supported via the main options object passed to `useTa
   - When `true`, the `expanded` state will automatically reset if any of the following conditions are met:
     - `data` is changed
   - To disable, set to `false`
-  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq.md#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
+  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 
 ### Instance Properties
 
