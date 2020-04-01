@@ -71,4 +71,4 @@ The order and usage of plugin hooks must follow The Laws of Hooks, just like any
 
 ### Option Memoization
 
-React Table relies on memoization to determine when state and side effects should update or be calculated. This means that every option you pass to `useTable` should be memoized either via `React.useMemo` (for objects) or `React.useCallback` (for functions).
+React Table relies on memoization to determine when state and side effects should update or be calculated. This means that every option you pass to `useTable` should be memoized either via [`React.useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo) (for objects) or [`React.useCallback`](https://reactjs.org/docs/hooks-reference.html#usecallback) (for functions).
