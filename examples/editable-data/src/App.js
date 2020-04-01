@@ -46,7 +46,7 @@ const Styles = styled.div`
 
 // Create an editable cell renderer
 const EditableCell = ({
-  cell: { value: initialValue },
+  value: initialValue,
   row: { index },
   column: { id },
   updateMyData, // This is a custom function that we supplied to our table instance

@@ -48,7 +48,7 @@ const data = [
 ]
 
 const defaultColumn = {
-  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
+  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
   Filter: ({ filterValue, setFilter }) => (
     <input
       value={filterValue || ''}
@@ -160,14 +160,14 @@ function App() {
             Header: 'First Name',
             accessor: 'firstName',
             aggregate: 'count',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `First Name Aggregated: ${value} Names`,
           },
           {
             Header: 'Last Name',
             accessor: 'lastName',
             aggregate: 'uniqueCount',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Last Name Aggregated: ${value} Unique Names`,
           },
         ],
@@ -179,14 +179,14 @@ function App() {
             Header: 'Age',
             accessor: 'age',
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Age Aggregated: ${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Visits Aggregated: ${value} (total)`,
           },
           {
@@ -194,7 +194,7 @@ function App() {
             id: 'minVisits',
             accessor: 'visits',
             aggregate: 'min',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Visits Aggregated: ${value} (min)`,
           },
           {
@@ -202,7 +202,7 @@ function App() {
             id: 'maxVisits',
             accessor: 'visits',
             aggregate: 'max',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Visits Aggregated: ${value} (max)`,
           },
           {
@@ -210,14 +210,14 @@ function App() {
             id: 'minMaxVisits',
             accessor: 'visits',
             aggregate: 'minMax',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Visits Aggregated: ${value} (minMax)`,
           },
           {
             Header: 'Status',
             accessor: 'status',
             aggregate: 'unique',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Visits Aggregated: ${value.join(', ')} (unique)`,
           },
           {
@@ -225,7 +225,7 @@ function App() {
             accessor: 'progress',
             id: 'progress',
             aggregate: 'median',
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Process Aggregated: ${value} (median)`,
           },
           {
@@ -233,7 +233,7 @@ function App() {
             accessor: 'progress',
             id: 'progressRounded',
             aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) =>
+            Aggregated: ({ value }) =>
               `Process Aggregated: ${value} (rounded median)`,
           },
         ],

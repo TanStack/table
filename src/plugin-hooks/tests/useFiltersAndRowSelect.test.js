@@ -106,7 +106,7 @@ function Table({ columns, data }) {
 }
 
 const defaultColumn = {
-  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
+  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
   Filter: ({ column: { filterValue, setFilter } }) => (
     <input
       value={filterValue || ''}
