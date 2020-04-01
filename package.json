@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Hooks for building lightweight, fast and extendable datagrids for React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table#readme",
@@ -42,7 +42,8 @@
   ],
   "browserslist": "> 0.25%, not dead",
   "dependencies": {
-    "@scarf/scarf": "^0.1.3"
+    "docz": "^2.2.0",
+    "gatsby-theme-docz": "^2.2.0"
   },
   "peerDependencies": {
     "react": "^16.8.3"
@@ -98,9 +99,5 @@
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
     "serve": "^11.2.0"
-  },
-  "dependencies": {
-    "docz": "^2.2.0",
-    "gatsby-theme-docz": "^2.2.0"
   }
 }
