@@ -2,7 +2,14 @@
 name: Changelog
 route: /changelog
 ---
+
 # React Table Changelog
+
+## 7.0.1 🎉
+
+- Added the `value` property to cell renderers so that destructurin the value from the `cell` property is now not necessary. This should help with people migrating from v6 and also just to cut down on noise in cell renderers
+- Fixed an issue where rollup would not build correctly
+- Fixed an issue where a page index of `-1` would result in an error
 
 ## 7.0.0 🎉
 
