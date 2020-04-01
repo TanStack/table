@@ -29,7 +29,8 @@
     "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
     "docz:build": "docz build",
     "docz:dev": "docz dev",
-    "docz:serve": "docz build && docz serve"
+    "docz:serve": "docz build && docz serve",
+    "postinstall": "node ./scripts/postinstall.js || exit 0"
   },
   "files": [
     "CHANGELOG.md",
