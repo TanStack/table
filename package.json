@@ -37,8 +37,6 @@
     "src/**/*.js",
     "index.d.ts",
     "dist",
-    "LICENCE",
-    "package.json",
     "README.md",
     "scripts/"
   ],
