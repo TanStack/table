@@ -5,6 +5,11 @@ route: /changelog
 
 # React Table Changelog
 
+## 7.0.3
+
+- Fixed an issue where unnecessary documentation dependencies were added when installing the library
+- Fixed an issue where the `scripts` directory was not added to the npm package on build
+
 ## 7.0.2
 
 - Fixed an issue where the internal flexRenderer would not work correctly in production due to the strangest friggin' minification bug I've ever encountered. 🤷‍♂️
