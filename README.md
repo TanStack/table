@@ -103,7 +103,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
       <td align="center" valign="middle">
         <a href="https://nozzle.io" target="_blank">
-          <img width='225' src="https://nozzle.io/img/logo-blue.png" />
+          <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Enterprise Rank Tracking" />
         </a>
       </td>
       <td align="center" valign="middle">
