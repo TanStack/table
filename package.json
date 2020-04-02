@@ -41,6 +41,9 @@
     "scripts/"
   ],
   "browserslist": "> 0.25%, not dead",
+  "dependencies": {
+    "@scarf/scarf": "^0.1.5"
+  },
   "peerDependencies": {
     "react": "^16.8.3"
   },
