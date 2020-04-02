@@ -42,10 +42,6 @@
     "README.md"
   ],
   "browserslist": "> 0.25%, not dead",
-  "dependencies": {
-    "docz": "^2.2.0",
-    "gatsby-theme-docz": "^2.2.0"
-  },
   "peerDependencies": {
     "react": "^16.8.3"
   },
@@ -64,6 +60,7 @@
     "babel-jest": "^24.9.0",
     "core-js": "3.4.1",
     "cross-env": "^6.0.3",
+    "docz": "^2.2.0",
     "eslint": "6.6.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-config-react-app": "^5.0.2",
@@ -78,6 +75,7 @@
     "eslint-plugin-react": "7.16.0",
     "eslint-plugin-react-hooks": "2.3.0",
     "eslint-plugin-standard": "^4.0.1",
+    "gatsby-theme-docz": "^2.2.0",
     "is-ci-cli": "^2.0.0",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
