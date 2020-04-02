@@ -5,6 +5,10 @@ route: /changelog
 
 # React Table Changelog
 
+## 7.0.4
+
+- Fixed a regression where @scarf/scarf was somehow removed from the package dependencies
+
 ## 7.0.3
 
 - Fixed an issue where unnecessary documentation dependencies were added when installing the library
