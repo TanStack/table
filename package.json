@@ -37,9 +37,8 @@
     "src/**/*.js",
     "index.d.ts",
     "dist",
-    "LICENCE",
-    "package.json",
-    "README.md"
+    "README.md",
+    "scripts/"
   ],
   "browserslist": "> 0.25%, not dead",
   "peerDependencies": {
