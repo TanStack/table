@@ -13,7 +13,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'ReactQuery',
+      name: 'ReactTable',
       file: 'dist/react-table.development.js',
       format: 'umd',
       sourcemap: true,
@@ -25,7 +25,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'ReactQuery',
+      name: 'ReactTable',
       file: 'dist/react-table.production.min.js',
       format: 'umd',
       sourcemap: true,
