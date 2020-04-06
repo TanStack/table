@@ -50,7 +50,39 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 Visit our new documentation site at https://react-table.js.org
 
-## Sponsors
+## React-Table used in Products
+
+The examples below are built by our partners from Creative Tim (https://creative-tim.com/?ref=react-table.js.org) and demonstrate how React Table can be integrated in real world applications. There are many examples that you can play with and each premium product comes with a free & open source version, too!
+
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href='https://www.creative-tim.com/product/material-dashboard-pro-react?ref=react-table.js.org'>
+          <div>Material Dashboard PRO React</div>
+          <img src="https://s3.amazonaws.com/creativetim_bucket/products/80/original/opt_mdp_react_thumbnail.jpg?1522160852" />
+        </a>
+        <div>Price: 59$</div>
+      </td>
+      <td>
+        <a href='https://www.creative-tim.com/product/black-dashboard-pro-react?ref=react-table.js.org'>
+          <div>Black Dashboard PRO React</div>
+          <img src="https://s3.amazonaws.com/creativetim_bucket/products/138/original/opt_bdp_thumbnail.jpg?1547454513" />
+        </a>
+        <div>Price: 59$</div>
+      </td>
+      <td>
+        <a href='https://www.creative-tim.com/product/now-ui-dashboard-pro-react?ref=react-table.js.org'>
+          <div>Now UI Dashboard PRO React</div>
+          <img src="https://s3.amazonaws.com/creativetim_bucket/products/73/original/opt_nudp_react_thumbnail.jpg?1518533306" />
+        </a>
+        <div>Price: 59$</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Github Sponsors
 
 This library is being built and maintained by me, @tannerlinsley and I am always in need of more support to keep this project afloat. If you would like to get additional support, add your logo or name on this README, or simply just contribute to my open source Sponsorship goal, [visit my Github Sponsors page!](https://github.com/sponsors/tannerlinsley/)
 
