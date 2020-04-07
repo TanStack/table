@@ -46,7 +46,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - Server-side/controlled data/state
 - Extensible via hook-based plugin system
 
-## React-Table used in Products
+## Product Examples
 
 The examples below are built by our partners from [Creative Tim](https://creative-tim.com/?ref=react-table.js.org) and demonstrate how React Table can be integrated in real world applications. There are many examples that you can play with and each premium product comes with a free & open source version, too!
 
