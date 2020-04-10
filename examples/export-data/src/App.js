@@ -86,7 +86,7 @@ function getExportFileBlob({ columns, data, fileType, fileName }) {
   }
 
   // Other formats goes here
-  return null
+  return false
 }
 
 function Table({ columns, data }) {
