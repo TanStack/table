@@ -86,13 +86,14 @@ function useInstance(instance) {
         })
       })
 
-      const headerNames = colHeader.map(col => col.name)
-
-      const exportData = { fields: headerNames, data }
-
       const fileName = getExportFileName({ fileType, all })
 
-      let fileBlob = getExportFileBlob({ data: exportData, fileName, fileType })
+      let fileBlob = getExportFileBlob({
+        columns: colHeader,
+        data,
+        fileName,
+        fileType,
+      })
 
       downloadFileViaBlob(fileBlob, fileName, fileType)
     },

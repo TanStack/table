@@ -55,9 +55,11 @@ const defaultColumn = {
   Filter: DefaultColumnFilter,
 }
 
-function getExportFileBlob({ data, fileType }) {
+function getExportFileBlob({ columns, data, fileType }) {
   if (fileType === 'csv') {
-    const csvString = Papa.unparse(data)
+    const headerNames = columns.map(col => col.name)
+    const exportData = { fields: headerNames, data }
+    const csvString = Papa.unparse(exportData)
     return new Blob([csvString], { type: 'text/csv' })
   }
   // Other formats goes here
