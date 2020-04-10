@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { getFirstDefined } from '../utils'
+import { ensurePluginOrder } from '../publicUtils'
 
 // Get exported file name(do not specify extension here)
 const defaultGetExportFileName = ({ fileType, all }) => {
@@ -39,7 +40,14 @@ function useInstance(instance) {
     disableExport,
     getExportFileName = defaultGetExportFileName,
     getExportFileBlob = defaultGetExportFileBlob,
+    plugins,
   } = instance
+
+  ensurePluginOrder(
+    plugins,
+    ['useColumnOrder', 'useColumnVisibility', 'useFilters', 'useSortBy'],
+    'useExportData'
+  )
 
   // Adding `canExport` & `exportValue` meta data
   allColumns.forEach(column => {
