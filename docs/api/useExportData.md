@@ -19,10 +19,11 @@ The following options are supported via the main options object passed to `useTa
 
 - `disableExport: Bool`
   - Disables exporting of data at table level.
-- `getExportFileBlob: Function({ columns, data, fileType }) => FileBlob`
+- `getExportFileBlob: Function({ columns, data, fileType, fileName }) => FileBlob | false`
   - **Required**
   - This function is used to return data as `FileBlob` which will be downloaded
   - In Above definition `columns` is downloadable columns based on select configuration of `All` Data or `Current` view
+  - Return `false` is downloading of file is already taken care of at consumer level
 - `getExportFileName: Function({ fileType, all }) => string`
   - **Optional**
   - This function is used to overwrite exported file name.

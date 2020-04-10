@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useTable, useSortBy, useFilters, useExportData } from 'react-table'
 import Papa from 'papaparse'
+import XLSX from 'xlsx'
 
 import makeData from './makeData'
 
@@ -55,12 +56,35 @@ const defaultColumn = {
   Filter: DefaultColumnFilter,
 }
 
-function getExportFileBlob({ columns, data, fileType }) {
+function getExportFileBlob({ columns, data, fileType, fileName }) {
   if (fileType === 'csv') {
+    // CSV example
     const headerNames = columns.map(col => col.exportValue)
     const csvString = Papa.unparse({ fields: headerNames, data })
     return new Blob([csvString], { type: 'text/csv' })
+  } else if (fileType === 'xlsx') {
+    // XLSX example
+
+    const header = columns.map(c => c.exportValue)
+    const compatibleData = data.map(row => {
+      const obj = {}
+      header.forEach((col, index) => {
+        obj[col] = row[index]
+      })
+      return obj
+    })
+
+    let wb = XLSX.utils.book_new()
+    let ws1 = XLSX.utils.json_to_sheet(compatibleData, {
+      header,
+    })
+    XLSX.utils.book_append_sheet(wb, ws1, 'React Table Data')
+    XLSX.writeFile(wb, `${fileName}.xlsx`)
+
+    // Returning false as downloading of file is already taken care of
+    return false
   }
+
   // Other formats goes here
   return null
 }
@@ -92,14 +116,29 @@ function Table({ columns, data }) {
           exportData('csv', true)
         }}
       >
-        Export All
+        Export All as CSV
       </button>
       <button
         onClick={() => {
           exportData('csv', false)
         }}
       >
-        Export Current View
+        Export Current View as CSV
+      </button>
+
+      <button
+        onClick={() => {
+          exportData('xlsx', true)
+        }}
+      >
+        Export All as xlsx
+      </button>
+      <button
+        onClick={() => {
+          exportData('xlsx', false)
+        }}
+      >
+        Export Current View as xlsx
       </button>
       <table {...getTableProps()}>
         <thead>

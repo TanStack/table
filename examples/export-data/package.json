@@ -14,7 +14,8 @@
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "react-table": "latest",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "xlsx": "^0.15.6"
   },
   "devDependencies": {
     "@rescripts/cli": "^0.0.11",

@@ -101,7 +101,9 @@ function useInstance(instance) {
       })
 
       // Trigger download in browser
-      downloadFileViaBlob(fileBlob, fileName, fileType)
+      if (fileBlob) {
+        downloadFileViaBlob(fileBlob, fileName, fileType)
+      }
     },
     [getExportFileBlob, getExportFileName, initialRows, rows, allColumns]
   )
