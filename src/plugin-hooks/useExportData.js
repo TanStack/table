@@ -8,7 +8,7 @@ const defaultGetExportFileName = ({ fileType, all }) => {
 }
 
 // To get column name while exporting
-const defaultGetExportHeaderValue = col => {
+const defaultGetColumnExportValue = col => {
   let name = col.Header
   if (typeof name === 'object' || typeof name === 'function') {
     name = col.id
@@ -17,7 +17,7 @@ const defaultGetExportHeaderValue = col => {
 }
 
 // To get cell value while exporting
-const defaultGetExportCellValue = (row, col) => {
+const defaultGetCellExportValue = (row, col) => {
   return row.values[col.id]
 }
 
@@ -41,9 +41,12 @@ function useInstance(instance) {
     getExportFileBlob = defaultGetExportFileBlob,
   } = instance
 
-  // Adding `canExport` meta data
+  // Adding `canExport` & `exportValue` meta data
   allColumns.forEach(column => {
-    const { accessor } = column
+    const {
+      accessor,
+      getColumnExportValue = defaultGetColumnExportValue,
+    } = column
 
     const canExport = accessor
       ? getFirstDefined(
@@ -54,47 +57,42 @@ function useInstance(instance) {
       : false
 
     column.canExport = canExport
+    column.exportValue = getColumnExportValue(column)
   })
 
   // This method will enable export of data on `instance` object
   const exportData = React.useCallback(
-    ({ all = false, type: fileType = 'csv' } = {}) => {
-      const colHeader = allColumns
-        .filter(col => col.canExport && (all || col.isVisible))
-        .map(col => {
-          const { getExportHeaderValue = defaultGetExportHeaderValue } = col
+    (fileType, all = false) => {
+      // Columns which are exportable
+      const exportableColumns = allColumns.filter(
+        col => col.canExport && (all || col.isVisible)
+      )
 
-          return { id: col.id, name: getExportHeaderValue(col), columnObj: col }
-        })
-
-      if (colHeader.length === 0) {
+      if (exportableColumns.length === 0) {
         console.warn('No exportable columns are available')
       }
 
-      let exportableRows = rows
-      if (all) {
-        exportableRows = initialRows
-      }
+      // Rows which are exportable
+      let exportableRows = (all ? initialRows : rows).map(row => {
+        return exportableColumns.map(col => {
+          const { getCellExportValue = defaultGetCellExportValue } = col
 
-      const data = exportableRows.map(row => {
-        return colHeader.map(col => {
-          const {
-            getExportCellValue = defaultGetExportCellValue,
-          } = col.columnObj
-
-          return getExportCellValue(row, col)
+          return getCellExportValue(row, col)
         })
       })
 
+      // Getting fileName
       const fileName = getExportFileName({ fileType, all })
 
+      // Get `FileBlob` to download
       let fileBlob = getExportFileBlob({
-        columns: colHeader,
-        data,
+        columns: exportableColumns,
+        data: exportableRows,
         fileName,
         fileType,
       })
 
+      // Trigger download in browser
       downloadFileViaBlob(fileBlob, fileName, fileType)
     },
     [getExportFileBlob, getExportFileName, initialRows, rows, allColumns]

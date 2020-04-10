@@ -57,9 +57,8 @@ const defaultColumn = {
 
 function getExportFileBlob({ columns, data, fileType }) {
   if (fileType === 'csv') {
-    const headerNames = columns.map(col => col.name)
-    const exportData = { fields: headerNames, data }
-    const csvString = Papa.unparse(exportData)
+    const headerNames = columns.map(col => col.exportValue)
+    const csvString = Papa.unparse({ fields: headerNames, data })
     return new Blob([csvString], { type: 'text/csv' })
   }
   // Other formats goes here
@@ -90,14 +89,14 @@ function Table({ columns, data }) {
     <>
       <button
         onClick={() => {
-          exportData({ all: true })
+          exportData('csv', true)
         }}
       >
         Export All
       </button>
       <button
         onClick={() => {
-          exportData()
+          exportData('csv', false)
         }}
       >
         Export Current View

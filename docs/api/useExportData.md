@@ -37,12 +37,12 @@ The following options are supported on any `Column` object passed to the `column
   - Defaults to `false`
   - If set to `true`, this column will not be exported with data
 
--`defaultGetExportHeaderValue: Function(column) => string`
+-`getColumnExportValue: Function(column) => string`
 
 - Optional
 - This function is used to overwrite exported value of Header for this column
 
--`defaultGetExportCellValue: Function(row, column) => string`
+-`getCellExportValue: Function(row, column) => string`
 
 - Optional
 - This function is used to overwrite exported value for this cell
@@ -51,10 +51,10 @@ The following options are supported on any `Column` object passed to the `column
 
 The following values are provided to the table `instance`:
 
-- `exportData: Function({all, type} : {all: boolean, type: string})`
+- `exportData: Function(fileType: string, all: boolean)`
   - This function is used to initiate downloading of data
   - Parameter `all` defined whether you want to download full data or current view only.
-    - `Current view` considers sorted filtered data that is currenlty visible to user.
+    - `Current view` considers sorted, filtered data that is currenlty visible to user.
 
 ### Column Properties
 
