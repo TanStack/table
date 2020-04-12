@@ -35,7 +35,6 @@
   "files": [
     "CHANGELOG.md",
     "src/**/*.js",
-    "index.d.ts",
     "dist",
     "README.md",
     "scripts/"
