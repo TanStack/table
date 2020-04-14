@@ -2,10 +2,6 @@ import React from 'react'
 
 let renderErr = 'Renderer Error ☝️'
 
-export const actions = {
-  init: 'init',
-}
-
 export const defaultColumn = {
   Cell: ({ value = '' }) => value,
   width: 150,

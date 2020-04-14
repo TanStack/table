@@ -7,7 +7,6 @@ import {
 } from '../utils'
 
 import {
-  actions,
   useMountedLayoutEffect,
   functionalUpdate,
   useGetLatest,
@@ -15,49 +14,11 @@ import {
 
 import * as filterTypes from '../filterTypes'
 
-// Actions
-actions.resetGlobalFilter = 'resetGlobalFilter'
-actions.setGlobalFilter = 'setGlobalFilter'
-
 export const useGlobalFilter = hooks => {
-  hooks.stateReducers.push(reducer)
   hooks.useInstance.push(useInstance)
 }
 
 useGlobalFilter.pluginName = 'useGlobalFilter'
-
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.resetGlobalFilter) {
-    return {
-      ...state,
-      globalFilter: instance.initialState.globalFilter || undefined,
-    }
-  }
-
-  if (action.type === actions.setGlobalFilter) {
-    const { filterValue } = action
-    const { userFilterTypes } = instance
-
-    const filterMethod = getFilterMethod(
-      instance.globalFilter,
-      userFilterTypes || {},
-      filterTypes
-    )
-
-    const newFilter = functionalUpdate(filterValue, state.globalFilter)
-
-    //
-    if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
-      const { globalFilter, ...stateWithoutGlobalFilter } = state
-      return stateWithoutGlobalFilter
-    }
-
-    return {
-      ...state,
-      globalFilter: newFilter,
-    }
-  }
-}
 
 function useInstance(instance) {
   const {
@@ -70,16 +31,38 @@ function useInstance(instance) {
     globalFilter,
     manualGlobalFilter,
     state: { globalFilter: globalFilterValue },
-    dispatch,
+    setState,
     autoResetGlobalFilter = true,
     disableGlobalFilter,
   } = instance
 
+  const getInstance = useGetLatest(instance)
+
   const setGlobalFilter = React.useCallback(
-    filterValue => {
-      dispatch({ type: actions.setGlobalFilter, filterValue })
-    },
-    [dispatch]
+    filterValue =>
+      setState(old => {
+        const { userFilterTypes } = getInstance()
+
+        const filterMethod = getFilterMethod(
+          getInstance().globalFilter,
+          userFilterTypes || {},
+          filterTypes
+        )
+
+        const newFilter = functionalUpdate(filterValue, old.globalFilter)
+
+        //
+        if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
+          const { globalFilter, ...stateWithoutGlobalFilter } = old
+          return stateWithoutGlobalFilter
+        }
+
+        return {
+          ...old,
+          globalFilter: newFilter,
+        }
+      }),
+    [getInstance, setState]
   )
 
   // TODO: Create a filter cache for incremental high speed multi-filtering
@@ -160,9 +143,12 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetGlobalFilter()) {
-      dispatch({ type: actions.resetGlobalFilter })
+      setState(old => ({
+        ...old,
+        globalFilter: getInstance().initialState.globalFilter || undefined,
+      }))
     }
-  }, [dispatch, manualGlobalFilter ? null : data])
+  }, [manualGlobalFilter ? null : data])
 
   Object.assign(instance, {
     preGlobalFilteredRows: rows,

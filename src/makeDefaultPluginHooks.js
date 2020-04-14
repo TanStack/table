@@ -47,8 +47,7 @@ const defaultGetCellProps = (props, { cell }) => ({
 export default function makeDefaultPluginHooks() {
   return {
     useOptions: [],
-    stateReducers: [],
-    useControlledState: [],
+    getInitialState: [],
     columns: [],
     columnsDeps: [],
     allColumns: [],

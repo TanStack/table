@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  actions,
   makePropGetter,
   ensurePluginOrder,
   useGetLatest,
@@ -10,15 +9,10 @@ import {
 
 const pluginName = 'useRowSelect'
 
-// Actions
-actions.resetSelectedRows = 'resetSelectedRows'
-actions.toggleAllRowsSelected = 'toggleAllRowsSelected'
-actions.toggleRowSelected = 'toggleRowSelected'
-
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = [defaultGetToggleRowSelectedProps]
   hooks.getToggleAllRowsSelectedProps = [defaultGetToggleAllRowsSelectedProps]
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.useInstance.push(useInstance)
   hooks.prepareRow.push(prepareRow)
 }
@@ -69,92 +63,10 @@ const defaultGetToggleAllRowsSelectedProps = (props, { instance }) => [
   },
 ]
 
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      selectedRowIds: {},
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetSelectedRows) {
-    return {
-      ...state,
-      selectedRowIds: instance.initialState.selectedRowIds || {},
-    }
-  }
-
-  if (action.type === actions.toggleAllRowsSelected) {
-    const { value: setSelected } = action
-    const {
-      isAllRowsSelected,
-      rowsById,
-      nonGroupedRowsById = rowsById,
-    } = instance
-
-    const selectAll =
-      typeof setSelected !== 'undefined' ? setSelected : !isAllRowsSelected
-
-    // Only remove/add the rows that are visible on the screen
-    //  Leave all the other rows that are selected alone.
-    const selectedRowIds = Object.assign({}, state.selectedRowIds)
-
-    if (selectAll) {
-      Object.keys(nonGroupedRowsById).forEach(rowId => {
-        selectedRowIds[rowId] = true
-      })
-    } else {
-      Object.keys(nonGroupedRowsById).forEach(rowId => {
-        delete selectedRowIds[rowId]
-      })
-    }
-
-    return {
-      ...state,
-      selectedRowIds,
-    }
-  }
-
-  if (action.type === actions.toggleRowSelected) {
-    const { id, value: setSelected } = action
-    const { rowsById, selectSubRows = true } = instance
-
-    // Join the ids of deep rows
-    // to make a key, then manage all of the keys
-    // in a flat object
-    const row = rowsById[id]
-    const isSelected = row.isSelected
-    const shouldExist =
-      typeof setSelected !== 'undefined' ? setSelected : !isSelected
-
-    if (isSelected === shouldExist) {
-      return state
-    }
-
-    const newSelectedRowIds = { ...state.selectedRowIds }
-
-    const handleRowById = id => {
-      const row = rowsById[id]
-
-      if (!row.isGrouped) {
-        if (shouldExist) {
-          newSelectedRowIds[id] = true
-        } else {
-          delete newSelectedRowIds[id]
-        }
-      }
-
-      if (selectSubRows && row.subRows) {
-        return row.subRows.forEach(row => handleRowById(row.id))
-      }
-    }
-
-    handleRowById(id)
-
-    return {
-      ...state,
-      selectedRowIds: newSelectedRowIds,
-    }
+function getInitialState(state) {
+  return {
+    selectedRowIds: {},
+    ...state,
   }
 }
 
@@ -169,7 +81,7 @@ function useInstance(instance) {
     autoResetSelectedRows = true,
     state: { selectedRowIds },
     selectSubRows = true,
-    dispatch,
+    setState,
   } = instance
 
   ensurePluginOrder(
@@ -177,6 +89,8 @@ function useInstance(instance) {
     ['useFilters', 'useGroupBy', 'useSortBy'],
     'useRowSelect'
   )
+
+  const getInstance = useGetLatest(instance)
 
   const selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows = []
@@ -208,28 +122,103 @@ function useInstance(instance) {
 
   const getAutoResetSelectedRows = useGetLatest(autoResetSelectedRows)
 
-  useMountedLayoutEffect(() => {
-    if (getAutoResetSelectedRows()) {
-      dispatch({ type: actions.resetSelectedRows })
-    }
-  }, [dispatch, data])
+  const resetSelectedRows = React.useCallback(
+    () =>
+      setState(old => ({
+        ...old,
+        selectedRowIds: getInstance().initialState.selectedRowIds || {},
+      })),
+    [getInstance, setState]
+  )
 
   const toggleAllRowsSelected = React.useCallback(
-    value => dispatch({ type: actions.toggleAllRowsSelected, value }),
-    [dispatch]
+    value =>
+      setState(old => {
+        const {
+          isAllRowsSelected,
+          rowsById,
+          nonGroupedRowsById = rowsById,
+        } = getInstance()
+
+        const selectAll =
+          typeof value !== 'undefined' ? value : !isAllRowsSelected
+
+        // Only remove/add the rows that are visible on the screen
+        //  Leave all the other rows that are selected alone.
+        const selectedRowIds = Object.assign({}, old.selectedRowIds)
+
+        if (selectAll) {
+          Object.keys(nonGroupedRowsById).forEach(rowId => {
+            selectedRowIds[rowId] = true
+          })
+        } else {
+          Object.keys(nonGroupedRowsById).forEach(rowId => {
+            delete selectedRowIds[rowId]
+          })
+        }
+
+        return {
+          ...old,
+          selectedRowIds,
+        }
+      }),
+    [getInstance, setState]
   )
 
   const toggleRowSelected = React.useCallback(
-    (id, value) => dispatch({ type: actions.toggleRowSelected, id, value }),
-    [dispatch]
-  )
+    (id, value) =>
+      setState(old => {
+        const { rowsById, selectSubRows = true } = getInstance()
 
-  const getInstance = useGetLatest(instance)
+        // Join the ids of deep rows
+        // to make a key, then manage all of the keys
+        // in a flat object
+        const row = rowsById[id]
+        const isSelected = row.isSelected
+        const shouldExist = typeof value !== 'undefined' ? value : !isSelected
+
+        if (isSelected === shouldExist) {
+          return old
+        }
+
+        const newSelectedRowIds = { ...old.selectedRowIds }
+
+        const handleRowById = id => {
+          const row = rowsById[id]
+
+          if (!row.isGrouped) {
+            if (shouldExist) {
+              newSelectedRowIds[id] = true
+            } else {
+              delete newSelectedRowIds[id]
+            }
+          }
+
+          if (selectSubRows && row.subRows) {
+            return row.subRows.forEach(row => handleRowById(row.id))
+          }
+        }
+
+        handleRowById(id)
+
+        return {
+          ...old,
+          selectedRowIds: newSelectedRowIds,
+        }
+      }),
+    [getInstance, setState]
+  )
 
   const getToggleAllRowsSelectedProps = makePropGetter(
     getHooks().getToggleAllRowsSelectedProps,
     { instance: getInstance() }
   )
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetSelectedRows()) {
+      resetSelectedRows()
+    }
+  }, [resetSelectedRows, data])
 
   Object.assign(instance, {
     selectedFlatRows,

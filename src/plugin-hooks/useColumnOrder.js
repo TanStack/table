@@ -1,13 +1,9 @@
 import React from 'react'
 
-import { functionalUpdate, actions } from '../publicUtils'
-
-// Actions
-actions.resetColumnOrder = 'resetColumnOrder'
-actions.setColumnOrder = 'setColumnOrder'
+import { functionalUpdate, useGetLatest } from '../publicUtils'
 
 export const useColumnOrder = hooks => {
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.visibleColumnsDeps.push((deps, { instance }) => {
     return [...deps, instance.state.columnOrder]
   })
@@ -17,26 +13,10 @@ export const useColumnOrder = hooks => {
 
 useColumnOrder.pluginName = 'useColumnOrder'
 
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      columnOrder: [],
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetColumnOrder) {
-    return {
-      ...state,
-      columnOrder: instance.initialState.columnOrder || [],
-    }
-  }
-
-  if (action.type === actions.setColumnOrder) {
-    return {
-      ...state,
-      columnOrder: functionalUpdate(action.columnOrder, state.columnOrder),
-    }
+function getInitialState(state) {
+  return {
+    columnOrder: [],
+    ...state,
   }
 }
 
@@ -75,12 +55,25 @@ function visibleColumns(
 }
 
 function useInstance(instance) {
-  const { dispatch } = instance
+  const { setState } = instance
+
+  const getInstance = useGetLatest(instance)
+
+  instance.resetColumnOrder = React.useCallback(
+    () =>
+      setState(old => ({
+        ...old,
+        columnOrder: getInstance().initialState.columnOrder || [],
+      })),
+    [getInstance, setState]
+  )
 
   instance.setColumnOrder = React.useCallback(
-    columnOrder => {
-      return dispatch({ type: actions.setColumnOrder, columnOrder })
-    },
-    [dispatch]
+    columnOrder =>
+      setState(old => ({
+        ...old,
+        columnOrder: functionalUpdate(columnOrder, old.columnOrder),
+      })),
+    [setState]
   )
 }

@@ -14,7 +14,6 @@ import {
 import {
   useGetLatest,
   reduceHooks,
-  actions,
   loopHooks,
   makePropGetter,
   makeRenderer,
@@ -26,11 +25,9 @@ import { useColumnVisibility } from './useColumnVisibility'
 
 const defaultInitialState = {}
 const defaultColumnInstance = {}
-const defaultReducer = (state, action, prevState) => state
 const defaultGetSubRows = (row, index) => row.subRows || []
 const defaultGetRowId = (row, index, parent) =>
   `${parent ? [parent.id, index].join('.') : index}`
-const defaultUseControlledState = d => d
 
 function applyDefaults(props) {
   const {
@@ -38,8 +35,6 @@ function applyDefaults(props) {
     defaultColumn = defaultColumnInstance,
     getSubRows = defaultGetSubRows,
     getRowId = defaultGetRowId,
-    stateReducer = defaultReducer,
-    useControlledState = defaultUseControlledState,
     ...rest
   } = props
 
@@ -49,8 +44,6 @@ function applyDefaults(props) {
     defaultColumn,
     getSubRows,
     getRowId,
-    stateReducer,
-    useControlledState,
   }
 }
 
@@ -97,52 +90,18 @@ export const useTable = (props, ...plugins) => {
     defaultColumn,
     getSubRows,
     getRowId,
-    stateReducer,
-    useControlledState,
   } = getInstance()
 
-  // Setup user reducer ref
-  const getStateReducer = useGetLatest(stateReducer)
-
-  // Build the reducer
-  const reducer = React.useCallback(
-    (state, action) => {
-      // Detect invalid actions
-      if (!action.type) {
-        console.info({ action })
-        throw new Error('Unknown Action 👆')
-      }
-
-      // Reduce the state from all plugin reducers
-      return [
-        ...getHooks().stateReducers,
-        // Allow the user to add their own state reducer(s)
-        ...(Array.isArray(getStateReducer())
-          ? getStateReducer()
-          : [getStateReducer()]),
-      ].reduce(
-        (s, handler) => handler(s, action, state, getInstance()) || s,
-        state
-      )
-    },
-    [getHooks, getStateReducer, getInstance]
-  )
-
-  // Start the reducer
-  const [reducerState, dispatch] = React.useReducer(reducer, undefined, () =>
-    reducer(initialState, { type: actions.init })
-  )
-
-  // Allow the user to control the final state with hooks
-  const state = reduceHooks(
-    [...getHooks().useControlledState, useControlledState],
-    reducerState,
-    { instance: getInstance() }
+  // Start the state
+  const [state, setState] = React.useState(() =>
+    reduceHooks(getHooks().getInitialState, initialState, {
+      instance: getInstance(),
+    })
   )
 
   Object.assign(getInstance(), {
     state,
-    dispatch,
+    setState,
   })
 
   // Decorate All the columns

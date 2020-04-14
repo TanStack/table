@@ -1,23 +1,16 @@
 import React from 'react'
 
 import {
-  actions,
   functionalUpdate,
   useGetLatest,
   makePropGetter,
   useMountedLayoutEffect,
 } from '../publicUtils'
 
-actions.resetHiddenColumns = 'resetHiddenColumns'
-actions.toggleHideColumn = 'toggleHideColumn'
-actions.setHiddenColumns = 'setHiddenColumns'
-actions.toggleHideAllColumns = 'toggleHideAllColumns'
-
 export const useColumnVisibility = hooks => {
   hooks.getToggleHiddenProps = [defaultGetToggleHiddenProps]
   hooks.getToggleHideAllColumnsProps = [defaultGetToggleHideAllColumnsProps]
-
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
   hooks.headerGroupsDeps.push((deps, { instance }) => [
     ...deps,
@@ -58,54 +51,10 @@ const defaultGetToggleHideAllColumnsProps = (props, { instance }) => [
   },
 ]
 
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      hiddenColumns: [],
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetHiddenColumns) {
-    return {
-      ...state,
-      hiddenColumns: instance.initialState.hiddenColumns || [],
-    }
-  }
-
-  if (action.type === actions.toggleHideColumn) {
-    const should =
-      typeof action.value !== 'undefined'
-        ? action.value
-        : !state.hiddenColumns.includes(action.columnId)
-
-    const hiddenColumns = should
-      ? [...state.hiddenColumns, action.columnId]
-      : state.hiddenColumns.filter(d => d !== action.columnId)
-
-    return {
-      ...state,
-      hiddenColumns,
-    }
-  }
-
-  if (action.type === actions.setHiddenColumns) {
-    return {
-      ...state,
-      hiddenColumns: functionalUpdate(action.value, state.hiddenColumns),
-    }
-  }
-
-  if (action.type === actions.toggleHideAllColumns) {
-    const shouldAll =
-      typeof action.value !== 'undefined'
-        ? action.value
-        : !state.hiddenColumns.length
-
-    return {
-      ...state,
-      hiddenColumns: shouldAll ? instance.allColumns.map(d => d.id) : [],
-    }
+function getInitialState(state) {
+  return {
+    hiddenColumns: [],
+    ...state,
   }
 }
 
@@ -150,7 +99,7 @@ function useInstance(instance) {
   const {
     columns,
     flatHeaders,
-    dispatch,
+    setState,
     allColumns,
     getHooks,
     state: { hiddenColumns },
@@ -163,18 +112,47 @@ function useInstance(instance) {
 
   const toggleHideColumn = React.useCallback(
     (columnId, value) =>
-      dispatch({ type: actions.toggleHideColumn, columnId, value }),
-    [dispatch]
+      setState(old => {
+        const should =
+          typeof value !== 'undefined'
+            ? value
+            : !old.hiddenColumns.includes(columnId)
+
+        const hiddenColumns = should
+          ? [...old.hiddenColumns, columnId]
+          : old.hiddenColumns.filter(d => d !== columnId)
+
+        return {
+          ...old,
+          hiddenColumns,
+        }
+      }),
+    [setState]
   )
 
   const setHiddenColumns = React.useCallback(
-    value => dispatch({ type: actions.setHiddenColumns, value }),
-    [dispatch]
+    value =>
+      setState(old => ({
+        ...old,
+        hiddenColumns: functionalUpdate(value, old.hiddenColumns),
+      })),
+    [setState]
   )
 
   const toggleHideAllColumns = React.useCallback(
-    value => dispatch({ type: actions.toggleHideAllColumns, value }),
-    [dispatch]
+    value =>
+      setState(old => {
+        const shouldAll =
+          typeof value !== 'undefined' ? value : !old.hiddenColumns.length
+
+        return {
+          ...old,
+          hiddenColumns: shouldAll
+            ? getInstance().allColumns.map(d => d.id)
+            : [],
+        }
+      }),
+    [getInstance, setState]
   )
 
   const getToggleHideAllColumnsProps = makePropGetter(
@@ -183,13 +161,7 @@ function useInstance(instance) {
   )
 
   flatHeaders.forEach(column => {
-    column.toggleHidden = value => {
-      dispatch({
-        type: actions.toggleHideColumn,
-        columnId: column.id,
-        value,
-      })
-    }
+    column.toggleHidden = value => toggleHideColumn(column.id, value)
 
     column.getToggleHiddenProps = makePropGetter(
       getHooks().getToggleHiddenProps,
@@ -204,9 +176,12 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetHiddenColumns()) {
-      dispatch({ type: actions.resetHiddenColumns })
+      setState(old => ({
+        ...old,
+        hiddenColumns: instance.initialState.hiddenColumns || [],
+      }))
     }
-  }, [dispatch, columns])
+  }, [setState, columns])
 
   Object.assign(instance, {
     allColumnsHidden,

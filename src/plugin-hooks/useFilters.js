@@ -7,7 +7,6 @@ import {
 } from '../utils'
 
 import {
-  actions,
   useGetLatest,
   functionalUpdate,
   useMountedLayoutEffect,
@@ -15,107 +14,17 @@ import {
 
 import * as filterTypes from '../filterTypes'
 
-// Actions
-actions.resetFilters = 'resetFilters'
-actions.setFilter = 'setFilter'
-actions.setAllFilters = 'setAllFilters'
-
 export const useFilters = hooks => {
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.useInstance.push(useInstance)
 }
 
 useFilters.pluginName = 'useFilters'
 
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      filters: [],
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetFilters) {
-    return {
-      ...state,
-      filters: instance.initialState.filters || [],
-    }
-  }
-
-  if (action.type === actions.setFilter) {
-    const { columnId, filterValue } = action
-    const { allColumns, filterTypes: userFilterTypes } = instance
-
-    const column = allColumns.find(d => d.id === columnId)
-
-    if (!column) {
-      throw new Error(
-        `React-Table: Could not find a column with id: ${columnId}`
-      )
-    }
-
-    const filterMethod = getFilterMethod(
-      column.filter,
-      userFilterTypes || {},
-      filterTypes
-    )
-
-    const previousfilter = state.filters.find(d => d.id === columnId)
-
-    const newFilter = functionalUpdate(
-      filterValue,
-      previousfilter && previousfilter.value
-    )
-
-    //
-    if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)) {
-      return {
-        ...state,
-        filters: state.filters.filter(d => d.id !== columnId),
-      }
-    }
-
-    if (previousfilter) {
-      return {
-        ...state,
-        filters: state.filters.map(d => {
-          if (d.id === columnId) {
-            return { id: columnId, value: newFilter }
-          }
-          return d
-        }),
-      }
-    }
-
-    return {
-      ...state,
-      filters: [...state.filters, { id: columnId, value: newFilter }],
-    }
-  }
-
-  if (action.type === actions.setAllFilters) {
-    const { filters } = action
-    const { allColumns, filterTypes: userFilterTypes } = instance
-
-    return {
-      ...state,
-      // Filter out undefined values
-      filters: functionalUpdate(filters, state.filters).filter(filter => {
-        const column = allColumns.find(d => d.id === filter.id)
-        const filterMethod = getFilterMethod(
-          column.filter,
-          userFilterTypes || {},
-          filterTypes
-        )
-
-        if (
-          shouldAutoRemoveFilter(filterMethod.autoRemove, filter.value, column)
-        ) {
-          return false
-        }
-        return true
-      }),
-    }
+function getInitialState(state) {
+  return {
+    filters: [],
+    ...state,
   }
 }
 
@@ -131,25 +40,98 @@ function useInstance(instance) {
     defaultCanFilter = false,
     disableFilters,
     state: { filters },
-    dispatch,
+    setState,
     autoResetFilters = true,
   } = instance
 
+  const getInstance = useGetLatest(instance)
+
   const setFilter = React.useCallback(
-    (columnId, filterValue) => {
-      dispatch({ type: actions.setFilter, columnId, filterValue })
-    },
-    [dispatch]
+    (columnId, filterValue) =>
+      setState(old => {
+        const { allColumns, filterTypes: userFilterTypes } = getInstance()
+
+        const column = allColumns.find(d => d.id === columnId)
+
+        if (!column) {
+          throw new Error(
+            `React-Table: Could not find a column with id: ${columnId}`
+          )
+        }
+
+        const filterMethod = getFilterMethod(
+          column.filter,
+          userFilterTypes || {},
+          filterTypes
+        )
+
+        const previousfilter = old.filters.find(d => d.id === columnId)
+
+        const newFilter = functionalUpdate(
+          filterValue,
+          previousfilter && previousfilter.value
+        )
+
+        //
+        if (
+          shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)
+        ) {
+          return {
+            ...old,
+            filters: old.filters.filter(d => d.id !== columnId),
+          }
+        }
+
+        if (previousfilter) {
+          return {
+            ...old,
+            filters: old.filters.map(d => {
+              if (d.id === columnId) {
+                return { id: columnId, value: newFilter }
+              }
+              return d
+            }),
+          }
+        }
+
+        return {
+          ...old,
+          filters: [...old.filters, { id: columnId, value: newFilter }],
+        }
+      }),
+    [getInstance, setState]
   )
 
   const setAllFilters = React.useCallback(
-    filters => {
-      dispatch({
-        type: actions.setAllFilters,
-        filters,
-      })
-    },
-    [dispatch]
+    filters =>
+      setState(old => {
+        const { allColumns, filterTypes: userFilterTypes } = getInstance()
+
+        return {
+          ...old,
+          // Filter out undefined values
+          filters: functionalUpdate(filters, old.filters).filter(filter => {
+            const column = allColumns.find(d => d.id === filter.id)
+            const filterMethod = getFilterMethod(
+              column.filter,
+              userFilterTypes || {},
+              filterTypes
+            )
+
+            if (
+              shouldAutoRemoveFilter(
+                filterMethod.autoRemove,
+                filter.value,
+                column
+              )
+            ) {
+              return false
+            }
+            return true
+          }),
+        }
+      }),
+    [getInstance, setState]
   )
 
   allColumns.forEach(column => {
@@ -283,9 +265,12 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetFilters()) {
-      dispatch({ type: actions.resetFilters })
+      setState(old => ({
+        ...old,
+        filters: [],
+      }))
     }
-  }, [dispatch, manualFilters ? null : data])
+  }, [manualFilters ? null : data])
 
   Object.assign(instance, {
     preFilteredRows: rows,

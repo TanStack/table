@@ -5,7 +5,6 @@ import * as aggregations from '../aggregations'
 import { getFirstDefined, flattenBy } from '../utils'
 
 import {
-  actions,
   makePropGetter,
   ensurePluginOrder,
   useMountedLayoutEffect,
@@ -15,13 +14,9 @@ import {
 const emptyArray = []
 const emptyObject = {}
 
-// Actions
-actions.resetGroupBy = 'resetGroupBy'
-actions.toggleGroupBy = 'toggleGroupBy'
-
 export const useGroupBy = hooks => {
   hooks.getGroupByToggleProps = [defaultGetGroupByToggleProps]
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.visibleColumnsDeps.push((deps, { instance }) => [
     ...deps,
     instance.state.groupBy,
@@ -50,40 +45,10 @@ const defaultGetGroupByToggleProps = (props, { header }) => [
 ]
 
 // Reducer
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      groupBy: [],
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetGroupBy) {
-    return {
-      ...state,
-      groupBy: instance.initialState.groupBy || [],
-    }
-  }
-
-  if (action.type === actions.toggleGroupBy) {
-    const { columnId, value: setGroupBy } = action
-
-    const resolvedGroupBy =
-      typeof setGroupBy !== 'undefined'
-        ? setGroupBy
-        : !state.groupBy.includes(columnId)
-
-    if (resolvedGroupBy) {
-      return {
-        ...state,
-        groupBy: [...state.groupBy, columnId],
-      }
-    }
-
-    return {
-      ...state,
-      groupBy: state.groupBy.filter(d => d !== columnId),
-    }
+function getInitialState(state) {
+  return {
+    groupBy: [],
+    ...state,
   }
 }
 
@@ -129,7 +94,7 @@ function useInstance(instance) {
     aggregations: userAggregations = defaultUserAggregations,
     plugins,
     state: { groupBy },
-    dispatch,
+    setState,
     autoResetGroupBy = true,
     disableGroupBy,
     defaultCanGroupBy,
@@ -170,9 +135,35 @@ function useInstance(instance) {
 
   const toggleGroupBy = React.useCallback(
     (columnId, value) => {
-      dispatch({ type: actions.toggleGroupBy, columnId, value })
+      setState(old => {
+        const resolvedGroupBy =
+          typeof value !== 'undefined' ? value : !old.groupBy.includes(columnId)
+
+        if (resolvedGroupBy) {
+          return {
+            ...old,
+            groupBy: [...old.groupBy, columnId],
+          }
+        }
+
+        return {
+          ...old,
+          groupBy: old.groupBy.filter(d => d !== columnId),
+        }
+      })
     },
-    [dispatch]
+    [setState]
+  )
+
+  const resetGroupBy = React.useCallback(
+    () =>
+      setState(old => {
+        return {
+          ...old,
+          groupBy: getInstance().initialState.groupBy || [],
+        }
+      }),
+    [getInstance, setState]
   )
 
   flatHeaders.forEach(header => {
@@ -375,9 +366,9 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetGroupBy()) {
-      dispatch({ type: actions.resetGroupBy })
+      resetGroupBy()
     }
-  }, [dispatch, manualGroupBy ? null : data])
+  }, [resetGroupBy, manualGroupBy ? null : data])
 
   Object.assign(instance, {
     preGroupedRows: rows,

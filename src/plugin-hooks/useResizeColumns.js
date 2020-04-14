@@ -1,5 +1,4 @@
 import {
-  actions,
   defaultColumn,
   makePropGetter,
   useGetLatest,
@@ -11,11 +10,6 @@ import { getFirstDefined } from '../utils'
 // Default Column
 defaultColumn.canResize = true
 
-// Actions
-actions.columnStartResizing = 'columnStartResizing'
-actions.columnResizing = 'columnResizing'
-actions.columnDoneResizing = 'columnDoneResizing'
-
 export const useResizeColumns = hooks => {
   hooks.getResizerProps = [defaultGetResizerProps]
   hooks.getHeaderProps.push({
@@ -23,13 +17,13 @@ export const useResizeColumns = hooks => {
       position: 'relative',
     },
   })
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialProps.push(getInitialProps)
   hooks.useInstance.push(useInstance)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
 
 const defaultGetResizerProps = (props, { instance, header }) => {
-  const { dispatch } = instance
+  const { setState } = instance
 
   const onResizeStart = (e, header) => {
     let isTouchEvent = false
@@ -45,10 +39,43 @@ const defaultGetResizerProps = (props, { instance, header }) => {
 
     const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX
 
-    const dispatchMove = clientXPos => {
-      dispatch({ type: actions.columnResizing, clientX: clientXPos })
-    }
-    const dispatchEnd = () => dispatch({ type: actions.columnDoneResizing })
+    const dispatchMove = clientXPos =>
+      setState(old => {
+        const { startX, columnWidth, headerIdWidths } = old.columnResizing
+
+        const deltaX = clientXPos - startX
+        const percentageDeltaX = deltaX / columnWidth
+
+        const newColumnWidths = {}
+
+        headerIdWidths.forEach(([headerId, headerWidth]) => {
+          newColumnWidths[headerId] = Math.max(
+            headerWidth + headerWidth * percentageDeltaX,
+            0
+          )
+        })
+
+        return {
+          ...old,
+          columnResizing: {
+            ...old.columnResizing,
+            columnWidths: {
+              ...old.columnResizing.columnWidths,
+              ...newColumnWidths,
+            },
+          },
+        }
+      })
+
+    const dispatchEnd = () =>
+      setState(old => ({
+        ...old,
+        columnResizing: {
+          ...old.columnResizing,
+          startX: null,
+          isResizingColumn: null,
+        },
+      }))
 
     const handlersAndEvents = {
       mouse: {
@@ -102,13 +129,16 @@ const defaultGetResizerProps = (props, { instance, header }) => {
       passive: false,
     })
 
-    dispatch({
-      type: actions.columnStartResizing,
-      columnId: header.id,
-      columnWidth: header.totalWidth,
-      headerIdWidths,
-      clientX,
-    })
+    setState(old => ({
+      ...old,
+      columnResizing: {
+        ...old.columnResizing,
+        startX: clientX,
+        headerIdWidths,
+        columnWidth: header.totalWidth,
+        isResizingColumn: header.id,
+      },
+    }))
   }
 
   return [
@@ -127,68 +157,12 @@ const defaultGetResizerProps = (props, { instance, header }) => {
 
 useResizeColumns.pluginName = 'useResizeColumns'
 
-function reducer(state, action) {
-  if (action.type === actions.init) {
-    return {
-      columnResizing: {
-        columnWidths: {},
-      },
-      ...state,
-    }
-  }
-
-  if (action.type === actions.columnStartResizing) {
-    const { clientX, columnId, columnWidth, headerIdWidths } = action
-
-    return {
-      ...state,
-      columnResizing: {
-        ...state.columnResizing,
-        startX: clientX,
-        headerIdWidths,
-        columnWidth,
-        isResizingColumn: columnId,
-      },
-    }
-  }
-
-  if (action.type === actions.columnResizing) {
-    const { clientX } = action
-    const { startX, columnWidth, headerIdWidths } = state.columnResizing
-
-    const deltaX = clientX - startX
-    const percentageDeltaX = deltaX / columnWidth
-
-    const newColumnWidths = {}
-
-    headerIdWidths.forEach(([headerId, headerWidth]) => {
-      newColumnWidths[headerId] = Math.max(
-        headerWidth + headerWidth * percentageDeltaX,
-        0
-      )
-    })
-
-    return {
-      ...state,
-      columnResizing: {
-        ...state.columnResizing,
-        columnWidths: {
-          ...state.columnResizing.columnWidths,
-          ...newColumnWidths,
-        },
-      },
-    }
-  }
-
-  if (action.type === actions.columnDoneResizing) {
-    return {
-      ...state,
-      columnResizing: {
-        ...state.columnResizing,
-        startX: null,
-        isResizingColumn: null,
-      },
-    }
+function getInitialProps(state, action) {
+  return {
+    columnResizing: {
+      columnWidths: {},
+    },
+    ...state,
   }
 }
 

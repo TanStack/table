@@ -4,21 +4,15 @@ import { expandRows } from '../utils'
 
 import {
   useGetLatest,
-  actions,
   useMountedLayoutEffect,
   makePropGetter,
   ensurePluginOrder,
 } from '../publicUtils'
 
-// Actions
-actions.resetExpanded = 'resetExpanded'
-actions.toggleRowExpanded = 'toggleRowExpanded'
-actions.toggleAllRowsExpanded = 'toggleAllRowsExpanded'
-
 export const useExpanded = hooks => {
   hooks.getToggleAllRowsExpandedProps = [defaultGetToggleAllRowsExpandedProps]
   hooks.getToggleRowExpandedProps = [defaultGetToggleRowExpandedProps]
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.useInstance.push(useInstance)
   hooks.prepareRow.push(prepareRow)
 }
@@ -52,70 +46,10 @@ const defaultGetToggleRowExpandedProps = (props, { row }) => [
 ]
 
 // Reducer
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      expanded: {},
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetExpanded) {
-    return {
-      ...state,
-      expanded: instance.initialState.expanded || {},
-    }
-  }
-
-  if (action.type === actions.toggleAllRowsExpanded) {
-    const { value } = action
-    const { isAllRowsExpanded, rowsById } = instance
-
-    const expandAll = typeof value !== 'undefined' ? value : !isAllRowsExpanded
-
-    if (expandAll) {
-      const expanded = {}
-
-      Object.keys(rowsById).forEach(rowId => {
-        expanded[rowId] = true
-      })
-
-      return {
-        ...state,
-        expanded,
-      }
-    }
-
-    return {
-      ...state,
-      expanded: {},
-    }
-  }
-
-  if (action.type === actions.toggleRowExpanded) {
-    const { id, value: setExpanded } = action
-    const exists = state.expanded[id]
-
-    const shouldExist =
-      typeof setExpanded !== 'undefined' ? setExpanded : !exists
-
-    if (!exists && shouldExist) {
-      return {
-        ...state,
-        expanded: {
-          ...state.expanded,
-          [id]: true,
-        },
-      }
-    } else if (exists && !shouldExist) {
-      const { [id]: _, ...rest } = state.expanded
-      return {
-        ...state,
-        expanded: rest,
-      }
-    } else {
-      return state
-    }
+function getInitialState(state) {
+  return {
+    expanded: {},
+    ...state,
   }
 }
 
@@ -131,7 +65,7 @@ function useInstance(instance) {
     getHooks,
     plugins,
     state: { expanded },
-    dispatch,
+    setState,
   } = instance
 
   ensurePluginOrder(
@@ -141,6 +75,7 @@ function useInstance(instance) {
   )
 
   const getAutoResetExpanded = useGetLatest(autoResetExpanded)
+  const getInstance = useGetLatest(instance)
 
   let isAllRowsExpanded = Boolean(
     Object.keys(rowsById).length && Object.keys(expanded).length
@@ -152,23 +87,78 @@ function useInstance(instance) {
     }
   }
 
+  const resetExpanded = React.useCallback(
+    () =>
+      setState(old => ({
+        ...old,
+        expanded: getInstance().initialState.expanded || {},
+      })),
+    [getInstance, setState]
+  )
+
   // Bypass any effects from firing when this changes
   useMountedLayoutEffect(() => {
     if (getAutoResetExpanded()) {
-      dispatch({ type: actions.resetExpanded })
+      resetExpanded()
     }
-  }, [dispatch, data])
+  }, [resetExpanded, data])
 
   const toggleRowExpanded = React.useCallback(
     (id, value) => {
-      dispatch({ type: actions.toggleRowExpanded, id, value })
+      setState(old => {
+        const exists = old.expanded[id]
+
+        const shouldExist = typeof value !== 'undefined' ? value : !exists
+
+        if (!exists && shouldExist) {
+          return {
+            ...old,
+            expanded: {
+              ...old.expanded,
+              [id]: true,
+            },
+          }
+        } else if (exists && !shouldExist) {
+          const { [id]: _, ...rest } = old.expanded
+          return {
+            ...old,
+            expanded: rest,
+          }
+        } else {
+          return old
+        }
+      })
     },
-    [dispatch]
+    [setState]
   )
 
   const toggleAllRowsExpanded = React.useCallback(
-    value => dispatch({ type: actions.toggleAllRowsExpanded, value }),
-    [dispatch]
+    value =>
+      setState(old => {
+        const { isAllRowsExpanded, rowsById } = getInstance()
+
+        const expandAll =
+          typeof value !== 'undefined' ? value : !isAllRowsExpanded
+
+        if (expandAll) {
+          const expanded = {}
+
+          Object.keys(rowsById).forEach(rowId => {
+            expanded[rowId] = true
+          })
+
+          return {
+            ...old,
+            expanded,
+          }
+        }
+
+        return {
+          ...old,
+          expanded: {},
+        }
+      }),
+    [getInstance, setState]
   )
 
   const expandedRows = React.useMemo(() => {
@@ -182,8 +172,6 @@ function useInstance(instance) {
   const expandedDepth = React.useMemo(() => findExpandedDepth(expanded), [
     expanded,
   ])
-
-  const getInstance = useGetLatest(instance)
 
   const getToggleAllRowsExpandedProps = makePropGetter(
     getHooks().getToggleAllRowsExpandedProps,
