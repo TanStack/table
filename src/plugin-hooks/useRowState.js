@@ -6,8 +6,8 @@ import {
   useGetLatest,
 } from '../publicUtils'
 
-const defaultInitialRowStateAccessor = originalRow => ({})
-const defaultInitialCellStateAccessor = originalRow => ({})
+const defaultInitialRowStateAccessor = () => ({})
+const defaultInitialCellStateAccessor = () => ({})
 
 export const useRowState = hooks => {
   hooks.getInitialState.push(getInitialState)
@@ -31,70 +31,102 @@ function useInstance(instance) {
 
   const setRowState = React.useCallback(
     (rowId, value) =>
-      setState(old => {
-        const {
-          initialRowStateAccessor = defaultInitialRowStateAccessor,
-          rowsById,
-        } = getInstance()
+      setState(
+        old => {
+          const {
+            initialRowStateAccessor = defaultInitialRowStateAccessor,
+            rowsById,
+          } = getInstance()
 
-        const oldRowState =
-          typeof old.rowState[rowId] !== 'undefined'
-            ? old.rowState[rowId]
-            : initialRowStateAccessor(rowsById[rowId].original)
+          const oldRowState =
+            typeof old.rowState[rowId] !== 'undefined'
+              ? old.rowState[rowId]
+              : initialRowStateAccessor(rowsById[rowId].original)
 
-        return {
-          ...old,
-          rowState: {
-            ...old.rowState,
-            [rowId]: functionalUpdate(value, oldRowState),
-          },
+          value = functionalUpdate(value, oldRowState)
+
+          return [
+            {
+              ...old,
+              rowState: {
+                ...old.rowState,
+                [rowId]: value,
+              },
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'setRowState',
+          rowId,
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
   const setCellState = React.useCallback(
     (rowId, columnId, value) =>
-      setState(old => {
-        const {
-          initialRowStateAccessor = defaultInitialRowStateAccessor,
-          initialCellStateAccessor = defaultInitialCellStateAccessor,
-          rowsById,
-        } = getInstance()
+      setState(
+        old => {
+          const {
+            initialRowStateAccessor = defaultInitialRowStateAccessor,
+            initialCellStateAccessor = defaultInitialCellStateAccessor,
+            rowsById,
+          } = getInstance()
 
-        const oldRowState =
-          typeof old.rowState[rowId] !== 'undefined'
-            ? old.rowState[rowId]
-            : initialRowStateAccessor(rowsById[rowId].original)
+          const oldRowState =
+            typeof old.rowState[rowId] !== 'undefined'
+              ? old.rowState[rowId]
+              : initialRowStateAccessor(rowsById[rowId].original)
 
-        const oldCellState =
-          typeof oldRowState?.cellState?.[columnId] !== 'undefined'
-            ? oldRowState.cellState[columnId]
-            : initialCellStateAccessor(rowsById[rowId].original)
+          const oldCellState =
+            typeof oldRowState?.cellState?.[columnId] !== 'undefined'
+              ? oldRowState.cellState[columnId]
+              : initialCellStateAccessor(rowsById[rowId].original)
 
-        return {
-          ...old,
-          rowState: {
-            ...old.rowState,
-            [rowId]: {
-              ...oldRowState,
-              cellState: {
-                ...(oldRowState.cellState || {}),
-                [columnId]: functionalUpdate(value, oldCellState),
+          value = functionalUpdate(value, oldCellState)
+
+          return [
+            {
+              ...old,
+              rowState: {
+                ...old.rowState,
+                [rowId]: {
+                  ...oldRowState,
+                  cellState: {
+                    ...(oldRowState.cellState || {}),
+                    [columnId]: value,
+                  },
+                },
               },
             },
-          },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'setCellState',
+          rowId,
+          columnId,
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
   const resetRowState = React.useCallback(
     () =>
-      setState(old => ({
-        ...old,
-        rowState: getInstance().initialState.rowState || {},
-      })),
+      setState(
+        old => ({
+          ...old,
+          rowState: getInstance().initialState.rowState || {},
+        }),
+        {
+          type: 'resetRowState',
+        }
+      ),
     [getInstance, setState]
   )
 
@@ -109,6 +141,7 @@ function useInstance(instance) {
   Object.assign(instance, {
     setRowState,
     setCellState,
+    resetRowState,
   })
 }
 

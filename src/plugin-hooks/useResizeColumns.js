@@ -17,7 +17,7 @@ export const useResizeColumns = hooks => {
       position: 'relative',
     },
   })
-  hooks.getInitialProps.push(getInitialProps)
+  hooks.getInitialState.push(getInitialState)
   hooks.useInstance.push(useInstance)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
@@ -39,48 +39,58 @@ const defaultGetResizerProps = (props, { instance, header }) => {
 
     const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX
 
-    const dispatchMove = clientXPos =>
-      setState(old => {
-        const { startX, columnWidth, headerIdWidths } = old.columnResizing
+    const onMove = clientXPos =>
+      setState(
+        old => {
+          const { startX, columnWidth, headerIdWidths } = old.columnResizing
 
-        const deltaX = clientXPos - startX
-        const percentageDeltaX = deltaX / columnWidth
+          const deltaX = clientXPos - startX
+          const percentageDeltaX = deltaX / columnWidth
 
-        const newColumnWidths = {}
+          const newColumnWidths = {}
 
-        headerIdWidths.forEach(([headerId, headerWidth]) => {
-          newColumnWidths[headerId] = Math.max(
-            headerWidth + headerWidth * percentageDeltaX,
-            0
-          )
-        })
+          headerIdWidths.forEach(([headerId, headerWidth]) => {
+            newColumnWidths[headerId] = Math.max(
+              headerWidth + headerWidth * percentageDeltaX,
+              0
+            )
+          })
 
-        return {
+          return {
+            ...old,
+            columnResizing: {
+              ...old.columnResizing,
+              columnWidths: {
+                ...old.columnResizing.columnWidths,
+                ...newColumnWidths,
+              },
+            },
+          }
+        },
+        {
+          type: 'resizeColumnMove',
+        }
+      )
+
+    const onEnd = () =>
+      setState(
+        old => ({
           ...old,
           columnResizing: {
             ...old.columnResizing,
-            columnWidths: {
-              ...old.columnResizing.columnWidths,
-              ...newColumnWidths,
-            },
+            startX: null,
+            isResizingColumn: null,
           },
+        }),
+        {
+          type: 'resizeColumnEnd',
         }
-      })
-
-    const dispatchEnd = () =>
-      setState(old => ({
-        ...old,
-        columnResizing: {
-          ...old.columnResizing,
-          startX: null,
-          isResizingColumn: null,
-        },
-      }))
+      )
 
     const handlersAndEvents = {
       mouse: {
         moveEvent: 'mousemove',
-        moveHandler: e => dispatchMove(e.clientX),
+        moveHandler: e => onMove(e.clientX),
         upEvent: 'mouseup',
         upHandler: e => {
           document.removeEventListener(
@@ -91,7 +101,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
             'mouseup',
             handlersAndEvents.mouse.upHandler
           )
-          dispatchEnd()
+          onEnd()
         },
       },
       touch: {
@@ -101,7 +111,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
             e.preventDefault()
             e.stopPropagation()
           }
-          dispatchMove(e.touches[0].clientX)
+          onMove(e.touches[0].clientX)
           return false
         },
         upEvent: 'touchend',
@@ -114,7 +124,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
             handlersAndEvents.touch.upEvent,
             handlersAndEvents.touch.moveHandler
           )
-          dispatchEnd()
+          onEnd()
         },
       },
     }
@@ -122,23 +132,30 @@ const defaultGetResizerProps = (props, { instance, header }) => {
     const events = isTouchEvent
       ? handlersAndEvents.touch
       : handlersAndEvents.mouse
+
     document.addEventListener(events.moveEvent, events.moveHandler, {
       passive: false,
     })
+
     document.addEventListener(events.upEvent, events.upHandler, {
       passive: false,
     })
 
-    setState(old => ({
-      ...old,
-      columnResizing: {
-        ...old.columnResizing,
-        startX: clientX,
-        headerIdWidths,
-        columnWidth: header.totalWidth,
-        isResizingColumn: header.id,
-      },
-    }))
+    setState(
+      old => ({
+        ...old,
+        columnResizing: {
+          ...old.columnResizing,
+          startX: clientX,
+          headerIdWidths,
+          columnWidth: header.totalWidth,
+          isResizingColumn: header.id,
+        },
+      }),
+      {
+        type: 'resizeColumnStart',
+      }
+    )
   }
 
   return [
@@ -157,7 +174,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
 
 useResizeColumns.pluginName = 'useResizeColumns'
 
-function getInitialProps(state, action) {
+function getInitialState(state, action) {
   return {
     columnResizing: {
       columnWidths: {},

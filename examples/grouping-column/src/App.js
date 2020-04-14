@@ -33,20 +33,6 @@ const Styles = styled.div`
   }
 `
 
-function useControlledState(state, { instance }) {
-  return React.useMemo(() => {
-    if (state.groupBy.length) {
-      return {
-        ...state,
-        hiddenColumns: [...state.hiddenColumns, ...state.groupBy].filter(
-          (d, i, all) => all.indexOf(d) === i
-        ),
-      }
-    }
-    return state
-  }, [state])
-}
-
 function Table({ columns, data }) {
   const {
     getTableProps,
@@ -59,12 +45,29 @@ function Table({ columns, data }) {
     {
       columns,
       data,
+      onStateChange: (newState, previousState, meta) => {
+        if (meta.type === 'toggleGroupBy') {
+          if (meta.value) {
+            return {
+              ...newState,
+              hiddenColumns: [...newState.hiddenColumns, meta.columnId],
+            }
+          }
+          return {
+            ...newState,
+            hiddenColumns: newState.hiddenColumns.filter(
+              d => d !== meta.columnId
+            ),
+          }
+        }
+
+        return newState
+      },
     },
     useGroupBy,
     useExpanded,
     // Our custom plugin to add the expander column
     hooks => {
-      hooks.useControlledState.push(useControlledState)
       hooks.visibleColumns.push((columns, { instance }) => {
         if (!instance.state.groupBy.length) {
           return columns

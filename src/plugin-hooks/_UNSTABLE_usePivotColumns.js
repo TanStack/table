@@ -1,7 +1,7 @@
 /* istanbul ignore file */
+import React from 'react'
 
 import {
-  actions,
   makePropGetter,
   ensurePluginOrder,
   useMountedLayoutEffect,
@@ -10,13 +10,9 @@ import {
 
 import { flattenColumns, getFirstDefined } from '../utils'
 
-// Actions
-actions.resetPivot = 'resetPivot'
-actions.togglePivot = 'togglePivot'
-
 export const _UNSTABLE_usePivotColumns = hooks => {
   hooks.getPivotToggleProps = [defaultGetPivotToggleProps]
-  hooks.stateReducers.push(reducer)
+  hooks.getInitialState.push(getInitialState)
   hooks.useInstanceAfterData.push(useInstanceAfterData)
   hooks.allColumns.push(allColumns)
   hooks.accessValue.push(accessValue)
@@ -48,41 +44,10 @@ const defaultGetPivotToggleProps = (props, { header }) => [
   },
 ]
 
-// Reducer
-function reducer(state, action, previousState, instance) {
-  if (action.type === actions.init) {
-    return {
-      pivotColumns: defaultPivotColumns,
-      ...state,
-    }
-  }
-
-  if (action.type === actions.resetPivot) {
-    return {
-      ...state,
-      pivotColumns: instance.initialState.pivotColumns || defaultPivotColumns,
-    }
-  }
-
-  if (action.type === actions.togglePivot) {
-    const { columnId, value: setPivot } = action
-
-    const resolvedPivot =
-      typeof setPivot !== 'undefined'
-        ? setPivot
-        : !state.pivotColumns.includes(columnId)
-
-    if (resolvedPivot) {
-      return {
-        ...state,
-        pivotColumns: [...state.pivotColumns, columnId],
-      }
-    }
-
-    return {
-      ...state,
-      pivotColumns: state.pivotColumns.filter(d => d !== columnId),
-    }
+function getInitialState(state) {
+  return {
+    pivotColumns: defaultPivotColumns,
+    ...state,
   }
 }
 
@@ -220,7 +185,7 @@ function useInstance(instance) {
     // manualPivot,
     getHooks,
     plugins,
-    dispatch,
+    setState,
     autoResetPivot = true,
     manaulPivot,
     disablePivot,
@@ -259,9 +224,38 @@ function useInstance(instance) {
     column.Aggregated = column.Aggregated || column.Cell
   })
 
-  const togglePivot = (columnId, value) => {
-    dispatch({ type: actions.togglePivot, columnId, value })
-  }
+  const togglePivot = (columnId, value) =>
+    setState(
+      old => {
+        value =
+          typeof value !== 'undefined'
+            ? value
+            : !old.pivotColumns.includes(columnId)
+
+        if (value) {
+          return [
+            {
+              ...old,
+              pivotColumns: [...old.pivotColumns, columnId],
+            },
+            {
+              value,
+            },
+          ]
+        }
+
+        return [
+          {
+            ...old,
+            pivotColumns: old.pivotColumns.filter(d => d !== columnId),
+          },
+          {
+            value,
+          },
+        ]
+      },
+      { type: 'togglePivot', columnId }
+    )
 
   flatHeaders.forEach(header => {
     header.getPivotToggleProps = makePropGetter(
@@ -273,16 +267,32 @@ function useInstance(instance) {
     )
   })
 
+  const resetPivot = React.useCallback(
+    () =>
+      setState(
+        old => ({
+          ...old,
+          pivotColumns:
+            getInstance().initialState.pivotColumns || defaultPivotColumns,
+        }),
+        {
+          type: 'resetPivot',
+        }
+      ),
+    [getInstance, setState]
+  )
+
   const getAutoResetPivot = useGetLatest(autoResetPivot)
 
   useMountedLayoutEffect(() => {
     if (getAutoResetPivot()) {
-      dispatch({ type: actions.resetPivot })
+      resetPivot()
     }
-  }, [dispatch, manaulPivot ? null : columns])
+  }, [resetPivot, manaulPivot ? null : columns])
 
   Object.assign(instance, {
     togglePivot,
+    resetPivot,
   })
 }
 

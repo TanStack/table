@@ -17,6 +17,7 @@ import {
   loopHooks,
   makePropGetter,
   makeRenderer,
+  functionalUpdate,
 } from '../publicUtils'
 
 import makeDefaultPluginHooks from '../makeDefaultPluginHooks'
@@ -24,6 +25,7 @@ import makeDefaultPluginHooks from '../makeDefaultPluginHooks'
 import { useColumnVisibility } from './useColumnVisibility'
 
 const defaultInitialState = {}
+const defaultOnStateChange = d => d
 const defaultColumnInstance = {}
 const defaultGetSubRows = (row, index) => row.subRows || []
 const defaultGetRowId = (row, index, parent) =>
@@ -32,6 +34,8 @@ const defaultGetRowId = (row, index, parent) =>
 function applyDefaults(props) {
   const {
     initialState = defaultInitialState,
+    controlledState = defaultInitialState,
+    onStateChange = defaultOnStateChange,
     defaultColumn = defaultColumnInstance,
     getSubRows = defaultGetSubRows,
     getRowId = defaultGetRowId,
@@ -41,6 +45,8 @@ function applyDefaults(props) {
   return {
     ...rest,
     initialState,
+    controlledState,
+    onStateChange,
     defaultColumn,
     getSubRows,
     getRowId,
@@ -87,16 +93,42 @@ export const useTable = (props, ...plugins) => {
     data,
     columns: userColumns,
     initialState,
+    controlledState,
     defaultColumn,
     getSubRows,
     getRowId,
   } = getInstance()
 
   // Start the state
-  const [state, setState] = React.useState(() =>
-    reduceHooks(getHooks().getInitialState, initialState, {
+  const [preState, preSetState] = React.useState(() =>
+    reduceHooks(getHooks().getInitialState, functionalUpdate(initialState), {
       instance: getInstance(),
     })
+  )
+
+  const setState = React.useCallback(
+    (updater, meta) =>
+      preSetState(old => {
+        const newState = functionalUpdate(updater, old)
+
+        const [newStateNoMeta, moreMeta] = Array.isArray(newState)
+          ? newState
+          : [newState, {}]
+
+        return getInstance().onStateChange(newStateNoMeta, old, {
+          ...meta,
+          ...moreMeta,
+        })
+      }),
+    [getInstance]
+  )
+
+  const state = React.useMemo(
+    () => ({
+      ...preState,
+      ...controlledState,
+    }),
+    [controlledState, preState]
   )
 
   Object.assign(getInstance(), {

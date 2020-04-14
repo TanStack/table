@@ -124,88 +124,112 @@ function useInstance(instance) {
 
   const resetSelectedRows = React.useCallback(
     () =>
-      setState(old => ({
-        ...old,
-        selectedRowIds: getInstance().initialState.selectedRowIds || {},
-      })),
+      setState(
+        old => ({
+          ...old,
+          selectedRowIds: getInstance().initialState.selectedRowIds || {},
+        }),
+        {
+          type: 'resetSelectedRows',
+        }
+      ),
     [getInstance, setState]
   )
 
   const toggleAllRowsSelected = React.useCallback(
     value =>
-      setState(old => {
-        const {
-          isAllRowsSelected,
-          rowsById,
-          nonGroupedRowsById = rowsById,
-        } = getInstance()
+      setState(
+        old => {
+          const {
+            isAllRowsSelected,
+            rowsById,
+            nonGroupedRowsById = rowsById,
+          } = getInstance()
 
-        const selectAll =
-          typeof value !== 'undefined' ? value : !isAllRowsSelected
+          value = typeof value !== 'undefined' ? value : !isAllRowsSelected
 
-        // Only remove/add the rows that are visible on the screen
-        //  Leave all the other rows that are selected alone.
-        const selectedRowIds = Object.assign({}, old.selectedRowIds)
+          // Only remove/add the rows that are visible on the screen
+          //  Leave all the other rows that are selected alone.
+          const selectedRowIds = Object.assign({}, old.selectedRowIds)
 
-        if (selectAll) {
-          Object.keys(nonGroupedRowsById).forEach(rowId => {
-            selectedRowIds[rowId] = true
-          })
-        } else {
-          Object.keys(nonGroupedRowsById).forEach(rowId => {
-            delete selectedRowIds[rowId]
-          })
+          if (value) {
+            Object.keys(nonGroupedRowsById).forEach(rowId => {
+              selectedRowIds[rowId] = true
+            })
+          } else {
+            Object.keys(nonGroupedRowsById).forEach(rowId => {
+              delete selectedRowIds[rowId]
+            })
+          }
+
+          return [
+            {
+              ...old,
+              selectedRowIds,
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'toggleAllRowsSelected',
         }
-
-        return {
-          ...old,
-          selectedRowIds,
-        }
-      }),
+      ),
     [getInstance, setState]
   )
 
   const toggleRowSelected = React.useCallback(
     (id, value) =>
-      setState(old => {
-        const { rowsById, selectSubRows = true } = getInstance()
+      setState(
+        old => {
+          const { rowsById, selectSubRows = true } = getInstance()
 
-        // Join the ids of deep rows
-        // to make a key, then manage all of the keys
-        // in a flat object
-        const row = rowsById[id]
-        const isSelected = row.isSelected
-        const shouldExist = typeof value !== 'undefined' ? value : !isSelected
-
-        if (isSelected === shouldExist) {
-          return old
-        }
-
-        const newSelectedRowIds = { ...old.selectedRowIds }
-
-        const handleRowById = id => {
+          // Join the ids of deep rows
+          // to make a key, then manage all of the keys
+          // in a flat object
           const row = rowsById[id]
+          const isSelected = row.isSelected
+          value = typeof value !== 'undefined' ? value : !isSelected
 
-          if (!row.isGrouped) {
-            if (shouldExist) {
-              newSelectedRowIds[id] = true
-            } else {
-              delete newSelectedRowIds[id]
+          if (isSelected === value) {
+            return old
+          }
+
+          const newSelectedRowIds = { ...old.selectedRowIds }
+
+          const handleRowById = id => {
+            const row = rowsById[id]
+
+            if (!row.isGrouped) {
+              if (value) {
+                newSelectedRowIds[id] = true
+              } else {
+                delete newSelectedRowIds[id]
+              }
+            }
+
+            if (selectSubRows && row.subRows) {
+              return row.subRows.forEach(row => handleRowById(row.id))
             }
           }
 
-          if (selectSubRows && row.subRows) {
-            return row.subRows.forEach(row => handleRowById(row.id))
-          }
-        }
+          handleRowById(id)
 
-        handleRowById(id)
-
-        return {
-          ...old,
-          selectedRowIds: newSelectedRowIds,
+          return [
+            {
+              ...old,
+              selectedRowIds: newSelectedRowIds,
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'toggleRowSelected',
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
@@ -226,6 +250,7 @@ function useInstance(instance) {
     toggleRowSelected,
     toggleAllRowsSelected,
     getToggleAllRowsSelectedProps,
+    resetSelectedRows,
   })
 }
 

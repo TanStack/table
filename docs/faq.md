@@ -11,7 +11,7 @@ Below are some of the most frequently asked questions on how to use the React Ta
 
 ## How can I manually control the table state?
 
-Occasionally, you may need to override some of the table state from a parent component or from somewhere above the usage of `useTable`. In this case, you can turn to `useTable`'s `useControlledState` option. This hook function is run on every render and allows you an opportunity to override or change the final table state in a safe way.
+Occasionally, you may want to store or override some or all of the table state from the component or parent component of where is is rendered. In this case, you can turn to `useTable`'s `onStateChange` and `controlledState` options. The `onStateChange` function is run on every attempt to change the internal state for the table and allows you an opportunity to delegate that new state to your own storage strategy, then likewise feed it back into the table using the `controlledState` option.
 
 For example, to control a table's `pageIndex` from a parent component:
 
@@ -19,19 +19,38 @@ For example, to control a table's `pageIndex` from a parent component:
 const [controlledPageIndex, setControlledPage] = React.useState(0)
 
 useTable({
-  useControlledState: state => {
-    return React.useMemo(
-      () => ({
-        ...state,
-        pageIndex: controlledPageIndex,
-      }),
-      [state, controlledPageIndex]
-    )
+  onStateChange: (newState, oldState) => {
+    if (newState.pageIndex !== oldState.pageIndex) {
+      // Update the pageIndex in our parent state
+      setControlledPage(newState.pageIndex)
+      return oldState // This will cancel the update and not rerender the table at this point
+    }
+    return newState
   },
+  controlledState: React.useMemo(
+    () => ({
+      // Send down our controlled state override,
+      // which is shallowly spread on top of the internal table state
+      pageIndex: controlledPageIndex,
+    }),
+    []
+  ),
 })
 ```
 
-> **It's important that the state override is done within a `useMemo` call to prevent the state variable from changing on every render. It's also extremely important that you always use the `state` in any dependencies to ensure that you do not block normal state updates.**
+Here is another example of controlling **all** of the table state:
+
+```js
+const [tableState, setTableState] = React.useState({})
+
+useTable({
+  onStateChange: (newState, oldState) => {
+    setTableState(newState)
+    return oldState
+  },
+  controlledState,
+})
+```
 
 ## How can I use the table state to fetch new data?
 

@@ -62,25 +62,17 @@ function useInstance(instance) {
 
   const resetPage = React.useCallback(
     () =>
-      setState(old => ({
-        ...old,
-        pageIndex: getInstance().initialState.pageIndex || 0,
-      })),
+      setState(
+        old => ({
+          ...old,
+          pageIndex: getInstance().initialState.pageIndex || 0,
+        }),
+        {
+          type: 'resetPage',
+        }
+      ),
     [getInstance, setState]
   )
-
-  useMountedLayoutEffect(() => {
-    if (getAutoResetPage()) {
-      resetPage()
-    }
-  }, [
-    resetPage,
-    manualPagination ? null : data,
-    globalFilter,
-    filters,
-    groupBy,
-    sortBy,
-  ])
 
   const pageCount = manualPagination
     ? userPageCount
@@ -128,24 +120,29 @@ function useInstance(instance) {
 
   const gotoPage = React.useCallback(
     pageIndex => {
-      setState(old => {
-        const { pageCount, page } = getInstance()
-        const newPageIndex = functionalUpdate(pageIndex, old.pageIndex)
-        const cannnotPreviousPage = newPageIndex < 0
-        const cannotNextPage =
-          pageCount === -1
-            ? page.length < old.pageSize
-            : newPageIndex > pageCount - 1
+      setState(
+        old => {
+          const { pageCount, page } = getInstance()
+          const newPageIndex = functionalUpdate(pageIndex, old.pageIndex)
+          const cannnotPreviousPage = newPageIndex < 0
+          const cannotNextPage =
+            pageCount === -1
+              ? page.length < old.pageSize
+              : newPageIndex > pageCount - 1
 
-        if (cannnotPreviousPage || cannotNextPage) {
-          return old
-        }
+          if (cannnotPreviousPage || cannotNextPage) {
+            return old
+          }
 
-        return {
-          ...old,
-          pageIndex: newPageIndex,
+          return {
+            ...old,
+            pageIndex: newPageIndex,
+          }
+        },
+        {
+          type: 'gotoPage',
         }
-      })
+      )
     },
     [getInstance, setState]
   )
@@ -160,19 +157,37 @@ function useInstance(instance) {
 
   const setPageSize = React.useCallback(
     pageSize => {
-      setState(old => {
-        const topRowIndex = old.pageSize * old.pageIndex
-        const pageIndex = Math.floor(topRowIndex / pageSize)
+      setState(
+        old => {
+          const topRowIndex = old.pageSize * old.pageIndex
+          const pageIndex = Math.floor(topRowIndex / pageSize)
 
-        return {
-          ...old,
-          pageIndex,
-          pageSize,
+          return {
+            ...old,
+            pageIndex,
+            pageSize,
+          }
+        },
+        {
+          type: 'setPageSize',
         }
-      })
+      )
     },
     [setState]
   )
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetPage()) {
+      resetPage()
+    }
+  }, [
+    resetPage,
+    manualPagination ? null : data,
+    globalFilter,
+    filters,
+    groupBy,
+    sortBy,
+  ])
 
   Object.assign(instance, {
     pageOptions,

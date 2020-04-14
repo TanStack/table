@@ -5,6 +5,19 @@ route: /changelog
 
 # React Table Changelog
 
+## 8.0.0
+
+- Migrated away from useReducer and plugin reducers to a simple useState architecture. Not only does this save around 1.5kb of minzipped bundle size, but it also opens up the state to be more easily manipulated by the user and plugins without having the overhead of a reducer. It may remove the ability to detect certain "actions" that are sent to the table state, but it appears that many don't use this because they are not familiar with the pattern or it's too much work.
+- Removed the `dispatch` method from the table instance
+- Removed the `useControlledState` option
+- Removed the `stateReducer` option
+- Removed the `stateReducers` plugin hook
+- Added the `setState` method to the table instance
+- Added the `getInitialState` plugin hook
+- Added the `onStateChange` option which allows you to manipulate state changes or control them altogether, receives new state, previous state and action meta
+- Added the `controlledState` option which allows you to shallowly override table state in a controlled way.
+- Added meta information to all internal `setState` operations
+
 ## 7.0.4
 
 - Fixed a regression where @scarf/scarf was somehow removed from the package dependencies

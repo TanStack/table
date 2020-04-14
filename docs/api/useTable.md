@@ -36,16 +36,13 @@ The following options are supported via the main options object passed to `useTa
   - When `true`, the `hiddenColumns` state will automatically reset if any of the following conditions are met:
     - `columns` is changed
   - To disable, set to `false`
-- `stateReducer: Function(newState, action, prevState) => newState`
+- `onStateChange: Function(newState, prevState, meta) => newState`
   - Optional
-  - With every action that is dispatched to the table's internal `React.useReducer` instance, this reducer is called and is allowed to modify the final state object for updating.
-  - It is passed the `newState`, `action`, and `prevState` and is expected to either return the `newState` or a modified version of the `newState`
-  - May also be used to "control" the state of the table, by overriding certain pieces of state regardless of the action.
-- `useControlledState: HookFunction(state) => controlledState`
-  - Optional
-  - If you need to control part of the table state, this is the place to do it.
-  - This function is run on every single render, just like a hook and allows you to alter the final state of the table if necessary.
-  - You can use hooks inside of this function, but most of the time, we just suggest using `React.useMemo` to memoize your state overrides.
+  - With every call that is made to update the table's internal `React.useState` instance, this function is called and is allowed to inspect or modify the final state object and optionally return a new one or the previous one.
+  - Any meta information about the event, if available, is also passed as the third parameter
+  - If the previous state is returned, the new state will not be and no rerender will occur
+  - If the new or modified state is returned, it will be used as the final state for the update and a rerender will occur.
+  - This callback can be used to "control" the state of the table by sending the new state up the component tree to your own state location and returning the previous state to cancel the update and subsequent rerender. You can then manage your own state further up however you'd like and then send your controlled state back down to the table using the `controlledState` property in `useTable`.
   - See the FAQ ["How can I manually control the table state?"](/faq#how-can-i-manually-control-the-table-state) for a an example.
 - `defaultColumn: Object`
   - Optional

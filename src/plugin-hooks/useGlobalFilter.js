@@ -39,29 +39,49 @@ function useInstance(instance) {
   const getInstance = useGetLatest(instance)
 
   const setGlobalFilter = React.useCallback(
-    filterValue =>
-      setState(old => {
-        const { userFilterTypes } = getInstance()
+    value =>
+      setState(
+        old => {
+          const { userFilterTypes } = getInstance()
 
-        const filterMethod = getFilterMethod(
-          getInstance().globalFilter,
-          userFilterTypes || {},
-          filterTypes
-        )
+          const filterMethod = getFilterMethod(
+            getInstance().globalFilter,
+            userFilterTypes || {},
+            filterTypes
+          )
 
-        const newFilter = functionalUpdate(filterValue, old.globalFilter)
+          const newFilter = functionalUpdate(value, old.globalFilter)
 
-        //
-        if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
-          const { globalFilter, ...stateWithoutGlobalFilter } = old
-          return stateWithoutGlobalFilter
+          //
+          if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
+            const { globalFilter, ...stateWithoutGlobalFilter } = old
+            return stateWithoutGlobalFilter
+          }
+
+          return {
+            ...old,
+            globalFilter: newFilter,
+          }
+        },
+        {
+          type: 'setGlobalFilter',
+          value,
         }
+      ),
+    [getInstance, setState]
+  )
 
-        return {
+  const resetGlobalFilter = React.useCallback(
+    () =>
+      setState(
+        old => ({
           ...old,
-          globalFilter: newFilter,
+          globalFilter: getInstance().initialState.globalFilter || undefined,
+        }),
+        {
+          type: 'resetGlobalFilter',
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
@@ -143,10 +163,7 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetGlobalFilter()) {
-      setState(old => ({
-        ...old,
-        globalFilter: getInstance().initialState.globalFilter || undefined,
-      }))
+      resetGlobalFilter()
     }
   }, [manualGlobalFilter ? null : data])
 
@@ -162,5 +179,6 @@ function useInstance(instance) {
     rowsById: globalFilteredRowsById,
     setGlobalFilter,
     disableGlobalFilter,
+    resetGlobalFilter,
   })
 }

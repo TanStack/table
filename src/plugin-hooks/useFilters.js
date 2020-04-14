@@ -47,91 +47,117 @@ function useInstance(instance) {
   const getInstance = useGetLatest(instance)
 
   const setFilter = React.useCallback(
-    (columnId, filterValue) =>
-      setState(old => {
-        const { allColumns, filterTypes: userFilterTypes } = getInstance()
+    (columnId, value) =>
+      setState(
+        old => {
+          const { allColumns, filterTypes: userFilterTypes } = getInstance()
 
-        const column = allColumns.find(d => d.id === columnId)
+          const column = allColumns.find(d => d.id === columnId)
 
-        if (!column) {
-          throw new Error(
-            `React-Table: Could not find a column with id: ${columnId}`
+          if (!column) {
+            throw new Error(
+              `React-Table: Could not find a column with id: ${columnId}`
+            )
+          }
+
+          const filterMethod = getFilterMethod(
+            column.filter,
+            userFilterTypes || {},
+            filterTypes
           )
-        }
 
-        const filterMethod = getFilterMethod(
-          column.filter,
-          userFilterTypes || {},
-          filterTypes
-        )
+          const previousfilter = old.filters.find(d => d.id === columnId)
 
-        const previousfilter = old.filters.find(d => d.id === columnId)
+          const newFilter = functionalUpdate(
+            value,
+            previousfilter && previousfilter.value
+          )
 
-        const newFilter = functionalUpdate(
-          filterValue,
-          previousfilter && previousfilter.value
-        )
+          //
+          if (
+            shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)
+          ) {
+            return {
+              ...old,
+              filters: old.filters.filter(d => d.id !== columnId),
+            }
+          }
 
-        //
-        if (
-          shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)
-        ) {
+          if (previousfilter) {
+            return {
+              ...old,
+              filters: old.filters.map(d => {
+                if (d.id === columnId) {
+                  return { id: columnId, value: newFilter }
+                }
+                return d
+              }),
+            }
+          }
+
           return {
             ...old,
-            filters: old.filters.filter(d => d.id !== columnId),
+            filters: [...old.filters, { id: columnId, value: newFilter }],
           }
+        },
+        {
+          type: 'setFilter',
+          columnId,
+          value,
         }
-
-        if (previousfilter) {
-          return {
-            ...old,
-            filters: old.filters.map(d => {
-              if (d.id === columnId) {
-                return { id: columnId, value: newFilter }
-              }
-              return d
-            }),
-          }
-        }
-
-        return {
-          ...old,
-          filters: [...old.filters, { id: columnId, value: newFilter }],
-        }
-      }),
+      ),
     [getInstance, setState]
   )
 
   const setAllFilters = React.useCallback(
     filters =>
-      setState(old => {
-        const { allColumns, filterTypes: userFilterTypes } = getInstance()
+      setState(
+        old => {
+          const { allColumns, filterTypes: userFilterTypes } = getInstance()
 
-        return {
-          ...old,
-          // Filter out undefined values
-          filters: functionalUpdate(filters, old.filters).filter(filter => {
-            const column = allColumns.find(d => d.id === filter.id)
-            const filterMethod = getFilterMethod(
-              column.filter,
-              userFilterTypes || {},
-              filterTypes
-            )
-
-            if (
-              shouldAutoRemoveFilter(
-                filterMethod.autoRemove,
-                filter.value,
-                column
+          return {
+            ...old,
+            // Filter out undefined values
+            filters: functionalUpdate(filters, old.filters).filter(filter => {
+              const column = allColumns.find(d => d.id === filter.id)
+              const filterMethod = getFilterMethod(
+                column.filter,
+                userFilterTypes || {},
+                filterTypes
               )
-            ) {
-              return false
-            }
-            return true
-          }),
+
+              if (
+                shouldAutoRemoveFilter(
+                  filterMethod.autoRemove,
+                  filter.value,
+                  column
+                )
+              ) {
+                return false
+              }
+              return true
+            }),
+          }
+        },
+        {
+          type: 'setAllFilters',
         }
-      }),
+      ),
     [getInstance, setState]
+  )
+
+  const resetFilters = React.useCallback(
+    () =>
+      setState(
+        old => ({
+          ...old,
+          filters: [],
+        }),
+        {
+          type: 'resetFilters',
+        }
+      ),
+    [setState]
   )
 
   allColumns.forEach(column => {
@@ -265,10 +291,7 @@ function useInstance(instance) {
 
   useMountedLayoutEffect(() => {
     if (getAutoResetFilters()) {
-      setState(old => ({
-        ...old,
-        filters: [],
-      }))
+      resetFilters()
     }
   }, [manualFilters ? null : data])
 
@@ -284,5 +307,6 @@ function useInstance(instance) {
     rowsById: filteredRowsById,
     setFilter,
     setAllFilters,
+    resetFilters,
   })
 }

@@ -61,19 +61,29 @@ function useInstance(instance) {
 
   instance.resetColumnOrder = React.useCallback(
     () =>
-      setState(old => ({
-        ...old,
-        columnOrder: getInstance().initialState.columnOrder || [],
-      })),
+      setState(
+        old => ({
+          ...old,
+          columnOrder: getInstance().initialState.columnOrder || [],
+        }),
+        {
+          type: 'resetColumnOrder',
+        }
+      ),
     [getInstance, setState]
   )
 
   instance.setColumnOrder = React.useCallback(
     columnOrder =>
-      setState(old => ({
-        ...old,
-        columnOrder: functionalUpdate(columnOrder, old.columnOrder),
-      })),
+      setState(
+        old => ({
+          ...old,
+          columnOrder: functionalUpdate(columnOrder, old.columnOrder),
+        }),
+        {
+          type: 'setColumnOrder',
+        }
+      ),
     [setState]
   )
 }

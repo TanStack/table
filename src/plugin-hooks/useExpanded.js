@@ -45,7 +45,6 @@ const defaultGetToggleRowExpandedProps = (props, { row }) => [
   },
 ]
 
-// Reducer
 function getInitialState(state) {
   return {
     expanded: {},
@@ -89,75 +88,103 @@ function useInstance(instance) {
 
   const resetExpanded = React.useCallback(
     () =>
-      setState(old => ({
-        ...old,
-        expanded: getInstance().initialState.expanded || {},
-      })),
+      setState(
+        old => ({
+          ...old,
+          expanded: getInstance().initialState.expanded || {},
+        }),
+        {
+          type: 'resetExpanded',
+        }
+      ),
     [getInstance, setState]
   )
 
-  // Bypass any effects from firing when this changes
-  useMountedLayoutEffect(() => {
-    if (getAutoResetExpanded()) {
-      resetExpanded()
-    }
-  }, [resetExpanded, data])
-
   const toggleRowExpanded = React.useCallback(
     (id, value) => {
-      setState(old => {
-        const exists = old.expanded[id]
+      setState(
+        old => {
+          const exists = old.expanded[id]
 
-        const shouldExist = typeof value !== 'undefined' ? value : !exists
+          value = typeof value !== 'undefined' ? value : !exists
 
-        if (!exists && shouldExist) {
-          return {
-            ...old,
-            expanded: {
-              ...old.expanded,
-              [id]: true,
-            },
+          if (!exists && value) {
+            return [
+              {
+                ...old,
+                expanded: {
+                  ...old.expanded,
+                  [id]: true,
+                },
+              },
+              {
+                value,
+              },
+            ]
+          } else if (exists && !value) {
+            const { [id]: _, ...rest } = old.expanded
+            return [
+              {
+                ...old,
+                expanded: rest,
+              },
+              {
+                value,
+              },
+            ]
+          } else {
+            return [old, { value }]
           }
-        } else if (exists && !shouldExist) {
-          const { [id]: _, ...rest } = old.expanded
-          return {
-            ...old,
-            expanded: rest,
-          }
-        } else {
-          return old
+        },
+        {
+          type: 'toggleRowExpanded',
+          id,
         }
-      })
+      )
     },
     [setState]
   )
 
   const toggleAllRowsExpanded = React.useCallback(
     value =>
-      setState(old => {
-        const { isAllRowsExpanded, rowsById } = getInstance()
+      setState(
+        old => {
+          const { isAllRowsExpanded, rowsById } = getInstance()
 
-        const expandAll =
-          typeof value !== 'undefined' ? value : !isAllRowsExpanded
+          value = typeof value !== 'undefined' ? value : !isAllRowsExpanded
 
-        if (expandAll) {
-          const expanded = {}
+          if (value) {
+            const expanded = {}
 
-          Object.keys(rowsById).forEach(rowId => {
-            expanded[rowId] = true
-          })
+            Object.keys(rowsById).forEach(rowId => {
+              expanded[rowId] = true
+            })
 
-          return {
-            ...old,
-            expanded,
+            return [
+              {
+                ...old,
+                expanded,
+              },
+              {
+                value,
+              },
+            ]
           }
-        }
 
-        return {
-          ...old,
-          expanded: {},
+          return [
+            {
+              ...old,
+              expanded: {},
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'toggleAllRowsExpanded',
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
@@ -178,6 +205,13 @@ function useInstance(instance) {
     { instance: getInstance() }
   )
 
+  // Bypass any effects from firing when this changes
+  useMountedLayoutEffect(() => {
+    if (getAutoResetExpanded()) {
+      resetExpanded()
+    }
+  }, [resetExpanded, data])
+
   Object.assign(instance, {
     preExpandedRows: rows,
     expandedRows,
@@ -187,6 +221,7 @@ function useInstance(instance) {
     toggleRowExpanded,
     toggleAllRowsExpanded,
     getToggleAllRowsExpandedProps,
+    resetExpanded,
   })
 }
 

@@ -6,6 +6,7 @@ import {
   makePropGetter,
   useGetLatest,
   useMountedLayoutEffect,
+  functionalUpdate,
 } from '../publicUtils'
 
 import { getFirstDefined, isFunction } from '../utils'
@@ -46,7 +47,6 @@ const defaultGetSortByToggleProps = (props, { instance, column }) => {
   ]
 }
 
-// Reducer
 function getInitialState(state) {
   return {
     sortBy: [],
@@ -85,110 +85,139 @@ function useInstance(instance) {
   // Updates sorting based on a columnId, desc flag and multi flag
   const toggleSortBy = React.useCallback(
     (columnId, desc, multi) =>
-      setState(old => {
-        const {
-          allColumns,
-          disableMultiSort,
-          disableSortRemove,
-          disableMultiRemove,
-          maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
-        } = getInstance()
+      setState(
+        old => {
+          const {
+            allColumns,
+            disableMultiSort,
+            disableSortRemove,
+            disableMultiRemove,
+            maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+          } = getInstance()
 
-        const { sortBy } = old
+          const { sortBy } = old
 
-        // Find the column for this columnId
-        const column = allColumns.find(d => d.id === columnId)
-        const { sortDescFirst } = column
+          // Find the column for this columnId
+          const column = allColumns.find(d => d.id === columnId)
+          const { sortDescFirst } = column
 
-        // Find any existing sortBy for this column
-        const existingSortBy = sortBy.find(d => d.id === columnId)
-        const existingIndex = sortBy.findIndex(d => d.id === columnId)
-        const hasDescDefined = typeof desc !== 'undefined' && desc !== null
+          // Find any existing sortBy for this column
+          const existingSortBy = sortBy.find(d => d.id === columnId)
+          const existingIndex = sortBy.findIndex(d => d.id === columnId)
+          const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
-        let newSortBy = []
+          let newSortBy = []
 
-        // What should we do with this sort action?
-        let sortAction
+          // What should we do with this sort action?
+          let sortAction
 
-        if (!disableMultiSort && multi) {
-          if (existingSortBy) {
-            sortAction = 'toggle'
-          } else {
-            sortAction = 'add'
-          }
-        } else {
-          // Normal mode
-          if (existingIndex !== sortBy.length - 1) {
-            sortAction = 'replace'
-          } else if (existingSortBy) {
-            sortAction = 'toggle'
-          } else {
-            sortAction = 'replace'
-          }
-        }
-
-        // Handle toggle states that will remove the sortBy
-        if (
-          sortAction === 'toggle' && // Must be toggling
-          !disableSortRemove && // If disableSortRemove, disable in general
-          !hasDescDefined && // Must not be setting desc
-          (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
-          ((existingSortBy && // Finally, detect if it should indeed be removed
-            existingSortBy.desc &&
-            !sortDescFirst) ||
-            (!existingSortBy.desc && sortDescFirst))
-        ) {
-          sortAction = 'remove'
-        }
-
-        if (sortAction === 'replace') {
-          newSortBy = [
-            {
-              id: columnId,
-              desc: hasDescDefined ? desc : sortDescFirst,
-            },
-          ]
-        } else if (sortAction === 'add') {
-          newSortBy = [
-            ...sortBy,
-            {
-              id: columnId,
-              desc: hasDescDefined ? desc : sortDescFirst,
-            },
-          ]
-          // Take latest n columns
-          newSortBy.splice(0, newSortBy.length - maxMultiSortColCount)
-        } else if (sortAction === 'toggle') {
-          // This flips (or sets) the
-          newSortBy = sortBy.map(d => {
-            if (d.id === columnId) {
-              return {
-                ...d,
-                desc: hasDescDefined ? desc : !existingSortBy.desc,
-              }
+          if (!disableMultiSort && multi) {
+            if (existingSortBy) {
+              sortAction = 'toggle'
+            } else {
+              sortAction = 'add'
             }
-            return d
-          })
-        } else if (sortAction === 'remove') {
-          newSortBy = sortBy.filter(d => d.id !== columnId)
-        }
+          } else {
+            // Normal mode
+            if (existingIndex !== sortBy.length - 1) {
+              sortAction = 'replace'
+            } else if (existingSortBy) {
+              sortAction = 'toggle'
+            } else {
+              sortAction = 'replace'
+            }
+          }
 
-        return {
-          ...old,
-          sortBy: newSortBy,
+          // Handle toggle states that will remove the sortBy
+          if (
+            sortAction === 'toggle' && // Must be toggling
+            !disableSortRemove && // If disableSortRemove, disable in general
+            !hasDescDefined && // Must not be setting desc
+            (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
+            ((existingSortBy && // Finally, detect if it should indeed be removed
+              existingSortBy.desc &&
+              !sortDescFirst) ||
+              (!existingSortBy.desc && sortDescFirst))
+          ) {
+            sortAction = 'remove'
+          }
+
+          if (sortAction === 'replace') {
+            newSortBy = [
+              {
+                id: columnId,
+                desc: hasDescDefined ? desc : sortDescFirst,
+              },
+            ]
+          } else if (sortAction === 'add') {
+            newSortBy = [
+              ...sortBy,
+              {
+                id: columnId,
+                desc: hasDescDefined ? desc : sortDescFirst,
+              },
+            ]
+            // Take latest n columns
+            newSortBy.splice(0, newSortBy.length - maxMultiSortColCount)
+          } else if (sortAction === 'toggle') {
+            // This flips (or sets) the
+            newSortBy = sortBy.map(d => {
+              if (d.id === columnId) {
+                return {
+                  ...d,
+                  desc: hasDescDefined ? desc : !existingSortBy.desc,
+                }
+              }
+              return d
+            })
+          } else if (sortAction === 'remove') {
+            newSortBy = sortBy.filter(d => d.id !== columnId)
+          }
+
+          return {
+            ...old,
+            sortBy: newSortBy,
+          }
+        },
+        {
+          type: 'toggleSortBy',
+          columnId,
+          desc,
+          multi,
         }
-      }),
+      ),
     [getInstance, setState]
+  )
+
+  const setSortBy = React.useCallback(
+    updater =>
+      setState(
+        old => {
+          return {
+            ...old,
+            sortBy: functionalUpdate(updater, old.sortBy),
+          }
+        },
+        {
+          type: 'setSortBy',
+        }
+      ),
+    [setState]
   )
 
   const resetSortBy = React.useCallback(
     () =>
-      setState(old => {
-        return {
-          ...old,
-          sortBy: getInstance().initialState.sortBy || [],
+      setState(
+        old => {
+          return {
+            ...old,
+            sortBy: getInstance().initialState.sortBy || [],
+          }
+        },
+        {
+          type: 'resetSortBy',
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
@@ -216,15 +245,21 @@ function useInstance(instance) {
         toggleSortBy(column.id, desc, multi)
 
       column.clearSortBy = () =>
-        setState(old => {
-          const { sortBy } = old
-          const newSortBy = sortBy.filter(d => d.id !== column.id)
+        setState(
+          old => {
+            const { sortBy } = old
+            const newSortBy = sortBy.filter(d => d.id !== column.id)
 
-          return {
-            ...old,
-            sortBy: newSortBy,
+            return {
+              ...old,
+              sortBy: newSortBy,
+            }
+          },
+          {
+            type: 'clearSortBy',
+            columnId: column.id,
           }
-        })
+        )
     }
 
     column.getSortByToggleProps = makePropGetter(
@@ -345,6 +380,8 @@ function useInstance(instance) {
     rows: sortedRows,
     flatRows: sortedFlatRows,
     toggleSortBy,
+    setSortBy,
+    resetSortBy,
   })
 }
 

@@ -44,7 +44,6 @@ const defaultGetGroupByToggleProps = (props, { header }) => [
   },
 ]
 
-// Reducer
 function getInitialState(state) {
   return {
     groupBy: [],
@@ -135,34 +134,55 @@ function useInstance(instance) {
 
   const toggleGroupBy = React.useCallback(
     (columnId, value) => {
-      setState(old => {
-        const resolvedGroupBy =
-          typeof value !== 'undefined' ? value : !old.groupBy.includes(columnId)
+      setState(
+        old => {
+          value =
+            typeof value !== 'undefined'
+              ? value
+              : !old.groupBy.includes(columnId)
 
-        if (resolvedGroupBy) {
-          return {
-            ...old,
-            groupBy: [...old.groupBy, columnId],
+          if (value) {
+            return [
+              {
+                ...old,
+                groupBy: [...old.groupBy, columnId],
+              },
+              { value },
+            ]
           }
-        }
 
-        return {
-          ...old,
-          groupBy: old.groupBy.filter(d => d !== columnId),
+          return [
+            {
+              ...old,
+              groupBy: old.groupBy.filter(d => d !== columnId),
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'toggleGroupBy',
+          columnId,
         }
-      })
+      )
     },
     [setState]
   )
 
   const resetGroupBy = React.useCallback(
     () =>
-      setState(old => {
-        return {
-          ...old,
-          groupBy: getInstance().initialState.groupBy || [],
+      setState(
+        old => {
+          return {
+            ...old,
+            groupBy: getInstance().initialState.groupBy || [],
+          }
+        },
+        {
+          type: 'resetGroupBy',
         }
-      }),
+      ),
     [getInstance, setState]
   )
 
@@ -385,6 +405,7 @@ function useInstance(instance) {
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
     toggleGroupBy,
+    resetGroupBy,
   })
 }
 
