@@ -46,6 +46,28 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - Server-side/controlled data/state
 - Extensible via hook-based plugin system
 
+## Used By
+
+- [Intuit](https://intuit.com)
+- [Google](https://google.com)
+- [Amazon](https://amazon.com)
+- [Apple](https://apple.com)
+- [AutoZone](https://autozone.com)
+- [Microsoft](https://microsoft.com)
+- [Cisco](https://cisco.com)
+- [Uber](https://uber.com)
+- [Walmart](https://walmart.com)
+- [HP](https://hp.com)
+- [Docusign](https://docusign.com)
+- [Tripwire](https://tripwire.com)
+- [Yahoo!](https://yahoo.com)
+- [Ocado](https://ocado.com)
+- [Nordstrom](https://nordstrom.com)
+- [TicketMaster](https://ticketmaster.com)
+- [Comcast Business](https://comcastbusiness.com)
+
+> _These analytics are made available via the awesome [Scarf](https://www.npmjs.com/package/@scarf/scarf) package analytics library_
+
 ## Product Examples
 
 The examples below are built by our partners from [Creative Tim](https://creative-tim.com/?ref=react-table.js.org) and demonstrate how React Table can be integrated in real world applications. There are many examples that you can play with and each premium product comes with a free & open source version, too!
