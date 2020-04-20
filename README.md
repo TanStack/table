@@ -240,6 +240,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <li>Timo Mämecke (@timomeh)</li>
           <li>Matt Stvartak (@mattstvartak)</li>
           <li>Nicholas Canvoa (@NicholasCanova)</li>
+          <li>JP Rosevear (@jprosevear)</li>
         </ul>
       </td>
       <td>
