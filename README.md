@@ -205,7 +205,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <li>Jon Eickmeier</li>
           <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
           <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
-          <li><a href="https://gitHub.com/kentcdodds"> Kent C. Dodds (@kentcdodds)</a></li>
+          <li><a href="https://kentcdodds.com/"> Kent C. Dodds (kentcdodds.com)</a></li>
         </ul>
       </td>
       <td>
