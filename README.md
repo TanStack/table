@@ -202,9 +202,10 @@ This library is being built and maintained by me, @tannerlinsley and I am always
       </td>
       <td>
         <ul>
-        <li>Jon Eickmeier</li>
+          <li>Jon Eickmeier</li>
           <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
           <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
+          <li><a href="https://gitHub.com/kentcdodds"> Kent C. Dodds (@kentcdodds)</a></li>
         </ul>
       </td>
       <td>
@@ -237,7 +238,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <li>Alin Porumb (@alinporumb)</li>
           <li>Janus Reith (@janus-reith)</li>
           <li>Timo Mämecke (@timomeh)</li>
-          <li>Tyler Reiff (@reiff12)</li>
           <li>Matt Stvartak (@mattstvartak)</li>
           <li>Nicholas Canvoa (@NicholasCanova)</li>
         </ul>
