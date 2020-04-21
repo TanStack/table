@@ -69,10 +69,6 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Must be **memoized**
   - Defaults to `(row, relativeIndex, parent) => parent ? [parent.id, relativeIndex].join('.') : relativeIndex`
-- `debug: Bool`
-  - Optional
-  - A flag to turn on debug mode.
-  - Defaults to `false`
 
 ### Column Options
 
