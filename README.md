@@ -57,6 +57,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - [Cisco](https://cisco.com)
 - [Uber](https://uber.com)
 - [Walmart](https://walmart.com)
+- [Wix](https://wix.com)
 - [HP](https://hp.com)
 - [Docusign](https://docusign.com)
 - [Tripwire](https://tripwire.com)
