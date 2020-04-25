@@ -316,7 +316,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             sort ? (sort.desc ? '-sort-desc' : '-sort-asc') : '',
             isSortable && '-cursor-pointer',
             !show && '-hidden',
-            pivotBy && pivotBy.slice(0, -1).includes(column.id) && 'rt-header-pivot'
+            pivotBy && pivotBy.slice(0, -1).includes(column.id) && 'rt-header-pivot',
+            currentlyResizing && currentlyResizing.id === column.id && 'rt-active-resizing-header',
           )}
           style={{
             ...styles,
