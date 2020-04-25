@@ -20,6 +20,8 @@ export default function useSorting(instance) {
       return [rows, flatRows]
     }
 
+    if (getInstance().options.debug) console.info('Sorting...')
+
     const sortedFlatRows = []
 
     // Filter out sortings that correspond to non existing columns

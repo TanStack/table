@@ -9,6 +9,7 @@ import {
   functionalUpdate,
   shouldAutoRemoveFilter,
   findExpandedDepth,
+  expandRows,
 } from '../utils'
 
 import * as filterTypes from '../filterTypes'
@@ -881,6 +882,153 @@ export default function useTableMethods(instance) {
           type: 'toggleRowSelected',
         }
       ),
+    [getInstance]
+  )
+
+  instance.resetPage = React.useCallback(
+    () =>
+      getInstance().setState(
+        old => ({
+          ...old,
+          pageIndex: getInstance().getInitialState().pageIndex,
+        }),
+        {
+          type: 'resetPage',
+        }
+      ),
+    [getInstance]
+  )
+
+  instance.resetPageSize = React.useCallback(
+    () =>
+      getInstance().setState(
+        old => ({
+          ...old,
+          pageIndex: getInstance().getInitialState().pageSize,
+        }),
+        {
+          type: 'resetPageSize',
+        }
+      ),
+    [getInstance]
+  )
+
+  instance.getPageCount = React.useCallback(
+    () =>
+      getInstance().options.manualPagination
+        ? getInstance().state.pageCount
+        : Math.ceil(getInstance().rows.length / getInstance().state.pageSize),
+    [getInstance]
+  )
+
+  instance.getPageOptions = React.useCallback(() => {
+    const pageCount = getInstance().getPageCount()
+
+    return pageCount > 0
+      ? [...new Array(pageCount)].fill(null).map((d, i) => i)
+      : []
+  }, [getInstance])
+
+  instance.getPageRows = React.useCallback(() => {
+    const {
+      rows,
+      state: { pageIndex, pageSize },
+      options: { manualPagination },
+    } = getInstance()
+    let page
+
+    if (manualPagination) {
+      page = rows
+    } else {
+      const pageStart = pageSize * pageIndex
+      const pageEnd = pageStart + pageSize
+
+      page = rows.slice(pageStart, pageEnd)
+    }
+
+    if (getInstance().options.paginateExpandedRows) {
+      return page
+    }
+
+    return expandRows(page, getInstance)
+  }, [getInstance])
+
+  instance.getCanPreviousPage = React.useCallback(
+    () => getInstance().state.pageIndex > 0,
+    [getInstance]
+  )
+
+  instance.getCanNextPage = React.useCallback(() => {
+    const {
+      state: { pageSize, pageIndex },
+      getPageRows,
+      getPageCount,
+    } = getInstance()
+
+    return getPageCount() === -1
+      ? getPageRows().length >= pageSize
+      : pageIndex < getPageCount() - 1
+  }, [getInstance])
+
+  instance.gotoPage = React.useCallback(
+    pageIndex => {
+      getInstance().setState(
+        old => {
+          const {
+            getPageCount,
+            state: { page },
+          } = getInstance()
+          const newPageIndex = functionalUpdate(pageIndex, old.pageIndex)
+          const cannnotPreviousPage = newPageIndex < 0
+          const pageCount = getPageCount()
+          const cannotNextPage =
+            pageCount === -1
+              ? page.length < old.pageSize
+              : newPageIndex > pageCount - 1
+
+          if (cannnotPreviousPage || cannotNextPage) {
+            return old
+          }
+
+          return {
+            ...old,
+            pageIndex: newPageIndex,
+          }
+        },
+        {
+          type: 'gotoPage',
+        }
+      )
+    },
+    [getInstance]
+  )
+
+  instance.previousPage = React.useCallback(() => {
+    return getInstance().gotoPage(old => old - 1)
+  }, [getInstance])
+
+  instance.nextPage = React.useCallback(() => {
+    return getInstance().gotoPage(old => old + 1)
+  }, [getInstance])
+
+  instance.setPageSize = React.useCallback(
+    pageSize => {
+      getInstance().setState(
+        old => {
+          const topRowIndex = old.pageSize * old.pageIndex
+          const pageIndex = Math.floor(topRowIndex / pageSize)
+
+          return {
+            ...old,
+            pageIndex,
+            pageSize,
+          }
+        },
+        {
+          type: 'setPageSize',
+        }
+      )
+    },
     [getInstance]
   )
 }

@@ -10,7 +10,7 @@ export default function useStateSync(instance) {
   ]
   React.useMemo(() => {
     if (getInstance().options.autoResetColumnFilters) {
-      instance.state.columnFilters = []
+      getInstance().state.columnFilters = getInstance().getInitialState().columnFilters
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, columnFilterResetDeps)
@@ -26,7 +26,7 @@ export default function useStateSync(instance) {
   ]
   React.useMemo(() => {
     if (getInstance().options.autoResetGlobalFilter) {
-      instance.state.globalFilterValue = ''
+      getInstance().state.globalFilterValue = getInstance().getInitialState().globalFilterValue
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, globalFilterResetDeps)
@@ -42,7 +42,7 @@ export default function useStateSync(instance) {
   ]
   React.useMemo(() => {
     if (getInstance().options.autoResetGrouping) {
-      instance.state.grouping = []
+      getInstance().state.grouping = getInstance().getInitialState().grouping
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, groupingResetDeps)
@@ -57,7 +57,7 @@ export default function useStateSync(instance) {
 
   React.useMemo(() => {
     if (getInstance().options.autoResetExpanded) {
-      instance.state.expanded = {}
+      getInstance().state.expanded = getInstance().getInitialState().expanded
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, expandedResetDeps)
@@ -73,7 +73,7 @@ export default function useStateSync(instance) {
   ]
   React.useMemo(() => {
     if (getInstance().options.autoResetSorting) {
-      instance.state.sorting = []
+      getInstance().state.sorting = getInstance().getInitialState().sorting
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, sortingResetDeps)
@@ -87,7 +87,7 @@ export default function useStateSync(instance) {
   const selectionResetDeps = [instance.options.data]
   React.useMemo(() => {
     if (getInstance().options.autoResetSelection) {
-      instance.state.selection = []
+      getInstance().state.selection = getInstance().getInitialState().selection
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, selectionResetDeps)
@@ -97,4 +97,24 @@ export default function useStateSync(instance) {
       instance.resetSelection()
     }
   }, selectionResetDeps)
+
+  const pageResetDeps = [
+    instance.options.manualPagination ? null : instance.options.data,
+    instance.state.globalFilterValue,
+    instance.state.columnFilters,
+    instance.state.grouping,
+    instance.state.sorting,
+  ]
+  React.useMemo(() => {
+    if (getInstance().options.autoResetPage) {
+      getInstance().state.pageIndex = getInstance().getInitialState().pageIndex
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, pageResetDeps)
+
+  useMountedLayoutEffect(() => {
+    if (getInstance().options.autoResetPage) {
+      instance.resetPage()
+    }
+  }, pageResetDeps)
 }

@@ -25,6 +25,8 @@ export default function useGlobalFilter(instance) {
       return [rows, flatRows, rowsById]
     }
 
+    if (getInstance().options.debug) console.info('Global Filtering...')
+
     const filteredFlatRows = []
     const filteredRowsById = {}
 

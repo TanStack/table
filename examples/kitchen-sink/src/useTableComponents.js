@@ -1,7 +1,7 @@
 import React from 'react'
 // import { compose } from 'react-table'
 
-const reduce = (...fns) => {
+const compose = (...fns) => {
   return (...args) => {
     fns.filter(Boolean).forEach(fn => fn(...args))
   }
@@ -10,9 +10,18 @@ const reduce = (...fns) => {
 export default options => {
   return {
     ...options,
-    decorateRow: reduce(decorateRow, options.decorateRow),
-    decorateCell: reduce(decorateCell, options.decorateCell),
-    decorateInstance: reduce(decorateInstance, options.decoreateInstance),
+    decorateRow: React.useMemo(
+      () => compose(decorateRow, options.decorateRow),
+      [options.decorateRow]
+    ),
+    decorateCell: React.useMemo(
+      () => compose(decorateCell, options.decorateCell),
+      [options.decorateCell]
+    ),
+    decorateInstance: React.useMemo(
+      () => compose(decorateInstance, options.decoreateInstance),
+      [options.decoreateInstance]
+    ),
   }
 }
 

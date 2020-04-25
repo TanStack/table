@@ -40,6 +40,8 @@ export default function useGrouping(instance) {
       ]
     }
 
+    if (getInstance().options.debug) console.info('Grouping...')
+
     // Ensure that the list of filtered columns exist
     const existingGrouping = grouping.filter(g =>
       flatColumns.find(col => col.id === g)

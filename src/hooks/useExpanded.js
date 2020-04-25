@@ -16,6 +16,7 @@ export default function useExpanded(instance) {
       // This is here to trigger the change detection
     }
     if (paginateExpandedRows) {
+      if (getInstance().options.debug) console.info('Expanding...')
       return expandRows(rows, getInstance)
     }
     return rows

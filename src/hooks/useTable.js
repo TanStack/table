@@ -34,6 +34,9 @@ const defaultInitialState = {
   sorting: [],
   columnOrder: [],
   selection: {},
+  pageIndex: 0,
+  pageSize: 10,
+  pageCount: -1,
 }
 const defaultInitialUserState = {}
 const defaultOnStateChange = d => d
@@ -71,6 +74,7 @@ const applyDefaults = ({
   orderByFn = defaultOrderByFn,
   manualRowSelectedKey = 'isSelected',
   selectSubRows = true,
+  autoResetPage = true,
   ...rest
 } = {}) => ({
   initialState,
@@ -101,6 +105,7 @@ const applyDefaults = ({
   orderByFn,
   manualRowSelectedKey,
   selectSubRows,
+  autoResetPage,
   ...rest,
 })
 

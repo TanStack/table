@@ -174,11 +174,10 @@ function App() {
     []
   )
 
-  const data = React.useMemo(() => makeData(1000), [])
+  const data = React.useMemo(() => makeData(100000), [])
 
   const {
     headerGroups,
-    rows,
     Table,
     TableHead,
     TableBody,
@@ -189,6 +188,15 @@ function App() {
     setGlobalFilterValue,
     getSelectedFlatRows,
     state,
+    gotoPage,
+    previousPage,
+    getCanPreviousPage,
+    nextPage,
+    getPageRows,
+    getCanNextPage,
+    getPageCount,
+    getPageOptions,
+    setPageSize,
   } = useTable(
     useTableComponents({
       data,
@@ -378,8 +386,8 @@ function App() {
           </filterGroup.HeaderGroup>
         </TableHead>
         <TableBody>
-          {rows.length ? (
-            rows.slice(0, 20).map((row, i) => (
+          {getPageRows().length ? (
+            getPageRows().map((row, i) => (
               <row.Row key={row.id}>
                 {row.getVisibleCells().map(cell => (
                   <cell.Cell key={cell.id}>
@@ -411,6 +419,67 @@ function App() {
             </tr>
           )}
         </TableBody>
+        <tfoot>
+          <tr>
+            <td colSpan={visibleColumns.length}>
+              <div className="pagination">
+                <button
+                  onClick={() => gotoPage(0)}
+                  disabled={!getCanPreviousPage()}
+                >
+                  {'<<'}
+                </button>{' '}
+                <button
+                  onClick={() => previousPage()}
+                  disabled={!getCanPreviousPage()}
+                >
+                  {'<'}
+                </button>{' '}
+                <button onClick={() => nextPage()} disabled={!getCanNextPage()}>
+                  {'>'}
+                </button>{' '}
+                <button
+                  onClick={() => gotoPage(getPageCount() - 1)}
+                  disabled={!getCanNextPage()}
+                >
+                  {'>>'}
+                </button>{' '}
+                <span>
+                  Page{' '}
+                  <strong>
+                    {state.pageIndex + 1} of {getPageOptions().length}
+                  </strong>{' '}
+                </span>
+                <span>
+                  | Go to page:{' '}
+                  <input
+                    type="number"
+                    defaultValue={state.pageIndex + 1}
+                    onChange={e => {
+                      const page = e.target.value
+                        ? Number(e.target.value) - 1
+                        : 0
+                      gotoPage(page)
+                    }}
+                    style={{ width: '100px' }}
+                  />
+                </span>{' '}
+                <select
+                  value={state.pageSize}
+                  onChange={e => {
+                    setPageSize(Number(e.target.value))
+                  }}
+                >
+                  {[10, 20, 30, 40, 50].map(pageSize => (
+                    <option key={pageSize} value={pageSize}>
+                      Show {pageSize}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
       </Table>
       <br />
       <h3>Console Commands</h3>
