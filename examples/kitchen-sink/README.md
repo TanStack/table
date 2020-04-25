@@ -1,4 +1,6 @@
-# Kitchen Sink
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and Rescripts.
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/kitchen-sink)
+You can:
+
+- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-hiding)
 - `yarn` and `yarn start` to run and edit the example

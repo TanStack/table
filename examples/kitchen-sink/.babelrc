@@ -1,4 +1,4 @@
 {
   "presets": ["react-app"],
-  "plugins": ["styled-components"]
+  "plugins": ["styled-components", "@babel/plugin-proposal-optional-chaining"]
 }

@@ -3,13 +3,12 @@ import React from 'react'
 //
 
 import {
+  expandRows,
   ensurePluginOrder,
   functionalUpdate,
   useMountedLayoutEffect,
   useGetLatest,
-} from '../publicUtils'
-
-import { expandRows } from '../utils'
+} from '../utils'
 
 const pluginName = 'usePagination'
 
@@ -41,10 +40,10 @@ function useInstance(instance) {
       pageSize,
       pageIndex,
       expanded,
-      globalFilter,
-      filters,
-      groupBy,
-      sortBy,
+      globalFilterValue,
+      columnFilters,
+      grouping,
+      sorting,
     },
     setState,
     data,
@@ -53,7 +52,13 @@ function useInstance(instance) {
 
   ensurePluginOrder(
     plugins,
-    ['useGlobalFilter', 'useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
+    [
+      'useGlobalFilter',
+      'useFilters',
+      'useGrouping',
+      'useSorting',
+      'useExpanded',
+    ],
     'usePagination'
   )
 
@@ -183,10 +188,10 @@ function useInstance(instance) {
   }, [
     resetPage,
     manualPagination ? null : data,
-    globalFilter,
-    filters,
-    groupBy,
-    sortBy,
+    globalFilterValue,
+    columnFilters,
+    grouping,
+    sorting,
   ])
 
   Object.assign(instance, {

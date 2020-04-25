@@ -7,8 +7,8 @@ export const alphanumeric = (rowA, rowB, columnId) => {
   let a = getRowValueByColumnID(rowA, columnId)
   let b = getRowValueByColumnID(rowB, columnId)
   // Force to strings (or "" for unsupported types)
-  a = toString(a)
-  b = toString(b)
+  a = toString(a).toLowerCase()
+  b = toString(b).toLowerCase()
 
   // Split on number groups, but keep the delimiter
   // Then remove falsey split values
@@ -51,6 +51,19 @@ export const alphanumeric = (rowA, rowB, columnId) => {
   }
 
   return a.length - b.length
+}
+
+// The text filter is more basic (less numeric support)
+// but is much faster
+export const text = (rowA, rowB, columnId) => {
+  let a = getRowValueByColumnID(rowA, columnId)
+  let b = getRowValueByColumnID(rowB, columnId)
+
+  // Force to strings (or "" for unsupported types)
+  a = toString(a).toLowerCase()
+  b = toString(b).toLowerCase()
+
+  return compareBasic(a, b)
 }
 
 export function datetime(rowA, rowB, columnId) {

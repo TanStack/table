@@ -59,7 +59,7 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     selectedFlatRows,
-    state: { selectedRowIds },
+    state: { selection },
   } = useTable(
     {
       columns,
@@ -117,12 +117,12 @@ function Table({ columns, data }) {
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
+      <p>Selected Rows: {Object.keys(selection).length}</p>
       <pre>
         <code>
           {JSON.stringify(
             {
-              selectedRowIds: selectedRowIds,
+              selection: selection,
               'selectedFlatRows[].original': selectedFlatRows.map(
                 d => d.original
               ),

@@ -14,9 +14,16 @@ route: /changelog
 - Removed the `stateReducers` plugin hook
 - Added the `setState` method to the table instance
 - Added the `getInitialState` plugin hook
+- Moved `data` and `columns` options to the `initialState` option. So now, you define your initial columns and data like so `useTable({ initialState: { data, columns } })`
+- The `initialState` option no longer needs to be memoized. If you want to reset the table, you can change the `initialState` as you please and call the `instance.reset` method
+- Added the `instance.reset` method which allows the table to reset using what is available in the `initialState` option
 - Added the `onStateChange` option which allows you to manipulate state changes or control them altogether, receives new state, previous state and action meta
-- Added the `controlledState` option which allows you to shallowly override table state in a controlled way.
+- Added the `state` option which allows you to shallowly override any or all of the table state in a controlled way.
 - Added meta information to all internal `setState` operations
+- `instance.columns` is now `instance.state.columns`
+- `instance.data` is now `instance.state.data`
+- `instance.allColumns` has been removed
+- Accessors with nested string syntax are no longer supported, eg. `nested.property[1].thing`. Only functions and single property accessors are allowed now.
 
 ## 7.0.4
 
@@ -132,7 +139,7 @@ route: /changelog
 - Added the `toggleAllExpanded` action
 - Added the `setExpanded` action
 - Changed `row.isAggregated` to `row.isGrouped`
-- `state.expanded` and `state.selectedRowIds` are now objects (`{[rowId]: Bool}`), not arrays. This should help with mid-to-large size datasets while also being serializable (instead of a Set(), which is not as reliable)
+- `state.expanded` and `state.selection` are now objects (`{[rowId]: Bool}`), not arrays. This should help with mid-to-large size datasets while also being serializable (instead of a Set(), which is not as reliable)
 - `state.filters` is now an array of objects (`{id, value}`). Since filters do have order and can be applied incrementally, it should be an array to ensure correct order.
 - Moved the `flatColumns` and `flatColumnsDeps` hooks to be after row/data materialization. These hooks can then manipulate the `flatColumns` object after all data has been accessed without triggering row materialization again.
 - Added the `row.allCells` property and the `cellColumns` reducer hook to determine which cells to create for each row. These cells are placed into `row.allCells`. The resulting cell array is not meant to be used for display in templating and is only made available for convenience and/or advanced templating.
@@ -147,7 +154,7 @@ route: /changelog
 - Fixed an issue where dependency hooks were not being reduced properly, thus the table would rerender unnecessarily
 - Renamed `toggleRowSelectedAll` to `toggleAllRowsSelected`. Duh...
 - Added an `indeterminate` boolean prop to the default props for row selection toggle prop getters
-- Renamed `selectedRowPaths` to `selectedRowIds`, which also no longer contains paths, but row IDs
+- Renamed `selectedRowPaths` to `selection`, which also no longer contains paths, but row IDs
 - Grouped or nested row selection actions and state are now derived, instead of tracked in state.
 - Rows now have a new property called `id`, which existed before and was derived from the `getRowId` option
 - Rows now also have an `isSomeSelected` prop when using the `useRowSelect` hook, which denotes that at least one subRow is selected (if applicable)
@@ -259,7 +266,7 @@ Modified:
 
 ## 7.0.0-beta.24
 
-- Changed `selectedRowIds` to use a `Set()` instead of an array for performance.
+- Changed `selection` to use a `Set()` instead of an array for performance.
 - Removed types and related files from the repo. The community will now maintain types externally on Definitely Typed
 
 ## 7.0.0-beta.23

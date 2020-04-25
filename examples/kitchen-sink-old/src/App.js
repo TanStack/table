@@ -232,8 +232,8 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val
 
-// Be sure to pass our updateMyData and the skipPageReset option
-function Table({ columns, data, updateMyData, skipPageReset }) {
+// Be sure to pass our updateMyData and the skipReset option
+function Table({ columns, data, updateMyData, skipReset }) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -282,15 +282,21 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize, groupBy, expanded, filters, selection },
+    state: {
+      pageIndex,
+      pageSize,
+      sortBy,
+      groupBy,
+      expanded,
+      filters,
+      selection,
+    },
   } = useTable(
     {
       columns,
       data,
       defaultColumn,
       filterTypes,
-      // nestExpandedRows: true,
-      initialState: { pageIndex: 2 },
       // updateMyData isn't part of the API, but
       // anything we put into these options will
       // automatically be available on the instance.
@@ -298,8 +304,10 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
       // cell renderer!
       updateMyData,
       // We also need to pass this so the page doesn't change
-      // when we edit the data, undefined means using the default
-      autoResetPage: !skipPageReset,
+      // when we edit the data.
+      autoResetPage: !skipReset,
+      autoResetSelectedRows: !skipReset,
+      disableMultiSort: true,
     },
     useFilters,
     useGroupBy,
@@ -307,30 +315,33 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     useExpanded,
     usePagination,
     useRowSelect,
+    // Here we will use a plugin to add our selection column
     hooks => {
-      hooks.visibleColumns.push(columns => [
-        {
-          id: 'selection',
-          // Make this column a groupByBoundary. This ensures that groupBy columns
-          // are placed after it
-          groupByBoundary: true,
-          // The header can use the table's getToggleAllRowsSelectedProps method
-          // to render a checkbox
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to the render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-      ])
+      hooks.visibleColumns.push(columns => {
+        return [
+          {
+            id: 'selection',
+            // Make this column a groupByBoundary. This ensures that groupBy columns
+            // are placed after it
+            groupByBoundary: true,
+            // The header can use the table's getToggleAllRowsSelectedProps method
+            // to render a checkbox
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+              </div>
+            ),
+            // The cell can use the individual row's getToggleRowSelectedProps method
+            // to the render a checkbox
+            Cell: ({ row }) => (
+              <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+            ),
+          },
+          ...columns,
+        ]
+      })
     }
   )
 
@@ -457,6 +468,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
               pageCount,
               canNextPage,
               canPreviousPage,
+              sortBy,
               groupBy,
               expanded: expanded,
               filters,
@@ -499,6 +511,23 @@ function roundedMedian(leafValues) {
 
   return Math.round((min + max) / 2)
 }
+
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
 
 function App() {
   const columns = React.useMemo(
@@ -577,14 +606,14 @@ function App() {
 
   // We need to keep the table from resetting the pageIndex when we
   // Update data. So we can keep track of that flag with a ref.
-  const skipPageResetRef = React.useRef(false)
+  const skipResetRef = React.useRef(false)
 
   // When our cell renderer calls updateMyData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
   const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
-    skipPageResetRef.current = true
+    skipResetRef.current = true
     setData(old =>
       old.map((row, index) => {
         if (index === rowIndex) {
@@ -598,18 +627,18 @@ function App() {
     )
   }
 
-  // After data chagnes, we turn the flag back off
+  // After data changes, we turn the flag back off
   // so that if data actually changes when we're not
   // editing it, the page is reset
   React.useEffect(() => {
-    skipPageResetRef.current = false
+    skipResetRef.current = false
   }, [data])
 
   // Let's add a data resetter/randomizer to help
   // illustrate that flow...
   const resetData = () => {
     // Don't reset the page when we do this
-    skipPageResetRef.current = true
+    skipResetRef.current = true
     setData(originalData)
   }
 
@@ -620,7 +649,7 @@ function App() {
         columns={columns}
         data={data}
         updateMyData={updateMyData}
-        skipPageReset={skipPageResetRef.current}
+        skipReset={skipResetRef.current}
       />
     </Styles>
   )

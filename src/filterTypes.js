@@ -108,4 +108,6 @@ export const between = (rows, ids, filterValue) => {
 }
 
 between.autoRemove = val =>
-  !val || (typeof val[0] !== 'number' && typeof val[1] !== 'number')
+  console.log(val) ||
+  !val ||
+  (typeof val[0] !== 'number' && typeof val[1] !== 'number')

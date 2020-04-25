@@ -42,7 +42,7 @@ The following options are supported via the main options object passed to `useTa
   - Any meta information about the event, if available, is also passed as the third parameter
   - If the previous state is returned, the new state will not be and no rerender will occur
   - If the new or modified state is returned, it will be used as the final state for the update and a rerender will occur.
-  - This callback can be used to "control" the state of the table by sending the new state up the component tree to your own state location and returning the previous state to cancel the update and subsequent rerender. You can then manage your own state further up however you'd like and then send your controlled state back down to the table using the `controlledState` property in `useTable`.
+  - This callback can be used to "control" the state of the table by sending the new state up the component tree to your own state location and returning the previous state to cancel the update and subsequent rerender. You can then manage your own state further up however you'd like and then send your controlled state back down to the table using the `state` property in `useTable`.
   - See the FAQ ["How can I manually control the table state?"](/faq#how-can-i-manually-control-the-table-state) for a an example.
 - `defaultColumn: Object`
   - Optional
@@ -122,17 +122,13 @@ The following options are supported on any column object you can pass to `column
 The following properties are available on the table instance returned from `useTable`
 
 - `state: Object`
-  - **Memoized** - This object reference will not change unless the internal table state is modified.
-  - This is the final state object of the table, which is the product of the `initialState`, internal table reducer and (optionally) a custom `reducer` supplied by the user.
-- `columns: Array<Column>`
-  - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
-  - See [Column Properties](#column-properties) for more information
-- `allColumns: Array<Column>`
-  - A **flat** array of all final column objects.
-  - See [Column Properties](#column-properties) for more information
-- `visibleColumns: Array<Column>`
-  - A **flat** array of all visible column objects derived from `allColumns`.
-  - See [Column Properties](#column-properties) for more information
+  - This is the internal state object of the table, and determines everything about how the table behaves. It houses all data, columns, column state, configuration options, essentially anything that can change over the course of a table instances lifecycle is here.
+  - `columns: Array<Column>`
+    - A **nested** array of final column objects, **similar in structure to the original columns configuration option**.
+    - See [Column Properties](#column-properties) for more information
+  - `rows: Array<Row>`
+    - An array of **materialized row objects** from the original `data` array and `columns` passed into the table options
+    - See [Row Properties](#row-properties) for more information
 - `headerGroups: Array<HeaderGroup>`
   - An array of normalized header groups, each containing a flattened array of final column objects for that row.
   - **Some of these headers may be materialized as placeholders**
@@ -141,18 +137,6 @@ The following properties are available on the table instance returned from `useT
   - An array of normalized header groups, but in reverse order, each containing a flattened array of final column objects for that row.
   - **Some of these headers may be materialized as placeholders**
   - See [HeaderGroup Properties](#headergroup-properties) for more information
-- `headers: Array<Column>`
-  - A **nested** array of final header objects, **similar in structure to the original columns configuration option, but rebuilt for ordering**
-  - Each contains the headers that are displayed underneath it.
-  - **Some of these headers may be materialized as placeholders**
-  - See [Column Properties](#column-properties) for more information
-- `flatHeaders[] Array<Column>`
-  - A **flat** array of final header objects found in each header group.
-  - **Some of these headers may be materialized as placeholders**
-  - See [Column Properties](#column-properties) for more information
-- `rows: Array<Row>`
-  - An array of **materialized row objects** from the original `data` array and `columns` passed into the table options
-  - See [Row Properties](#row-properties) for more information
 - `getTableProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for your table wrapper.

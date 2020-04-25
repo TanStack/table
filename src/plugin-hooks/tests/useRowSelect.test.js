@@ -75,7 +75,6 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: { selectedRowIds },
   } = useTable(
     {
       columns,

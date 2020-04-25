@@ -6,7 +6,7 @@ import {
   ensurePluginOrder,
   useMountedLayoutEffect,
   useGetLatest,
-} from '../publicUtils'
+} from '../utils'
 
 import { flattenColumns, getFirstDefined } from '../utils'
 
@@ -14,7 +14,7 @@ export const _UNSTABLE_usePivotColumns = hooks => {
   hooks.getPivotToggleProps = [defaultGetPivotToggleProps]
   hooks.getInitialState.push(getInitialState)
   hooks.useInstanceAfterData.push(useInstanceAfterData)
-  hooks.allColumns.push(allColumns)
+  hooks.flatColumns.push(flatColumns)
   hooks.accessValue.push(accessValue)
   hooks.materializedColumns.push(materializedColumns)
   hooks.materializedColumnsDeps.push(materializedColumnsDeps)
@@ -52,12 +52,12 @@ function getInitialState(state) {
 }
 
 function useInstanceAfterData(instance) {
-  instance.allColumns.forEach(column => {
+  instance.flatColumns.forEach(column => {
     column.isPivotSource = instance.state.pivotColumns.includes(column.id)
   })
 }
 
-function allColumns(columns, { instance }) {
+function flatColumns(columns, { instance }) {
   columns.forEach(column => {
     column.isPivotSource = instance.state.pivotColumns.includes(column.id)
     column.uniqueValues = new Set()
@@ -73,20 +73,20 @@ function accessValue(value, { column }) {
 }
 
 function materializedColumns(materialized, { instance }) {
-  const { allColumns, state } = instance
+  const { flatColumns, state } = instance
 
-  if (!state.pivotColumns.length || !state.groupBy || !state.groupBy.length) {
+  if (!state.pivotColumns.length || !state.grouping || !state.grouping.length) {
     return materialized
   }
 
   const pivotColumns = state.pivotColumns
-    .map(id => allColumns.find(d => d.id === id))
+    .map(id => flatColumns.find(d => d.id === id))
     .filter(Boolean)
 
-  const sourceColumns = allColumns.filter(
+  const sourceColumns = flatColumns.filter(
     d =>
       !d.isPivotSource &&
-      !state.groupBy.includes(d.id) &&
+      !state.grouping.includes(d.id) &&
       !state.pivotColumns.includes(d.id)
   )
 
@@ -153,19 +153,19 @@ function materializedColumnsDeps(
   deps,
   {
     instance: {
-      state: { pivotColumns, groupBy },
+      state: { pivotColumns, grouping },
     },
   }
 ) {
-  return [...deps, pivotColumns, groupBy]
+  return [...deps, pivotColumns, grouping]
 }
 
 function visibleColumns(visibleColumns, { instance: { state } }) {
   visibleColumns = visibleColumns.filter(d => !d.isPivotSource)
 
-  if (state.pivotColumns.length && state.groupBy && state.groupBy.length) {
+  if (state.pivotColumns.length && state.grouping && state.grouping.length) {
     visibleColumns = visibleColumns.filter(
-      column => column.isGrouped || column.isPivoted
+      column => column.getIsGrouped() || column.getIsPivoted()
     )
   }
 
@@ -173,13 +173,13 @@ function visibleColumns(visibleColumns, { instance: { state } }) {
 }
 
 function visibleColumnsDeps(deps, { instance }) {
-  return [...deps, instance.state.pivotColumns, instance.state.groupBy]
+  return [...deps, instance.state.pivotColumns, instance.state.grouping]
 }
 
 function useInstance(instance) {
   const {
     columns,
-    allColumns,
+    flatColumns,
     flatHeaders,
     // pivotFn = defaultPivotFn,
     // manualPivot,
@@ -192,11 +192,11 @@ function useInstance(instance) {
     defaultCanPivot,
   } = instance
 
-  ensurePluginOrder(plugins, ['useGroupBy'], 'usePivotColumns')
+  ensurePluginOrder(plugins, ['useGrouping'], 'usePivotColumns')
 
   const getInstance = useGetLatest(instance)
 
-  allColumns.forEach(column => {
+  flatColumns.forEach(column => {
     const {
       accessor,
       defaultPivot: defaultColumnPivot,

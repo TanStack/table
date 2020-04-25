@@ -44,25 +44,8 @@ const defaultGetCellProps = (props, { cell }) => ({
   ...props,
 })
 
-export default function makeDefaultPluginHooks() {
+export default function makeDefaultPluginPoints() {
   return {
-    useOptions: [],
-    getInitialState: [],
-    columns: [],
-    columnsDeps: [],
-    allColumns: [],
-    allColumnsDeps: [],
-    accessValue: [],
-    materializedColumns: [],
-    materializedColumnsDeps: [],
-    useInstanceAfterData: [],
-    visibleColumns: [],
-    visibleColumnsDeps: [],
-    headerGroups: [],
-    headerGroupsDeps: [],
-    useInstanceBeforeDimensions: [],
-    useInstance: [],
-    prepareRow: [],
     getTableProps: [defaultGetTableProps],
     getTableBodyProps: [defaultGetTableBodyProps],
     getHeaderGroupProps: [defaultGetHeaderGroupProps],

@@ -1,9 +1,11 @@
 import babel from 'rollup-plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import size from 'rollup-plugin-size'
+import json from '@rollup/plugin-json'
 import externalDeps from 'rollup-plugin-peer-deps-external'
-
-const external = ['react']
+import resolve from 'rollup-plugin-node-resolve'
+import commonJS from 'rollup-plugin-commonjs'
+import visualizer from 'rollup-plugin-visualizer'
 
 const globals = {
   react: 'React',
@@ -19,8 +21,14 @@ export default [
       sourcemap: true,
       globals,
     },
-    external,
-    plugins: [babel(), externalDeps()],
+    plugins: [
+      resolve(),
+      babel(),
+      commonJS(),
+      externalDeps(),
+      json(),
+      visualizer(),
+    ],
   },
   {
     input: 'src/index.js',
@@ -31,14 +39,15 @@ export default [
       sourcemap: true,
       globals,
     },
-    external,
     plugins: [
+      resolve(),
       babel(),
+      commonJS(),
+      json(),
       externalDeps(),
       terser(),
-      size({
-        writeFile: false,
-      }),
+      size(),
+      visualizer(),
     ],
   },
 ]

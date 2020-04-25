@@ -215,7 +215,7 @@ describe('usePagination', () => {
     ).toEqual('tanner 30')
   })
 
-  test('changing filters resets pagination', async () => {
+  test('changing columnFilters resets pagination', async () => {
     const { result } = renderHook(() =>
       useTable(
         {

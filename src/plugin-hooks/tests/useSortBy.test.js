@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
-import { useSortBy } from '../useSortBy'
+import { useSorting } from '../useSorting'
 
 const data = [
   {
@@ -47,7 +47,7 @@ function Table({ columns, data }) {
       data,
       defaultColumn,
     },
-    useSortBy
+    useSorting
   )
 
   return (
@@ -58,7 +58,7 @@ function Table({ columns, data }) {
             {headerGroup.headers.map(column => (
               // Add the sorting props to control sorting. For this example
               // we can add them into the header props
-              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+              <th {...column.getHeaderProps(column.getToggleSortingProps())}>
                 {column.render('Header')}
                 {/* Add a sort direction indicator */}
                 {column.isSorted

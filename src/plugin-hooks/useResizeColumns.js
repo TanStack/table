@@ -1,11 +1,10 @@
 import {
+  getFirstDefined,
   defaultColumn,
   makePropGetter,
   useGetLatest,
   ensurePluginOrder,
-} from '../publicUtils'
-
-import { getFirstDefined } from '../utils'
+} from '../utils'
 
 // Default Column
 defaultColumn.canResize = true

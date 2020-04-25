@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
-import { useGroupBy } from '../useGroupBy'
+import { useGrouping } from '../useGrouping'
 import { useExpanded } from '../useExpanded'
 
 const data = [
@@ -73,10 +73,10 @@ function Table({ columns, data }) {
       data,
       defaultColumn,
       initialState: {
-        groupBy: ["Column Doesn't Exist"],
+        grouping: ["Column Doesn't Exist"],
       },
     },
-    useGroupBy,
+    useGrouping,
     useExpanded
   )
 
@@ -87,10 +87,10 @@ function Table({ columns, data }) {
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th {...column.getHeaderProps()}>
-                {column.canGroupBy ? (
+                {column.canGroup ? (
                   // If the column can be grouped, let's add a toggle
-                  <span {...column.getGroupByToggleProps()}>
-                    {column.isGrouped ? 'Ungroup' : 'Group'} {column.id}
+                  <span {...column.getToggleGroupingProps()}>
+                    {column.getIsGrouped() ? 'Ungroup' : 'Group'} {column.id}
                   </span>
                 ) : null}
                 {column.render('Header')}
@@ -107,7 +107,7 @@ function Table({ columns, data }) {
                 {row.cells.map(cell => {
                   return (
                     <td {...cell.getCellProps()}>
-                      {cell.isGrouped ? (
+                      {cell.getIsGrouped() ? (
                         <>
                           <span
                             style={{
@@ -115,13 +115,13 @@ function Table({ columns, data }) {
                             }}
                             onClick={() => row.toggleRowExpanded()}
                           >
-                            {row.isExpanded ? '👇' : '👉'}
+                            {row.getIsExpanded() ? '👇' : '👉'}
                           </span>
                           {cell.render('Cell')} ({row.subRows.length})
                         </>
-                      ) : cell.isAggregated ? (
+                      ) : cell.getIsAggregated() ? (
                         cell.render('Aggregated')
-                      ) : cell.isPlaceholder ? null : (
+                      ) : cell.getIsPlaceholder() ? null : (
                         cell.render('Cell')
                       )}
                     </td>
@@ -160,8 +160,7 @@ function App() {
             Header: 'First Name',
             accessor: 'firstName',
             aggregate: 'count',
-            Aggregated: ({ value }) =>
-              `First Name Aggregated: ${value} Names`,
+            Aggregated: ({ value }) => `First Name Aggregated: ${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -179,39 +178,34 @@ function App() {
             Header: 'Age',
             accessor: 'age',
             aggregate: 'average',
-            Aggregated: ({ value }) =>
-              `Age Aggregated: ${value} (avg)`,
+            Aggregated: ({ value }) => `Age Aggregated: ${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             aggregate: 'sum',
-            Aggregated: ({ value }) =>
-              `Visits Aggregated: ${value} (total)`,
+            Aggregated: ({ value }) => `Visits Aggregated: ${value} (total)`,
           },
           {
             Header: 'Min Visits',
             id: 'minVisits',
             accessor: 'visits',
             aggregate: 'min',
-            Aggregated: ({ value }) =>
-              `Visits Aggregated: ${value} (min)`,
+            Aggregated: ({ value }) => `Visits Aggregated: ${value} (min)`,
           },
           {
             Header: 'Max Visits',
             id: 'maxVisits',
             accessor: 'visits',
             aggregate: 'max',
-            Aggregated: ({ value }) =>
-              `Visits Aggregated: ${value} (max)`,
+            Aggregated: ({ value }) => `Visits Aggregated: ${value} (max)`,
           },
           {
             Header: 'Min/Max Visits',
             id: 'minMaxVisits',
             accessor: 'visits',
             aggregate: 'minMax',
-            Aggregated: ({ value }) =>
-              `Visits Aggregated: ${value} (minMax)`,
+            Aggregated: ({ value }) => `Visits Aggregated: ${value} (minMax)`,
           },
           {
             Header: 'Status',
@@ -225,8 +219,7 @@ function App() {
             accessor: 'progress',
             id: 'progress',
             aggregate: 'median',
-            Aggregated: ({ value }) =>
-              `Process Aggregated: ${value} (median)`,
+            Aggregated: ({ value }) => `Process Aggregated: ${value} (median)`,
           },
           {
             Header: 'Profile Progress (Rounded Median)',

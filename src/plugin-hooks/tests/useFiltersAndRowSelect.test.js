@@ -93,13 +93,11 @@ function Table({ columns, data }) {
       <p>
         Selected Rows:{' '}
         <span data-testid="selected-count">
-          {Object.keys(state.selectedRowIds).length}
+          {Object.keys(state.selection).length}
         </span>
       </p>
       <pre>
-        <code>
-          {JSON.stringify({ selectedRowIds: state.selectedRowIds }, null, 2)}
-        </code>
+        <code>{JSON.stringify({ selection: state.selection }, null, 2)}</code>
       </pre>
     </>
   )

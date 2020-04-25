@@ -113,7 +113,7 @@ const EnhancedTable = ({
     setPageSize,
     preGlobalFilteredRows,
     setGlobalFilter,
-    state: { pageIndex, pageSize, selectedRowIds, globalFilter },
+    state: { pageIndex, pageSize, selection, globalFilter },
   } = useTable(
     {
       columns,
@@ -174,7 +174,7 @@ const EnhancedTable = ({
   const deleteUserHandler = event => {
     const newData = removeByIndexs(
       data,
-      Object.keys(selectedRowIds).map(x => parseInt(x, 10))
+      Object.keys(selection).map(x => parseInt(x, 10))
     )
     setData(newData)
   }
@@ -188,7 +188,7 @@ const EnhancedTable = ({
   return (
     <TableContainer>
       <TableToolbar
-        numSelected={Object.keys(selectedRowIds).length}
+        numSelected={Object.keys(selection).length}
         deleteUserHandler={deleteUserHandler}
         addUserHandler={addUserHandler}
         preGlobalFilteredRows={preGlobalFilteredRows}

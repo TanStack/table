@@ -26,6 +26,7 @@
     "prepare": "yarn build",
     "release": "yarn publish",
     "releaseNext": "yarn publish --tag next",
+    "stats": "open ./stats.html",
     "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
     "docz:build": "docz build",
     "docz:dev": "docz dev",
@@ -53,6 +54,7 @@
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/runtime": "^7.7.2",
+    "@rollup/plugin-json": "^4.0.3",
     "@svgr/rollup": "^4.3.3",
     "@testing-library/dom": "^6.10.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -99,6 +101,7 @@
     "rollup-plugin-size": "^0.2.1",
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-visualizer": "^4.0.4",
     "serve": "^11.2.0"
   }
 }
