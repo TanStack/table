@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "6.11.4",
+  "version": "6.11.5",
   "description": "A fast, lightweight, opinionated table and datagrid built on React",
   "license": "MIT",
   "homepage": "https://github.com/tannerlinsley/react-table/tree/v6#readme",
@@ -20,7 +20,6 @@
     "src/",
     "es/",
     "lib/",
-    "index.d.ts",
     "react-table.js",
     "react-table.min.js",
     "react-table.css",
@@ -44,6 +43,7 @@
     "docs:build": "yarn build && cd docs && yarn && yarn build"
   },
   "dependencies": {
+    "@types/react-table": "^6.8.5",
     "classnames": "^2.2.5",
     "react-is": "^16.8.1"
   },
