@@ -223,3 +223,9 @@ export function findExpandedDepth(expanded) {
 
   return maxDepth
 }
+
+export function composeDecorate(...fns) {
+  return (...args) => {
+    fns.filter(Boolean).forEach(fn => fn(...args))
+  }
+}

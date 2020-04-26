@@ -300,6 +300,7 @@ export const useTable = options => {
 
 function decorateColumn(column, getInstance) {
   column.getToggleVisibilityProps = (props = {}) => ({
+    type: 'checkbox',
     onChange: e => {
       column.toggleVisibility(e.target.checked)
     },

@@ -1,33 +1,26 @@
 import React from 'react'
-// import { compose } from 'react-table'
+// import { composeDecorate } from 'react-table'
 
-const compose = (...fns) => {
-  return (...args) => {
-    fns.filter(Boolean).forEach(fn => fn(...args))
-  }
-}
-
-export default options => {
-  return {
-    ...options,
-    decorateRow: React.useMemo(
-      () => compose(decorateRow, options.decorateRow),
-      [options.decorateRow]
-    ),
-    decorateCell: React.useMemo(
-      () => compose(decorateCell, options.decorateCell),
-      [options.decorateCell]
-    ),
-    decorateInstance: React.useMemo(
-      () => compose(decorateInstance, options.decoreateInstance),
-      [options.decoreateInstance]
-    ),
-  }
-}
+// export default options => {
+//   return {
+//     ...options,
+//     decorateRow: React.useCallback(
+//       composeDecorate(decorateRow, options.decorateRow),
+//       [options]
+//     ),
+//     decorateCell: React.useCallback(
+//       composeDecorate(decorateCell, options.decorateCell),
+//       [options]
+//     ),
+//     decorateInstance: React.useCallback(
+//       composeDecorate(decorateInstance, options.decoreateInstance),
+//       [options]
+//     ),
+//   }
+// }
 
 function decorateRow(row, getInstance) {
-  row.Row = assignMemo(
-    row,
+  memoOn(row)(
     'Row',
     () => ({
       as = 'tr',
@@ -38,8 +31,7 @@ function decorateRow(row, getInstance) {
 }
 
 function decorateCell(cell, getInstance) {
-  cell.Cell = assignMemo(
-    cell,
+  memoOn(cell)(
     'Cell',
     () => ({ as = 'td', children = cell.render('Cell'), ...rest }) =>
       React.createElement(as, cell.getCellProps(rest), children)
@@ -48,15 +40,13 @@ function decorateCell(cell, getInstance) {
 
 function decorateInstance(instance) {
   instance.flatHeaders.forEach((header, i) => {
-    header.Header = assignMemo(
-      header,
+    memoOn(header)(
       'Header',
       () => ({ as = 'th', children = header.render('Header'), ...rest }) =>
         React.createElement(as, header.getHeaderProps(rest), children)
     )
 
-    header.Footer = assignMemo(
-      header,
+    memoOn(header)(
       'Footer',
       () => ({
         as = 'td',
@@ -65,8 +55,7 @@ function decorateInstance(instance) {
       }) => React.createElement(as, header.getFooterProps(rest), children)
     )
 
-    header.column.VisibilityToggle = assignMemo(
-      header,
+    memoOn(header)(
       'VisibilityToggle',
       () => ({
         as = props => <input type="checkbox" {...props} />,
@@ -80,8 +69,7 @@ function decorateInstance(instance) {
         )
     )
 
-    header.column.GroupingToggle = assignMemo(
-      header,
+    memoOn(header)(
       'GroupingToggle',
       () => ({ as = 'span', children, ...rest }) =>
         header.column.getCanGroup()
@@ -93,8 +81,7 @@ function decorateInstance(instance) {
           : null
     )
 
-    header.column.SortingToggle = assignMemo(
-      header,
+    memoOn(header)(
       'SortingToggle',
       () => ({ as = 'span', children, ...rest }) =>
         header.column.getCanSort()
@@ -109,8 +96,7 @@ function decorateInstance(instance) {
 
   // Decorate HeadersGroups and FooterGroups
   instance.headerGroups.forEach((headerGroup, i) => {
-    headerGroup.HeaderGroup = assignMemo(
-      headerGroup,
+    memoOn(headerGroup)(
       'HeaderGroup',
       () => ({
         as = 'tr',
@@ -127,8 +113,7 @@ function decorateInstance(instance) {
       [headerGroup]
     )
 
-    headerGroup.FooterGroup = assignMemo(
-      headerGroup,
+    memoOn(headerGroup)(
       'FooterGroup',
       () => ({
         as = 'tr',
@@ -141,8 +126,7 @@ function decorateInstance(instance) {
     )
   })
 
-  instance.TableHead = assignMemo(
-    instance,
+  memoOn(instance)(
     'TableHead',
     () => ({
       as = 'thead',
@@ -155,8 +139,7 @@ function decorateInstance(instance) {
 
   const firstFooterGroup = instance.footerGroups[0]
 
-  instance.TableFooter = assignMemo(
-    instance,
+  memoOn(instance)(
     'TableFooter',
     () => ({
       as = 'tfoot',
@@ -166,8 +149,7 @@ function decorateInstance(instance) {
     [firstFooterGroup]
   )
 
-  instance.TableBody = assignMemo(
-    instance,
+  memoOn(instance)(
     'TableBody',
     () => ({
       as = 'tbody',
@@ -176,23 +158,14 @@ function decorateInstance(instance) {
     }) => React.createElement(as, instance.getTableBodyProps(rest), children)
   )
 
-  instance.Table = assignMemo(
-    instance,
-    'Table',
-    () => ({
-      as = 'table',
-      children = () => (
-        <>
-          <instance.TableHead />
-          <instance.TableBody />
-        </>
-      ),
-      ...rest
-    }) => React.createElement(as, instance.getTableProps(rest), children)
+  memoOn(instance)('Table', () => ({ as = 'table', children = () => <>
+        <instance.TableHead />
+        <instance.TableBody />
+      </>, ...rest }) =>
+    React.createElement(as, instance.getTableProps(rest), children)
   )
 
-  instance.AllColumnsVisibilityToggle = assignMemo(
-    instance,
+  memoOn(instance)(
     'AllColumnsVisibilityToggle',
     () => ({
       as = props => <input type="checkbox" {...props} />,
@@ -207,20 +180,23 @@ function decorateInstance(instance) {
   )
 }
 
-function assignMemo(obj, key, value, deps = []) {
-  obj._memos = obj._memos || {}
-  obj._memos[key] = obj._memos[key] || {}
+function memoOn(context) {
+  context._memos = context._memos || {}
 
-  const memo = obj._memos[key]
+  return (key, value, deps = []) => {
+    context._memos[key] = context._memos[key] || {}
 
-  if (
-    !memo.lastDeps ||
-    memo.lastDeps.length !== deps.length ||
-    deps.some((dep, i) => memo.lastDeps[i] !== dep)
-  ) {
-    memo.lastDeps = deps
-    memo.value = value()
+    const memo = context._memos[key]
+
+    if (
+      !memo.lastDeps ||
+      memo.lastDeps.length !== deps.length ||
+      deps.some((dep, i) => memo.lastDeps[i] !== dep)
+    ) {
+      memo.lastDeps = deps
+      memo.value = value()
+    }
+
+    context[key] = memo.value
   }
-
-  return memo.value
 }

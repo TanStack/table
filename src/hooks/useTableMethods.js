@@ -61,7 +61,9 @@ export default function useTableMethods(instance) {
           columnVisibility: getInstance().flatColumns.reduce(
             (obj, column) => ({
               ...obj,
-              [column.id]: value,
+              [column.id]: !value
+                ? !getInstance().getColumnCanHide(column.id)
+                : value,
             }),
             {}
           ),

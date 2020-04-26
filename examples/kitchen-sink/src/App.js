@@ -4,7 +4,17 @@ import matchSorter from 'match-sorter'
 import { useTable } from 'react-table'
 
 import makeData from './makeData'
-import useTableComponents from './useTableComponents'
+// import {
+//   Table,
+//   TableHead,
+//   TableBody,
+//   HeaderGroup,
+//   Header,
+//   GroupingToggle,
+//   SortingToggle,
+//   HeaderContent,
+//   AllColumnsVisibilityToggle,
+// } from './TableComponents'
 
 import {
   DefaultColumnFilter,
@@ -178,10 +188,6 @@ function App() {
 
   const {
     headerGroups,
-    Table,
-    TableHead,
-    TableBody,
-    AllColumnsVisibilityToggle,
     visibilityColumns,
     visibleColumns,
     preGlobalFilteredRows,
@@ -197,91 +203,104 @@ function App() {
     getPageCount,
     getPageOptions,
     setPageSize,
-  } = useTable(
-    useTableComponents({
-      data,
-      columns,
-      defaultColumn: {
-        Filter: DefaultColumnFilter,
-      },
-      filterTypes: {
-        fuzzy: filterFuzzy,
-        greaterThan: filterGreaterThan,
-      },
-      enableFacetedFilters: true,
-      decorateFlatColumns: React.useCallback(
-        flatColumns => {
+    getToggleAllColumnsVisibilityProps,
+    getTableProps,
+    getTableHeadProps,
+    getTableBodyProps,
+  } = useTable({
+    data,
+    columns,
+    defaultColumn: {
+      Filter: DefaultColumnFilter,
+    },
+    filterTypes: {
+      fuzzy: filterFuzzy,
+      greaterThan: filterGreaterThan,
+    },
+    enableFacetedFilters: true,
+    decorateFlatColumns: React.useCallback(
+      flatColumns => {
+        flatColumns.unshift({
+          id: 'selection',
+          isSelectionColumn: true,
+          Header: ({ tableInstance: { getToggleAllRowsSelectedProps } }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        })
+
+        if (enableExpanderColumn) {
           flatColumns.unshift({
-            id: 'selection',
-            isSelectionColumn: true,
-            Header: ({ tableInstance: { getToggleAllRowsSelectedProps } }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </div>
-            ),
-            Cell: ({ row }) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </div>
-            ),
-          })
-
-          if (enableExpanderColumn) {
-            flatColumns.unshift({
-              id: 'expander',
-              isExpanderColumn: true,
-              Header: ({
-                tableInstance: {
-                  flatColumns,
-                  state: { grouping },
-                },
-              }) => {
-                return grouping.map(columnId => {
-                  const column = flatColumns.find(d => d.id === columnId)
-
-                  return (
-                    <span key={columnId}>
-                      {column.getCanGroup() ? (
-                        // If the column can be grouped, let's add a toggle
-                        <column.GroupingToggle>
-                          {column.getIsGrouped() ? '🛑 ' : '👊 '}
-                        </column.GroupingToggle>
-                      ) : null}
-                      {column.render('Header')}{' '}
-                    </span>
-                  )
-                })
+            id: 'expander',
+            isExpanderColumn: true,
+            Header: ({
+              tableInstance: {
+                flatColumns,
+                state: { grouping },
               },
-              Cell: ({ row }) => {
-                if (!row.getCanExpand()) {
-                  return null
-                }
-
-                const groupedCell = row.cells.find(cell => cell.getIsGrouped())
+            }) => {
+              return grouping.map(columnId => {
+                const column = flatColumns.find(d => d.id === columnId)
 
                 return (
-                  <span
-                    {...row.getToggleExpandedProps({
-                      style: {
-                        // We can even use the row.depth property
-                        // and paddingLeft to indicate the depth
-                        // of the row
-                        paddingLeft: `${row.depth * 2}rem`,
-                      },
-                    })}
-                  >
-                    {row.getIsExpanded(0) ? '👇' : '👉'}{' '}
-                    {groupedCell.render('Cell')} ({row.subRows.length})
+                  <span key={columnId}>
+                    {column.getCanGroup() ? (
+                      // If the column can be grouped, let's add a toggle
+                      <column.GroupingToggle>
+                        {column.getIsGrouped() ? '🛑 ' : '👊 '}
+                      </column.GroupingToggle>
+                    ) : null}
+                    {column.SortingToggle ? (
+                      <column.SortingToggle>
+                        {column.render('Header')}
+                        {column.getIsSorted()
+                          ? column.getIsSortedDesc()
+                            ? ' 🔽'
+                            : ' 🔼'
+                          : ''}
+                      </column.SortingToggle>
+                    ) : (
+                      column.render('Header')
+                    )}{' '}
                   </span>
                 )
-              },
-            })
-          }
-        },
-        [enableExpanderColumn]
-      ),
-    })
-  )
+              })
+            },
+            Cell: ({ row }) => {
+              if (!row.getCanExpand()) {
+                return null
+              }
+
+              const groupedCell = row.cells.find(cell => cell.getIsGrouped())
+
+              return (
+                <span
+                  {...row.getToggleExpandedProps({
+                    style: {
+                      // We can even use the row.depth property
+                      // and paddingLeft to indicate the depth
+                      // of the row
+                      paddingLeft: `${row.depth * 2}rem`,
+                    },
+                  })}
+                >
+                  {row.getIsExpanded(0) ? '👇' : '👉'}{' '}
+                  {groupedCell.render('Cell')} ({row.subRows.length})
+                </span>
+              )
+            },
+          })
+        }
+      },
+      [enableExpanderColumn]
+    ),
+  })
 
   const filterGroup = headerGroups[headerGroups.length - 1]
 
@@ -308,13 +327,15 @@ function App() {
         <h3>Column Visibility</h3>
         <label>
           <strong>
-            <AllColumnsVisibilityToggle as={IndeterminateCheckbox} /> All
+            <IndeterminateCheckbox {...getToggleAllColumnsVisibilityProps()} />{' '}
+            All
           </strong>
         </label>{' '}
         {visibilityColumns.map(column => (
           <span key={column.id}>
             <label>
-              <column.VisibilityToggle /> {column.header.render('Header')}
+              <input {...column.getToggleVisibilityProps()} />{' '}
+              {column.header.render('Header')}
             </label>{' '}
           </span>
         ))}
@@ -326,34 +347,36 @@ function App() {
         globalFilterValue={state.globalFilterValue}
         setGlobalFilterValue={setGlobalFilterValue}
       />
-      <Table>
-        <TableHead>
+      <table {...getTableProps()}>
+        <thead {...getTableHeadProps()}>
           {headerGroups.map(headerGroup => (
-            <headerGroup.HeaderGroup key={headerGroup.id}>
+            <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(header => (
-                <header.Header key={header.id}>
-                  <header.column.GroupingToggle>
-                    {header.column.getIsGrouped() ? '🛑 ' : '👊 '}
-                  </header.column.GroupingToggle>{' '}
-                  {header.column.SortingToggle ? (
-                    <header.column.SortingToggle>
+                <th key={header.id} {...header.getHeaderProps()}>
+                  {header.column.getCanGroup() ? (
+                    <span {...header.column.getToggleGroupingProps()}>
+                      {header.column.getIsGrouped() ? '🛑 ' : '👊 '}
+                    </span>
+                  ) : null}
+                  {header.column.getCanSort() ? (
+                    <span {...header.column.getToggleSortingProps()}>
                       {header.render('Header')}
                       {header.column.getIsSorted()
                         ? header.column.getIsSortedDesc()
                           ? ' 🔽'
                           : ' 🔼'
                         : ''}
-                    </header.column.SortingToggle>
+                    </span>
                   ) : (
                     header.render('Header')
                   )}
-                </header.Header>
+                </th>
               ))}
-            </headerGroup.HeaderGroup>
+            </tr>
           ))}
-          <filterGroup.HeaderGroup>
+          <tr {...filterGroup.getHeaderGroupProps()}>
             {filterGroup.headers.map(header => (
-              <header.Header
+              <th
                 key={header.id}
                 style={{
                   position: 'relative',
@@ -381,16 +404,16 @@ function App() {
                 {header.column.getCanFilter() && header.column.Filter
                   ? header.render('Filter')
                   : null}
-              </header.Header>
+              </th>
             ))}
-          </filterGroup.HeaderGroup>
-        </TableHead>
-        <TableBody>
+          </tr>
+        </thead>
+        <tbody {...getTableBodyProps()}>
           {getPageRows().length ? (
             getPageRows().map((row, i) => (
-              <row.Row key={row.id}>
+              <tr key={row.id}>
                 {row.getVisibleCells().map(cell => (
-                  <cell.Cell key={cell.id}>
+                  <td key={cell.id}>
                     {cell.getIsGrouped() ? (
                       // If it's a grouped cell, add an expander and row count
                       <>
@@ -407,9 +430,9 @@ function App() {
                       // Otherwise, just render the regular cell
                       cell.render('Cell')
                     )}
-                  </cell.Cell>
+                  </td>
                 ))}
-              </row.Row>
+              </tr>
             ))
           ) : (
             <tr>
@@ -418,7 +441,7 @@ function App() {
               </td>
             </tr>
           )}
-        </TableBody>
+        </tbody>
         <tfoot>
           <tr>
             <td colSpan={visibleColumns.length}>
@@ -480,7 +503,7 @@ function App() {
             </td>
           </tr>
         </tfoot>
-      </Table>
+      </table>
       <br />
       <h3>Console Commands</h3>
       <ul>
