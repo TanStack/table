@@ -4,17 +4,6 @@ import matchSorter from 'match-sorter'
 import { useTable } from 'react-table'
 
 import makeData from './makeData'
-// import {
-//   Table,
-//   TableHead,
-//   TableBody,
-//   HeaderGroup,
-//   Header,
-//   GroupingToggle,
-//   SortingToggle,
-//   HeaderContent,
-//   AllColumnsVisibilityToggle,
-// } from './TableComponents'
 
 import {
   DefaultColumnFilter,
@@ -411,9 +400,9 @@ function App() {
         <tbody {...getTableBodyProps()}>
           {getPageRows().length ? (
             getPageRows().map((row, i) => (
-              <tr key={row.id}>
+              <tr key={row.id} {...row.getRowProps()}>
                 {row.getVisibleCells().map(cell => (
-                  <td key={cell.id}>
+                  <td key={cell.id} {...cell.getCellProps()}>
                     {cell.getIsGrouped() ? (
                       // If it's a grouped cell, add an expander and row count
                       <>

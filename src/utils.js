@@ -6,6 +6,8 @@ export function functionalUpdate(updater, old) {
   return typeof updater === 'function' ? updater(old) : updater
 }
 
+export function noop() {}
+
 export function useGetLatest(obj) {
   const ref = React.useRef()
   ref.current = obj
@@ -116,24 +118,6 @@ export function flattenBy(arr, key) {
   return flat
 }
 
-export function assignMemo(obj, key, value, deps = []) {
-  obj._memos = obj._memos || {}
-  obj._memos[key] = obj._memos[key] || {}
-
-  const memo = obj._memos[key]
-
-  if (
-    !memo.lastDeps ||
-    memo.lastDeps.length !== deps.length ||
-    deps.some((dep, i) => memo.lastDeps[i] !== dep)
-  ) {
-    memo.lastDeps = deps
-    memo.value = value()
-  }
-
-  return memo.value
-}
-
 export function expandRows(rows, getInstance) {
   const expandedRows = []
 
@@ -163,7 +147,7 @@ export function shouldAutoRemoveFilter(autoRemove, value, column) {
   return autoRemove ? autoRemove(value, column) : typeof value === 'undefined'
 }
 
-export function defaultGroupingFn(rows, columnId) {
+export function groupBy(rows, columnId) {
   return rows.reduce((prev, row, i) => {
     const resKey = `${row.values[columnId]}`
     prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
@@ -172,12 +156,12 @@ export function defaultGroupingFn(rows, columnId) {
   }, {})
 }
 
-export function defaultOrderByFn(arr, funcs, dirs) {
+export function orderBy(arr, funcs, dirs) {
   return [...arr].sort((rowA, rowB) => {
     for (let i = 0; i < funcs.length; i += 1) {
       const sortFn = funcs[i]
       const desc = dirs[i] === false || dirs[i] === 'desc'
-      const sortInt = sortFn(rowA, rowB)
+      const sortInt = sortFn(rowA, rowB, desc)
       if (sortInt !== 0) {
         return desc ? -sortInt : sortInt
       }
@@ -228,4 +212,55 @@ export function composeDecorate(...fns) {
   return (...args) => {
     fns.filter(Boolean).forEach(fn => fn(...args))
   }
+}
+
+export function getLeafHeaders(header) {
+  const leafHeaders = []
+  const recurseHeader = header => {
+    if (header.columns && header.columns.length) {
+      header.columns.map(recurseHeader)
+    }
+    leafHeaders.push(header)
+  }
+  recurseHeader(header)
+  return leafHeaders
+}
+
+export function useLazyMemo(fn, deps = []) {
+  const ref = React.useRef({ deps: [] })
+
+  return React.useCallback(() => {
+    if (
+      ref.current.deps.length !== deps.length ||
+      deps.some((dep, i) => ref.current.deps[i] !== dep)
+    ) {
+      ref.current.deps = deps
+      ref.current.result = fn()
+    }
+
+    return ref.current.result
+  }, [deps, fn])
+}
+
+export function composeDecorator(...fns) {
+  return (...args) => {
+    fns.forEach(fn => fn(...args))
+  }
+}
+
+export function composeReducer(...fns) {
+  return (initial, ...args) =>
+    fns.reduce((reduced, fn) => fn(reduced, ...args), initial)
+}
+
+export function applyDefaults(obj, defaults) {
+  const newObj = { ...obj }
+
+  Object.keys(defaults).forEach(key => {
+    if (typeof newObj[key] === 'undefined') {
+      newObj[key] = defaults[key]
+    }
+  })
+
+  return newObj
 }

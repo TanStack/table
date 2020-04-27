@@ -4,7 +4,7 @@ import React from 'react'
 
 import { useGetLatest, makeRenderer } from '../utils'
 
-export default function useAccessRows(instance) {
+export default function useDataModel(instance) {
   const {
     flatColumns,
     options: { data, decorateRow, decorateCell, getRowId, getSubRows },
@@ -13,7 +13,8 @@ export default function useAccessRows(instance) {
   const getInstance = useGetLatest(instance)
 
   const [rows, flatRows, rowsById] = React.useMemo(() => {
-    if (getInstance().options.debug) console.info('Accessing...')
+    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+      console.info('Accessing...')
 
     // Access the row model using initial columns
     const rows = []
@@ -83,11 +84,6 @@ export default function useAccessRows(instance) {
           value,
         }
 
-        // Give each cell a getCellProps base
-        cell.getCellProps = (props = {}) => ({
-          ...props,
-        })
-
         // Give each cell a renderer function (supports multiple renderers)
         cell.render = makeRenderer(getInstance, column, {
           row,
@@ -96,7 +92,7 @@ export default function useAccessRows(instance) {
           value,
         })
 
-        decorateCell(cell, getInstance)
+        getInstance().plugs.decorateCell(cell, getInstance)
 
         return cell
       })
@@ -106,17 +102,9 @@ export default function useAccessRows(instance) {
           row.cells.find(cell => cell.column.id === column.id)
         )
 
-      decorateRow(row, getInstance)
+      getInstance().plugs.decorateRow(row, getInstance)
     }
-  }, [
-    data,
-    decorateCell,
-    decorateRow,
-    flatColumns,
-    getInstance,
-    getRowId,
-    getSubRows,
-  ])
+  }, [data, flatColumns, getInstance, getRowId, getSubRows])
 
   Object.assign(getInstance(), {
     rows,

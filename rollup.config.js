@@ -6,6 +6,7 @@ import externalDeps from 'rollup-plugin-peer-deps-external'
 import resolve from 'rollup-plugin-node-resolve'
 import commonJS from 'rollup-plugin-commonjs'
 import visualizer from 'rollup-plugin-visualizer'
+import replace from '@rollup/plugin-replace'
 
 const globals = {
   react: 'React',
@@ -40,6 +41,7 @@ export default [
       globals,
     },
     plugins: [
+      replace({ 'process.env.NODE_ENV': `"production"`, delimiters: ['', ''] }),
       resolve(),
       babel(),
       commonJS(),

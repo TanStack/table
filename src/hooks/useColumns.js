@@ -38,7 +38,8 @@ export default function useColumns(instance) {
   // TODO: Derive the default table state from column initial state
 
   instance.columns = React.useMemo(() => {
-    if (getInstance().options.debug) console.info('Building Columns...')
+    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+      console.info('Building Columns...')
 
     return recurseColumns(columns)
 
@@ -96,12 +97,20 @@ export default function useColumns(instance) {
 
     if (!column.id && column.columns) {
       console.error(column)
-      throw new Error('A column ID (or unique "Header" value) is required!')
+      throw new Error(
+        process.env.NODE_ENV !== 'production'
+          ? 'A column ID (or unique "Header" value) is required!'
+          : ''
+      )
     }
 
     if (!column.id) {
       console.error(column)
-      throw new Error('A column ID (or string accessor) is required!')
+      throw new Error(
+        process.env.NODE_ENV !== 'production'
+          ? 'A column ID (or string accessor) is required!'
+          : ''
+      )
     }
 
     column.render = makeRenderer(getInstance, column, {
@@ -136,7 +145,7 @@ export default function useColumns(instance) {
     column.getIsSortedDesc = () =>
       getInstance().getColumnIsSortedDesc(column.id)
 
-    decorateColumn(column, getInstance)
+    instance.plugs.decorateColumn(column, getInstance)
   })
 
   instance.orderedColumns = React.useMemo(() => {
@@ -197,21 +206,17 @@ export default function useColumns(instance) {
       orderedColumns.unshift(selectionColumn)
     }
 
-    decorateOrderedColumns(orderedColumns, getInstance)
+    getInstance().plugs.decorateOrderedColumns(orderedColumns, getInstance)
 
     return orderedColumns
-  }, [
-    columnOrder,
-    decorateOrderedColumns,
-    getInstance,
-    grouping,
-    instance.flatColumns,
-  ])
+  }, [columnOrder, getInstance, grouping, instance.flatColumns])
 
-  instance.visibilityColumns = React.useMemo(() =>
-    instance.orderedColumns.filter(
-      d => !d.isSelectionColumn && !d.isExpanderColumn && d.getCanHide()
-    )
+  instance.visibilityColumns = React.useMemo(
+    () =>
+      instance.orderedColumns.filter(
+        d => !d.isSelectionColumn && !d.isExpanderColumn && d.getCanHide()
+      ),
+    [instance.orderedColumns]
   )
 
   instance.visibleColumns = React.useMemo(() => {
@@ -219,13 +224,26 @@ export default function useColumns(instance) {
       getColumnIsVisible(column.id)
     )
 
-    decorateVisibleColumns(visibleColumns, getInstance)
+    getInstance().plugs.decorateOrderedColumns(visibleColumns, getInstance)
 
     return visibleColumns
-  }, [
-    instance.orderedColumns,
-    decorateVisibleColumns,
-    getInstance,
-    getColumnIsVisible,
-  ])
+  }, [instance.orderedColumns, getInstance, getColumnIsVisible])
+
+  // Check for duplicate columns
+  if (process.env.NODE_ENV !== 'production') {
+    const duplicateColumns = instance.flatColumns.filter((column, i, all) => {
+      return instance.flatColumns.findIndex(d => d.id === column.id) !== i
+    })
+
+    if (duplicateColumns.length) {
+      console.info(instance.flatColumns)
+      throw new Error(
+        process.env.NODE_ENV !== 'production'
+          ? `Duplicate columns were found with ids: "${duplicateColumns
+              .map(d => d.id)
+              .join(', ')}" in the columns array above`
+          : ''
+      )
+    }
+  }
 }

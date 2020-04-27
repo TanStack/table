@@ -1,15 +1,148 @@
 import React from 'react'
 
-import * as aggregationTypes from '../aggregationTypes'
+import {
+  useGetLatest,
+  getFirstDefined,
+  flattenBy,
+  makeRenderer,
+  groupBy,
+  useMountedLayoutEffect,
+} from '../utils'
 
-import { flattenBy, useGetLatest, makeRenderer } from '../utils'
+import * as aggregationTypes from '../aggregationTypes'
 
 const emptyArray = []
 const emptyObject = {}
 
-export default function useGrouping(instance) {
+export const withGrouping = {
+  useOptions,
+  useInstanceAfterState,
+  useInstanceAfterDataModel,
+  decorateColumn,
+  decorateRow,
+  decorateCell,
+}
+
+function useOptions(options) {
+  return {
+    aggregationTypes: {},
+    manualGrouping: false,
+    autoResetGrouping: true,
+    ...options,
+    initialState: {
+      grouping: [],
+      ...options.initialState,
+    },
+  }
+}
+
+function useInstanceAfterState(instance) {
+  const { setState } = instance
+
+  const getInstance = useGetLatest(instance)
+
+  const groupingResetDeps = [
+    instance.options.manualGrouping ? null : instance.options.data,
+  ]
+  React.useMemo(() => {
+    if (getInstance().options.autoResetGrouping) {
+      getInstance().state.grouping = getInstance().getInitialState().grouping
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, groupingResetDeps)
+
+  useMountedLayoutEffect(() => {
+    if (getInstance().options.autoResetGrouping) {
+      instance.resetGrouping()
+    }
+  }, groupingResetDeps)
+
+  instance.getColumnCanGroup = React.useCallback(
+    columnId => {
+      const column = getInstance().flatColumns.find(d => d.id === columnId)
+
+      if (!column) {
+        return false
+      }
+
+      return getFirstDefined(
+        getInstance().options.disableGrouping ? false : undefined,
+        column.disableGrouping ? false : undefined,
+        column.defaultCanGrouping,
+        !!column.accessor
+      )
+    },
+    [getInstance]
+  )
+
+  instance.getColumnIsGrouped = React.useCallback(
+    columnId => getInstance().state.grouping.includes(columnId),
+    [getInstance]
+  )
+
+  instance.getColumnGroupedIndex = React.useCallback(
+    columnId => getInstance().state.grouping.indexOf(columnId),
+    [getInstance]
+  )
+
+  instance.toggleColumnGrouping = React.useCallback(
+    (columnId, value) => {
+      setState(
+        old => {
+          value =
+            typeof value !== 'undefined'
+              ? value
+              : !old.grouping.includes(columnId)
+
+          if (value) {
+            return [
+              {
+                ...old,
+                grouping: [...old.grouping, columnId],
+              },
+              { value },
+            ]
+          }
+
+          return [
+            {
+              ...old,
+              grouping: old.grouping.filter(d => d !== columnId),
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'toggleColumnGrouping',
+          columnId,
+        }
+      )
+    },
+    [setState]
+  )
+
+  instance.resetGrouping = React.useCallback(
+    () =>
+      setState(
+        old => {
+          return {
+            ...old,
+            grouping: getInstance().getInitialState().grouping,
+          }
+        },
+        {
+          type: 'resetGrouping',
+        }
+      ),
+    [getInstance, setState]
+  )
+}
+
+function useInstanceAfterDataModel(instance) {
   const {
-    options: { groupingFn, manualGrouping, decorateCell, decorateRow },
+    options: { manualGrouping, decorateCell, decorateRow },
     state: { grouping },
     flatColumns,
     rows,
@@ -40,7 +173,8 @@ export default function useGrouping(instance) {
       ]
     }
 
-    if (getInstance().options.debug) console.info('Grouping...')
+    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+      console.info('Grouping...')
 
     // Ensure that the list of filtered columns exist
     const existingGrouping = grouping.filter(g =>
@@ -79,7 +213,9 @@ export default function useGrouping(instance) {
             if (!aggregateValueFn) {
               console.info({ column })
               throw new Error(
-                `React Table: Invalid column.aggregateValue option for column listed above`
+                process.env.NODE_ENV !== 'production'
+                  ? `React Table: Invalid column.aggregateValue option for column listed above`
+                  : ''
               )
             }
 
@@ -100,7 +236,9 @@ export default function useGrouping(instance) {
         } else if (column.aggregate) {
           console.info({ column })
           throw new Error(
-            `React Table: Invalid column.aggregate option for column listed above`
+            process.env.NODE_ENV !== 'production'
+              ? `React Table: Invalid column.aggregate option for column listed above`
+              : ''
           )
         } else {
           values[column.id] = null
@@ -127,7 +265,7 @@ export default function useGrouping(instance) {
       const columnId = existingGrouping[depth]
 
       // Group the rows together for this level
-      let rowGroupsMap = groupingFn(rows, columnId)
+      let rowGroupsMap = groupBy(rows, columnId)
 
       // Peform aggregations for each group
       const aggregatedGroupedRows = Object.entries(rowGroupsMap).map(
@@ -181,11 +319,6 @@ export default function useGrouping(instance) {
               value,
             }
 
-            // Give each cell a getCellProps base
-            cell.getCellProps = (props = {}) => ({
-              ...props,
-            })
-
             // Give each cell a renderer function (supports multiple renderers)
             cell.render = makeRenderer(getInstance, column, {
               row,
@@ -194,7 +327,7 @@ export default function useGrouping(instance) {
               value,
             })
 
-            decorateCell(cell, getInstance)
+            getInstance().plugs.decorateCell(cell, getInstance)
 
             return cell
           })
@@ -204,7 +337,7 @@ export default function useGrouping(instance) {
               row.cells.find(cell => cell.column.id === column.id)
             )
 
-          decorateRow(row, getInstance)
+          getInstance().plugs.decorateRow(row, getInstance)
 
           return row
         }
@@ -245,9 +378,6 @@ export default function useGrouping(instance) {
     rowsById,
     flatColumns,
     getInstance,
-    groupingFn,
-    decorateRow,
-    decorateCell,
   ])
 
   Object.assign(instance, {
@@ -265,4 +395,40 @@ export default function useGrouping(instance) {
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
   })
+}
+
+function decorateColumn(column) {
+  column.getToggleGroupingProps = (props = {}) => {
+    const canGroup = column.getCanGroup()
+
+    return {
+      onClick: canGroup
+        ? e => {
+            e.persist()
+            column.toggleGrouping()
+          }
+        : undefined,
+      style: {
+        cursor: canGroup ? 'pointer' : undefined,
+      },
+      title: 'Toggle Grouping',
+      ...props,
+    }
+  }
+}
+
+function decorateRow(row, getInstance) {
+  row.getIsGrouped = () => !!row.groupingId
+}
+
+function decorateCell(cell) {
+  // Grouped cells are in the grouping and the pivot cell for the row
+  cell.getIsGrouped = () =>
+    cell.column.getIsGrouped() && cell.column.id === cell.row.groupingId
+  // Placeholder cells are any columns in the grouping that are not grouped
+  cell.getIsPlaceholder = () =>
+    !cell.getIsGrouped() && cell.column.getIsGrouped()
+  // Aggregated cells are not grouped, not repeated, but still have subRows
+  cell.getIsAggregated = () =>
+    !cell.getIsGrouped() && !cell.getIsPlaceholder() && cell.row.getCanExpand()
 }

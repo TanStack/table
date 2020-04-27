@@ -8,7 +8,8 @@ export default function useHeaderWidths(instance) {
   const getInstance = useGetLatest(instance)
 
   React.useMemo(() => {
-    if (getInstance().options.debug) console.info('Getting Header Widths...')
+    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+      console.info('Getting Header Widths...')
 
     let sumTotalMinWidth = 0
     let sumTotalWidth = 0
