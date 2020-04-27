@@ -400,7 +400,14 @@ function App() {
         <tbody {...getTableBodyProps()}>
           {getPageRows().length ? (
             getPageRows().map((row, i) => (
-              <tr key={row.id} {...row.getRowProps()}>
+              <tr
+                key={row.id}
+                {...row.getRowProps({
+                  style: {
+                    background: row.getIsSelected() ? '#d2f4ff' : undefined,
+                  },
+                })}
+              >
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id} {...cell.getCellProps()}>
                     {cell.getIsGrouped() ? (

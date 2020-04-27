@@ -5,6 +5,8 @@ import {
   useLazyMemo,
   useMountedLayoutEffect,
   getRowIsSelected,
+  composeReducer,
+  functionalUpdate,
 } from '../utils'
 
 export const withSelection = {
@@ -18,6 +20,8 @@ function useOptions(options) {
     selectSubRows: true,
     selectGroupingRows: false,
     manualRowSelectedKey: 'isSelected',
+    isAdditiveSelectEvent: e => e.metaKey,
+    isInclusiveSelectEvent: e => e.shiftKey,
     ...options,
     initialState: {
       selection: {},
@@ -63,6 +67,20 @@ function useInstanceAfterState(instance) {
         }
       ),
     [getInstance, setState]
+  )
+
+  instance.setSelectedRows = React.useCallback(
+    updater =>
+      setState(
+        old => ({
+          ...old,
+          selection: functionalUpdate(updater, old.selection),
+        }),
+        {
+          type: 'resetSelectedRows',
+        }
+      ),
+    [setState]
   )
 
   instance.toggleAllRowsSelected = React.useCallback(
@@ -162,6 +180,33 @@ function useInstanceAfterState(instance) {
     [getInstance, setState]
   )
 
+  instance.addSelectionToRowId = React.useCallback(
+    rowId => {
+      getInstance().setSelectedRows(old => {
+        const firstSelectedId = Object.keys(old)[0] || getInstance().rows[0].id
+
+        let include = false
+        const newSelected = {}
+
+        getInstance().rows.forEach(d => {
+          if (!include && (d.id === rowId || d.id === firstSelectedId)) {
+            include = true
+          } else if (include && (d.id === rowId || d.id === firstSelectedId)) {
+            newSelected[d.id] = true
+            include = false
+          }
+
+          if (include) {
+            newSelected[d.id] = true
+          }
+        })
+
+        return newSelected
+      })
+    },
+    [getInstance]
+  )
+
   instance.getIsAllRowsSelected = useLazyMemo(() => {
     let isAllRowsSelected = Boolean(
       Object.keys(instance.nonGroupedRowsById).length &&
@@ -224,9 +269,7 @@ function decorateRow(row, getInstance) {
     }
 
     return {
-      onChange: e => {
-        row.toggleRowSelected(e.target.checked)
-      },
+      onChange: e => row.toggleRowSelected(e.target.checked),
       style: {
         cursor: 'pointer',
       },
@@ -236,4 +279,16 @@ function decorateRow(row, getInstance) {
       ...props,
     }
   }
+
+  row.getRowProps = composeReducer(row.getRowProps, props => ({
+    onClick: e =>
+      getInstance().options.isAdditiveSelectEvent(e)
+        ? row.toggleRowSelected()
+        : getInstance().options.isInclusiveSelectEvent(e)
+        ? getInstance().addSelectionToRowId(row.id)
+        : getInstance().setSelectedRows(old => ({
+            [row.id]: !old[row.id],
+          })),
+    ...props,
+  }))
 }
