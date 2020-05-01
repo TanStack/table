@@ -8,13 +8,13 @@ import {
 } from '../utils'
 
 export const withExpanding = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
   decorateRow,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     manualExpandedKey: 'expanded',
     expandSubRows: true,
@@ -75,6 +75,8 @@ function useInstanceAfterState(instance) {
       setState(
         old => {
           const exists = old.expanded[id]
+
+          console.log('expand', exists)
 
           value = typeof value !== 'undefined' ? value : !exists
 
@@ -176,9 +178,6 @@ function useInstanceAfterState(instance) {
     onClick: e => {
       instance.toggleAllRowsExpanded()
     },
-    style: {
-      cursor: 'pointer',
-    },
     title: 'Toggle All Rows Expanded',
     ...props,
   })
@@ -212,7 +211,7 @@ function useInstanceAfterDataModel(instance) {
   })
 }
 
-function decorateRow(row, getInstance) {
+function decorateRow(row, { getInstance }) {
   row.toggleExpanded = set => getInstance().toggleRowExpanded(row.id, set)
 
   row.getIsExpanded = () =>
@@ -222,12 +221,7 @@ function decorateRow(row, getInstance) {
   row.getCanExpand = () => row.subRows && !!row.subRows.length
 
   row.getToggleExpandedProps = (props = {}) => ({
-    onClick: () => {
-      row.toggleExpanded()
-    },
-    style: {
-      cursor: 'pointer',
-    },
+    onClick: e => e.stopPropagation() || row.toggleExpanded(),
     title: 'Toggle Row Expanded',
     ...props,
   })

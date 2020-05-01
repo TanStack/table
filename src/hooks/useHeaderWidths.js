@@ -7,7 +7,7 @@ import { useGetLatest } from '../utils'
 export default function useHeaderWidths(instance) {
   const getInstance = useGetLatest(instance)
 
-  React.useMemo(() => {
+  const measurements = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
       console.info('Getting Header Widths...')
 
@@ -18,12 +18,12 @@ export default function useHeaderWidths(instance) {
 
     calculateHeaderWidths(instance.headerGroups[0].headers)
 
-    Object.assign(getInstance(), {
+    return {
       sumTotalMinWidth,
       sumTotalWidth,
       sumTotalMaxWidth,
       sumTotalFlexWidth,
-    })
+    }
 
     function calculateHeaderWidths(headers, left = 0) {
       headers.forEach(header => {
@@ -38,18 +38,21 @@ export default function useHeaderWidths(instance) {
             totalMaxWidth,
             totalFlexWidth,
           ] = calculateHeaderWidths(subHeaders, left)
+
           header.totalMinWidth = totalMinWidth
           header.totalWidth = totalWidth
           header.totalMaxWidth = totalMaxWidth
           header.totalFlexWidth = totalFlexWidth
         } else {
-          header.totalMinWidth = header.minWidth
+          header.totalMinWidth = header.column.minWidth
           header.totalWidth = Math.min(
-            Math.max(header.minWidth, header.width),
-            header.maxWidth
+            Math.max(header.column.minWidth, header.column.width),
+            header.column.maxWidth
           )
-          header.totalMaxWidth = header.maxWidth
-          header.totalFlexWidth = header.canResize ? header.totalWidth : 0
+          header.totalMaxWidth = header.column.maxWidth
+          header.totalFlexWidth = header.getCanResize?.()
+            ? header.totalWidth
+            : 0
         }
 
         if (header.column.getIsVisible()) {
@@ -62,4 +65,6 @@ export default function useHeaderWidths(instance) {
       })
     }
   }, [getInstance, instance.headerGroups])
+
+  Object.assign(instance, measurements)
 }

@@ -13,27 +13,30 @@ import useHeaderWidths from './useHeaderWidths'
 
 import { withCore } from '../plugins/withCore'
 import { withVisibility } from '../plugins/withVisibility'
-import { withColumnFilters } from '../plugins/withColumnFilters'
-import { withGlobalFilter } from '../plugins/withGlobalFilter'
-import { withGrouping } from '../plugins/withGrouping'
-import { withSorting } from '../plugins/withSorting'
-import { withExpanding } from '../plugins/withExpanding'
-import { withPagination } from '../plugins/withPagination'
-import { withSelection } from '../plugins/withSelection'
 
 //
 
 const plugTypes = [
-  ['useOptions', composeReducer],
+  ['useReduceOptions', composeReducer],
   ['useInstanceAfterState', composeDecorator],
   ['useInstanceAfterDataModel', composeDecorator],
   ['decorateFlatColumns', composeDecorator],
   ['decorateColumn', composeDecorator],
+  ['decorateHeader', composeDecorator],
   ['decorateOrderedColumns', composeDecorator],
   ['decorateVisibleColumns', composeDecorator],
   ['decorateRow', composeDecorator],
   ['decorateCell', composeDecorator],
   ['useInstanceFinal', composeDecorator],
+  ['reduceTableProps', composeReducer],
+  ['reduceTableBodyProps', composeReducer],
+  ['reduceTableHeadProps', composeReducer],
+  ['reduceTableFootProps', composeReducer],
+  ['reduceHeaderGroupProps', composeReducer],
+  ['reduceFooterGroupProps', composeReducer],
+  ['reduceHeaderProps', composeReducer],
+  ['reduceRowProps', composeReducer],
+  ['reduceCellProps', composeReducer],
 ]
 
 export const useTable = options => {
@@ -47,18 +50,7 @@ export const useTable = options => {
 
   options = {
     ...options,
-    plugins: [
-      withCore,
-      withVisibility,
-      withColumnFilters,
-      withGlobalFilter,
-      withGrouping,
-      withSorting,
-      withExpanding,
-      withPagination,
-      withSelection,
-      ...options.plugins,
-    ].filter(Boolean),
+    plugins: [withCore, withVisibility, ...options.plugins].filter(Boolean),
   }
 
   instance.plugs = {}
@@ -68,7 +60,11 @@ export const useTable = options => {
       .map(plugin => plugin[plugType])
       .filter(Boolean)
 
-    instance.plugs[plugType] = compositionFn(...pluginPlugs)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    instance.plugs[plugType] = React.useCallback(
+      compositionFn(...pluginPlugs),
+      pluginPlugs
+    )
   })
 
   // Apply the defaults to our options

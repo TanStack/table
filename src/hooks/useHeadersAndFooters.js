@@ -2,7 +2,7 @@ import React from 'react'
 
 //
 
-import { useGetLatest, makeRenderer, getLeafHeaders } from '../utils'
+import { useGetLatest, makeRenderer } from '../utils'
 
 export default function useHeadersAndFooters(instance) {
   const { columns, visibleColumns } = instance
@@ -110,15 +110,23 @@ export default function useHeadersAndFooters(instance) {
     headerGroups.reverse()
 
     headerGroups.forEach(headerGroup => {
-      headerGroup.getHeaderGroupProps = (props = {}) => ({
-        role: 'row',
-        ...props,
-      })
+      headerGroup.getHeaderGroupProps = (props = {}) =>
+        getInstance().plugs.reduceHeaderGroupProps(
+          {
+            role: 'row',
+            ...props,
+          },
+          { getInstance, headerGroup }
+        )
 
-      headerGroup.getFooterGroupProps = (props = {}) => ({
-        role: 'row',
-        ...props,
-      })
+      headerGroup.getFooterGroupProps = (props = {}) =>
+        getInstance().plugs.reduceFooterGroupProps(
+          {
+            role: 'row',
+            ...props,
+          },
+          { getInstance, headerGroup }
+        )
     })
 
     return headerGroups
@@ -167,192 +175,36 @@ export default function useHeadersAndFooters(instance) {
         .map(header => {
           header.render = header.isPlaceholder
             ? () => null
-            : makeRenderer(getInstance, header.column, {
+            : makeRenderer(getInstance, {
                 column: header.column,
               })
 
           // Give columns/headers a default getHeaderProps
-          header.getHeaderProps = (props = {}) => ({
-            role: 'columnheader',
-            colSpan: header.colSpan,
-            style: {
-              position: 'relative',
-            },
-            ...props,
-          })
+          header.getHeaderProps = (props = {}) =>
+            getInstance().plugs.reduceHeaderProps(
+              {
+                role: 'columnheader',
+                ...props,
+              },
+              { getInstance, header }
+            )
 
           // Give columns/headers a default getFooterProps
-          header.getFooterProps = (props = {}) => ({
-            colSpan: header.colSpan,
-            style: {
-              position: 'relative',
-            },
-            ...props,
-          })
-
-          header.getCanResize = () =>
-            getInstance().getColumnCanResize(header.column.id)
+          header.getFooterProps = (props = {}) =>
+            getInstance().plugs.reduceFooterProps(
+              {
+                role: 'columnfooter',
+                ...props,
+              },
+              {
+                getInstance,
+                header,
+              }
+            )
 
           header.getWidth = () => getInstance().getColumnWidth(header.column.id)
-          header.getIsResizing = () =>
-            getInstance().getColumnIsResizing(header.column.id)
 
-          header.getResizerProps = (props = {}) => {
-            const onResizeStart = (e, header) => {
-              let isTouchEvent = false
-              if (e.type === 'touchstart') {
-                // lets not respond to multiple touches (e.g. 2 or 3 fingers)
-                if (e.touches && e.touches.length > 1) {
-                  return
-                }
-                isTouchEvent = true
-              }
-              const headersToResize = getLeafHeaders(header)
-              const headerIdWidths = headersToResize.map(d => [
-                d.id,
-                d.totalWidth,
-              ])
-
-              const clientX = isTouchEvent
-                ? Math.round(e.touches[0].clientX)
-                : e.clientX
-
-              const onMove = clientXPos =>
-                getInstance().setState(
-                  old => {
-                    const {
-                      startX,
-                      columnWidth,
-                      headerIdWidths,
-                    } = old.columnResizing
-
-                    const deltaX = clientXPos - startX
-                    const percentageDeltaX = deltaX / columnWidth
-
-                    const newColumnWidths = {}
-
-                    headerIdWidths.forEach(([headerId, headerWidth]) => {
-                      newColumnWidths[headerId] = Math.max(
-                        headerWidth + headerWidth * percentageDeltaX,
-                        0
-                      )
-                    })
-
-                    return {
-                      ...old,
-                      columnResizing: {
-                        ...old.columnResizing,
-                        columnWidths: {
-                          ...old.columnResizing.columnWidths,
-                          ...newColumnWidths,
-                        },
-                      },
-                    }
-                  },
-                  {
-                    type: 'resizeColumnMove',
-                  }
-                )
-
-              const onEnd = () =>
-                getInstance().setState(
-                  old => ({
-                    ...old,
-                    columnResizing: {
-                      ...old.columnResizing,
-                      startX: null,
-                      isResizingColumn: null,
-                    },
-                  }),
-                  {
-                    type: 'resizeColumnEnd',
-                  }
-                )
-
-              const handlersAndEvents = {
-                mouse: {
-                  moveEvent: 'mousemove',
-                  moveHandler: e => onMove(e.clientX),
-                  upEvent: 'mouseup',
-                  upHandler: e => {
-                    document.removeEventListener(
-                      'mousemove',
-                      handlersAndEvents.mouse.moveHandler
-                    )
-                    document.removeEventListener(
-                      'mouseup',
-                      handlersAndEvents.mouse.upHandler
-                    )
-                    onEnd()
-                  },
-                },
-                touch: {
-                  moveEvent: 'touchmove',
-                  moveHandler: e => {
-                    if (e.cancelable) {
-                      e.preventDefault()
-                      e.stopPropagation()
-                    }
-                    onMove(e.touches[0].clientX)
-                    return false
-                  },
-                  upEvent: 'touchend',
-                  upHandler: e => {
-                    document.removeEventListener(
-                      handlersAndEvents.touch.moveEvent,
-                      handlersAndEvents.touch.moveHandler
-                    )
-                    document.removeEventListener(
-                      handlersAndEvents.touch.upEvent,
-                      handlersAndEvents.touch.moveHandler
-                    )
-                    onEnd()
-                  },
-                },
-              }
-
-              const events = isTouchEvent
-                ? handlersAndEvents.touch
-                : handlersAndEvents.mouse
-
-              document.addEventListener(events.moveEvent, events.moveHandler, {
-                passive: false,
-              })
-
-              document.addEventListener(events.upEvent, events.upHandler, {
-                passive: false,
-              })
-
-              getInstance().setState(
-                old => ({
-                  ...old,
-                  columnResizing: {
-                    ...old.columnResizing,
-                    startX: clientX,
-                    headerIdWidths,
-                    columnWidth: header.totalWidth,
-                    isResizingColumn: header.id,
-                  },
-                }),
-                {
-                  type: 'resizeColumnStart',
-                }
-              )
-            }
-
-            return [
-              props,
-              {
-                onMouseDown: e => e.persist() || onResizeStart(e, header),
-                onTouchStart: e => e.persist() || onResizeStart(e, header),
-                style: {
-                  cursor: 'ew-resize',
-                },
-                draggable: false,
-                role: 'separator',
-              },
-            ]
-          }
+          getInstance().plugs.decorateHeader(header, { getInstance })
 
           return header
         }),

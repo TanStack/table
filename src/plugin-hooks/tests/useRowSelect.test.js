@@ -89,7 +89,7 @@ function Table({ columns, data }) {
           id: 'selection',
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
-          Header: ({ getToggleAllRowsSelectedProps }) => (
+          Header: ({ tableInstance: { getToggleAllRowsSelectedProps } }) => (
             <div>
               <label>
                 <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />{' '}

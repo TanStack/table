@@ -1,76 +1,20 @@
 import React from 'react'
-import styled from 'styled-components'
 import matchSorter from 'match-sorter'
-import { useTable } from 'react-table'
+
+import {
+  useTable,
+  withColumnFilters,
+  withGlobalFilter,
+  withGrouping,
+  withSorting,
+  withExpanding,
+  withPagination,
+  withSelection,
+} from 'react-table'
 
 import makeData from './makeData'
 
-import {
-  DefaultColumnFilter,
-  GlobalFilter,
-  SelectColumnFilter,
-  SliderColumnFilter,
-  NumberRangeColumnFilter,
-} from './Filters'
-
-const Styles = styled.div`
-  padding: 1rem;
-
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
-
-    thead {
-      tr:last-child {
-        th {
-          border-bottom: 2px solid black;
-        }
-      }
-    }
-
-    tr {
-      :last-child {
-        th,
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
-      :last-child {
-        border-right: 0;
-      }
-    }
-
-    tfoot {
-      tr:first-child {
-        td {
-          border-top: 2px solid black;
-        }
-      }
-    }
-  }
-`
-
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef()
-    const resolvedRef = ref || defaultRef
-
-    React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate
-    }, [resolvedRef, indeterminate])
-
-    return <input type="checkbox" ref={resolvedRef} {...rest} />
-  }
-)
+import { BasicTable, withBasicTable } from './BasicTable'
 
 // Define a custom filterType function!
 const filterGreaterThan = (rows, ids, filterValue) => {
@@ -110,6 +54,8 @@ function roundedMedian(leafValues) {
 
 function App() {
   const [enableExpanderColumn, setEnableExpanderColumn] = React.useState(false)
+  const [debug, setDebug] = React.useState(false)
+
   const columns = React.useMemo(
     () => [
       {
@@ -136,7 +82,7 @@ function App() {
           {
             Header: 'Age',
             accessor: 'age',
-            Filter: SliderColumnFilter,
+            filterUi: 'range',
             filterType: 'equals',
             aggregate: 'average',
             Aggregated: ({ value }) => `${value} (avg)`,
@@ -145,7 +91,7 @@ function App() {
           {
             Header: 'Visits',
             accessor: 'visits',
-            Filter: NumberRangeColumnFilter,
+            filterUi: 'minMax',
             filterType: 'between',
             aggregate: 'sum',
             Aggregated: ({ value }) => `${value} (total)`,
@@ -154,14 +100,14 @@ function App() {
           {
             Header: 'Status',
             accessor: 'status',
-            Filter: SelectColumnFilter,
+            filterUi: 'select',
             filterType: 'includes',
             enableUniqueValues: true,
           },
           {
             Header: 'Profile Progress',
             accessor: 'progress',
-            Filter: SliderColumnFilter,
+            filterUi: 'range',
             filterType: 'greaterThan',
             aggregate: roundedMedian,
             Aggregated: ({ value }) => `${value} (med)`,
@@ -175,334 +121,69 @@ function App() {
 
   const data = React.useMemo(() => makeData(100000), [])
 
-  const {
-    headerGroups,
-    visibilityColumns,
-    visibleColumns,
-    preGlobalFilteredRows,
-    setGlobalFilterValue,
-    getSelectedFlatRows,
-    state,
-    gotoPage,
-    previousPage,
-    getCanPreviousPage,
-    nextPage,
-    getPageRows,
-    getCanNextPage,
-    getPageCount,
-    getPageOptions,
-    setPageSize,
-    getToggleAllColumnsVisibilityProps,
-    getTableProps,
-    getTableHeadProps,
-    getTableBodyProps,
-  } = useTable({
+  const instance = useTable({
+    debug,
     data,
     columns,
-    defaultColumn: {
-      Filter: DefaultColumnFilter,
-    },
     filterTypes: {
       fuzzy: filterFuzzy,
       greaterThan: filterGreaterThan,
     },
     enableFacetedFilters: true,
-    decorateFlatColumns: React.useCallback(
-      flatColumns => {
-        flatColumns.unshift({
-          id: 'selection',
-          isSelectionColumn: true,
-          Header: ({ tableInstance: { getToggleAllRowsSelectedProps } }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        })
-
-        if (enableExpanderColumn) {
-          flatColumns.unshift({
-            id: 'expander',
-            isExpanderColumn: true,
-            Header: ({
-              tableInstance: {
-                flatColumns,
-                state: { grouping },
-              },
-            }) => {
-              return grouping.map(columnId => {
-                const column = flatColumns.find(d => d.id === columnId)
-
-                return (
-                  <span key={columnId}>
-                    {column.getCanGroup() ? (
-                      // If the column can be grouped, let's add a toggle
-                      <column.GroupingToggle>
-                        {column.getIsGrouped() ? '🛑 ' : '👊 '}
-                      </column.GroupingToggle>
-                    ) : null}
-                    {column.SortingToggle ? (
-                      <column.SortingToggle>
-                        {column.render('Header')}
-                        {column.getIsSorted()
-                          ? column.getIsSortedDesc()
-                            ? ' 🔽'
-                            : ' 🔼'
-                          : ''}
-                      </column.SortingToggle>
-                    ) : (
-                      column.render('Header')
-                    )}{' '}
-                  </span>
-                )
-              })
-            },
-            Cell: ({ row }) => {
-              if (!row.getCanExpand()) {
-                return null
-              }
-
-              const groupedCell = row.cells.find(cell => cell.getIsGrouped())
-
-              return (
-                <span
-                  {...row.getToggleExpandedProps({
-                    style: {
-                      // We can even use the row.depth property
-                      // and paddingLeft to indicate the depth
-                      // of the row
-                      paddingLeft: `${row.depth * 2}rem`,
-                    },
-                  })}
-                >
-                  {row.getIsExpanded(0) ? '👇' : '👉'}{' '}
-                  {groupedCell.render('Cell')} ({row.subRows.length})
-                </span>
-              )
-            },
-          })
-        }
-      },
-      [enableExpanderColumn]
-    ),
+    enableExpanderColumn,
+    plugins: [
+      withColumnFilters,
+      withGlobalFilter,
+      withGrouping,
+      withSorting,
+      withExpanding,
+      withPagination,
+      withSelection,
+      withBasicTable,
+    ],
   })
 
-  const filterGroup = headerGroups[headerGroups.length - 1]
+  const { getSelectedFlatRows, state } = instance
 
   React.useEffect(() => {
+    window.getInstance = () => console.log(instance)
     window.getState = () => console.log(state)
     window.getSelectedFlatRows = () => console.log(getSelectedFlatRows())
   })
 
   return (
-    <Styles>
+    <div>
       <h1>React Table</h1>
       <div>
         <h3>Options</h3>
-        <label>
-          <input
-            type="checkbox"
-            value={enableExpanderColumn}
-            onChange={e => setEnableExpanderColumn(e.target.checked)}
-          />{' '}
-          Enable Expander Column
-        </label>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value={debug}
+              onChange={e => setDebug(e.target.checked)}
+            />{' '}
+            Enable Debug Logs
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value={enableExpanderColumn}
+              onChange={e => setEnableExpanderColumn(e.target.checked)}
+            />{' '}
+            Enable Expander Column
+          </label>
+        </div>
       </div>
-      <div>
-        <h3>Column Visibility</h3>
-        <label>
-          <strong>
-            <IndeterminateCheckbox {...getToggleAllColumnsVisibilityProps()} />{' '}
-            All
-          </strong>
-        </label>{' '}
-        {visibilityColumns.map(column => (
-          <span key={column.id}>
-            <label>
-              <input {...column.getToggleVisibilityProps()} />{' '}
-              {column.header.render('Header')}
-            </label>{' '}
-          </span>
-        ))}
-      </div>
-      <br />
-      <br />
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilterValue={state.globalFilterValue}
-        setGlobalFilterValue={setGlobalFilterValue}
-      />
-      <table {...getTableProps()}>
-        <thead {...getTableHeadProps()}>
-          {headerGroups.map(headerGroup => (
-            <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id} {...header.getHeaderProps()}>
-                  {header.column.getCanGroup() ? (
-                    <span {...header.column.getToggleGroupingProps()}>
-                      {header.column.getIsGrouped() ? '🛑 ' : '👊 '}
-                    </span>
-                  ) : null}
-                  {header.column.getCanSort() ? (
-                    <span {...header.column.getToggleSortingProps()}>
-                      {header.render('Header')}
-                      {header.column.getIsSorted()
-                        ? header.column.getIsSortedDesc()
-                          ? ' 🔽'
-                          : ' 🔼'
-                        : ''}
-                    </span>
-                  ) : (
-                    header.render('Header')
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-          <tr {...filterGroup.getHeaderGroupProps()}>
-            {filterGroup.headers.map(header => (
-              <th
-                key={header.id}
-                style={{
-                  position: 'relative',
-                }}
-              >
-                {header.column.getIsFiltered() ? (
-                  <span
-                    css={`
-                      position: absolute;
-                      left: 0;
-                      top: 0;
-                      display: inline-block;
-                      font-size: 0.5rem;
-                      font-weight: bold;
-                      padding: 0.1rem 0.2rem;
-                      color: white;
-                      background: gray;
-                    `}
-                  >
-                    {header.column.getFilterIndex() + 1}
-                  </span>
-                ) : (
-                  ''
-                )}
-                {header.column.getCanFilter() && header.column.Filter
-                  ? header.render('Filter')
-                  : null}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {getPageRows().length ? (
-            getPageRows().map((row, i) => (
-              <tr
-                key={row.id}
-                {...row.getRowProps({
-                  style: {
-                    background: row.getIsSelected() ? '#d2f4ff' : undefined,
-                  },
-                })}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} {...cell.getCellProps()}>
-                    {cell.getIsGrouped() ? (
-                      // If it's a grouped cell, add an expander and row count
-                      <>
-                        <span {...row.getToggleExpandedProps()}>
-                          {row.getIsExpanded() ? '👇' : '👉'}
-                        </span>{' '}
-                        {cell.render('Cell')} ({row.subRows.length})
-                      </>
-                    ) : cell.getIsAggregated() ? (
-                      // If the cell is aggregated, use the Aggregated
-                      // renderer for cell
-                      cell.render('Aggregated')
-                    ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
-                      // Otherwise, just render the regular cell
-                      cell.render('Cell')
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={visibleColumns.length}>
-                <em>No rows to display</em>
-              </td>
-            </tr>
-          )}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={visibleColumns.length}>
-              <div className="pagination">
-                <button
-                  onClick={() => gotoPage(0)}
-                  disabled={!getCanPreviousPage()}
-                >
-                  {'<<'}
-                </button>{' '}
-                <button
-                  onClick={() => previousPage()}
-                  disabled={!getCanPreviousPage()}
-                >
-                  {'<'}
-                </button>{' '}
-                <button onClick={() => nextPage()} disabled={!getCanNextPage()}>
-                  {'>'}
-                </button>{' '}
-                <button
-                  onClick={() => gotoPage(getPageCount() - 1)}
-                  disabled={!getCanNextPage()}
-                >
-                  {'>>'}
-                </button>{' '}
-                <span>
-                  Page{' '}
-                  <strong>
-                    {state.pageIndex + 1} of {getPageOptions().length}
-                  </strong>{' '}
-                </span>
-                <span>
-                  | Go to page:{' '}
-                  <input
-                    type="number"
-                    defaultValue={state.pageIndex + 1}
-                    onChange={e => {
-                      const page = e.target.value
-                        ? Number(e.target.value) - 1
-                        : 0
-                      gotoPage(page)
-                    }}
-                    style={{ width: '100px' }}
-                  />
-                </span>{' '}
-                <select
-                  value={state.pageSize}
-                  onChange={e => {
-                    setPageSize(Number(e.target.value))
-                  }}
-                >
-                  {[10, 20, 30, 40, 50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                      Show {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+      <BasicTable instance={instance} />
       <br />
       <h3>Console Commands</h3>
       <ul>
+        <li>
+          <pre>window.getInstance()</pre> - Dump the table instance.
+        </li>
         <li>
           <pre>window.getState()</pre> - Dump the state of the table.
         </li>
@@ -511,7 +192,7 @@ function App() {
           that are currently selected
         </li>
       </ul>
-    </Styles>
+    </div>
   )
 }
 

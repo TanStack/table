@@ -1,4 +1,4 @@
-import { applyDefaults } from '../utils'
+import { applyDefaults, useGetLatest } from '../utils'
 
 const defaultOptions = {
   initialState: {},
@@ -14,5 +14,12 @@ const defaultOptions = {
 }
 
 export default function useTableOptions(options, instance) {
-  return instance.plugs.useOptions(applyDefaults(options, defaultOptions))
+  const getInstance = useGetLatest(instance)
+
+  return instance.plugs.useReduceOptions(
+    applyDefaults(options, defaultOptions),
+    {
+      getInstance,
+    }
+  )
 }

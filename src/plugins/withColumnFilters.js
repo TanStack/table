@@ -12,12 +12,12 @@ import {
 import * as filterTypes from '../filterTypes'
 
 export const withColumnFilters = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     autoResetColumnFilters: true,
     ...options,

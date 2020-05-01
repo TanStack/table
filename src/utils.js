@@ -1,7 +1,5 @@
 import React from 'react'
 
-let renderErr = 'Renderer Error ☝️'
-
 export function functionalUpdate(updater, old) {
   return typeof updater === 'function' ? updater(old) : updater
 }
@@ -31,19 +29,8 @@ export function useMountedLayoutEffect(fn, deps) {
   }, deps)
 }
 
-export function makeRenderer(getInstance, renderers, meta = {}) {
-  return (types, userProps = {}) => {
-    types = Array.isArray(types) ? types : [types]
-
-    const type = types.find(t => renderers[t])
-
-    const Comp = renderers[type]
-
-    if (typeof Comp === 'undefined') {
-      console.info(renderers)
-      throw new Error(renderErr)
-    }
-
+export function makeRenderer(getInstance, meta = {}) {
+  return (Comp, userProps = {}) => {
     return flexRender(Comp, {
       tableInstance: getInstance(),
       ...meta,
@@ -251,6 +238,11 @@ export function composeDecorator(...fns) {
 export function composeReducer(...fns) {
   return (initial, ...args) =>
     fns.reduce((reduced, fn) => fn(reduced, ...args), initial)
+}
+
+export function composePropsReducer(...fns) {
+  return (initial, ...args) =>
+    fns.reduceRight((reduced, fn) => fn(reduced, ...args), initial)
 }
 
 export function applyDefaults(obj, defaults) {

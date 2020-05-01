@@ -7,7 +7,7 @@ import { useGetLatest, makeRenderer } from '../utils'
 export default function useDataModel(instance) {
   const {
     flatColumns,
-    options: { data, decorateRow, decorateCell, getRowId, getSubRows },
+    options: { data, getRowId, getSubRows },
   } = instance
 
   const getInstance = useGetLatest(instance)
@@ -84,15 +84,14 @@ export default function useDataModel(instance) {
           value,
         }
 
-        // Give each cell a renderer function (supports multiple renderers)
-        cell.render = makeRenderer(getInstance, column, {
+        cell.render = makeRenderer(getInstance, {
+          cell,
           row,
           column,
-          cell,
           value,
         })
 
-        getInstance().plugs.decorateCell(cell, getInstance)
+        getInstance().plugs.decorateCell(cell, { getInstance })
 
         return cell
       })
@@ -102,7 +101,7 @@ export default function useDataModel(instance) {
           row.cells.find(cell => cell.column.id === column.id)
         )
 
-      getInstance().plugs.decorateRow(row, getInstance)
+      getInstance().plugs.decorateRow(row, { getInstance })
     }
   }, [data, flatColumns, getInstance, getRowId, getSubRows])
 

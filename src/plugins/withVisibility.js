@@ -3,13 +3,13 @@ import React from 'react'
 import { useGetLatest, getFirstDefined } from '../utils'
 
 export const withVisibility = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceFinal,
   decorateColumn,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     ...options,
     initialState: {
@@ -121,9 +121,6 @@ function useInstanceFinal(instance) {
         onChange: e => {
           getInstance().toggleAllColumnsVisible(e.target.checked)
         },
-        style: {
-          cursor: 'pointer',
-        },
         title: 'Toggle visibility for all columns',
         checked: getInstance().getIsAllColumnsVisible(),
         indeterminate:
@@ -141,9 +138,6 @@ function decorateColumn(column) {
     type: 'checkbox',
     onChange: e => {
       column.toggleVisibility(e.target.checked)
-    },
-    style: {
-      cursor: 'pointer',
     },
     checked: column.getIsVisible(),
     title: 'Toggle Column Visible',

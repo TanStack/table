@@ -12,13 +12,13 @@ import {
 import * as sortTypes from '../sortTypes'
 
 export const withSorting = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
   decorateColumn,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     autoResetSorting: true,
     isMultiSortEvent: e => e.shiftKey,
@@ -343,7 +343,7 @@ function useInstanceAfterDataModel(instance) {
   })
 }
 
-function decorateColumn(column, getInstance) {
+function decorateColumn(column, { getInstance }) {
   column.getToggleSortingProps = (props = {}) => {
     const canSort = column.getCanSort()
 
@@ -358,9 +358,6 @@ function decorateColumn(column, getInstance) {
             )
           }
         : undefined,
-      style: {
-        cursor: canSort ? 'pointer' : undefined,
-      },
       title: canSort ? 'Toggle Sorting' : undefined,
       ...props,
     }

@@ -4,9 +4,9 @@ import {
   useGetLatest,
   getFirstDefined,
   flattenBy,
-  makeRenderer,
   groupBy,
   useMountedLayoutEffect,
+  makeRenderer,
 } from '../utils'
 
 import * as aggregationTypes from '../aggregationTypes'
@@ -15,7 +15,7 @@ const emptyArray = []
 const emptyObject = {}
 
 export const withGrouping = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
   decorateColumn,
@@ -23,7 +23,7 @@ export const withGrouping = {
   decorateCell,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     aggregationTypes: {},
     manualGrouping: false,
@@ -142,7 +142,7 @@ function useInstanceAfterState(instance) {
 
 function useInstanceAfterDataModel(instance) {
   const {
-    options: { manualGrouping, decorateCell, decorateRow },
+    options: { manualGrouping },
     state: { grouping },
     flatColumns,
     rows,
@@ -290,7 +290,7 @@ function useInstanceAfterDataModel(instance) {
             values,
             subRows,
             leafRows,
-            depth,
+            depth: depth + 1,
             index,
           }
 
@@ -319,15 +319,14 @@ function useInstanceAfterDataModel(instance) {
               value,
             }
 
-            // Give each cell a renderer function (supports multiple renderers)
-            cell.render = makeRenderer(getInstance, column, {
+            cell.render = makeRenderer(getInstance, {
+              cell,
               row,
               column,
-              cell,
               value,
             })
 
-            getInstance().plugs.decorateCell(cell, getInstance)
+            getInstance().plugs.decorateCell(cell, { getInstance })
 
             return cell
           })
@@ -337,7 +336,7 @@ function useInstanceAfterDataModel(instance) {
               row.cells.find(cell => cell.column.id === column.id)
             )
 
-          getInstance().plugs.decorateRow(row, getInstance)
+          getInstance().plugs.decorateRow(row, { getInstance })
 
           return row
         }
@@ -408,16 +407,13 @@ function decorateColumn(column) {
             column.toggleGrouping()
           }
         : undefined,
-      style: {
-        cursor: canGroup ? 'pointer' : undefined,
-      },
       title: 'Toggle Grouping',
       ...props,
     }
   }
 }
 
-function decorateRow(row, getInstance) {
+function decorateRow(row) {
   row.getIsGrouped = () => !!row.groupingId
 }
 

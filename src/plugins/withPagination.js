@@ -9,12 +9,12 @@ import {
 } from '../utils'
 
 export const withPagination = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceFinal,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     autoResetPage: true,
     ...options,

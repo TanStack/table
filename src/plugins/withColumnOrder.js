@@ -3,12 +3,12 @@ import React from 'react'
 import { useGetLatest, functionalUpdate } from '../utils'
 
 export const withColumnOrder = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceFinal,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     ...options,
     initialState: {

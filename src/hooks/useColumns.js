@@ -26,13 +26,8 @@ export default function useColumns(instance) {
   const {
     getColumnIsVisible,
     state: { grouping, columnOrder },
-    options: {
-      columns,
-      decorateFlatColumns,
-      decorateColumn,
-      decorateOrderedColumns,
-      decorateVisibleColumns,
-    },
+    options: { columns },
+    plugs: { decorateFlatColumns },
   } = instance
 
   // TODO: Derive the default table state from column initial state
@@ -64,7 +59,7 @@ export default function useColumns(instance) {
   instance.flatColumns = React.useMemo(() => {
     const flatColumns = flattenColumns(instance.columns)
 
-    decorateFlatColumns(flatColumns, getInstance)
+    decorateFlatColumns(flatColumns, { getInstance })
 
     return flatColumns.map(column => {
       column = {
@@ -113,7 +108,7 @@ export default function useColumns(instance) {
       )
     }
 
-    column.render = makeRenderer(getInstance, column, {
+    column.render = makeRenderer(getInstance, {
       column,
     })
 
@@ -145,7 +140,7 @@ export default function useColumns(instance) {
     column.getIsSortedDesc = () =>
       getInstance().getColumnIsSortedDesc(column.id)
 
-    instance.plugs.decorateColumn(column, getInstance)
+    instance.plugs.decorateColumn(column, { getInstance })
   })
 
   instance.orderedColumns = React.useMemo(() => {
@@ -206,7 +201,7 @@ export default function useColumns(instance) {
       orderedColumns.unshift(selectionColumn)
     }
 
-    getInstance().plugs.decorateOrderedColumns(orderedColumns, getInstance)
+    getInstance().plugs.decorateOrderedColumns(orderedColumns, { getInstance })
 
     return orderedColumns
   }, [columnOrder, getInstance, grouping, instance.flatColumns])
@@ -224,7 +219,7 @@ export default function useColumns(instance) {
       getColumnIsVisible(column.id)
     )
 
-    getInstance().plugs.decorateOrderedColumns(visibleColumns, getInstance)
+    getInstance().plugs.decorateOrderedColumns(visibleColumns, { getInstance })
 
     return visibleColumns
   }, [instance.orderedColumns, getInstance, getColumnIsVisible])

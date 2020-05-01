@@ -13,6 +13,8 @@ export default function useTableState(instance) {
   // A home for our automatic internal table state
   const [autoState, setAutoState] = React.useState(instance.getInitialState)
 
+  delete instance.queuedAutoState
+
   // The computed state with any conrolled state overrides from the user
   instance.state = React.useMemo(
     () => ({
@@ -30,7 +32,10 @@ export default function useTableState(instance) {
         options: { onStateChange },
       } = getInstance()
 
-      const newState = functionalUpdate(updater, old)
+      const newState = functionalUpdate(
+        updater,
+        getInstance().queuedAutoState || old
+      )
 
       const [newStateNoMeta, moreMeta] = Array.isArray(newState)
         ? newState
@@ -42,9 +47,13 @@ export default function useTableState(instance) {
       })
 
       if (resolvedState && resolvedState !== old) {
+        getInstance().queuedAutoState = {
+          ...resolvedState,
+          ...instance.options.userState,
+        }
         setAutoState(resolvedState)
       }
     },
-    [getInstance]
+    [getInstance, instance.options.userState]
   )
 }

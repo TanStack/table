@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useGetLatest } from '../utils'
+
 export const withCore = {
   useInstanceAfterState,
   decorateRow,
@@ -16,20 +18,42 @@ function useInstanceAfterState(instance) {
   }, [instance])
 }
 
-function decorateRow(row) {
-  row.getRowProps = (props = {}) => ({ role: 'row', ...props })
+function decorateRow(row, { getInstance }) {
+  row.getRowProps = (props = {}) =>
+    getInstance().plugs.reduceRowProps(
+      { role: 'row', ...props },
+      { getInstance, row }
+    )
 }
 
-function decorateCell(cell) {
-  cell.getCellProps = (props = {}) => ({
-    role: 'cell',
-    ...props,
-  })
+function decorateCell(cell, { getInstance }) {
+  cell.getCellProps = (props = {}) =>
+    getInstance().plugs.reduceCellProps(
+      {
+        role: 'gridcell',
+        ...props,
+      },
+      {
+        getInstance,
+        cell,
+      }
+    )
 }
 
 function useInstanceFinal(instance) {
-  instance.getTableHeadProps = (props = {}) => ({ ...props })
-  instance.getTableFooterProps = (props = {}) => ({ ...props })
-  instance.getTableBodyProps = (props = {}) => ({ role: 'rowgroup', ...props })
-  instance.getTableProps = (props = {}) => ({ role: 'table', ...props })
+  const getInstance = useGetLatest(instance)
+  instance.getTableHeadProps = (props = {}) =>
+    getInstance().plugs.reduceTableHeadProps({ ...props }, { getInstance })
+  instance.getTableFooterProps = (props = {}) =>
+    getInstance().plugs.reduceTableFooterProps({ ...props }, { getInstance })
+  instance.getTableBodyProps = (props = {}) =>
+    getInstance().plugs.reduceTableBodyProps(
+      { role: 'rowgroup', ...props },
+      { getInstance }
+    )
+  instance.getTableProps = (props = {}) =>
+    getInstance().plugs.reduceTableProps(
+      { role: 'table', ...props },
+      { getInstance }
+    )
 }

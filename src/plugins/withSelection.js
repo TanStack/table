@@ -10,12 +10,12 @@ import {
 } from '../utils'
 
 export const withSelection = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   decorateRow,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     selectSubRows: true,
     selectGroupingRows: false,
@@ -130,7 +130,10 @@ function useInstanceAfterState(instance) {
     (id, value) =>
       setState(
         old => {
-          const { rowsById, selectSubRows, selectGroupingRows } = getInstance()
+          const {
+            rowsById,
+            options: { selectSubRows, selectGroupingRows },
+          } = getInstance()
 
           // Join the ids of deep rows
           // to make a key, then manage all of the keys
@@ -143,30 +146,18 @@ function useInstanceAfterState(instance) {
             return old
           }
 
-          const newSelectedRowIds = { ...old.selection }
+          const selectedRowIds = { ...old.selection }
 
-          const handleRowById = id => {
-            const row = rowsById[id]
-
-            if (selectGroupingRows || !row.getIsGrouped()) {
-              if (value) {
-                newSelectedRowIds[id] = true
-              } else {
-                delete newSelectedRowIds[id]
-              }
-            }
-
-            if (selectSubRows && row.subRows) {
-              return row.subRows.forEach(row => handleRowById(row.id))
-            }
-          }
-
-          handleRowById(id)
+          selectRowById(selectedRowIds, id, value, {
+            rowsById,
+            selectGroupingRows,
+            selectSubRows,
+          })
 
           return [
             {
               ...old,
-              selection: newSelectedRowIds,
+              selection: selectedRowIds,
             },
             {
               value,
@@ -180,28 +171,65 @@ function useInstanceAfterState(instance) {
     [getInstance, setState]
   )
 
-  instance.addSelectionToRowId = React.useCallback(
+  instance.addSelectionRange = React.useCallback(
     rowId => {
       getInstance().setSelectedRows(old => {
-        const firstSelectedId = Object.keys(old)[0] || getInstance().rows[0].id
+        const {
+          rows,
+          rowsById,
+          options: { selectGroupingRows, selectSubRows },
+        } = getInstance()
+
+        const findSelectedRow = rows => {
+          let found
+          rows.find(d => {
+            if (d.getIsSelected()) {
+              found = d
+              return true
+            }
+            const subFound = findSelectedRow(d.subRows || [])
+            if (subFound) {
+              found = subFound
+              return true
+            }
+            return false
+          })
+          return found
+        }
+
+        const firstRow = findSelectedRow(rows) || rows[0]
+        const lastRow = rowsById[rowId]
 
         let include = false
-        const newSelected = {}
+        const selectedRowIds = {}
 
-        getInstance().rows.forEach(d => {
-          if (!include && (d.id === rowId || d.id === firstSelectedId)) {
-            include = true
-          } else if (include && (d.id === rowId || d.id === firstSelectedId)) {
-            newSelected[d.id] = true
-            include = false
+        const addRow = row => {
+          selectRowById(selectedRowIds, row.id, true, {
+            rowsById,
+            selectGroupingRows,
+            selectSubRows,
+          })
+        }
+
+        getInstance().rows.forEach(row => {
+          const isFirstRow = row.id === firstRow.id
+          const isLastRow = row.id === lastRow.id
+
+          if (isFirstRow || isLastRow) {
+            if (!include) {
+              include = true
+            } else if (include) {
+              addRow(row)
+              include = false
+            }
           }
 
           if (include) {
-            newSelected[d.id] = true
+            addRow(row)
           }
         })
 
-        return newSelected
+        return selectedRowIds
       })
     },
     [getInstance]
@@ -232,9 +260,6 @@ function useInstanceAfterState(instance) {
       onChange: e => {
         getInstance().toggleAllRowsSelected(e.target.checked)
       },
-      style: {
-        cursor: 'pointer',
-      },
       checked: allRowsSelected,
       title: 'Toggle All Rows Selected',
       indeterminate: Boolean(
@@ -245,7 +270,7 @@ function useInstanceAfterState(instance) {
   }
 }
 
-function decorateRow(row, getInstance) {
+function decorateRow(row, { getInstance }) {
   row.getIsSelected = () =>
     getInstance().options.selectSubRows
       ? getRowIsSelected(row, getInstance().state.selection)
@@ -253,7 +278,7 @@ function decorateRow(row, getInstance) {
 
   row.getIsSomeSelected = () => row.getIsSelected() === null
 
-  row.toggleRowSelected = set => getInstance().toggleRowSelected(row.id, set)
+  row.toggleSelected = set => getInstance().toggleRowSelected(row.id, set)
 
   row.getToggleRowSelectedProps = props => {
     const {
@@ -269,10 +294,8 @@ function decorateRow(row, getInstance) {
     }
 
     return {
-      onChange: e => row.toggleRowSelected(e.target.checked),
-      style: {
-        cursor: 'pointer',
-      },
+      onClick: e => e.stopPropagation(),
+      onChange: e => row.toggleSelected(e.target.checked),
       checked,
       title: 'Toggle Row Selected',
       indeterminate: row.getIsSomeSelected(),
@@ -281,14 +304,43 @@ function decorateRow(row, getInstance) {
   }
 
   row.getRowProps = composeReducer(row.getRowProps, props => ({
-    onClick: e =>
-      getInstance().options.isAdditiveSelectEvent(e)
-        ? row.toggleRowSelected()
-        : getInstance().options.isInclusiveSelectEvent(e)
-        ? getInstance().addSelectionToRowId(row.id)
-        : getInstance().setSelectedRows(old => ({
-            [row.id]: !old[row.id],
-          })),
+    onClick: e => {
+      if (getInstance().options.isAdditiveSelectEvent(e)) {
+        row.toggleSelected()
+      } else if (getInstance().options.isInclusiveSelectEvent(e)) {
+        getInstance().addSelectionRange(row.id)
+      } else {
+        getInstance().setSelectedRows({})
+        row.toggleSelected()
+      }
+    },
     ...props,
   }))
+}
+
+const selectRowById = (
+  selectedRowIds,
+  id,
+  value,
+  { rowsById, selectGroupingRows, selectSubRows }
+) => {
+  const row = rowsById[id]
+
+  if (!row.getIsGrouped() || (row.getIsGrouped() && selectGroupingRows)) {
+    if (value) {
+      selectedRowIds[id] = true
+    } else {
+      delete selectedRowIds[id]
+    }
+  }
+
+  if (selectSubRows && row.subRows) {
+    return row.subRows.forEach(row =>
+      selectRowById(selectedRowIds, row.id, value, {
+        rowsById,
+        selectGroupingRows,
+        selectSubRows,
+      })
+    )
+  }
 }

@@ -12,12 +12,12 @@ import {
 import * as filterTypes from '../filterTypes'
 
 export const withGlobalFilter = {
-  useOptions,
+  useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
 }
 
-function useOptions(options) {
+function useReduceOptions(options) {
   return {
     autoResetGlobalFilter: true,
     globalFilterType: 'text',
