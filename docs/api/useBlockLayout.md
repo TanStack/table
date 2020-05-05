@@ -1,6 +1,6 @@
 ---
-name: useBlocklayout
-route: /api/useBlocklayout
+name: useBlockLayout
+route: /api/useBlockLayout
 menu: API
 ---
 
