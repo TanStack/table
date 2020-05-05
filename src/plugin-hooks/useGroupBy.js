@@ -229,7 +229,7 @@ function useInstance(instance) {
         const leafValues = leafRows.map(row => {
           let columnValue = row.values[column.id]
 
-          if (!depth && column.aggregatedValue) {
+          if (!depth && column.aggregateValue) {
             const aggregateValueFn =
               typeof column.aggregateValue === 'function'
                 ? column.aggregateValue
