@@ -56,6 +56,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - [Microsoft](https://microsoft.com)
 - [Cisco](https://cisco.com)
 - [Uber](https://uber.com)
+- [Salesforce](http://salesforce.com/)
 - [Walmart](https://walmart.com)
 - [Wix](https://wix.com)
 - [HP](https://hp.com)
