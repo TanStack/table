@@ -35,4 +35,4 @@ import {
 } from 'react-table'
 ```
 
-Once you've installed React Table, continue to [Concepts](./concepts) to read more about how to utilize its API
+Once you've installed React Table, continue to [Concepts](./concepts.md) to read more about how to utilize its API
