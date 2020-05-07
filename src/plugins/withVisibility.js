@@ -5,7 +5,7 @@ import { useGetLatest, getFirstDefined } from '../utils'
 export const withVisibility = {
   useReduceOptions,
   useInstanceAfterState,
-  useInstanceFinal,
+  useInstanceAfterDataModel,
   decorateColumn,
 }
 
@@ -57,7 +57,7 @@ function useInstanceAfterState(instance) {
       setState(
         old => ({
           ...old,
-          columnVisibility: getInstance().flatColumns.reduce(
+          columnVisibility: getInstance().leafColumns.reduce(
             (obj, column) => ({
               ...obj,
               [column.id]: !value
@@ -78,7 +78,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnIsVisible = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return true
@@ -95,7 +95,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnCanHide = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
@@ -112,7 +112,7 @@ function useInstanceAfterState(instance) {
   )
 }
 
-function useInstanceFinal(instance) {
+function useInstanceAfterDataModel(instance) {
   const getInstance = useGetLatest(instance)
 
   instance.getToggleAllColumnsVisibilityProps = React.useCallback(

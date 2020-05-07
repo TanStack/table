@@ -69,8 +69,8 @@ function isExoticComponent(component) {
   )
 }
 
-export function flattenColumns(columns) {
-  return flattenBy(columns, 'columns')
+export function flattenColumns(columns, includeParents) {
+  return flattenBy(columns, 'columns', includeParents)
 }
 
 export function getFirstDefined(...args) {
@@ -87,15 +87,18 @@ export function isFunction(a) {
   }
 }
 
-export function flattenBy(arr, key) {
+export function flattenBy(arr, key, includeParents) {
   const flat = []
 
   const recurse = arr => {
     arr.forEach(d => {
-      if (!d[key]) {
-        flat.push(d)
-      } else {
+      if (d[key]) {
+        if (includeParents) {
+          flat.push(d)
+        }
         recurse(d[key])
+      } else {
+        flat.push(d)
       }
     })
   }
@@ -204,8 +207,8 @@ export function composeDecorate(...fns) {
 export function getLeafHeaders(header) {
   const leafHeaders = []
   const recurseHeader = header => {
-    if (header.columns && header.columns.length) {
-      header.columns.map(recurseHeader)
+    if (header.subHeaders && header.subHeaders.length) {
+      header.subHeaders.map(recurseHeader)
     }
     leafHeaders.push(header)
   }

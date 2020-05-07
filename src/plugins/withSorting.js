@@ -56,7 +56,7 @@ function useInstanceAfterState(instance) {
       setState(
         old => {
           const {
-            flatColumns,
+            leafColumns,
             disableMultiSort,
             disableSortRemove,
             disableMultiRemove,
@@ -66,7 +66,7 @@ function useInstanceAfterState(instance) {
           const { sorting } = old
 
           // Find the column for this columnId
-          const column = flatColumns.find(d => d.id === columnId)
+          const column = leafColumns.find(d => d.id === columnId)
           const { sortDescFirst } = column
 
           // Find any existing sorting for this column
@@ -191,7 +191,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnCanSort = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
@@ -249,7 +249,7 @@ function useInstanceAfterDataModel(instance) {
     state: { sorting },
     rows,
     flatRows,
-    flatColumns,
+    leafColumns,
   } = instance
 
   const getInstance = useGetLatest(instance)
@@ -266,7 +266,7 @@ function useInstanceAfterDataModel(instance) {
 
     // Filter out sortings that correspond to non existing columns
     const availableSorting = sorting.filter(sort =>
-      flatColumns.find(col => col.id === sort.id)
+      leafColumns.find(col => col.id === sort.id)
     )
 
     const sortData = rows => {
@@ -276,7 +276,7 @@ function useInstanceAfterDataModel(instance) {
         rows,
         availableSorting.map(sort => {
           // Support custom sorting methods for each column
-          const column = flatColumns.find(d => d.id === sort.id)
+          const column = leafColumns.find(d => d.id === sort.id)
 
           if (!column) {
             throw new Error(
@@ -308,7 +308,7 @@ function useInstanceAfterDataModel(instance) {
         // Map the directions
         availableSorting.map(sort => {
           // Detect and use the sortInverted option
-          const column = flatColumns.find(d => d.id === sort.id)
+          const column = leafColumns.find(d => d.id === sort.id)
 
           if (column && column.sortInverted) {
             return sort.desc
@@ -331,7 +331,7 @@ function useInstanceAfterDataModel(instance) {
     }
 
     return [sortData(rows), sortedFlatRows]
-  }, [manualSorting, sorting, rows, flatRows, flatColumns, getInstance])
+  }, [manualSorting, sorting, rows, flatRows, leafColumns, getInstance])
 
   Object.assign(instance, {
     preSortedRows: rows,

@@ -59,7 +59,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnCanGroup = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
@@ -144,7 +144,7 @@ function useInstanceAfterDataModel(instance) {
   const {
     options: { manualGrouping },
     state: { grouping },
-    flatColumns,
+    leafColumns,
     rows,
     flatRows,
     rowsById,
@@ -178,7 +178,7 @@ function useInstanceAfterDataModel(instance) {
 
     // Ensure that the list of filtered columns exist
     const existingGrouping = grouping.filter(g =>
-      flatColumns.find(col => col.id === g)
+      leafColumns.find(col => col.id === g)
     )
 
     // Find the columns that can or are aggregating
@@ -186,7 +186,7 @@ function useInstanceAfterDataModel(instance) {
     const aggregateRowsToValues = (leafRows, groupedRows, depth) => {
       const values = {}
 
-      flatColumns.forEach(column => {
+      leafColumns.forEach(column => {
         // Don't aggregate columns that are in the grouping
         if (existingGrouping.includes(column.id)) {
           values[column.id] = groupedRows[0]
@@ -307,9 +307,8 @@ function useInstanceAfterDataModel(instance) {
           })
 
           row.cells = []
-          row.visibleCells = []
 
-          row.cells = flatColumns.map(column => {
+          row.cells = leafColumns.map(column => {
             let value = row.values[column.id]
 
             const cell = {
@@ -375,7 +374,7 @@ function useInstanceAfterDataModel(instance) {
     rows,
     flatRows,
     rowsById,
-    flatColumns,
+    leafColumns,
     getInstance,
   ])
 

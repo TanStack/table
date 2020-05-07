@@ -51,7 +51,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnCanFilter = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
@@ -92,11 +92,11 @@ function useInstanceAfterState(instance) {
       setState(
         old => {
           const {
-            flatColumns,
+            leafColumns,
             options: { filterTypes: userFilterTypes },
           } = getInstance()
 
-          const column = flatColumns.find(d => d.id === columnId)
+          const column = leafColumns.find(d => d.id === columnId)
 
           if (!column) {
             throw new Error(
@@ -163,7 +163,7 @@ function useInstanceAfterState(instance) {
       setState(
         old => {
           const {
-            flatColumns,
+            leafColumns,
             options: { filterTypes: userFilterTypes },
           } = getInstance()
 
@@ -174,7 +174,7 @@ function useInstanceAfterState(instance) {
               columnFilters,
               old.columnFilters
             ).filter(filter => {
-              const column = flatColumns.find(d => d.id === filter.id)
+              const column = leafColumns.find(d => d.id === filter.id)
               const filterMethod = getFilterMethod(
                 column.filterType,
                 userFilterTypes || {},
@@ -262,7 +262,7 @@ function useInstanceAfterDataModel(instance) {
 
       columnFilters.forEach(({ id: columnId, value: filterValue }) => {
         // Find the columnFilters column
-        const column = getInstance().flatColumns.find(d => d.id === columnId)
+        const column = getInstance().leafColumns.find(d => d.id === columnId)
 
         if (!column) {
           return
@@ -329,7 +329,7 @@ function useInstanceAfterDataModel(instance) {
   React.useMemo(() => {
     // Now that each filtered column has it's partially filtered rows,
     // lets assign the final filtered rows to all of the other columns
-    const nonFilteredColumns = getInstance().flatColumns.filter(
+    const nonFilteredColumns = getInstance().leafColumns.filter(
       column => !columnFilters.find(d => d.id === column.id)
     )
 

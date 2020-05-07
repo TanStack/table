@@ -52,7 +52,7 @@ function useInstanceAfterState(instance) {
 
   instance.getCanGlobalFilterColumn = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
@@ -124,7 +124,7 @@ function useInstanceAfterDataModel(instance) {
     rows,
     flatRows,
     rowsById,
-    flatColumns,
+    leafColumns,
   } = instance
 
   const getInstance = useGetLatest(instance)
@@ -157,7 +157,7 @@ function useInstanceAfterDataModel(instance) {
       return rows
     }
 
-    const filterableColumns = flatColumns.filter(c =>
+    const filterableColumns = leafColumns.filter(c =>
       getInstance().getCanGlobalFilterColumn(c.id)
     )
 
@@ -188,7 +188,7 @@ function useInstanceAfterDataModel(instance) {
     globalFilterValue,
     globalFilterType,
     getInstance,
-    flatColumns,
+    leafColumns,
     rows,
     flatRows,
     rowsById,

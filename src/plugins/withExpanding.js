@@ -76,8 +76,6 @@ function useInstanceAfterState(instance) {
         old => {
           const exists = old.expanded[id]
 
-          console.log('expand', exists)
-
           value = typeof value !== 'undefined' ? value : !exists
 
           if (!exists && value) {

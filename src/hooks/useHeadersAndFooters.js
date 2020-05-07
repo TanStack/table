@@ -5,7 +5,8 @@ import React from 'react'
 import { useGetLatest, makeRenderer } from '../utils'
 
 export default function useHeadersAndFooters(instance) {
-  const { columns, visibleColumns } = instance
+  const { columns, visibleColumns, getColumnIsVisible } = instance
+
   const getInstance = useGetLatest(instance)
 
   instance.headerGroups = React.useMemo(() => {
@@ -20,15 +21,15 @@ export default function useHeadersAndFooters(instance) {
     let maxDepth = 0
 
     const findMaxDepth = (columns, depth = 0) => {
+      maxDepth = Math.max(maxDepth, depth)
+
       columns.forEach(column => {
-        if (!column.getIsVisible?.()) {
+        if (column.getIsVisible && !column.getIsVisible()) {
           return
         }
         if (column.columns) {
           findMaxDepth(column.columns, depth + 1)
         }
-
-        maxDepth = Math.max(maxDepth, depth)
       }, 0)
     }
 
@@ -142,7 +143,7 @@ export default function useHeadersAndFooters(instance) {
     let rowSpan = 1
     let childRowSpans = [0]
 
-    if (header.column.getIsVisible()) {
+    if (header.column.getIsVisible && header.column.getIsVisible()) {
       if (header.subHeaders && header.subHeaders.length) {
         childRowSpans = []
         header.subHeaders.forEach(subHeader => {
@@ -151,7 +152,7 @@ export default function useHeadersAndFooters(instance) {
           childRowSpans.push(childRowSpan)
         })
       } else {
-        colSpan = header.column.getIsVisible() ? 1 : 0
+        colSpan = 1
       }
     }
 
@@ -173,39 +174,7 @@ export default function useHeadersAndFooters(instance) {
       instance.headerGroups
         .reduce((all, headerGroup) => [...all, ...headerGroup.headers], [])
         .map(header => {
-          header.render = header.isPlaceholder
-            ? () => null
-            : makeRenderer(getInstance, {
-                column: header.column,
-              })
-
-          // Give columns/headers a default getHeaderProps
-          header.getHeaderProps = (props = {}) =>
-            getInstance().plugs.reduceHeaderProps(
-              {
-                role: 'columnheader',
-                ...props,
-              },
-              { getInstance, header }
-            )
-
-          // Give columns/headers a default getFooterProps
-          header.getFooterProps = (props = {}) =>
-            getInstance().plugs.reduceFooterProps(
-              {
-                role: 'columnfooter',
-                ...props,
-              },
-              {
-                getInstance,
-                header,
-              }
-            )
-
-          header.getWidth = () => getInstance().getColumnWidth(header.column.id)
-
           getInstance().plugs.decorateHeader(header, { getInstance })
-
           return header
         }),
     [getInstance, instance.headerGroups]
@@ -220,15 +189,13 @@ export default function useHeadersAndFooters(instance) {
     [instance.footerGroups]
   )
 
-  const { getColumnIsVisible } = instance
-
   instance.getIsAllColumnsVisible = React.useCallback(
-    () => !instance.flatColumns.some(column => !getColumnIsVisible(column.id)),
-    [getColumnIsVisible, instance.flatColumns]
+    () => !instance.leafColumns.some(column => !getColumnIsVisible(column.id)),
+    [getColumnIsVisible, instance.leafColumns]
   )
 
   instance.getIsSomeColumnsVisible = React.useCallback(
-    () => instance.flatColumns.some(column => getColumnIsVisible(column.id)),
-    [getColumnIsVisible, instance.flatColumns]
+    () => instance.leafColumns.some(column => getColumnIsVisible(column.id)),
+    [getColumnIsVisible, instance.leafColumns]
   )
 }

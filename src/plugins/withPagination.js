@@ -11,7 +11,6 @@ import {
 export const withPagination = {
   useReduceOptions,
   useInstanceAfterState,
-  useInstanceFinal,
 }
 
 function useReduceOptions(options) {
@@ -200,8 +199,4 @@ function useInstanceAfterState(instance) {
     },
     [setState]
   )
-}
-
-function useInstanceFinal(instance) {
-  const getInstance = useGetLatest(instance)
 }

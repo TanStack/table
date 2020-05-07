@@ -11,8 +11,9 @@ import {
 
 export const defaultColumn = {
   Header: () => <>&nbsp;</>,
-  Cell: ({ value = '' }) => value,
-  minWidth: 0,
+  Cell: ({ value = '' }) =>
+    typeof value === 'boolean' ? value.toString() : value,
+  minWidth: 40,
   maxWidth: Number.MAX_SAFE_INTEGER,
   defaultIsVisible: true,
   width: 150,
@@ -27,10 +28,90 @@ export default function useColumns(instance) {
     getColumnIsVisible,
     state: { grouping, columnOrder },
     options: { columns },
-    plugs: { decorateFlatColumns },
+    plugs: {
+      decorateAllColumns,
+      decorateOrderedColumns,
+      decorateVisibleColumns,
+    },
   } = instance
 
   // TODO: Derive the default table state from column initial state
+
+  const prepColumn = React.useCallback(
+    column => {
+      if (column.prepared) {
+        return
+      }
+
+      column.prepared = true
+
+      if (typeof column.accessor === 'string') {
+        column.id = column.id = column.id || column.accessor
+        const key = column.accessor
+        column.accessor = row => row[key]
+      }
+
+      if (!column.id && typeof column.Header === 'string' && column.Header) {
+        column.id = column.id = column.Header
+      }
+
+      if (!column.id && column.columns) {
+        console.error(column)
+        throw new Error(
+          process.env.NODE_ENV !== 'production'
+            ? 'A column ID (or unique "Header" value) is required!'
+            : ''
+        )
+      }
+
+      if (!column.id) {
+        console.error(column)
+        throw new Error(
+          process.env.NODE_ENV !== 'production'
+            ? 'A column ID (or string accessor) is required!'
+            : ''
+        )
+      }
+
+      column.render = makeRenderer(getInstance, {
+        column,
+      })
+
+      column.getWidth = () => getInstance().getColumnWidth(column.id)
+
+      column.getCanHide = () => getInstance().getColumnCanHide(column.id)
+      column.getIsVisible = () => getInstance().getColumnIsVisible(column.id)
+      column.toggleVisibility = value =>
+        getInstance().toggleColumnVisibility(column.id, value)
+
+      column.getCanFilter = () => getInstance().getColumnCanFilter(column.id)
+      column.getFilterIndex = () =>
+        getInstance().getColumnFilterIndex(column.id)
+      column.getIsFiltered = () => getInstance().getColumnIsFiltered(column.id)
+      column.getFilterValue = () =>
+        getInstance().getColumnFilterValue(column.id)
+      column.setFilterValue = val =>
+        getInstance().setColumnFilterValue(column.id, val)
+
+      column.getCanGroup = () => getInstance().getColumnCanGroup(column.id)
+      column.getGroupedIndex = () =>
+        getInstance().getColumnGroupedIndex(column.id)
+      column.getIsGrouped = () => getInstance().getColumnIsGrouped(column.id)
+      column.toggleGrouping = value =>
+        getInstance().toggleColumnGrouping(column.id, value)
+
+      column.getCanSort = () => getInstance().getColumnCanSort(column.id)
+      column.getSortedIndex = () =>
+        getInstance().getColumnSortedIndex(column.id)
+      column.getIsSorted = () => getInstance().getColumnIsSorted(column.id)
+      column.toggleSorting = (desc, multi) =>
+        getInstance().toggleColumnSorting(column.id, desc, multi)
+      column.clearSorting = () => getInstance().clearColumnSorting(column.id)
+      column.getIsSortedDesc = () =>
+        getInstance().getColumnIsSortedDesc(column.id)
+    },
+    [getInstance]
+  )
 
   instance.columns = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
@@ -56,17 +137,17 @@ export default function useColumns(instance) {
     }
   }, [columns, getInstance])
 
-  instance.flatColumns = React.useMemo(() => {
-    const flatColumns = flattenColumns(instance.columns)
+  instance.allColumns = React.useMemo(() => {
+    const allColumns = flattenColumns(instance.columns, true)
 
-    decorateFlatColumns(flatColumns, { getInstance })
+    decorateAllColumns(allColumns, { getInstance })
 
-    return flatColumns.map(column => {
-      column = {
+    return allColumns.map(column => {
+      Object.assign(column, {
         ...defaultColumn,
         ...(getInstance().options.defaultColumn || {}),
         ...column,
-      }
+      })
 
       column.Aggregated = column.Aggregated || column.Cell
       column.disableHiding = getFirstDefined(
@@ -77,71 +158,20 @@ export default function useColumns(instance) {
 
       return column
     })
-  }, [decorateFlatColumns, getInstance, instance.columns])
+  }, [decorateAllColumns, getInstance, instance.columns])
 
-  instance.flatColumns.forEach(column => {
-    if (typeof column.accessor === 'string') {
-      column.id = column.id = column.id || column.accessor
-      const key = column.accessor
-      column.accessor = row => row[key]
-    }
-
-    if (!column.id && typeof column.Header === 'string' && column.Header) {
-      column.id = column.id = column.Header
-    }
-
-    if (!column.id && column.columns) {
-      console.error(column)
-      throw new Error(
-        process.env.NODE_ENV !== 'production'
-          ? 'A column ID (or unique "Header" value) is required!'
-          : ''
-      )
-    }
-
-    if (!column.id) {
-      console.error(column)
-      throw new Error(
-        process.env.NODE_ENV !== 'production'
-          ? 'A column ID (or string accessor) is required!'
-          : ''
-      )
-    }
-
-    column.render = makeRenderer(getInstance, {
-      column,
-    })
-
-    column.getCanHide = () => getInstance().getColumnCanHide(column.id)
-    column.getIsVisible = () => getInstance().getColumnIsVisible(column.id)
-    column.toggleVisibility = value =>
-      getInstance().toggleColumnVisibility(column.id, value)
-
-    column.getCanFilter = () => getInstance().getColumnCanFilter(column.id)
-    column.getFilterIndex = () => getInstance().getColumnFilterIndex(column.id)
-    column.getIsFiltered = () => getInstance().getColumnIsFiltered(column.id)
-    column.getFilterValue = () => getInstance().getColumnFilterValue(column.id)
-    column.setFilterValue = val =>
-      getInstance().setColumnFilterValue(column.id, val)
-
-    column.getCanGroup = () => getInstance().getColumnCanGroup(column.id)
-    column.getGroupedIndex = () =>
-      getInstance().getColumnGroupedIndex(column.id)
-    column.getIsGrouped = () => getInstance().getColumnIsGrouped(column.id)
-    column.toggleGrouping = value =>
-      getInstance().toggleColumnGrouping(column.id, value)
-
-    column.getCanSort = () => getInstance().getColumnCanSort(column.id)
-    column.getSortedIndex = () => getInstance().getColumnSortedIndex(column.id)
-    column.getIsSorted = () => getInstance().getColumnIsSorted(column.id)
-    column.toggleSorting = (desc, multi) =>
-      getInstance().toggleColumnSorting(column.id, desc, multi)
-    column.clearSorting = () => getInstance().clearColumnSorting(column.id)
-    column.getIsSortedDesc = () =>
-      getInstance().getColumnIsSortedDesc(column.id)
-
+  instance.allColumns.forEach(column => {
+    prepColumn(column)
     instance.plugs.decorateColumn(column, { getInstance })
   })
+
+  instance.leafColumns = React.useMemo(
+    () =>
+      instance.allColumns.filter(
+        column => !column.columns || !column.columns.length
+      ),
+    [instance.allColumns]
+  )
 
   instance.orderedColumns = React.useMemo(() => {
     // Sort grouped columns to the start of the column list
@@ -153,25 +183,25 @@ export default function useColumns(instance) {
       const columnOrderCopy = [...columnOrder]
 
       // If there is an order, make a copy of the columns
-      const flatColumnsCopy = [...instance.flatColumns]
+      const leafColumnsCopy = [...instance.leafColumns]
 
       // And make a new ordered array of the columns
 
       // Loop over the columns and place them in order into the new array
-      while (flatColumnsCopy.length && columnOrderCopy.length) {
+      while (leafColumnsCopy.length && columnOrderCopy.length) {
         const targetColumnId = columnOrderCopy.shift()
-        const foundIndex = flatColumnsCopy.findIndex(
+        const foundIndex = leafColumnsCopy.findIndex(
           d => d.id === targetColumnId
         )
         if (foundIndex > -1) {
-          orderedColumns.push(flatColumnsCopy.splice(foundIndex, 1)[0])
+          orderedColumns.push(leafColumnsCopy.splice(foundIndex, 1)[0])
         }
       }
 
       // If there are any columns left, add them to the end
-      orderedColumns = [...orderedColumns, ...flatColumnsCopy]
+      orderedColumns = [...orderedColumns, ...leafColumnsCopy]
     } else {
-      orderedColumns = instance.flatColumns
+      orderedColumns = instance.leafColumns
     }
 
     const selectionColumn = orderedColumns.find(d => d.isSelectionColumn)
@@ -201,10 +231,16 @@ export default function useColumns(instance) {
       orderedColumns.unshift(selectionColumn)
     }
 
-    getInstance().plugs.decorateOrderedColumns(orderedColumns, { getInstance })
+    decorateOrderedColumns(orderedColumns, { getInstance })
 
     return orderedColumns
-  }, [columnOrder, getInstance, grouping, instance.flatColumns])
+  }, [
+    columnOrder,
+    decorateOrderedColumns,
+    getInstance,
+    grouping,
+    instance.leafColumns,
+  ])
 
   instance.visibilityColumns = React.useMemo(
     () =>
@@ -219,19 +255,24 @@ export default function useColumns(instance) {
       getColumnIsVisible(column.id)
     )
 
-    getInstance().plugs.decorateOrderedColumns(visibleColumns, { getInstance })
+    decorateVisibleColumns(visibleColumns, { getInstance })
 
     return visibleColumns
-  }, [instance.orderedColumns, getInstance, getColumnIsVisible])
+  }, [
+    instance.orderedColumns,
+    decorateVisibleColumns,
+    getInstance,
+    getColumnIsVisible,
+  ])
 
   // Check for duplicate columns
   if (process.env.NODE_ENV !== 'production') {
-    const duplicateColumns = instance.flatColumns.filter((column, i, all) => {
-      return instance.flatColumns.findIndex(d => d.id === column.id) !== i
+    const duplicateColumns = instance.leafColumns.filter((column, i, all) => {
+      return instance.leafColumns.findIndex(d => d.id === column.id) !== i
     })
 
     if (duplicateColumns.length) {
-      console.info(instance.flatColumns)
+      console.info(instance.leafColumns)
       throw new Error(
         process.env.NODE_ENV !== 'production'
           ? `Duplicate columns were found with ids: "${duplicateColumns

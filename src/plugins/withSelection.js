@@ -303,19 +303,24 @@ function decorateRow(row, { getInstance }) {
     }
   }
 
-  row.getRowProps = composeReducer(row.getRowProps, props => ({
-    onClick: e => {
-      if (getInstance().options.isAdditiveSelectEvent(e)) {
-        row.toggleSelected()
-      } else if (getInstance().options.isInclusiveSelectEvent(e)) {
-        getInstance().addSelectionRange(row.id)
-      } else {
-        getInstance().setSelectedRows({})
-        row.toggleSelected()
-      }
-    },
-    ...props,
-  }))
+  row.getRowProps = composeReducer(
+    row.getRowProps,
+    ({ onClick, ...props }) => ({
+      ...props,
+      onClick: e => {
+        if (getInstance().options.isAdditiveSelectEvent(e)) {
+          row.toggleSelected()
+        } else if (getInstance().options.isInclusiveSelectEvent(e)) {
+          getInstance().addSelectionRange(row.id)
+        } else {
+          getInstance().setSelectedRows({})
+          row.toggleSelected()
+        }
+
+        if (onClick) onClick(e)
+      },
+    })
+  )
 }
 
 const selectRowById = (

@@ -6,7 +6,7 @@ import { useGetLatest, makeRenderer } from '../utils'
 
 export default function useDataModel(instance) {
   const {
-    flatColumns,
+    leafColumns,
     options: { data, getRowId, getSubRows },
   } = instance
 
@@ -63,9 +63,8 @@ export default function useDataModel(instance) {
       }
 
       row.cells = []
-      row.visibleCells = []
 
-      row.cells = flatColumns.map(column => {
+      row.cells = leafColumns.map(column => {
         let value
 
         // If the column has an accessor, use it to get a value
@@ -103,7 +102,7 @@ export default function useDataModel(instance) {
 
       getInstance().plugs.decorateRow(row, { getInstance })
     }
-  }, [data, flatColumns, getInstance, getRowId, getSubRows])
+  }, [data, leafColumns, getInstance, getRowId, getSubRows])
 
   Object.assign(getInstance(), {
     rows,

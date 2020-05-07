@@ -5,7 +5,7 @@ import { useGetLatest, functionalUpdate } from '../utils'
 export const withColumnOrder = {
   useReduceOptions,
   useInstanceAfterState,
-  useInstanceFinal,
+  useInstanceAfterDataModel,
 }
 
 function useReduceOptions(options) {
@@ -52,6 +52,6 @@ function useInstanceAfterState(instance) {
   )
 }
 
-function useInstanceFinal(instance) {
+function useInstanceAfterDataModel(instance) {
   const getInstance = useGetLatest(instance)
 }

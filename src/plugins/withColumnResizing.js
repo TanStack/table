@@ -26,11 +26,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnCanResize = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
-
-      if (!column) {
-        return false
-      }
+      const column = getInstance().allColumns.find(d => d.id === columnId)
 
       return getFirstDefined(
         column.disableResizing === true ? false : undefined,
@@ -43,15 +39,15 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnWidth = React.useCallback(
     columnId => {
-      const column = getInstance().flatColumns.find(d => d.id === columnId)
+      const column = getInstance().allColumns.find(d => d.id === columnId)
 
-      if (!column) {
-        return
-      }
-
-      return (
-        getInstance().state.columnResizing.columnWidths[columnId] ||
-        column.width
+      return Math.min(
+        Math.max(
+          column.minWidth,
+          getInstance().state.columnResizing.columnWidths[columnId] ||
+            column.width
+        ),
+        column.maxWidth
       )
     },
     [getInstance]
@@ -71,8 +67,10 @@ function decorateColumn(column, { getInstance }) {
 }
 
 function decorateHeader(header, { getInstance }) {
-  header.getIsResizing = () => header.column.getIsResizing()
-  header.getCanResize = () => header.column.getCanResize()
+  header.getIsResizing = () =>
+    header?.column?.getIsResizing ? header.column.getIsResizing() : true
+  header.getCanResize = () =>
+    header?.column?.getCanResize ? header.column.getCanResize() : true
 
   header.getResizerProps = (props = {}) => {
     const onResizeStart = (e, header) => {
@@ -85,7 +83,7 @@ function decorateHeader(header, { getInstance }) {
         isTouchEvent = true
       }
       const headersToResize = getLeafHeaders(header)
-      const headerIdWidths = headersToResize.map(d => [d.id, d.totalWidth])
+      const headerIdWidths = headersToResize.map(d => [d.id, d.getWidth()])
 
       const clientX = isTouchEvent
         ? Math.round(e.touches[0].clientX)
@@ -97,7 +95,7 @@ function decorateHeader(header, { getInstance }) {
             const { startX, columnWidth, headerIdWidths } = old.columnResizing
 
             const deltaX = clientXPos - startX
-            const percentageDeltaX = deltaX / columnWidth
+            const percentageDeltaX = Math.max(deltaX / columnWidth, -0.999999)
 
             const newColumnWidths = {}
 
@@ -200,7 +198,7 @@ function decorateHeader(header, { getInstance }) {
             ...old.columnResizing,
             startX: clientX,
             headerIdWidths,
-            columnWidth: header.totalWidth,
+            columnWidth: header.getWidth(),
             isResizingColumn: header.id,
           },
         }),
@@ -211,11 +209,11 @@ function decorateHeader(header, { getInstance }) {
     }
 
     return {
-      ...props,
       onMouseDown: e => e.persist() || onResizeStart(e, header),
       onTouchStart: e => e.persist() || onResizeStart(e, header),
       draggable: false,
       role: 'separator',
+      ...props,
     }
   }
 }

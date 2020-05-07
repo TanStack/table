@@ -9,7 +9,6 @@ import useTableState from './useTableState'
 import useColumns from './useColumns'
 import useHeadersAndFooters from './useHeadersAndFooters'
 import useDataModel from './useDataModel'
-import useHeaderWidths from './useHeaderWidths'
 
 import { withCore } from '../plugins/withCore'
 import { withVisibility } from '../plugins/withVisibility'
@@ -17,17 +16,17 @@ import { withVisibility } from '../plugins/withVisibility'
 //
 
 const plugTypes = [
+  ['plugins', composeReducer],
   ['useReduceOptions', composeReducer],
   ['useInstanceAfterState', composeDecorator],
-  ['useInstanceAfterDataModel', composeDecorator],
-  ['decorateFlatColumns', composeDecorator],
+  ['decorateAllColumns', composeDecorator],
   ['decorateColumn', composeDecorator],
   ['decorateHeader', composeDecorator],
   ['decorateOrderedColumns', composeDecorator],
   ['decorateVisibleColumns', composeDecorator],
   ['decorateRow', composeDecorator],
   ['decorateCell', composeDecorator],
-  ['useInstanceFinal', composeDecorator],
+  ['useInstanceAfterDataModel', composeDecorator],
   ['reduceTableProps', composeReducer],
   ['reduceTableBodyProps', composeReducer],
   ['reduceTableHeadProps', composeReducer],
@@ -48,15 +47,23 @@ export const useTable = options => {
   }
   const instance = instanceRef.current
 
-  options = {
-    ...options,
-    plugins: [withCore, withVisibility, ...options.plugins].filter(Boolean),
+  const allPlugins = [withCore, withVisibility]
+
+  const recursePlugins = plugins => {
+    plugins.filter(Boolean).forEach(plugin => {
+      if (plugin.plugins) {
+        recursePlugins(plugin.plugins)
+      }
+      allPlugins.push(plugin)
+    })
   }
+
+  recursePlugins(options.plugins)
 
   instance.plugs = {}
 
   plugTypes.forEach(([plugType, compositionFn]) => {
-    const pluginPlugs = options.plugins
+    const pluginPlugs = allPlugins
       .map(plugin => plugin[plugType])
       .filter(Boolean)
 
@@ -79,10 +86,6 @@ export const useTable = options => {
   useDataModel(instance)
 
   instance.plugs.useInstanceAfterDataModel(instance)
-
-  useHeaderWidths(instance)
-
-  instance.plugs.useInstanceFinal(instance)
 
   return instance
 }
