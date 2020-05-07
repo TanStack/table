@@ -11,7 +11,7 @@ React Table uses React Hooks both internally and externally for almost all of it
 React Table is essentially a compatible collection of **custom React hooks**:
 
 - The primary React Table hook
-  - [`useTable`](./api/useTable)
+  - [`useTable`](./useTable.md)
 - Plugin Hooks
   - Core Plugin Hooks
     - [`useGroupBy`](./useGroupBy.md)
@@ -25,10 +25,10 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - [`useRowState`](./useRowState.md)
     - [`useColumnOrder`](./useColumnOrder.md)
   - Layout Hooks
-    - [`useBlockLayout`](./useBlockLayout)
-    - [`useAbsoluteLayout`](./useAbsoluteLayout)
-    - [`useFlexLayout`](./useFlexLayout)
-    - [`useResizeColumns`](./useResizeColumns)
+    - [`useBlockLayout`](./useBlockLayout.md)
+    - [`useAbsoluteLayout`](./useAbsoluteLayout.md)
+    - [`useFlexLayout`](./useFlexLayout.md)
+    - [`useResizeColumns`](./useResizeColumns.md)
 - 3rd Party Plugin Hooks
   - Want your custom plugin hook listed here? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
 

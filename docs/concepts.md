@@ -33,6 +33,6 @@ As of React Table v7, **you the developer** are responsible for rendering your o
 ---
 
 After reading about React Table's concepts, you should:
-- [Follow the Quick Start](./quickstart)
+- [Follow the Quick Start](./quickstart.mdx)
 - [Check Out Some Examples](./examples)
 - [Study the API](./api)
