@@ -12,6 +12,8 @@ import {
 import * as filterTypes from '../filterTypes'
 
 export const withGlobalFilter = {
+  name: 'withGlobalFilter',
+  after: ['withColumnFilters'],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,

@@ -12,9 +12,12 @@ import {
 import * as filterTypes from '../filterTypes'
 
 export const withColumnFilters = {
+  name: 'withColumnFilters',
+  after: [],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
+  decorateColumn,
 }
 
 function useReduceOptions(options) {
@@ -24,6 +27,10 @@ function useReduceOptions(options) {
     initialState: {
       columnFilters: [],
       ...options.initialState,
+    },
+    defaultColumn: {
+      filterType: 'text',
+      ...options.defaultColumn,
     },
   }
 }
@@ -405,4 +412,13 @@ function facetFilterValues(column, rows, getInstance) {
       }
     })
   }
+}
+
+function decorateColumn(column, { getInstance }) {
+  column.getCanFilter = () => getInstance().getColumnCanFilter(column.id)
+  column.getFilterIndex = () => getInstance().getColumnFilterIndex(column.id)
+  column.getIsFiltered = () => getInstance().getColumnIsFiltered(column.id)
+  column.getFilterValue = () => getInstance().getColumnFilterValue(column.id)
+  column.setFilterValue = val =>
+    getInstance().setColumnFilterValue(column.id, val)
 }

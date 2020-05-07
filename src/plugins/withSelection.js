@@ -10,6 +10,15 @@ import {
 } from '../utils'
 
 export const withSelection = {
+  name: 'withSelection',
+  after: [
+    'withColumnFilters',
+    'withGlobalFilter',
+    'withGrouping',
+    'withSorting',
+    'withExpanding',
+    'withPagination',
+  ],
   useReduceOptions,
   useInstanceAfterState,
   decorateRow,

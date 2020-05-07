@@ -12,6 +12,8 @@ import {
 import * as sortTypes from '../sortTypes'
 
 export const withSorting = {
+  name: 'withSorting',
+  after: ['withColumnFilters', 'withGlobalFilter', 'withGrouping'],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
@@ -26,6 +28,11 @@ function useReduceOptions(options) {
     initialState: {
       sorting: [],
       ...options.initialState,
+    },
+    defaultColumn: {
+      sortType: 'basic',
+      sortDescFirst: false,
+      ...options.defaultColumn,
     },
   }
 }
@@ -344,6 +351,14 @@ function useInstanceAfterDataModel(instance) {
 }
 
 function decorateColumn(column, { getInstance }) {
+  column.getCanSort = () => getInstance().getColumnCanSort(column.id)
+  column.getSortedIndex = () => getInstance().getColumnSortedIndex(column.id)
+  column.getIsSorted = () => getInstance().getColumnIsSorted(column.id)
+  column.toggleSorting = (desc, multi) =>
+    getInstance().toggleColumnSorting(column.id, desc, multi)
+  column.clearSorting = () => getInstance().clearColumnSorting(column.id)
+  column.getIsSortedDesc = () => getInstance().getColumnIsSortedDesc(column.id)
+
   column.getToggleSortingProps = (props = {}) => {
     const canSort = column.getCanSort()
 

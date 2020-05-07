@@ -2,24 +2,16 @@ import React from 'react'
 
 //
 
-import {
-  useGetLatest,
-  flattenColumns,
-  makeRenderer,
-  getFirstDefined,
-} from '../utils'
+import { useGetLatest, flattenColumns, makeRenderer } from '../utils'
 
 export const defaultColumn = {
   Header: () => <>&nbsp;</>,
   Cell: ({ value = '' }) =>
     typeof value === 'boolean' ? value.toString() : value,
-  minWidth: 40,
-  maxWidth: Number.MAX_SAFE_INTEGER,
   defaultIsVisible: true,
   width: 150,
-  filterType: 'text',
-  sortType: 'basic',
-  sortDescFirst: false,
+  minWidth: 20,
+  maxWidth: Number.MAX_SAFE_INTEGER,
 }
 
 export default function useColumns(instance) {
@@ -34,8 +26,6 @@ export default function useColumns(instance) {
       decorateVisibleColumns,
     },
   } = instance
-
-  // TODO: Derive the default table state from column initial state
 
   const prepColumn = React.useCallback(
     column => {
@@ -78,37 +68,6 @@ export default function useColumns(instance) {
       })
 
       column.getWidth = () => getInstance().getColumnWidth(column.id)
-
-      column.getCanHide = () => getInstance().getColumnCanHide(column.id)
-      column.getIsVisible = () => getInstance().getColumnIsVisible(column.id)
-      column.toggleVisibility = value =>
-        getInstance().toggleColumnVisibility(column.id, value)
-
-      column.getCanFilter = () => getInstance().getColumnCanFilter(column.id)
-      column.getFilterIndex = () =>
-        getInstance().getColumnFilterIndex(column.id)
-      column.getIsFiltered = () => getInstance().getColumnIsFiltered(column.id)
-      column.getFilterValue = () =>
-        getInstance().getColumnFilterValue(column.id)
-      column.setFilterValue = val =>
-        getInstance().setColumnFilterValue(column.id, val)
-
-      column.getCanGroup = () => getInstance().getColumnCanGroup(column.id)
-      column.getGroupedIndex = () =>
-        getInstance().getColumnGroupedIndex(column.id)
-      column.getIsGrouped = () => getInstance().getColumnIsGrouped(column.id)
-      column.toggleGrouping = value =>
-        getInstance().toggleColumnGrouping(column.id, value)
-
-      column.getCanSort = () => getInstance().getColumnCanSort(column.id)
-      column.getSortedIndex = () =>
-        getInstance().getColumnSortedIndex(column.id)
-      column.getIsSorted = () => getInstance().getColumnIsSorted(column.id)
-      column.toggleSorting = (desc, multi) =>
-        getInstance().toggleColumnSorting(column.id, desc, multi)
-      column.clearSorting = () => getInstance().clearColumnSorting(column.id)
-      column.getIsSortedDesc = () =>
-        getInstance().getColumnIsSortedDesc(column.id)
     },
     [getInstance]
   )
@@ -148,13 +107,6 @@ export default function useColumns(instance) {
         ...(getInstance().options.defaultColumn || {}),
         ...column,
       })
-
-      column.Aggregated = column.Aggregated || column.Cell
-      column.disableHiding = getFirstDefined(
-        column.disableHiding,
-        column.isSelectionColumn ? true : undefined,
-        column.isExpanderColumn ? true : undefined
-      )
 
       return column
     })

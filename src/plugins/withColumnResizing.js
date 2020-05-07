@@ -3,6 +3,8 @@ import React from 'react'
 import { useGetLatest, getFirstDefined, getLeafHeaders } from '../utils'
 
 export const withColumnResizing = {
+  name: 'withColumnResizing',
+  after: [],
   useReduceOptions,
   useInstanceAfterState,
   decorateColumn,

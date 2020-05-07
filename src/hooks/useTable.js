@@ -47,18 +47,19 @@ export const useTable = options => {
   }
   const instance = instanceRef.current
 
-  const allPlugins = [withCore, withVisibility]
+  const userPlugins = options.plugins.filter(Boolean)
 
-  const recursePlugins = plugins => {
-    plugins.filter(Boolean).forEach(plugin => {
-      if (plugin.plugins) {
-        recursePlugins(plugin.plugins)
-      }
-      allPlugins.push(plugin)
-    })
-  }
+  userPlugins.sort((a, b) => {
+    if (a.after.includes(b.name) || a.after.length > b.after.length) {
+      return 1
+    }
+    if (b.after.includes(a.name) || b.after.length > a.after.length) {
+      return -1
+    }
+    return 0
+  })
 
-  recursePlugins(options.plugins)
+  const allPlugins = [withCore, withVisibility, ...userPlugins]
 
   instance.plugs = {}
 

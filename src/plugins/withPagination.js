@@ -9,6 +9,14 @@ import {
 } from '../utils'
 
 export const withPagination = {
+  name: 'withPagination',
+  after: [
+    'withColumnFilters',
+    'withGlobalFilter',
+    'withGrouping',
+    'withSorting',
+    'withExpanding',
+  ],
   useReduceOptions,
   useInstanceAfterState,
 }

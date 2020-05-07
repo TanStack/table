@@ -3,6 +3,8 @@ import React from 'react'
 import { useGetLatest, makeRenderer } from '../utils'
 
 export const withCore = {
+  name: 'withCore',
+  after: [],
   useInstanceAfterState,
   decorateHeader,
   decorateRow,

@@ -3,6 +3,8 @@ import React from 'react'
 import { useGetLatest, getFirstDefined } from '../utils'
 
 export const withVisibility = {
+  name: 'withVisibility',
+  after: ['withCore'],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
@@ -133,7 +135,12 @@ function useInstanceAfterDataModel(instance) {
   )
 }
 
-function decorateColumn(column) {
+function decorateColumn(column, { getInstance }) {
+  column.getCanHide = () => getInstance().getColumnCanHide(column.id)
+  column.getIsVisible = () => getInstance().getColumnIsVisible(column.id)
+  column.toggleVisibility = value =>
+    getInstance().toggleColumnVisibility(column.id, value)
+
   column.getToggleVisibilityProps = (props = {}) => ({
     type: 'checkbox',
     onChange: e => {

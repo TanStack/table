@@ -3,9 +3,10 @@ import React from 'react'
 import { useGetLatest, functionalUpdate } from '../utils'
 
 export const withColumnOrder = {
+  name: 'withColumnOrder',
+  after: [],
   useReduceOptions,
   useInstanceAfterState,
-  useInstanceAfterDataModel,
 }
 
 function useReduceOptions(options) {
@@ -50,8 +51,4 @@ function useInstanceAfterState(instance) {
       ),
     [setState]
   )
-}
-
-function useInstanceAfterDataModel(instance) {
-  const getInstance = useGetLatest(instance)
 }

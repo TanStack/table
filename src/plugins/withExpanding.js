@@ -8,6 +8,13 @@ import {
 } from '../utils'
 
 export const withExpanding = {
+  name: 'withExpanding',
+  after: [
+    'withColumnFilters',
+    'withGlobalFilter',
+    'withGrouping',
+    'withSorting',
+  ],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,

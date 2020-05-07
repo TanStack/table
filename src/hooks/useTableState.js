@@ -19,9 +19,9 @@ export default function useTableState(instance) {
   instance.state = React.useMemo(
     () => ({
       ...autoState,
-      ...instance.options.userState,
+      ...instance.options.state,
     }),
-    [autoState, instance.options.userState]
+    [autoState, instance.options.state]
   )
 
   // Our super cool setState function with meta and onStateChange callback support
@@ -49,11 +49,11 @@ export default function useTableState(instance) {
       if (resolvedState && resolvedState !== old) {
         getInstance().queuedAutoState = {
           ...resolvedState,
-          ...instance.options.userState,
+          ...instance.options.state,
         }
         setAutoState(resolvedState)
       }
     },
-    [getInstance, instance.options.userState]
+    [getInstance, instance.options.state]
   )
 }

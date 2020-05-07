@@ -15,6 +15,8 @@ const emptyArray = []
 const emptyObject = {}
 
 export const withGrouping = {
+  name: 'withGrouping',
+  after: ['withColumnFilters', 'withGlobalFilter'],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
@@ -395,7 +397,15 @@ function useInstanceAfterDataModel(instance) {
   })
 }
 
-function decorateColumn(column) {
+function decorateColumn(column, { getInstance }) {
+  column.Aggregated = column.Aggregated || column.Cell
+
+  column.getCanGroup = () => getInstance().getColumnCanGroup(column.id)
+  column.getGroupedIndex = () => getInstance().getColumnGroupedIndex(column.id)
+  column.getIsGrouped = () => getInstance().getColumnIsGrouped(column.id)
+  column.toggleGrouping = value =>
+    getInstance().toggleColumnGrouping(column.id, value)
+
   column.getToggleGroupingProps = (props = {}) => {
     const canGroup = column.getCanGroup()
 
