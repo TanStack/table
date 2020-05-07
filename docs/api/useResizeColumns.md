@@ -19,7 +19,7 @@ menu: API
 
 ### Column Options
 
-The core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](#column-options) for more information on these options.
+The core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. [See Column Options](./useTable.md#column-options) for more information on these options.
 
 - `disableResizing: Bool`
   - Defaults to `false`
