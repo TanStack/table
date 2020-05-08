@@ -20,7 +20,7 @@ jobs:
           subfolder: /github/workspace/
 
           # A comma-separated list of file types to cover in the URL checks
-          file_types: .md
+          file_types: .md,.mdx
 
           # Choose whether to include file with no URLs in the prints.
           print_all: false
@@ -32,7 +32,7 @@ jobs:
           retry_count: 1
 
           # A comma separated links to exclude during URL checks
-          white_listed_urls:
+          white_listed_urls: https://uber.com
 
           # A comma separated patterns to exclude during URL checks
           white_listed_patterns:

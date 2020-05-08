@@ -66,7 +66,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - [Ocado](https://ocado.com)
 - [Nordstrom](https://nordstrom.com)
 - [TicketMaster](https://ticketmaster.com)
-- [Comcast Business](https://comcastbusiness.com)
+- [Comcast Business](https://business.comcast.com)
 
 > _These analytics are made available via the awesome [Scarf](https://www.npmjs.com/package/@scarf/scarf) package analytics library_
 
