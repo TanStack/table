@@ -166,9 +166,9 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 [![Supporters](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/supporters.png)](https://github.com/sponsors/tannerlinsley)
 
-- Jon Eickmeier</li>
-- <a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
-- <a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
+- Jon Eickmeier
+- <a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a>
+- <a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a>
 
 [![Fans](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/fans.png)](https://github.com/sponsors/tannerlinsley)
 
