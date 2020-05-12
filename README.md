@@ -106,153 +106,80 @@ The examples below are built by our partners from [Creative Tim](https://creativ
 
 This library is being built and maintained by me, @tannerlinsley and I am always in need of more support to keep this project afloat. If you would like to get additional support, add your logo or name on this README, or simply just contribute to my open source Sponsorship goal, [visit my Github Sponsors page!](https://github.com/sponsors/tannerlinsley/)
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/diamond.png" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Become a Sponsor!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+[![Diamond Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/diamond.png)](https://github.com/sponsors/tannerlinsley)
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/platinum.png" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-       <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Become a Sponsor!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/gold.png" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://nozzle.io" target="_blank">
-          <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Become a Sponsor!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<hr />
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley/" target="_blank">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/silver.png" />
-        </a>
-      </td>
-       <td align="center" valign="middle">
-        <a href="https://tripwire.com" target="_blank">
-          <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://www.fream.pl/" target="_blank">
-          <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Become a Sponsor!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+[![Gold Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/gold.png)](https://github.com/sponsors/tannerlinsley)
 
-<table>
-  <tbody>
-    <tr>
-      <td valign="top">
-        <a href="https://github.com/sponsors/tannerlinsley/">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/supporters.png" />
-        </a>
-      </td>
-      <td>
-        <ul>
-          <li>Jon Eickmeier</li>
-          <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
-          <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
-          <li><a href="https://kentcdodds.com/"> Kent C. Dodds (kentcdodds.com)</a></li>
-        </ul>
-      </td>
-      <td>
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Become a Supporter!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
+  <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
+</a>
 
-<table>
-  <tbody>
-    <tr>
-      <td valign="top">
-        <a href="https://github.com/sponsors/tannerlinsley/">
-          <img width='150' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/fans.png" />
-        </a>
-      </td>
-      <td>
-        <ul>
-          <li>Hugo Meissner</li>
-          <li>Benoit Leger-Derville</li>
-          <li>Thomas Funk</li>
-          <li>David Pickut</li>
-          <li>Jordan Soltman</li>
-          <li>Robert Tajnšek</li>
-          <li>Eric Lanehart (@pushred)</li>
-          <li>Anish P Patel (@anishpatelyaadada)</li>
-          <li>Alin Porumb (@alinporumb)</li>
-          <li>Janus Reith (@janus-reith)</li>
-          <li>Timo Mämecke (@timomeh)</li>
-          <li>Matt Stvartak (@mattstvartak)</li>
-          <li>Nicholas Canvoa (@NicholasCanova)</li>
-          <li>JP Rosevear (@jprosevear)</li>
-        </ul>
-      </td>
-      <td>
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Become a Fan!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
+
+<hr />
+
+[![Silver Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/silver.png)](https://github.com/sponsors/tannerlinsley)
+
+<p>
+  <a href="https://nozzle.io" target="_blank">
+    <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
+  </a>
+<p>
+
+[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
+
+<hr />
+
+[![Bronze Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/bronze.png)](https://github.com/sponsors/tannerlinsley)
+
+<p>
+  <a href="https://tripwire.com" target="_blank">
+    <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
+  </a>
+  <a href="https://www.fream.pl/" target="_blank">
+    <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
+  </a>
+</p>
+
+[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
+
+<hr />
+
+[![Supporters](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/supporters.png)](https://github.com/sponsors/tannerlinsley)
+
+<ul>
+  <li>Jon Eickmeier</li>
+  <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
+  <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
+</ul>
+
+[Get Your Name Here!](https://github.com/sponsors/tannerlinsley)
+
+<hr />
+
+[![Fans](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/fans.png)](https://github.com/sponsors/tannerlinsley)
+
+<ul>
+  <li>Hugo Meissner</li>
+  <li>Benoit Leger-Derville</li>
+  <li>Thomas Funk</li>
+  <li>David Pickut</li>
+  <li>Jordan Soltman</li>
+  <li>Robert Tajnšek</li>
+  <li>Eric Lanehart (@pushred)</li>
+  <li>Anish P Patel (@anishpatelyaadada)</li>
+  <li>Alin Porumb (@alinporumb)</li>
+  <li>Janus Reith (@janus-reith)</li>
+  <li>Timo Mämecke (@timomeh)</li>
+  <li>Tyler Reiff (@reiff12)</li>
+  <li>Matt Stvartak (@mattstvartak)</li>
+</ul>
+
+[Get Your Name Here!](https://github.com/sponsors/tannerlinsley)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
