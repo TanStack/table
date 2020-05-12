@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.4",
+  "version": "7.0.5",
   "description": "Hooks for building lightweight, fast and extendable datagrids for React",
   "license": "MIT",
   "homepage": "https://react-table.js.org",
