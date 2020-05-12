@@ -110,17 +110,11 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 [Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
 
-<hr />
-
 [![Gold Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/gold.png)](https://github.com/sponsors/tannerlinsley)
 
 <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
   <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
 </a>
-
-[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
-
-<hr />
 
 [![Silver Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/silver.png)](https://github.com/sponsors/tannerlinsley)
 
@@ -129,10 +123,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
   </a>
 <p>
-
-[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
-
-<hr />
 
 [![Bronze Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/bronze.png)](https://github.com/sponsors/tannerlinsley)
 
@@ -145,10 +135,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
   </a>
 </p>
 
-[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
-
-<hr />
-
 [![Supporters](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/supporters.png)](https://github.com/sponsors/tannerlinsley)
 
 <ul>
@@ -156,10 +142,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
   <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
   <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
 </ul>
-
-[Get Your Name Here!](https://github.com/sponsors/tannerlinsley)
-
-<hr />
 
 [![Fans](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/fans.png)](https://github.com/sponsors/tannerlinsley)
 
@@ -178,8 +160,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
   <li>Tyler Reiff (@reiff12)</li>
   <li>Matt Stvartak (@mattstvartak)</li>
 </ul>
-
-[Get Your Name Here!](https://github.com/sponsors/tannerlinsley)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
