@@ -89,7 +89,7 @@ The following options are supported on any column object you can pass to `column
   - Receives the table instance and column model as props
   - Must either be a **string or return valid JSX**
   - If a function/component is passed, it will be used for formatting the header value, eg. You can use a `Header` function to dynamically format the header using any table or column state.
-- `Cell: Function | React.Component => JSX`
+- `Cell: Function | React.Component => JSX` <a id="column-object-cell"></a>
   - Optional
   - Defaults to `({ value }) => String(value)`
   - Receives the table instance and cell model as props
@@ -274,7 +274,7 @@ The following additional properties are available on every `Cell` object returne
   - The corresponding row object for this cell
 - `value: any`
   - The **resolved** value for this cell.
-  - By default, this value is displayed on the table via the default `Cell` renderer. To override the way a cell displays
+  - By default, this value is displayed on the table via the default `Cell` renderer. To override the way a cell displays override the [Cell](#column-object-cell) property of the column object.
 - `getCellProps: Function(?props)`
   - **Required**
   - This function is used to resolve any props needed for this cell.
