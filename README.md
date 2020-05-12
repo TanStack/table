@@ -155,12 +155,12 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <tr>
       <td>
         <a href="https://tripwire.com" target="_blank">
-          <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
+          <img width='130' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
         </a>
       </td>
       <td>
         <a href="https://www.fream.pl/" target="_blank">
-          <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
+          <img width='130' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
         </a>
       </td>
     </tr>
