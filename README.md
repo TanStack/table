@@ -112,27 +112,51 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 [![Gold Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/gold.png)](https://github.com/sponsors/tannerlinsley)
 
-<a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-  <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
-</a>
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
+          <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 [![Silver Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/silver.png)](https://github.com/sponsors/tannerlinsley)
 
-<p>
-  <a href="https://nozzle.io" target="_blank">
-    <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
-  </a>
-<p>
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://nozzle.io" target="_blank">
+          <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 [![Bronze Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/bronze.png)](https://github.com/sponsors/tannerlinsley)
 
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://tripwire.com" target="_blank">
+          <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
+        </a>
+      </td>
+      <td>
+        <a href="https://www.fream.pl/" target="_blank">
+          <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <p>
-  <a href="https://tripwire.com" target="_blank">
-    <img width='170' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
-  </a>
-  <a href="https://www.fream.pl/" target="_blank">
-    <img width='170' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
-  </a>
 </p>
 
 [![Supporters](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/supporters.png)](https://github.com/sponsors/tannerlinsley)
@@ -160,6 +184,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
   <li>Tyler Reiff (@reiff12)</li>
   <li>Matt Stvartak (@mattstvartak)</li>
 </ul>
+
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
