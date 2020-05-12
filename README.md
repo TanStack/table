@@ -108,7 +108,17 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 [![Diamond Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/diamond.png)](https://github.com/sponsors/tannerlinsley)
 
-[Get Your Logo Here!](https://github.com/sponsors/tannerlinsley)
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
+          Get Your Logo Here!
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 [![Gold Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/gold.png)](https://github.com/sponsors/tannerlinsley)
 
@@ -156,35 +166,28 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     </tr>
   </tbody>
 </table>
-<p>
-</p>
 
 [![Supporters](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/supporters.png)](https://github.com/sponsors/tannerlinsley)
 
-<ul>
-  <li>Jon Eickmeier</li>
-  <li><a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
-  <li><a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
-</ul>
+- Jon Eickmeier</li>
+- <a href="https://github.com/rhefner">Richard Hefner (@rhefner)</a></li>
+- <a href="https://gitHub.com/snorkypie"> Steeve Lennmark (@snorkypie)</a></li>
 
 [![Fans](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/fans.png)](https://github.com/sponsors/tannerlinsley)
 
-<ul>
-  <li>Hugo Meissner</li>
-  <li>Benoit Leger-Derville</li>
-  <li>Thomas Funk</li>
-  <li>David Pickut</li>
-  <li>Jordan Soltman</li>
-  <li>Robert Tajnšek</li>
-  <li>Eric Lanehart (@pushred)</li>
-  <li>Anish P Patel (@anishpatelyaadada)</li>
-  <li>Alin Porumb (@alinporumb)</li>
-  <li>Janus Reith (@janus-reith)</li>
-  <li>Timo Mämecke (@timomeh)</li>
-  <li>Tyler Reiff (@reiff12)</li>
-  <li>Matt Stvartak (@mattstvartak)</li>
-</ul>
-
+- Hugo Meissner
+- Benoit Leger-Derville
+- Thomas Funk
+- David Pickut
+- Jordan Soltman
+- Robert Tajnšek
+- Eric Lanehart (@pushred)
+- Anish P Patel (@anishpatelyaadada)
+- Alin Porumb (@alinporumb)
+- Janus Reith (@janus-reith)
+- Timo Mämecke (@timomeh)
+- Tyler Reiff (@reiff12)
+- Matt Stvartak (@mattstvartak)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
