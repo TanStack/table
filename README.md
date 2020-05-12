@@ -193,7 +193,14 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 
 ## Documentation
 
-Visit our new documentation site at https://react-table.js.org
+- [Installation](./docs/installation.md) - Walk through how to install React Table
+- [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
+- [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
+- [API](./docs/api/README.md) - Get to know React Table's API
+- [FAQ](./docs/faq.md) - Learn how to use React Table for specific challenges and tasks
+- [Previous Versions](#previous-versions)
+- [Contributing](./CONTRIBUTING.md) - Become familiar with how to contribute back to React Table
+- [Code of Conduct](./CODE_OF_CONDUCT.md) - Be a good React Table citizen by following these repository rules
 
 ## Previous Versions
 
