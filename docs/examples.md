@@ -1,8 +1,3 @@
----
-name: Examples
-route: /examples
----
-
 # Examples
 
 - [**Simple**](./examples/simple.mdx) - All of these examples use automatic state management, meaning, they don't hoist any state out of the table or manually control anything. Start here for understanding the basics about how to build your table UI.

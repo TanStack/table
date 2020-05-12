@@ -1,9 +1,3 @@
----
-name: Simple
-route: /examples/simple
-menu: Examples
----
-
 # Simple
 
 All of these examples use automatic state management, meaning, they don't hoist any state out of the table or manually control anything. Start here for understanding the basics about how to build your table UI.
@@ -12,13 +6,6 @@ All of these examples use automatic state management, meaning, they don't hoist 
 
 - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/basic)
 - [Open in CodeSandbox](https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/basic)
-  <iframe
-    src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/basic?autoresize=1&fontsize=14&module=%2Fsrc%2FApp.js&theme=dark"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="tannerlinsley/react-table: basic"
-    allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
-    sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-  ></iframe>
 
 ## Footers
 

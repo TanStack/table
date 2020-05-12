@@ -1,8 +1,3 @@
----
-name: Concepts
-route: /concepts
----
-
 # Concepts
 
 ## React Table is a "headless" UI library
@@ -33,6 +28,7 @@ As of React Table v7, **you the developer** are responsible for rendering your o
 ---
 
 After reading about React Table's concepts, you should:
+
 - [Follow the Quick Start](./quickstart.mdx)
 - [Check Out Some Examples](./examples)
 - [Study the API](./api)

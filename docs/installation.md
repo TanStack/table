@@ -1,8 +1,3 @@
----
-name: Installation
-route: /installation
----
-
 # Installation
 
 Install React Table as a dependency using `npm` or `yarn`

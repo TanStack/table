@@ -1,8 +1,3 @@
----
-name: usePagination
-route: /api/usePagination
-menu: API
----
 # `usePagination`
 
 - Plugin Hook

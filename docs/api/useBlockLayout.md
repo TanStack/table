@@ -1,9 +1,3 @@
----
-name: useBlockLayout
-route: /api/useBlockLayout
-menu: API
----
-
 # `useBlockLayout`
 
 - Plugin Hook

@@ -1,9 +1,3 @@
----
-name: useGlobalFilter
-route: /api/useGlobalFilter
-menu: API
----
-
 # `useGlobalFilter`
 
 - Plugin Hook

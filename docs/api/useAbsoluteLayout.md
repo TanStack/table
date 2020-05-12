@@ -1,9 +1,3 @@
----
-name: useAbsoluteLayout
-route: /api/useAbsoluteLayout
-menu: API
----
-
 # `useAbsoluteLayout`
 
 - Plugin Hook

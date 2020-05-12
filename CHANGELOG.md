@@ -1,8 +1,3 @@
----
-name: Changelog
-route: /changelog
----
-
 # React Table Changelog
 
 ## 7.0.4

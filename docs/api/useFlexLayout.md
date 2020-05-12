@@ -1,9 +1,3 @@
----
-name: useFlexLayout
-route: /api/useFlexLayout
-menu: API
----
-
 # `useFlexLayout`
 
 - Plugin Hook

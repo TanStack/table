@@ -1,9 +1,3 @@
----
-name: useRowState
-route: /api/useRowState
-menu: API
----
-
 # `useRowState`
 
 - Plugin Hook

@@ -1,9 +1,3 @@
----
-name: useSortBy
-route: /api/useSortBy
-menu: API
----
-
 # `useSortBy`
 
 - Plugin Hook
