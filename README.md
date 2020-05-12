@@ -185,6 +185,13 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Timo Mämecke (@timomeh)
 - Tyler Reiff (@reiff12)
 - Matt Stvartak (@mattstvartak)
+- JP Rosevear (@jprosevear)
+- Maurits (@mgm1313)
+- Stefan Khan-Kernahan (@skhanker)
+- Jesse Jafa (@awareness481)
+- Salik Syed (@saliksyed)
+- Ujjwal Pachori (@UjjwalP2)
+- Chet Corcos (@ccorcos)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
