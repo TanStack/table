@@ -6,7 +6,7 @@ import {
   ensurePluginOrder,
 } from '../publicUtils'
 
-import { getFirstDefined } from '../utils'
+import { getFirstDefined, passiveEventSupported } from '../utils'
 
 // Default Column
 defaultColumn.canResize = true
@@ -95,12 +95,19 @@ const defaultGetResizerProps = (props, { instance, header }) => {
     const events = isTouchEvent
       ? handlersAndEvents.touch
       : handlersAndEvents.mouse
-    document.addEventListener(events.moveEvent, events.moveHandler, {
-      passive: false,
-    })
-    document.addEventListener(events.upEvent, events.upHandler, {
-      passive: false,
-    })
+    const passiveIfSupported = passiveEventSupported()
+      ? { passive: false }
+      : false
+    document.addEventListener(
+      events.moveEvent,
+      events.moveHandler,
+      passiveIfSupported
+    )
+    document.addEventListener(
+      events.upEvent,
+      events.upHandler,
+      passiveIfSupported
+    )
 
     dispatch({
       type: actions.columnStartResizing,
