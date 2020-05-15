@@ -110,12 +110,12 @@ function useInstanceAfterState(instance) {
       setState(
         old => {
           const {
-            isAllRowsSelected,
+            getIsAllRowsSelected,
             rowsById,
             nonGroupedRowsById = rowsById,
           } = getInstance()
 
-          value = typeof value !== 'undefined' ? value : !isAllRowsSelected
+          value = typeof value !== 'undefined' ? value : !getIsAllRowsSelected()
 
           // Only remove/add the rows that are visible on the screen
           //  Leave all the other rows that are selected alone.
@@ -275,18 +275,24 @@ function useInstanceAfterState(instance) {
     return isAllRowsSelected
   }, [instance.nonGroupedRowsById, instance.state.selection])
 
+  instance.getIsSomeRowsSelected = useLazyMemo(() => {
+    return (
+      !getInstance().getIsAllRowsSelected() &&
+      Object.keys(instance.state.selection).length
+    )
+  }, [instance.nonGroupedRowsById, instance.state.selection])
+
   instance.getToggleAllRowsSelectedProps = props => {
-    const allRowsSelected = getInstance().getIsAllRowsSelected()
+    const isSomeRowsSelected = getInstance().getIsSomeRowsSelected()
+    const isAllRowsSelected = getInstance().getIsAllRowsSelected()
 
     return {
       onChange: e => {
         getInstance().toggleAllRowsSelected(e.target.checked)
       },
-      checked: allRowsSelected,
+      checked: isAllRowsSelected,
       title: 'Toggle All Rows Selected',
-      indeterminate: Boolean(
-        !allRowsSelected && Object.keys(getInstance().state.selection).length
-      ),
+      indeterminate: isSomeRowsSelected,
       ...props,
     }
   }
