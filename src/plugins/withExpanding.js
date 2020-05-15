@@ -7,17 +7,28 @@ import {
   useMountedLayoutEffect,
 } from '../utils'
 
+import {
+  withExpanding as name,
+  withColumnVisibility,
+  withColumnFilters,
+  withGlobalFilter,
+  withGrouping,
+  withSorting,
+} from '../Constants'
+
 export const withExpanding = {
-  name: 'withExpanding',
+  name,
   after: [
-    'withColumnFilters',
-    'withGlobalFilter',
-    'withGrouping',
-    'withSorting',
+    withColumnVisibility,
+    withColumnFilters,
+    withGlobalFilter,
+    withGrouping,
+    withSorting,
   ],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
+  useReduceLeafColumns,
   decorateRow,
 }
 
@@ -215,6 +226,20 @@ function useInstanceAfterDataModel(instance) {
     rows: expandedRows,
   })
 }
+
+function useReduceLeafColumns(orderedColumns, { getInstance }) {
+  return React.useMemo(() => {
+    if (getInstance().state.grouping?.length) {
+      return [
+        orderedColumns.find(d => d.isExpanderColumn),
+        ...orderedColumns.filter(d => d && !d.isExpanderColumn),
+      ].filter(Boolean)
+    }
+    return orderedColumns
+  }, [getInstance, orderedColumns])
+}
+
+useReduceLeafColumns.after = ['withGrouping']
 
 function decorateRow(row, { getInstance }) {
   row.toggleExpanded = set => getInstance().toggleRowExpanded(row.id, set)

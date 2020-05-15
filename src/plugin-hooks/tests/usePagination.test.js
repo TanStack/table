@@ -230,7 +230,7 @@ describe('usePagination', () => {
     act(() => result.current.nextPage())
     act(() => result.current.nextPage())
     expect(result.current.state.pageIndex).toEqual(2)
-    act(() => result.current.visibleColumns[0].setFilter('tanner'))
+    act(() => result.current.leafColumns[0].setFilter('tanner'))
     expect(result.current.state.pageIndex).toEqual(0)
   })
 })

@@ -2,200 +2,65 @@ import React from 'react'
 
 //
 
-import { useGetLatest, makeRenderer } from '../utils'
+import {
+  useGetLatest,
+  flattenBy,
+  buildHeaderGroups,
+  recurseHeaderForSpans,
+} from '../utils'
 
 export default function useHeadersAndFooters(instance) {
-  const { columns, visibleColumns, getColumnIsVisible } = instance
+  const {
+    columns,
+    leafColumns,
+    plugs: {
+      useReduceHeaderGroups,
+      useReduceFooterGroups,
+      useReduceFlatHeaders,
+    },
+  } = instance
 
   const getInstance = useGetLatest(instance)
 
   instance.headerGroups = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
       console.info('Building Headers and Footers')
-    // Find the max depth of the columns:
-    // build the leaf column row
-    // build each buffer row going up
-    //    placeholder for non-existent level
-    //    real column for existing level
 
-    let maxDepth = 0
+    return buildHeaderGroups(columns, leafColumns, { getInstance })
+  }, [columns, getInstance, leafColumns])
 
-    const findMaxDepth = (columns, depth = 0) => {
-      maxDepth = Math.max(maxDepth, depth)
+  instance.headerGroups = useReduceHeaderGroups(instance.headerGroups, {
+    getInstance,
+  })
 
-      columns.forEach(column => {
-        if (column.getIsVisible && !column.getIsVisible()) {
-          return
-        }
-        if (column.columns) {
-          findMaxDepth(column.columns, depth + 1)
-        }
-      }, 0)
-    }
-
-    findMaxDepth(columns)
-
-    const headerGroups = []
-
-    const makeHeaderGroup = (headers, depth) => {
-      // The header group we are creating
-      const headerGroup = {
-        depth,
-        id: depth,
-        headers: [],
-      }
-
-      // The parent columns we're going to scan next
-      const parentHeaders = []
-
-      // Scan each column for parents
-      headers.forEach(header => {
-        // What is the latest (last) parent column?
-        let latestParentHeader = [...parentHeaders].reverse()[0]
-
-        let parentHeader = {
-          subHeaders: [],
-        }
-
-        const isTrueHeaderDepth = header.column.depth === headerGroup.depth
-
-        if (isTrueHeaderDepth && header.column.parent) {
-          // The parent header different
-          parentHeader.isPlaceholder = false
-          parentHeader.column = header.column.parent
-        } else {
-          // The parent header is repeated
-          parentHeader.column = header.column
-          parentHeader.isPlaceholder = true
-        }
-
-        parentHeader.placeholderId = parentHeaders.filter(
-          d => d.column === parentHeader.column
-        ).length
-
-        if (
-          !latestParentHeader ||
-          latestParentHeader.column !== parentHeader.column
-        ) {
-          parentHeader.subHeaders.push(header)
-          parentHeaders.push(parentHeader)
-        } else {
-          latestParentHeader.subHeaders.push(header)
-        }
-
-        if (!header.isPlaceholder) {
-          header.column.header = header
-        }
-
-        header.id = [header.column.id, header.placeholderId]
-          .filter(Boolean)
-          .join('_')
-
-        headerGroup.headers.push(header)
-      })
-
-      headerGroups.push(headerGroup)
-
-      if (depth > 0) {
-        makeHeaderGroup(parentHeaders, depth - 1)
-      }
-    }
-
-    const bottomHeaders = visibleColumns.map(column => ({
-      column,
-      isPlaceholder: false,
-    }))
-
-    makeHeaderGroup(bottomHeaders, maxDepth)
-
-    headerGroups.reverse()
-
-    headerGroups.forEach(headerGroup => {
-      headerGroup.getHeaderGroupProps = (props = {}) =>
-        getInstance().plugs.reduceHeaderGroupProps(
-          {
-            role: 'row',
-            ...props,
-          },
-          { getInstance, headerGroup }
-        )
-
-      headerGroup.getFooterGroupProps = (props = {}) =>
-        getInstance().plugs.reduceFooterGroupProps(
-          {
-            role: 'row',
-            ...props,
-          },
-          { getInstance, headerGroup }
-        )
-    })
-
-    return headerGroups
-  }, [columns, getInstance, visibleColumns])
+  instance.headerGroups[0].headers.forEach(header =>
+    recurseHeaderForSpans(header)
+  )
 
   instance.footerGroups = React.useMemo(
     () => [...instance.headerGroups].reverse(),
     [instance.headerGroups]
   )
 
-  const recurseHeaderForSpans = header => {
-    let colSpan = 0
-    let rowSpan = 1
-    let childRowSpans = [0]
-
-    if (header.column.getIsVisible && header.column.getIsVisible()) {
-      if (header.subHeaders && header.subHeaders.length) {
-        childRowSpans = []
-        header.subHeaders.forEach(subHeader => {
-          const [count, childRowSpan] = recurseHeaderForSpans(subHeader)
-          colSpan += count
-          childRowSpans.push(childRowSpan)
-        })
-      } else {
-        colSpan = 1
-      }
-    }
-
-    let minChildRowSpan = Math.min(...childRowSpans)
-    rowSpan = rowSpan + minChildRowSpan
-
-    header.colSpan = colSpan
-    header.rowSpan = rowSpan
-
-    return [colSpan, rowSpan]
-  }
-
-  instance.headerGroups[0].headers.forEach(header =>
-    recurseHeaderForSpans(header)
-  )
+  instance.footerGroups = useReduceFooterGroups(instance.footerGroups, {
+    getInstance,
+  })
 
   instance.flatHeaders = React.useMemo(
-    () =>
-      instance.headerGroups
-        .reduce((all, headerGroup) => [...all, ...headerGroup.headers], [])
-        .map(header => {
-          getInstance().plugs.decorateHeader(header, { getInstance })
-          return header
-        }),
-    [getInstance, instance.headerGroups]
+    () => flattenBy(instance.headerGroups, 'headers', true),
+    [instance.headerGroups]
   )
+
+  instance.flatHeaders = useReduceFlatHeaders(instance.flatHeaders, {
+    getInstance,
+  })
+
+  instance.flatHeaders.forEach(header => {
+    getInstance().plugs.decorateHeader(header, { getInstance })
+  })
 
   instance.flatFooters = React.useMemo(
-    () =>
-      instance.footerGroups.reduce(
-        (all, footerGroup) => [...all, ...footerGroup.footers],
-        []
-      ),
+    () => flattenBy(instance.footerGroups, 'footers', true),
     [instance.footerGroups]
-  )
-
-  instance.getIsAllColumnsVisible = React.useCallback(
-    () => !instance.leafColumns.some(column => !getColumnIsVisible(column.id)),
-    [getColumnIsVisible, instance.leafColumns]
-  )
-
-  instance.getIsSomeColumnsVisible = React.useCallback(
-    () => instance.leafColumns.some(column => getColumnIsVisible(column.id)),
-    [getColumnIsVisible, instance.leafColumns]
   )
 }

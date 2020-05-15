@@ -59,11 +59,11 @@ route: /changelog
 ## 7.0.0-rc.16
 
 - Moved away from snapshot tests. No more testing implementation details.
-- Added `visibleColumns` and `visibleColumnsDeps` hooks to manipulate columns after all data is processed. Further visibility processing may result in these columns not being visible, such as `hiddenColumn` state
+- Added `leafColumns` and `leafColumnsDeps` hooks to manipulate columns after all data is processed. Further visibility processing may result in these columns not being visible, such as `hiddenColumn` state
 - The `useRows` hook has been deprecated due to its dangerous nature 💀
 - Added the `instance.rowsById` object
 - Renamed `instance.flatColumns` to `instance.allColumns` which now accumulates ALL columns created for the table, visible or not.
-- Added the `instance.visibleColumns` object
+- Added the `instance.leafColumns` object
 - Fix an issue where `useAsyncDebounce` would crash when passed arguments
 - Started development on the `usePivotColumns` plugin, which can be tested currently using the `_UNSTABLE_usePivotColumns` export.
 - Renamed `cell.isRepeatedValue` to `cell.isPlaceholder`

@@ -308,7 +308,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     usePagination,
     useRowSelect,
     hooks => {
-      hooks.visibleColumns.push(columns => [
+      hooks.leafColumns.push(columns => [
         {
           id: 'selection',
           // Make this column a groupByBoundary. This ensures that groupBy columns

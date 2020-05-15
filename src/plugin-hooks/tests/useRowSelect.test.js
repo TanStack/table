@@ -83,7 +83,7 @@ function Table({ columns, data }) {
     useRowSelect,
     useExpanded,
     hooks => {
-      hooks.visibleColumns.push(columns => [
+      hooks.leafColumns.push(columns => [
         // Let's make a column for selection
         {
           id: 'selection',

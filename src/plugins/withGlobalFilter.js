@@ -9,11 +9,17 @@ import {
   useMountedLayoutEffect,
 } from '../utils'
 
+import {
+  withGlobalFilter as name,
+  withColumnVisibility,
+  withColumnFilters,
+} from '../Constants'
+
 import * as filterTypes from '../filterTypes'
 
 export const withGlobalFilter = {
-  name: 'withGlobalFilter',
-  after: ['withColumnFilters'],
+  name,
+  after: [withColumnVisibility, withColumnFilters],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,

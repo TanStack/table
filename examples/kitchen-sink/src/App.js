@@ -317,7 +317,7 @@ function Table({ columns, data, updateMyData, skipReset }) {
     useRowSelect,
     // Here we will use a plugin to add our selection column
     hooks => {
-      hooks.visibleColumns.push(columns => {
+      hooks.leafColumns.push(columns => {
         return [
           {
             id: 'selection',

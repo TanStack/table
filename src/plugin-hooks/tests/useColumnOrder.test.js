@@ -57,7 +57,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    visibleColumns,
+    leafColumns,
     prepareRow,
     setColumnOrder,
     state,
@@ -72,7 +72,7 @@ function Table({ columns, data }) {
   const testColumnOrder = () => {
     setColumnOrder(
       shuffle(
-        visibleColumns.map(d => d.id),
+        leafColumns.map(d => d.id),
         [1, 4, 2, 0, 3, 5]
       )
     )

@@ -9,11 +9,24 @@ import {
   useMountedLayoutEffect,
 } from '../utils'
 
+import {
+  withSorting as name,
+  withColumnVisibility,
+  withColumnFilters,
+  withGlobalFilter,
+  withGrouping,
+} from '../Constants'
+
 import * as sortTypes from '../sortTypes'
 
 export const withSorting = {
-  name: 'withSorting',
-  after: ['withColumnFilters', 'withGlobalFilter', 'withGrouping'],
+  name,
+  after: [
+    withColumnVisibility,
+    withColumnFilters,
+    withGlobalFilter,
+    withGrouping,
+  ],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
@@ -229,7 +242,7 @@ function useInstanceAfterState(instance) {
     [getInstance]
   )
 
-  instance.clearSorting = React.useCallback(
+  instance.clearColumnSorting = React.useCallback(
     columnId =>
       setState(
         old => {
@@ -242,7 +255,7 @@ function useInstanceAfterState(instance) {
           }
         },
         {
-          type: 'clearSorting',
+          type: 'clearColumnSorting',
           columnId,
         }
       ),
@@ -359,7 +372,7 @@ function decorateColumn(column, { getInstance }) {
   column.clearSorting = () => getInstance().clearColumnSorting(column.id)
   column.getIsSortedDesc = () => getInstance().getColumnIsSortedDesc(column.id)
 
-  column.getToggleSortingProps = (props = {}) => {
+  column.getToggleSortingProps = ({ isMulti, ...props } = {}) => {
     const canSort = column.getCanSort()
 
     return {
@@ -369,7 +382,7 @@ function decorateColumn(column, { getInstance }) {
             column.toggleSorting(
               undefined,
               !getInstance().options.disableMultiSort &&
-                getInstance().options.isMultiSortEvent(e)
+                (isMulti || getInstance().options.isMultiSortEvent(e))
             )
           }
         : undefined,

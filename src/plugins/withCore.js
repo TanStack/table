@@ -36,7 +36,7 @@ function useInstanceAfterState(instance) {
   )
 
   instance.getTotalWidth = React.useCallback(() => {
-    return getInstance().visibleColumns.reduce(
+    return getInstance().leafColumns.reduce(
       (sum, column) => sum + column.getWidth(),
       0
     )

@@ -2,7 +2,7 @@ import React from 'react'
 
 //
 
-import { useGetLatest, makeRenderer } from '../utils'
+import { useGetLatest, makeRenderer, flattenBy } from '../utils'
 
 export default function useDataModel(instance) {
   const {
@@ -60,6 +60,7 @@ export default function useDataModel(instance) {
         )
         // Keep the new subRows array on the row
         row.subRows = subRows
+        row.leafRows = flattenBy(subRows, 'leafRows')
       }
 
       row.cells = []
@@ -96,7 +97,7 @@ export default function useDataModel(instance) {
       })
 
       row.getVisibleCells = () =>
-        getInstance().visibleColumns.map(column =>
+        getInstance().leafColumns.map(column =>
           row.cells.find(cell => cell.column.id === column.id)
         )
 

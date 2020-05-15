@@ -205,7 +205,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    visibleColumns,
+    leafColumns,
     prepareRow,
     setColumnOrder,
     state,
@@ -230,7 +230,7 @@ function Table({ columns, data }) {
   )
 
   const randomizeColumns = () => {
-    setColumnOrder(shuffle(visibleColumns.map(d => d.id)))
+    setColumnOrder(shuffle(leafColumns.map(d => d.id)))
   }
 
   return (

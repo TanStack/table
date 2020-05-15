@@ -13,7 +13,7 @@ function Table({ columns: userColumns, data, SubComponent }) {
     headerGroups,
     rows,
     prepareRow,
-    visibleColumns,
+    leafColumns,
   } = useTable(
     {
       columns: userColumns,
@@ -49,7 +49,7 @@ function Table({ columns: userColumns, data, SubComponent }) {
                 </tr>
                 {!row.subRows.length && row.isExpanded ? (
                   <tr>
-                    <td colSpan={visibleColumns.length}>
+                    <td colSpan={leafColumns.length}>
                       {SubComponent({ row })}
                     </td>
                   </tr>

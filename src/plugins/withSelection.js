@@ -9,18 +9,31 @@ import {
   functionalUpdate,
 } from '../utils'
 
+import {
+  withSelection as name,
+  withColumnVisibility,
+  withColumnFilters,
+  withGlobalFilter,
+  withGrouping,
+  withSorting,
+  withExpanding,
+  withPagination,
+} from '../Constants'
+
 export const withSelection = {
-  name: 'withSelection',
+  name,
   after: [
-    'withColumnFilters',
-    'withGlobalFilter',
-    'withGrouping',
-    'withSorting',
-    'withExpanding',
-    'withPagination',
+    withColumnVisibility,
+    withColumnFilters,
+    withGlobalFilter,
+    withGrouping,
+    withSorting,
+    withExpanding,
+    withPagination,
   ],
   useReduceOptions,
   useInstanceAfterState,
+  useReduceLeafColumns,
   decorateRow,
 }
 
@@ -278,6 +291,17 @@ function useInstanceAfterState(instance) {
     }
   }
 }
+
+function useReduceLeafColumns(orderedColumns) {
+  return React.useMemo(() => {
+    return [
+      orderedColumns.find(d => d.isSelectionColumn),
+      ...orderedColumns.filter(d => d && !d.isSelectionColumn),
+    ].filter(Boolean)
+  }, [orderedColumns])
+}
+
+useReduceLeafColumns.after = ['withGrouping', 'withExpanding']
 
 function decorateRow(row, { getInstance }) {
   row.getIsSelected = () =>

@@ -8,14 +8,25 @@ import {
   useMountedLayoutEffect,
 } from '../utils'
 
+import {
+  withPagination as name,
+  withColumnVisibility,
+  withColumnFilters,
+  withGlobalFilter,
+  withGrouping,
+  withSorting,
+  withExpanding,
+} from '../Constants'
+
 export const withPagination = {
-  name: 'withPagination',
+  name,
   after: [
-    'withColumnFilters',
-    'withGlobalFilter',
-    'withGrouping',
-    'withSorting',
-    'withExpanding',
+    withColumnVisibility,
+    withColumnFilters,
+    withGlobalFilter,
+    withGrouping,
+    withSorting,
+    withExpanding,
   ],
   useReduceOptions,
   useInstanceAfterState,

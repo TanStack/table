@@ -9,17 +9,25 @@ import {
   makeRenderer,
 } from '../utils'
 
+import {
+  withGrouping as name,
+  withColumnVisibility,
+  withColumnFilters,
+  withGlobalFilter,
+} from '../Constants'
+
 import * as aggregationTypes from '../aggregationTypes'
 
 const emptyArray = []
 const emptyObject = {}
 
 export const withGrouping = {
-  name: 'withGrouping',
-  after: ['withColumnFilters', 'withGlobalFilter'],
+  name,
+  after: [withColumnVisibility, withColumnFilters, withGlobalFilter],
   useReduceOptions,
   useInstanceAfterState,
   useInstanceAfterDataModel,
+  useReduceLeafColumns,
   decorateColumn,
   decorateRow,
   decorateCell,
@@ -292,7 +300,7 @@ function useInstanceAfterDataModel(instance) {
             values,
             subRows,
             leafRows,
-            depth: depth + 1,
+            depth,
             index,
           }
 
@@ -333,7 +341,7 @@ function useInstanceAfterDataModel(instance) {
           })
 
           row.getVisibleCells = () =>
-            getInstance().visibleColumns.map(column =>
+            getInstance().leafColumns.map(column =>
               row.cells.find(cell => cell.column.id === column.id)
             )
 
@@ -395,6 +403,34 @@ function useInstanceAfterDataModel(instance) {
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
   })
+}
+
+function useReduceLeafColumns(orderedColumns, { getInstance }) {
+  const {
+    state: { grouping },
+  } = getInstance()
+
+  return React.useMemo(() => {
+    if (!grouping.length) {
+      return orderedColumns
+    }
+
+    const expanderColumn = orderedColumns.find(d => d.isExpanderColumn)
+
+    const groupingColumns = grouping
+      .map(g => orderedColumns.find(col => col.id === g))
+      .filter(Boolean)
+
+    const nonGroupingColumns = orderedColumns.filter(
+      col => !grouping.includes(col.id)
+    )
+
+    if (!expanderColumn) {
+      nonGroupingColumns.unshift(...groupingColumns)
+    }
+
+    return nonGroupingColumns
+  }, [grouping, orderedColumns])
 }
 
 function decorateColumn(column, { getInstance }) {

@@ -2,9 +2,11 @@ import React from 'react'
 
 import { useGetLatest, getFirstDefined, getLeafHeaders } from '../utils'
 
+import { withColumnResizing as name, withColumnVisibility } from '../Constants'
+
 export const withColumnResizing = {
-  name: 'withColumnResizing',
-  after: [],
+  name,
+  after: [withColumnVisibility],
   useReduceOptions,
   useInstanceAfterState,
   decorateColumn,

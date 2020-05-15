@@ -103,7 +103,7 @@ function App(props) {
     headerGroups,
     rows,
     prepareRow,
-    visibleColumns,
+    leafColumns,
     state,
     setGlobalFilter,
   } = useTable(
@@ -135,7 +135,7 @@ function App(props) {
           ))}
           <tr>
             <th
-              colSpan={visibleColumns.length}
+              colSpan={leafColumns.length}
               style={{
                 textAlign: 'left',
               }}

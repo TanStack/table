@@ -17,14 +17,8 @@ export const defaultColumn = {
 export default function useColumns(instance) {
   const getInstance = useGetLatest(instance)
   const {
-    getColumnIsVisible,
-    state: { grouping, columnOrder },
     options: { columns },
-    plugs: {
-      decorateAllColumns,
-      decorateOrderedColumns,
-      decorateVisibleColumns,
-    },
+    plugs: { useReduceColumns, useReduceAllColumns, useReduceLeafColumns },
   } = instance
 
   const prepColumn = React.useCallback(
@@ -96,12 +90,19 @@ export default function useColumns(instance) {
     }
   }, [columns, getInstance])
 
+  instance.columns = useReduceColumns(instance.columns, { getInstance })
+
+  instance.allColumns = React.useMemo(
+    () => flattenColumns(instance.columns, true),
+    [instance.columns]
+  )
+
+  instance.allColumns = useReduceAllColumns(instance.allColumns, {
+    getInstance,
+  })
+
   instance.allColumns = React.useMemo(() => {
-    const allColumns = flattenColumns(instance.columns, true)
-
-    decorateAllColumns(allColumns, { getInstance })
-
-    return allColumns.map(column => {
+    return instance.allColumns.map(column => {
       Object.assign(column, {
         ...defaultColumn,
         ...(getInstance().options.defaultColumn || {}),
@@ -110,7 +111,7 @@ export default function useColumns(instance) {
 
       return column
     })
-  }, [decorateAllColumns, getInstance, instance.columns])
+  }, [getInstance, instance.allColumns])
 
   instance.allColumns.forEach(column => {
     prepColumn(column)
@@ -125,97 +126,9 @@ export default function useColumns(instance) {
     [instance.allColumns]
   )
 
-  instance.orderedColumns = React.useMemo(() => {
-    // Sort grouped columns to the start of the column list
-    // before the headers are built
-    let orderedColumns = []
-
-    // If there is no order, return the normal columns
-    if (columnOrder?.length) {
-      const columnOrderCopy = [...columnOrder]
-
-      // If there is an order, make a copy of the columns
-      const leafColumnsCopy = [...instance.leafColumns]
-
-      // And make a new ordered array of the columns
-
-      // Loop over the columns and place them in order into the new array
-      while (leafColumnsCopy.length && columnOrderCopy.length) {
-        const targetColumnId = columnOrderCopy.shift()
-        const foundIndex = leafColumnsCopy.findIndex(
-          d => d.id === targetColumnId
-        )
-        if (foundIndex > -1) {
-          orderedColumns.push(leafColumnsCopy.splice(foundIndex, 1)[0])
-        }
-      }
-
-      // If there are any columns left, add them to the end
-      orderedColumns = [...orderedColumns, ...leafColumnsCopy]
-    } else {
-      orderedColumns = instance.leafColumns
-    }
-
-    const selectionColumn = orderedColumns.find(d => d.isSelectionColumn)
-    const expanderColumn = orderedColumns.find(d => d.isExpanderColumn)
-
-    const groupingColumns = grouping
-      .map(g => orderedColumns.find(col => col.id === g))
-      .filter(Boolean)
-
-    const nonGroupingColumns = orderedColumns.filter(
-      col => !grouping.includes(col.id)
-    )
-
-    orderedColumns = nonGroupingColumns.filter(
-      d => d && !d.isSelectionColumn && !d.isExpanderColumn
-    )
-
-    if (grouping.length) {
-      if (expanderColumn) {
-        orderedColumns.unshift(expanderColumn)
-      } else {
-        orderedColumns.unshift(...groupingColumns)
-      }
-    }
-
-    if (selectionColumn) {
-      orderedColumns.unshift(selectionColumn)
-    }
-
-    decorateOrderedColumns(orderedColumns, { getInstance })
-
-    return orderedColumns
-  }, [
-    columnOrder,
-    decorateOrderedColumns,
+  instance.leafColumns = useReduceLeafColumns(instance.leafColumns, {
     getInstance,
-    grouping,
-    instance.leafColumns,
-  ])
-
-  instance.visibilityColumns = React.useMemo(
-    () =>
-      instance.orderedColumns.filter(
-        d => !d.isSelectionColumn && !d.isExpanderColumn && d.getCanHide()
-      ),
-    [instance.orderedColumns]
-  )
-
-  instance.visibleColumns = React.useMemo(() => {
-    const visibleColumns = instance.orderedColumns.filter(column =>
-      getColumnIsVisible(column.id)
-    )
-
-    decorateVisibleColumns(visibleColumns, { getInstance })
-
-    return visibleColumns
-  }, [
-    instance.orderedColumns,
-    decorateVisibleColumns,
-    getInstance,
-    getColumnIsVisible,
-  ])
+  })
 
   // Check for duplicate columns
   if (process.env.NODE_ENV !== 'production') {
