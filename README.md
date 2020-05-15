@@ -160,6 +160,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Salik Syed (@saliksyed)
 - Ujjwal Pachori (@UjjwalP2)
 - Chet Corcos (@ccorcos)
+- Yefri Laura (@yefrioscar)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
