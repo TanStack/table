@@ -1,6 +1,11 @@
 import React from 'react'
 
-import { useGetLatest, getFirstDefined, getLeafHeaders } from '../utils'
+import {
+  useGetLatest,
+  getFirstDefined,
+  getLeafHeaders,
+  passiveEventSupported,
+} from '../utils'
 
 import { withColumnResizing as name, withColumnVisibility } from '../Constants'
 
@@ -187,13 +192,19 @@ function decorateHeader(header, { getInstance }) {
         ? handlersAndEvents.touch
         : handlersAndEvents.mouse
 
-      document.addEventListener(events.moveEvent, events.moveHandler, {
-        passive: false,
-      })
-
-      document.addEventListener(events.upEvent, events.upHandler, {
-        passive: false,
-      })
+      const passiveIfSupported = passiveEventSupported()
+        ? { passive: false }
+        : false
+      document.addEventListener(
+        events.moveEvent,
+        events.moveHandler,
+        passiveIfSupported
+      )
+      document.addEventListener(
+        events.upEvent,
+        events.upHandler,
+        passiveIfSupported
+      )
 
       getInstance().setState(
         old => ({
