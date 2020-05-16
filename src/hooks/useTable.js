@@ -40,6 +40,7 @@ const plugTypes = [
 ]
 
 export const useTable = options => {
+  const { plugins = [] } = options
   const instanceRef = React.useRef()
 
   // Create and keep track of the table instance
@@ -48,7 +49,7 @@ export const useTable = options => {
   }
   const instance = instanceRef.current
 
-  const userPlugins = options.plugins.filter(Boolean)
+  const userPlugins = plugins.filter(Boolean)
 
   userPlugins.sort((a, b) => {
     if (a.after.includes(b.name) || a.after.length > b.after.length) {

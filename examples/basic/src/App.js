@@ -40,7 +40,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
+    plugs: { decorateRow },
   } = useTable({
     columns,
     data,
@@ -60,7 +60,7 @@ function Table({ columns, data }) {
       </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
-          prepareRow(row)
+          // decorateRow(row)
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
