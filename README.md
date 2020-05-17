@@ -161,6 +161,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Ujjwal Pachori (@UjjwalP2)
 - Chet Corcos (@ccorcos)
 - Yefri Laura (@yefrioscar)
+- Muhammad Umar (@umarmuha)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
