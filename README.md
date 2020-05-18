@@ -163,6 +163,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Chet Corcos (@ccorcos)
 - Yefri Laura (@yefrioscar)
 - Muhammad Umar (@umarmuha)
+- Joe Alden (@joalden)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
