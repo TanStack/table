@@ -22,6 +22,7 @@ The following options are supported via the main options object passed to `useTa
 - `pageCount: Int`
   - **Required if `manualPagination` is set to `true`**
   - If `manualPagination` is `true`, then this value used to determine the amount of pages available. This amount is then used to materialize the `pageOptions` and also compute the `canNextPage` values on the table instance.
+  - Set to `-1` if you don't know or don't want to present the number of pages available.  `canNextPage` will return `false` if page data length is less than pageSize, otherwise `true`.
 - `manualPagination: Bool`
   - Enables pagination functionality, but does not automatically perform row pagination.
   - Turn this on if you wish to implement your own pagination outside of the table (eg. server-side pagination or any other manual pagination technique)
