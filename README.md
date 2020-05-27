@@ -164,6 +164,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Yefri Laura (@yefrioscar)
 - Muhammad Umar (@umarmuha)
 - Joe Alden (@joalden)
+- Standard Resume (@StandardResumeSponsors)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
