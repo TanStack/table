@@ -165,7 +165,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Tyler Reiff (@reiff12)
 - Matt Stvartak (@mattstvartak)
 - JP Rosevear (@jprosevear)
-- Maurits (@mgm1313)
 - Stefan Khan-Kernahan (@skhanker)
 - Jesse Jafa (@awareness481)
 - Salik Syed (@saliksyed)
