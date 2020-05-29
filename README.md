@@ -92,7 +92,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
     <tr>
       <td>
         <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='300' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
+          <img width='350' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
         </a>
       </td>
     </tr>
