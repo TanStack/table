@@ -159,7 +159,6 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Robert Tajnšek
 - Eric Lanehart (@pushred)
 - Anish P Patel (@anishpatelyaadada)
-- Alin Porumb (@alinporumb)
 - Janus Reith (@janus-reith)
 - Timo Mämecke (@timomeh)
 - Tyler Reiff (@reiff12)
