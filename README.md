@@ -105,6 +105,11 @@ This library is being built and maintained by me, @tannerlinsley and I am always
   <tbody>
     <tr>
       <td>
+        <a href="https://neo4j.com/" target="_blank">
+          <img width='225' src="https://go.neo4j.com/rs/710-RRC-335/images/neo4j_logo.svg" alt="Nozzle - Google Keyword Rank Tracker" />
+        </a>
+      </td>
+      <td>
         <a href="https://nozzle.io" target="_blank">
           <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
         </a>
