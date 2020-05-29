@@ -128,6 +128,11 @@ This library is being built and maintained by me, @tannerlinsley and I am always
           <img width='130' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
         </a>
       </td>
+      <td>
+        <a href="https://www.encamp.com/careers/senior-software-engineer" target="_blank">
+          <img width='130' src="https://assets.website-files.com/5dee7e4754c6bbc1eaf4210b/5deea3042cdb07ff7082211d_encamp-logo.svg" />
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
