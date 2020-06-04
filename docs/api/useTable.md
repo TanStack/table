@@ -25,6 +25,7 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - The initial state object for hidden columns
   - If a column's ID is contained in this array, it will be hidden
+  - To update `hiddenColumns`, pass a new array into `setHiddenColumns` which is supplied by `useTable`. Changing `hiddenColumns` directly won't cause the table to add the hidden columns back.
 - `autoResetHiddenColumns: Boolean`
   - Defaults to `true`
   - When `true`, the `hiddenColumns` state will automatically reset if any of the following conditions are met:
