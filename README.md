@@ -173,6 +173,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Muhammad Umar (@umarmuha)
 - Joe Alden (@joalden)
 - Standard Resume (@StandardResumeSponsors)
+- Jay (@jjstrat3)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
