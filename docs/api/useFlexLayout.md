@@ -37,6 +37,18 @@
   - **Usage Required**
   - This core prop getter is required to to enable absolute layout for headers
 
+### FooterGroup Properties
+
+- `getFooterGroupProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for footers
+
+### Footer Properties
+
+- `getFooterProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for footers
+
 ### Example (Full Width Resizable Table)
 
 - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/full-width-resizable-table)
