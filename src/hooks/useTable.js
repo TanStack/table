@@ -210,6 +210,7 @@ export const useTable = (props, ...plugins) => {
 
   Object.assign(getInstance(), {
     rows,
+    initialRows: [...rows],
     flatRows,
     rowsById,
     // materializedColumns,
