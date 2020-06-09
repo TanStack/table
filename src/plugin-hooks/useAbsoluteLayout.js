@@ -7,6 +7,7 @@ export const useAbsoluteLayout = hooks => {
   hooks.getTableBodyProps.push(getRowStyles)
   hooks.getRowProps.push(getRowStyles)
   hooks.getHeaderGroupProps.push(getRowStyles)
+  hooks.getFooterGroupProps.push(getRowStyles)
 
   hooks.getHeaderProps.push((props, { column }) => [
     props,
@@ -26,6 +27,17 @@ export const useAbsoluteLayout = hooks => {
         ...cellStyles,
         left: `${cell.column.totalLeft}px`,
         width: `${cell.column.totalWidth}px`,
+      },
+    },
+  ])
+
+  hooks.getFooterProps.push((props, { column }) => [
+    props,
+    {
+      style: {
+        ...cellStyles,
+        left: `${column.totalLeft}px`,
+        width: `${column.totalWidth}px`,
       },
     },
   ])
