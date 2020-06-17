@@ -75,7 +75,6 @@ export function decorateColumn(column, userDefaultColumn) {
     Footer: () => <>&nbsp;</>,
     ...defaultColumn,
     ...userDefaultColumn,
-    ...column,
   })
   return column
 }
