@@ -75,7 +75,13 @@ export function decorateColumn(column, userDefaultColumn) {
     Footer: () => <>&nbsp;</>,
     ...defaultColumn,
     ...userDefaultColumn,
+    ...column,
   })
+
+  // column already has default Header property
+  if (userDefaultColumn.Header) {
+    column.Header = userDefaultColumn.Header;
+  }
   return column
 }
 
