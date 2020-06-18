@@ -68,7 +68,7 @@ export function median(values) {
 }
 
 export function unique(values) {
-  return [...new Set(values).values()]
+  return Array.from(new Set(values).values())
 }
 
 export function uniqueCount(values) {
