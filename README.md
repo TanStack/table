@@ -175,6 +175,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - Joe Alden (@joalden)
 - Standard Resume (@StandardResumeSponsors)
 - Jay (@jjstrat3)
+- TC Schiller (@tcschiller)
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
