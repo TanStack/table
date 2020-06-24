@@ -3,7 +3,7 @@
 - Plugin Hook
 - Optional
 
-`useSortBy` is the hook that implements **row sorting**. It also support multi-sort (keyboard required).
+`useSortBy` is the hook that implements **row sorting**. It also supports multi-sort (keyboard required).
 
 - Multi-sort is enabled by default
 - To sort the table via UI, attach the props generated from each column's `getSortByToggleProps()`, then click any of those elements.
