@@ -65,7 +65,7 @@ The following values are provided to the table `instance`:
   - If there are pages and the current `pageIndex` is less than `pageCount`, this will be `true`
 - `gotoPage: Function(pageIndex)`
   - This function, when called with a valid `pageIndex`, will set `pageIndex` to that value.
-  - If the aginateassed index is outside of the valid `pageIndex` range, then this function will do nothing.
+  - If the passed index is outside of the valid `pageIndex` range, then this function will do nothing.
 - `previousPage: Function`
   - This function decreases `state.pageIndex` by one.
   - If there are no pages or `canPreviousPage` is false, this function will do nothing.
