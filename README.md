@@ -65,8 +65,6 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - [TicketMaster](https://ticketmaster.com)
 - [Comcast Business](https://business.comcast.com)
 
-> _These analytics are made available via the awesome [Scarf](https://www.npmjs.com/package/@scarf/scarf) package analytics library_
-
 ## Github Sponsors
 
 This library is being built and maintained by me, @tannerlinsley and I am always in need of more support to keep this project afloat. If you would like to get additional support, add your logo or name on this README, or simply just contribute to my open source Sponsorship goal, [visit my Github Sponsors page!](https://github.com/sponsors/tannerlinsley/)
