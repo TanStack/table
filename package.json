@@ -6,7 +6,11 @@
   "homepage": "https://react-table.js.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tannerlinsley/react-table.git"
+    "url": "https://github.com/tannerlinsley/react-table"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "react",
