@@ -6,7 +6,11 @@
   "homepage": "https://react-table.js.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tannerlinsley/react-table.git"
+    "url": "https://github.com/tannerlinsley/react-table"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "react",
@@ -29,8 +33,7 @@
     "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
     "docz:build": "docz build",
     "docz:dev": "docz dev",
-    "docz:serve": "docz build && docz serve",
-    "postinstall": "node ./scripts/postinstall.js || exit 0"
+    "docz:serve": "docz build && docz serve"
   },
   "files": [
     "CHANGELOG.md",
