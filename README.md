@@ -147,6 +147,7 @@ This library is being built and maintained by me, @tannerlinsley and I am always
 - [Steeve Lennmark (@snorkypie)]("https://gitHub.com/snorkypie)
 - [Sam Mason de Caires (@samjbmason)](https://gitHub.com/samjbmason)
 - [Josh Thurau](https://github.com/jthurau)
+- [Gabe Ragland](https://github.com/gragland)
 
 [![Fans](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/fans.png)](https://github.com/sponsors/tannerlinsley)
 
