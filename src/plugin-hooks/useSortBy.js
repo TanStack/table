@@ -113,7 +113,7 @@ function reducer(state, action, previousState, instance) {
       }
     } else {
       // Normal mode
-      if (existingIndex !== sortBy.length - 1) {
+      if (existingIndex !== sortBy.length - 1 || sortBy.length !== 1) {
         sortAction = 'replace'
       } else if (existingSortBy) {
         sortAction = 'toggle'

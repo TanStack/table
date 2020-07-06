@@ -34,7 +34,7 @@ const defaultColumn = {
   Cell: ({ value, column: { id } }) => `${id}: ${value}`,
 }
 
-function Table({ columns, data }) {
+function Table({ columns, data, initialState }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -46,6 +46,7 @@ function Table({ columns, data }) {
       columns,
       data,
       defaultColumn,
+      initialState: initialState || {},
     },
     useSortBy
   )
@@ -85,7 +86,7 @@ function Table({ columns, data }) {
   )
 }
 
-function App() {
+function App(props) {
   const columns = React.useMemo(
     () => [
       {
@@ -126,7 +127,7 @@ function App() {
     []
   )
 
-  return <Table columns={columns} data={data} />
+  return <Table columns={columns} data={data} initialState={props.initialState} />
 }
 
 test('renders a sortable table', () => {
@@ -168,4 +169,35 @@ test('renders a sortable table', () => {
       .slice(2)
       .map(d => d.children[0].textContent)
   ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+})
+
+test('Test initialState.sortBy: When clicking the last sortBy column, the sorted state will be replaced not toggled', () => {
+  const initialState = {
+    sortBy: [
+      { id: 'firstName', desc: true, },
+      { id: 'age', desc: true, }
+    ],
+  }
+  const rendered = render(<App initialState={initialState} />)
+
+  fireEvent.click(rendered.getByText('Age 🔽1'))
+  rendered.getByText('Age 🔼0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: tanner', 'firstName: derek', 'firstName: joe'])
+
+  fireEvent.click(rendered.getByText('Age 🔼0'))
+  rendered.getByText('Age 🔽0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+
+  fireEvent.click(rendered.getByText('Age 🔽0'))
+  rendered.getByText('Age')
 })
