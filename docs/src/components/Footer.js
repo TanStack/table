@@ -98,11 +98,11 @@ export const Footer = props => {
               inbox.
             </p>
             <form
-              action="https://app.convertkit.com/forms/1513638/subscriptions"
+              action="https://app.convertkit.com/forms/1519043/subscriptions"
               className=""
               method="post"
-              data-sv-form="1513638"
-              data-uid="4fc050bc50"
+              data-sv-form="1519043"
+              data-uid="1a9874b8c7"
               data-format="inline"
               data-version="5"
               data-options='{"settings":{"after_subscribe":{"action":"message","success_message":"Success! Please, check your email to confirm your subscription.","redirect_url":""},"modal":{"trigger":null,"scroll_percentage":null,"timer":null,"devices":null,"show_once_every":null},"recaptcha":{"enabled":false},"slide_in":{"display_in":null,"trigger":null,"scroll_percentage":null,"timer":null,"devices":null,"show_once_every":null}}}'
