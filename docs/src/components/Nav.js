@@ -23,12 +23,12 @@ export const Nav = () => (
               </Link>
             </div>
             <div>
-              <Link href="/docs/examples/simple">
+              <Link href="/docs/examples/basic">
                 <a className="leading-6 font-medium">Examples</a>
               </Link>
             </div>
             <div>
-              <Link href="/docs/api">
+              <Link href="/docs/api/overview">
                 <a className="leading-6 font-medium">API</a>
               </Link>
             </div>
