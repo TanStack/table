@@ -3,8 +3,6 @@ id: quick-start
 title: Quick Start
 ---
 
-import { useTable } from '../../../../'
-
 At the heart of every React Table is the `useTable` hook and the table `instance` object that it returns. This `instance` object contains everything you'll need to build a table and interact with its state. This includes, but is not limited to:
 
 - Columns
