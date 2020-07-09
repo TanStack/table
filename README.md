@@ -1,6 +1,4 @@
-![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/header.png)
-
-<img src='https://github.com/tannerlinsley/react-table/raw/master/media/logo.png' width='300'/>
+![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/repo-dark.png)
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
@@ -24,9 +22,9 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
 
-### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
+## Visit [react-table.tanstack.com](https://react-table.tanstack.com) for docs, guides, API and more!
 
-## Features
+## Quick Features
 
 - Lightweight (5kb - 14kb+ depending on features used and tree-shaking)
 - Headless (100% customizable, Bring-your-own-UI)
@@ -43,152 +41,7 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - Server-side/controlled data/state
 - Extensible via hook-based plugin system
 
-## Used By
-
-- [Intuit](https://intuit.com)
-- [Google](https://google.com)
-- [Amazon](https://amazon.com)
-- [Apple](https://apple.com)
-- [AutoZone](https://autozone.com)
-- [Microsoft](https://microsoft.com)
-- [Cisco](https://cisco.com)
-- [Uber](https://uber.com)
-- [Salesforce](http://salesforce.com/)
-- [Walmart](https://walmart.com)
-- [Wix](https://wix.com)
-- [HP](https://hp.com)
-- [Docusign](https://docusign.com)
-- [Tripwire](https://tripwire.com)
-- [Yahoo!](https://yahoo.com)
-- [Ocado](https://ocado.com)
-- [Nordstrom](https://nordstrom.com)
-- [TicketMaster](https://ticketmaster.com)
-- [Comcast Business](https://business.comcast.com)
-
-## Github Sponsors
-
-This library is being built and maintained by me, @tannerlinsley and I am always in need of more support to keep this project afloat. If you would like to get additional support, add your logo or name on this README, or simply just contribute to my open source Sponsorship goal, [visit my Github Sponsors page!](https://github.com/sponsors/tannerlinsley/)
-
-[![Diamond Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/diamond.png)](https://github.com/sponsors/tannerlinsley)
-
-<table>
-  <tbody>
-    <tr>
-      <td>
-        <a href="https://github.com/sponsors/tannerlinsley" target="_blank">
-          Get Your Logo Here!
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-[![Gold Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/gold.png)](https://github.com/sponsors/tannerlinsley)
-
-<table>
-  <tbody>
-    <tr>
-      <td>
-        <a href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table" target="_blank">
-          <img width='350' src="https://raw.githubusercontent.com/tannerlinsley/files/master/images/patreon/sponsor-retool.png" />
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-[![Silver Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/silver.png)](https://github.com/sponsors/tannerlinsley)
-
-<table>
-  <tbody>
-    <tr>
-      <td>
-        <a href="https://neo4j.com/" target="_blank">
-          <img width='225' src="https://go.neo4j.com/rs/710-RRC-335/images/neo4j_logo.svg" alt="Nozzle - Google Keyword Rank Tracker" />
-        </a>
-      </td>
-      <td>
-        <a href="https://nozzle.io" target="_blank">
-          <img width='225' src="https://nozzle.io/img/logo-blue.png" alt="Nozzle - Google Keyword Rank Tracker" />
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-[![Bronze Sponsors](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/bronze.png)](https://github.com/sponsors/tannerlinsley)
-
-<table>
-  <tbody>
-    <tr>
-      <td>
-        <a href="https://tripwire.com" target="_blank">
-          <img width='130' src="https://www.tripwire.com/-/media/tripwiredotcom/icons/tripwire-logo-footer.svg" />
-        </a>
-      </td>
-      <td>
-        <a href="https://www.fream.pl/" target="_blank">
-          <img width='130' src="https://www.fream.pl/wp-content/uploads/2017/08/logo.png" />
-        </a>
-      </td>
-      <td>
-        <a href="https://www.encamp.com/careers/senior-software-engineer" target="_blank">
-          <img width='130' src="https://assets.website-files.com/5dee7e4754c6bbc1eaf4210b/5deea3042cdb07ff7082211d_encamp-logo.svg" />
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-[![Supporters](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/supporters.png)](https://github.com/sponsors/tannerlinsley)
-
-- Jon Eickmeier
-- [Richard Hefner (@rhefner)](https://github.com/rhefner)
-- [Steeve Lennmark (@snorkypie)]("https://gitHub.com/snorkypie)
-- [Sam Mason de Caires (@samjbmason)](https://gitHub.com/samjbmason)
-- [Josh Thurau](https://github.com/jthurau)
-- [Gabe Ragland](https://github.com/gragland)
-
-[![Fans](https://raw.githubusercontent.com/tannerlinsley/files/master/sponsorships/fans.png)](https://github.com/sponsors/tannerlinsley)
-
-- Hugo Meissner
-- Benoit Leger-Derville
-- Thomas Funk
-- David Pickut
-- Jordan Soltman
-- Robert Tajnšek
-- Eric Lanehart (@pushred)
-- Anish P Patel (@anishpatelyaadada)
-- Janus Reith (@janus-reith)
-- Timo Mämecke (@timomeh)
-- Tyler Reiff (@reiff12)
-- Matt Stvartak (@mattstvartak)
-- JP Rosevear (@jprosevear)
-- Stefan Khan-Kernahan (@skhanker)
-- Jesse Jafa (@awareness481)
-- Salik Syed (@saliksyed)
-- Ujjwal Pachori (@UjjwalP2)
-- Chet Corcos (@ccorcos)
-- Yefri Laura (@yefrioscar)
-- Muhammad Umar (@umarmuha)
-- Joe Alden (@joalden)
-- Standard Resume (@StandardResumeSponsors)
-- Jay (@jjstrat3)
-- TC Schiller (@tcschiller)
-- Brent Clark (@brentmclark)
-
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
-
-## Documentation
-
-- [Installation](./docs/installation.md) - Walk through how to install React Table
-- [Concepts](./docs/concepts.md) - Read how React Table works and how you can use it better
-- [Examples](./docs/examples.md) - Experience and learn from some examples and guides of how to use React Table and implement common patterns
-- [API](./docs/api/README.md) - Get to know React Table's API
-- [FAQ](./docs/faq.md) - Learn how to use React Table for specific challenges and tasks
-- [Previous Versions](#previous-versions)
-- [Contributing](./CONTRIBUTING.md) - Become familiar with how to contribute back to React Table
-- [Code of Conduct](./CODE_OF_CONDUCT.md) - Be a good React Table citizen by following these repository rules
 
 ## Previous Versions
 
