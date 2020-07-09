@@ -5,7 +5,6 @@ dotenvLoad()
 
 const remarkPlugins = [
   require('remark-slug'),
-  require('./src/lib/docs/remark-paragraph-alerts'),
   [
     require('remark-autolink-headings'),
     {
