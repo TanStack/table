@@ -252,26 +252,26 @@ const Home = props => {
                   Supporters
                 </div>
                 <ul className="list-none text-center">
-                  <li className="text-gray-800">Jon Eickmeier</li>
-                  <li className="text-blue-800">
+                  <li className="font-bold text-gray-800">Jon Eickmeier</li>
+                  <li className="font-bold text-blue-800">
                     <a href="https://github.com/rhefner">
                       Richard Hefner (@rhefner)
                     </a>
                   </li>
-                  <li className="text-blue-800">
+                  <li className="font-bold text-blue-800">
                     <a href="https://gitHub.com/snorkypie">
                       Steeve Lennmark (@snorkypie)
                     </a>
                   </li>
-                  <li className="text-blue-800">
+                  <li className="font-bold text-blue-800">
                     <a href="https://gitHub.com/samjbmason">
                       Sam Mason de Caires (@samjbmason)
                     </a>
                   </li>
-                  <li className="text-blue-800">
+                  <li className="font-bold text-blue-800">
                     <a href="https://github.com/jthurau">Josh Thurau</a>
                   </li>
-                  <li className="text-blue-800">
+                  <li className="font-bold text-blue-800">
                     <a href="https://github.com/gragland">Gabe Ragland</a>
                   </li>
                 </ul>
