@@ -74,7 +74,7 @@ The following options are supported on any `Column` object passed to the `column
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
 - `sortType: String | Function(rowA: <Row>, rowB: <Row>, columnId: String, desc: Bool)`
   - Used to compare 2 rows of data and order them correctly.
-  - If a **function** is passed, it must be **memoized**
+  - If a **function** is passed, it must be **memoized** and it should always return the data in **ascending** order. `react-table` will take care of the rest. 
   - String options: `basic`, `datetime`, `alphanumeric`. Defaults to `alphanumeric`.
   - The resolved function from the this string/function will be used to sort the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used.
