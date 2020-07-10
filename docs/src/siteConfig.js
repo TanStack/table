@@ -6,7 +6,7 @@ export const siteConfig = {
   repoUrl: 'https://github.com/tannerlinsley/react-table',
   algolia: {
     appId: 'BH4D9OD16A',
-    apiKey: 'c97369bb0f67e99c8acf34bfd732cca7',
+    apiKey: '8e6cc6c0a7b77ae1f3b33c6f7b706c09',
     indexName: 'tanstack_react-table', // algoliaOptions: {
     //   facetFilters: ['version:VERSION'],
     // },
