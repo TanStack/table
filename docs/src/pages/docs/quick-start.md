@@ -18,7 +18,7 @@ In React Table, **you the developer** are responsible for rendering the UI (mark
 
 To show you how this works. Let's start with a very basic table example.
 
-## Gettin your data
+## Getting your data
 
 When thinking about a table structure, you typically have **rows** which contain **columns**. While table configurations can get far more complex with nested columns, subrows, etc. for this basic quick start, we need to define some data that resembles this structure.
 
