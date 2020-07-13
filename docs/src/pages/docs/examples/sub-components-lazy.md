@@ -1,0 +1,23 @@
+---
+id: sub-components-lazy
+title: Sub Components Lazy
+toc: false
+---
+
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sub-components-lazy)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/sub-components-lazy)
+
+<iframe
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/sub-components-lazy?autoresize=1&fontsize=14&theme=dark"
+  title="tannerlinsley/react-table: sub-components-lazy"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+  style={{
+    width: '100%',
+    height: '80vh',
+    border: '0',
+    borderRadius: 8,
+    overflow: 'hidden',
+    position: 'static',
+    zIndex: 0,
+  }}
+></iframe>
