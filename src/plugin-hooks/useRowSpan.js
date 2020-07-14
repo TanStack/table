@@ -1,6 +1,5 @@
 import {
   ensurePluginOrder,
-  useGetLatest,
 } from '../publicUtils'
 
 export const useRowSpan = hooks => {
@@ -11,16 +10,10 @@ export const useRowSpan = hooks => {
 useRowSpan.pluginName = 'useRowSpan'
 
 function useInstance(instance) {
-  const getInstance = useGetLatest(instance)
   const {
-    rows,
     allColumns,
     plugins,
-    state,
-    getHooks,
-    rowSpanEnabled = true,
-    rowSpanHierarchy = true
-  } = getInstance()
+  } = instance;
   ensurePluginOrder(plugins, ['useFilters', 'useSortBy'], 'useRowSpan')
     
   allColumns.forEach(column => {
@@ -31,7 +24,12 @@ function useInstance(instance) {
   })
 }
 
-function prepareRow(row) {
+function prepareRow(row, { instance }) {
+  const {
+    rows,
+    rowSpanEnabled = true,
+    rowSpanHierarchy = true
+  } = instance;
   let numCells = row.allCells.length;
   
   let parentBoundary = false;
