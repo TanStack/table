@@ -13,6 +13,7 @@ export const useRowSpan = hooks => {
 useRowSpan.pluginName = 'useRowSpan'
 
 function useInstance(instance) {
+  const getInstance = useGetLatest(instance)
   const {
     data,
     rows,
@@ -22,11 +23,8 @@ function useInstance(instance) {
     getHooks,
     rowSpanEnabled = true,
     rowSpanHierarchy = true
-  } = instance
+  } = getInstance()
   ensurePluginOrder(plugins, ['useFilters', 'useSortBy'], 'useRowSpan')
-  const getInstance = useGetLatest(instance)
-  
-  const { allColumns } = getInstance();
     
   allColumns.forEach(column => {
     if (column.enableRowSpan) {
