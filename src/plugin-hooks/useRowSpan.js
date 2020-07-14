@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   ensurePluginOrder,
   useGetLatest,
@@ -15,7 +13,6 @@ useRowSpan.pluginName = 'useRowSpan'
 function useInstance(instance) {
   const getInstance = useGetLatest(instance)
   const {
-    data,
     rows,
     allColumns,
     plugins,
