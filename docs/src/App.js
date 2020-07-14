@@ -3,7 +3,7 @@
 import React from 'react';
 //
 import ReactStory, { defaultProps } from 'react-story';
-import CodeSandbox from './CodeSandbox.js';
+import { CodeSandbox, CodeSandboxId} from './CodeSandbox.js';
 import './stories/utils/prism.css';
 import '../../react-table.css';
 
@@ -19,54 +19,47 @@ const stories = [
   { name: 'HOC Readme', component: HOCReadme },
 
   // { name: 'Tester', component: Test },
-  { name: 'Simple Table', component: CodeSandbox('X6npLXPRW') },
+  { name: 'Simple Table', component: CodeSandbox('simple-table') },
   {
-    name: 'Cell Renderers & Custom Components',
-    component: CodeSandbox('OyRL04Z4Y')
+    name: 'Cell Renderers & Custom Components', component: CodeSandbox('cell-renderers')
   },
-  { name: 'Default Sorting', component: CodeSandbox('gLwmmjzA3') },
+  { name: 'Default Sorting', component: CodeSandbox('default-sorting') },
   {
-    name: 'Custom Sorting',
-    component: CodeSandbox('VGx67J35')
+    name: 'Custom Sorting', component: CodeSandbox('custom-sorting')
   },
-  { name: 'Custom Column Widths', component: CodeSandbox('o2OORXNXN') },
-  { name: 'Custom Component Props', component: CodeSandbox('nZW3L0wp4') },
-  { name: 'Server-side Data', component: CodeSandbox('wjrn8wy3R') },
-  { name: 'Sub Components', component: CodeSandbox('n2gqAxl7') },
-  { name: 'Pivoting & Aggregation', component: CodeSandbox('oNY9z8xN') },
+  { name: 'Custom Column Widths', component: CodeSandbox('custom-column-widths') },
+  { name: 'Custom Component Props', component: CodeSandbox('custom-component-props') },
+  { name: 'Server-side Data', component: CodeSandbox('server-side-data') },
+  { name: 'Sub Components', component: CodeSandbox('sub-components') },
+  { name: 'Pivoting & Aggregation', component: CodeSandbox('pivoting-and-aggregation') },
   {
-    name: 'Pivoting & Aggregation w/ Sub Components',
-    component: CodeSandbox('p0kEVBgQ')
+    name: 'Pivoting & Aggregation w/ Sub Components', component: CodeSandbox('pivoting-sub-components')
   },
   {
-    name: '100k Rows w/ Pivoting & Sub Components',
-    component: CodeSandbox('DRmKj0XyK')
+    name: '100k Rows w/ Pivoting & Sub Components', component: CodeSandbox('100k-rows-aggregation')
   },
-  { name: 'Pivoting Options', component: CodeSandbox('kZKmNBK6r') },
-  { name: 'Functional Rendering', component: CodeSandbox('VPZ0Bzv8X') },
+  { name: 'Pivoting Options', component: CodeSandbox('pivoting-options') },
+  { name: 'Functional Rendering', component: CodeSandbox('functional-rendering') },
   {
-    name: 'Custom Expander Position',
-    component: CodeSandbox('1jj2XrPEV')
+    name: 'Custom Expander Position', component: CodeSandbox('custom-expander-position')
   },
-  { name: 'Custom "No Data" Text', component: CodeSandbox('RgRpRDv80') },
-  { name: 'Footers', component: CodeSandbox('KOqQXn3p8') },
-  { name: 'Custom Filtering', component: CodeSandbox('5Eyxxxyx') },
-  { name: 'Controlled Component', component: CodeSandbox('r7XEZRK2') },
-  { name: 'Editable Table', component: CodeSandbox('n5r19gzQP') },
+  { name: 'Custom "No Data" Text', component: CodeSandbox('custom-no-data-text') },
+  { name: 'Footers', component: CodeSandbox('footers') },
+  { name: 'Custom Filtering', component: CodeSandbox('custom-filtering') },
+  { name: 'Controlled Component', component: CodeSandbox('controlled-table') },
+  { name: 'Editable Table', component: CodeSandbox('editable-content') },
   {
-    name: 'Fixed Header w/ Vertical Scroll',
-    component: CodeSandbox('7LY0gjA8O')
+    name: 'Fixed Header w/ Vertical Scroll', component: CodeSandbox('fixed-header-vertical-scroll')
   },
   {
-    name: 'Multiple Pagers (Top and Bottom)',
-    component: CodeSandbox('VEZ8OgvX')
+    name: 'Multiple Pagers (Top and Bottom)', component: CodeSandbox('multiple-pagination-bars')
   },
 
-  { name: 'Tree Table (HOC)', component: CodeSandbox('lxmr4wynzq') },
-  { name: 'Select Table (HOC)', component: CodeSandbox('7yq5ylw09j') },
-  { name: 'Select Tree Table (HOC)', component: CodeSandbox('2p7jp4klwp') },
-  { name: 'Foldable Table (HOC)', component: CodeSandbox('8pkrj5yorl') },
-  { name: 'Advanced Expand Table (HOC)', component: CodeSandbox('y2m39jz8v1') }
+ { name: 'Tree Table (HOC)', component: CodeSandboxId('lxmr4wynzq') },
+  { name: 'Select Table (HOC)', component: CodeSandboxId('7yq5ylw09j') },
+  { name: 'Select Tree Table (HOC)', component: CodeSandboxId('2p7jp4klwp') },
+  { name: 'Foldable Table (HOC)', component: CodeSandboxId('8pkrj5yorl') },
+  { name: 'Advanced Expand Table (HOC)', component: CodeSandboxId('y2m39jz8v1') }
 ];
 
 export default class App extends React.Component {
