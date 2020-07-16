@@ -174,7 +174,7 @@ function useInstance(instance) {
 
   ensurePluginOrder(
     plugins,
-    ['useFilters', 'useGroupBy', 'useSortBy'],
+    ['useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
     'useRowSelect'
   )
 
