@@ -22,7 +22,7 @@ export default [
     },
     external,
     plugins: [
-      replace({ 'process.env.NODE_ENV': `"production"`, delimiters: ['', ''] }),
+      replace({ 'process.env.NODE_ENV': `"development"`, delimiters: ['', ''] }),
       babel(),
       externalDeps(),
     ],
