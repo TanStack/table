@@ -77,6 +77,11 @@ export function decorateColumn(column, userDefaultColumn) {
     ...userDefaultColumn,
     ...column,
   })
+
+  Object.assign(column, {
+    originalWidth: column.width,
+  })
+
   return column
 }
 
