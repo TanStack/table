@@ -136,8 +136,8 @@ function useInstance(instance) {
     getHooks,
   } = instance
 
-  ensurePluginOrder(plugins, ['useFilters'], 'useGroupBy')
-
+  ensurePluginOrder(plugins, ['useColumnOrder', 'useFilters'], 'useGroupBy')
+  
   const getInstance = useGetLatest(instance)
 
   allColumns.forEach(column => {
