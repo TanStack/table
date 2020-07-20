@@ -315,6 +315,7 @@ const Home = props => {
                   <li>TC Schiller (@tcschiller)</li>
                   <li>Brent Clark (@brentmclark)</li>
                   <li>Mario Menjívar (@mariomenjr)</li> 
+                  <li>Kelley van Evert (@kelleyvanevert)</li> 
                 </ul>
               </div>
             </div>
