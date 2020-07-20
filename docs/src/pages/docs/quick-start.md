@@ -42,7 +42,7 @@ const data = React.useMemo(
 )
 ```
 
-> It's import that we're using [`React.useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo) here to ensure that our data isn't recreated on every render. If we didn't use `React.useMemo`, the table would think it was receiving new data on every render and attempt to recalulate a lot of logic every single time. Not cool!
+> It's important that we're using [`React.useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo) here to ensure that our data isn't recreated on every render. If we didn't use `React.useMemo`, the table would think it was receiving new data on every render and attempt to recalulate a lot of logic every single time. Not cool!
 
 ## Define Columns
 
