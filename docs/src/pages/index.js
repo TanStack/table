@@ -295,6 +295,7 @@ const Home = props => {
                   <li>Tyler Reiff (@reiff12)</li>
                   <li>Matt Stvartak (@mattstvartak)</li>
                   <li>JP Rosevear (@jprosevear)</li>
+                  <li>Stefan Khan-Kernahan (@skhanker)</li>
                 </ul>
               </div>
               <div className="mt-10">
@@ -302,7 +303,6 @@ const Home = props => {
                   Fans
                 </div>
                 <ul className="list-none text-center">
-                  <li>Stefan Khan-Kernahan (@skhanker)</li>
                   <li>Jesse Jafa (@awareness481)</li>
                   <li>Salik Syed (@saliksyed)</li>
                   <li>Ujjwal Pachori (@UjjwalP2)</li>
@@ -316,6 +316,7 @@ const Home = props => {
                   <li>Brent Clark (@brentmclark)</li>
                   <li>Mario Menjívar (@mariomenjr)</li> 
                   <li>Kelley van Evert (@kelleyvanevert)</li> 
+                  <li>Aaron VanEtveldt (@totaldis)</li> 
                 </ul>
               </div>
             </div>
