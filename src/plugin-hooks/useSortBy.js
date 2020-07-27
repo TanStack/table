@@ -15,7 +15,7 @@ import * as sortTypes from '../sortTypes'
 
 // Actions
 actions.resetSortBy = 'resetSortBy'
-actions.setAllSortBy = 'setAllSortBy'
+actions.setSortBy = 'setSortBy'
 actions.toggleSortBy = 'toggleSortBy'
 actions.clearSortBy = 'clearSortBy'
 
@@ -79,7 +79,7 @@ function reducer(state, action, previousState, instance) {
     }
   }
 
-  if (action.type === actions.setAllSortBy) {
+  if (action.type === actions.setSortBy) {
     const { sortBy } = action
     return {
       ...state,
@@ -209,9 +209,9 @@ function useInstance(instance) {
     'useSortBy'
   )
 
-  const setAllSortBy = React.useCallback(
+  const setSortBy = React.useCallback(
     sortBy => {
-      dispatch({ type: actions.setAllSortBy, sortBy })
+      dispatch({ type: actions.setSortBy, sortBy })
     },
     [dispatch]
   )
@@ -372,7 +372,7 @@ function useInstance(instance) {
     sortedFlatRows,
     rows: sortedRows,
     flatRows: sortedFlatRows,
-    setAllSortBy,
+    setSortBy,
     toggleSortBy,
   })
 }
