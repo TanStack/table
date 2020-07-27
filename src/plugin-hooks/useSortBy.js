@@ -15,6 +15,7 @@ import * as sortTypes from '../sortTypes'
 
 // Actions
 actions.resetSortBy = 'resetSortBy'
+actions.setAllSortBy = 'setAllSortBy'
 actions.toggleSortBy = 'toggleSortBy'
 actions.clearSortBy = 'clearSortBy'
 
@@ -75,6 +76,14 @@ function reducer(state, action, previousState, instance) {
     return {
       ...state,
       sortBy: newSortBy,
+    }
+  }
+
+  if (action.type === actions.setAllSortBy) {
+    const { sortBy } = action
+    return {
+      ...state,
+      sortBy,
     }
   }
 
@@ -198,6 +207,13 @@ function useInstance(instance) {
     plugins,
     ['useFilters', 'useGlobalFilter', 'useGroupBy', 'usePivotColumns'],
     'useSortBy'
+  )
+
+  const setAllSortBy = React.useCallback(
+    sortBy => {
+      dispatch({ type: actions.setAllSortBy, sortBy })
+    },
+    [dispatch]
   )
 
   // Updates sorting based on a columnId, desc flag and multi flag
@@ -356,6 +372,7 @@ function useInstance(instance) {
     sortedFlatRows,
     rows: sortedRows,
     flatRows: sortedFlatRows,
+    setAllSortBy,
     toggleSortBy,
   })
 }
