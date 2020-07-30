@@ -271,14 +271,10 @@ function useInstance(instance) {
   }
 
   if (!isAllRowsSelected) {
-    console.log('🐶', 'hit')
-    console.log('🐶', page)
     if (page && page.length && page.some(({ id }) => !selectedRowIds[id])) {
       isAllPageRowsSelected = false
     }
   }
-
-  console.log('🐶', { isAllPageRowsSelected })
 
   const getAutoResetSelectedRows = useGetLatest(autoResetSelectedRows)
 
