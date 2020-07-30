@@ -162,8 +162,8 @@ function SelectAllPaginatedTable({ columns, data }) {
       initialState: { pageSize: 5 },
     },
     useExpanded,
-    useRowSelect,
     usePagination,
+    useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
@@ -341,7 +341,7 @@ test('renders a table with selectable rows', () => {
   expect(rtl.queryByText('Row 4')).toBeNull()
 })
 
-test('renders a table with selectable rows', () => {
+test('renders a table with selectable rows, only selecting the current page', () => {
   const rtl = render(<App selectAllPage />)
 
   fireEvent.click(rtl.getByLabelText('Select All'))
