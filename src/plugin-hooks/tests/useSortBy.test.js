@@ -156,7 +156,7 @@ function App({ useTableRef, initialState }) {
       columns={columns}
       data={data}
       useTableRef={useTableRef}
-      initialState={props.initialState}
+      initialState={initialState}
     />
   )
 }
