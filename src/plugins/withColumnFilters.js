@@ -9,7 +9,7 @@ import {
   useMountedLayoutEffect,
 } from '../utils'
 
-import { withColumnFilters as name, withColumnVisibility } from 'constants'
+import { withColumnFilters as name, withColumnVisibility } from '../Constants'
 
 import * as filterTypes from '../filterTypes'
 
