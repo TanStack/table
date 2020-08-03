@@ -1,5 +1,5 @@
 import React from 'react'
-import { defaultColumn } from './publicUtils'
+import { defaultColumn, emptyRenderer } from './publicUtils'
 
 // Find the depth of the columns
 export function findMaxDepth(columns, depth = 0) {
@@ -71,12 +71,17 @@ export function decorateColumn(column, userDefaultColumn) {
   }
   Object.assign(column, {
     // Make sure there is a fallback header, just in case
-    Header: () => <>&nbsp;</>,
-    Footer: () => <>&nbsp;</>,
+    Header: emptyRenderer,
+    Footer: emptyRenderer,
     ...defaultColumn,
     ...userDefaultColumn,
     ...column,
   })
+
+  Object.assign(column, {
+    originalWidth: column.width,
+  })
+
   return column
 }
 

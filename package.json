@@ -6,7 +6,11 @@
   "homepage": "https://react-table.js.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tannerlinsley/react-table.git"
+    "url": "https://github.com/tannerlinsley/react-table"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "react",
@@ -29,8 +33,7 @@
     "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
     "docz:build": "docz build",
     "docz:dev": "docz dev",
-    "docz:serve": "docz build && docz serve",
-    "postinstall": "node ./scripts/postinstall.js || exit 0"
+    "docz:serve": "docz build && docz serve"
   },
   "files": [
     "CHANGELOG.md",
@@ -40,9 +43,6 @@
     "scripts/"
   ],
   "browserslist": "> 0.25%, not dead",
-  "dependencies": {
-    "@scarf/scarf": "^1.0.4"
-  },
   "peerDependencies": {
     "react": "^16.8.3"
   },
@@ -52,6 +52,7 @@
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/runtime": "^7.7.2",
+    "@rollup/plugin-replace": "^2.3.3",
     "@svgr/rollup": "^4.3.3",
     "@testing-library/dom": "^6.10.1",
     "@testing-library/jest-dom": "^4.2.4",
