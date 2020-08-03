@@ -14,9 +14,9 @@
 
 The following options are supported via the main options object passed to `useTable(options)`
 
-- `initialState.sortBy: Array<Object<id: columnId, desc: Bool>>`
+- `initialState.sortBy: Array<Object<id: columnId, desc: Bool = true>>`
   - Must be **memoized**
-  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key may be set to true or false to indicated ascending or descending sorting for that column. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
+  - An array of sorting objects. If there is more than one object in the array, multi-sorting will be enabled. Each sorting object should contain an `id` key with the corresponding column ID to sort by. An optional `desc` key (which defaults to `false`) may be set to `true` to indicate a descending sorting directionfor that column, otherwise, it will be assumed to be ascending. This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `manualSortBy: Bool`
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableSortBy: Bool`
@@ -74,7 +74,7 @@ The following options are supported on any `Column` object passed to the `column
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
 - `sortType: String | Function(rowA: <Row>, rowB: <Row>, columnId: String, desc: Bool)`
   - Used to compare 2 rows of data and order them correctly.
-  - If a **function** is passed, it must be **memoized**. The sortType function should return -1 if rowA is larger, and 1 if rowB is larger. `react-table` will take care of the rest. 
+  - If a **function** is passed, it must be **memoized**. The sortType function should return -1 if rowA is larger, and 1 if rowB is larger. `react-table` will take care of the rest.
   - String options: `basic`, `datetime`, `alphanumeric`. Defaults to `alphanumeric`.
   - The resolved function from the this string/function will be used to sort the this column's data.
     - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used.

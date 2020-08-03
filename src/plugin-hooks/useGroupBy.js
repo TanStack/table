@@ -17,6 +17,7 @@ const emptyObject = {}
 
 // Actions
 actions.resetGroupBy = 'resetGroupBy'
+actions.setGroupBy = 'setGroupBy'
 actions.toggleGroupBy = 'toggleGroupBy'
 
 export const useGroupBy = hooks => {
@@ -62,6 +63,14 @@ function reducer(state, action, previousState, instance) {
     return {
       ...state,
       groupBy: instance.initialState.groupBy || [],
+    }
+  }
+
+  if (action.type === actions.setGroupBy) {
+    const { value } = action
+    return {
+      ...state,
+      groupBy: value,
     }
   }
 
@@ -137,7 +146,7 @@ function useInstance(instance) {
   } = instance
 
   ensurePluginOrder(plugins, ['useColumnOrder', 'useFilters'], 'useGroupBy')
-  
+
   const getInstance = useGetLatest(instance)
 
   allColumns.forEach(column => {
@@ -171,6 +180,13 @@ function useInstance(instance) {
   const toggleGroupBy = React.useCallback(
     (columnId, value) => {
       dispatch({ type: actions.toggleGroupBy, columnId, value })
+    },
+    [dispatch]
+  )
+
+  const setGroupBy = React.useCallback(
+    value => {
+      dispatch({ type: actions.setGroupBy, value })
     },
     [dispatch]
   )
@@ -394,6 +410,7 @@ function useInstance(instance) {
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
     toggleGroupBy,
+    setGroupBy,
   })
 }
 
@@ -404,7 +421,8 @@ function prepareRow(row) {
     // Placeholder cells are any columns in the groupBy that are not grouped
     cell.isPlaceholder = !cell.isGrouped && cell.column.isGrouped
     // Aggregated cells are not grouped, not repeated, but still have subRows
-    cell.isAggregated = !cell.isGrouped && !cell.isPlaceholder && row.canExpand
+    cell.isAggregated =
+      !cell.isGrouped && !cell.isPlaceholder && row.subRows?.length
   })
 }
 

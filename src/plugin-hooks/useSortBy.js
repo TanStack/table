@@ -15,6 +15,7 @@ import * as sortTypes from '../sortTypes'
 
 // Actions
 actions.resetSortBy = 'resetSortBy'
+actions.setSortBy = 'setSortBy'
 actions.toggleSortBy = 'toggleSortBy'
 actions.clearSortBy = 'clearSortBy'
 
@@ -78,6 +79,14 @@ function reducer(state, action, previousState, instance) {
     }
   }
 
+  if (action.type === actions.setSortBy) {
+    const { sortBy } = action
+    return {
+      ...state,
+      sortBy,
+    }
+  }
+
   if (action.type === actions.toggleSortBy) {
     const { columnId, desc, multi } = action
 
@@ -113,7 +122,7 @@ function reducer(state, action, previousState, instance) {
       }
     } else {
       // Normal mode
-      if (existingIndex !== sortBy.length - 1) {
+      if (existingIndex !== sortBy.length - 1 || sortBy.length !== 1) {
         sortAction = 'replace'
       } else if (existingSortBy) {
         sortAction = 'toggle'
@@ -198,6 +207,13 @@ function useInstance(instance) {
     plugins,
     ['useFilters', 'useGlobalFilter', 'useGroupBy', 'usePivotColumns'],
     'useSortBy'
+  )
+
+  const setSortBy = React.useCallback(
+    sortBy => {
+      dispatch({ type: actions.setSortBy, sortBy })
+    },
+    [dispatch]
   )
 
   // Updates sorting based on a columnId, desc flag and multi flag
@@ -321,7 +337,10 @@ function useInstance(instance) {
       // If there are sub-rows, sort them
       sortedData.forEach(row => {
         sortedFlatRows.push(row)
-        if (!row.subRows || row.subRows.length < 1) {
+        if (!row.subRows) {
+          return
+        } else if (row.subRows.length === 1) {
+          sortedFlatRows.push(row.subRows[0])
           return
         }
         row.subRows = sortData(row.subRows)
@@ -356,6 +375,7 @@ function useInstance(instance) {
     sortedFlatRows,
     rows: sortedRows,
     flatRows: sortedFlatRows,
+    setSortBy,
     toggleSortBy,
   })
 }

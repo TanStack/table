@@ -1,4 +1,3 @@
-import React from 'react'
 import { defaultColumn, emptyRenderer } from './publicUtils'
 
 // Find the depth of the columns
@@ -86,7 +85,11 @@ export function decorateColumn(column, userDefaultColumn) {
 }
 
 // Build the header groups from the bottom up
-export function makeHeaderGroups(allColumns, defaultColumn) {
+export function makeHeaderGroups(
+  allColumns,
+  defaultColumn,
+  additionalHeaderProperties = () => ({})
+) {
   const headerGroups = []
 
   let scanColumns = allColumns
@@ -120,6 +123,7 @@ export function makeHeaderGroups(allColumns, defaultColumn) {
             originalId: column.parent.id,
             id: `${column.parent.id}_${getUID()}`,
             headers: [column],
+            ...additionalHeaderProperties(column),
           }
         } else {
           // If other columns have parents, we'll need to add a place holder if necessary
@@ -130,6 +134,7 @@ export function makeHeaderGroups(allColumns, defaultColumn) {
               id: `${column.id}_placeholder_${getUID()}`,
               placeholderOf: column,
               headers: [column],
+              ...additionalHeaderProperties(column),
             },
             defaultColumn
           )
