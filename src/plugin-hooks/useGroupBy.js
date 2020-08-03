@@ -146,7 +146,7 @@ function useInstance(instance) {
   } = instance
 
   ensurePluginOrder(plugins, ['useColumnOrder', 'useFilters'], 'useGroupBy')
-  
+
   const getInstance = useGetLatest(instance)
 
   allColumns.forEach(column => {
@@ -185,7 +185,7 @@ function useInstance(instance) {
   )
 
   const setGroupBy = React.useCallback(
-    (value) => {
+    value => {
       dispatch({ type: actions.setGroupBy, value })
     },
     [dispatch]
@@ -421,7 +421,8 @@ function prepareRow(row) {
     // Placeholder cells are any columns in the groupBy that are not grouped
     cell.isPlaceholder = !cell.isGrouped && cell.column.isGrouped
     // Aggregated cells are not grouped, not repeated, but still have subRows
-    cell.isAggregated = !cell.isGrouped && !cell.isPlaceholder && row.canExpand
+    cell.isAggregated =
+      !cell.isGrouped && !cell.isPlaceholder && row.subRows?.length
   })
 }
 
