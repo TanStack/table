@@ -236,6 +236,11 @@
               "editUrl": "/docs/examples/material-ui-kitchen-sink.mdx"
             },
             {
+              "title": "Bootstrap UI",
+              "path": "/docs/examples/bootstrap-ui-components",
+              "editUrl": "/docs/examples/bootstrap-ui-components.mdx"
+            },
+            {
               "title": "RMWC Table",
               "path": "/docs/examples/rmwc-components",
               "editUrl": "/docs/examples/rmwc-components.mdx"

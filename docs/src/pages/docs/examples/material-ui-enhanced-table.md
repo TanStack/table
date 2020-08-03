@@ -1,15 +1,15 @@
 ---
-id: material-UI-kitchen-sink
+id: material-ui-kitchen-sink
 title: Material-UI Kitchen Sink
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/material-UI-kitchen-sink)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/material-UI-kitchen-sink)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/material-ui-kitchen-sink)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/material-ui-kitchen-sink)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/material-UI-kitchen-sink?autoresize=1&fontsize=14&theme=dark"
-  title="tannerlinsley/react-table: material-UI-kitchen-sink"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/material-ui-kitchen-sink?autoresize=1&fontsize=14&theme=dark"
+  title="tannerlinsley/react-table: material-ui-kitchen-sink"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{
     width: '100%',

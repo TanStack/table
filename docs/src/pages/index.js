@@ -264,11 +264,6 @@ const Home = props => {
                     </a>
                   </li>
                   <li className="font-bold text-blue-800">
-                    <a href="https://gitHub.com/samjbmason">
-                      Sam Mason de Caires (@samjbmason)
-                    </a>
-                  </li>
-                  <li className="font-bold text-blue-800">
                     <a href="https://github.com/jthurau">Josh Thurau</a>
                   </li>
                   <li className="font-bold text-blue-800">
@@ -305,7 +300,6 @@ const Home = props => {
                 <ul className="list-none text-center">
                   <li>Jesse Jafa (@awareness481)</li>
                   <li>Salik Syed (@saliksyed)</li>
-                  <li>Ujjwal Pachori (@UjjwalP2)</li>
                   <li>Chet Corcos (@ccorcos)</li>
                   <li>Yefri Laura (@yefrioscar)</li>
                   <li>Muhammad Umar (@umarmuha)</li>
@@ -314,9 +308,9 @@ const Home = props => {
                   <li>Jay (@jjstrat3)</li>
                   <li>TC Schiller (@tcschiller)</li>
                   <li>Brent Clark (@brentmclark)</li>
-                  <li>Mario Menjívar (@mariomenjr)</li> 
-                  <li>Kelley van Evert (@kelleyvanevert)</li> 
-                  <li>Aaron VanEtveldt (@totaldis)</li> 
+                  <li>Mario Menjívar (@mariomenjr)</li>
+                  <li>Kelley van Evert (@kelleyvanevert)</li>
+                  <li>Aaron VanEtveldt (@totaldis)</li>
                 </ul>
               </div>
             </div>

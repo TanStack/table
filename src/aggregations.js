@@ -54,17 +54,9 @@ export function median(values) {
     return null
   }
 
-  let min = 0
-  let max = 0
-
-  values.forEach(value => {
-    if (typeof value === 'number') {
-      min = Math.min(min, value)
-      max = Math.max(max, value)
-    }
-  })
-
-  return (min + max) / 2
+  const mid = Math.floor(values.length / 2)
+  const nums = [...values].sort((a, b) => a - b)
+  return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2
 }
 
 export function unique(values) {
