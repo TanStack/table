@@ -1,4 +1,3 @@
-import React from 'react'
 import { defaultColumn, emptyRenderer } from './publicUtils'
 
 // Find the depth of the columns
@@ -86,7 +85,11 @@ export function decorateColumn(column, userDefaultColumn) {
 }
 
 // Build the header groups from the bottom up
-export function makeHeaderGroups(allColumns, defaultColumn, additionalHeaderProperties = () => ({})) {
+export function makeHeaderGroups(
+  allColumns,
+  defaultColumn,
+  additionalHeaderProperties = () => ({})
+) {
   const headerGroups = []
 
   let scanColumns = allColumns

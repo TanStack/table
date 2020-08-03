@@ -75,14 +75,13 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: { selectedRowIds },
   } = useTable(
     {
       columns,
       data,
     },
-    useRowSelect,
     useExpanded,
+    useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
@@ -218,15 +217,15 @@ test('renders a table with selectable rows', () => {
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
-  expect(rtl.getAllByText('Selected').length).toBe(24)
+  expect(rtl.getAllByText('Selected').length).toBe(36)
 
   fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
 
-  expect(rtl.queryAllByText('Selected').length).toBe(23)
+  expect(rtl.queryAllByText('Selected').length).toBe(33)
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
-  expect(rtl.queryAllByText('Selected').length).toBe(24)
+  expect(rtl.queryAllByText('Selected').length).toBe(36)
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 

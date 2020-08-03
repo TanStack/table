@@ -250,7 +250,12 @@ test('Test initialState.sortBy: When clicking the last sortBy column, the sorted
       .queryAllByRole('row')
       .slice(2)
       .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: tanner', 'firstName: derek', 'firstName: joe'])
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: john',
+  ])
 
   fireEvent.click(rendered.getByText('Age 🔼0'))
   rendered.getByText('Age 🔽0')
@@ -259,7 +264,12 @@ test('Test initialState.sortBy: When clicking the last sortBy column, the sorted
       .queryAllByRole('row')
       .slice(2)
       .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+  ).toEqual([
+    'firstName: john',
+    'firstName: joe',
+    'firstName: derek',
+    'firstName: tanner',
+  ])
 
   fireEvent.click(rendered.getByText('Age 🔽0'))
   rendered.getByText('Age')
