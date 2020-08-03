@@ -1,11 +1,11 @@
-# Pagination
+# Row Selection and Pagination
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
+- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
 - `yarn` and `yarn start` to run and edit the example
 
 ## Guide
 
-To add automatic client side pagination, use the `usePagination` hook:
+To use `useRowSelect` and `usePagination` together (NOTE that `usePagination` goes first!):
 
 ```diff
 // Import React
@@ -19,7 +19,25 @@ import {
   useSortBy,
   useExpanded,
 +  usePagination,
++  useRowSelect,
 } from 'react-table'
+
++ const IndeterminateCheckbox = React.forwardRef(
++   ({ indeterminate, ...rest }, ref) => {
++     const defaultRef = React.useRef()
++     const resolvedRef = ref || defaultRef
++
++     React.useEffect(() => {
++       resolvedRef.current.indeterminate = indeterminate
++     }, [resolvedRef, indeterminate])
++
++     return (
++       <>
++         <input type="checkbox" ref={resolvedRef} {...rest} />
++       </>
++     )
++   }
++ )
 
 // Create a component to render your table
 function MyTable(props) {
@@ -31,6 +49,25 @@ function MyTable(props) {
     useSortBy,
     useExpanded,
 +   usePagination,
++   useRowSelect
++   hooks => {
++     hooks.visibleColumns.push(columns => [
++       {
++         id: 'selection',
++         Header: ({ getToggleAllPageRowsSelectedProps }) => (
++           <div>
++             <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
++           </div>
++         ),
++         Cell: ({ row }) => (
++           <div>
++             <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
++           </div>
++         ),
++       },
++       ...columns,
++     ])
++   }
   )
 
   // Use the state and functions returned from useTable to build your UI
