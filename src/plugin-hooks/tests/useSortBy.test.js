@@ -52,12 +52,13 @@ const defaultColumn = {
   Cell: ({ value, column: { id } }) => `${id}: ${value}`,
 }
 
-function Table({ columns, data, useTableRef }) {
+function Table({ columns, data, useTableRef, initialState }) {
   const instance = useTable(
     {
       columns,
       data,
       defaultColumn,
+      initialState: initialState || {},
     },
     useSortBy
   )
@@ -109,7 +110,7 @@ function Table({ columns, data, useTableRef }) {
   )
 }
 
-function App({ useTableRef }) {
+function App({ useTableRef, initialState }) {
   const columns = React.useMemo(
     () => [
       {
@@ -150,7 +151,14 @@ function App({ useTableRef }) {
     []
   )
 
-  return <Table columns={columns} data={data} useTableRef={useTableRef} />
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      useTableRef={useTableRef}
+      initialState={props.initialState}
+    />
+  )
 }
 
 test('renders a sortable table', () => {
@@ -224,4 +232,35 @@ test('maintains the integrity of instance.flatRows', () => {
   expect(
     flatRows.find(r => r.values.firstName === 'winston')
   ).not.toBeUndefined()
+})
+
+test('Test initialState.sortBy: When clicking the last sortBy column, the sorted state will be replaced not toggled', () => {
+  const initialState = {
+    sortBy: [
+      { id: 'firstName', desc: true },
+      { id: 'age', desc: true },
+    ],
+  }
+  const rendered = render(<App initialState={initialState} />)
+
+  fireEvent.click(rendered.getByText('Age 🔽1'))
+  rendered.getByText('Age 🔼0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: tanner', 'firstName: derek', 'firstName: joe'])
+
+  fireEvent.click(rendered.getByText('Age 🔼0'))
+  rendered.getByText('Age 🔽0')
+  expect(
+    rendered
+      .queryAllByRole('row')
+      .slice(2)
+      .map(d => d.children[0].textContent)
+  ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+
+  fireEvent.click(rendered.getByText('Age 🔽0'))
+  rendered.getByText('Age')
 })
