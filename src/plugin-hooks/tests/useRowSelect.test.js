@@ -304,15 +304,15 @@ test('renders a table with selectable rows', () => {
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
-  expect(rtl.getAllByText('Selected').length).toBe(36)
+  expect(rtl.getAllByText('Selected').length).toBe(26)
 
   fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
 
-  expect(rtl.queryAllByText('Selected').length).toBe(33)
+  expect(rtl.queryAllByText('Selected').length).toBe(23)
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
-  expect(rtl.queryAllByText('Selected').length).toBe(36)
+  expect(rtl.queryAllByText('Selected').length).toBe(26)
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 

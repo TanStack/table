@@ -79,8 +79,11 @@ const defaultGetToggleAllPageRowsSelectedProps = (props, { instance }) => [
     onChange(e) {
       instance.toggleAllPageRowsSelected(e.target.checked)
     },
+    style: {
+      cursor: 'pointer',
+    },
     checked: instance.isAllPageRowsSelected,
-    title: 'Toggle All Page Rows Selected',
+    title: 'Toggle All Current Page Rows Selected',
     indeterminate: Boolean(
       !instance.isAllPageRowsSelected &&
         instance.page.some(({ id }) => instance.state.selectedRowIds[id])
