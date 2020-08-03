@@ -151,6 +151,11 @@
               "editUrl": "/docs/examples/row-selection.mdx"
             },
             {
+              "title": "Row Selection With Pagination",
+              "path": "/docs/examples/row-selection-and-pagination",
+              "editUrl": "/docs/examples/row-selection-and-pagination.mdx"
+            },
+            {
               "title": "Expanding",
               "path": "/docs/examples/expanding",
               "editUrl": "/docs/examples/expanding.mdx"
