@@ -161,6 +161,11 @@
               "editUrl": "/docs/examples/sub-components.mdx"
             },
             {
+              "title": "Sub Components (Lazy)",
+              "path": "/docs/examples/sub-components-lazy",
+              "editUrl": "/docs/examples/sub-components-lazy.mdx"
+            },
+            {
               "title": "Editable Data",
               "path": "/docs/examples/editable-data",
               "editUrl": "/docs/examples/editable-data.mdx"
