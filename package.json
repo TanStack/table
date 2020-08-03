@@ -52,6 +52,7 @@
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/runtime": "^7.7.2",
+    "@rollup/plugin-replace": "^2.3.3",
     "@svgr/rollup": "^4.3.3",
     "@testing-library/dom": "^6.10.1",
     "@testing-library/jest-dom": "^4.2.4",

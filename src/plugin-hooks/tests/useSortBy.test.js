@@ -28,20 +28,32 @@ const data = [
     status: 'Complicated',
     progress: 10,
   },
+  {
+    firstName: 'john',
+    lastName: 'buggyman',
+    age: 52,
+    visits: 24,
+    status: 'Married',
+    progress: 17,
+    subRows: [
+      {
+        firstName: 'winston',
+        lastName: 'buggyman',
+        age: 18,
+        visits: 200,
+        status: 'Single',
+        progress: 10,
+      },
+    ],
+  },
 ]
 
 const defaultColumn = {
   Cell: ({ value, column: { id } }) => `${id}: ${value}`,
 }
 
-function Table({ columns, data, initialState }) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
+function Table({ columns, data, useTableRef, initialState }) {
+  const instance = useTable(
     {
       columns,
       data,
@@ -50,6 +62,18 @@ function Table({ columns, data, initialState }) {
     },
     useSortBy
   )
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = instance
+
+  if (useTableRef) {
+    useTableRef.current = instance
+  }
 
   return (
     <table {...getTableProps()}>
@@ -86,7 +110,7 @@ function Table({ columns, data, initialState }) {
   )
 }
 
-function App(props) {
+function App({ useTableRef, initialState }) {
   const columns = React.useMemo(
     () => [
       {
@@ -127,7 +151,14 @@ function App(props) {
     []
   )
 
-  return <Table columns={columns} data={data} initialState={props.initialState} />
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      useTableRef={useTableRef}
+      initialState={props.initialState}
+    />
+  )
 }
 
 test('renders a sortable table', () => {
@@ -140,7 +171,12 @@ test('renders a sortable table', () => {
       .queryAllByRole('row')
       .slice(2)
       .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: derek', 'firstName: joe', 'firstName: tanner'])
+  ).toEqual([
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: john',
+    'firstName: tanner',
+  ])
 
   fireEvent.click(rendered.getByText('First Name 🔼0'))
   rendered.getByText('First Name 🔽0')
@@ -149,7 +185,12 @@ test('renders a sortable table', () => {
       .queryAllByRole('row')
       .slice(2)
       .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: derek'])
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: john',
+    'firstName: joe',
+    'firstName: derek',
+  ])
 
   fireEvent.click(rendered.getByText('Profile Progress'))
   rendered.getByText('Profile Progress 🔼0')
@@ -158,7 +199,12 @@ test('renders a sortable table', () => {
       .queryAllByRole('row')
       .slice(2)
       .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: joe', 'firstName: tanner', 'firstName: derek'])
+  ).toEqual([
+    'firstName: joe',
+    'firstName: john',
+    'firstName: tanner',
+    'firstName: derek',
+  ])
 
   fireEvent.click(rendered.getByText('First Name'), { shiftKey: true })
   rendered.getByText('Profile Progress 🔼0')
@@ -168,14 +214,31 @@ test('renders a sortable table', () => {
       .queryAllByRole('row')
       .slice(2)
       .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+  ).toEqual([
+    'firstName: joe',
+    'firstName: john',
+    'firstName: derek',
+    'firstName: tanner',
+  ])
+})
+
+test('maintains the integrity of instance.flatRows', () => {
+  const useTableRef = { current: null }
+  const rendered = render(<App useTableRef={useTableRef} />)
+
+  fireEvent.click(rendered.getByText('First Name'))
+  const flatRows = useTableRef.current.flatRows
+  expect(flatRows.length).toBe(5)
+  expect(
+    flatRows.find(r => r.values.firstName === 'winston')
+  ).not.toBeUndefined()
 })
 
 test('Test initialState.sortBy: When clicking the last sortBy column, the sorted state will be replaced not toggled', () => {
   const initialState = {
     sortBy: [
-      { id: 'firstName', desc: true, },
-      { id: 'age', desc: true, }
+      { id: 'firstName', desc: true },
+      { id: 'age', desc: true },
     ],
   }
   const rendered = render(<App initialState={initialState} />)
