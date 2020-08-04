@@ -348,6 +348,14 @@ function useInstanceAfterState(instance) {
     )
   }, [instance.nonGroupedRowsById, instance.state.selection])
 
+  instance.getIsSomePageRowsSelected = useLazyMemo(() => {
+    return (
+      !getInstance().getIsPageAllRowsSelected() &&
+      instance.page?.length &&
+      instance.page.some(({ id }) => instance.selectRowIds[id])
+    )
+  }, [instance.page, instance.state.selection])
+
   instance.getToggleAllRowsSelectedProps = props => {
     const isSomeRowsSelected = getInstance().getIsSomeRowsSelected()
     const isAllRowsSelected = getInstance().getIsAllRowsSelected()
@@ -369,7 +377,7 @@ function useInstanceAfterState(instance) {
 
     return {
       onChange: e => {
-        getInstance().toggleAllRowsSelected(e.target.checked)
+        getInstance().toggleAllPageRowsSelected(e.target.checked)
       },
       checked: isAllPageRowsSelected,
       title: 'Toggle All Current Page Rows Selected',
