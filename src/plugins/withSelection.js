@@ -148,6 +148,58 @@ function useInstanceAfterState(instance) {
     [getInstance, setState]
   )
 
+  instance.toggleAllPageRowsSelected = React.useCallback(
+    value =>
+      setState(
+        old => {
+          const {
+            getIsAllPageRowsSelected,
+            rowsById,
+            getSubRows,
+            page,
+            selectSubRows = true,
+          } = getInstance()
+
+          const selectAll =
+            typeof value !== 'undefined' ? value : !getIsAllPageRowsSelected()
+
+          const selection = { ...old.selection }
+
+          const handleRowById = id => {
+            const row = rowsById[id]
+
+            if (!row.isGrouped) {
+              if (selectAll) {
+                selection[id] = true
+              } else {
+                delete selection[id]
+              }
+            }
+
+            if (selectSubRows && getSubRows(row)) {
+              return getSubRows(row).forEach(row => handleRowById(row.id))
+            }
+          }
+
+          page.forEach(row => handleRowById(row.id))
+
+          return [
+            {
+              ...old,
+              selection,
+            },
+            {
+              value,
+            },
+          ]
+        },
+        {
+          type: 'toggleAllPageRowsSelected',
+        }
+      ),
+    [getInstance, setState]
+  )
+
   instance.toggleRowSelected = React.useCallback(
     (id, value) =>
       setState(
@@ -275,6 +327,20 @@ function useInstanceAfterState(instance) {
     return isAllRowsSelected
   }, [instance.nonGroupedRowsById, instance.state.selection])
 
+  instance.getIsAllPageRowsSelected = useLazyMemo(() => {
+    let isAllPageRowsSelected = instance.getIsAllPageRowsSelected()
+    if (!isAllPageRowsSelected) {
+      if (
+        instance.page?.length &&
+        instance.page.some(({ id }) => !instance.selectedRowIds[id])
+      ) {
+        isAllPageRowsSelected = false
+      }
+    }
+
+    return isAllPageRowsSelected
+  }, [instance.page, instance.state.selection])
+
   instance.getIsSomeRowsSelected = useLazyMemo(() => {
     return (
       !getInstance().getIsAllRowsSelected() &&
@@ -293,6 +359,21 @@ function useInstanceAfterState(instance) {
       checked: isAllRowsSelected,
       title: 'Toggle All Rows Selected',
       indeterminate: isSomeRowsSelected,
+      ...props,
+    }
+  }
+
+  instance.getToggleAllPageRowsSelectedProps = props => {
+    const isSomePageRowsSelected = getInstance().getIsSomePageRowsSelected()
+    const isAllPageRowsSelected = getInstance().getIsAllPageRowsSelected()
+
+    return {
+      onChange: e => {
+        getInstance().toggleAllRowsSelected(e.target.checked)
+      },
+      checked: isAllPageRowsSelected,
+      title: 'Toggle All Current Page Rows Selected',
+      indeterminate: isSomePageRowsSelected,
       ...props,
     }
   }
