@@ -135,7 +135,7 @@ The following properties are available on the table instance returned from `useT
   - Each contains the headers that are displayed underneath it.
   - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information
-- `flatHeaders[] Array<Column>`
+- `flatHeaders: Array<Column>`
   - A **flat** array of final header objects found in each header group.
   - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information
