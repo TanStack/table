@@ -68,6 +68,7 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.setGroupBy) {
     const { value } = action
+
     return {
       ...state,
       groupBy: value,
@@ -101,19 +102,21 @@ function visibleColumns(
   {
     instance: {
       state: { groupBy },
+      reorderGroupedColumns = true
     },
   }
 ) {
   // Sort grouped columns to the start of the column list
   // before the headers are built
+  if(reorderGroupedColumns) {
+    const groupByColumns = groupBy
+      .map(g => columns.find(col => col.id === g))
+      .filter(Boolean)
 
-  const groupByColumns = groupBy
-    .map(g => columns.find(col => col.id === g))
-    .filter(Boolean)
-
-  const nonGroupByColumns = columns.filter(col => !groupBy.includes(col.id))
-
-  columns = [...groupByColumns, ...nonGroupByColumns]
+    const nonGroupByColumns = columns.filter(col => !groupBy.includes(col.id))
+  
+    columns = [...groupByColumns, ...nonGroupByColumns]
+  }
 
   columns.forEach(column => {
     column.isGrouped = groupBy.includes(column.id)
