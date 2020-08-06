@@ -27,6 +27,10 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Defaults to `defaultGroupByFn`
   - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
+- `reorderGroupedColumns: Bool`
+  - Defaults to `true`
+  - Re-orders columns by [...groupedColumns, nonGroupedColumns ]
+  - Set it to `false` in order to save column order being influenced by grouping.
 
 ### Column Options
 
