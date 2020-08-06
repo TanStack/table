@@ -68,7 +68,6 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.setGroupBy) {
     const { value } = action
-
     return {
       ...state,
       groupBy: value,
