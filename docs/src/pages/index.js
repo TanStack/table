@@ -187,7 +187,7 @@ const Home = props => {
                   Gold Sponsors
                 </div>
                 <a
-                  href="https://www.reactbricks.com/"
+                  href="https://tryretool.com/?utm_source=sponsor&utm_campaign=react_table"
                   target="_blank"
                   className="block w-96 m-auto"
                 >
