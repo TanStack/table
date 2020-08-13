@@ -5,7 +5,7 @@ toc: false
 ---
 
 - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/material-ui-components)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/material-ui-components)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/material-UI-components)
 
 <iframe
   src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/material-ui-components?autoresize=1&fontsize=14&theme=dark"
