@@ -6,8 +6,11 @@ export const actions = {
   init: 'init',
 }
 
+export const defaultRenderer = ({ value = '' }) => value;
+export const emptyRenderer = () => <>&nbsp;</>;
+
 export const defaultColumn = {
-  Cell: ({ value = '' }) => value,
+  Cell: defaultRenderer,
   width: 150,
   minWidth: 0,
   maxWidth: Number.MAX_SAFE_INTEGER,

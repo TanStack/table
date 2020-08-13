@@ -3,6 +3,7 @@ import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
 import { useRowSelect } from '../useRowSelect'
 import { useExpanded } from '../useExpanded'
+import { usePagination } from '../usePagination'
 
 const dataPiece = [
   {
@@ -28,7 +29,6 @@ const dataPiece = [
     visits: 20,
     status: 'Complicated',
     progress: 10,
-    expanded: true,
     subRows: [
       {
         firstName: 'bob',
@@ -67,7 +67,7 @@ const data = [
   ...dataPiece,
 ]
 
-function Table({ columns, data }) {
+function SelectAllTable({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -75,14 +75,14 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state: { selectedRowIds },
   } = useTable(
     {
       columns,
       data,
+      initialState: { expanded: { '2': true } },
     },
-    useRowSelect,
     useExpanded,
+    useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
@@ -146,6 +146,88 @@ function Table({ columns, data }) {
   )
 }
 
+function SelectAllPaginatedTable({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    toggleAllRowsExpanded,
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageSize: 5 },
+    },
+    useExpanded,
+    usePagination,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <label>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />{' '}
+                Select All
+              </label>
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <label>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />{' '}
+                Select Row
+              </label>
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
+  )
+
+  // Render the UI for your table
+  return (
+    <>
+      <button onClick={toggleAllRowsExpanded}>Toggle Rows Expanded</button>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+    </>
+  )
+}
+
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef()
@@ -159,7 +241,7 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function App() {
+function App({ selectAllPage = false }) {
   const columns = React.useMemo(
     () => [
       {
@@ -210,7 +292,11 @@ function App() {
     []
   )
 
-  return <Table columns={columns} data={data} />
+  return selectAllPage ? (
+    <SelectAllPaginatedTable columns={columns} data={data} />
+  ) : (
+    <SelectAllTable columns={columns} data={data} />
+  )
 }
 
 test('renders a table with selectable rows', () => {
@@ -218,7 +304,7 @@ test('renders a table with selectable rows', () => {
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
-  expect(rtl.getAllByText('Selected').length).toBe(24)
+  expect(rtl.getAllByText('Selected').length).toBe(26)
 
   fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
 
@@ -226,7 +312,7 @@ test('renders a table with selectable rows', () => {
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
-  expect(rtl.queryAllByText('Selected').length).toBe(24)
+  expect(rtl.queryAllByText('Selected').length).toBe(26)
 
   fireEvent.click(rtl.getByLabelText('Select All'))
 
@@ -253,4 +339,46 @@ test('renders a table with selectable rows', () => {
   fireEvent.click(rtl.getAllByLabelText('Select Row')[4])
 
   expect(rtl.queryByText('Row 4')).toBeNull()
+})
+
+test('renders a table with selectable rows, only selecting the current page', () => {
+  const rtl = render(<App selectAllPage />)
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+
+  expect(rtl.getAllByText('Selected').length).toBe(5)
+
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
+
+  expect(rtl.queryAllByText('Selected').length).toBe(4)
+  expect(rtl.getByLabelText('Select All').indeterminate).toBe(true)
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+
+  expect(rtl.queryAllByText('Selected').length).toBe(5)
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+
+  expect(rtl.queryAllByText('Selected').length).toBe(0)
+
+  fireEvent.click(rtl.getByText('Toggle Rows Expanded'))
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+
+  expect(rtl.getAllByText('Selected').length).toBe(5)
+
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
+
+  // Unselects the parent, and the two subrows
+  expect(rtl.queryAllByText('Selected').length).toBe(2)
+
+  expect(rtl.getByLabelText('Select All').indeterminate).toBe(true)
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+
+  expect(rtl.queryAllByText('Selected').length).toBe(5)
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+
+  expect(rtl.queryAllByText('Selected').length).toBe(0)
 })

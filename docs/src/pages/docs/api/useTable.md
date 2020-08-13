@@ -48,11 +48,6 @@ The following options are supported via the main options object passed to `useTa
   - The default column object for every column passed to React Table.
   - Column-specific properties will override the properties in this object, eg. `{ ...defaultColumn, ...userColumn }`
   - This is particularly useful for adding global column properties. For instance, when using the `useFilters` plugin hook, add a default `Filter` renderer for every column, eg.`{ Filter: MyDefaultFilterComponent }`
-- `initialRowStateKey: String`
-  - Optional
-  - Defaults to `initialState`
-  - This key is used to look for the initial state of a row when initializing the `rowState` for a `data` array.
-  - If the value located at `row[initialRowStateKey]` is falsey, `{}` will be used instead.
 - `getSubRows: Function(row, relativeIndex) => Rows[]`
   - Optional
   - Must be **memoized**
@@ -140,7 +135,7 @@ The following properties are available on the table instance returned from `useT
   - Each contains the headers that are displayed underneath it.
   - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information
-- `flatHeaders[] Array<Column>`
+- `flatHeaders: Array<Column>`
   - A **flat** array of final header objects found in each header group.
   - **Some of these headers may be materialized as placeholders**
   - See [Column Properties](#column-properties) for more information

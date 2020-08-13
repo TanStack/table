@@ -32,14 +32,26 @@ The following values are provided to the table `instance`:
   - Use this function to toggle a row's selected state.
   - Optionally pass `true` or `false` to set it to that state
 - `toggleAllRowsSelected: Function(?set: Bool) => void`
-  - Use this function to toggle all rows as select or not
+  - Use this function to toggle all rows as selected or not
   - Optionally pass `true` or `false` to set all rows to that state
+- `toggleAllPageRowsSelected: Function(?set: Bool) => void`
+  - Use this function to toggle all of the current page's rows as selected or not
+  - Optionally pass `true` or `false` to set all rows to that state
+- `getToggleAllPageRowsSelectedProps: Function(props) => props`
+  - Use this function to get the props needed for a **select all checkbox (current page only)**.
+  - Props:
+    - `onChange: Function()`
+    - `style.cursor: 'pointer'`
+    - `checked: Bool`
+    - `indeterminate: Bool`
+    - `title: 'Toggle All Rows Selected'`
 - `getToggleAllRowsSelectedProps: Function(props) => props`
   - Use this function to get the props needed for a **select all checkbox**.
   - Props:
     - `onChange: Function()`
     - `style.cursor: 'pointer'`
     - `checked: Bool`
+    - `indeterminate: Bool`
     - `title: 'Toggle All Rows Selected'`
 - `isAllRowsSelected: Bool`
   - Will be `true` if all rows are selected.
@@ -68,5 +80,12 @@ The following additional properties are available on every **prepared** `row` ob
 
 ### Example
 
+#### Select All Checks All Rows
+
 - [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
 - [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
+
+#### Select All Checks Current Page's Rows
+
+- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)

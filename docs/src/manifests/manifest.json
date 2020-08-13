@@ -151,6 +151,11 @@
               "editUrl": "/docs/examples/row-selection.mdx"
             },
             {
+              "title": "Row Selection With Pagination",
+              "path": "/docs/examples/row-selection-and-pagination",
+              "editUrl": "/docs/examples/row-selection-and-pagination.mdx"
+            },
+            {
               "title": "Expanding",
               "path": "/docs/examples/expanding",
               "editUrl": "/docs/examples/expanding.mdx"
@@ -159,6 +164,11 @@
               "title": "Sub Components",
               "path": "/docs/examples/sub-components",
               "editUrl": "/docs/examples/sub-components.mdx"
+            },
+            {
+              "title": "Sub Components (Lazy)",
+              "path": "/docs/examples/sub-components-lazy",
+              "editUrl": "/docs/examples/sub-components-lazy.mdx"
             },
             {
               "title": "Editable Data",
@@ -229,6 +239,11 @@
               "title": "Material-UI Kitchen Sink",
               "path": "/docs/examples/material-ui-kitchen-sink",
               "editUrl": "/docs/examples/material-ui-kitchen-sink.mdx"
+            },
+            {
+              "title": "Bootstrap UI",
+              "path": "/docs/examples/bootstrap-ui-components",
+              "editUrl": "/docs/examples/bootstrap-ui-components.mdx"
             },
             {
               "title": "RMWC Table",

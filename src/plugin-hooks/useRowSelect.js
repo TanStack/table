@@ -14,10 +14,14 @@ const pluginName = 'useRowSelect'
 actions.resetSelectedRows = 'resetSelectedRows'
 actions.toggleAllRowsSelected = 'toggleAllRowsSelected'
 actions.toggleRowSelected = 'toggleRowSelected'
+actions.toggleAllPageRowsSelected = 'toggleAllPageRowsSelected'
 
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = [defaultGetToggleRowSelectedProps]
   hooks.getToggleAllRowsSelectedProps = [defaultGetToggleAllRowsSelectedProps]
+  hooks.getToggleAllPageRowsSelectedProps = [
+    defaultGetToggleAllPageRowsSelectedProps,
+  ]
   hooks.stateReducers.push(reducer)
   hooks.useInstance.push(useInstance)
   hooks.prepareRow.push(prepareRow)
@@ -69,6 +73,25 @@ const defaultGetToggleAllRowsSelectedProps = (props, { instance }) => [
   },
 ]
 
+const defaultGetToggleAllPageRowsSelectedProps = (props, { instance }) => [
+  props,
+  {
+    onChange(e) {
+      instance.toggleAllPageRowsSelected(e.target.checked)
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    checked: instance.isAllPageRowsSelected,
+    title: 'Toggle All Current Page Rows Selected',
+    indeterminate: Boolean(
+      !instance.isAllPageRowsSelected &&
+        instance.page.some(({ id }) => instance.state.selectedRowIds[id])
+    ),
+  },
+]
+
+// eslint-disable-next-line max-params
 function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
@@ -117,7 +140,7 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleRowSelected) {
     const { id, value: setSelected } = action
-    const { rowsById, selectSubRows = true } = instance
+    const { rowsById, selectSubRows = true, getSubRows } = instance
 
     // Join the ids of deep rows
     // to make a key, then manage all of the keys
@@ -144,8 +167,8 @@ function reducer(state, action, previousState, instance) {
         }
       }
 
-      if (selectSubRows && row.subRows) {
-        return row.subRows.forEach(row => handleRowById(row.id))
+      if (selectSubRows && getSubRows(row)) {
+        return getSubRows(row).forEach(row => handleRowById(row.id))
       }
     }
 
@@ -156,6 +179,46 @@ function reducer(state, action, previousState, instance) {
       selectedRowIds: newSelectedRowIds,
     }
   }
+
+  if (action.type === actions.toggleAllPageRowsSelected) {
+    const { value: setSelected } = action
+    const {
+      page,
+      rowsById,
+      selectSubRows = true,
+      isAllPageRowsSelected,
+      getSubRows,
+    } = instance
+
+    const selectAll =
+      typeof setSelected !== 'undefined' ? setSelected : !isAllPageRowsSelected
+
+    const newSelectedRowIds = { ...state.selectedRowIds }
+
+    const handleRowById = id => {
+      const row = rowsById[id]
+
+      if (!row.isGrouped) {
+        if (selectAll) {
+          newSelectedRowIds[id] = true
+        } else {
+          delete newSelectedRowIds[id]
+        }
+      }
+
+      if (selectSubRows && getSubRows(row)) {
+        return getSubRows(row).forEach(row => handleRowById(row.id))
+      }
+    }
+
+    page.forEach(row => handleRowById(row.id))
+
+    return {
+      ...state,
+      selectedRowIds: newSelectedRowIds,
+    }
+  }
+  return state
 }
 
 function useInstance(instance) {
@@ -170,11 +233,13 @@ function useInstance(instance) {
     state: { selectedRowIds },
     selectSubRows = true,
     dispatch,
+    page,
+    getSubRows,
   } = instance
 
   ensurePluginOrder(
     plugins,
-    ['useFilters', 'useGroupBy', 'useSortBy'],
+    ['useFilters', 'useGroupBy', 'useSortBy', 'useExpanded', 'usePagination'],
     'useRowSelect'
   )
 
@@ -183,7 +248,7 @@ function useInstance(instance) {
 
     rows.forEach(row => {
       const isSelected = selectSubRows
-        ? getRowIsSelected(row, selectedRowIds)
+        ? getRowIsSelected(row, selectedRowIds, getSubRows)
         : !!selectedRowIds[row.id]
       row.isSelected = !!isSelected
       row.isSomeSelected = isSelected === null
@@ -194,15 +259,23 @@ function useInstance(instance) {
     })
 
     return selectedFlatRows
-  }, [rows, selectSubRows, selectedRowIds])
+  }, [rows, selectSubRows, selectedRowIds, getSubRows])
 
   let isAllRowsSelected = Boolean(
     Object.keys(nonGroupedRowsById).length && Object.keys(selectedRowIds).length
   )
 
+  let isAllPageRowsSelected = isAllRowsSelected
+
   if (isAllRowsSelected) {
     if (Object.keys(nonGroupedRowsById).some(id => !selectedRowIds[id])) {
       isAllRowsSelected = false
+    }
+  }
+
+  if (!isAllRowsSelected) {
+    if (page && page.length && page.some(({ id }) => !selectedRowIds[id])) {
+      isAllPageRowsSelected = false
     }
   }
 
@@ -219,6 +292,11 @@ function useInstance(instance) {
     [dispatch]
   )
 
+  const toggleAllPageRowsSelected = React.useCallback(
+    value => dispatch({ type: actions.toggleAllPageRowsSelected, value }),
+    [dispatch]
+  )
+
   const toggleRowSelected = React.useCallback(
     (id, value) => dispatch({ type: actions.toggleRowSelected, id, value }),
     [dispatch]
@@ -231,12 +309,20 @@ function useInstance(instance) {
     { instance: getInstance() }
   )
 
+  const getToggleAllPageRowsSelectedProps = makePropGetter(
+    getHooks().getToggleAllPageRowsSelectedProps,
+    { instance: getInstance() }
+  )
+
   Object.assign(instance, {
     selectedFlatRows,
     isAllRowsSelected,
+    isAllPageRowsSelected,
     toggleRowSelected,
     toggleAllRowsSelected,
     getToggleAllRowsSelectedProps,
+    getToggleAllPageRowsSelectedProps,
+    toggleAllPageRowsSelected,
   })
 }
 
@@ -249,22 +335,24 @@ function prepareRow(row, { instance }) {
   )
 }
 
-function getRowIsSelected(row, selectedRowIds) {
+function getRowIsSelected(row, selectedRowIds, getSubRows) {
   if (selectedRowIds[row.id]) {
     return true
   }
 
-  if (row.subRows && row.subRows.length) {
+  const subRows = getSubRows(row)
+
+  if (subRows && subRows.length) {
     let allChildrenSelected = true
     let someSelected = false
 
-    row.subRows.forEach(subRow => {
+    subRows.forEach(subRow => {
       // Bail out early if we know both of these
       if (someSelected && !allChildrenSelected) {
         return
       }
 
-      if (getRowIsSelected(subRow, selectedRowIds)) {
+      if (getRowIsSelected(subRow, selectedRowIds, getSubRows)) {
         someSelected = true
       } else {
         allChildrenSelected = false
