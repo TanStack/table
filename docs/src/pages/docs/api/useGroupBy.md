@@ -64,6 +64,8 @@ The following values are provided to the table `instance`:
   - The array of rows originally used to create the grouped rows.
 - `toggleGroupBy: Function(columnId: String, ?set: Bool) => void`
   - This function can be used to programmatically set or toggle the groupBy state for a specific column.
+- `setGroupBy: Function(columnIds: Array<String>) => void`
+  - This function can be used to programmatically set the groupBy state for the table.
 
 ### Column Properties
 
