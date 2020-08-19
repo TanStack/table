@@ -142,11 +142,7 @@ function reducer(state, action, previousState, instance) {
     const { id, value: setSelected } = action
     const { rowsById, selectSubRows = true, getSubRows } = instance
 
-    // Join the ids of deep rows
-    // to make a key, then manage all of the keys
-    // in a flat object
-    const row = rowsById[id]
-    const isSelected = row.isSelected
+    const isSelected = id in state.selectedRowIds
     const shouldExist =
       typeof setSelected !== 'undefined' ? setSelected : !isSelected
 
