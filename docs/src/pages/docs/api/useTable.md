@@ -85,6 +85,12 @@ The following options are supported on any column object you can pass to `column
   - Receives the table instance and column model as props
   - Must either be a **string or return valid JSX**
   - If a function/component is passed, it will be used for formatting the header value, eg. You can use a `Header` function to dynamically format the header using any table or column state.
+- `Footer: String | Function | React.Component => JSX`
+  - Optional
+  - Defaults to `() => null`
+  - Receives the table instance and column model as props
+  - Must either be a **string or return valid JSX**
+  - If a function/component is passed, it will be used for formatting the footer value, eg. You can use a `Footer` function to dynamically format the footer using any table or column state.
 - `Cell: Function | React.Component => JSX` <a id="column-object-cell"></a>
   - Optional
   - Defaults to `({ value }) => String(value)`
