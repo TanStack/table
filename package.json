@@ -1,6 +1,6 @@
 {
   "name": "react-table",
-  "version": "7.0.5",
+  "version": "1.0.0-semantic-release",
   "description": "Hooks for building lightweight, fast and extendable datagrids for React",
   "license": "MIT",
   "homepage": "https://react-table.tanstack.com",
@@ -28,12 +28,20 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "start": "rollup -c -w",
     "prepare": "yarn build",
-    "release": "yarn publish",
-    "releaseNext": "yarn publish --tag next",
     "format": "prettier {src,src/**,examples/*/src,examples/*/src/**}/*.{md,js,jsx,tsx} --write",
     "docz:build": "docz build",
     "docz:dev": "docz dev",
     "docz:serve": "docz build && docz serve"
+  },
+  "release": {
+    "branches": [
+      "6.x",
+      "master",
+      {
+        "name": "next",
+        "prerelease": true
+      }
+    ]
   },
   "files": [
     "CHANGELOG.md",
