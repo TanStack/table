@@ -153,7 +153,7 @@ function prepareRow(row, { instance }) {
       cell.state =
         typeof row.state.cellState[cell.column.id] !== 'undefined'
           ? row.state.cellState[cell.column.id]
-          : initialCellStateAccessor(row.original)
+          : initialCellStateAccessor(cell)
 
       cell.setState = updater => {
         return instance.setCellState(row.id, cell.column.id, updater)
