@@ -279,9 +279,7 @@ const Home = props => {
                 <ul className="list-none text-center">
                   <li>Hugo Meissner</li>
                   <li>Benoit Leger-Derville</li>
-                  <li>Thomas Funk</li>
                   <li>David Pickut</li>
-                  <li>Jordan Soltman</li>
                   <li>Robert Tajnšek</li>
                   <li>Eric Lanehart (@pushred)</li>
                   <li>Anish P Patel (@anishpatelyaadada)</li>
@@ -291,6 +289,7 @@ const Home = props => {
                   <li>Matt Stvartak (@mattstvartak)</li>
                   <li>JP Rosevear (@jprosevear)</li>
                   <li>Stefan Khan-Kernahan (@skhanker)</li>
+                  <li>Nicholas Canvoa</li>
                 </ul>
               </div>
               <div className="mt-10">
