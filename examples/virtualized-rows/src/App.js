@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useTable, useBlockLayout } from 'react-table'
 import { FixedSizeList } from 'react-window'
+import scrollbarWidth from './scrollbarWidth'
 
 import makeData from './makeData'
 
@@ -29,7 +30,7 @@ const Styles = styled.div`
       border-right: 1px solid black;
 
       :last-child {
-        border-right: 0;
+        border-right: 1px solid black;
       }
     }
   }
@@ -44,6 +45,8 @@ function Table({ columns, data }) {
     }),
     []
   )
+
+  const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
 
   const {
     getTableProps,
@@ -105,7 +108,7 @@ function Table({ columns, data }) {
           height={400}
           itemCount={rows.length}
           itemSize={35}
-          width={totalColumnsWidth}
+          width={totalColumnsWidth+scrollBarSize}
         >
           {RenderRow}
         </FixedSizeList>
