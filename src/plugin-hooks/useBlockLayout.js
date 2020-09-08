@@ -8,11 +8,20 @@ const getId = cell => {
   return role + '_' + cell.row.id + '_' + cell.column.id;
 }
 
+const getSpanStyles = count => {
+  return {
+    height: count * 35,
+    zIndex: count,
+    background: "white"
+  }
+}
+
 const getRowStyles = (props, { instance }) => [
   props,
   {
     style: {
       display: 'flex',
+
       width: `${instance.totalColumnsWidth}px`,
     },
   },
@@ -38,7 +47,7 @@ export const useBlockLayout = (hooks, spanList = {}) => {
     let spanStyles = {};
 
     if (id in spanList) {
-      console.log(id, spanList[id])
+      spanStyles = getSpanStyles(spanList[id]);
     }
 
     return [
