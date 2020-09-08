@@ -13,9 +13,7 @@ const getRowStyles = (props, { instance }) => [
   },
 ]
 
-export const useBlockLayout = (hooks, spanList) => {
-  console.log("BLOCK")
-  console.log(spanList)
+export const useBlockLayout = (hooks, spanList = {}) => {
   hooks.getRowProps.push(getRowStyles)
   hooks.getHeaderGroupProps.push(getRowStyles)
   hooks.getFooterGroupProps.push(getRowStyles)
