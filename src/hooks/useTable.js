@@ -54,7 +54,7 @@ function applyDefaults(props) {
   }
 }
 
-export const useTable = (props, ...plugins) => {
+export const useTable = (props, ...plugins, spanList) => {
   // Apply default props
   props = applyDefaults(props)
 
