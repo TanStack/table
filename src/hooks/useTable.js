@@ -76,7 +76,7 @@ export const useTable = (props, ...plugins, spanList) => {
 
   // Allow plugins to register hooks as early as possible
   plugins.filter(Boolean).forEach(plugin => {
-    plugin(getInstance().hooks)
+    plugin(getInstance().hooks, spanList);
   })
 
   // Consume all hooks and make a getter for them
