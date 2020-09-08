@@ -3,6 +3,11 @@ const cellStyles = {
   boxSizing: 'border-box',
 }
 
+const getId = cell => {
+  let role = 'cell';
+  return role + '_' + cell.row.id + '_' + cell.column.id;
+}
+
 const getRowStyles = (props, { instance }) => [
   props,
   {
@@ -28,15 +33,24 @@ export const useBlockLayout = (hooks, spanList = {}) => {
     },
   ])
 
-  hooks.getCellProps.push((props, { cell }) => [
+  hooks.getCellProps.push((props, { cell }) => {
+    let id = getId(cell);
+    let spanStyles = {};
+
+    if (id in spanList) {
+      console.log(id, spanList[id])
+    }
+
+    return [
     props,
     {
       style: {
         ...cellStyles,
+        ... spanStyles,
         width: `${cell.column.totalWidth}px`,
       },
     },
-  ])
+  ]})
 
   hooks.getFooterProps.push((props, { column }) => [
     props,
