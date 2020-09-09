@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { functionalUpdate, actions } from '../utils'
+import { functionalUpdate, actions } from '../publicUtils'
 
 // Actions
 actions.resetColumnOrder = 'resetColumnOrder'
@@ -8,10 +8,10 @@ actions.setColumnOrder = 'setColumnOrder'
 
 export const useColumnOrder = hooks => {
   hooks.stateReducers.push(reducer)
-  hooks.flatColumnsDeps.push((deps, { instance }) => {
+  hooks.visibleColumnsDeps.push((deps, { instance }) => {
     return [...deps, instance.state.columnOrder]
   })
-  hooks.flatColumns.push(flatColumns)
+  hooks.visibleColumns.push(visibleColumns)
   hooks.useInstance.push(useInstance)
 }
 
@@ -40,7 +40,7 @@ function reducer(state, action, previousState, instance) {
   }
 }
 
-function flatColumns(
+function visibleColumns(
   columns,
   {
     instance: {

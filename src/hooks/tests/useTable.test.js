@@ -115,14 +115,12 @@ function App() {
 }
 
 test('renders a basic table', () => {
-  const { getByText, asFragment } = render(<App />)
+  const rtl = render(<App />)
 
-  expect(getByText('tanner')).toBeInTheDocument()
-  expect(getByText('linsley')).toBeInTheDocument()
-  expect(getByText('29')).toBeInTheDocument()
-  expect(getByText('100')).toBeInTheDocument()
-  expect(getByText('In Relationship')).toBeInTheDocument()
-  expect(getByText('50')).toBeInTheDocument()
-
-  expect(asFragment()).toMatchSnapshot()
+  expect(rtl.getByText('tanner')).toBeInTheDocument()
+  expect(rtl.getByText('linsley')).toBeInTheDocument()
+  expect(rtl.getByText('29')).toBeInTheDocument()
+  expect(rtl.getByText('100')).toBeInTheDocument()
+  expect(rtl.getByText('In Relationship')).toBeInTheDocument()
+  expect(rtl.getByText('50')).toBeInTheDocument()
 })

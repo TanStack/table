@@ -46,7 +46,7 @@ const Styles = styled.div`
 
 // Create an editable cell renderer
 const EditableCell = ({
-  cell: { value: initialValue },
+  value: initialValue,
   row: { index },
   column: { id },
   updateMyData, // This is a custom function that we supplied to our table instance
@@ -63,7 +63,7 @@ const EditableCell = ({
     updateMyData(index, id, value)
   }
 
-  // If the initialValue is changed externall, sync it up with our state
+  // If the initialValue is changed external, sync it up with our state
   React.useEffect(() => {
     setValue(initialValue)
   }, [initialValue])

@@ -1,5 +1,3 @@
-import { ensurePluginOrder } from '../utils'
-
 const cellStyles = {
   position: 'absolute',
   top: 0,
@@ -9,7 +7,7 @@ export const useAbsoluteLayout = hooks => {
   hooks.getTableBodyProps.push(getRowStyles)
   hooks.getRowProps.push(getRowStyles)
   hooks.getHeaderGroupProps.push(getRowStyles)
-  hooks.useInstance.push(useInstance)
+  hooks.getFooterGroupProps.push(getRowStyles)
 
   hooks.getHeaderProps.push((props, { column }) => [
     props,
@@ -32,6 +30,17 @@ export const useAbsoluteLayout = hooks => {
       },
     },
   ])
+
+  hooks.getFooterProps.push((props, { column }) => [
+    props,
+    {
+      style: {
+        ...cellStyles,
+        left: `${column.totalLeft}px`,
+        width: `${column.totalWidth}px`,
+      },
+    },
+  ])
 }
 
 useAbsoluteLayout.pluginName = 'useAbsoluteLayout'
@@ -45,9 +54,3 @@ const getRowStyles = (props, { instance }) => [
     },
   },
 ]
-
-function useInstance({ plugins }) {
-  ensurePluginOrder(plugins, [], useAbsoluteLayout.pluginName, [
-    'useResizeColumns',
-  ])
-}

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, useFilters, useGlobalFilter } from 'react-table'
+import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
 // A great library for fuzzy filtering/sorting items
 import matchSorter from 'match-sorter'
 
@@ -42,14 +42,19 @@ function GlobalFilter({
   setGlobalFilter,
 }) {
   const count = preGlobalFilteredRows.length
+  const [value, setValue] = React.useState(globalFilter)
+  const onChange = useAsyncDebounce(value => {
+    setGlobalFilter(value || undefined)
+  }, 200)
 
   return (
     <span>
       Search:{' '}
       <input
-        value={globalFilter || ''}
+        value={value || ""}
         onChange={e => {
-          setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+          setValue(e.target.value);
+          onChange(e.target.value);
         }}
         placeholder={`${count} records...`}
         style={{
@@ -243,7 +248,7 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     state,
-    flatColumns,
+    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(
@@ -278,7 +283,7 @@ function Table({ columns, data }) {
           ))}
           <tr>
             <th
-              colSpan={flatColumns.length}
+              colSpan={visibleColumns.length}
               style={{
                 textAlign: 'left',
               }}

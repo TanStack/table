@@ -50,7 +50,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    flatColumns,
+    visibleColumns,
     prepareRow,
     setColumnOrder,
     state,
@@ -63,7 +63,7 @@ function Table({ columns, data }) {
   )
 
   const randomizeColumns = () => {
-    setColumnOrder(shuffle(flatColumns.map(d => d.id)))
+    setColumnOrder(shuffle(visibleColumns.map(d => d.id)))
   }
 
   return (
@@ -80,19 +80,16 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.slice(0, 10).map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, i) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
+          {rows.slice(0, 10).map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, i) => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       <pre>

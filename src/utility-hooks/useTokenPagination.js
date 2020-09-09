@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React from 'react'
 
 // Token pagination behaves a bit different from

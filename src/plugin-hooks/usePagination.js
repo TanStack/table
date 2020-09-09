@@ -5,11 +5,12 @@ import React from 'react'
 import {
   actions,
   ensurePluginOrder,
-  expandRows,
   functionalUpdate,
   useMountedLayoutEffect,
   useGetLatest,
-} from '../utils'
+} from '../publicUtils'
+
+import { expandRows } from '../utils'
 
 const pluginName = 'usePagination'
 
@@ -42,12 +43,25 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.gotoPage) {
-    const { pageCount } = instance
+    const { pageCount, page } = instance
     const newPageIndex = functionalUpdate(action.pageIndex, state.pageIndex)
+    let canNavigate = false
 
-    if (newPageIndex < 0 || newPageIndex > pageCount - 1) {
+    if (newPageIndex > state.pageIndex) {
+      // next page
+      canNavigate =
+        pageCount === -1
+          ? page.length >= state.pageSize
+          : newPageIndex <= pageCount
+    } else if (newPageIndex < state.pageIndex) {
+      // prev page
+      canNavigate = newPageIndex > -1
+    }
+
+    if (!canNavigate) {
       return state
     }
+
     return {
       ...state,
       pageIndex: newPageIndex,
@@ -76,21 +90,24 @@ function useInstance(instance) {
     pageCount: userPageCount,
     paginateExpandedRows = true,
     expandSubRows = true,
-    state: { pageSize, pageIndex, expanded, globalFilter, filters, groupBy, sortBy },
+    state: {
+      pageSize,
+      pageIndex,
+      expanded,
+      globalFilter,
+      filters,
+      groupBy,
+      sortBy,
+    },
     dispatch,
     data,
     manualPagination,
-    manualGlobalFilter,
-    manualFilters,
-    manualGroupBy,
-    manualSortBy,
   } = instance
 
   ensurePluginOrder(
     plugins,
     ['useGlobalFilter', 'useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'],
-    'usePagination',
-    []
+    'usePagination'
   )
 
   const getAutoResetPage = useGetLatest(autoResetPage)
@@ -102,10 +119,10 @@ function useInstance(instance) {
   }, [
     dispatch,
     manualPagination ? null : data,
-    manualPagination || manualGlobalFilter ? null : globalFilter,
-    manualPagination || manualFilters ? null : filters,
-    manualPagination || manualGroupBy ? null : groupBy,
-    manualPagination || manualSortBy ? null : sortBy,
+    globalFilter,
+    filters,
+    groupBy,
+    sortBy,
   ])
 
   const pageCount = manualPagination
@@ -113,7 +130,10 @@ function useInstance(instance) {
     : Math.ceil(rows.length / pageSize)
 
   const pageOptions = React.useMemo(
-    () => (pageCount > 0 ? [...new Array(pageCount)].map((d, i) => i) : []),
+    () =>
+      pageCount > 0
+        ? [...new Array(pageCount)].fill(null).map((d, i) => i)
+        : [],
     [pageCount]
   )
 
@@ -146,7 +166,8 @@ function useInstance(instance) {
   ])
 
   const canPreviousPage = pageIndex > 0
-  const canNextPage = pageCount === -1 || pageIndex < pageCount - 1
+  const canNextPage =
+    pageCount === -1 ? page.length >= pageSize : pageIndex < pageCount - 1
 
   const gotoPage = React.useCallback(
     pageIndex => {

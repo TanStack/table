@@ -36,9 +36,9 @@ function Table({ columns, data }) {
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
                 return (
-                  <th {...cell.getCellProps()}>
+                  <td {...cell.getCellProps()}>
                     {cell.render('Cell')}
-                  </th>
+                  </td>
                 )
               })}
             </tr>

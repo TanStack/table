@@ -1,5 +1,4 @@
 node_modules
-lib
 dist
 es
 docs/build
@@ -10,4 +9,7 @@ react-table.css
 .idea
 .DS_Store
 .history
+.vscode
 package-lock.json
+coverage
+.docz

@@ -42,7 +42,7 @@ export const includes = (rows, ids, filterValue) => {
   return rows.filter(row => {
     return ids.some(id => {
       const rowValue = row.values[id]
-      return filterValue.includes(rowValue)
+      return rowValue.includes(filterValue)
     })
   })
 }
@@ -63,6 +63,32 @@ export const includesAll = (rows, ids, filterValue) => {
 }
 
 includesAll.autoRemove = val => !val || !val.length
+
+export const includesSome = (rows, ids, filterValue) => {
+  return rows.filter(row => {
+    return ids.some(id => {
+      const rowValue = row.values[id]
+      return (
+        rowValue &&
+        rowValue.length &&
+        filterValue.some(val => rowValue.includes(val))
+      )
+    })
+  })
+}
+
+includesSome.autoRemove = val => !val || !val.length
+
+export const includesValue = (rows, ids, filterValue) => {
+  return rows.filter(row => {
+    return ids.some(id => {
+      const rowValue = row.values[id]
+      return filterValue.includes(rowValue)
+    })
+  })
+}
+
+includesValue.autoRemove = val => !val || !val.length
 
 export const exact = (rows, ids, filterValue) => {
   return rows.filter(row => {

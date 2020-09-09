@@ -57,7 +57,7 @@ const Styles = styled.div`
 
 // Create an editable cell renderer
 const EditableCell = ({
-  cell: { value: initialValue },
+  value: initialValue,
   row: { index },
   column: { id },
   updateMyData, // This is a custom function that we supplied to our table instance
@@ -301,14 +301,14 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
       // when we edit the data, undefined means using the default
       autoResetPage: !skipPageReset,
     },
-    useGroupBy,
     useFilters,
+    useGroupBy,
     useSortBy,
     useExpanded,
     usePagination,
     useRowSelect,
     hooks => {
-      hooks.flatColumns.push(columns => [
+      hooks.visibleColumns.push(columns => [
         {
           id: 'selection',
           // Make this column a groupByBoundary. This ensures that groupBy columns
@@ -378,7 +378,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
                       {cell.isGrouped ? (
                         // If it's a grouped cell, add an expander and row count
                         <>
-                          <span {...row.getExpandedToggleProps()}>
+                          <span {...row.getToggleRowExpandedProps()}>
                             {row.isExpanded ? '👇' : '👉'}
                           </span>{' '}
                           {cell.render('Cell', { editable: false })} (
@@ -388,7 +388,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
                         cell.render('Aggregated')
-                      ) : cell.isRepeatedValue ? null : ( // For cells with repeated values, render null
+                      ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         cell.render('Cell', { editable: true })
                       )}
@@ -400,8 +400,8 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
           })}
         </tbody>
       </table>
-      {/* 
-        Pagination can be built however you'd like. 
+      {/*
+        Pagination can be built however you'd like.
         This is just a very basic UI implementation:
       */}
       <div className="pagination">
@@ -486,13 +486,13 @@ function filterGreaterThan(rows, id, filterValue) {
 filterGreaterThan.autoRemove = val => typeof val !== 'number'
 
 // This is a custom aggregator that
-// takes in an array of values and
+// takes in an array of leaf values and
 // returns the rounded median
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
+function roundedMedian(leafValues) {
+  let min = leafValues[0] || 0
+  let max = leafValues[0] || 0
 
-  values.forEach(value => {
+  leafValues.forEach(value => {
     min = Math.min(min, value)
     max = Math.max(max, value)
   })
@@ -513,8 +513,8 @@ function App() {
             // count the total rows being aggregated,
             // then sum any of those counts if they are
             // aggregated further
-            aggregate: ['sum', 'count'],
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
+            aggregate: 'count',
+            Aggregated: ({ value }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -525,8 +525,8 @@ function App() {
             // first count the UNIQUE values from the rows
             // being aggregated, then sum those counts if
             // they are aggregated further
-            aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
+            aggregate: 'uniqueCount',
+            Aggregated: ({ value }) => `${value} Unique Names`,
           },
         ],
       },
@@ -540,7 +540,7 @@ function App() {
             filter: 'equals',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
+            Aggregated: ({ value }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
@@ -549,7 +549,7 @@ function App() {
             filter: 'between',
             // Aggregate the sum of all visits
             aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
+            Aggregated: ({ value }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -564,7 +564,7 @@ function App() {
             filter: filterGreaterThan,
             // Use our custom roundedMedian aggregator
             aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
+            Aggregated: ({ value }) => `${value} (med)`,
           },
         ],
       },

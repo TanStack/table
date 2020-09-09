@@ -1,50 +1,50 @@
 import babel from 'rollup-plugin-babel'
-import commonjs from 'rollup-plugin-commonjs'
-import external from 'rollup-plugin-peer-deps-external'
-import resolve from 'rollup-plugin-node-resolve'
-import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
+import { terser } from 'rollup-plugin-terser'
 import size from 'rollup-plugin-size'
-import pkg from './package.json'
+import externalDeps from 'rollup-plugin-peer-deps-external'
+import replace from '@rollup/plugin-replace'
+
+const external = ['react']
+
+const globals = {
+  react: 'React',
+}
 
 export default [
   {
     input: 'src/index.js',
     output: {
-      file: pkg.main,
-      format: 'cjs',
+      name: 'ReactTable',
+      file: 'dist/react-table.development.js',
+      format: 'umd',
       sourcemap: true,
+      globals,
     },
+    external,
     plugins: [
-      external(),
+      replace({ 'process.env.NODE_ENV': `"development"`, delimiters: ['', ''] }),
       babel(),
-      resolve(),
-      commonjs(),
-      size({
-        publish: true,
-        exclude: pkg.module,
-        filename: 'sizes-cjs.json',
-        writeFile: process.env.CI ? true : false,
-      }),
-      sizeSnapshot(),
+      externalDeps(),
     ],
   },
   {
     input: 'src/index.js',
     output: {
-      file: pkg.module,
-      format: 'es',
+      name: 'ReactTable',
+      file: 'dist/react-table.production.min.js',
+      format: 'umd',
       sourcemap: true,
+      globals,
     },
+    external,
     plugins: [
-      external(),
+      replace({ 'process.env.NODE_ENV': `"production"`, delimiters: ['', ''] }),
       babel(),
+      externalDeps(),
+      terser(),
       size({
-        publish: true,
-        exclude: pkg.main,
-        filename: 'sizes-es.json',
-        writeFile: process.env.CI ? true : false,
+        writeFile: false,
       }),
-      sizeSnapshot(),
     ],
   },
 ]

@@ -1,41 +1,19 @@
 import React from 'react'
 
-let renderErr = 'Renderer Error'
+let renderErr = 'Renderer Error ☝️'
 
 export const actions = {
   init: 'init',
 }
 
+export const defaultRenderer = ({ value = '' }) => value;
+export const emptyRenderer = () => <>&nbsp;</>;
+
 export const defaultColumn = {
-  Cell: ({ cell: { value = '' } }) => value,
+  Cell: defaultRenderer,
   width: 150,
   minWidth: 0,
   maxWidth: Number.MAX_SAFE_INTEGER,
-}
-
-export function defaultOrderByFn(arr, funcs, dirs) {
-  return [...arr].sort((rowA, rowB) => {
-    for (let i = 0; i < funcs.length; i += 1) {
-      const sortFn = funcs[i]
-      const desc = dirs[i] === false || dirs[i] === 'desc'
-      const sortInt = sortFn(rowA, rowB)
-      if (sortInt !== 0) {
-        return desc ? -sortInt : sortInt
-      }
-    }
-    return dirs[0] ? rowA.index - rowB.index : rowB.index - rowA.index
-  })
-}
-
-export function defaultGroupByFn(rows, columnId) {
-  return rows.reduce((prev, row, i) => {
-    // TODO: Might want to implement a key serializer here so
-    // irregular column values can still be grouped if needed?
-    const resKey = `${row.values[columnId]}`
-    prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
-    prev[resKey].push(row)
-    return prev
-  }, {})
 }
 
 function mergeProps(...propList) {
@@ -94,11 +72,11 @@ export const makePropGetter = (hooks, meta = {}) => {
     )
 }
 
-export const reduceHooks = (hooks, initial, meta = {}) =>
+export const reduceHooks = (hooks, initial, meta = {}, allowUndefined) =>
   hooks.reduce((prev, next) => {
     const nextValue = next(prev, meta)
     if (process.env.NODE_ENV !== 'production') {
-      if (typeof nextValue === 'undefined') {
+      if (!allowUndefined && typeof nextValue === 'undefined') {
         console.info(next)
         throw new Error(
           'React Table: A reducer hook ☝️ just returned undefined! This is not allowed.'
@@ -108,9 +86,9 @@ export const reduceHooks = (hooks, initial, meta = {}) =>
     return nextValue
   }, initial)
 
-export const loopHooks = (hooks, meta = {}) =>
+export const loopHooks = (hooks, context, meta = {}) =>
   hooks.forEach(hook => {
-    const nextValue = hook(meta)
+    const nextValue = hook(context, meta)
     if (process.env.NODE_ENV !== 'production') {
       if (typeof nextValue !== 'undefined') {
         console.info(hook, nextValue)
@@ -122,6 +100,11 @@ export const loopHooks = (hooks, meta = {}) =>
   })
 
 export function ensurePluginOrder(plugins, befores, pluginName, afters) {
+  if (process.env.NODE_ENV !== 'production' && afters) {
+    throw new Error(
+      `Defining plugins in the "after" section of ensurePluginOrder is no longer supported (see plugin ${pluginName})`
+    )
+  }
   const pluginIndex = plugins.findIndex(
     plugin => plugin.pluginName === pluginName
   )
@@ -144,17 +127,6 @@ This usually means you need to need to name your plugin hook by setting the 'plu
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(
           `React Table: The ${pluginName} plugin hook must be placed after the ${before} plugin hook!`
-        )
-      }
-    }
-  })
-
-  afters.forEach(after => {
-    const afterIndex = plugins.findIndex(plugin => plugin.pluginName === after)
-    if (process.env.NODE_ENV !== 'production') {
-      if (afterIndex > -1 && afterIndex < pluginIndex) {
-        throw new Error(
-          `React Table: The ${pluginName} plugin hook must be placed before the ${after} plugin hook!`
         )
       }
     }
@@ -190,14 +162,12 @@ export function useMountedLayoutEffect(fn, deps) {
 
 export function useAsyncDebounce(defaultFn, defaultWait = 0) {
   const debounceRef = React.useRef({})
-  debounceRef.current.defaultFn = defaultFn
-  debounceRef.current.defaultWait = defaultWait
 
-  const debounce = React.useCallback(
-    async (
-      fn = debounceRef.current.defaultFn,
-      wait = debounceRef.current.defaultWait
-    ) => {
+  const getDefaultFn = useGetLatest(defaultFn)
+  const getDefaultWait = useGetLatest(defaultWait)
+
+  return React.useCallback(
+    async (...args) => {
       if (!debounceRef.current.promise) {
         debounceRef.current.promise = new Promise((resolve, reject) => {
           debounceRef.current.resolve = resolve
@@ -212,26 +182,18 @@ export function useAsyncDebounce(defaultFn, defaultWait = 0) {
       debounceRef.current.timeout = setTimeout(async () => {
         delete debounceRef.current.timeout
         try {
-          debounceRef.current.resolve(await fn())
+          debounceRef.current.resolve(await getDefaultFn()(...args))
         } catch (err) {
           debounceRef.current.reject(err)
         } finally {
           delete debounceRef.current.promise
         }
-      }, wait)
+      }, getDefaultWait())
 
       return debounceRef.current.promise
     },
-    []
+    [getDefaultFn, getDefaultWait]
   )
-
-  return debounce
-}
-
-export function useConsumeHookGetter(hooks, hookName) {
-  const getter = useGetLatest(hooks[hookName])
-  hooks[hookName] = undefined
-  return getter
 }
 
 export function makeRenderer(instance, column, meta = {}) {
@@ -239,6 +201,7 @@ export function makeRenderer(instance, column, meta = {}) {
     const Comp = typeof type === 'string' ? column[type] : type
 
     if (typeof Comp === 'undefined') {
+      console.info(column)
       throw new Error(renderErr)
     }
 
@@ -250,18 +213,22 @@ export function flexRender(Comp, props) {
   return isReactComponent(Comp) ? <Comp {...props} /> : Comp
 }
 
-function isClassComponent(component) {
+function isReactComponent(component) {
   return (
-    typeof component === 'function' &&
-    !!(() => {
-      let proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isReactComponent
-    })()
+    isClassComponent(component) ||
+    typeof component === 'function' ||
+    isExoticComponent(component)
   )
 }
 
-function isFunctionComponent(component) {
-  return typeof component === 'function'
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' &&
+    (() => {
+      const proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isReactComponent
+    })()
+  )
 }
 
 function isExoticComponent(component) {
@@ -269,13 +236,5 @@ function isExoticComponent(component) {
     typeof component === 'object' &&
     typeof component.$$typeof === 'symbol' &&
     ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
-  )
-}
-
-function isReactComponent(component) {
-  return (
-    isClassComponent(component) ||
-    isFunctionComponent(component) ||
-    isExoticComponent(component)
   )
 }

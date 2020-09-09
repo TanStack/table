@@ -6,8 +6,7 @@ import {
   ensurePluginOrder,
   useGetLatest,
   useMountedLayoutEffect,
-  useConsumeHookGetter,
-} from '../utils'
+} from '../publicUtils'
 
 const pluginName = 'useRowSelect'
 
@@ -15,13 +14,17 @@ const pluginName = 'useRowSelect'
 actions.resetSelectedRows = 'resetSelectedRows'
 actions.toggleAllRowsSelected = 'toggleAllRowsSelected'
 actions.toggleRowSelected = 'toggleRowSelected'
+actions.toggleAllPageRowsSelected = 'toggleAllPageRowsSelected'
 
 export const useRowSelect = hooks => {
   hooks.getToggleRowSelectedProps = [defaultGetToggleRowSelectedProps]
   hooks.getToggleAllRowsSelectedProps = [defaultGetToggleAllRowsSelectedProps]
+  hooks.getToggleAllPageRowsSelectedProps = [
+    defaultGetToggleAllPageRowsSelectedProps,
+  ]
   hooks.stateReducers.push(reducer)
-  hooks.useRows.push(useRows)
   hooks.useInstance.push(useInstance)
+  hooks.prepareRow.push(prepareRow)
 }
 
 useRowSelect.pluginName = pluginName
@@ -70,6 +73,25 @@ const defaultGetToggleAllRowsSelectedProps = (props, { instance }) => [
   },
 ]
 
+const defaultGetToggleAllPageRowsSelectedProps = (props, { instance }) => [
+  props,
+  {
+    onChange(e) {
+      instance.toggleAllPageRowsSelected(e.target.checked)
+    },
+    style: {
+      cursor: 'pointer',
+    },
+    checked: instance.isAllPageRowsSelected,
+    title: 'Toggle All Current Page Rows Selected',
+    indeterminate: Boolean(
+      !instance.isAllPageRowsSelected &&
+        instance.page.some(({ id }) => instance.state.selectedRowIds[id])
+    ),
+  },
+]
+
+// eslint-disable-next-line max-params
 function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
@@ -86,61 +108,67 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.toggleAllRowsSelected) {
-    const { selected } = action
-    const { isAllRowsSelected, flatRowsById } = instance
+    const { value: setSelected } = action
+    const {
+      isAllRowsSelected,
+      rowsById,
+      nonGroupedRowsById = rowsById,
+    } = instance
 
     const selectAll =
-      typeof selected !== 'undefined' ? selected : !isAllRowsSelected
+      typeof setSelected !== 'undefined' ? setSelected : !isAllRowsSelected
+
+    // Only remove/add the rows that are visible on the screen
+    //  Leave all the other rows that are selected alone.
+    const selectedRowIds = Object.assign({}, state.selectedRowIds)
 
     if (selectAll) {
-      const selectedRowIds = {}
-
-      Object.keys(flatRowsById).forEach(rowId => {
+      Object.keys(nonGroupedRowsById).forEach(rowId => {
         selectedRowIds[rowId] = true
       })
-
-      return {
-        ...state,
-        selectedRowIds,
-      }
+    } else {
+      Object.keys(nonGroupedRowsById).forEach(rowId => {
+        delete selectedRowIds[rowId]
+      })
     }
 
     return {
       ...state,
-      selectedRowIds: {},
+      selectedRowIds,
     }
   }
 
   if (action.type === actions.toggleRowSelected) {
-    const { id, selected } = action
-    const { flatGroupedRowsById } = instance
+    const { id, value: setSelected } = action
+    const { rowsById, selectSubRows = true, getSubRows } = instance
 
     // Join the ids of deep rows
     // to make a key, then manage all of the keys
     // in a flat object
-    const row = flatGroupedRowsById[id]
+    const row = rowsById[id]
     const isSelected = row.isSelected
-    const shouldExist = typeof selected !== 'undefined' ? selected : !isSelected
+    const shouldExist =
+      typeof setSelected !== 'undefined' ? setSelected : !isSelected
 
     if (isSelected === shouldExist) {
       return state
     }
 
-    let newSelectedRowIds = { ...state.selectedRowIds }
+    const newSelectedRowIds = { ...state.selectedRowIds }
 
     const handleRowById = id => {
-      const row = flatGroupedRowsById[id]
+      const row = rowsById[id]
 
       if (!row.isGrouped) {
-        if (!isSelected && shouldExist) {
+        if (shouldExist) {
           newSelectedRowIds[id] = true
-        } else if (isSelected && !shouldExist) {
+        } else {
           delete newSelectedRowIds[id]
         }
       }
 
-      if (row.subRows) {
-        return row.subRows.forEach(row => handleRowById(row.id))
+      if (selectSubRows && getSubRows(row)) {
+        return getSubRows(row).forEach(row => handleRowById(row.id))
       }
     }
 
@@ -151,18 +179,77 @@ function reducer(state, action, previousState, instance) {
       selectedRowIds: newSelectedRowIds,
     }
   }
+
+  if (action.type === actions.toggleAllPageRowsSelected) {
+    const { value: setSelected } = action
+    const {
+      page,
+      rowsById,
+      selectSubRows = true,
+      isAllPageRowsSelected,
+      getSubRows,
+    } = instance
+
+    const selectAll =
+      typeof setSelected !== 'undefined' ? setSelected : !isAllPageRowsSelected
+
+    const newSelectedRowIds = { ...state.selectedRowIds }
+
+    const handleRowById = id => {
+      const row = rowsById[id]
+
+      if (!row.isGrouped) {
+        if (selectAll) {
+          newSelectedRowIds[id] = true
+        } else {
+          delete newSelectedRowIds[id]
+        }
+      }
+
+      if (selectSubRows && getSubRows(row)) {
+        return getSubRows(row).forEach(row => handleRowById(row.id))
+      }
+    }
+
+    page.forEach(row => handleRowById(row.id))
+
+    return {
+      ...state,
+      selectedRowIds: newSelectedRowIds,
+    }
+  }
+  return state
 }
 
-function useRows(rows, { instance }) {
+function useInstance(instance) {
   const {
+    data,
+    rows,
+    getHooks,
+    plugins,
+    rowsById,
+    nonGroupedRowsById = rowsById,
+    autoResetSelectedRows = true,
     state: { selectedRowIds },
+    selectSubRows = true,
+    dispatch,
+    page,
+    getSubRows,
   } = instance
 
-  instance.selectedFlatRows = React.useMemo(() => {
+  ensurePluginOrder(
+    plugins,
+    ['useFilters', 'useGroupBy', 'useSortBy', 'useExpanded', 'usePagination'],
+    'useRowSelect'
+  )
+
+  const selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows = []
 
     rows.forEach(row => {
-      const isSelected = getRowIsSelected(row, selectedRowIds)
+      const isSelected = selectSubRows
+        ? getRowIsSelected(row, selectedRowIds, getSubRows)
+        : !!selectedRowIds[row.id]
       row.isSelected = !!isSelected
       row.isSomeSelected = isSelected === null
 
@@ -172,50 +259,23 @@ function useRows(rows, { instance }) {
     })
 
     return selectedFlatRows
-  }, [rows, selectedRowIds])
-
-  return rows
-}
-
-function useInstance(instance) {
-  const {
-    data,
-    hooks,
-    plugins,
-    flatRows,
-    autoResetSelectedRows = true,
-    state: { selectedRowIds },
-    dispatch,
-  } = instance
-
-  ensurePluginOrder(
-    plugins,
-    ['useFilters', 'useGroupBy', 'useSortBy'],
-    'useRowSelect',
-    []
-  )
-
-  const [flatRowsById, flatGroupedRowsById] = React.useMemo(() => {
-    const all = {}
-    const grouped = {}
-
-    flatRows.forEach(row => {
-      if (!row.isGrouped) {
-        all[row.id] = row
-      }
-      grouped[row.id] = row
-    })
-
-    return [all, grouped]
-  }, [flatRows])
+  }, [rows, selectSubRows, selectedRowIds, getSubRows])
 
   let isAllRowsSelected = Boolean(
-    Object.keys(flatRowsById).length && Object.keys(selectedRowIds).length
+    Object.keys(nonGroupedRowsById).length && Object.keys(selectedRowIds).length
   )
 
+  let isAllPageRowsSelected = isAllRowsSelected
+
   if (isAllRowsSelected) {
-    if (Object.keys(flatRowsById).some(id => !selectedRowIds[id])) {
+    if (Object.keys(nonGroupedRowsById).some(id => !selectedRowIds[id])) {
       isAllRowsSelected = false
+    }
+  }
+
+  if (!isAllRowsSelected) {
+    if (page && page.length && page.some(({ id }) => !selectedRowIds[id])) {
+      isAllPageRowsSelected = false
     }
   }
 
@@ -227,64 +287,72 @@ function useInstance(instance) {
     }
   }, [dispatch, data])
 
-  const toggleAllRowsSelected = selected =>
-    dispatch({ type: actions.toggleAllRowsSelected, selected })
+  const toggleAllRowsSelected = React.useCallback(
+    value => dispatch({ type: actions.toggleAllRowsSelected, value }),
+    [dispatch]
+  )
 
-  const toggleRowSelected = (id, selected) =>
-    dispatch({ type: actions.toggleRowSelected, id, selected })
+  const toggleAllPageRowsSelected = React.useCallback(
+    value => dispatch({ type: actions.toggleAllPageRowsSelected, value }),
+    [dispatch]
+  )
+
+  const toggleRowSelected = React.useCallback(
+    (id, value) => dispatch({ type: actions.toggleRowSelected, id, value }),
+    [dispatch]
+  )
 
   const getInstance = useGetLatest(instance)
 
-  const getToggleAllRowsSelectedPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleAllRowsSelectedProps'
-  )
-
   const getToggleAllRowsSelectedProps = makePropGetter(
-    getToggleAllRowsSelectedPropsHooks(),
+    getHooks().getToggleAllRowsSelectedProps,
     { instance: getInstance() }
   )
 
-  const getToggleRowSelectedPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleRowSelectedProps'
+  const getToggleAllPageRowsSelectedProps = makePropGetter(
+    getHooks().getToggleAllPageRowsSelectedProps,
+    { instance: getInstance() }
   )
 
-  hooks.prepareRow.push(row => {
-    row.toggleRowSelected = set => toggleRowSelected(row.id, set)
-
-    row.getToggleRowSelectedProps = makePropGetter(
-      getToggleRowSelectedPropsHooks(),
-      { instance: getInstance(), row }
-    )
-  })
-
   Object.assign(instance, {
-    flatRowsById,
-    flatGroupedRowsById,
+    selectedFlatRows,
+    isAllRowsSelected,
+    isAllPageRowsSelected,
     toggleRowSelected,
     toggleAllRowsSelected,
     getToggleAllRowsSelectedProps,
-    isAllRowsSelected,
+    getToggleAllPageRowsSelectedProps,
+    toggleAllPageRowsSelected,
   })
 }
 
-function getRowIsSelected(row, selectedRowIds) {
+function prepareRow(row, { instance }) {
+  row.toggleRowSelected = set => instance.toggleRowSelected(row.id, set)
+
+  row.getToggleRowSelectedProps = makePropGetter(
+    instance.getHooks().getToggleRowSelectedProps,
+    { instance: instance, row }
+  )
+}
+
+function getRowIsSelected(row, selectedRowIds, getSubRows) {
   if (selectedRowIds[row.id]) {
     return true
   }
 
-  if (row.subRows && row.subRows.length) {
+  const subRows = getSubRows(row)
+
+  if (subRows && subRows.length) {
     let allChildrenSelected = true
     let someSelected = false
 
-    row.subRows.forEach(subRow => {
+    subRows.forEach(subRow => {
       // Bail out early if we know both of these
       if (someSelected && !allChildrenSelected) {
         return
       }
 
-      if (getRowIsSelected(subRow, selectedRowIds)) {
+      if (getRowIsSelected(subRow, selectedRowIds, getSubRows)) {
         someSelected = true
       } else {
         allChildrenSelected = false

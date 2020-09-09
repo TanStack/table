@@ -4,9 +4,9 @@ import {
   actions,
   functionalUpdate,
   useGetLatest,
-  useConsumeHookGetter,
   makePropGetter,
-} from '../utils'
+  useMountedLayoutEffect,
+} from '../publicUtils'
 
 actions.resetHiddenColumns = 'resetHiddenColumns'
 actions.toggleHideColumn = 'toggleHideColumn'
@@ -104,7 +104,7 @@ function reducer(state, action, previousState, instance) {
 
     return {
       ...state,
-      hiddenColumns: shouldAll ? instance.flatColumns.map(d => d.id) : [],
+      hiddenColumns: shouldAll ? instance.allColumns.map(d => d.id) : [],
     }
   }
 }
@@ -148,15 +148,18 @@ function useInstanceBeforeDimensions(instance) {
 
 function useInstance(instance) {
   const {
+    columns,
     flatHeaders,
     dispatch,
-    flatColumns,
+    allColumns,
+    getHooks,
     state: { hiddenColumns },
+    autoResetHiddenColumns = true,
   } = instance
 
   const getInstance = useGetLatest(instance)
 
-  const allColumnsHidden = flatColumns.length === hiddenColumns.length
+  const allColumnsHidden = allColumns.length === hiddenColumns.length
 
   const toggleHideColumn = React.useCallback(
     (columnId, value) =>
@@ -174,21 +177,9 @@ function useInstance(instance) {
     [dispatch]
   )
 
-  // Snapshot hook and disallow more from being added
-  const getToggleHideAllColumnsPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleHideAllColumnsProps'
-  )
-
   const getToggleHideAllColumnsProps = makePropGetter(
-    getToggleHideAllColumnsPropsHooks(),
+    getHooks().getToggleHideAllColumnsProps,
     { instance: getInstance() }
-  )
-
-  // Snapshot hook and disallow more from being added
-  const getToggleHiddenPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getToggleHiddenProps'
   )
 
   flatHeaders.forEach(column => {
@@ -200,11 +191,22 @@ function useInstance(instance) {
       })
     }
 
-    column.getToggleHiddenProps = makePropGetter(getToggleHiddenPropsHooks(), {
-      instance: getInstance(),
-      column,
-    })
+    column.getToggleHiddenProps = makePropGetter(
+      getHooks().getToggleHiddenProps,
+      {
+        instance: getInstance(),
+        column,
+      }
+    )
   })
+
+  const getAutoResetHiddenColumns = useGetLatest(autoResetHiddenColumns)
+
+  useMountedLayoutEffect(() => {
+    if (getAutoResetHiddenColumns()) {
+      dispatch({ type: actions.resetHiddenColumns })
+    }
+  }, [dispatch, columns])
 
   Object.assign(instance, {
     allColumnsHidden,

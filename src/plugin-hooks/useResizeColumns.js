@@ -1,11 +1,15 @@
+import React from 'react'
+
 import {
   actions,
   defaultColumn,
-  getFirstDefined,
   makePropGetter,
   useGetLatest,
-} from '../utils'
-import { useConsumeHookGetter } from '../publicUtils'
+  ensurePluginOrder,
+  useMountedLayoutEffect,
+} from '../publicUtils'
+
+import { getFirstDefined, passiveEventSupported } from '../utils'
 
 // Default Column
 defaultColumn.canResize = true
@@ -14,6 +18,7 @@ defaultColumn.canResize = true
 actions.columnStartResizing = 'columnStartResizing'
 actions.columnResizing = 'columnResizing'
 actions.columnDoneResizing = 'columnDoneResizing'
+actions.resetResize = 'resetResize'
 
 export const useResizeColumns = hooks => {
   hooks.getResizerProps = [defaultGetResizerProps]
@@ -23,6 +28,7 @@ export const useResizeColumns = hooks => {
     },
   })
   hooks.stateReducers.push(reducer)
+  hooks.useInstance.push(useInstance)
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions)
 }
 
@@ -93,12 +99,19 @@ const defaultGetResizerProps = (props, { instance, header }) => {
     const events = isTouchEvent
       ? handlersAndEvents.touch
       : handlersAndEvents.mouse
-    document.addEventListener(events.moveEvent, events.moveHandler, {
-      passive: false,
-    })
-    document.addEventListener(events.upEvent, events.upHandler, {
-      passive: false,
-    })
+    const passiveIfSupported = passiveEventSupported()
+      ? { passive: false }
+      : false
+    document.addEventListener(
+      events.moveEvent,
+      events.moveHandler,
+      passiveIfSupported
+    )
+    document.addEventListener(
+      events.upEvent,
+      events.upHandler,
+      passiveIfSupported
+    )
 
     dispatch({
       type: actions.columnStartResizing,
@@ -118,6 +131,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
         cursor: 'ew-resize',
       },
       draggable: false,
+      role: 'separator',
     },
   ]
 }
@@ -131,6 +145,15 @@ function reducer(state, action) {
         columnWidths: {},
       },
       ...state,
+    }
+  }
+
+  if (action.type === actions.resetResize) {
+    return {
+      ...state,
+      columnResizing: {
+        columnWidths: {},
+      },
     }
   }
 
@@ -193,15 +216,11 @@ const useInstanceBeforeDimensions = instance => {
   const {
     flatHeaders,
     disableResizing,
+    getHooks,
     state: { columnResizing },
   } = instance
 
   const getInstance = useGetLatest(instance)
-
-  const getResizerPropsHooks = useConsumeHookGetter(
-    getInstance().hooks,
-    'getResizerProps'
-  )
 
   flatHeaders.forEach(header => {
     const canResize = getFirstDefined(
@@ -211,15 +230,40 @@ const useInstanceBeforeDimensions = instance => {
     )
 
     header.canResize = canResize
-    header.width = columnResizing.columnWidths[header.id] || header.width
+    header.width =
+      columnResizing.columnWidths[header.id] ||
+      header.originalWidth ||
+      header.width
     header.isResizing = columnResizing.isResizingColumn === header.id
 
     if (canResize) {
-      header.getResizerProps = makePropGetter(getResizerPropsHooks(), {
+      header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
         instance: getInstance(),
         header,
       })
     }
+  })
+}
+
+function useInstance(instance) {
+  const { plugins, dispatch, autoResetResize = true, columns } = instance
+
+  ensurePluginOrder(plugins, ['useAbsoluteLayout'], 'useResizeColumns')
+
+  const getAutoResetResize = useGetLatest(autoResetResize)
+  useMountedLayoutEffect(() => {
+    if (getAutoResetResize()) {
+      dispatch({ type: actions.resetResize })
+    }
+  }, [columns])
+
+  const resetResizing = React.useCallback(
+    () => dispatch({ type: actions.resetResize }),
+    [dispatch]
+  )
+
+  Object.assign(instance, {
+    resetResizing,
   })
 }
 

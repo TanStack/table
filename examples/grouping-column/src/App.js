@@ -65,7 +65,7 @@ function Table({ columns, data }) {
     // Our custom plugin to add the expander column
     hooks => {
       hooks.useControlledState.push(useControlledState)
-      hooks.flatColumns.push((columns, { instance }) => {
+      hooks.visibleColumns.push((columns, { instance }) => {
         if (!instance.state.groupBy.length) {
           return columns
         }
@@ -74,9 +74,9 @@ function Table({ columns, data }) {
           {
             id: 'expander', // Make sure it has an ID
             // Build our expander column
-            Header: ({ flatColumns, state: { groupBy } }) => {
+            Header: ({ allColumns, state: { groupBy } }) => {
               return groupBy.map(columnId => {
-                const column = flatColumns.find(d => d.id === columnId)
+                const column = allColumns.find(d => d.id === columnId)
 
                 return (
                   <span {...column.getHeaderProps()}>
@@ -97,7 +97,7 @@ function Table({ columns, data }) {
 
                 return (
                   <span
-                    {...row.getExpandedToggleProps({
+                    {...row.getToggleRowExpandedProps({
                       style: {
                         // We can even use the row.depth property
                         // and paddingLeft to indicate the depth
@@ -122,7 +122,7 @@ function Table({ columns, data }) {
   )
 
   // We don't want to render all of the rows for this example, so cap
-  // it at 20 for this use case
+  // it at 100 for this use case
   const firstPageRows = rows.slice(0, 100)
 
   return (
@@ -166,7 +166,7 @@ function Table({ columns, data }) {
                           ? '#0aff0082'
                           : cell.isAggregated
                           ? '#ffa50078'
-                          : cell.isRepeatedValue
+                          : cell.isPlaceholder
                           ? '#ff000042'
                           : 'white',
                       }}
@@ -175,7 +175,7 @@ function Table({ columns, data }) {
                         ? // If the cell is aggregated, use the Aggregated
                           // renderer for cell
                           cell.render('Aggregated')
-                        : cell.isRepeatedValue
+                        : cell.isPlaceholder
                         ? null // For cells with repeated values, render null
                         : // Otherwise, just render the regular cell
                           cell.render('Cell')}
@@ -225,20 +225,20 @@ function Legend() {
           padding: '0.5rem',
         }}
       >
-        Repeated Value
+        Placeholder
       </span>
     </div>
   )
 }
 
 // This is a custom aggregator that
-// takes in an array of values and
+// takes in an array of leaf values and
 // returns the rounded median
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
+function roundedMedian(leafValues) {
+  let min = leafValues[0] || 0
+  let max = leafValues[0] || 0
 
-  values.forEach(value => {
+  leafValues.forEach(value => {
     min = Math.min(min, value)
     max = Math.max(max, value)
   })
@@ -259,8 +259,8 @@ function App() {
             // count the total rows being aggregated,
             // then sum any of those counts if they are
             // aggregated further
-            aggregate: ['sum', 'count'],
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
+            aggregate: 'count',
+            Aggregated: ({ value }) => `${value} Names`,
           },
           {
             Header: 'Last Name',
@@ -269,8 +269,8 @@ function App() {
             // first count the UNIQUE values from the rows
             // being aggregated, then sum those counts if
             // they are aggregated further
-            aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
+            aggregate: 'uniqueCount',
+            Aggregated: ({ value }) => `${value} Unique Names`,
           },
         ],
       },
@@ -282,14 +282,14 @@ function App() {
             accessor: 'age',
             // Aggregate the average age of visitors
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
+            Aggregated: ({ value }) => `${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             // Aggregate the sum of all visits
             aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
+            Aggregated: ({ value }) => `${value} (total)`,
           },
           {
             Header: 'Status',
@@ -300,7 +300,7 @@ function App() {
             accessor: 'progress',
             // Use our custom roundedMedian aggregator
             aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
+            Aggregated: ({ value }) => `${value} (med)`,
           },
         ],
       },

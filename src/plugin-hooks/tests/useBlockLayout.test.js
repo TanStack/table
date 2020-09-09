@@ -31,7 +31,7 @@ const data = [
 ]
 
 const defaultColumn = {
-  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
+  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
   width: 200,
   minWidth: 100,
   maxWidth: 300,
@@ -136,7 +136,28 @@ function App() {
 }
 
 test('renders a table', () => {
-  const { asFragment } = render(<App />)
+  const rtl = render(<App />)
 
-  expect(asFragment()).toMatchSnapshot()
+  expect(
+    rtl
+      .getAllByRole('columnheader')
+      .every(d => d.style.display === 'inline-block')
+  ).toBe(true)
+
+  expect(rtl.getAllByRole('row').every(d => d.style.display === 'flex')).toBe(
+    true
+  )
+
+  expect(
+    rtl.getAllByRole('columnheader').map(d => d.style.width)
+  ).toStrictEqual([
+    '550px',
+    '850px',
+    '250px',
+    '300px',
+    '300px',
+    '150px',
+    '200px',
+    '200px',
+  ])
 })

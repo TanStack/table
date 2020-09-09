@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
 import { useGroupBy } from '../useGroupBy'
 import { useExpanded } from '../useExpanded'
@@ -30,6 +30,14 @@ const data = [
     progress: 10,
   },
   {
+    firstName: 'joe',
+    lastName: 'dirt',
+    age: 20,
+    visits: 5,
+    status: 'Complicated',
+    progress: 97,
+  },
+  {
     firstName: 'jaylen',
     lastName: 'linsley',
     age: 26,
@@ -40,7 +48,7 @@ const data = [
 ]
 
 const defaultColumn = {
-  Cell: ({ cell: { value }, column: { id } }) => `${id}: ${value}`,
+  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
   Filter: ({ filterValue, setFilter }) => (
     <input
       value={filterValue || ''}
@@ -82,7 +90,7 @@ function Table({ columns, data }) {
                 {column.canGroupBy ? (
                   // If the column can be grouped, let's add a toggle
                   <span {...column.getGroupByToggleProps()}>
-                    {column.isGrouped ? '🛑' : '👊'}
+                    {column.isGrouped ? 'Ungroup' : 'Group'} {column.id}
                   </span>
                 ) : null}
                 {column.render('Header')}
@@ -105,7 +113,7 @@ function Table({ columns, data }) {
                             style={{
                               cursor: 'pointer',
                             }}
-                            onClick={() => row.toggleExpanded()}
+                            onClick={() => row.toggleRowExpanded()}
                           >
                             {row.isExpanded ? '👇' : '👉'}
                           </span>
@@ -113,7 +121,7 @@ function Table({ columns, data }) {
                         </>
                       ) : cell.isAggregated ? (
                         cell.render('Aggregated')
-                      ) : cell.isRepeatedValue ? null : (
+                      ) : cell.isPlaceholder ? null : (
                         cell.render('Cell')
                       )}
                     </td>
@@ -127,11 +135,14 @@ function Table({ columns, data }) {
   )
 }
 
-function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
+// This is a custom aggregator that
+// takes in an array of leaf values and
+// returns the rounded median
+function roundedMedian(leafValues) {
+  let min = leafValues[0] || 0
+  let max = leafValues[0] || 0
 
-  values.forEach(value => {
+  leafValues.forEach(value => {
     min = Math.min(min, value)
     max = Math.max(max, value)
   })
@@ -148,14 +159,16 @@ function App() {
           {
             Header: 'First Name',
             accessor: 'firstName',
-            aggregate: ['sum', 'count'],
-            Aggregated: ({ cell: { value } }) => `${value} Names`,
+            aggregate: 'count',
+            Aggregated: ({ value }) =>
+              `First Name Aggregated: ${value} Names`,
           },
           {
             Header: 'Last Name',
             accessor: 'lastName',
-            aggregate: ['sum', 'uniqueCount'],
-            Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
+            aggregate: 'uniqueCount',
+            Aggregated: ({ value }) =>
+              `Last Name Aggregated: ${value} Unique Names`,
           },
         ],
       },
@@ -166,23 +179,62 @@ function App() {
             Header: 'Age',
             accessor: 'age',
             aggregate: 'average',
-            Aggregated: ({ cell: { value } }) => `${value} (avg)`,
+            Aggregated: ({ value }) =>
+              `Age Aggregated: ${value} (avg)`,
           },
           {
             Header: 'Visits',
             accessor: 'visits',
             aggregate: 'sum',
-            Aggregated: ({ cell: { value } }) => `${value} (total)`,
+            Aggregated: ({ value }) =>
+              `Visits Aggregated: ${value} (total)`,
+          },
+          {
+            Header: 'Min Visits',
+            id: 'minVisits',
+            accessor: 'visits',
+            aggregate: 'min',
+            Aggregated: ({ value }) =>
+              `Visits Aggregated: ${value} (min)`,
+          },
+          {
+            Header: 'Max Visits',
+            id: 'maxVisits',
+            accessor: 'visits',
+            aggregate: 'max',
+            Aggregated: ({ value }) =>
+              `Visits Aggregated: ${value} (max)`,
+          },
+          {
+            Header: 'Min/Max Visits',
+            id: 'minMaxVisits',
+            accessor: 'visits',
+            aggregate: 'minMax',
+            Aggregated: ({ value }) =>
+              `Visits Aggregated: ${value} (minMax)`,
           },
           {
             Header: 'Status',
             accessor: 'status',
+            aggregate: 'unique',
+            Aggregated: ({ value }) =>
+              `Visits Aggregated: ${value.join(', ')} (unique)`,
           },
           {
-            Header: 'Profile Progress',
+            Header: 'Profile Progress (Median)',
             accessor: 'progress',
+            id: 'progress',
+            aggregate: 'median',
+            Aggregated: ({ value }) =>
+              `Process Aggregated: ${value} (median)`,
+          },
+          {
+            Header: 'Profile Progress (Rounded Median)',
+            accessor: 'progress',
+            id: 'progressRounded',
             aggregate: roundedMedian,
-            Aggregated: ({ cell: { value } }) => `${value} (med)`,
+            Aggregated: ({ value }) =>
+              `Process Aggregated: ${value} (rounded median)`,
           },
         ],
       },
@@ -194,20 +246,26 @@ function App() {
 }
 
 test('renders a groupable table', () => {
-  const { getAllByText, asFragment } = render(<App />)
+  const rendered = render(<App />)
 
-  const groupByButtons = getAllByText('👊')
+  fireEvent.click(rendered.getByText('Group lastName'))
 
-  const beforeGrouping = asFragment()
+  rendered.getByText('lastName: linsley (2)')
 
-  fireEvent.click(groupByButtons[1])
+  fireEvent.click(rendered.getByText('Group visits'))
 
-  const afterGrouping1 = asFragment()
+  fireEvent.click(rendered.getByText('Ungroup lastName'))
 
-  fireEvent.click(groupByButtons[3])
+  rendered.getByText('visits: 100 (1)')
 
-  const afterGrouping2 = asFragment()
+  fireEvent.click(rendered.getByText('Ungroup visits'))
 
-  expect(beforeGrouping).toMatchDiffSnapshot(afterGrouping1)
-  expect(afterGrouping1).toMatchDiffSnapshot(afterGrouping2)
+  fireEvent.click(rendered.getByText('Group firstName'))
+
+  rendered.getByText('firstName: tanner (1)')
+
+  rendered.debugDiff(false)
+  fireEvent.click(rendered.getByText('Group age'))
+
+  rendered.getByText('Last Name Aggregated: 2 Unique Names')
 })
