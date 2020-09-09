@@ -7,8 +7,8 @@ import {
   useGetLatest,
 } from '../publicUtils'
 
-const defaultInitialRowStateAccessor = originalRow => ({})
-const defaultInitialCellStateAccessor = originalRow => ({})
+const defaultInitialRowStateAccessor = row => ({})
+const defaultInitialCellStateAccessor = cell => ({})
 
 // Actions
 actions.setRowState = 'setRowState'
@@ -50,7 +50,7 @@ function reducer(state, action, previousState, instance) {
     const oldRowState =
       typeof state.rowState[rowId] !== 'undefined'
         ? state.rowState[rowId]
-        : initialRowStateAccessor(rowsById[rowId].original)
+        : initialRowStateAccessor(rowsById[rowId])
 
     return {
       ...state,
@@ -67,12 +67,14 @@ function reducer(state, action, previousState, instance) {
     const oldRowState =
       typeof state.rowState[rowId] !== 'undefined'
         ? state.rowState[rowId]
-        : initialRowStateAccessor(rowsById[rowId].original)
+        : initialRowStateAccessor(rowsById[rowId])
 
     const oldCellState =
       typeof oldRowState?.cellState?.[columnId] !== 'undefined'
         ? oldRowState.cellState[columnId]
-        : initialCellStateAccessor(rowsById[rowId].original)
+        : initialCellStateAccessor(
+            rowsById[rowId]?.cells?.find(cell => cell.column.id === columnId)
+          )
 
     return {
       ...state,
@@ -135,11 +137,11 @@ function prepareRow(row, { instance }) {
     state: { rowState },
   } = instance
 
-  if (row.original) {
+  if (row) {
     row.state =
       typeof rowState[row.id] !== 'undefined'
         ? rowState[row.id]
-        : initialRowStateAccessor(row.original)
+        : initialRowStateAccessor(row)
 
     row.setState = updater => {
       return instance.setRowState(row.id, updater)
@@ -153,7 +155,7 @@ function prepareRow(row, { instance }) {
       cell.state =
         typeof row.state.cellState[cell.column.id] !== 'undefined'
           ? row.state.cellState[cell.column.id]
-          : initialCellStateAccessor(row.original)
+          : initialCellStateAccessor(cell)
 
       cell.setState = updater => {
         return instance.setCellState(row.id, cell.column.id, updater)
