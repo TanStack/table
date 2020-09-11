@@ -195,6 +195,7 @@ function useInstance(instance) {
     manualSortBy,
     defaultCanSort,
     disableSortBy,
+    disableSubRowSortBy = false,
     flatHeaders,
     state: { sortBy },
     dispatch,
@@ -343,7 +344,9 @@ function useInstance(instance) {
           sortedFlatRows.push(row.subRows[0])
           return
         }
-        row.subRows = sortData(row.subRows)
+        if (!disableSubRowSortBy) {
+          row.subRows = sortData(row.subRows)
+        }
       })
 
       return sortedData
@@ -358,6 +361,7 @@ function useInstance(instance) {
     allColumns,
     orderByFn,
     userSortTypes,
+    disableSubRowSortBy,
   ])
 
   const getAutoResetSortBy = useGetLatest(autoResetSortBy)

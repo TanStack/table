@@ -21,6 +21,8 @@ The following options are supported via the main options object passed to `useTa
   - Enables sorting detection functionality, but does not automatically perform row sorting. Turn this on if you wish to implement your own sorting outside of the table (eg. server-side or manual row grouping/nesting)
 - `disableSortBy: Bool`
   - Disables sorting for every column in the entire table.
+- `disableSubRowSortBy: Bool`
+  - Disables sorting on sub rows. Especially helpful for tables with a high M\*N for rows and subrows.
 - `defaultCanSort: Bool`
   - Optional
   - Defaults to `false`
