@@ -7,6 +7,7 @@
     "eject": "rescripts eject"
   },
   "dependencies": {
+    "clsx": "^1.1.1",
     "namor": "^1.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

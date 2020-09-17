@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import styled from 'styled-components'
 import { useTable, useBlockLayout, useResizeColumns } from 'react-table'
 
@@ -8,6 +9,7 @@ const Styles = styled.div`
   padding: 1rem;
 
   .table {
+    margin-top: 8px;
     display: inline-block;
     border-spacing: 0;
     border: 1px solid black;
@@ -51,12 +53,18 @@ const Styles = styled.div`
         &.isResizing {
           background: red;
         }
+        &.rtl {
+          left: 0;
+          right: auto;
+          transform: translateX(-50%);
+        }
       }
     }
   }
 `
 
 function Table({ columns, data }) {
+  const [rtl, setRtl] = React.useState(false)
   const defaultColumn = React.useMemo(
     () => ({
       minWidth: 30,
@@ -79,13 +87,23 @@ function Table({ columns, data }) {
       columns,
       data,
       defaultColumn,
+      rtl,
     },
     useBlockLayout,
     useResizeColumns
   )
 
+  const toggleRTL = () => {
+    setRtl(!rtl)
+  }
+
+  React.useEffect(() => {
+    document.body.dir = rtl ? 'rtl' : 'ltr'
+  }, [rtl])
+
   return (
     <>
+      <button onClick={toggleRTL}>{rtl ? 'LTR' : 'RTL'} Direction</button>{' '}
       <button onClick={resetResizing}>Reset Resizing</button>
       <div>
         <div {...getTableProps()} className="table">
@@ -98,9 +116,10 @@ function Table({ columns, data }) {
                     {/* Use column.getResizerProps to hook up the events correctly */}
                     <div
                       {...column.getResizerProps()}
-                      className={`resizer ${
-                        column.isResizing ? 'isResizing' : ''
-                      }`}
+                      className={clsx('resizer', {
+                        rtl,
+                        isResizing: column.isResizing,
+                      })}
                     />
                   </div>
                 ))}
@@ -126,7 +145,7 @@ function Table({ columns, data }) {
           </div>
         </div>
       </div>
-      <pre>
+      <pre dir="ltr">
         <code>{JSON.stringify(state, null, 2)}</code>
       </pre>
     </>
