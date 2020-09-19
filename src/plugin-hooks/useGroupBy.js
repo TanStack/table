@@ -395,6 +395,8 @@ function useInstance(instance) {
     }
   }, [dispatch, manualGroupBy ? null : data])
 
+  const bindedRowsById = Object.assign({}, rowsById, groupedRowsById);
+
   Object.assign(instance, {
     preGroupedRows: rows,
     preGroupedFlatRow: flatRows,
@@ -408,7 +410,7 @@ function useInstance(instance) {
     nonGroupedRowsById,
     rows: groupedRows,
     flatRows: groupedFlatRows,
-    rowsById: groupedRowsById,
+    rowsById: bindedRowsById,
     toggleGroupBy,
     setGroupBy,
   })
