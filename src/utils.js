@@ -247,28 +247,32 @@ export function flattenBy(arr, key) {
   return flat
 }
 
-export function expandRows(
-  rows,
-  { manualExpandedKey, expanded, expandSubRows = true }
+function expandRows(
+	rows,
+	{ manualExpandedKey, expanded, expandSubRows = true }
 ) {
-  const expandedRows = []
+	const expandedRows = [];
 
-  const handleRow = row => {
-    row.isExpanded =
-      (row.original && row.original[manualExpandedKey]) || expanded[row.id]
+	const handleRow = (row, addToExpandedRows = true) => {
+		row.isExpanded =
+			(row.original && row.original[manualExpandedKey]) || expanded[row.id];
 
-    row.canExpand = row.subRows && !!row.subRows.length
+		row.canExpand = row.subRows && !!row.subRows.length;
 
-    expandedRows.push(row)
+		if (addToExpandedRows) {
+			expandedRows.push(row);
+		}
 
-    if (expandSubRows && row.subRows && row.subRows.length && row.isExpanded) {
-      row.subRows.forEach(handleRow)
-    }
-  }
+		if (row.subRows && row.subRows.length && row.isExpanded) {
+			row.subRows.forEach((row) => handleRow(row, expandSubRows));
+		}
+	};
 
-  rows.forEach(handleRow)
+	rows.forEach((row) => handleRow(row));
 
-  return expandedRows
+	console.log("foidn");
+	rows.forEach((row) => console.log("---row", row));
+	return expandedRows;
 }
 
 export function getFilterMethod(filter, userFilterTypes, filterTypes) {
