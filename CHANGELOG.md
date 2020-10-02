@@ -2,7 +2,7 @@
 
 ## 7.0.5
 
-- Added semantic release support. So no more changelog entries here! See ya!
+- Added semantic release support. So no more changelog entries here - see [Releases](https://github.com/tannerlinsley/react-table/releases) instead! See ya!
 
 ## 7.0.4
 
