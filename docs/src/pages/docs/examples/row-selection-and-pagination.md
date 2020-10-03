@@ -4,8 +4,8 @@ title: Row Selection and Pagination
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
 
 <iframe
   src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination?autoresize=1&fontsize=14&theme=dark"
