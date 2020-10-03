@@ -91,6 +91,8 @@ The following values are provided to the table `instance`:
   - The array of rows that were originally sorted.
 - `toggleSortBy: Function(ColumnId: String, descending: Bool, isMulti: Bool) => void`
   - This function can be used to programmatically toggle the sorting for any specific column
+- `setSortBy: Function(sortBy: Array<Object<id: columnId, desc: Bool = true>>) => void`
+  - This function can be use to programmatically set the sortBy for the table instance.
 
 ### Column Properties
 
