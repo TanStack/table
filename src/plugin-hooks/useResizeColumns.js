@@ -128,7 +128,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
       onMouseDown: e => e.persist() || onResizeStart(e, header),
       onTouchStart: e => e.persist() || onResizeStart(e, header),
       style: {
-        cursor: 'ew-resize',
+        cursor: 'col-resize',
       },
       draggable: false,
       role: 'separator',
