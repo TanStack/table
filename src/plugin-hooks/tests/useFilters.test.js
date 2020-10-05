@@ -391,3 +391,89 @@ test('does not filter columns with GlobalFilter if marked disableGlobalFilter', 
       .map(row => Array.from(row.children)[0].textContent)
   ).toEqual(['firstName: tanner', 'firstName: derek', 'firstName: jaylen'])
 })
+
+test('test custom filter type', () => {
+  const columns = [
+    {
+      Header: 'Name',
+      columns: [
+        {
+          Header: 'First Name',
+          accessor: 'firstName',
+          disableFilters: true,
+        },
+        {
+          Header: 'Last Name',
+          accessor: 'lastName',
+          disableFilters: true,
+        },
+      ],
+    },
+    {
+      Header: 'Status',
+      columns: [
+        {
+          Header: 'In Relationship',
+          id: 'inRelationship',
+          accessor: ({status}) => status === 'In Relationship',
+          Filter: ({column: {filterValue, setFilter}}) => {
+            const onClick = () => {
+              if (typeof filterValue === 'undefined') {
+                setFilter(false);
+              } else {
+                setFilter(undefined);
+              }
+            }
+
+            return <button onClick={onClick}>
+              {typeof filterValue === 'undefined' ? 'Any status' : 'Single'}
+            </button>
+
+          },
+          // could use 'exact' filter type, but we want to use a custom filter method for this test
+          filter: function strictEquals(rows, id, filterValue) {
+            return rows.filter( row => {
+              const rowValue = row.values[id];
+              return rowValue === filterValue;
+            })
+          }
+        }
+      ]
+    }
+  ]
+
+  const rendered = render(<App columns={columns} />)
+
+  // check button cycles through states undefined ->  false -> undefined
+
+  const filterButton = rendered.getByText('Any status')
+
+  fireEvent.click(filterButton, {});
+  let nextButtonState = rendered.getByText('Single')
+  expect(nextButtonState).toEqual(filterButton);
+  expect(
+      rendered
+          .queryAllByRole('row')
+          .slice(3)
+          .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: derek',
+    'firstName: joe',
+  ])
+
+  fireEvent.click(filterButton, {});
+  nextButtonState = rendered.getByText('Any status')
+  expect(nextButtonState).toEqual(filterButton);
+  expect(
+      rendered
+          .queryAllByRole('row')
+          .slice(3)
+          .map(row => Array.from(row.children)[0].textContent)
+  ).toEqual([
+    'firstName: tanner',
+    'firstName: derek',
+    'firstName: joe',
+    'firstName: jaylen',
+  ])
+
+})
