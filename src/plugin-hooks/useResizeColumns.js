@@ -128,7 +128,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
       onMouseDown: e => e.persist() || onResizeStart(e, header),
       onTouchStart: e => e.persist() || onResizeStart(e, header),
       style: {
-        cursor: 'ew-resize',
+        cursor: 'col-resize',
       },
       draggable: false,
       role: 'separator',
@@ -174,7 +174,7 @@ function reducer(state, action) {
 
   if (action.type === actions.columnResizing) {
     const { clientX } = action
-    const { startX, columnWidth, headerIdWidths } = state.columnResizing
+    const { startX, columnWidth, headerIdWidths = [] } = state.columnResizing
 
     const deltaX = clientX - startX
     const percentageDeltaX = deltaX / columnWidth

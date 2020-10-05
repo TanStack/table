@@ -311,9 +311,6 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
       hooks.visibleColumns.push(columns => [
         {
           id: 'selection',
-          // Make this column a groupByBoundary. This ensures that groupBy columns
-          // are placed after it
-          groupByBoundary: true,
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           Header: ({ getToggleAllRowsSelectedProps }) => (

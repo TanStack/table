@@ -141,8 +141,7 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.toggleRowSelected) {
     const { id, value: setSelected } = action
     const { rowsById, selectSubRows = true, getSubRows } = instance
-
-    const isSelected = id in state.selectedRowIds
+    const isSelected = state.selectedRowIds[id]
     const shouldExist =
       typeof setSelected !== 'undefined' ? setSelected : !isSelected
 

@@ -4,11 +4,11 @@ title: Bootstrap UI
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/bootstrap-ui-components)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/bootstrap-ui-components)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/bootstrap-UI-components)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/bootstrap-UI-components)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/bootstrap-ui-components?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/bootstrap-UI-components?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: bootstrap-ui-components"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{
