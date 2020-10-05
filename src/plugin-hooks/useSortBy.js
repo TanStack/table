@@ -337,10 +337,7 @@ function useInstance(instance) {
       // If there are sub-rows, sort them
       sortedData.forEach(row => {
         sortedFlatRows.push(row)
-        if (!row.subRows) {
-          return
-        } else if (row.subRows.length === 1) {
-          sortedFlatRows.push(row.subRows[0])
+        if (!row.subRows || row.subRows.length === 0) {
           return
         }
         row.subRows = sortData(row.subRows)

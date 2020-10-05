@@ -46,6 +46,42 @@ const data = [
       },
     ],
   },
+  {
+    firstName: 'peter',
+    lastName: 'zhang',
+    age: 30,
+    visits: 82,
+    status: 'Married',
+    progress: 30,
+    subRows: [
+      {
+        firstName: 'linda',
+        lastName: 'zhang',
+        age: 20,
+        visits: 120,
+        status: 'Single',
+        progress: 60,
+        subRows: [
+          {
+            firstName: 'robert',
+            lastName: 'zhang',
+            age: 26,
+            visits: 20,
+            status: 'Single',
+            progress: 40,
+          },
+          {
+            firstName: 'james',
+            lastName: 'zhang',
+            age: 35,
+            visits: 23,
+            status: 'Complicated',
+            progress: 20,
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 const defaultColumn = {
@@ -175,6 +211,7 @@ test('renders a sortable table', () => {
     'firstName: derek',
     'firstName: joe',
     'firstName: john',
+    'firstName: peter',
     'firstName: tanner',
   ])
 
@@ -187,6 +224,7 @@ test('renders a sortable table', () => {
       .map(d => d.children[0].textContent)
   ).toEqual([
     'firstName: tanner',
+    'firstName: peter',
     'firstName: john',
     'firstName: joe',
     'firstName: derek',
@@ -202,6 +240,7 @@ test('renders a sortable table', () => {
   ).toEqual([
     'firstName: joe',
     'firstName: john',
+    'firstName: peter',
     'firstName: tanner',
     'firstName: derek',
   ])
@@ -217,6 +256,7 @@ test('renders a sortable table', () => {
   ).toEqual([
     'firstName: joe',
     'firstName: john',
+    'firstName: peter',
     'firstName: derek',
     'firstName: tanner',
   ])
@@ -228,10 +268,20 @@ test('maintains the integrity of instance.flatRows', () => {
 
   fireEvent.click(rendered.getByText('First Name'))
   const flatRows = useTableRef.current.flatRows
-  expect(flatRows.length).toBe(5)
+  expect(flatRows.length).toBe(9)
   expect(
-    flatRows.find(r => r.values.firstName === 'winston')
-  ).not.toBeUndefined()
+    flatRows.map(r => r.values.firstName)
+  ).toEqual([
+    'derek',
+    'joe',
+    'john',
+    'winston',
+    'peter',
+    'linda',
+    'james',
+    'robert',
+    'tanner',
+  ])
 })
 
 test('Test initialState.sortBy: When clicking the last sortBy column, the sorted state will be replaced not toggled', () => {
@@ -252,6 +302,7 @@ test('Test initialState.sortBy: When clicking the last sortBy column, the sorted
       .map(d => d.children[0].textContent)
   ).toEqual([
     'firstName: tanner',
+    'firstName: peter',
     'firstName: derek',
     'firstName: joe',
     'firstName: john',
@@ -268,6 +319,7 @@ test('Test initialState.sortBy: When clicking the last sortBy column, the sorted
     'firstName: john',
     'firstName: joe',
     'firstName: derek',
+    'firstName: peter',
     'firstName: tanner',
   ])
 
