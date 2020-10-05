@@ -14,7 +14,7 @@ const getTableProps = (props, { instance }) => [
   props,
   {
     style: {
-      minWidth: `${instance.totalColumnsWidth}px`,
+      minWidth: `${instance.totalColumnsMinWidth}px`,
     },
   },
 ]
