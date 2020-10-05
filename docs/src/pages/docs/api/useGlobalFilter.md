@@ -3,7 +3,7 @@
 - Plugin Hook
 - Optional
 
-`useGlobalFilter` is the hook that implements **global row filtering** and can even be used in conjunction with `useFilters`. It's also important to note that this hook can be used either **before or after** `useFilters`, depending on the performance characteristics you want to code for.
+`useGlobalFilter` is the hook that implements **global row filtering** (filtering on all rows) and can even be used in conjunction with `useFilters`. It's also important to note that this hook can be used either **before or after** `useFilters`, depending on the performance characteristics you want to code for.
 
 ### Table Options
 
