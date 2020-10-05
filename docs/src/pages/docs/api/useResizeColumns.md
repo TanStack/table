@@ -3,7 +3,7 @@
 - Plugin Hook
 - Optional
 
-`useResizeColumns` is a plugin hook that adds support for resizing headers and cells when using non-table elements for layout eg. the `useBlockLayout` and `useAbsoluteLayout` hooks. It even supports resizing column groups!
+`useResizeColumns` is a plugin hook that adds support for resizing headers and cells when using non-table elements for layout eg. the `useBlockLayout`, `useAbsoluteLayout`, and `useGridLayout` hooks. It even supports resizing column groups!
 
 ### Table Options
 
