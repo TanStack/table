@@ -268,7 +268,7 @@ export function expandRows(
     }
   }
 
-  rows.forEach(handleRow)
+  rows.forEach(row => handleRow(row))
 
   return expandedRows
 }
