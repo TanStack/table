@@ -31,11 +31,12 @@ function useReduceOptions(options) {
   return {
     ...options,
     initialState: {
+      ...options.initialState,
       columnPinning: {
         left: [],
         right: [],
+        ...options.initialState.columnPinning,
       },
-      ...options.initialState,
     },
   }
 }
@@ -150,6 +151,8 @@ function useReduceLeafColumns(leafColumns, { getInstance }) {
       columnPinning: { left, right },
     },
   } = getInstance()
+
+  console.log(getInstance())
 
   getInstance().centerLeafColumns = React.useMemo(() => {
     if (left.length || right.length) {
