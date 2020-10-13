@@ -101,7 +101,11 @@ function decorateHeader(header, { getInstance }) {
       const onMove = clientXPos =>
         getInstance().setState(
           old => {
-            const { startX, columnWidth, headerIdWidths } = old.columnResizing
+            const {
+              startX,
+              columnWidth,
+              headerIdWidths = [],
+            } = old.columnResizing
 
             const deltaX = clientXPos - startX
             const percentageDeltaX = Math.max(deltaX / columnWidth, -0.999999)

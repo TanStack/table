@@ -205,35 +205,6 @@ function useInstanceAfterDataModel(instance) {
           return
         }
 
-        // Get the columnValues to aggregate
-        const groupedValues = groupedRows.map(row => row.values[column.id])
-
-        // Get the columnValues to aggregate
-        const leafValues = leafRows.map(row => {
-          let columnValue = row.values[column.id]
-
-          if (!depth && column.aggregatedValue) {
-            const aggregateValueFn =
-              typeof column.aggregateValue === 'function'
-                ? column.aggregateValue
-                : getInstance().options.aggregationTypes[
-                    column.aggregateValue
-                  ] || aggregationTypes[column.aggregateValue]
-
-            if (!aggregateValueFn) {
-              console.info({ column })
-              throw new Error(
-                process.env.NODE_ENV !== 'production'
-                  ? `React Table: Invalid column.aggregateValue option for column listed above`
-                  : ''
-              )
-            }
-
-            columnValue = aggregateValueFn(columnValue, row, column)
-          }
-          return columnValue
-        })
-
         // Aggregate the values
         let aggregateFn =
           typeof column.aggregate === 'function'
@@ -242,6 +213,35 @@ function useInstanceAfterDataModel(instance) {
               aggregationTypes[column.aggregate]
 
         if (aggregateFn) {
+          // Get the columnValues to aggregate
+          const groupedValues = groupedRows.map(row => row.values[column.id])
+
+          // Get the columnValues to aggregate
+          const leafValues = leafRows.map(row => {
+            let columnValue = row.values[column.id]
+
+            if (!depth && column.aggregatedValue) {
+              const aggregateValueFn =
+                typeof column.aggregateValue === 'function'
+                  ? column.aggregateValue
+                  : getInstance().options.aggregationTypes[
+                      column.aggregateValue
+                    ] || aggregationTypes[column.aggregateValue]
+
+              if (!aggregateValueFn) {
+                console.info({ column })
+                throw new Error(
+                  process.env.NODE_ENV !== 'production'
+                    ? `React Table: Invalid column.aggregateValue option for column listed above`
+                    : ''
+                )
+              }
+
+              columnValue = aggregateValueFn(columnValue, row, column)
+            }
+            return columnValue
+          })
+
           values[column.id] = aggregateFn(leafValues, groupedValues)
         } else if (column.aggregate) {
           console.info({ column })
