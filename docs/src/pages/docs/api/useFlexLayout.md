@@ -11,7 +11,7 @@
 - `width` is used as both the `flex-basis` and `flex-grow`. This means that it essentially acts as both the minimum width and flex-ratio of the column.
 - `maxWidth` is only used to limit column resizing. It does not define the maximum width for a column.
 
-[See Column Options](./useTable.md#column-options) for more information on these options.
+[See Column Options](./useTable#column-options) for more information on these options.
 
 ### Row Properties
 
