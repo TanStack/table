@@ -1,8 +1,8 @@
 import React from 'react'
 import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
-import { useFilters } from '../useFilters'
-import { useGlobalFilter } from '../useGlobalFilter'
+import { withColumnFilters } from '../../plugins/withColumnFilters'
+import { withGlobalFilter } from '../../plugins/withGlobalFilter'
 
 const makeData = () => [
   {
@@ -41,11 +41,11 @@ const makeData = () => [
 
 const defaultColumn = {
   Cell: ({ value, column: { id } }) => `${id}: ${value}`,
-  Filter: ({ column: { filterValue, setFilter } }) => (
+  Filter: ({ column: { getFilterValue, setFilterValue } }) => (
     <input
-      value={filterValue || ''}
+      value={getFilterValue() || ''}
       onChange={e => {
-        setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+        setFilterValue(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
       placeholder="Search..."
     />
@@ -97,24 +97,26 @@ function App(props) {
     ]
   }, [props.columns])
 
+  let instance = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+        plugins: [
+          withColumnFilters,
+          withGlobalFilter
+        ]
+      },
+  );
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
     leafColumns,
     state,
     setGlobalFilter,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    useFilters,
-    useGlobalFilter
-  )
+  } = instance
 
   const reset = () => setData(makeData())
 
@@ -125,10 +127,10 @@ function App(props) {
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>
-                  {column.render('Header')}
-                  {column.canFilter ? column.render('Filter') : null}
+              {headerGroup.headers.map(header => (
+                <th {...header.getHeaderProps()}>
+                  {header.render('Header')}
+                  {header.column.getCanFilter() ? header.column.render(header.column.Filter) : null}
                 </th>
               ))}
             </tr>
@@ -158,8 +160,7 @@ function App(props) {
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.map(
-            (row, i) =>
-              prepareRow(row) || (
+            (row, i) => (
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => (
                     <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
