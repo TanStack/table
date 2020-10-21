@@ -39,8 +39,28 @@ export function makeRenderer(getInstance, meta = {}) {
   }
 }
 
+const flexRenderStrategies = [
+    reactComponentRenderer,
+    simpleHeaderRenderer,
+    simpleCellRenderer,
+];
 export function flexRender(Comp, props) {
-  return isReactComponent(Comp) ? <Comp {...props} /> : Comp
+  for (const strategy of flexRenderStrategies) {
+    const rendered = strategy(Comp, props);
+    if (rendered !== undefined) return rendered;
+  }
+  return Comp;
+}
+function reactComponentRenderer(Comp, props) {
+  return isReactComponent(Comp) ? <Comp {...props} /> : undefined;
+}
+function simpleHeaderRenderer(Comp, props) {
+  if (Comp !== "Header") return  undefined;
+  return props.column.id;
+}
+function simpleCellRenderer(Comp, props) {
+  if (Comp !== "Cell") return  undefined;
+  return props.value;
 }
 
 function isReactComponent(component) {

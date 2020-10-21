@@ -48,7 +48,10 @@ export const useTable = options => {
   }
   const instance = instanceRef.current
 
-  const userPlugins = options.plugins.filter(Boolean)
+  const {
+    plugins = []
+  } = options;
+  const userPlugins = plugins.filter(Boolean)
 
   userPlugins.sort((a, b) => {
     if (a.after.includes(b.name) || a.after.length > b.after.length) {
