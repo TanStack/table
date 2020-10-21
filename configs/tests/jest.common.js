@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  preset: "ts-jest/presets/js-with-babel",
   moduleDirectories: [
     'node_modules',
     /*
