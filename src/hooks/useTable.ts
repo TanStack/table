@@ -1,46 +1,19 @@
 import React from 'react'
-
-//
-
-import { composeDecorator, composeReducer } from '../utils'
-
 import useTableOptions from './useTableOptions'
 import useTableState from './useTableState'
 import useColumns from './useColumns'
 import useHeadersAndFooters from './useHeadersAndFooters'
 import useDataModel from './useDataModel'
 
-import { withCore } from '../plugins/withCore'
+import {withCore} from '../plugins/withCore'
+import {plugTypes, TablePlugin} from "./pluginSupport";
 
-//
+interface TableOptions {
+  plugins: TablePlugin[]
+}
 
-const plugTypes = [
-  ['useReduceOptions', composeReducer],
-  ['useInstanceAfterState', composeDecorator],
-  ['useReduceColumns', composeReducer],
-  ['useReduceAllColumns', composeReducer],
-  ['useReduceLeafColumns', composeReducer],
-  ['decorateColumn', composeDecorator],
-  ['useReduceHeaderGroups', composeReducer],
-  ['useReduceFooterGroups', composeReducer],
-  ['useReduceFlatHeaders', composeReducer],
-  ['decorateHeader', composeDecorator],
-  ['decorateRow', composeDecorator],
-  ['decorateCell', composeDecorator],
-  ['useInstanceAfterDataModel', composeDecorator],
-  ['reduceTableProps', composeReducer],
-  ['reduceTableBodyProps', composeReducer],
-  ['reduceTableHeadProps', composeReducer],
-  ['reduceTableFootProps', composeReducer],
-  ['reduceHeaderGroupProps', composeReducer],
-  ['reduceFooterGroupProps', composeReducer],
-  ['reduceHeaderProps', composeReducer],
-  ['reduceRowProps', composeReducer],
-  ['reduceCellProps', composeReducer],
-]
-
-export const useTable = options => {
-  const instanceRef = React.useRef()
+export const useTable = (options: TableOptions) => {
+  const instanceRef: any = React.useRef()
 
   // Create and keep track of the table instance
   if (!instanceRef.current) {
