@@ -1,18 +1,28 @@
 import React from 'react'
+import { TablePlugin } from '../types'
 
 import { useGetLatest, makeRenderer } from '../utils'
 
-export const withCore = {
+export const withCore: TablePlugin = {
   name: 'withCore',
   after: [],
-  useInstanceAfterState,
-  decorateHeader,
-  decorateRow,
-  decorateCell,
-  useInstanceAfterDataModel,
+  plugs: {
+    useTable,
+    // useInstanceAfterState,
+    // decorateHeader,
+    // decorateRow,
+    // decorateCell,
+    // useInstanceAfterDataModel,
+  },
 }
 
-function useInstanceAfterState(instance) {
+interface TableInstanceWithCore {
+  reset: () => void
+}
+
+function useTable(instance: TableInstanceWithCore): TableInstanceWithCore
+
+function useInstanceAfterState(instance: TableInstanceWithCore) {
   const getInstance = useGetLatest(instance)
 
   instance.reset = React.useCallback(() => {
