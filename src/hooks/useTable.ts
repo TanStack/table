@@ -6,13 +6,19 @@ import useHeadersAndFooters from './useHeadersAndFooters'
 import useDataModel from './useDataModel'
 
 import {withCore} from '../plugins/withCore'
-import {plugTypes, TablePlugin} from "./pluginSupport";
+import {plugTypes, TableCell, TableColumn, TablePlugin} from "./pluginSupport";
 
-interface TableOptions {
-  plugins: TablePlugin[]
-}
+type TableOptions<
+  Column extends TableColumn = TableColumn,
+  Cell extends TableCell = TableCell
+> = {
+  plugins?: TablePlugin<Column, Cell>[]
+} & Record<string, any>
 
-export const useTable = (options: TableOptions) => {
+export function useTable<
+  Column extends TableColumn = TableColumn,
+  Cell extends TableCell = TableCell,
+>(options: TableOptions<Column, Cell>) {
   const instanceRef: any = React.useRef()
 
   // Create and keep track of the table instance
@@ -102,3 +108,4 @@ export const useTable = (options: TableOptions) => {
 
   return instance
 }
+

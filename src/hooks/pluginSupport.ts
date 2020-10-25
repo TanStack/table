@@ -27,21 +27,33 @@ export const plugTypes = [
 
 export type TableColumn = {
   id: string,
-} & Record<string, any>
+}
 export type TableCell = {
-  column: TableColumn
   value: any
-} & Record<string, any>
+}
 export type PluginMetaData = { getInstance: () => object }
-export type StrongPluginTypes = {
-    decorateCell: (cell: TableCell, meta: PluginMetaData) => void,
-    decorateHeader: (cell: TableCell, meta: PluginMetaData) => void,
+
+type CellArgument<
+  Column extends TableColumn,
+  Cell extends TableCell
+> = Cell & {column: Column}
+
+export type StrongPluginTypes<
+  Column extends TableColumn,
+  Cell extends TableCell>
+= {
+    decorateCell: (cell: CellArgument<Column, Cell>, meta: PluginMetaData) => void,
+    decorateHeader: (cell: CellArgument<Column, Cell>, meta: PluginMetaData) => void,
 }
 
-export type PluginTypes = Exclude<typeof plugTypes[number][0], keyof StrongPluginTypes>
-export type TablePlugin = {
+export type PluginTypes = Exclude<typeof plugTypes[number][0], keyof StrongPluginTypes<any, any>>
+
+export type TablePlugin<
+  Column extends TableColumn = TableColumn,
+  Cell extends TableCell = TableCell,
+> = {
     readonly name: string,
     readonly after?: string[],
-} & StrongPluginTypes
+} & StrongPluginTypes<Column,Cell>
  & { [key in PluginTypes]?: any }
 

@@ -1,8 +1,19 @@
-import React from "react";
-import {TableColumn, TablePlugin} from "../hooks/pluginSupport";
+import React, {ComponentType, ReactChild, ReactElement, ReactFragment, ReactText} from "react";
+import {TableCell, TableColumn, TablePlugin} from "../hooks/pluginSupport";
 import { isReactComponent, getFirstDefined } from "../utils";
 
-export const withRenderSupport: TablePlugin = {
+export type Renderer<Props> = ComponentType<Props> | ReactElement | ReactText | ReactFragment;
+
+interface RenderSupportColumn extends TableColumn {
+  Cell: Renderer<{}>,
+  Header: Renderer<{}>,
+}
+
+interface RenderSupportCell extends TableCell {
+  Renderer: (props: object) => ReactChild
+}
+
+export const withRenderSupport: TablePlugin<RenderSupportColumn, RenderSupportCell> = {
     name: "withRenderSupport",
     decorateCell: (cell, meta) => {
       const Component = getFirstDefined(
@@ -34,7 +45,7 @@ export const withRenderSupport: TablePlugin = {
            simpleHeaderRenderer,
         );
 
-        let Renderer: (props: object) => any;
+        let Renderer: RenderSupportCell["Renderer"];
         if (isReactComponent(Component)) {
           if (typeof Component === "function") {
             // allow functional components to be inlined
