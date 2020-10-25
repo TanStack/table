@@ -51,9 +51,9 @@ function Table({ columns, data }) {
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.render('Header')}
+            {headerGroup.headers.map(headerCell => (
+              <th {...headerCell.getHeaderProps()}>
+                {headerCell.Renderer()}
               </th>
             ))}
           </tr>
@@ -78,35 +78,30 @@ function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: "Name",
         columns: [
           {
-            Header: 'First Name',
             accessor: 'firstName',
           },
           {
-            Header: 'Last Name',
             accessor: 'lastName',
           },
         ],
       },
       {
-        Header: 'Info',
+        Header: "Info",
         columns: [
           {
-            Header: 'Age',
             accessor: 'age',
           },
           {
-            Header: 'Visits',
             accessor: 'visits',
           },
           {
-            Header: 'Status',
             accessor: 'status',
           },
           {
-            Header: 'Profile Progress',
+            id: 'my-progress',
             accessor: 'progress',
           },
         ],
@@ -118,13 +113,74 @@ function App() {
   return <Table columns={columns} data={data} />
 }
 
-test('renders a basic table', () => {
-  const rtl = render(<App />)
+describe('withRenderSupport', () => {
+    test('renders a basic table', () => {
+      const rtl = render(<App />)
 
-  expect(rtl.getByText('tanner')).toBeInTheDocument()
-  expect(rtl.getByText('linsley')).toBeInTheDocument()
-  expect(rtl.getByText('29')).toBeInTheDocument()
-  expect(rtl.getByText('100')).toBeInTheDocument()
-  expect(rtl.getByText('In Relationship')).toBeInTheDocument()
-  expect(rtl.getByText('50')).toBeInTheDocument()
+      // test header rendering
+      expect(rtl.getByText('age')).toBeInTheDocument()
+      expect(rtl.getByText('visits')).toBeInTheDocument()
+      expect(rtl.getByText('status')).toBeInTheDocument()
+      expect(rtl.getByText('my-progress')).toBeInTheDocument()
+
+      // test value cell rendering
+      expect(rtl.getByText('tanner')).toBeInTheDocument()
+      expect(rtl.getByText('linsley')).toBeInTheDocument()
+      expect(rtl.getByText('29')).toBeInTheDocument()
+      expect(rtl.getByText('100')).toBeInTheDocument()
+      expect(rtl.getByText('In Relationship')).toBeInTheDocument()
+      expect(rtl.getByText('50')).toBeInTheDocument()
+    })
+    test( 'renders according to user column definition', () => {
+      const rtl = render(<Table data={data}
+          columns={[
+              {
+                Header: 'Name',
+                columns: [
+                  {
+                    Header: 'First Name',
+                    accessor: 'firstName',
+                    Cell: (cell) => "first name: " + cell.value
+                  },
+                  {
+                    Header: 'Last Name',
+                    accessor: 'lastName',
+                    Cell: (cell) => "last name: " + cell.value
+                  },
+                ],
+              },
+              {
+                Header: 'Info',
+                columns: [
+                  {
+                    Header: 'Age',
+                    accessor: 'age',
+                  },
+                  {
+                    Header: 'Visits',
+                    accessor: 'visits',
+                  },
+                  {
+                    Header: 'Status',
+                    accessor: 'status',
+                  },
+                  {
+                    Header: 'Profile Progress',
+                    accessor: 'progress',
+                  },
+                ],
+              },
+            ]}
+      />)
+
+      // test header rendering
+      expect(rtl.getByText('Info')).toBeInTheDocument()
+      expect(rtl.getByText('Profile Progress')).toBeInTheDocument()
+      expect(rtl.getByText('First Name')).toBeInTheDocument()
+
+      expect(rtl.getByText('first name: tanner')).toBeInTheDocument()
+      expect(rtl.getByText('last name: linsley')).toBeInTheDocument()
+    })
+
 })
+

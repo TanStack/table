@@ -5,9 +5,6 @@ import React from 'react'
 import { useGetLatest, flattenColumns, makeRenderer } from '../utils'
 
 export const defaultColumn = {
-  Header: () => <>&nbsp;</>,
-  Cell: ({ value = '' }) =>
-    typeof value === 'boolean' ? value.toString() : value,
   defaultIsVisible: true,
   width: 150,
   minWidth: 20,

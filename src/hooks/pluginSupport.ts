@@ -1,4 +1,4 @@
-import { composeReducer, composeDecorator } from "../utils";
+import {composeDecorator, composeReducer} from "../utils";
 
 export const plugTypes = [
     ['useReduceOptions', composeReducer],
@@ -25,8 +25,17 @@ export const plugTypes = [
     ['reduceCellProps', composeReducer],
 ] as const;
 
-type StrongPluginTypes = {
-    decorateCell: (column: object, meta: { getInstance: () => object}) => void,
+export type TableColumn = {
+  id: string,
+} & Record<string, any>
+export type TableCell = {
+  column: TableColumn
+  value: any
+} & Record<string, any>
+export type PluginMetaData = { getInstance: () => object }
+export type StrongPluginTypes = {
+    decorateCell: (cell: TableCell, meta: PluginMetaData) => void,
+    decorateHeader: (cell: TableCell, meta: PluginMetaData) => void,
 }
 
 export type PluginTypes = Exclude<typeof plugTypes[number][0], keyof StrongPluginTypes>

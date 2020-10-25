@@ -26,7 +26,7 @@ export const useTable = (options: TableOptions) => {
   } = options;
   const userPlugins = plugins.filter(Boolean)
 
-  userPlugins.sort((a, b) => {
+  userPlugins.sort((a: any, b: any) => {
     if (a.after.includes(b.name) || a.after.length > b.after.length) {
       return 1
     }
@@ -40,6 +40,7 @@ export const useTable = (options: TableOptions) => {
 
   instance.plugs = {}
 
+  // @ts-ignore  @todo @types/node ?
   if (process.env.NODE_ENV !== 'production') {
     allPlugins.forEach(plugin => {
       Object.keys(plugin).forEach(plugName => {

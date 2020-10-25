@@ -63,7 +63,7 @@ function simpleCellRenderer(Comp, props) {
   return props.value;
 }
 
-function isReactComponent(component) {
+export function isReactComponent(component) {
   return (
     isClassComponent(component) ||
     typeof component === 'function' ||
