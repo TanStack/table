@@ -41,7 +41,6 @@
     "README.md",
     "scripts/"
   ],
-  "browserslist": "> 0.25%, not dead",
   "dependencies": {
     "@scarf/scarf": "^0.1.5"
   },

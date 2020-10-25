@@ -16,19 +16,12 @@ module.exports = {
     '@babel/react',
   ],
   plugins: [
-    [
-      'const-enum',
-      {
-        transform: 'constObject',
-      },
-    ],
-    'babel-plugin-transform-async-to-promises',
     cjs && ['@babel/transform-modules-commonjs', { loose }],
     [
       '@babel/transform-runtime',
       {
         useESModules: !cjs,
-        version: require('./package.json').dependencies[
+        version: require('./package.json').devDependencies[
           '@babel/runtime'
         ].replace(/^[^0-9]*/, ''),
       },

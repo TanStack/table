@@ -6,7 +6,7 @@
     "lib": ["ESNext", "dom"],
     "target": "es5",
     "noEmit": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": true,
     "noUnusedLocals": true,
