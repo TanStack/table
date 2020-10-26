@@ -300,7 +300,6 @@ const Home = props => {
                   <li>Jesse Jafa (@awareness481)</li>
                   <li>Salik Syed (@saliksyed)</li>
                   <li>Chet Corcos (@ccorcos)</li>
-                  <li>Yefri Laura (@yefrioscar)</li>
                   <li>Muhammad Umar (@umarmuha)</li>
                   <li>Joe Alden (@joalden)</li>
                   <li>Standard Resume (@StandardResumeSponsors)</li>
