@@ -52,7 +52,7 @@ function reducer(state, action, previousState, instance) {
       canNavigate =
         pageCount === -1
           ? page.length >= state.pageSize
-          : newPageIndex <= pageCount
+          : newPageIndex < pageCount
     } else if (newPageIndex < state.pageIndex) {
       // prev page
       canNavigate = newPageIndex > -1
