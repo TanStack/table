@@ -31,11 +31,12 @@ function useReduceOptions(options) {
   return {
     ...options,
     initialState: {
+      ...options.initialState,
       columnPinning: {
         left: [],
         right: [],
+        ...options.initialState.columnPinning,
       },
-      ...options.initialState,
     },
   }
 }
