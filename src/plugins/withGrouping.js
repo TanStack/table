@@ -24,13 +24,15 @@ const emptyObject = {}
 export const withGrouping = {
   name,
   after: [withColumnVisibility, withColumnFilters, withGlobalFilter],
-  useReduceOptions,
-  useInstanceAfterState,
-  useInstanceAfterDataModel,
-  useReduceLeafColumns,
-  decorateColumn,
-  decorateRow,
-  decorateCell,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useInstanceAfterDataModel,
+    useReduceLeafColumns,
+    decorateColumn,
+    decorateRow,
+    decorateCell,
+  },
 }
 
 function useReduceOptions(options) {
@@ -49,50 +51,48 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const groupingResetDeps = [
     instance.options.manualGrouping ? null : instance.options.data,
   ]
   React.useMemo(() => {
-    if (getInstance().options.autoResetGrouping) {
-      getInstance().state.grouping = getInstance().getInitialState().grouping
+    if (instance.options.autoResetGrouping) {
+      instance.state.grouping = instance.getInitialState().grouping
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, groupingResetDeps)
 
   useMountedLayoutEffect(() => {
-    if (getInstance().options.autoResetGrouping) {
+    if (instance.options.autoResetGrouping) {
       instance.resetGrouping()
     }
   }, groupingResetDeps)
 
   instance.getColumnCanGroup = React.useCallback(
     columnId => {
-      const column = getInstance().leafColumns.find(d => d.id === columnId)
+      const column = instance.leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
       }
 
       return getFirstDefined(
-        getInstance().options.disableGrouping ? false : undefined,
+        instance.options.disableGrouping ? false : undefined,
         column.disableGrouping ? false : undefined,
         column.defaultCanGrouping,
         !!column.accessor
       )
     },
-    [getInstance]
+    [instance.leafColumns, instance.options.disableGrouping]
   )
 
   instance.getColumnIsGrouped = React.useCallback(
-    columnId => getInstance().state.grouping.includes(columnId),
-    [getInstance]
+    columnId => instance.state.grouping.includes(columnId),
+    [instance.state.grouping]
   )
 
   instance.getColumnGroupedIndex = React.useCallback(
-    columnId => getInstance().state.grouping.indexOf(columnId),
-    [getInstance]
+    columnId => instance.state.grouping.indexOf(columnId),
+    [instance.state.grouping]
   )
 
   instance.toggleColumnGrouping = React.useCallback(
@@ -139,14 +139,14 @@ function useInstanceAfterState(instance) {
         old => {
           return {
             ...old,
-            grouping: getInstance().getInitialState().grouping,
+            grouping: instance.getInitialState().grouping,
           }
         },
         {
           type: 'resetGrouping',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 }
 
@@ -159,8 +159,6 @@ function useInstanceAfterDataModel(instance) {
     flatRows,
     rowsById,
   } = instance
-
-  const getInstance = useGetLatest(instance)
 
   const [
     groupedRows,
@@ -183,7 +181,7 @@ function useInstanceAfterDataModel(instance) {
       ]
     }
 
-    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+    if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Grouping...')
 
     // Ensure that the list of filtered columns exist
@@ -209,7 +207,7 @@ function useInstanceAfterDataModel(instance) {
         let aggregateFn =
           typeof column.aggregate === 'function'
             ? column.aggregate
-            : getInstance().options.aggregationTypes[column.aggregate] ||
+            : instance.options.aggregationTypes[column.aggregate] ||
               aggregationTypes[column.aggregate]
 
         if (aggregateFn) {
@@ -224,9 +222,8 @@ function useInstanceAfterDataModel(instance) {
               const aggregateValueFn =
                 typeof column.aggregateValue === 'function'
                   ? column.aggregateValue
-                  : getInstance().options.aggregationTypes[
-                      column.aggregateValue
-                    ] || aggregationTypes[column.aggregateValue]
+                  : instance.options.aggregationTypes[column.aggregateValue] ||
+                    aggregationTypes[column.aggregateValue]
 
               if (!aggregateValueFn) {
                 console.info({ column })
@@ -328,24 +325,24 @@ function useInstanceAfterDataModel(instance) {
               value,
             }
 
-            cell.render = makeRenderer(getInstance, {
+            cell.render = makeRenderer(instance, {
               cell,
               row,
               column,
               value,
             })
 
-            getInstance().plugs.decorateCell(cell, { getInstance })
+            instance.plugs.decorateCell(cell, { instance })
 
             return cell
           })
 
           row.getVisibleCells = () =>
-            getInstance().leafColumns.map(column =>
+            instance.leafColumns.map(column =>
               row.cells.find(cell => cell.column.id === column.id)
             )
 
-          getInstance().plugs.decorateRow(row, { getInstance })
+          instance.plugs.decorateRow(row, { instance })
 
           return row
         }
@@ -381,11 +378,11 @@ function useInstanceAfterDataModel(instance) {
   }, [
     manualGrouping,
     grouping,
+    instance,
     rows,
     flatRows,
     rowsById,
     leafColumns,
-    getInstance,
   ])
 
   Object.assign(instance, {
@@ -405,10 +402,10 @@ function useInstanceAfterDataModel(instance) {
   })
 }
 
-function useReduceLeafColumns(orderedColumns, { getInstance }) {
+function useReduceLeafColumns(orderedColumns, { instance }) {
   const {
     state: { grouping },
-  } = getInstance()
+  } = instance
 
   return React.useMemo(() => {
     if (!grouping.length) {
@@ -433,15 +430,14 @@ function useReduceLeafColumns(orderedColumns, { getInstance }) {
   }, [grouping, orderedColumns])
 }
 
-function decorateColumn(column, { getInstance }) {
+function decorateColumn(column, { instance }) {
   column.Aggregated = column.Aggregated || column.Cell
 
-  column.getCanGroup = () => getInstance().getColumnCanGroup(column.id)
-  column.getGroupedIndex = () => getInstance().getColumnGroupedIndex(column.id)
-  column.getIsGrouped = () => getInstance().getColumnIsGrouped(column.id)
+  column.getCanGroup = () => instance.getColumnCanGroup(column.id)
+  column.getGroupedIndex = () => instance.getColumnGroupedIndex(column.id)
+  column.getIsGrouped = () => instance.getColumnIsGrouped(column.id)
   column.toggleGrouping = value =>
-    getInstance().toggleColumnGrouping(column.id, value)
-
+    instance.toggleColumnGrouping(column.id, value)
   column.getToggleGroupingProps = (props = {}) => {
     const canGroup = column.getCanGroup()
 

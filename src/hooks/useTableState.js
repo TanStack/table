@@ -1,17 +1,11 @@
 import React from 'react'
-
-import { functionalUpdate, useGetLatest } from '../utils'
+import { functionalUpdate } from '../utils'
 
 export default function useTableState(instance) {
-  const getInstance = useGetLatest(instance)
-  // Get the users initialState for the table
-  instance.getInitialState = React.useCallback(
-    () => functionalUpdate(getInstance().options.initialState),
-    [getInstance]
-  )
-
   // A home for our automatic internal table state
-  const [autoState, setAutoState] = React.useState(instance.getInitialState)
+  const [autoState, setAutoState] = React.useState(
+    instance.options.initialState
+  )
 
   delete instance.queuedAutoState
 
@@ -30,11 +24,11 @@ export default function useTableState(instance) {
       const {
         state: old,
         options: { onStateChange },
-      } = getInstance()
+      } = instance
 
       const newState = functionalUpdate(
         updater,
-        getInstance().queuedAutoState || old
+        instance.queuedAutoState || old
       )
 
       const [newStateNoMeta, moreMeta] = Array.isArray(newState)
@@ -47,13 +41,13 @@ export default function useTableState(instance) {
       })
 
       if (resolvedState && resolvedState !== old) {
-        getInstance().queuedAutoState = {
+        instance.queuedAutoState = {
           ...resolvedState,
           ...instance.options.state,
         }
         setAutoState(resolvedState)
       }
     },
-    [getInstance, instance.options.state]
+    [instance]
   )
 }

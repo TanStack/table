@@ -7,35 +7,20 @@ import commonJS from 'rollup-plugin-commonjs'
 import visualizer from 'rollup-plugin-visualizer'
 import replace from '@rollup/plugin-replace'
 
-const external = ['react']
+const external = ['react', 'react-dom']
 
 const globals = {
   react: 'React',
+  'react-dom': 'ReactDOM',
 }
 
-const inputSrc = 'src/index.js'
+const inputSrc = 'src/index.ts'
+
+const extensions = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']
+const babelConfig = { extensions, runtimeHelpers: true }
+const resolveConfig = { extensions }
 
 export default [
-  {
-    input: inputSrc,
-    output: {
-      file: 'dist/react-table.mjs',
-      format: 'es',
-      sourcemap: true,
-    },
-    external,
-    plugins: [resolve(), babel(), commonJS(), externalDeps()],
-  },
-  {
-    input: inputSrc,
-    output: {
-      file: 'dist/react-table.min.mjs',
-      format: 'es',
-      sourcemap: true,
-    },
-    external,
-    plugins: [resolve(), babel(), commonJS(), externalDeps(), terser()],
-  },
   {
     input: inputSrc,
     output: {
@@ -46,7 +31,12 @@ export default [
       globals,
     },
     external,
-    plugins: [resolve(), babel(), commonJS(), externalDeps()],
+    plugins: [
+      resolve(resolveConfig),
+      babel(babelConfig),
+      commonJS(),
+      externalDeps(),
+    ],
   },
   {
     input: inputSrc,
@@ -60,13 +50,16 @@ export default [
     external,
     plugins: [
       replace({ 'process.env.NODE_ENV': `"production"`, delimiters: ['', ''] }),
-      resolve(),
-      babel(),
+      resolve(resolveConfig),
+      babel(babelConfig),
       commonJS(),
       externalDeps(),
       terser(),
       size(),
-      visualizer(),
+      visualizer({
+        filename: 'stats-react.json',
+        json: true,
+      }),
     ],
   },
 ]

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   useLazyMemo,
   useMountedLayoutEffect,
   getRowIsSelected,
@@ -31,10 +30,12 @@ export const withSelection = {
     withExpanding,
     withPagination,
   ],
-  useReduceOptions,
-  useInstanceAfterState,
-  useReduceLeafColumns,
-  decorateRow,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useReduceLeafColumns,
+    decorateRow,
+  },
 }
 
 function useReduceOptions(options) {
@@ -55,40 +56,38 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const selectionResetDeps = [instance.options.data]
   React.useMemo(() => {
-    if (getInstance().options.autoResetSelection) {
-      getInstance().state.selection = getInstance().getInitialState().selection
+    if (instance.options.autoResetSelection) {
+      instance.state.selection = instance.getInitialState().selection
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, selectionResetDeps)
 
   useMountedLayoutEffect(() => {
-    if (getInstance().options.autoResetSelection) {
+    if (instance.options.autoResetSelection) {
       instance.resetSelection()
     }
   }, selectionResetDeps)
 
   instance.getSelectedFlatRows = React.useCallback(() => {
-    const { flatRows } = getInstance()
+    const { flatRows } = instance
 
     return flatRows.filter(row => !row.getIsGrouped() && row.getIsSelected())
-  }, [getInstance])
+  }, [instance])
 
   instance.resetSelectedRows = React.useCallback(
     () =>
       setState(
         old => ({
           ...old,
-          selection: getInstance().getInitialState().selection || {},
+          selection: instance.getInitialState().selection || {},
         }),
         {
           type: 'resetSelectedRows',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.setSelectedRows = React.useCallback(
@@ -113,7 +112,7 @@ function useInstanceAfterState(instance) {
             getIsAllRowsSelected,
             rowsById,
             nonGroupedRowsById = rowsById,
-          } = getInstance()
+          } = instance
 
           value = typeof value !== 'undefined' ? value : !getIsAllRowsSelected()
 
@@ -145,7 +144,7 @@ function useInstanceAfterState(instance) {
           type: 'toggleAllRowsSelected',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.toggleAllPageRowsSelected = React.useCallback(
@@ -158,7 +157,7 @@ function useInstanceAfterState(instance) {
             getSubRows,
             page,
             selectSubRows = true,
-          } = getInstance()
+          } = instance
 
           const selectAll =
             typeof value !== 'undefined' ? value : !getIsAllPageRowsSelected()
@@ -197,7 +196,7 @@ function useInstanceAfterState(instance) {
           type: 'toggleAllPageRowsSelected',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.toggleRowSelected = React.useCallback(
@@ -207,7 +206,7 @@ function useInstanceAfterState(instance) {
           const {
             rowsById,
             options: { selectSubRows, selectGroupingRows },
-          } = getInstance()
+          } = instance
 
           // Join the ids of deep rows
           // to make a key, then manage all of the keys
@@ -242,71 +241,69 @@ function useInstanceAfterState(instance) {
           type: 'toggleRowSelected',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.addSelectionRange = React.useCallback(
     rowId => {
-      getInstance().setSelectedRows(old => {
-        const {
-          rows,
-          rowsById,
-          options: { selectGroupingRows, selectSubRows },
-        } = getInstance()
+      const {
+        rows,
+        rowsById,
+        options: { selectGroupingRows, selectSubRows },
+      } = instance
 
-        const findSelectedRow = rows => {
-          let found
-          rows.find(d => {
-            if (d.getIsSelected()) {
-              found = d
-              return true
-            }
-            const subFound = findSelectedRow(d.subRows || [])
-            if (subFound) {
-              found = subFound
-              return true
-            }
-            return false
-          })
-          return found
-        }
-
-        const firstRow = findSelectedRow(rows) || rows[0]
-        const lastRow = rowsById[rowId]
-
-        let include = false
-        const selectedRowIds = {}
-
-        const addRow = row => {
-          selectRowById(selectedRowIds, row.id, true, {
-            rowsById,
-            selectGroupingRows,
-            selectSubRows,
-          })
-        }
-
-        getInstance().rows.forEach(row => {
-          const isFirstRow = row.id === firstRow.id
-          const isLastRow = row.id === lastRow.id
-
-          if (isFirstRow || isLastRow) {
-            if (!include) {
-              include = true
-            } else if (include) {
-              addRow(row)
-              include = false
-            }
+      const findSelectedRow = rows => {
+        let found
+        rows.find(d => {
+          if (d.getIsSelected()) {
+            found = d
+            return true
           }
-
-          if (include) {
-            addRow(row)
+          const subFound = findSelectedRow(d.subRows || [])
+          if (subFound) {
+            found = subFound
+            return true
           }
+          return false
         })
+        return found
+      }
 
-        return selectedRowIds
+      const firstRow = findSelectedRow(rows) || rows[0]
+      const lastRow = rowsById[rowId]
+
+      let include = false
+      const selectedRowIds = {}
+
+      const addRow = row => {
+        selectRowById(selectedRowIds, row.id, true, {
+          rowsById,
+          selectGroupingRows,
+          selectSubRows,
+        })
+      }
+
+      instance.rows.forEach(row => {
+        const isFirstRow = row.id === firstRow.id
+        const isLastRow = row.id === lastRow.id
+
+        if (isFirstRow || isLastRow) {
+          if (!include) {
+            include = true
+          } else if (include) {
+            addRow(row)
+            include = false
+          }
+        }
+
+        if (include) {
+          addRow(row)
+        }
       })
+
+      instance.setSelectedRows(selectedRowIds)
     },
-    [getInstance]
+    [instance]
   )
 
   instance.getIsAllRowsSelected = useLazyMemo(() => {
@@ -314,6 +311,7 @@ function useInstanceAfterState(instance) {
       Object.keys(instance.nonGroupedRowsById).length &&
         Object.keys(instance.state.selection).length
     )
+
     if (isAllRowsSelected) {
       if (
         Object.keys(instance.nonGroupedRowsById).some(
@@ -343,26 +341,26 @@ function useInstanceAfterState(instance) {
 
   instance.getIsSomeRowsSelected = useLazyMemo(() => {
     return (
-      !getInstance().getIsAllRowsSelected() &&
+      !instance.getIsAllRowsSelected() &&
       Object.keys(instance.state.selection).length
     )
   }, [instance.nonGroupedRowsById, instance.state.selection])
 
   instance.getIsSomePageRowsSelected = useLazyMemo(() => {
     return (
-      !getInstance().getIsPageAllRowsSelected() &&
+      !instance.getIsPageAllRowsSelected() &&
       instance.page?.length &&
       instance.page.some(({ id }) => instance.selectRowIds[id])
     )
   }, [instance.page, instance.state.selection])
 
   instance.getToggleAllRowsSelectedProps = props => {
-    const isSomeRowsSelected = getInstance().getIsSomeRowsSelected()
-    const isAllRowsSelected = getInstance().getIsAllRowsSelected()
+    const isSomeRowsSelected = instance.getIsSomeRowsSelected()
+    const isAllRowsSelected = instance.getIsAllRowsSelected()
 
     return {
       onChange: e => {
-        getInstance().toggleAllRowsSelected(e.target.checked)
+        instance.toggleAllRowsSelected(e.target.checked)
       },
       checked: isAllRowsSelected,
       title: 'Toggle All Rows Selected',
@@ -372,12 +370,12 @@ function useInstanceAfterState(instance) {
   }
 
   instance.getToggleAllPageRowsSelectedProps = props => {
-    const isSomePageRowsSelected = getInstance().getIsSomePageRowsSelected()
-    const isAllPageRowsSelected = getInstance().getIsAllPageRowsSelected()
+    const isSomePageRowsSelected = instance.getIsSomePageRowsSelected()
+    const isAllPageRowsSelected = instance.getIsAllPageRowsSelected()
 
     return {
       onChange: e => {
-        getInstance().toggleAllPageRowsSelected(e.target.checked)
+        instance.toggleAllPageRowsSelected(e.target.checked)
       },
       checked: isAllPageRowsSelected,
       title: 'Toggle All Current Page Rows Selected',
@@ -398,20 +396,20 @@ function useReduceLeafColumns(orderedColumns) {
 
 useReduceLeafColumns.after = ['withGrouping', 'withExpanding']
 
-function decorateRow(row, { getInstance }) {
+function decorateRow(row, { instance }) {
   row.getIsSelected = () =>
-    getInstance().options.selectSubRows
-      ? getRowIsSelected(row, getInstance().state.selection)
-      : !!getInstance().state.selection[row.id]
+    instance.options.selectSubRows
+      ? getRowIsSelected(row, instance.state.selection)
+      : !!instance.state.selection[row.id]
 
   row.getIsSomeSelected = () => row.getIsSelected() === null
 
-  row.toggleSelected = set => getInstance().toggleRowSelected(row.id, set)
+  row.toggleSelected = set => instance.toggleRowSelected(row.id, set)
 
   row.getToggleRowSelectedProps = props => {
     const {
       options: { manualRowSelectedKey },
-    } = getInstance()
+    } = instance
 
     let checked = false
 
@@ -436,12 +434,12 @@ function decorateRow(row, { getInstance }) {
     ({ onClick, ...props }) => ({
       ...props,
       onClick: e => {
-        if (getInstance().options.isAdditiveSelectEvent(e)) {
+        if (instance.options.isAdditiveSelectEvent(e)) {
           row.toggleSelected()
-        } else if (getInstance().options.isInclusiveSelectEvent(e)) {
-          getInstance().addSelectionRange(row.id)
+        } else if (instance.options.isInclusiveSelectEvent(e)) {
+          instance.addSelectionRange(row.id)
         } else {
-          getInstance().setSelectedRows({})
+          instance.setSelectedRows({})
           row.toggleSelected()
         }
 

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   functionalUpdate,
   expandRows,
   useLazyMemo,
@@ -28,8 +27,10 @@ export const withPagination = {
     withSorting,
     withExpanding,
   ],
-  useReduceOptions,
-  useInstanceAfterState,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+  },
 }
 
 function useReduceOptions(options) {
@@ -48,8 +49,6 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const pageResetDeps = [
     instance.options.manualPagination ? null : instance.options.data,
     instance.state.globalFilterValue,
@@ -58,14 +57,14 @@ function useInstanceAfterState(instance) {
     instance.state.sorting,
   ]
   React.useMemo(() => {
-    if (getInstance().options.autoResetPage) {
-      getInstance().state.pageIndex = getInstance().getInitialState().pageIndex
+    if (instance.options.autoResetPage) {
+      instance.state.pageIndex = instance.getInitialState().pageIndex
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, pageResetDeps)
 
   useMountedLayoutEffect(() => {
-    if (getInstance().options.autoResetPage) {
+    if (instance.options.autoResetPage) {
       instance.resetPage()
     }
   }, pageResetDeps)
@@ -75,13 +74,13 @@ function useInstanceAfterState(instance) {
       setState(
         old => ({
           ...old,
-          pageIndex: getInstance().getInitialState().pageIndex,
+          pageIndex: instance.getInitialState().pageIndex,
         }),
         {
           type: 'resetPage',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.resetPageSize = React.useCallback(
@@ -89,39 +88,44 @@ function useInstanceAfterState(instance) {
       setState(
         old => ({
           ...old,
-          pageIndex: getInstance().getInitialState().pageSize,
+          pageIndex: instance.getInitialState().pageSize,
         }),
         {
           type: 'resetPageSize',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.getPageCount = React.useCallback(
     () =>
-      getInstance().options.manualPagination
-        ? getInstance().state.pageCount
-        : getInstance().rows
-        ? Math.ceil(getInstance().rows.length / getInstance().state.pageSize)
+      instance.options.manualPagination
+        ? instance.state.pageCount
+        : instance.rows
+        ? Math.ceil(instance.rows.length / instance.state.pageSize)
         : 0,
-    [getInstance]
+    [
+      instance.options.manualPagination,
+      instance.rows,
+      instance.state.pageCount,
+      instance.state.pageSize,
+    ]
   )
 
   instance.getPageOptions = useLazyMemo(() => {
-    const pageCount = getInstance().getPageCount()
+    const pageCount = instance.getPageCount()
 
     return pageCount > 0
       ? [...new Array(pageCount)].fill(null).map((d, i) => i)
       : []
-  }, [getInstance().getPageCount()])
+  }, [instance.getPageCount()])
 
   instance.getPageRows = React.useCallback(() => {
     const {
       rows,
       state: { pageIndex, pageSize },
       options: { manualPagination },
-    } = getInstance()
+    } = instance
     let page
 
     if (manualPagination) {
@@ -133,16 +137,16 @@ function useInstanceAfterState(instance) {
       page = rows.slice(pageStart, pageEnd)
     }
 
-    if (getInstance().options.paginateExpandedRows) {
+    if (instance.options.paginateExpandedRows) {
       return page
     }
 
-    return expandRows(page, getInstance)
-  }, [getInstance])
+    return expandRows(page, instance)
+  }, [instance])
 
   instance.getCanPreviousPage = React.useCallback(
-    () => getInstance().state.pageIndex > 0,
-    [getInstance]
+    () => instance.state.pageIndex > 0,
+    [instance.state.pageIndex]
   )
 
   instance.getCanNextPage = React.useCallback(() => {
@@ -150,12 +154,12 @@ function useInstanceAfterState(instance) {
       state: { pageSize, pageIndex },
       getPageRows,
       getPageCount,
-    } = getInstance()
+    } = instance
 
     return getPageCount() === -1
       ? getPageRows().length >= pageSize
       : pageIndex < getPageCount() - 1
-  }, [getInstance])
+  }, [instance])
 
   instance.gotoPage = React.useCallback(
     pageIndex => {
@@ -164,7 +168,7 @@ function useInstanceAfterState(instance) {
           const {
             getPageCount,
             state: { page },
-          } = getInstance()
+          } = instance
           const newPageIndex = functionalUpdate(pageIndex, old.pageIndex)
           const cannnotPreviousPage = newPageIndex < 0
           const pageCount = getPageCount()
@@ -187,16 +191,16 @@ function useInstanceAfterState(instance) {
         }
       )
     },
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.previousPage = React.useCallback(() => {
-    return getInstance().gotoPage(old => old - 1)
-  }, [getInstance])
+    return instance.gotoPage(old => old - 1)
+  }, [instance])
 
   instance.nextPage = React.useCallback(() => {
-    return getInstance().gotoPage(old => old + 1)
-  }, [getInstance])
+    return instance.gotoPage(old => old + 1)
+  }, [instance])
 
   instance.setPageSize = React.useCallback(
     pageSize => {

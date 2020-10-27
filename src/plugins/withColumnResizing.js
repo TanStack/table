@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   getFirstDefined,
   getLeafHeaders,
   passiveEventSupported,
@@ -12,10 +11,12 @@ import { withColumnResizing as name, withColumnVisibility } from '../Constants'
 export const withColumnResizing = {
   name,
   after: [withColumnVisibility],
-  useReduceOptions,
-  useInstanceAfterState,
-  decorateColumn,
-  decorateHeader,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    decorateColumn,
+    decorateHeader,
+  },
 }
 
 function useReduceOptions(options) {
@@ -31,51 +32,48 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const getInstance = useGetLatest(instance)
-
   instance.getColumnCanResize = React.useCallback(
     columnId => {
-      const column = getInstance().allColumns.find(d => d.id === columnId)
+      const column = instance.allColumns.find(d => d.id === columnId)
 
       return getFirstDefined(
         column.disableResizing === true ? false : undefined,
-        getInstance().options.disableResizing === true ? false : undefined,
+        instance.options.disableResizing === true ? false : undefined,
         true
       )
     },
-    [getInstance]
+    [instance.allColumns, instance.options.disableResizing]
   )
 
   instance.getColumnWidth = React.useCallback(
     columnId => {
-      const column = getInstance().allColumns.find(d => d.id === columnId)
+      const column = instance.allColumns.find(d => d.id === columnId)
 
       return Math.min(
         Math.max(
           column.minWidth,
-          getInstance().state.columnResizing.columnWidths[columnId] ||
-            column.width
+          instance.state.columnResizing.columnWidths[columnId] || column.width
         ),
         column.maxWidth
       )
     },
-    [getInstance]
+    [instance.allColumns, instance.state.columnResizing.columnWidths]
   )
 
   instance.getColumnIsResizing = React.useCallback(
     columnId => {
-      return getInstance().state.columnResizing.isResizingColumn === columnId
+      return instance.state.columnResizing.isResizingColumn === columnId
     },
-    [getInstance]
+    [instance.state.columnResizing.isResizingColumn]
   )
 }
 
-function decorateColumn(column, { getInstance }) {
-  column.getIsResizing = () => getInstance().getColumnIsResizing(column.id)
-  column.getCanResize = () => getInstance().getColumnCanResize(column.id)
+function decorateColumn(column, { instance }) {
+  column.getIsResizing = () => instance.getColumnIsResizing(column.id)
+  column.getCanResize = () => instance.getColumnCanResize(column.id)
 }
 
-function decorateHeader(header, { getInstance }) {
+function decorateHeader(header, { instance }) {
   header.getIsResizing = () =>
     header?.column?.getIsResizing ? header.column.getIsResizing() : true
   header.getCanResize = () =>
@@ -99,7 +97,7 @@ function decorateHeader(header, { getInstance }) {
         : e.clientX
 
       const onMove = clientXPos =>
-        getInstance().setState(
+        instance.setState(
           old => {
             const {
               startX,
@@ -136,7 +134,7 @@ function decorateHeader(header, { getInstance }) {
         )
 
       const onEnd = () =>
-        getInstance().setState(
+        instance.setState(
           old => ({
             ...old,
             columnResizing: {
@@ -155,7 +153,7 @@ function decorateHeader(header, { getInstance }) {
           moveEvent: 'mousemove',
           moveHandler: e => onMove(e.clientX),
           upEvent: 'mouseup',
-          upHandler: e => {
+          upHandler: () => {
             document.removeEventListener(
               'mousemove',
               handlersAndEvents.mouse.moveHandler
@@ -178,14 +176,14 @@ function decorateHeader(header, { getInstance }) {
             return false
           },
           upEvent: 'touchend',
-          upHandler: e => {
+          upHandler: () => {
             document.removeEventListener(
               handlersAndEvents.touch.moveEvent,
               handlersAndEvents.touch.moveHandler
             )
             document.removeEventListener(
               handlersAndEvents.touch.upEvent,
-              handlersAndEvents.touch.moveHandler
+              handlersAndEvents.touch.upHandler
             )
             onEnd()
           },
@@ -210,7 +208,7 @@ function decorateHeader(header, { getInstance }) {
         passiveIfSupported
       )
 
-      getInstance().setState(
+      instance.setState(
         old => ({
           ...old,
           columnResizing: {
