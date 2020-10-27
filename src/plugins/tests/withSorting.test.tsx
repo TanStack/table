@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '../../../test-utils/react-testing'
 import { useTable } from '../../hooks/useTable'
-import { useSorting } from '../useSorting'
+import { withSorting } from '../withSorting'
 
 const data = [
   {
@@ -47,7 +47,7 @@ function Table({ columns, data }) {
       data,
       defaultColumn,
     },
-    useSorting
+    [withSorting]
   )
 
   return (
@@ -55,14 +55,15 @@ function Table({ columns, data }) {
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map(header => (
               // Add the sorting props to control sorting. For this example
               // we can add them into the header props
-              <th {...column.getHeaderProps(column.getToggleSortingProps())}>
-                {column.render('Header')}
+              <th {...header.getHeaderProps(header.getToggleSortingProps())}>
+                {header.render(header.column.Header)}
                 {/* Add a sort direction indicator */}
-                {column.isSorted
-                  ? (column.isSortedDesc ? ' 🔽' : ' 🔼') + column.sortedIndex
+                {header.getIsSorted()
+                  ? (header.getIsSortedDesc() ? ' 🔽' : ' 🔼') +
+                    header.getSortedIndex()
                   : ''}
               </th>
             ))}
@@ -70,16 +71,17 @@ function Table({ columns, data }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
-              </tr>
-            )
-        )}
+        {rows.map((row, i) => (
+          <tr {...row.getRowProps()}>
+            {row.cells.map(cell => {
+              return (
+                <td {...cell.getCellProps()}>
+                  {cell.render(cell.column.Cell)}
+                </td>
+              )
+            })}
+          </tr>
+        ))}
       </tbody>
     </table>
   )
@@ -129,43 +131,45 @@ function App() {
   return <Table columns={columns} data={data} />
 }
 
-test('renders a sortable table', () => {
-  const rendered = render(<App />)
+describe('withSorting', () => {
+  it('renders a sortable table', () => {
+    const rendered = render(<App />)
 
-  fireEvent.click(rendered.getByText('First Name'))
-  rendered.getByText('First Name 🔼0')
-  expect(
-    rendered
-      .queryAllByRole('row')
-      .slice(2)
-      .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: derek', 'firstName: joe', 'firstName: tanner'])
+    fireEvent.click(rendered.getByText('First Name'))
+    rendered.getByText('First Name 🔼0')
+    expect(
+      rendered
+        .queryAllByRole('row')
+        .slice(2)
+        .map(d => d.children[0].textContent)
+    ).toEqual(['firstName: derek', 'firstName: joe', 'firstName: tanner'])
 
-  fireEvent.click(rendered.getByText('First Name 🔼0'))
-  rendered.getByText('First Name 🔽0')
-  expect(
-    rendered
-      .queryAllByRole('row')
-      .slice(2)
-      .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: derek'])
+    fireEvent.click(rendered.getByText('First Name 🔼0'))
+    rendered.getByText('First Name 🔽0')
+    expect(
+      rendered
+        .queryAllByRole('row')
+        .slice(2)
+        .map(d => d.children[0].textContent)
+    ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: derek'])
 
-  fireEvent.click(rendered.getByText('Profile Progress'))
-  rendered.getByText('Profile Progress 🔼0')
-  expect(
-    rendered
-      .queryAllByRole('row')
-      .slice(2)
-      .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: joe', 'firstName: tanner', 'firstName: derek'])
+    fireEvent.click(rendered.getByText('Profile Progress'))
+    rendered.getByText('Profile Progress 🔼0')
+    expect(
+      rendered
+        .queryAllByRole('row')
+        .slice(2)
+        .map(d => d.children[0].textContent)
+    ).toEqual(['firstName: joe', 'firstName: tanner', 'firstName: derek'])
 
-  fireEvent.click(rendered.getByText('First Name'), { shiftKey: true })
-  rendered.getByText('Profile Progress 🔼0')
-  rendered.getByText('First Name 🔼1')
-  expect(
-    rendered
-      .queryAllByRole('row')
-      .slice(2)
-      .map(d => d.children[0].textContent)
-  ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+    fireEvent.click(rendered.getByText('First Name'), { shiftKey: true })
+    rendered.getByText('Profile Progress 🔼0')
+    rendered.getByText('First Name 🔼1')
+    expect(
+      rendered
+        .queryAllByRole('row')
+        .slice(2)
+        .map(d => d.children[0].textContent)
+    ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+  })
 })

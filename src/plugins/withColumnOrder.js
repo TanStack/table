@@ -1,15 +1,17 @@
 import React from 'react'
 
-import { useGetLatest, functionalUpdate } from '../utils'
+import { functionalUpdate } from '../utils'
 
 import { withColumnOrder as name, withColumnVisibility } from '../Constants'
 
 export const withColumnOrder = {
   name,
   after: [withColumnVisibility],
-  useReduceOptions,
-  useInstanceAfterState,
-  useReduceLeafColumns,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useReduceLeafColumns,
+  },
 }
 
 function useReduceOptions(options) {
@@ -25,20 +27,18 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   instance.resetColumnOrder = React.useCallback(
     () =>
       setState(
         old => ({
           ...old,
-          columnOrder: getInstance().initialState.columnOrder || [],
+          columnOrder: instance.initialState.columnOrder || [],
         }),
         {
           type: 'resetColumnOrder',
         }
       ),
-    [getInstance, setState]
+    [instance.initialState.columnOrder, setState]
   )
 
   instance.setColumnOrder = React.useCallback(
@@ -56,10 +56,10 @@ function useInstanceAfterState(instance) {
   )
 }
 
-function useReduceLeafColumns(leafColumns, { getInstance }) {
+function useReduceLeafColumns(leafColumns, { instance }) {
   const {
     state: { columnOrder },
-  } = getInstance()
+  } = instance
 
   return React.useMemo(() => {
     // Sort grouped columns to the start of the column list

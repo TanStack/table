@@ -2,7 +2,7 @@ import React from 'react'
 
 //
 
-import { useGetLatest, flattenColumns, makeRenderer } from '../utils'
+import { flattenColumns, makeRenderer } from '../utils'
 
 export const defaultColumn = {
   Header: () => <>&nbsp;</>,
@@ -15,7 +15,6 @@ export const defaultColumn = {
 }
 
 export default function useColumns(instance) {
-  const getInstance = useGetLatest(instance)
   const {
     options: { columns },
     plugs: { useReduceColumns, useReduceAllColumns, useReduceLeafColumns },
@@ -57,23 +56,23 @@ export default function useColumns(instance) {
         )
       }
 
-      column.render = makeRenderer(getInstance, {
+      column.render = makeRenderer(instance, {
         column,
       })
 
-      column.getWidth = () => getInstance().getColumnWidth(column.id)
+      column.getWidth = () => instance.getColumnWidth(column.id)
     },
-    [getInstance]
+    [instance]
   )
 
   instance.columns = React.useMemo(() => {
-    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+    if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Building Columns...')
 
     return recurseColumns(columns)
 
-    function recurseColumns(columns, parent, depth = 0) {
-      return columns.map(column => {
+    function recurseColumns(cols, parent, depth = 0) {
+      return cols.map(column => {
         column = {
           ...column,
           parent,
@@ -88,9 +87,9 @@ export default function useColumns(instance) {
         return column
       })
     }
-  }, [columns, getInstance])
+  }, [columns, instance.options.debug])
 
-  instance.columns = useReduceColumns(instance.columns, { getInstance })
+  instance.columns = useReduceColumns(instance.columns, { instance })
 
   instance.allColumns = React.useMemo(
     () => flattenColumns(instance.columns, true),
@@ -98,24 +97,24 @@ export default function useColumns(instance) {
   )
 
   instance.allColumns = useReduceAllColumns(instance.allColumns, {
-    getInstance,
+    instance,
   })
 
   instance.allColumns = React.useMemo(() => {
     return instance.allColumns.map(column => {
       Object.assign(column, {
         ...defaultColumn,
-        ...(getInstance().options.defaultColumn || {}),
+        ...(instance.options.defaultColumn || {}),
         ...column,
       })
 
       return column
     })
-  }, [getInstance, instance.allColumns])
+  }, [instance.allColumns, instance.options.defaultColumn])
 
   instance.allColumns.forEach(column => {
     prepColumn(column)
-    instance.plugs.decorateColumn(column, { getInstance })
+    instance.plugs.decorateColumn(column, { instance })
   })
 
   instance.leafColumns = React.useMemo(
@@ -127,12 +126,12 @@ export default function useColumns(instance) {
   )
 
   instance.leafColumns = useReduceLeafColumns(instance.leafColumns, {
-    getInstance,
+    instance,
   })
 
   // Check for duplicate columns
   if (process.env.NODE_ENV !== 'production') {
-    const duplicateColumns = instance.leafColumns.filter((column, i, all) => {
+    const duplicateColumns = instance.leafColumns.filter((column, i) => {
       return instance.leafColumns.findIndex(d => d.id === column.id) !== i
     })
 
