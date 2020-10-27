@@ -20,9 +20,11 @@ import * as filterTypes from '../filterTypes'
 export const withGlobalFilter = {
   name,
   after: [withColumnVisibility, withColumnFilters],
-  useReduceOptions,
-  useInstanceAfterState,
-  useInstanceAfterDataModel,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useInstanceAfterDataModel,
+  },
 }
 
 function useReduceOptions(options) {
@@ -40,35 +42,34 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const globalFilterResetDeps = [
     instance.options.manualGlobalFilter ? null : instance.options.data,
   ]
+
   React.useMemo(() => {
-    if (getInstance().options.autoResetGlobalFilter) {
-      getInstance().state.globalFilterValue = getInstance().getInitialState().globalFilterValue
+    if (instance.options.autoResetGlobalFilter) {
+      instance.state.globalFilterValue = instance.getInitialState().globalFilterValue
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, globalFilterResetDeps)
 
   useMountedLayoutEffect(() => {
-    if (getInstance().options.autoResetGlobalFilter) {
+    if (instance.options.autoResetGlobalFilter) {
       instance.resetGlobalFilter()
     }
   }, globalFilterResetDeps)
 
   instance.getCanGlobalFilterColumn = React.useCallback(
     columnId => {
-      const column = getInstance().leafColumns.find(d => d.id === columnId)
+      const column = instance.leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
       }
 
       return getFirstDefined(
-        getInstance().options.disableFilters ? false : undefined,
-        getInstance().options.disableGlobalFilters ? false : undefined,
+        instance.options.disableFilters ? false : undefined,
+        instance.options.disableGlobalFilters ? false : undefined,
         column.disableAllFilters ? false : undefined,
         column.disableGlobalFilter ? false : undefined,
         column.defaultCanFilter,
@@ -76,7 +77,11 @@ function useInstanceAfterState(instance) {
         !!column.accessor
       )
     },
-    [getInstance]
+    [
+      instance.leafColumns,
+      instance.options.disableFilters,
+      instance.options.disableGlobalFilters,
+    ]
   )
 
   instance.setGlobalFilterValue = React.useCallback(
@@ -84,8 +89,8 @@ function useInstanceAfterState(instance) {
       setState(
         old => {
           const filterMethod = getFilterMethod(
-            getInstance().options.globalFilterType,
-            getInstance().options.filterTypes || {},
+            instance.options.globalFilterType,
+            instance.options.filterTypes || {},
             filterTypes
           )
 
@@ -93,6 +98,7 @@ function useInstanceAfterState(instance) {
 
           //
           if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { globalFilterValue, ...stateWithout } = old
             return stateWithout
           }
@@ -107,7 +113,7 @@ function useInstanceAfterState(instance) {
           value,
         }
       ),
-    [getInstance, setState]
+    [instance.options.filterTypes, instance.options.globalFilterType, setState]
   )
 
   instance.resetGlobalFilter = React.useCallback(
@@ -115,13 +121,13 @@ function useInstanceAfterState(instance) {
       setState(
         old => ({
           ...old,
-          globalFilterValue: getInstance().getInitialState().globalFilterValue,
+          globalFilterValue: instance.getInitialState().globalFilterValue,
         }),
         {
           type: 'resetGlobalFilter',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 }
 
@@ -135,8 +141,6 @@ function useInstanceAfterDataModel(instance) {
     leafColumns,
   } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const [
     globalFilteredRows,
     globalFilteredFlatRows,
@@ -146,7 +150,7 @@ function useInstanceAfterDataModel(instance) {
       return [rows, flatRows, rowsById]
     }
 
-    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+    if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Global Filtering...')
 
     const filteredFlatRows = []
@@ -154,7 +158,7 @@ function useInstanceAfterDataModel(instance) {
 
     const filterMethod = getFilterMethod(
       globalFilterType,
-      getInstance().options.filterTypes || {},
+      instance.options.filterTypes || {},
       filterTypes
     )
 
@@ -166,7 +170,7 @@ function useInstanceAfterDataModel(instance) {
     }
 
     const filterableColumns = leafColumns.filter(c =>
-      getInstance().getCanGlobalFilterColumn(c.id)
+      instance.getCanGlobalFilterColumn(c.id)
     )
 
     // Filters top level and nested rows
@@ -194,8 +198,8 @@ function useInstanceAfterDataModel(instance) {
   }, [
     manualGlobalFilter,
     globalFilterValue,
+    instance,
     globalFilterType,
-    getInstance,
     leafColumns,
     rows,
     flatRows,

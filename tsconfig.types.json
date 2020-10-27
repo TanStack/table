@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "declarationDir": "./types",
+    "emitDeclarationOnly": true,
+    "noEmit": false
+  },
+  "files": ["./src/index.ts", "./src/hydration/index.ts"],
+  "exclude": ["./src/**/*"]
+}

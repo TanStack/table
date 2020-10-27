@@ -2,30 +2,28 @@ import React from 'react'
 
 //
 
-import { useGetLatest, makeRenderer, flattenBy } from '../utils'
+import { makeRenderer, flattenBy } from '../utils'
 
 export default function useDataModel(instance) {
   const {
     leafColumns,
-    options: { data, getRowId, getSubRows },
+    options: { data, getRowId, getSubRows, debug },
   } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const [rows, flatRows, rowsById] = React.useMemo(() => {
-    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+    if (process.env.NODE_ENV !== 'production' && debug)
       console.info('Accessing...')
 
     // Access the row model using initial columns
-    const rows = []
-    const flatRows = []
-    const rowsById = {}
+    const _rows = []
+    const _flatRows = []
+    const _rowsById = {}
 
     data.forEach((originalRow, rowIndex) =>
-      accessRow(originalRow, rowIndex, 0, undefined, rows)
+      accessRow(originalRow, rowIndex, 0, undefined, _rows)
     )
 
-    return [rows, flatRows, rowsById]
+    return [_rows, _flatRows, _rowsById]
 
     function accessRow(originalRow, rowIndex, depth = 0, parent, parentRows) {
       // Keep the original reference around
@@ -45,9 +43,9 @@ export default function useDataModel(instance) {
       // Push this row into the parentRows array
       parentRows.push(row)
       // Keep track of every row in a flat array
-      flatRows.push(row)
+      _flatRows.push(row)
       // Also keep track of every row by its ID
-      rowsById[id] = row
+      _rowsById[id] = row
 
       // Get the original subrows
       row.originalSubRows = getSubRows(originalRow, rowIndex)
@@ -84,28 +82,28 @@ export default function useDataModel(instance) {
           value,
         }
 
-        cell.render = makeRenderer(getInstance, {
+        cell.render = makeRenderer(instance, {
           cell,
           row,
           column,
           value,
         })
 
-        getInstance().plugs.decorateCell(cell, { getInstance })
+        instance.plugs.decorateCell(cell, { instance })
 
         return cell
       })
 
       row.getVisibleCells = () =>
-        getInstance().leafColumns.map(column =>
+        leafColumns.map(column =>
           row.cells.find(cell => cell.column.id === column.id)
         )
 
-      getInstance().plugs.decorateRow(row, { getInstance })
+      instance.plugs.decorateRow(row, { instance })
     }
-  }, [data, leafColumns, getInstance, getRowId, getSubRows])
+  }, [debug, data, getRowId, getSubRows, leafColumns, instance])
 
-  Object.assign(getInstance(), {
+  Object.assign(instance, {
     rows,
     flatRows,
     rowsById,

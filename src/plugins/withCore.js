@@ -1,20 +1,36 @@
 import React from 'react'
 
-import { useGetLatest, makeRenderer } from '../utils'
+import { makeRenderer } from '../utils'
 
 export const withCore = {
   name: 'withCore',
   after: [],
-  useInstanceAfterState,
-  decorateHeader,
-  decorateRow,
-  decorateCell,
-  useInstanceAfterDataModel,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    decorateHeader,
+    decorateRow,
+    decorateCell,
+    useInstanceAfterDataModel,
+  },
+}
+
+function useReduceOptions(options) {
+  return {
+    initialState: {},
+    state: {},
+    onStateChange: d => d,
+    getSubRows: row => row.subRows || [],
+    getRowId: (row, index, parent) =>
+      `${parent ? [parent.id, index].join('.') : index}`,
+    enableFilters: true,
+    filterFromChildrenUp: true,
+    paginateExpandedRows: true,
+    ...options,
+  }
 }
 
 function useInstanceAfterState(instance) {
-  const getInstance = useGetLatest(instance)
-
   instance.reset = React.useCallback(() => {
     const { setState, getInitialState } = instance
     setState(getInitialState(), {
@@ -24,7 +40,7 @@ function useInstanceAfterState(instance) {
 
   instance.getColumnWidth = React.useCallback(
     columnId => {
-      const column = getInstance().leafColumns.find(d => d.id === columnId)
+      const column = instance.leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return
@@ -32,43 +48,45 @@ function useInstanceAfterState(instance) {
 
       return Math.min(Math.max(column.minWidth, column.width), column.maxWidth)
     },
-    [getInstance]
+    [instance.leafColumns]
   )
 
   instance.getTotalWidth = React.useCallback(() => {
-    return getInstance().leafColumns.reduce(
+    return instance.leafColumns.reduce(
       (sum, column) => sum + column.getWidth(),
       0
     )
-  }, [getInstance])
+  }, [instance.leafColumns])
 }
 
-function decorateHeader(header, { getInstance }) {
+function decorateHeader(header, { instance }) {
   header.render = header.isPlaceholder
     ? () => null
-    : makeRenderer(getInstance, {
+    : makeRenderer(instance, {
         column: header.column,
       })
 
   // Give columns/headers a default getHeaderProps
   header.getHeaderProps = (props = {}) =>
-    getInstance().plugs.reduceHeaderProps(
+    instance.plugs.reduceHeaderProps(
       {
+        key: header.id,
         role: 'columnheader',
         ...props,
       },
-      { getInstance, header }
+      { instance, header }
     )
 
   // Give columns/headers a default getFooterProps
   header.getFooterProps = (props = {}) =>
-    getInstance().plugs.reduceFooterProps(
+    instance.plugs.reduceFooterProps(
       {
+        key: header.id,
         role: 'columnfooter',
         ...props,
       },
       {
-        getInstance,
+        instance,
         header,
       }
     )
@@ -90,42 +108,39 @@ function decorateHeader(header, { getInstance }) {
   }
 }
 
-function decorateRow(row, { getInstance }) {
+function decorateRow(row, { instance }) {
   row.getRowProps = (props = {}) =>
-    getInstance().plugs.reduceRowProps(
-      { role: 'row', ...props },
-      { getInstance, row }
+    instance.plugs.reduceRowProps(
+      { key: row.id, role: 'row', ...props },
+      { instance, row }
     )
 }
 
-function decorateCell(cell, { getInstance }) {
+function decorateCell(cell, { instance }) {
   cell.getCellProps = (props = {}) =>
-    getInstance().plugs.reduceCellProps(
+    instance.plugs.reduceCellProps(
       {
+        key: cell.id,
         role: 'gridcell',
         ...props,
       },
       {
-        getInstance,
+        instance,
         cell,
       }
     )
 }
 
 function useInstanceAfterDataModel(instance) {
-  const getInstance = useGetLatest(instance)
   instance.getTableHeadProps = (props = {}) =>
-    getInstance().plugs.reduceTableHeadProps({ ...props }, { getInstance })
+    instance.plugs.reduceTableHeadProps({ ...props }, { instance })
   instance.getTableFooterProps = (props = {}) =>
-    getInstance().plugs.reduceTableFooterProps({ ...props }, { getInstance })
+    instance.plugs.reduceTableFooterProps({ ...props }, { instance })
   instance.getTableBodyProps = (props = {}) =>
-    getInstance().plugs.reduceTableBodyProps(
+    instance.plugs.reduceTableBodyProps(
       { role: 'rowgroup', ...props },
-      { getInstance }
+      { instance }
     )
   instance.getTableProps = (props = {}) =>
-    getInstance().plugs.reduceTableProps(
-      { role: 'table', ...props },
-      { getInstance }
-    )
+    instance.plugs.reduceTableProps({ role: 'table', ...props }, { instance })
 }

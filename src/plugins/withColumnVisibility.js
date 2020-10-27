@@ -1,17 +1,19 @@
 import React from 'react'
 
-import { useGetLatest, getFirstDefined } from '../utils'
+import { getFirstDefined } from '../utils'
 
 import { withColumnVisibility as name } from '../Constants'
 
 export const withColumnVisibility = {
   name,
   after: [],
-  useReduceOptions,
-  useInstanceAfterState,
-  useInstanceAfterDataModel,
-  decorateColumn,
-  useReduceLeafColumns,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useInstanceAfterDataModel,
+    decorateColumn,
+    useReduceLeafColumns,
+  },
 }
 
 function useReduceOptions(options) {
@@ -27,16 +29,11 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   instance.toggleColumnVisibility = React.useCallback(
     (columnId, value) => {
-      value = getFirstDefined(
-        value,
-        !getInstance().getColumnIsVisible(columnId)
-      )
+      value = getFirstDefined(value, !instance.getColumnIsVisible(columnId))
 
-      if (getInstance().getColumnCanHide(columnId)) {
+      if (instance.getColumnCanHide(columnId)) {
         setState(
           old => ({
             ...old,
@@ -52,17 +49,17 @@ function useInstanceAfterState(instance) {
         )
       }
     },
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.toggleAllColumnsVisible = React.useCallback(
     value => {
-      value = getFirstDefined(value, !getInstance().getIsAllColumnsVisible())
+      value = getFirstDefined(value, !instance.getIsAllColumnsVisible())
 
       setState(
         old => ({
           ...old,
-          columnVisibility: getInstance().preVisibleLeafColumns.reduce(
+          columnVisibility: instance.preVisibleLeafColumns.reduce(
             (obj, column) => ({
               ...obj,
               [column.id]: !value ? !column.getCanHide() : value,
@@ -76,12 +73,12 @@ function useInstanceAfterState(instance) {
         }
       )
     },
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.getColumnIsVisible = React.useCallback(
     columnId => {
-      const column = getInstance().allColumns.find(d => d.id === columnId)
+      const column = instance.allColumns.find(d => d.id === columnId)
 
       if (!column) {
         return true
@@ -93,25 +90,25 @@ function useInstanceAfterState(instance) {
         true
       )
     },
-    [getInstance, instance.state.columnVisibility]
+    [instance.allColumns, instance.state.columnVisibility]
   )
 
   instance.getColumnCanHide = React.useCallback(
     columnId => {
-      const column = getInstance().allColumns.find(d => d.id === columnId)
+      const column = instance.allColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
       }
 
       return getFirstDefined(
-        getInstance().options.disabledHiding ? false : undefined,
+        instance.options.disabledHiding ? false : undefined,
         column.disableHiding ? false : undefined,
         column.defaultCanHide,
         true
       )
     },
-    [getInstance]
+    [instance.allColumns, instance.options.disabledHiding]
   )
 
   instance.getIsAllColumnsVisible = React.useCallback(
@@ -127,31 +124,29 @@ function useInstanceAfterState(instance) {
 }
 
 function useInstanceAfterDataModel(instance) {
-  const getInstance = useGetLatest(instance)
-
   instance.getToggleAllColumnsVisibilityProps = React.useCallback(
     (props = {}) => {
       return {
         onChange: e => {
-          getInstance().toggleAllColumnsVisible(e.target.checked)
+          instance.toggleAllColumnsVisible(e.target.checked)
         },
         title: 'Toggle visibility for all columns',
-        checked: getInstance().getIsAllColumnsVisible(),
+        checked: instance.getIsAllColumnsVisible(),
         indeterminate:
-          !getInstance().getIsAllColumnsVisible() &&
-          getInstance().getIsSomeColumnsVisible(),
+          !instance.getIsAllColumnsVisible() &&
+          instance.getIsSomeColumnsVisible(),
         ...props,
       }
     },
-    [getInstance]
+    [instance]
   )
 }
 
-function decorateColumn(column, { getInstance }) {
-  column.getCanHide = () => getInstance().getColumnCanHide(column.id)
-  column.getIsVisible = () => getInstance().getColumnIsVisible(column.id)
+function decorateColumn(column, { instance }) {
+  column.getCanHide = () => instance.getColumnCanHide(column.id)
+  column.getIsVisible = () => instance.getColumnIsVisible(column.id)
   column.toggleVisibility = value =>
-    getInstance().toggleColumnVisibility(column.id, value)
+    instance.toggleColumnVisibility(column.id, value)
 
   column.getToggleVisibilityProps = (props = {}) => ({
     type: 'checkbox',
@@ -164,10 +159,10 @@ function decorateColumn(column, { getInstance }) {
   })
 }
 
-function useReduceLeafColumns(leafColumns, { getInstance }) {
-  const { getColumnIsVisible } = getInstance()
+function useReduceLeafColumns(leafColumns, { instance }) {
+  const { getColumnIsVisible } = instance
 
-  getInstance().preVisibleLeafColumns = React.useMemo(
+  instance.preVisibleLeafColumns = React.useMemo(
     () => leafColumns.filter(column => column.getCanHide()),
     [leafColumns]
   )

@@ -1,10 +1,21 @@
 import React from 'react'
 
+export function composeDecorator(fns) {
+  return (initial, meta) => fns.forEach(fn => fn(initial, meta), initial)
+}
+
+export function composeReducer(fns) {
+  return (initial, meta) =>
+    fns.reduce((reduced, fn) => fn(reduced, meta), initial)
+}
+
 export function functionalUpdate(updater, old) {
   return typeof updater === 'function' ? updater(old) : updater
 }
 
-export function noop() {}
+export function noop() {
+  //
+}
 
 export function useGetLatest(obj) {
   const ref = React.useRef()
@@ -29,10 +40,10 @@ export function useMountedLayoutEffect(fn, deps) {
   }, deps)
 }
 
-export function makeRenderer(getInstance, meta = {}) {
+export function makeRenderer(instance, meta = {}) {
   return (Comp, userProps = {}) => {
     return flexRender(Comp, {
-      tableInstance: getInstance(),
+      instance,
       ...meta,
       ...userProps,
     })
@@ -90,8 +101,8 @@ export function isFunction(a) {
 export function flattenBy(arr, key, includeParents) {
   const flat = []
 
-  const recurse = arr => {
-    arr.forEach(d => {
+  const recurse = subArr => {
+    subArr.forEach(d => {
       if (d[key] && d[key].length) {
         if (includeParents) {
           flat.push(d)
@@ -108,14 +119,14 @@ export function flattenBy(arr, key, includeParents) {
   return flat
 }
 
-export function expandRows(rows, getInstance) {
+export function expandRows(rows, instance) {
   const expandedRows = []
 
   const handleRow = row => {
     expandedRows.push(row)
 
     if (
-      getInstance().options.expandSubRows &&
+      instance.options.expandSubRows &&
       row.subRows &&
       row.subRows.length &&
       row.getIsExpanded()
@@ -138,7 +149,7 @@ export function shouldAutoRemoveFilter(autoRemove, value, column) {
 }
 
 export function groupBy(rows, columnId) {
-  return rows.reduce((prev, row, i) => {
+  return rows.reduce((prev, row) => {
     const resKey = `${row.values[columnId]}`
     prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : []
     prev[resKey].push(row)
@@ -198,21 +209,23 @@ export function findExpandedDepth(expanded) {
   return maxDepth
 }
 
-export function composeDecorate(...fns) {
+export function composeDecorate(fns) {
   return (...args) => {
     fns.filter(Boolean).forEach(fn => fn(...args))
   }
 }
 
-export function getLeafHeaders(header) {
+export function getLeafHeaders(originalHeader) {
   const leafHeaders = []
+
   const recurseHeader = header => {
     if (header.subHeaders && header.subHeaders.length) {
       header.subHeaders.map(recurseHeader)
     }
     leafHeaders.push(header)
   }
-  recurseHeader(header)
+
+  recurseHeader(originalHeader)
   return leafHeaders
 }
 
@@ -232,22 +245,6 @@ export function useLazyMemo(fn, deps = []) {
   }, [deps, fn])
 }
 
-export function composeDecorator(...fns) {
-  return (...args) => {
-    fns.forEach(fn => fn(...args))
-  }
-}
-
-export function composeReducer(...fns) {
-  return (initial, ...args) =>
-    fns.reduce((reduced, fn) => fn(reduced, ...args), initial)
-}
-
-export function composePropsReducer(...fns) {
-  return (initial, ...args) =>
-    fns.reduceRight((reduced, fn) => fn(reduced, ...args), initial)
-}
-
 export function applyDefaults(obj, defaults) {
   const newObj = { ...obj }
 
@@ -260,7 +257,7 @@ export function applyDefaults(obj, defaults) {
   return newObj
 }
 
-export function buildHeaderGroups(columns, leafColumns, { getInstance }) {
+export function buildHeaderGroups(originalColumns, leafColumns, { instance }) {
   // Find the max depth of the columns:
   // build the leaf column row
   // build each buffer row going up
@@ -282,7 +279,7 @@ export function buildHeaderGroups(columns, leafColumns, { getInstance }) {
     }, 0)
   }
 
-  findMaxDepth(columns)
+  findMaxDepth(originalColumns)
 
   const headerGroups = []
 
@@ -361,21 +358,23 @@ export function buildHeaderGroups(columns, leafColumns, { getInstance }) {
 
   headerGroups.forEach(headerGroup => {
     headerGroup.getHeaderGroupProps = (props = {}) =>
-      getInstance().plugs.reduceHeaderGroupProps(
+      instance.plugs.reduceHeaderGroupProps(
         {
+          key: headerGroup.id,
           role: 'row',
           ...props,
         },
-        { getInstance, headerGroup }
+        { instance, headerGroup }
       )
 
     headerGroup.getFooterGroupProps = (props = {}) =>
-      getInstance().plugs.reduceFooterGroupProps(
+      instance.plugs.reduceFooterGroupProps(
         {
+          key: headerGroup.id,
           role: 'row',
           ...props,
         },
-        { getInstance, headerGroup }
+        { instance, headerGroup }
       )
   })
 

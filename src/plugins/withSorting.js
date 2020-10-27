@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   getFirstDefined,
   functionalUpdate,
   isFunction,
@@ -27,10 +26,13 @@ export const withSorting = {
     withGlobalFilter,
     withGrouping,
   ],
-  useReduceOptions,
-  useInstanceAfterState,
-  useInstanceAfterDataModel,
-  decorateColumn,
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useInstanceAfterDataModel,
+    decorateColumn,
+    decorateHeader: decorateColumn,
+  },
 }
 
 function useReduceOptions(options) {
@@ -53,20 +55,18 @@ function useReduceOptions(options) {
 function useInstanceAfterState(instance) {
   const { setState } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const sortingResetDeps = [
     instance.options.manualSorting ? null : instance.options.data,
   ]
   React.useMemo(() => {
-    if (getInstance().options.autoResetSorting) {
-      getInstance().state.sorting = getInstance().getInitialState().sorting
+    if (instance.options.autoResetSorting) {
+      instance.state.sorting = instance.options.initialState.sorting
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, sortingResetDeps)
 
   useMountedLayoutEffect(() => {
-    if (getInstance().options.autoResetSorting) {
+    if (instance.options.autoResetSorting) {
       instance.resetSorting()
     }
   }, sortingResetDeps)
@@ -81,7 +81,7 @@ function useInstanceAfterState(instance) {
             disableSortRemove,
             disableMultiRemove,
             maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
-          } = getInstance()
+          } = instance
 
           const { sorting } = old
 
@@ -174,7 +174,7 @@ function useInstanceAfterState(instance) {
           multi,
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.setSorting = React.useCallback(
@@ -199,47 +199,47 @@ function useInstanceAfterState(instance) {
         old => {
           return {
             ...old,
-            sorting: getInstance().getInitialState().sorting,
+            sorting: instance.getInitialState().sorting,
           }
         },
         {
           type: 'resetSorting',
         }
       ),
-    [getInstance, setState]
+    [instance, setState]
   )
 
   instance.getColumnCanSort = React.useCallback(
     columnId => {
-      const column = getInstance().leafColumns.find(d => d.id === columnId)
+      const column = instance.leafColumns.find(d => d.id === columnId)
 
       if (!column) {
         return false
       }
 
       return getFirstDefined(
-        getInstance().options.disableSorting ? false : undefined,
+        instance.options.disableSorting ? false : undefined,
         column.disableSorting ? false : undefined,
         column.defaultCanSort,
         !!column.accessor
       )
     },
-    [getInstance]
+    [instance]
   )
 
   instance.getColumnSortedIndex = React.useCallback(
-    columnId => getInstance().state.sorting.findIndex(d => d.id === columnId),
-    [getInstance]
+    columnId => instance.state.sorting.findIndex(d => d.id === columnId),
+    [instance]
   )
 
   instance.getColumnIsSorted = React.useCallback(
-    columnId => getInstance().getColumnSortedIndex(columnId) > -1,
-    [getInstance]
+    columnId => instance.getColumnSortedIndex(columnId) > -1,
+    [instance]
   )
 
   instance.getColumnIsSortedDesc = React.useCallback(
-    columnId => getInstance().state.sorting.find(d => d.id === columnId)?.desc,
-    [getInstance]
+    columnId => instance.state.sorting.find(d => d.id === columnId)?.desc,
+    [instance]
   )
 
   instance.clearColumnSorting = React.useCallback(
@@ -272,14 +272,12 @@ function useInstanceAfterDataModel(instance) {
     leafColumns,
   } = instance
 
-  const getInstance = useGetLatest(instance)
-
   const [sortedRows, sortedFlatRows] = React.useMemo(() => {
     if (manualSorting || !sorting.length) {
       return [rows, flatRows]
     }
 
-    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+    if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Sorting...')
 
     const sortedFlatRows = []
@@ -310,7 +308,7 @@ function useInstanceAfterDataModel(instance) {
 
           const sortMethod =
             isFunction(sortType) ||
-            (getInstance().options.sortTypes || {})[sortType] ||
+            (instance.options.sortTypes || {})[sortType] ||
             sortTypes[sortType]
 
           if (!sortMethod) {
@@ -351,7 +349,7 @@ function useInstanceAfterDataModel(instance) {
     }
 
     return [sortData(rows), sortedFlatRows]
-  }, [manualSorting, sorting, rows, flatRows, leafColumns, getInstance])
+  }, [manualSorting, sorting, rows, flatRows, leafColumns, instance])
 
   Object.assign(instance, {
     preSortedRows: rows,
@@ -363,14 +361,14 @@ function useInstanceAfterDataModel(instance) {
   })
 }
 
-function decorateColumn(column, { getInstance }) {
-  column.getCanSort = () => getInstance().getColumnCanSort(column.id)
-  column.getSortedIndex = () => getInstance().getColumnSortedIndex(column.id)
-  column.getIsSorted = () => getInstance().getColumnIsSorted(column.id)
+function decorateColumn(column, { instance }) {
+  column.getCanSort = () => instance.getColumnCanSort(column.id)
+  column.getSortedIndex = () => instance.getColumnSortedIndex(column.id)
+  column.getIsSorted = () => instance.getColumnIsSorted(column.id)
   column.toggleSorting = (desc, multi) =>
-    getInstance().toggleColumnSorting(column.id, desc, multi)
-  column.clearSorting = () => getInstance().clearColumnSorting(column.id)
-  column.getIsSortedDesc = () => getInstance().getColumnIsSortedDesc(column.id)
+    instance.toggleColumnSorting(column.id, desc, multi)
+  column.clearSorting = () => instance.clearColumnSorting(column.id)
+  column.getIsSortedDesc = () => instance.getColumnIsSortedDesc(column.id)
 
   column.getToggleSortingProps = ({ isMulti, ...props } = {}) => {
     const canSort = column.getCanSort()
@@ -381,8 +379,8 @@ function decorateColumn(column, { getInstance }) {
             e.persist()
             column.toggleSorting(
               undefined,
-              !getInstance().options.disableMultiSort &&
-                (isMulti || getInstance().options.isMultiSortEvent(e))
+              !instance.options.disableMultiSort &&
+                (isMulti || instance.options.isMultiSortEvent(e))
             )
           }
         : undefined,

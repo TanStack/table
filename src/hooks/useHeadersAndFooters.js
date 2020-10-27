@@ -2,12 +2,7 @@ import React from 'react'
 
 //
 
-import {
-  useGetLatest,
-  flattenBy,
-  buildHeaderGroups,
-  recurseHeaderForSpans,
-} from '../utils'
+import { flattenBy, buildHeaderGroups, recurseHeaderForSpans } from '../utils'
 
 export default function useHeadersAndFooters(instance) {
   const {
@@ -20,17 +15,15 @@ export default function useHeadersAndFooters(instance) {
     },
   } = instance
 
-  const getInstance = useGetLatest(instance)
-
   instance.headerGroups = React.useMemo(() => {
-    if (process.env.NODE_ENV !== 'production' && getInstance().options.debug)
+    if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Building Headers and Footers')
 
-    return buildHeaderGroups(columns, leafColumns, { getInstance })
-  }, [columns, getInstance, leafColumns])
+    return buildHeaderGroups(columns, leafColumns, { instance })
+  }, [columns, instance, leafColumns])
 
   instance.headerGroups = useReduceHeaderGroups(instance.headerGroups, {
-    getInstance,
+    instance,
   })
 
   instance.headerGroups[0].headers.forEach(header =>
@@ -43,7 +36,7 @@ export default function useHeadersAndFooters(instance) {
   )
 
   instance.footerGroups = useReduceFooterGroups(instance.footerGroups, {
-    getInstance,
+    instance,
   })
 
   instance.flatHeaders = React.useMemo(
@@ -52,11 +45,11 @@ export default function useHeadersAndFooters(instance) {
   )
 
   instance.flatHeaders = useReduceFlatHeaders(instance.flatHeaders, {
-    getInstance,
+    instance,
   })
 
   instance.flatHeaders.forEach(header => {
-    getInstance().plugs.decorateHeader(header, { getInstance })
+    instance.plugs.decorateHeader(header, { instance })
   })
 
   instance.flatFooters = React.useMemo(

@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import {
-  useTable,
-  usePagination,
-  useSortBy,
-  useFilters,
-  useGroupBy,
-  useExpanded,
-  useRowSelect,
+  makeUseTable,
+  // usePagination,
+  // useSortBy,
+  // useFilters,
+  // useGroupBy,
+  // useExpanded,
+  // useRowSelect,
 } from 'react-table'
 import matchSorter from 'match-sorter'
 
@@ -264,6 +264,42 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     []
   )
 
+  const useTable = makeUseTable({
+    plugins: [
+      // withFilters,
+      // withGroupBy,
+      // withSortBy,
+      // withExpanded,
+      // withPagination,
+      // withRowSelect,
+      // hooks => {
+      //   hooks.leafColumns.push(columns => [
+      //     {
+      //       id: 'selection',
+      //       // Make this column a groupByBoundary. This ensures that groupBy columns
+      //       // are placed after it
+      //       groupByBoundary: true,
+      //       // The header can use the table's getToggleAllRowsSelectedProps method
+      //       // to render a checkbox
+      //       Header: ({ getToggleAllRowsSelectedProps }) => (
+      //         <div>
+      //           <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+      //         </div>
+      //       ),
+      //       // The cell can use the individual row's getToggleRowSelectedProps method
+      //       // to the render a checkbox
+      //       Cell: ({ row }) => (
+      //         <div>
+      //           <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+      //         </div>
+      //       ),
+      //     },
+      //     ...columns,
+      //   ])
+      // },
+    ],
+  })
+
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -274,8 +310,6 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     // which has only the rows for the active page
 
     // The rest of these things are super handy, too ;)
-    canPreviousPage,
-    canNextPage,
     pageOptions,
     pageCount,
     gotoPage,
@@ -283,56 +317,23 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize, groupBy, expanded, filters, selection },
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-      filterTypes,
-      // nestExpandedRows: true,
-      initialState: { pageIndex: 2 },
-      // updateMyData isn't part of the API, but
-      // anything we put into these options will
-      // automatically be available on the instance.
-      // That way we can call this function from our
-      // cell renderer!
-      updateMyData,
-      // We also need to pass this so the page doesn't change
-      // when we edit the data, undefined means using the default
-      autoResetPage: !skipPageReset,
-    },
-    useFilters,
-    useGroupBy,
-    useSortBy,
-    useExpanded,
-    usePagination,
-    useRowSelect,
-    hooks => {
-      hooks.leafColumns.push(columns => [
-        {
-          id: 'selection',
-          // Make this column a groupByBoundary. This ensures that groupBy columns
-          // are placed after it
-          groupByBoundary: true,
-          // The header can use the table's getToggleAllRowsSelectedProps method
-          // to render a checkbox
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to the render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-      ])
-    }
-  )
+  } = useTable({
+    columns,
+    data,
+    defaultColumn,
+    filterTypes,
+    // nestExpandedRows: true,
+    initialState: { pageIndex: 2 },
+    // updateMyData isn't part of the API, but
+    // anything we put into these options will
+    // automatically be available on the instance.
+    // That way we can call this function from our
+    // cell renderer!
+    updateMyData,
+    // We also need to pass this so the page doesn't change
+    // when we edit the data, undefined means using the default
+    autoResetPage: !skipPageReset,
+  })
 
   // Render the UI for your table
   return (
@@ -455,8 +456,6 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
               pageIndex,
               pageSize,
               pageCount,
-              canNextPage,
-              canPreviousPage,
               groupBy,
               expanded: expanded,
               filters,
