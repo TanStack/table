@@ -6,6 +6,7 @@ import {
   functionalUpdate,
   shouldAutoRemoveFilter,
   useMountedLayoutEffect,
+  makeStateUpdater,
 } from '../utils'
 
 import { withColumnFilters as name, withColumnVisibility } from '../Constants'
@@ -25,6 +26,10 @@ export const withColumnFilters = {
 
 function useReduceOptions(options) {
   return {
+    onColumnFiltersChange: React.useCallback(
+      makeStateUpdater('columnFilters'),
+      []
+    ),
     autoResetColumnFilters: true,
     ...options,
     initialState: {
@@ -39,7 +44,37 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
+  instance.setColumnFilters = React.useCallback(
+    updater => {
+      instance.options.onColumnFiltersChange(old => {
+        const {
+          leafColumns,
+          options: { filterTypes: userFilterTypes },
+        } = instance
+
+        return functionalUpdate(updater, old).filter(filter => {
+          const column = leafColumns.find(d => d.id === filter.id)
+          const filterMethod = getFilterMethod(
+            column.filterType,
+            userFilterTypes || {},
+            filterTypes
+          )
+
+          if (
+            shouldAutoRemoveFilter(
+              filterMethod.autoRemove,
+              filter.value,
+              column
+            )
+          ) {
+            return false
+          }
+          return true
+        })
+      }, instance)
+    },
+    [instance]
+  )
 
   const columnFilterResetDeps = [
     instance.options.manualColumnFilters ? null : instance.options.data,
@@ -47,7 +82,7 @@ function useInstanceAfterState(instance) {
 
   React.useMemo(() => {
     if (instance.options.autoResetColumnFilters) {
-      instance.state.columnFilters = instance.getInitialState().columnFilters
+      instance.state.columnFilters = instance.options.initialState.columnFilters
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, columnFilterResetDeps)
@@ -101,7 +136,7 @@ function useInstanceAfterState(instance) {
 
   instance.setColumnFilterValue = React.useCallback(
     (columnId, value) =>
-      setState(
+      instance.setColumnFilters(
         old => {
           const {
             leafColumns,
@@ -124,7 +159,7 @@ function useInstanceAfterState(instance) {
             filterTypes
           )
 
-          const previousfilter = old.columnFilters.find(d => d.id === columnId)
+          const previousfilter = old.find(d => d.id === columnId)
 
           const newFilter = functionalUpdate(
             value,
@@ -135,31 +170,19 @@ function useInstanceAfterState(instance) {
           if (
             shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)
           ) {
-            return {
-              ...old,
-              columnFilters: old.columnFilters.filter(d => d.id !== columnId),
-            }
+            return old.filter(d => d.id !== columnId)
           }
 
           if (previousfilter) {
-            return {
-              ...old,
-              columnFilters: old.columnFilters.map(d => {
-                if (d.id === columnId) {
-                  return { id: columnId, value: newFilter }
-                }
-                return d
-              }),
-            }
+            return old.map(d => {
+              if (d.id === columnId) {
+                return { id: columnId, value: newFilter }
+              }
+              return d
+            })
           }
 
-          return {
-            ...old,
-            columnFilters: [
-              ...old.columnFilters,
-              { id: columnId, value: newFilter },
-            ],
-          }
+          return [...old, { id: columnId, value: newFilter }]
         },
         {
           type: 'setColumnFilterValue',
@@ -167,50 +190,7 @@ function useInstanceAfterState(instance) {
           value,
         }
       ),
-    [instance, setState]
-  )
-
-  instance.setColumnFilters = React.useCallback(
-    columnFilters =>
-      setState(
-        old => {
-          const {
-            leafColumns,
-            options: { filterTypes: userFilterTypes },
-          } = instance
-
-          return {
-            ...old,
-            // Filter out undefined values
-            columnFilters: functionalUpdate(
-              columnFilters,
-              old.columnFilters
-            ).filter(filter => {
-              const column = leafColumns.find(d => d.id === filter.id)
-              const filterMethod = getFilterMethod(
-                column.filterType,
-                userFilterTypes || {},
-                filterTypes
-              )
-
-              if (
-                shouldAutoRemoveFilter(
-                  filterMethod.autoRemove,
-                  filter.value,
-                  column
-                )
-              ) {
-                return false
-              }
-              return true
-            }),
-          }
-        },
-        {
-          type: 'setColumnFilters',
-        }
-      ),
-    [instance, setState]
+    [instance]
   )
 
   instance.resetColumnFilters = React.useCallback(
@@ -218,13 +198,13 @@ function useInstanceAfterState(instance) {
       setState(
         old => ({
           ...old,
-          columnFilters: instance.getInitialState().columnFilters,
+          columnFilters: instance.options.initialState.columnFilters,
         }),
         {
           type: 'resetColumnFilters',
         }
       ),
-    [instance, setState]
+    [instance]
   )
 }
 

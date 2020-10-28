@@ -1,12 +1,12 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   getFirstDefined,
   getFilterMethod,
   functionalUpdate,
   shouldAutoRemoveFilter,
   useMountedLayoutEffect,
+  makeStateUpdater,
 } from '../utils'
 
 import {
@@ -29,26 +29,28 @@ export const withGlobalFilter = {
 
 function useReduceOptions(options) {
   return {
+    onGlobalFilterChange: React.useCallback(
+      makeStateUpdater('globalFilter'),
+      []
+    ),
     autoResetGlobalFilter: true,
     globalFilterType: 'text',
     ...options,
     initialState: {
-      globalFilterValue: '',
+      globalFilter: '',
       ...options.initialState,
     },
   }
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
-
   const globalFilterResetDeps = [
     instance.options.manualGlobalFilter ? null : instance.options.data,
   ]
 
   React.useMemo(() => {
     if (instance.options.autoResetGlobalFilter) {
-      instance.state.globalFilterValue = instance.getInitialState().globalFilterValue
+      instance.state.globalFilter = instance.options.initialState.globalFilter
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, globalFilterResetDeps)
@@ -58,6 +60,34 @@ function useInstanceAfterState(instance) {
       instance.resetGlobalFilter()
     }
   }, globalFilterResetDeps)
+
+  instance.setGlobalFilter = React.useCallback(
+    updater =>
+      instance.onGlobalFilterChange(old => {
+        const filterMethod = getFilterMethod(
+          instance.options.globalFilterType,
+          instance.options.filterTypes || {},
+          filterTypes
+        )
+
+        const newFilter = functionalUpdate(updater, old)
+
+        //
+        if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { globalFilter, ...stateWithout } = old
+          return stateWithout
+        }
+
+        return newFilter
+      }),
+    [instance]
+  )
+
+  instance.resetGlobalFilter = React.useCallback(
+    () => instance.setGlobalFilter(instance.options.initialState.globalFilter),
+    [instance]
+  )
 
   instance.getCanGlobalFilterColumn = React.useCallback(
     columnId => {
@@ -83,58 +113,12 @@ function useInstanceAfterState(instance) {
       instance.options.disableGlobalFilters,
     ]
   )
-
-  instance.setGlobalFilterValue = React.useCallback(
-    value =>
-      setState(
-        old => {
-          const filterMethod = getFilterMethod(
-            instance.options.globalFilterType,
-            instance.options.filterTypes || {},
-            filterTypes
-          )
-
-          const newFilter = functionalUpdate(value, old.globalFilterValue)
-
-          //
-          if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { globalFilterValue, ...stateWithout } = old
-            return stateWithout
-          }
-
-          return {
-            ...old,
-            globalFilterValue: newFilter,
-          }
-        },
-        {
-          type: 'setGlobalFilterValue',
-          value,
-        }
-      ),
-    [instance.options.filterTypes, instance.options.globalFilterType, setState]
-  )
-
-  instance.resetGlobalFilter = React.useCallback(
-    () =>
-      setState(
-        old => ({
-          ...old,
-          globalFilterValue: instance.getInitialState().globalFilterValue,
-        }),
-        {
-          type: 'resetGlobalFilter',
-        }
-      ),
-    [instance, setState]
-  )
 }
 
 function useInstanceAfterDataModel(instance) {
   const {
     options: { manualGlobalFilter, globalFilterType },
-    state: { globalFilterValue },
+    state: { globalFilter },
     rows,
     flatRows,
     rowsById,
@@ -146,7 +130,7 @@ function useInstanceAfterDataModel(instance) {
     globalFilteredFlatRows,
     globalFilteredRowsById,
   ] = React.useMemo(() => {
-    if (manualGlobalFilter || !globalFilterValue) {
+    if (manualGlobalFilter || !globalFilter) {
       return [rows, flatRows, rowsById]
     }
 
@@ -178,7 +162,7 @@ function useInstanceAfterDataModel(instance) {
       filteredRows = filterMethod(
         filteredRows,
         filterableColumns.map(d => d.id),
-        globalFilterValue
+        globalFilter
       )
 
       filteredRows.forEach(row => {
@@ -197,7 +181,7 @@ function useInstanceAfterDataModel(instance) {
     return [filterRows(rows), filteredFlatRows, filteredRowsById]
   }, [
     manualGlobalFilter,
-    globalFilterValue,
+    globalFilter,
     instance,
     globalFilterType,
     leafColumns,

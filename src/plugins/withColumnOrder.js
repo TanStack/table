@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { functionalUpdate } from '../utils'
+import { functionalUpdate, makeStateUpdater } from '../utils'
 
 import { withColumnOrder as name, withColumnVisibility } from '../Constants'
 
@@ -16,6 +16,7 @@ export const withColumnOrder = {
 
 function useReduceOptions(options) {
   return {
+    onColumnOrderChange: React.useCallback(makeStateUpdater('columnOrder'), []),
     ...options,
     initialState: {
       columnOrder: [],
@@ -25,34 +26,22 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
-
-  instance.resetColumnOrder = React.useCallback(
-    () =>
-      setState(
-        old => ({
-          ...old,
-          columnOrder: instance.initialState.columnOrder || [],
-        }),
-        {
-          type: 'resetColumnOrder',
-        }
-      ),
-    [instance.initialState.columnOrder, setState]
-  )
-
   instance.setColumnOrder = React.useCallback(
     columnOrder =>
-      setState(
+      instance.onColumnOrderChange(
         old => ({
           ...old,
           columnOrder: functionalUpdate(columnOrder, old.columnOrder),
         }),
-        {
-          type: 'setColumnOrder',
-        }
+        instance
       ),
-    [setState]
+    [instance]
+  )
+
+  instance.resetColumnOrder = React.useCallback(
+    () =>
+      instance.setColumnOrder(instance.options.initialState.columnOrder || []),
+    [instance]
   )
 }
 

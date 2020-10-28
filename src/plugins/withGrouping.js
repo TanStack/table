@@ -1,12 +1,12 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   getFirstDefined,
   flattenBy,
   groupBy,
   useMountedLayoutEffect,
   makeRenderer,
+  makeStateUpdater,
 } from '../utils'
 
 import {
@@ -37,6 +37,7 @@ export const withGrouping = {
 
 function useReduceOptions(options) {
   return {
+    onGroupingChange: React.useCallback(makeStateUpdater('grouping'), []),
     aggregationTypes: {},
     manualGrouping: false,
     autoResetGrouping: true,
@@ -49,14 +50,12 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
-
   const groupingResetDeps = [
     instance.options.manualGrouping ? null : instance.options.data,
   ]
   React.useMemo(() => {
     if (instance.options.autoResetGrouping) {
-      instance.state.grouping = instance.getInitialState().grouping
+      instance.state.grouping = instance.options.initialState.grouping
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, groupingResetDeps)
@@ -66,6 +65,36 @@ function useInstanceAfterState(instance) {
       instance.resetGrouping()
     }
   }, groupingResetDeps)
+
+  instance.setGrouping = React.useCallback(
+    updater => {
+      instance.options.onGroupingChange(updater, instance)
+    },
+    [instance]
+  )
+
+  instance.toggleColumnGrouping = React.useCallback(
+    (columnId, value) => {
+      instance.setGrouping(old => {
+        value =
+          typeof value !== 'undefined'
+            ? value
+            : !old.grouping.includes(columnId)
+
+        if (value) {
+          return [...old.grouping, columnId]
+        }
+
+        return old.grouping.filter(d => d !== columnId)
+      })
+    },
+    [instance]
+  )
+
+  instance.resetGrouping = React.useCallback(
+    () => instance.setGrouping(instance.options.initialState.grouping),
+    [instance]
+  )
 
   instance.getColumnCanGroup = React.useCallback(
     columnId => {
@@ -93,60 +122,6 @@ function useInstanceAfterState(instance) {
   instance.getColumnGroupedIndex = React.useCallback(
     columnId => instance.state.grouping.indexOf(columnId),
     [instance.state.grouping]
-  )
-
-  instance.toggleColumnGrouping = React.useCallback(
-    (columnId, value) => {
-      setState(
-        old => {
-          value =
-            typeof value !== 'undefined'
-              ? value
-              : !old.grouping.includes(columnId)
-
-          if (value) {
-            return [
-              {
-                ...old,
-                grouping: [...old.grouping, columnId],
-              },
-              { value },
-            ]
-          }
-
-          return [
-            {
-              ...old,
-              grouping: old.grouping.filter(d => d !== columnId),
-            },
-            {
-              value,
-            },
-          ]
-        },
-        {
-          type: 'toggleColumnGrouping',
-          columnId,
-        }
-      )
-    },
-    [setState]
-  )
-
-  instance.resetGrouping = React.useCallback(
-    () =>
-      setState(
-        old => {
-          return {
-            ...old,
-            grouping: instance.getInitialState().grouping,
-          }
-        },
-        {
-          type: 'resetGrouping',
-        }
-      ),
-    [instance, setState]
   )
 }
 

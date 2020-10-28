@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getFirstDefined } from '../utils'
+import { getFirstDefined, makeStateUpdater } from '../utils'
 
 import { withColumnVisibility as name } from '../Constants'
 
@@ -18,6 +18,10 @@ export const withColumnVisibility = {
 
 function useReduceOptions(options) {
   return {
+    onColumnVisibilityChange: React.useCallback(
+      makeStateUpdater('columnVisibility'),
+      []
+    ),
     ...options,
     initialState: {
       columnVisibility: {},
@@ -27,53 +31,40 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
+  instance.setColumnVisibility = React.useCallback(
+    updater => instance.options.onColumnVisibilityChange(updater, instance),
+    [instance]
+  )
 
   instance.toggleColumnVisibility = React.useCallback(
     (columnId, value) => {
       value = getFirstDefined(value, !instance.getColumnIsVisible(columnId))
 
       if (instance.getColumnCanHide(columnId)) {
-        setState(
-          old => ({
-            ...old,
-            columnVisibility: {
-              ...old.columnVisibility,
-              [columnId]: value,
-            },
-          }),
-          {
-            type: 'toggleColumnVisibility',
-            value,
-          }
-        )
+        instance.setColumnVisibility(old => ({
+          ...old,
+          [columnId]: value,
+        }))
       }
     },
-    [instance, setState]
+    [instance]
   )
 
   instance.toggleAllColumnsVisible = React.useCallback(
     value => {
       value = getFirstDefined(value, !instance.getIsAllColumnsVisible())
 
-      setState(
-        old => ({
-          ...old,
-          columnVisibility: instance.preVisibleLeafColumns.reduce(
-            (obj, column) => ({
-              ...obj,
-              [column.id]: !value ? !column.getCanHide() : value,
-            }),
-            {}
-          ),
-        }),
-        {
-          type: 'toggleAllColumnsVisible',
-          value,
-        }
+      instance.setColumnVisibility(
+        instance.preVisibleLeafColumns.reduce(
+          (obj, column) => ({
+            ...obj,
+            [column.id]: !value ? !column.getCanHide() : value,
+          }),
+          {}
+        )
       )
     },
-    [instance, setState]
+    [instance]
   )
 
   instance.getColumnIsVisible = React.useCallback(

@@ -2,10 +2,10 @@ import React from 'react'
 
 import {
   getFirstDefined,
-  functionalUpdate,
   isFunction,
   orderBy,
   useMountedLayoutEffect,
+  makeStateUpdater,
 } from '../utils'
 
 import {
@@ -37,6 +37,7 @@ export const withSorting = {
 
 function useReduceOptions(options) {
   return {
+    onSortingChange: React.useCallback(makeStateUpdater('sorting'), []),
     autoResetSorting: true,
     isMultiSortEvent: e => e.shiftKey,
     ...options,
@@ -53,18 +54,27 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
+  instance.setSorting = React.useCallback(
+    updater => instance.options.onSortingChange(updater, instance),
+    [instance]
+  )
 
   const sortingResetDeps = [
     instance.options.manualSorting ? null : instance.options.data,
   ]
+
+  // This is a tricky trick here. When we detect that the sorting should
+  // reset, we can't just ONLY call `resetSorting()`, (though that's still required
+  // below to ensure eventual consistency with our controlled state), but we
+  // also have to override the state in the current hook call so the output
+  // of the hook matches what we would expect. Sure, it causes a double render,
+  // but the second render is very light, since the state is the same between the two
   React.useMemo(() => {
     if (instance.options.autoResetSorting) {
       instance.state.sorting = instance.options.initialState.sorting
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, sortingResetDeps)
-
   useMountedLayoutEffect(() => {
     if (instance.options.autoResetSorting) {
       instance.resetSorting()
@@ -73,140 +83,100 @@ function useInstanceAfterState(instance) {
 
   instance.toggleColumnSorting = React.useCallback(
     (columnId, desc, multi) =>
-      setState(
-        old => {
-          const {
-            leafColumns,
-            disableMultiSort,
-            disableSortRemove,
-            disableMultiRemove,
-            maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
-          } = instance
+      instance.setSorting(old => {
+        const {
+          leafColumns,
+          disableMultiSort,
+          disableSortRemove,
+          disableMultiRemove,
+          maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+        } = instance
 
-          const { sorting } = old
+        // Find the column for this columnId
+        const column = leafColumns.find(d => d.id === columnId)
+        const { sortDescFirst } = column
 
-          // Find the column for this columnId
-          const column = leafColumns.find(d => d.id === columnId)
-          const { sortDescFirst } = column
+        // Find any existing sorting for this column
+        const existingSorting = old.find(d => d.id === columnId)
+        const existingIndex = old.findIndex(d => d.id === columnId)
+        const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
-          // Find any existing sorting for this column
-          const existingSorting = sorting.find(d => d.id === columnId)
-          const existingIndex = sorting.findIndex(d => d.id === columnId)
-          const hasDescDefined = typeof desc !== 'undefined' && desc !== null
+        let newSorting = []
 
-          let newSorting = []
+        // What should we do with this sort action?
+        let sortAction
 
-          // What should we do with this sort action?
-          let sortAction
-
-          if (!disableMultiSort && multi) {
-            if (existingSorting) {
-              sortAction = 'toggle'
-            } else {
-              sortAction = 'add'
-            }
+        if (!disableMultiSort && multi) {
+          if (existingSorting) {
+            sortAction = 'toggle'
           } else {
-            // Normal mode
-            if (existingIndex !== sorting.length - 1) {
-              sortAction = 'replace'
-            } else if (existingSorting) {
-              sortAction = 'toggle'
-            } else {
-              sortAction = 'replace'
-            }
+            sortAction = 'add'
           }
-
-          // Handle toggle states that will remove the sorting
-          if (
-            sortAction === 'toggle' && // Must be toggling
-            !disableSortRemove && // If disableSortRemove, disable in general
-            !hasDescDefined && // Must not be setting desc
-            (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
-            ((existingSorting && // Finally, detect if it should indeed be removed
-              existingSorting.desc &&
-              !sortDescFirst) ||
-              (!existingSorting.desc && sortDescFirst))
-          ) {
-            sortAction = 'remove'
+        } else {
+          // Normal mode
+          if (existingIndex !== old.length - 1) {
+            sortAction = 'replace'
+          } else if (existingSorting) {
+            sortAction = 'toggle'
+          } else {
+            sortAction = 'replace'
           }
+        }
 
-          if (sortAction === 'replace') {
-            newSorting = [
-              {
-                id: columnId,
-                desc: hasDescDefined ? desc : sortDescFirst,
-              },
-            ]
-          } else if (sortAction === 'add') {
-            newSorting = [
-              ...sorting,
-              {
-                id: columnId,
-                desc: hasDescDefined ? desc : sortDescFirst,
-              },
-            ]
-            // Take latest n columns
-            newSorting.splice(0, newSorting.length - maxMultiSortColCount)
-          } else if (sortAction === 'toggle') {
-            // This flips (or sets) the
-            newSorting = sorting.map(d => {
-              if (d.id === columnId) {
-                return {
-                  ...d,
-                  desc: hasDescDefined ? desc : !existingSorting.desc,
-                }
+        // Handle toggle states that will remove the sorting
+        if (
+          sortAction === 'toggle' && // Must be toggling
+          !disableSortRemove && // If disableSortRemove, disable in general
+          !hasDescDefined && // Must not be setting desc
+          (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
+          ((existingSorting && // Finally, detect if it should indeed be removed
+            existingSorting.desc &&
+            !sortDescFirst) ||
+            (!existingSorting.desc && sortDescFirst))
+        ) {
+          sortAction = 'remove'
+        }
+
+        if (sortAction === 'replace') {
+          newSorting = [
+            {
+              id: columnId,
+              desc: hasDescDefined ? desc : sortDescFirst,
+            },
+          ]
+        } else if (sortAction === 'add') {
+          newSorting = [
+            ...old,
+            {
+              id: columnId,
+              desc: hasDescDefined ? desc : sortDescFirst,
+            },
+          ]
+          // Take latest n columns
+          newSorting.splice(0, newSorting.length - maxMultiSortColCount)
+        } else if (sortAction === 'toggle') {
+          // This flips (or sets) the
+          newSorting = old.map(d => {
+            if (d.id === columnId) {
+              return {
+                ...d,
+                desc: hasDescDefined ? desc : !existingSorting.desc,
               }
-              return d
-            })
-          } else if (sortAction === 'remove') {
-            newSorting = sorting.filter(d => d.id !== columnId)
-          }
-
-          return {
-            ...old,
-            sorting: newSorting,
-          }
-        },
-        {
-          type: 'toggleColumnSorting',
-          columnId,
-          desc,
-          multi,
+            }
+            return d
+          })
+        } else if (sortAction === 'remove') {
+          newSorting = old.filter(d => d.id !== columnId)
         }
-      ),
-    [instance, setState]
-  )
 
-  instance.setSorting = React.useCallback(
-    updater =>
-      setState(
-        old => {
-          return {
-            ...old,
-            sorting: functionalUpdate(updater, old.sorting),
-          }
-        },
-        {
-          type: 'setSorting',
-        }
-      ),
-    [setState]
+        return newSorting
+      }),
+    [instance]
   )
 
   instance.resetSorting = React.useCallback(
-    () =>
-      setState(
-        old => {
-          return {
-            ...old,
-            sorting: instance.getInitialState().sorting,
-          }
-        },
-        {
-          type: 'resetSorting',
-        }
-      ),
-    [instance, setState]
+    () => instance.setSorting(instance.options.initialState.sorting),
+    [instance]
   )
 
   instance.getColumnCanSort = React.useCallback(
@@ -243,23 +213,8 @@ function useInstanceAfterState(instance) {
   )
 
   instance.clearColumnSorting = React.useCallback(
-    columnId =>
-      setState(
-        old => {
-          const { sorting } = old
-          const newSorting = sorting.filter(d => d.id !== columnId)
-
-          return {
-            ...old,
-            sorting: newSorting,
-          }
-        },
-        {
-          type: 'clearColumnSorting',
-          columnId,
-        }
-      ),
-    [setState]
+    columnId => instance.setSorting(old => old.filter(d => d.id !== columnId)),
+    [instance]
   )
 }
 
@@ -369,7 +324,6 @@ function decorateColumn(column, { instance }) {
     instance.toggleColumnSorting(column.id, desc, multi)
   column.clearSorting = () => instance.clearColumnSorting(column.id)
   column.getIsSortedDesc = () => instance.getColumnIsSortedDesc(column.id)
-
   column.getToggleSortingProps = ({ isMulti, ...props } = {}) => {
     const canSort = column.getCanSort()
 

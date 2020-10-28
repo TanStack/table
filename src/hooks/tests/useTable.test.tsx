@@ -1,6 +1,6 @@
-import React from 'react'
-import { render } from '@testing-library/react'
 import { useTable } from '../useTable'
+import { getHeaderIds, getRowValues } from '../../../test-utils'
+import { renderHook } from '@testing-library/react-hooks'
 
 const data = [
   {
@@ -68,22 +68,27 @@ const columns = [
 
 describe('useTable', () => {
   it('renders a basic table', () => {
-    const states = []
+    const { result } = renderHook(
+      ({ initialValue }) => useTable(initialValue),
+      {
+        initialProps: {
+          initialValue: {
+            data,
+            columns,
+          },
+        },
+      }
+    )
 
-    function App() {
-      // Use the state and functions returned from useTable to build your UI
-      const instance = useTable({
-        columns,
-        data,
-      })
+    expect(getHeaderIds(result.current)).toEqual([
+      ['Name', 'Info'],
+      ['firstName', 'lastName', 'age', 'visits', 'status', 'progress'],
+    ])
 
-      states.push(instance)
-
-      return null
-    }
-
-    const rtl = render(<App />)
-
-    expect(states.length).toBe(1)
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 50],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+    ])
   })
 })

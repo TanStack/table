@@ -142,7 +142,7 @@ function App(props) {
             >
               <span>
                 <input
-                  value={state.globalFilterValue || ''}
+                  value={state.globalFilter || ''}
                   onChange={e => {
                     setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
                   }}

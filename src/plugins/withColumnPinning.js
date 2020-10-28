@@ -1,12 +1,12 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   functionalUpdate,
   getFirstDefined,
   buildHeaderGroups,
   recurseHeaderForSpans,
   flattenBy,
+  makeStateUpdater,
 } from '../utils'
 
 import {
@@ -31,6 +31,10 @@ export const withColumnPinning = {
 
 function useReduceOptions(options) {
   return {
+    onColumnPinningChange: React.useCallback(
+      makeStateUpdater('columnPinning'),
+      []
+    ),
     ...options,
     initialState: {
       ...options.initialState,
@@ -44,60 +48,35 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
+  instance.setColumnPinning = React.useCallback(
+    columnPinning => instance.onColumnPinningChange(columnPinning, instance),
+    [instance]
+  )
 
   instance.resetColumnPinning = React.useCallback(
     () =>
-      setState(
-        old => ({
-          ...old,
-          columnPinning: instance.initialState.columnPinning || [],
-        }),
-        {
-          type: 'resetColumnPinning',
-        }
+      instance.setColumnPinning(
+        instance.options.initialState.columnPinning || []
       ),
-    [instance.initialState.columnPinning, setState]
-  )
-
-  instance.setColumnPinning = React.useCallback(
-    columnPinning =>
-      setState(
-        old => ({
-          ...old,
-          columnPinning: functionalUpdate(columnPinning, old.columnPinning),
-        }),
-        {
-          type: 'setColumnPinning',
-        }
-      ),
-    [setState]
+    [instance]
   )
 
   instance.toggleColumnPinning = React.useCallback(
     (columnId, side, value) => {
-      setState(
-        old => {
-          const isIncluded = old.columnPinning[side].includes(columnId)
+      instance.setColumnPinning(old => {
+        const isIncluded = old[side].includes(columnId)
 
-          value = typeof value !== 'undefined' ? value : !isIncluded
+        value = typeof value !== 'undefined' ? value : !isIncluded
 
-          return {
-            ...old,
-            columnPinning: {
-              ...old.columnPinning,
-              [side]: value
-                ? [...old.columnPinning[side], columnId]
-                : old.columnPinning[side].filter(d => d !== columnId),
-            },
-          }
-        },
-        {
-          type: 'setColumnPinning',
+        return {
+          ...old,
+          [side]: value
+            ? [...old[side], columnId]
+            : old[side].filter(d => d !== columnId),
         }
-      )
+      })
     },
-    [setState]
+    [instance]
   )
 
   instance.getColumnCanPin = React.useCallback(

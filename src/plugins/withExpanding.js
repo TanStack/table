@@ -1,10 +1,10 @@
 import React from 'react'
 
 import {
-  useGetLatest,
   findExpandedDepth,
   expandRows,
   useMountedLayoutEffect,
+  makeStateUpdater,
 } from '../utils'
 
 import {
@@ -36,6 +36,7 @@ export const withExpanding = {
 
 function useReduceOptions(options) {
   return {
+    onExpandedChange: React.useCallback(makeStateUpdater('expanded'), []),
     manualExpandedKey: 'expanded',
     expandSubRows: true,
     ...options,
@@ -47,13 +48,18 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
+  instance.setExpanded = React.useCallback(
+    updater => {
+      instance.options.onExpandedChange(updater, instance)
+    },
+    [instance]
+  )
 
   const expandedResetDeps = [instance.options.data]
 
   React.useMemo(() => {
     if (instance.options.autoResetExpanded) {
-      instance.state.expanded = instance.getInitialState().expanded
+      instance.state.expanded = instance.options.initialState.expanded
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, expandedResetDeps)
@@ -88,105 +94,51 @@ function useInstanceAfterState(instance) {
 
   instance.toggleRowExpanded = React.useCallback(
     (id, value) => {
-      setState(
-        old => {
-          const exists = old.expanded[id]
+      instance.setExpanded(old => {
+        const exists = old[id]
 
-          value = typeof value !== 'undefined' ? value : !exists
+        value = typeof value !== 'undefined' ? value : !exists
 
-          if (!exists && value) {
-            return [
-              {
-                ...old,
-                expanded: {
-                  ...old.expanded,
-                  [id]: true,
-                },
-              },
-              {
-                value,
-              },
-            ]
-          } else if (exists && !value) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { [id]: _, ...rest } = old.expanded
-            return [
-              {
-                ...old,
-                expanded: rest,
-              },
-              {
-                value,
-              },
-            ]
-          } else {
-            return [old, { value }]
+        if (!exists && value) {
+          return {
+            ...old,
+            [id]: true,
           }
-        },
-        {
-          type: 'toggleRowExpanded',
-          id,
+        } else if (exists && !value) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [id]: _, ...rest } = old
+          return rest
+        } else {
+          return old
         }
-      )
+      })
     },
-    [setState]
+    [instance]
   )
 
   instance.toggleAllRowsExpanded = React.useCallback(
-    value =>
-      setState(
-        old => {
-          const { isAllRowsExpanded, rowsById } = instance
+    value => {
+      const { isAllRowsExpanded, rowsById } = instance
 
-          value = typeof value !== 'undefined' ? value : !isAllRowsExpanded
+      value = typeof value !== 'undefined' ? value : !isAllRowsExpanded
 
-          if (value) {
-            const expanded = {}
+      if (value) {
+        const expanded = {}
 
-            Object.keys(rowsById).forEach(rowId => {
-              expanded[rowId] = true
-            })
+        Object.keys(rowsById).forEach(rowId => {
+          expanded[rowId] = true
+        })
 
-            return [
-              {
-                ...old,
-                expanded,
-              },
-              {
-                value,
-              },
-            ]
-          }
-
-          return [
-            {
-              ...old,
-              expanded: {},
-            },
-            {
-              value,
-            },
-          ]
-        },
-        {
-          type: 'toggleAllRowsExpanded',
-        }
-      ),
-    [instance, setState]
+        instance.setExpanded(expanded)
+      }
+      instance.setExpanded({})
+    },
+    [instance]
   )
 
   instance.resetExpanded = React.useCallback(
-    () =>
-      setState(
-        old => ({
-          ...old,
-          expanded: instance.getInitialState.expanded,
-        }),
-        {
-          type: 'resetExpanded',
-        }
-      ),
-    [instance.getInitialState.expanded, setState]
+    () => instance.setExpanded(instance.options.initialState.expanded),
+    [instance]
   )
 
   instance.getToggleAllRowsExpandedProps = (props = {}) => ({

@@ -3,6 +3,7 @@ import React from 'react'
 import {
   getFirstDefined,
   getLeafHeaders,
+  makeStateUpdater,
   passiveEventSupported,
 } from '../utils'
 
@@ -21,6 +22,10 @@ export const withColumnResizing = {
 
 function useReduceOptions(options) {
   return {
+    onColumnResizingChange: React.useCallback(
+      makeStateUpdater('columnResizing'),
+      []
+    ),
     ...options,
     initialState: {
       columnResizing: {
@@ -32,6 +37,13 @@ function useReduceOptions(options) {
 }
 
 function useInstanceAfterState(instance) {
+  instance.setColumnResizing = React.useCallback(
+    updater => {
+      instance.options.onColumnResizingChange(updater, instance)
+    },
+    [instance]
+  )
+
   instance.getColumnCanResize = React.useCallback(
     columnId => {
       const column = instance.allColumns.find(d => d.id === columnId)
@@ -97,56 +109,36 @@ function decorateHeader(header, { instance }) {
         : e.clientX
 
       const onMove = clientXPos =>
-        instance.setState(
-          old => {
-            const {
-              startX,
-              columnWidth,
-              headerIdWidths = [],
-            } = old.columnResizing
+        instance.setColumnResizing(old => {
+          const { startX, columnWidth, headerIdWidths = [] } = old
 
-            const deltaX = clientXPos - startX
-            const percentageDeltaX = Math.max(deltaX / columnWidth, -0.999999)
+          const deltaX = clientXPos - startX
+          const percentageDeltaX = Math.max(deltaX / columnWidth, -0.999999)
 
-            const newColumnWidths = {}
+          const newColumnWidths = {}
 
-            headerIdWidths.forEach(([headerId, headerWidth]) => {
-              newColumnWidths[headerId] = Math.max(
-                headerWidth + headerWidth * percentageDeltaX,
-                0
-              )
-            })
+          headerIdWidths.forEach(([headerId, headerWidth]) => {
+            newColumnWidths[headerId] = Math.max(
+              headerWidth + headerWidth * percentageDeltaX,
+              0
+            )
+          })
 
-            return {
-              ...old,
-              columnResizing: {
-                ...old.columnResizing,
-                columnWidths: {
-                  ...old.columnResizing.columnWidths,
-                  ...newColumnWidths,
-                },
-              },
-            }
-          },
-          {
-            type: 'resizeColumnMove',
+          return {
+            ...old,
+            columnWidths: {
+              ...old.columnWidths,
+              ...newColumnWidths,
+            },
           }
-        )
+        })
 
       const onEnd = () =>
-        instance.setState(
-          old => ({
-            ...old,
-            columnResizing: {
-              ...old.columnResizing,
-              startX: null,
-              isResizingColumn: null,
-            },
-          }),
-          {
-            type: 'resizeColumnEnd',
-          }
-        )
+        instance.setColumnResizing(old => ({
+          ...old,
+          startX: null,
+          isResizingColumn: null,
+        }))
 
       const handlersAndEvents = {
         mouse: {
@@ -208,21 +200,13 @@ function decorateHeader(header, { instance }) {
         passiveIfSupported
       )
 
-      instance.setState(
-        old => ({
-          ...old,
-          columnResizing: {
-            ...old.columnResizing,
-            startX: clientX,
-            headerIdWidths,
-            columnWidth: header.getWidth(),
-            isResizingColumn: header.id,
-          },
-        }),
-        {
-          type: 'resizeColumnStart',
-        }
-      )
+      instance.setColumnResizing(old => ({
+        ...old,
+        startX: clientX,
+        headerIdWidths,
+        columnWidth: header.getWidth(),
+        isResizingColumn: header.id,
+      }))
     }
 
     return {

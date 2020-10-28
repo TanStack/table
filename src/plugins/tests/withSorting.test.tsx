@@ -1,6 +1,8 @@
 import React from 'react'
-import { render, fireEvent } from '../../../test-utils/react-testing'
+import { renderHook, act } from '@testing-library/react-hooks'
+import { getHeaderIds, getRowValues } from '../../../test-utils'
 import { useTable } from '../../hooks/useTable'
+import { noop } from '../../utils'
 import { withSorting } from '../withSorting'
 
 const data = [
@@ -30,146 +32,309 @@ const data = [
   },
 ]
 
-const defaultColumn = {
-  Cell: ({ value, column: { id } }) => `${id}: ${value}`,
-}
-
-function Table({ columns, data }) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    [withSorting]
-  )
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(header => (
-              // Add the sorting props to control sorting. For this example
-              // we can add them into the header props
-              <th {...header.getHeaderProps(header.getToggleSortingProps())}>
-                {header.render(header.column.Header)}
-                {/* Add a sort direction indicator */}
-                {header.getIsSorted()
-                  ? (header.getIsSortedDesc() ? ' 🔽' : ' 🔼') +
-                    header.getSortedIndex()
-                  : ''}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => (
-          <tr {...row.getRowProps()}>
-            {row.cells.map(cell => {
-              return (
-                <td {...cell.getCellProps()}>
-                  {cell.render(cell.column.Cell)}
-                </td>
-              )
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-}
-
-function App() {
-  const columns = React.useMemo(
-    () => [
+const columns = [
+  {
+    Header: 'Name',
+    columns: [
       {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
+        Header: 'First Name',
+        accessor: 'firstName',
       },
       {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
+        Header: 'Last Name',
+        accessor: 'lastName',
       },
     ],
-    []
-  )
-
-  return <Table columns={columns} data={data} />
-}
+  },
+  {
+    Header: 'Info',
+    columns: [
+      {
+        Header: 'Age',
+        accessor: 'age',
+      },
+      {
+        Header: 'Visits',
+        accessor: 'visits',
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+      },
+      {
+        Header: 'Profile Progress',
+        accessor: 'progress',
+      },
+    ],
+  },
+]
 
 describe('withSorting', () => {
   it('renders a sortable table', () => {
-    const rendered = render(<App />)
+    const { result } = renderHook(
+      options => {
+        const instance = useTable(options, [withSorting])
 
-    fireEvent.click(rendered.getByText('First Name'))
-    rendered.getByText('First Name 🔼0')
-    expect(
-      rendered
-        .queryAllByRole('row')
-        .slice(2)
-        .map(d => d.children[0].textContent)
-    ).toEqual(['firstName: derek', 'firstName: joe', 'firstName: tanner'])
+        return instance
+      },
+      {
+        initialProps: {
+          data,
+          columns,
+        },
+      }
+    )
 
-    fireEvent.click(rendered.getByText('First Name 🔼0'))
-    rendered.getByText('First Name 🔽0')
-    expect(
-      rendered
-        .queryAllByRole('row')
-        .slice(2)
-        .map(d => d.children[0].textContent)
-    ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: derek'])
+    expect(getHeaderIds(result.current)).toEqual([
+      ['Name', 'Info'],
+      ['firstName', 'lastName', 'age', 'visits', 'status', 'progress'],
+    ])
 
-    fireEvent.click(rendered.getByText('Profile Progress'))
-    rendered.getByText('Profile Progress 🔼0')
-    expect(
-      rendered
-        .queryAllByRole('row')
-        .slice(2)
-        .map(d => d.children[0].textContent)
-    ).toEqual(['firstName: joe', 'firstName: tanner', 'firstName: derek'])
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+    ])
 
-    fireEvent.click(rendered.getByText('First Name'), { shiftKey: true })
-    rendered.getByText('Profile Progress 🔼0')
-    rendered.getByText('First Name 🔼1')
-    expect(
-      rendered
-        .queryAllByRole('row')
-        .slice(2)
-        .map(d => d.children[0].textContent)
-    ).toEqual(['firstName: joe', 'firstName: derek', 'firstName: tanner'])
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'firstName')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'firstName')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'progress')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'firstName')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+          shiftKey: true,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+    ])
+  })
+
+  it('renders a controlled sorted table', () => {
+    const { result, rerender } = renderHook(
+      options => {
+        const instance = useTable(options, [withSorting])
+
+        return instance
+      },
+      {
+        initialProps: {
+          data,
+          columns,
+          state: {},
+        },
+      }
+    )
+
+    expect(getHeaderIds(result.current)).toEqual([
+      ['Name', 'Info'],
+      ['firstName', 'lastName', 'age', 'visits', 'status', 'progress'],
+    ])
+
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+    ])
+
+    rerender({
+      data,
+      columns,
+      state: { sorting: [{ id: 'firstName', desc: false }] },
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+    ])
+
+    rerender({
+      data,
+      columns,
+      state: { sorting: [{ id: 'firstName', desc: true }] },
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+    ])
+
+    rerender({
+      data,
+      columns,
+      state: { sorting: [{ id: 'progress', desc: false }] },
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+    ])
+
+    rerender({
+      data,
+      columns,
+      state: {
+        sorting: [
+          { id: 'progress', desc: false },
+          { id: 'firstName', desc: false },
+        ],
+      },
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+    ])
+  })
+
+  it('renders a hoisted state sorted table', () => {
+    const { result, rerender } = renderHook(
+      options => {
+        const [sorting, setSorting] = React.useState([])
+
+        const instance = useTable(
+          {
+            ...options,
+            state: {
+              sorting,
+            },
+            onSortingChange: setSorting,
+          },
+          [withSorting]
+        )
+
+        return instance
+      },
+      {
+        initialProps: {
+          data,
+          columns,
+        },
+      }
+    )
+
+    expect(getHeaderIds(result.current)).toEqual([
+      ['Name', 'Info'],
+      ['firstName', 'lastName', 'age', 'visits', 'status', 'progress'],
+    ])
+
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'firstName')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'firstName')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'progress')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+    ])
+
+    act(() => {
+      result.current.flatHeaders
+        .find(d => d.id === 'firstName')
+        .getToggleSortingProps()
+        .onClick({
+          persist: noop,
+          shiftKey: true,
+        })
+    })
+
+    expect(getRowValues(result.current)).toEqual([
+      ['joe', 'bergevin', 45, 20, 'Complicated', 10],
+      ['derek', 'perkins', 40, 40, 'Single', 80],
+      ['tanner', 'linsley', 29, 100, 'In Relationship', 80],
+    ])
   })
 })

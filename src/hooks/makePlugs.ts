@@ -1,6 +1,43 @@
 import { composeDecorator, composeReducer } from '../utils'
 
-const plugTypes = [
+interface Plugin {
+  name: string
+  after: string[]
+  plugs: PluginPlugs
+}
+
+interface PluginPlugs {
+  useReduceOptions: unknown
+  useInstanceAfterState: unknown
+  useReduceColumns: unknown
+  useReduceAllColumns: unknown
+  useReduceLeafColumns: unknown
+  decorateColumn: unknown
+  useReduceHeaderGroups: unknown
+  useReduceFooterGroups: unknown
+  useReduceFlatHeaders: unknown
+  decorateHeader: unknown
+  decorateRow: unknown
+  decorateCell: unknown
+  useInstanceAfterDataModel: unknown
+  reduceTableProps: unknown
+  reduceTableBodyProps: unknown
+  reduceTableHeadProps: unknown
+  reduceTableFootProps: unknown
+  reduceHeaderGroupProps: unknown
+  reduceFooterGroupProps: unknown
+  reduceHeaderProps: unknown
+  reduceRowProps: unknown
+  reduceCellProps: unknown
+}
+
+type PlugType = [keyof PluginPlugs, PluginPlugBuilder]
+
+type PluginPlugBuilder = any
+
+type Plugs = Partial<Record<keyof PluginPlugs, unknown>>
+
+const plugTypes: PlugType[] = [
   ['useReduceOptions', composeReducer],
   ['useInstanceAfterState', composeDecorator],
   ['useReduceColumns', composeReducer],
@@ -25,7 +62,7 @@ const plugTypes = [
   ['reduceCellProps', composeReducer],
 ]
 
-export default function makePlugs(plugins) {
+export default function makePlugs(plugins: Plugin[]) {
   plugins = plugins.filter(Boolean)
 
   plugins.sort((a, b) => {
@@ -38,7 +75,7 @@ export default function makePlugs(plugins) {
     return 0
   })
 
-  const plugs = {}
+  const plugs: Plugs = {}
 
   if (process.env.NODE_ENV !== 'production') {
     plugins.forEach(plugin => {

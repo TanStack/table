@@ -17,6 +17,17 @@ export function noop() {
   //
 }
 
+export function makeStateUpdater(key) {
+  return (updater, instance) => {
+    instance.setState(old => {
+      return {
+        ...old,
+        [key]: functionalUpdate(updater, old[key]),
+      }
+    })
+  }
+}
+
 export function useGetLatest(obj) {
   const ref = React.useRef()
   ref.current = obj

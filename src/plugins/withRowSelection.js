@@ -5,11 +5,11 @@ import {
   useMountedLayoutEffect,
   getRowIsSelected,
   composeReducer,
-  functionalUpdate,
+  makeStateUpdater,
 } from '../utils'
 
 import {
-  withSelection as name,
+  withRowSelection as name,
   withColumnVisibility,
   withColumnFilters,
   withGlobalFilter,
@@ -19,7 +19,7 @@ import {
   withPagination,
 } from '../Constants'
 
-export const withSelection = {
+export const withRowSelection = {
   name,
   after: [
     withColumnVisibility,
@@ -40,6 +40,10 @@ export const withSelection = {
 
 function useReduceOptions(options) {
   return {
+    onRowSelectionChange: React.useCallback(
+      makeStateUpdater('rowSelection'),
+      []
+    ),
     selectSubRows: true,
     selectGroupingRows: false,
     manualRowSelectedKey: 'isSelected',
@@ -47,161 +51,109 @@ function useReduceOptions(options) {
     isInclusiveSelectEvent: e => e.shiftKey,
     ...options,
     initialState: {
-      selection: {},
+      rowSelection: {},
       ...options.initialState,
     },
   }
 }
 
 function useInstanceAfterState(instance) {
-  const { setState } = instance
-
-  const selectionResetDeps = [instance.options.data]
+  const rowSelectionResetDeps = [instance.options.data]
   React.useMemo(() => {
-    if (instance.options.autoResetSelection) {
-      instance.state.selection = instance.getInitialState().selection
+    if (instance.options.autoResetRowSelection) {
+      instance.state.rowSelection = instance.options.initialState.rowSelection
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, selectionResetDeps)
+  }, rowSelectionResetDeps)
 
   useMountedLayoutEffect(() => {
-    if (instance.options.autoResetSelection) {
-      instance.resetSelection()
+    if (instance.options.autoResetRowSelection) {
+      instance.resetRowSelection()
     }
-  }, selectionResetDeps)
+  }, rowSelectionResetDeps)
 
-  instance.getSelectedFlatRows = React.useCallback(() => {
-    const { flatRows } = instance
-
-    return flatRows.filter(row => !row.getIsGrouped() && row.getIsSelected())
-  }, [instance])
-
-  instance.resetSelectedRows = React.useCallback(
-    () =>
-      setState(
-        old => ({
-          ...old,
-          selection: instance.getInitialState().selection || {},
-        }),
-        {
-          type: 'resetSelectedRows',
-        }
-      ),
-    [instance, setState]
+  instance.setRowSelection = React.useCallback(
+    updater => instance.options.onRowSelectionChange(updater),
+    [instance.options]
   )
 
-  instance.setSelectedRows = React.useCallback(
-    updater =>
-      setState(
-        old => ({
-          ...old,
-          selection: functionalUpdate(updater, old.selection),
-        }),
-        {
-          type: 'resetSelectedRows',
-        }
-      ),
-    [setState]
+  instance.resetRowSelection = React.useCallback(
+    () => instance.setRowSelection(instance.options.initialState.rowSelection),
+    [instance]
   )
 
   instance.toggleAllRowsSelected = React.useCallback(
     value =>
-      setState(
-        old => {
-          const {
-            getIsAllRowsSelected,
-            rowsById,
-            nonGroupedRowsById = rowsById,
-          } = instance
+      instance.setRowSelection(old => {
+        const {
+          getIsAllRowsSelected,
+          rowsById,
+          nonGroupedRowsById = rowsById,
+        } = instance
 
-          value = typeof value !== 'undefined' ? value : !getIsAllRowsSelected()
+        value = typeof value !== 'undefined' ? value : !getIsAllRowsSelected()
 
-          // Only remove/add the rows that are visible on the screen
-          //  Leave all the other rows that are selected alone.
-          const selection = Object.assign({}, old.selection)
+        // Only remove/add the rows that are visible on the screen
+        //  Leave all the other rows that are selected alone.
+        const rowSelection = Object.assign({}, old)
 
-          if (value) {
-            Object.keys(nonGroupedRowsById).forEach(rowId => {
-              selection[rowId] = true
-            })
-          } else {
-            Object.keys(nonGroupedRowsById).forEach(rowId => {
-              delete selection[rowId]
-            })
-          }
-
-          return [
-            {
-              ...old,
-              selection,
-            },
-            {
-              value,
-            },
-          ]
-        },
-        {
-          type: 'toggleAllRowsSelected',
+        if (value) {
+          Object.keys(nonGroupedRowsById).forEach(rowId => {
+            rowSelection[rowId] = true
+          })
+        } else {
+          Object.keys(nonGroupedRowsById).forEach(rowId => {
+            delete rowSelection[rowId]
+          })
         }
-      ),
-    [instance, setState]
+
+        return rowSelection
+      }),
+    [instance]
   )
 
   instance.toggleAllPageRowsSelected = React.useCallback(
     value =>
-      setState(
-        old => {
-          const {
-            getIsAllPageRowsSelected,
-            rowsById,
-            getSubRows,
-            page,
-            selectSubRows = true,
-          } = instance
+      instance.setRowSelection(old => {
+        const {
+          getIsAllPageRowsSelected,
+          rowsById,
+          getSubRows,
+          page,
+          selectSubRows = true,
+        } = instance
 
-          const selectAll =
-            typeof value !== 'undefined' ? value : !getIsAllPageRowsSelected()
+        const selectAll =
+          typeof value !== 'undefined' ? value : !getIsAllPageRowsSelected()
 
-          const selection = { ...old.selection }
+        const rowSelection = { ...old }
 
-          const handleRowById = id => {
-            const row = rowsById[id]
+        const handleRowById = id => {
+          const row = rowsById[id]
 
-            if (!row.isGrouped) {
-              if (selectAll) {
-                selection[id] = true
-              } else {
-                delete selection[id]
-              }
-            }
-
-            if (selectSubRows && getSubRows(row)) {
-              return getSubRows(row).forEach(row => handleRowById(row.id))
+          if (!row.isGrouped) {
+            if (selectAll) {
+              rowSelection[id] = true
+            } else {
+              delete rowSelection[id]
             }
           }
 
-          page.forEach(row => handleRowById(row.id))
-
-          return [
-            {
-              ...old,
-              selection,
-            },
-            {
-              value,
-            },
-          ]
-        },
-        {
-          type: 'toggleAllPageRowsSelected',
+          if (selectSubRows && getSubRows(row)) {
+            return getSubRows(row).forEach(row => handleRowById(row.id))
+          }
         }
-      ),
-    [instance, setState]
+
+        page.forEach(row => handleRowById(row.id))
+
+        return rowSelection
+      }),
+    [instance]
   )
 
   instance.toggleRowSelected = React.useCallback(
     (id, value) =>
-      setState(
+      instance.setRowSelection(
         old => {
           const {
             rowsById,
@@ -219,7 +171,7 @@ function useInstanceAfterState(instance) {
             return old
           }
 
-          const selectedRowIds = { ...old.selection }
+          const selectedRowIds = { ...old }
 
           selectRowById(selectedRowIds, id, value, {
             rowsById,
@@ -227,24 +179,16 @@ function useInstanceAfterState(instance) {
             selectSubRows,
           })
 
-          return [
-            {
-              ...old,
-              selection: selectedRowIds,
-            },
-            {
-              value,
-            },
-          ]
+          return selectedRowIds
         },
         {
           type: 'toggleRowSelected',
         }
       ),
-    [instance, setState]
+    [instance]
   )
 
-  instance.addSelectionRange = React.useCallback(
+  instance.addRowSelectionRange = React.useCallback(
     rowId => {
       const {
         rows,
@@ -301,21 +245,27 @@ function useInstanceAfterState(instance) {
         }
       })
 
-      instance.setSelectedRows(selectedRowIds)
+      instance.setRowSelection(selectedRowIds)
     },
     [instance]
   )
 
+  instance.getSelectedFlatRows = React.useCallback(() => {
+    return instance.flatRows.filter(
+      row => !row.getIsGrouped() && row.getIsSelected()
+    )
+  }, [instance])
+
   instance.getIsAllRowsSelected = useLazyMemo(() => {
     let isAllRowsSelected = Boolean(
       Object.keys(instance.nonGroupedRowsById).length &&
-        Object.keys(instance.state.selection).length
+        Object.keys(instance.state.rowSelection).length
     )
 
     if (isAllRowsSelected) {
       if (
         Object.keys(instance.nonGroupedRowsById).some(
-          id => !instance.state.selection[id]
+          id => !instance.state.rowSelection[id]
         )
       ) {
         isAllRowsSelected = false
@@ -323,7 +273,7 @@ function useInstanceAfterState(instance) {
     }
 
     return isAllRowsSelected
-  }, [instance.nonGroupedRowsById, instance.state.selection])
+  }, [instance.nonGroupedRowsById, instance.state.rowSelection])
 
   instance.getIsAllPageRowsSelected = useLazyMemo(() => {
     let isAllPageRowsSelected = instance.getIsAllPageRowsSelected()
@@ -337,14 +287,14 @@ function useInstanceAfterState(instance) {
     }
 
     return isAllPageRowsSelected
-  }, [instance.page, instance.state.selection])
+  }, [instance.page, instance.state.rowSelection])
 
   instance.getIsSomeRowsSelected = useLazyMemo(() => {
     return (
       !instance.getIsAllRowsSelected() &&
-      Object.keys(instance.state.selection).length
+      Object.keys(instance.state.rowSelection).length
     )
-  }, [instance.nonGroupedRowsById, instance.state.selection])
+  }, [instance.nonGroupedRowsById, instance.state.rowSelection])
 
   instance.getIsSomePageRowsSelected = useLazyMemo(() => {
     return (
@@ -352,7 +302,7 @@ function useInstanceAfterState(instance) {
       instance.page?.length &&
       instance.page.some(({ id }) => instance.selectRowIds[id])
     )
-  }, [instance.page, instance.state.selection])
+  }, [instance.page, instance.state.rowSelection])
 
   instance.getToggleAllRowsSelectedProps = props => {
     const isSomeRowsSelected = instance.getIsSomeRowsSelected()
@@ -388,8 +338,8 @@ function useInstanceAfterState(instance) {
 function useReduceLeafColumns(orderedColumns) {
   return React.useMemo(() => {
     return [
-      orderedColumns.find(d => d.isSelectionColumn),
-      ...orderedColumns.filter(d => d && !d.isSelectionColumn),
+      orderedColumns.find(d => d.isRowSelectionColumn),
+      ...orderedColumns.filter(d => d && !d.isRowSelectionColumn),
     ].filter(Boolean)
   }, [orderedColumns])
 }
@@ -399,8 +349,8 @@ useReduceLeafColumns.after = ['withGrouping', 'withExpanding']
 function decorateRow(row, { instance }) {
   row.getIsSelected = () =>
     instance.options.selectSubRows
-      ? getRowIsSelected(row, instance.state.selection)
-      : !!instance.state.selection[row.id]
+      ? getRowIsSelected(row, instance.state.rowSelection)
+      : !!instance.state.rowSelection[row.id]
 
   row.getIsSomeSelected = () => row.getIsSelected() === null
 
@@ -437,9 +387,9 @@ function decorateRow(row, { instance }) {
         if (instance.options.isAdditiveSelectEvent(e)) {
           row.toggleSelected()
         } else if (instance.options.isInclusiveSelectEvent(e)) {
-          instance.addSelectionRange(row.id)
+          instance.addRowSelectionRange(row.id)
         } else {
-          instance.setSelectedRows({})
+          instance.setRowSelection({})
           row.toggleSelected()
         }
 

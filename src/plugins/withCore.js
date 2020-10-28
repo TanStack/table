@@ -32,10 +32,9 @@ function useReduceOptions(options) {
 
 function useInstanceAfterState(instance) {
   instance.reset = React.useCallback(() => {
-    const { setState, getInitialState } = instance
-    setState(getInitialState(), {
-      type: 'reset',
-    })
+    // It's possible that in the future, this function is pluggable
+    // and allows other plugins to add their own reset functionality
+    instance.setState(instance.options.initialState)
   }, [instance])
 
   instance.getColumnWidth = React.useCallback(
