@@ -142,15 +142,17 @@ function useInstance(instance) {
 
   const getAutoResetExpanded = useGetLatest(autoResetExpanded)
 
-  let isAllRowsExpanded = Boolean(
-    Object.keys(rowsById).length && Object.keys(expanded).length
-  )
+  let isAllRowsExpanded = React.useMemo(() => {
+    let flag = Boolean(
+      Object.keys(rowsById).length && Object.keys(expanded).length
+    )
 
-  if (isAllRowsExpanded) {
-    if (Object.keys(rowsById).some(id => !expanded[id])) {
-      isAllRowsExpanded = false
+    if (flag && Object.keys(rowsById).some(id => !expanded[id])) {
+      flag = false
     }
-  }
+
+    return flag
+  }, [expanded, rowsById])
 
   // Bypass any effects from firing when this changes
   useMountedLayoutEffect(() => {
