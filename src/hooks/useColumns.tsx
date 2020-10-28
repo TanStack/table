@@ -1,12 +1,19 @@
 import React from 'react'
-
 //
-
 import { flattenColumns, makeRenderer } from '../utils'
 
-export const defaultColumn = {
+export interface Column {
+  Header: unknown | ((...any: any) => JSX.Element)
+  Cell: unknown | ((...any: any) => JSX.Element)
+  defaultIsVisible: boolean
+  width: number
+  minWidth: number
+  maxWidth: number
+}
+
+export const defaultColumn: Column = {
   Header: () => <>&nbsp;</>,
-  Cell: ({ value = '' }) =>
+  Cell: ({ value = '' }: { value: unknown }) =>
     typeof value === 'boolean' ? value.toString() : value,
   defaultIsVisible: true,
   width: 150,
@@ -14,7 +21,9 @@ export const defaultColumn = {
   maxWidth: Number.MAX_SAFE_INTEGER,
 }
 
-export default function useColumns(instance) {
+export default function useColumns<TInstance extends TableInstance>(
+  instance: TInstance
+) {
   const {
     options: { columns },
     plugs: { useReduceColumns, useReduceAllColumns, useReduceLeafColumns },

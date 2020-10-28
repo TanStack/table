@@ -1,41 +1,48 @@
 import { composeDecorator, composeReducer } from '../utils'
 
-interface Plugin {
+export interface Plugin {
   name: string
   after: string[]
-  plugs: PluginPlugs
+  plugs: Partial<PluginPlugs>
 }
 
-interface PluginPlugs {
-  useReduceOptions: unknown
-  useInstanceAfterState: unknown
-  useReduceColumns: unknown
-  useReduceAllColumns: unknown
-  useReduceLeafColumns: unknown
-  decorateColumn: unknown
-  useReduceHeaderGroups: unknown
-  useReduceFooterGroups: unknown
-  useReduceFlatHeaders: unknown
-  decorateHeader: unknown
-  decorateRow: unknown
-  decorateCell: unknown
-  useInstanceAfterDataModel: unknown
-  reduceTableProps: unknown
-  reduceTableBodyProps: unknown
-  reduceTableHeadProps: unknown
-  reduceTableFootProps: unknown
-  reduceHeaderGroupProps: unknown
-  reduceFooterGroupProps: unknown
-  reduceHeaderProps: unknown
-  reduceRowProps: unknown
-  reduceCellProps: unknown
+export interface PluginPlugs {
+  useReduceOptions: PluginPlugFn
+  useInstanceAfterState: PluginPlugFn
+  useReduceColumns: PluginPlugFn
+  useReduceAllColumns: PluginPlugFn
+  useReduceLeafColumns: PluginPlugFn
+  decorateColumn: PluginPlugFn
+  useReduceHeaderGroups: PluginPlugFn
+  useReduceFooterGroups: PluginPlugFn
+  useReduceFlatHeaders: PluginPlugFn
+  decorateHeader: PluginPlugFn
+  decorateRow: PluginPlugFn
+  decorateCell: PluginPlugFn
+  useInstanceAfterDataModel: PluginPlugFn
+  reduceTableProps: PluginPlugFn
+  reduceTableBodyProps: PluginPlugFn
+  reduceTableHeadProps: PluginPlugFn
+  reduceTableFootProps: PluginPlugFn
+  reduceHeaderGroupProps: PluginPlugFn
+  reduceFooterGroupProps: PluginPlugFn
+  reduceHeaderProps: PluginPlugFn
+  reduceRowProps: PluginPlugFn
+  reduceCellProps: PluginPlugFn
 }
 
-type PlugType = [keyof PluginPlugs, PluginPlugBuilder]
+export interface PluginPlugFn {
+  (...any: any): any
+  after?: string[]
+}
 
-type PluginPlugBuilder = any
+export type PluginPlugName = keyof PluginPlugs
 
-type Plugs = Partial<Record<keyof PluginPlugs, unknown>>
+export type PlugType = [PluginPlugName, PluginPlugBuilder]
+
+export type PluginPlugBuilder = any
+
+export type InstancePlugs = Partial<Record<PluginPlugName, unknown>>
 
 const plugTypes: PlugType[] = [
   ['useReduceOptions', composeReducer],
@@ -75,7 +82,7 @@ export default function makePlugs(plugins: Plugin[]) {
     return 0
   })
 
-  const plugs: Plugs = {}
+  const plugs: InstancePlugs = {}
 
   if (process.env.NODE_ENV !== 'production') {
     plugins.forEach(plugin => {
@@ -93,10 +100,12 @@ export default function makePlugs(plugins: Plugin[]) {
     const pluginPlugs = plugins
       // Get the info necessary to sort
       .map(plugin => {
+        const plugFn = plugin.plugs[plugType]
+
         return {
           pluginName: plugin.name,
-          plug: plugin.plugs[plugType],
-          after: plugin.plugs[plugType]?.after || [],
+          plug: plugFn,
+          after: plugFn?.after || [],
         }
       })
       // remove empty

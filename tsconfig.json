@@ -7,13 +7,13 @@
     "lib": ["ESNext", "dom"],
     "target": "es5",
     "noEmit": true,
-    "noImplicitAny": true,
+    "strict": true,
+    "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "skipLibCheck": true,
-    "strict": true,
     "types": ["jest", "node"]
   },
   "include": ["./src"]

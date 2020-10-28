@@ -2,21 +2,32 @@ import React from 'react'
 
 //
 
+import type { InstancePlugs } from './makePlugs'
+
 import { withCore } from '../plugins/withCore'
 import makePlugs from './makePlugs'
 import useTableState from './useTableState'
-import useColumns from './useColumns'
+import useColumns, { Column } from './useColumns'
 import useHeadersAndFooters from './useHeadersAndFooters'
 import useDataModel from './useDataModel'
 
-export function useTable(options, plugins = []) {
-  const instanceRef = React.useRef()
+interface TableInstance {
+  options: {
+    columns: Column[]
+  }
+  plugs: InstancePlugs
+}
+
+interface TableOptions {}
+
+export function useTable(options: TableOptions, plugins = []) {
+  const instanceRef = React.useRef<Partial<TableInstance>>()
 
   // Create and keep track of the table instance
   if (!instanceRef.current) {
     instanceRef.current = {
       plugs: makePlugs([withCore, ...plugins]),
-    }
+    } as Pick<TableInstance, 'plugs'>
   }
 
   const instance = instanceRef.current

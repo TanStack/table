@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -85,13 +86,20 @@ main {
 .sidebar {
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.7rem;
+  align-items: center;
+  margin: 0 50px;
+  height: 20px;
 }
 
 .size-selectors {
   display: flex;
   flex-direction: row;
-  font-size: 0.7rem;
-  padding-top: 0.2rem;
+  align-items: center;
 }
 
 .size-selector {
@@ -104,142 +112,47 @@ main {
 .size-selector input {
   margin: 0 0.3rem 0 0;
 }
-    </style>
-    <style>
-    undefined
+
+.filters {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+.filter input {
+  flex: 1;
+  height: 1rem;
+  padding: 0.1rem;
+  font-size: 0.7rem;
+  margin-left: 0.3rem;
+}
+.filter + .filter {
+  margin-left: 0.5rem;
+}
     </style>
   </head>
   <body>
     <main></main>
     <script>
+    /*<!--*/
     var drawChart = (function () {
   'use strict';
 
-  var n,u,i,t,o,r,f,e={},c=[],s=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord/i;function a(n,l){for(var u in l)n[u]=l[u];return n}function v(n){var l=n.parentNode;l&&l.removeChild(n);}function h(n,l,u){var i,t=arguments,o={};for(i in l)"key"!==i&&"ref"!==i&&(o[i]=l[i]);if(arguments.length>3)for(u=[u],i=3;i<arguments.length;i++)u.push(t[i]);if(null!=u&&(o.children=u),"function"==typeof n&&null!=n.defaultProps)for(i in n.defaultProps)void 0===o[i]&&(o[i]=n.defaultProps[i]);return p(n,o,l&&l.key,l&&l.ref)}function p(l,u,i,t){var o={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,constructor:void 0};return n.vnode&&n.vnode(o),o}function d(n){return n.children}function m(n,l){this.props=n,this.context=l;}function w(n,l){if(null==l)return n.__?w(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?w(n):null}function g(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return g(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!i++||o!==n.debounceRendering)&&((o=n.debounceRendering)||t)(_);}function _(){for(var n;i=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,o,r;n.__d&&(o=(t=(l=n).__v).__e,(r=l.__P)&&(u=[],i=A(r,t,a({},t),l.__n,void 0!==r.ownerSVGElement,null,u,null==o?w(t):o),T(u,t),i!=o&&g(t)));});}function b(n,l,u,i,t,o,r,f,s){var a,h,p,y,d,m,g,k=u&&u.__k||c,_=k.length;if(f==e&&(f=null!=o?o[0]:_?w(u,0):null),a=0,l.__k=x(l.__k,function(u){if(null!=u){if(u.__=l,u.__b=l.__b+1,null===(p=k[a])||p&&u.key==p.key&&u.type===p.type)k[a]=void 0;else for(h=0;h<_;h++){if((p=k[h])&&u.key==p.key&&u.type===p.type){k[h]=void 0;break}p=null;}if(y=A(n,u,p=p||e,i,t,o,r,f,s),(h=u.ref)&&p.ref!=h&&(g||(g=[]),p.ref&&g.push(p.ref,null,u),g.push(h,u.__c||y,u)),null!=y){var c;if(null==m&&(m=y),void 0!==u.__d)c=u.__d,u.__d=void 0;else if(o==p||y!=f||null==y.parentNode){n:if(null==f||f.parentNode!==n)n.appendChild(y),c=null;else {for(d=f,h=0;(d=d.nextSibling)&&h<_;h+=2)if(d==y)break n;n.insertBefore(y,f),c=f;}"option"==l.type&&(n.value="");}f=void 0!==c?c:y.nextSibling,"function"==typeof l.type&&(l.__d=f);}else f&&p.__e==f&&f.parentNode!=n&&(f=w(p));}return a++,u}),l.__e=m,null!=o&&"function"!=typeof l.type)for(a=o.length;a--;)null!=o[a]&&v(o[a]);for(a=_;a--;)null!=k[a]&&D(k[a],k[a]);if(g)for(a=0;a<g.length;a++)j(g[a],g[++a],g[++a]);}function x(n,l,u){if(null==u&&(u=[]),null==n||"boolean"==typeof n)l&&u.push(l(null));else if(Array.isArray(n))for(var i=0;i<n.length;i++)x(n[i],l,u);else u.push(l?l("string"==typeof n||"number"==typeof n?p(null,n,null,null):null!=n.__e||null!=n.__c?p(n.type,n.props,n.key,null):n):n);return u}function P(n,l,u,i,t){var o;for(o in u)o in l||N(n,o,null,u[o],i);for(o in l)t&&"function"!=typeof l[o]||"value"===o||"checked"===o||u[o]===l[o]||N(n,o,l[o],u[o],i);}function C(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]="number"==typeof u&&!1===s.test(l)?u+"px":null==u?"":u;}function N(n,l,u,i,t){var o,r,f,e,c;if(t?"className"===l&&(l="class"):"class"===l&&(l="className"),"key"===l||"children"===l);else if("style"===l)if(o=n.style,"string"==typeof u)o.cssText=u;else {if("string"==typeof i&&(o.cssText="",i=null),i)for(r in i)u&&r in u||C(o,r,"");if(u)for(f in u)i&&u[f]===i[f]||C(o,f,u[f]);}else "o"===l[0]&&"n"===l[1]?(e=l!==(l=l.replace(/Capture$/,"")),c=l.toLowerCase(),l=(c in n?c:l).slice(2),u?(i||n.addEventListener(l,z,e),(n.l||(n.l={}))[l]=u):n.removeEventListener(l,z,e)):"list"!==l&&"tagName"!==l&&"form"!==l&&"type"!==l&&"size"!==l&&!t&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/^xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u&&!/^ar/.test(l)?n.removeAttribute(l):n.setAttribute(l,u));}function z(l){this.l[l.type](n.event?n.event(l):l);}function A(l,u,i,t,o,r,f,e,c){var s,v,h,p,y,w,g,k,_,x,P=u.type;if(void 0!==u.constructor)return null;(s=n.__b)&&s(u);try{n:if("function"==typeof P){if(k=u.props,_=(s=P.contextType)&&t[s.__c],x=s?_?_.props.value:s.__:t,i.__c?g=(v=u.__c=i.__c).__=v.__E:("prototype"in P&&P.prototype.render?u.__c=v=new P(k,x):(u.__c=v=new m(k,x),v.constructor=P,v.render=E),_&&_.sub(v),v.props=k,v.state||(v.state={}),v.context=x,v.__n=t,h=v.__d=!0,v.__h=[]),null==v.__s&&(v.__s=v.state),null!=P.getDerivedStateFromProps&&(v.__s==v.state&&(v.__s=a({},v.__s)),a(v.__s,P.getDerivedStateFromProps(k,v.__s))),p=v.props,y=v.state,h)null==P.getDerivedStateFromProps&&null!=v.componentWillMount&&v.componentWillMount(),null!=v.componentDidMount&&v.__h.push(v.componentDidMount);else {if(null==P.getDerivedStateFromProps&&k!==p&&null!=v.componentWillReceiveProps&&v.componentWillReceiveProps(k,x),!v.__e&&null!=v.shouldComponentUpdate&&!1===v.shouldComponentUpdate(k,v.__s,x)){for(v.props=k,v.state=v.__s,v.__d=!1,v.__v=u,u.__e=i.__e,u.__k=i.__k,v.__h.length&&f.push(v),s=0;s<u.__k.length;s++)u.__k[s]&&(u.__k[s].__=u);break n}null!=v.componentWillUpdate&&v.componentWillUpdate(k,v.__s,x),null!=v.componentDidUpdate&&v.__h.push(function(){v.componentDidUpdate(p,y,w);});}v.context=x,v.props=k,v.state=v.__s,(s=n.__r)&&s(u),v.__d=!1,v.__v=u,v.__P=l,s=v.render(v.props,v.state,v.context),u.__k=null!=s&&s.type==d&&null==s.key?s.props.children:Array.isArray(s)?s:[s],null!=v.getChildContext&&(t=a(a({},t),v.getChildContext())),h||null==v.getSnapshotBeforeUpdate||(w=v.getSnapshotBeforeUpdate(p,y)),b(l,u,i,t,o,r,f,e,c),v.base=u.__e,v.__h.length&&f.push(v),g&&(v.__E=v.__=null),v.__e=!1;}else u.__e=$(i.__e,u,i,t,o,r,f,c);(s=n.diffed)&&s(u);}catch(l){n.__e(l,u,i);}return u.__e}function T(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u);});}catch(l){n.__e(l,u.__v);}});}function $(n,l,u,i,t,o,r,f){var s,a,v,h,p,y=u.props,d=l.props;if(t="svg"===l.type||t,null!=o)for(s=0;s<o.length;s++)if(null!=(a=o[s])&&((null===l.type?3===a.nodeType:a.localName===l.type)||n==a)){n=a,o[s]=null;break}if(null==n){if(null===l.type)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type,d.is&&{is:d.is}),o=null;}if(null===l.type)y!==d&&n.data!=d&&(n.data=d);else if(l!==u){if(null!=o&&(o=c.slice.call(n.childNodes)),v=(y=u.props||e).dangerouslySetInnerHTML,h=d.dangerouslySetInnerHTML,!f){if(y===e)for(y={},p=0;p<n.attributes.length;p++)y[n.attributes[p].name]=n.attributes[p].value;(h||v)&&(h&&v&&h.__html==v.__html||(n.innerHTML=h&&h.__html||""));}P(n,d,y,t,f),l.__k=l.props.children,h||b(n,l,u,i,"foreignObject"!==l.type&&t,o,r,e,f),f||("value"in d&&void 0!==d.value&&d.value!==n.value&&(n.value=null==d.value?"":d.value),"checked"in d&&void 0!==d.checked&&d.checked!==n.checked&&(n.checked=d.checked));}return n}function j(l,u,i){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,i);}}function D(l,u,i){var t,o,r;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||j(t,null,u)),i||"function"==typeof l.type||(i=null!=(o=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount();}catch(l){n.__e(l,u);}t.base=t.__P=null;}if(t=l.__k)for(r=0;r<t.length;r++)t[r]&&D(t[r],u,i);null!=o&&v(o);}function E(n,l,u){return this.constructor(n,u)}function H(l,u,i){var t,o,f;n.__&&n.__(l,u),o=(t=i===r)?null:i&&i.__k||u.__k,l=h(d,null,[l]),f=[],A(u,(t?u:i||u).__k=l,o||e,e,void 0!==u.ownerSVGElement,i&&!t?[i]:o?null:c.slice.call(u.childNodes),f,i||e,t),T(f,l);}n={__e:function(n,l){for(var u,i;l=l.__;)if((u=l.__c)&&!u.__)try{if(u.constructor&&null!=u.constructor.getDerivedStateFromError&&(i=!0,u.setState(u.constructor.getDerivedStateFromError(n))),null!=u.componentDidCatch&&(i=!0,u.componentDidCatch(n)),i)return k(u.__E=u)}catch(l){n=l;}throw n}},m.prototype.setState=function(n,l){var u;u=this.__s!==this.state?this.__s:this.__s=a({},this.state),"function"==typeof n&&(n=n(u,this.props)),n&&a(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this));},m.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this));},m.prototype.render=d,u=[],i=0,t="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,r=e,f=0;
+  var n,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function s(n,l){for(var u in l)n[u]=l[u];return n}function a(n){var l=n.parentNode;l&&l.removeChild(n);}function h(n,l,u){var i,t,o,r=arguments,f={};for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);if(null!=u&&(f.children=u),"function"==typeof n&&null!=n.defaultProps)for(o in n.defaultProps)void 0===f[o]&&(f[o]=n.defaultProps[o]);return v(n,f,i,t,null)}function v(l,u,i,t,o){var r={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:o};return null==o&&(r.__v=r),null!=n.vnode&&n.vnode(r),r}function p(n){return n.children}function d(n,l){this.props=n,this.context=l;}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?_(n):null}function w(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return w(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!g.__r++||t!==n.debounceRendering)&&((t=n.debounceRendering)||i)(g);}function g(){for(var n;g.__r=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,o,r,f;n.__d&&(r=(o=(l=n).__v).__e,(f=l.__P)&&(u=[],(i=s({},o)).__v=i,t=$(f,o,i,l.__n,void 0!==f.ownerSVGElement,null!=o.__h?[r]:null,u,null==r?_(o):r,o.__h),j(u,o),t!=r&&w(o)));});}function m(n,l,u,i,t,o,r,c,s,h){var y,d,w,k,g,m,b,A=i&&i.__k||e,P=A.length;for(s==f&&(s=null!=r?r[0]:P?_(i,0):null),u.__k=[],y=0;y<l.length;y++)if(null!=(k=u.__k[y]=null==(k=l[y])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k?v(null,k,null,null,k):Array.isArray(k)?v(p,{children:k},null,null,null):null!=k.__e||null!=k.__c?v(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(w=A[y])||w&&k.key==w.key&&k.type===w.type)A[y]=void 0;else for(d=0;d<P;d++){if((w=A[d])&&k.key==w.key&&k.type===w.type){A[d]=void 0;break}w=null;}g=$(n,k,w=w||f,t,o,r,c,s,h),(d=k.ref)&&w.ref!=d&&(b||(b=[]),w.ref&&b.push(w.ref,null,k),b.push(d,k.__c||g,k)),null!=g?(null==m&&(m=g),s=x(n,k,w,A,r,g,s),h||"option"!=u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&w.__e==s&&s.parentNode!=n&&(s=_(w));}if(u.__e=m,null!=r&&"function"!=typeof u.type)for(y=r.length;y--;)null!=r[y]&&a(r[y]);for(y=P;y--;)null!=A[y]&&L(A[y],A[y]);if(b)for(y=0;y<b.length;y++)I(b[y],b[++y],b[++y]);}function x(n,l,u,i,t,o,r){var f,e,c;if(void 0!==l.__d)f=l.__d,l.__d=void 0;else if(t==u||o!=r||null==o.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(o),f=null;else {for(e=r,c=0;(e=e.nextSibling)&&c<i.length;c+=2)if(e==o)break n;n.insertBefore(o,r),f=r;}return void 0!==f?f:o.nextSibling}function A(n,l,u,i,t){var o;for(o in u)"children"===o||"key"===o||o in l||C(n,o,null,u[o],i);for(o in l)t&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||C(n,o,l[o],u[o],i);}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||c.test(l)?u:u+"px";}function C(n,l,u,i,t){var o,r,f;if(t&&"className"==l&&(l="class"),"style"===l)if("string"==typeof u)n.style.cssText=u;else {if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||P(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||P(n.style,l,u[l]);}else "o"===l[0]&&"n"===l[1]?(o=l!==(l=l.replace(/Capture$/,"")),(r=l.toLowerCase())in n&&(l=r),l=l.slice(2),n.l||(n.l={}),n.l[l+o]=u,f=o?N:z,u?i||n.addEventListener(l,f,o):n.removeEventListener(l,f,o)):"list"!==l&&"tagName"!==l&&"form"!==l&&"type"!==l&&"size"!==l&&"download"!==l&&"href"!==l&&!t&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u&&!/^ar/.test(l)?n.removeAttribute(l):n.setAttribute(l,u));}function z(l){this.l[l.type+!1](n.event?n.event(l):l);}function N(l){this.l[l.type+!0](n.event?n.event(l):l);}function T(n,l,u){var i,t;for(i=0;i<n.__k.length;i++)(t=n.__k[i])&&(t.__=n,t.__e&&("function"==typeof t.type&&t.__k.length>1&&T(t,l,u),l=x(u,t,t,n.__k,null,t.__e,l),"function"==typeof n.type&&(n.__d=l)));}function $(l,u,i,t,o,r,f,e,c){var a,h,v,y,_,w,k,g,b,x,A,P=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,r=[e]),(a=n.__b)&&a(u);try{n:if("function"==typeof P){if(g=u.props,b=(a=P.contextType)&&t[a.__c],x=a?b?b.props.value:a.__:t,i.__c?k=(h=u.__c=i.__c).__=h.__E:("prototype"in P&&P.prototype.render?u.__c=h=new P(g,x):(u.__c=h=new d(g,x),h.constructor=P,h.render=M),b&&b.sub(h),h.props=g,h.state||(h.state={}),h.context=x,h.__n=t,v=h.__d=!0,h.__h=[]),null==h.__s&&(h.__s=h.state),null!=P.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=s({},h.__s)),s(h.__s,P.getDerivedStateFromProps(g,h.__s))),y=h.props,_=h.state,v)null==P.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else {if(null==P.getDerivedStateFromProps&&g!==y&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(g,x),!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(g,h.__s,x)||u.__v===i.__v){h.props=g,h.state=h.__s,u.__v!==i.__v&&(h.__d=!1),h.__v=u,u.__e=i.__e,u.__k=i.__k,h.__h.length&&f.push(h),T(u,e,l);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(g,h.__s,x),null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(y,_,w);});}h.context=x,h.props=g,h.state=h.__s,(a=n.__r)&&a(u),h.__d=!1,h.__v=u,h.__P=l,a=h.render(h.props,h.state,h.context),h.state=h.__s,null!=h.getChildContext&&(t=s(s({},t),h.getChildContext())),v||null==h.getSnapshotBeforeUpdate||(w=h.getSnapshotBeforeUpdate(y,_)),A=null!=a&&a.type==p&&null==a.key?a.props.children:a,m(l,Array.isArray(A)?A:[A],u,i,t,o,r,f,e,c),h.base=u.__e,u.__h=null,h.__h.length&&f.push(h),k&&(h.__E=h.__=null),h.__e=!1;}else null==r&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=H(i.__e,u,i,t,o,r,f,c);(a=n.diffed)&&a(u);}catch(l){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),n.__e(l,u,i);}return u.__e}function j(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u);});}catch(l){n.__e(l,u.__v);}});}function H(n,l,u,i,t,o,r,c){var s,a,h,v,y,p=u.props,d=l.props;if(t="svg"===l.type||t,null!=o)for(s=0;s<o.length;s++)if(null!=(a=o[s])&&((null===l.type?3===a.nodeType:a.localName===l.type)||n==a)){n=a,o[s]=null;break}if(null==n){if(null===l.type)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type,d.is&&{is:d.is}),o=null,c=!1;}if(null===l.type)p===d||c&&n.data===d||(n.data=d);else {if(null!=o&&(o=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,!c){if(null!=o)for(p={},y=0;y<n.attributes.length;y++)p[n.attributes[y].name]=n.attributes[y].value;(v||h)&&(v&&(h&&v.__html==h.__html||v.__html===n.innerHTML)||(n.innerHTML=v&&v.__html||""));}A(n,d,p,t,c),v?l.__k=[]:(s=l.props.children,m(n,Array.isArray(s)?s:[s],l,u,i,"foreignObject"!==l.type&&t,o,r,f,c)),c||("value"in d&&void 0!==(s=d.value)&&(s!==n.value||"progress"===l.type&&!s)&&C(n,"value",s,p.value,!1),"checked"in d&&void 0!==(s=d.checked)&&s!==n.checked&&C(n,"checked",s,p.checked,!1));}return n}function I(l,u,i){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,i);}}function L(l,u,i){var t,o,r;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||I(t,null,u)),i||"function"==typeof l.type||(i=null!=(o=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount();}catch(l){n.__e(l,u);}t.base=t.__P=null;}if(t=l.__k)for(r=0;r<t.length;r++)t[r]&&L(t[r],u,i);null!=o&&a(o);}function M(n,l,u){return this.constructor(n,u)}function O(l,u,i){var t,r,c;n.__&&n.__(l,u),r=(t=i===o)?null:i&&i.__k||u.__k,l=h(p,null,[l]),c=[],$(u,(t?u:i||u).__k=l,r||f,f,void 0!==u.ownerSVGElement,i&&!t?[i]:r?null:u.childNodes.length?e.slice.call(u.childNodes):null,c,i||f,t),j(c,l);}n={__e:function(n,l){for(var u,i,t,o=l.__h;l=l.__;)if((u=l.__c)&&!u.__)try{if((i=u.constructor)&&null!=i.getDerivedStateFromError&&(u.setState(i.getDerivedStateFromError(n)),t=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),t=u.__d),t)return l.__h=o,u.__E=u}catch(l){n=l;}throw n}},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=s({},this.state),"function"==typeof n&&(n=n(s({},u),this.props)),n&&s(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this));},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this));},d.prototype.render=p,u=[],i="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,g.__r=0,o=f,r=0;
 
-  var t$1,r$1,u$1,i$1=[],o$1=n.__r,f$1=n.diffed,c$1=n.__c,e$1=n.unmount;function a$1(t){n.__h&&n.__h(r$1);var u=r$1.__H||(r$1.__H={__:[],__h:[]});return t>=u.__.length&&u.__.push({}),u.__[t]}function v$1(n){return m$1(x$1,n)}function m$1(n,u,i){var o=a$1(t$1++);return o.__c||(o.__c=r$1,o.__=[i?i(u):x$1(void 0,u),function(t){var r=n(o.__[0],t);o.__[0]!==r&&(o.__[0]=r,o.__c.setState({}));}]),o.__}function p$1(n,u){var i=a$1(t$1++);q(i.__H,u)&&(i.__=n,i.__H=u,r$1.__H.__h.push(i));}function y(n){return s$1(function(){return {current:n}},[])}function s$1(n,r){var u=a$1(t$1++);return q(u.__H,r)?(u.__H=r,u.__h=n,u.__=n()):u.__}function F(){i$1.some(function(t){if(t.__P)try{t.__H.__h.forEach(_$1),t.__H.__h.forEach(g$1),t.__H.__h=[];}catch(r){return n.__e(r,t.__v),!0}}),i$1=[];}function _$1(n){n.t&&n.t();}function g$1(n){var t=n.__();"function"==typeof t&&(n.t=t);}function q(n,t){return !n||t.some(function(t,r){return t!==n[r]})}function x$1(n,t){return "function"==typeof t?t(n):t}n.__r=function(n){o$1&&o$1(n),t$1=0,(r$1=n.__c).__H&&(r$1.__H.__h.forEach(_$1),r$1.__H.__h.forEach(g$1),r$1.__H.__h=[]);},n.diffed=function(t){f$1&&f$1(t);var r=t.__c;if(r){var o=r.__H;o&&o.__h.length&&(1!==i$1.push(r)&&u$1===n.requestAnimationFrame||((u$1=n.requestAnimationFrame)||function(n){var t,r=function(){clearTimeout(u),cancelAnimationFrame(t),setTimeout(n);},u=setTimeout(r,100);"undefined"!=typeof window&&(t=requestAnimationFrame(r));})(F));}},n.__c=function(t,r){r.some(function(t){try{t.__h.forEach(_$1),t.__h=t.__h.filter(function(n){return !n.__||g$1(n)});}catch(u){r.some(function(n){n.__h&&(n.__h=[]);}),r=[],n.__e(u,t.__v);}}),c$1&&c$1(t,r);},n.unmount=function(t){e$1&&e$1(t);var r=t.__c;if(r){var u=r.__H;if(u)try{u.__.forEach(function(n){return n.t&&n.t()});}catch(t){n.__e(t,r.__v);}}};
+  var n$1=function(t,s,r,e){var u;s[0]=0;for(var h=1;h<s.length;h++){var p=s[h++],a=s[h]?(s[0]|=p?1:2,r[s[h++]]):s[++h];3===p?e[0]=a:4===p?e[1]=Object.assign(e[1]||{},a):5===p?(e[1]=e[1]||{})[s[++h]]=a:6===p?e[1][s[++h]]+=a+"":p?(u=t.apply(a,n$1(t,a,r,["",null])),e.push(u),a[0]?s[0]|=2:(s[h-2]=0,s[h]=u)):e.push(a);}return e},t$1=new Map;function e$1(s){var r=t$1.get(this);return r||(r=new Map,t$1.set(this,r)),(r=n$1(this,r.get(s)||(r.set(s,r=function(n){for(var t,s,r=1,e="",u="",h=[0],p=function(n){1===r&&(n||(e=e.replace(/^\s*\n\s*|\s*\n\s*$/g,"")))?h.push(0,n,e):3===r&&(n||e)?(h.push(3,n,e),r=2):2===r&&"..."===e&&n?h.push(4,n,0):2===r&&e&&!n?h.push(5,0,!0,e):r>=5&&((e||!n&&5===r)&&(h.push(r,0,e,s),r=6),n&&(h.push(r,n,0,s),r=6)),e="";},a=0;a<n.length;a++){a&&(1===r&&p(),p(a));for(var l=0;l<n[a].length;l++)t=n[a][l],1===r?"<"===t?(p(),h=[h],r=3):e+=t:4===r?"--"===e&&">"===t?(r=1,e=""):e=t+e[0]:u?t===u?u="":e+=t:'"'===t||"'"===t?u=t:">"===t?(p(),r=1):r&&("="===t?(r=5,s=e,e=""):"/"===t&&(r<5||">"===n[a][l+1])?(p(),3===r&&(h=h[0]),r=h,(h=h[0]).push(2,0,r),r=0):" "===t||"\t"===t||"\n"===t||"\r"===t?(p(),r=2):e+=t),3===r&&"!--"===e&&(r=4,h=h[0]);}return p(),h}(s)),r),arguments,[])).length>1?r:r[0]}
 
-  var n$1=function(t,s,r,e){var u;s[0]=0;for(var h=1;h<s.length;h++){var p=s[h++],a=s[h]?(s[0]|=p?1:2,r[s[h++]]):s[++h];3===p?e[0]=a:4===p?e[1]=Object.assign(e[1]||{},a):5===p?(e[1]=e[1]||{})[s[++h]]=a:6===p?e[1][s[++h]]+=a+"":p?(u=t.apply(a,n$1(t,a,r,["",null])),e.push(u),a[0]?s[0]|=2:(s[h-2]=0,s[h]=u)):e.push(a);}return e},t$2=new Map;function e$2(s){var r=t$2.get(this);return r||(r=new Map,t$2.set(this,r)),(r=n$1(this,r.get(s)||(r.set(s,r=function(n){for(var t,s,r=1,e="",u="",h=[0],p=function(n){1===r&&(n||(e=e.replace(/^\s*\n\s*|\s*\n\s*$/g,"")))?h.push(0,n,e):3===r&&(n||e)?(h.push(3,n,e),r=2):2===r&&"..."===e&&n?h.push(4,n,0):2===r&&e&&!n?h.push(5,0,!0,e):r>=5&&((e||!n&&5===r)&&(h.push(r,0,e,s),r=6),n&&(h.push(r,n,0,s),r=6)),e="";},a=0;a<n.length;a++){a&&(1===r&&p(),p(a));for(var l=0;l<n[a].length;l++)t=n[a][l],1===r?"<"===t?(p(),h=[h],r=3):e+=t:4===r?"--"===e&&">"===t?(r=1,e=""):e=t+e[0]:u?t===u?u="":e+=t:'"'===t||"'"===t?u=t:">"===t?(p(),r=1):r&&("="===t?(r=5,s=e,e=""):"/"===t&&(r<5||">"===n[a][l+1])?(p(),3===r&&(h=h[0]),r=h,(h=h[0]).push(2,0,r),r=0):" "===t||"\t"===t||"\n"===t||"\r"===t?(p(),r=2):e+=t),3===r&&"!--"===e&&(r=4,h=h[0]);}return p(),h}(s)),r),arguments,[])).length>1?r:r[0]}
+  var m$1=e$1.bind(h);
 
-  var m$2=e$2.bind(h);
-
-  function ascending(a, b) {
-    return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
-  }
-
-  function bisector(compare) {
-    if (compare.length === 1) compare = ascendingComparator(compare);
-    return {
-      left: function(a, x, lo, hi) {
-        if (lo == null) lo = 0;
-        if (hi == null) hi = a.length;
-        while (lo < hi) {
-          var mid = lo + hi >>> 1;
-          if (compare(a[mid], x) < 0) lo = mid + 1;
-          else hi = mid;
-        }
-        return lo;
-      },
-      right: function(a, x, lo, hi) {
-        if (lo == null) lo = 0;
-        if (hi == null) hi = a.length;
-        while (lo < hi) {
-          var mid = lo + hi >>> 1;
-          if (compare(a[mid], x) > 0) hi = mid;
-          else lo = mid + 1;
-        }
-        return lo;
-      }
-    };
-  }
-
-  function ascendingComparator(f) {
-    return function(d, x) {
-      return ascending(f(d), x);
-    };
-  }
-
-  var ascendingBisect = bisector(ascending);
-  var bisectRight = ascendingBisect.right;
-
-  function identity(x) {
-    return x;
-  }
-
-  function group(values, ...keys) {
-    return nest(values, identity, identity, keys);
-  }
-
-  function nest(values, map, reduce, keys) {
-    return (function regroup(values, i) {
-      if (i >= keys.length) return reduce(values);
-      const groups = new Map();
-      const keyof = keys[i++];
-      let index = -1;
-      for (const value of values) {
-        const key = keyof(value, ++index, values);
-        const group = groups.get(key);
-        if (group) group.push(value);
-        else groups.set(key, [value]);
-      }
-      for (const [key, values] of groups) {
-        groups.set(key, regroup(values, i));
-      }
-      return map(groups);
-    })(values, 0);
-  }
-
-  var e10 = Math.sqrt(50),
-      e5 = Math.sqrt(10),
-      e2 = Math.sqrt(2);
-
-  function ticks(start, stop, count) {
-    var reverse,
-        i = -1,
-        n,
-        ticks,
-        step;
-
-    stop = +stop, start = +start, count = +count;
-    if (start === stop && count > 0) return [start];
-    if (reverse = stop < start) n = start, start = stop, stop = n;
-    if ((step = tickIncrement(start, stop, count)) === 0 || !isFinite(step)) return [];
-
-    if (step > 0) {
-      start = Math.ceil(start / step);
-      stop = Math.floor(stop / step);
-      ticks = new Array(n = Math.ceil(stop - start + 1));
-      while (++i < n) ticks[i] = (start + i) * step;
-    } else {
-      start = Math.floor(start * step);
-      stop = Math.ceil(stop * step);
-      ticks = new Array(n = Math.ceil(start - stop + 1));
-      while (++i < n) ticks[i] = (start - i) / step;
-    }
-
-    if (reverse) ticks.reverse();
-
-    return ticks;
-  }
-
-  function tickIncrement(start, stop, count) {
-    var step = (stop - start) / Math.max(0, count),
-        power = Math.floor(Math.log(step) / Math.LN10),
-        error = step / Math.pow(10, power);
-    return power >= 0
-        ? (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1) * Math.pow(10, power)
-        : -Math.pow(10, -power) / (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1);
-  }
-
-  function tickStep(start, stop, count) {
-    var step0 = Math.abs(stop - start) / Math.max(0, count),
-        step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
-        error = step0 / step1;
-    if (error >= e10) step1 *= 10;
-    else if (error >= e5) step1 *= 5;
-    else if (error >= e2) step1 *= 2;
-    return stop < start ? -step1 : step1;
-  }
+  var t$2,u$1,r$1,o$1=0,i$1=[],c$1=n.__r,f$1=n.diffed,e$2=n.__c,a$1=n.unmount;function v$1(t,r){n.__h&&n.__h(u$1,t,o$1||r),o$1=0;var i=u$1.__H||(u$1.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function m$2(n){return o$1=1,p$1(k$1,n)}function p$1(n,r,o){var i=v$1(t$2++,2);return i.t=n,i.__c||(i.__=[o?o(r):k$1(void 0,r),function(n){var t=i.t(i.__[0],n);i.__[0]!==t&&(i.__=[t,i.__[1]],i.__c.setState({}));}],i.__c=u$1),i.__}function y(r,o){var i=v$1(t$2++,3);!n.__s&&j$1(i.__H,o)&&(i.__=r,i.__H=o,u$1.__H.__h.push(i));}function h$1(n){return o$1=5,_$1(function(){return {current:n}},[])}function _$1(n,u){var r=v$1(t$2++,7);return j$1(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function q(){i$1.forEach(function(t){if(t.__P)try{t.__H.__h.forEach(b),t.__H.__h.forEach(g$1),t.__H.__h=[];}catch(u){t.__H.__h=[],n.__e(u,t.__v);}}),i$1=[];}n.__r=function(n){c$1&&c$1(n),t$2=0;var r=(u$1=n.__c).__H;r&&(r.__h.forEach(b),r.__h.forEach(g$1),r.__h=[]);},n.diffed=function(t){f$1&&f$1(t);var u=t.__c;u&&u.__H&&u.__H.__h.length&&(1!==i$1.push(u)&&r$1===n.requestAnimationFrame||((r$1=n.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),x$1&&cancelAnimationFrame(t),setTimeout(n);},r=setTimeout(u,100);x$1&&(t=requestAnimationFrame(u));})(q));},n.__c=function(t,u){u.some(function(t){try{t.__h.forEach(b),t.__h=t.__h.filter(function(n){return !n.__||g$1(n)});}catch(r){u.some(function(n){n.__h&&(n.__h=[]);}),u=[],n.__e(r,t.__v);}}),e$2&&e$2(t,u);},n.unmount=function(t){a$1&&a$1(t);var u=t.__c;if(u&&u.__H)try{u.__H.__.forEach(b);}catch(t){n.__e(t,u.__v);}};var x$1="function"==typeof requestAnimationFrame;function b(n){"function"==typeof n.__c&&n.__c();}function g$1(n){n.__c=n.__();}function j$1(n,t){return !n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}function k$1(n,t){return "function"==typeof t?t(n):t}
 
   function count(node) {
     var sum = 0,
@@ -254,43 +167,50 @@ main {
     return this.eachAfter(count);
   }
 
-  function node_each(callback) {
-    var node = this, current, next = [node], children, i, n;
-    do {
-      current = next.reverse(), next = [];
-      while (node = current.pop()) {
-        callback(node), children = node.children;
-        if (children) for (i = 0, n = children.length; i < n; ++i) {
-          next.push(children[i]);
-        }
-      }
-    } while (next.length);
+  function node_each(callback, that) {
+    let index = -1;
+    for (const node of this) {
+      callback.call(that, node, ++index, this);
+    }
     return this;
   }
 
-  function node_eachBefore(callback) {
-    var node = this, nodes = [node], children, i;
+  function node_eachBefore(callback, that) {
+    var node = this, nodes = [node], children, i, index = -1;
     while (node = nodes.pop()) {
-      callback(node), children = node.children;
-      if (children) for (i = children.length - 1; i >= 0; --i) {
-        nodes.push(children[i]);
+      callback.call(that, node, ++index, this);
+      if (children = node.children) {
+        for (i = children.length - 1; i >= 0; --i) {
+          nodes.push(children[i]);
+        }
       }
     }
     return this;
   }
 
-  function node_eachAfter(callback) {
-    var node = this, nodes = [node], next = [], children, i, n;
+  function node_eachAfter(callback, that) {
+    var node = this, nodes = [node], next = [], children, i, n, index = -1;
     while (node = nodes.pop()) {
-      next.push(node), children = node.children;
-      if (children) for (i = 0, n = children.length; i < n; ++i) {
-        nodes.push(children[i]);
+      next.push(node);
+      if (children = node.children) {
+        for (i = 0, n = children.length; i < n; ++i) {
+          nodes.push(children[i]);
+        }
       }
     }
     while (node = next.pop()) {
-      callback(node);
+      callback.call(that, node, ++index, this);
     }
     return this;
+  }
+
+  function node_find(callback, that) {
+    let index = -1;
+    for (const node of this) {
+      if (callback.call(that, node, ++index, this)) {
+        return node;
+      }
+    }
   }
 
   function node_sum(value) {
@@ -351,11 +271,7 @@ main {
   }
 
   function node_descendants() {
-    var nodes = [];
-    this.each(function(node) {
-      nodes.push(node);
-    });
-    return nodes;
+    return Array.from(this);
   }
 
   function node_leaves() {
@@ -378,9 +294,30 @@ main {
     return links;
   }
 
+  function* node_iterator() {
+    var node = this, current, next = [node], children, i, n;
+    do {
+      current = next.reverse(), next = [];
+      while (node = current.pop()) {
+        yield node;
+        if (children = node.children) {
+          for (i = 0, n = children.length; i < n; ++i) {
+            next.push(children[i]);
+          }
+        }
+      }
+    } while (next.length);
+  }
+
   function hierarchy(data, children) {
+    if (data instanceof Map) {
+      data = [undefined, data];
+      if (children === undefined) children = mapChildren;
+    } else if (children === undefined) {
+      children = objectChildren;
+    }
+
     var root = new Node(data),
-        valued = +data.value && (root.value = data.value),
         node,
         nodes = [root],
         child,
@@ -388,14 +325,11 @@ main {
         i,
         n;
 
-    if (children == null) children = defaultChildren;
-
     while (node = nodes.pop()) {
-      if (valued) node.value = +node.data.value;
-      if ((childs = children(node.data)) && (n = childs.length)) {
-        node.children = new Array(n);
+      if ((childs = children(node.data)) && (n = (childs = Array.from(childs)).length)) {
+        node.children = childs;
         for (i = n - 1; i >= 0; --i) {
-          nodes.push(child = node.children[i] = new Node(childs[i]));
+          nodes.push(child = childs[i] = new Node(childs[i]));
           child.parent = node;
           child.depth = node.depth + 1;
         }
@@ -409,11 +343,16 @@ main {
     return hierarchy(this).eachBefore(copyData);
   }
 
-  function defaultChildren(d) {
+  function objectChildren(d) {
     return d.children;
   }
 
+  function mapChildren(d) {
+    return Array.isArray(d) ? d[1] : null;
+  }
+
   function copyData(node) {
+    if (node.data.value !== undefined) node.value = node.data.value;
     node.data = node.data.data;
   }
 
@@ -436,6 +375,7 @@ main {
     each: node_each,
     eachAfter: node_eachAfter,
     eachBefore: node_eachBefore,
+    find: node_find,
     sum: node_sum,
     sort: node_sort,
     path: node_path,
@@ -443,7 +383,8 @@ main {
     descendants: node_descendants,
     leaves: node_leaves,
     links: node_links,
-    copy: node_copy
+    copy: node_copy,
+    [Symbol.iterator]: node_iterator
   };
 
   function required(f) {
@@ -664,8 +605,8 @@ main {
         while (++j < m) {
           row = rows[j], nodes = row.children;
           for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value;
-          if (row.dice) treemapDice(row, x0, y0, x1, y0 += (y1 - y0) * row.value / value);
-          else treemapSlice(row, x0, y0, x0 += (x1 - x0) * row.value / value, y1);
+          if (row.dice) treemapDice(row, x0, y0, x1, value ? y0 += (y1 - y0) * row.value / value : y1);
+          else treemapSlice(row, x0, y0, value ? x0 += (x1 - x0) * row.value / value : x1, y1);
           value -= row.value;
         }
       } else {
@@ -680,6 +621,196 @@ main {
 
     return resquarify;
   })(phi);
+
+  const LABELS = {
+    renderedLength: "Rendered",
+    gzipLength: "Gzip",
+    brotliLength: "Brotli",
+  };
+
+  const getAvailableSizeOptions = (options = {}) => {
+    const availableSizeProperties = ["renderedLength"];
+    if (options.gzip) {
+      availableSizeProperties.push("gzipLength");
+    }
+    if (options.brotli) {
+      availableSizeProperties.push("brotliLength");
+    }
+
+    return availableSizeProperties;
+  };
+
+  const SideBar = ({
+    availableSizeProperties,
+    sizeProperty,
+    setSizeProperty,
+  }) => {
+    const handleChange = (sizeProp) => () => {
+      if (sizeProp !== sizeProperty) {
+        setSizeProperty(sizeProp);
+      }
+    };
+    return m$1`
+    <aside class="sidebar">
+      <div class="size-selectors">
+        ${availableSizeProperties.length > 1 &&
+        availableSizeProperties.map((sizeProp) => {
+          const id = `selector-${sizeProp}`;
+          return m$1`
+            <div class="size-selector">
+              <input
+                type="radio"
+                id=${id}
+                checked=${sizeProp === sizeProperty}
+                onChange=${handleChange(sizeProp)}
+              />
+              <label for=${id}>
+                ${LABELS[sizeProp]}
+              </label>
+            </div>
+          `;
+        })}
+      </div>
+    </aside>
+  `;
+  };
+
+  function ascending(a, b) {
+    return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
+  }
+
+  function bisector(f) {
+    let delta = f;
+    let compare = f;
+
+    if (f.length === 1) {
+      delta = (d, x) => f(d) - x;
+      compare = ascendingComparator(f);
+    }
+
+    function left(a, x, lo, hi) {
+      if (lo == null) lo = 0;
+      if (hi == null) hi = a.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >>> 1;
+        if (compare(a[mid], x) < 0) lo = mid + 1;
+        else hi = mid;
+      }
+      return lo;
+    }
+
+    function right(a, x, lo, hi) {
+      if (lo == null) lo = 0;
+      if (hi == null) hi = a.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >>> 1;
+        if (compare(a[mid], x) > 0) hi = mid;
+        else lo = mid + 1;
+      }
+      return lo;
+    }
+
+    function center(a, x, lo, hi) {
+      if (lo == null) lo = 0;
+      if (hi == null) hi = a.length;
+      const i = left(a, x, lo, hi - 1);
+      return i > lo && delta(a[i - 1], x) > -delta(a[i], x) ? i - 1 : i;
+    }
+
+    return {left, center, right};
+  }
+
+  function ascendingComparator(f) {
+    return (d, x) => ascending(f(d), x);
+  }
+
+  function number(x) {
+    return x === null ? NaN : +x;
+  }
+
+  const ascendingBisect = bisector(ascending);
+  const bisectRight = ascendingBisect.right;
+  const bisectCenter = bisector(number).center;
+
+  function identity(x) {
+    return x;
+  }
+
+  function group(values, ...keys) {
+    return nest(values, identity, identity, keys);
+  }
+
+  function nest(values, map, reduce, keys) {
+    return (function regroup(values, i) {
+      if (i >= keys.length) return reduce(values);
+      const groups = new Map();
+      const keyof = keys[i++];
+      let index = -1;
+      for (const value of values) {
+        const key = keyof(value, ++index, values);
+        const group = groups.get(key);
+        if (group) group.push(value);
+        else groups.set(key, [value]);
+      }
+      for (const [key, values] of groups) {
+        groups.set(key, regroup(values, i));
+      }
+      return map(groups);
+    })(values, 0);
+  }
+
+  var e10 = Math.sqrt(50),
+      e5 = Math.sqrt(10),
+      e2 = Math.sqrt(2);
+
+  function ticks(start, stop, count) {
+    var reverse,
+        i = -1,
+        n,
+        ticks,
+        step;
+
+    stop = +stop, start = +start, count = +count;
+    if (start === stop && count > 0) return [start];
+    if (reverse = stop < start) n = start, start = stop, stop = n;
+    if ((step = tickIncrement(start, stop, count)) === 0 || !isFinite(step)) return [];
+
+    if (step > 0) {
+      start = Math.ceil(start / step);
+      stop = Math.floor(stop / step);
+      ticks = new Array(n = Math.ceil(stop - start + 1));
+      while (++i < n) ticks[i] = (start + i) * step;
+    } else {
+      step = -step;
+      start = Math.ceil(start * step);
+      stop = Math.floor(stop * step);
+      ticks = new Array(n = Math.ceil(stop - start + 1));
+      while (++i < n) ticks[i] = (start + i) / step;
+    }
+
+    if (reverse) ticks.reverse();
+
+    return ticks;
+  }
+
+  function tickIncrement(start, stop, count) {
+    var step = (stop - start) / Math.max(0, count),
+        power = Math.floor(Math.log(step) / Math.LN10),
+        error = step / Math.pow(10, power);
+    return power >= 0
+        ? (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1) * Math.pow(10, power)
+        : -Math.pow(10, -power) / (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1);
+  }
+
+  function tickStep(start, stop, count) {
+    var step0 = Math.abs(stop - start) / Math.max(0, count),
+        step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
+        error = step0 / step1;
+    if (error >= e10) step1 *= 10;
+    else if (error >= e5) step1 *= 5;
+    else if (error >= e2) step1 *= 2;
+    return stop < start ? -step1 : step1;
+  }
 
   /*!
    * bytes
@@ -766,6 +897,329 @@ main {
 
     return str + unitSeparator + unit;
   }
+
+  const Node$1 = ({
+    node,
+    backgroundColor,
+    fontColor,
+    onClick,
+    isSelected,
+    onNodeHover,
+    sizeProperty,
+  }) => {
+    const {
+      nodeUid,
+      x0,
+      x1,
+      y1,
+      y0,
+      clipUid,
+      data,
+      originalValue,
+      children = null,
+    } = node;
+
+    const tspan1Props = {};
+    const tspan2Props = {};
+    if (children != null) {
+      tspan1Props.dx = 3;
+      tspan2Props.dx = 3;
+      tspan1Props.y = 13;
+      tspan2Props.y = 13;
+    } else {
+      tspan1Props.x = 3;
+      tspan2Props.x = 3;
+      tspan1Props.y = "1.1em";
+      tspan2Props.y = "2.3em";
+    }
+
+    const handleClickSelection = (event) => {
+      if (window.getSelection().toString() !== "") {
+        event.stopPropagation();
+      }
+    };
+
+    return m$1`
+    <g
+      class="node"
+      transform="translate(${x0},${y0})"
+      onClick=${onClick}
+      onMouseOver=${(evt) => {
+        evt.stopPropagation();
+        onNodeHover(node);
+      }}
+    >
+      <rect
+        id=${nodeUid.id}
+        fill=${backgroundColor}
+        rx=${2}
+        ry=${2}
+        width=${x1 - x0}
+        height=${y1 - y0}
+        stroke=${isSelected ? "#fff" : null}
+        stroke-width=${isSelected ? 2 : null}
+      >
+      </rect>
+      <clipPath id=${clipUid.id}>
+        <use xlink:href=${nodeUid.href} />
+      </clipPath>
+      <text
+        clip-path=${clipUid}
+        fill=${fontColor}
+        onClick=${handleClickSelection}
+      >
+        <tspan ...${tspan1Props} font-size="0.7em">${data.name}</tspan>
+        <tspan ...${tspan2Props} fill-opacity=${0.7} font-size="0.7em"
+          >${format_1(originalValue[sizeProperty])}</tspan
+        >
+      </text>
+    </g>
+  `;
+  };
+
+  const TreeMap = ({
+    root,
+    layout,
+    color,
+    width,
+    height,
+    onNodeHover,
+    sizeProperty,
+  }) => {
+    const [selectedNode, setSelectedNode] = m$2(null);
+
+    const desiredValue = root.originalValue[sizeProperty] * 0.2;
+
+    //handle zoom of selected node
+    const selectedNodeMultiplier =
+      selectedNode != null
+        ? desiredValue > selectedNode.originalValue[sizeProperty]
+          ? desiredValue / selectedNode.originalValue[sizeProperty]
+          : 3
+        : 1;
+
+    // i only need to increase value of leaf nodes
+    // as folders will sum they up
+    const nodesToIncrease =
+      selectedNode != null
+        ? selectedNode.children != null
+          ? selectedNode.leaves()
+          : [selectedNode]
+        : [];
+
+    const nodesToIncreaseSet = new Set(nodesToIncrease);
+
+    // update value for nodes
+    root = root.eachAfter((node) => {
+      let sum = 0;
+      const children = node.children;
+      if (children != null) {
+        let i = children.length;
+        while (--i >= 0) sum += children[i].value;
+      } else {
+        sum = nodesToIncreaseSet.has(node)
+          ? node.originalValue[sizeProperty] * selectedNodeMultiplier
+          : node.originalValue[sizeProperty];
+      }
+
+      node.value = sum;
+    });
+
+    layout(root);
+
+    // this will make groups by height
+    const nestedDataMap = group(root.descendants(), (d) => d.height);
+    const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+      key,
+      values,
+    }));
+    nestedData.sort((a, b) => b.key - a.key);
+
+    return m$1`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox=${`0 0 ${width} ${height}`}>
+      ${nestedData.map(({ key, values }) => {
+        return m$1`
+          <g class="layer" key=${key}>
+            ${values.map((node) => {
+              const { backgroundColor, fontColor } = color(node);
+              return m$1`
+                <${Node$1}
+                  node=${node}
+                  backgroundColor=${backgroundColor}
+                  fontColor=${fontColor}
+                  onClick=${() =>
+                    setSelectedNode(selectedNode === node ? null : node)}
+                  isSelected=${selectedNode === node}
+                  onNodeHover=${onNodeHover}
+                  sizeProperty=${sizeProperty}
+                />
+              `;
+            })}
+          </g>
+        `;
+      })}
+    </svg>
+  `;
+  };
+
+  const Tooltip = ({
+    node,
+    visible,
+    root,
+    sizeProperty,
+    availableSizeProperties,
+    importedByCache,
+  }) => {
+    const ref = h$1();
+    const [style, setStyle] = m$2({});
+    const content = _$1(() => {
+      if (!node) return null;
+
+      const mainSize = node.originalValue[sizeProperty];
+
+      const percentageNum = (100 * mainSize) / root.originalValue[sizeProperty];
+      const percentage = percentageNum.toFixed(2);
+      const percentageString = percentage + "%";
+
+      const uid = node.data.uid;
+
+      const path = node
+        .ancestors()
+        .reverse()
+        .map((d) => d.data.name)
+        .join("/");
+
+      return m$1`
+      <div>${path}</div>
+      ${availableSizeProperties.map((sizeProp) => {
+        if (sizeProp === sizeProperty) {
+          return m$1`
+            <div>
+              <b>${LABELS[sizeProp]}:${" "}${format_1(mainSize)}</b
+              >${" "}(${percentageString})
+            </div>
+          `;
+        } else {
+          return m$1`
+            <div>
+              ${LABELS[sizeProp]}:${" "}
+              ${format_1(node.originalValue[sizeProp])}
+            </div>
+          `;
+        }
+      })}
+      ${uid &&
+      importedByCache.has(uid) &&
+      m$1`
+        <div>
+          <div><b>Imported By</b>:</div>
+          ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
+            (id) => m$1` <div>${id}</div> `
+          )}
+        </div>
+      `}
+    `;
+    }, [node]);
+
+    const updatePosition = (mouseCoords) => {
+      const pos = {
+        left: mouseCoords.x + Tooltip.marginX,
+        top: mouseCoords.y + Tooltip.marginY,
+      };
+
+      const boundingRect = ref.current.getBoundingClientRect();
+
+      if (pos.left + boundingRect.width > window.innerWidth) {
+        // Shifting horizontally
+        pos.left = window.innerWidth - boundingRect.width;
+      }
+
+      if (pos.top + boundingRect.height > window.innerHeight) {
+        // Flipping vertically
+        pos.top = mouseCoords.y - Tooltip.marginY - boundingRect.height;
+      }
+
+      setStyle(pos);
+    };
+
+    const handleMouseMove = (event) => {
+      updatePosition({
+        x: event.pageX,
+        y: event.pageY,
+      });
+    };
+
+    y(() => {
+      document.addEventListener("mousemove", handleMouseMove, true);
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove, true);
+      };
+    }, []);
+
+    return m$1`
+    <div
+      class="tooltip ${visible ? "" : "tooltip-hidden"}"
+      ref=${ref}
+      style=${style}
+    >
+      ${content}
+    </div>
+  `;
+  };
+
+  Tooltip.marginX = 10;
+  Tooltip.marginY = 30;
+
+  const Chart = ({
+    layout,
+    root,
+    color,
+    width,
+    height,
+    sizeProperty,
+    availableSizeProperties,
+    importedCache,
+    importedByCache,
+  }) => {
+    const [showTooltip, setShowTooltip] = m$2(false);
+    const [tooltipNode, setTooltipNode] = m$2(null);
+
+    const handleMouseOut = () => {
+      setShowTooltip(false);
+    };
+
+    y(() => {
+      document.addEventListener("mouseover", handleMouseOut);
+      return () => {
+        document.removeEventListener("mouseover", handleMouseOut);
+      };
+    }, []);
+
+    return m$1`
+    <${TreeMap}
+      layout=${layout}
+      root=${root}
+      color=${color}
+      width=${width}
+      height=${height}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+      onNodeHover=${(node) => {
+        setTooltipNode(node);
+        setShowTooltip(true);
+      }}
+    />
+    <${Tooltip}
+      visible=${showTooltip}
+      node=${tooltipNode}
+      root=${root}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+      importedByCache=${importedByCache}
+      importedCache=${importedCache}
+    />
+  `;
+  };
 
   let count$1 = 0;
 
@@ -1035,8 +1489,8 @@ main {
     format = (format + "").trim().toLowerCase();
     return (m = reHex.exec(format)) ? (l = m[1].length, m = parseInt(m[1], 16), l === 6 ? rgbn(m) // #ff0000
         : l === 3 ? new Rgb((m >> 8 & 0xf) | (m >> 4 & 0xf0), (m >> 4 & 0xf) | (m & 0xf0), ((m & 0xf) << 4) | (m & 0xf), 1) // #f00
-        : l === 8 ? new Rgb(m >> 24 & 0xff, m >> 16 & 0xff, m >> 8 & 0xff, (m & 0xff) / 0xff) // #ff000000
-        : l === 4 ? new Rgb((m >> 12 & 0xf) | (m >> 8 & 0xf0), (m >> 8 & 0xf) | (m >> 4 & 0xf0), (m >> 4 & 0xf) | (m & 0xf0), (((m & 0xf) << 4) | (m & 0xf)) / 0xff) // #f000
+        : l === 8 ? rgba(m >> 24 & 0xff, m >> 16 & 0xff, m >> 8 & 0xff, (m & 0xff) / 0xff) // #ff000000
+        : l === 4 ? rgba((m >> 12 & 0xf) | (m >> 8 & 0xf0), (m >> 8 & 0xf) | (m >> 4 & 0xf0), (m >> 4 & 0xf) | (m & 0xf0), (((m & 0xf) << 4) | (m & 0xf)) / 0xff) // #f000
         : null) // invalid hex
         : (m = reRgbInteger.exec(format)) ? new Rgb(m[1], m[2], m[3], 1) // rgb(255, 0, 0)
         : (m = reRgbPercent.exec(format)) ? new Rgb(m[1] * 255 / 100, m[2] * 255 / 100, m[3] * 255 / 100, 1) // rgb(100%, 0%, 0%)
@@ -1207,31 +1661,7 @@ main {
         : m1) * 255;
   }
 
-  function basis(t1, v0, v1, v2, v3) {
-    var t2 = t1 * t1, t3 = t2 * t1;
-    return ((1 - 3 * t1 + 3 * t2 - t3) * v0
-        + (4 - 6 * t2 + 3 * t3) * v1
-        + (1 + 3 * t1 + 3 * t2 - 3 * t3) * v2
-        + t3 * v3) / 6;
-  }
-
-  function basis$1(values) {
-    var n = values.length - 1;
-    return function(t) {
-      var i = t <= 0 ? (t = 0) : t >= 1 ? (t = 1, n - 1) : Math.floor(t * n),
-          v1 = values[i],
-          v2 = values[i + 1],
-          v0 = i > 0 ? values[i - 1] : 2 * v1 - v2,
-          v3 = i < n - 1 ? values[i + 2] : 2 * v2 - v1;
-      return basis((t - i / n) * n, v0, v1, v2, v3);
-    };
-  }
-
-  function constant$1(x) {
-    return function() {
-      return x;
-    };
-  }
+  var constant$1 = x => () => x;
 
   function linear(a, d) {
     return function(t) {
@@ -1277,34 +1707,6 @@ main {
 
     return rgb$1;
   })(1);
-
-  function rgbSpline(spline) {
-    return function(colors) {
-      var n = colors.length,
-          r = new Array(n),
-          g = new Array(n),
-          b = new Array(n),
-          i, color;
-      for (i = 0; i < n; ++i) {
-        color = rgb(colors[i]);
-        r[i] = color.r || 0;
-        g[i] = color.g || 0;
-        b[i] = color.b || 0;
-      }
-      r = spline(r);
-      g = spline(g);
-      b = spline(b);
-      color.opacity = 1;
-      return function(t) {
-        color.r = r(t);
-        color.g = g(t);
-        color.b = b(t);
-        return color + "";
-      };
-    };
-  }
-
-  var rgbBasis = rgbSpline(basis$1);
 
   function numberArray(a, b) {
     if (!b) b = [];
@@ -1454,13 +1856,13 @@ main {
     };
   }
 
-  function constant$2(x) {
+  function constants(x) {
     return function() {
       return x;
     };
   }
 
-  function number(x) {
+  function number$1(x) {
     return +x;
   }
 
@@ -1473,7 +1875,7 @@ main {
   function normalize(a, b) {
     return (b -= (a = +a))
         ? function(x) { return (x - a) / b; }
-        : constant$2(isNaN(b) ? NaN : 0.5);
+        : constants(isNaN(b) ? NaN : 0.5);
   }
 
   function clamper(a, b) {
@@ -1552,7 +1954,7 @@ main {
     };
 
     scale.domain = function(_) {
-      return arguments.length ? (domain = Array.from(_, number), rescale()) : domain.slice();
+      return arguments.length ? (domain = Array.from(_, number$1), rescale()) : domain.slice();
     };
 
     scale.range = function(_) {
@@ -1585,10 +1987,16 @@ main {
     return transformer()(identity$1, identity$1);
   }
 
+  function formatDecimal(x) {
+    return Math.abs(x = Math.round(x)) >= 1e21
+        ? x.toLocaleString("en").replace(/,/g, "")
+        : x.toString(10);
+  }
+
   // Computes the decimal coefficient and exponent of the specified number x with
   // significant digits p, where x is positive and p is in [1, 21] or undefined.
-  // For example, formatDecimal(1.23) returns ["123", 0].
-  function formatDecimal(x, p) {
+  // For example, formatDecimalParts(1.23) returns ["123", 0].
+  function formatDecimalParts(x, p) {
     if ((i = (x = p ? x.toExponential(p - 1) : x.toExponential()).indexOf("e")) < 0) return null; // NaN, ±Infinity
     var i, coefficient = x.slice(0, i);
 
@@ -1601,7 +2009,7 @@ main {
   }
 
   function exponent(x) {
-    return x = formatDecimal(Math.abs(x)), x ? x[1] : NaN;
+    return x = formatDecimalParts(Math.abs(x)), x ? x[1] : NaN;
   }
 
   function formatGroup(grouping, thousands) {
@@ -1694,7 +2102,7 @@ main {
   var prefixExponent;
 
   function formatPrefixAuto(x, p) {
-    var d = formatDecimal(x, p);
+    var d = formatDecimalParts(x, p);
     if (!d) return x + "";
     var coefficient = d[0],
         exponent = d[1],
@@ -1703,11 +2111,11 @@ main {
     return i === n ? coefficient
         : i > n ? coefficient + new Array(i - n + 1).join("0")
         : i > 0 ? coefficient.slice(0, i) + "." + coefficient.slice(i)
-        : "0." + new Array(1 - i).join("0") + formatDecimal(x, Math.max(0, p + i - 1))[0]; // less than 1y!
+        : "0." + new Array(1 - i).join("0") + formatDecimalParts(x, Math.max(0, p + i - 1))[0]; // less than 1y!
   }
 
   function formatRounded(x, p) {
-    var d = formatDecimal(x, p);
+    var d = formatDecimalParts(x, p);
     if (!d) return x + "";
     var coefficient = d[0],
         exponent = d[1];
@@ -1717,19 +2125,19 @@ main {
   }
 
   var formatTypes = {
-    "%": function(x, p) { return (x * 100).toFixed(p); },
-    "b": function(x) { return Math.round(x).toString(2); },
-    "c": function(x) { return x + ""; },
-    "d": function(x) { return Math.round(x).toString(10); },
-    "e": function(x, p) { return x.toExponential(p); },
-    "f": function(x, p) { return x.toFixed(p); },
-    "g": function(x, p) { return x.toPrecision(p); },
-    "o": function(x) { return Math.round(x).toString(8); },
-    "p": function(x, p) { return formatRounded(x * 100, p); },
+    "%": (x, p) => (x * 100).toFixed(p),
+    "b": (x) => Math.round(x).toString(2),
+    "c": (x) => x + "",
+    "d": formatDecimal,
+    "e": (x, p) => x.toExponential(p),
+    "f": (x, p) => x.toFixed(p),
+    "g": (x, p) => x.toPrecision(p),
+    "o": (x) => Math.round(x).toString(8),
+    "p": (x, p) => formatRounded(x * 100, p),
     "r": formatRounded,
     "s": formatPrefixAuto,
-    "X": function(x) { return Math.round(x).toString(16).toUpperCase(); },
-    "x": function(x) { return Math.round(x).toString(16); }
+    "X": (x) => Math.round(x).toString(16).toUpperCase(),
+    "x": (x) => Math.round(x).toString(16)
   };
 
   function identity$2(x) {
@@ -1746,7 +2154,7 @@ main {
         decimal = locale.decimal === undefined ? "." : locale.decimal + "",
         numerals = locale.numerals === undefined ? identity$2 : formatNumerals(map$1.call(locale.numerals, String)),
         percent = locale.percent === undefined ? "%" : locale.percent + "",
-        minus = locale.minus === undefined ? "-" : locale.minus + "",
+        minus = locale.minus === undefined ? "−" : locale.minus + "",
         nan = locale.nan === undefined ? "NaN" : locale.nan + "";
 
     function newFormat(specifier) {
@@ -1802,19 +2210,20 @@ main {
         } else {
           value = +value;
 
+          // Determine the sign. -0 is not less than 0, but 1 / -0 is!
+          var valueNegative = value < 0 || 1 / value < 0;
+
           // Perform the initial formatting.
-          var valueNegative = value < 0;
           value = isNaN(value) ? nan : formatType(Math.abs(value), precision);
 
           // Trim insignificant zeros.
           if (trim) value = formatTrim(value);
 
-          // If a negative value rounds to zero during formatting, treat as positive.
-          if (valueNegative && +value === 0) valueNegative = false;
+          // If a negative value rounds to zero after formatting, and no explicit positive sign is requested, hide the sign.
+          if (valueNegative && +value === 0 && sign !== "+") valueNegative = false;
 
           // Compute the prefix and suffix.
           valuePrefix = (valueNegative ? (sign === "(" ? sign : minus) : sign === "-" || sign === "(" ? "" : sign) + valuePrefix;
-
           valueSuffix = (type === "s" ? prefixes[8 + prefixExponent / 3] : "") + valueSuffix + (valueNegative && sign === "(" ? ")" : "");
 
           // Break the formatted value into the integer “value” part that can be
@@ -1880,11 +2289,9 @@ main {
   var formatPrefix;
 
   defaultLocale({
-    decimal: ".",
     thousands: ",",
     grouping: [3],
-    currency: ["$", ""],
-    minus: "-"
+    currency: ["$", ""]
   });
 
   function defaultLocale(definition) {
@@ -1950,38 +2357,36 @@ main {
     scale.nice = function(count) {
       if (count == null) count = 10;
 
-      var d = domain(),
-          i0 = 0,
-          i1 = d.length - 1,
-          start = d[i0],
-          stop = d[i1],
-          step;
+      var d = domain();
+      var i0 = 0;
+      var i1 = d.length - 1;
+      var start = d[i0];
+      var stop = d[i1];
+      var prestep;
+      var step;
+      var maxIter = 10;
 
       if (stop < start) {
         step = start, start = stop, stop = step;
         step = i0, i0 = i1, i1 = step;
       }
-
-      step = tickIncrement(start, stop, count);
-
-      if (step > 0) {
-        start = Math.floor(start / step) * step;
-        stop = Math.ceil(stop / step) * step;
+      
+      while (maxIter-- > 0) {
         step = tickIncrement(start, stop, count);
-      } else if (step < 0) {
-        start = Math.ceil(start * step) / step;
-        stop = Math.floor(stop * step) / step;
-        step = tickIncrement(start, stop, count);
-      }
-
-      if (step > 0) {
-        d[i0] = Math.floor(start / step) * step;
-        d[i1] = Math.ceil(stop / step) * step;
-        domain(d);
-      } else if (step < 0) {
-        d[i0] = Math.ceil(start * step) / step;
-        d[i1] = Math.floor(stop * step) / step;
-        domain(d);
+        if (step === prestep) {
+          d[i0] = start;
+          d[i1] = stop;
+          return domain(d);
+        } else if (step > 0) {
+          start = Math.floor(start / step) * step;
+          stop = Math.ceil(stop / step) * step;
+        } else if (step < 0) {
+          start = Math.ceil(start * step) / step;
+          stop = Math.floor(stop * step) / step;
+        } else {
+          break;
+        }
+        prestep = step;
       }
 
       return scale;
@@ -2068,30 +2473,6 @@ main {
     return initInterpolator.apply(scale, arguments);
   }
 
-  function colors(specifier) {
-    var n = specifier.length / 6 | 0, colors = new Array(n), i = 0;
-    while (i < n) colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
-    return colors;
-  }
-
-  function ramp(scheme) {
-    return rgbBasis(scheme[scheme.length - 1]);
-  }
-
-  var scheme = new Array(3).concat(
-    "fc8d59ffffbf99d594",
-    "d7191cfdae61abdda42b83ba",
-    "d7191cfdae61ffffbfabdda42b83ba",
-    "d53e4ffc8d59fee08be6f59899d5943288bd",
-    "d53e4ffc8d59fee08bffffbfe6f59899d5943288bd",
-    "d53e4ff46d43fdae61fee08be6f598abdda466c2a53288bd",
-    "d53e4ff46d43fdae61fee08bffffbfe6f598abdda466c2a53288bd",
-    "9e0142d53e4ff46d43fdae61fee08be6f598abdda466c2a53288bd5e4fa2",
-    "9e0142d53e4ff46d43fdae61fee08bffffbfe6f598abdda466c2a53288bd5e4fa2"
-  ).map(colors);
-
-  var colorRainbow = ramp(scheme);
-
   const COLOR_BASE = "#cecece";
 
   // https://www.w3.org/TR/WCAG20/#relativeluminancedef
@@ -2122,9 +2503,8 @@ main {
     colorParentMap.set(root, COLOR_BASE);
 
     if (root.children != null) {
-      const colorScale = sequential(
-        [0, root.children.length - 1],
-        colorRainbow
+      const colorScale = sequential([0, root.children.length - 1], (n) =>
+        hsl(360 * n, 0.6, 0.85)
       );
       root.children.forEach((c, id) => {
         colorParentMap.set(c, colorScale(id));
@@ -2133,7 +2513,7 @@ main {
 
     const colorMap = new Map();
 
-    const lightScale = linear$1().domain([0, root.height]).range([0.8, 0.1]);
+    const lightScale = linear$1().domain([0, root.height]).range([0.9, 0.3]);
 
     const getBackgroundColor = (node) => {
       const parents = node.ancestors();
@@ -2160,382 +2540,6 @@ main {
     };
   };
 
-  const LABELS = {
-    renderedLength: "Rendered",
-    gzipLength: "Gzip",
-    brotliLength: "Brotli",
-  };
-
-  const getAvailableSizeOptions = (options = {}) => {
-    const availableSizeProperties = ["renderedLength"];
-    if (options.gzip) {
-      availableSizeProperties.push("gzipLength");
-    }
-    if (options.brotli) {
-      availableSizeProperties.push("brotliLength");
-    }
-
-    return availableSizeProperties;
-  };
-
-  const Tooltip = ({
-    node,
-    visible,
-    root,
-    sizeProperty,
-    availableSizeProperties,
-    importedByCache,
-  }) => {
-    const ref = y();
-    const [style, setStyle] = v$1({});
-    const content = s$1(() => {
-      if (!node) return null;
-
-      const mainSize = node.originalValue[sizeProperty];
-
-      const percentageNum = (100 * mainSize) / root.originalValue[sizeProperty];
-      const percentage = percentageNum.toFixed(2);
-      const percentageString = percentage + "%";
-
-      const uid = node.data.uid;
-
-      const path = node
-        .ancestors()
-        .reverse()
-        .map((d) => d.data.name)
-        .join("/");
-
-      return m$2`
-      <div>${path}</div>
-      ${availableSizeProperties.map((sizeProp) => {
-        if (sizeProp === sizeProperty) {
-          return m$2`
-            <div>
-              <b>${LABELS[sizeProp]}:${" "}${format_1(mainSize)}</b
-              >${" "}(${percentageString})
-            </div>
-          `;
-        } else {
-          return m$2`
-            <div>
-              ${LABELS[sizeProp]}:${" "}
-              ${format_1(node.originalValue[sizeProp])}
-            </div>
-          `;
-        }
-      })}
-      ${uid &&
-      importedByCache.has(uid) &&
-      m$2`
-        <div>
-          <div><b>Imported By</b>:</div>
-          ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
-            (id) => m$2` <div>${id}</div> `
-          )}
-        </div>
-      `}
-    `;
-    }, [node]);
-
-    const updatePosition = (mouseCoords) => {
-      const pos = {
-        left: mouseCoords.x + Tooltip.marginX,
-        top: mouseCoords.y + Tooltip.marginY,
-      };
-
-      const boundingRect = ref.current.getBoundingClientRect();
-
-      if (pos.left + boundingRect.width > window.innerWidth) {
-        // Shifting horizontally
-        pos.left = window.innerWidth - boundingRect.width;
-      }
-
-      if (pos.top + boundingRect.height > window.innerHeight) {
-        // Flipping vertically
-        pos.top = mouseCoords.y - Tooltip.marginY - boundingRect.height;
-      }
-
-      setStyle(pos);
-    };
-
-    const handleMouseMove = (event) => {
-      updatePosition({
-        x: event.pageX,
-        y: event.pageY,
-      });
-    };
-
-    p$1(() => {
-      document.addEventListener("mousemove", handleMouseMove, true);
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove, true);
-      };
-    }, []);
-
-    return m$2`
-    <div
-      class="tooltip ${visible ? "" : "tooltip-hidden"}"
-      ref=${ref}
-      style=${style}
-    >
-      ${content}
-    </div>
-  `;
-  };
-
-  Tooltip.marginX = 10;
-  Tooltip.marginY = 30;
-
-  const Node$1 = ({
-    node,
-    backgroundColor,
-    fontColor,
-    onClick,
-    isSelected,
-    onNodeHover,
-    sizeProperty,
-  }) => {
-    const {
-      nodeUid,
-      x0,
-      x1,
-      y1,
-      y0,
-      clipUid,
-      data,
-      originalValue,
-      children = null,
-    } = node;
-
-    const tspan1Props = {};
-    const tspan2Props = {};
-    if (children != null) {
-      tspan1Props.dx = 3;
-      tspan2Props.dx = 3;
-      tspan1Props.y = 13;
-      tspan2Props.y = 13;
-    } else {
-      tspan1Props.x = 3;
-      tspan2Props.x = 3;
-      tspan1Props.y = "1.1em";
-      tspan2Props.y = "2.3em";
-    }
-
-    const handleClickSelection = (event) => {
-      if (window.getSelection().toString() !== "") {
-        event.stopPropagation();
-      }
-    };
-
-    return m$2`
-    <g
-      class="node"
-      transform="translate(${x0},${y0})"
-      onClick=${onClick}
-      onMouseOver=${(evt) => {
-        evt.stopPropagation();
-        onNodeHover(node);
-      }}
-    >
-      <rect
-        id=${nodeUid.id}
-        fill=${backgroundColor}
-        rx=${2}
-        ry=${2}
-        width=${x1 - x0}
-        height=${y1 - y0}
-        stroke=${isSelected ? "#fff" : null}
-        stroke-width=${isSelected ? 2 : null}
-      >
-      </rect>
-      <clipPath id=${clipUid.id}>
-        <use xlink:href=${nodeUid.href} />
-      </clipPath>
-      <text
-        clip-path=${clipUid}
-        fill=${fontColor}
-        onClick=${handleClickSelection}
-      >
-        <tspan ...${tspan1Props} font-size="0.7em">${data.name}</tspan>
-        <tspan ...${tspan2Props} fill-opacity=${0.7} font-size="0.7em"
-          >${format_1(originalValue[sizeProperty])}</tspan
-        >
-      </text>
-    </g>
-  `;
-  };
-
-  const TreeMap = ({
-    root,
-    layout,
-    color,
-    width,
-    height,
-    onNodeHover,
-    sizeProperty,
-  }) => {
-    const [selectedNode, setSelectedNode] = v$1(null);
-
-    const desiredValue = root.originalValue[sizeProperty] * 0.2;
-
-    //handle zoom of selected node
-    const selectedNodeMultiplier =
-      selectedNode != null
-        ? desiredValue > selectedNode.originalValue[sizeProperty]
-          ? desiredValue / selectedNode.originalValue[sizeProperty]
-          : 3
-        : 1;
-
-    // i only need to increase value of leaf nodes
-    // as folders will sum they up
-    const nodesToIncrease =
-      selectedNode != null
-        ? selectedNode.children != null
-          ? selectedNode.leaves()
-          : [selectedNode]
-        : [];
-
-    const nodesToIncreaseSet = new Set(nodesToIncrease);
-
-    // update value for nodes
-    root = root.eachAfter((node) => {
-      let sum = 0;
-      const children = node.children;
-      if (children != null) {
-        let i = children.length;
-        while (--i >= 0) sum += children[i].value;
-      } else {
-        sum = nodesToIncreaseSet.has(node)
-          ? node.originalValue[sizeProperty] * selectedNodeMultiplier
-          : node.originalValue[sizeProperty];
-      }
-
-      node.value = sum;
-    });
-
-    layout(root);
-
-    // this will make groups by height
-    const nestedDataMap = group(root.descendants(), (d) => d.height);
-    const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
-      key,
-      values,
-    }));
-    nestedData.sort((a, b) => b.key - a.key);
-
-    return m$2`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox=${`0 0 ${width} ${height}`}>
-      ${nestedData.map(({ key, values }) => {
-        return m$2`
-          <g class="layer" key=${key}>
-            ${values.map((node) => {
-              const { backgroundColor, fontColor } = color(node);
-              return m$2`
-                <${Node$1}
-                  node=${node}
-                  backgroundColor=${backgroundColor}
-                  fontColor=${fontColor}
-                  onClick=${() =>
-                    setSelectedNode(selectedNode === node ? null : node)}
-                  isSelected=${selectedNode === node}
-                  onNodeHover=${onNodeHover}
-                  sizeProperty=${sizeProperty}
-                />
-              `;
-            })}
-          </g>
-        `;
-      })}
-    </svg>
-  `;
-  };
-
-  const Chart = ({
-    layout,
-    root,
-    color,
-    width,
-    height,
-    sizeProperty,
-    availableSizeProperties,
-    importedCache,
-    importedByCache,
-  }) => {
-    const [showTooltip, setShowTooltip] = v$1(false);
-    const [tooltipNode, setTooltipNode] = v$1(null);
-
-    const handleMouseOut = () => {
-      setShowTooltip(false);
-    };
-
-    p$1(() => {
-      document.addEventListener("mouseover", handleMouseOut);
-      return () => {
-        document.removeEventListener("mouseover", handleMouseOut);
-      };
-    }, []);
-
-    return m$2`
-    <${TreeMap}
-      layout=${layout}
-      root=${root}
-      color=${color}
-      width=${width}
-      height=${height}
-      sizeProperty=${sizeProperty}
-      availableSizeProperties=${availableSizeProperties}
-      onNodeHover=${(node) => {
-        setTooltipNode(node);
-        setShowTooltip(true);
-      }}
-    />
-    <${Tooltip}
-      visible=${showTooltip}
-      node=${tooltipNode}
-      root=${root}
-      sizeProperty=${sizeProperty}
-      availableSizeProperties=${availableSizeProperties}
-      importedByCache=${importedByCache}
-      importedCache=${importedCache}
-    />
-  `;
-  };
-
-  const SideBar = ({
-    availableSizeProperties,
-    sizeProperty,
-    setSizeProperty,
-  }) => {
-    const handleChange = (sizeProp) => () => {
-      if (sizeProp !== sizeProperty) {
-        setSizeProperty(sizeProp);
-      }
-    };
-    return m$2`
-    <aside class="sidebar">
-      <div class="size-selectors">
-        ${availableSizeProperties.length > 1 &&
-        availableSizeProperties.map((sizeProp) => {
-          const id = `selector-${sizeProp}`;
-          return m$2`
-            <div class="size-selector">
-              <input
-                type="radio"
-                id=${id}
-                checked=${sizeProp === sizeProperty}
-                onChange=${handleChange(sizeProp)}
-              />
-              <label for=${id}>
-                ${LABELS[sizeProp]}
-              </label>
-            </div>
-          `;
-        })}
-      </div>
-    </aside>
-  `;
-  };
-
   const Main = ({
     width,
     height,
@@ -2543,7 +2547,7 @@ main {
   }) => {
     const availableSizeProperties = getAvailableSizeOptions(options);
 
-    const [sizeProperty, setSizeProperty] = v$1(availableSizeProperties[0]);
+    const [sizeProperty, setSizeProperty] = m$2(availableSizeProperties[0]);
 
     const layout = d3treemap()
       .size([width, height])
@@ -2563,17 +2567,22 @@ main {
         // use node.data.children because if it is empty d3 will skip this node
         // and it will look like it is actually a leaf - which technically it is but not exactly
         // it is just a chunk without deps - usually just with imports
-        if (node.data.children != null) {
+        if (node.children == null && node.data.children != null) {
+          // this should be root withiout children
+          for (const prop of availableSizeProperties) {
+            value[prop] += node.data[prop] || 0;
+          }
+        } else if (node.data.children != null) {
           const children = node.children;
           let i = node.data.children.length;
           while (--i >= 0) {
             for (const prop of availableSizeProperties) {
-              value[prop] += children[i].originalValue[prop];
+              value[prop] += children[i].originalValue[prop] || 0;
             }
           }
         } else {
           for (const prop of availableSizeProperties) {
-            value[prop] = nodes[node.data.uid][prop];
+            value[prop] = nodes[node.data.uid][prop] || 0;
           }
         }
 
@@ -2604,7 +2613,7 @@ main {
       importedCache.get(source).push({ uid: target, ...nodes[target] });
     }
 
-    return m$2`
+    return m$1`
     <${SideBar}
       sizeProperty=${sizeProperty}
       availableSizeProperties=${availableSizeProperties}
@@ -2625,8 +2634,8 @@ main {
   };
 
   const drawChart = (parentNode, data, width, height) => {
-    H(
-      m$2` <${Main} data=${data} width=${width} height=${height} /> `,
+    O(
+      m$1` <${Main} data=${data} width=${width} height=${height} /> `,
       parentNode
     );
   };
@@ -2635,18 +2644,21 @@ main {
 
 }());
 
+    /*-->*/
     </script>
     <script>
-      const chartParameters = {};
-      const data = {"version":1,"tree":{"name":"react-table.production.min.js","children":[{"name":"utils.js","uid":"2902-1"},{"name":"hooks","children":[{"name":"useTableOptions.js","uid":"2902-2"},{"name":"useTableState.js","uid":"2902-3"},{"name":"useColumns.js","uid":"2902-4"},{"name":"useHeadersAndFooters.js","uid":"2902-5"},{"name":"useDataModel.js","uid":"2902-6"},{"name":"useTable.js","uid":"2902-8"}]},{"name":"plugins","children":[{"name":"withCore.js","uid":"2902-7"},{"name":"withColumnVisibility.js","uid":"2902-10"},{"name":"withColumnOrder.js","uid":"2902-11"},{"name":"withColumnPinning.js","uid":"2902-12"},{"name":"withColumnFilters.js","uid":"2902-14"},{"name":"withGlobalFilter.js","uid":"2902-15"},{"name":"withGrouping.js","uid":"2902-17"},{"name":"withSorting.js","uid":"2902-19"},{"name":"withExpanding.js","uid":"2902-20"},{"name":"withPagination.js","uid":"2902-21"},{"name":"withSelection.js","uid":"2902-22"},{"name":"withColumnResizing.js","uid":"2902-23"}]},{"name":"Constants.js","uid":"2902-9"},{"name":"filterTypes.js","uid":"2902-13"},{"name":"aggregationTypes.js","uid":"2902-16"},{"name":"sortTypes.js","uid":"2902-18"},{"name":"index.js","uid":"2902-24"},{"name":"\u0000rollupPluginBabelHelpers.js","uid":"2902-0"}]},"nodes":{"2902-0":{"renderedLength":1252,"id":"\u0000rollupPluginBabelHelpers.js"},"2902-1":{"renderedLength":12085,"id":"utils.js"},"2902-2":{"renderedLength":634,"id":"hooks/useTableOptions.js"},"2902-3":{"renderedLength":1553,"id":"hooks/useTableState.js"},"2902-4":{"renderedLength":3315,"id":"hooks/useColumns.js"},"2902-5":{"renderedLength":1606,"id":"hooks/useHeadersAndFooters.js"},"2902-6":{"renderedLength":2952,"id":"hooks/useDataModel.js"},"2902-7":{"renderedLength":4001,"id":"plugins/withCore.js"},"2902-8":{"renderedLength":2872,"id":"hooks/useTable.js"},"2902-9":{"renderedLength":452,"id":"Constants.js"},"2902-10":{"renderedLength":4872,"id":"plugins/withColumnVisibility.js"},"2902-11":{"renderedLength":2489,"id":"plugins/withColumnOrder.js"},"2902-12":{"renderedLength":6977,"id":"plugins/withColumnPinning.js"},"2902-13":{"renderedLength":2975,"id":"filterTypes.js"},"2902-14":{"renderedLength":11226,"id":"plugins/withColumnFilters.js"},"2902-15":{"renderedLength":4975,"id":"plugins/withGlobalFilter.js"},"2902-16":{"renderedLength":1395,"id":"aggregationTypes.js"},"2902-17":{"renderedLength":12389,"id":"plugins/withGrouping.js"},"2902-18":{"renderedLength":2420,"id":"sortTypes.js"},"2902-19":{"renderedLength":10496,"id":"plugins/withSorting.js"},"2902-20":{"renderedLength":5920,"id":"plugins/withExpanding.js"},"2902-21":{"renderedLength":4963,"id":"plugins/withPagination.js"},"2902-22":{"renderedLength":10282,"id":"plugins/withSelection.js"},"2902-23":{"renderedLength":6462,"id":"plugins/withColumnResizing.js"},"2902-24":{"renderedLength":0,"isEntry":true,"id":"index.js"},"2902-25":{"renderedLength":0,"isExternal":true,"id":"react"}},"links":[{"source":"2902-24","target":"2902-8"},{"source":"2902-24","target":"2902-10"},{"source":"2902-24","target":"2902-11"},{"source":"2902-24","target":"2902-12"},{"source":"2902-24","target":"2902-14"},{"source":"2902-24","target":"2902-15"},{"source":"2902-24","target":"2902-17"},{"source":"2902-24","target":"2902-19"},{"source":"2902-24","target":"2902-20"},{"source":"2902-24","target":"2902-21"},{"source":"2902-24","target":"2902-22"},{"source":"2902-24","target":"2902-23"},{"source":"2902-24","target":"2902-1"},{"source":"2902-8","target":"2902-25"},{"source":"2902-8","target":"2902-1"},{"source":"2902-8","target":"2902-2"},{"source":"2902-8","target":"2902-3"},{"source":"2902-8","target":"2902-4"},{"source":"2902-8","target":"2902-5"},{"source":"2902-8","target":"2902-6"},{"source":"2902-8","target":"2902-7"},{"source":"2902-10","target":"2902-0"},{"source":"2902-10","target":"2902-25"},{"source":"2902-10","target":"2902-1"},{"source":"2902-10","target":"2902-9"},{"source":"2902-11","target":"2902-0"},{"source":"2902-11","target":"2902-25"},{"source":"2902-11","target":"2902-1"},{"source":"2902-11","target":"2902-9"},{"source":"2902-12","target":"2902-0"},{"source":"2902-12","target":"2902-25"},{"source":"2902-12","target":"2902-1"},{"source":"2902-12","target":"2902-9"},{"source":"2902-14","target":"2902-0"},{"source":"2902-14","target":"2902-25"},{"source":"2902-14","target":"2902-1"},{"source":"2902-14","target":"2902-9"},{"source":"2902-14","target":"2902-13"},{"source":"2902-15","target":"2902-0"},{"source":"2902-15","target":"2902-25"},{"source":"2902-15","target":"2902-1"},{"source":"2902-15","target":"2902-9"},{"source":"2902-15","target":"2902-13"},{"source":"2902-17","target":"2902-0"},{"source":"2902-17","target":"2902-25"},{"source":"2902-17","target":"2902-1"},{"source":"2902-17","target":"2902-9"},{"source":"2902-17","target":"2902-16"},{"source":"2902-19","target":"2902-0"},{"source":"2902-19","target":"2902-25"},{"source":"2902-19","target":"2902-1"},{"source":"2902-19","target":"2902-9"},{"source":"2902-19","target":"2902-18"},{"source":"2902-20","target":"2902-0"},{"source":"2902-20","target":"2902-25"},{"source":"2902-20","target":"2902-1"},{"source":"2902-20","target":"2902-9"},{"source":"2902-21","target":"2902-0"},{"source":"2902-21","target":"2902-25"},{"source":"2902-21","target":"2902-1"},{"source":"2902-21","target":"2902-9"},{"source":"2902-22","target":"2902-0"},{"source":"2902-22","target":"2902-25"},{"source":"2902-22","target":"2902-1"},{"source":"2902-22","target":"2902-9"},{"source":"2902-23","target":"2902-0"},{"source":"2902-23","target":"2902-25"},{"source":"2902-23","target":"2902-1"},{"source":"2902-23","target":"2902-9"},{"source":"2902-1","target":"2902-0"},{"source":"2902-1","target":"2902-25"},{"source":"2902-2","target":"2902-1"},{"source":"2902-3","target":"2902-0"},{"source":"2902-3","target":"2902-25"},{"source":"2902-3","target":"2902-1"},{"source":"2902-4","target":"2902-0"},{"source":"2902-4","target":"2902-25"},{"source":"2902-4","target":"2902-1"},{"source":"2902-5","target":"2902-25"},{"source":"2902-5","target":"2902-1"},{"source":"2902-6","target":"2902-25"},{"source":"2902-6","target":"2902-1"},{"source":"2902-7","target":"2902-0"},{"source":"2902-7","target":"2902-25"},{"source":"2902-7","target":"2902-1"}],"env":{"rollup":"1.32.1","rollup-plugin-visualizer":"4.0.4"},"options":{"gzip":false,"brotli":false}};
+      /*<!--*/
+      const data = {"version":1,"tree":{"name":"root","children":[{"name":"react-table.production.min.js","children":[{"name":"node_modules","children":[{"name":"@babel","children":[{"name":"runtime","children":[{"name":"helpers","children":[{"name":"esm","children":[{"name":"extends.js","uid":"1924-0"}]}]}]}]}]},{"name":"src","children":[{"name":"utils.js","uid":"1924-1"},{"name":"plugins","children":[{"name":"withCore.js","uid":"1924-2"}]},{"name":"hooks","children":[{"name":"makePlugs.ts","uid":"1924-3"},{"name":"useTableState.js","uid":"1924-4"},{"name":"useColumns.js","uid":"1924-5"},{"name":"useHeadersAndFooters.js","uid":"1924-6"},{"name":"useDataModel.js","uid":"1924-7"},{"name":"useTable.js","uid":"1924-8"}]},{"name":"index.ts","uid":"1924-9"}]}],"renderedLength":10162,"isRoot":true}]},"links":[{"source":"1924-9","target":"1924-8"},{"source":"1924-8","target":"1924-10"},{"source":"1924-8","target":"1924-2"},{"source":"1924-8","target":"1924-3"},{"source":"1924-8","target":"1924-4"},{"source":"1924-8","target":"1924-5"},{"source":"1924-8","target":"1924-6"},{"source":"1924-8","target":"1924-7"},{"source":"1924-2","target":"1924-0"},{"source":"1924-2","target":"1924-10"},{"source":"1924-2","target":"1924-1"},{"source":"1924-3","target":"1924-1"},{"source":"1924-4","target":"1924-0"},{"source":"1924-4","target":"1924-10"},{"source":"1924-4","target":"1924-1"},{"source":"1924-5","target":"1924-0"},{"source":"1924-5","target":"1924-10"},{"source":"1924-5","target":"1924-1"},{"source":"1924-6","target":"1924-10"},{"source":"1924-6","target":"1924-1"},{"source":"1924-7","target":"1924-10"},{"source":"1924-7","target":"1924-1"},{"source":"1924-1","target":"1924-0"},{"source":"1924-1","target":"1924-10"}],"nodes":{"1924-0":{"renderedLength":382,"id":"node_modules/@babel/runtime/helpers/esm/extends.js"},"1924-1":{"renderedLength":6125,"id":"src/utils.js"},"1924-2":{"renderedLength":4478,"id":"src/plugins/withCore.js"},"1924-3":{"renderedLength":2156,"id":"src/hooks/makePlugs.ts"},"1924-4":{"renderedLength":1227,"id":"src/hooks/useTableState.js"},"1924-5":{"renderedLength":3260,"id":"src/hooks/useColumns.js"},"1924-6":{"renderedLength":1524,"id":"src/hooks/useHeadersAndFooters.js"},"1924-7":{"renderedLength":2917,"id":"src/hooks/useDataModel.js"},"1924-8":{"renderedLength":698,"id":"src/hooks/useTable.js"},"1924-9":{"renderedLength":0,"isEntry":true,"id":"src/index.ts"},"1924-10":{"renderedLength":0,"isExternal":true,"id":"react"}}};
 
       document.addEventListener('DOMContentLoaded', () => {
-        const width = chartParameters.width || window.innerWidth;
-        const height = chartParameters.height || window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
 
         const chartNode = document.querySelector("main");
         drawChart(chartNode, data, width, height);
       });
+      /*-->*/
     </script>
   </body>
 </html>
+

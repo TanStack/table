@@ -1,8 +1,9 @@
 import React from 'react'
 
 import { makeRenderer } from '../utils'
+import { Plugin } from '../hooks/makePlugs'
 
-export const withCore = {
+export const withCore: Plugin = {
   name: 'withCore',
   after: [],
   plugs: {
@@ -15,13 +16,31 @@ export const withCore = {
   },
 }
 
-function useReduceOptions(options) {
+interface InitialState {}
+
+interface Row {
+  id: string | number
+  subRows: Row[]
+}
+
+interface UseReduceOptions {
+  initialState: InitialState
+  state: InitialState
+  onStateChange: <T>(d: T) => T
+  getSubRows: (row: Row) => Row[]
+  getRowId: (row: Row, index: number, parent: Row) => string
+  enableFilters: unknown
+  filterFromChildrenUp: unknown
+  paginateExpandedRows: unknown
+}
+
+function useReduceOptions<T>(options: T): UseReduceOptions & T {
   return {
     initialState: {},
     state: {},
     onStateChange: d => d,
     getSubRows: row => row.subRows || [],
-    getRowId: (row, index, parent) =>
+    getRowId: (_row, index, parent) =>
       `${parent ? [parent.id, index].join('.') : index}`,
     enableFilters: true,
     filterFromChildrenUp: true,
