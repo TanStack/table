@@ -256,9 +256,12 @@ function useInstance(instance) {
     return selectedFlatRows
   }, [rows, selectSubRows, selectedRowIds, getSubRows])
 
-  let isAllRowsSelected = Boolean(
-    Object.keys(nonGroupedRowsById).length && Object.keys(selectedRowIds).length
-  )
+  let isAllRowsSelected = React.useMemo(() => {
+    return Boolean(
+      Object.keys(nonGroupedRowsById).length &&
+        Object.keys(selectedRowIds).length
+    )
+  }, [nonGroupedRowsById, selectedRowIds])
 
   let isAllPageRowsSelected = isAllRowsSelected
 
