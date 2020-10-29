@@ -1,7 +1,14 @@
 import React from 'react'
+import {
+  Plugin,
+  TableInstance,
+  TableOptions,
+  Header,
+  Row,
+  Cell,
+} from '../types'
 
 import { makeRenderer } from '../utils'
-import { Plugin } from '../hooks/makePlugs'
 
 export const withCore: Plugin = {
   name: 'withCore',
@@ -16,25 +23,7 @@ export const withCore: Plugin = {
   },
 }
 
-interface InitialState {}
-
-interface Row {
-  id: string | number
-  subRows: Row[]
-}
-
-interface UseReduceOptions {
-  initialState: InitialState
-  state: InitialState
-  onStateChange: <T>(d: T) => T
-  getSubRows: (row: Row) => Row[]
-  getRowId: (row: Row, index: number, parent: Row) => string
-  enableFilters: unknown
-  filterFromChildrenUp: unknown
-  paginateExpandedRows: unknown
-}
-
-function useReduceOptions<T>(options: T): UseReduceOptions & T {
+function useReduceOptions(options: any): TableOptions {
   return {
     initialState: {},
     state: {},
@@ -49,7 +38,7 @@ function useReduceOptions<T>(options: T): UseReduceOptions & T {
   }
 }
 
-function useInstanceAfterState(instance) {
+function useInstanceAfterState(instance: TableInstance) {
   instance.reset = React.useCallback(() => {
     // It's possible that in the future, this function is pluggable
     // and allows other plugins to add their own reset functionality
@@ -61,7 +50,7 @@ function useInstanceAfterState(instance) {
       const column = instance.leafColumns.find(d => d.id === columnId)
 
       if (!column) {
-        return
+        return 0
       }
 
       return Math.min(Math.max(column.minWidth, column.width), column.maxWidth)
@@ -75,9 +64,14 @@ function useInstanceAfterState(instance) {
       0
     )
   }, [instance.leafColumns])
+
+  return instance
 }
 
-function decorateHeader(header, { instance }) {
+function decorateHeader(
+  header: Header,
+  { instance }: { instance: TableInstance }
+) {
   header.render = header.isPlaceholder
     ? () => null
     : makeRenderer(instance, {
@@ -112,8 +106,8 @@ function decorateHeader(header, { instance }) {
   header.getWidth = () => {
     let sum = 0
 
-    const recurse = header => {
-      if (header.subHeaders?.length) {
+    const recurse = (header: Header) => {
+      if (header.subHeaders.length) {
         header.subHeaders.forEach(recurse)
       } else {
         sum += header.column.getWidth()
@@ -124,17 +118,21 @@ function decorateHeader(header, { instance }) {
 
     return sum
   }
+
+  return header
 }
 
-function decorateRow(row, { instance }) {
+function decorateRow(row: Row, { instance }: { instance: TableInstance }) {
   row.getRowProps = (props = {}) =>
     instance.plugs.reduceRowProps(
       { key: row.id, role: 'row', ...props },
       { instance, row }
     )
+
+  return row
 }
 
-function decorateCell(cell, { instance }) {
+function decorateCell(cell: Cell, { instance }: { instance: TableInstance }) {
   cell.getCellProps = (props = {}) =>
     instance.plugs.reduceCellProps(
       {
@@ -147,9 +145,11 @@ function decorateCell(cell, { instance }) {
         cell,
       }
     )
+
+  return cell
 }
 
-function useInstanceAfterDataModel(instance) {
+function useInstanceAfterDataModel(instance: TableInstance) {
   instance.getTableHeadProps = (props = {}) =>
     instance.plugs.reduceTableHeadProps({ ...props }, { instance })
   instance.getTableFooterProps = (props = {}) =>
@@ -161,4 +161,6 @@ function useInstanceAfterDataModel(instance) {
     )
   instance.getTableProps = (props = {}) =>
     instance.plugs.reduceTableProps({ role: 'table', ...props }, { instance })
+
+  return instance
 }

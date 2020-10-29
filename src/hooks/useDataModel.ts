@@ -1,10 +1,11 @@
 import React from 'react'
+import { Cell, Row, TableInstance } from '../types'
 
 //
 
 import { makeRenderer, flattenBy } from '../utils'
 
-export default function useDataModel(instance) {
+export default function useDataModel(instance: Required<TableInstance>) {
   const {
     leafColumns,
     options: { data, getRowId, getSubRows, debug },
@@ -15,17 +16,23 @@ export default function useDataModel(instance) {
       console.info('Accessing...')
 
     // Access the row model using initial columns
-    const _rows = []
-    const _flatRows = []
-    const _rowsById = {}
+    const rows: Row[] = []
+    const flatRows: Row[] = []
+    const rowsById: Record<Row['id'], Row> = {}
 
     data.forEach((originalRow, rowIndex) =>
-      accessRow(originalRow, rowIndex, 0, undefined, _rows)
+      accessRow(originalRow, rowIndex, 0, undefined, rows)
     )
 
-    return [_rows, _flatRows, _rowsById]
+    return [rows, flatRows, rowsById]
 
-    function accessRow(originalRow, rowIndex, depth = 0, parent, parentRows) {
+    function accessRow<TOriginalRow>(
+      originalRow: TOriginalRow,
+      rowIndex: number,
+      depth = 0,
+      parent?: Row,
+      parentRows?: Row[]
+    ) {
       // Keep the original reference around
       const original = originalRow
 
@@ -38,21 +45,21 @@ export default function useDataModel(instance) {
         index: rowIndex,
         depth,
         values: {},
-      }
+      } as Row
 
       // Push this row into the parentRows array
-      parentRows.push(row)
+      parentRows?.push(row)
       // Keep track of every row in a flat array
-      _flatRows.push(row)
+      flatRows.push(row)
       // Also keep track of every row by its ID
-      _rowsById[id] = row
+      rowsById[id] = row
 
       // Get the original subrows
       row.originalSubRows = getSubRows(originalRow, rowIndex)
 
       // Then recursively access them
       if (row.originalSubRows) {
-        const subRows = []
+        const subRows: Row[] = []
         row.originalSubRows.forEach((d, i) =>
           accessRow(d, i, depth + 1, row, subRows)
         )
@@ -80,7 +87,7 @@ export default function useDataModel(instance) {
           row,
           column,
           value,
-        }
+        } as Cell
 
         cell.render = makeRenderer(instance, {
           cell,
@@ -97,7 +104,7 @@ export default function useDataModel(instance) {
       row.getVisibleCells = () =>
         leafColumns.map(column =>
           row.cells.find(cell => cell.column.id === column.id)
-        )
+        ) as Cell[]
 
       instance.plugs.decorateRow(row, { instance })
     }

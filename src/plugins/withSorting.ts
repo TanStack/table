@@ -17,6 +17,7 @@ import {
 } from '../Constants'
 
 import * as sortTypes from '../sortTypes'
+import { TableInstance, TableOptions } from '../types'
 
 export const withSorting = {
   name,
@@ -35,7 +36,7 @@ export const withSorting = {
   },
 }
 
-function useReduceOptions(options) {
+function useReduceOptions(options: TableOptions): TableOptions {
   return {
     onSortingChange: React.useCallback(makeStateUpdater('sorting'), []),
     autoResetSorting: true,
@@ -53,9 +54,9 @@ function useReduceOptions(options) {
   }
 }
 
-function useInstanceAfterState(instance) {
+function useInstanceAfterState(instance: TableInstance) {
   instance.setSorting = React.useCallback(
-    updater => instance.options.onSortingChange(updater, instance),
+    updater => instance.options.onSortingChange?.(updater, instance),
     [instance]
   )
 
@@ -71,7 +72,7 @@ function useInstanceAfterState(instance) {
   // but the second render is very light, since the state is the same between the two
   React.useMemo(() => {
     if (instance.options.autoResetSorting) {
-      instance.state.sorting = instance.options.initialState.sorting
+      instance.state.sorting = instance.options.initialState?.sorting
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, sortingResetDeps)
@@ -86,14 +87,21 @@ function useInstanceAfterState(instance) {
       instance.setSorting(old => {
         const {
           leafColumns,
-          disableMultiSort,
-          disableSortRemove,
-          disableMultiRemove,
-          maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+          options: {
+            disableMultiSort,
+            disableSortRemove,
+            disableMultiRemove,
+            maxMultiSortColCount = Number.MAX_SAFE_INTEGER,
+          },
         } = instance
 
         // Find the column for this columnId
         const column = leafColumns.find(d => d.id === columnId)
+
+        if (!column) {
+          return
+        }
+
         const { sortDescFirst } = column
 
         // Find any existing sorting for this column
@@ -175,7 +183,7 @@ function useInstanceAfterState(instance) {
   )
 
   instance.resetSorting = React.useCallback(
-    () => instance.setSorting(instance.options.initialState.sorting),
+    () => instance.setSorting(instance.options.initialState?.sorting),
     [instance]
   )
 

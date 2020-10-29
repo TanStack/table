@@ -1,10 +1,17 @@
 import React from 'react'
+import {
+  Footer,
+  FooterGroup,
+  Header,
+  HeaderGroup,
+  TableInstance,
+} from '../types'
 
 //
 
 import { flattenBy, buildHeaderGroups, recurseHeaderForSpans } from '../utils'
 
-export default function useHeadersAndFooters(instance) {
+export default function useHeadersAndFooters(instance: TableInstance) {
   const {
     columns,
     leafColumns,
@@ -30,17 +37,22 @@ export default function useHeadersAndFooters(instance) {
     recurseHeaderForSpans(header)
   )
 
-  instance.footerGroups = React.useMemo(
+  instance.footerGroups = (React.useMemo(
     () => [...instance.headerGroups].reverse(),
     [instance.headerGroups]
-  )
+  ) as unknown) as FooterGroup[]
 
   instance.footerGroups = useReduceFooterGroups(instance.footerGroups, {
     instance,
   })
 
   instance.flatHeaders = React.useMemo(
-    () => flattenBy(instance.headerGroups, 'headers', true),
+    () =>
+      flattenBy<HeaderGroup[], Header[]>(
+        instance.headerGroups,
+        'headers',
+        true
+      ),
     [instance.headerGroups]
   )
 
@@ -53,7 +65,12 @@ export default function useHeadersAndFooters(instance) {
   })
 
   instance.flatFooters = React.useMemo(
-    () => flattenBy(instance.footerGroups, 'footers', true),
+    () =>
+      flattenBy<FooterGroup[], Footer[]>(
+        instance.footerGroups,
+        'footers',
+        true
+      ),
     [instance.footerGroups]
   )
 }

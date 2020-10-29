@@ -1,4 +1,5 @@
 import React from 'react'
+import { TableColumn, RendererMeta, TableInstance } from './types'
 
 export function composeDecorator(fns) {
   return (initial, meta) => fns.forEach(fn => fn(initial, meta), initial)
@@ -51,8 +52,11 @@ export function useMountedLayoutEffect(fn, deps) {
   }, deps)
 }
 
-export function makeRenderer(instance, meta = {}) {
-  return (Comp, userProps = {}) => {
+export function makeRenderer<T, U extends RendererMeta>(
+  instance: T,
+  meta: U = {} as U
+) {
+  return (Comp: any, userProps = {}) => {
     return flexRender(Comp, {
       instance,
       ...meta,
@@ -61,11 +65,11 @@ export function makeRenderer(instance, meta = {}) {
   }
 }
 
-export function flexRender(Comp, props) {
+export function flexRender(Comp: any, props: any) {
   return isReactComponent(Comp) ? <Comp {...props} /> : Comp
 }
 
-function isReactComponent(component) {
+function isReactComponent(component: unknown) {
   return (
     isClassComponent(component) ||
     typeof component === 'function' ||
@@ -73,7 +77,7 @@ function isReactComponent(component) {
   )
 }
 
-function isClassComponent(component) {
+function isClassComponent(component: any) {
   return (
     typeof component === 'function' &&
     (() => {
@@ -83,7 +87,7 @@ function isClassComponent(component) {
   )
 }
 
-function isExoticComponent(component) {
+function isExoticComponent(component: any) {
   return (
     typeof component === 'object' &&
     typeof component.$$typeof === 'symbol' &&
@@ -91,11 +95,18 @@ function isExoticComponent(component) {
   )
 }
 
-export function flattenColumns(columns, includeParents) {
-  return flattenBy(columns, 'columns', includeParents)
+export function flattenColumns(
+  columns: TableColumn[],
+  includeParents: boolean
+) {
+  return flattenBy<TableColumn[], TableColumn[]>(
+    columns,
+    'columns',
+    includeParents
+  )
 }
 
-export function getFirstDefined(...args) {
+export function getFirstDefined<T extends any>(...args: T[]): T | undefined {
   for (let i = 0; i < args.length; i += 1) {
     if (typeof args[i] !== 'undefined') {
       return args[i]
@@ -109,25 +120,29 @@ export function isFunction(a) {
   }
 }
 
-export function flattenBy(arr, key, includeParents) {
-  const flat = []
+export function flattenBy<T extends any[], U>(
+  arr: T,
+  key: string,
+  includeParents?: boolean
+) {
+  const flat: any = []
 
-  const recurse = subArr => {
-    subArr.forEach(d => {
-      if (d[key] && d[key].length) {
+  const recurse = (subArr: T) => {
+    subArr.forEach(item => {
+      if (item[key]?.length) {
         if (includeParents) {
-          flat.push(d)
+          flat.push(item)
         }
-        recurse(d[key])
+        recurse(item[key])
       } else {
-        flat.push(d)
+        flat.push(item)
       }
     })
   }
 
   recurse(arr)
 
-  return flat
+  return flat as U
 }
 
 export function expandRows(rows, instance) {
@@ -308,9 +323,9 @@ export function buildHeaderGroups(originalColumns, leafColumns, { instance }) {
     // Scan each column for parents
     headers.forEach(header => {
       // What is the latest (last) parent column?
-      let latestParentHeader = [...parentHeaders].reverse()[0]
+      const latestParentHeader = [...parentHeaders].reverse()[0]
 
-      let parentHeader = {
+      const parentHeader = {
         subHeaders: [],
       }
 
@@ -410,7 +425,7 @@ export function recurseHeaderForSpans(header) {
     }
   }
 
-  let minChildRowSpan = Math.min(...childRowSpans)
+  const minChildRowSpan = Math.min(...childRowSpans)
   rowSpan = rowSpan + minChildRowSpan
 
   header.colSpan = colSpan

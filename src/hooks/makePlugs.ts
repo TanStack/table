@@ -1,48 +1,5 @@
+import { InstancePlugs, Plugin, PlugType } from '../types'
 import { composeDecorator, composeReducer } from '../utils'
-
-export interface Plugin {
-  name: string
-  after: string[]
-  plugs: Partial<PluginPlugs>
-}
-
-export interface PluginPlugs {
-  useReduceOptions: PluginPlugFn
-  useInstanceAfterState: PluginPlugFn
-  useReduceColumns: PluginPlugFn
-  useReduceAllColumns: PluginPlugFn
-  useReduceLeafColumns: PluginPlugFn
-  decorateColumn: PluginPlugFn
-  useReduceHeaderGroups: PluginPlugFn
-  useReduceFooterGroups: PluginPlugFn
-  useReduceFlatHeaders: PluginPlugFn
-  decorateHeader: PluginPlugFn
-  decorateRow: PluginPlugFn
-  decorateCell: PluginPlugFn
-  useInstanceAfterDataModel: PluginPlugFn
-  reduceTableProps: PluginPlugFn
-  reduceTableBodyProps: PluginPlugFn
-  reduceTableHeadProps: PluginPlugFn
-  reduceTableFootProps: PluginPlugFn
-  reduceHeaderGroupProps: PluginPlugFn
-  reduceFooterGroupProps: PluginPlugFn
-  reduceHeaderProps: PluginPlugFn
-  reduceRowProps: PluginPlugFn
-  reduceCellProps: PluginPlugFn
-}
-
-export interface PluginPlugFn {
-  (...any: any): any
-  after?: string[]
-}
-
-export type PluginPlugName = keyof PluginPlugs
-
-export type PlugType = [PluginPlugName, PluginPlugBuilder]
-
-export type PluginPlugBuilder = any
-
-export type InstancePlugs = Partial<Record<PluginPlugName, unknown>>
 
 const plugTypes: PlugType[] = [
   ['useReduceOptions', composeReducer],
@@ -61,7 +18,7 @@ const plugTypes: PlugType[] = [
   ['reduceTableProps', composeReducer],
   ['reduceTableBodyProps', composeReducer],
   ['reduceTableHeadProps', composeReducer],
-  ['reduceTableFootProps', composeReducer],
+  ['reduceTableFooterProps', composeReducer],
   ['reduceHeaderGroupProps', composeReducer],
   ['reduceFooterGroupProps', composeReducer],
   ['reduceHeaderProps', composeReducer],
@@ -82,8 +39,6 @@ export default function makePlugs(plugins: Plugin[]) {
     return 0
   })
 
-  const plugs: InstancePlugs = {}
-
   if (process.env.NODE_ENV !== 'production') {
     plugins.forEach(plugin => {
       Object.keys(plugin.plugs).forEach(plugName => {
@@ -96,7 +51,7 @@ export default function makePlugs(plugins: Plugin[]) {
     })
   }
 
-  plugTypes.forEach(([plugType, plugCompositionFn]) => {
+  return plugTypes.reduce((plugs, [plugType, plugCompositionFn]) => {
     const pluginPlugs = plugins
       // Get the info necessary to sort
       .map(plugin => {
@@ -124,7 +79,7 @@ export default function makePlugs(plugins: Plugin[]) {
       .map(d => d.plug)
 
     plugs[plugType] = plugCompositionFn(pluginPlugs)
-  })
 
-  return plugs
+    return plugs
+  }, {} as InstancePlugs)
 }

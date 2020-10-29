@@ -4,6 +4,7 @@ import { getHeaderIds, getRowValues } from '../../../test-utils'
 import { useTable } from '../../hooks/useTable'
 import { noop } from '../../utils'
 import { withSorting } from '../withSorting'
+import { TableColumn, Column } from '../../types'
 
 const data = [
   {
@@ -32,7 +33,7 @@ const data = [
   },
 ]
 
-const columns = [
+const columns: Column[] = [
   {
     Header: 'Name',
     columns: [
@@ -99,7 +100,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'firstName')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
         })
@@ -114,7 +115,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'firstName')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
         })
@@ -129,7 +130,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'progress')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
         })
@@ -144,7 +145,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'firstName')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
           shiftKey: true,
@@ -279,7 +280,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'firstName')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
         })
@@ -294,7 +295,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'firstName')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
         })
@@ -309,7 +310,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'progress')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
         })
@@ -324,7 +325,7 @@ describe('withSorting', () => {
     act(() => {
       result.current.flatHeaders
         .find(d => d.id === 'firstName')
-        .getToggleSortingProps()
+        ?.getToggleSortingProps()
         .onClick({
           persist: noop,
           shiftKey: true,

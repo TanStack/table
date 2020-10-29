@@ -1,17 +1,9 @@
 import React from 'react'
+import { Column, TableColumn, TableInstance } from '../types'
 //
 import { flattenColumns, makeRenderer } from '../utils'
 
-export interface Column {
-  Header: unknown | ((...any: any) => JSX.Element)
-  Cell: unknown | ((...any: any) => JSX.Element)
-  defaultIsVisible: boolean
-  width: number
-  minWidth: number
-  maxWidth: number
-}
-
-export const defaultColumn: Column = {
+export const defaultColumn: Partial<TableColumn> = {
   Header: () => <>&nbsp;</>,
   Cell: ({ value = '' }: { value: unknown }) =>
     typeof value === 'boolean' ? value.toString() : value,
@@ -21,79 +13,83 @@ export const defaultColumn: Column = {
   maxWidth: Number.MAX_SAFE_INTEGER,
 }
 
-export default function useColumns<TInstance extends TableInstance>(
-  instance: TInstance
-) {
+export default function useColumns(instance: TableInstance) {
   const {
     options: { columns },
     plugs: { useReduceColumns, useReduceAllColumns, useReduceLeafColumns },
   } = instance
 
-  const prepColumn = React.useCallback(
-    column => {
-      if (column.prepared) {
-        return
-      }
+  const prepColumn = (column: TableColumn) => {
+    if (column.prepared) {
+      return
+    }
 
-      column.prepared = true
+    column.prepared = true
 
-      if (typeof column.accessor === 'string') {
-        column.id = column.id = column.id || column.accessor
-        const key = column.accessor
-        column.accessor = row => row[key]
-      }
+    if (typeof column.accessor === 'string') {
+      column.id = column.id = column.id || column.accessor
+      const key = column.accessor
+      column.accessor = row => row[key]
+    }
 
-      if (!column.id && typeof column.Header === 'string' && column.Header) {
-        column.id = column.id = column.Header
-      }
+    if (!column.id && typeof column.Header === 'string' && column.Header) {
+      column.id = column.id = column.Header
+    }
 
-      if (!column.id && column.columns) {
-        console.error(column)
-        throw new Error(
-          process.env.NODE_ENV !== 'production'
-            ? 'A column ID (or unique "Header" value) is required!'
-            : ''
-        )
-      }
+    if (!column.id && column.columns) {
+      console.error(column)
+      throw new Error(
+        process.env.NODE_ENV !== 'production'
+          ? 'A column ID (or unique "Header" value) is required!'
+          : ''
+      )
+    }
 
-      if (!column.id) {
-        console.error(column)
-        throw new Error(
-          process.env.NODE_ENV !== 'production'
-            ? 'A column ID (or string accessor) is required!'
-            : ''
-        )
-      }
+    if (!column.id) {
+      console.error(column)
+      throw new Error(
+        process.env.NODE_ENV !== 'production'
+          ? 'A column ID (or string accessor) is required!'
+          : ''
+      )
+    }
 
-      column.render = makeRenderer(instance, {
-        column,
-      })
+    column.render = makeRenderer(instance, {
+      column,
+    })
 
-      column.getWidth = () => instance.getColumnWidth(column.id)
-    },
-    [instance]
-  )
+    column.getWidth = () => instance.getColumnWidth(column.id)
+  }
 
   instance.columns = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Building Columns...')
 
-    return recurseColumns(columns)
+    if (columns) {
+      return recurseColumns(columns)
+    }
 
-    function recurseColumns(cols, parent, depth = 0) {
-      return cols.map(column => {
-        column = {
+    return []
+
+    function recurseColumns(
+      columns: Column[],
+      parent?: TableColumn,
+      depth = 0
+    ): TableColumn[] {
+      return columns.map(column => {
+        const tableColumn: TableColumn = {
           ...column,
           parent,
           depth,
           originalColumn: column,
+          columns: [],
         }
 
-        if (column.columns) {
-          column.columns = recurseColumns(column.columns, column, depth + 1)
-        }
+        tableColumn.columns = column.columns
+          ? recurseColumns(column.columns, tableColumn, depth + 1)
+          : []
 
-        return column
+        return tableColumn
       })
     }
   }, [columns, instance.options.debug])

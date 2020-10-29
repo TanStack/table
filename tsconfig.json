@@ -8,7 +8,7 @@
     "target": "es5",
     "noEmit": true,
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noImplicitReturns": false,
     "noImplicitThis": true,
     "noUnusedLocals": true,
