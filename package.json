@@ -32,13 +32,21 @@
     "format": "prettier {.,src,src/**,example/src,example/src/**,types}/*.{md,js,jsx,tsx,json} --write",
     "stats": "open ./stats.html"
   },
+  "release": {
+    "branches": [
+      "master",
+      {
+        "name": "beta",
+        "prerelease": true
+      }
+    ]
+  },
   "files": [
-    "CHANGELOG.md",
-    "src/**/*.js",
-    "index.d.ts",
+    "core",
     "dist",
-    "README.md",
-    "scripts/"
+    "es",
+    "lib",
+    "types"
   ],
   "dependencies": {
     "@babel/runtime": "^7.12.1",
