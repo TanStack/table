@@ -26,10 +26,12 @@ export default function useColumns(instance: TableInstance) {
 
     column.prepared = true
 
-    if (typeof column.accessor === 'string') {
-      column.id = column.id = column.id || column.accessor
-      const key = column.accessor
+    if (typeof column.originalColumn.accessor === 'string') {
+      column.id = column.id = column.id || column.originalColumn.accessor
+      const key = column.originalColumn.accessor
       column.accessor = row => row[key]
+    } else if (typeof column.originalColumn.accessor === 'function') {
+      column.accessor = column.originalColumn.accessor
     }
 
     if (!column.id && typeof column.Header === 'string' && column.Header) {
@@ -83,6 +85,7 @@ export default function useColumns(instance: TableInstance) {
           depth,
           originalColumn: column,
           columns: [],
+          accessor: undefined, // This is built later
         }
 
         tableColumn.columns = column.columns

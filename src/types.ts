@@ -17,31 +17,43 @@ export interface TableInstance {
   footerGroups: FooterGroup[]
   flatHeaders: Header[]
   flatFooters: Footer[]
-  // Sorting
+  rows: Row[]
+  flatRows: Row[]
+
+  // withSorting
   setSorting: (updater: Updater<TableState['sorting']>) => void
   resetSorting: () => void
-  toggleColumnSorting: (columnId: string, desc: boolean, multi: boolean) => void
-  getColumnCanSort: (columnId: string) => boolean
+  toggleColumnSorting: (columnId?: Id, desc?: boolean, multi?: boolean) => void
+  getColumnCanSort: (columnId?: Id) => boolean
+  getColumnSortedIndex: (columnId?: Id) => number
+  getColumnIsSorted: (columnId?: Id) => boolean
+  getColumnIsSortedDesc: (columnId?: Id) => boolean
+  clearColumnSorting: (columnId?: Id) => void
 }
 
 type Id = string | number
 
-type Updater<T> = T | ((...args: any[]) => T)
+type Updater<T> = T | ((old: T) => T)
 
 export interface TableOptions {
   data: unknown[]
   columns: Column[]
   debug?: boolean
-  defaultColumn?: TableColumn
+  defaultColumn?: Column
   initialState?: TableState
   state?: TableState
   onStateChange?: (newState: TableState, instance: TableInstance) => void
-  getSubRows?: <T extends any>(originalRow: T, index: number) => unknown[]
+  getSubRows?: <T extends { subRows?: any[] }>(
+    originalRow: T,
+    index: number
+  ) => unknown[]
   getRowId?: <T>(originalRow: T, index: number, parent?: Row) => string
   enableFilters?: boolean
   filterFromChildrenUp?: boolean
   paginateExpandedRows?: boolean
-  // Sorting
+
+  // withSorting
+  sortTypes?: Record<string, SortFn>
   manualSorting?: boolean
   autoResetSorting?: boolean
   isMultiSortEvent?: (event: any) => boolean
@@ -60,8 +72,8 @@ export interface TableState {
   sorting?: SortObj[]
 }
 
-interface SortObj {
-  id: string
+export interface SortObj {
+  id: Id
   desc?: boolean
 }
 
@@ -94,13 +106,15 @@ export interface Column {
   maxWidth?: number
   columns?: Column[]
 
-  // Sorting
+  // withSorting
   sortDescFirst?: boolean
   disableSorting?: boolean
   defaultCanSort?: boolean
+  sortType?: SortType
 }
 
 export interface TableColumn extends Column {
+  accessor?: (originalRow: any, index: number, row: Row) => unknown
   depth: number
   originalColumn: Column
   parent?: TableColumn
@@ -108,18 +122,17 @@ export interface TableColumn extends Column {
   render?: (Comp?: any, props?: any) => JSX.Element | null
   getWidth?: () => number
   columns?: TableColumn[]
-  // Sorting
-  sortType?:
-    | 'basic'
-    | 'alphanumeric'
-    | 'text'
-    | 'datetime'
-    | 'basic'
-    | string
-    | SortFn
-}
 
-export type SortFn = (rowA: Row, rowB: Row, columnId: Id) => number
+  // withSorting
+  sortInverted?: boolean
+  getCanSort?: () => boolean
+  getSortedIndex?: () => number
+  getIsSorted?: () => boolean
+  toggleSorting?: (desc?: boolean, multi?: boolean) => void
+  clearSorting?: () => void
+  getIsSortedDesc?: () => boolean
+  getToggleSortingProps?: (userProps: any) => ToggleSortingProps
+}
 
 export interface Cell {
   id: Id
@@ -136,7 +149,7 @@ export interface Plugin {
   plugs: PluginPlugs
 }
 
-export interface Header extends Pick<TableColumn, 'id' | 'render'> {
+export interface Header extends TableColumn {
   isPlaceholder: boolean
   column: TableColumn
   getHeaderProps: (userProps: any) => HeaderProps
@@ -164,86 +177,91 @@ export interface FooterProps {}
 export interface RowProps {}
 export interface CellProps {}
 
-type UseReduceOptions = (
+export type UseReduceOptions = (
   options: TableOptions,
-  { instance }?: { instance: TableInstance }
+  { instance }: { instance: TableInstance }
 ) => TableOptions
-type UseInstanceAfterState = (instance: TableInstance) => TableInstance
-type UseReduceColumns = (
+export type UseInstanceAfterState = (instance: TableInstance) => TableInstance
+export type UseReduceColumns = (
   columns: TableColumn[],
   { instance }: { instance: TableInstance }
 ) => TableColumn[]
-type UseReduceAllColumns = (
+export type UseReduceAllColumns = (
   allColumns: TableColumn[],
   { instance }: { instance: TableInstance }
 ) => TableColumn[]
-type UseReduceLeafColumns = (
+export type UseReduceLeafColumns = (
   leafColumns: TableColumn[],
   { instance }: { instance: TableInstance }
 ) => TableColumn[]
-type DecorateColumn = (
+export type DecorateColumn = (
   column: TableColumn,
   { instance }: { instance: TableInstance }
 ) => TableColumn
-type UseReduceHeaderGroups = (
+export type UseReduceHeaderGroups = (
   headerGroups: HeaderGroup[],
   { instance }: { instance: TableInstance }
 ) => HeaderGroup[]
-type UseReduceFooterGroups = (
+export type UseReduceFooterGroups = (
   footerGroups: FooterGroup[],
   { instance }: { instance: TableInstance }
 ) => FooterGroup[]
-type UseReduceFlatHeaders = (
+export type UseReduceFlatHeaders = (
   flatHeaders: Header[],
   { instance }: { instance: TableInstance }
 ) => Header[]
-type DecorateHeader = (
+export type DecorateHeader = (
   header: Header,
   { instance }: { instance: TableInstance }
 ) => Header
-type DecorateRow = (row: Row, { instance }: { instance: TableInstance }) => Row
-type DecorateCell = (
+export type DecorateRow = (
+  row: Row,
+  { instance }: { instance: TableInstance }
+) => Row
+export type DecorateCell = (
   cell: Cell,
   { instance }: { instance: TableInstance }
 ) => Cell
-type UseInstanceAfterDataModel = (instanace: TableInstance) => TableInstance
-type ReduceTableProps = (
+export type UseInstanceAfterDataModel = (
+  instance: TableInstance
+) => TableInstance
+export type ReduceTableProps = (
   tableProps: TableProps,
   { instance }: { instance: TableInstance }
 ) => TableProps
-type ReduceTableBodyProps = (
+export type ReduceTableBodyProps = (
   tableBodyProps: TableBodyProps,
   { instance }: { instance: TableInstance }
 ) => TableBodyProps
-type ReduceTableHeadProps = (
+export type ReduceTableHeadProps = (
   tableHeadProps: TableHeadProps,
   { instance }: { instance: TableInstance }
 ) => TableHeadProps
-type ReduceTableFooterProps = (
+export type ReduceTableFooterProps = (
   tableFootProps: TableFooterProps,
   { instance }: { instance: TableInstance }
 ) => TableFooterProps
-type ReduceHeaderGroupProps = (
+export type ReduceHeaderGroupProps = (
   headerGroupProps: HeaderGroupProps,
   { instance }: { instance: TableInstance }
 ) => HeaderGroupProps
-type ReduceFooterGroupProps = (
+export type ReduceFooterGroupProps = (
   footerGroupProps: FooterGroupProps,
   { instance, header }: { instance: TableInstance; header: Header }
 ) => FooterGroupProps
-type ReduceHeaderProps = (
+export type ReduceHeaderProps = (
   headerProps: HeaderProps,
   { instance, header }: { instance: TableInstance; header: Header }
 ) => HeaderProps
-type ReduceFooterProps = (
+export type ReduceFooterProps = (
   footerProps: FooterProps,
   { instance, header }: { instance: TableInstance; header: Header }
 ) => HeaderProps
-type ReduceRowProps = (
+export type ReduceRowProps = (
   rowProps: RowProps,
   { instance, row }: { instance: TableInstance; row: Row }
 ) => RowProps
-type ReduceCellProps = (
+export type ReduceCellProps = (
   cellProps: CellProps,
   { instance, cell }: { instance: TableInstance; cell: Cell }
 ) => CellProps
@@ -317,3 +335,26 @@ export type PlugType = [PlugName, PluginPlugBuilder]
 export type PluginPlugBuilder = any
 
 export interface RendererMeta {}
+
+// withSorting
+
+type SortType =
+  | 'basic'
+  | 'alphanumeric'
+  | 'text'
+  | 'datetime'
+  | 'basic'
+  | string
+  | SortFn
+
+export type SortFn = (
+  rowA: Row,
+  rowB: Row,
+  columnId: Id,
+  desc: boolean
+) => number
+
+export interface ToggleSortingProps {
+  onClick?: any
+  title?: string
+}

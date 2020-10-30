@@ -1,5 +1,5 @@
 import React from 'react'
-import { TableColumn, RendererMeta, TableInstance } from './types'
+import { TableColumn, RendererMeta, TableInstance, SortFn } from './types'
 
 export function composeDecorator(fns) {
   return (initial, meta) => fns.forEach(fn => fn(initial, meta), initial)
@@ -183,18 +183,24 @@ export function groupBy(rows, columnId) {
   }, {})
 }
 
-export function orderBy(arr, funcs, dirs) {
-  return [...arr].sort((rowA, rowB) => {
+type BasicSortFn = (a: any, b: any) => number
+
+export function orderBy<T extends { index: number }>(
+  arr: T[],
+  funcs: BasicSortFn[]
+): T[] {
+  const copy = [...arr]
+  copy.sort((a, b) => {
     for (let i = 0; i < funcs.length; i += 1) {
-      const sortFn = funcs[i]
-      const desc = dirs[i] === false || dirs[i] === 'desc'
-      const sortInt = sortFn(rowA, rowB, desc)
+      const sortInt = funcs[i](a, b)
       if (sortInt !== 0) {
-        return desc ? -sortInt : sortInt
+        return sortInt
       }
     }
-    return dirs[0] ? rowA.index - rowB.index : rowB.index - rowA.index
+
+    return b.index - a.index
   })
+  return copy
 }
 
 export function getRowIsSelected(row, selection) {

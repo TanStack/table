@@ -1,5 +1,5 @@
 import React from 'react'
-import { TableInstance } from '../types'
+import { TableInstance, TableState } from '../types'
 
 export default function useTableState(instance: TableInstance) {
   // A home for our automatic internal table state
@@ -9,10 +9,11 @@ export default function useTableState(instance: TableInstance) {
 
   // The computed state with any conrolled state overrides from the user
   instance.state = React.useMemo(
-    () => ({
-      ...autoState,
-      ...instance.options.state,
-    }),
+    () =>
+      ({
+        ...autoState,
+        ...instance.options.state,
+      } as TableState),
     [autoState, instance.options.state]
   )
 

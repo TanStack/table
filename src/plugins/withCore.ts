@@ -6,24 +6,17 @@ import {
   Header,
   Row,
   Cell,
+  UseReduceOptions,
+  UseInstanceAfterState,
+  DecorateHeader,
+  DecorateCell,
+  DecorateRow,
+  UseInstanceAfterDataModel,
 } from '../types'
 
 import { makeRenderer } from '../utils'
 
-export const withCore: Plugin = {
-  name: 'withCore',
-  after: [],
-  plugs: {
-    useReduceOptions,
-    useInstanceAfterState,
-    decorateHeader,
-    decorateRow,
-    decorateCell,
-    useInstanceAfterDataModel,
-  },
-}
-
-function useReduceOptions(options: any): TableOptions {
+const useReduceOptions: UseReduceOptions = options => {
   return {
     initialState: {},
     state: {},
@@ -38,7 +31,7 @@ function useReduceOptions(options: any): TableOptions {
   }
 }
 
-function useInstanceAfterState(instance: TableInstance) {
+const useInstanceAfterState: UseInstanceAfterState = instance => {
   instance.reset = React.useCallback(() => {
     // It's possible that in the future, this function is pluggable
     // and allows other plugins to add their own reset functionality
@@ -53,14 +46,17 @@ function useInstanceAfterState(instance: TableInstance) {
         return 0
       }
 
-      return Math.min(Math.max(column.minWidth, column.width), column.maxWidth)
+      return Math.min(
+        Math.max(column.minWidth ?? 0, column.width ?? 0),
+        column.maxWidth ?? 0
+      )
     },
     [instance.leafColumns]
   )
 
   instance.getTotalWidth = React.useCallback(() => {
     return instance.leafColumns.reduce(
-      (sum, column) => sum + column.getWidth(),
+      (sum, column) => sum + (column.getWidth?.() ?? 0),
       0
     )
   }, [instance.leafColumns])
@@ -68,10 +64,7 @@ function useInstanceAfterState(instance: TableInstance) {
   return instance
 }
 
-function decorateHeader(
-  header: Header,
-  { instance }: { instance: TableInstance }
-) {
+const decorateHeader: DecorateHeader = (header, { instance }) => {
   header.render = header.isPlaceholder
     ? () => null
     : makeRenderer(instance, {
@@ -110,7 +103,7 @@ function decorateHeader(
       if (header.subHeaders.length) {
         header.subHeaders.forEach(recurse)
       } else {
-        sum += header.column.getWidth()
+        sum += header.column.getWidth?.() ?? 0
       }
     }
 
@@ -122,7 +115,10 @@ function decorateHeader(
   return header
 }
 
-function decorateRow(row: Row, { instance }: { instance: TableInstance }) {
+const decorateRow: DecorateRow = (
+  row: Row,
+  { instance }: { instance: TableInstance }
+) => {
   row.getRowProps = (props = {}) =>
     instance.plugs.reduceRowProps(
       { key: row.id, role: 'row', ...props },
@@ -132,7 +128,10 @@ function decorateRow(row: Row, { instance }: { instance: TableInstance }) {
   return row
 }
 
-function decorateCell(cell: Cell, { instance }: { instance: TableInstance }) {
+const decorateCell: DecorateCell = (
+  cell: Cell,
+  { instance }: { instance: TableInstance }
+) => {
   cell.getCellProps = (props = {}) =>
     instance.plugs.reduceCellProps(
       {
@@ -149,7 +148,9 @@ function decorateCell(cell: Cell, { instance }: { instance: TableInstance }) {
   return cell
 }
 
-function useInstanceAfterDataModel(instance: TableInstance) {
+const useInstanceAfterDataModel: UseInstanceAfterDataModel = (
+  instance: TableInstance
+) => {
   instance.getTableHeadProps = (props = {}) =>
     instance.plugs.reduceTableHeadProps({ ...props }, { instance })
   instance.getTableFooterProps = (props = {}) =>
@@ -163,4 +164,17 @@ function useInstanceAfterDataModel(instance: TableInstance) {
     instance.plugs.reduceTableProps({ role: 'table', ...props }, { instance })
 
   return instance
+}
+
+export const withCore: Plugin = {
+  name: 'withCore',
+  after: [],
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    decorateHeader,
+    decorateRow,
+    decorateCell,
+    useInstanceAfterDataModel,
+  },
 }

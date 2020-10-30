@@ -1,9 +1,11 @@
+import { SortFn } from './types'
+
 const reSplitAlphaNumeric = /([0-9]+)/gm
 
 // Mixed sorting is slow, but very inclusive of many edge cases.
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
-export const alphanumeric = (rowA, rowB, columnId) => {
+export const alphanumeric: SortFn = (rowA, rowB, columnId) => {
   let a = getRowValueByColumnID(rowA, columnId)
   let b = getRowValueByColumnID(rowB, columnId)
   // Force to strings (or "" for unsupported types)
@@ -17,8 +19,8 @@ export const alphanumeric = (rowA, rowB, columnId) => {
 
   // While
   while (a.length && b.length) {
-    let aa = a.shift()
-    let bb = b.shift()
+    const aa = a.shift()
+    const bb = b.shift()
 
     const an = parseInt(aa, 10)
     const bn = parseInt(bb, 10)
@@ -55,7 +57,7 @@ export const alphanumeric = (rowA, rowB, columnId) => {
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-export const text = (rowA, rowB, columnId) => {
+export const text: SortFn = (rowA, rowB, columnId) => {
   let a = getRowValueByColumnID(rowA, columnId)
   let b = getRowValueByColumnID(rowB, columnId)
 
@@ -66,7 +68,7 @@ export const text = (rowA, rowB, columnId) => {
   return compareBasic(a, b)
 }
 
-export function datetime(rowA, rowB, columnId) {
+export const datetime: SortFn = (rowA, rowB, columnId) => {
   let a = getRowValueByColumnID(rowA, columnId)
   let b = getRowValueByColumnID(rowB, columnId)
 
@@ -76,24 +78,27 @@ export function datetime(rowA, rowB, columnId) {
   return compareBasic(a, b)
 }
 
-export function basic(rowA, rowB, columnId) {
-  let a = getRowValueByColumnID(rowA, columnId)
-  let b = getRowValueByColumnID(rowB, columnId)
+export const basic: SortFn = (rowA, rowB, columnId) => {
+  const a = getRowValueByColumnID(rowA, columnId)
+  const b = getRowValueByColumnID(rowB, columnId)
 
   return compareBasic(a, b)
 }
 
 // Utils
 
-function compareBasic(a, b) {
+function compareBasic(a: any, b: any) {
   return a === b ? 0 : a > b ? 1 : -1
 }
 
-function getRowValueByColumnID(row, columnId) {
+function getRowValueByColumnID<TRow extends { values: { [key: string]: any } }>(
+  row: TRow,
+  columnId: string | number
+) {
   return row.values[columnId]
 }
 
-function toString(a) {
+function toString(a: any) {
   if (typeof a === 'number') {
     if (isNaN(a) || a === Infinity || a === -Infinity) {
       return ''

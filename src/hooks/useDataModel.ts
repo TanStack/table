@@ -5,7 +5,7 @@ import { Cell, Row, TableInstance } from '../types'
 
 import { makeRenderer, flattenBy } from '../utils'
 
-export default function useDataModel(instance: Required<TableInstance>) {
+export default function useDataModel(instance: TableInstance) {
   const {
     leafColumns,
     options: { data, getRowId, getSubRows, debug },
@@ -36,7 +36,11 @@ export default function useDataModel(instance: Required<TableInstance>) {
       // Keep the original reference around
       const original = originalRow
 
-      const id = getRowId(originalRow, rowIndex, parent)
+      const id = getRowId?.(originalRow, rowIndex, parent)
+
+      if (!id) {
+        throw new Error(`getRowId expected an ID, but got ${id}`)
+      }
 
       // Make the row
       const row = {
@@ -55,7 +59,7 @@ export default function useDataModel(instance: Required<TableInstance>) {
       rowsById[id] = row
 
       // Get the original subrows
-      row.originalSubRows = getSubRows(originalRow, rowIndex)
+      row.originalSubRows = getSubRows?.(originalRow, rowIndex) ?? []
 
       // Then recursively access them
       if (row.originalSubRows) {
@@ -75,7 +79,7 @@ export default function useDataModel(instance: Required<TableInstance>) {
 
         // If the column has an accessor, use it to get a value
         if (column.accessor) {
-          value = row.values[column.id] = column.accessor(
+          value = row.values[column.id as string] = column.accessor(
             originalRow,
             rowIndex,
             row

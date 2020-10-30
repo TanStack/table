@@ -16,27 +16,20 @@ import {
   withGrouping,
 } from '../Constants'
 
-import * as sortTypes from '../sortTypes'
-import { TableInstance, TableOptions } from '../types'
+import * as _sortTypes from '../sortTypes'
+import {
+  SortObj,
+  Row,
+  SortFn,
+  UseReduceOptions,
+  UseInstanceAfterState,
+  UseInstanceAfterDataModel,
+  DecorateColumn,
+} from '../types'
 
-export const withSorting = {
-  name,
-  after: [
-    withColumnVisibility,
-    withColumnFilters,
-    withGlobalFilter,
-    withGrouping,
-  ],
-  plugs: {
-    useReduceOptions,
-    useInstanceAfterState,
-    useInstanceAfterDataModel,
-    decorateColumn,
-    decorateHeader: decorateColumn,
-  },
-}
+const sortTypes: Record<string, SortFn> = _sortTypes
 
-function useReduceOptions(options: TableOptions): TableOptions {
+const useReduceOptions: UseReduceOptions = options => {
   return {
     onSortingChange: React.useCallback(makeStateUpdater('sorting'), []),
     autoResetSorting: true,
@@ -54,7 +47,7 @@ function useReduceOptions(options: TableOptions): TableOptions {
   }
 }
 
-function useInstanceAfterState(instance: TableInstance) {
+const useInstanceAfterState: UseInstanceAfterState = instance => {
   instance.setSorting = React.useCallback(
     updater => instance.options.onSortingChange?.(updater, instance),
     [instance]
@@ -72,7 +65,7 @@ function useInstanceAfterState(instance: TableInstance) {
   // but the second render is very light, since the state is the same between the two
   React.useMemo(() => {
     if (instance.options.autoResetSorting) {
-      instance.state.sorting = instance.options.initialState?.sorting
+      instance.state.sorting = instance.options.initialState?.sorting ?? []
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, sortingResetDeps)
@@ -83,7 +76,11 @@ function useInstanceAfterState(instance: TableInstance) {
   }, sortingResetDeps)
 
   instance.toggleColumnSorting = React.useCallback(
-    (columnId, desc, multi) =>
+    (columnId, desc, multi) => {
+      if (!columnId) {
+        return
+      }
+
       instance.setSorting(old => {
         const {
           leafColumns,
@@ -99,17 +96,17 @@ function useInstanceAfterState(instance: TableInstance) {
         const column = leafColumns.find(d => d.id === columnId)
 
         if (!column) {
-          return
+          return []
         }
 
         const { sortDescFirst } = column
 
         // Find any existing sorting for this column
-        const existingSorting = old.find(d => d.id === columnId)
-        const existingIndex = old.findIndex(d => d.id === columnId)
+        const existingSorting = old?.find(d => d.id === columnId)
+        const existingIndex = old?.findIndex(d => d.id === columnId)
         const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
-        let newSorting = []
+        let newSorting: SortObj[] = []
 
         // What should we do with this sort action?
         let sortAction
@@ -122,7 +119,7 @@ function useInstanceAfterState(instance: TableInstance) {
           }
         } else {
           // Normal mode
-          if (existingIndex !== old.length - 1) {
+          if (old?.length && existingIndex !== old.length - 1) {
             sortAction = 'replace'
           } else if (existingSorting) {
             sortAction = 'toggle'
@@ -137,10 +134,9 @@ function useInstanceAfterState(instance: TableInstance) {
           !disableSortRemove && // If disableSortRemove, disable in general
           !hasDescDefined && // Must not be setting desc
           (multi ? !disableMultiRemove : true) && // If multi, don't allow if disableMultiRemove
-          ((existingSorting && // Finally, detect if it should indeed be removed
-            existingSorting.desc &&
-            !sortDescFirst) ||
-            (!existingSorting.desc && sortDescFirst))
+          (existingSorting?.desc // Finally, detect if it should indeed be removed
+            ? !sortDescFirst
+            : sortDescFirst)
         ) {
           sortAction = 'remove'
         }
@@ -152,7 +148,7 @@ function useInstanceAfterState(instance: TableInstance) {
               desc: hasDescDefined ? desc : sortDescFirst,
             },
           ]
-        } else if (sortAction === 'add') {
+        } else if (sortAction === 'add' && old?.length) {
           newSorting = [
             ...old,
             {
@@ -162,28 +158,29 @@ function useInstanceAfterState(instance: TableInstance) {
           ]
           // Take latest n columns
           newSorting.splice(0, newSorting.length - maxMultiSortColCount)
-        } else if (sortAction === 'toggle') {
+        } else if (sortAction === 'toggle' && old?.length) {
           // This flips (or sets) the
           newSorting = old.map(d => {
             if (d.id === columnId) {
               return {
                 ...d,
-                desc: hasDescDefined ? desc : !existingSorting.desc,
+                desc: hasDescDefined ? desc : !existingSorting?.desc,
               }
             }
             return d
           })
-        } else if (sortAction === 'remove') {
+        } else if (sortAction === 'remove' && old?.length) {
           newSorting = old.filter(d => d.id !== columnId)
         }
 
         return newSorting
-      }),
+      })
+    },
     [instance]
   )
 
   instance.resetSorting = React.useCallback(
-    () => instance.setSorting(instance.options.initialState?.sorting),
+    () => instance.setSorting(instance.options.initialState?.sorting ?? []),
     [instance]
   )
 
@@ -195,11 +192,13 @@ function useInstanceAfterState(instance: TableInstance) {
         return false
       }
 
-      return getFirstDefined(
-        instance.options.disableSorting ? false : undefined,
-        column.disableSorting ? false : undefined,
-        column.defaultCanSort,
-        !!column.accessor
+      return (
+        getFirstDefined(
+          instance.options.disableSorting ? false : undefined,
+          column.disableSorting ? false : undefined,
+          column.defaultCanSort,
+          !!column.accessor
+        ) ?? false
       )
     },
     [instance]
@@ -216,7 +215,8 @@ function useInstanceAfterState(instance: TableInstance) {
   )
 
   instance.getColumnIsSortedDesc = React.useCallback(
-    columnId => instance.state.sorting.find(d => d.id === columnId)?.desc,
+    columnId =>
+      instance.state.sorting.find(d => d.id === columnId)?.desc ?? false,
     [instance]
   )
 
@@ -224,9 +224,11 @@ function useInstanceAfterState(instance: TableInstance) {
     columnId => instance.setSorting(old => old.filter(d => d.id !== columnId)),
     [instance]
   )
+
+  return instance
 }
 
-function useInstanceAfterDataModel(instance) {
+const useInstanceAfterDataModel: UseInstanceAfterDataModel = instance => {
   const {
     options: { manualSorting },
     state: { sorting },
@@ -243,14 +245,14 @@ function useInstanceAfterDataModel(instance) {
     if (process.env.NODE_ENV !== 'production' && instance.options.debug)
       console.info('Sorting...')
 
-    const sortedFlatRows = []
+    const sortedFlatRows: Row[] = []
 
     // Filter out sortings that correspond to non existing columns
     const availableSorting = sorting.filter(sort =>
       leafColumns.find(col => col.id === sort.id)
     )
 
-    const sortData = rows => {
+    const sortData = (rows: Row[]) => {
       // This will also perform a stable sorting using the row index
       // if needed.
       const sortedData = orderBy(
@@ -269,12 +271,12 @@ function useInstanceAfterDataModel(instance) {
 
           const { sortType } = column
 
-          const sortMethod =
+          const sortFn: SortFn =
             isFunction(sortType) ||
-            (instance.options.sortTypes || {})[sortType] ||
-            sortTypes[sortType]
+            (instance.options.sortTypes || {})[sortType as string] ||
+            sortTypes[sortType as string]
 
-          if (!sortMethod) {
+          if (!sortFn) {
             throw new Error(
               process.env.NODE_ENV !== 'production'
                 ? `React-Table: Could not find a valid sortType of '${sortType}' for column '${sort.id}'.`
@@ -282,20 +284,12 @@ function useInstanceAfterDataModel(instance) {
             )
           }
 
+          const isDesc = sort?.desc ?? false
+
           // Return the correct sortFn.
           // This function should always return in ascending order
-          return (a, b) => sortMethod(a, b, sort.id, sort.desc)
-        }),
-        // Map the directions
-        availableSorting.map(sort => {
-          // Detect and use the sortInverted option
-          const column = leafColumns.find(d => d.id === sort.id)
-
-          if (column && column.sortInverted) {
-            return sort.desc
-          }
-
-          return !sort.desc
+          return (a, b) =>
+            sortFn(a, b, sort.id, column?.sortInverted ? !isDesc : isDesc)
         })
       )
 
@@ -322,9 +316,11 @@ function useInstanceAfterDataModel(instance) {
     rows: sortedRows,
     flatRows: sortedFlatRows,
   })
+
+  return instance
 }
 
-function decorateColumn(column, { instance }) {
+const decorateColumn: DecorateColumn = (column, { instance }) => {
   column.getCanSort = () => instance.getColumnCanSort(column.id)
   column.getSortedIndex = () => instance.getColumnSortedIndex(column.id)
   column.getIsSorted = () => instance.getColumnIsSorted(column.id)
@@ -333,16 +329,16 @@ function decorateColumn(column, { instance }) {
   column.clearSorting = () => instance.clearColumnSorting(column.id)
   column.getIsSortedDesc = () => instance.getColumnIsSortedDesc(column.id)
   column.getToggleSortingProps = ({ isMulti, ...props } = {}) => {
-    const canSort = column.getCanSort()
+    const canSort = column.getCanSort?.()
 
     return {
       onClick: canSort
-        ? e => {
+        ? (e: { persist?: any }) => {
             e.persist()
-            column.toggleSorting(
+            column.toggleSorting?.(
               undefined,
               !instance.options.disableMultiSort &&
-                (isMulti || instance.options.isMultiSortEvent(e))
+                (isMulti || instance.options.isMultiSortEvent?.(e))
             )
           }
         : undefined,
@@ -350,4 +346,22 @@ function decorateColumn(column, { instance }) {
       ...props,
     }
   }
+
+  return column
+}
+
+export const withSorting = {
+  name,
+  after: [
+    withColumnVisibility,
+    withColumnFilters,
+    withGlobalFilter,
+    withGrouping,
+  ],
+  plugs: {
+    useReduceOptions,
+    useInstanceAfterState,
+    useInstanceAfterDataModel,
+    decorateColumn,
+  },
 }
