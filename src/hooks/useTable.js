@@ -396,6 +396,12 @@ export const useTable = (props, ...plugins) => {
 
   getInstance().prepareRow = React.useCallback(
     row => {
+      if (row.preparedWith === getInstance().state) {
+        return
+      }
+
+      row.preparedWith = getInstance().state
+      
       row.getRowProps = makePropGetter(getHooks().getRowProps, {
         instance: getInstance(),
         row,
