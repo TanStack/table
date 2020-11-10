@@ -35,9 +35,7 @@ const getHeaderProps = (props, { column }) => [
   {
     style: {
       boxSizing: 'border-box',
-      flex: column.totalFlexWidth
-        ? `${column.totalFlexWidth} 0 auto`
-        : undefined,
+      flex: `${column.totalFlexWidth} 0 auto`,
       minWidth: `${column.totalMinWidth}px`,
       width: `${column.totalWidth}px`,
     },
