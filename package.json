@@ -52,7 +52,7 @@
   ],
   "browserslist": "> 0.25%, not dead",
   "peerDependencies": {
-    "react": "^16.8.3"
+    "react": "^16.8.3 || ^17.0.0-0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
