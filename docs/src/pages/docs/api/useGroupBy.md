@@ -90,7 +90,7 @@ The following properties are available on every `Column` object returned by the 
 
 The following properties are available on every `Row` object returned by the table instance.
 
-- `groupById: String`
+- `groupByID: String`
   - The column ID for which this row is being grouped.
   - Will be `undefined` if the row is an original row from `data` and not a materialized one from the grouping.
 - `groupByVal: any`
