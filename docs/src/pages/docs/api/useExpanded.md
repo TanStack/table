@@ -18,7 +18,7 @@ The following options are supported via the main options object passed to `useTa
   - This information is stored in state since the table is allowed to manipulate the filter through user interaction.
 - `getSubRows: Function(row, relativeIndex) => Rows[]`
   - Optional
-  - See the [useTable hook](./useTable.md#table-options) for more details
+  - See the [useTable hook](./useTable#table-options) for more details
 - `manualExpandedKey: String`
   - Optional
   - Defaults to `expanded`
@@ -33,7 +33,7 @@ The following options are supported via the main options object passed to `useTa
   - When `true`, the `expanded` state will automatically reset if any of the following conditions are met:
     - `data` is changed
   - To disable, set to `false`
-  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq.md#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
+  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 
 ### Instance Properties
 

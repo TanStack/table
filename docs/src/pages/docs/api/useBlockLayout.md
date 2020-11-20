@@ -5,7 +5,7 @@
 
 `useBlockLayout` is a plugin hook that adds support for headers and cells to be rendered as `inline-block` `div`s (or other non-table elements) with explicit `width`. Similar to the `useAbsoluteLayout` hook, this becomes useful if and when you need to virtualize rows and cells for performance.
 
-**NOTE:** Although no additional options are needed for this plugin to work, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. See `Column Options` ([website](./useTable#column-options)) or ([GitHub](./useTable.md#column-options)) for more information on these options.
+**NOTE:** Although no additional options are needed for this plugin to work, the core column options `width`, `minWidth` and `maxWidth` are used to calculate column and cell widths and must be set. See `Column Options` ([website](./useTable#column-options)) or ([GitHub](./useTable#column-options)) for more information on these options.
 
 ### Row Properties
 

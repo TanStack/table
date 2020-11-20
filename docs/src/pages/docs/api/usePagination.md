@@ -35,7 +35,7 @@ The following options are supported via the main options object passed to `useTa
     - `manualFilters` is `false` and `state.filters` is changed
     - `manualGroupBy` is `false` and `state.groupBy` is changed
   - To disable, set to `false`
-  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq.md#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
+  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 - `paginateExpandedRows: Bool`
   - Optional
   - Only applies when using the `useExpanded` plugin hook simultaneously
