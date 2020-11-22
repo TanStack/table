@@ -15,6 +15,7 @@
     "styled-components": "^4.3.2"
   },
   "devDependencies": {
+    "@babel/helper-regex": "^7.10.5",
     "@rescripts/cli": "^0.0.11",
     "@rescripts/rescript-use-babel-config": "^0.0.8",
     "@rescripts/rescript-use-eslint-config": "^0.0.9",
