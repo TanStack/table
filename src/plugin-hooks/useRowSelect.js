@@ -140,7 +140,7 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleRowSelected) {
     const { id, value: setSelected } = action
-    const { rowsById, selectSubRows = true, getSubRows } = instance
+    const { rowsById, selectSubRows = true } = instance
     const isSelected = state.selectedRowIds[id]
     const shouldExist =
       typeof setSelected !== 'undefined' ? setSelected : !isSelected
@@ -162,8 +162,8 @@ function reducer(state, action, previousState, instance) {
         }
       }
 
-      if (selectSubRows && getSubRows(row)) {
-        return getSubRows(row).forEach(row => handleRowById(row.id))
+      if (selectSubRows && row.subRows) {
+        return row.subRows.forEach(row => handleRowById(row.id))
       }
     }
 
@@ -182,7 +182,6 @@ function reducer(state, action, previousState, instance) {
       rowsById,
       selectSubRows = true,
       isAllPageRowsSelected,
-      getSubRows,
     } = instance
 
     const selectAll =
@@ -201,8 +200,8 @@ function reducer(state, action, previousState, instance) {
         }
       }
 
-      if (selectSubRows && getSubRows(row)) {
-        return getSubRows(row).forEach(row => handleRowById(row.id))
+      if (selectSubRows && row.subRows) {
+        return row.subRows.forEach(row => handleRowById(row.id))
       }
     }
 
@@ -229,7 +228,6 @@ function useInstance(instance) {
     selectSubRows = true,
     dispatch,
     page,
-    getSubRows,
   } = instance
 
   ensurePluginOrder(
@@ -243,7 +241,7 @@ function useInstance(instance) {
 
     rows.forEach(row => {
       const isSelected = selectSubRows
-        ? getRowIsSelected(row, selectedRowIds, getSubRows)
+        ? getRowIsSelected(row, selectedRowIds)
         : !!selectedRowIds[row.id]
       row.isSelected = !!isSelected
       row.isSomeSelected = isSelected === null
@@ -254,11 +252,14 @@ function useInstance(instance) {
     })
 
     return selectedFlatRows
-  }, [rows, selectSubRows, selectedRowIds, getSubRows])
+  }, [rows, selectSubRows, selectedRowIds])
 
-  let isAllRowsSelected = Boolean(
-    Object.keys(nonGroupedRowsById).length && Object.keys(selectedRowIds).length
-  )
+  let isAllRowsSelected = React.useMemo(() => {
+    return Boolean(
+      Object.keys(nonGroupedRowsById).length &&
+        Object.keys(selectedRowIds).length
+    )
+  }, [nonGroupedRowsById, selectedRowIds])
 
   let isAllPageRowsSelected = isAllRowsSelected
 
@@ -330,12 +331,12 @@ function prepareRow(row, { instance }) {
   )
 }
 
-function getRowIsSelected(row, selectedRowIds, getSubRows) {
+function getRowIsSelected(row, selectedRowIds) {
   if (selectedRowIds[row.id]) {
     return true
   }
 
-  const subRows = getSubRows(row)
+  const subRows = row.subRows
 
   if (subRows && subRows.length) {
     let allChildrenSelected = true
@@ -347,7 +348,7 @@ function getRowIsSelected(row, selectedRowIds, getSubRows) {
         return
       }
 
-      if (getRowIsSelected(subRow, selectedRowIds, getSubRows)) {
+      if (getRowIsSelected(subRow, selectedRowIds)) {
         someSelected = true
       } else {
         allChildrenSelected = false
