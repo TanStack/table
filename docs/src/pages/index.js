@@ -382,7 +382,7 @@ const Home = props => {
                   <span className="bg-coral text-gray-800 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
                     <Check />
                   </span>
-                  100% Custom Cell Formmatters
+                  100% Custom Cell Formatters
                 </a>
                 <a className="mb-2">
                   <span className="bg-coral text-gray-800 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
