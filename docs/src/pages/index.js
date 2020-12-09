@@ -243,6 +243,13 @@ const Home = props => {
                 >
                   <img src="https://assets.website-files.com/5dee7e4754c6bbc1eaf4210b/5deea3042cdb07ff7082211d_encamp-logo.svg"></img>
                 </a>
+                <a
+                  href="https://ledgy.com/"
+                  target="_blank"
+                  className="block w-48 m-auto"
+                >
+                  <img src="https://cdn.ledgy.com/img/logo_color.png"></img>
+                </a>
               </div>
             </div>
 
