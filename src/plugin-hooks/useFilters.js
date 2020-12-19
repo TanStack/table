@@ -11,6 +11,7 @@ import {
   useGetLatest,
   functionalUpdate,
   useMountedLayoutEffect,
+  reduceMappings,
 } from '../publicUtils'
 
 import * as filterTypes from '../filterTypes'
@@ -187,73 +188,96 @@ function useInstance(instance) {
       return [rows, flatRows, rowsById]
     }
 
-    const filteredFlatRows = []
-    const filteredRowsById = {}
+    //partially apply useFilterType and filterTypes to avoid having to pass these around
+    const prepareFilter = filter =>
+      getFilterMethod(filter, userFilterTypes || {}, filterTypes)
 
-    // Filters top level and nested rows
-    const filterRows = (rows, depth = 0) => {
-      let filteredRows = rows
+    const columnFilterPairs = filters.map(filterOption => {
+      const { id: columnId, value: filterValue } = filterOption
 
-      filteredRows = filters.reduce(
-        (filteredSoFar, { id: columnId, value: filterValue }) => {
-          // Find the filters column
-          const column = allColumns.find(d => d.id === columnId)
+      //Find the column this filter is refering to
+      const column = allColumns.find(d => d.id === columnId)
+      //Create the filter function for this column
+      const filter = produceFilterFromColumn(column, filterValue, prepareFilter)
 
-          if (!column) {
-            return filteredSoFar
-          }
+      return { column, filter }
+    })
 
-          if (depth === 0) {
-            column.preFilteredRows = filteredSoFar
-          }
+    //main row filters update their column with their current filter progress
+    const mainRowFilters = columnFilterPairs.map(
+      ({ column, filter }) => rows => {
+        const filteredRows = filter(rows)
+        Object.assign(column, { preFilteredRows: rows, filteredRows })
+        return filteredRows
+      }
+    )
 
-          const filterMethod = getFilterMethod(
-            column.filter,
-            userFilterTypes || {},
-            filterTypes
+    //sub row filters DO NOT update the column with their "in progress" filtered values
+    const subRowFilters = columnFilterPairs.map(({ filter }) => filter)
+
+    //Build a function that recusively evaluates rows starting from a row
+    const filterSubRows = row => reduceMappings(row.subRows, subRowFilters)
+    const evaluateRow = (row, depth = 0) =>
+      reduceMappings(row, [
+        //expose the current depth to the filter
+        row => ({ ...row, depth }),
+
+        //recurse the subrows first
+        row => ({
+          ...row,
+          subRows: row.subRows?.map(row => evaluateRow(row, depth + 1)) || [],
+        }),
+
+        //filter and collect the subrows
+        row => {
+          //collect the flat rows before filtering
+          const [subRowsFlat, subRowsById] = row.subRows.reduce(
+            ([filteredFlatRows, filteredRowsById], row) => [
+              [...filteredFlatRows, ...row.filteredFlatRows],
+              { ...filteredRowsById, ...row.filteredRowsById },
+            ],
+            [[], {}]
           )
 
-          if (!filterMethod) {
-            console.warn(
-              `Could not find a valid 'column.filter' for column with the ID: ${column.id}.`
-            )
-            return filteredSoFar
+          const filteredSubRows = filterSubRows(row)
+          return {
+            ...row,
+            subRows: filteredSubRows,
+            prefilteredSubRows: row.subRows,
+            filteredFlatRows: [...filteredSubRows, ...subRowsFlat],
+            filteredRowsById: {
+              ...Object.fromEntries(filteredSubRows.map(row => [row.id, row])),
+              ...subRowsById,
+            },
           }
-
-          // Pass the rows, id, filterValue and column to the filterMethod
-          // to get the filtered rows back
-          column.filteredRows = filterMethod(
-            filteredSoFar,
-            [columnId],
-            filterValue
-          )
-
-          return column.filteredRows
         },
-        rows
-      )
+      ])
 
-      // Apply the filter to any subRows
-      // We technically could do this recursively in the above loop,
-      // but that would severely hinder the API for the user, since they
-      // would be required to do that recursion in some scenarios
-      filteredRows.forEach(row => {
-        filteredFlatRows.push(row)
-        filteredRowsById[row.id] = row
-        if (!row.subRows) {
-          return
-        }
+    //evaluate each row
+    const evaluatedRows = rows.map(row => evaluateRow(row))
 
-        row.subRows =
-          row.subRows && row.subRows.length > 0
-            ? filterRows(row.subRows, depth + 1)
-            : row.subRows
-      })
+    //filter the main rows with thier special filters
+    const filteredRows = reduceMappings(evaluatedRows, mainRowFilters)
 
-      return filteredRows
-    }
+    //do this first so we get a lookup table
+    const filteredMainRowsById = Object.fromEntries(
+      filteredRows.map(row => [row.id, row])
+    )
 
-    return [filterRows(rows), filteredFlatRows, filteredRowsById]
+    //collect filteredFlatRows, filteredRowsById
+    const [filteredFlatRows, filteredRowsById] = evaluatedRows.reduce(
+      ([filteredFlatRows, filteredRowsById], row) => [
+        [
+          ...filteredFlatRows,
+          ...([filteredRowsById[row.id]] || []), // to ensure that flatRows occurs in depth first order we need to conditionally add it here
+          ...row.filteredFlatRows,
+        ],
+        { ...filteredRowsById, ...row.filteredRowsById },
+      ],
+      [[], filteredMainRowsById] //since order doesn't matter in objects prepopulate with the main rows
+    )
+
+    return [filteredRows, filteredFlatRows, filteredRowsById]
   }, [
     manualFilters,
     filters,
@@ -300,4 +324,58 @@ function useInstance(instance) {
     setFilter,
     setAllFilters,
   })
+}
+
+const produceFilterFromColumn = (column, filterValue, getFilterMethod) => {
+  if (!column) return rows => rows
+
+  const filterMethod = getFilterMethod(column.filter)
+
+  if (!filterMethod) {
+    console.warn(
+      `Could not find a valid 'column.filter' for column with the ID: ${column.id}.`
+    )
+    return rows => rows
+  }
+
+  return rows => filterMethod(rows, [column.id], filterValue)
+}
+
+export default useFilters
+
+//This allows you to use any existing filter as a tree filter.
+//This HOC is inherently slow (does 1 extra list traversal)
+//If you find that this causes table to slow down it's best to implement this yourself
+/* eg.
+	{
+	  Header: "Name",
+	  accessor: "name",
+	  filter: makeTreeFilter(text, "subRowHasMatch")
+	}
+  */
+
+export function makeTreeFilter(
+  filter = filterTypes.text,
+  deep_filter_key = 'deep_filtered'
+) {
+  //(row, ids, filterValue)
+  return (rows, ids, filterValue) => {
+    const filteredRowsById = Object.fromEntries(
+      filter(rows, ids, filterValue).map(row => [row.id, row])
+    )
+
+    //rebuild the list from subRows that have a descendant that matches the filter or things matched throught the userFilter
+    return rows.reduce((rows, row) => {
+      const matchedRow = filteredRowsById[row.id]
+      if (matchedRow) {
+        matchedRow[deep_filter_key] = false //this flag indicates that this row was filtered directly
+        return [...rows, matchedRow]
+      } else if (row.filteredFlatRows.length > 0) {
+        row[deep_filter_key] = true
+        return [...rows, row]
+      } else {
+        return rows
+      }
+    }, [])
+  }
 }
