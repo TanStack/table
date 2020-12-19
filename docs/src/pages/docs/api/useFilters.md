@@ -74,6 +74,11 @@ The following values are provided to the table `instance`:
   - An instance-level function used to update the values for **all** filters on the table, all at once.
   - `filtersObjectArray` is an array of objects with `id` and `value` keys. Example: `[{ id: 'columnAccessor', value: 'valueToFilter' }]`
   - **Note:** You must call `setAllFilters` with an array, even if that array is empty. Example: `setAllFilters([])`
+- `filteredFlatRows: Array<Row>`
+  - An array of all Rows including subRows which have been matched by the filter and have been flattened into the order in which they were detected (depth first)
+  - This can be helpful in calculating total row counts that must include subRow
+- `filteredRowsById: Object<rowId: Row>`
+  - An object of all Rows including subRows which have been matched by the filter.
 
 ### Column Properties
 
@@ -91,6 +96,20 @@ The following properties are available on every `Column` object returned by the 
 - `filteredRows: Array<row>`
   - The resulting array of rows received from this column's filter **after** filtering took place.
   - This array of rows can be useful if building faceted filter options.
+
+### Row Properties
+
+The following properties are available on every `Row` Object returned from the table instance
+
+- `subRows: Array<Row>`
+  - An array of **filtered** subRows.
+- `preFilteredSubRows: Array<Row>`
+  - An array of subRows **used right before filtering**.
+- `filteredFlatRows: Array<Row>`
+  - An array of all subRows, including sub-subRows, which have been matched by the filter and have been flattened into the order in which they were detected (depth first)
+  - This can be helpful in calculating total subRow counts and if some descendant row has been matched while the current row is not
+- `filteredRowsById: Object<rowId: Row>`
+  - An object of all subRows, including sub-subRows which, have been matched by the filter.
 
 ### Example
 
