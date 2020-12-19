@@ -6,8 +6,8 @@ export const actions = {
   init: 'init',
 }
 
-export const defaultRenderer = ({ value = '' }) => value;
-export const emptyRenderer = () => <>&nbsp;</>;
+export const defaultRenderer = ({ value = '' }) => value
+export const emptyRenderer = () => <>&nbsp;</>
 
 export const defaultColumn = {
   Cell: defaultRenderer,
@@ -237,4 +237,9 @@ function isExoticComponent(component) {
     typeof component.$$typeof === 'symbol' &&
     ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
   )
+}
+
+//pass data through each mapper one at a time in order
+export function reduceMappings(data, mappings) {
+  return mappings.reduce((data, mapping) => mapping(data), data)
 }
