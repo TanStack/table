@@ -48,6 +48,7 @@ function MyApp({ Component, pageProps }) {
           }}
         />
       </Head>
+      <img src="https://static.scarf.sh/a.png?x-pxid=2b0d73f3-59ed-4ac8-9e75-b5b2098d75eb" />
       <SearchProvider>
         <Component {...pageProps} />
       </SearchProvider>
