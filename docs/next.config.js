@@ -36,7 +36,7 @@ const remarkPlugins = [
 module.exports = optimizedImages({
   pageExtensions: ['jsx', 'js', 'mdx', 'md'],
   env: {
-    GA_TRACKING_ID: process.env.GA_TRACKING_ID || '',
+    NEXT_PUBLIC_GA_TRACKING_ID: process.env.NEXT_PUBLIC_GA_TRACKING_ID || '',
     SENTRY_RELEASE: process.env.VERCEL_GITHUB_COMMIT_SHA || '',
   },
   experimental: {
