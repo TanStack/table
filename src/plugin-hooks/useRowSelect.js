@@ -68,7 +68,7 @@ const defaultGetToggleAllRowsSelectedProps = (props, { instance }) => [
     title: 'Toggle All Rows Selected',
     indeterminate: Boolean(
       !instance.isAllRowsSelected &&
-        Object.keys(instance.state.selectedRowIds).length
+        instance.initialRows.some(({ id }) => instance.state.selectedRowIds[id])
     ),
   },
 ]
