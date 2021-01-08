@@ -113,142 +113,142 @@
             {
               "title": "Basic",
               "path": "/docs/examples/basic",
-              "editUrl": "/docs/examples/basic.mdx"
+              "editUrl": "/docs/examples/basic.md"
             },
             {
               "title": "Footers",
               "path": "/docs/examples/footers",
-              "editUrl": "/docs/examples/footers.mdx"
+              "editUrl": "/docs/examples/footers.md"
             },
             {
               "title": "Sorting",
               "path": "/docs/examples/sorting",
-              "editUrl": "/docs/examples/sorting.mdx"
+              "editUrl": "/docs/examples/sorting.md"
             },
             {
               "title": "Filtering",
               "path": "/docs/examples/filtering",
-              "editUrl": "/docs/examples/filtering.mdx"
+              "editUrl": "/docs/examples/filtering.md"
             },
             {
               "title": "Grouping",
               "path": "/docs/examples/grouping",
-              "editUrl": "/docs/examples/grouping.mdx"
+              "editUrl": "/docs/examples/grouping.md"
             },
             {
               "title": "Grouping Column",
               "path": "/docs/examples/grouping-column",
-              "editUrl": "/docs/examples/grouping-column.mdx"
+              "editUrl": "/docs/examples/grouping-column.md"
             },
             {
               "title": "Pagination",
               "path": "/docs/examples/pagination",
-              "editUrl": "/docs/examples/pagination.mdx"
+              "editUrl": "/docs/examples/pagination.md"
             },
             {
               "title": "Row Selection",
               "path": "/docs/examples/row-selection",
-              "editUrl": "/docs/examples/row-selection.mdx"
+              "editUrl": "/docs/examples/row-selection.md"
             },
             {
               "title": "Row Selection With Pagination",
               "path": "/docs/examples/row-selection-and-pagination",
-              "editUrl": "/docs/examples/row-selection-and-pagination.mdx"
+              "editUrl": "/docs/examples/row-selection-and-pagination.md"
             },
             {
               "title": "Expanding",
               "path": "/docs/examples/expanding",
-              "editUrl": "/docs/examples/expanding.mdx"
+              "editUrl": "/docs/examples/expanding.md"
             },
             {
               "title": "Sub Components",
               "path": "/docs/examples/sub-components",
-              "editUrl": "/docs/examples/sub-components.mdx"
+              "editUrl": "/docs/examples/sub-components.md"
             },
             {
               "title": "Sub Components (Lazy)",
               "path": "/docs/examples/sub-components-lazy",
-              "editUrl": "/docs/examples/sub-components-lazy.mdx"
+              "editUrl": "/docs/examples/sub-components-lazy.md"
             },
             {
               "title": "Editable Data",
               "path": "/docs/examples/editable-data",
-              "editUrl": "/docs/examples/editable-data.mdx"
+              "editUrl": "/docs/examples/editable-data.md"
             },
             {
               "title": "Column Ordering",
               "path": "/docs/examples/column-ordering",
-              "editUrl": "/docs/examples/column-ordering.mdx"
+              "editUrl": "/docs/examples/column-ordering.md"
             },
             {
               "title": "Column Hiding",
               "path": "/docs/examples/column-hiding",
-              "editUrl": "/docs/examples/column-hiding.mdx"
+              "editUrl": "/docs/examples/column-hiding.md"
             },
             {
               "title": "Column Resizing",
               "path": "/docs/examples/column-resizing",
-              "editUrl": "/docs/examples/column-resizing.mdx"
+              "editUrl": "/docs/examples/column-resizing.md"
             },
             {
               "title": "Data-Driven Classes and Styles",
               "path": "/docs/examples/data-driven-classes-and-styles",
-              "editUrl": "/docs/examples/data-driven-classes-and-styles.mdx"
+              "editUrl": "/docs/examples/data-driven-classes-and-styles.md"
             },
             {
               "title": "Row Drag & Drop",
               "path": "/docs/examples/row-dnd",
-              "editUrl": "/docs/examples/row-dnd.mdx"
+              "editUrl": "/docs/examples/row-dnd.md"
             },
             {
               "title": "Full Width Table",
               "path": "/docs/examples/full-width-table",
-              "editUrl": "/docs/examples/full-width-table.mdx"
+              "editUrl": "/docs/examples/full-width-table.md"
             },
             {
               "title": "Full Width Resizable Table",
               "path": "/docs/examples/full-width-resizable-table",
-              "editUrl": "/docs/examples/full-width-resizable-table.mdx"
+              "editUrl": "/docs/examples/full-width-resizable-table.md"
             },
             {
               "title": "Kitchen Sink",
               "path": "/docs/examples/kitchen-sink",
-              "editUrl": "/docs/examples/kitchen-sink.mdx"
+              "editUrl": "/docs/examples/kitchen-sink.md"
             },
             {
               "title": "Pagination (Controlled)",
               "path": "/docs/examples/pagination-controlled",
-              "editUrl": "/docs/examples/pagination-controlled.mdx"
+              "editUrl": "/docs/examples/pagination-controlled.md"
             },
             {
               "title": "Virtualized Rows (React-Window)",
               "path": "/docs/examples/virtualized-rows",
-              "editUrl": "/docs/examples/virtualized-rows.mdx"
+              "editUrl": "/docs/examples/virtualized-rows.md"
             },
             {
               "title": "Animated (Framer-Motion)",
               "path": "/docs/examples/animated-framer-motion",
-              "editUrl": "/docs/examples/animated-framer-motion.mdx"
+              "editUrl": "/docs/examples/animated-framer-motion.md"
             },
             {
               "title": "Material-UI",
               "path": "/docs/examples/material-ui-components",
-              "editUrl": "/docs/examples/material-ui-components.mdx"
+              "editUrl": "/docs/examples/material-ui-components.md"
             },
             {
               "title": "Material-UI Kitchen Sink",
               "path": "/docs/examples/material-ui-kitchen-sink",
-              "editUrl": "/docs/examples/material-ui-kitchen-sink.mdx"
+              "editUrl": "/docs/examples/material-ui-kitchen-sink.md"
             },
             {
               "title": "Bootstrap UI",
               "path": "/docs/examples/bootstrap-ui-components",
-              "editUrl": "/docs/examples/bootstrap-ui-components.mdx"
+              "editUrl": "/docs/examples/bootstrap-ui-components.md"
             },
             {
               "title": "RMWC Table",
               "path": "/docs/examples/rmwc-components",
-              "editUrl": "/docs/examples/rmwc-components.mdx"
+              "editUrl": "/docs/examples/rmwc-components.md"
             }
           ]
         }
