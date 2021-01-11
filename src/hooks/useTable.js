@@ -566,7 +566,13 @@ function accessRowsForColumn({
 
     // If the column has an accessor, use it to get a value
     if (column.accessor) {
-      row.values[column.id] = column.accessor(originalRow, rowIndex, row)
+      row.values[column.id] = column.accessor(
+        originalRow,
+        rowIndex,
+        row,
+        parentRows,
+        data
+      )
     }
 
     // Allow plugins to manipulate the column value
