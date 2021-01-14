@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Scrollbars } from 'react-custom-scrollbars'
+import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import classnames from 'classnames'
 //
 import _ from './utils'
@@ -840,37 +840,38 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         {showPagination && showPaginationTop ? (
           <div className="pagination-top">{makePagination(true)}</div>
         ) : null}
-        <Scrollbars
-          autoHeightMin="100%"
-          autoHeightMax="100%"
-        >
-          <div ref={this.scrollRef} style={{ overflowX: "auto", overflowY: "hidden" }}>
-            <div style={{ paddingTop: "1px", width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
-          </div>
-        </Scrollbars>
-        <TableComponent
-          ref={this.tableRef}
-          className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
-          style={tableProps.style}
-          {...tableProps.rest}
-        >
-          {hasHeaderGroups ? makeHeaderGroups() : null}
-          {makeHeaders()}
-          {hasFilters ? makeFilters() : null}
+        <ScrollSync>
+          <ScrollSyncPane>
+            <div ref={this.scrollRef} style={{ overflowX: "auto", overflowY: "hidden" }}>
+              <div style={{ paddingTop: "1px", width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
+            </div>
+          </ScrollSyncPane>
+          <ScrollSyncPane>
+            <TableComponent
+              ref={this.tableRef}
+              className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
+              style={tableProps.style}
+              {...tableProps.rest}
+            >
+              {hasHeaderGroups ? makeHeaderGroups() : null}
+              {makeHeaders()}
+              {hasFilters ? makeFilters() : null}
 
-          <TbodyComponent
-            className={classnames(tBodyProps.className)}
-            style={{
-              ...tBodyProps.style,
-              minWidth: `${rowMinWidth}px`,
-            }}
-            {...tBodyProps.rest}
-          >
-            {pageRows.map((d, i) => makePageRow(d, i))}
-            {padRows.map(makePadRow)}
-          </TbodyComponent>
-          {hasColumnFooter ? makeColumnFooters() : null}
-        </TableComponent>
+              <TbodyComponent
+                className={classnames(tBodyProps.className)}
+                style={{
+                  ...tBodyProps.style,
+                  minWidth: `${rowMinWidth}px`,
+                }}
+                {...tBodyProps.rest}
+              >
+                {pageRows.map((d, i) => makePageRow(d, i))}
+                {padRows.map(makePadRow)}
+              </TbodyComponent>
+              {hasColumnFooter ? makeColumnFooters() : null}
+            </TableComponent>
+          </ScrollSyncPane>
+        </ScrollSync>
         {showPagination && showPaginationBottom ? (
           <div className="pagination-bottom">{makePagination(false)}</div>
         ) : null}
