@@ -179,8 +179,9 @@ export default {
   rowsSelectorText: 'rows per page',
 
   // Components
-  TableComponent: ({ children, className, ...rest }) => (
+  TableComponent: React.forwardRef(({ children, className, ...rest }, ref) => (
     <div
+      ref={ref}
       className={classnames('rt-table', className)}
       role="grid"
       // tabIndex='0'
@@ -188,7 +189,7 @@ export default {
     >
       {children}
     </div>
-  ),
+  )),
   TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead'),
   TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody'),
   TrGroupComponent: ({ children, className, ...rest }) => (

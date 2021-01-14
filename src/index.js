@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import classnames from 'classnames'
 //
 import _ from './utils'
@@ -16,6 +17,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   constructor (props) {
     super(props)
 
+    this.tableRef = React.createRef();
+    this.scrollRef = React.createRef();
+
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
     this.getSortedData = this.getSortedData.bind(this)
@@ -32,6 +36,19 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.resizeColumnStart = this.resizeColumnStart.bind(this)
     this.resizeColumnEnd = this.resizeColumnEnd.bind(this)
     this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
+  }
+
+  componentDidMount() {
+    let scrollDiv = this.scrollRef.current;
+    let tableDiv = this.tableRef.current;
+    // assoc the scrolls
+    scrollDiv.onscroll = function() {
+      tableDiv.scrollLeft = scrollDiv.scrollLeft;
+    };
+
+    tableDiv.onscroll= function() {
+      scrollDiv.scrollLeft = tableDiv.scrollLeft;
+    };
   }
 
   render () {
@@ -823,7 +840,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         {showPagination && showPaginationTop ? (
           <div className="pagination-top">{makePagination(true)}</div>
         ) : null}
+        <Scrollbars
+          autoHeightMin="100%"
+          autoHeightMax="100%"
+        >
+          <div ref={this.scrollRef} style={{ overflowX: "auto", overflowY: "hidden" }}>
+            <div style={{ paddingTop: "1px", width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
+          </div>
+        </Scrollbars>
         <TableComponent
+          ref={this.tableRef}
           className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
           style={tableProps.style}
           {...tableProps.rest}
@@ -831,10 +857,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
           {hasFilters ? makeFilters() : null}
-          
-          <div ref="outerDiv" style={{ overflowX: "auto", overflowY: "hidden" }}>
-            <div ref="innerDiv" style={{ paddingTop: "1px", width: `${rowMinWidth}px` }}>&nbsp;</div>
-          </div>
 
           <TbodyComponent
             className={classnames(tBodyProps.className)}

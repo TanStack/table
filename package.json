@@ -46,6 +46,7 @@
   "dependencies": {
     "@types/react-table": "^6.8.5",
     "classnames": "^2.2.5",
+    "react-custom-scrollbars": "^4.2.1",
     "react-is": "^16.8.1"
   },
   "peerDependencies": {
