@@ -23,6 +23,7 @@
     "react-table.js",
     "react-table.min.js",
     "react-table.css",
+    "rollup.config.js",
     "media/*.png"
   ],
   "scripts": {
