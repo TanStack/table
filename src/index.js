@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import classnames from 'classnames'
 //
 import _ from './utils'
@@ -36,19 +35,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.resizeColumnStart = this.resizeColumnStart.bind(this)
     this.resizeColumnEnd = this.resizeColumnEnd.bind(this)
     this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
-  }
-
-  componentDidMount() {
-    let scrollDiv = this.scrollRef.current;
-    let tableDiv = this.tableRef.current;
-    // assoc the scrolls
-    scrollDiv.onscroll = function() {
-      tableDiv.scrollLeft = scrollDiv.scrollLeft;
-    };
-
-    tableDiv.onscroll= function() {
-      scrollDiv.scrollLeft = tableDiv.scrollLeft;
-    };
   }
 
   render () {
@@ -840,38 +826,35 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         {showPagination && showPaginationTop ? (
           <div className="pagination-top">{makePagination(true)}</div>
         ) : null}
-        <ScrollSync>
-          <ScrollSyncPane>
-            <div ref={this.scrollRef} style={{ overflowX: "auto", overflowY: "hidden" }}>
-              <div style={{ paddingTop: "1px", width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
-            </div>
-          </ScrollSyncPane>
-          <ScrollSyncPane>
-            <TableComponent
-              ref={this.tableRef}
-              className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
-              style={tableProps.style}
-              {...tableProps.rest}
-            >
-              {hasHeaderGroups ? makeHeaderGroups() : null}
-              {makeHeaders()}
-              {hasFilters ? makeFilters() : null}
+        <div ref={this.scrollRef} style={{ overflowX: "auto", overflowY: "hidden" }}>
+          <div style={{ paddingTop: "1px", width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
+        </div>
+        <TableComponent
+          onScroll={({ scrollLeft }) =>
+            this.scrollRef.current.scrollTo({ scrollLeft })
+          }
+          ref={this.tableRef}
+          className={classnames(tableProps.className, currentlyResizing ? 'rt-resizing' : '')}
+          style={tableProps.style}
+          {...tableProps.rest}
+        >
+          {hasHeaderGroups ? makeHeaderGroups() : null}
+          {makeHeaders()}
+          {hasFilters ? makeFilters() : null}
 
-              <TbodyComponent
-                className={classnames(tBodyProps.className)}
-                style={{
-                  ...tBodyProps.style,
-                  minWidth: `${rowMinWidth}px`,
-                }}
-                {...tBodyProps.rest}
-              >
-                {pageRows.map((d, i) => makePageRow(d, i))}
-                {padRows.map(makePadRow)}
-              </TbodyComponent>
-              {hasColumnFooter ? makeColumnFooters() : null}
-            </TableComponent>
-          </ScrollSyncPane>
-        </ScrollSync>
+          <TbodyComponent
+            className={classnames(tBodyProps.className)}
+            style={{
+              ...tBodyProps.style,
+              minWidth: `${rowMinWidth}px`,
+            }}
+            {...tBodyProps.rest}
+          >
+            {pageRows.map((d, i) => makePageRow(d, i))}
+            {padRows.map(makePadRow)}
+          </TbodyComponent>
+          {hasColumnFooter ? makeColumnFooters() : null}
+        </TableComponent>
         {showPagination && showPaginationBottom ? (
           <div className="pagination-bottom">{makePagination(false)}</div>
         ) : null}
