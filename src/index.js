@@ -831,6 +831,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {hasHeaderGroups ? makeHeaderGroups() : null}
           {makeHeaders()}
           {hasFilters ? makeFilters() : null}
+          
+          <div ref="outerDiv" style={{ overflowX: "auto", overflowY: "hidden" }}>
+            <div ref="innerDiv" style={{ paddingTop: "1px", width: `${rowMinWidth}px` }}>&nbsp;</div>
+          </div>
+
           <TbodyComponent
             className={classnames(tBodyProps.className)}
             style={{
