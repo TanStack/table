@@ -3993,7 +3993,7 @@ var ReactTable = function (_Methods) {
             },
             React__default.createElement(
               'div',
-              { style: { width: rowMinWidth + 'px', height: 0 } },
+              { style: { paddingBottom: '1px', width: rowMinWidth + 'px', height: 0 } },
               '\xA0'
             )
           ),

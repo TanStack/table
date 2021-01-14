@@ -845,7 +845,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{ overflowX: "auto", overflowY: "hidden" }}
           onScroll={() => scroll('fakeScroll')}
         >
-          <div style={{ width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
+          <div style={{ paddingBottom: '1px', width: `${rowMinWidth}px`, height: 0 }}>&nbsp;</div>
         </div>
         <TableComponent
           onScroll={() => scroll('table')}
