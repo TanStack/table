@@ -2,6 +2,7 @@ export function useGridLayout(hooks) {
   hooks.stateReducers.push(reducer)
   hooks.getTableProps.push(getTableProps)
   hooks.getHeaderProps.push(getHeaderProps)
+  hooks.getRowProps.push(getRowProps)
 }
 
 useGridLayout.pluginName = 'useGridLayout'
@@ -76,6 +77,20 @@ function reducer(state, action, previousState, instance) {
       },
     }
   }
+}
+
+const getRowProps = (props, { row }) => {
+  if (row.isExpanded) {
+    return [
+      props,
+      {
+        style: {
+          gridColumn: `1 / ${row.cells.length + 1}`,
+        },
+      },
+    ]
+  }
+  return [props, {}]
 }
 
 function getElementWidth(columnId) {
