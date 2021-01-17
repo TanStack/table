@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTable } from '../../hooks/useTable'
 import { useGridLayout } from '../useGridLayout'
-import { render } from '../../../test-utils/react-testing'
+import { render, fireEvent } from '../../../test-utils/react-testing'
 
 const data = [
   {
@@ -36,33 +36,45 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
+    toggleHideColumn,
   } = useTable(
     {
       columns,
       data,
     },
-    useGridLayout,
+    useGridLayout
   )
 
+  const testHiddenColumn = () => {
+    toggleHideColumn('visits')
+  }
+
   return (
-    <div {...getTableProps()} className="table">
-      {headerGroups.map(headerGroup => (
-        headerGroup.headers.map(column => (
-          <div key={column.id} {...column.getHeaderProps()} className="cell header">
-            {column.render('Header')}
-          </div>
-        ))
-      ))}
-      {rows.map(row => 
-        prepareRow(row) || (
-          row.cells.map(cell => (
-            <div {...cell.getCellProps()} className="cell">
-              {cell.render('Cell')}
+    <>
+      <button onClick={() => testHiddenColumn({})}>Hide Test Column</button>
+      <div {...getTableProps()} className="table">
+        {headerGroups.map(headerGroup =>
+          headerGroup.headers.map(column => (
+            <div
+              key={column.id}
+              {...column.getHeaderProps()}
+              className="cell header"
+            >
+              {column.render('Header')}
             </div>
           ))
-        )
-      )}
-    </div>
+        )}
+        {rows.map(
+          row =>
+            prepareRow(row) ||
+            row.cells.map(cell => (
+              <div {...cell.getCellProps()} className="cell">
+                {cell.render('Cell')}
+              </div>
+            ))
+        )}
+      </div>
+    </>
   )
 }
 
@@ -80,6 +92,7 @@ function App() {
       {
         Header: 'Age',
         accessor: 'age',
+        width: '4rem',
       },
       {
         Header: 'Visits',
@@ -101,11 +114,25 @@ function App() {
 }
 
 test('renders a table', () => {
-  const rendered = render(<App />)
+  render(<App />)
+})
 
+test('respects column.width', () => {
+  const rendered = render(<App />)
   const [table] = rendered.queryAllByRole('table')
 
   expect(table.getAttribute('style')).toEqual(
-    'display: grid; grid-template-columns: auto auto auto auto auto auto;'
+    'display: grid; grid-template-columns: auto auto 4rem auto auto auto;'
+  )
+})
+
+test('respects hidden columns', () => {
+  const rendered = render(<App />)
+  const [table] = rendered.queryAllByRole('table')
+
+  fireEvent.click(rendered.getByText('Hide Test Column'))
+
+  expect(table.getAttribute('style')).toEqual(
+    'display: grid; grid-template-columns: auto auto 4rem auto auto;'
   )
 })
