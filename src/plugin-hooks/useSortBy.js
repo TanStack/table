@@ -281,7 +281,7 @@ function useInstance(instance) {
       allColumns.find(col => col.id === sort.id)
     )
 
-    const sortData = rows => {
+    const sortData = (rows, parentRow = undefined) => {
       // Use the orderByFn to compose multiple sortBy's together.
       // This will also perform a stable sorting using the row index
       // if needed.
@@ -331,7 +331,8 @@ function useInstance(instance) {
           }
 
           return !sort.desc
-        })
+        }),
+        parentRow
       )
 
       // If there are sub-rows, sort them
@@ -340,7 +341,7 @@ function useInstance(instance) {
         if (!row.subRows || row.subRows.length === 0) {
           return
         }
-        row.subRows = sortData(row.subRows)
+        row.subRows = sortData(row.subRows, row)
       })
 
       return sortedData
