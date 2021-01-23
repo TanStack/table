@@ -36,7 +36,7 @@ The following options are supported via the main options object passed to `useTa
   - If true, the un-sorted state will not be available to columns once they have been sorted.
 - `disableMultiRemove: Bool`
   - If true, the un-sorted state will not be available to multi-sorted columns.
-- `orderByFn: Function`
+- `orderByFn: Function( data, sortFunctions, directions, parentRow )`
   - Must be **memoized**
   - Defaults to the built-in default orderBy function
   - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
