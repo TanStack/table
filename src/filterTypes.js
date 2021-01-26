@@ -42,7 +42,7 @@ export const includes = (rows, ids, filterValue) => {
   return rows.filter(row => {
     return ids.some(id => {
       const rowValue = row.values[id]
-      return rowValue.includes(filterValue)
+      return rowValue && rowValue.includes(filterValue)
     })
   })
 }
