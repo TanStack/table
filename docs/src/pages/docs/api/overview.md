@@ -29,6 +29,15 @@ React Table is essentially a compatible collection of **custom React hooks**:
     - `useAbsoluteLayout`
     - `useFlexLayout`
 - 3rd Party Plugin Hooks
+  - [LineUp-lite Hooks](https://lineup-lite.netlify.app)
+    - Core Plugin Hooks
+      - `useStats`
+    - Column Hooks
+      - `useRowExpandColumn`
+      - `useRowSelectColumn`
+      - `useRowRankColumn`
+    - Numerous renderers for cells, groups, aggregations, and interactive summaries
+    
   - Want your custom plugin hook listed here? [Submit a PR!](https://github.com/tannerlinsley/react-table/compare)
 
 ### Hook Usage
