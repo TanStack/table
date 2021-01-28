@@ -9,7 +9,6 @@ import { Footer } from 'components/Footer'
 import { ClientsMarquee } from 'components/clients/ClientsMarquee'
 import { Seo } from 'components/Seo'
 import Head from 'next/head'
-import SponsorPack from 'components/SponsorPack'
 
 const Home = () => {
   return (
