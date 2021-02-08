@@ -56,6 +56,20 @@ The following options are supported on any `Column` object passed to the `column
       - It must be **memoized**
       - It will be called directly with an array of `rows` to filter, an array of `columnIds` (being a single-element array with the column ID being filtered), and `filterValue`, being the current value of the filter being applied
       - It must return an `Array` of rows, being the remaining rows that have _not_ been filtered out
+      
+#### Available filter functions
+<dl>
+<dt>text</dt><dd>This is the default filter function. It lower-cases the search string and checks if the row value includes the search string</dd>
+<dt>exactText</dt><dd>Checks that the row value matches the search string exactly (case-insensitive)</dd>
+<dt>exactTextCase</dt><dd>Checks that the row value matches the search string exactly (case-sensitive)</dd>
+<dt>includes</dt><dd>Check that the row value includes the search string</dd>
+<dt>includesAll</dt><dd>Check that the row value includes every item in the array</dd>
+<dt>includesSome</dt><dd>Check that row value includes some item in the array</dd>
+<dt>includesValue</dt><dd>Check that the filter value includes the value of the row</dd>
+<dt>exact</dt><dd>Checks for exact equality between the row value and the search term. <pre>===</pre></dd>
+<dt>equals</dt><dd>Checks for equality between the row value and the search term. <pre>==</pre></dd>
+<dt>between</dt><dd>Expects an array with a min and max value as the search term. Checks that the row value is between the min and max</dd>
+</dl>
 
 ### Instance Properties
 
