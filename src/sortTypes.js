@@ -70,6 +70,13 @@ export function basic(rowA, rowB, columnId) {
   return compareBasic(a, b)
 }
 
+export function boolean(rowA, rowB, columnId){
+  let a = getRowValueByColumnID(rowA, columnId);
+  let b = getRowValueByColumnID(rowB, columnId);
+
+  return a === b ? 0 : a ? 1 : -1; 
+}
+
 // Utils
 
 function compareBasic(a, b) {
