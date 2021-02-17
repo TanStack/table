@@ -10,6 +10,9 @@
 - `disableResizing: Bool`
   - Defaults to `false`
   - When set to `true`, resizing is disabled across the entire table
+- `autoResetResize: Bool`
+  - Defaults to `true`
+  - When set to `true`, auto-resets column sizes whenever the useTable properties change
 
 ### Column Options
 
