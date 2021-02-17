@@ -61,7 +61,7 @@ The following values are provided to the table `instance`:
   - This can be useful for generating things like select interfaces for the user to select a page from a list, instead of manually paginating to the desired page.
 - `canPreviousPage: Bool`
   - If there are pages and the current `pageIndex` is greater than `0`, this will be `true`
-- `canNextPage:`
+- `canNextPage: Bool`
   - If there are pages and the current `pageIndex` is less than `pageCount`, this will be `true`
 - `gotoPage: Function(pageIndex)`
   - This function, when called with a valid `pageIndex`, will set `pageIndex` to that value.
