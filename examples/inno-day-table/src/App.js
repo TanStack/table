@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTable, usePagination, useRowSelect } from 'react-table'
+import { useTable, usePagination, useRowSelect, useExpanded } from 'react-table'
+import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 
 import { EditableCell } from './EditableCell'
 import makeData from './makeData'
@@ -87,7 +88,7 @@ function Table({ columns, data, updateMyData }) {
     previousPage,
     setPageSize,
     selectedFlatRows,
-    state: { pageIndex, pageSize, selectedRowIds },
+    state: { pageIndex, pageSize, selectedRowIds, expanded },
   } = useTable(
     {
       columns,
@@ -97,10 +98,32 @@ function Table({ columns, data, updateMyData }) {
       autoResetPage: false,
       autoResetSelectedRows: false,
     },
+    useExpanded,
     usePagination,
     useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => [
+        {
+          id: 'expander',
+          Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
+            <div {...getToggleAllRowsExpandedProps()}>
+              <span>{isAllRowsExpanded ? <FiChevronDown /> : <FiChevronRight />}</span>
+            </div>
+          ),
+          Cell: ({ row }) => (
+            row.canExpand ? (
+              <span
+                {...row.getToggleRowExpandedProps({
+                  style: {
+                    paddingLeft: `${row.depth * 2}rem`,
+                  },
+                })}
+              >
+                {row.isExpanded ? <FiChevronDown /> : <FiChevronRight />}
+              </span>
+            ) : null
+          )
+        },
         // Let's make a column for selection
         {
           id: 'selection',
@@ -209,6 +232,7 @@ function Table({ columns, data, updateMyData }) {
                 pageCount,
                 canNextPage,
                 canPreviousPage,
+                expanded
               },
               null,
               2
@@ -278,7 +302,8 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
+  const initialData = React.useMemo(() => makeData(100, 5, 5, 5), [])
+  const [data, setData] = React.useState(initialData)
 
   // When our cell renderer calls updateMyData, we'll use
   // the rowIndex, columnId and new value to update the

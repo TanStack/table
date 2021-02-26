@@ -19,7 +19,8 @@
     "@rescripts/rescript-use-babel-config": "^0.0.8",
     "@rescripts/rescript-use-eslint-config": "^0.0.9",
     "babel-eslint": "10.0.1",
-    "eslint-config-prettier": "^6.15.0"
+    "eslint-config-prettier": "^6.15.0",
+    "react-icons": "^4.2.0"
   },
   "browserslist": {
     "production": [
