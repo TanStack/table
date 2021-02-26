@@ -2,7 +2,7 @@
 
 ## Tasks
 
-- (x) add simple edit template (text) with save and state change
+- (/) add simple edit template (text) with save and state change
 - (x) add filtering
 - (x) add sorting
 - (x) add expanding
