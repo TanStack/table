@@ -1,3 +1,16 @@
+# Inno day
+
+## Tasks
+
+- (x) add simple edit template (text) with save and state change
+- (x) add filtering
+- (x) add sorting
+- (x) add expanding
+- (x) add resizing
+- (/) add pagination
+- (/) add rows selecting
+- (x) add virtualization
+
 ![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/repo-dark.png)
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
