@@ -40,7 +40,7 @@ The following values are provided to the table `instance`:
   - Use this function to programmatically update the state of a row.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 - `setCellState: Function(rowPath: Array<string>, columnId: String, updater: Function | Any) => void`
-  - Use this function to programmatically update the cell of a row.
+  - Use this function to programmatically update the state of a cell.
   - `updater` can be a function or value. If a `function` is passed, it will receive the current value and expect a new one to be returned.
 
 ### Row Properties
