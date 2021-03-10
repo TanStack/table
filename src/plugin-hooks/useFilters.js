@@ -170,7 +170,10 @@ function useInstance(instance) {
       : getFirstDefined(columnDefaultCanFilter, defaultCanFilter, false)
 
     // Provide the column a way of updating the filter value
-    column.setFilter = val => setFilter(column.id, val)
+    column.setFilter = React.useCallback(val => setFilter(column.id, val), [
+      setFilter,
+      column.id,
+    ])
 
     // Provide the current filter value to the column for
     // convenience
