@@ -218,7 +218,6 @@ function reducer(state, action, previousState, instance) {
 
 function useInstance(instance) {
   const {
-    data,
     rows,
     getHooks,
     plugins,
@@ -280,7 +279,7 @@ function useInstance(instance) {
     if (getAutoResetSelectedRows()) {
       dispatch({ type: actions.resetSelectedRows })
     }
-  }, [dispatch, data])
+  }, [dispatch])
 
   const toggleAllRowsSelected = React.useCallback(
     value => dispatch({ type: actions.toggleAllRowsSelected, value }),
