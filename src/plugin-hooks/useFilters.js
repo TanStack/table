@@ -152,6 +152,19 @@ function useInstance(instance) {
     [dispatch]
   )
 
+  // Memoized per column setFilter
+  const columnSetFilters = React.useMemo(
+    () =>
+      allColumns.reduce(
+        (setFilterDict, { id }) => ({
+          ...setFilterDict,
+          [id]: val => setFilter(id, val),
+        }),
+        {}
+      ),
+    [setFilter, allColumns]
+  )
+
   allColumns.forEach(column => {
     const {
       id,
@@ -170,7 +183,7 @@ function useInstance(instance) {
       : getFirstDefined(columnDefaultCanFilter, defaultCanFilter, false)
 
     // Provide the column a way of updating the filter value
-    column.setFilter = val => setFilter(column.id, val)
+    column.setFilter = columnSetFilters[id]
 
     // Provide the current filter value to the column for
     // convenience
