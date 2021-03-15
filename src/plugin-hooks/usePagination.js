@@ -38,7 +38,7 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.resetPage) {
     return {
       ...state,
-      pageIndex: instance.initialState.pageIndex || 0,
+      pageIndex: 0,
     }
   }
 
