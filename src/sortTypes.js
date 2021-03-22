@@ -20,8 +20,8 @@ export const alphanumeric = (rowA, rowB, columnId) => {
     let aa = a.shift()
     let bb = b.shift()
 
-    const an = parseInt(aa, 10)
-    const bn = parseInt(bb, 10)
+    const an = Number(aa)
+    const bn = Number(bb)
 
     const combo = [an, bn].sort()
 
