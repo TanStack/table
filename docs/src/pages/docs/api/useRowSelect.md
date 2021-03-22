@@ -56,6 +56,9 @@ The following values are provided to the table `instance`:
 - `isAllRowsSelected: Bool`
   - Will be `true` if all rows are selected.
   - If at least one row is not selected, will be `false`
+- `isAllPageRowsSelected: Bool`
+  - Will be `true` if all rows are selected **on the current page**.
+  - If at least one row is not selected **on the current page**, will be `false`
 - `selectedFlatRows: Array<Row>`
   - The flat array of rows that are currently selected
 
