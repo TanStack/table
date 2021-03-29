@@ -1,5 +1,4 @@
 import React from 'react'
-
 import {
   actions,
   defaultColumn,
@@ -19,6 +18,7 @@ actions.columnStartResizing = 'columnStartResizing'
 actions.columnResizing = 'columnResizing'
 actions.columnDoneResizing = 'columnDoneResizing'
 actions.resetResize = 'resetResize'
+actions.setColumnsWidths = 'setColumnsWidths'
 
 export const useResizeColumns = hooks => {
   hooks.getResizerProps = [defaultGetResizerProps]
@@ -210,6 +210,18 @@ function reducer(state, action) {
       },
     }
   }
+
+  if (action.type === actions.setColumnsWidths) {
+    return {
+      ...state,
+      columnResizing: {
+        ...state.columnResizing,
+        columnWidths: action.columnsWidthsMap,
+        startX: null,
+        isResizingColumn: null,
+      },
+    }
+  }
 }
 
 const useInstanceBeforeDimensions = instance => {
@@ -262,8 +274,16 @@ function useInstance(instance) {
     [dispatch]
   )
 
+  const setColumnsWidths = React.useCallback(
+    (newColumnsWidthsMap) => {
+      return dispatch({ type: actions.setColumnsWidths, columnsWidthsMap: newColumnsWidthsMap })
+    },
+    [dispatch]
+  )
+
   Object.assign(instance, {
     resetResizing,
+    setColumnsWidths
   })
 }
 
