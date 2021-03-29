@@ -182,9 +182,6 @@ details > summary {
 }
 
 @tailwind utilities;
-/* purgecss end ignore */
-
-/* Why is this not showing up in prod? 👇 */
 
 #carbonads * {
   margin: initial;
@@ -247,3 +244,5 @@ details > summary {
   bottom: 0;
   right: 0;
 }
+
+/* purgecss end ignore */
