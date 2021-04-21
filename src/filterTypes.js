@@ -2,7 +2,7 @@ export const text = (rows, ids, filterValue) => {
   rows = rows.filter(row => {
     return ids.some(id => {
       const rowValue = row.values[id]
-      return String(rowValue)
+      return String(rowValue || '')
         .toLowerCase()
         .includes(String(filterValue).toLowerCase())
     })
@@ -17,7 +17,7 @@ export const exactText = (rows, ids, filterValue) => {
     return ids.some(id => {
       const rowValue = row.values[id]
       return rowValue !== undefined
-        ? String(rowValue).toLowerCase() === String(filterValue).toLowerCase()
+        ? String(rowValue || '').toLowerCase() === String(filterValue).toLowerCase()
         : true
     })
   })
@@ -30,7 +30,7 @@ export const exactTextCase = (rows, ids, filterValue) => {
     return ids.some(id => {
       const rowValue = row.values[id]
       return rowValue !== undefined
-        ? String(rowValue) === String(filterValue)
+        ? String(rowValue || '') === String(filterValue)
         : true
     })
   })
