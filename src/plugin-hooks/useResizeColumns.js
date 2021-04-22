@@ -52,16 +52,12 @@ const defaultGetResizerProps = (props, { instance, header }) => {
     let raf
     let mostRecentClientX
 
-    let counterA = 0
-    let counterB = 0
     const dispatchEnd = () => {
       window.cancelAnimationFrame(raf)
       raf = null
       dispatch({ type: actions.columnDoneResizing })
     }
     const dispatchMove = () => {
-      counterB++
-      console.log(counterA, counterB)
       window.cancelAnimationFrame(raf)
       raf = null
       dispatch({ type: actions.columnResizing, clientX: mostRecentClientX })
@@ -69,7 +65,6 @@ const defaultGetResizerProps = (props, { instance, header }) => {
 
     const scheduleDispatchMoveOnNextAnimationFrame = clientXPos => {
       mostRecentClientX = clientXPos
-      counterA++
       if (!raf) {
         raf = window.requestAnimationFrame(dispatchMove)
       }
