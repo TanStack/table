@@ -49,15 +49,31 @@ const defaultGetResizerProps = (props, { instance, header }) => {
 
     const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX
 
-    const dispatchMove = clientXPos => {
-      dispatch({ type: actions.columnResizing, clientX: clientXPos })
+    let raf
+    let mostRecentClientX
+
+    const dispatchEnd = () => {
+      window.cancelAnimationFrame(raf)
+      raf = null
+      dispatch({ type: actions.columnDoneResizing })
     }
-    const dispatchEnd = () => dispatch({ type: actions.columnDoneResizing })
+    const dispatchMove = () => {
+      window.cancelAnimationFrame(raf)
+      raf = null
+      dispatch({ type: actions.columnResizing, clientX: mostRecentClientX })
+    }
+
+    const scheduleDispatchMoveOnNextAnimationFrame = clientXPos => {
+      mostRecentClientX = clientXPos
+      if (!raf) {
+        raf = window.requestAnimationFrame(dispatchMove)
+      }
+    }
 
     const handlersAndEvents = {
       mouse: {
         moveEvent: 'mousemove',
-        moveHandler: e => dispatchMove(e.clientX),
+        moveHandler: e => scheduleDispatchMoveOnNextAnimationFrame(e.clientX),
         upEvent: 'mouseup',
         upHandler: e => {
           document.removeEventListener(
@@ -78,7 +94,7 @@ const defaultGetResizerProps = (props, { instance, header }) => {
             e.preventDefault()
             e.stopPropagation()
           }
-          dispatchMove(e.touches[0].clientX)
+          scheduleDispatchMoveOnNextAnimationFrame(e.touches[0].clientX)
           return false
         },
         upEvent: 'touchend',
