@@ -155,6 +155,7 @@ function App({ useTableRef, initialState }) {
           {
             Header: 'First Name',
             accessor: 'firstName',
+            sortType: 'string'
           },
           {
             Header: 'Last Name',
@@ -168,6 +169,7 @@ function App({ useTableRef, initialState }) {
           {
             Header: 'Age',
             accessor: 'age',
+            sortType: 'number'
           },
           {
             Header: 'Visits',
