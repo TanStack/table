@@ -4,8 +4,8 @@ const reSplitAlphaNumeric = /([0-9]+)/gm
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
 export const alphanumeric = (rowA, rowB, columnId) => {
-  let a = getRowValueByColumnID(rowA, columnId)
-  let b = getRowValueByColumnID(rowB, columnId)
+  let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
+
   // Force to strings (or "" for unsupported types)
   a = toString(a)
   b = toString(b)
@@ -52,10 +52,8 @@ export const alphanumeric = (rowA, rowB, columnId) => {
 
   return a.length - b.length
 }
-
 export function datetime(rowA, rowB, columnId) {
-  let a = getRowValueByColumnID(rowA, columnId)
-  let b = getRowValueByColumnID(rowB, columnId)
+  let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
 
   a = a.getTime()
   b = b.getTime()
@@ -64,8 +62,51 @@ export function datetime(rowA, rowB, columnId) {
 }
 
 export function basic(rowA, rowB, columnId) {
-  let a = getRowValueByColumnID(rowA, columnId)
-  let b = getRowValueByColumnID(rowB, columnId)
+  let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
+
+  return compareBasic(a, b)
+}
+
+export function string(rowA, rowB, columnId) {
+  let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
+
+  a = a.split('').filter(Boolean)
+  b = b.split('').filter(Boolean)
+
+  while (a.length && b.length) {
+    let aa = a.shift()
+    let bb = b.shift()
+
+    let alower = aa.toLowerCase()
+    let blower = bb.toLowerCase()
+
+    // Case insensitive comparison until characters match
+    if (alower > blower) {
+      return 1
+    }
+    if (blower > alower) {
+      return -1
+    }
+    // If lowercase characters are identical
+    if (aa > bb) {
+      return 1
+    }
+    if (bb > aa) {
+      return -1
+    }
+    continue
+  }
+
+  return a.length - b.length
+}
+
+export function number(rowA, rowB, columnId) {
+  let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
+
+  const replaceNonNumeric = /[^0-9.]/gi
+
+  a = Number(String(a).replace(replaceNonNumeric, ''))
+  b = Number(String(b).replace(replaceNonNumeric, ''))
 
   return compareBasic(a, b)
 }
@@ -76,8 +117,8 @@ function compareBasic(a, b) {
   return a === b ? 0 : a > b ? 1 : -1
 }
 
-function getRowValueByColumnID(row, columnId) {
-  return row.values[columnId]
+function getRowValuesByColumnID(row1, row2, columnId) {
+  return [row1.values[columnId], row2.values[columnId]]
 }
 
 function toString(a) {
