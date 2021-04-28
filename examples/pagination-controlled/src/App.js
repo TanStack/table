@@ -267,9 +267,8 @@ function App() {
         // Your server could send back total page count.
         // For now we'll just fake it, too
         setPageCount(Math.ceil(serverData.length / pageSize))
-
-        setLoading(false)
       }
+      setLoading(false)
     }, 1000)
   }, [])
 
