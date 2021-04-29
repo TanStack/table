@@ -53,7 +53,7 @@ export default Component => {
             column = {
               id: col.id,
               accessor: col.accessor,
-              width: `${treeTableIndent}px`,
+              width: `${treeTableIndent}`,
               show: false,
               Header: '',
               Expander: col.Expander,
