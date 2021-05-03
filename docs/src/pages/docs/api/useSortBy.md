@@ -85,6 +85,8 @@ The following options are supported on any `Column` object passed to the `column
 
 The following values are provided to the table `instance`:
 
+- `state.sortBy: Array<Object<id: String, desc: Bool>>`
+  - The current `sortBy` values located on the state object. This is an array of objects, each having a column `id` and the `desc` Bool. Example: `[{ id: 'name', desc: true}, { id: 'age', desc: false }]`
 - `rows: Array<Row>`
   - An array of **sorted** rows.
 - `preSortedRows: Array<Row>`
