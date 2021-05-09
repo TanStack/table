@@ -53,7 +53,7 @@ Using this approach, you can respond and trigger any type of side-effect using t
 
 ## How can I debounce rapid table state changes?
 
-React Table has a few built-in side-effects of it's own (most of which are meant for resetting parts of the state when `data` changes). By default, these state side-effects are on and when their conditions are met, they immediately fire off actions that will manipulate the table state. Sometimes, this may result in multiple rapid rerenders (usually just 2, or one more than normal), and could cause any side-effects you have watching the table state to also fire multiple times in-a-row. To alleviate this edge-case, React Table exports a `useAsyncDebounce` function that will allow you to debounce rapid side-effects and only use the latest one.
+React Table has a few built-in side-effects of its own (most of which are meant for resetting parts of the state when `data` changes). By default, these state side-effects are on and when their conditions are met, they immediately fire off actions that will manipulate the table state. Sometimes, this may result in multiple rapid rerenders (usually just 2, or one more than normal), and could cause any side-effects you have watching the table state to also fire multiple times in-a-row. To alleviate this edge-case, React Table exports a `useAsyncDebounce` function that will allow you to debounce rapid side-effects and only use the latest one.
 
 A good example of this when doing server-side pagination and sorting, a user changes the `sortBy` for a table and the `pageIndex` is automatically reset to `0` via an internal side effect. This would normally cause our effect below to fire 2 times, but with `useAsyncDebounce` we can make sure our data fetch function only gets called once:
 
