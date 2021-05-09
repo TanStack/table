@@ -217,7 +217,7 @@ The following properties are available on every `Column` object returned by the 
   - This is the total width in pixels of all columns to the left of this column
   - Specifically useful when using plugin hooks that allow the user to resize column widths
 - `totalWidth: Int`
-  - This is the total width in pixels for this column (if it is a leaf-column) or or all of it's sub-columns (if it is a column group)
+  - This is the total width in pixels for this column (if it is a leaf-column) or or all of its sub-columns (if it is a column group)
   - Specifically useful when using plugin hooks that allow the user to resize column widths
 - `getHeaderProps: Function(?props)`
   - **Required**

@@ -114,7 +114,7 @@ const Home = () => {
                     </h3>
                     <p className="mt-2  lg:mt-4 text-base xl:text-lg lg:leading-normal leading-6 text-gray-600">
                       Plugins are important for a healthy ecosystem, which is
-                      why React Table has it's very own plugin system allowing
+                      why React Table has its very own plugin system allowing
                       you to override or extend any logical step, stage or
                       process happening under the hood. Are you itching to build
                       your own row grouping and aggregation strategy? It's all
