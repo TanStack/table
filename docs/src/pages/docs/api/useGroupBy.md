@@ -79,7 +79,7 @@ The following properties are available on every `Column` object returned by the 
 - `groupedIndex: Int`
   - If this column is currently being grouped, this integer is the index of this column's ID in the table state's `groupBy` array.
 - `toggleGroupBy: Function(?set: Bool) => void`
-  - This function can be used to programmatically set or toggle the groupBy state fo this column.
+  - This function can be used to programmatically set or toggle the groupBy state for this column.
 - `getGroupByToggleProps: Function(props) => props`
   - **Required**
   - This function is used to resolve any props needed for this column's UI that is responsible for toggling grouping when the user clicks it.
