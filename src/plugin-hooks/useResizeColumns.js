@@ -230,10 +230,12 @@ const useInstanceBeforeDimensions = instance => {
     )
 
     header.canResize = canResize
+
+    const width = columnResizing.columnWidths[header.id]
+
     header.width =
-      columnResizing.columnWidths[header.id] ||
-      header.originalWidth ||
-      header.width
+      typeof width === 'number' ? width : header.originalWidth || header.width
+
     header.isResizing = columnResizing.isResizingColumn === header.id
 
     if (canResize) {
