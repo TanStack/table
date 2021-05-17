@@ -114,18 +114,20 @@ export const useTable = (props, ...plugins) => {
       }
 
       // Reduce the state from all plugin reducers
-      return [
+      const nextState = [
         ...getHooks().stateReducers,
         // Allow the user to add their own state reducer(s)
-        ...(Array.isArray(getStateReducer())
-          ? getStateReducer()
-          : [getStateReducer()]),
-      ].reduce(
-        (s, handler) => handler(s, action, state, getInstance()) || s,
-        state
-      )
+        ...(Array.isArray(getStateReducer()) ? getStateReducer() : [ getStateReducer() ])
+      ].reduce((s, handler) => handler(s, action, state, getInstance()) || s, state)
+
+      // Allow the user to control the final state with hooks
+      const controlledState = reduceHooks([ ...getHooks().useControlledState, useControlledState ], nextState, {
+        instance: getInstance()
+      })
+
+      return controlledState
     },
-    [getHooks, getStateReducer, getInstance]
+    [getHooks, getStateReducer, useControlledState, getInstance]
   )
 
   // Start the reducer
@@ -133,15 +135,8 @@ export const useTable = (props, ...plugins) => {
     reducer(initialState, { type: actions.init })
   )
 
-  // Allow the user to control the final state with hooks
-  const state = reduceHooks(
-    [...getHooks().useControlledState, useControlledState],
-    reducerState,
-    { instance: getInstance() }
-  )
-
   Object.assign(getInstance(), {
-    state,
+    state: reducerState,
     dispatch,
   })
 
