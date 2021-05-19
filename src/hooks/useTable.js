@@ -129,7 +129,7 @@ export const useTable = (props, ...plugins) => {
   )
 
   // Start the reducer
-  const [reducerState, dispatch] = React.useReducer(reducer, getInstance().state, () =>
+  const [reducerState, dispatch] = React.useReducer((_, action) => reducer(getInstance().state, action), undefined, () =>
     reducer(initialState, { type: actions.init })
   )
 
