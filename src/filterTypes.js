@@ -90,6 +90,17 @@ export const includesValue = (rows, ids, filterValue) => {
 
 includesValue.autoRemove = val => !val || !val.length
 
+export const regex = (rows, ids, filterValue) => {
+  return rows.filter(row => {
+    return ids.some(id => {
+      const rowValue = row.values[id]
+      return filterValue.test(rowValue)
+    })
+  })
+}
+
+regex.autoRemove = val => !val || !val.length
+
 export const exact = (rows, ids, filterValue) => {
   return rows.filter(row => {
     return ids.some(id => {
