@@ -1,0 +1,20 @@
+.Sort {
+    cursor: pointer;
+}
+.Sort:after {
+    padding-left: 1em;
+
+    font-size: 0.5em;
+}
+.SortNone:after {
+    content: "\25B2\25BC";
+    padding-left: 0.5em;
+    /*font-size: 1em;*/
+}
+
+.SortAsc:after {
+    content: "\25BC";
+}
+.SortDesc:after {
+    content: "\25B2";
+}
