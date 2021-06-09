@@ -15,7 +15,7 @@ const Home = () => {
     <>
       <Seo
         title="React Table"
-        description="Hooks for building lightweight, fast and extendable datagrids for React"
+        description="Hooks for building lightweight, fast and extendable datagrids for React. The best and most top-rated fully open-source table library for React!"
       />
       <Head>
         <title>
