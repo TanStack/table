@@ -1,3 +1,7 @@
+import {
+  isNil
+} from './utils'
+
 const reSplitAlphaNumeric = /([0-9]+)/gm
 
 // Mixed sorting is slow, but very inclusive of many edge cases.
@@ -52,11 +56,17 @@ export const alphanumeric = (rowA, rowB, columnId) => {
 
   return a.length - b.length
 }
+
+function getTime(item) {
+  if (isNil(item)) return new Date(null).getTime()
+  return item.getTime()
+}
+
 export function datetime(rowA, rowB, columnId) {
   let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
 
-  a = a.getTime()
-  b = b.getTime()
+  a = getTime(a)
+  b = getTime(b)
 
   return compareBasic(a, b)
 }

@@ -345,3 +345,7 @@ function flattenDeep(arr, newArr = []) {
   }
   return newArr
 }
+
+export function isNil(value) {
+  return [null, undefined].includes(value)
+}
