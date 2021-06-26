@@ -113,12 +113,10 @@ export function makeHeaderGroups(
       // What is the latest (last) parent column?
       let latestParentColumn = [...parentColumns].reverse()[0]
 
-      let newParent
-
       if (hasParents) {
         // If the column has a parent, add it if necessary
         if (column.parent) {
-          newParent = {
+          column.parent = {
             ...column.parent,
             originalId: column.parent.id,
             id: `${column.parent.id}_${getUID()}`,
@@ -128,7 +126,7 @@ export function makeHeaderGroups(
         } else {
           // If other columns have parents, we'll need to add a place holder if necessary
           const originalId = `${column.id}_placeholder`
-          newParent = decorateColumn(
+          column.parent = decorateColumn(
             {
               originalId,
               id: `${column.id}_placeholder_${getUID()}`,
@@ -144,11 +142,12 @@ export function makeHeaderGroups(
         // the column and increment the header span
         if (
           latestParentColumn &&
-          latestParentColumn.originalId === newParent.originalId
+          latestParentColumn.originalId === column.parent.originalId
         ) {
+          column.parent.id = latestParentColumn.id
           latestParentColumn.headers.push(column)
         } else {
-          parentColumns.push(newParent)
+          parentColumns.push(column.parent)
         }
       }
 
