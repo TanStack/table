@@ -70,8 +70,12 @@ export function basic(rowA, rowB, columnId) {
 export function string(rowA, rowB, columnId) {
   let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
 
-  a = a.split('').filter(Boolean)
-  b = b.split('').filter(Boolean)
+  a = a?.toString().split('').filter(Boolean)
+  b = b?.toString().split('').filter(Boolean)
+
+  if(!a && !b) return 0;
+  if(a && !b) return 1;
+  if(!a && b) return -1;
 
   while (a.length && b.length) {
     let aa = a.shift()
