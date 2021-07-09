@@ -2,6 +2,12 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { useDrop, useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ItemTypes from './itemTypes'
+import styled from 'styled-components'
+
+const StyledTh = styled.th`
+  cursor: move;
+  opacity: ${props => (props.isDragging ? 0 : 1)};
+`
 
 const DraggableHeader = ({ column, index, reoder }) => {
   const ref = useRef()
@@ -37,13 +43,9 @@ const DraggableHeader = ({ column, index, reoder }) => {
   const memoizedColumn = useMemo(() => column.render('Header'), [column])
 
   return (
-    <th
-      ref={ref}
-      {...column.getHeaderProps()}
-      style={{ cursor: 'move', opacity: isDragging ? 0 : 1 }}
-    >
+    <StyledTh ref={ref} isDragging={isDragging} {...column.getHeaderProps()}>
       {memoizedColumn}
-    </th>
+    </StyledTh>
   )
 }
 
