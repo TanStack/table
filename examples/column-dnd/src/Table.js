@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTable, useColumnOrder } from 'react-table'
 import makeData from './makeData'
 import DraggableHeader from './DraggableHeader'
@@ -125,23 +125,20 @@ export default function Table() {
     useColumnOrder
   )
 
-  const reoder = useCallback(
-    (item, newIndex) => {
-      const { index: currentIndex } = item
+  const reoder = (item, newIndex) => {
+    const { index: currentIndex } = item
 
-      const dragRecord = state.columnOrder[currentIndex]
+    const dragRecord = state.columnOrder[currentIndex]
 
-      setColumnOrder(
-        update(state.columnOrder, {
-          $splice: [
-            [currentIndex, 1],
-            [newIndex, 0, dragRecord],
-          ],
-        })
-      )
-    },
-    [state, setColumnOrder]
-  )
+    setColumnOrder(
+      update(state.columnOrder, {
+        $splice: [
+          [currentIndex, 1],
+          [newIndex, 0, dragRecord],
+        ],
+      })
+    )
+  }
 
   return (
     <ScrollingComponent>
