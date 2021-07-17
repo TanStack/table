@@ -22,8 +22,34 @@ To show you how this works. Let's start with a very basic table example.
 
 When thinking about a table structure, you typically have **rows** which contain **columns**. While table configurations can get far more complex with nested columns, subrows, etc. for this basic quick start, we need to define some data that resembles this structure.
 
+**JavaScript:**
 ```js
 const data = React.useMemo(
+  () => [
+    {
+      col1: 'Hello',
+      col2: 'World',
+    },
+    {
+      col1: 'react-table',
+      col2: 'rocks',
+    },
+    {
+      col1: 'whatever',
+      col2: 'you want',
+    },
+  ],
+  []
+)
+```
+**TypeScript:**
+```js
+type Entity = {
+  col1: string,
+  col2: string
+}
+
+const data = React.useMemo<Entity[]>(
   () => [
     {
       col1: 'Hello',
@@ -48,8 +74,25 @@ const data = React.useMemo(
 
 Now that we have some data, let's create a set of **column definitions** to pass into the `useTable` hook.
 
+**JavaScript:**
 ```js
 const columns = React.useMemo(
+  () => [
+    {
+      Header: 'Column 1',
+      accessor: 'col1', // accessor is the "key" in the data
+    },
+    {
+      Header: 'Column 2',
+      accessor: 'col2',
+    },
+  ],
+  []
+)
+```
+**TypeScript:**
+```js
+const columns = React.useMemo<Column<Entity>[]>(
   () => [
     {
       Header: 'Column 1',
