@@ -9,14 +9,14 @@ const StyledTh = styled.th`
   opacity: ${props => (props.isDragging ? 0 : 1)};
 `
 
-const DraggableHeader = ({ column, index, reoder }) => {
+const DraggableHeader = ({ column, index, reorder }) => {
   const ref = useRef()
   const { id, Header } = column
 
   const [, drop] = useDrop({
     accept: ItemTypes.COLUMN,
     drop: item => {
-      reoder(item, index)
+      reorder(item, index)
     },
   })
 

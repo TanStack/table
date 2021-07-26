@@ -125,7 +125,7 @@ export default function Table() {
     useColumnOrder
   )
 
-  const reoder = (item, newIndex) => {
+  const reorder = (item, newIndex) => {
     const { index: currentIndex } = item
 
     const dragRecord = state.columnOrder[currentIndex]
@@ -149,7 +149,7 @@ export default function Table() {
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, i) => (
                   <DraggableHeader
-                    reoder={reoder}
+                    reorder={reorder}
                     key={column.id}
                     column={column}
                     index={i}
