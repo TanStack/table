@@ -49,8 +49,8 @@
   },
   "peerDependencies": {
     "prop-types": "^15.7.0",
-    "react": "^17.x.x",
-    "react-dom": "^17.x.x"
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
