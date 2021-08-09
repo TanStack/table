@@ -11,8 +11,10 @@ export function findMaxDepth(columns, depth = 0) {
 }
 
 // Build the visible columns, headers and flat column list
-export function linkColumnStructure(columns, parent, depth = 0) {
+export function linkColumnStructure(columns, parent, depth = 0, maxDepth = 0) {
   return columns.map(column => {
+    const deepest =
+      !depth && column.columns ? findMaxDepth(column.columns) + 1 : maxDepth
     column = {
       ...column,
       parent,
@@ -21,8 +23,25 @@ export function linkColumnStructure(columns, parent, depth = 0) {
 
     assignColumnAccessor(column)
 
+    const newDepth = depth + 1
+
     if (column.columns) {
-      column.columns = linkColumnStructure(column.columns, column, depth + 1)
+      column.columns = linkColumnStructure(
+        column.columns,
+        column,
+        newDepth,
+        deepest
+      )
+    } else if (deepest > depth) {
+      const nextCol = { ...column }
+      column = {
+        parent,
+        depth,
+        Header: '',
+        id: column.id + '_previous_placeholder',
+        placeholderOf: column,
+      }
+      column.columns = linkColumnStructure([nextCol], column, newDepth, deepest)
     }
     return column
   })
