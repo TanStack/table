@@ -172,7 +172,7 @@ The following properties are available on the table instance returned from `useT
 - `setHiddenColumns: Function(Array<ColumnId: String> | Function(oldHiddenColumns) => Array<ColumnId: String>) => void`
   - This function can be used to set the `hiddenColumns` state for the entire table.
   - If a value is passed, `hiddenColumns` will be set to that value
-  - If a function is passed, it will received the previous `hiddenColumns` value and will be expected to return the new value.
+  - If a function is passed, it will receive the previous `hiddenColumns` value and will be expected to return the new value.
 - `toggleHideAllColumns: Function(?value: Boolean) => void`
   - This function can be used to toggle or set the visibility for all columns to `true` or `false`
   - If a value is not passed, the visibility for all columns will be toggled back and forth from `true` to `false`
