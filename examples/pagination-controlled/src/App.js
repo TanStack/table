@@ -73,6 +73,7 @@ function Table({
       // This means we'll also have to provide our own
       // pageCount.
       pageCount: controlledPageCount,
+      autoResetPage: false,
     },
     usePagination
   )
