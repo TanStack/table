@@ -588,7 +588,7 @@ function accessRowsForColumn({
     )
   }
 
-  data.forEach((originalRow, rowIndex) =>
+  data?.forEach((originalRow, rowIndex) =>
     accessRow(originalRow, rowIndex, 0, undefined, rows)
   )
 }
