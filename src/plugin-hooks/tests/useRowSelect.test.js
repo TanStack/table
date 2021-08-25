@@ -1,9 +1,10 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
-import { useRowSelect } from '../useRowSelect'
+import { useRowSelect, reducer } from '../useRowSelect'
 import { useExpanded } from '../useExpanded'
 import { usePagination } from '../usePagination'
+import { actions } from '../../publicUtils'
 
 const dataPiece = [
   {
@@ -381,4 +382,27 @@ test('renders a table with selectable rows, only selecting the current page', ()
   fireEvent.click(rtl.getByLabelText('Select All'))
 
   expect(rtl.queryAllByText('Selected').length).toBe(0)
+})
+
+describe('reducer', () => {
+  describe('toggleRowSelected', () => {
+    test('does not throw when row not found', () => {
+      const state = { selectedRowIds: {2: true, 3: true} }
+      const action = {
+        type: actions.toggleRowSelected,
+        value: false,
+        id: 1
+      }
+      const instance = {
+        rowsById: {},
+        selectSubRows: true,
+        getSubRows: () => {}
+      }
+      expect(() => {
+        const { selectedRowIds } = reducer(state, action, undefined, instance)
+        expect(selectedRowIds['2']).toBe(true)
+        expect(selectedRowIds['3']).toBe(true)
+      }).not.toThrow()
+    })
+  })
 })

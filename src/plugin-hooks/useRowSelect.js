@@ -92,7 +92,7 @@ const defaultGetToggleAllPageRowsSelectedProps = (props, { instance }) => [
 ]
 
 // eslint-disable-next-line max-params
-function reducer(state, action, previousState, instance) {
+export function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       selectedRowIds: {},
@@ -153,6 +153,7 @@ function reducer(state, action, previousState, instance) {
 
     const handleRowById = id => {
       const row = rowsById[id]
+      if (row === undefined) return
 
       if (!row.isGrouped) {
         if (shouldExist) {
