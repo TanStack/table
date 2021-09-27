@@ -1,9 +1,8 @@
 import React from 'react'
-
 import {
   actions,
-  makePropGetter,
   ensurePluginOrder,
+  makePropGetter,
   useGetLatest,
   useMountedLayoutEffect,
 } from '../publicUtils'
@@ -43,7 +42,7 @@ const defaultGetToggleRowSelectedProps = (props, { instance, row }) => {
     props,
     {
       onChange: e => {
-        row.toggleRowSelected(e.target.checked)
+        row.toggleRowSelected(e.target.checked, e.nativeEvent.shiftKey)
       },
       style: {
         cursor: 'pointer',
@@ -96,6 +95,8 @@ function reducer(state, action, previousState, instance) {
   if (action.type === actions.init) {
     return {
       selectedRowIds: {},
+      lastSelectedRowId: null,
+      lastShiftSelectedRowId: null,
       ...state,
     }
   }
@@ -139,8 +140,8 @@ function reducer(state, action, previousState, instance) {
   }
 
   if (action.type === actions.toggleRowSelected) {
-    const { id, value: setSelected } = action
-    const { rowsById, selectSubRows = true, getSubRows } = instance
+    const { id, value: setSelected, shiftKey } = action
+    const { rows, rowsById, selectSubRows = true, getSubRows } = instance
     const isSelected = state.selectedRowIds[id]
     const shouldExist =
       typeof setSelected !== 'undefined' ? setSelected : !isSelected
@@ -167,7 +168,23 @@ function reducer(state, action, previousState, instance) {
       }
     }
 
-    handleRowById(id)
+    if (shiftKey && state.lastSelectedRowId && state.lastSelectedRowId !== id) {
+      const previousIndex = rows.findIndex(
+        row => row.id === state.lastSelectedRowId
+      )
+      const currentIndex = rows.findIndex(row => row.id === id)
+      const startIndex = Math.min(previousIndex, currentIndex)
+      const endIndex = Math.max(previousIndex, currentIndex)
+      const rowIdsToToggle = Object.keys(rowsById).slice(
+        startIndex,
+        endIndex + 1
+      )
+      rowIdsToToggle.forEach(id => handleRowById(id))
+    } else {
+      handleRowById(id)
+    }
+
+    state.lastSelectedRowId = id
 
     return {
       ...state,
@@ -293,7 +310,8 @@ function useInstance(instance) {
   )
 
   const toggleRowSelected = React.useCallback(
-    (id, value) => dispatch({ type: actions.toggleRowSelected, id, value }),
+    (id, value, shiftKey) =>
+      dispatch({ type: actions.toggleRowSelected, id, value, shiftKey }),
     [dispatch]
   )
 
@@ -322,7 +340,8 @@ function useInstance(instance) {
 }
 
 function prepareRow(row, { instance }) {
-  row.toggleRowSelected = set => instance.toggleRowSelected(row.id, set)
+  row.toggleRowSelected = (set, shiftKey) =>
+    instance.toggleRowSelected(row.id, set, shiftKey)
 
   row.getToggleRowSelectedProps = makePropGetter(
     instance.getHooks().getToggleRowSelectedProps,
