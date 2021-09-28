@@ -1,9 +1,10 @@
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
 import { useTable } from '../../hooks/useTable'
-import { useRowSelect } from '../useRowSelect'
 import { useExpanded } from '../useExpanded'
 import { usePagination } from '../usePagination'
+import { useRowSelect } from '../useRowSelect'
+import { useSortBy } from '../useSortBy'
 
 const dataPiece = [
   {
@@ -228,6 +229,97 @@ function SelectAllPaginatedTable({ columns, data }) {
   )
 }
 
+function SelectAllSortableTable({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy,
+    useExpanded,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <label>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />{' '}
+                Select All
+              </label>
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <label>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />{' '}
+                Select Row
+              </label>
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
+  )
+
+  // Render the UI for your table
+  return (
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                // Add the sorting props to control sorting. For this example
+                // we can add them into the header props
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render('Header')}
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(
+            (row, i) =>
+              prepareRow(row) || (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+    </>
+  )
+}
+
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef()
@@ -241,7 +333,7 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function App({ selectAllPage = false }) {
+function App({ selectAllPage = false, selectAllSort = false }) {
   const columns = React.useMemo(
     () => [
       {
@@ -294,6 +386,8 @@ function App({ selectAllPage = false }) {
 
   return selectAllPage ? (
     <SelectAllPaginatedTable columns={columns} data={data} />
+  ) : selectAllSort ? (
+    <SelectAllSortableTable columns={columns} data={data} />
   ) : (
     <SelectAllTable columns={columns} data={data} />
   )
@@ -381,4 +475,35 @@ test('renders a table with selectable rows, only selecting the current page', ()
   fireEvent.click(rtl.getByLabelText('Select All'))
 
   expect(rtl.queryAllByText('Selected').length).toBe(0)
+})
+
+test('can shift select and deselect a range of rows', () => {
+  const rtl = render(<App selectAllSort />)
+
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[1])
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[3], { shiftKey: true })
+  expect(rtl.queryAllByText('Selected').length).toBe(3)
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[5], { shiftKey: true })
+  expect(rtl.queryAllByText('Selected').length).toBe(5)
+
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[2])
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[4], { shiftKey: true })
+  expect(rtl.queryAllByText('Selected').length).toBe(2)
+
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[3])
+  expect(rtl.queryAllByText('Selected').length).toBe(3)
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[5], { shiftKey: true })
+  expect(rtl.queryAllByText('Selected').length).toBe(1)
+
+  fireEvent.click(rtl.getByLabelText('Select All'))
+  fireEvent.click(rtl.getByLabelText('Select All'))
+  expect(rtl.queryAllByText('Selected').length).toBe(0)
+
+  fireEvent.click(rtl.queryAllByText('First Name')[0])
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[1])
+  expect(rtl.queryAllByText('Row 5').length).toBe(1)
+  fireEvent.click(rtl.getAllByLabelText('Select Row')[3], { shiftKey: true })
+  expect(rtl.queryAllByText('Row 5').length).toBe(1)
+  expect(rtl.queryAllByText('Row 9').length).toBe(1)
+  expect(rtl.queryAllByText('Row 13').length).toBe(1)
 })

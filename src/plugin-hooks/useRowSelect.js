@@ -174,8 +174,8 @@ function reducer(state, action, previousState, instance) {
       const currentIndex = rows.findIndex(row => row.id === id)
       const startIndex = Math.min(previousIndex, currentIndex)
       const endIndex = Math.max(previousIndex, currentIndex)
-      const rowIdsToToggle = rows.slice(startIndex, endIndex + 1)
-      rowIdsToToggle.forEach(row => handleRowById(row.id))
+      const rowsToToggle = rows.slice(startIndex, endIndex + 1)
+      rowsToToggle.forEach(row => handleRowById(row.id))
     } else {
       handleRowById(id)
     }
