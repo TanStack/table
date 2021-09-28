@@ -3,7 +3,7 @@
 - Plugin Hook
 - Optional
 
-`useRowSelect` is the hook that implements **basic row selection**. For more information on row selection, see Row Selection
+`useRowSelect` is the hook that implements **basic row selection**. It supports the selection of a range of rows with the shift key modifier. For more information on row selection, see Row Selection
 
 ### Table Options
 
@@ -28,6 +28,8 @@ The following options are supported via the main options object passed to `useTa
 
 The following values are provided to the table `instance`:
 
+- `state.lastSelectedRowId: rowId | null`
+  - The id of the row that last was selected.
 - `toggleRowSelected: Function(rowPath: String, ?set: Bool) => void`
   - Use this function to toggle a row's selected state.
   - Optionally pass `true` or `false` to set it to that state

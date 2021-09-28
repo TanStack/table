@@ -104,6 +104,7 @@ function reducer(state, action, previousState, instance) {
     return {
       ...state,
       selectedRowIds: instance.initialState.selectedRowIds || {},
+      lastSelectedRowId: null,
     }
   }
 
