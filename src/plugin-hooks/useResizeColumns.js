@@ -33,7 +33,9 @@ export const useResizeColumns = hooks => {
 }
 
 const defaultGetResizerProps = (props, { instance, header }) => {
-  const { dispatch } = instance
+  const { dispatch, reverseResizer } = instance
+
+  console.log(reverseResizer)
 
   const onResizeStart = (e, header) => {
     let isTouchEvent = false
@@ -50,7 +52,10 @@ const defaultGetResizerProps = (props, { instance, header }) => {
     const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX
 
     const dispatchMove = clientXPos => {
-      dispatch({ type: actions.columnResizing, clientX: clientXPos })
+      dispatch({
+        type: actions.columnResizing,
+        payload: { clientX: clientXPos, reverseResizer },
+      })
     }
     const dispatchEnd = () => dispatch({ type: actions.columnDoneResizing })
 
@@ -173,10 +178,10 @@ function reducer(state, action) {
   }
 
   if (action.type === actions.columnResizing) {
-    const { clientX } = action
+    const { clientX, reverseResizer } = action.payload
     const { startX, columnWidth, headerIdWidths = [] } = state.columnResizing
 
-    const deltaX = clientX - startX
+    const deltaX = reverseResizer ? startX - clientX : clientX - startX
     const percentageDeltaX = deltaX / columnWidth
 
     const newColumnWidths = {}

@@ -8,8 +8,13 @@
 ### Table Options
 
 - `disableResizing: Bool`
+
   - Defaults to `false`
   - When set to `true`, resizing is disabled across the entire table
+
+- `reverseResizer: Bool`
+  - Defaults to `undefined`
+  - When set to `true`,use it for rtl layout. resizing will be reversed witch means by moving resizer to right the column width will be decreases in ltr layouts.
 
 ### Column Options
 
