@@ -70,6 +70,14 @@ export function basic(rowA, rowB, columnId) {
 export function string(rowA, rowB, columnId) {
   let [a, b] = getRowValuesByColumnID(rowA, rowB, columnId)
 
+  // Handle cases where one or both are null, undefined or empty.
+  if (!a) {
+    return b ? -1 : 0
+  }
+  if (!b) {
+    return 1
+  }
+
   a = a.split('').filter(Boolean)
   b = b.split('').filter(Boolean)
 
