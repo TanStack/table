@@ -66,7 +66,7 @@ export function assignColumnAccessor(column) {
 
 export function decorateColumn(column, userDefaultColumn) {
   if (!userDefaultColumn) {
-    throw new Error()
+    throw new Error('userDefaultColumn is required!')
   }
   Object.assign(column, {
     // Make sure there is a fallback header, just in case
