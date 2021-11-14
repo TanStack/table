@@ -31,36 +31,45 @@ const data = [
 ]
 
 function Table({ columns, data }) {
-  const {
-    getTableProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
+    const defaultColumn = React.useMemo(
+      () => ({
+        minWidth: 30,
+        width: 'auto',
+        maxWidth: 400,
+      }),
+      []
+    )
+
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
       data,
+      defaultColumn,
     },
-    useGridLayout,
+    useGridLayout
   )
 
   return (
     <div {...getTableProps()} className="table">
-      {headerGroups.map(headerGroup => (
+      {headerGroups.map(headerGroup =>
         headerGroup.headers.map(column => (
-          <div key={column.id} {...column.getHeaderProps()} className="cell header">
+          <div
+            key={column.id}
+            {...column.getHeaderProps()}
+            className="cell header"
+          >
             {column.render('Header')}
           </div>
         ))
-      ))}
-      {rows.map(row => 
-        prepareRow(row) || (
+      )}
+      {rows.map(
+        row =>
+          prepareRow(row) ||
           row.cells.map(cell => (
             <div {...cell.getCellProps()} className="cell">
               {cell.render('Cell')}
             </div>
           ))
-        )
       )}
     </div>
   )
@@ -70,28 +79,42 @@ function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'First Name',
-        accessor: 'firstName',
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+            width: 'auto',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+            width: 350,
+          },
+        ],
       },
       {
-        Header: 'Last Name',
-        accessor: 'lastName',
-      },
-      {
-        Header: 'Age',
-        accessor: 'age',
-      },
-      {
-        Header: 'Visits',
-        accessor: 'visits',
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-      },
-      {
-        Header: 'Profile Progress',
-        accessor: 'progress',
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+            minWidth: 300,
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+            maxWidth: 150,
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
       },
     ],
     []
@@ -106,6 +129,6 @@ test('renders a table', () => {
   const [table] = rendered.queryAllByRole('table')
 
   expect(table.getAttribute('style')).toEqual(
-    'display: grid; grid-template-columns: auto auto auto auto auto auto;'
+    'display: grid; grid-template-columns: auto 350px auto auto auto auto;'
   )
 })
