@@ -51,6 +51,7 @@ const defaultGetToggleRowSelectedProps = (props, { instance, row }) => {
       checked,
       title: 'Toggle Row Selected',
       indeterminate: row.isSomeSelected,
+      disabled: !instance.isRowSelectable(row),
     },
   ]
 }
@@ -113,6 +114,7 @@ function reducer(state, action, previousState, instance) {
       isAllRowsSelected,
       rowsById,
       nonGroupedRowsById = rowsById,
+      isRowSelectable = defaultIsRowSelectable,
     } = instance
 
     const selectAll =
@@ -124,7 +126,10 @@ function reducer(state, action, previousState, instance) {
 
     if (selectAll) {
       Object.keys(nonGroupedRowsById).forEach(rowId => {
-        selectedRowIds[rowId] = true
+        const row = rowsById[rowId]
+        if (isRowSelectable(row)) {
+          selectedRowIds[rowId] = true
+        }
       })
     } else {
       Object.keys(nonGroupedRowsById).forEach(rowId => {
@@ -140,7 +145,13 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleRowSelected) {
     const { id, value: setSelected } = action
-    const { rowsById, selectSubRows = true, getSubRows } = instance
+    const {
+      rowsById,
+      selectSubRows = true,
+      getSubRows,
+      isRowSelectable = defaultIsRowSelectable,
+    } = instance
+
     const isSelected = state.selectedRowIds[id]
     const shouldExist =
       typeof setSelected !== 'undefined' ? setSelected : !isSelected
@@ -153,6 +164,9 @@ function reducer(state, action, previousState, instance) {
 
     const handleRowById = id => {
       const row = rowsById[id]
+      if (!isRowSelectable(row)) {
+        return
+      }
 
       if (!row.isGrouped) {
         if (shouldExist) {
@@ -163,7 +177,7 @@ function reducer(state, action, previousState, instance) {
       }
 
       if (selectSubRows && getSubRows(row)) {
-        return getSubRows(row).forEach(row => handleRowById(row.id))
+        getSubRows(row).forEach(row => handleRowById(row.id))
       }
     }
 
@@ -202,7 +216,7 @@ function reducer(state, action, previousState, instance) {
       }
 
       if (selectSubRows && getSubRows(row)) {
-        return getSubRows(row).forEach(row => handleRowById(row.id))
+        getSubRows(row).forEach(row => handleRowById(row.id))
       }
     }
 
@@ -230,6 +244,7 @@ function useInstance(instance) {
     dispatch,
     page,
     getSubRows,
+    isRowSelectable = defaultIsRowSelectable,
   } = instance
 
   ensurePluginOrder(
@@ -263,13 +278,25 @@ function useInstance(instance) {
   let isAllPageRowsSelected = isAllRowsSelected
 
   if (isAllRowsSelected) {
-    if (Object.keys(nonGroupedRowsById).some(id => !selectedRowIds[id])) {
+    if (
+      Object.keys(nonGroupedRowsById).some(id => {
+        const row = rowsById[id]
+        return !selectedRowIds[id] && isRowSelectable(row)
+      })
+    ) {
       isAllRowsSelected = false
     }
   }
 
   if (!isAllRowsSelected) {
-    if (page && page.length && page.some(({ id }) => !selectedRowIds[id])) {
+    if (
+      page &&
+      page.length &&
+      page.some(({ id }) => {
+        const row = rowsById[id]
+        return !selectedRowIds[id] && isRowSelectable(row)
+      })
+    ) {
       isAllPageRowsSelected = false
     }
   }
@@ -353,8 +380,13 @@ function getRowIsSelected(row, selectedRowIds, getSubRows) {
         allChildrenSelected = false
       }
     })
+
     return allChildrenSelected ? true : someSelected ? null : false
   }
 
   return false
+}
+
+function defaultIsRowSelectable(row) {
+  return !!row.original.disabled
 }
