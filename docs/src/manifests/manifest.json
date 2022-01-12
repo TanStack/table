@@ -103,6 +103,11 @@
               "title": "useFlexLayout",
               "path": "/docs/api/useFlexLayout",
               "editUrl": "/docs/api/useFlexLayout.md"
+            },
+            {
+              "title": "useGridLayout",
+              "path": "/docs/api/useGridLayout",
+              "editUrl": "/docs/api/useGridLayout.md"
             }
           ]
         },
