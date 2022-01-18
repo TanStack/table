@@ -30,7 +30,14 @@ function reducer(state, action, previousState, instance) {
   if (action.type === `init`) {
     return {
       gridLayout: {
-        columnWidths: instance.columns.map(() => `auto`),
+        columnWidths: instance.columns.map((column, index) => {
+          // If column width is defined, use it instead of `auto`
+          return column.width !== undefined
+            ? typeof column.width == 'number'
+              ? column.width + 'px'
+              : column.width
+            : `auto`;
+        }),
       },
       ...state,
     }
