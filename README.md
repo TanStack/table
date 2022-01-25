@@ -155,4 +155,4 @@ yarn add @tanstack/react-table@alpha
 - Try your hand at migrating an example to v8! The todo list for the examples is above!
 - **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a wrapping hook/function that uses `useTable` internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
 
-<!-- Force 2 -->
+<!-- Force 1 -->
