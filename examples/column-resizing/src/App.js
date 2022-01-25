@@ -1,8 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useTable, useBlockLayout, useResizeColumns } from 'react-table'
+import React from "react";
+import styled from "styled-components";
+import {
+  useTable,
+  useBlockLayout,
+  useResizeColumns,
+} from "@tanstack/react-table";
 
-import makeData from './makeData'
+import makeData from "./makeData";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -27,8 +31,10 @@ const Styles = styled.div`
       border-bottom: 1px solid black;
       border-right: 1px solid black;
 
-      ${'' /* In this example we use an absolutely position resizer,
-       so this is required. */}
+      ${
+        "" /* In this example we use an absolutely position resizer,
+       so this is required. */
+      }
       position: relative;
 
       :last-child {
@@ -45,7 +51,7 @@ const Styles = styled.div`
         top: 0;
         transform: translateX(50%);
         z-index: 1;
-        ${'' /* prevents from scrolling while dragging on touch devices */}
+        ${"" /* prevents from scrolling while dragging on touch devices */}
         touch-action:none;
 
         &.isResizing {
@@ -54,7 +60,7 @@ const Styles = styled.div`
       }
     }
   }
-`
+`;
 
 function Table({ columns, data }) {
   const defaultColumn = React.useMemo(
@@ -64,125 +70,108 @@ function Table({ columns, data }) {
       maxWidth: 400,
     }),
     []
-  )
+  );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    resetResizing,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    useBlockLayout,
-    useResizeColumns
-  )
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useBlockLayout,
+      useResizeColumns
+    );
 
   return (
-    <>
-      <button onClick={resetResizing}>Reset Resizing</button>
+    <div {...getTableProps()} className="table">
       <div>
-        <div {...getTableProps()} className="table">
-          <div>
-            {headerGroups.map(headerGroup => (
-              <div {...headerGroup.getHeaderGroupProps()} className="tr">
-                {headerGroup.headers.map(column => (
-                  <div {...column.getHeaderProps()} className="th">
-                    {column.render('Header')}
-                    {/* Use column.getResizerProps to hook up the events correctly */}
-                    <div
-                      {...column.getResizerProps()}
-                      className={`resizer ${
-                        column.isResizing ? 'isResizing' : ''
-                      }`}
-                    />
-                  </div>
-                ))}
+        {headerGroups.map((headerGroup) => (
+          <div {...headerGroup.getHeaderGroupProps()} className="tr">
+            {headerGroup.headers.map((column) => (
+              <div {...column.getHeaderProps()} className="th">
+                {column.render("Header")}
+                {/* Use column.getResizerProps to hook up the events correctly */}
+                <div
+                  {...column.getResizerProps()}
+                  className={`resizer ${column.isResizing ? "isResizing" : ""}`}
+                />
               </div>
             ))}
           </div>
-
-          <div {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row)
-              return (
-                <div {...row.getRowProps()} className="tr">
-                  {row.cells.map(cell => {
-                    return (
-                      <div {...cell.getCellProps()} className="td">
-                        {cell.render('Cell')}
-                      </div>
-                    )
-                  })}
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        ))}
       </div>
-      <pre>
-        <code>{JSON.stringify(state, null, 2)}</code>
-      </pre>
-    </>
-  )
+
+      <div {...getTableBodyProps()}>
+        {rows.map((row, i) => {
+          prepareRow(row);
+          return (
+            <div {...row.getRowProps()} className="tr">
+              {row.cells.map((cell) => {
+                return (
+                  <div {...cell.getCellProps()} className="td">
+                    {cell.render("Cell")}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: "Name",
         columns: [
           {
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: "First Name",
+            accessor: "firstName",
           },
           {
-            Header: 'Last Name',
-            accessor: 'lastName',
+            Header: "Last Name",
+            accessor: "lastName",
           },
         ],
       },
       {
-        Header: 'Info',
+        Header: "Info",
         columns: [
           {
-            Header: 'Age',
-            accessor: 'age',
+            Header: "Age",
+            accessor: "age",
             width: 50,
           },
           {
-            Header: 'Visits',
-            accessor: 'visits',
+            Header: "Visits",
+            accessor: "visits",
             width: 60,
           },
           {
-            Header: 'Status',
-            accessor: 'status',
+            Header: "Status",
+            accessor: "status",
           },
           {
-            Header: 'Profile Progress',
-            accessor: 'progress',
+            Header: "Profile Progress",
+            accessor: "progress",
           },
         ],
       },
     ],
     []
-  )
+  );
 
-  const data = React.useMemo(() => makeData(10), [])
+  const data = React.useMemo(() => makeData(20), []);
 
   return (
     <Styles>
       <Table columns={columns} data={data} />
     </Styles>
-  )
+  );
 }
 
-export default App
+export default App;

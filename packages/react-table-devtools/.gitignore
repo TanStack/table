@@ -1,0 +1,10 @@
+*.log
+.DS_Store
+node_modules
+.cache
+/dist
+.history
+/es
+/lib
+/types
+stats-react.json

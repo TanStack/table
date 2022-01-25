@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/react-table" },
+    { "path": "packages/react-table-devtools" }
+  ]
+  // "exclude": ["node_modules"]
+}

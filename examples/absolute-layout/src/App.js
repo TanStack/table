@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useTable, useAbsoluteLayout } from 'react-table'
+import React from "react";
+import styled from "styled-components";
+import { useTable, useAbsoluteLayout } from "@tanstack/react-table";
 
-import makeData from './makeData'
+import makeData from "./makeData";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -46,7 +46,7 @@ const Styles = styled.div`
       border: 0;
     }
   }
-`
+`;
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
@@ -56,35 +56,30 @@ function Table({ columns, data }) {
       width: 150,
     }),
     []
-  )
+  );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    useAbsoluteLayout
-  )
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useAbsoluteLayout
+    );
 
   // Render the UI for your table
   return (
     <div {...getTableProps()} className="table">
       <div>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <div
             {...headerGroup.getHeaderGroupProps()}
             className="row header-group"
           >
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <div {...column.getHeaderProps()} className="cell header">
-                {column.render('Header')}
+                {column.render("Header")}
               </div>
             ))}
           </div>
@@ -93,72 +88,72 @@ function Table({ columns, data }) {
 
       <div className="rows" {...getTableBodyProps()}>
         {rows.map((row, i) => {
-          prepareRow(row)
+          prepareRow(row);
           return (
             <div {...row.getRowProps()} className="row body">
               {row.cells.map((cell, index) => (
                 <div {...cell.getCellProps()} key={index} className="cell">
-                  {cell.render('Cell')}
+                  {cell.render("Cell")}
                 </div>
               ))}
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: "Name",
         columns: [
           {
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: "First Name",
+            accessor: "firstName",
           },
           {
-            Header: 'Last Name',
-            accessor: 'lastName',
+            Header: "Last Name",
+            accessor: "lastName",
           },
         ],
       },
       {
-        Header: 'Info',
+        Header: "Info",
         columns: [
           {
-            Header: 'Age',
-            accessor: 'age',
+            Header: "Age",
+            accessor: "age",
             width: 50,
           },
           {
-            Header: 'Visits',
-            accessor: 'visits',
+            Header: "Visits",
+            accessor: "visits",
             width: 60,
           },
           {
-            Header: 'Status',
-            accessor: 'status',
+            Header: "Status",
+            accessor: "status",
           },
           {
-            Header: 'Profile Progress',
-            accessor: 'progress',
+            Header: "Profile Progress",
+            accessor: "progress",
           },
         ],
       },
     ],
     []
-  )
+  );
 
-  const data = React.useMemo(() => makeData(20), [])
+  const data = React.useMemo(() => makeData(20), []);
 
   return (
     <Styles>
       <Table columns={columns} data={data} />
     </Styles>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,10 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useTable, useBlockLayout } from 'react-table'
-import { FixedSizeList } from 'react-window'
-import scrollbarWidth from './scrollbarWidth'
+import React from "react";
+import styled from "styled-components";
+import { useTable, useBlockLayout } from "@tanstack/react-table";
+import { FixedSizeList } from "react-window";
 
-import makeData from './makeData'
+import makeData from "./makeData";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -30,11 +29,11 @@ const Styles = styled.div`
       border-right: 1px solid black;
 
       :last-child {
-        border-right: 1px solid black;
+        border-right: 0;
       }
     }
   }
-`
+`;
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
@@ -44,9 +43,7 @@ function Table({ columns, data }) {
       width: 150,
     }),
     []
-  )
-
-  const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
+  );
 
   const {
     getTableProps,
@@ -62,12 +59,12 @@ function Table({ columns, data }) {
       defaultColumn,
     },
     useBlockLayout
-  )
+  );
 
   const RenderRow = React.useCallback(
     ({ index, style }) => {
-      const row = rows[index]
-      prepareRow(row)
+      const row = rows[index];
+      prepareRow(row);
       return (
         <div
           {...row.getRowProps({
@@ -75,28 +72,28 @@ function Table({ columns, data }) {
           })}
           className="tr"
         >
-          {row.cells.map(cell => {
+          {row.cells.map((cell) => {
             return (
               <div {...cell.getCellProps()} className="td">
-                {cell.render('Cell')}
+                {cell.render("Cell")}
               </div>
-            )
+            );
           })}
         </div>
-      )
+      );
     },
     [prepareRow, rows]
-  )
+  );
 
   // Render the UI for your table
   return (
     <div {...getTableProps()} className="table">
       <div>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <div {...headerGroup.getHeaderGroupProps()} className="tr">
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <div {...column.getHeaderProps()} className="th">
-                {column.render('Header')}
+                {column.render("Header")}
               </div>
             ))}
           </div>
@@ -108,69 +105,69 @@ function Table({ columns, data }) {
           height={400}
           itemCount={rows.length}
           itemSize={35}
-          width={totalColumnsWidth+scrollBarSize}
+          width={totalColumnsWidth}
         >
           {RenderRow}
         </FixedSizeList>
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Row Index',
+        Header: "Row Index",
         accessor: (row, i) => i,
       },
       {
-        Header: 'Name',
+        Header: "Name",
         columns: [
           {
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: "First Name",
+            accessor: "firstName",
           },
           {
-            Header: 'Last Name',
-            accessor: 'lastName',
+            Header: "Last Name",
+            accessor: "lastName",
           },
         ],
       },
       {
-        Header: 'Info',
+        Header: "Info",
         columns: [
           {
-            Header: 'Age',
-            accessor: 'age',
+            Header: "Age",
+            accessor: "age",
             width: 50,
           },
           {
-            Header: 'Visits',
-            accessor: 'visits',
+            Header: "Visits",
+            accessor: "visits",
             width: 60,
           },
           {
-            Header: 'Status',
-            accessor: 'status',
+            Header: "Status",
+            accessor: "status",
           },
           {
-            Header: 'Profile Progress',
-            accessor: 'progress',
+            Header: "Profile Progress",
+            accessor: "progress",
           },
         ],
       },
     ],
     []
-  )
+  );
 
-  const data = React.useMemo(() => makeData(100000), [])
+  const data = React.useMemo(() => makeData(100000), []);
 
   return (
     <Styles>
       <Table columns={columns} data={data} />
     </Styles>
-  )
+  );
 }
 
-export default App
+export default App;

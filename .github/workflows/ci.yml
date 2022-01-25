@@ -1,0 +1,37 @@
+name: ci
+concurrency:
+  group: publish-${{ github.github.base_ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches:
+      - "main"
+      - "next"
+      - "beta"
+      - "alpha"
+jobs:
+  publish:
+    name: "Publish Module to NPM"
+    if: github.repository == 'tanstack/react-table' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/next')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          cache: "yarn"
+      - run: |
+          yarn install --frozen-lockfile
+          git config --global user.name 'Tanner Linsley'
+          git config --global user.email 'tannerlinsley@users.noreply.github.com'
+          yarn cipublish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          YARN_REGISTRY: https://registry.npmjs.org/
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # GH_TOKEN: ${{secrets.GH_TOKEN}}

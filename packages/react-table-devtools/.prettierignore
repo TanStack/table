@@ -1,0 +1,5 @@
+coverage
+node_modules
+dist
+other
+.history

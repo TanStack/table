@@ -1,102 +1,96 @@
-import React from 'react'
+import React from "react";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import BTable from 'react-bootstrap/Table';
+import BTable from "react-bootstrap/Table";
 
-import { useTable } from 'react-table'
+import { useTable } from "@tanstack/react-table";
 
-import makeData from './makeData'
+import makeData from "./makeData";
 
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data,
-  })
+  });
 
   // Render the UI for your table
   return (
     <BTable striped bordered hover size="sm" {...getTableProps()}>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.render('Header')}
-              </th>
+            {headerGroup.headers.map((column) => (
+              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
             ))}
           </tr>
         ))}
       </thead>
       <tbody>
         {rows.map((row, i) => {
-          prepareRow(row)
+          prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return (
-                  <th {...cell.getCellProps()}>
-                    {cell.render('Cell')}
-                  </th>
-                )
+              {row.cells.map((cell) => {
+                return <th {...cell.getCellProps()}>{cell.render("Cell")}</th>;
               })}
             </tr>
-          )
+          );
         })}
       </tbody>
     </BTable>
-  )
+  );
 }
 
 function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: "Name",
         columns: [
           {
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: "First Name",
+            accessor: "firstName",
           },
           {
-            Header: 'Last Name',
-            accessor: 'lastName',
+            Header: "Last Name",
+            accessor: "lastName",
           },
         ],
       },
       {
-        Header: 'Info',
+        Header: "Info",
         columns: [
           {
-            Header: 'Age',
-            accessor: 'age',
+            Header: "Age",
+            accessor: "age",
           },
           {
-            Header: 'Visits',
-            accessor: 'visits',
+            Header: "Visits",
+            accessor: "visits",
           },
           {
-            Header: 'Status',
-            accessor: 'status',
+            Header: "Status",
+            accessor: "status",
           },
           {
-            Header: 'Profile Progress',
-            accessor: 'progress',
+            Header: "Profile Progress",
+            accessor: "progress",
           },
         ],
       },
     ],
     []
-  )
+  );
 
-  const data = React.useMemo(() => makeData(20), [])
+  const data = React.useMemo(() => makeData(20), []);
 
   return (
     <div>
       <Table columns={columns} data={data} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
