@@ -22,7 +22,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
 
-## Visit [react-table.tanstack.com](https://react-table.tanstack.com) for docs, guides, API and more!
+## Visit [react-table-v8.tanstack.com](https://react-table-v8.tanstack.com) for docs, guides, API and more!
 
 ## Quick Features
 
