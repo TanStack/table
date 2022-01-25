@@ -6,7 +6,7 @@ on: [push, pull_request]
 jobs:
   publish:
     name: "Publish Module to NPM"
-    if: github.repository == 'tanstack/react-table' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/next')
+    if: github.repository == 'tanstack/react-table')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
