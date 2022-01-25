@@ -157,4 +157,4 @@ yarn add @tanstack/react-table@alpha
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
-<!-- Force 1 -->
+<!-- Force 2 -->
