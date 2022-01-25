@@ -200,9 +200,9 @@ async function run() {
   const changedPackages = RELEASE_ALL
     ? packages
     : changedFiles.reduce((changedPackages, file) => {
-        const packageName = packages.find((p) => file.startsWith(p.srcDir));
-        if (packageName) {
-          changedPackages.push(packageName);
+        const pkg = packages.find((p) => file.startsWith(p.srcDir));
+        if (pkg && !changedPackages.find((d) => d.name === pkg.name)) {
+          changedPackages.push(pkg);
         }
         return changedPackages;
       }, [] as Package[]);
@@ -343,6 +343,7 @@ async function run() {
 
   console.log("Testing packages...");
   execSync(`yarn test:ci`, { encoding: "utf8" });
+  console.log("");
 
   console.log(
     `Updating all changed packages and their dependencies to version ${version}...`
@@ -450,7 +451,11 @@ async function run() {
   console.log(`Pushed tags to branch.`);
 
   // Stringify the markdown to excape any quotes
-  execSync(`gh release create v${version} --notes '${changelogMd}'`);
+  execSync(
+    `gh release create v${version} ${
+      branch.prerelease ? "--prerelease" : ""
+    } --notes '${changelogMd}'`
+  );
 
   console.log(`Committing changes...`);
   execSync(`git add -A && git commit -m "${releaseCommitMsg(version)}"`);
