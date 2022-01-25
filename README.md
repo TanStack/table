@@ -22,3 +22,5 @@
 - Extensible via hook-based plugin system
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
+
+<!-- Force 1 -->
