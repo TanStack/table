@@ -1,5 +1,11 @@
 ![React Table Header](https://github.com/tannerlinsley/react-table/raw/alpha/media/repo-dark.png)
 
+# React Table v8 (alpha)
+
+> This is an **alpha** version of React Table v8. It is not ready for production use, but it is ready to be taste-tested!
+
+> [Looking for version 7? Click here!](https://github.com/tanstack/react-table/tree/v7)
+
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
 <a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
@@ -22,32 +28,26 @@ Hooks for building **lightweight, fast and extendable datagrids** for React
 
 Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
 
-## Visit [react-table-v8.tanstack.com](https://react-table-v8.tanstack.com) for docs, guides, API and more!
+## Visit [/docs](https://github.com/tanstack/react-table/tree/alpha/docs) for docs, guides, API and more!
 
 ## Quick Features
 
-- Lightweight (5kb - 14kb+ depending on features used and tree-shaking)
+- Lightweight at 9kb - 11.5kb (depending on tree-shaking)
+- 100% TypeScript, but not required (you can use JS if you want)
 - Headless (100% customizable, Bring-your-own-UI)
 - Auto out of the box, fully controllable API
-- Sorting (Multi and Stable)
-- Filters
-- Pivoting & Aggregation
+- Filters (column and global)
+- Sorting (multi-column, multi-directional)
+- Grouping & Aggregation
+- Pivoting (coming soon!)
 - Row Selection
 - Row Expansion
-- Column Ordering
+- Column Visibility/Ordering/Pinning
+- Table Splitting
 - Animatable
 - Virtualizable
 - Resizable
 - Server-side/controlled data/state
-- Extensible via hook-based plugin system
-
-### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
-
-# React Table v8 (alpha)
-
-> [Looking for version 7? Click here!](https://github.com/tanstack/react-table/tree/v7)
-
-This is an **alpha** version of React Table v8. It is not ready for production use, but it is ready to be taste-tested!
 
 ## Notable Changes
 
@@ -154,5 +154,7 @@ yarn add @tanstack/react-table@alpha
 - Write some docs! Start with the [API docs](https://react-table-v8.tanstack.com/docs/api-reference) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
 - Try your hand at migrating an example to v8! The todo list for the examples is above!
 - **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a wrapping hook/function that uses `useTable` internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
+
+### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
 <!-- Force 1 -->
