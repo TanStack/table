@@ -50,6 +50,8 @@ type Parsed = {
 
 type Package = { name: string; srcDir: string; deps?: string[] };
 
+type Branch = { tag?: string; ghRelease: boolean };
+
 // TODO: List your npm packages here. The first package will be used as the versioner.
 const packages: Package[] = [
   { name: "@tanstack/react-table", srcDir: "packages/react-table/src" },
@@ -60,22 +62,21 @@ const packages: Package[] = [
   },
 ];
 
-const branches: Record<string, { prerelease: boolean; tag: string }> = {
+const branches: Record<string, Branch> = {
   main: {
-    tag: "latest",
-    prerelease: false,
+    ghRelease: true,
   },
   next: {
     tag: "next",
-    prerelease: true,
+    ghRelease: true,
   },
   beta: {
     tag: "beta",
-    prerelease: true,
+    ghRelease: true,
   },
   alpha: {
     tag: "alpha",
-    prerelease: true,
+    ghRelease: true,
   },
 };
 
@@ -95,8 +96,21 @@ const examplesDir = path.resolve(rootDir, "examples");
 
 async function run() {
   const branchName: string = currentGitBranch();
-  const branch = branches[branchName];
-  const prereleaseBranch = branch.prerelease ? branchName : undefined;
+  let branch: Branch = branches[branchName];
+
+  if (!branch) {
+    if (!process.env.PR_NUMBER) {
+      console.log(
+        `Cutting a release for branch "${branchName}" is not supported at this time.`
+      );
+      return;
+    }
+
+    branch = {
+      tag: `preview-${process.env.PR_NUMBER}`,
+      ghRelease: false,
+    } as Branch;
+  }
 
   let remoteURL = execSync("git config --get remote.origin.url").toString();
 
@@ -109,8 +123,8 @@ async function run() {
   tags = tags
     .filter(semver.valid)
     .filter((tag) => {
-      if (branch.prerelease) {
-        return tag.includes(`-${branchName}`);
+      if (branch.tag) {
+        return tag.includes(`-${branch.tag}`);
       }
       return semver.prerelease(tag) == null;
     })
@@ -317,7 +331,7 @@ async function run() {
   const version = getNextVersion(
     latestTag,
     recommendedReleaseLevel,
-    prereleaseBranch
+    branch.tag
   );
 
   const changelogMd = [
@@ -448,27 +462,34 @@ async function run() {
 
   console.log(`Pushing new tags to branch.`);
   execSync(`git push --tags`);
-  console.log(`Pushed tags to branch.`);
+  console.log(`  Pushed tags to branch.`);
 
-  // Stringify the markdown to excape any quotes
-  execSync(
-    `gh release create v${version} ${
-      branch.prerelease ? "--prerelease" : ""
-    } --notes '${changelogMd}'`
-  );
+  if (branch.ghRelease) {
+    console.log(`Creating github release...`);
+    // Stringify the markdown to excape any quotes
+    execSync(
+      `gh release create v${version} ${
+        branch.tag ? "--prerelease" : ""
+      } --notes '${changelogMd}'`
+    );
+    console.log(`  Github release created.`);
 
-  console.log(`Committing changes...`);
-  execSync(`git add -A && git commit -m "${releaseCommitMsg(version)}"`);
-  console.log();
-  console.log(`Committed Changes.`);
-  console.log(`Pushing changes...`);
-  execSync(`git push`);
-  console.log();
-  console.log(`Changes pushed.`);
+    console.log(`Committing changes...`);
+    execSync(`git add -A && git commit -m "${releaseCommitMsg(version)}"`);
+    console.log();
+    console.log(`  Committed Changes.`);
+    console.log(`Pushing changes...`);
+    execSync(`git push`);
+    console.log();
+    console.log(`  Changes pushed.`);
+  } else {
+    console.log(`Skipping github release and change commit.`);
+  }
+
   console.log(`Pushing tags...`);
   execSync(`git push --tags`);
   console.log();
-  console.log(`Tags pushed.`);
+  console.log(`  Tags pushed.`);
   console.log(`All done!`);
 }
 
@@ -491,26 +512,26 @@ function getPackageDir(packageName: string) {
 function getNextVersion(
   currentVersion: string,
   recommendedReleaseLevel: number,
-  prereleaseBranch?: string
+  branchTag?: string
 ) {
-  const releaseType = prereleaseBranch
+  const releaseType = branchTag
     ? "prerelease"
     : { 0: "patch", 1: "minor", 2: "major" }[recommendedReleaseLevel];
 
   if (!releaseType) {
     throw new Error(
-      `Invalid release brand: ${prereleaseBranch} or level: ${recommendedReleaseLevel}`
+      `Invalid release tag: ${branchTag} or level: ${recommendedReleaseLevel}`
     );
   }
 
-  let nextVersion = semver.inc(currentVersion, releaseType, prereleaseBranch);
+  let nextVersion = semver.inc(currentVersion, releaseType, branchTag);
 
   if (!nextVersion) {
     throw new Error(
       `Invalid version increment: ${JSON.stringify({
         currentVersion,
         recommendedReleaseLevel,
-        prereleaseBranch,
+        branchTag,
       })}`
     );
   }
