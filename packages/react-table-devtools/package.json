@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/react-table-devtools",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.0",
+  "version": "8.0.0-alpha.1",
   "description": "Devtools for React Table",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
@@ -38,6 +38,6 @@
     "react-dom": ">=16"
   },
   "dependencies": {
-    "@tanstack/react-table": "0.0.1-alpha.13"
+    "@tanstack/react-table": "8.0.0-alpha.1"
   }
 }
