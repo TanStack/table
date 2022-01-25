@@ -1,4 +1,4 @@
-![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/repo-dark.png)
+![React Table Header](https://github.com/tannerlinsley/react-table/raw/alpha/media/repo-dark.png)
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
 
