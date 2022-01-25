@@ -99,17 +99,17 @@ async function run() {
   let branch: Branch = branches[branchName];
 
   if (!branch) {
-    if (!process.env.PR_NUMBER) {
-      console.log(
-        `Cutting a release for branch "${branchName}" is not supported at this time.`
-      );
-      return;
-    }
+    // if (!process.env.PR_NUMBER) {
+    console.log(
+      `Cutting a release for branch "${branchName}" is not supported at this time.`
+    );
+    return;
+    // }
 
-    branch = {
-      tag: `preview-${process.env.PR_NUMBER}`,
-      ghRelease: false,
-    } as Branch;
+    // branch = {
+    //   tag: `preview-${process.env.PR_NUMBER}`,
+    //   ghRelease: false,
+    // } as Branch;
   }
 
   let remoteURL = execSync("git config --get remote.origin.url").toString();
