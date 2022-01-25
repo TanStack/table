@@ -385,7 +385,7 @@ async function run() {
     });
   }
 
-  if (!process.env.CI || "hello") {
+  if (!process.env.CI) {
     console.warn(
       `This is a dry run for version ${version}. Push to CI to publish for real or set CI=true to override!`
     );

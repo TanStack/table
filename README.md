@@ -109,7 +109,7 @@ Currently migration will involve rewrites to:
   - [ ] full-width-table
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
-- [ ] [Documentation](https://react-table-v8.tanstack.com/)
+- [ ] [Documentation](https://github.com/tanstack/react-table/tree/alpha/docs/)
   - [ ] API
     - [ ] Core
     - [ ] Columns
@@ -151,7 +151,7 @@ yarn add @tanstack/react-table@alpha
 - Try it out in your own projects.
 - Introspect the types! Even without the docs finished, the library ships with 100% typescript to help you explore its capabilities.
 - [Read the contribution guidelines](https://gitub.com/tanstack/react-table/tree/alpha/CONTRIBUTING.md)
-- Write some docs! Start with the [API docs](https://react-table-v8.tanstack.com/docs/api-reference) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
+- Write some docs! Start with the [API docs](https://github.com/tanstack/react-table/tree/alpha/docs/docs/api-reference) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
 - Try your hand at migrating an example to v8! The todo list for the examples is above!
 - **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a wrapping hook/function that uses `useTable` internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
 
