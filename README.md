@@ -1,3 +1,5 @@
+# React Table v7
+
 ![React Table Header](https://github.com/tannerlinsley/react-table/raw/master/media/repo-dark.png)
 
 Hooks for building **lightweight, fast and extendable datagrids** for React
@@ -42,19 +44,3 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - Extensible via hook-based plugin system
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
-
-## Previous Versions
-
-### Version 6
-
-v6 is a great library and while it is still available to install and use, I am no longer offering any long-term support for it. If you intend to keep using v6, I recommend maintaining your own fork of the library and keeping it up to date for your version of React.
-
-#### Where are the docs for the older v6 version?
-
-Please [visit the v6 branch](https://github.com/tannerlinsley/react-table/tree/v6)
-
-#### I want to migrate from v6 to v7. How do I do that?
-
-The differences between the 2 versions are incredibly massive. Unfortunately, I cannot write a one-to-one upgrade guide for any of v6's API, simply because much of it is irrelevant with v7's headless approach. The best approach for migrating to v7 is to learn its API by reading the documentation and then following some of the examples to begin building your own table component.
-
-In case you would need to have both v6 and v7 in one app during the migration process (large codebase, complex use cases), you can either (1) fork and maintain your own local version of React Table v6 or (2) install the [`react-table-6` alias package](https://www.npmjs.com/package/react-table-6) for use alongside the `react-table` package.

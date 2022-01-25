@@ -1,0 +1,41 @@
+import { Cell, Column, FooterGroupProps, FooterProps, Getter, Header, HeaderGroup, HeaderGroupProps, HeaderProps, PropGetterValue, ReactTable, Row } from '../types';
+export declare type HeadersRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
+    _getAllVisibleCells: () => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getVisibleCells: () => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getLeftVisibleCells: () => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getCenterVisibleCells: () => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getRightVisibleCells: () => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+};
+export declare type HeadersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
+    createHeader: (column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>, options: {
+        id?: string;
+        isPlaceholder?: boolean;
+        placeholderId?: string;
+        depth: number;
+    }) => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>;
+    getHeaderGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getLeftHeaderGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getCenterHeaderGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getRightHeaderGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getFooterGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getCenterFooterGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getLeftFooterGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getRightFooterGroups: () => HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getFlatHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getLeftFlatHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getCenterFlatHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getRightFlatHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getLeafHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getLeftLeafHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getCenterLeafHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getRightLeafHeaders: () => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];
+    getHeader: (id: string) => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>;
+    getHeaderGroupProps: <TGetter extends Getter<HeaderGroupProps>>(id: string, userProps?: TGetter) => undefined | PropGetterValue<HeaderGroupProps, TGetter>;
+    getFooterGroupProps: <TGetter extends Getter<FooterGroupProps>>(id: string, userProps?: TGetter) => undefined | PropGetterValue<FooterGroupProps, TGetter>;
+    getHeaderProps: <TGetter extends Getter<HeaderProps>>(headerId: string, userProps?: TGetter) => undefined | PropGetterValue<HeaderProps, TGetter>;
+    getFooterProps: <TGetter extends Getter<FooterProps>>(headerId: string, userProps?: TGetter) => undefined | PropGetterValue<FooterProps, TGetter>;
+    getTotalWidth: () => number;
+};
+export declare function createRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>, instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>): HeadersRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>;
+export declare function getInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>): HeadersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>;
+export declare function buildHeaderGroups<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(allColumns: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[], columnsToGroup: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[], instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>, headerFamily?: 'center' | 'left' | 'right'): HeaderGroup<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[];

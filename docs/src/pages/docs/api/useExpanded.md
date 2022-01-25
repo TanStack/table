@@ -61,5 +61,5 @@ The following additional properties are available on every `row` object returned
 
 ### Example
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/expanding)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/expanding)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/expanding)

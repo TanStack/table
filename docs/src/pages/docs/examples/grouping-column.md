@@ -4,11 +4,11 @@ title: Grouping Column
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping-column)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping-column)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/grouping-column)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/grouping-column)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/grouping-column?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/grouping-column?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: grouping-column"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

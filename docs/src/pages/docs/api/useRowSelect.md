@@ -82,10 +82,10 @@ The following additional properties are available on every **prepared** `row` ob
 
 #### Select All Checks All Rows
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/row-selection)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/row-selection)
 
 #### Select All Checks Current Page's Rows
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/row-selection-and-pagination)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/row-selection-and-pagination)

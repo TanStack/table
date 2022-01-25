@@ -4,11 +4,11 @@ title: Sorting
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/sorting)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/sorting)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/sorting)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/sorting?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/sorting?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: sorting"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

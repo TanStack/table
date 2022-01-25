@@ -2,7 +2,7 @@
 
 Automatic sorting can be accomplished by using the `useSortBy` plugin hook.
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting)
+- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/sorting)
 - Or, `yarn` and `yarn start` to run and edit the example
 
 ## Guide

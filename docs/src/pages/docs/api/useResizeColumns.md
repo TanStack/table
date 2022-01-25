@@ -31,5 +31,5 @@ The core column options `width`, `minWidth` and `maxWidth` are used to calculate
 
 ### Example
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-resizing)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-resizing)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/column-resizing)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/column-resizing)

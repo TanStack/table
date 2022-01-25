@@ -4,11 +4,11 @@ title: Animated Columns (Framer-Motion)
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/animated-framer-motion)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/animated-framer-motion)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/animated-framer-motion)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/animated-framer-motion)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/animated-framer-motion?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/animated-framer-motion?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: animated-framer-motion"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

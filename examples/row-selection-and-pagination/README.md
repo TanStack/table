@@ -1,6 +1,6 @@
 # Row Selection and Pagination
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection-and-pagination)
+- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/row-selection-and-pagination)
 - `yarn` and `yarn start` to run and edit the example
 
 ## Guide

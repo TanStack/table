@@ -94,5 +94,5 @@ The following properties are available on every `Column` object returned by the 
 
 ### Example
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/filtering)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/filtering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/filtering)

@@ -126,5 +126,5 @@ The following additional properties are available on every `Cell` object returne
 
 ### Example
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/grouping)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/grouping)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/grouping)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/grouping)

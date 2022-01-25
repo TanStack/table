@@ -173,7 +173,10 @@ const Home = () => {
             <h3 className="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 lg:leading-none mt-8">
               Sponsors
             </h3>
-            <div className="py-4 flex flex-wrap mx-auto" style={{ maxWidth: '95%' }}>
+            <div
+              className="py-4 flex flex-wrap mx-auto"
+              style={{ maxWidth: '95%' }}
+            >
               <ParentSize>
                 {({ width }) => {
                   return (
@@ -221,7 +224,7 @@ const Home = () => {
         <section className="bg-gray-900 body-font">
           <div className="container max-w-7xl px-4  mx-auto -mt-72 relative">
             <iframe
-              src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/basic?autoresize=1&fontsize=16&theme=dark"
+              src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/basic?autoresize=1&fontsize=16&theme=dark"
               title="tannerlinsley/react-table: basic"
               sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
               className="shadow-2xl"

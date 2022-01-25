@@ -4,11 +4,11 @@ title: Row Selection
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-selection)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-selection)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/row-selection)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/row-selection)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/row-selection?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/row-selection?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: row-selection"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

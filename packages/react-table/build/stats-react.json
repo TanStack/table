@@ -1,0 +1,703 @@
+{
+  "version": 2,
+  "tree": {
+    "name": "root",
+    "children": [
+      {
+        "name": "index.production.js",
+        "children": [
+          {
+            "name": "packages/react-table/src",
+            "children": [
+              {
+                "name": "utils",
+                "children": [
+                  {
+                    "uid": "3b62-45",
+                    "name": "columnFilterRowsFn.ts"
+                  },
+                  {
+                    "uid": "3b62-47",
+                    "name": "globalFilterRowsFn.ts"
+                  },
+                  {
+                    "uid": "3b62-49",
+                    "name": "sortRowsFn.ts"
+                  },
+                  {
+                    "uid": "3b62-55",
+                    "name": "groupRowsFn.ts"
+                  },
+                  {
+                    "uid": "3b62-57",
+                    "name": "expandRowsFn.ts"
+                  }
+                ]
+              },
+              {
+                "uid": "3b62-53",
+                "name": "utils.tsx"
+              },
+              {
+                "name": "features",
+                "children": [
+                  {
+                    "uid": "3b62-59",
+                    "name": "Visibility.ts"
+                  },
+                  {
+                    "uid": "3b62-63",
+                    "name": "Grouping.ts"
+                  },
+                  {
+                    "uid": "3b62-65",
+                    "name": "Ordering.ts"
+                  },
+                  {
+                    "uid": "3b62-67",
+                    "name": "Pinning.ts"
+                  },
+                  {
+                    "uid": "3b62-69",
+                    "name": "Headers.ts"
+                  },
+                  {
+                    "uid": "3b62-73",
+                    "name": "Filters.ts"
+                  },
+                  {
+                    "uid": "3b62-77",
+                    "name": "Sorting.ts"
+                  },
+                  {
+                    "uid": "3b62-79",
+                    "name": "Expanding.ts"
+                  }
+                ]
+              },
+              {
+                "uid": "3b62-61",
+                "name": "aggregationTypes.ts"
+              },
+              {
+                "uid": "3b62-71",
+                "name": "filterTypes.ts"
+              },
+              {
+                "uid": "3b62-75",
+                "name": "sortTypes.ts"
+              },
+              {
+                "uid": "3b62-81",
+                "name": "core.tsx"
+              },
+              {
+                "uid": "3b62-83",
+                "name": "createTable.tsx"
+              },
+              {
+                "uid": "3b62-85",
+                "name": "index.tsx"
+              }
+            ]
+          },
+          {
+            "uid": "3b62-51",
+            "name": "\u0000rollupPluginBabelHelpers.js"
+          }
+        ]
+      }
+    ],
+    "isRoot": true
+  },
+  "nodeParts": {
+    "3b62-45": {
+      "renderedLength": 3156,
+      "gzipLength": 860,
+      "brotliLength": 0,
+      "mainUid": "3b62-44"
+    },
+    "3b62-47": {
+      "renderedLength": 2523,
+      "gzipLength": 714,
+      "brotliLength": 0,
+      "mainUid": "3b62-46"
+    },
+    "3b62-49": {
+      "renderedLength": 2416,
+      "gzipLength": 811,
+      "brotliLength": 0,
+      "mainUid": "3b62-48"
+    },
+    "3b62-51": {
+      "renderedLength": 2695,
+      "gzipLength": 1065,
+      "brotliLength": 0,
+      "mainUid": "3b62-50"
+    },
+    "3b62-53": {
+      "renderedLength": 3913,
+      "gzipLength": 1413,
+      "brotliLength": 0,
+      "mainUid": "3b62-52"
+    },
+    "3b62-55": {
+      "renderedLength": 4797,
+      "gzipLength": 1351,
+      "brotliLength": 0,
+      "mainUid": "3b62-54"
+    },
+    "3b62-57": {
+      "renderedLength": 631,
+      "gzipLength": 278,
+      "brotliLength": 0,
+      "mainUid": "3b62-56"
+    },
+    "3b62-59": {
+      "renderedLength": 5559,
+      "gzipLength": 1139,
+      "brotliLength": 0,
+      "mainUid": "3b62-58"
+    },
+    "3b62-61": {
+      "renderedLength": 2520,
+      "gzipLength": 755,
+      "brotliLength": 0,
+      "mainUid": "3b62-60"
+    },
+    "3b62-63": {
+      "renderedLength": 7455,
+      "gzipLength": 1615,
+      "brotliLength": 0,
+      "mainUid": "3b62-62"
+    },
+    "3b62-65": {
+      "renderedLength": 2381,
+      "gzipLength": 745,
+      "brotliLength": 0,
+      "mainUid": "3b62-64"
+    },
+    "3b62-67": {
+      "renderedLength": 5325,
+      "gzipLength": 1040,
+      "brotliLength": 0,
+      "mainUid": "3b62-66"
+    },
+    "3b62-69": {
+      "renderedLength": 17919,
+      "gzipLength": 2898,
+      "brotliLength": 0,
+      "mainUid": "3b62-68"
+    },
+    "3b62-71": {
+      "renderedLength": 4437,
+      "gzipLength": 786,
+      "brotliLength": 0,
+      "mainUid": "3b62-70"
+    },
+    "3b62-73": {
+      "renderedLength": 15814,
+      "gzipLength": 2768,
+      "brotliLength": 0,
+      "mainUid": "3b62-72"
+    },
+    "3b62-75": {
+      "renderedLength": 2752,
+      "gzipLength": 846,
+      "brotliLength": 0,
+      "mainUid": "3b62-74"
+    },
+    "3b62-77": {
+      "renderedLength": 9830,
+      "gzipLength": 2116,
+      "brotliLength": 0,
+      "mainUid": "3b62-76"
+    },
+    "3b62-79": {
+      "renderedLength": 7502,
+      "gzipLength": 1624,
+      "brotliLength": 0,
+      "mainUid": "3b62-78"
+    },
+    "3b62-81": {
+      "renderedLength": 15063,
+      "gzipLength": 3151,
+      "brotliLength": 0,
+      "mainUid": "3b62-80"
+    },
+    "3b62-83": {
+      "renderedLength": 1694,
+      "gzipLength": 487,
+      "brotliLength": 0,
+      "mainUid": "3b62-82"
+    },
+    "3b62-85": {
+      "renderedLength": 0,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "mainUid": "3b62-84"
+    }
+  },
+  "nodeMetas": {
+    "3b62-44": {
+      "id": "/packages/react-table/src/utils/columnFilterRowsFn.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-45"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-46": {
+      "id": "/packages/react-table/src/utils/globalFilterRowsFn.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-47"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-48": {
+      "id": "/packages/react-table/src/utils/sortRowsFn.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-49"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-50": {
+      "id": "\u0000rollupPluginBabelHelpers.js",
+      "moduleParts": {
+        "index.production.js": "3b62-51"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-82"
+        },
+        {
+          "uid": "3b62-52"
+        },
+        {
+          "uid": "3b62-80"
+        },
+        {
+          "uid": "3b62-58"
+        },
+        {
+          "uid": "3b62-76"
+        },
+        {
+          "uid": "3b62-78"
+        },
+        {
+          "uid": "3b62-60"
+        }
+      ]
+    },
+    "3b62-52": {
+      "id": "/packages/react-table/src/utils.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-53"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        },
+        {
+          "uid": "3b62-87"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-54"
+        },
+        {
+          "uid": "3b62-80"
+        },
+        {
+          "uid": "3b62-58"
+        },
+        {
+          "uid": "3b62-64"
+        },
+        {
+          "uid": "3b62-66"
+        },
+        {
+          "uid": "3b62-68"
+        },
+        {
+          "uid": "3b62-72"
+        },
+        {
+          "uid": "3b62-76"
+        },
+        {
+          "uid": "3b62-62"
+        },
+        {
+          "uid": "3b62-78"
+        }
+      ]
+    },
+    "3b62-54": {
+      "id": "/packages/react-table/src/utils/groupRowsFn.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-55"
+      },
+      "imported": [
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-56": {
+      "id": "/packages/react-table/src/utils/expandRowsFn.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-57"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-58": {
+      "id": "/packages/react-table/src/features/Visibility.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-59"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        },
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-60": {
+      "id": "/packages/react-table/src/aggregationTypes.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-61"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-62"
+        }
+      ]
+    },
+    "3b62-62": {
+      "id": "/packages/react-table/src/features/Grouping.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-63"
+      },
+      "imported": [
+        {
+          "uid": "3b62-60"
+        },
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        },
+        {
+          "uid": "3b62-64"
+        }
+      ]
+    },
+    "3b62-64": {
+      "id": "/packages/react-table/src/features/Ordering.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-65"
+      },
+      "imported": [
+        {
+          "uid": "3b62-52"
+        },
+        {
+          "uid": "3b62-62"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-66": {
+      "id": "/packages/react-table/src/features/Pinning.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-67"
+      },
+      "imported": [
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-68": {
+      "id": "/packages/react-table/src/features/Headers.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-69"
+      },
+      "imported": [
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-70": {
+      "id": "/packages/react-table/src/filterTypes.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-71"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-72"
+        }
+      ]
+    },
+    "3b62-72": {
+      "id": "/packages/react-table/src/features/Filters.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-73"
+      },
+      "imported": [
+        {
+          "uid": "3b62-70"
+        },
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-74": {
+      "id": "/packages/react-table/src/sortTypes.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-75"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-76"
+        }
+      ]
+    },
+    "3b62-76": {
+      "id": "/packages/react-table/src/features/Sorting.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-77"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        },
+        {
+          "uid": "3b62-74"
+        },
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-78": {
+      "id": "/packages/react-table/src/features/Expanding.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-79"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        },
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-80"
+        }
+      ]
+    },
+    "3b62-80": {
+      "id": "/packages/react-table/src/core.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-81"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        },
+        {
+          "uid": "3b62-52"
+        },
+        {
+          "uid": "3b62-58"
+        },
+        {
+          "uid": "3b62-64"
+        },
+        {
+          "uid": "3b62-66"
+        },
+        {
+          "uid": "3b62-68"
+        },
+        {
+          "uid": "3b62-72"
+        },
+        {
+          "uid": "3b62-76"
+        },
+        {
+          "uid": "3b62-62"
+        },
+        {
+          "uid": "3b62-78"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-82"
+        }
+      ]
+    },
+    "3b62-82": {
+      "id": "/packages/react-table/src/createTable.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-83"
+      },
+      "imported": [
+        {
+          "uid": "3b62-50"
+        },
+        {
+          "uid": "3b62-87"
+        },
+        {
+          "uid": "3b62-80"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-84": {
+      "id": "/packages/react-table/src/index.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-85"
+      },
+      "imported": [
+        {
+          "uid": "3b62-86"
+        },
+        {
+          "uid": "3b62-44"
+        },
+        {
+          "uid": "3b62-46"
+        },
+        {
+          "uid": "3b62-48"
+        },
+        {
+          "uid": "3b62-54"
+        },
+        {
+          "uid": "3b62-56"
+        },
+        {
+          "uid": "3b62-82"
+        }
+      ],
+      "importedBy": [],
+      "isEntry": true
+    },
+    "3b62-86": {
+      "id": "/packages/react-table/src/types.ts",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-84"
+        }
+      ]
+    },
+    "3b62-87": {
+      "id": "react",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-82"
+        },
+        {
+          "uid": "3b62-52"
+        }
+      ],
+      "isExternal": true
+    }
+  },
+  "env": {
+    "rollup": "2.66.0"
+  },
+  "options": {
+    "gzip": true,
+    "brotli": false,
+    "sourcemap": false
+  }
+}

@@ -4,11 +4,11 @@ title: Pagination
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/pagination)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/pagination)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/pagination?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/pagination?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: pagination"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

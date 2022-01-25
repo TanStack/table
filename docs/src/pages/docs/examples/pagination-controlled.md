@@ -4,11 +4,11 @@ title: Pagination (Controlled)
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/pagination-controlled)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/pagination-controlled)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/pagination-controlled)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/pagination-controlled?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/pagination-controlled?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: pagination-controlled"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

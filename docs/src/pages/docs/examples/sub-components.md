@@ -4,11 +4,11 @@ title: Sub Components
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sub-components)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/sub-components)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/sub-components)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/sub-components)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/sub-components?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/sub-components?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: sub-components"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

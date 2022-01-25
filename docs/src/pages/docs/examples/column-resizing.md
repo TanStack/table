@@ -4,11 +4,11 @@ title: Column Resizing
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-resizing)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-resizing)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/column-resizing)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/column-resizing)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/column-resizing?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/column-resizing?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: column-resizing"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

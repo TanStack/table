@@ -45,5 +45,5 @@
 
 ### Example
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/block-layout)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/block-layout)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/block-layout)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/block-layout)

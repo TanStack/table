@@ -4,11 +4,11 @@ title: Data Driven Classes and Styles
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/data-driven-classes-and-styles)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/data-driven-classes-and-styles)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/data-driven-classes-and-styles)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/data-driven-classes-and-styles)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/data-driven-classes-and-styles?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/data-driven-classes-and-styles?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: data-driven-classes-and-styles"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

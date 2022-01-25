@@ -4,11 +4,11 @@ title: Expanding
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/expanding)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/expanding)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/expanding)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/expanding)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/expanding?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/expanding?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: expanding"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

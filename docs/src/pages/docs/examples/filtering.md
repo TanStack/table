@@ -4,11 +4,11 @@ title: Filtering
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/filtering)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/filtering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/filtering)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/filtering)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/filtering?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/filtering?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: filtering"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

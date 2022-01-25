@@ -4,11 +4,11 @@ title: Row Drag & Drop
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/row-dnd)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/row-dnd)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/row-dnd)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/row-dnd)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/row-dnd?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/row-dnd?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: row-dnd"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

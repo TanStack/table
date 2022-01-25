@@ -1,0 +1,7 @@
+/// <reference types="react" />
+export declare const Panel: import("react").ForwardRefExoticComponent<import("react").HTMLAttributes<HTMLDivElement> & import("react").RefAttributes<HTMLDivElement>>;
+export declare const ActivePanel: import("react").ForwardRefExoticComponent<import("react").HTMLAttributes<HTMLDivElement> & import("react").RefAttributes<HTMLDivElement>>;
+export declare const Button: import("react").ForwardRefExoticComponent<Pick<import("react").DetailedHTMLProps<import("react").ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "key" | keyof import("react").ButtonHTMLAttributes<HTMLButtonElement>> & import("react").RefAttributes<HTMLButtonElement>>;
+export declare const Code: import("react").ForwardRefExoticComponent<import("react").HTMLAttributes<HTMLElement> & import("react").RefAttributes<HTMLElement>>;
+export declare const Input: import("react").ForwardRefExoticComponent<Pick<import("react").DetailedHTMLProps<import("react").InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "key" | keyof import("react").InputHTMLAttributes<HTMLInputElement>> & import("react").RefAttributes<HTMLInputElement>>;
+export declare const Select: import("react").ForwardRefExoticComponent<Pick<import("react").DetailedHTMLProps<import("react").SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>, "key" | keyof import("react").SelectHTMLAttributes<HTMLSelectElement>> & import("react").RefAttributes<HTMLSelectElement>>;

@@ -4,11 +4,11 @@ title: Basic
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/basic)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/basic)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/basic)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/basic)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/basic?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/basic?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: basic"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

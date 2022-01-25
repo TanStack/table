@@ -4,11 +4,11 @@ title: Column Hiding
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-hiding)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-hiding)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/column-hiding)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/column-hiding)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/column-hiding?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/column-hiding?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: column-hiding"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

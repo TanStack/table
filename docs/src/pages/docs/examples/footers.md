@@ -4,11 +4,11 @@ title: Footers
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/footers)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/footers)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/footers)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/footers)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/footers?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/footers?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: footers"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{

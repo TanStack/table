@@ -51,5 +51,5 @@
 
 ### Example
 
-- [Source](https://github.com/tannerlinsley/react-table/tree/master/examples/absolute-layout)
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/absolute-layout)
+- [Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/absolute-layout)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/absolute-layout)

@@ -4,11 +4,11 @@ title: Column Ordering
 toc: false
 ---
 
-- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/column-ordering)
-- [View Source](https://github.com/tannerlinsley/react-table/tree/master/examples/column-ordering)
+- [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/column-ordering)
+- [View Source](https://github.com/tannerlinsley/react-table/tree/v7/examples/column-ordering)
 
 <iframe
-  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/master/examples/column-ordering?autoresize=1&fontsize=14&theme=dark"
+  src="https://codesandbox.io/embed/github/tannerlinsley/react-table/tree/v7/examples/column-ordering?autoresize=1&fontsize=14&theme=dark"
   title="tannerlinsley/react-table: column-ordering"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
   style={{
