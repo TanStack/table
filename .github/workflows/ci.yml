@@ -6,16 +6,11 @@ on: [push]
 jobs:
   test-and-publish:
     name: "Test & Publish"
-    # if: github.repository == 'tanstack/react-table'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: "0"
-      # - uses: jwalton/gh-find-current-pr@v1
-      #   id: findPr
-      #   with:
-      #     state: open
       - uses: actions/setup-node@v2
         with:
           node-version: 16
@@ -32,5 +27,3 @@ jobs:
           YARN_REGISTRY: https://registry.npmjs.org/
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # PR_NUMBER: ${{ steps.findPr.outputs.pr }}
-          # GH_TOKEN: ${{secrets.GH_TOKEN}}
