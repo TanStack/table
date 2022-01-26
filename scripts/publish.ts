@@ -50,7 +50,10 @@ type Parsed = {
 
 type Package = { name: string; srcDir: string; deps?: string[] };
 
-type Branch = { tag?: string; ghRelease: boolean };
+type BranchConfig = {
+  prerelease: boolean;
+  ghRelease: boolean;
+};
 
 // TODO: List your npm packages here. The first package will be used as the versioner.
 const packages: Package[] = [
@@ -62,20 +65,23 @@ const packages: Package[] = [
   },
 ];
 
-const branches: Record<string, Branch> = {
+const latestBranch = "main";
+
+const branchConfigs: Record<string, BranchConfig> = {
   main: {
+    prerelease: false,
     ghRelease: true,
   },
   next: {
-    tag: "next",
+    prerelease: true,
     ghRelease: true,
   },
   beta: {
-    tag: "beta",
+    prerelease: true,
     ghRelease: true,
   },
   alpha: {
-    tag: "alpha",
+    prerelease: true,
     ghRelease: true,
   },
 };
@@ -95,22 +101,17 @@ const rootDir = path.resolve(__dirname, "..");
 const examplesDir = path.resolve(rootDir, "examples");
 
 async function run() {
-  const branchName: string = currentGitBranch();
-  let branch: Branch = branches[branchName];
+  let branchName: string = process.env.PR_NUMBER
+    ? `pr-${process.env.PR_NUMBER}`
+    : currentGitBranch();
 
-  if (!branch) {
-    // if (!process.env.PR_NUMBER) {
-    console.log(
-      `Cutting a release for branch "${branchName}" is not supported at this time.`
-    );
-    return;
-    // }
+  const branchConfig: BranchConfig = branchConfigs[branchName] || {
+    prerelease: true,
+    ghRelease: false,
+  };
 
-    // branch = {
-    //   tag: `preview-${process.env.PR_NUMBER}`,
-    //   ghRelease: false,
-    // } as Branch;
-  }
+  const isLatestBranch = branchName === latestBranch;
+  const npmTag = isLatestBranch ? "latest" : branchName;
 
   let remoteURL = execSync("git config --get remote.origin.url").toString();
 
@@ -123,10 +124,11 @@ async function run() {
   tags = tags
     .filter(semver.valid)
     .filter((tag) => {
-      if (branch.tag) {
-        return tag.includes(`-${branch.tag}`);
+      if (isLatestBranch) {
+        return semver.prerelease(tag) == null;
       }
-      return semver.prerelease(tag) == null;
+
+      return tag.includes(`-${branchName}`);
     })
     // sort by latest
     .sort(semver.compare);
@@ -328,11 +330,25 @@ async function run() {
       .join("\n\n");
   });
 
-  const version = getNextVersion(
-    latestTag,
-    recommendedReleaseLevel,
-    branch.tag
-  );
+  const releaseType = branchConfig.prerelease
+    ? "prerelease"
+    : { 0: "patch", 1: "minor", 2: "major" }[recommendedReleaseLevel];
+
+  if (!releaseType) {
+    throw new Error(`Invalid release level: ${recommendedReleaseLevel}`);
+  }
+
+  const version = semver.inc(latestTag, releaseType, npmTag);
+
+  if (!version) {
+    throw new Error(
+      `Invalid version increment from semver.inc(${[
+        latestTag,
+        recommendedReleaseLevel,
+        branchConfig.prerelease,
+      ].join(", ")}`
+    );
+  }
 
   const changelogMd = [
     `Version ${version} - ${DateTime.now().toLocaleString(
@@ -448,14 +464,14 @@ async function run() {
   );
 
   console.log();
-  console.log(`Publishing all packages to npm with tag "${branch.tag}"`);
+  console.log(`Publishing all packages to npm with tag "${npmTag}"`);
 
   // Publish each package
   changedPackages.map((pkg) => {
     let packageDir = path.join(rootDir, "packages", getPackageDir(pkg.name));
-    const cmd = `cd ${packageDir} && yarn publish --tag ${branch.tag} --access=public`;
+    const cmd = `cd ${packageDir} && yarn publish --tag ${npmTag} --access=public`;
     console.log(
-      `  Publishing ${pkg.name}@${version} to npm with tag "${branch.tag}"...`
+      `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
     );
     execSync(`${cmd} --token ${process.env.NPM_TOKEN}`, { stdio: "inherit" });
   });
@@ -464,12 +480,12 @@ async function run() {
   execSync(`git push --tags`);
   console.log(`  Pushed tags to branch.`);
 
-  if (branch.ghRelease) {
+  if (branchConfig.ghRelease) {
     console.log(`Creating github release...`);
     // Stringify the markdown to excape any quotes
     execSync(
       `gh release create v${version} ${
-        branch.tag ? "--prerelease" : ""
+        branchName ? "--prerelease" : ""
       } --notes '${changelogMd}'`
     );
     console.log(`  Github release created.`);
@@ -507,36 +523,6 @@ function getPackageDir(packageName: string) {
     .split("/")
     .filter((d) => !d.startsWith("@"))
     .join("/");
-}
-
-function getNextVersion(
-  currentVersion: string,
-  recommendedReleaseLevel: number,
-  branchTag?: string
-) {
-  const releaseType = branchTag
-    ? "prerelease"
-    : { 0: "patch", 1: "minor", 2: "major" }[recommendedReleaseLevel];
-
-  if (!releaseType) {
-    throw new Error(
-      `Invalid release tag: ${branchTag} or level: ${recommendedReleaseLevel}`
-    );
-  }
-
-  let nextVersion = semver.inc(currentVersion, releaseType, branchTag);
-
-  if (!nextVersion) {
-    throw new Error(
-      `Invalid version increment: ${JSON.stringify({
-        currentVersion,
-        recommendedReleaseLevel,
-        branchTag,
-      })}`
-    );
-  }
-
-  return nextVersion;
 }
 
 async function getPackageVersion(packageName: string) {
