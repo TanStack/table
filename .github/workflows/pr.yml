@@ -1,18 +1,35 @@
 name: pr
-on: [pull_request]
+on:
+  pull_request_target:
+    types: [labeled]
 jobs:
-  test:
-    name: "Test (node ${{ matrix.node }})"
+  test-and-publish:
+    name: "Test & Publish"
+    if: contains(github.event.pull_request.labels.*.name, 'safe to build/test')
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [12, 14, 16]
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+        with:
+          state: open
       - uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          cache: "yarn"
       - run: |
           yarn install --frozen-lockfile
-          yarn build
-          yarn test
+          git config --global user.name 'Tanner Linsley'
+          git config --global user.email 'tannerlinsley@users.noreply.github.com'
+          yarn cipublish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          YARN_REGISTRY: https://registry.npmjs.org/
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # PR_NUMBER: ${{ steps.findPr.outputs.pr }}
+          # GH_TOKEN: ${{secrets.GH_TOKEN}}
