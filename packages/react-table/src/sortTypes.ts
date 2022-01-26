@@ -1,6 +1,6 @@
 import { Row } from './types'
 
-// Testing PR releases again
+// Testing PR releases
 
 const reSplitAlphaNumeric = /([0-9]+)/gm
 
