@@ -226,6 +226,11 @@
               "editUrl": "/docs/examples/virtualized-rows.mdx"
             },
             {
+              "title": "Virtualized Rows (React Virtuoso)",
+              "path": "/docs/examples/virtualized-rows-virtuoso",
+              "editUrl": "/docs/examples/virtualized-rows-virtuoso.mdx"
+            },
+            {
               "title": "Animated (Framer-Motion)",
               "path": "/docs/examples/animated-framer-motion",
               "editUrl": "/docs/examples/animated-framer-motion.mdx"
