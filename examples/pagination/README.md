@@ -37,7 +37,7 @@ function MyTable(props) {
   const {
     getTableProps,
     headerGroups,
-    rows,
+-   rows,
     getRowProps,
     prepareRow,
 +   pageOptions,
@@ -55,6 +55,16 @@ function MyTable(props) {
   return (
     <div>
       <table {...getTableProps()}>
+        ...
+        <tbody {...getTableBodyProps()}>
+-        {rows.map((row, i) => {
++        {page.map((row, i) => {
+          prepareRow(row)
+          return (
+            ...
+          )
+        })}        
+        </tbody>
         ...
       </table>
 +     <div>
