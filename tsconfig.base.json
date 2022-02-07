@@ -10,6 +10,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@tanstack/react-table": ["packages/react-table"],
