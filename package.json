@@ -108,5 +108,8 @@
     "rollup-plugin-size-snapshot": "^0.10.0",
     "rollup-plugin-terser": "^5.1.2",
     "serve": "^11.2.0"
-  }
+  },
+  "precommit": [
+    "build"
+  ]
 }
