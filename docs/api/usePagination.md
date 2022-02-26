@@ -9,7 +9,7 @@ menu: API
 - Plugin Hook
 - Optional
 
-`usePagination` is the hook that implements **row pagination**. It can be used for both client-side pagination or server-side pagination. For more information on pagination, see Pagination
+`usePagination` is the hook that implements **row pagination**. It can be used for both client-side pagination or server-side pagination. For more information on pagination, see [Pagination](/examples/pagination)
 
 > **NOTE** Some server-side pagination implementations do not use page index and instead use **token based pagination**! If that's the case, please use the `useTokenPagination` plugin instead.
 
