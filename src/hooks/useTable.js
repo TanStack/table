@@ -555,6 +555,7 @@ function accessRowsForColumn({
           accessRow(d, i, depth + 1, row, subRows)
         )
         // Keep the new subRows array on the row
+        row.initialSubRows = subRows
         row.subRows = subRows
       }
     } else if (row.subRows) {

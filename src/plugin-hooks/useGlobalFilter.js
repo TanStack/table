@@ -93,6 +93,14 @@ function useInstance(instance) {
     globalFilteredRowsById,
   ] = React.useMemo(() => {
     if (manualGlobalFilter || typeof globalFilterValue === 'undefined') {
+      if (Array.isArray(flatRows)) {
+        // Reset subRows
+        flatRows.forEach(r => {
+          if (r.initialSubRows && r.initialSubRows.length !== (r.subRows || []).length) {
+            r.subRows = r.initialSubRows;
+          }
+        });
+      }
       return [rows, flatRows, rowsById]
     }
 
@@ -133,11 +141,10 @@ function useInstance(instance) {
       filteredRows.forEach(row => {
         filteredFlatRows.push(row)
         filteredRowsById[row.id] = row
-
         row.subRows =
-          row.subRows && row.subRows.length
-            ? filterRows(row.subRows)
-            : row.subRows
+          row.initialSubRows && row.initialSubRows.length
+            ? filterRows(row.initialSubRows)
+            : row.initialSubRows
       })
 
       return filteredRows
