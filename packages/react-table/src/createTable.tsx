@@ -5,7 +5,7 @@ import { ReactTable, ColumnDef, AccessorFn, Options } from './types'
 import { Overwrite } from './utils'
 
 type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
-  RowType: <TTData>() => TableHelper<
+  RowType<TTData>(): TableHelper<
     TTData,
     TValue,
     TFilterFns,

@@ -438,7 +438,7 @@ export function getInstance<
     setColumnFilters: (updater: Updater<ColumnFiltersState>) => {
       const leafColumns = instance.getAllLeafColumns()
 
-      const updateFn = (old?: ColumnFiltersState) => {
+      const updateFn = (old: ColumnFiltersState) => {
         return functionalUpdate(updater, old)?.filter(filter => {
           const column = leafColumns.find(d => d.id === filter.id)
 

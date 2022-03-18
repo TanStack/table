@@ -1,6 +1,7 @@
 import {
   Cell,
   Column,
+  CoreHeader,
   FooterGroupProps,
   FooterProps,
   Getter,
@@ -13,6 +14,8 @@ import {
   Row,
 } from '../types'
 import { propGetter, memo, flexRender } from '../utils'
+
+import * as ColumnSizing from './ColumnSizing'
 
 export type HeadersRow<
   TData,
@@ -319,7 +322,7 @@ export function getInstance<
     ) => {
       const id = options.id ?? column.id
 
-      let header: Header<
+      let header: CoreHeader<
         TData,
         TValue,
         TFilterFns,
@@ -338,7 +341,7 @@ export function getInstance<
           let sum = 0
 
           const recurse = (
-            header: Header<
+            header: CoreHeader<
               TData,
               TValue,
               TFilterFns,
@@ -364,7 +367,7 @@ export function getInstance<
           TSortingFns,
           TAggregationFns
         >[] => {
-          const leafHeaders: Header<
+          const leafHeaders: CoreHeader<
             TData,
             TValue,
             TFilterFns,
@@ -373,7 +376,13 @@ export function getInstance<
           >[] = []
 
           const recurseHeader = (
-            h: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+            h: CoreHeader<
+              TData,
+              TValue,
+              TFilterFns,
+              TSortingFns,
+              TAggregationFns
+            >
           ) => {
             if (h.subHeaders && h.subHeaders.length) {
               h.subHeaders.map(recurseHeader)
@@ -382,7 +391,14 @@ export function getInstance<
           }
 
           recurseHeader(header)
-          return leafHeaders
+
+          return leafHeaders as Header<
+            TData,
+            TValue,
+            TFilterFns,
+            TSortingFns,
+            TAggregationFns
+          >[]
         },
         getHeaderProps: userProps =>
           instance.getHeaderProps(header.id, userProps)!,
@@ -392,7 +408,28 @@ export function getInstance<
         renderFooter: () => flexRender(column.footer, { header, column }),
       }
 
-      return header
+      header = Object.assign(
+        header,
+        ColumnSizing.createHeader(
+          header as Header<
+            TData,
+            TValue,
+            TFilterFns,
+            TSortingFns,
+            TAggregationFns
+          >,
+          instance
+        )
+      )
+
+      // Yes, we have to convert instance to uknown, because we know more than the compiler here.
+      return header as Header<
+        TData,
+        TValue,
+        TFilterFns,
+        TSortingFns,
+        TAggregationFns
+      >
     },
 
     // Header Groups

@@ -56,6 +56,14 @@ import {
   ExpandedTableState,
 } from './features/Expanding'
 import { Overwrite } from './utils'
+import {
+  ColumnSizingColumn,
+  ColumnSizingColumnDef,
+  ColumnSizingHeader,
+  ColumnSizingInstance,
+  ColumnSizingOptions,
+  ColumnSizingTableState,
+} from './features/ColumnSizing'
 
 // declare global {
 //   const process.env.NODE_ENV !== 'production': boolean
@@ -81,6 +89,13 @@ export type ReactTable<
   FiltersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
   SortingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
   GroupingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+  ColumnSizingInstance<
+    TData,
+    TValue,
+    TFilterFns,
+    TSortingFns,
+    TAggregationFns
+  > &
   ExpandedInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 
 export type Renderable<TProps> =
@@ -98,9 +113,10 @@ export type Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
     FiltersOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     SortingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     GroupingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    ExpandedOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    ExpandedOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+    ColumnSizingOptions
 
-export type Updater<T> = T | ((old?: T) => T)
+export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
 
 export type TableState = VisibilityTableState &
@@ -109,7 +125,8 @@ export type TableState = VisibilityTableState &
   FiltersTableState &
   SortingTableState &
   ExpandedTableState &
-  GroupingTableState
+  GroupingTableState &
+  ColumnSizingTableState
 
 export type Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
   CoreRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
@@ -139,7 +156,8 @@ export type ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
     ColumnPinningColumnDef &
     FiltersColumnDef<TFilterFns> &
     SortingColumnDef<TSortingFns> &
-    GroupingColumnDef<TAggregationFns>
+    GroupingColumnDef<TAggregationFns> &
+    ColumnSizingColumnDef
 
 export type Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
   ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
@@ -148,7 +166,8 @@ export type Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
     ColumnPinningColumn &
     FiltersColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     SortingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    GroupingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    GroupingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+    ColumnSizingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 
 export type Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
   id: string
@@ -161,7 +180,17 @@ export type Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
   renderCell: () => React.ReactNode
 }
 
-export type Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
+export type Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
+  CoreHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+    ColumnSizingHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+
+export type CoreHeader<
+  TData,
+  TValue,
+  TFilterFns,
+  TSortingFns,
+  TAggregationFns
+> = {
   id: string
   depth: number
   column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>

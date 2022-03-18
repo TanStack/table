@@ -1,5 +1,11 @@
 import React from 'react'
-import { Getter, NoInfer, PropGetterValue, Renderable } from './types'
+import {
+  Getter,
+  NoInfer,
+  PropGetterValue,
+  Renderable,
+  TableState,
+} from './types'
 
 export type IsAny<T> = 0 extends 1 & T ? true : false
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -26,7 +32,7 @@ export function noop() {
   //
 }
 
-export function makeStateUpdater(key: string, instance: unknown) {
+export function makeStateUpdater(key: keyof TableState, instance: unknown) {
   return (updater: Updater<any, any>) => {
     ;(instance as any).setState(<TTableState,>(old: TTableState) => {
       return {

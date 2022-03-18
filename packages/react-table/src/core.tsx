@@ -38,6 +38,7 @@ import * as Filters from './features/Filters'
 import * as Sorting from './features/Sorting'
 import * as Grouping from './features/Grouping'
 import * as Expanding from './features/Expanding'
+import * as ColumnSizing from './features/ColumnSizing'
 import { RowModel } from '.'
 
 // import './features/withColumnResizing';
@@ -225,6 +226,10 @@ export type TableCore<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
       columnId: string,
       userProps?: TGetter
     ) => undefined | PropGetterValue<CellProps, TGetter>
+    getTableWidth: () => number
+    getLeftTableWidth: () => number
+    getCenterTableWidth: () => number
+    getRightTableWidth: () => number
   }
 
 export type CoreRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
@@ -410,6 +415,7 @@ export function createTableInstance<
     ...Sorting.getDefaultOptions(instance),
     ...Grouping.getDefaultOptions(instance),
     ...Expanding.getDefaultOptions(instance),
+    ...ColumnSizing.getDefaultOptions(instance),
   }
 
   const defaultState = {}
@@ -432,6 +438,7 @@ export function createTableInstance<
     ...Sorting.getInitialState(),
     ...Grouping.getInitialState(),
     ...Expanding.getInitialState(),
+    ...ColumnSizing.getInitialState(),
     ...(options.initialState ?? {}),
   }
 
@@ -451,6 +458,7 @@ export function createTableInstance<
     ...Sorting.getInstance(instance),
     ...Grouping.getInstance(instance),
     ...Expanding.getInstance(instance),
+    ...ColumnSizing.getInstance(instance),
     rerender,
     initialState,
     internalState: initialState,
@@ -563,9 +571,7 @@ export function createTableInstance<
         TSortingFns,
         TAggregationFns
       > = {
-        width: 150,
-        minWidth: 20,
-        maxWidth: Number.MAX_SAFE_INTEGER,
+        ...ColumnSizing.defaultColumnSizing,
         ...defaultColumn,
         ...columnDef,
         id: `${id}`,
@@ -661,6 +667,16 @@ export function createTableInstance<
           instance
         ),
         Grouping.createColumn(
+          column as Column<
+            TData,
+            TValue,
+            TFilterFns,
+            TSortingFns,
+            TAggregationFns
+          >,
+          instance
+        ),
+        ColumnSizing.createColumn(
           column as Column<
             TData,
             TValue,
@@ -783,9 +799,14 @@ export function createTableInstance<
         throw new Error()
       }
 
+      const columnSize = instance.getState().columnSizing[column.id]
+
       return Math.min(
-        Math.max(column.minWidth ?? 0, column.width ?? 0),
-        column.maxWidth ?? 0
+        Math.max(
+          column.minWidth ?? ColumnSizing.defaultColumnSizing.minWidth,
+          columnSize ?? column.width ?? ColumnSizing.defaultColumnSizing.width
+        ),
+        column.maxWidth ?? ColumnSizing.defaultColumnSizing.maxWidth
       )
     },
 
@@ -1188,6 +1209,23 @@ export function createTableInstance<
         userProps
       )
     },
+
+    getTableWidth: () =>
+      instance.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        return sum + header.getWidth()
+      }, 0) ?? 0,
+    getLeftTableWidth: () =>
+      instance.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        return sum + header.getWidth()
+      }, 0) ?? 0,
+    getCenterTableWidth: () =>
+      instance.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        return sum + header.getWidth()
+      }, 0) ?? 0,
+    getRightTableWidth: () =>
+      instance.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        return sum + header.getWidth()
+      }, 0) ?? 0,
   }
 
   return Object.assign(instance, finalInstance)
