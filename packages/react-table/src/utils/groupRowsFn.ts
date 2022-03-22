@@ -1,9 +1,7 @@
 import { ReactTable, Row, RowModel } from '../types'
-import { Options } from '../types'
-import { GroupingState } from '../features/Grouping'
 import { flattenBy } from '../utils'
 
-export const groupRowsFn: Options<any, any, {}, {}, {}>['groupRowsFn'] = <
+export function groupRowsFn<
   TData,
   TValue,
   TFilterFns,
@@ -11,7 +9,6 @@ export const groupRowsFn: Options<any, any, {}, {}, {}>['groupRowsFn'] = <
   TAggregationFns
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  groupingState: GroupingState,
   sortedRowModel: RowModel<
     TData,
     TValue,
@@ -19,7 +16,8 @@ export const groupRowsFn: Options<any, any, {}, {}, {}>['groupRowsFn'] = <
     TSortingFns,
     TAggregationFns
   >
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
+): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  const groupingState = instance.getState().grouping
   // Filter the grouping list down to columns that exist
   const existingGrouping = groupingState.filter(columnId =>
     instance.getColumn(columnId)

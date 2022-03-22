@@ -43,14 +43,7 @@ export type ExpandedOptions<
       TSortingFns,
       TAggregationFns
     >,
-    expandedState: ExpandedState,
-    groupedRowModel: RowModel<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
+    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   expandSubRows?: boolean
   defaultCanExpand?: boolean
@@ -75,6 +68,7 @@ export type ExpandedInstance<
   TSortingFns,
   TAggregationFns
 > = {
+  _notifyExpandedReset: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void
@@ -170,7 +164,26 @@ export function getInstance<
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 ): ExpandedInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  let registered = false
+
   return {
+    _notifyExpandedReset: () => {
+      if (!registered) {
+        registered = true
+        return
+      }
+
+      if (instance.options.autoResetAll === false) {
+        return
+      }
+
+      if (
+        instance.options.autoResetAll === true ||
+        instance.options.autoResetExpanded
+      ) {
+        instance.resetExpanded()
+      }
+    },
     setExpanded: updater =>
       instance.options.onExpandedChange?.(
         updater,
@@ -344,10 +357,13 @@ export function getInstance<
         if (process.env.NODE_ENV !== 'production' && instance.options.debug)
           console.info('Expanding...')
 
-        return expandRowsFn(instance, expanded, rowModel)
+        return expandRowsFn(instance, rowModel)
       },
-      'getExpandedRowModel',
-      instance.options.debug
+      {
+        key: 'getExpandedRowModel',
+        debug: instance.options.debug,
+        onChange: () => instance._notifyPageIndexReset(),
+      }
     ),
 
     getPreExpandedRows: () => instance.getGroupedRowModel().rows,

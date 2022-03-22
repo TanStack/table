@@ -1,6 +1,6 @@
-This project was bootstrapped with [Next.js](https://nextjs.org).
+# Example
 
-You can:
+To run this example:
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tanstack/react-table/tree/master/examples/basic)
-- `yarn` and `yarn dev` to run and edit the example
+- `npm install` or `yarn`
+- `npm run start` or `yarn start`

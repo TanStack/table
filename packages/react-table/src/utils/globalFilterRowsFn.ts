@@ -1,13 +1,6 @@
-import { Options } from '..'
 import { ReactTable, Row, RowModel } from '../types'
 
-export const globalFilterRowsFn: Options<
-  any,
-  any,
-  {},
-  {},
-  {}
->['globalFilterRowsFn'] = <
+export function globalFilterRowsFn<
   TData,
   TValue,
   TFilterFns,
@@ -15,9 +8,9 @@ export const globalFilterRowsFn: Options<
   TAggregationFns
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  globalFilter: any,
   rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
+): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  const globalFilter = instance.getState().globalFilter
   const newFilteredFlatRows: Row<
     TData,
     TValue,

@@ -39,11 +39,23 @@ import * as Sorting from './features/Sorting'
 import * as Grouping from './features/Grouping'
 import * as Expanding from './features/Expanding'
 import * as ColumnSizing from './features/ColumnSizing'
+import * as Pagination from './features/Pagination'
+import * as RowSelection from './features/RowSelection'
 import { RowModel } from '.'
 
-// import './features/withColumnResizing';
-// import './features/withPagination';
-// import './features/withRowSelection';
+const features = [
+  Visibility,
+  Ordering,
+  Pinning,
+  Headers,
+  Filters,
+  Sorting,
+  Grouping,
+  Expanding,
+  ColumnSizing,
+  Pagination,
+  RowSelection,
+]
 
 export type CoreOptions<
   TData,
@@ -67,6 +79,7 @@ export type CoreOptions<
     parent?: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   ) => string
   onStateChange?: (newState: TableState) => void
+  autoResetAll?: boolean
 }
 
 export type TableCore<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
@@ -261,93 +274,139 @@ export type CoreColumnDef<
   TFilterFns,
   TSortingFns,
   TAggregationFns
-> = (
-  | {
-      accessorFn: AccessorFn<TData>
-      id: string
-      accessorKey?: never
-      header?:
-        | string
-        | Renderable<{
-            header: Header<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-            column: Column<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-          }>
-    }
-  | {
-      accessorKey: string & keyof TData
-      id?: string
-      accessorFn?: never
-      header?:
-        | string
-        | Renderable<{
-            header: Header<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-            column: Column<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-          }>
-    }
-  | {
-      id: string
-      accessorKey?: never
-      accessorFn?: never
-      header?:
-        | string
-        | Renderable<{
-            header: Header<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-            column: Column<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-          }>
-    }
-  | {
-      header: string
-      id?: string
-      accessorKey?: never
-      accessorFn?: never
-    }
-) & {
+> = {
+  id: string
+  accessorKey?: string & keyof TData
+  accessorFn?: AccessorFn<TData>
+  header?:
+    | string
+    | Renderable<{
+        instance: ReactTable<
+          TData,
+          TValue,
+          TFilterFns,
+          TSortingFns,
+          TAggregationFns
+        >
+        header: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+        column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+      }>
+} & //       | Renderable<{ //       | string //     header?: //     accessorKey?: never //     id: string //     accessorFn: AccessorFn<TData> // | {
+//           instance: ReactTable<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//           header: Header<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//           column: Column<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//         }>
+//   }
+// | {
+//     accessorKey: string & keyof TData
+//     id?: string
+//     accessorFn?: never
+//     header?:
+//       | string
+//       | Renderable<{
+//           instance: ReactTable<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//           header: Header<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//           column: Column<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//         }>
+//   }
+// | {
+//     id: string
+//     accessorKey?: never
+//     accessorFn?: never
+//     header?:
+//       | string
+//       | Renderable<{
+//           instance: ReactTable<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//           header: Header<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//           column: Column<
+//             TData,
+//             TValue,
+//             TFilterFns,
+//             TSortingFns,
+//             TAggregationFns
+//           >
+//         }>
+//   }
+// | {
+//     header: string
+//     id?: string
+//     accessorKey?: never
+//     accessorFn?: never
+//   }
+{
   __generated: true
   width?: number
   minWidth?: number
   maxWidth?: number
   columns?: ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
   footer?: Renderable<{
+    instance: ReactTable<
+      TData,
+      TValue,
+      TFilterFns,
+      TSortingFns,
+      TAggregationFns
+    >
     header: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   }>
   cell?: Renderable<{
+    instance: ReactTable<
+      TData,
+      TValue,
+      TFilterFns,
+      TSortingFns,
+      TAggregationFns
+    >
+    row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     cell: Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     value: TValue
@@ -407,16 +466,9 @@ export function createTableInstance<
     TAggregationFns
   >
 
-  const defaultOptions = {
-    ...Visibility.getDefaultOptions(instance),
-    ...Ordering.getDefaultOptions(instance),
-    ...Pinning.getDefaultOptions(instance),
-    ...Filters.getDefaultOptions(instance),
-    ...Sorting.getDefaultOptions(instance),
-    ...Grouping.getDefaultOptions(instance),
-    ...Expanding.getDefaultOptions(instance),
-    ...ColumnSizing.getDefaultOptions(instance),
-  }
+  const defaultOptions = features.reduce((obj, feature) => {
+    return Object.assign(obj, (feature as any).getDefaultOptions?.(instance))
+  }, {})
 
   const defaultState = {}
 
@@ -431,16 +483,11 @@ export function createTableInstance<
   instance.options = buildOptions(options)
 
   const initialState = {
-    ...Visibility.getInitialState(),
-    ...Ordering.getInitialState(),
-    ...Pinning.getInitialState(),
-    ...Filters.getInitialState(),
-    ...Sorting.getInitialState(),
-    ...Grouping.getInitialState(),
-    ...Expanding.getInitialState(),
-    ...ColumnSizing.getInitialState(),
+    ...features.reduce((obj, feature) => {
+      return Object.assign(obj, (feature as any).getInitialState?.())
+    }, {}),
     ...(options.initialState ?? {}),
-  }
+  } as TableState
 
   const finalInstance: ReactTable<
     TData,
@@ -450,15 +497,9 @@ export function createTableInstance<
     TAggregationFns
   > = {
     ...instance,
-    ...Visibility.getInstance(instance),
-    ...Ordering.getInstance(instance),
-    ...Pinning.getInstance(instance),
-    ...Headers.getInstance(instance),
-    ...Filters.getInstance(instance),
-    ...Sorting.getInstance(instance),
-    ...Grouping.getInstance(instance),
-    ...Expanding.getInstance(instance),
-    ...ColumnSizing.getInstance(instance),
+    ...features.reduce((obj, feature) => {
+      return Object.assign(obj, (feature as any).getInstance?.(instance))
+    }, {}),
     rerender,
     initialState,
     internalState: initialState,
@@ -476,18 +517,22 @@ export function createTableInstance<
     ) => `${parent ? [parent.id, index].join('.') : index}`,
 
     getState: () => {
-      return {
+      let state = {
         ...instance.internalState,
         ...instance.options.state,
       }
+
+      return state
     },
 
     setState: (
       updater: Updater<TableState>,
       shouldRerender: boolean = true
     ) => {
-      const newState = functionalUpdate(updater, instance.internalState)
       const onStateChange = instance.options.onStateChange
+
+      let internalState = instance.internalState
+      let newState = functionalUpdate(updater, internalState)
 
       instance.internalState = newState
 
@@ -521,17 +566,15 @@ export function createTableInstance<
           ) => props.header.column.id,
           cell: ({ value = '' }: { value: any }): JSX.Element =>
             typeof value === 'boolean' ? value.toString() : value,
-          ...Visibility.getDefaultColumn(),
-          ...Filters.getDefaultColumn(),
-          ...Sorting.getDefaultColumn(),
-          ...Grouping.getDefaultColumn(),
+          ...features.reduce((obj, feature) => {
+            return Object.assign(obj, (feature as any).getDefaultColumn?.())
+          }, {}),
           ...defaultColumn,
         } as Partial<
           ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
         >
       },
-      'getDefaultColumn',
-      instance.options.debug
+      { debug: instance.options.debug, key: 'getDefaultColumn' }
     ),
 
     getColumnDefs: () => instance.options.columns,
@@ -595,8 +638,10 @@ export function createTableInstance<
               ...column.columns?.flatMap(d => d.getFlatColumns()),
             ]
           },
-          'column.getFlatColumns',
-          instance.options.debug
+          {
+            key: 'column.getFlatColumns',
+            debug: instance.options.debug,
+          }
         ),
         getLeafColumns: memo(
           () => [instance.getOrderColumnsFn()],
@@ -619,74 +664,19 @@ export function createTableInstance<
               >,
             ]
           },
-          'column.getLeafColumns',
-          instance.options.debug
+          {
+            key: 'column.getLeafColumns',
+            debug: instance.options.debug,
+          }
         ),
       }
 
-      column = Object.assign(
-        column,
-        Visibility.createColumn(
-          column as Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
-        ),
-        Pinning.createColumn(
-          column as Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
-        ),
-        Filters.createColumn(
-          column as Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
-        ),
-        Sorting.createColumn(
-          column as Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
-        ),
-        Grouping.createColumn(
-          column as Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
-        ),
-        ColumnSizing.createColumn(
-          column as Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
+      column = features.reduce((obj, feature) => {
+        return Object.assign(
+          obj,
+          (feature as any).createColumn?.(column, instance)
         )
-      )
+      }, column)
 
       // Yes, we have to convert instance to uknown, because we know more than the compiler here.
       return column as Column<
@@ -740,8 +730,7 @@ export function createTableInstance<
 
         return recurseColumns(columnDefs)
       },
-      'getAllColumns',
-      instance.options.debug
+      { key: 'getAllColumns', debug: instance.options.debug }
     ),
 
     getAllFlatColumns: memo(
@@ -751,8 +740,7 @@ export function createTableInstance<
           return column.getFlatColumns()
         })
       },
-      'getAllFlatColumns',
-      instance.options.debug
+      { key: 'getAllFlatColumns', debug: instance.options.debug }
     ),
 
     getAllFlatColumnsById: memo(
@@ -763,8 +751,7 @@ export function createTableInstance<
           return acc
         }, {} as Record<string, Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>>)
       },
-      'getAllFlatColumnsById',
-      instance.options.debug
+      { key: 'getAllFlatColumnsById', debug: instance.options.debug }
     ),
 
     getAllLeafColumns: memo(
@@ -773,8 +760,7 @@ export function createTableInstance<
         let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
         return orderColumns(leafColumns)
       },
-      'getAllLeafColumns',
-      instance.options.debug
+      { key: 'getAllLeafColumns', debug: instance.options.debug }
     ),
 
     getColumn: columnId => {
@@ -826,24 +812,28 @@ export function createTableInstance<
         value,
         getCellProps: userProps =>
           instance.getCellProps(row.id, column.id, userProps)!,
-        renderCell: () => flexRender(column.cell, { column, cell, value }),
+        renderCell: () =>
+          flexRender(column.cell, { instance, column, row, cell, value }),
       }
 
-      Object.assign(cell, {
-        ...Grouping.createCell(
-          cell as Cell<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          > &
-            Grouping.GroupingCell,
-          column,
-          row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-          instance
-        ),
-      })
+      features.forEach(feature => {
+        Object.assign(
+          cell,
+          (feature as any).createCell?.(
+            cell as Cell<
+              TData,
+              TValue,
+              TFilterFns,
+              TSortingFns,
+              TAggregationFns
+            > &
+              Grouping.GroupingCell,
+            column,
+            row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+            instance
+          )
+        )
+      }, {})
 
       return cell
     },
@@ -885,8 +875,10 @@ export function createTableInstance<
             )
           })
         },
-        process.env.NODE_ENV !== 'production' ? 'row.getAllCells' : '',
-        instance.options.debug
+        {
+          key: process.env.NODE_ENV !== 'production' ? 'row.getAllCells' : '',
+          debug: instance.options.debug,
+        }
       )
 
       row.getAllCellsByColumnId = memo(
@@ -897,25 +889,15 @@ export function createTableInstance<
             return acc
           }, {} as Record<string, Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>>)
         },
-        'row.getAllCellsByColumnId',
-        instance.options.debug
+        {
+          key: 'row.getAllCellsByColumnId',
+          debug: instance.options.debug,
+        }
       )
 
-      row = Object.assign(
-        row,
-        Headers.createRow(
-          row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-          instance
-        ),
-        Grouping.createRow(
-          row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-          instance
-        ),
-        Expanding.createRow(
-          row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-          instance
-        )
-      )
+      features.forEach(feature => {
+        Object.assign(row, (feature as any).createRow?.(row, instance))
+      })
 
       return row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     },
@@ -934,50 +916,6 @@ export function createTableInstance<
       } => {
         if (process.env.NODE_ENV !== 'production' && instance.options.debug)
           console.info('Accessing...')
-
-        // Auto-reset data-dependent states if configured
-        if (
-          instance.options.autoResetColumnFilters &&
-          // @ts-ignore
-          instance.getRowModelNonFirst
-        ) {
-          instance.resetColumnFilters()
-        }
-
-        if (
-          instance.options.autoResetGlobalFilter &&
-          // @ts-ignore
-          instance.getRowModelNonFirst
-        ) {
-          instance.resetGlobalFilter()
-        }
-
-        if (
-          instance.options.autoResetSorting &&
-          // @ts-ignore
-          instance.getRowModelNonFirst
-        ) {
-          instance.resetSorting()
-        }
-
-        if (
-          instance.options.autoResetGrouping &&
-          // @ts-ignore
-          instance.getRowModelNonFirst
-        ) {
-          instance.resetGrouping()
-        }
-
-        if (
-          instance.options.autoResetExpanded &&
-          // @ts-ignore
-          instance.getRowModelNonFirst
-        ) {
-          instance.resetExpanded()
-        }
-
-        // @ts-ignore
-        instance.getRowModelNonFirst = true
 
         // Access the row model using initial columns
         const rows: Row<
@@ -1087,8 +1025,14 @@ export function createTableInstance<
 
         return { rows, flatRows, rowsById }
       },
-      'getRowModel',
-      instance.options.debug
+      {
+        key: 'getRowModel',
+        debug: instance.options.debug,
+        onChange: () => {
+          instance._notifyRowSelectionReset()
+          instance._notifyFiltersReset()
+        },
+      }
     ),
 
     // The standard
@@ -1228,5 +1172,11 @@ export function createTableInstance<
       }, 0) ?? 0,
   }
 
-  return Object.assign(instance, finalInstance)
+  instance = Object.assign(instance, finalInstance)
+
+  // This won't trigger a rerender yet, but it will force
+  // pagination derivation to run (particularly pageSize detection)
+  instance.setPagination(d => d)
+
+  return instance
 }

@@ -1,68 +1,68 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import faker from "faker";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import faker from 'faker'
 
-import "./index.css";
+import './index.css'
 
-import { createTable } from "react-table";
-import { makeData, Person } from "./makeData";
+import { createTable } from '@tanstack/react-table'
+import { makeData, Person } from './makeData'
 
-let table = createTable().RowType<Person>();
+let table = createTable().RowType<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({
-    header: "Name",
-    footer: (props) => props.column.id,
+    header: 'Name',
+    footer: props => props.column.id,
     columns: [
-      table.createColumn("firstName", {
-        cell: (info) => info.value,
-        footer: (props) => props.column.id,
+      table.createDataColumn('firstName', {
+        cell: info => info.value,
+        footer: props => props.column.id,
       }),
-      table.createColumn((row) => row.lastName, {
-        id: "lastName",
-        cell: (info) => info.value,
+      table.createDataColumn(row => row.lastName, {
+        id: 'lastName',
+        cell: info => info.value,
         header: <span>Last Name</span>,
-        footer: (props) => props.column.id,
+        footer: props => props.column.id,
       }),
     ],
   }),
   table.createGroup({
-    header: "Info",
-    footer: (props) => props.column.id,
+    header: 'Info',
+    footer: props => props.column.id,
     columns: [
-      table.createColumn("age", {
-        header: () => "Age",
-        footer: (props) => props.column.id,
+      table.createDataColumn('age', {
+        header: () => 'Age',
+        footer: props => props.column.id,
       }),
       table.createGroup({
-        header: "More Info",
+        header: 'More Info',
         columns: [
-          table.createColumn("visits", {
+          table.createDataColumn('visits', {
             header: () => <span>Visits</span>,
-            footer: (props) => props.column.id,
+            footer: props => props.column.id,
           }),
-          table.createColumn("status", {
-            header: "Status",
-            footer: (props) => props.column.id,
+          table.createDataColumn('status', {
+            header: 'Status',
+            footer: props => props.column.id,
           }),
-          table.createColumn("progress", {
-            header: "Profile Progress",
-            footer: (props) => props.column.id,
+          table.createDataColumn('progress', {
+            header: 'Profile Progress',
+            footer: props => props.column.id,
           }),
         ],
       }),
     ],
   }),
-]);
+])
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(20));
-  const [columns] = React.useState(() => [...defaultColumns]);
+  const [data, setData] = React.useState(() => makeData(20))
+  const [columns] = React.useState(() => [...defaultColumns])
 
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [columnOrder, setColumnOrder] = React.useState([]);
+  const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [columnOrder, setColumnOrder] = React.useState([])
 
-  const rerender = () => setData(() => makeData(20));
+  const rerender = () => setData(() => makeData(20))
 
   const instance = table.useTable({
     data,
@@ -74,13 +74,13 @@ function App() {
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
     // debug: true,
-  });
+  })
 
   const randomizeColumns = () => {
     instance.setColumnOrder(
-      faker.helpers.shuffle(instance.getAllLeafColumns().map((d) => d.id))
-    );
-  };
+      faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+    )
+  }
 
   return (
     <div className="p-2">
@@ -91,14 +91,14 @@ function App() {
             All
           </label>
         </div>
-        {instance.getAllLeafColumns().map((column) => {
+        {instance.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
                 <input {...column.getToggleVisibilityProps()} /> {column.id}
               </label>
             </div>
-          );
+          )
         })}
       </div>
       <div className="h-4" />
@@ -113,9 +113,9 @@ function App() {
       <div className="h-4" />
       <table {...instance.getTableProps()}>
         <thead>
-          {instance.getHeaderGroups().map((headerGroup) => (
+          {instance.getHeaderGroups().map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((header) => (
+              {headerGroup.headers.map(header => (
                 <th {...header.getHeaderProps()}>
                   {header.isPlaceholder ? null : header.renderHeader()}
                 </th>
@@ -124,18 +124,18 @@ function App() {
           ))}
         </thead>
         <tbody {...instance.getTableBodyProps()}>
-          {instance.getRows().map((row) => (
+          {instance.getRows().map(row => (
             <tr {...row.getRowProps()}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getVisibleCells().map(cell => (
                 <td {...cell.getCellProps()}>{cell.renderCell()}</td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot>
-          {instance.getFooterGroups().map((footerGroup) => (
+          {instance.getFooterGroups().map(footerGroup => (
             <tr {...footerGroup.getFooterGroupProps()}>
-              {footerGroup.headers.map((header) => (
+              {footerGroup.headers.map(header => (
                 <th {...header.getFooterProps()}>
                   {header.isPlaceholder ? null : header.renderFooter()}
                 </th>
@@ -145,12 +145,12 @@ function App() {
         </tfoot>
       </table>
     </div>
-  );
+  )
 }
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById("root")
-);
+  document.getElementById('root')
+)

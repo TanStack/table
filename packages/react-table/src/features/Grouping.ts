@@ -39,7 +39,6 @@ export type GroupingColumnDef<TAggregationFns> = {
   renderAggregatedCell?: () => React.ReactNode
   enableGrouping?: boolean
   defaultCanGroup?: boolean
-  getCanGroup?: unknown
 }
 
 export type GroupingColumn<
@@ -98,14 +97,7 @@ export type GroupingOptions<
       TSortingFns,
       TAggregationFns
     >,
-    groupingState: GroupingState,
-    sortedRowsModel: RowModel<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
+    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 
   groupedColumnMode?: false | 'reorder' | 'remove'
@@ -125,6 +117,7 @@ export type GroupingInstance<
   TSortingFns,
   TAggregationFns
 > = {
+  _notifyGroupingReset: () => void
   getColumnAutoAggregationFn: (columnId: string) => AggregationFn | undefined
   getColumnAggregationFn: (columnId: string) => AggregationFn | undefined
   setGrouping: (updater: Updater<GroupingState>) => void
@@ -243,7 +236,26 @@ export function getInstance<
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 ): GroupingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  let registered = false
+
   return {
+    _notifyGroupingReset: () => {
+      if (!registered) {
+        registered = true
+        return
+      }
+
+      if (instance.options.autoResetAll === false) {
+        return
+      }
+
+      if (
+        instance.options.autoResetAll === true ||
+        instance.options.autoResetGrouping
+      ) {
+        instance.resetGrouping()
+      }
+    },
     getColumnAutoAggregationFn: columnId => {
       const firstRow = instance.getCoreFlatRows()[0]
 
@@ -360,10 +372,13 @@ export function getInstance<
         if (process.env.NODE_ENV !== 'production' && instance.options.debug)
           console.info('Grouping...')
 
-        return groupRowsFn(instance, grouping, rowModel)
+        return groupRowsFn(instance, rowModel)
       },
-      'getGroupedRowModel',
-      instance.options.debug
+      {
+        key: 'getGroupedRowModel',
+        debug: instance.options.debug,
+        onChange: () => instance._notifyExpandedReset(),
+      }
     ),
 
     getPreGroupedRows: () => instance.getSortedRowModel().rows,

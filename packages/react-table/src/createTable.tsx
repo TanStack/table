@@ -1,7 +1,14 @@
 import * as React from 'react'
 import { Cell, Column, Row } from '.'
 import { createTableInstance } from './core'
-import { ReactTable, ColumnDef, AccessorFn, Options } from './types'
+import {
+  ReactTable,
+  ColumnDef,
+  AccessorFn,
+  Options,
+  Renderable,
+  Header,
+} from './types'
 import { Overwrite } from './utils'
 
 type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
@@ -38,11 +45,55 @@ type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
   createGroup: (
     column: Overwrite<
       ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>,
+      | {
+          __generated?: never
+          accessorFn?: never
+          accessorKey?: never
+          header: string
+          id?: string
+        }
+      | {
+          __generated?: never
+          accessorFn?: never
+          accessorKey?: never
+          id: string
+          header?:
+            | string
+            | Renderable<{
+                instance: ReactTable<
+                  TData,
+                  TValue,
+                  TFilterFns,
+                  TSortingFns,
+                  TAggregationFns
+                >
+                header: Header<
+                  TData,
+                  TValue,
+                  TFilterFns,
+                  TSortingFns,
+                  TAggregationFns
+                >
+                column: Column<
+                  TData,
+                  TValue,
+                  TFilterFns,
+                  TSortingFns,
+                  TAggregationFns
+                >
+              }>
+        }
+    >
+  ) => ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>
+
+  createDisplayColumn: (
+    column: Overwrite<
+      ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>,
       { __generated?: never; accessorFn?: never; accessorKey?: never }
     >
   ) => ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>
 
-  createColumn: <TAccessor extends AccessorFn<TData> | keyof TData>(
+  createDataColumn: <TAccessor extends AccessorFn<TData> | keyof TData>(
     accessor: TAccessor,
     column: TAccessor extends (...args: any[]) => any
       ? // Accessor Fn
@@ -71,7 +122,12 @@ type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
             TSortingFns,
             TAggregationFns
           >,
-          { __generated?: never; accessorFn?: never; accessorKey?: never }
+          {
+            __generated?: never
+            accessorFn?: never
+            accessorKey?: never
+            id?: string
+          }
         >
       : never
   ) => ColumnDef<
@@ -124,7 +180,15 @@ export function createTable<
     SortingFns: () => createTable(),
     AggregationFns: () => createTable(),
     createColumns: columns => columns,
-    createColumn: (accessor, column) => {
+    createDisplayColumn: column => ({
+      ...column,
+      __generated: true,
+    }),
+    createGroup: column => ({
+      ...column,
+      __generated: true,
+    }),
+    createDataColumn: (accessor, column) => {
       column = {
         ...column,
         id: column.id,
@@ -149,10 +213,6 @@ export function createTable<
 
       throw new Error('Invalid accessor')
     },
-    createGroup: column => ({
-      ...column,
-      __generated: true,
-    }),
     useTable: <TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
       options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     ): ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {

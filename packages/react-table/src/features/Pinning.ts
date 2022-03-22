@@ -1,7 +1,7 @@
 import { OnChangeFn, Updater, ReactTable, Column } from '../types'
 import { functionalUpdate, makeStateUpdater } from '../utils'
 
-type ColumnPinningPosition = 'left' | 'right' | 'both'
+type ColumnPinningPosition = false | 'left' | 'right'
 
 export type ColumnPinningState = {
   left?: string[]
@@ -29,7 +29,7 @@ export type ColumnPinningColumnDef = {
 export type ColumnPinningColumn = {
   getCanPin: () => boolean
   getPinnedIndex: () => number
-  getIsPinned: () => false | ColumnPinningPosition
+  getIsPinned: () => ColumnPinningPosition
   pin: (position: ColumnPinningPosition) => void
 }
 
@@ -44,7 +44,7 @@ export type ColumnPinningInstance<
   resetColumnPinning: () => void
   pinColumn: (columnId: string, position: ColumnPinningPosition) => void
   getColumnCanPin: (columnId: string) => boolean
-  getColumnIsPinned: (columnId: string) => false | ColumnPinningPosition
+  getColumnIsPinned: (columnId: string) => ColumnPinningPosition
   getColumnPinnedIndex: (columnId: string) => number
 }
 
@@ -186,24 +186,11 @@ export function getInstance<
       const isLeft = leafColumnIds.some(d => left?.includes(d))
       const isRight = leafColumnIds.some(d => right?.includes(d))
 
-      if (isLeft && isRight) {
-        return 'both'
-      }
-
       return isLeft ? 'left' : isRight ? 'right' : false
     },
 
     getColumnPinnedIndex: columnId => {
       const position = instance.getColumnIsPinned(columnId)
-
-      if (position === 'both') {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn(
-            `Column ${columnId} has leaf columns that are pinned on both sides`
-          )
-        }
-        throw new Error()
-      }
 
       return position
         ? instance.getState().columnPinning?.[position]?.indexOf(columnId) ?? -1

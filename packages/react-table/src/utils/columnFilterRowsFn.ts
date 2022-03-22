@@ -1,14 +1,6 @@
 import { ReactTable, Row, RowModel } from '../types'
-import { ColumnFiltersState } from '../features/Filters'
-import { Options } from '..'
 
-export const columnFilterRowsFn: Options<
-  any,
-  any,
-  {},
-  {},
-  {}
->['columnFilterRowsFn'] = <
+export function columnFilterRowsFn<
   TData,
   TValue,
   TFilterFns,
@@ -16,9 +8,10 @@ export const columnFilterRowsFn: Options<
   TAggregationFns
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  columnFilters: ColumnFiltersState,
   rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
+): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  const columnFilters = instance.getState().columnFilters
+
   const newFilteredFlatRows: Row<
     TData,
     TValue,

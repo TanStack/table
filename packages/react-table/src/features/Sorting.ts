@@ -1,10 +1,11 @@
 import { MouseEvent, TouchEvent } from 'react'
 import { RowModel } from '..'
-import { BuiltInSortType, sortTypes } from '../sortTypes'
+import { BuiltInSortType, reSplitAlphaNumeric, sortTypes } from '../sortTypes'
 
 import {
   Column,
   Getter,
+  Header,
   OnChangeFn,
   PropGetterValue,
   ReactTable,
@@ -19,6 +20,8 @@ import {
   memo,
   propGetter,
 } from '../utils'
+
+export type SortDirection = 'asc' | 'desc'
 
 export type ColumnSort = {
   id: string
@@ -67,7 +70,7 @@ export type SortingColumn<
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
-  getIsSorted: () => false | 'asc' | 'desc'
+  getIsSorted: () => false | SortDirection
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
   getToggleSortingProps: <TGetter extends Getter<ToggleSortingProps>>(
     userProps?: TGetter
@@ -97,14 +100,7 @@ export type SortingOptions<
       TSortingFns,
       TAggregationFns
     >,
-    sortingState: SortingState,
-    globalFilteredRowModel: RowModel<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
+    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: MouseEvent | TouchEvent) => boolean
@@ -122,9 +118,11 @@ export type SortingInstance<
   TSortingFns,
   TAggregationFns
 > = {
+  _notifySortingReset: () => void
   getColumnAutoSortingFn: (
     columnId: string
   ) => SortingFn<any, any, any, any, any> | undefined
+  getColumnAutoSortDir: (columnId: string) => SortDirection
 
   getColumnSortingFn: (
     columnId: string
@@ -216,6 +214,9 @@ export function getDefaultOptions<
   return {
     onSortingChange: makeStateUpdater('sorting', instance),
     autoResetSorting: true,
+    isMultiSortEvent: (e: MouseEvent | TouchEvent) => {
+      return e.shiftKey
+    },
   }
 }
 
@@ -251,21 +252,63 @@ export function getInstance<
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 ): SortingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  let registered = false
+
   return {
+    _notifySortingReset: () => {
+      if (!registered) {
+        registered = true
+        return
+      }
+
+      if (instance.options.autoResetAll === false) {
+        return
+      }
+
+      if (
+        instance.options.autoResetAll === true ||
+        instance.options.autoResetSorting
+      ) {
+        instance.resetSorting()
+      }
+    },
     getColumnAutoSortingFn: columnId => {
+      const firstRows = instance.getGlobalFilteredRowModel().flatRows.slice(100)
+
+      let isString = false
+
+      for (const row of firstRows) {
+        const value = row?.values[columnId]
+
+        if (Object.prototype.toString.call(value) === '[object Date]') {
+          return sortTypes.datetime
+        }
+
+        if (typeof value === 'string') {
+          isString = true
+
+          if (value.split(reSplitAlphaNumeric).length > 1) {
+            return sortTypes.alphanumeric
+          }
+        }
+      }
+
+      if (isString) {
+        return sortTypes.text
+      }
+
+      return sortTypes.basic
+    },
+    getColumnAutoSortDir: columnId => {
       const firstRow = instance.getGlobalFilteredRowModel().flatRows[0]
 
       const value = firstRow?.values[columnId]
 
       if (typeof value === 'string') {
-        return sortTypes.alphanumeric
+        return 'asc'
       }
 
-      if (Object.prototype.toString.call(value) === '[object Date]') {
-        return sortTypes.datetime
-      }
-
-      return sortTypes.basic
+      return 'desc'
     },
     getColumnSortingFn: columnId => {
       const column = instance.getColumn(columnId)
@@ -278,7 +321,7 @@ export function getInstance<
       return isFunction(column.sortType)
         ? column.sortType
         : column.sortType === 'auto'
-        ? instance.getColumnAutoFilterFn(columnId)
+        ? instance.getColumnAutoSortingFn(columnId)
         : (userSortTypes as Record<string, any>)?.[column.sortType as string] ??
           (sortTypes[column.sortType as BuiltInSortType] as SortingFn<
             TData,
@@ -302,6 +345,15 @@ export function getInstance<
         throw new Error()
       }
 
+      // if (column.columns.length) {
+      //   column.columns.forEach((c, i) => {
+      //     if (c.id) {
+      //       instance.toggleColumnSorting(c.id, undefined, multi || !!i)
+      //     }
+      //   })
+      //   return
+      // }
+
       instance.setSorting(old => {
         // Find any existing sorting for this column
         const existingSorting = old?.find(d => d.id === columnId)
@@ -313,7 +365,7 @@ export function getInstance<
         // What should we do with this sort action?
         let sortAction
 
-        if (!column.getCanMultiSort() && multi) {
+        if (column.getCanMultiSort() && multi) {
           if (existingSorting) {
             sortAction = 'toggle'
           } else {
@@ -331,7 +383,9 @@ export function getInstance<
         }
 
         const sortDescFirst =
-          column.sortDescFirst ?? instance.options.sortDescFirst
+          column.sortDescFirst ??
+          instance.options.sortDescFirst ??
+          instance.getColumnAutoSortDir(columnId) === 'desc'
 
         // Handle toggle states that will remove the sorting
         if (
@@ -398,6 +452,9 @@ export function getInstance<
         instance.options.enableSorting ??
         column.defaultCanSort ??
         !!column.accessorFn
+        // (!!column.accessorFn ||
+        //   column.columns?.some(c => c.id && instance.getColumnCanSort(c.id))) ??
+        // false
       )
     },
 
@@ -471,10 +528,13 @@ export function getInstance<
         if (process.env.NODE_ENV !== 'production' && instance.options.debug)
           console.info('Sorting...')
 
-        return sortingFn(instance, sorting, rowModel)
+        return sortingFn(instance, rowModel)
       },
-      'getSortedRowModel',
-      instance.options.debug
+      {
+        key: 'getSortedRowModel',
+        debug: instance.options.debug,
+        onChange: () => instance._notifyGroupingReset(),
+      }
     ),
 
     getPreSortedRows: () => instance.getGlobalFilteredRowModel().rows,

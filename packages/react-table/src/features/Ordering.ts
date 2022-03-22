@@ -7,7 +7,7 @@ import * as Grouping from './Grouping'
 export type ColumnOrderState = string[]
 
 export type ColumnOrderTableState = {
-  columnOrder: string[]
+  columnOrder: ColumnOrderState
 }
 
 export type ColumnOrderOptions = {
@@ -127,8 +127,7 @@ export function getInstance<
           groupedColumnMode
         )
       },
-      'getOrderColumnsFn',
-      instance.options.debug
+      { key: 'getOrderColumnsFn', debug: instance.options.debug }
     ),
   }
 }

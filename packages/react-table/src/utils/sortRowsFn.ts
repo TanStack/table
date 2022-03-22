@@ -1,8 +1,7 @@
 import { ReactTable, Row, RowModel } from '../types'
-import { SortingFn, SortingState } from '../features/Sorting'
-import { Options } from '../types'
+import { SortingFn } from '../features/Sorting'
 
-export const sortRowsFn: Options<any, any, {}, {}, {}>['sortRowsFn'] = <
+export function sortRowsFn<
   TData,
   TValue,
   TFilterFns,
@@ -10,9 +9,10 @@ export const sortRowsFn: Options<any, any, {}, {}, {}>['sortRowsFn'] = <
   TAggregationFns
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  sortingState: SortingState,
   rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
+): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  const sortingState = instance.getState().sorting
+
   const sortedFlatRows: Row<
     TData,
     TValue,

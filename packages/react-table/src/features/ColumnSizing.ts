@@ -49,7 +49,7 @@ export type ColumnSizingDefaultOptions = {
   onColumnSizingInfoChange: OnChangeFn<ColumnSizingInfoState>
 }
 
-export type HeaderResizerProps = {
+export type ColumnResizerProps = {
   title?: string
   onMouseDown?: (e: ReactMouseEvent) => void
   onTouchStart?: (e: ReactTouchEvent) => void
@@ -72,10 +72,10 @@ export type ColumnSizingInstance<
   resetHeaderSizeInfo: () => void
   getColumnCanResize: (columnId: string) => boolean
   getHeaderCanResize: (headerId: string) => boolean
-  getHeaderResizerProps: <TGetter extends Getter<HeaderResizerProps>>(
+  getColumnResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
     columnId: string,
     userProps?: TGetter
-  ) => undefined | PropGetterValue<HeaderResizerProps, TGetter>
+  ) => undefined | PropGetterValue<ColumnResizerProps, TGetter>
   getColumnIsResizing: (columnId: string) => boolean
   getHeaderIsResizing: (headerId: string) => boolean
 }
@@ -94,21 +94,9 @@ export type ColumnSizingColumn<
 > = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
-  resetSize: () => void
-}
-
-export type ColumnSizingHeader<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  getCanResize: () => boolean
-  getIsResizing: () => boolean
-  getResizerProps: <TGetter extends Getter<HeaderResizerProps>>(
+  getResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
     userProps?: TGetter
-  ) => undefined | PropGetterValue<HeaderResizerProps, TGetter>
+  ) => undefined | PropGetterValue<ColumnResizerProps, TGetter>
   resetSize: () => void
 }
 
@@ -237,7 +225,7 @@ export function getInstance<
 
       return instance.getColumnIsResizing(header.column.id)
     },
-    getHeaderResizerProps: (headerId, userProps) => {
+    getColumnResizerProps: (headerId, userProps) => {
       const header = instance.getHeader(headerId)
 
       if (!header) {
@@ -394,7 +382,7 @@ export function getInstance<
         }))
       }
 
-      const initialProps: HeaderResizerProps = canResize
+      const initialProps: ColumnResizerProps = canResize
         ? {
             title: 'Toggle Grouping',
             draggable: false,
@@ -429,25 +417,8 @@ export function createColumn<
     getIsResizing: () => instance.getColumnIsResizing(column.id),
     getCanResize: () => instance.getColumnCanResize(column.id),
     resetSize: () => instance.resetColumnSize(column.id),
-  }
-}
-
-export function createHeader<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  header: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ColumnSizingHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
-  return {
-    getIsResizing: () => instance.getHeaderIsResizing(header.id),
-    getCanResize: () => instance.getHeaderCanResize(header.id),
     getResizerProps: userProps =>
-      instance.getHeaderResizerProps(header.id, userProps),
-    resetSize: () => instance.resetHeaderSize(header.id),
+      instance.getColumnResizerProps(column.id, userProps),
   }
 }
 

@@ -113,8 +113,11 @@ export const propGetter: PropGetterImpl = (initial, getter) => {
 export function memo<TDeps extends readonly any[], TResult>(
   getDeps: () => [...TDeps],
   fn: (...args: NoInfer<[...TDeps]>) => TResult,
-  key?: string,
-  debug?: boolean
+  opts: {
+    key: string
+    debug?: boolean
+    onChange?: (result: TResult, previousResult?: TResult) => void
+  }
 ): () => TResult {
   let deps: any[] = []
   let result: TResult | undefined
@@ -131,8 +134,8 @@ export function memo<TDeps extends readonly any[], TResult>(
       )
 
     if (depsChanged) {
-      if (debug) {
-        console.info(key, {
+      if (opts?.debug) {
+        console.info(opts?.key, {
           length: `${oldSerializedDeps.length} -> ${newSerializedDeps.length}`,
           ...newSerializedDeps
             .map((_, index) => {
@@ -157,8 +160,13 @@ export function memo<TDeps extends readonly any[], TResult>(
           parent,
         })
       }
+
+      let oldResult = result
       result = fn(...newDeps)
       deps = newSerializedDeps
+      opts?.onChange?.(result, oldResult)
+
+      oldResult = undefined
     }
 
     return result!

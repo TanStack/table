@@ -54,11 +54,11 @@ const defaultColumns = table.createColumns([
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      table.createColumn('firstName', {
+      table.createDataColumn('firstName', {
         cell: info => info.value,
         footer: props => props.column.id,
       }),
-      table.createColumn(row => row.lastName, {
+      table.createDataColumn(row => row.lastName, {
         id: 'lastName',
         cell: info => info.value,
         header: <span>Last Name</span>,
@@ -70,22 +70,22 @@ const defaultColumns = table.createColumns([
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      table.createColumn('age', {
+      table.createDataColumn('age', {
         header: () => 'Age',
         footer: props => props.column.id,
       }),
       table.createGroup({
         header: 'More Info',
         columns: [
-          table.createColumn('visits', {
+          table.createDataColumn('visits', {
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
           }),
-          table.createColumn('status', {
+          table.createDataColumn('status', {
             header: 'Status',
             footer: props => props.column.id,
           }),
-          table.createColumn('progress', {
+          table.createDataColumn('progress', {
             header: 'Profile Progress',
             footer: props => props.column.id,
           }),
@@ -152,16 +152,16 @@ function App() {
                   >
                     {header.isPlaceholder ? null : header.renderHeader()}
                     <div
-                      {...header.getResizerProps(props => ({
+                      {...header.column.getResizerProps(props => ({
                         ...props,
                         className: `${props.className} resizer ${
-                          header.getIsResizing() ? 'isResizing' : ''
+                          header.column.getIsResizing() ? 'isResizing' : ''
                         }`,
                         style: {
                           ...props.style,
                           transform:
                             columnResizeMode === 'onEnd' &&
-                            header.getIsResizing()
+                            header.column.getIsResizing()
                               ? `translateX(${
                                   instance.getState().columnSizingInfo
                                     .deltaOffset
@@ -227,16 +227,16 @@ function App() {
                   >
                     {header.isPlaceholder ? null : header.renderHeader()}
                     <div
-                      {...header.getResizerProps(props => ({
+                      {...header.column.getResizerProps(props => ({
                         ...props,
                         className: `${props.className} resizer ${
-                          header.getIsResizing() ? 'isResizing' : ''
+                          header.column.getIsResizing() ? 'isResizing' : ''
                         }`,
                         style: {
                           ...props.style,
                           transform:
                             columnResizeMode === 'onEnd' &&
-                            header.getIsResizing()
+                            header.column.getIsResizing()
                               ? `translateX(${
                                   instance.getState().columnSizingInfo
                                     .deltaOffset

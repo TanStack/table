@@ -1,8 +1,6 @@
 import { ReactTable, Row, RowModel } from '../types'
-import { Options } from '../types'
-import { ExpandedState } from '../features/Expanding'
 
-export const expandRowsFn: Options<any, any, {}, {}, {}>['expandRowsFn'] = <
+export function expandRowsFn<
   TData,
   TValue,
   TFilterFns,
@@ -10,7 +8,6 @@ export const expandRowsFn: Options<any, any, {}, {}, {}>['expandRowsFn'] = <
   TAggregationFns
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  _expandedState: ExpandedState,
   sortedRowModel: RowModel<
     TData,
     TValue,
@@ -18,7 +15,7 @@ export const expandRowsFn: Options<any, any, {}, {}, {}>['expandRowsFn'] = <
     TSortingFns,
     TAggregationFns
   >
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
+): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
   const expandedRows: Row<
     TData,
     TValue,

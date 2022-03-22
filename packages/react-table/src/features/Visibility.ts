@@ -172,8 +172,7 @@ export function getInstance<
       allFlatColumns => {
         return allFlatColumns.filter(d => d.getIsVisible?.())
       },
-      'getVisibleFlatColumns',
-      instance.options.debug
+      { key: 'getVisibleFlatColumns', debug: instance.options.debug }
     ),
 
     getVisibleLeafColumns: memo(
@@ -188,8 +187,7 @@ export function getInstance<
       allFlatColumns => {
         return allFlatColumns.filter(d => d.getIsVisible?.())
       },
-      'getVisibleLeafColumns',
-      instance.options.debug
+      { key: 'getVisibleLeafColumns', debug: instance.options.debug }
     ),
 
     setColumnVisibility: updater =>

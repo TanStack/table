@@ -1,70 +1,70 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import faker from "faker";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import faker from 'faker'
 
-import "./index.css";
+import './index.css'
 
-import { createTable, HeaderProps } from "react-table";
-import { makeData, Person } from "./makeData";
+import { createTable } from '@tanstack/react-table'
+import { makeData, Person } from './makeData'
 
-let table = createTable().RowType<Person>();
+let table = createTable().RowType<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({
-    header: "Name",
-    footer: (props) => props.column.id,
+    header: 'Name',
+    footer: props => props.column.id,
     columns: [
-      table.createColumn("firstName", {
-        cell: (info) => info.value,
-        footer: (props) => props.column.id,
+      table.createDataColumn('firstName', {
+        cell: info => info.value,
+        footer: props => props.column.id,
       }),
-      table.createColumn((row) => row.lastName, {
-        id: "lastName",
-        cell: (info) => info.value,
+      table.createDataColumn(row => row.lastName, {
+        id: 'lastName',
+        cell: info => info.value,
         header: <span>Last Name</span>,
-        footer: (props) => props.column.id,
+        footer: props => props.column.id,
       }),
     ],
   }),
   table.createGroup({
-    header: "Info",
-    footer: (props) => props.column.id,
+    header: 'Info',
+    footer: props => props.column.id,
     columns: [
-      table.createColumn("age", {
-        header: () => "Age",
-        footer: (props) => props.column.id,
+      table.createDataColumn('age', {
+        header: () => 'Age',
+        footer: props => props.column.id,
       }),
       table.createGroup({
-        header: "More Info",
+        header: 'More Info',
         columns: [
-          table.createColumn("visits", {
+          table.createDataColumn('visits', {
             header: () => <span>Visits</span>,
-            footer: (props) => props.column.id,
+            footer: props => props.column.id,
           }),
-          table.createColumn("status", {
-            header: "Status",
-            footer: (props) => props.column.id,
+          table.createDataColumn('status', {
+            header: 'Status',
+            footer: props => props.column.id,
           }),
-          table.createColumn("progress", {
-            header: "Profile Progress",
-            footer: (props) => props.column.id,
+          table.createDataColumn('progress', {
+            header: 'Profile Progress',
+            footer: props => props.column.id,
           }),
         ],
       }),
     ],
   }),
-]);
+])
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(100000));
-  const [columns] = React.useState(() => [...defaultColumns]);
+  const [data, setData] = React.useState(() => makeData(100000))
+  const [columns] = React.useState(() => [...defaultColumns])
 
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [columnOrder, setColumnOrder] = React.useState([]);
-  const [columnPinning, setColumnPinning] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [columnOrder, setColumnOrder] = React.useState([])
+  const [columnPinning, setColumnPinning] = React.useState({})
 
-  const [isSplit, setIsSplit] = React.useState(false);
-  const rerender = () => setData(() => makeData(100000));
+  const [isSplit, setIsSplit] = React.useState(false)
+  const rerender = () => setData(() => makeData(100000))
 
   const instance = table.useTable({
     data,
@@ -78,13 +78,13 @@ function App() {
     onColumnOrderChange: setColumnOrder,
     onColumnPinningChange: setColumnPinning,
     // debug: true,
-  });
+  })
 
   const randomizeColumns = () => {
     instance.setColumnOrder(
-      faker.helpers.shuffle(instance.getAllLeafColumns().map((d) => d.id))
-    );
-  };
+      faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+    )
+  }
 
   const getHeaderProps = (
     headerProps: ReturnType<typeof instance.getHeaderProps>
@@ -92,8 +92,8 @@ function App() {
     return {
       ...headerProps,
       className: `h-16`,
-    };
-  };
+    }
+  }
 
   return (
     <div className="p-2">
@@ -104,14 +104,14 @@ function App() {
             All
           </label>
         </div>
-        {instance.getAllLeafColumns().map((column) => {
+        {instance.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
                 <input {...column.getToggleVisibilityProps()} /> {column.id}
               </label>
             </div>
-          );
+          )
         })}
       </div>
       <div className="h-4" />
@@ -129,55 +129,55 @@ function App() {
           <input
             type="checkbox"
             checked={isSplit}
-            onChange={(e) => setIsSplit(e.target.checked)}
-          />{" "}
+            onChange={e => setIsSplit(e.target.checked)}
+          />{' '}
           Split Mode
         </label>
       </div>
-      <div className={`flex ${isSplit ? "gap-4" : ""}`}>
+      <div className={`flex ${isSplit ? 'gap-4' : ''}`}>
         {isSplit ? (
           <table
             {...instance.getTableProps({})}
             className="border-2 border-black"
           >
             <thead>
-              {instance.getLeftHeaderGroups().map((headerGroup) => (
+              {instance.getLeftHeaderGroups().map(headerGroup => (
                 <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map(header => (
                     <th {...getHeaderProps(header.getHeaderProps())}>
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder ? null : header.renderHeader()}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
                         <div className="flex gap-1 justify-center">
-                          {header.column.getIsPinned() !== "left" ? (
+                          {header.column.getIsPinned() !== 'left' ? (
                             <button
                               className="border rounded px-2"
                               onClick={() => {
-                                header.column.pin("left");
+                                header.column.pin('left')
                               }}
                             >
-                              {"<="}
+                              {'<='}
                             </button>
                           ) : null}
                           {header.column.getIsPinned() ? (
                             <button
                               className="border rounded px-2"
                               onClick={() => {
-                                header.column.pin(false);
+                                header.column.pin(false)
                               }}
                             >
                               X
                             </button>
                           ) : null}
-                          {header.column.getIsPinned() !== "right" ? (
+                          {header.column.getIsPinned() !== 'right' ? (
                             <button
                               className="border rounded px-2"
                               onClick={() => {
-                                header.column.pin("right");
+                                header.column.pin('right')
                               }}
                             >
-                              {"=>"}
+                              {'=>'}
                             </button>
                           ) : null}
                         </div>
@@ -191,14 +191,14 @@ function App() {
               {instance
                 .getRows()
                 .slice(0, 20)
-                .map((row) => {
+                .map(row => {
                   return (
                     <tr {...row.getRowProps()}>
-                      {row.getLeftVisibleCells().map((cell) => {
-                        return <td {...cell.getCellProps()}>{cell.value}</td>;
+                      {row.getLeftVisibleCells().map(cell => {
+                        return <td {...cell.getCellProps()}>{cell.value}</td>
                       })}
                     </tr>
-                  );
+                  )
                 })}
             </tbody>
           </table>
@@ -211,43 +211,43 @@ function App() {
             {(isSplit
               ? instance.getCenterHeaderGroups()
               : instance.getHeaderGroups()
-            ).map((headerGroup) => (
+            ).map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map(header => (
                   <th {...getHeaderProps(header.getHeaderProps())}>
                     <div className="whitespace-nowrap">
                       {header.isPlaceholder ? null : header.renderHeader()}
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="flex gap-1 justify-center">
-                        {header.column.getIsPinned() !== "left" ? (
+                        {header.column.getIsPinned() !== 'left' ? (
                           <button
                             className="border rounded px-2"
                             onClick={() => {
-                              header.column.pin("left");
+                              header.column.pin('left')
                             }}
                           >
-                            {"<="}
+                            {'<='}
                           </button>
                         ) : null}
                         {header.column.getIsPinned() ? (
                           <button
                             className="border rounded px-2"
                             onClick={() => {
-                              header.column.pin(false);
+                              header.column.pin(false)
                             }}
                           >
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== "right" ? (
+                        {header.column.getIsPinned() !== 'right' ? (
                           <button
                             className="border rounded px-2"
                             onClick={() => {
-                              header.column.pin("right");
+                              header.column.pin('right')
                             }}
                           >
-                            {"=>"}
+                            {'=>'}
                           </button>
                         ) : null}
                       </div>
@@ -261,17 +261,17 @@ function App() {
             {instance
               .getRows()
               .slice(0, 20)
-              .map((row) => {
+              .map(row => {
                 return (
                   <tr {...row.getRowProps()}>
                     {(isSplit
                       ? row.getCenterVisibleCells()
                       : row.getVisibleCells()
-                    ).map((cell) => {
-                      return <td {...cell.getCellProps()}>{cell.value}</td>;
+                    ).map(cell => {
+                      return <td {...cell.getCellProps()}>{cell.value}</td>
                     })}
                   </tr>
-                );
+                )
               })}
           </tbody>
         </table>
@@ -281,43 +281,43 @@ function App() {
             className="border-2 border-black"
           >
             <thead>
-              {instance.getRightHeaderGroups().map((headerGroup) => (
+              {instance.getRightHeaderGroups().map(headerGroup => (
                 <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map(header => (
                     <th {...getHeaderProps(header.getHeaderProps())}>
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder ? null : header.renderHeader()}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
                         <div className="flex gap-1 justify-center">
-                          {header.column.getIsPinned() !== "left" ? (
+                          {header.column.getIsPinned() !== 'left' ? (
                             <button
                               className="border rounded px-2"
                               onClick={() => {
-                                header.column.pin("left");
+                                header.column.pin('left')
                               }}
                             >
-                              {"<="}
+                              {'<='}
                             </button>
                           ) : null}
                           {header.column.getIsPinned() ? (
                             <button
                               className="border rounded px-2"
                               onClick={() => {
-                                header.column.pin(false);
+                                header.column.pin(false)
                               }}
                             >
                               X
                             </button>
                           ) : null}
-                          {header.column.getIsPinned() !== "right" ? (
+                          {header.column.getIsPinned() !== 'right' ? (
                             <button
                               className="border rounded px-2"
                               onClick={() => {
-                                header.column.pin("right");
+                                header.column.pin('right')
                               }}
                             >
-                              {"=>"}
+                              {'=>'}
                             </button>
                           ) : null}
                         </div>
@@ -331,26 +331,26 @@ function App() {
               {instance
                 .getRows()
                 .slice(0, 20)
-                .map((row) => {
+                .map(row => {
                   return (
                     <tr {...row.getRowProps()}>
-                      {row.getRightVisibleCells().map((cell) => {
-                        return <td {...cell.getCellProps()}>{cell.value}</td>;
+                      {row.getRightVisibleCells().map(cell => {
+                        return <td {...cell.getCellProps()}>{cell.value}</td>
                       })}
                     </tr>
-                  );
+                  )
                 })}
             </tbody>
           </table>
         ) : null}
       </div>
     </div>
-  );
+  )
 }
 
 ReactDOM.render(
   // <React.StrictMode>
   <App />,
   // </React.StrictMode>,
-  document.getElementById("root")
-);
+  document.getElementById('root')
+)

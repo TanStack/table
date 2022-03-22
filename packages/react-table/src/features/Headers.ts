@@ -16,6 +16,7 @@ import {
 import { propGetter, memo, flexRender } from '../utils'
 
 import * as ColumnSizing from './ColumnSizing'
+import * as Sorting from './Sorting'
 
 export type HeadersRow<
   TData,
@@ -240,8 +241,7 @@ export function createRow<
       _ => {
         return row.getAllCells().filter(cell => cell.column.getIsVisible())
       },
-      'row._getAllVisibleCells',
-      instance.options.debug
+      { key: 'row._getAllVisibleCells', debug: instance.options.debug }
     ),
     getVisibleCells: memo(
       () => [
@@ -250,8 +250,7 @@ export function createRow<
         row.getRightVisibleCells(),
       ],
       (left, center, right) => [...left, ...center, ...right],
-      'row.getVisibleCells',
-      instance.options.debug
+      { key: 'row.getVisibleCells', debug: instance.options.debug }
     ),
     getCenterVisibleCells: memo(
       () => [
@@ -264,8 +263,7 @@ export function createRow<
 
         return allCells.filter(d => !leftAndRight.includes(d.columnId))
       },
-      'row.getCenterVisibleCells',
-      instance.options.debug
+      { key: 'row.getCenterVisibleCells', debug: instance.options.debug }
     ),
     getLeftVisibleCells: memo(
       () => [
@@ -280,8 +278,7 @@ export function createRow<
 
         return cells
       },
-      'row.getLeftVisibleCells',
-      instance.options.debug
+      { key: 'row.getLeftVisibleCells', debug: instance.options.debug }
     ),
     getRightVisibleCells: memo(
       () => [
@@ -295,8 +292,7 @@ export function createRow<
 
         return cells
       },
-      'row.getRightVisibleCells',
-      instance.options.debug
+      { key: 'row.getRightVisibleCells', debug: instance.options.debug }
     ),
   }
 }
@@ -404,23 +400,11 @@ export function getInstance<
           instance.getHeaderProps(header.id, userProps)!,
         getFooterProps: userProps =>
           instance.getFooterProps(header.id, userProps)!,
-        renderHeader: () => flexRender(column.header, { header, column }),
-        renderFooter: () => flexRender(column.footer, { header, column }),
+        renderHeader: () =>
+          flexRender(column.header, { instance, header, column }),
+        renderFooter: () =>
+          flexRender(column.footer, { instance, header, column }),
       }
-
-      header = Object.assign(
-        header,
-        ColumnSizing.createHeader(
-          header as Header<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          instance
-        )
-      )
 
       // Yes, we have to convert instance to uknown, because we know more than the compiler here.
       return header as Header<
@@ -459,8 +443,7 @@ export function getInstance<
 
         return headerGroups
       },
-      'getHeaderGroups',
-      instance.options.debug
+      { key: 'getHeaderGroups', debug: instance.options.debug }
     ),
 
     getCenterHeaderGroups: memo(
@@ -476,8 +459,7 @@ export function getInstance<
         )
         return buildHeaderGroups(allColumns, leafColumns, instance, 'center')
       },
-      'getCenterHeaderGroups',
-      instance.options.debug
+      { key: 'getCenterHeaderGroups', debug: instance.options.debug }
     ),
 
     getLeftHeaderGroups: memo(
@@ -490,8 +472,7 @@ export function getInstance<
         leafColumns = leafColumns.filter(column => left?.includes(column.id))
         return buildHeaderGroups(allColumns, leafColumns, instance, 'left')
       },
-      'getLeftHeaderGroups',
-      instance.options.debug
+      { key: 'getLeftHeaderGroups', debug: instance.options.debug }
     ),
 
     getRightHeaderGroups: memo(
@@ -504,8 +485,7 @@ export function getInstance<
         leafColumns = leafColumns.filter(column => right?.includes(column.id))
         return buildHeaderGroups(allColumns, leafColumns, instance, 'right')
       },
-      'getRightHeaderGroups',
-      instance.options.debug
+      { key: 'getRightHeaderGroups', debug: instance.options.debug }
     ),
 
     // Footer Groups
@@ -515,8 +495,7 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      'getFooterGroups',
-      instance.options.debug
+      { key: 'getFooterGroups', debug: instance.options.debug }
     ),
 
     getLeftFooterGroups: memo(
@@ -524,8 +503,7 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      'getLeftFooterGroups',
-      instance.options.debug
+      { key: 'getLeftFooterGroups', debug: instance.options.debug }
     ),
 
     getCenterFooterGroups: memo(
@@ -533,8 +511,7 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      'getCenterFooterGroups',
-      instance.options.debug
+      { key: 'getCenterFooterGroups', debug: instance.options.debug }
     ),
 
     getRightFooterGroups: memo(
@@ -542,8 +519,7 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      'getRightFooterGroups',
-      instance.options.debug
+      { key: 'getRightFooterGroups', debug: instance.options.debug }
     ),
 
     // Flat Headers
@@ -557,8 +533,7 @@ export function getInstance<
           })
           .flat()
       },
-      'getFlatHeaders',
-      instance.options.debug
+      { key: 'getFlatHeaders', debug: instance.options.debug }
     ),
 
     getLeftFlatHeaders: memo(
@@ -570,8 +545,7 @@ export function getInstance<
           })
           .flat()
       },
-      'getLeftFlatHeaders',
-      instance.options.debug
+      { key: 'getLeftFlatHeaders', debug: instance.options.debug }
     ),
 
     getCenterFlatHeaders: memo(
@@ -583,8 +557,7 @@ export function getInstance<
           })
           .flat()
       },
-      'getCenterFlatHeaders',
-      instance.options.debug
+      { key: 'getCenterFlatHeaders', debug: instance.options.debug }
     ),
 
     getRightFlatHeaders: memo(
@@ -596,8 +569,7 @@ export function getInstance<
           })
           .flat()
       },
-      'getRightFlatHeaders',
-      instance.options.debug
+      { key: 'getRightFlatHeaders', debug: instance.options.debug }
     ),
 
     // Leaf Headers
@@ -607,8 +579,7 @@ export function getInstance<
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      'getCenterLeafHeaders',
-      instance.options.debug
+      { key: 'getCenterLeafHeaders', debug: instance.options.debug }
     ),
 
     getLeftLeafHeaders: memo(
@@ -616,8 +587,7 @@ export function getInstance<
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      'getLeftLeafHeaders',
-      instance.options.debug
+      { key: 'getLeftLeafHeaders', debug: instance.options.debug }
     ),
 
     getRightLeafHeaders: memo(
@@ -625,8 +595,7 @@ export function getInstance<
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      'getRightLeafHeaders',
-      instance.options.debug
+      { key: 'getRightLeafHeaders', debug: instance.options.debug }
     ),
 
     getLeafHeaders: memo(
@@ -646,8 +615,7 @@ export function getInstance<
           })
           .flat()
       },
-      'getLeafHeaders',
-      instance.options.debug
+      { key: 'getLeafHeaders', debug: instance.options.debug }
     ),
 
     getHeader: (id: string) => {

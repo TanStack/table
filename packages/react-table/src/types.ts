@@ -1,5 +1,4 @@
 import React from 'react'
-// import * as TS from 'ts-toolbelt'
 import {
   CoreColumn,
   CoreColumnDef,
@@ -59,11 +58,21 @@ import { Overwrite } from './utils'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
-  ColumnSizingHeader,
   ColumnSizingInstance,
   ColumnSizingOptions,
   ColumnSizingTableState,
 } from './features/ColumnSizing'
+import {
+  PaginationInstance,
+  PaginationOptions,
+  PaginationTableState,
+} from './features/Pagination'
+import {
+  RowSelectionInstance,
+  RowSelectionOptions,
+  RowSelectionRow,
+  RowSelectionTableState,
+} from './features/RowSelection'
 
 // declare global {
 //   const process.env.NODE_ENV !== 'production': boolean
@@ -96,7 +105,9 @@ export type ReactTable<
     TSortingFns,
     TAggregationFns
   > &
-  ExpandedInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  ExpandedInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+  PaginationInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+  RowSelectionInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 
 export type Renderable<TProps> =
   | React.ReactNode
@@ -114,7 +125,9 @@ export type Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
     SortingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     GroupingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     ExpandedOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    ColumnSizingOptions
+    ColumnSizingOptions &
+    PaginationOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+    RowSelectionOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
@@ -126,13 +139,16 @@ export type TableState = VisibilityTableState &
   SortingTableState &
   ExpandedTableState &
   GroupingTableState &
-  ColumnSizingTableState
+  ColumnSizingTableState &
+  PaginationTableState &
+  RowSelectionTableState
 
 export type Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
   CoreRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     VisibilityRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
     HeadersRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    GroupingRow
+    GroupingRow &
+    RowSelectionRow
 
 export type RowValues = {
   [key: string]: any
@@ -181,8 +197,7 @@ export type Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
 }
 
 export type Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  CoreHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    ColumnSizingHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  CoreHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 
 export type CoreHeader<
   TData,
@@ -291,6 +306,8 @@ export type CellProps = {
   key: string
   role: string
 }
+
+export type Listener<TArgs extends [...any]> = (...args: [...TArgs]) => void
 
 //
 

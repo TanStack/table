@@ -1,6 +1,13 @@
 import { RowModel } from '..'
 import { BuiltInFilterType, filterTypes } from '../filterTypes'
-import { Column, OnChangeFn, ReactTable, Row, Updater } from '../types'
+import {
+  Column,
+  Listener,
+  OnChangeFn,
+  ReactTable,
+  Row,
+  Updater,
+} from '../types'
 import { functionalUpdate, isFunction, makeStateUpdater, memo } from '../utils'
 
 export type ColumnFilter = {
@@ -106,7 +113,6 @@ export type FiltersOptions<
   enableColumnFilters?: boolean
   columnFilterRowsFn?: (
     instance: ReactTable<any, any, any, any, any>,
-    columnFilters: ColumnFiltersState,
     coreRowModel: RowModel<any, any, any, any, any>
   ) => RowModel<any, any, any, any, any>
   // Global
@@ -117,14 +123,7 @@ export type FiltersOptions<
   enableGlobalFilter?: boolean
   globalFilterRowsFn?: (
     instance: ReactTable<any, any, any, any, any>,
-    globalFilter: any,
-    columnFilteredRowModel: RowModel<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
+    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   getColumnCanGlobalFilterFn?: (
     column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
@@ -138,6 +137,7 @@ export type FiltersInstance<
   TSortingFns,
   TAggregationFns
 > = {
+  _notifyFiltersReset: () => void
   getColumnAutoFilterFn: (
     columnId: string
   ) => FilterFn<any, any, any, any, any> | undefined
@@ -163,6 +163,31 @@ export type FiltersInstance<
     TFilterFns,
     TSortingFns,
     TAggregationFns
+  >
+  getPreFilteredRowModel: () => RowModel<
+    TData,
+    TValue,
+    TFilterFns,
+    TSortingFns,
+    TAggregationFns
+  >
+  getPreFilteredRows: () => Row<
+    TData,
+    TValue,
+    TFilterFns,
+    TSortingFns,
+    TAggregationFns
+  >[]
+  getPreFilteredFlatRows: () => Row<
+    TData,
+    TValue,
+    TFilterFns,
+    TSortingFns,
+    TAggregationFns
+  >[]
+  getPreFilteredRowsById: () => Record<
+    string,
+    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
   >
   getPreColumnFilteredRows: () => Row<
     TData,
@@ -337,8 +362,7 @@ export function createColumn<
         preFilteredMinMaxValues,
       }
     },
-    'column.getFacetInfo',
-    instance.options.debug
+    { key: 'column.getFacetInfo', debug: instance.options.debug }
   )
 
   return {
@@ -364,7 +388,30 @@ export function getInstance<
 >(
   instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 ): FiltersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+  let registered = false
+
   return {
+    _notifyFiltersReset: () => {
+      if (!registered) {
+        registered = true
+        return
+      }
+
+      if (instance.options.autoResetAll === false) {
+        return
+      }
+
+      if (instance.options.autoResetAll === true) {
+        instance.resetSorting()
+      } else {
+        if (instance.options.autoResetColumnFilters) {
+          instance.resetColumnFilters()
+        }
+        if (instance.options.autoResetGlobalFilter) {
+          instance.resetGlobalFilter()
+        }
+      }
+    },
     getColumnAutoFilterFn: columnId => {
       const firstRow = instance.getCoreFlatRows()[0]
 
@@ -601,7 +648,7 @@ export function getInstance<
           if (process.env.NODE_ENV !== 'production' && instance.options.debug)
             console.info('Column Filtering...')
 
-          return columnFiltersFn(instance as any, columnFilters, rowModel)
+          return columnFiltersFn(instance as any, rowModel)
         })()
 
         // Now that each filtered column has it's partially filtered rows,
@@ -622,19 +669,25 @@ export function getInstance<
 
         return columnFilteredRowModel
       },
-      'getColumnFilteredRowModel',
-      instance.options.debug
+      { key: 'getColumnFilteredRowModel', debug: instance.options.debug }
     ),
 
+    // These might be easier to remember than "column" filtered rows
+    getPreFilteredRowModel: () => instance.getCoreRowModel(),
+    getPreFilteredRows: () => instance.getCoreRowModel().rows,
+    getPreFilteredFlatRows: () => instance.getCoreRowModel().flatRows,
+    getPreFilteredRowsById: () => instance.getCoreRowModel().rowsById,
+
+    // Pre Column Filter
     getPreColumnFilteredRows: () => instance.getCoreRowModel().rows,
     getPreColumnFilteredFlatRows: () => instance.getCoreRowModel().flatRows,
     getPreColumnFilteredRowsById: () => instance.getCoreRowModel().rowsById,
     getColumnFilteredRows: () => instance.getColumnFilteredRowModel().rows,
+
     getColumnFilteredFlatRows: () =>
       instance.getColumnFilteredRowModel().flatRows,
     getColumnFilteredRowsById: () =>
       instance.getColumnFilteredRowModel().rowsById,
-
     getGlobalFilteredRowModel: memo(
       () => [
         instance.getState().globalFilter,
@@ -652,7 +705,6 @@ export function getInstance<
 
           return globalFiltersFn(
             instance as ReactTable<any, any, any, any, any>,
-            globalFilterValue,
             columnFilteredRowModel
           )
         })()
@@ -675,8 +727,11 @@ export function getInstance<
 
         return globalFilteredRowModel
       },
-      'getGlobalFilteredRowModel',
-      instance.options.debug
+      {
+        key: 'getGlobalFilteredRowModel',
+        debug: instance.options.debug,
+        onChange: () => instance._notifySortingReset(),
+      }
     ),
 
     getPreGlobalFilteredRows: () => instance.getColumnFilteredRowModel().rows,

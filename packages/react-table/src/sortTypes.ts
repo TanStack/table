@@ -1,6 +1,6 @@
 import { Row } from './types'
 
-const reSplitAlphaNumeric = /([0-9]+)/gm
+export const reSplitAlphaNumeric = /([0-9]+)/gm
 
 export const sortTypes = {
   alphanumeric,
