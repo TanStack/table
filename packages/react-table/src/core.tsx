@@ -291,8 +291,7 @@ export type CoreColumnDef<
         header: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
         column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
       }>
-} & //       | Renderable<{ //       | string //     header?: //     accessorKey?: never //     id: string //     accessorFn: AccessorFn<TData> // | {
-//           instance: ReactTable<
+} & //           instance: ReactTable< //       | Renderable<{ //       | string //     header?: //     accessorKey?: never //     id: string //     accessorFn: AccessorFn<TData> // | {
 //             TData,
 //             TValue,
 //             TFilterFns,
@@ -1053,7 +1052,7 @@ export function createTableInstance<
     // expanded rows, which then work their way up
 
     getRowModel: () => {
-      return instance.getExpandedRowModel()
+      return instance.getPaginationRowModel()
     },
 
     getRows: () => {

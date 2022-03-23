@@ -1,17 +1,18 @@
-import React, { HTMLAttributes } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { makeData } from './makeData'
-
 import {
-  Column,
-  columnFilterRowsFn,
   createTable,
-  globalFilterRowsFn,
+  sortRowsFn,
+  paginateRowsFn,
+  Column,
   ReactTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import { PaginationState } from '@tanstack/react-table/build/types/features/Pagination'
+
 type Row = {
   firstName: string
   lastName: string
@@ -31,26 +32,9 @@ let table = createTable()
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [columnFilters, setColumnFilters] = React.useState([])
-  const [globalFilter, setGlobalFilter] = React.useState('')
-
   const columns = React.useMemo(
     () =>
       table.createColumns([
-        table.createDisplayColumn({
-          id: 'select',
-          header: ({ instance }) => (
-            <IndeterminateCheckbox
-              {...instance.getToggleAllRowsSelectedProps()}
-            />
-          ),
-          cell: ({ row }) => (
-            <div className="px-1">
-              <IndeterminateCheckbox {...row.getToggleSelectedProps()} />
-            </div>
-          ),
-        }),
         table.createGroup({
           header: 'Name',
           footer: props => props.column.id,
@@ -104,31 +88,25 @@ function App() {
     () => makeData(10000)
   )
 
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
   const instance = table.useTable({
     data,
     columns,
     state: {
-      rowSelection,
-      columnFilters,
-      globalFilter,
+      pagination,
     },
-    onRowSelectionChange: setRowSelection,
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    columnFilterRowsFn: columnFilterRowsFn,
-    globalFilterRowsFn: globalFilterRowsFn,
+    onPaginationChange: setPagination,
+    paginateRowsFn: paginateRowsFn,
   })
+
+  window.instance = instance
 
   return (
     <div className="p-2">
-      <div>
-        <input
-          value={globalFilter ?? ''}
-          onChange={e => setGlobalFilter(e.target.value)}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
       <div className="h-2" />
       <table {...instance.getTableProps({})}>
         <thead>
@@ -138,7 +116,7 @@ function App() {
                 return (
                   <th {...header.getHeaderProps()}>
                     {header.isPlaceholder ? null : (
-                      <>
+                      <div>
                         {header.renderHeader()}
                         {header.column.getCanColumnFilter() ? (
                           <div>
@@ -148,7 +126,7 @@ function App() {
                             />
                           </div>
                         ) : null}
-                      </>
+                      </div>
                     )}
                   </th>
                 )
@@ -157,61 +135,89 @@ function App() {
           ))}
         </thead>
         <tbody {...instance.getTableBodyProps()}>
-          {instance
-            .getRows()
-            .slice(0, 10)
-            .map(row => {
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.getVisibleCells().map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
-                  })}
-                </tr>
-              )
-            })}
+          {instance.getRows().map(row => {
+            return (
+              <tr {...row.getRowProps()}>
+                {row.getVisibleCells().map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.value}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
-      <br />
-      <div>
-        {Object.keys(rowSelection).length} of{' '}
-        {instance.getPreFilteredRows().length} Total Rows Selected
-      </div>
-      <hr />
-      <br />
-      <div>
-        <button className="border rounded p-2 mb-2" onClick={() => rerender()}>
-          Force Rerender
-        </button>
-      </div>
-      <div>
+      <div className="h-2" />
+      <div className="flex items-center gap-2">
         <button
-          className="border rounded p-2 mb-2"
-          onClick={() => refreshData()}
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(0)}
+          disabled={!instance.getCanPreviousPage()}
         >
-          Refresh Data
+          {'<<'}
         </button>
-      </div>
-      <div>
         <button
-          className="border rounded p-2 mb-2"
-          onClick={() => console.log('rowSelection', rowSelection)}
+          className="border rounded p-1"
+          onClick={() => instance.previousPage()}
+          disabled={!instance.getCanPreviousPage()}
         >
-          Log `rowSelection` state
+          {'<'}
         </button>
-      </div>
-      <div>
         <button
-          className="border rounded p-2 mb-2"
+          className="border rounded p-1"
+          onClick={() => instance.nextPage()}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="border rounded p-1"
           onClick={() =>
-            console.log(
-              'instance.getSelectedFlatRows()',
-              instance.getSelectedFlatRows()
-            )
+            instance.setPageIndex(instance.getState().pagination.pageCount - 1)
           }
+          disabled={!instance.getCanNextPage()}
         >
-          Log instance.getSelectedFlatRows()
+          {'>>'}
         </button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {instance.getState().pagination.pageIndex + 1} of{' '}
+            {instance.getState().pagination.pageCount}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            defaultValue={instance.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              instance.setPageIndex(page)
+            }}
+            className="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={instance.getState().pagination.pageSize}
+          onChange={e => {
+            instance.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
       </div>
+      <div>{instance.getRows().length} Rows</div>
+      <div>
+        <button onClick={() => rerender()}>Force Rerender</button>
+      </div>
+      <div>
+        <button onClick={() => refreshData()}>Refresh Data</button>
+      </div>
+      <pre>{JSON.stringify(pagination, null, 2)}</pre>
     </div>
   )
 }
@@ -258,27 +264,6 @@ function Filter({
       onChange={e => column.setColumnFilterValue(e.target.value)}
       placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
       className="w-36 border shadow rounded"
-    />
-  )
-}
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = '',
-  ...rest
-}: { indeterminate: boolean } & HTMLAttributes<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
-
-  React.useEffect(() => {
-    ref.current.indeterminate = indeterminate
-  }, [ref, indeterminate])
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className + ' cursor-pointer'}
-      {...rest}
     />
   )
 }

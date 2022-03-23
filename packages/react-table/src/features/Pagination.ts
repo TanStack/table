@@ -9,10 +9,12 @@ import {
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
+export type PageCount = undefined | null | number
+
 export type PaginationState = {
   pageIndex: number
   pageSize: number
-  pageCount: number
+  pageCount?: PageCount
 }
 
 export type PaginationTableState = {
@@ -59,12 +61,12 @@ export type PaginationInstance<
   resetPageIndex: () => void
   setPageSize: (updater: Updater<number>) => void
   resetPageSize: () => void
-  setPageCount: (updater: Updater<number>) => void
+  setPageCount: (updater: Updater<PageCount>) => void
   getPageOptions: () => number[]
   getCanPreviousPage: () => boolean
   getCanNextPage: () => boolean
-  gotoPreviousPage: () => void
-  gotoNextPage: () => void
+  previousPage: () => void
+  nextPage: () => void
   getPaginationRowModel: () => RowModel<
     TData,
     TValue,
@@ -117,7 +119,6 @@ export function getInitialState(): PaginationTableState {
     pagination: {
       pageIndex: 0,
       pageSize: 10,
-      pageCount: -1,
     },
   }
 }
@@ -167,21 +168,18 @@ export function getInstance<
     },
     setPagination: updater => {
       const safeUpdater: Updater<PaginationState> = old => {
-        const newState = functionalUpdate(old, updater)
+        let newState = functionalUpdate(updater, old)
 
-        if (!instance.options.paginateRowsFn) {
-          return {
-            ...old,
-            pageCount: instance.getPreExpandedRows()?.length
-              ? Math.ceil(
-                  instance.getPreExpandedRows().length /
-                    instance.getState().pagination.pageSize
-                )
-              : 0,
-          }
+        if (instance.options.paginateRowsFn) {
+          newState.pageCount = instance.getPrePaginationRows()?.length
+            ? Math.ceil(
+                instance.getPrePaginationRows().length /
+                  instance.getState().pagination.pageSize
+              )
+            : 0
         }
 
-        return old
+        return newState
       }
 
       return instance.options.onPaginationChange?.(
@@ -200,13 +198,18 @@ export function getInstance<
     },
     setPageIndex: updater => {
       instance.setPagination(old => {
-        const newPageIndex = functionalUpdate(updater, old.pageIndex)
+        let pageIndex = functionalUpdate(updater, old.pageIndex)
+
         const maxPageIndex =
-          old.pageCount > 0 ? old.pageCount - 1 : Number.MAX_SAFE_INTEGER
+          old.pageCount && old.pageCount > 0
+            ? old.pageCount - 1
+            : Number.MAX_SAFE_INTEGER
+
+        pageIndex = Math.min(Math.max(0, pageIndex), maxPageIndex)
 
         return {
           ...old,
-          pageIndex: Math.min(Math.max(0, newPageIndex), maxPageIndex),
+          pageIndex,
         }
       })
     },
@@ -232,10 +235,18 @@ export function getInstance<
       })
     },
     setPageCount: updater =>
-      instance.setPagination(old => ({
-        ...old,
-        pageCount: Math.max(-1, functionalUpdate(updater, old.pageCount)),
-      })),
+      instance.setPagination(old => {
+        let newPageCount = functionalUpdate(updater, old.pageCount)
+
+        if (typeof newPageCount === 'number') {
+          newPageCount = Math.max(-1, newPageCount)
+        }
+
+        return {
+          ...old,
+          pageCount: newPageCount,
+        }
+      }),
 
     getPageOptions: memo(
       () => [
@@ -244,7 +255,7 @@ export function getInstance<
       ],
       (pageSize, pageCount) => {
         let pageOptions: number[] = []
-        if (pageCount > 0) {
+        if (pageCount && pageCount > 0) {
           pageOptions = [...new Array(pageCount)].fill(null).map((_, i) => i)
         }
         return pageOptions
@@ -274,12 +285,14 @@ export function getInstance<
       )
     },
 
-    gotoPreviousPage: () => {
-      return instance.setPageIndex?.(old => old! - 1)
+    previousPage: () => {
+      return instance.setPageIndex(old => old - 1)
     },
 
-    gotoNextPage: () => {
-      return instance.setPageIndex?.(old => old! + 1)
+    nextPage: () => {
+      return instance.setPageIndex(old => {
+        return old + 1
+      })
     },
 
     getPaginationRowModel: memo(
