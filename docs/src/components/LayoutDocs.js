@@ -20,6 +20,7 @@ import { Seo } from './Seo'
 import MDXComponents from './MDXComponents'
 import Head from 'next/head'
 import { getManifest } from 'manifests/getManifest'
+import BytesForm from './BytesForm'
 
 const getSlugAndTag = path => {
   const parts = path.split('/')
@@ -112,6 +113,16 @@ export const LayoutDocs = props => {
                         On this page
                       </h4>
                       <Toc />
+                    </div>
+                    <div className="mt-12 relative">
+                      <h4 className="font-semibold uppercase text-sm mb-2 mt-2 text-gray-500">
+                        Subscribe to Bytes
+                      </h4>
+                      <p className="mt-4  text-sm leading-6 mb-4">
+                        The best JavaScript newsletter! Delivered every
+                        Monday to over 76,000 devs.
+                      </p>
+                      <BytesForm />
                     </div>
                   </div>
                 )}
