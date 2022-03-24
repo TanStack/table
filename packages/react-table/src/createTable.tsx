@@ -11,7 +11,7 @@ import {
 } from './types'
 import { Overwrite } from './utils'
 
-type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
+export type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
   RowType<TTData>(): TableHelper<
     TTData,
     TValue,
