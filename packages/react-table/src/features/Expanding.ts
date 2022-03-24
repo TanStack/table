@@ -192,7 +192,7 @@ export function getInstance<
     toggleRowExpanded: (rowId, expanded) => {
       if (!rowId) return
 
-      instance.setExpanded((old = {}) => {
+      instance.setExpanded(old => {
         const exists = old === true ? true : !!old?.[rowId]
 
         let oldExpanded: ExpandedStateList = {}
@@ -230,7 +230,7 @@ export function getInstance<
       }
     },
     resetExpanded: () => {
-      instance.setExpanded(instance.options?.initialState?.expanded ?? {})
+      instance.setExpanded(instance.initialState?.expanded ?? {})
     },
     getIsRowExpanded: rowId => {
       const row = instance.getRow(rowId)
@@ -362,7 +362,9 @@ export function getInstance<
       {
         key: 'getExpandedRowModel',
         debug: instance.options.debug,
-        onChange: () => instance._notifyPageIndexReset(),
+        onChange: () => {
+          instance._notifyPageIndexReset()
+        },
       }
     ),
 

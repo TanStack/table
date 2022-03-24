@@ -43,29 +43,6 @@ export function makeStateUpdater(key: keyof TableState, instance: unknown) {
   }
 }
 
-// SSR has issues with useLayoutEffect still, so use useEffect during SSR
-export const safeUseLayoutEffect =
-  typeof document !== 'undefined' ? React.useLayoutEffect : React.useEffect
-
-export function useMountedLayoutEffect(fn: any, deps: any[]) {
-  const mountedRef = React.useRef(false)
-
-  safeUseLayoutEffect(() => {
-    if (mountedRef.current) {
-      fn()
-    }
-    mountedRef.current = true
-    // eslint-disable-next-line
-  }, deps)
-}
-
-export function useGetLatest<T>(obj: T): () => T {
-  const ref = React.useRef<T>()
-  ref.current = obj
-
-  return React.useCallback(() => ref.current!, [])
-}
-
 type AnyFunction = (...args: any) => any
 
 export function isFunction<T extends AnyFunction>(d: any): d is T {
@@ -124,27 +101,19 @@ export function memo<TDeps extends readonly any[], TResult>(
 
   return () => {
     const newDeps = getDeps()
-    const newSerializedDeps = newDeps
-    const oldSerializedDeps = deps
 
     const depsChanged =
-      newSerializedDeps.length !== oldSerializedDeps.length ||
-      newSerializedDeps.some(
-        (dep: any, index: number) => oldSerializedDeps[index] !== dep
-      )
+      newDeps.length !== deps.length ||
+      newDeps.some((dep: any, index: number) => deps[index] !== dep)
 
     if (depsChanged) {
       if (opts?.debug) {
         console.info(opts?.key, {
-          length: `${oldSerializedDeps.length} -> ${newSerializedDeps.length}`,
-          ...newSerializedDeps
+          length: `${deps.length} -> ${newDeps.length}`,
+          ...newDeps
             .map((_, index) => {
-              if (oldSerializedDeps[index] !== newSerializedDeps[index]) {
-                return [
-                  index,
-                  oldSerializedDeps[index],
-                  newSerializedDeps[index],
-                ]
+              if (deps[index] !== newDeps[index]) {
+                return [index, deps[index], newDeps[index]]
               }
 
               return false
@@ -163,7 +132,7 @@ export function memo<TDeps extends readonly any[], TResult>(
 
       let oldResult = result
       result = fn(...newDeps)
-      deps = newSerializedDeps
+      deps = newDeps
       opts?.onChange?.(result, oldResult)
 
       oldResult = undefined
@@ -171,37 +140,6 @@ export function memo<TDeps extends readonly any[], TResult>(
 
     return result!
   }
-}
-
-// Copied from: https://github.com/jonschlinkert/is-plain-object
-export function isPlainObject(o: any): o is Object {
-  if (!hasObjectPrototype(o)) {
-    return false
-  }
-
-  // If has modified constructor
-  const ctor = o.constructor
-  if (typeof ctor === 'undefined') {
-    return true
-  }
-
-  // If has modified prototype
-  const prot = ctor.prototype
-  if (!hasObjectPrototype(prot)) {
-    return false
-  }
-
-  // If constructor does not have an Object-specific method
-  if (!prot.hasOwnProperty('isPrototypeOf')) {
-    return false
-  }
-
-  // Most likely a plain Object
-  return true
-}
-
-function hasObjectPrototype(o: any): boolean {
-  return Object.prototype.toString.call(o) === '[object Object]'
 }
 
 export type Render = typeof flexRender

@@ -79,8 +79,8 @@ Currently migration will involve rewrites to:
   - [x] Grouping
   - [x] Expanding
   - [x] Column Sizing
-  - [ ] Pagination
-  - [ ] Row Selection
+  - [x] Pagination
+  - [x] Row Selection
 - [ ] Migrate [Examples](https://github.com/tanstack/react-table/tree/alpha/examples)
   - [x] column-visibility
   - [x] column-ordering
@@ -88,9 +88,10 @@ Currently migration will involve rewrites to:
   - [x] basic
   - [x] filters
   - [x] sorting
-  - [ ] grouping-and-aggregation
-  - [ ] pagination
+  - [x] pagination
   - [x] column-sizing
+  - [x] row-selection
+  - [ ] grouping-and-aggregation
   - [ ] editable-data
   - [ ] pagination-controlled
   - [ ] kitchen-sink

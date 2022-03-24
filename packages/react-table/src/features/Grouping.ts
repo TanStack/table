@@ -331,7 +331,7 @@ export function getInstance<
       instance.getState().grouping?.indexOf(columnId),
 
     resetGrouping: () => {
-      instance.setGrouping(instance.options?.initialState?.grouping ?? [])
+      instance.setGrouping(instance.initialState?.grouping ?? [])
     },
 
     getToggleGroupingProps: (columnId, userProps) => {

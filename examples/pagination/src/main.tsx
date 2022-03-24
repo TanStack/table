@@ -5,7 +5,7 @@ import './index.css'
 
 import {
   createTable,
-  sortRowsFn,
+  columnFilterRowsFn,
   paginateRowsFn,
   Column,
   ReactTable,
@@ -83,9 +83,9 @@ function App() {
   )
 
   const [data, refreshData] = React.useReducer(
-    () => makeData(10000),
+    () => makeData(100000),
     undefined,
-    () => makeData(10000)
+    () => makeData(100000)
   )
 
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -101,6 +101,7 @@ function App() {
     },
     onPaginationChange: setPagination,
     paginateRowsFn: paginateRowsFn,
+    columnFilterRowsFn: columnFilterRowsFn,
   })
 
   window.instance = instance

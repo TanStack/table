@@ -484,7 +484,7 @@ export function getInstance<
       instance.getState().sorting?.findIndex(d => d.id === columnId) ?? -1,
 
     resetSorting: () => {
-      instance.setSorting(instance.options?.initialState?.sorting ?? [])
+      instance.setSorting(instance.initialState?.sorting ?? [])
     },
 
     getToggleSortingProps: (columnId, userProps) => {

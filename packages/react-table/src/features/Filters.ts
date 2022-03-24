@@ -628,9 +628,7 @@ export function getInstance<
     },
 
     resetColumnFilters: () => {
-      instance.setColumnFilters(
-        instance.options?.initialState?.columnFilters ?? []
-      )
+      instance.setColumnFilters(instance.initialState?.columnFilters ?? [])
     },
 
     getColumnFilteredRowModel: memo(
@@ -730,7 +728,9 @@ export function getInstance<
       {
         key: 'getGlobalFilteredRowModel',
         debug: instance.options.debug,
-        onChange: () => instance._notifySortingReset(),
+        onChange: () => {
+          instance._notifySortingReset()
+        },
       }
     ),
 

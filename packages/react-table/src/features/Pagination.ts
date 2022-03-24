@@ -217,9 +217,7 @@ export function getInstance<
       instance.setPageIndex(0)
     },
     resetPageSize: () => {
-      instance.setPageSize(
-        instance.options.initialState?.pagination?.pageSize ?? 10
-      )
+      instance.setPageSize(instance.initialState?.pagination?.pageSize ?? 10)
     },
     setPageSize: updater => {
       instance.setPagination(old => {

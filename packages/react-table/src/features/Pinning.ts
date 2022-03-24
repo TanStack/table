@@ -114,9 +114,7 @@ export function getInstance<
       ),
 
     resetColumnPinning: () =>
-      instance.setColumnPinning(
-        instance.options.initialState?.columnPinning ?? {}
-      ),
+      instance.setColumnPinning(instance.initialState?.columnPinning ?? {}),
 
     pinColumn: (columnId, position) => {
       const column = instance.getColumn(columnId)
