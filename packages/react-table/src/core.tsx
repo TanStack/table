@@ -166,7 +166,7 @@ export type TableCore<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
     ) => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     createRow: (
       id: string,
-      original: TData | undefined,
+      original: TData,
       rowIndex: number,
       depth: number,
       values: Record<string, any>
