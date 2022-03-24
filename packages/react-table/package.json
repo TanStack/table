@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/react-table",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.5",
   "description": "Hooks for building lightweight, fast and extendable datagrids for React",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
