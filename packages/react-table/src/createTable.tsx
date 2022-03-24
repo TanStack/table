@@ -11,7 +11,13 @@ import {
 } from './types'
 import { Overwrite } from './utils'
 
-export type TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
+export type TableHelper<
+  TData,
+  TValue,
+  TFilterFns,
+  TSortingFns,
+  TAggregationFns
+> = {
   RowType<TTData>(): TableHelper<
     TTData,
     TValue,
@@ -220,7 +226,24 @@ export function createTable<
         ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
       >(undefined!)
 
-      const rerender = React.useReducer(() => ({}), {})[1]
+      const unsafeRerender = React.useReducer(() => ({}), {})[1]
+
+      const isMountedRef = React.useRef(false)
+
+      const rerender = React.useCallback(() => {
+        if (!isMountedRef.current) {
+          return
+        }
+
+        unsafeRerender()
+      }, [])
+
+      React.useLayoutEffect(() => {
+        isMountedRef.current = true
+        return () => {
+          isMountedRef.current = false
+        }
+      })
 
       if (!instanceRef.current) {
         instanceRef.current = createTableInstance<
