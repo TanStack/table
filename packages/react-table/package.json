@@ -36,5 +36,11 @@
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"
+  },
+  "dependencies": {
+    "use-sync-external-store": "^1.0.0-rc.0"
+  },
+  "devDependencies": {
+    "@types/use-sync-external-store": "^0.0.3"
   }
 }

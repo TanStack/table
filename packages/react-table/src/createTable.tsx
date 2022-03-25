@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Cell, Column, Row } from '.'
 import { createTableInstance } from './core'
 import {
@@ -222,42 +223,21 @@ export function createTable<
     useTable: <TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
       options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
     ): ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
-      const instanceRef = React.useRef<
-        ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-      >(undefined!)
-
-      const unsafeRerender = React.useReducer(() => ({}), {})[1]
-
-      const isMountedRef = React.useRef(false)
-
-      const rerender = React.useCallback(() => {
-        if (!isMountedRef.current) {
-          return
-        }
-
-        unsafeRerender()
-      }, [])
-
-      React.useLayoutEffect(() => {
-        isMountedRef.current = true
-        return () => {
-          isMountedRef.current = false
-        }
-      })
-
-      if (!instanceRef.current) {
-        instanceRef.current = createTableInstance<
+      const [instance] = React.useState(() =>
+        createTableInstance<
           TData,
           TValue,
           TFilterFns,
           TSortingFns,
           TAggregationFns
-        >(options, rerender)
-      }
+        >(options)
+      )
 
-      instanceRef.current.updateOptions(options)
+      useSyncExternalStore(instance.subscribe, () => instance.internalState)
 
-      return instanceRef.current
+      instance.updateOptions(options)
+
+      return instance
     },
     types: undefined as any,
   } as TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>

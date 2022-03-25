@@ -84,7 +84,8 @@ export type CoreOptions<
 
 export type TableCore<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
   {
-    rerender: () => void
+    subscribe: (cb: () => void) => () => void
+    notify: () => void
     initialState: TableState
     internalState: TableState
     reset: () => void
@@ -360,8 +361,7 @@ export function createTableInstance<
   TSortingFns,
   TAggregationFns
 >(
-  options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rerender: () => void
+  options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
 ): ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
   if (process.env.NODE_ENV !== 'production' && options.debug) {
     console.info('Creating React Table Instance...')
@@ -374,6 +374,8 @@ export function createTableInstance<
     TSortingFns,
     TAggregationFns
   >
+
+  let listeners: (() => void)[] = []
 
   const defaultOptions = features.reduce((obj, feature) => {
     return Object.assign(obj, (feature as any).getDefaultOptions?.(instance))
@@ -406,10 +408,18 @@ export function createTableInstance<
     TAggregationFns
   > = {
     ...instance,
+    subscribe: cb => {
+      listeners.push(cb)
+      return () => {
+        listeners = listeners.filter(l => l !== cb)
+      }
+    },
+    notify: () => {
+      listeners.forEach(l => l())
+    },
     ...features.reduce((obj, feature) => {
       return Object.assign(obj, (feature as any).getInstance?.(instance))
     }, {}),
-    rerender,
     initialState,
     internalState: initialState,
     reset: () => {
@@ -434,10 +444,7 @@ export function createTableInstance<
       return state
     },
 
-    setState: (
-      updater: Updater<TableState>,
-      shouldRerender: boolean = true
-    ) => {
+    setState: (updater: Updater<TableState>) => {
       const onStateChange = instance.options.onStateChange
 
       let internalState = instance.internalState
@@ -450,9 +457,7 @@ export function createTableInstance<
         return
       }
 
-      if (shouldRerender) {
-        instance.rerender()
-      }
+      instance.notify()
     },
 
     getDefaultColumn: memo(
