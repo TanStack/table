@@ -42,12 +42,7 @@ const defaultData: Row[] = [
   },
 ]
 
-let table = createTable()
-  .RowType<Row>()
-  .AggregationFns({
-    testAggregationFn: (rows: Row[]) =>
-      rows.reduce((acc, row) => acc + row.age, 0),
-  })
+let table = createTable().RowType<Row>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({

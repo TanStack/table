@@ -22,12 +22,7 @@ type Row = {
   progress: number
 }
 
-let table = createTable()
-  .RowType<Row>()
-  .AggregationFns({
-    testAggregationFn: (rows: Row[]) =>
-      rows.reduce((acc, row) => acc + row.age, 0),
-  })
+let table = createTable().RowType<Row>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
