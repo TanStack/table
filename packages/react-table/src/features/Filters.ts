@@ -116,19 +116,10 @@ export type FiltersInstance<TGenerics extends PartialGenerics> = {
 
   // All
   getPreFilteredRowModel: () => RowModel<TGenerics>
-  getPreFilteredRows: () => Row<TGenerics>[]
-  getPreFilteredFlatRows: () => Row<TGenerics>[]
-  getPreFilteredRowsById: () => Record<string, Row<TGenerics>>
 
   // Column Filters
-  getPreColumnFilteredRows: () => Row<TGenerics>[]
-  getPreColumnFilteredFlatRows: () => Row<TGenerics>[]
-  getPreColumnFilteredRowsById: () => Record<string, Row<TGenerics>>
-
+  getPreColumnFilteredRowModel: () => RowModel<TGenerics>
   getColumnFilteredRowModel: () => RowModel<TGenerics>
-  getColumnFilteredRows: () => Row<TGenerics>[]
-  getColumnFilteredFlatRows: () => Row<TGenerics>[]
-  getColumnFilteredRowsById: () => Record<string, Row<TGenerics>>
 
   // Global Filters
   setGlobalFilter: (updater: Updater<any>) => void
@@ -136,13 +127,8 @@ export type FiltersInstance<TGenerics extends PartialGenerics> = {
   getGlobalAutoFilterFn: () => FilterFn<TGenerics> | undefined
   getGlobalFilterFn: () => FilterFn<TGenerics> | undefined
   getColumnCanGlobalFilter: (columnId: string) => boolean
-  getPreGlobalFilteredRows: () => Row<TGenerics>[]
-  getPreGlobalFilteredFlatRows: () => Row<TGenerics>[]
-  getPreGlobalFilteredRowsById: () => Record<string, Row<TGenerics>>
+  getPreGlobalFilteredRowModel: () => RowModel<TGenerics>
   getGlobalFilteredRowModel: () => RowModel<TGenerics>
-  getGlobalFilteredRows: () => Row<TGenerics>[]
-  getGlobalFilteredFlatRows: () => Row<TGenerics>[]
-  getGlobalFilteredRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
@@ -173,9 +159,9 @@ export function getDefaultOptions<TGenerics extends PartialGenerics>(
     autoResetGlobalFilter: true,
     globalFilterType: 'auto',
     getColumnCanGlobalFilterFn: column => {
-      const value = instance.getCoreFlatRows()[0]?.getAllCellsByColumnId()[
-        column.id
-      ]?.value
+      const value = instance
+        .getCoreRowModel()
+        .flatRows[0]?.getAllCellsByColumnId()[column.id]?.value
 
       return typeof value === 'string'
     },
@@ -268,7 +254,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
       }
     },
     getColumnAutoFilterFn: columnId => {
-      const firstRow = instance.getCoreFlatRows()[0]
+      const firstRow = instance.getCoreRowModel().flatRows[0]
 
       const value = firstRow?.values[columnId]
 
@@ -472,6 +458,8 @@ export function getInstance<TGenerics extends PartialGenerics>(
       instance.setColumnFilters(instance.initialState?.columnFilters ?? [])
     },
 
+    getPreFilteredRowModel: () => instance.getCoreRowModel(),
+    getPreColumnFilteredRowModel: () => instance.getCoreRowModel(),
     getColumnFilteredRowModel: memo(
       () => [
         instance.getState().columnFilters,
@@ -510,23 +498,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
       }
     ),
-
-    // These might be easier to remember than "column" filtered rows
-    getPreFilteredRowModel: () => instance.getCoreRowModel(),
-    getPreFilteredRows: () => instance.getCoreRowModel().rows,
-    getPreFilteredFlatRows: () => instance.getCoreRowModel().flatRows,
-    getPreFilteredRowsById: () => instance.getCoreRowModel().rowsById,
-
-    // Pre Column Filter
-    getPreColumnFilteredRows: () => instance.getCoreRowModel().rows,
-    getPreColumnFilteredFlatRows: () => instance.getCoreRowModel().flatRows,
-    getPreColumnFilteredRowsById: () => instance.getCoreRowModel().rowsById,
-    getColumnFilteredRows: () => instance.getColumnFilteredRowModel().rows,
-
-    getColumnFilteredFlatRows: () =>
-      instance.getColumnFilteredRowModel().flatRows,
-    getColumnFilteredRowsById: () =>
-      instance.getColumnFilteredRowModel().rowsById,
+    getPreGlobalFilteredRowModel: () => instance.getColumnFilteredRowModel(),
     getGlobalFilteredRowModel: memo(
       () => [
         instance.getState().globalFilter,
@@ -571,17 +543,6 @@ export function getInstance<TGenerics extends PartialGenerics>(
         },
       }
     ),
-
-    getPreGlobalFilteredRows: () => instance.getColumnFilteredRowModel().rows,
-    getPreGlobalFilteredFlatRows: () =>
-      instance.getColumnFilteredRowModel().flatRows,
-    getPreGlobalFilteredRowsById: () =>
-      instance.getColumnFilteredRowModel().rowsById,
-    getGlobalFilteredRows: () => instance.getGlobalFilteredRowModel().rows,
-    getGlobalFilteredFlatRows: () =>
-      instance.getGlobalFilteredRowModel().flatRows,
-    getGlobalFilteredRowsById: () =>
-      instance.getGlobalFilteredRowModel().rowsById,
   }
 }
 

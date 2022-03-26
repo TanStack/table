@@ -64,12 +64,7 @@ export type ExpandedInstance<TGenerics extends PartialGenerics> = {
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
   getExpandedRowModel: () => RowModel<TGenerics>
-  getExpandedRows: () => Row<TGenerics>[]
-  getExpandedFlatRows: () => Row<TGenerics>[]
-  getExpandedRowsById: () => Record<string, Row<TGenerics>>
-  getPreExpandedRows: () => Row<TGenerics>[]
-  getPreExpandedFlatRows: () => Row<TGenerics>[]
-  getPreExpandedRowsById: () => Record<string, Row<TGenerics>>
+  getPreExpandedRowModel: () => RowModel<TGenerics>
 }
 
 //
@@ -129,7 +124,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
         let oldExpanded: ExpandedStateList = {}
 
         if (old === true) {
-          Object.keys(instance.getRowsById()).forEach(rowId => {
+          Object.keys(instance.getRowModel().rowsById).forEach(rowId => {
             oldExpanded[rowId] = true
           })
         } else {
@@ -243,7 +238,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
 
       // If any row is not expanded, return false
       if (
-        Object.keys(instance.getRowsById()).some(
+        Object.keys(instance.getRowModel().rowsById).some(
           id => !instance.getIsRowExpanded(id)
         )
       ) {
@@ -258,7 +253,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
 
       const rowIds =
         instance.getState().expanded === true
-          ? Object.keys(instance.getRowsById())
+          ? Object.keys(instance.getRowModel().rowsById)
           : Object.keys(instance.getState().expanded)
 
       rowIds.forEach(id => {
@@ -296,12 +291,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
       }
     ),
 
-    getPreExpandedRows: () => instance.getGroupedRowModel().rows,
-    getPreExpandedFlatRows: () => instance.getGroupedRowModel().flatRows,
-    getPreExpandedRowsById: () => instance.getGroupedRowModel().rowsById,
-    getExpandedRows: () => instance.getExpandedRowModel().rows,
-    getExpandedFlatRows: () => instance.getExpandedRowModel().flatRows,
-    getExpandedRowsById: () => instance.getExpandedRowModel().rowsById,
+    getPreExpandedRowModel: () => instance.getGroupedRowModel(),
   }
 }
 

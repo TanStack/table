@@ -141,8 +141,8 @@ function App() {
         </thead>
         <tbody {...instance.getTableBodyProps()}>
           {instance
-            .getRows()
-            .slice(0, 10)
+            .getRowModel()
+            .rows.slice(0, 10)
             .map(row => {
               return (
                 <tr {...row.getRowProps()}>
@@ -219,7 +219,7 @@ function App() {
       <br />
       <div>
         {Object.keys(rowSelection).length} of{' '}
-        {instance.getPreFilteredRows().length} Total Rows Selected
+        {instance.getPreFilteredRowModel().rows.length} Total Rows Selected
       </div>
       <hr />
       <br />
@@ -250,7 +250,7 @@ function App() {
           onClick={() =>
             console.log(
               'instance.getSelectedFlatRows()',
-              instance.getSelectedFlatRows()
+              instance.getSelectedRowModel().flatRows
             )
           }
         >
@@ -269,7 +269,7 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredFlatRows()[0].values[column.id]
+    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">

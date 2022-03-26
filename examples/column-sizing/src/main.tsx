@@ -173,7 +173,7 @@ function App() {
             ))}
           </thead>
           <tbody {...instance.getTableBodyProps()}>
-            {instance.getRows().map(row => (
+            {instance.getRowModel().rows.map(row => (
               <tr {...row.getRowProps()}>
                 {row.getVisibleCells().map(cell => (
                   <td
@@ -252,7 +252,7 @@ function App() {
               className: 'tbody',
             })}
           >
-            {instance.getRows().map(row => (
+            {instance.getRowModel().rows.map(row => (
               <div
                 {...row.getRowProps({
                   className: 'tr',

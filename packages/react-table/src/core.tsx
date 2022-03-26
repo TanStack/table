@@ -122,13 +122,7 @@ export type TableCore<TGenerics extends PartialGenerics> = {
     values: Record<string, any>
   ) => Row<TGenerics>
   getCoreRowModel: () => RowModel<TGenerics>
-  getCoreRows: () => Row<TGenerics>[]
-  getCoreFlatRows: () => Row<TGenerics>[]
-  getCoreRowsById: () => Record<string, Row<TGenerics>>
   getRowModel: () => RowModel<TGenerics>
-  getRows: () => Row<TGenerics>[]
-  getFlatRows: () => Row<TGenerics>[]
-  getRowsById: () => Record<string, Row<TGenerics>>
   getRow: (id: string) => Row<TGenerics>
   getCell: (rowId: string, columnId: string) => Cell<TGenerics>
   getTableProps: PropGetter<TableProps>
@@ -652,20 +646,6 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       }
     ),
 
-    // The standard
-
-    getCoreRows: () => {
-      return instance.getCoreRowModel().rows
-    },
-
-    getCoreFlatRows: () => {
-      return instance.getCoreRowModel().flatRows
-    },
-
-    getCoreRowsById: () => {
-      return instance.getCoreRowModel().rowsById
-    },
-
     // The final calls start at the bottom of the model,
     // expanded rows, which then work their way up
 
@@ -673,20 +653,8 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       return instance.getPaginationRowModel()
     },
 
-    getRows: () => {
-      return instance.getRowModel().rows
-    },
-
-    getFlatRows: () => {
-      return instance.getRowModel().flatRows
-    },
-
-    getRowsById: () => {
-      return instance.getRowModel().rowsById
-    },
-
     getRow: (id: string) => {
-      const row = instance.getRowsById()[id]
+      const row = instance.getRowModel().rowsById[id]
 
       if (!row) {
         if (process.env.NODE_ENV !== 'production') {

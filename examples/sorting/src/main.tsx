@@ -110,8 +110,8 @@ function App() {
         </thead>
         <tbody {...instance.getTableBodyProps()}>
           {instance
-            .getRows()
-            .slice(0, 10)
+            .getRowModel()
+            .rows.slice(0, 10)
             .map(row => {
               return (
                 <tr {...row.getRowProps()}>
@@ -123,7 +123,7 @@ function App() {
             })}
         </tbody>
       </table>
-      <div>{instance.getRows().length} Rows</div>
+      <div>{instance.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>

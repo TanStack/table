@@ -48,13 +48,8 @@ export type PaginationInstance<TGenerics extends PartialGenerics> = {
   getCanNextPage: () => boolean
   previousPage: () => void
   nextPage: () => void
-  getPrePaginationRows: () => Row<TGenerics>[]
-  getPrePaginationFlatRows: () => Row<TGenerics>[]
-  getPrePaginationRowsById: () => Record<string, Row<TGenerics>>
+  getPrePaginationRowModel: () => RowModel<TGenerics>
   getPaginationRowModel: () => RowModel<TGenerics>
-  getPaginationRows: () => Row<TGenerics>[]
-  getPaginationFlatRows: () => Row<TGenerics>[]
-  getPaginationRowsById: () => Record<string, Row<TGenerics>>
   getPageCount: () => number
 }
 
@@ -205,7 +200,8 @@ export function getInstance<TGenerics extends PartialGenerics>(
 
       return (
         pageIndex <
-        Math.ceil(instance.getPrePaginationRows().length / pageSize) - 1
+        Math.ceil(instance.getPrePaginationRowModel().rows.length / pageSize) -
+          1
       )
     },
 
@@ -219,6 +215,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
       })
     },
 
+    getPrePaginationRowModel: () => instance.getExpandedRowModel(),
     getPaginationRowModel: memo(
       () => [
         instance.getState().pagination,
@@ -238,13 +235,6 @@ export function getInstance<TGenerics extends PartialGenerics>(
       }
     ),
 
-    getPrePaginationRows: () => instance.getExpandedRowModel().rows,
-    getPrePaginationFlatRows: () => instance.getExpandedRowModel().flatRows,
-    getPrePaginationRowsById: () => instance.getExpandedRowModel().rowsById,
-    getPaginationRows: () => instance.getPaginationRowModel().rows,
-    getPaginationFlatRows: () => instance.getPaginationRowModel().flatRows,
-    getPaginationRowsById: () => instance.getPaginationRowModel().rowsById,
-
     getPageCount: () => {
       const { pageCount } = instance.getState().pagination
       if (pageCount > 0) {
@@ -252,7 +242,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
       }
 
       return Math.ceil(
-        instance.getPrePaginationRows().length /
+        instance.getPrePaginationRowModel().rows.length /
           instance.getState().pagination.pageSize
       )
     },

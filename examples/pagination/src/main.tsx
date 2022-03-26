@@ -136,7 +136,7 @@ function App() {
           ))}
         </thead>
         <tbody {...instance.getTableBodyProps()}>
-          {instance.getRows().map(row => {
+          {instance.getRowModel().rows.map(row => {
             return (
               <tr {...row.getRowProps()}>
                 {row.getVisibleCells().map(cell => {
@@ -209,7 +209,7 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{instance.getRows().length} Rows</div>
+      <div>{instance.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
@@ -229,7 +229,7 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredFlatRows()[0].values[column.id]
+    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">

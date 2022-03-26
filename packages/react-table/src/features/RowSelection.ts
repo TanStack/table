@@ -91,18 +91,10 @@ export type RowSelectionInstance<TGenerics extends PartialGenerics> = {
   getIsSomePageRowsSelected: () => boolean
   toggleAllRowsSelected: (value: boolean) => void
   toggleAllPageRowsSelected: (value: boolean) => void
+  getPreSelectedRowModel: () => RowModel<TGenerics>
   getSelectedRowModel: () => RowModel<TGenerics>
-  getSelectedRows: () => Row<TGenerics>[]
-  getSelectedFlatRows: () => Row<TGenerics>[]
-  getSelectedRowsById: () => Record<string, Row<TGenerics>>
   getFilteredSelectedRowModel: () => RowModel<TGenerics>
-  getFilteredSelectedRows: () => Row<TGenerics>[]
-  getFilteredSelectedFlatRows: () => Row<TGenerics>[]
-  getFilteredSelectedRowsById: () => Record<string, Row<TGenerics>>
   getGroupedSelectedRowModel: () => RowModel<TGenerics>
-  getGroupedSelectedRows: () => Row<TGenerics>[]
-  getGroupedSelectedFlatRows: () => Row<TGenerics>[]
-  getGroupedSelectedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
@@ -171,7 +163,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
         //  Leave all the other rows that are selected alone.
         const rowSelection = Object.assign({}, old)
 
-        const preGroupedFlatRows = instance.getPreGroupedFlatRows()
+        const preGroupedFlatRows = instance.getPreGroupedRowModel().flatRows
 
         // We don't use `mutateRowIsSelected` here for performance reasons.
         // All of the rows are flat already, so it wouldn't be worth it
@@ -197,7 +189,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
 
         const rowSelection: RowSelectionState = { ...old }
 
-        instance.getRows().forEach(row => {
+        instance.getRowModel().rows.forEach(row => {
           mutateRowIsSelected(rowSelection, row.id, value, instance)
         })
 
@@ -279,6 +271,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
 
     //   instance.setRowSelection(selectedRowIds)
     // },
+    getPreSelectedRowModel: () => instance.getCoreRowModel(),
     getSelectedRowModel: memo(
       () => [instance.getState().rowSelection, instance.getCoreRowModel()],
       (rowSelection, rowModel) => {
@@ -298,9 +291,6 @@ export function getInstance<TGenerics extends PartialGenerics>(
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
-    getSelectedRows: () => instance.getSelectedRowModel().rows,
-    getSelectedFlatRows: () => instance.getSelectedRowModel().flatRows,
-    getSelectedRowsById: () => instance.getSelectedRowModel().rowsById,
 
     getFilteredSelectedRowModel: memo(
       () => [
@@ -324,11 +314,6 @@ export function getInstance<TGenerics extends PartialGenerics>(
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
-    getFilteredSelectedRows: () => instance.getFilteredSelectedRowModel().rows,
-    getFilteredSelectedFlatRows: () =>
-      instance.getFilteredSelectedRowModel().flatRows,
-    getFilteredSelectedRowsById: () =>
-      instance.getFilteredSelectedRowModel().rowsById,
 
     getGroupedSelectedRowModel: memo(
       () => [instance.getState().rowSelection, instance.getGroupedRowModel()],
@@ -349,11 +334,6 @@ export function getInstance<TGenerics extends PartialGenerics>(
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
-    getGroupedSelectedRows: () => instance.getGroupedSelectedRowModel().rows,
-    getGroupedSelectedFlatRows: () =>
-      instance.getGroupedSelectedRowModel().flatRows,
-    getGroupedSelectedRowsById: () =>
-      instance.getGroupedSelectedRowModel().rowsById,
 
     ///
 
@@ -436,7 +416,8 @@ export function getInstance<TGenerics extends PartialGenerics>(
     // },
 
     getIsAllRowsSelected: () => {
-      const preFilteredFlatRows = instance.getPreGlobalFilteredFlatRows()
+      const preFilteredFlatRows =
+        instance.getPreGlobalFilteredRowModel().flatRows
       const { rowSelection } = instance.getState()
 
       let isAllRowsSelected = Boolean(
@@ -453,7 +434,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
     },
 
     getIsAllPageRowsSelected: () => {
-      const paginationFlatRows = instance.getPaginationFlatRows()
+      const paginationFlatRows = instance.getPaginationRowModel().flatRows
       const { rowSelection } = instance.getState()
 
       let isAllPageRowsSelected = !!paginationFlatRows.length
@@ -476,7 +457,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
     },
 
     getIsSomePageRowsSelected: () => {
-      const paginationFlatRows = instance.getPaginationFlatRows()
+      const paginationFlatRows = instance.getPaginationRowModel().flatRows
       return instance.getIsAllPageRowsSelected()
         ? false
         : !!paginationFlatRows?.length

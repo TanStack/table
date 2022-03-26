@@ -191,8 +191,8 @@ function App() {
             </thead>
             <tbody {...instance.getTableBodyProps()}>
               {instance
-                .getRows()
-                .slice(0, 20)
+                .getRowModel()
+                .rows.slice(0, 20)
                 .map(row => {
                   return (
                     <tr {...row.getRowProps()}>
@@ -261,8 +261,8 @@ function App() {
           </thead>
           <tbody {...instance.getTableBodyProps()}>
             {instance
-              .getRows()
-              .slice(0, 20)
+              .getRowModel()
+              .rows.slice(0, 20)
               .map(row => {
                 return (
                   <tr {...row.getRowProps()}>
@@ -331,8 +331,8 @@ function App() {
             </thead>
             <tbody {...instance.getTableBodyProps()}>
               {instance
-                .getRows()
-                .slice(0, 20)
+                .getRowModel()
+                .rows.slice(0, 20)
                 .map(row => {
                   return (
                     <tr {...row.getRowProps()}>

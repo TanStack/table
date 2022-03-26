@@ -121,13 +121,8 @@ export type GroupingInstance<TGenerics extends PartialGenerics> = {
     userProps?: TGetter
   ) => undefined | PropGetterValue<ToggleGroupingProps, TGetter>
   getRowIsGrouped: (rowId: string) => boolean
+  getPreGroupedRowModel: () => RowModel<TGenerics>
   getGroupedRowModel: () => RowModel<TGenerics>
-  getGroupedRows: () => Row<TGenerics>[]
-  getGroupedFlatRows: () => Row<TGenerics>[]
-  getGroupedRowsById: () => Record<string, Row<TGenerics>>
-  getPreGroupedRows: () => Row<TGenerics>[]
-  getPreGroupedFlatRows: () => Row<TGenerics>[]
-  getPreGroupedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
@@ -195,7 +190,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
       }
     },
     getColumnAutoAggregationFn: columnId => {
-      const firstRow = instance.getCoreFlatRows()[0]
+      const firstRow = instance.getCoreRowModel().flatRows[0]
 
       const value = firstRow?.values[columnId]
 
@@ -292,6 +287,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
 
     getRowIsGrouped: rowId => !!instance.getRow(rowId)?.groupingColumnId,
 
+    getPreGroupedRowModel: () => instance.getSortedRowModel(),
     getGroupedRowModel: memo(
       () => [
         instance.getState().grouping,
@@ -311,13 +307,6 @@ export function getInstance<TGenerics extends PartialGenerics>(
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
-
-    getPreGroupedRows: () => instance.getSortedRowModel().rows,
-    getPreGroupedFlatRows: () => instance.getSortedRowModel().flatRows,
-    getPreGroupedRowsById: () => instance.getSortedRowModel().rowsById,
-    getGroupedRows: () => instance.getGroupedRowModel().rows,
-    getGroupedFlatRows: () => instance.getGroupedRowModel().flatRows,
-    getGroupedRowsById: () => instance.getGroupedRowModel().rowsById,
   }
 }
 

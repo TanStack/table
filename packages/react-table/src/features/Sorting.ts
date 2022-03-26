@@ -117,13 +117,8 @@ export type SortingInstance<TGenerics extends PartialGenerics> = {
     columnId: string,
     userProps?: TGetter
   ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
-  getPreSortedRows: () => Row<TGenerics>[]
-  getPreSortedFlatRows: () => Row<TGenerics>[]
-  getPreSortedRowsById: () => Record<string, Row<TGenerics>>
+  getPreSortedRowModel: () => RowModel<TGenerics>
   getSortedRowModel: () => RowModel<TGenerics>
-  getSortedRows: () => Row<TGenerics>[]
-  getSortedFlatRows: () => Row<TGenerics>[]
-  getSortedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
@@ -432,6 +427,7 @@ export function getInstance<TGenerics extends PartialGenerics>(
       return propGetter(initialProps, userProps)
     },
 
+    getPreSortedRowModel: () => instance.getGlobalFilteredRowModel(),
     getSortedRowModel: memo(
       () => [
         instance.getState().sorting,
@@ -453,12 +449,5 @@ export function getInstance<TGenerics extends PartialGenerics>(
         },
       }
     ),
-
-    getPreSortedRows: () => instance.getGlobalFilteredRowModel().rows,
-    getPreSortedFlatRows: () => instance.getGlobalFilteredRowModel().flatRows,
-    getPreSortedRowsById: () => instance.getGlobalFilteredRowModel().rowsById,
-    getSortedRows: () => instance.getSortedRowModel().rows,
-    getSortedFlatRows: () => instance.getSortedRowModel().flatRows,
-    getSortedRowsById: () => instance.getSortedRowModel().rowsById,
   }
 }
