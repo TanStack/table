@@ -3,25 +3,18 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { makeData } from './makeData'
+import { makeData, Person } from './makeData'
 
 import {
   Column,
   columnFilterRowsFn,
   createTable,
   globalFilterRowsFn,
-  ReactTable,
+  paginateRowsFn,
+  TableInstance,
 } from '@tanstack/react-table'
-type Row = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
 
-let table = createTable().RowType<Row>()
+let table = createTable<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -93,25 +86,20 @@ function App() {
     []
   )
 
-  const [data, refreshData] = React.useReducer(
-    () => makeData(10000),
-    undefined,
-    () => makeData(10000)
-  )
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(makeData(100000))
 
   const instance = table.useTable({
     data,
     columns,
     state: {
       rowSelection,
-      columnFilters,
-      globalFilter,
     },
     onRowSelectionChange: setRowSelection,
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
     columnFilterRowsFn: columnFilterRowsFn,
     globalFilterRowsFn: globalFilterRowsFn,
+    paginateRowsFn: paginateRowsFn,
+    debugTable: true,
   })
 
   return (
@@ -166,6 +154,68 @@ function App() {
             })}
         </tbody>
       </table>
+      <div className="h-2" />
+      <div className="flex items-center gap-2">
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(0)}
+          disabled={!instance.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.previousPage()}
+          disabled={!instance.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.nextPage()}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {instance.getState().pagination.pageIndex + 1} of{' '}
+            {instance.getPageCount()}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            defaultValue={instance.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              instance.setPageIndex(page)
+            }}
+            className="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={instance.getState().pagination.pageSize}
+          onChange={e => {
+            instance.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
       <br />
       <div>
         {Object.keys(rowSelection).length} of{' '}
@@ -215,8 +265,8 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any, any, any, any, any>
-  instance: ReactTable<any, any, any, any, any>
+  column: Column<any>
+  instance: TableInstance<any>
 }) {
   const firstValue =
     instance.getPreColumnFilteredFlatRows()[0].values[column.id]
@@ -278,4 +328,9 @@ function IndeterminateCheckbox({
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+)

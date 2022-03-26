@@ -7,8 +7,9 @@ import {
   Getter,
   Header,
   OnChangeFn,
+  PartialGenerics,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Row,
   Updater,
 } from '../types'
@@ -18,6 +19,7 @@ import {
   isFunction,
   makeStateUpdater,
   memo,
+  Overwrite,
   propGetter,
 } from '../utils'
 
@@ -30,27 +32,27 @@ export type ColumnSort = {
 
 export type SortingState = ColumnSort[]
 
-export type SortingFn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  {
-    (
-      rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-      rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-      columnId: string
-    ): number
-  }
+export type SortingFn<TGenerics extends PartialGenerics> = {
+  (rowA: Row<TGenerics>, rowB: Row<TGenerics>, columnId: string): number
+}
+
+export type CustomSortingTypes<TGenerics extends PartialGenerics> = Record<
+  string,
+  SortingFn<TGenerics>
+>
 
 export type SortingTableState = {
   sorting: SortingState
 }
 
-export type SortType<TSortingFns> =
+export type SortType<TGenerics extends PartialGenerics> =
   | 'auto'
   | BuiltInSortType
-  | keyof TSortingFns
-  | SortingFn<any, any, any, TSortingFns, any>
+  | keyof TGenerics['SortingFns']
+  | SortingFn<TGenerics>
 
-export type SortingColumnDef<TFilterFns> = {
-  sortType?: SortType<TFilterFns>
+export type SortingColumnDef<TGenerics extends PartialGenerics> = {
+  sortType?: SortType<Overwrite<TGenerics, { Value: any }>>
   sortDescFirst?: boolean
   enableSorting?: boolean
   enableMultiSort?: boolean
@@ -59,14 +61,8 @@ export type SortingColumnDef<TFilterFns> = {
   sortUndefined?: false | -1 | 1
 }
 
-export type SortingColumn<
-  _TData,
-  _TValue,
-  TFilterFns,
-  _TSortingFns,
-  _TAggregationFns
-> = {
-  sortType: SortType<TFilterFns>
+export type SortingColumn<TGenerics extends PartialGenerics> = {
+  sortType: SortType<Overwrite<TGenerics, { Value: any }>>
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
@@ -77,14 +73,8 @@ export type SortingColumn<
   ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
 }
 
-export type SortingOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  sortTypes?: TSortingFns
+export type SortingOptions<TGenerics extends PartialGenerics> = {
+  sortTypes?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
   autoResetSorting?: boolean
   enableSorting?: boolean
@@ -93,15 +83,9 @@ export type SortingOptions<
   enableMultiSort?: boolean
   sortDescFirst?: boolean
   sortRowsFn?: (
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >,
-    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    instance: TableInstance<TGenerics>,
+    rowModel: RowModel<TGenerics>
+  ) => RowModel<TGenerics>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: MouseEvent | TouchEvent) => boolean
 }
@@ -111,22 +95,12 @@ export type ToggleSortingProps = {
   onClick?: (event: MouseEvent | TouchEvent) => void
 }
 
-export type SortingInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type SortingInstance<TGenerics extends PartialGenerics> = {
   _notifySortingReset: () => void
-  getColumnAutoSortingFn: (
-    columnId: string
-  ) => SortingFn<any, any, any, any, any> | undefined
+  getColumnAutoSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
   getColumnAutoSortDir: (columnId: string) => SortDirection
 
-  getColumnSortingFn: (
-    columnId: string
-  ) => SortingFn<any, any, any, any, any> | undefined
+  getColumnSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
 
   setSorting: (updater: Updater<SortingState>) => void
   toggleColumnSorting: (
@@ -143,54 +117,20 @@ export type SortingInstance<
     columnId: string,
     userProps?: TGetter
   ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
-  getSortedRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPreSortedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreSortedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreSortedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getSortedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getSortedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getSortedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+  getPreSortedRows: () => Row<TGenerics>[]
+  getPreSortedFlatRows: () => Row<TGenerics>[]
+  getPreSortedRowsById: () => Record<string, Row<TGenerics>>
+  getSortedRowModel: () => RowModel<TGenerics>
+  getSortedRows: () => Row<TGenerics>[]
+  getSortedFlatRows: () => Row<TGenerics>[]
+  getSortedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
 
-export function getDefaultColumn<TFilterFns>(): SortingColumnDef<TFilterFns> {
+export function getDefaultColumn<
+  TGenerics extends PartialGenerics
+>(): SortingColumnDef<TGenerics> {
   return {
     sortType: 'auto',
   }
@@ -202,15 +142,9 @@ export function getInitialState(): SortingTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): SortingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): SortingOptions<TGenerics> {
   return {
     onSortingChange: makeStateUpdater('sorting', instance),
     autoResetSorting: true,
@@ -220,16 +154,10 @@ export function getDefaultOptions<
   }
 }
 
-export function createColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): SortingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function createColumn<TGenerics extends PartialGenerics>(
+  column: Column<TGenerics>,
+  instance: TableInstance<TGenerics>
+): SortingColumn<TGenerics> {
   return {
     sortType: column.sortType,
     getCanSort: () => instance.getColumnCanSort(column.id),
@@ -243,15 +171,9 @@ export function createColumn<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): SortingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): SortingInstance<TGenerics> {
   let registered = false
 
   return {
@@ -323,13 +245,9 @@ export function getInstance<
         : column.sortType === 'auto'
         ? instance.getColumnAutoSortingFn(columnId)
         : (userSortTypes as Record<string, any>)?.[column.sortType as string] ??
-          (sortTypes[column.sortType as BuiltInSortType] as SortingFn<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >)
+          (sortTypes[
+            column.sortType as BuiltInSortType
+          ] as SortingFn<TGenerics>)
     },
 
     setSorting: updater =>
@@ -525,15 +443,14 @@ export function getInstance<
           return rowModel
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Sorting...')
-
         return sortingFn(instance, rowModel)
       },
       {
         key: 'getSortedRowModel',
-        debug: instance.options.debug,
-        onChange: () => instance._notifyGroupingReset(),
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        onChange: () => {
+          instance._notifyGroupingReset()
+        },
       }
     ),
 

@@ -1,4 +1,4 @@
-import { AccessorFn, Row } from './types'
+import { AccessorFn, PartialGenerics, Row } from './types'
 
 export const filterTypes = {
   includesString,
@@ -14,15 +14,8 @@ export const filterTypes = {
 
 export type BuiltInFilterType = keyof typeof filterTypes
 
-function includesString<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function includesString<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -38,15 +31,8 @@ function includesString<
 
 includesString.autoRemove = (val: any) => testFalsey(val)
 
-function includesStringSensitive<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function includesStringSensitive<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -62,15 +48,8 @@ function includesStringSensitive<
 
 includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
 
-function equalsString<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function equalsString<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -88,15 +67,8 @@ function equalsString<
 
 equalsString.autoRemove = (val: any) => testFalsey(val)
 
-function equalsStringSensitive<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function equalsStringSensitive<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -111,15 +83,8 @@ function equalsStringSensitive<
 
 equalsStringSensitive.autoRemove = (val: any) => testFalsey(val)
 
-function arrIncludes<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function arrIncludes<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -133,15 +98,8 @@ function arrIncludes<
 
 arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function arrIncludesAll<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function arrIncludesAll<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown[]
 ) {
@@ -159,15 +117,8 @@ function arrIncludesAll<
 
 arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function equals<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function equals<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -181,15 +132,8 @@ function equals<
 
 equals.autoRemove = (val: any) => testFalsey(val)
 
-function weakEquals<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function weakEquals<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
 ) {
@@ -204,15 +148,8 @@ function weakEquals<
 
 weakEquals.autoRemove = (val: any) => testFalsey(val)
 
-function betweenNumberRange<
-  TData,
-  TValue,
-  TAccessor extends AccessorFn<TData>,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function betweenNumberRange<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: [unknown, unknown]
 ) {

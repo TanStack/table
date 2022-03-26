@@ -58,6 +58,7 @@ import { Overwrite } from './utils'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
+  ColumnSizingHeader,
   ColumnSizingInstance,
   ColumnSizingOptions,
   ColumnSizingTableState,
@@ -78,36 +79,29 @@ import {
 //   const process.env.NODE_ENV !== 'production': boolean
 // }
 
-export type ReactTable<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = TableCore<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  VisibilityInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  ColumnOrderInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  ColumnPinningInstance<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  > &
-  HeadersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  FiltersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  SortingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  GroupingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  ColumnSizingInstance<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  > &
-  ExpandedInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  PaginationInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-  RowSelectionInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export type DefaultGenerics = {
+  Row: unknown
+  Value: unknown
+  FilterFns: object
+  SortingFns: object
+  AggregationFns: object
+}
+
+export type PartialGenerics = Partial<DefaultGenerics>
+
+export type TableInstance<TGenerics extends PartialGenerics> =
+  TableCore<TGenerics> &
+    VisibilityInstance<TGenerics> &
+    ColumnOrderInstance<TGenerics> &
+    ColumnPinningInstance<TGenerics> &
+    HeadersInstance<TGenerics> &
+    FiltersInstance<TGenerics> &
+    SortingInstance<TGenerics> &
+    GroupingInstance<TGenerics> &
+    ColumnSizingInstance<TGenerics> &
+    ExpandedInstance<TGenerics> &
+    PaginationInstance<TGenerics> &
+    RowSelectionInstance<TGenerics>
 
 export type Renderable<TProps> =
   | React.ReactNode
@@ -116,18 +110,18 @@ export type Renderable<TProps> =
 
 //
 
-export type Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  CoreOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+export type Options<TGenerics extends PartialGenerics> =
+  CoreOptions<TGenerics> &
     VisibilityOptions &
     ColumnOrderOptions &
     ColumnPinningOptions &
-    FiltersOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    SortingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    GroupingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    ExpandedOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+    FiltersOptions<TGenerics> &
+    SortingOptions<TGenerics> &
+    GroupingOptions<TGenerics> &
+    ExpandedOptions<TGenerics> &
     ColumnSizingOptions &
-    PaginationOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    RowSelectionOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    PaginationOptions<TGenerics> &
+    RowSelectionOptions<TGenerics>
 
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
@@ -143,101 +137,87 @@ export type TableState = VisibilityTableState &
   PaginationTableState &
   RowSelectionTableState
 
-export type Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  CoreRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    VisibilityRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    HeadersRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    GroupingRow &
-    RowSelectionRow
+export type Row<TGenerics extends PartialGenerics> = CoreRow<TGenerics> &
+  VisibilityRow<TGenerics> &
+  HeadersRow<TGenerics> &
+  GroupingRow &
+  RowSelectionRow
 
 export type RowValues = {
   [key: string]: any
 }
 
-export type RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  {
-    rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-    flatRows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-    rowsById: Record<
-      string,
-      Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    >
-  }
+export type RowModel<TGenerics extends PartialGenerics> = {
+  rows: Row<TGenerics>[]
+  flatRows: Row<TGenerics>[]
+  rowsById: Record<string, Row<TGenerics>>
+}
 
 export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 
-export type ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  CoreColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
+export const Please_use_the_create_table_column_utilities_to_define_columns: unique symbol =
+  Symbol()
+
+export type _NonGenerated<T> = Overwrite<
+  T,
+  {
+    [Please_use_the_create_table_column_utilities_to_define_columns]?: never
+  }
+>
+
+export type ColumnDef<TGenerics extends PartialGenerics> =
+  CoreColumnDef<TGenerics> &
     VisibilityColumnDef &
     ColumnPinningColumnDef &
-    FiltersColumnDef<TFilterFns> &
-    SortingColumnDef<TSortingFns> &
-    GroupingColumnDef<TAggregationFns> &
+    FiltersColumnDef<TGenerics> &
+    SortingColumnDef<TGenerics> &
+    GroupingColumnDef<TGenerics> &
     ColumnSizingColumnDef
 
-export type Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    CoreColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    ColumnVisibilityColumn &
-    ColumnPinningColumn &
-    FiltersColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    SortingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    GroupingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    ColumnSizingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export type Column<TGenerics extends PartialGenerics> = ColumnDef<TGenerics> &
+  CoreColumn<TGenerics> &
+  ColumnVisibilityColumn &
+  ColumnPinningColumn &
+  FiltersColumn<TGenerics> &
+  SortingColumn<TGenerics> &
+  GroupingColumn<TGenerics> &
+  ColumnSizingColumn<TGenerics>
 
-export type Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
+export type Cell<TGenerics extends PartialGenerics> = {
   id: string
   rowId: string
   columnId: string
-  value: TValue
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  value: TGenerics['Value']
+  row: Row<TGenerics>
+  column: Column<TGenerics>
   getCellProps: PropGetter<CellProps>
   renderCell: () => React.ReactNode
 }
 
-export type Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  CoreHeader<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export type Header<TGenerics extends PartialGenerics> = CoreHeader<TGenerics> &
+  ColumnSizingHeader<TGenerics>
 
-export type CoreHeader<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type CoreHeader<TGenerics extends PartialGenerics> = {
   id: string
   depth: number
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  column: Column<TGenerics>
   getWidth: () => number
-  subHeaders: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
+  subHeaders: Header<TGenerics>[]
   colSpan?: number
   rowSpan?: number
   getHeaderProps: PropGetter<HeaderProps>
   getFooterProps: PropGetter<HeaderProps>
-  getLeafHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+  getLeafHeaders: () => Header<TGenerics>[]
   isPlaceholder?: boolean
   placeholderId?: string
   renderHeader: (options?: { renderPlaceholder?: boolean }) => React.ReactNode
   renderFooter: (options?: { renderPlaceholder?: boolean }) => React.ReactNode
 }
 
-export type HeaderGroup<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type HeaderGroup<TGenerics extends PartialGenerics> = {
   id: string
   depth: number
-  headers: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
+  headers: Header<TGenerics>[]
   getHeaderGroupProps: PropGetter<HeaderGroupProps>
   getFooterGroupProps: PropGetter<FooterGroupProps>
 }

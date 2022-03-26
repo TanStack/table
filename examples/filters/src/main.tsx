@@ -8,20 +8,12 @@ import {
   columnFilterRowsFn,
   createTable,
   globalFilterRowsFn,
-  ReactTable,
+  TableInstance,
 } from '@tanstack/react-table'
-import { makeData } from './makeData'
 
-type Row = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
+import { makeData, Person } from './makeData'
 
-let table = createTable().RowType<Row>()
+let table = createTable<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -79,16 +71,12 @@ function App() {
     []
   )
 
-  const [data, refreshData] = React.useReducer(
-    () => makeData(100000),
-    undefined,
-    () => makeData(100000)
-  )
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(old => [...old])
 
   const instance = table.useTable({
     data,
     columns,
-    debug: true,
     state: {
       columnFilters,
       globalFilter,
@@ -97,6 +85,9 @@ function App() {
     onGlobalFilterChange: setGlobalFilter,
     columnFilterRowsFn: columnFilterRowsFn,
     globalFilterRowsFn: globalFilterRowsFn,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   })
 
   return (
@@ -167,8 +158,8 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any, any, any, any, any>
-  instance: ReactTable<any, any, any, any, any>
+  column: Column<any>
+  instance: TableInstance<any>
 }) {
   const firstValue =
     instance.getPreColumnFilteredFlatRows()[0].values[column.id]
@@ -209,4 +200,9 @@ function Filter({
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <div>
+    <App />
+  </div>,
+  document.getElementById('root')
+)

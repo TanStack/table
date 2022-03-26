@@ -1,4 +1,4 @@
-import { Row } from './types'
+import { PartialGenerics, Row } from './types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
@@ -13,9 +13,9 @@ export const sortTypes = {
 
 export type BuiltInSortType = keyof typeof sortTypes
 
-function alphanumeric<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-  rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+function alphanumeric<TGenerics extends PartialGenerics>(
+  rowA: Row<TGenerics>,
+  rowB: Row<TGenerics>,
   columnId: string
 ) {
   return compareAlphanumeric(
@@ -24,15 +24,9 @@ function alphanumeric<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
   )
 }
 
-function alphanumericCaseSensitive<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+function alphanumericCaseSensitive<TGenerics extends PartialGenerics>(
+  rowA: Row<TGenerics>,
+  rowB: Row<TGenerics>,
   columnId: string
 ) {
   return compareAlphanumeric(
@@ -90,9 +84,9 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-function text<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-  rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+function text<TGenerics extends PartialGenerics>(
+  rowA: Row<TGenerics>,
+  rowB: Row<TGenerics>,
   columnId: string
 ) {
   return compareBasic(
@@ -103,15 +97,9 @@ function text<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-function textCaseSensitive<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+function textCaseSensitive<TGenerics extends PartialGenerics>(
+  rowA: Row<TGenerics>,
+  rowB: Row<TGenerics>,
   columnId: string
 ) {
   return compareBasic(
@@ -120,9 +108,9 @@ function textCaseSensitive<
   )
 }
 
-function datetime<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-  rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+function datetime<TGenerics extends PartialGenerics>(
+  rowA: Row<TGenerics>,
+  rowB: Row<TGenerics>,
   columnId: string
 ) {
   return compareBasic(
@@ -131,9 +119,9 @@ function datetime<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
   )
 }
 
-function basic<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-  rowA: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowB: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+function basic<TGenerics extends PartialGenerics>(
+  rowA: Row<TGenerics>,
+  rowB: Row<TGenerics>,
   columnId: string
 ) {
   return compareBasic(rowA.values[columnId], rowB.values[columnId])

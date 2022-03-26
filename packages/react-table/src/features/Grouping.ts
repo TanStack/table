@@ -7,48 +7,52 @@ import {
   Getter,
   OnChangeFn,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Row,
   Updater,
+  PartialGenerics,
 } from '../types'
 import {
   functionalUpdate,
   isFunction,
   makeStateUpdater,
   memo,
+  Overwrite,
   propGetter,
 } from '../utils'
 
 export type GroupingState = string[]
 
-export type AggregationFn = (leafValues: any[], childValues: any[]) => any
+export type AggregationFn<TGenerics extends PartialGenerics> = (
+  leafValues: TGenerics['Row'][],
+  childValues: TGenerics['Row'][]
+) => any
 
-export type AggregationType<TAggregationFns> =
+export type CustomAggregationTypes<TGenerics extends PartialGenerics> = Record<
+  string,
+  AggregationFn<TGenerics>
+>
+
+export type AggregationType<TGenerics extends PartialGenerics> =
   | 'auto'
   | BuiltInAggregationType
-  | keyof TAggregationFns
-  | AggregationFn
+  | keyof TGenerics['AggregationFns']
+  | AggregationFn<TGenerics>
 
 export type GroupingTableState = {
   grouping: GroupingState
 }
 
-export type GroupingColumnDef<TAggregationFns> = {
-  aggregationType?: AggregationType<TAggregationFns>
+export type GroupingColumnDef<TGenerics extends PartialGenerics> = {
+  aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   aggregateValue?: (columnValue: unknown) => any
   renderAggregatedCell?: () => React.ReactNode
   enableGrouping?: boolean
   defaultCanGroup?: boolean
 }
 
-export type GroupingColumn<
-  _TData,
-  _TValue,
-  _TFilterFns,
-  _TSortingFns,
-  TAggregationFns
-> = {
-  aggregationType?: AggregationType<TAggregationFns>
+export type GroupingColumn<TGenerics extends PartialGenerics> = {
+  aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   getCanGroup: () => boolean
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
@@ -77,28 +81,16 @@ export type ColumnDefaultOptions = {
   enableGrouping: boolean
 }
 
-export type GroupingOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  aggregationTypes?: TAggregationFns
+export type GroupingOptions<TGenerics extends PartialGenerics> = {
+  aggregationTypes?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
   autoResetGrouping?: boolean
   enableGrouping?: boolean
   enableGroupingRemoval?: boolean
   groupRowsFn?: (
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >,
-    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    instance: TableInstance<TGenerics>,
+    rowModel: RowModel<TGenerics>
+  ) => RowModel<TGenerics>
 
   groupedColumnMode?: false | 'reorder' | 'remove'
 }
@@ -110,16 +102,14 @@ export type ToggleGroupingProps = {
   onClick?: (event: MouseEvent | TouchEvent) => void
 }
 
-export type GroupingInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type GroupingInstance<TGenerics extends PartialGenerics> = {
   _notifyGroupingReset: () => void
-  getColumnAutoAggregationFn: (columnId: string) => AggregationFn | undefined
-  getColumnAggregationFn: (columnId: string) => AggregationFn | undefined
+  getColumnAutoAggregationFn: (
+    columnId: string
+  ) => AggregationFn<TGenerics> | undefined
+  getColumnAggregationFn: (
+    columnId: string
+  ) => AggregationFn<TGenerics> | undefined
   setGrouping: (updater: Updater<GroupingState>) => void
   resetGrouping: () => void
   toggleColumnGrouping: (columnId: string) => void
@@ -131,54 +121,20 @@ export type GroupingInstance<
     userProps?: TGetter
   ) => undefined | PropGetterValue<ToggleGroupingProps, TGetter>
   getRowIsGrouped: (rowId: string) => boolean
-  getGroupedRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPreGroupedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreGroupedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreGroupedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getGroupedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getGroupedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getGroupedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+  getGroupedRowModel: () => RowModel<TGenerics>
+  getGroupedRows: () => Row<TGenerics>[]
+  getGroupedFlatRows: () => Row<TGenerics>[]
+  getGroupedRowsById: () => Record<string, Row<TGenerics>>
+  getPreGroupedRows: () => Row<TGenerics>[]
+  getPreGroupedFlatRows: () => Row<TGenerics>[]
+  getPreGroupedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
 
-export function getDefaultColumn<TFilterFns>(): GroupingColumnDef<TFilterFns> {
+export function getDefaultColumn<
+  TGenerics extends PartialGenerics
+>(): GroupingColumnDef<TGenerics> {
   return {
     aggregationType: 'auto',
   }
@@ -190,15 +146,9 @@ export function getInitialState(): GroupingTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): GroupingOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): GroupingOptions<TGenerics> {
   return {
     onGroupingChange: makeStateUpdater('grouping', instance),
     autoResetGrouping: true,
@@ -206,16 +156,10 @@ export function getDefaultOptions<
   }
 }
 
-export function createColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): GroupingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function createColumn<TGenerics extends PartialGenerics>(
+  column: Column<TGenerics>,
+  instance: TableInstance<TGenerics>
+): GroupingColumn<TGenerics> {
   return {
     aggregationType: column.aggregationType,
     getCanGroup: () => instance.getColumnCanGroup(column.id),
@@ -227,15 +171,9 @@ export function createColumn<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): GroupingInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): GroupingInstance<TGenerics> {
   let registered = false
 
   return {
@@ -288,7 +226,7 @@ export function getInstance<
           ] ??
           (aggregationTypes[
             column.aggregationType as BuiltInAggregationType
-          ] as AggregationFn)
+          ] as AggregationFn<TGenerics>)
     },
 
     setGrouping: updater =>
@@ -337,10 +275,6 @@ export function getInstance<
     getToggleGroupingProps: (columnId, userProps) => {
       const column = instance.getColumn(columnId)
 
-      if (!column) {
-        return
-      }
-
       const canGroup = column.getCanGroup()
 
       const initialProps: ToggleGroupingProps = {
@@ -369,14 +303,11 @@ export function getInstance<
           return rowModel
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Grouping...')
-
         return groupRowsFn(instance, rowModel)
       },
       {
         key: 'getGroupedRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
@@ -390,33 +321,20 @@ export function getInstance<
   }
 }
 
-export function createRow<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function createRow<TGenerics extends PartialGenerics>(
+  row: Row<TGenerics>,
+  instance: TableInstance<TGenerics>
 ): GroupingRow {
   return {
     getIsGrouped: () => instance.getRowIsGrouped(row.id),
   }
 }
 
-export function createCell<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  cell: Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> &
-    GroupingCell,
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  _instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function createCell<TGenerics extends PartialGenerics>(
+  cell: Cell<TGenerics> & GroupingCell,
+  column: Column<TGenerics>,
+  row: Row<TGenerics>,
+  _instance: TableInstance<TGenerics>
 ): GroupingCell {
   return {
     getIsGrouped: () =>
@@ -429,20 +347,8 @@ export function createCell<
   }
 }
 
-export function orderColumns<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  leafColumns: Column<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[],
+export function orderColumns<TGenerics extends PartialGenerics>(
+  leafColumns: Column<TGenerics>[],
   grouping: string[],
   groupedColumnMode?: GroupingColumnMode
 ) {

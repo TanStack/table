@@ -3,8 +3,9 @@ import { RowModel } from '..'
 import {
   Getter,
   OnChangeFn,
+  PartialGenerics,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Row,
   Updater,
 } from '../types'
@@ -25,34 +26,18 @@ export type ExpandedRow = {
   ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
 }
 
-export type ExpandedOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type ExpandedOptions<TGenerics extends PartialGenerics> = {
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
   enableExpanded?: boolean
   expandRowsFn?: (
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >,
-    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    instance: TableInstance<TGenerics>,
+    rowModel: RowModel<TGenerics>
+  ) => RowModel<TGenerics>
   expandSubRows?: boolean
   defaultCanExpand?: boolean
-  getIsRowExpanded?: (
-    row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => boolean
-  getRowCanExpand?: (
-    row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => boolean
+  getIsRowExpanded?: (row: Row<TGenerics>) => boolean
+  getRowCanExpand?: (row: Row<TGenerics>) => boolean
   paginateExpandedRows?: boolean
 }
 
@@ -61,13 +46,7 @@ export type ToggleExpandedProps = {
   onClick?: (event: MouseEvent | TouchEvent) => void
 }
 
-export type ExpandedInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type ExpandedInstance<TGenerics extends PartialGenerics> = {
   _notifyExpandedReset: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
@@ -84,49 +63,13 @@ export type ExpandedInstance<
   ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
-  getExpandedRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPreExpandedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreExpandedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreExpandedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getExpandedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getExpandedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getExpandedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+  getExpandedRowModel: () => RowModel<TGenerics>
+  getExpandedRows: () => Row<TGenerics>[]
+  getExpandedFlatRows: () => Row<TGenerics>[]
+  getExpandedRowsById: () => Record<string, Row<TGenerics>>
+  getPreExpandedRows: () => Row<TGenerics>[]
+  getPreExpandedFlatRows: () => Row<TGenerics>[]
+  getPreExpandedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
@@ -137,15 +80,9 @@ export function getInitialState(): ExpandedTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ExpandedOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): ExpandedOptions<TGenerics> {
   return {
     onExpandedChange: makeStateUpdater('expanded', instance),
     autoResetExpanded: true,
@@ -155,15 +92,9 @@ export function getDefaultOptions<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ExpandedInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): ExpandedInstance<TGenerics> {
   let registered = false
 
   return {
@@ -354,14 +285,11 @@ export function getInstance<
           return rowModel
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Expanding...')
-
         return expandRowsFn(instance, rowModel)
       },
       {
         key: 'getExpandedRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance._notifyPageIndexReset()
         },
@@ -377,15 +305,9 @@ export function getInstance<
   }
 }
 
-export function createRow<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function createRow<TGenerics extends PartialGenerics>(
+  row: Row<TGenerics>,
+  instance: TableInstance<TGenerics>
 ): ExpandedRow {
   return {
     toggleExpanded: expanded =>

@@ -5,6 +5,7 @@ import {
   PropGetterValue,
   Renderable,
   TableState,
+  Updater,
 } from './types'
 
 export type IsAny<T> = 0 extends 1 & T ? true : false
@@ -13,18 +14,11 @@ export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>
 export type Overwrite<T, U> = Omit<T, keyof U> & U
 
-export type DataUpdateFunction<TInput, TOutput> = (input: TInput) => TOutput
+export type DataUpdateFunction<T> = (input: T) => T
 
-export type Updater<TInput, TOutput> =
-  | TOutput
-  | DataUpdateFunction<TInput, TOutput>
-
-export function functionalUpdate<TInput, TOutput = TInput>(
-  updater: Updater<TInput, TOutput>,
-  input: TInput
-): TOutput {
+export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
-    ? (updater as DataUpdateFunction<TInput, TOutput>)(input)
+    ? (updater as DataUpdateFunction<T>)(input)
     : updater
 }
 
@@ -33,7 +27,7 @@ export function noop() {
 }
 
 export function makeStateUpdater(key: keyof TableState, instance: unknown) {
-  return (updater: Updater<any, any>) => {
+  return (updater: Updater<any>) => {
     ;(instance as any).setState(<TTableState,>(old: TTableState) => {
       return {
         ...old,
@@ -92,7 +86,7 @@ export function memo<TDeps extends readonly any[], TResult>(
   fn: (...args: NoInfer<[...TDeps]>) => TResult,
   opts: {
     key: string
-    debug?: boolean
+    debug?: () => any
     onChange?: (result: TResult, previousResult?: TResult) => void
   }
 ): () => TResult {
@@ -100,6 +94,9 @@ export function memo<TDeps extends readonly any[], TResult>(
   let result: TResult | undefined
 
   return () => {
+    let depTime: number
+    if (opts.key && opts.debug) depTime = performance.now()
+
     const newDeps = getDeps()
 
     const depsChanged =
@@ -107,33 +104,62 @@ export function memo<TDeps extends readonly any[], TResult>(
       newDeps.some((dep: any, index: number) => deps[index] !== dep)
 
     if (depsChanged) {
-      if (opts?.debug) {
-        console.info(opts?.key, {
-          length: `${deps.length} -> ${newDeps.length}`,
-          ...newDeps
-            .map((_, index) => {
-              if (deps[index] !== newDeps[index]) {
-                return [index, deps[index], newDeps[index]]
-              }
-
-              return false
-            })
-            .filter(Boolean)
-            .reduce(
-              (accu, curr: any) => ({
-                ...accu,
-                [curr[0]]: curr.slice(1),
-              }),
-              {}
-            ),
-          parent,
-        })
-      }
-
       let oldResult = result
+      let resultTime: number
+      if (opts.key && opts.debug) resultTime = performance.now()
       result = fn(...newDeps)
       deps = newDeps
       opts?.onChange?.(result, oldResult)
+
+      if (opts.key && opts.debug) {
+        if (opts?.debug()) {
+          const depEndTime =
+            Math.round((performance.now() - depTime!) * 100) / 100
+          const resultEndTime =
+            Math.round((performance.now() - resultTime!) * 100) / 100
+          const resultFpsPercentage = resultEndTime / 16
+
+          const pad = (str: number | string, num: number) => {
+            str = String(str)
+            while (str.length < num) {
+              str = ' ' + str
+            }
+            return str
+          }
+
+          console.info(
+            `%c⏱ ${pad(resultEndTime, 5)} /${pad(depEndTime, 5)} ms`,
+            `
+            font-size: .6rem;
+            font-weight: bold;
+            color: hsl(${Math.max(
+              0,
+              Math.min(120 - 120 * resultFpsPercentage, 120)
+            )}deg 100% 31%);`,
+            opts?.key,
+            {
+              length: `${deps.length} -> ${newDeps.length}`,
+              ...newDeps
+                .map((_, index) => {
+                  if (deps[index] !== newDeps[index]) {
+                    return [index, deps[index], newDeps[index]]
+                  }
+
+                  return false
+                })
+                .filter(Boolean)
+                .reduce(
+                  (accu, [a, b]: any) => ({
+                    ...accu,
+                    [a]: b,
+                  }),
+                  {}
+                ),
+              parent,
+            }
+          )
+        }
+      }
 
       oldResult = undefined
     }

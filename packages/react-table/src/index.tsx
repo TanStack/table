@@ -1,4 +1,5 @@
 export * from './types'
+export * from './utils'
 export * from './utils/columnFilterRowsFn'
 export * from './utils/globalFilterRowsFn'
 export * from './utils/sortRowsFn'

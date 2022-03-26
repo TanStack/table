@@ -1,25 +1,13 @@
-import { ReactTable, Row, RowModel } from '../types'
+import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
 import { SortingFn } from '../features/Sorting'
 
-export function sortRowsFn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function sortRowsFn<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>,
+  rowModel: RowModel<TGenerics>
+): RowModel<TGenerics> {
   const sortingState = instance.getState().sorting
 
-  const sortedFlatRows: Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[] = []
+  const sortedFlatRows: Row<TGenerics>[] = []
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sortingState.filter(sort =>
@@ -31,13 +19,7 @@ export function sortRowsFn<
     {
       sortUndefined?: false | -1 | 1
       invertSorting?: boolean
-      sortingFn: SortingFn<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >
+      sortingFn: SortingFn<TGenerics>
     }
   > = {}
 
@@ -51,9 +33,7 @@ export function sortRowsFn<
     }
   })
 
-  const sortData = (
-    rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  ) => {
+  const sortData = (rows: Row<TGenerics>[]) => {
     // This will also perform a stable sorting using the row index
     // if needed.
     const sortedData = rows.slice()

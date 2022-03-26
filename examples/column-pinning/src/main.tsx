@@ -7,7 +7,7 @@ import './index.css'
 import { createTable } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable().RowType<Person>()
+let table = createTable<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({
@@ -56,7 +56,7 @@ const defaultColumns = table.createColumns([
 ])
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(5000))
   const [columns] = React.useState(() => [...defaultColumns])
 
   const [columnVisibility, setColumnVisibility] = React.useState({})
@@ -64,7 +64,7 @@ function App() {
   const [columnPinning, setColumnPinning] = React.useState({})
 
   const [isSplit, setIsSplit] = React.useState(false)
-  const rerender = () => setData(() => makeData(100000))
+  const rerender = () => setData(() => makeData(5000))
 
   const instance = table.useTable({
     data,
@@ -77,7 +77,9 @@ function App() {
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
     onColumnPinningChange: setColumnPinning,
-    // debug: true,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   })
 
   const randomizeColumns = () => {

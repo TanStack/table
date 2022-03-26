@@ -1,22 +1,10 @@
-import { ReactTable, Row, RowModel } from '../types'
+import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
 import { flattenBy } from '../utils'
 
-export function groupRowsFn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  sortedRowModel: RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function groupRowsFn<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>,
+  sortedRowModel: RowModel<TGenerics>
+): RowModel<TGenerics> {
   const groupingState = instance.getState().grouping
   // Filter the grouping list down to columns that exist
   const existingGrouping = groupingState.filter(columnId =>
@@ -26,8 +14,8 @@ export function groupRowsFn<
   // Find the columns that can or are aggregating
   // Uses each column to aggregate rows into a single value
   const aggregateRowsToValues = (
-    leafRows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
-    groupedRows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+    leafRows: Row<TGenerics>[],
+    groupedRows: Row<TGenerics>[],
     depth: number
   ) => {
     const values: Record<string, unknown> = {}
@@ -75,17 +63,8 @@ export function groupRowsFn<
     return values
   }
 
-  const groupedFlatRows: Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[] = []
-  const groupedRowsById: Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  > = {}
+  const groupedFlatRows: Row<TGenerics>[] = []
+  const groupedRowsById: Record<string, Row<TGenerics>> = {}
   // const onlyGroupedFlatRows: Row[] = [];
   // const onlyGroupedRowsById: Record<RowId, Row> = {};
   // const nonGroupedFlatRows: Row[] = [];
@@ -93,7 +72,7 @@ export function groupRowsFn<
 
   // Recursively group the data
   const groupUpRecursively = (
-    rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+    rows: Row<TGenerics>[],
     depth = 0,
     parentId: string
   ) => {
@@ -172,14 +151,11 @@ export function groupRowsFn<
   }
 }
 
-function groupBy<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-  rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
+function groupBy<TGenerics extends PartialGenerics>(
+  rows: Row<TGenerics>[],
   columnId: string
 ) {
-  const groupMap = new Map<
-    any,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  >()
+  const groupMap = new Map<any, Row<TGenerics>[]>()
 
   return rows.reduce((map, row) => {
     const resKey = `${row.values[columnId]}`

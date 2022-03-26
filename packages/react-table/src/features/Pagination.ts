@@ -1,7 +1,8 @@
 import {
   Column,
   OnChangeFn,
-  ReactTable,
+  PartialGenerics,
+  TableInstance,
   Row,
   RowModel,
   TableState,
@@ -9,37 +10,23 @@ import {
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
-export type PageCount = undefined | null | number
-
 export type PaginationState = {
   pageIndex: number
   pageSize: number
-  pageCount?: PageCount
+  pageCount: number
 }
 
 export type PaginationTableState = {
   pagination: PaginationState
 }
 
-export type PaginationOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type PaginationOptions<TGenerics extends PartialGenerics> = {
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
   paginateRowsFn?: (
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >,
-    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    instance: TableInstance<TGenerics>,
+    rowModel: RowModel<TGenerics>
+  ) => RowModel<TGenerics>
 }
 
 export type PaginationDefaultOptions = {
@@ -47,13 +34,7 @@ export type PaginationDefaultOptions = {
   autoResetPageIndex: boolean
 }
 
-export type PaginationInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type PaginationInstance<TGenerics extends PartialGenerics> = {
   _notifyPageIndexReset: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: () => void
@@ -61,55 +42,20 @@ export type PaginationInstance<
   resetPageIndex: () => void
   setPageSize: (updater: Updater<number>) => void
   resetPageSize: () => void
-  setPageCount: (updater: Updater<PageCount>) => void
+  setPageCount: (updater: Updater<number>) => void
   getPageOptions: () => number[]
   getCanPreviousPage: () => boolean
   getCanNextPage: () => boolean
   previousPage: () => void
   nextPage: () => void
-  getPaginationRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPrePaginationRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPrePaginationFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPrePaginationRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getPaginationRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPaginationFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPaginationRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+  getPrePaginationRows: () => Row<TGenerics>[]
+  getPrePaginationFlatRows: () => Row<TGenerics>[]
+  getPrePaginationRowsById: () => Record<string, Row<TGenerics>>
+  getPaginationRowModel: () => RowModel<TGenerics>
+  getPaginationRows: () => Row<TGenerics>[]
+  getPaginationFlatRows: () => Row<TGenerics>[]
+  getPaginationRowsById: () => Record<string, Row<TGenerics>>
+  getPageCount: () => number
 }
 
 //
@@ -117,20 +63,15 @@ export type PaginationInstance<
 export function getInitialState(): PaginationTableState {
   return {
     pagination: {
+      pageCount: -1,
       pageIndex: 0,
       pageSize: 10,
     },
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
 ): PaginationDefaultOptions {
   return {
     onPaginationChange: makeStateUpdater('pagination', instance),
@@ -138,15 +79,9 @@ export function getDefaultOptions<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): PaginationInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): PaginationInstance<TGenerics> {
   let registered = false
   return {
     _notifyPageIndexReset: () => {
@@ -163,21 +98,12 @@ export function getInstance<
         instance.options.autoResetAll === true ||
         instance.options.autoResetPageIndex
       ) {
-        instance.resetPageSize()
+        instance.resetPageIndex()
       }
     },
     setPagination: updater => {
       const safeUpdater: Updater<PaginationState> = old => {
         let newState = functionalUpdate(updater, old)
-
-        if (instance.options.paginateRowsFn) {
-          newState.pageCount = instance.getPrePaginationRows()?.length
-            ? Math.ceil(
-                instance.getPrePaginationRows().length /
-                  instance.getState().pagination.pageSize
-              )
-            : 0
-        }
 
         return newState
       }
@@ -260,7 +186,7 @@ export function getInstance<
       },
       {
         key: 'getPageOptions',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
       }
     ),
 
@@ -304,14 +230,11 @@ export function getInstance<
           return rowModel
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Paginating...')
-
         return paginateRowsFn(instance, rowModel)
       },
       {
         key: 'getPaginationRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
       }
     ),
 
@@ -321,5 +244,17 @@ export function getInstance<
     getPaginationRows: () => instance.getPaginationRowModel().rows,
     getPaginationFlatRows: () => instance.getPaginationRowModel().flatRows,
     getPaginationRowsById: () => instance.getPaginationRowModel().rowsById,
+
+    getPageCount: () => {
+      const { pageCount } = instance.getState().pagination
+      if (pageCount > 0) {
+        return pageCount
+      }
+
+      return Math.ceil(
+        instance.getPrePaginationRows().length /
+          instance.getState().pagination.pageSize
+      )
+    },
   }
 }

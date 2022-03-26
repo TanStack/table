@@ -9,194 +9,53 @@ import {
   HeaderGroup,
   HeaderGroupProps,
   HeaderProps,
+  PartialGenerics,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Row,
 } from '../types'
 import { propGetter, memo, flexRender } from '../utils'
-
 import * as ColumnSizing from './ColumnSizing'
-import * as Sorting from './Sorting'
 
-export type HeadersRow<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  _getAllVisibleCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getVisibleCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getLeftVisibleCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getCenterVisibleCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getRightVisibleCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+export type HeadersRow<TGenerics extends PartialGenerics> = {
+  _getAllVisibleCells: () => Cell<TGenerics>[]
+  getVisibleCells: () => Cell<TGenerics>[]
+  getLeftVisibleCells: () => Cell<TGenerics>[]
+  getCenterVisibleCells: () => Cell<TGenerics>[]
+  getRightVisibleCells: () => Cell<TGenerics>[]
 }
 
-export type HeadersInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type HeadersInstance<TGenerics extends PartialGenerics> = {
   createHeader: (
-    column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+    column: Column<TGenerics>,
     options: {
       id?: string
       isPlaceholder?: boolean
       placeholderId?: string
       depth: number
     }
-  ) => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  getHeaderGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getLeftHeaderGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getCenterHeaderGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getRightHeaderGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+  ) => Header<TGenerics>
+  getHeaderGroups: () => HeaderGroup<TGenerics>[]
+  getLeftHeaderGroups: () => HeaderGroup<TGenerics>[]
+  getCenterHeaderGroups: () => HeaderGroup<TGenerics>[]
+  getRightHeaderGroups: () => HeaderGroup<TGenerics>[]
 
-  getFooterGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getCenterFooterGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getLeftFooterGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getRightFooterGroups: () => HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+  getFooterGroups: () => HeaderGroup<TGenerics>[]
+  getLeftFooterGroups: () => HeaderGroup<TGenerics>[]
+  getCenterFooterGroups: () => HeaderGroup<TGenerics>[]
+  getRightFooterGroups: () => HeaderGroup<TGenerics>[]
 
-  getFlatHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getLeftFlatHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getCenterFlatHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getRightFlatHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+  getFlatHeaders: () => Header<TGenerics>[]
+  getLeftFlatHeaders: () => Header<TGenerics>[]
+  getCenterFlatHeaders: () => Header<TGenerics>[]
+  getRightFlatHeaders: () => Header<TGenerics>[]
 
-  getLeafHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getLeftLeafHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getCenterLeafHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getRightLeafHeaders: () => Header<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+  getLeafHeaders: () => Header<TGenerics>[]
+  getLeftLeafHeaders: () => Header<TGenerics>[]
+  getCenterLeafHeaders: () => Header<TGenerics>[]
+  getRightLeafHeaders: () => Header<TGenerics>[]
 
-  getHeader: (
-    id: string
-  ) => Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  getHeader: (id: string) => Header<TGenerics>
 
   getHeaderGroupProps: <TGetter extends Getter<HeaderGroupProps>>(
     id: string,
@@ -219,16 +78,10 @@ export type HeadersInstance<
 
 //
 
-export function createRow<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): HeadersRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function createRow<TGenerics extends PartialGenerics>(
+  row: Row<TGenerics>,
+  instance: TableInstance<TGenerics>
+): HeadersRow<TGenerics> {
   return {
     _getAllVisibleCells: memo(
       () => [
@@ -241,7 +94,10 @@ export function createRow<
       _ => {
         return row.getAllCells().filter(cell => cell.column.getIsVisible())
       },
-      { key: 'row._getAllVisibleCells', debug: instance.options.debug }
+      {
+        key: 'row._getAllVisibleCells',
+        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+      }
     ),
     getVisibleCells: memo(
       () => [
@@ -250,7 +106,10 @@ export function createRow<
         row.getRightVisibleCells(),
       ],
       (left, center, right) => [...left, ...center, ...right],
-      { key: 'row.getVisibleCells', debug: instance.options.debug }
+      {
+        key: 'row.getVisibleCells',
+        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+      }
     ),
     getCenterVisibleCells: memo(
       () => [
@@ -263,7 +122,10 @@ export function createRow<
 
         return allCells.filter(d => !leftAndRight.includes(d.columnId))
       },
-      { key: 'row.getCenterVisibleCells', debug: instance.options.debug }
+      {
+        key: 'row.getCenterVisibleCells',
+        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+      }
     ),
     getLeftVisibleCells: memo(
       () => [
@@ -278,7 +140,10 @@ export function createRow<
 
         return cells
       },
-      { key: 'row.getLeftVisibleCells', debug: instance.options.debug }
+      {
+        key: 'row.getLeftVisibleCells',
+        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+      }
     ),
     getRightVisibleCells: memo(
       () => [
@@ -292,23 +157,20 @@ export function createRow<
 
         return cells
       },
-      { key: 'row.getRightVisibleCells', debug: instance.options.debug }
+      {
+        key: 'row.getRightVisibleCells',
+        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+      }
     ),
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): HeadersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): HeadersInstance<TGenerics> {
   return {
     createHeader: (
-      column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+      column: Column<TGenerics>,
       options: {
         id?: string
         isPlaceholder?: boolean
@@ -318,13 +180,7 @@ export function getInstance<
     ) => {
       const id = options.id ?? column.id
 
-      let header: CoreHeader<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      > = {
+      let header: CoreHeader<TGenerics> = {
         id,
         column,
         isPlaceholder: options.isPlaceholder,
@@ -336,15 +192,7 @@ export function getInstance<
         getWidth: () => {
           let sum = 0
 
-          const recurse = (
-            header: CoreHeader<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-          ) => {
+          const recurse = (header: CoreHeader<TGenerics>) => {
             if (header.subHeaders.length) {
               header.subHeaders.forEach(recurse)
             } else {
@@ -356,30 +204,10 @@ export function getInstance<
 
           return sum
         },
-        getLeafHeaders: (): Header<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >[] => {
-          const leafHeaders: CoreHeader<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >[] = []
+        getLeafHeaders: (): Header<TGenerics>[] => {
+          const leafHeaders: CoreHeader<TGenerics>[] = []
 
-          const recurseHeader = (
-            h: CoreHeader<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >
-          ) => {
+          const recurseHeader = (h: CoreHeader<TGenerics>) => {
             if (h.subHeaders && h.subHeaders.length) {
               h.subHeaders.map(recurseHeader)
             }
@@ -388,13 +216,7 @@ export function getInstance<
 
           recurseHeader(header)
 
-          return leafHeaders as Header<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >[]
+          return leafHeaders as Header<TGenerics>[]
         },
         getHeaderProps: userProps =>
           instance.getHeaderProps(header.id, userProps)!,
@@ -406,14 +228,11 @@ export function getInstance<
           flexRender(column.footer, { instance, header, column }),
       }
 
-      // Yes, we have to convert instance to uknown, because we know more than the compiler here.
-      return header as Header<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >
+      // Yes, we have to convert instance to unknown, because we know more than the compiler here.
+      return Object.assign(
+        header,
+        ColumnSizing.createHeader(header as Header<TGenerics>, instance)
+      ) as Header<TGenerics>
     },
 
     // Header Groups
@@ -443,7 +262,10 @@ export function getInstance<
 
         return headerGroups
       },
-      { key: 'getHeaderGroups', debug: instance.options.debug }
+      {
+        key: 'getHeaderGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getCenterHeaderGroups: memo(
@@ -459,7 +281,10 @@ export function getInstance<
         )
         return buildHeaderGroups(allColumns, leafColumns, instance, 'center')
       },
-      { key: 'getCenterHeaderGroups', debug: instance.options.debug }
+      {
+        key: 'getCenterHeaderGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getLeftHeaderGroups: memo(
@@ -472,7 +297,10 @@ export function getInstance<
         leafColumns = leafColumns.filter(column => left?.includes(column.id))
         return buildHeaderGroups(allColumns, leafColumns, instance, 'left')
       },
-      { key: 'getLeftHeaderGroups', debug: instance.options.debug }
+      {
+        key: 'getLeftHeaderGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getRightHeaderGroups: memo(
@@ -485,7 +313,10 @@ export function getInstance<
         leafColumns = leafColumns.filter(column => right?.includes(column.id))
         return buildHeaderGroups(allColumns, leafColumns, instance, 'right')
       },
-      { key: 'getRightHeaderGroups', debug: instance.options.debug }
+      {
+        key: 'getRightHeaderGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     // Footer Groups
@@ -495,7 +326,10 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      { key: 'getFooterGroups', debug: instance.options.debug }
+      {
+        key: 'getFooterGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getLeftFooterGroups: memo(
@@ -503,7 +337,10 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      { key: 'getLeftFooterGroups', debug: instance.options.debug }
+      {
+        key: 'getLeftFooterGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getCenterFooterGroups: memo(
@@ -511,7 +348,10 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      { key: 'getCenterFooterGroups', debug: instance.options.debug }
+      {
+        key: 'getCenterFooterGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getRightFooterGroups: memo(
@@ -519,7 +359,10 @@ export function getInstance<
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      { key: 'getRightFooterGroups', debug: instance.options.debug }
+      {
+        key: 'getRightFooterGroups',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     // Flat Headers
@@ -533,7 +376,10 @@ export function getInstance<
           })
           .flat()
       },
-      { key: 'getFlatHeaders', debug: instance.options.debug }
+      {
+        key: 'getFlatHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getLeftFlatHeaders: memo(
@@ -545,7 +391,10 @@ export function getInstance<
           })
           .flat()
       },
-      { key: 'getLeftFlatHeaders', debug: instance.options.debug }
+      {
+        key: 'getLeftFlatHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getCenterFlatHeaders: memo(
@@ -557,7 +406,10 @@ export function getInstance<
           })
           .flat()
       },
-      { key: 'getCenterFlatHeaders', debug: instance.options.debug }
+      {
+        key: 'getCenterFlatHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getRightFlatHeaders: memo(
@@ -569,7 +421,10 @@ export function getInstance<
           })
           .flat()
       },
-      { key: 'getRightFlatHeaders', debug: instance.options.debug }
+      {
+        key: 'getRightFlatHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     // Leaf Headers
@@ -579,7 +434,10 @@ export function getInstance<
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      { key: 'getCenterLeafHeaders', debug: instance.options.debug }
+      {
+        key: 'getCenterLeafHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getLeftLeafHeaders: memo(
@@ -587,7 +445,10 @@ export function getInstance<
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      { key: 'getLeftLeafHeaders', debug: instance.options.debug }
+      {
+        key: 'getLeftLeafHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getRightLeafHeaders: memo(
@@ -595,7 +456,10 @@ export function getInstance<
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      { key: 'getRightLeafHeaders', debug: instance.options.debug }
+      {
+        key: 'getRightLeafHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getLeafHeaders: memo(
@@ -615,7 +479,10 @@ export function getInstance<
           })
           .flat()
       },
-      { key: 'getLeafHeaders', debug: instance.options.debug }
+      {
+        key: 'getLeafHeaders',
+        debug: () => instance.options.debugAll ?? instance.options.debugHeaders,
+      }
     ),
 
     getHeader: (id: string) => {
@@ -686,9 +553,6 @@ export function getInstance<
 
     getFooterProps: (id, userProps) => {
       const header = instance.getHeader(id)
-      if (!header) {
-        return
-      }
 
       const initialProps: FooterProps = {
         key: header.id,
@@ -712,22 +576,10 @@ export function getInstance<
   }
 }
 
-export function buildHeaderGroups<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  allColumns: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
-  columnsToGroup: Column<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[],
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+export function buildHeaderGroups<TGenerics extends PartialGenerics>(
+  allColumns: Column<TGenerics>[],
+  columnsToGroup: Column<TGenerics>[],
+  instance: TableInstance<TGenerics>,
   headerFamily?: 'center' | 'left' | 'right'
 ) {
   // Find the max depth of the columns:
@@ -738,10 +590,7 @@ export function buildHeaderGroups<
 
   let maxDepth = 0
 
-  const findMaxDepth = (
-    columns: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
-    depth = 1
-  ) => {
+  const findMaxDepth = (columns: Column<TGenerics>[], depth = 1) => {
     maxDepth = Math.max(maxDepth, depth)
 
     columns
@@ -755,32 +604,14 @@ export function buildHeaderGroups<
 
   findMaxDepth(allColumns)
 
-  let headerGroups: HeaderGroup<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[] = []
+  let headerGroups: HeaderGroup<TGenerics>[] = []
 
   const createHeaderGroup = (
-    headersToGroup: Header<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[],
+    headersToGroup: Header<TGenerics>[],
     depth: number
   ) => {
     // The header group we are creating
-    const headerGroup: HeaderGroup<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    > = {
+    const headerGroup: HeaderGroup<TGenerics> = {
       depth,
       id: [headerFamily, `${depth}`].filter(Boolean).join('_'),
       headers: [],
@@ -791,13 +622,7 @@ export function buildHeaderGroups<
     }
 
     // The parent columns we're going to scan next
-    const parentHeaders: Header<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[] = []
+    const parentHeaders: Header<TGenerics>[] = []
 
     // Scan each column for parents
     headersToGroup.forEach(headerToGroup => {
@@ -807,13 +632,7 @@ export function buildHeaderGroups<
 
       const isLeafHeader = headerToGroup.column.depth === headerGroup.depth
 
-      let column: Column<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >
+      let column: Column<TGenerics>
       let isPlaceholder = false
 
       if (isLeafHeader && headerToGroup.column.parent) {
@@ -871,9 +690,7 @@ export function buildHeaderGroups<
   //   return !headerGroup.headers.every(header => header.isPlaceholder)
   // })
 
-  const recurseHeadersForSpans = (
-    headers: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  ) => {
+  const recurseHeadersForSpans = (headers: Header<TGenerics>[]) => {
     const filteredHeaders = headers.filter(header =>
       header.column.getIsVisible()
     )

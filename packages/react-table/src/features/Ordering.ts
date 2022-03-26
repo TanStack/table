@@ -1,6 +1,12 @@
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
-import { ReactTable, OnChangeFn, Updater, Column } from '../types'
+import {
+  TableInstance,
+  OnChangeFn,
+  Updater,
+  Column,
+  PartialGenerics,
+} from '../types'
 
 import * as Grouping from './Grouping'
 
@@ -18,18 +24,10 @@ export type ColumnOrderDefaultOptions = {
   onColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
-export type ColumnOrderInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type ColumnOrderInstance<TGenerics extends PartialGenerics> = {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
   resetColumnOrder: () => void
-  getOrderColumnsFn: () => (
-    columns: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  ) => Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
+  getOrderColumnsFn: () => (columns: Column<TGenerics>[]) => Column<TGenerics>[]
 }
 
 //
@@ -40,35 +38,17 @@ export function getInitialState(): ColumnOrderTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
 ): ColumnOrderDefaultOptions {
   return {
     onColumnOrderChange: makeStateUpdater('columnOrder', instance),
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ColumnOrderInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): ColumnOrderInstance<TGenerics> {
   return {
     setColumnOrder: updater =>
       instance.options.onColumnOrderChange?.(
@@ -87,13 +67,7 @@ export function getInstance<
       (columnOrder, grouping, groupedColumnMode) => columns => {
         // Sort grouped columns to the start of the column list
         // before the headers are built
-        let orderedColumns: Column<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >[] = []
+        let orderedColumns: Column<TGenerics>[] = []
 
         // If there is no order, return the normal columns
         if (!columnOrder?.length) {
@@ -127,7 +101,10 @@ export function getInstance<
           groupedColumnMode
         )
       },
-      { key: 'getOrderColumnsFn', debug: instance.options.debug }
+      {
+        key: 'getOrderColumnsFn',
+        // debug: () => instance.options.debugAll ?? instance.options.debugTable,
+      }
     ),
   }
 }

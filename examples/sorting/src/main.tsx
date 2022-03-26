@@ -4,18 +4,9 @@ import ReactDOM from 'react-dom'
 import './index.css'
 
 import { createTable, sortRowsFn } from '@tanstack/react-table'
-import { makeData } from './makeData'
+import { makeData, Person } from './makeData'
 
-type Row = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-let table = createTable().RowType<Row>()
+let table = createTable<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -72,11 +63,8 @@ function App() {
     []
   )
 
-  const [data, refreshData] = React.useReducer(
-    () => makeData(100000),
-    undefined,
-    () => makeData(100000)
-  )
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(makeData(100000))
 
   const instance = table.useTable({
     data,
@@ -86,9 +74,8 @@ function App() {
     },
     onSortingChange: setSorting,
     sortRowsFn: sortRowsFn,
+    debugTable: true,
   })
-
-  console.log(instance)
 
   return (
     <div className="p-2">
@@ -148,4 +135,9 @@ function App() {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+)

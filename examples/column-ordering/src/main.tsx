@@ -7,7 +7,7 @@ import './index.css'
 import { createTable } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable().RowType<Person>()
+let table = createTable<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({
@@ -73,7 +73,9 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
-    // debug: true,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   })
 
   const randomizeColumns = () => {
@@ -148,4 +150,9 @@ function App() {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+)

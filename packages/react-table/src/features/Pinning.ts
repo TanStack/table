@@ -1,4 +1,10 @@
-import { OnChangeFn, Updater, ReactTable, Column } from '../types'
+import {
+  OnChangeFn,
+  Updater,
+  TableInstance,
+  Column,
+  PartialGenerics,
+} from '../types'
 import { functionalUpdate, makeStateUpdater } from '../utils'
 
 type ColumnPinningPosition = false | 'left' | 'right'
@@ -33,13 +39,7 @@ export type ColumnPinningColumn = {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export type ColumnPinningInstance<
-  _TData,
-  _TValue,
-  _TFilterFns,
-  _TSortingFns,
-  _TAggregationFns
-> = {
+export type ColumnPinningInstance<TGenerics extends PartialGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: () => void
   pinColumn: (columnId: string, position: ColumnPinningPosition) => void
@@ -59,29 +59,17 @@ export function getInitialState(): ColumnPinningTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
 ): ColumnPinningDefaultOptions {
   return {
     onColumnPinningChange: makeStateUpdater('columnPinning', instance),
   }
 }
 
-export function createColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function createColumn<TGenerics extends PartialGenerics>(
+  column: Column<TGenerics>,
+  instance: TableInstance<TGenerics>
 ): ColumnPinningColumn {
   return {
     getCanPin: () => instance.getColumnCanPin(column.id),
@@ -91,21 +79,9 @@ export function createColumn<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ColumnPinningInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): ColumnPinningInstance<TGenerics> {
   return {
     setColumnPinning: updater =>
       instance.options.onColumnPinningChange?.(

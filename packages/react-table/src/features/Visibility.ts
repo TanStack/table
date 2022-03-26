@@ -3,8 +3,9 @@ import {
   Column,
   Getter,
   OnChangeFn,
+  PartialGenerics,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Updater,
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
@@ -24,27 +25,9 @@ export type VisibilityTableState = {
   columnVisibility: VisibilityState
 }
 
-export type VisibilityInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  getVisibleFlatColumns: () => Column<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getVisibleLeafColumns: () => Column<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+export type VisibilityInstance<TGenerics extends PartialGenerics> = {
+  getVisibleFlatColumns: () => Column<TGenerics>[]
+  getVisibleLeafColumns: () => Column<TGenerics>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
   toggleColumnVisibility: (columnId: string, value?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
@@ -67,20 +50,8 @@ export type VisibilityColumnDef = {
   defaultCanHide?: boolean
 }
 
-export type VisibilityRow<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  getVisibleCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+export type VisibilityRow<TGenerics extends PartialGenerics> = {
+  getVisibleCells: () => Cell<TGenerics>[]
 }
 
 export type VisibilityColumn = {
@@ -100,14 +71,8 @@ export function getInitialState(): VisibilityTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
 ): VisibilityDefaultOptions {
   return {
     onColumnVisibilityChange: makeStateUpdater('columnVisibility', instance),
@@ -120,15 +85,9 @@ export function getDefaultColumn() {
   }
 }
 
-export function createColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function createColumn<TGenerics extends PartialGenerics>(
+  column: Column<TGenerics>,
+  instance: TableInstance<TGenerics>
 ): VisibilityColumn {
   return {
     getCanHide: () => instance.getColumnCanHide(column.id),
@@ -150,15 +109,9 @@ export function createColumn<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): VisibilityInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): VisibilityInstance<TGenerics> {
   return {
     getVisibleFlatColumns: memo(
       () => [
@@ -172,7 +125,10 @@ export function getInstance<
       allFlatColumns => {
         return allFlatColumns.filter(d => d.getIsVisible?.())
       },
-      { key: 'getVisibleFlatColumns', debug: instance.options.debug }
+      {
+        key: 'getVisibleFlatColumns',
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+      }
     ),
 
     getVisibleLeafColumns: memo(
@@ -187,7 +143,10 @@ export function getInstance<
       allFlatColumns => {
         return allFlatColumns.filter(d => d.getIsVisible?.())
       },
-      { key: 'getVisibleLeafColumns', debug: instance.options.debug }
+      {
+        key: 'getVisibleLeafColumns',
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+      }
     ),
 
     setColumnVisibility: updater =>

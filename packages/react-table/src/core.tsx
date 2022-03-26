@@ -25,9 +25,11 @@ import {
   Getter,
   RowProps,
   CellProps,
-  ReactTable,
+  TableInstance,
   RowValues,
   Renderable,
+  Please_use_the_create_table_column_utilities_to_define_columns,
+  PartialGenerics,
 } from './types'
 
 import * as Visibility from './features/Visibility'
@@ -57,323 +59,160 @@ const features = [
   RowSelection,
 ]
 
-export type CoreOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  data: TData[]
-  columns: ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  debug?: boolean
-  defaultColumn?: Partial<
-    ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+export type CoreOptions<TGenerics extends PartialGenerics> = {
+  data: TGenerics['Row'][]
+  columns: ColumnDef<TGenerics>[]
+  state: Partial<TableState>
+  onStateChange: (updater: Updater<TableState>) => void
+  debugAll?: boolean
+  debugTable?: boolean
+  debugHeaders?: boolean
+  debugColumns?: boolean
+  debugRows?: boolean
+  defaultColumn?: Partial<ColumnDef<TGenerics>>
   initialState?: Partial<TableState>
-  state?: Partial<TableState>
-  getSubRows?: (originalRow: TData, index: number) => TData[]
+  getSubRows?: (
+    originalRow: TGenerics['Row'],
+    index: number
+  ) => TGenerics['Row'][]
   getRowId?: (
-    originalRow: TData,
+    originalRow: TGenerics['Row'],
     index: number,
-    parent?: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    parent?: Row<TGenerics>
   ) => string
-  onStateChange?: (newState: TableState) => void
   autoResetAll?: boolean
 }
 
-export type TableCore<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  {
-    subscribe: (cb: () => void) => () => void
-    notify: () => void
-    initialState: TableState
-    internalState: TableState
-    reset: () => void
-    options: RequiredKeys<
-      Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-      'state'
-    >
-    updateOptions: (
-      newOptions: Options<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >
-    ) => void
-    getRowId: (
-      _: TData,
-      index: number,
-      parent?: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    ) => string
-    getState: () => TableState
-    setState: (updater: Updater<TableState>) => void
-    getDefaultColumn: () => Partial<
-      ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    >
-    getColumnDefs: () => ColumnDef<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    createColumn: (
-      columnDef: ColumnDef<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >,
-      depth: number,
-      parent?: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    ) => Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    getAllColumns: () => Column<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getAllFlatColumns: () => Column<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getAllFlatColumnsById: () => Record<
-      string,
-      Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    >
-    getAllLeafColumns: () => Column<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getColumn: (
-      columnId: string
-    ) => Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    getColumnWidth: (columnId: string) => number
-    getTotalWidth: () => number
-    createCell: (
-      row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-      column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-      value: any
-    ) => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    createRow: (
-      id: string,
-      original: TData | undefined,
-      rowIndex: number,
-      depth: number,
-      values: Record<string, any>
-    ) => Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    getCoreRowModel: () => RowModel<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
-    getCoreRows: () => Row<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getCoreFlatRows: () => Row<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getCoreRowsById: () => Record<
-      string,
-      Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    >
-    getRowModel: () => RowModel<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
-    getRows: () => Row<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getFlatRows: () => Row<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-    getRowsById: () => Record<
-      string,
-      Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    >
-    getRow: (
-      id: string
-    ) => Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    getCell: (
-      rowId: string,
-      columnId: string
-    ) => Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    getTableProps: PropGetter<TableProps>
-    getTableBodyProps: PropGetter<TableBodyProps>
-    getRowProps: <TGetter extends Getter<RowProps>>(
-      rowId: string,
-      userProps?: TGetter
-    ) => undefined | PropGetterValue<RowProps, TGetter>
-    getCellProps: <TGetter extends Getter<CellProps>>(
-      rowId: string,
-      columnId: string,
-      userProps?: TGetter
-    ) => undefined | PropGetterValue<CellProps, TGetter>
-    getTableWidth: () => number
-    getLeftTableWidth: () => number
-    getCenterTableWidth: () => number
-    getRightTableWidth: () => number
-  }
-
-export type CoreRow<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> = {
-  id: string
-  index: number
-  original?: TData
-  depth: number
-  values: RowValues
-  leafRows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  subRows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  getRowProps: PropGetter<RowProps>
-  originalSubRows?: TData[]
-  getAllCells: () => Cell<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getAllCellsByColumnId: () => Record<
-    string,
-    Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+export type TableCore<TGenerics extends PartialGenerics> = {
+  initialState: TableState
+  reset: () => void
+  options: RequiredKeys<Options<TGenerics>, 'state'>
+  setOptions: (newOptions: Updater<Options<TGenerics>>) => void
+  getRowId: (
+    _: TGenerics['Row'],
+    index: number,
+    parent?: Row<TGenerics>
+  ) => string
+  getState: () => TableState
+  setState: (updater: Updater<TableState>) => void
+  getDefaultColumn: () => Partial<ColumnDef<TGenerics>>
+  getColumnDefs: () => ColumnDef<TGenerics>[]
+  createColumn: (
+    columnDef: ColumnDef<TGenerics>,
+    depth: number,
+    parent?: Column<TGenerics>
+  ) => Column<TGenerics>
+  getAllColumns: () => Column<TGenerics>[]
+  getAllFlatColumns: () => Column<TGenerics>[]
+  getAllFlatColumnsById: () => Record<string, Column<TGenerics>>
+  getAllLeafColumns: () => Column<TGenerics>[]
+  getColumn: (columnId: string) => Column<TGenerics>
+  getColumnWidth: (columnId: string) => number
+  getTotalWidth: () => number
+  createCell: (
+    row: Row<TGenerics>,
+    column: Column<TGenerics>,
+    value: any
+  ) => Cell<TGenerics>
+  createRow: (
+    id: string,
+    original: TGenerics['Row'] | undefined,
+    rowIndex: number,
+    depth: number,
+    values: Record<string, any>
+  ) => Row<TGenerics>
+  getCoreRowModel: () => RowModel<TGenerics>
+  getCoreRows: () => Row<TGenerics>[]
+  getCoreFlatRows: () => Row<TGenerics>[]
+  getCoreRowsById: () => Record<string, Row<TGenerics>>
+  getRowModel: () => RowModel<TGenerics>
+  getRows: () => Row<TGenerics>[]
+  getFlatRows: () => Row<TGenerics>[]
+  getRowsById: () => Record<string, Row<TGenerics>>
+  getRow: (id: string) => Row<TGenerics>
+  getCell: (rowId: string, columnId: string) => Cell<TGenerics>
+  getTableProps: PropGetter<TableProps>
+  getTableBodyProps: PropGetter<TableBodyProps>
+  getRowProps: <TGetter extends Getter<RowProps>>(
+    rowId: string,
+    userProps?: TGetter
+  ) => undefined | PropGetterValue<RowProps, TGetter>
+  getCellProps: <TGetter extends Getter<CellProps>>(
+    rowId: string,
+    columnId: string,
+    userProps?: TGetter
+  ) => undefined | PropGetterValue<CellProps, TGetter>
+  getTableWidth: () => number
+  getLeftTableWidth: () => number
+  getCenterTableWidth: () => number
+  getRightTableWidth: () => number
 }
 
-export type CoreColumnDef<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type CoreRow<TGenerics extends PartialGenerics> = {
   id: string
-  accessorKey?: string & keyof TData
-  accessorFn?: AccessorFn<TData>
+  index: number
+  original?: TGenerics['Row']
+  depth: number
+  values: RowValues
+  leafRows: Row<TGenerics>[]
+  subRows: Row<TGenerics>[]
+  getRowProps: PropGetter<RowProps>
+  originalSubRows?: TGenerics['Row'][]
+  getAllCells: () => Cell<TGenerics>[]
+  getAllCellsByColumnId: () => Record<string, Cell<TGenerics>>
+}
+
+export type CoreColumnDef<TGenerics extends PartialGenerics> = {
+  id: string
+  accessorKey?: string & keyof TGenerics['Row']
+  accessorFn?: AccessorFn<TGenerics['Row']>
   header?:
     | string
     | Renderable<{
-        instance: ReactTable<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >
-        header: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-        column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+        instance: TableInstance<TGenerics>
+        header: Header<TGenerics>
+        column: Column<TGenerics>
       }>
-  __generated: true
   width?: number
   minWidth?: number
   maxWidth?: number
-  columns?: ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
+  columns?: ColumnDef<TGenerics>[]
   footer?: Renderable<{
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
-    header: Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+    instance: TableInstance<TGenerics>
+    header: Header<TGenerics>
+    column: Column<TGenerics>
   }>
   cell?: Renderable<{
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
-    row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    cell: Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    value: TValue
+    instance: TableInstance<TGenerics>
+    row: Row<TGenerics>
+    column: Column<TGenerics>
+    cell: Cell<TGenerics>
+    value: TGenerics['Value']
   }>
   defaultIsVisible?: boolean
+  [Please_use_the_create_table_column_utilities_to_define_columns]: true
 }
 
-export type CoreColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type CoreColumn<TGenerics extends PartialGenerics> = {
   id: string
   depth: number
-  accessorFn?: AccessorFn<TData>
-  columnDef: ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  accessorFn?: AccessorFn<TGenerics['Row']>
+  columnDef: ColumnDef<TGenerics>
   getWidth: () => number
-  columns: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-  parent?: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  getFlatColumns: () => Column<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getLeafColumns: () => Column<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
+  columns: Column<TGenerics>[]
+  parent?: Column<TGenerics>
+  getFlatColumns: () => Column<TGenerics>[]
+  getLeafColumns: () => Column<TGenerics>[]
 }
 
-export function createTableInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
-  if (process.env.NODE_ENV !== 'production' && options.debug) {
+export function createTableInstance<TGenerics extends PartialGenerics>(
+  options: Options<TGenerics>
+): TableInstance<TGenerics> {
+  if (options.debugAll || options.debugTable) {
     console.info('Creating React Table Instance...')
   }
 
-  let instance = {} as ReactTable<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
+  let instance = {} as TableInstance<TGenerics>
 
   let listeners: (() => void)[] = []
 
@@ -381,12 +220,7 @@ export function createTableInstance<
     return Object.assign(obj, (feature as any).getDefaultOptions?.(instance))
   }, {})
 
-  const defaultState = {}
-
-  const buildOptions = (
-    options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => ({
-    state: defaultState,
+  const buildOptions = (options: Options<TGenerics>) => ({
     ...defaultOptions,
     ...options,
   })
@@ -400,95 +234,54 @@ export function createTableInstance<
     ...(options.initialState ?? {}),
   } as TableState
 
-  const finalInstance: ReactTable<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  > = {
+  const finalInstance: TableInstance<TGenerics> = {
     ...instance,
-    subscribe: cb => {
-      listeners.push(cb)
-      return () => {
-        listeners = listeners.filter(l => l !== cb)
-      }
-    },
-    notify: () => {
-      listeners.forEach(l => l())
-    },
     ...features.reduce((obj, feature) => {
       return Object.assign(obj, (feature as any).getInstance?.(instance))
     }, {}),
     initialState,
-    internalState: initialState,
     reset: () => {
       instance.setState(instance.initialState)
     },
-    updateOptions: newOptions => {
-      instance.options = buildOptions(newOptions)
+    setOptions: updater => {
+      instance.options = buildOptions(
+        functionalUpdate(updater, instance.options)
+      )
     },
 
-    getRowId: (
-      _: TData,
-      index: number,
-      parent?: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    ) => `${parent ? [parent.id, index].join('.') : index}`,
+    getRowId: (_: TGenerics['Row'], index: number, parent?: Row<TGenerics>) =>
+      `${parent ? [parent.id, index].join('.') : index}`,
 
     getState: () => {
-      let state = {
-        ...instance.internalState,
-        ...instance.options.state,
-      }
-
-      return state
+      return instance.options.state as TableState
     },
 
     setState: (updater: Updater<TableState>) => {
-      const onStateChange = instance.options.onStateChange
-
-      let internalState = instance.internalState
-      let newState = functionalUpdate(updater, internalState)
-
-      instance.internalState = newState
-
-      if (onStateChange) {
-        onStateChange(newState)
-        return
-      }
-
-      instance.notify()
+      instance.options.onStateChange?.(updater)
     },
 
     getDefaultColumn: memo(
       () => [instance.options.defaultColumn],
       defaultColumn => {
-        defaultColumn = (defaultColumn ?? {}) as Partial<
-          ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-        >
+        defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TGenerics>>
 
         return {
-          header: (
-            props: HeaderRenderProps<
-              Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-            >
-          ) => props.header.column.id,
-          footer: (
-            props: HeaderRenderProps<
-              Header<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-            >
-          ) => props.header.column.id,
+          header: (props: HeaderRenderProps<Header<TGenerics>>) =>
+            props.header.column.id,
+          footer: (props: HeaderRenderProps<Header<TGenerics>>) =>
+            props.header.column.id,
           cell: ({ value = '' }: { value: any }): JSX.Element =>
             typeof value === 'boolean' ? value.toString() : value,
           ...features.reduce((obj, feature) => {
             return Object.assign(obj, (feature as any).getDefaultColumn?.())
           }, {}),
           ...defaultColumn,
-        } as Partial<
-          ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-        >
+        } as Partial<ColumnDef<TGenerics>>
       },
-      { debug: instance.options.debug, key: 'getDefaultColumn' }
+      {
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        key: 'getDefaultColumn',
+      }
     ),
 
     getColumnDefs: () => instance.options.columns,
@@ -501,12 +294,12 @@ export function createTableInstance<
         columnDef.accessorKey ??
         (typeof columnDef.header === 'string' ? columnDef.header : undefined)
 
-      let accessorFn: AccessorFn<TData> | undefined
+      let accessorFn: AccessorFn<TGenerics['Row']> | undefined
 
       if (columnDef.accessorFn) {
         accessorFn = columnDef.accessorFn
       } else if (columnDef.accessorKey) {
-        accessorFn = (originalRow?: TData) =>
+        accessorFn = (originalRow?: TGenerics['Row']) =>
           (originalRow as any)[columnDef.accessorKey]
       }
 
@@ -521,13 +314,7 @@ export function createTableInstance<
         throw new Error()
       }
 
-      let column: CoreColumn<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      > = {
+      let column: CoreColumn<TGenerics> = {
         ...ColumnSizing.defaultColumnSizing,
         ...defaultColumn,
         ...columnDef,
@@ -542,19 +329,14 @@ export function createTableInstance<
           () => [true],
           () => {
             return [
-              column as Column<
-                TData,
-                TValue,
-                TFilterFns,
-                TSortingFns,
-                TAggregationFns
-              >,
+              column as Column<TGenerics>,
               ...column.columns?.flatMap(d => d.getFlatColumns()),
             ]
           },
           {
             key: 'column.getFlatColumns',
-            debug: instance.options.debug,
+            debug: () =>
+              instance.options.debugAll ?? instance.options.debugColumns,
           }
         ),
         getLeafColumns: memo(
@@ -568,19 +350,12 @@ export function createTableInstance<
               return orderColumns(leafColumns)
             }
 
-            return [
-              column as Column<
-                TData,
-                TValue,
-                TFilterFns,
-                TSortingFns,
-                TAggregationFns
-              >,
-            ]
+            return [column as Column<TGenerics>]
           },
           {
             key: 'column.getLeafColumns',
-            debug: instance.options.debug,
+            debug: () =>
+              instance.options.debugAll ?? instance.options.debugColumns,
           }
         ),
       }
@@ -593,44 +368,17 @@ export function createTableInstance<
       }, column)
 
       // Yes, we have to convert instance to uknown, because we know more than the compiler here.
-      return column as Column<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >
+      return column as Column<TGenerics>
     },
 
     getAllColumns: memo(
       () => [instance.getColumnDefs()],
       columnDefs => {
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Building Columns...')
-
         const recurseColumns = (
-          columnDefs: ColumnDef<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >[],
-          parent?: Column<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
+          columnDefs: ColumnDef<TGenerics>[],
+          parent?: Column<TGenerics>,
           depth = 0
-        ): Column<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >[] => {
+        ): Column<TGenerics>[] => {
           return columnDefs.map(columnDef => {
             const column = instance.createColumn(columnDef, depth, parent)
 
@@ -644,7 +392,10 @@ export function createTableInstance<
 
         return recurseColumns(columnDefs)
       },
-      { key: 'getAllColumns', debug: instance.options.debug }
+      {
+        key: 'getAllColumns',
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+      }
     ),
 
     getAllFlatColumns: memo(
@@ -654,7 +405,10 @@ export function createTableInstance<
           return column.getFlatColumns()
         })
       },
-      { key: 'getAllFlatColumns', debug: instance.options.debug }
+      {
+        key: 'getAllFlatColumns',
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+      }
     ),
 
     getAllFlatColumnsById: memo(
@@ -663,9 +417,12 @@ export function createTableInstance<
         return flatColumns.reduce((acc, column) => {
           acc[column.id] = column
           return acc
-        }, {} as Record<string, Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>>)
+        }, {} as Record<string, Column<TGenerics>>)
       },
-      { key: 'getAllFlatColumnsById', debug: instance.options.debug }
+      {
+        key: 'getAllFlatColumnsById',
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+      }
     ),
 
     getAllLeafColumns: memo(
@@ -674,7 +431,10 @@ export function createTableInstance<
         let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
         return orderColumns(leafColumns)
       },
-      { key: 'getAllLeafColumns', debug: instance.options.debug }
+      {
+        key: 'getAllLeafColumns',
+        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+      }
     ),
 
     getColumn: columnId => {
@@ -711,13 +471,7 @@ export function createTableInstance<
     },
 
     createCell: (row, column, value) => {
-      const cell: Cell<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      > = {
+      const cell: Cell<TGenerics> = {
         id: `${row.id}_${column.id}`,
         rowId: row.id,
         columnId: column.id,
@@ -734,16 +488,9 @@ export function createTableInstance<
         Object.assign(
           cell,
           (feature as any).createCell?.(
-            cell as Cell<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            > &
-              Grouping.GroupingCell,
+            cell as Cell<TGenerics> & Grouping.GroupingCell,
             column,
-            row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+            row as Row<TGenerics>,
             instance
           )
         )
@@ -753,13 +500,7 @@ export function createTableInstance<
     },
 
     createRow: (id, original, rowIndex, depth, values) => {
-      let row: CoreRow<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      > = {
+      let row: CoreRow<TGenerics> = {
         id,
         index: rowIndex,
         original,
@@ -777,13 +518,7 @@ export function createTableInstance<
         leafColumns => {
           return leafColumns.map(column => {
             return instance.createCell(
-              row as Row<
-                TData,
-                TValue,
-                TFilterFns,
-                TSortingFns,
-                TAggregationFns
-              >,
+              row as Row<TGenerics>,
               column,
               row.values[column.id]
             )
@@ -791,7 +526,7 @@ export function createTableInstance<
         },
         {
           key: process.env.NODE_ENV !== 'production' ? 'row.getAllCells' : '',
-          debug: instance.options.debug,
+          debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       )
 
@@ -801,19 +536,20 @@ export function createTableInstance<
           return allCells.reduce((acc, cell) => {
             acc[cell.columnId] = cell
             return acc
-          }, {} as Record<string, Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>>)
+          }, {} as Record<string, Cell<TGenerics>>)
         },
         {
           key: 'row.getAllCellsByColumnId',
-          debug: instance.options.debug,
+          debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       )
 
-      features.forEach(feature => {
+      for (let i = 0; i < features.length; i++) {
+        const feature = features[i]
         Object.assign(row, (feature as any).createRow?.(row, instance))
-      })
+      }
 
-      return row as Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+      return row as Row<TGenerics>
     },
 
     getCoreRowModel: memo(
@@ -821,50 +557,23 @@ export function createTableInstance<
       (
         data
       ): {
-        rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-        flatRows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-        rowsById: Record<
-          string,
-          Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-        >
+        rows: Row<TGenerics>[]
+        flatRows: Row<TGenerics>[]
+        rowsById: Record<string, Row<TGenerics>>
       } => {
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Accessing...')
-
         // Access the row model using initial columns
-        const rows: Row<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >[] = []
-        const flatRows: Row<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >[] = []
-        const rowsById: Record<
-          string,
-          Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-        > = {}
+        const rows: Row<TGenerics>[] = []
+        const flatRows: Row<TGenerics>[] = []
+        const rowsById: Record<string, Row<TGenerics>> = {}
 
         const leafColumns = instance.getAllLeafColumns()
 
         const accessRow = (
-          originalRow: TData,
+          originalRow: TGenerics['Row'],
           rowIndex: number,
           depth = 0,
-          parentRows: Row<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >[],
-          parent?: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+          parentRows: Row<TGenerics>[],
+          parent?: Row<TGenerics>
         ) => {
           const id = instance.getRowId(originalRow, rowIndex, parent)
 
@@ -909,17 +618,11 @@ export function createTableInstance<
             // Then recursively access them
             if (originalSubRows?.length) {
               row.originalSubRows = originalSubRows
-              const subRows: Row<
-                TData,
-                TValue,
-                TFilterFns,
-                TSortingFns,
-                TAggregationFns
-              >[] = []
+              const subRows: Row<TGenerics>[] = []
 
               for (let i = 0; i < row.originalSubRows.length; i++) {
                 accessRow(
-                  row.originalSubRows[i] as TData,
+                  row.originalSubRows[i] as TGenerics['Row'],
                   i,
                   depth + 1,
                   subRows,
@@ -934,14 +637,14 @@ export function createTableInstance<
         }
 
         for (let i = 0; i < data.length; i++) {
-          accessRow(data[i] as TData, i, 0, rows)
+          accessRow(data[i] as TGenerics['Row'], i, 0, rows)
         }
 
         return { rows, flatRows, rowsById }
       },
       {
         key: 'getRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance._notifyRowSelectionReset()
           instance._notifyFiltersReset()
@@ -1087,10 +790,6 @@ export function createTableInstance<
   }
 
   instance = Object.assign(instance, finalInstance)
-
-  // This won't trigger a rerender yet, but it will force
-  // pagination derivation to run (particularly pageSize detection)
-  instance.setPagination(d => d)
 
   return instance
 }

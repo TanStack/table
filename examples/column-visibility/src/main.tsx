@@ -5,7 +5,7 @@ import './index.css'
 
 import { createTable } from '@tanstack/react-table'
 
-type Row = {
+type Person = {
   firstName: string
   lastName: string
   age: number
@@ -14,7 +14,7 @@ type Row = {
   progress: number
 }
 
-const defaultData: Row[] = [
+const defaultData: Person[] = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -41,7 +41,7 @@ const defaultData: Row[] = [
   },
 ]
 
-let table = createTable().RowType<Row>()
+let table = createTable<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({
@@ -90,7 +90,7 @@ const defaultColumns = table.createColumns([
 ])
 
 function App() {
-  const [data, setData] = React.useState<Row[]>(() => [...defaultData])
+  const [data, setData] = React.useState(() => [...defaultData])
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
@@ -105,7 +105,9 @@ function App() {
     state: {
       columnVisibility,
     },
-    // debug: true,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   })
 
   return (
@@ -169,4 +171,9 @@ function App() {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+)

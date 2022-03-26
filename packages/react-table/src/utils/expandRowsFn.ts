@@ -1,34 +1,14 @@
-import { ReactTable, Row, RowModel } from '../types'
+import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
 
-export function expandRowsFn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  sortedRowModel: RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
-  const expandedRows: Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[] = []
+export function expandRowsFn<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>,
+  sortedRowModel: RowModel<TGenerics>
+): RowModel<TGenerics> {
+  const expandedRows: Row<TGenerics>[] = []
 
   const { expandSubRows } = instance.options
 
-  const handleRow = (
-    row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => {
+  const handleRow = (row: Row<TGenerics>) => {
     expandedRows.push(row)
 
     if (

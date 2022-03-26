@@ -1,5 +1,5 @@
 import React from 'react'
-import { ReactTable } from '@tanstack/react-table'
+import { TableInstance } from '@tanstack/react-table'
 
 import useLocalStorage from './useLocalStorage'
 import { useIsMounted } from './utils'
@@ -152,7 +152,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
     setIsOpen,
     ...panelProps
   } = props as DevtoolsPanelOptions & {
-    instance: ReactTable<unknown, unknown, {}, {}, {}>
+    instance: TableInstance<{}>
   }
 
   // const [activeMatchId, setActiveRouteId] = useLocalStorage(

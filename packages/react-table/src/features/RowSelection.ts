@@ -2,8 +2,9 @@ import React, { MouseEvent, TouchEvent } from 'react'
 import {
   Getter,
   OnChangeFn,
+  PartialGenerics,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Row,
   RowModel,
   Updater,
@@ -16,47 +17,29 @@ export type RowSelectionTableState = {
   rowSelection: RowSelectionState
 }
 
-export type RowSelectionOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type RowSelectionOptions<TGenerics extends PartialGenerics> = {
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
   autoResetRowSelection?: boolean
-  enableRowSelection?:
-    | boolean
-    | ((
-        row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-      ) => boolean)
-  enableMultiRowSelection?:
-    | boolean
-    | ((
-        row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-      ) => boolean)
-  enableSubRowSelection?:
-    | boolean
-    | ((
-        row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-      ) => boolean)
+  enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+  enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+  enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
   // enableGroupingRowSelection?:
   //   | boolean
   //   | ((
-  //       row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  //       row: Row<TGenerics>
   //     ) => boolean)
   // isAdditiveSelectEvent?: (e: MouseEvent | TouchEvent) => boolean
   // isInclusiveSelectEvent?: (e: MouseEvent | TouchEvent) => boolean
   // selectRowsFn?: (
-  //   instance: ReactTable<
+  //   instance: TableInstance<
   //     TData,
   //     TValue,
   //     TFilterFns,
   //     TSortingFns,
   //     TAggregationFns
   //   >,
-  //   rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  // ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  //   rowModel: RowModel<TGenerics>
+  // ) => RowModel<TGenerics>
 }
 
 type ToggleRowSelectedProps = {
@@ -77,13 +60,7 @@ export type RowSelectionRow = {
   ) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
 }
 
-export type RowSelectionInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type RowSelectionInstance<TGenerics extends PartialGenerics> = {
   _notifyRowSelectionReset: () => void
   getToggleRowSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
     rowId: string,
@@ -114,81 +91,18 @@ export type RowSelectionInstance<
   getIsSomePageRowsSelected: () => boolean
   toggleAllRowsSelected: (value: boolean) => void
   toggleAllPageRowsSelected: (value: boolean) => void
-  getSelectedRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getSelectedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getSelectedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getSelectedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getFilteredSelectedRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getFilteredSelectedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getFilteredSelectedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getFilteredSelectedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getGroupedSelectedRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getGroupedSelectedRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getGroupedSelectedFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getGroupedSelectedRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+  getSelectedRowModel: () => RowModel<TGenerics>
+  getSelectedRows: () => Row<TGenerics>[]
+  getSelectedFlatRows: () => Row<TGenerics>[]
+  getSelectedRowsById: () => Record<string, Row<TGenerics>>
+  getFilteredSelectedRowModel: () => RowModel<TGenerics>
+  getFilteredSelectedRows: () => Row<TGenerics>[]
+  getFilteredSelectedFlatRows: () => Row<TGenerics>[]
+  getFilteredSelectedRowsById: () => Record<string, Row<TGenerics>>
+  getGroupedSelectedRowModel: () => RowModel<TGenerics>
+  getGroupedSelectedRows: () => Row<TGenerics>[]
+  getGroupedSelectedFlatRows: () => Row<TGenerics>[]
+  getGroupedSelectedRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
@@ -199,21 +113,9 @@ export function getInitialState(): RowSelectionTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowSelectionOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> {
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): RowSelectionOptions<TGenerics> {
   return {
     onRowSelectionChange: makeStateUpdater('rowSelection', instance),
     autoResetRowSelection: true,
@@ -226,21 +128,9 @@ export function getDefaultOptions<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowSelectionInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): RowSelectionInstance<TGenerics> {
   let registered = false
 
   // const pageRows = instance.getPageRows()
@@ -400,14 +290,11 @@ export function getInstance<
           }
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Selecting...')
-
         return selectRowsFn(instance, rowModel)
       },
       {
         key: 'getSelectedRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
@@ -429,14 +316,11 @@ export function getInstance<
           }
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Selecting...')
-
         return selectRowsFn(instance, rowModel)
       },
       {
         key: 'getFilteredSelectedRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
@@ -457,14 +341,11 @@ export function getInstance<
           }
         }
 
-        if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-          console.info('Selecting...')
-
         return selectRowsFn(instance, rowModel)
       },
       {
         key: 'getGroupedSelectedRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => instance._notifyExpandedReset(),
       }
     ),
@@ -672,15 +553,9 @@ export function getInstance<
   }
 }
 
-export function createRow<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function createRow<TGenerics extends PartialGenerics>(
+  row: Row<TGenerics>,
+  instance: TableInstance<TGenerics>
 ): RowSelectionRow {
   return {
     getIsSelected: () => instance.getRowIsSelected(row.id),
@@ -693,17 +568,11 @@ export function createRow<
   }
 }
 
-const mutateRowIsSelected = <
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
+const mutateRowIsSelected = <TGenerics extends PartialGenerics>(
   selectedRowIds: Record<string, boolean>,
   id: string,
   value: boolean,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  instance: TableInstance<TGenerics>
 ) => {
   const row = instance.getRow(id)
 
@@ -727,35 +596,17 @@ const mutateRowIsSelected = <
   }
 }
 
-export function selectRowsFn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function selectRowsFn<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>,
+  rowModel: RowModel<TGenerics>
+): RowModel<TGenerics> {
   const rowSelection = instance.getState().rowSelection
 
-  const newSelectedFlatRows: Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[] = []
-  const newSelectedRowsById: Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  > = {}
+  const newSelectedFlatRows: Row<TGenerics>[] = []
+  const newSelectedRowsById: Record<string, Row<TGenerics>> = {}
 
   // Filters top level and nested rows
-  const recurseRows = (
-    rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
-    depth = 0
-  ) => {
+  const recurseRows = (rows: Row<TGenerics>[], depth = 0) => {
     return rows
       .map(row => {
         const isSelected = isRowSelected(row, rowSelection, instance) === true
@@ -776,13 +627,7 @@ export function selectRowsFn<
           return row
         }
       })
-      .filter(Boolean) as Row<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
+      .filter(Boolean) as Row<TGenerics>[]
   }
 
   return {
@@ -792,16 +637,10 @@ export function selectRowsFn<
   }
 }
 
-export function isRowSelected<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
+export function isRowSelected<TGenerics extends PartialGenerics>(
+  row: Row<TGenerics>,
   selection: Record<string, boolean>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  instance: TableInstance<TGenerics>
 ): boolean | 'some' {
   if (selection[row.id]) {
     return true

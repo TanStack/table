@@ -1,27 +1,12 @@
-import { ReactTable, Row, RowModel } from '../types'
+import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
 
-export function globalFilterRowsFn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function globalFilterRowsFn<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>,
+  rowModel: RowModel<TGenerics>
+): RowModel<TGenerics> {
   const globalFilter = instance.getState().globalFilter
-  const newFilteredFlatRows: Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[] = []
-  const newFilteredRowsById: Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  > = {}
+  const newFilteredFlatRows: Row<TGenerics>[] = []
+  const newFilteredRowsById: Record<string, Row<TGenerics>> = {}
 
   const filterFromChildrenUp = instance.options.filterFromChildrenUp
 
@@ -41,16 +26,7 @@ export function globalFilterRowsFn<
   const filterableColumnIds = filterableColumns.map(d => d.id)
 
   if (filterFromChildrenUp) {
-    const recurseFilterRows = (
-      rowsToFilter: Row<
-        TData,
-        TValue,
-        TFilterFns,
-        TSortingFns,
-        TAggregationFns
-      >[],
-      depth = 0
-    ) => {
+    const recurseFilterRows = (rowsToFilter: Row<TGenerics>[], depth = 0) => {
       // Filter from children up
       rowsToFilter = rowsToFilter.filter(row => {
         if (!row.subRows?.length) {
@@ -81,16 +57,7 @@ export function globalFilterRowsFn<
   }
 
   // Filters top level and nested rows
-  const recurseFilterRows = (
-    rowsToFilter: Row<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[],
-    depth = 0
-  ) => {
+  const recurseFilterRows = (rowsToFilter: Row<TGenerics>[], depth = 0) => {
     // Filter from parents downward
     rowsToFilter = filterFn(rowsToFilter, filterableColumnIds, globalFilter)
 

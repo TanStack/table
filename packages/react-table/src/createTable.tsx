@@ -1,201 +1,125 @@
 import * as React from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Cell, Column, Row } from '.'
 import { createTableInstance } from './core'
+import { CustomFilterTypes } from './features/Filters'
+import { CustomAggregationTypes } from './features/Grouping'
+import { CustomSortingTypes } from './features/Sorting'
 import {
-  ReactTable,
+  TableInstance,
   ColumnDef,
   AccessorFn,
   Options,
-  Renderable,
-  Header,
+  DefaultGenerics,
+  PartialGenerics,
+  _NonGenerated,
 } from './types'
-import { Overwrite } from './utils'
+import { Overwrite, PartialKeys } from './utils'
 
-export type TableHelper<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
+export type CreatTableFactory<TGenerics extends Partial<DefaultGenerics>> = <
+  TRow
+>() => CreateTable<Overwrite<TGenerics, { Row: TRow }>>
+
+export type CreateTableOptions<
+  TFilterFns extends CustomFilterTypes<any>,
+  TSortingFns extends CustomSortingTypes<any>,
+  TAggregationFns extends CustomAggregationTypes<any>
 > = {
-  RowType<TTData>(): TableHelper<
-    TTData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
+  filterFns?: TFilterFns
+  sortingFns?: TSortingFns
+  aggregationFns?: TAggregationFns
+}
+
+export function createTableFactory<
+  TFilterFns extends CustomFilterTypes<any>,
+  TSortingFns extends CustomSortingTypes<any>,
+  TAggregationFns extends CustomAggregationTypes<any>
+>(
+  opts: CreateTableOptions<TFilterFns, TSortingFns, TAggregationFns>
+): CreatTableFactory<
+  Overwrite<
+    PartialGenerics,
+    {
+      FilterFns: TFilterFns
+      SortingFns: TSortingFns
+      AggregationFns: TAggregationFns
+    }
   >
+> {
+  return () => _createTable(undefined, undefined, opts)
+}
 
-  FilterFns: <TTFilterFns>(
-    filterFns: TTFilterFns
-  ) => TableHelper<TData, TValue, TTFilterFns, TSortingFns, TAggregationFns>
-
-  SortingFns: <TTSortingFns>(
-    sortingFns: TTSortingFns
-  ) => TableHelper<TData, TValue, TFilterFns, TTSortingFns, TAggregationFns>
-
-  AggregationFns: <TTAggregationFns>(
-    aggregationFns: TTAggregationFns
-  ) => TableHelper<TData, TValue, TFilterFns, TSortingFns, TTAggregationFns>
-
-  createColumns: (
-    columns: ColumnDef<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >[]
-  ) => ColumnDef<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-
+export type CreateTable<TGenerics extends Partial<DefaultGenerics>> = {
+  createColumns: (columns: ColumnDef<TGenerics>[]) => ColumnDef<TGenerics>[]
   createGroup: (
     column: Overwrite<
-      ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>,
-      | {
-          __generated?: never
-          accessorFn?: never
-          accessorKey?: never
-          header: string
-          id?: string
-        }
-      | {
-          __generated?: never
-          accessorFn?: never
-          accessorKey?: never
-          id: string
-          header?:
-            | string
-            | Renderable<{
-                instance: ReactTable<
-                  TData,
-                  TValue,
-                  TFilterFns,
-                  TSortingFns,
-                  TAggregationFns
-                >
-                header: Header<
-                  TData,
-                  TValue,
-                  TFilterFns,
-                  TSortingFns,
-                  TAggregationFns
-                >
-                column: Column<
-                  TData,
-                  TValue,
-                  TFilterFns,
-                  TSortingFns,
-                  TAggregationFns
-                >
-              }>
-        }
-    >
-  ) => ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>
-
-  createDisplayColumn: (
-    column: Overwrite<
-      ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>,
-      { __generated?: never; accessorFn?: never; accessorKey?: never }
-    >
-  ) => ColumnDef<TData, unknown, TFilterFns, TSortingFns, TAggregationFns>
-
-  createDataColumn: <TAccessor extends AccessorFn<TData> | keyof TData>(
-    accessor: TAccessor,
-    column: TAccessor extends (...args: any[]) => any
-      ? // Accessor Fn
-        Overwrite<
-          ColumnDef<
-            TData,
-            ReturnType<TAccessor>,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
+      | Overwrite<
+          _NonGenerated<ColumnDef<TGenerics>>,
           {
-            __generated?: never
-            accessorFn?: never
-            accessorKey?: never
-            id: string
-          }
-        >
-      : TAccessor extends keyof TData
-      ? // Accessor Key
-        Overwrite<
-          ColumnDef<
-            TData,
-            TData[TAccessor],
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >,
-          {
-            __generated?: never
-            accessorFn?: never
-            accessorKey?: never
+            header: string
             id?: string
           }
         >
-      : never
-  ) => ColumnDef<
-    TData,
-    TAccessor extends (...args: any[]) => any
-      ? ReturnType<TAccessor>
-      : TAccessor extends keyof TData
-      ? TData[TAccessor]
-      : never,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-
-  useTable: <TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-    options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-
-  types: {
-    instance: ReactTable<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
+      | Overwrite<
+          _NonGenerated<ColumnDef<TGenerics>>,
+          {
+            id: string
+            header?: string | ColumnDef<TGenerics>['header']
+          }
+        >,
+      { accessorFn?: never; accessorKey?: never }
     >
-    columnDef: ColumnDef<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
+  ) => ColumnDef<TGenerics>
+  createDisplayColumn: (
+    column: PartialKeys<
+      _NonGenerated<ColumnDef<TGenerics>>,
+      'accessorFn' | 'accessorKey'
     >
-    column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    row: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    cell: Cell<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  }
+  ) => ColumnDef<TGenerics>
+  createDataColumn: <
+    TAccessor extends AccessorFn<TGenerics['Row']> | keyof TGenerics['Row']
+  >(
+    accessor: TAccessor,
+    column: Overwrite<
+      TAccessor extends (...args: any[]) => any
+        ? // Accessor Fn
+          _NonGenerated<ColumnDef<TGenerics>>
+        : TAccessor extends keyof TGenerics['Row']
+        ? // Accessor Key
+          Overwrite<
+            _NonGenerated<ColumnDef<TGenerics>>,
+            {
+              id?: string
+            }
+          >
+        : never,
+      {
+        accessorFn?: never
+        accessorKey?: never
+      }
+    >
+  ) => ColumnDef<TGenerics>
+  useTable: (
+    options: PartialKeys<
+      Omit<Options<TGenerics>, keyof CreateTableOptions<any, any, any>>,
+      'state' | 'onStateChange'
+    >
+  ) => TableInstance<TGenerics>
 }
 
-export function createTable<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(): TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function createTable<TRow>() {
+  return _createTable<Overwrite<PartialGenerics, { Row: TRow }>>()
+}
+
+function _createTable<TGenerics extends PartialGenerics>(
+  _?: undefined,
+  __?: undefined,
+  opts?: CreateTableOptions<any, any, any>
+): CreateTable<TGenerics> {
   return {
-    RowType: () => createTable(),
-    FilterFns: () => createTable(),
-    SortingFns: () => createTable(),
-    AggregationFns: () => createTable(),
     createColumns: columns => columns,
-    createDisplayColumn: column => ({
-      ...column,
-      __generated: true,
-    }),
-    createGroup: column => ({
-      ...column,
-      __generated: true,
-    }),
-    createDataColumn: (accessor, column) => {
+    createDisplayColumn: column => column as any,
+    createGroup: column => column as any,
+    createDataColumn: (accessor, column): any => {
       column = {
         ...column,
         id: column.id,
@@ -206,7 +130,6 @@ export function createTable<
           ...column,
           id: column.id ?? accessor,
           accessorKey: accessor,
-          __generated: true,
         }
       }
 
@@ -214,31 +137,49 @@ export function createTable<
         return {
           ...column,
           accessorFn: accessor,
-          __generated: true,
         }
       }
 
       throw new Error('Invalid accessor')
     },
-    useTable: <TData, TValue, TFilterFns, TSortingFns, TAggregationFns>(
-      options: Options<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-    ): ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> => {
+    useTable: (
+      options: PartialKeys<
+        Omit<Options<TGenerics>, keyof CreateTableOptions<any, any, any>>,
+        'state' | 'onStateChange'
+      >
+    ): TableInstance<TGenerics> => {
+      const resolvedOptions = {
+        ...(opts ?? {}),
+        state: {}, // Dummy state
+        onStateChange: () => {}, // noop
+        ...options,
+      }
+      // Create a new table instance with our options
       const [instance] = React.useState(() =>
-        createTableInstance<
-          TData,
-          TValue,
-          TFilterFns,
-          TSortingFns,
-          TAggregationFns
-        >(options)
+        createTableInstance<TGenerics>(resolvedOptions)
       )
 
-      useSyncExternalStore(instance.subscribe, () => instance.internalState)
+      // By default, manage table state here using the instance's initial state
+      const [state, setState] = React.useState(() => instance.initialState)
 
-      instance.updateOptions(options)
+      // Compose the default state above with any user state. This will allow the user
+      // to only control a subset of the state if desired.
+      instance.setOptions(prev => ({
+        ...prev,
+        ...options,
+        state: {
+          ...state,
+          ...options.state,
+        },
+        // Similarly, we'll maintain both our internal state and any user-provided
+        // state.
+        onStateChange: updater => {
+          setState(updater)
+          options.onStateChange?.(updater)
+        },
+      }))
 
       return instance
     },
-    types: undefined as any,
-  } as TableHelper<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  }
 }

@@ -1,8 +1,5 @@
-import React, {
-  ComponentProps,
+import {
   MouseEvent as ReactMouseEvent,
-  PropsWithoutRef,
-  PropsWithRef,
   TouchEvent as ReactTouchEvent,
 } from 'react'
 import {
@@ -10,8 +7,9 @@ import {
   Getter,
   Header,
   OnChangeFn,
+  PartialGenerics,
   PropGetterValue,
-  ReactTable,
+  TableInstance,
   Updater,
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
@@ -57,13 +55,7 @@ export type ColumnResizerProps = {
   role?: string
 }
 
-export type ColumnSizingInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type ColumnSizingInstance<TGenerics extends PartialGenerics> = {
   setColumnSizing: (updater: Updater<ColumnSizing>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
   resetColumnSizing: () => void
@@ -72,8 +64,8 @@ export type ColumnSizingInstance<
   resetHeaderSizeInfo: () => void
   getColumnCanResize: (columnId: string) => boolean
   getHeaderCanResize: (headerId: string) => boolean
-  getColumnResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
-    columnId: string,
+  getHeaderResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
+    headerId: string,
     userProps?: TGetter
   ) => undefined | PropGetterValue<ColumnResizerProps, TGetter>
   getColumnIsResizing: (columnId: string) => boolean
@@ -85,13 +77,13 @@ export type ColumnSizingColumnDef = {
   defaultCanResize?: boolean
 }
 
-export type ColumnSizingColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type ColumnSizingColumn<TGenerics extends PartialGenerics> = {
+  getCanResize: () => boolean
+  getIsResizing: () => boolean
+  resetSize: () => void
+}
+
+export type ColumnSizingHeader<TGenerics extends PartialGenerics> = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
   getResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
@@ -122,14 +114,8 @@ export function getInitialState(): ColumnSizingTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
 ): ColumnSizingDefaultOptions {
   return {
     columnResizeMode: 'onEnd',
@@ -138,21 +124,9 @@ export function getDefaultOptions<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ColumnSizingInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): ColumnSizingInstance<TGenerics> {
   return {
     setColumnSizing: updater =>
       instance.options.onColumnSizingChange?.(
@@ -177,10 +151,6 @@ export function getInstance<
     },
     resetHeaderSize: headerId => {
       const header = instance.getHeader(headerId)
-
-      if (!header) {
-        return
-      }
 
       return instance.resetColumnSize(header.column.id)
     },
@@ -225,18 +195,10 @@ export function getInstance<
 
       return instance.getColumnIsResizing(header.column.id)
     },
-    getColumnResizerProps: (headerId, userProps) => {
+
+    getHeaderResizerProps: (headerId, userProps) => {
       const header = instance.getHeader(headerId)
-
-      if (!header) {
-        return
-      }
-
       const column = instance.getColumn(header.column.id)
-
-      if (!column) {
-        return
-      }
 
       const canResize = column.getCanResize()
 
@@ -248,9 +210,13 @@ export function getInstance<
           }
         }
 
+        const header = headerId ? instance.getHeader(headerId) : undefined
+
+        const startSize = header ? header.getWidth() : column.getWidth()
+
         const columnSizingStart: [string, number][] = header
-          .getLeafHeaders()
-          .map(d => [d.column.id, d.getWidth()])
+          ? header.getLeafHeaders().map(d => [d.column.id, d.getWidth()])
+          : [[column.id, column.getWidth()]]
 
         const clientX = isTouchStartEvent(e)
           ? Math.round(e.touches[0].clientX)
@@ -274,10 +240,10 @@ export function getInstance<
             )
 
             old.columnSizingStart.forEach(([columnId, headerWidth]) => {
-              newColumnSizing[columnId] = Math.max(
-                headerWidth + headerWidth * deltaPercentage,
-                0
-              )
+              newColumnSizing[columnId] =
+                Math.round(
+                  Math.max(headerWidth + headerWidth * deltaPercentage, 0) * 100
+                ) / 100
             })
 
             return {
@@ -374,11 +340,11 @@ export function getInstance<
         instance.setColumnSizingInfo(old => ({
           ...old,
           startOffset: clientX,
-          startSize: header.getWidth(),
+          startSize,
           deltaOffset: 0,
           deltaPercentage: 0,
           columnSizingStart,
-          isResizingColumn: header.column.id,
+          isResizingColumn: column.id,
         }))
       }
 
@@ -403,22 +369,27 @@ export function getInstance<
   }
 }
 
-export function createColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): ColumnSizingColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function createColumn<TGenerics extends PartialGenerics>(
+  column: Column<TGenerics>,
+  instance: TableInstance<TGenerics>
+): ColumnSizingColumn<TGenerics> {
   return {
     getIsResizing: () => instance.getColumnIsResizing(column.id),
     getCanResize: () => instance.getColumnCanResize(column.id),
     resetSize: () => instance.resetColumnSize(column.id),
+  }
+}
+
+export function createHeader<TGenerics extends PartialGenerics>(
+  header: Header<TGenerics>,
+  instance: TableInstance<TGenerics>
+): ColumnSizingHeader<TGenerics> {
+  return {
+    getIsResizing: () => instance.getColumnIsResizing(header.column.id),
+    getCanResize: () => instance.getColumnCanResize(header.column.id),
+    resetSize: () => instance.resetColumnSize(header.column.id),
     getResizerProps: userProps =>
-      instance.getColumnResizerProps(column.id, userProps),
+      instance.getHeaderResizerProps(header.id, userProps),
   }
 }
 

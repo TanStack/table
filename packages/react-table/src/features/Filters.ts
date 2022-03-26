@@ -4,11 +4,18 @@ import {
   Column,
   Listener,
   OnChangeFn,
-  ReactTable,
+  PartialGenerics,
+  TableInstance,
   Row,
   Updater,
 } from '../types'
-import { functionalUpdate, isFunction, makeStateUpdater, memo } from '../utils'
+import {
+  functionalUpdate,
+  isFunction,
+  makeStateUpdater,
+  memo,
+  Overwrite,
+} from '../utils'
 
 export type ColumnFilter = {
   id: string
@@ -17,42 +24,19 @@ export type ColumnFilter = {
 
 export type ColumnFiltersState = ColumnFilter[]
 
-export type FilterFn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> =
-  {
-    (
-      rows: Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[],
-      columnIds: string[],
-      filterValue: any
-    ): any
-    autoRemove?: ColumnFilterAutoRemoveTestFn<
-      TData,
-      TValue,
-      TFilterFns,
-      TSortingFns,
-      TAggregationFns
-    >
-  }
+export type FilterFn<TGenerics extends PartialGenerics> = {
+  (rows: Row<TGenerics>[], columnIds: string[], filterValue: any): any
+  autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
+}
 
-export type ColumnFilterAutoRemoveTestFn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = (
+export type ColumnFilterAutoRemoveTestFn<TGenerics extends PartialGenerics> = (
   value: unknown,
-  column?: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  column?: Column<TGenerics>
 ) => boolean
 
-export type CustomFilterTypes<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = Record<
+export type CustomFilterTypes<TGenerics extends PartialGenerics> = Record<
   string,
-  FilterFn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
+  FilterFn<TGenerics>
 >
 
 export type FiltersTableState = {
@@ -60,14 +44,14 @@ export type FiltersTableState = {
   globalFilter: any
 }
 
-export type FilterType<TFilterFns> =
+export type FilterType<TGenerics extends PartialGenerics> =
   | 'auto'
   | BuiltInFilterType
-  | keyof TFilterFns
-  | FilterFn<unknown, unknown, TFilterFns, any, any>
+  | TGenerics['FilterFns']
+  | FilterFn<TGenerics>
 
-export type FiltersColumnDef<TFilterFns> = {
-  filterType?: FilterType<TFilterFns>
+export type FiltersColumnDef<TGenerics extends PartialGenerics> = {
+  filterType?: FilterType<Overwrite<TGenerics, { Value: any }>>
   enableAllFilters?: boolean
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
@@ -76,210 +60,96 @@ export type FiltersColumnDef<TFilterFns> = {
   defaultCanGlobalFilter?: boolean
 }
 
-export type FiltersColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
-  filterType: FilterType<TFilterFns>
+export type FiltersColumn<TGenerics extends PartialGenerics> = {
+  filterType: FilterType<Overwrite<TGenerics, { Value: any }>>
   getCanColumnFilter: () => boolean
   getCanGlobalFilter: () => boolean
   getColumnFilterIndex: () => number
   getIsColumnFiltered: () => boolean
   getColumnFilterValue: () => unknown
   setColumnFilterValue: (value: any) => void
-  getPreFilteredRows: () =>
-    | Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>[]
-    | undefined
+  getPreFilteredRows: () => Row<TGenerics>[] | undefined
   getPreFilteredUniqueValues: () => Map<any, number>
   getPreFilteredMinMaxValues: () => [any, any]
 }
 
-export type FiltersOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type FiltersOptions<TGenerics extends PartialGenerics> = {
   filterFromChildrenUp?: boolean
-  filterTypes?: TFilterFns
+  filterTypes?: TGenerics['FilterFns']
   enableFilters?: boolean
   // Column
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
   autoResetColumnFilters?: boolean
   enableColumnFilters?: boolean
   columnFilterRowsFn?: (
-    instance: ReactTable<any, any, any, any, any>,
-    coreRowModel: RowModel<any, any, any, any, any>
-  ) => RowModel<any, any, any, any, any>
+    instance: TableInstance<TGenerics>,
+    coreRowModel: RowModel<TGenerics>
+  ) => RowModel<TGenerics>
   // Global
-  globalFilterType?: FilterType<TFilterFns>
+  globalFilterType?: FilterType<TGenerics>
   onGlobalFilterChange?: OnChangeFn<any>
   enableGlobalFilters?: boolean
   autoResetGlobalFilter?: boolean
   enableGlobalFilter?: boolean
   globalFilterRowsFn?: (
-    instance: ReactTable<any, any, any, any, any>,
-    rowModel: RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => RowModel<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  getColumnCanGlobalFilterFn?: (
-    column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => boolean
+    instance: TableInstance<TGenerics>,
+    rowModel: RowModel<TGenerics>
+  ) => RowModel<TGenerics>
+  getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 }
 
-export type FiltersInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
-> = {
+export type FiltersInstance<TGenerics extends PartialGenerics> = {
   _notifyFiltersReset: () => void
-  getColumnAutoFilterFn: (
-    columnId: string
-  ) => FilterFn<any, any, any, any, any> | undefined
+  getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
-  getColumnFilterFn: (
-    columnId: string
-  ) => FilterFn<any, any, any, any, any> | undefined
+  getColumnFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
   setColumnFilterValue: (columnId: string, value: any) => void
   resetColumnFilters: () => void
   getColumnCanColumnFilter: (columnId: string) => boolean
-  getColumnCanGlobalFilterFn?: (
-    column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  ) => boolean
+  getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 
   getColumnIsFiltered: (columnId: string) => boolean
   getColumnFilterValue: (columnId: string) => unknown
   getColumnFilterIndex: (columnId: string) => number
-  getColumnFilteredRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPreFilteredRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPreFilteredRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreFilteredFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreFilteredRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getPreColumnFilteredRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreColumnFilteredFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreColumnFilteredRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getColumnFilteredRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getColumnFilteredFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getColumnFilteredRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
 
-  // Global
+  // All
+  getPreFilteredRowModel: () => RowModel<TGenerics>
+  getPreFilteredRows: () => Row<TGenerics>[]
+  getPreFilteredFlatRows: () => Row<TGenerics>[]
+  getPreFilteredRowsById: () => Record<string, Row<TGenerics>>
+
+  // Column Filters
+  getPreColumnFilteredRows: () => Row<TGenerics>[]
+  getPreColumnFilteredFlatRows: () => Row<TGenerics>[]
+  getPreColumnFilteredRowsById: () => Record<string, Row<TGenerics>>
+
+  getColumnFilteredRowModel: () => RowModel<TGenerics>
+  getColumnFilteredRows: () => Row<TGenerics>[]
+  getColumnFilteredFlatRows: () => Row<TGenerics>[]
+  getColumnFilteredRowsById: () => Record<string, Row<TGenerics>>
+
+  // Global Filters
   setGlobalFilter: (updater: Updater<any>) => void
   resetGlobalFilter: () => void
-  getGlobalAutoFilterFn: () => FilterFn<any, any, any, any, any> | undefined
-  getGlobalFilterFn: () => FilterFn<any, any, any, any, any> | undefined
+  getGlobalAutoFilterFn: () => FilterFn<TGenerics> | undefined
+  getGlobalFilterFn: () => FilterFn<TGenerics> | undefined
   getColumnCanGlobalFilter: (columnId: string) => boolean
-  getGlobalFilteredRowModel: () => RowModel<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >
-  getPreGlobalFilteredRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreGlobalFilteredFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getPreGlobalFilteredRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
-  getGlobalFilteredRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getGlobalFilteredFlatRows: () => Row<
-    TData,
-    TValue,
-    TFilterFns,
-    TSortingFns,
-    TAggregationFns
-  >[]
-  getGlobalFilteredRowsById: () => Record<
-    string,
-    Row<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-  >
+  getPreGlobalFilteredRows: () => Row<TGenerics>[]
+  getPreGlobalFilteredFlatRows: () => Row<TGenerics>[]
+  getPreGlobalFilteredRowsById: () => Record<string, Row<TGenerics>>
+  getGlobalFilteredRowModel: () => RowModel<TGenerics>
+  getGlobalFilteredRows: () => Row<TGenerics>[]
+  getGlobalFilteredFlatRows: () => Row<TGenerics>[]
+  getGlobalFilteredRowsById: () => Record<string, Row<TGenerics>>
 }
 
 //
 
-export function getDefaultColumn<TFilterFns>(): FiltersColumnDef<TFilterFns> {
+export function getDefaultColumn<
+  TGenerics extends PartialGenerics
+>(): FiltersColumnDef<TGenerics> {
   return {
     filterType: 'auto',
   }
@@ -292,15 +162,9 @@ export function getInitialState(): FiltersTableState {
   }
 }
 
-export function getDefaultOptions<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): FiltersOptions<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getDefaultOptions<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): FiltersOptions<TGenerics> {
   return {
     onColumnFiltersChange: makeStateUpdater('columnFilters', instance),
     onGlobalFilterChange: makeStateUpdater('globalFilter', instance),
@@ -318,16 +182,10 @@ export function getDefaultOptions<
   }
 }
 
-export function createColumn<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  column: Column<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>,
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): FiltersColumn<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function createColumn<TGenerics extends PartialGenerics>(
+  column: Column<TGenerics>,
+  instance: TableInstance<TGenerics>
+): FiltersColumn<TGenerics> {
   const getFacetInfo = memo(
     () => [column.getPreFilteredRows()],
     (rows = []) => {
@@ -362,7 +220,10 @@ export function createColumn<
         preFilteredMinMaxValues,
       }
     },
-    { key: 'column.getFacetInfo', debug: instance.options.debug }
+    {
+      key: 'column.getFacetInfo',
+      debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+    }
   )
 
   return {
@@ -379,15 +240,9 @@ export function createColumn<
   }
 }
 
-export function getInstance<
-  TData,
-  TValue,
-  TFilterFns,
-  TSortingFns,
-  TAggregationFns
->(
-  instance: ReactTable<TData, TValue, TFilterFns, TSortingFns, TAggregationFns>
-): FiltersInstance<TData, TValue, TFilterFns, TSortingFns, TAggregationFns> {
+export function getInstance<TGenerics extends PartialGenerics>(
+  instance: TableInstance<TGenerics>
+): FiltersInstance<TGenerics> {
   let registered = false
 
   return {
@@ -453,13 +308,9 @@ export function getInstance<
         : (userFilterTypes as Record<string, any>)?.[
             column.filterType as string
           ] ??
-          (filterTypes[column.filterType as BuiltInFilterType] as FilterFn<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >)
+          (filterTypes[
+            column.filterType as BuiltInFilterType
+          ] as FilterFn<TGenerics>)
     },
 
     getGlobalFilterFn: () => {
@@ -473,13 +324,9 @@ export function getInstance<
         : (userFilterTypes as Record<string, any>)?.[
             globalFilterType as string
           ] ??
-          (filterTypes[globalFilterType as BuiltInFilterType] as FilterFn<
-            TData,
-            TValue,
-            TFilterFns,
-            TSortingFns,
-            TAggregationFns
-          >)
+          (filterTypes[
+            globalFilterType as BuiltInFilterType
+          ] as FilterFn<TGenerics>)
     },
 
     setColumnFilters: (updater: Updater<ColumnFiltersState>) => {
@@ -592,13 +439,7 @@ export function getInstance<
         //
         if (
           shouldAutoRemoveFilter(
-            filterFn as FilterFn<
-              TData,
-              TValue,
-              TFilterFns,
-              TSortingFns,
-              TAggregationFns
-            >,
+            filterFn as FilterFn<TGenerics>,
             newFilter,
             column
           )
@@ -643,9 +484,6 @@ export function getInstance<
             return rowModel
           }
 
-          if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-            console.info('Column Filtering...')
-
           return columnFiltersFn(instance as any, rowModel)
         })()
 
@@ -667,7 +505,10 @@ export function getInstance<
 
         return columnFilteredRowModel
       },
-      { key: 'getColumnFilteredRowModel', debug: instance.options.debug }
+      {
+        key: 'getColumnFilteredRowModel',
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+      }
     ),
 
     // These might be easier to remember than "column" filtered rows
@@ -698,11 +539,8 @@ export function getInstance<
             return columnFilteredRowModel
           }
 
-          if (process.env.NODE_ENV !== 'production' && instance.options.debug)
-            console.info('Global Filtering...')
-
           return globalFiltersFn(
-            instance as ReactTable<any, any, any, any, any>,
+            instance as TableInstance<TGenerics>,
             columnFilteredRowModel
           )
         })()
@@ -727,7 +565,7 @@ export function getInstance<
       },
       {
         key: 'getGlobalFilteredRowModel',
-        debug: instance.options.debug,
+        debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance._notifySortingReset()
         },
@@ -747,10 +585,10 @@ export function getInstance<
   }
 }
 
-export function shouldAutoRemoveFilter(
-  filterFn?: FilterFn<any, any, any, any, any>,
+export function shouldAutoRemoveFilter<TGenerics extends PartialGenerics>(
+  filterFn?: FilterFn<TGenerics>,
   value?: any,
-  column?: Column<any, any, any, any, any>
+  column?: Column<TGenerics>
 ) {
   return (
     (filterFn && filterFn.autoRemove

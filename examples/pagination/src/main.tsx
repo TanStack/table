@@ -8,10 +8,11 @@ import {
   columnFilterRowsFn,
   paginateRowsFn,
   Column,
-  ReactTable,
+  TableInstance,
+  PaginationState,
+  functionalUpdate,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import { PaginationState } from '@tanstack/react-table/build/types/features/Pagination'
 
 type Row = {
   firstName: string
@@ -22,7 +23,7 @@ type Row = {
   progress: number
 }
 
-let table = createTable().RowType<Row>()
+let table = createTable<Row>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -77,11 +78,8 @@ function App() {
     []
   )
 
-  const [data, refreshData] = React.useReducer(
-    () => makeData(100000),
-    undefined,
-    () => makeData(100000)
-  )
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(makeData(100000))
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -94,12 +92,19 @@ function App() {
     state: {
       pagination,
     },
-    onPaginationChange: setPagination,
+    onPaginationChange: updater => {
+      setPagination(old => {
+        // debugger
+        const newValue = functionalUpdate(updater, old)
+        return newValue
+      })
+    },
     paginateRowsFn: paginateRowsFn,
     columnFilterRowsFn: columnFilterRowsFn,
+    debugTable: true,
+    // debugHeaders: true,
+    // debugColumns: true,
   })
-
-  window.instance = instance
 
   return (
     <div className="p-2">
@@ -167,9 +172,7 @@ function App() {
         </button>
         <button
           className="border rounded p-1"
-          onClick={() =>
-            instance.setPageIndex(instance.getState().pagination.pageCount - 1)
-          }
+          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
           disabled={!instance.getCanNextPage()}
         >
           {'>>'}
@@ -178,7 +181,7 @@ function App() {
           <div>Page</div>
           <strong>
             {instance.getState().pagination.pageIndex + 1} of{' '}
-            {instance.getState().pagination.pageCount}
+            {instance.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -222,8 +225,8 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any, any, any, any, any>
-  instance: ReactTable<any, any, any, any, any>
+  column: Column<any>
+  instance: TableInstance<any>
 }) {
   const firstValue =
     instance.getPreColumnFilteredFlatRows()[0].values[column.id]
@@ -264,4 +267,9 @@ function Filter({
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+)
