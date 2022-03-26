@@ -2,7 +2,6 @@ import { RowModel } from '..'
 import { BuiltInFilterType, filterTypes } from '../filterTypes'
 import {
   Column,
-  Listener,
   OnChangeFn,
   PartialGenerics,
   TableInstance,

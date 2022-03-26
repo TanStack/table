@@ -148,13 +148,15 @@ function _createTable<TGenerics extends PartialGenerics>(
         'state' | 'onStateChange'
       >
     ): TableInstance<TGenerics> => {
+      // Compose in the generic options to the user options
       const resolvedOptions = {
         ...(opts ?? {}),
         state: {}, // Dummy state
         onStateChange: () => {}, // noop
         ...options,
       }
-      // Create a new table instance with our options
+
+      // Create a new table instance and store it in state
       const [instance] = React.useState(() =>
         createTableInstance<TGenerics>(resolvedOptions)
       )

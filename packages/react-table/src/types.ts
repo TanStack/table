@@ -287,8 +287,6 @@ export type CellProps = {
   role: string
 }
 
-export type Listener<TArgs extends [...any]> = (...args: [...TArgs]) => void
-
 //
 
 export type PropGetter<TBase> = <TGetter extends Getter<TBase>>(
