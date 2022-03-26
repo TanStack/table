@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { createTableInstance } from './core'
 import { CustomFilterTypes } from './features/Filters'
 import { CustomAggregationTypes } from './features/Grouping'
