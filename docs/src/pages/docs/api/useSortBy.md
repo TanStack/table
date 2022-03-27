@@ -55,7 +55,7 @@ The following options are supported via the main options object passed to `useTa
 
 The following options are supported on any `Column` object passed to the `columns` options in `useTable()`
 
-- `defaultCanSort: Bool`
+- `canSort: Bool`
   - Optional
   - Defaults to `false`
   - If set to `true`, this column will be sortable, regardless if it has a valid `accessor`
