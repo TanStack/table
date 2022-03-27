@@ -53,6 +53,7 @@ import {
   ExpandedInstance,
   ExpandedOptions,
   ExpandedTableState,
+  ExpandedRow,
 } from './features/Expanding'
 import { Overwrite } from './utils'
 import {
@@ -141,7 +142,8 @@ export type Row<TGenerics extends PartialGenerics> = CoreRow<TGenerics> &
   VisibilityRow<TGenerics> &
   HeadersRow<TGenerics> &
   GroupingRow &
-  RowSelectionRow
+  RowSelectionRow &
+  ExpandedRow
 
 export type RowValues = {
   [key: string]: any
