@@ -14,7 +14,7 @@ type Row = {
   progress: number
 }
 
-const table = createTable().RowType<Row>()
+const table = createTable<Row>()
 
 const defaultData: Row[] = [
   {
@@ -125,7 +125,7 @@ describe('core', () => {
               ))}
             </thead>
             <tbody {...instance.getTableBodyProps()}>
-              {instance.getRows().map(row => (
+              {instance.getRowModel().rows.map(row => (
                 <tr {...row.getRowProps()}>
                   {row.getVisibleCells().map(cell => (
                     <td {...cell.getCellProps()}>{cell.renderCell()}</td>
