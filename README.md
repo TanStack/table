@@ -995,7 +995,7 @@ Alternatively, you can set `filterAll` to `true`, and `filterMethod` will be pas
 
 To completely override the filter that is shown, you can set the `Filter` column option. Using this option you can specify the JSX that is shown. The option is passed an `onChange` method which must be called with the the value that you want to pass to the `filterMethod` option whenever the filter has changed.
 
-See <a href="http://react-table.js.org/#/story/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
+See <a href="https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v6/examples/custom-filtering" target="\_parent">Custom Filtering</a> demo for examples.
 
 ## Component Overrides
 
