@@ -1,13 +1,9 @@
-import * as React from 'react'
-import { createTableInstance } from './core'
 import { CustomFilterTypes } from './features/Filters'
 import { CustomAggregationTypes } from './features/Grouping'
 import { CustomSortingTypes } from './features/Sorting'
 import {
-  TableInstance,
   ColumnDef,
   AccessorFn,
-  Options,
   DefaultGenerics,
   PartialGenerics,
   _NonGenerated,
@@ -16,9 +12,9 @@ import { Overwrite, PartialKeys } from './utils'
 
 export type CreatTableFactory<TGenerics extends Partial<DefaultGenerics>> = <
   TRow
->() => CreateTable<Overwrite<TGenerics, { Row: TRow }>>
+>() => TableFactory<Overwrite<TGenerics, { Row: TRow }>>
 
-export type CreateTableOptions<
+export type CreateTableFactoryOptions<
   TFilterFns extends CustomFilterTypes<any>,
   TSortingFns extends CustomSortingTypes<any>,
   TAggregationFns extends CustomAggregationTypes<any>
@@ -33,7 +29,7 @@ export function createTableFactory<
   TSortingFns extends CustomSortingTypes<any>,
   TAggregationFns extends CustomAggregationTypes<any>
 >(
-  opts: CreateTableOptions<TFilterFns, TSortingFns, TAggregationFns>
+  opts: CreateTableFactoryOptions<TFilterFns, TSortingFns, TAggregationFns>
 ): CreatTableFactory<
   Overwrite<
     PartialGenerics,
@@ -47,7 +43,8 @@ export function createTableFactory<
   return () => _createTable(undefined, undefined, opts)
 }
 
-export type CreateTable<TGenerics extends Partial<DefaultGenerics>> = {
+export type TableFactory<TGenerics extends Partial<DefaultGenerics>> = {
+  __options: CreateTableFactoryOptions<any, any, any>
   createColumns: (columns: ColumnDef<TGenerics>[]) => ColumnDef<TGenerics>[]
   createGroup: (
     column: Overwrite<
@@ -97,12 +94,6 @@ export type CreateTable<TGenerics extends Partial<DefaultGenerics>> = {
       }
     >
   ) => ColumnDef<TGenerics>
-  useTable: (
-    options: PartialKeys<
-      Omit<Options<TGenerics>, keyof CreateTableOptions<any, any, any>>,
-      'state' | 'onStateChange'
-    >
-  ) => TableInstance<TGenerics>
 }
 
 export function createTable<TRow>() {
@@ -112,9 +103,10 @@ export function createTable<TRow>() {
 function _createTable<TGenerics extends PartialGenerics>(
   _?: undefined,
   __?: undefined,
-  opts?: CreateTableOptions<any, any, any>
-): CreateTable<TGenerics> {
+  __options?: CreateTableFactoryOptions<any, any, any>
+): TableFactory<TGenerics> {
   return {
+    __options: __options || {},
     createColumns: columns => columns,
     createDisplayColumn: column => column as any,
     createGroup: column => column as any,
@@ -140,47 +132,6 @@ function _createTable<TGenerics extends PartialGenerics>(
       }
 
       throw new Error('Invalid accessor')
-    },
-    useTable: (
-      options: PartialKeys<
-        Omit<Options<TGenerics>, keyof CreateTableOptions<any, any, any>>,
-        'state' | 'onStateChange'
-      >
-    ): TableInstance<TGenerics> => {
-      // Compose in the generic options to the user options
-      const resolvedOptions = {
-        ...(opts ?? {}),
-        state: {}, // Dummy state
-        onStateChange: () => {}, // noop
-        ...options,
-      }
-
-      // Create a new table instance and store it in state
-      const [instance] = React.useState(() =>
-        createTableInstance<TGenerics>(resolvedOptions)
-      )
-
-      // By default, manage table state here using the instance's initial state
-      const [state, setState] = React.useState(() => instance.initialState)
-
-      // Compose the default state above with any user state. This will allow the user
-      // to only control a subset of the state if desired.
-      instance.setOptions(prev => ({
-        ...prev,
-        ...options,
-        state: {
-          ...state,
-          ...options.state,
-        },
-        // Similarly, we'll maintain both our internal state and any user-provided
-        // state.
-        onStateChange: updater => {
-          setState(updater)
-          options.onStateChange?.(updater)
-        },
-      }))
-
-      return instance
     },
   }
 }

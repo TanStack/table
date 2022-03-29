@@ -9,6 +9,7 @@ import {
   createTable,
   globalFilterRowsFn,
   TableInstance,
+  useTable,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -74,7 +75,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(old => [...old])
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     state: {

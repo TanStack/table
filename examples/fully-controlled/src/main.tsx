@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { createTable, paginateRowsFn } from '@tanstack/react-table'
+import { createTable, paginateRowsFn, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
 
 type Person = {
@@ -99,7 +99,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // Create the instance and pass your options
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     paginateRowsFn: paginateRowsFn,

@@ -4,7 +4,7 @@ import faker from 'faker'
 
 import './index.css'
 
-import { createTable } from '@tanstack/react-table'
+import { createTable, useTable } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
 let table = createTable<Person>()
@@ -66,7 +66,7 @@ function App() {
   const [isSplit, setIsSplit] = React.useState(false)
   const rerender = () => setData(() => makeData(5000))
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     state: {

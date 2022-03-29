@@ -3,7 +3,12 @@ import { BranchConfig, Package } from './types'
 
 // TODO: List your npm packages here. The first package will be used as the versioner.
 export const packages: Package[] = [
-  { name: '@tanstack/react-table', srcDir: 'packages/react-table/src' },
+  { name: '@tanstack/table-core', srcDir: 'packages/table-core/src' },
+  {
+    name: '@tanstack/react-table',
+    srcDir: 'packages/react-table/src',
+    peerDependencies: ['@tanstack/table-core'],
+  },
   {
     name: '@tanstack/react-table-devtools',
     srcDir: 'packages/react-table-devtools/src',

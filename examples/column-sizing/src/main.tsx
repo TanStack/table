@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { createTable } from '@tanstack/react-table'
+import { createTable, useTable } from '@tanstack/react-table'
 import { ColumnResizeMode } from '@tanstack/react-table/build/types/features/ColumnSizing'
 
 type Person = {
@@ -101,7 +101,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     columnResizeMode,

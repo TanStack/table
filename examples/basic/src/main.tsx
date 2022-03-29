@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { createTable } from '@tanstack/react-table'
+import { createTable, useTable } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -97,7 +97,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
   })

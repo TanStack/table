@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { createTable, sortRowsFn } from '@tanstack/react-table'
+import { createTable, sortRowsFn, useTable } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
 let table = createTable<Person>()
@@ -66,7 +66,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(makeData(100000))
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     state: {

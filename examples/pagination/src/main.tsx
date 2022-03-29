@@ -11,6 +11,7 @@ import {
   TableInstance,
   PaginationState,
   functionalUpdate,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 
@@ -86,7 +87,7 @@ function App() {
     pageSize: 10,
   })
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     state: {

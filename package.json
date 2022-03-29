@@ -16,6 +16,7 @@
     "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true yarn cipublish"
   },
   "workspaces": [
+    "./packages/table-core",
     "./packages/react-table",
     "./packages/react-table-devtools"
   ],

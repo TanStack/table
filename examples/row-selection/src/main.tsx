@@ -12,6 +12,7 @@ import {
   globalFilterRowsFn,
   paginateRowsFn,
   TableInstance,
+  useTable,
 } from '@tanstack/react-table'
 
 let table = createTable<Person>()
@@ -89,7 +90,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(makeData(100000))
 
-  const instance = table.useTable({
+  const instance = useTable(table, {
     data,
     columns,
     state: {

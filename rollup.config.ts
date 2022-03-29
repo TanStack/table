@@ -19,6 +19,7 @@ type Options = {
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
+  '@tanstack/table-core': 'TableCore',
   '@tanstack/react-table': 'ReactTable',
   '@tanstack/react-table-devtools': 'ReactTableDevtools',
 }
@@ -40,6 +41,13 @@ const babelPlugin = babel({
 
 export default function rollup(options: RollupOptions): RollupOptions[] {
   return [
+    ...buildConfigs({
+      name: 'table-core',
+      packageDir: 'packages/table-core',
+      jsName: 'TableCore',
+      outputFile: 'table-core',
+      entryFile: 'src/index.tsx',
+    }),
     ...buildConfigs({
       name: 'react-table',
       packageDir: 'packages/react-table',

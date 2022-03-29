@@ -32,17 +32,17 @@ import {
   PartialGenerics,
 } from './types'
 
-import * as Visibility from './features/Visibility'
-import * as Ordering from './features/Ordering'
-import * as Pinning from './features/Pinning'
-import * as Headers from './features/Headers'
-import * as Filters from './features/Filters'
-import * as Sorting from './features/Sorting'
-import * as Grouping from './features/Grouping'
-import * as Expanding from './features/Expanding'
-import * as ColumnSizing from './features/ColumnSizing'
-import * as Pagination from './features/Pagination'
-import * as RowSelection from './features/RowSelection'
+import { Visibility } from './features/Visibility'
+import { Ordering } from './features/Ordering'
+import { Pinning } from './features/Pinning'
+import { Headers } from './features/Headers'
+import { Filters } from './features/Filters'
+import { Sorting } from './features/Sorting'
+import { Grouping, GroupingCell } from './features/Grouping'
+import { Expanding } from './features/Expanding'
+import { ColumnSizing, defaultColumnSizing } from './features/ColumnSizing'
+import { Pagination } from './features/Pagination'
+import { RowSelection } from './features/RowSelection'
 import { RowModel } from '.'
 
 const features = [
@@ -309,7 +309,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       }
 
       let column: CoreColumn<TGenerics> = {
-        ...ColumnSizing.defaultColumnSizing,
+        ...defaultColumnSizing,
         ...defaultColumn,
         ...columnDef,
         id: `${id}`,
@@ -457,10 +457,10 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
 
       return Math.min(
         Math.max(
-          column.minWidth ?? ColumnSizing.defaultColumnSizing.minWidth,
-          columnSize ?? column.width ?? ColumnSizing.defaultColumnSizing.width
+          column.minWidth ?? defaultColumnSizing.minWidth,
+          columnSize ?? column.width ?? defaultColumnSizing.width
         ),
-        column.maxWidth ?? ColumnSizing.defaultColumnSizing.maxWidth
+        column.maxWidth ?? defaultColumnSizing.maxWidth
       )
     },
 
@@ -482,7 +482,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
         Object.assign(
           cell,
           (feature as any).createCell?.(
-            cell as Cell<TGenerics> & Grouping.GroupingCell,
+            cell as Cell<TGenerics> & GroupingCell,
             column,
             row as Row<TGenerics>,
             instance

@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/react-table",
+  "name": "@tanstack/table-core",
   "author": "Tanner Linsley",
   "version": "8.0.0-alpha.8",
   "description": "Hooks for building lightweight, fast and extendable datagrids for React",
@@ -15,7 +15,7 @@
   "keywords": [
     "react",
     "table",
-    "react-table",
+    "table-core",
     "datagrid"
   ],
   "funding": {
@@ -33,9 +33,6 @@
     "build",
     "src"
   ],
-  "dependencies": {
-    "@tanstack/table-core": "^8.0.0-alpha.9"
-  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"
