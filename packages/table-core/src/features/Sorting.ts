@@ -67,6 +67,7 @@ export type SortingColumn<TGenerics extends PartialGenerics> = {
   getCanMultiSort: () => boolean
   getSortIndex: () => number
   getIsSorted: () => false | SortDirection
+  resetSorting: () => void
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
   getToggleSortingProps: <TGetter extends Getter<ToggleSortingProps>>(
     userProps?: TGetter
@@ -108,7 +109,7 @@ export type SortingInstance<TGenerics extends PartialGenerics> = {
     desc?: boolean,
     multi?: boolean
   ) => void
-  resetSorting: () => void
+  resetSorting: (columnId?: string) => void
   getColumnCanSort: (columnId: string) => boolean
   getColumnCanMultiSort: (columnId: string) => boolean
   getColumnIsSorted: (columnId: string) => false | 'asc' | 'desc'
@@ -160,6 +161,7 @@ export const Sorting = {
       getCanMultiSort: () => instance.getColumnCanMultiSort(column.id),
       getSortIndex: () => instance.getColumnSortIndex(column.id),
       getIsSorted: () => instance.getColumnIsSorted(column.id),
+      resetSorting: () => instance.resetSorting(column.id),
       toggleSorting: (desc, isMulti) =>
         instance.toggleColumnSorting(column.id, desc, isMulti),
       getToggleSortingProps: userProps =>
@@ -402,8 +404,14 @@ export const Sorting = {
       getColumnSortIndex: columnId =>
         instance.getState().sorting?.findIndex(d => d.id === columnId) ?? -1,
 
-      resetSorting: () => {
-        instance.setSorting(instance.initialState?.sorting ?? [])
+      resetSorting: (columnId?: string) => {
+        if (columnId) {
+          instance.setSorting(old =>
+            old?.length ? old.filter(d => d.id !== columnId) : []
+          )
+        } else {
+          instance.setSorting(instance.initialState?.sorting ?? [])
+        }
       },
 
       getToggleSortingProps: (columnId, userProps) => {
