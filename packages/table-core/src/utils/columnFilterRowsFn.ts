@@ -1,6 +1,6 @@
-import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
+import { AnyGenerics, TableInstance, Row, RowModel } from '../types'
 
-export function columnFilterRowsFn<TGenerics extends PartialGenerics>(
+export function columnFilterRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
   rowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {

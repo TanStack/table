@@ -1,7 +1,7 @@
-import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
+import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
 import { flattenBy } from '../utils'
 
-export function groupRowsFn<TGenerics extends PartialGenerics>(
+export function groupRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
   sortedRowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {
@@ -151,7 +151,7 @@ export function groupRowsFn<TGenerics extends PartialGenerics>(
   }
 }
 
-function groupBy<TGenerics extends PartialGenerics>(
+function groupBy<TGenerics extends AnyGenerics>(
   rows: Row<TGenerics>[],
   columnId: string
 ) {

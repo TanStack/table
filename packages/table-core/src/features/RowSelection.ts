@@ -7,6 +7,7 @@ import {
   Row,
   RowModel,
   Updater,
+  AnyGenerics,
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
 
@@ -580,7 +581,7 @@ const mutateRowIsSelected = <TGenerics extends PartialGenerics>(
   }
 }
 
-export function selectRowsFn<TGenerics extends PartialGenerics>(
+export function selectRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
   rowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {

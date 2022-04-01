@@ -15,13 +15,12 @@ import {
   useTable,
 } from '@tanstack/react-table'
 
-let table = createTable<Person>()
+let table = createTable<{ Row: Person }>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const [rowSelection, setRowSelection] = React.useState({})
-  const [columnFilters, setColumnFilters] = React.useState([])
   const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo(
@@ -51,7 +50,7 @@ function App() {
             table.createDataColumn(row => row.lastName, {
               id: 'lastName',
               cell: info => info.value,
-              header: <span>Last Name</span>,
+              header: () => <span>Last Name</span>,
               footer: props => props.column.id,
             }),
           ],

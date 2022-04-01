@@ -1,7 +1,7 @@
-import { PartialGenerics, TableInstance, RowModel } from '../types'
+import { TableInstance, RowModel, AnyGenerics } from '../types'
 import { expandRowsFn } from './expandRowsFn'
 
-export function paginateRowsFn<TGenerics extends PartialGenerics>(
+export function paginateRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
   rowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {

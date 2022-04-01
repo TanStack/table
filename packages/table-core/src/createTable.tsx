@@ -53,7 +53,13 @@ export type Table<TGenerics extends PartialGenerics> = {
             header?: string | ColumnDef<TGenerics>['header']
           }
         >,
-      { accessorFn?: never; accessorKey?: never }
+      {
+        accessorFn?: never
+        accessorKey?: never
+        // This is sketchy, but allows the column helper pattern we want.
+        // Someone smarter than me could probably do this better.
+        columns?: ColumnDef<any>[]
+      }
     >
   ) => ColumnDef<TGenerics>
   createDisplayColumn: (

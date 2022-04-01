@@ -1,7 +1,7 @@
-import { PartialGenerics, TableInstance, Row, RowModel } from '../types'
+import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
 import { SortingFn } from '../features/Sorting'
 
-export function sortRowsFn<TGenerics extends PartialGenerics>(
+export function sortRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
   rowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {

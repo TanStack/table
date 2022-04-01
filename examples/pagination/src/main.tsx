@@ -13,18 +13,9 @@ import {
   functionalUpdate,
   useTable,
 } from '@tanstack/react-table'
-import { makeData } from './makeData'
+import { makeData, Person } from './makeData'
 
-type Row = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-let table = createTable<Row>()
+let table = createTable<{ Row: Person }>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -43,7 +34,7 @@ function App() {
             table.createDataColumn(row => row.lastName, {
               id: 'lastName',
               cell: info => info.value,
-              header: <span>Last Name</span>,
+              header: () => <span>Last Name</span>,
               footer: props => props.column.id,
             }),
           ],
@@ -85,6 +76,7 @@ function App() {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
+    pageCount: -1, // -1 allows the table to calculate the page count for us via instance.getPageCount()
   })
 
   const instance = useTable(table, {

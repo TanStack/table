@@ -14,7 +14,7 @@ import {
 
 import { makeData, Person } from './makeData'
 
-let table = createTable<Person>()
+let table = createTable<{ Row: Person }>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -36,7 +36,7 @@ function App() {
             table.createDataColumn(row => row.lastName, {
               id: 'lastName',
               cell: info => info.value,
-              header: <span>Last Name</span>,
+              header: () => <span>Last Name</span>,
               footer: props => props.column.id,
             }),
           ],

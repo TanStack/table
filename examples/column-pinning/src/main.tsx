@@ -7,7 +7,7 @@ import './index.css'
 import { createTable, useTable } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable<Person>()
+let table = createTable<{ Row: Person }>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({
@@ -21,7 +21,7 @@ const defaultColumns = table.createColumns([
       table.createDataColumn(row => row.lastName, {
         id: 'lastName',
         cell: info => info.value,
-        header: <span>Last Name</span>,
+        header: () => <span>Last Name</span>,
         footer: props => props.column.id,
       }),
     ],
