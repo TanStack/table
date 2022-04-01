@@ -78,11 +78,17 @@ export type TableFactory<TGenerics extends Partial<DefaultGenerics>> = {
     column: Overwrite<
       TAccessor extends (...args: any[]) => any
         ? // Accessor Fn
-          _NonGenerated<ColumnDef<TGenerics>>
+          _NonGenerated<
+            ColumnDef<Overwrite<TGenerics, { Value: ReturnType<TAccessor> }>>
+          >
         : TAccessor extends keyof TGenerics['Row']
         ? // Accessor Key
           Overwrite<
-            _NonGenerated<ColumnDef<TGenerics>>,
+            _NonGenerated<
+              ColumnDef<
+                Overwrite<TGenerics, { Value: TGenerics['Row'][TAccessor] }>
+              >
+            >,
             {
               id?: string
             }
@@ -93,7 +99,18 @@ export type TableFactory<TGenerics extends Partial<DefaultGenerics>> = {
         accessorKey?: never
       }
     >
-  ) => ColumnDef<TGenerics>
+  ) => ColumnDef<
+    Overwrite<
+      TGenerics,
+      {
+        Value: TAccessor extends (...args: any[]) => any
+          ? ReturnType<TAccessor>
+          : TAccessor extends keyof TGenerics['Row']
+          ? TGenerics['Row'][TAccessor]
+          : never
+      }
+    >
+  >
 }
 
 export function createTable<TRow>() {
