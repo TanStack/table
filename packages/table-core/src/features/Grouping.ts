@@ -1,4 +1,3 @@
-import React, { MouseEvent, TouchEvent } from 'react'
 import { RowModel } from '..'
 import { BuiltInAggregationType, aggregationTypes } from '../aggregationTypes'
 import {
@@ -11,6 +10,8 @@ import {
   Row,
   Updater,
   PartialGenerics,
+  Renderable,
+  UseRenderer,
 } from '../types'
 import {
   functionalUpdate,
@@ -46,7 +47,16 @@ export type GroupingTableState = {
 export type GroupingColumnDef<TGenerics extends PartialGenerics> = {
   aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   aggregateValue?: (columnValue: unknown) => any
-  renderAggregatedCell?: () => React.ReactNode
+  aggregatedCell?: Renderable<
+    TGenerics,
+    {
+      instance: TableInstance<TGenerics>
+      row: Row<TGenerics>
+      column: Column<TGenerics>
+      cell: Cell<TGenerics>
+      value: TGenerics['Value']
+    }
+  >
   enableGrouping?: boolean
   defaultCanGroup?: boolean
 }
@@ -68,10 +78,11 @@ export type GroupingRow = {
   getIsGrouped: () => boolean
 }
 
-export type GroupingCell = {
+export type GroupingCell<TGenerics extends PartialGenerics> = {
   getIsGrouped: () => boolean
   getIsPlaceholder: () => boolean
   getIsAggregated: () => boolean
+  renderAggregatedCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
 export type ColumnDefaultOptions = {
@@ -277,7 +288,6 @@ export const Grouping = {
           title: canGroup ? 'Toggle Grouping' : undefined,
           onClick: canGroup
             ? (e: MouseEvent | TouchEvent) => {
-                e.persist()
                 column.toggleGrouping?.()
               }
             : undefined,
@@ -321,11 +331,11 @@ export const Grouping = {
   },
 
   createCell: <TGenerics extends PartialGenerics>(
-    cell: Cell<TGenerics> & GroupingCell,
+    cell: Cell<TGenerics>,
     column: Column<TGenerics>,
     row: Row<TGenerics>,
-    _instance: TableInstance<TGenerics>
-  ): GroupingCell => {
+    instance: TableInstance<TGenerics>
+  ): GroupingCell<TGenerics> => {
     return {
       getIsGrouped: () =>
         column.getIsGrouped() && column.id === row.groupingColumnId,
@@ -334,6 +344,19 @@ export const Grouping = {
         !cell.getIsGrouped() &&
         !cell.getIsPlaceholder() &&
         row.subRows?.length > 1,
+      renderAggregatedCell: () => {
+        const template = column.aggregatedCell ?? column.cell
+
+        return template
+          ? instance.render(template, {
+              instance,
+              column,
+              row,
+              cell,
+              value: cell.value,
+            })
+          : null
+      },
     }
   },
 

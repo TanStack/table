@@ -165,7 +165,7 @@ export const Expanding = {
         if (!row) {
           if (process.env.NODE_ENV !== 'production') {
             console.warn(
-              `[ReactTable] getIsRowExpanded: no row found with id ${rowId}`
+              `[Table] getIsRowExpanded: no row found with id ${rowId}`
             )
           }
           throw new Error()
@@ -184,7 +184,7 @@ export const Expanding = {
         if (!row) {
           if (process.env.NODE_ENV !== 'production') {
             console.warn(
-              `[ReactTable] getRowCanExpand: no row found with id ${rowId}`
+              `[Table] getRowCanExpand: no row found with id ${rowId}`
             )
           }
           throw new Error()

@@ -1,4 +1,3 @@
-import React, { MouseEvent, TouchEvent } from 'react'
 import {
   Getter,
   OnChangeFn,

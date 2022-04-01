@@ -1,8 +1,4 @@
 import {
-  MouseEvent as ReactMouseEvent,
-  TouchEvent as ReactTouchEvent,
-} from 'react'
-import {
   Column,
   Getter,
   Header,
@@ -49,8 +45,8 @@ export type ColumnSizingDefaultOptions = {
 
 export type ColumnResizerProps = {
   title?: string
-  onMouseDown?: (e: ReactMouseEvent) => void
-  onTouchStart?: (e: ReactTouchEvent) => void
+  onMouseDown?: (e: MouseEvent) => void
+  onTouchStart?: (e: TouchEvent) => void
   draggable?: boolean
   role?: string
 }
@@ -207,7 +203,7 @@ export const ColumnSizing = {
 
         const canResize = column.getCanResize()
 
-        const onResizeStart = (e: ReactMouseEvent | ReactTouchEvent) => {
+        const onResizeStart = (e: MouseEvent | TouchEvent) => {
           if (isTouchStartEvent(e)) {
             // lets not respond to multiple touches (e.g. 2 or 3 fingers)
             if (e.touches && e.touches.length > 1) {
@@ -360,12 +356,12 @@ export const ColumnSizing = {
               title: 'Toggle Grouping',
               draggable: false,
               role: 'separator',
-              onMouseDown: (e: ReactMouseEvent) => {
-                e.persist()
+              onMouseDown: (e: MouseEvent & { persist?: () => void }) => {
+                e.persist?.()
                 onResizeStart(e)
               },
-              onTouchStart: (e: ReactTouchEvent) => {
-                e.persist()
+              onTouchStart: (e: TouchEvent & { persist?: () => void }) => {
+                e.persist?.()
                 onResizeStart(e)
               },
             }
@@ -425,8 +421,6 @@ export function passiveEventSupported() {
   return passiveSupported
 }
 
-function isTouchStartEvent(
-  e: ReactTouchEvent | ReactMouseEvent
-): e is ReactTouchEvent {
+function isTouchStartEvent(e: TouchEvent | MouseEvent): e is TouchEvent {
   return e.type === 'touchstart'
 }

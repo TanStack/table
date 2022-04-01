@@ -3,7 +3,6 @@ import {
   functionalUpdate,
   propGetter,
   memo,
-  flexRender,
   RequiredKeys,
 } from './utils'
 
@@ -27,9 +26,11 @@ import {
   CellProps,
   TableInstance,
   RowValues,
-  Renderable,
   Please_use_the_create_table_column_utilities_to_define_columns,
   PartialGenerics,
+  CoreCell,
+  Renderable,
+  UseRenderer,
 } from './types'
 
 import { Visibility } from './features/Visibility'
@@ -38,7 +39,7 @@ import { Pinning } from './features/Pinning'
 import { Headers } from './features/Headers'
 import { Filters } from './features/Filters'
 import { Sorting } from './features/Sorting'
-import { Grouping, GroupingCell } from './features/Grouping'
+import { Grouping } from './features/Grouping'
 import { Expanding } from './features/Expanding'
 import { ColumnSizing, defaultColumnSizing } from './features/ColumnSizing'
 import { Pagination } from './features/Pagination'
@@ -64,6 +65,7 @@ export type CoreOptions<TGenerics extends PartialGenerics> = {
   columns: ColumnDef<TGenerics>[]
   state: Partial<TableState>
   onStateChange: (updater: Updater<TableState>) => void
+  render: TGenerics['Render']
   debugAll?: boolean
   debugTable?: boolean
   debugHeaders?: boolean
@@ -140,6 +142,10 @@ export type TableCore<TGenerics extends PartialGenerics> = {
   getLeftTableWidth: () => number
   getCenterTableWidth: () => number
   getRightTableWidth: () => number
+  render: <TProps>(
+    template: Renderable<TGenerics, TProps>,
+    props: TProps
+  ) => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
 export type CoreRow<TGenerics extends PartialGenerics> = {
@@ -160,30 +166,37 @@ export type CoreColumnDef<TGenerics extends PartialGenerics> = {
   id: string
   accessorKey?: string & keyof TGenerics['Row']
   accessorFn?: AccessorFn<TGenerics['Row']>
-  header?:
-    | string
-    | Renderable<{
-        instance: TableInstance<TGenerics>
-        header: Header<TGenerics>
-        column: Column<TGenerics>
-      }>
   width?: number
   minWidth?: number
   maxWidth?: number
   columns?: ColumnDef<TGenerics>[]
-  footer?: Renderable<{
-    instance: TableInstance<TGenerics>
-    header: Header<TGenerics>
-    column: Column<TGenerics>
-  }>
-  cell?: Renderable<{
-    instance: TableInstance<TGenerics>
-    row: Row<TGenerics>
-    column: Column<TGenerics>
-    cell: Cell<TGenerics>
-    value: TGenerics['Value']
-  }>
-  defaultIsVisible?: boolean
+  header?: Renderable<
+    TGenerics,
+    {
+      instance: TableInstance<TGenerics>
+      header: Header<TGenerics>
+      column: Column<TGenerics>
+    }
+  >
+  footer?: Renderable<
+    TGenerics,
+    {
+      instance: TableInstance<TGenerics>
+      header: Header<TGenerics>
+      column: Column<TGenerics>
+    }
+  >
+  cell?: Renderable<
+    TGenerics,
+    {
+      instance: TableInstance<TGenerics>
+      row: Row<TGenerics>
+      column: Column<TGenerics>
+      cell: Cell<TGenerics>
+      value: TGenerics['Value']
+    }
+  >
+  meta?: TGenerics['ColumnMeta']
   [Please_use_the_create_table_column_utilities_to_define_columns]: true
 }
 
@@ -203,12 +216,10 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
   options: Options<TGenerics>
 ): TableInstance<TGenerics> {
   if (options.debugAll || options.debugTable) {
-    console.info('Creating React Table Instance...')
+    console.info('Creating Table Instance...')
   }
 
   let instance = {} as TableInstance<TGenerics>
-
-  let listeners: (() => void)[] = []
 
   const defaultOptions = features.reduce((obj, feature) => {
     return Object.assign(obj, (feature as any).getDefaultOptions?.(instance))
@@ -241,6 +252,17 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       instance.options = buildOptions(
         functionalUpdate(updater, instance.options)
       )
+    },
+    render: (template, props) => {
+      if (typeof instance.options.render === 'function') {
+        return instance.options.render(template, props)
+      }
+
+      if (typeof template === 'function') {
+        return (template as Function)(props)
+      }
+
+      return template
     },
 
     getRowId: (_: TGenerics['Row'], index: number, parent?: Row<TGenerics>) =>
@@ -436,9 +458,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
 
       if (!column) {
         if (process.env.NODE_ENV !== 'production') {
-          console.warn(
-            `[React Table] Column with id ${columnId} does not exist.`
-          )
+          console.warn(`[Table] Column with id ${columnId} does not exist.`)
         }
         throw new Error()
       }
@@ -465,7 +485,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
     },
 
     createCell: (row, column, value) => {
-      const cell: Cell<TGenerics> = {
+      const cell: CoreCell<TGenerics> = {
         id: `${row.id}_${column.id}`,
         rowId: row.id,
         columnId: column.id,
@@ -475,14 +495,22 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
         getCellProps: userProps =>
           instance.getCellProps(row.id, column.id, userProps)!,
         renderCell: () =>
-          flexRender(column.cell, { instance, column, row, cell, value }),
+          column.cell
+            ? instance.render(column.cell, {
+                instance,
+                column,
+                row,
+                cell: cell as Cell<TGenerics>,
+                value,
+              })
+            : null,
       }
 
       features.forEach(feature => {
         Object.assign(
           cell,
           (feature as any).createCell?.(
-            cell as Cell<TGenerics> & GroupingCell,
+            cell as Cell<TGenerics>,
             column,
             row as Row<TGenerics>,
             instance
@@ -490,7 +518,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
         )
       }, {})
 
-      return cell
+      return cell as Cell<TGenerics>
     },
 
     createRow: (id, original, rowIndex, depth, values) => {
@@ -671,7 +699,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
 
       if (!row) {
         if (process.env.NODE_ENV !== 'production') {
-          throw new Error(`[React Table] could not find row with id ${rowId}`)
+          throw new Error(`[Table] could not find row with id ${rowId}`)
         }
         throw new Error()
       }
@@ -681,7 +709,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       if (!cell) {
         if (process.env.NODE_ENV !== 'production') {
           throw new Error(
-            `[React Table] could not find cell ${columnId} in row ${rowId}`
+            `[Table] could not find cell ${columnId} in row ${rowId}`
           )
         }
         throw new Error()

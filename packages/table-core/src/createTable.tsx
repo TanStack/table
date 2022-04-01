@@ -4,47 +4,38 @@ import { CustomSortingTypes } from './features/Sorting'
 import {
   ColumnDef,
   AccessorFn,
-  DefaultGenerics,
   PartialGenerics,
   _NonGenerated,
+  AnyRender,
 } from './types'
 import { Overwrite, PartialKeys } from './utils'
 
-export type CreatTableFactory<TGenerics extends Partial<DefaultGenerics>> = <
-  TRow
->() => TableFactory<Overwrite<TGenerics, { Row: TRow }>>
+export type CreateTableFactory<TGenerics extends PartialGenerics> = <
+  TSubGenerics extends {
+    Row: any
+    ColumnMeta?: object
+  }
+>() => Table<
+  Overwrite<
+    TGenerics,
+    { Row: TSubGenerics['Row']; ColumnMeta: TSubGenerics['ColumnMeta'] }
+  >
+>
 
 export type CreateTableFactoryOptions<
+  TRender extends AnyRender,
   TFilterFns extends CustomFilterTypes<any>,
   TSortingFns extends CustomSortingTypes<any>,
   TAggregationFns extends CustomAggregationTypes<any>
 > = {
+  render: TRender
   filterFns?: TFilterFns
   sortingFns?: TSortingFns
   aggregationFns?: TAggregationFns
 }
 
-export function createTableFactory<
-  TFilterFns extends CustomFilterTypes<any>,
-  TSortingFns extends CustomSortingTypes<any>,
-  TAggregationFns extends CustomAggregationTypes<any>
->(
-  opts: CreateTableFactoryOptions<TFilterFns, TSortingFns, TAggregationFns>
-): CreatTableFactory<
-  Overwrite<
-    PartialGenerics,
-    {
-      FilterFns: TFilterFns
-      SortingFns: TSortingFns
-      AggregationFns: TAggregationFns
-    }
-  >
-> {
-  return () => _createTable(undefined, undefined, opts)
-}
-
-export type TableFactory<TGenerics extends Partial<DefaultGenerics>> = {
-  __options: CreateTableFactoryOptions<any, any, any>
+export type Table<TGenerics extends PartialGenerics> = {
+  __options: CreateTableFactoryOptions<any, any, any, any>
   createColumns: (columns: ColumnDef<TGenerics>[]) => ColumnDef<TGenerics>[]
   createGroup: (
     column: Overwrite<
@@ -96,17 +87,38 @@ export type TableFactory<TGenerics extends Partial<DefaultGenerics>> = {
   ) => ColumnDef<TGenerics>
 }
 
-export function createTable<TRow>() {
-  return _createTable<Overwrite<PartialGenerics, { Row: TRow }>>()
+type InitTable<TRender extends AnyRender> = {
+  createTableFactory: <TGenerics extends PartialGenerics>(
+    options?: CreateTableFactoryOptions<TRender, any, any, any>
+  ) => CreateTableFactory<Overwrite<TGenerics, { Render: TRender }>>
+  createTable: CreateTableFactory<
+    Overwrite<PartialGenerics, { Render: TRender }>
+  >
+}
+
+//
+
+export function init<TRender extends AnyRender>(opts: {
+  render: TRender
+}): InitTable<TRender> {
+  return {
+    createTableFactory: options => () =>
+      _createTable(undefined, undefined, { ...options, ...opts }),
+    createTable: () => _createTable(undefined, undefined, opts),
+  }
 }
 
 function _createTable<TGenerics extends PartialGenerics>(
   _?: undefined,
   __?: undefined,
-  __options?: CreateTableFactoryOptions<any, any, any>
-): TableFactory<TGenerics> {
+  __options?: CreateTableFactoryOptions<any, any, any, any>
+): Table<TGenerics> {
   return {
-    __options: __options || {},
+    __options: __options ?? {
+      render: () => {
+        throw new Error()
+      },
+    },
     createColumns: columns => columns,
     createDisplayColumn: column => column as any,
     createGroup: column => column as any,

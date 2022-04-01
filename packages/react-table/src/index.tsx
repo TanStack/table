@@ -9,21 +9,70 @@ import {
   TableInstance,
   PartialGenerics,
   CreateTableFactoryOptions,
-  TableFactory,
+  Table,
+  init,
+  AnyGenerics,
 } from '@tanstack/table-core'
 
-export function useTable<TGenerics extends PartialGenerics>(
-  table: TableFactory<TGenerics>,
+export type Renderable<TProps> =
+  | React.ReactNode
+  | React.FunctionComponent<TProps>
+  | React.Component<TProps>
+
+export const render = <TProps extends {}>(
+  Comp: Renderable<TProps>,
+  props: TProps
+): React.ReactNode =>
+  !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
+
+export type Render = typeof render
+
+function isReactComponent(component: unknown): component is React.FC {
+  return (
+    isClassComponent(component) ||
+    typeof component === 'function' ||
+    isExoticComponent(component)
+  )
+}
+
+function isClassComponent(component: any) {
+  return (
+    typeof component === 'function' &&
+    (() => {
+      const proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isReactComponent
+    })()
+  )
+}
+
+function isExoticComponent(component: any) {
+  return (
+    typeof component === 'object' &&
+    typeof component.$$typeof === 'symbol' &&
+    ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
+  )
+}
+
+const { createTable, createTableFactory } = init({ render })
+
+export { createTable, createTableFactory }
+
+export function useTable<TGenerics extends AnyGenerics>(
+  table: Table<TGenerics>,
   options: PartialKeys<
-    Omit<Options<TGenerics>, keyof CreateTableFactoryOptions<any, any, any>>,
+    Omit<
+      Options<TGenerics>,
+      keyof CreateTableFactoryOptions<any, any, any, any>
+    >,
     'state' | 'onStateChange'
   >
 ): TableInstance<TGenerics> {
   // Compose in the generic options to the user options
-  const resolvedOptions = {
+  const resolvedOptions: Options<TGenerics> = {
     ...(table.__options ?? {}),
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
+    render,
     ...options,
   }
 

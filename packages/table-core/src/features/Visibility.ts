@@ -48,6 +48,7 @@ type ToggleAllColumnsVisibilityProps = {}
 export type VisibilityColumnDef = {
   enableHiding?: boolean
   defaultCanHide?: boolean
+  defaultIsVisible?: boolean
 }
 
 export type VisibilityRow<TGenerics extends PartialGenerics> = {

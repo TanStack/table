@@ -1,18 +1,14 @@
-import React from 'react'
-import {
-  Getter,
-  NoInfer,
-  PropGetterValue,
-  Renderable,
-  TableState,
-  Updater,
-} from './types'
+import { Getter, NoInfer, PropGetterValue, TableState, Updater } from './types'
 
 export type IsAny<T> = 0 extends 1 & T ? true : false
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>
-export type Overwrite<T, U> = Omit<T, keyof U> & U
+export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
+  T,
+  keyof U
+> &
+  U
 
 export type DataUpdateFunction<T> = (input: T) => T
 
@@ -166,41 +162,6 @@ export function memo<TDeps extends readonly any[], TResult>(
 
     return result!
   }
-}
-
-export type Render = typeof flexRender
-
-export function flexRender<TProps extends {}>(
-  Comp: Renderable<TProps>,
-  props: TProps
-): React.ReactNode {
-  return !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
-}
-
-function isReactComponent(component: unknown): component is React.FC {
-  return (
-    isClassComponent(component) ||
-    typeof component === 'function' ||
-    isExoticComponent(component)
-  )
-}
-
-function isClassComponent(component: any) {
-  return (
-    typeof component === 'function' &&
-    (() => {
-      const proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isReactComponent
-    })()
-  )
-}
-
-function isExoticComponent(component: any) {
-  return (
-    typeof component === 'object' &&
-    typeof component.$$typeof === 'symbol' &&
-    ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
-  )
 }
 
 // export function hashString(str: string, seed = 0): string {

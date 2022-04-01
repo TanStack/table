@@ -52,7 +52,7 @@ export function groupRowsFn<TGenerics extends PartialGenerics>(
         console.info({ column })
         throw new Error(
           process.env.NODE_ENV !== 'production'
-            ? `React Table: Invalid column.aggregateType option for column listed above`
+            ? `Table: Invalid column.aggregateType option for column listed above`
             : ''
         )
       } else {

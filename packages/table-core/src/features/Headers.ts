@@ -14,7 +14,7 @@ import {
   TableInstance,
   Row,
 } from '../types'
-import { propGetter, memo, flexRender } from '../utils'
+import { propGetter, memo } from '../utils'
 import { ColumnSizing } from './ColumnSizing'
 
 export type HeadersRow<TGenerics extends PartialGenerics> = {
@@ -224,9 +224,21 @@ export const Headers = {
           getFooterProps: userProps =>
             instance.getFooterProps(header.id, userProps)!,
           renderHeader: () =>
-            flexRender(column.header, { instance, header, column }),
+            column.header
+              ? instance.render(column.header, {
+                  instance,
+                  header: header as Header<TGenerics>,
+                  column,
+                })
+              : null,
           renderFooter: () =>
-            flexRender(column.footer, { instance, header, column }),
+            column.footer
+              ? instance.render(column.footer, {
+                  instance,
+                  header: header as Header<TGenerics>,
+                  column,
+                })
+              : null,
         }
 
         // Yes, we have to convert instance to unknown, because we know more than the compiler here.

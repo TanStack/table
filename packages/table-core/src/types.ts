@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   CoreColumn,
   CoreColumnDef,
@@ -42,6 +41,7 @@ import {
   SortingTableState,
 } from './features/Sorting'
 import {
+  GroupingCell,
   GroupingColumn,
   GroupingColumnDef,
   GroupingInstance,
@@ -55,7 +55,7 @@ import {
   ExpandedTableState,
   ExpandedRow,
 } from './features/Expanding'
-import { Overwrite } from './utils'
+import { Overwrite, PartialKeys } from './utils'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
@@ -76,19 +76,26 @@ import {
   RowSelectionTableState,
 } from './features/RowSelection'
 
-// declare global {
-//   const process.env.NODE_ENV !== 'production': boolean
-// }
-
 export type DefaultGenerics = {
   Row: unknown
   Value: unknown
   FilterFns: object
   SortingFns: object
   AggregationFns: object
+  Render: unknown
+  ColumnMeta: object
 }
 
+export type AnyRender = (Comp: any, props: any) => any
+
+export type UseRenderer<TGenerics extends PartialGenerics> =
+  TGenerics['Render'] extends (...args: any) => any ? TGenerics['Render'] : any
+
 export type PartialGenerics = Partial<DefaultGenerics>
+
+export type AnyGenerics = {
+  [TKey in keyof PartialGenerics]: any
+}
 
 export type TableInstance<TGenerics extends PartialGenerics> =
   TableCore<TGenerics> &
@@ -103,11 +110,6 @@ export type TableInstance<TGenerics extends PartialGenerics> =
     ExpandedInstance<TGenerics> &
     PaginationInstance<TGenerics> &
     RowSelectionInstance<TGenerics>
-
-export type Renderable<TProps> =
-  | React.ReactNode
-  | React.FunctionComponent<TProps>
-  | React.Component<TProps>
 
 //
 
@@ -167,6 +169,10 @@ export type _NonGenerated<T> = Overwrite<
   }
 >
 
+export type Renderable<TGenerics extends PartialGenerics, TProps> =
+  | string
+  | ((props: TProps) => ReturnType<UseRenderer<TGenerics>>)
+
 export type ColumnDef<TGenerics extends PartialGenerics> =
   CoreColumnDef<TGenerics> &
     VisibilityColumnDef &
@@ -185,7 +191,10 @@ export type Column<TGenerics extends PartialGenerics> = ColumnDef<TGenerics> &
   GroupingColumn<TGenerics> &
   ColumnSizingColumn<TGenerics>
 
-export type Cell<TGenerics extends PartialGenerics> = {
+export type Cell<TGenerics extends PartialGenerics> = CoreCell<TGenerics> &
+  GroupingCell<TGenerics>
+
+export type CoreCell<TGenerics extends PartialGenerics> = {
   id: string
   rowId: string
   columnId: string
@@ -193,7 +202,7 @@ export type Cell<TGenerics extends PartialGenerics> = {
   row: Row<TGenerics>
   column: Column<TGenerics>
   getCellProps: PropGetter<CellProps>
-  renderCell: () => React.ReactNode
+  renderCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
 export type Header<TGenerics extends PartialGenerics> = CoreHeader<TGenerics> &
@@ -212,8 +221,12 @@ export type CoreHeader<TGenerics extends PartialGenerics> = {
   getLeafHeaders: () => Header<TGenerics>[]
   isPlaceholder?: boolean
   placeholderId?: string
-  renderHeader: (options?: { renderPlaceholder?: boolean }) => React.ReactNode
-  renderFooter: (options?: { renderPlaceholder?: boolean }) => React.ReactNode
+  renderHeader: (options?: {
+    renderPlaceholder?: boolean
+  }) => string | null | ReturnType<UseRenderer<TGenerics>>
+  renderFooter: (options?: {
+    renderPlaceholder?: boolean
+  }) => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
 export type HeaderGroup<TGenerics extends PartialGenerics> = {

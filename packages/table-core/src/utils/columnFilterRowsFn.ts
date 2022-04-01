@@ -18,9 +18,7 @@ export function columnFilterRowsFn<TGenerics extends PartialGenerics>(
 
       if (!column) {
         if (process.env.NODE_ENV !== 'production') {
-          console.warn(
-            `React-Table: Could not find a column with id: ${columnId}`
-          )
+          console.warn(`Table: Could not find a column with id: ${columnId}`)
         }
         throw new Error()
       }
