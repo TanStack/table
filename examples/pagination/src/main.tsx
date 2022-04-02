@@ -88,7 +88,7 @@ function App() {
     onPaginationChange: setPagination,
     paginateRowsFn: paginateRowsFn,
     columnFilterRowsFn: columnFilterRowsFn,
-    debugTable: true,
+    // debugTable: true,
   })
 
   return (

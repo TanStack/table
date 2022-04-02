@@ -32,31 +32,30 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 ## Quick Features
 
-- Lightweight at 9kb - 11.5kb (depending on tree-shaking)
-- 100% TypeScript, but not required (you can use JS if you want)
+- ~14kb or less (with tree-shaking)
+- 100% TypeScript (but not required)
 - Headless (100% customizable, Bring-your-own-UI)
-- Auto out of the box, fully controllable API
+- Auto out of the box, opt-in controllable state
 - Filters (column and global)
 - Sorting (multi-column, multi-directional)
 - Grouping & Aggregation
 - Pivoting (coming soon!)
 - Row Selection
 - Row Expansion
-- Column Visibility/Ordering/Pinning
+- Column Visibility/Ordering/Pinning/Resizing
 - Table Splitting
 - Animatable
 - Virtualizable
-- Resizable
-- Server-side/controlled data/state
+- Server-side/external data model support
 
 ## Notable Changes
 
 - Full rewrite to TypeScript
-- Removal of plugin system
-- Much more inversion of control
-- More stable and feature complete API
+- Removal of plugin system to favor more inversion of control
+- Vastly larger and improved API
 - Better controlled state management
 - Better support for server-side operations
+- Agnostic Core (+ other framework adapters!)
 
 ## Migration
 
