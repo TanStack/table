@@ -85,18 +85,10 @@ function App() {
     state: {
       pagination,
     },
-    onPaginationChange: updater => {
-      setPagination(old => {
-        // debugger
-        const newValue = functionalUpdate(updater, old)
-        return newValue
-      })
-    },
+    onPaginationChange: setPagination,
     paginateRowsFn: paginateRowsFn,
     columnFilterRowsFn: columnFilterRowsFn,
     debugTable: true,
-    // debugHeaders: true,
-    // debugColumns: true,
   })
 
   return (

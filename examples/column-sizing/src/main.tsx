@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { createTable, useTable } from '@tanstack/react-table'
-import { ColumnResizeMode } from '@tanstack/react-table/build/types/features/ColumnSizing'
+import { createTable, useTable, ColumnResizeMode } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -293,13 +292,6 @@ function App() {
       </pre>
     </div>
   )
-}
-
-function Test() {
-  React.useEffect(() => {
-    console.log('mount')
-  }, [])
-  return null
 }
 
 ReactDOM.render(

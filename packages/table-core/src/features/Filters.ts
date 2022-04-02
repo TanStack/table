@@ -132,15 +132,15 @@ export type FiltersInstance<TGenerics extends PartialGenerics> = {
 
 //
 
-export function getDefaultColumn<
-  TGenerics extends PartialGenerics
->(): FiltersColumnDef<TGenerics> {
-  return {
-    filterType: 'auto',
-  }
-}
-
 export const Filters = {
+  getDefaultColumn: <
+    TGenerics extends PartialGenerics
+  >(): FiltersColumnDef<TGenerics> => {
+    return {
+      filterType: 'auto',
+    }
+  },
+
   getInitialState: (): FiltersTableState => {
     return {
       columnFilters: [],
