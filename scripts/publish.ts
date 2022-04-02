@@ -49,7 +49,7 @@ async function run() {
   // Filter tags to our branch/pre-release combo
   tags = tags
     .filter(semver.valid)
-    .filter((tag) => {
+    .filter(tag => {
       if (isLatestBranch) {
         return semver.prerelease(tag) == null
       }
@@ -73,20 +73,20 @@ async function run() {
     if (process.env.TAG) {
       if (!process.env.TAG.startsWith('v')) {
         throw new Error(
-          `process.env.TAG must start with "v", eg. v0.0.0. You supplied ${process.env.TAG}`,
+          `process.env.TAG must start with "v", eg. v0.0.0. You supplied ${process.env.TAG}`
         )
       }
       console.log(
         chalk.yellow(
-          `Tag is set to ${process.env.TAG}. This will force release all packages. Publishing...`,
-        ),
+          `Tag is set to ${process.env.TAG}. This will force release all packages. Publishing...`
+        )
       )
       RELEASE_ALL = true
       latestTag = process.env.TAG
       range = ''
     } else {
       throw new Error(
-        'Could not find latest tag! To make a release tag of v0.0.1, run with TAG=v0.0.1',
+        'Could not find latest tag! To make a release tag of v0.0.1, run with TAG=v0.0.1'
       )
     }
   }
@@ -102,12 +102,12 @@ async function run() {
         if (err) return reject(err)
 
         Promise.all(
-          arr.map(async (d) => {
+          arr.map(async d => {
             const parsed = await parseCommit(d.subject)
 
             return { ...d, parsed }
-          }),
-        ).then((res) => resolve(res.filter(Boolean)))
+          })
+        ).then(res => resolve(res.filter(Boolean)))
       })
     })
   ).filter((commit: Commit) => {
@@ -120,7 +120,7 @@ async function run() {
   })
 
   console.log(
-    `Parsing ${commitsSinceLatestTag.length} commits since ${latestTag}...`,
+    `Parsing ${commitsSinceLatestTag.length} commits since ${latestTag}...`
   )
 
   // Pares the commit messsages, log them, and determine the type of release needed
@@ -144,7 +144,7 @@ async function run() {
 
       return releaseLevel
     },
-    -1,
+    -1
   )
 
   const changedFiles: string[] = process.env.TAG
@@ -154,27 +154,37 @@ async function run() {
         .split('\n')
         .filter(Boolean)
 
-  const changedPackages = RELEASE_ALL
+  let changedPackages = RELEASE_ALL
     ? packages
     : changedFiles.reduce((changedPackages, file) => {
-        const pkg = packages.find((p) => file.startsWith(p.srcDir))
-        if (pkg && !changedPackages.find((d) => d.name === pkg.name)) {
+        const pkg = packages.find(p => file.startsWith(p.srcDir))
+        if (pkg && !changedPackages.find(d => d.name === pkg.name)) {
           changedPackages.push(pkg)
         }
         return changedPackages
       }, [] as Package[])
 
+  // If a package has a dependency that has been updated, we need to update the
+  // package that depends on it as well.
+  packages.forEach(pkg => {
+    if (
+      pkg.dependencies?.find(dep => changedPackages.find(d => d.name === dep))
+    ) {
+      changedPackages.push(pkg)
+    }
+  })
+
   if (!process.env.TAG) {
     if (recommendedReleaseLevel === 2) {
       console.log(
-        `Major versions releases must be tagged and released manually.`,
+        `Major versions releases must be tagged and released manually.`
       )
       return
     }
 
     if (recommendedReleaseLevel === -1) {
       console.log(
-        `There have been no changes since the release of ${latestTag} that require a new version. You're good!`,
+        `There have been no changes since the release of ${latestTag} that require a new version. You're good!`
       )
       return
     }
@@ -184,7 +194,7 @@ async function run() {
     return (a: TItem, b: TItem) => {
       let i = 0
 
-      sorters.some((sorter) => {
+      sorters.some(sorter => {
         const sortedA = sorter(a)
         const sortedB = sorter(b)
         if (sortedA > sortedB) {
@@ -213,7 +223,7 @@ async function run() {
               ...acc,
               [type]: [...(acc[type] || []), next],
             }
-          }, {} as Record<string, Commit[]>),
+          }, {} as Record<string, Commit[]>)
         )
           .sort(
             getSorterFn([
@@ -228,12 +238,12 @@ async function run() {
                   'fix',
                   'feat',
                 ].indexOf(d),
-            ]),
+            ])
           )
           .reverse()
           .map(async ([type, commits]) => {
             return Promise.all(
-              commits.map(async (commit) => {
+              commits.map(async commit => {
                 let username = ''
 
                 if (process.env.GH_TOKEN) {
@@ -250,7 +260,7 @@ async function run() {
                       headers: {
                         Authorization: `token ${process.env.GH_TOKEN}`,
                       },
-                    },
+                    }
                   )
 
                   username = res.data.items[0]?.login
@@ -267,10 +277,10 @@ async function run() {
                     ? `by @${username}`
                     : `by ${commit.author.name ?? commit.author.email}`
                 }`
-              }),
-            ).then((commits) => [type, commits] as const)
-          }),
-      ).then((groups) => {
+              })
+            ).then(commits => [type, commits] as const)
+          })
+      ).then(groups => {
         return groups
           .map(([type, commits]) => {
             return [`### ${capitalize(type)}`, commits.join('\n')].join('\n\n')
@@ -296,18 +306,18 @@ async function run() {
         latestTag,
         recommendedReleaseLevel,
         branchConfig.prerelease,
-      ].join(', ')}`,
+      ].join(', ')}`
     )
   }
 
   const changelogMd = [
     `Version ${version} - ${DateTime.now().toLocaleString(
-      DateTime.DATETIME_SHORT,
+      DateTime.DATETIME_SHORT
     )}`,
     `## Changes`,
     changelogCommitsMd,
     `## Packages`,
-    changedPackages.map((d) => `- ${d.name}@${version}`).join('\n'),
+    changedPackages.map(d => `- ${d.name}@${version}`).join('\n'),
   ].join('\n\n')
 
   console.log('Generating changelog...')
@@ -326,18 +336,28 @@ async function run() {
   console.log('')
 
   console.log(
-    `Updating all changed packages and their dependencies to version ${version}...`,
+    `Updating all changed packages and their dependencies to version ${version}...`
   )
   // Update each package to the new version along with any dependencies
   for (const pkg of changedPackages) {
     console.log(`  Updating ${pkg.name} version to ${version}...`)
 
-    await updatePackageConfig(pkg.name, (config) => {
+    await updatePackageConfig(pkg.name, config => {
       config.version = version
-      pkg.peerDependencies?.forEach((peerDep) => {
+
+      pkg.dependencies?.forEach(dep => {
+        if (config.dependencies?.[dep]) {
+          console.log(
+            `    Updating dependency on ${pkg.name} to version ${version}.`
+          )
+          config.dependencies[dep] = version
+        }
+      })
+
+      pkg.peerDependencies?.forEach(peerDep => {
         if (config.peerDependencies?.[peerDep]) {
           console.log(
-            `    Updating peerDependency on ${pkg.name} to version ${version}.`,
+            `    Updating peerDependency on ${pkg.name} to version ${version}.`
           )
           config.peerDependencies[peerDep] = version
         }
@@ -353,11 +373,11 @@ async function run() {
 
     console.log(`  Updating example ${example} to version ${version}...`)
 
-    await updateExamplesPackageConfig(example, (config) => {
-      changedPackages.forEach((pkg) => {
+    await updateExamplesPackageConfig(example, config => {
+      changedPackages.forEach(pkg => {
         if (config.dependencies?.[pkg.name]) {
           console.log(
-            `    Updating dependency ${pkg.name} to version ${version}...`,
+            `    Updating dependency ${pkg.name} to version ${version}...`
           )
           config.dependencies[pkg.name] = version
         }
@@ -367,7 +387,7 @@ async function run() {
 
   if (!process.env.CI) {
     console.warn(
-      `This is a dry run for version ${version}. Push to CI to publish for real or set CI=true to override!`,
+      `This is a dry run for version ${version}. Push to CI to publish for real or set CI=true to override!`
     )
     return
   }
@@ -379,7 +399,7 @@ async function run() {
   let taggedVersion = getTaggedVersion()
   if (!taggedVersion) {
     throw new Error(
-      'Missing the tagged release version. Something weird is afoot!',
+      'Missing the tagged release version. Something weird is afoot!'
     )
   }
 
@@ -388,42 +408,51 @@ async function run() {
 
   // Ensure packages are up to date and ready
   await Promise.all(
-    changedPackages.map(async (pkg) => {
+    changedPackages.map(async pkg => {
       let file = path.join(
         rootDir,
         'packages',
         getPackageDir(pkg.name),
-        'package.json',
+        'package.json'
       )
       let json = (await jsonfile.readFile(file)) as PackageJson
 
       if (json.version !== version) {
         throw new Error(
-          `Package ${pkg.name} is on version ${json.version}, but should be on ${version}`,
+          `Package ${pkg.name} is on version ${json.version}, but should be on ${version}`
         )
       }
 
-      ;(pkg.peerDependencies ?? []).forEach((peerDependency) => {
-        if (json.peerDependencies?.[peerDependency]) {
-          if (json.peerDependencies[peerDependency] !== version) {
+      ;(pkg.dependencies ?? []).forEach(dependency => {
+        if (json.dependencies?.[dependency]) {
+          if (json.dependencies[dependency] !== version) {
             throw new Error(
-              `Package ${pkg.name}'s peerDependency of ${peerDependency} is on version ${json.peerDependencies[peerDependency]}, but should be on ${version}`,
+              `Package ${pkg.name}'s dependency of ${dependency} is on version ${json.dependencies[dependency]}, but should be on ${version}`
             )
           }
         }
       })
-    }),
+      ;(pkg.dependencies ?? []).forEach(peerDependency => {
+        if (json.peerDependencies?.[peerDependency]) {
+          if (json.peerDependencies[peerDependency] !== version) {
+            throw new Error(
+              `Package ${pkg.name}'s peerDependency of ${peerDependency} is on version ${json.peerDependencies[peerDependency]}, but should be on ${version}`
+            )
+          }
+        }
+      })
+    })
   )
 
   console.log()
   console.log(`Publishing all packages to npm with tag "${npmTag}"`)
 
   // Publish each package
-  changedPackages.map((pkg) => {
+  changedPackages.map(pkg => {
     let packageDir = path.join(rootDir, 'packages', getPackageDir(pkg.name))
     const cmd = `cd ${packageDir} && yarn publish --tag ${npmTag} --access=public`
     console.log(
-      `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`,
+      `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
     )
     execSync(`${cmd} --token ${process.env.NPM_TOKEN}`, { stdio: 'inherit' })
   })
@@ -438,7 +467,7 @@ async function run() {
     execSync(
       `gh release create v${version} ${
         isLatestBranch ? '--prerelease' : ''
-      } --notes '${changelogMd}'`,
+      } --notes '${changelogMd}'`
     )
     console.log(`  Github release created.`)
 
@@ -461,7 +490,7 @@ async function run() {
   console.log(`All done!`)
 }
 
-run().catch((err) => {
+run().catch(err => {
   console.log(err)
   process.exit(1)
 })
@@ -472,7 +501,7 @@ function capitalize(str: string) {
 
 async function updatePackageConfig(
   packageName: string,
-  transform: (json: PackageJson) => void,
+  transform: (json: PackageJson) => void
 ) {
   let file = packageJson(packageName)
   let json = await jsonfile.readFile(file)
@@ -482,7 +511,7 @@ async function updatePackageConfig(
 
 async function updateExamplesPackageConfig(
   example: string,
-  transform: (json: PackageJson) => void,
+  transform: (json: PackageJson) => void
 ) {
   let file = packageJson(example, 'examples')
   let json = await jsonfile.readFile(file)
@@ -495,7 +524,7 @@ function packageJson(packageName: string, directory = 'packages') {
     rootDir,
     directory,
     getPackageDir(packageName),
-    'package.json',
+    'package.json'
   )
 }
 

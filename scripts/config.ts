@@ -7,7 +7,7 @@ export const packages: Package[] = [
   {
     name: '@tanstack/react-table',
     srcDir: 'packages/react-table/src',
-    peerDependencies: ['@tanstack/table-core'],
+    dependencies: ['@tanstack/table-core'],
   },
   {
     name: '@tanstack/react-table-devtools',
