@@ -64,7 +64,12 @@ export type Table<TGenerics extends PartialGenerics> = {
   ) => ColumnDef<TGenerics>
   createDisplayColumn: (
     column: PartialKeys<
-      _NonGenerated<ColumnDef<TGenerics>>,
+      Overwrite<
+        _NonGenerated<ColumnDef<TGenerics>>, {
+          // This is sketchy, but allows the column helper pattern we want.
+          // Someone smarter than me could probably do this better.
+          columns?: ColumnDef<any>[]
+        }>,
       'accessorFn' | 'accessorKey'
     >
   ) => ColumnDef<TGenerics>
@@ -93,7 +98,10 @@ export type Table<TGenerics extends PartialGenerics> = {
         : never,
       {
         accessorFn?: never
-        accessorKey?: never
+        accessorKey?: never,
+        // This is sketchy, but allows the column helper pattern we want.
+        // Someone smarter than me could probably do this better.
+        columns?: ColumnDef<any>[]
       }
     >
   ) => ColumnDef<
