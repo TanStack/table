@@ -102,7 +102,7 @@ function App() {
   const instance = useTable(table, {
     data,
     columns,
-    paginateRowsFn: paginateRowsFn,
+    paginateRowsFn,
   })
 
   // Manage your own state

@@ -1,4 +1,4 @@
-import { PartialGenerics, Row } from './types'
+import { PartialGenerics, AnyGenerics, Row } from './types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 

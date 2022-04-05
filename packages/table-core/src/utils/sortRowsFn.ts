@@ -1,4 +1,10 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import {
+  TableInstance,
+  Row,
+  RowModel,
+  AnyGenerics,
+  PartialGenerics,
+} from '../types'
 import { SortingFn } from '../features/Sorting'
 
 export function sortRowsFn<TGenerics extends AnyGenerics>(

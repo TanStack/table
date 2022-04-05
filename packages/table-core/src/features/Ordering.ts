@@ -5,6 +5,7 @@ import {
   OnChangeFn,
   Updater,
   Column,
+  AnyGenerics,
   PartialGenerics,
 } from '../types'
 

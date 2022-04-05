@@ -26,7 +26,6 @@ import {
   CellProps,
   TableInstance,
   RowValues,
-  Please_use_the_create_table_column_utilities_to_define_columns,
   PartialGenerics,
   CoreCell,
   Renderable,
@@ -197,8 +196,8 @@ export type CoreColumnDef<TGenerics extends PartialGenerics> = {
     }
   >
   meta?: TGenerics['ColumnMeta']
-  [Please_use_the_create_table_column_utilities_to_define_columns]: true
 }
+// & GeneratedProperties<true>
 
 export type CoreColumn<TGenerics extends PartialGenerics> = {
   id: string

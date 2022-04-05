@@ -90,6 +90,7 @@ Currently migration will involve rewrites to:
   - [x] pagination
   - [x] column-sizing
   - [x] row-selection
+  - [x] expanding
   - [ ] grouping-and-aggregation
   - [ ] editable-data
   - [ ] pagination-controlled

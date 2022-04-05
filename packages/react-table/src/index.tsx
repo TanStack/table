@@ -3,7 +3,6 @@ export * from '@tanstack/table-core'
 
 import {
   createTableInstance,
-  _NonGenerated,
   PartialKeys,
   Options,
   TableInstance,

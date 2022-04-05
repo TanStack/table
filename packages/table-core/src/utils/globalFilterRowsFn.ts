@@ -1,4 +1,10 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import {
+  TableInstance,
+  Row,
+  RowModel,
+  AnyGenerics,
+  PartialGenerics,
+} from '../types'
 
 export function globalFilterRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,

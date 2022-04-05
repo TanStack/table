@@ -125,7 +125,7 @@ function App() {
             return (
               <tr {...row.getRowProps()}>
                 {row.getVisibleCells().map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.value}</td>
+                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
                 })}
               </tr>
             )

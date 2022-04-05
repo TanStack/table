@@ -3,6 +3,7 @@ import { BuiltInFilterType, filterTypes } from '../filterTypes'
 import {
   Column,
   OnChangeFn,
+  AnyGenerics,
   PartialGenerics,
   TableInstance,
   Row,

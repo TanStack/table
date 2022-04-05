@@ -1,4 +1,10 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import {
+  TableInstance,
+  Row,
+  RowModel,
+  AnyGenerics,
+  PartialGenerics,
+} from '../types'
 
 export function expandRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
@@ -6,13 +12,11 @@ export function expandRowsFn<TGenerics extends AnyGenerics>(
 ): RowModel<TGenerics> {
   const expandedRows: Row<TGenerics>[] = []
 
-  const { expandSubRows } = instance.options
-
   const handleRow = (row: Row<TGenerics>) => {
     expandedRows.push(row)
 
     if (
-      expandSubRows &&
+      instance.options.expandSubRows &&
       row.subRows?.length &&
       instance.getIsRowExpanded(row.id)
     ) {

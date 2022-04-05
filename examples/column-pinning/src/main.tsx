@@ -197,7 +197,9 @@ function App() {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.getLeftVisibleCells().map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.value}</td>
+                        return (
+                          <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                        )
                       })}
                     </tr>
                   )
@@ -270,7 +272,9 @@ function App() {
                       ? row.getCenterVisibleCells()
                       : row.getVisibleCells()
                     ).map(cell => {
-                      return <td {...cell.getCellProps()}>{cell.value}</td>
+                      return (
+                        <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                      )
                     })}
                   </tr>
                 )
@@ -337,7 +341,9 @@ function App() {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.getRightVisibleCells().map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.value}</td>
+                        return (
+                          <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                        )
                       })}
                     </tr>
                   )

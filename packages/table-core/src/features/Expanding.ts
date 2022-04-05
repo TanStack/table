@@ -3,6 +3,7 @@ import { RowModel } from '..'
 import {
   Getter,
   OnChangeFn,
+  AnyGenerics,
   PartialGenerics,
   PropGetterValue,
   TableInstance,
@@ -82,7 +83,6 @@ export const Expanding = {
     return {
       onExpandedChange: makeStateUpdater('expanded', instance),
       autoResetExpanded: true,
-      getIsRowExpanded: row => !!(row?.original as { expanded?: any }).expanded,
       expandSubRows: true,
       paginateExpandedRows: true,
     }
@@ -160,7 +160,7 @@ export const Expanding = {
         instance.setExpanded(instance.initialState?.expanded ?? {})
       },
       getIsRowExpanded: rowId => {
-        const row = instance.getRow(rowId)
+        const row = instance.getPreExpandedRowModel().rowsById[rowId]
 
         if (!row) {
           if (process.env.NODE_ENV !== 'production') {
@@ -175,7 +175,7 @@ export const Expanding = {
 
         return !!(
           instance.options.getIsRowExpanded?.(row) ??
-          (expanded || expanded?.[rowId])
+          (expanded === true || expanded?.[rowId])
         )
       },
       getRowCanExpand: rowId => {
@@ -276,7 +276,7 @@ export const Expanding = {
             !expandRowsFn ||
             // Do not expand if rows are not included in pagination
             !paginateExpandedRows ||
-            !Object.keys(expanded ?? {}).length
+            (expanded !== true && !Object.keys(expanded ?? {}).length)
           ) {
             return rowModel
           }
@@ -286,9 +286,6 @@ export const Expanding = {
         {
           key: 'getExpandedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => {
-            instance._notifyPageIndexReset()
-          },
         }
       ),
 

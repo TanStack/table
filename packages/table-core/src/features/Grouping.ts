@@ -9,6 +9,7 @@ import {
   TableInstance,
   Row,
   Updater,
+  AnyGenerics,
   PartialGenerics,
   Renderable,
   UseRenderer,

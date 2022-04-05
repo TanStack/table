@@ -3,6 +3,7 @@ import {
   Column,
   Getter,
   OnChangeFn,
+  AnyGenerics,
   PartialGenerics,
   PropGetterValue,
   TableInstance,

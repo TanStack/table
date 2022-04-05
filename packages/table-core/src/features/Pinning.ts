@@ -3,6 +3,7 @@ import {
   Updater,
   TableInstance,
   Column,
+  AnyGenerics,
   PartialGenerics,
 } from '../types'
 import { functionalUpdate, makeStateUpdater } from '../utils'

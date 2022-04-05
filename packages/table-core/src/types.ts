@@ -94,7 +94,7 @@ export type UseRenderer<TGenerics extends PartialGenerics> =
 export type PartialGenerics = Partial<DefaultGenerics>
 
 export type AnyGenerics = {
-  [TKey in keyof PartialGenerics]: any
+  [TKey in keyof PartialGenerics]?: any
 }
 
 export type TableInstance<TGenerics extends PartialGenerics> =
@@ -159,15 +159,24 @@ export type RowModel<TGenerics extends PartialGenerics> = {
 
 export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 
-export const Please_use_the_create_table_column_utilities_to_define_columns: unique symbol =
-  Symbol()
+// export type UserColumnDef<TGenerics extends PartialGenerics> = Overwrite<
+//   ColumnDef<TGenerics>,
+//   GeneratedProperties<false>
+// >
 
-export type _NonGenerated<T> = Overwrite<
-  T,
-  {
-    [Please_use_the_create_table_column_utilities_to_define_columns]?: never
-  }
->
+// type _GeneratedProperties = {
+//   ['Column definitions should be generated with the table.createColumn() (and related) utilities']: false
+// }
+
+// export type GeneratedProperties<T> = T extends true
+//   ? {
+//       [TKey in keyof _GeneratedProperties]: true
+//     }
+//   : T extends false
+//   ? {
+//       [TKey in keyof _GeneratedProperties]?: false
+//     }
+// : never
 
 export type Renderable<TGenerics extends PartialGenerics, TProps> =
   | string

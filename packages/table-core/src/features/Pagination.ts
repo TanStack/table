@@ -1,5 +1,6 @@
 import {
   OnChangeFn,
+  AnyGenerics,
   PartialGenerics,
   TableInstance,
   RowModel,
@@ -186,8 +187,9 @@ export const Pagination = {
       getCanPreviousPage: () => instance.getState().pagination.pageIndex > 0,
 
       getCanNextPage: () => {
-        const { pageIndex, pageCount, pageSize } =
-          instance.getState().pagination
+        const { pageIndex, pageSize } = instance.getState().pagination
+
+        const pageCount = instance.getPageCount()
 
         if (pageCount === -1) {
           return true

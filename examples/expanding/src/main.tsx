@@ -4,23 +4,22 @@ import ReactDOM from 'react-dom'
 import './index.css'
 
 import {
-  Column,
-  columnFilterRowsFn,
   createTable,
-  globalFilterRowsFn,
+  columnFilterRowsFn,
+  paginateRowsFn,
+  Column,
   TableInstance,
+  PaginationState,
   useTable,
+  ExpandedState,
+  expandRowsFn,
 } from '@tanstack/react-table'
-
 import { makeData, Person } from './makeData'
 
 let table = createTable<{ Row: Person }>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
-
-  const [columnFilters, setColumnFilters] = React.useState([])
-  const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo(
     () =>
@@ -30,7 +29,41 @@ function App() {
           footer: props => props.column.id,
           columns: [
             table.createDataColumn('firstName', {
-              cell: info => info.value,
+              header: ({ instance }) => (
+                <>
+                  <span {...instance.getToggleAllRowsExpandedProps()}>
+                    {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
+                  </span>{' '}
+                  First Name
+                </>
+              ),
+              cell: ({ row, value }) => (
+                // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+                // to build the toggle for expanding a row
+                <div
+                  style={{
+                    paddingLeft: `${row.depth * 2}rem`,
+                  }}
+                >
+                  {row.getCanExpand() ? (
+                    <span
+                      {...row.getToggleExpandedProps({
+                        style: {
+                          // We can even use the row.depth property
+                          // and paddingLeft to indicate the depth
+                          // of the row
+                          cursor: 'pointer',
+                        },
+                      })}
+                    >
+                      {row.getIsExpanded() ? '👇' : '👉'}
+                    </span>
+                  ) : (
+                    '🔵'
+                  )}{' '}
+                  {value}
+                </div>
+              ),
               footer: props => props.column.id,
             }),
             table.createDataColumn(row => row.lastName, {
@@ -72,35 +105,27 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(old => [...old])
+  const [data, setData] = React.useState(() => makeData(100, 5, 3))
+  const refreshData = () => setData(makeData(100, 5, 3))
+
+  const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   const instance = useTable(table, {
     data,
     columns,
     state: {
-      columnFilters,
-      globalFilter,
+      expanded,
     },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
+    onExpandedChange: setExpanded,
+    paginateRowsFn: paginateRowsFn,
+    expandRowsFn: expandRowsFn,
     columnFilterRowsFn: columnFilterRowsFn,
-    globalFilterRowsFn: globalFilterRowsFn,
+    getSubRows: row => row.subRows,
     debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
   })
 
   return (
     <div className="p-2">
-      <div>
-        <input
-          value={globalFilter ?? ''}
-          onChange={e => setGlobalFilter(e.target.value)}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
       <div className="h-2" />
       <table {...instance.getTableProps({})}>
         <thead>
@@ -110,7 +135,7 @@ function App() {
                 return (
                   <th {...header.getHeaderProps()}>
                     {header.isPlaceholder ? null : (
-                      <>
+                      <div>
                         {header.renderHeader()}
                         {header.column.getCanColumnFilter() ? (
                           <div>
@@ -120,7 +145,7 @@ function App() {
                             />
                           </div>
                         ) : null}
-                      </>
+                      </div>
                     )}
                   </th>
                 )
@@ -129,20 +154,79 @@ function App() {
           ))}
         </thead>
         <tbody {...instance.getTableBodyProps()}>
-          {instance
-            .getRowModel()
-            .rows.slice(0, 10)
-            .map(row => {
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.getVisibleCells().map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
-                  })}
-                </tr>
-              )
-            })}
+          {instance.getRowModel().rows.map(row => {
+            return (
+              <tr {...row.getRowProps()}>
+                {row.getVisibleCells().map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
+      <div className="h-2" />
+      <div className="flex items-center gap-2">
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(0)}
+          disabled={!instance.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.previousPage()}
+          disabled={!instance.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.nextPage()}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {instance.getState().pagination.pageIndex + 1} of{' '}
+            {instance.getPageCount()}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            defaultValue={instance.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              instance.setPageIndex(page)
+            }}
+            className="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={instance.getState().pagination.pageSize}
+          onChange={e => {
+            instance.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
       <div>{instance.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
@@ -150,7 +234,7 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(columnFilters, null, 2)}</pre>
+      <pre>{JSON.stringify(expanded, null, 2)}</pre>
     </div>
   )
 }
@@ -202,8 +286,8 @@ function Filter({
 }
 
 ReactDOM.render(
-  <div>
+  <React.StrictMode>
     <App />
-  </div>,
+  </React.StrictMode>,
   document.getElementById('root')
 )

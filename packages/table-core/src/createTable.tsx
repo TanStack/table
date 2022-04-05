@@ -1,13 +1,7 @@
 import { CustomFilterTypes } from './features/Filters'
 import { CustomAggregationTypes } from './features/Grouping'
 import { CustomSortingTypes } from './features/Sorting'
-import {
-  ColumnDef,
-  AccessorFn,
-  PartialGenerics,
-  _NonGenerated,
-  AnyRender,
-} from './types'
+import { ColumnDef, AccessorFn, PartialGenerics, AnyRender } from './types'
 import { Overwrite, PartialKeys } from './utils'
 
 export type CreateTableFactory<TGenerics extends PartialGenerics> = <
@@ -35,42 +29,40 @@ export type CreateTableFactoryOptions<
 }
 
 export type Table<TGenerics extends PartialGenerics> = {
+  generics: TGenerics
   __options: CreateTableFactoryOptions<any, any, any, any>
-  createColumns: (columns: ColumnDef<TGenerics>[]) => ColumnDef<TGenerics>[]
+  createColumns: <TColumnDef extends ColumnDef<any>>(
+    columns: TColumnDef[]
+  ) => TColumnDef[]
   createGroup: (
     column: Overwrite<
       | Overwrite<
-          _NonGenerated<ColumnDef<TGenerics>>,
+          ColumnDef<any>,
           {
             header: string
             id?: string
           }
         >
       | Overwrite<
-          _NonGenerated<ColumnDef<TGenerics>>,
+          ColumnDef<any>,
           {
             id: string
-            header?: string | ColumnDef<TGenerics>['header']
+            header?: string | ((...any: any) => any)
           }
         >,
       {
         accessorFn?: never
         accessorKey?: never
-        // This is sketchy, but allows the column helper pattern we want.
-        // Someone smarter than me could probably do this better.
         columns?: ColumnDef<any>[]
       }
     >
   ) => ColumnDef<TGenerics>
   createDisplayColumn: (
-    column: PartialKeys<
-      Overwrite<
-        _NonGenerated<ColumnDef<TGenerics>>, {
-          // This is sketchy, but allows the column helper pattern we want.
-          // Someone smarter than me could probably do this better.
-          columns?: ColumnDef<any>[]
-        }>,
-      'accessorFn' | 'accessorKey'
+    column: Overwrite<
+      PartialKeys<ColumnDef<TGenerics>, 'accessorFn' | 'accessorKey'>,
+      {
+        columns?: ColumnDef<any>[]
+      }
     >
   ) => ColumnDef<TGenerics>
   createDataColumn: <
@@ -80,16 +72,12 @@ export type Table<TGenerics extends PartialGenerics> = {
     column: Overwrite<
       TAccessor extends (...args: any[]) => any
         ? // Accessor Fn
-          _NonGenerated<
-            ColumnDef<Overwrite<TGenerics, { Value: ReturnType<TAccessor> }>>
-          >
+          ColumnDef<Overwrite<TGenerics, { Value: ReturnType<TAccessor> }>>
         : TAccessor extends keyof TGenerics['Row']
         ? // Accessor Key
           Overwrite<
-            _NonGenerated<
-              ColumnDef<
-                Overwrite<TGenerics, { Value: TGenerics['Row'][TAccessor] }>
-              >
+            ColumnDef<
+              Overwrite<TGenerics, { Value: TGenerics['Row'][TAccessor] }>
             >,
             {
               id?: string
@@ -98,24 +86,11 @@ export type Table<TGenerics extends PartialGenerics> = {
         : never,
       {
         accessorFn?: never
-        accessorKey?: never,
-        // This is sketchy, but allows the column helper pattern we want.
-        // Someone smarter than me could probably do this better.
+        accessorKey?: never
         columns?: ColumnDef<any>[]
       }
     >
-  ) => ColumnDef<
-    Overwrite<
-      TGenerics,
-      {
-        Value: TAccessor extends (...args: any[]) => any
-          ? ReturnType<TAccessor>
-          : TAccessor extends keyof TGenerics['Row']
-          ? TGenerics['Row'][TAccessor]
-          : never
-      }
-    >
-  >
+  ) => ColumnDef<TGenerics>
 }
 
 type InitTable<TRender extends AnyRender> = {
@@ -145,6 +120,7 @@ function _createTable<TGenerics extends PartialGenerics>(
   __options?: CreateTableFactoryOptions<any, any, any, any>
 ): Table<TGenerics> {
   return {
+    generics: undefined!,
     __options: __options ?? {
       render: () => {
         throw new Error()

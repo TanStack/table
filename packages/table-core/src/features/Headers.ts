@@ -9,6 +9,7 @@ import {
   HeaderGroup,
   HeaderGroupProps,
   HeaderProps,
+  AnyGenerics,
   PartialGenerics,
   PropGetterValue,
   TableInstance,
