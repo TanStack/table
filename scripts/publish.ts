@@ -168,7 +168,10 @@ async function run() {
   // package that depends on it as well.
   packages.forEach(pkg => {
     if (
-      pkg.dependencies?.find(dep => changedPackages.find(d => d.name === dep))
+      pkg.dependencies?.find(dep =>
+        changedPackages.find(d => d.name === dep)
+      ) &&
+      !changedPackages.find(d => d.name === pkg.name)
     ) {
       changedPackages.push(pkg)
     }
