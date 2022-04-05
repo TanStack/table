@@ -6859,6 +6859,11 @@ socks@^2.3.3, socks@^2.6.1:
     ip "^1.1.5"
     smart-buffer "^4.1.0"
 
+solid-js@^1.3.13:
+  version "1.3.13"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.3.13.tgz#7e1a0f52e5b22b4c21ac2ac5196dfd2176ee3a46"
+  integrity sha512-1EBEIW9u2yqT5QNjFdvz/tMAoKsDdaRA2Jbgykd2Dt13Ia0D4mV+BFvPkOaseSyu7DsMKS23+ZZofV8BVKmpuQ==
+
 sort-keys@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-2.0.0.tgz#658535584861ec97d730d6cf41822e1f56684128"
