@@ -46,7 +46,7 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
 }
 
-export function getValue<T extends any = any>(value: AccessorOrValue<T>): T {
+export function getValue<T extends any>(value: AccessorOrValue<T>): T {
   return isFunction(value) ? value() : value
 }
 
