@@ -4,12 +4,19 @@ import {
   Header,
   OnChangeFn,
   AnyGenerics,
+  AccessorOrValue,
   PartialGenerics,
   PropGetterValue,
   TableInstance,
   Updater,
 } from '../types'
-import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
+import {
+  getValue,
+  functionalUpdate,
+  makeStateUpdater,
+  memo,
+  propGetter,
+} from '../utils'
 
 //
 
@@ -32,8 +39,8 @@ export type ColumnSizingTableState = {
 export type ColumnResizeMode = 'onChange' | 'onEnd'
 
 export type ColumnSizingOptions = {
-  enableColumnResizing?: boolean
-  columnResizeMode?: ColumnResizeMode
+  enableColumnResizing?: AccessorOrValue<boolean>
+  columnResizeMode?: AccessorOrValue<ColumnResizeMode>
   onColumnSizingChange?: OnChangeFn<ColumnSizing>
   onColumnSizingInfoChange?: OnChangeFn<ColumnSizingInfoState>
 }
@@ -172,7 +179,7 @@ export const ColumnSizing = {
 
         return (
           column.enableResizing ??
-          instance.options.enableColumnResizing ??
+          getValue(instance.options.enableColumnResizing) ??
           column.defaultCanResize ??
           true
         )
@@ -257,7 +264,7 @@ export const ColumnSizing = {
             })
 
             if (
-              instance.options.columnResizeMode === 'onChange' ||
+              getValue(instance.options.columnResizeMode) === 'onChange' ||
               eventType === 'end'
             ) {
               instance.setColumnSizing(old => ({
