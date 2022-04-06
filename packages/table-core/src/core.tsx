@@ -1,4 +1,5 @@
 import {
+  getValue,
   flattenBy,
   functionalUpdate,
   propGetter,
@@ -7,6 +8,7 @@ import {
 } from './utils'
 
 import {
+  AccessorOrValue,
   Updater,
   PropGetterValue,
   Options,
@@ -60,9 +62,9 @@ const features = [
 ]
 
 export type CoreOptions<TGenerics extends PartialGenerics> = {
-  data: TGenerics['Row'][]
-  columns: ColumnDef<TGenerics>[]
-  state: Partial<TableState>
+  data: AccessorOrValue<TGenerics['Row'][]>
+  columns: AccessorOrValue<ColumnDef<TGenerics>[]>
+  state: AccessorOrValue<Partial<TableState>>
   onStateChange: (updater: Updater<TableState>) => void
   render: TGenerics['Render']
   debugAll?: boolean
@@ -299,7 +301,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       }
     ),
 
-    getColumnDefs: () => instance.options.columns,
+    getColumnDefs: () => getValue(instance.options.columns),
 
     createColumn: (columnDef, depth: number, parent) => {
       const defaultColumn = instance.getDefaultColumn()
@@ -574,7 +576,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
     },
 
     getCoreRowModel: memo(
-      () => [instance.options.data],
+      () => [getValue(instance.options.data)],
       (
         data
       ): {

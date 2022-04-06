@@ -1,4 +1,11 @@
-import { Getter, NoInfer, PropGetterValue, TableState, Updater } from './types'
+import {
+  AccessorOrValue,
+  Getter,
+  NoInfer,
+  PropGetterValue,
+  TableState,
+  Updater,
+} from './types'
 
 export type IsAny<T> = 0 extends 1 & T ? true : false
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -37,6 +44,10 @@ type AnyFunction = (...args: any) => any
 
 export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
+}
+
+export function getValue<T extends any = any>(value: AccessorOrValue<T>): T {
+  return isFunction(value) ? value() : value
 }
 
 export function flattenBy<TNode>(
