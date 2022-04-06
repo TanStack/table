@@ -270,7 +270,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       `${parent ? [parent.id, index].join('.') : index}`,
 
     getState: () => {
-      return instance.options.state as TableState
+      return getValue(instance.options.state) as TableState
     },
 
     setState: (updater: Updater<TableState>) => {
