@@ -62,6 +62,7 @@ export type ExpandedInstance<TGenerics extends PartialGenerics> = {
   getToggleAllRowsExpandedProps: <TGetter extends Getter<ToggleExpandedProps>>(
     userProps?: TGetter
   ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
+  getIsSomeRowsExpanded: () => boolean
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
   getExpandedRowModel: () => RowModel<TGenerics>
@@ -228,6 +229,10 @@ export const Expanding = {
         }
 
         return propGetter(initialProps, userProps)
+      },
+      getIsSomeRowsExpanded: () => {
+        const expanded = instance.getState().expanded
+        return expanded === true || Object.values(expanded).some(Boolean)
       },
       getIsAllRowsExpanded: () => {
         const expanded = instance.getState().expanded
