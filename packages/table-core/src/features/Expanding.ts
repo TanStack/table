@@ -1,4 +1,3 @@
-import { MouseEvent, TouchEvent } from 'react'
 import { RowModel } from '..'
 import {
   Getter,
@@ -211,7 +210,7 @@ export const Expanding = {
           title: canExpand ? 'Toggle Expanded' : undefined,
           onClick: canExpand
             ? (e: MouseEvent | TouchEvent) => {
-                e.persist()
+                ;(e as any).persist?.()
                 instance.toggleRowExpanded(rowId)
               }
             : undefined,
@@ -223,7 +222,7 @@ export const Expanding = {
         const initialProps: ToggleExpandedProps = {
           title: 'Toggle All Expanded',
           onClick: (e: MouseEvent | TouchEvent) => {
-            e.persist()
+            ;(e as any).persist?.()
             instance.toggleAllRowsExpanded()
           },
         }
