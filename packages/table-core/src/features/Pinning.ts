@@ -179,7 +179,7 @@ export const Pinning = {
         const { left, right } = instance.getState().columnPinning
 
         return Boolean(left?.length || right?.length)
-      }
+      },
     }
   },
 }
