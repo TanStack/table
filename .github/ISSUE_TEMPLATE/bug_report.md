@@ -1,40 +1,110 @@
----
-name: Bug report
-about: Create a report to help us improve
----
+name: '🐛 Bug report'
+description: Report a reproducible bug or regression
+body:
 
-**Describe the bug (required)**
-A clear and concise description of what the bug is.
+- type: markdown
+  attributes:
+  value: |
+  Thank you for reporting an issue :pray:.
 
-**Provide an example via Codesandbox! (required)**
-Use a new [react-table codesandbox](https://codesandbox.io/s/m5lxzzpz69) to reproduce the issue.
+      This issue tracker is for reporting reproducible bugs or regression's found in [react-table](https://github.com/tanstack/react-table)
+      If you have a question about how to achieve something and are struggling, please post a question
+      inside of react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions)
 
-**Steps To Reproduce (required)**
-Steps to reproduce the behavior:
+      Before submitting a new bug/issue, please check the links below to see if there is a solution or question posted there already:
+       - react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions)
+       - react-table's [Open Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+       - react-table's [Closed Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+      The more information you fill in, the better the community can help you.
 
-**Expected behavior (Recommended)**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
-
-- OS: [e.g. iOS]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
-
-- Device: [e.g. iPhone6]
-- OS: [e.g. iOS8.1]
-- Browser [e.g. stock browser, safari]
-- Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+- type: textarea
+  id: description
+  attributes:
+  label: Describe the bug
+  description: Provide a clear and concise description of the challenge you are running into.
+  validations:
+  required: true
+- type: input
+  id: link
+  attributes:
+  label: Your minimal, reproducible example
+  description: |
+  Please add a link to a minimal reproduction.
+  Note: - Your bug may get fixed much faster if we can run your code and it doesn't have dependencies other than React. - To create a shareable code example for web, you can use CodeSandbox (https://codesandbox.io/s/new) or Stackblitz (https://stackblitz.com/). - Please make sure the example is complete and runnable without prior dependencies and free of unnecessary abstractions - Feel free to fork any of the official CodeSandbox examples to reproduce your issue: https://github.com/tanstack/react-table/tree/main/examples/ - For React Native, you can use: https://snack.expo.dev/ - For TypeScript related issues only, a TypeScript Playground link might be sufficient: https://www.typescriptlang.org/play - Please read these tips for providing a minimal example: https://stackoverflow.com/help/mcve.
+  placeholder: |
+  e.g. Code Sandbox, Stackblitz, Expo Snack or TypeScript playground
+  validations:
+  required: true
+- type: textarea
+  id: steps
+  attributes:
+  label: Steps to reproduce
+  description: Describe the steps we have to take to reproduce the behavior.
+  placeholder: | 1. Go to '...' 2. Click on '....' 3. Scroll down to '....' 4. See error
+  validations:
+  required: true
+- type: textarea
+  id: expected
+  attributes:
+  label: Expected behavior
+  description: Provide a clear and concise description of what you expected to happen.
+  placeholder: |
+  As a user, I expected **_ behavior but i am seeing _**
+  validations:
+  required: true
+- type: dropdown
+  attributes:
+  label: How often does this bug happen?
+  description: |
+  Following the repro steps above, how easily are you able to reproduce this bug?
+  options: - Every time - Often - Sometimes - Only once
+- type: textarea
+  id: screenshots_or_videos
+  attributes:
+  label: Screenshots or Videos
+  description: |
+  If applicable, add screenshots or a video to help explain your problem.
+  For more information on the supported file image/file types and the file size limits, please refer
+  to the following link: https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files
+  placeholder: |
+  You can drag your video or image files inside of this editor ↓
+- type: textarea
+  id: platform
+  attributes:
+  label: Platform
+  description: |
+  Please let us know which Operting System, Browser and Browser version you were using when the issue occurred.
+  placeholder: | - OS: [e.g. macOS, Windows, Linux, iOS, Android] - Browser: [e.g. Chrome, Safari, Firefox, React Native] - Version: [e.g. 91.1]
+  validations:
+  required: true
+- type: input
+  id: library-version
+  attributes:
+  label: react-table version
+  description: |
+  Please let us know the exact version of react-table you were using when the issue occurred. Please don't just put in "latest", as this is subject to change.
+  placeholder: |
+  e.g. v3.30.1
+  validations:
+  required: true
+- type: input
+  id: ts-version
+  attributes:
+  label: TypeScript version
+  description: |
+  If you are using TypeScript, please let us know the exact version of TypeScript you were using when the issue occurred.
+  placeholder: |
+  e.g. v4.5.4
+- type: textarea
+  id: additional
+  attributes:
+  label: Additional context
+  description: Add any other context about the problem here.
+- type: checkbox
+  id: agrees-to-terms
+  attributes:
+  label: Terms & Conditions
+  description: I have followed all of the instructions above to the best of my ability and understand that if my bug cannot be reliable and easily reproduced, it will probably not be fixed.
+  validations:
+  required: true
