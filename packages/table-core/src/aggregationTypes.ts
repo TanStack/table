@@ -12,19 +12,19 @@ export const aggregationTypes = {
 
 export type BuiltInAggregationType = keyof typeof aggregationTypes
 
-function sum(_leafValues: unknown[], childValues: unknown[]) {
+function sum(_getLeafValues: () => unknown[], getChildValues: () => unknown[]) {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
-  return childValues.reduce(
+  return getChildValues().reduce(
     (sum: number, next: unknown) => sum + (typeof next === 'number' ? next : 0),
     0
   )
 }
 
-function min(_leafValues: unknown[], childValues: unknown[]) {
+function min(_getLeafValues: () => unknown[], getChildValues: () => unknown[]) {
   let min: number | undefined
 
-  for (const value of childValues as number[]) {
+  for (const value of getChildValues() as number[]) {
     if (
       value != null &&
       (min! > value || (min === undefined && value >= value))
@@ -36,10 +36,10 @@ function min(_leafValues: unknown[], childValues: unknown[]) {
   return min
 }
 
-function max(_leafValues: unknown[], childValues: unknown[]) {
+function max(_getLeafValues: () => unknown[], getChildValues: () => unknown[]) {
   let max: number | undefined
 
-  for (const value of childValues as number[]) {
+  for (const value of getChildValues() as number[]) {
     if (
       value != null &&
       (max! < value || (max === undefined && value >= value))
@@ -51,11 +51,14 @@ function max(_leafValues: unknown[], childValues: unknown[]) {
   return max
 }
 
-function extent(_leafValues: unknown[], childValues: unknown[]) {
+function extent(
+  _getLeafValues: () => unknown[],
+  getChildValues: () => unknown[]
+) {
   let min: number | undefined
   let max: number | undefined
 
-  for (const value of childValues as number[]) {
+  for (const value of getChildValues() as number[]) {
     if (value != null) {
       if (min === undefined) {
         if (value >= value) min = max = value
@@ -69,11 +72,11 @@ function extent(_leafValues: unknown[], childValues: unknown[]) {
   return [min, max]
 }
 
-function mean(leafValues: unknown[]) {
+function mean(getLeafValues: () => unknown[]) {
   let count = 0
   let sum = 0
 
-  for (let value of leafValues as number[]) {
+  for (let value of getLeafValues() as number[]) {
     if (value != null && (value = +value) >= value) {
       ++count, (sum += value)
     }
@@ -84,15 +87,16 @@ function mean(leafValues: unknown[]) {
   return
 }
 
-function median(values: unknown[]) {
-  if (!values.length) {
+function median(getLeafValues: () => unknown[]) {
+  const leafValues = getLeafValues()
+  if (!leafValues.length) {
     return
   }
 
   let min = 0
   let max = 0
 
-  values.forEach(value => {
+  leafValues.forEach(value => {
     if (typeof value === 'number') {
       min = Math.min(min, value)
       max = Math.max(max, value)
@@ -102,14 +106,14 @@ function median(values: unknown[]) {
   return (min + max) / 2
 }
 
-function unique<T>(values: T[]) {
-  return Array.from(new Set(values).values())
+function unique<T>(getLeafValues: () => T[]) {
+  return Array.from(new Set(getLeafValues()).values())
 }
 
-function uniqueCount(values: unknown[]) {
-  return new Set(values).size
+function uniqueCount(getLeafValues: () => unknown[]) {
+  return new Set(getLeafValues()).size
 }
 
-function count(values: unknown[]) {
-  return values.length
+function count(getLeafValues: () => unknown[]) {
+  return getLeafValues().length
 }

@@ -74,7 +74,7 @@ export type FiltersColumn<TGenerics extends PartialGenerics> = {
 }
 
 export type FiltersOptions<TGenerics extends PartialGenerics> = {
-  filterFromChildrenUp?: boolean
+  filterFromLeafRows?: boolean
   filterTypes?: TGenerics['FilterFns']
   enableFilters?: boolean
   // Column
@@ -156,7 +156,7 @@ export const Filters = {
       onColumnFiltersChange: makeStateUpdater('columnFilters', instance),
       onGlobalFilterChange: makeStateUpdater('globalFilter', instance),
       autoResetColumnFilters: true,
-      filterFromChildrenUp: true,
+      filterFromLeafRows: true,
       autoResetGlobalFilter: true,
       globalFilterType: 'auto',
       getColumnCanGlobalFilterFn: column => {

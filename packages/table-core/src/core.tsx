@@ -153,8 +153,8 @@ export type CoreRow<TGenerics extends PartialGenerics> = {
   original?: TGenerics['Row']
   depth: number
   values: RowValues
-  leafRows: Row<TGenerics>[]
   subRows: Row<TGenerics>[]
+  getLeafRows: () => Row<TGenerics>[]
   getRowProps: PropGetter<RowProps>
   originalSubRows?: TGenerics['Row'][]
   getAllCells: () => Cell<TGenerics>[]
@@ -528,7 +528,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
         depth,
         values,
         subRows: [],
-        leafRows: [],
+        getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
         getRowProps: userProps => instance.getRowProps(row.id, userProps)!,
         getAllCells: undefined!,
         getAllCellsByColumnId: undefined!,
@@ -650,9 +650,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
                   row
                 )
               }
-              // Keep the new subRows array on the row
               row.subRows = subRows
-              row.leafRows = flattenBy(subRows, d => d.leafRows)
             }
           }
         }
@@ -667,8 +665,8 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
         key: 'getRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance._notifyRowSelectionReset()
           instance._notifyFiltersReset()
+          instance._notifyRowSelectionReset()
         },
       }
     ),

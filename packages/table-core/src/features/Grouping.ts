@@ -26,8 +26,8 @@ import {
 export type GroupingState = string[]
 
 export type AggregationFn<TGenerics extends PartialGenerics> = (
-  leafValues: TGenerics['Row'][],
-  childValues: TGenerics['Row'][]
+  getLeafValues: () => TGenerics['Row'][],
+  getChildValues: () => TGenerics['Row'][]
 ) => any
 
 export type CustomAggregationTypes<TGenerics extends PartialGenerics> = Record<

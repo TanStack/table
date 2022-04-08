@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
@@ -31,6 +31,9 @@ function App() {
             table.createDataColumn('firstName', {
               header: ({ instance }) => (
                 <>
+                  <IndeterminateCheckbox
+                    {...instance.getToggleAllRowsSelectedProps()}
+                  />{' '}
                   <span {...instance.getToggleAllRowsExpandedProps()}>
                     {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
                   </span>{' '}
@@ -42,26 +45,29 @@ function App() {
                 // to build the toggle for expanding a row
                 <div
                   style={{
+                    // Since rows are flattened by default,
+                    // we can use the row.depth property
+                    // and paddingLeft to visually indicate the depth
+                    // of the row
                     paddingLeft: `${row.depth * 2}rem`,
                   }}
                 >
-                  {row.getCanExpand() ? (
-                    <span
-                      {...row.getToggleExpandedProps({
-                        style: {
-                          // We can even use the row.depth property
-                          // and paddingLeft to indicate the depth
-                          // of the row
-                          cursor: 'pointer',
-                        },
-                      })}
-                    >
-                      {row.getIsExpanded() ? '👇' : '👉'}
-                    </span>
-                  ) : (
-                    '🔵'
-                  )}{' '}
-                  {value}
+                  <IndeterminateCheckbox {...row.getToggleSelectedProps()} />{' '}
+                  <span
+                    {...row.getToggleExpandedProps(props => ({
+                      ...props,
+                      style: {
+                        cursor: props.onClick ? 'pointer' : 'normal',
+                      },
+                    }))}
+                  >
+                    {row.getCanExpand()
+                      ? row.getIsExpanded()
+                        ? '👇'
+                        : '👉'
+                      : '🔵'}{' '}
+                    {value}
+                  </span>
                 </div>
               ),
               footer: props => props.column.id,
@@ -106,7 +112,7 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(100, 5, 3))
-  const refreshData = () => setData(makeData(100, 5, 3))
+  const refreshData = () => setData(() => makeData(100, 5, 3))
 
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
@@ -281,6 +287,27 @@ function Filter({
       onChange={e => column.setColumnFilterValue(e.target.value)}
       placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
       className="w-36 border shadow rounded"
+    />
+  )
+}
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = '',
+  ...rest
+}: { indeterminate: boolean } & HTMLAttributes<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!)
+
+  React.useEffect(() => {
+    ref.current.indeterminate = indeterminate
+  }, [ref, indeterminate])
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className + ' cursor-pointer'}
+      {...rest}
     />
   )
 }

@@ -160,9 +160,7 @@ export const RowSelection = {
               ? value
               : !instance.getIsAllRowsSelected()
 
-          // Only remove/add the rows that are visible on the screen
-          //  Leave all the other rows that are selected alone.
-          const rowSelection = Object.assign({}, old)
+          const rowSelection = { ...old }
 
           const preGroupedFlatRows = instance.getPreGroupedRowModel().flatRows
 

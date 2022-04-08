@@ -39,21 +39,19 @@ export function groupRowsFn<TGenerics extends AnyGenerics>(
       const aggregateFn = instance.getColumnAggregationFn(column.id)
 
       if (aggregateFn) {
-        // Get the columnValues to aggregate
-        const groupedValues = groupedRows.map(row => row.values[column.id])
+        values[column.id] = aggregateFn(
+          () =>
+            leafRows.map(row => {
+              let columnValue = row.values[column.id]
 
-        // Get the columnValues to aggregate
-        const leafValues = leafRows.map(row => {
-          let columnValue = row.values[column.id]
+              if (!depth && column.aggregateValue) {
+                columnValue = column.aggregateValue(columnValue)
+              }
 
-          if (!depth && column.aggregateValue) {
-            columnValue = column.aggregateValue(columnValue)
-          }
-
-          return columnValue
-        })
-
-        values[column.id] = aggregateFn(leafValues, groupedValues)
+              return columnValue
+            }),
+          () => groupedRows.map(row => row.values[column.id])
+        )
       } else if (column.aggregationType) {
         console.info({ column })
         throw new Error(
@@ -103,7 +101,7 @@ export function groupRowsFn<TGenerics extends AnyGenerics>(
 
         // Flatten the leaf rows of the rows in this group
         const leafRows = depth
-          ? flattenBy(groupedRows, row => row.leafRows)
+          ? flattenBy(groupedRows, row => row.subRows)
           : groupedRows
 
         const values = aggregateRowsToValues(leafRows, groupedRows, depth)

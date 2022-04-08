@@ -307,16 +307,8 @@ export const Expanding = {
         void instance.toggleRowExpanded(row.id, expanded),
       getIsExpanded: () => instance.getIsRowExpanded(row.id),
       getCanExpand: () => row.subRows && !!row.subRows.length,
-      getToggleExpandedProps: userProps => {
-        const initialProps: ToggleExpandedProps = {
-          title: 'Toggle Row Expanded',
-          onClick: (e: MouseEvent | TouchEvent) => {
-            e.stopPropagation()
-            instance.toggleRowExpanded(row.id)
-          },
-        }
-        return propGetter(initialProps, userProps)
-      },
+      getToggleExpandedProps: userProps =>
+        instance.getToggleExpandedProps(row.id, userProps),
     }
   },
 }
