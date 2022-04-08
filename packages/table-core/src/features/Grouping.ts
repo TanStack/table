@@ -9,7 +9,6 @@ import {
   TableInstance,
   Row,
   Updater,
-  AnyGenerics,
   PartialGenerics,
   Renderable,
   UseRenderer,
@@ -228,7 +227,7 @@ export const Grouping = {
         return isFunction(column.aggregationType)
           ? column.aggregationType
           : column.aggregationType === 'auto'
-          ? instance.getColumnAutoFilterFn(columnId)
+          ? instance.getColumnAutoAggregationFn(columnId)
           : (userAggregationTypes as Record<string, any>)?.[
               column.aggregationType as string
             ] ??
