@@ -12,7 +12,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-stale: 14
-          days-before-close: 14
+          days-before-close: 0
           stale-issue-message: 'This issue is being marked as stale (no activity in the last 14 days)'
           stale-pr-message: 'This pull request is being marked as stale (no activity in the last 14 days)'
           close-pr-message: |
