@@ -47,6 +47,7 @@ export type ColumnPinningInstance<TGenerics extends PartialGenerics> = {
   getColumnCanPin: (columnId: string) => boolean
   getColumnIsPinned: (columnId: string) => ColumnPinningPosition
   getColumnPinnedIndex: (columnId: string) => number
+  getIsSomeColumnsPinned: () => boolean
 }
 
 //
@@ -172,6 +173,12 @@ export const Pinning = {
           ? instance.getState().columnPinning?.[position]?.indexOf(columnId) ??
               -1
           : 0
+      },
+
+      getIsSomeColumnsPinned: () => {
+        const { left, right } = instance.getState().columnPinning
+
+        return Boolean(left?.length || right?.length)
       },
     }
   },
