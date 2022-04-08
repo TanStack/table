@@ -6,16 +6,21 @@ body:
       value: |
         Thank you for reporting an issue :pray:.
 
-            This issue tracker is for reporting reproducible bugs or regression's found in [react-table](https://github.com/tanstack/react-table)
-            If you have a question about how to achieve something and are struggling, please post a question
-            inside of react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions)
+        This issue tracker is for reporting reproducible bugs or regression's found in [react-table](https://github.com/tanstack/react-table)
+        If you have a question about how to achieve or implement something and are struggling, please post a question
+        inside of react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions) instead of filing an issue.
 
-            Before submitting a new bug/issue, please check the links below to see if there is a solution or question posted there already:
-            - react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions)
-            - react-table's [Open Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-            - react-table's [Closed Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
+        Before submitting a new bug/issue, please check the links below to see if there is a solution or question posted there already:
+        - react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions)
+        - react-table's [Open Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+        - react-table's [Closed Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
 
-            The more information you fill in, the better the community can help you.
+        The more information you fill in, the better the community can help you.
+
+        > ⚠️⚠️⚠️ React Table v8 is on the horizon with alpha/beta builds and v7 is entering
+        > an LTS phase and will only be receiving patch-level fixes. If you are experiencing
+        > issues in v7 that require minor/feature or major/breaking changes, your issue will
+        > be redirected to v8 or possibly even closed if the issue has already been fixed in v8.
 
   - type: textarea
     id: description
