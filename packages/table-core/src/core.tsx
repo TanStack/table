@@ -30,36 +30,38 @@ import {
   CoreCell,
   Renderable,
   UseRenderer,
+  RowModel,
+  TableFeature,
+  AnyGenerics,
 } from './types'
 
-import { Visibility } from './features/Visibility'
-import { Ordering } from './features/Ordering'
-import { Pinning } from './features/Pinning'
-import { Headers } from './features/Headers'
-import { Filters } from './features/Filters'
-import { Sorting } from './features/Sorting'
-import { Grouping } from './features/Grouping'
+import { ColumnSizing } from './features/ColumnSizing'
 import { Expanding } from './features/Expanding'
-import { ColumnSizing, defaultColumnSizing } from './features/ColumnSizing'
+import { Filters } from './features/Filters'
+import { Grouping } from './features/Grouping'
+import { Ordering } from './features/Ordering'
 import { Pagination } from './features/Pagination'
+import { Pinning } from './features/Pinning'
 import { RowSelection } from './features/RowSelection'
-import { RowModel } from '.'
+import { Sorting } from './features/Sorting'
+import { Visibility } from './features/Visibility'
+import { Headers } from './features/Headers'
 
-const features = [
+const features: TableFeature[] = [
+  Headers,
   Visibility,
   Ordering,
   Pinning,
-  Headers,
   Filters,
   Sorting,
   Grouping,
   Expanding,
-  ColumnSizing,
   Pagination,
   RowSelection,
+  ColumnSizing,
 ]
 
-export type CoreOptions<TGenerics extends PartialGenerics> = {
+export type CoreOptions<TGenerics extends AnyGenerics> = {
   data: TGenerics['Row'][]
   columns: ColumnDef<TGenerics>[]
   state: Partial<TableState>
@@ -84,7 +86,7 @@ export type CoreOptions<TGenerics extends PartialGenerics> = {
   autoResetAll?: boolean
 }
 
-export type TableCore<TGenerics extends PartialGenerics> = {
+export type TableCore<TGenerics extends AnyGenerics> = {
   initialState: TableState
   reset: () => void
   options: RequiredKeys<Options<TGenerics>, 'state'>
@@ -108,7 +110,6 @@ export type TableCore<TGenerics extends PartialGenerics> = {
   getAllFlatColumnsById: () => Record<string, Column<TGenerics>>
   getAllLeafColumns: () => Column<TGenerics>[]
   getColumn: (columnId: string) => Column<TGenerics>
-  getColumnWidth: (columnId: string) => number
   getTotalWidth: () => number
   createCell: (
     row: Row<TGenerics>,
@@ -147,7 +148,7 @@ export type TableCore<TGenerics extends PartialGenerics> = {
   ) => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
-export type CoreRow<TGenerics extends PartialGenerics> = {
+export type CoreRow<TGenerics extends AnyGenerics> = {
   id: string
   index: number
   original?: TGenerics['Row']
@@ -161,13 +162,10 @@ export type CoreRow<TGenerics extends PartialGenerics> = {
   getAllCellsByColumnId: () => Record<string, Cell<TGenerics>>
 }
 
-export type CoreColumnDef<TGenerics extends PartialGenerics> = {
+export type CoreColumnDef<TGenerics extends AnyGenerics> = {
   id: string
   accessorKey?: string & keyof TGenerics['Row']
   accessorFn?: AccessorFn<TGenerics['Row']>
-  width?: number
-  minWidth?: number
-  maxWidth?: number
   columns?: ColumnDef<TGenerics>[]
   header?: Renderable<
     TGenerics,
@@ -199,7 +197,7 @@ export type CoreColumnDef<TGenerics extends PartialGenerics> = {
 }
 // & GeneratedProperties<true>
 
-export type CoreColumn<TGenerics extends PartialGenerics> = {
+export type CoreColumn<TGenerics extends AnyGenerics> = {
   id: string
   depth: number
   accessorFn?: AccessorFn<TGenerics['Row']>
@@ -211,7 +209,7 @@ export type CoreColumn<TGenerics extends PartialGenerics> = {
   getLeafColumns: () => Column<TGenerics>[]
 }
 
-export function createTableInstance<TGenerics extends PartialGenerics>(
+export function createTableInstance<TGenerics extends AnyGenerics>(
   options: Options<TGenerics>
 ): TableInstance<TGenerics> {
   if (options.debugAll || options.debugTable) {
@@ -221,7 +219,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
   let instance = {} as TableInstance<TGenerics>
 
   const defaultOptions = features.reduce((obj, feature) => {
-    return Object.assign(obj, (feature as any).getDefaultOptions?.(instance))
+    return Object.assign(obj, feature.getDefaultOptions?.(instance))
   }, {})
 
   const buildOptions = (options: Options<TGenerics>) => ({
@@ -233,7 +231,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
 
   const initialState = {
     ...features.reduce((obj, feature) => {
-      return Object.assign(obj, (feature as any).getInitialState?.())
+      return Object.assign(obj, feature.getInitialState?.())
     }, {}),
     ...(options.initialState ?? {}),
   } as TableState
@@ -241,7 +239,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
   const finalInstance: TableInstance<TGenerics> = {
     ...instance,
     ...features.reduce((obj, feature) => {
-      return Object.assign(obj, (feature as any).getInstance?.(instance))
+      return Object.assign(obj, feature.getInstance?.(instance))
     }, {}),
     initialState,
     reset: () => {
@@ -288,7 +286,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
           cell: ({ value = '' }: { value: any }): JSX.Element =>
             typeof value === 'boolean' ? value.toString() : value,
           ...features.reduce((obj, feature) => {
-            return Object.assign(obj, (feature as any).getDefaultColumn?.())
+            return Object.assign(obj, feature.getDefaultColumn?.())
           }, {}),
           ...defaultColumn,
         } as Partial<ColumnDef<TGenerics>>
@@ -330,7 +328,6 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       }
 
       let column: CoreColumn<TGenerics> = {
-        ...defaultColumnSizing,
         ...defaultColumn,
         ...columnDef,
         id: `${id}`,
@@ -376,10 +373,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       }
 
       column = features.reduce((obj, feature) => {
-        return Object.assign(
-          obj,
-          (feature as any).createColumn?.(column, instance)
-        )
+        return Object.assign(obj, feature.createColumn?.(column, instance))
       }, column)
 
       // Yes, we have to convert instance to uknown, because we know more than the compiler here.
@@ -465,24 +459,6 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       return column
     },
 
-    getColumnWidth: (columnId: string) => {
-      const column = instance.getColumn(columnId)
-
-      if (!column) {
-        throw new Error()
-      }
-
-      const columnSize = instance.getState().columnSizing[column.id]
-
-      return Math.min(
-        Math.max(
-          column.minWidth ?? defaultColumnSizing.minWidth,
-          columnSize ?? column.width ?? defaultColumnSizing.width
-        ),
-        column.maxWidth ?? defaultColumnSizing.maxWidth
-      )
-    },
-
     createCell: (row, column, value) => {
       const cell: CoreCell<TGenerics> = {
         id: `${row.id}_${column.id}`,
@@ -508,7 +484,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
       features.forEach(feature => {
         Object.assign(
           cell,
-          (feature as any).createCell?.(
+          feature.createCell?.(
             cell as Cell<TGenerics>,
             column,
             row as Row<TGenerics>,
@@ -567,7 +543,7 @@ export function createTableInstance<TGenerics extends PartialGenerics>(
 
       for (let i = 0; i < features.length; i++) {
         const feature = features[i]
-        Object.assign(row, (feature as any).createRow?.(row, instance))
+        Object.assign(row, feature.createRow?.(row, instance))
       }
 
       return row as Row<TGenerics>

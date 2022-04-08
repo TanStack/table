@@ -40,7 +40,7 @@ export type ColumnPinningColumn = {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export type ColumnPinningInstance<TGenerics extends PartialGenerics> = {
+export type ColumnPinningInstance<TGenerics extends AnyGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: () => void
   pinColumn: (columnId: string, position: ColumnPinningPosition) => void
@@ -62,7 +62,7 @@ export const Pinning = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnPinningDefaultOptions => {
     return {
@@ -70,7 +70,7 @@ export const Pinning = {
     }
   },
 
-  createColumn: <TGenerics extends PartialGenerics>(
+  createColumn: <TGenerics extends AnyGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ColumnPinningColumn => {
@@ -82,7 +82,7 @@ export const Pinning = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnPinningInstance<TGenerics> => {
     return {

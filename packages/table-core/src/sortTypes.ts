@@ -13,7 +13,7 @@ export const sortTypes = {
 
 export type BuiltInSortType = keyof typeof sortTypes
 
-function alphanumeric<TGenerics extends PartialGenerics>(
+function alphanumeric<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -24,7 +24,7 @@ function alphanumeric<TGenerics extends PartialGenerics>(
   )
 }
 
-function alphanumericCaseSensitive<TGenerics extends PartialGenerics>(
+function alphanumericCaseSensitive<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -84,7 +84,7 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-function text<TGenerics extends PartialGenerics>(
+function text<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -97,7 +97,7 @@ function text<TGenerics extends PartialGenerics>(
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-function textCaseSensitive<TGenerics extends PartialGenerics>(
+function textCaseSensitive<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -108,7 +108,7 @@ function textCaseSensitive<TGenerics extends PartialGenerics>(
   )
 }
 
-function datetime<TGenerics extends PartialGenerics>(
+function datetime<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -119,7 +119,7 @@ function datetime<TGenerics extends PartialGenerics>(
   )
 }
 
-function basic<TGenerics extends PartialGenerics>(
+function basic<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string

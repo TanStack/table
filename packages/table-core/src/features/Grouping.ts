@@ -12,6 +12,7 @@ import {
   PartialGenerics,
   Renderable,
   UseRenderer,
+  AnyGenerics,
 } from '../types'
 import {
   functionalUpdate,
@@ -24,17 +25,17 @@ import {
 
 export type GroupingState = string[]
 
-export type AggregationFn<TGenerics extends PartialGenerics> = (
+export type AggregationFn<TGenerics extends AnyGenerics> = (
   getLeafValues: () => TGenerics['Row'][],
   getChildValues: () => TGenerics['Row'][]
 ) => any
 
-export type CustomAggregationTypes<TGenerics extends PartialGenerics> = Record<
+export type CustomAggregationTypes<TGenerics extends AnyGenerics> = Record<
   string,
   AggregationFn<TGenerics>
 >
 
-export type AggregationType<TGenerics extends PartialGenerics> =
+export type AggregationType<TGenerics extends AnyGenerics> =
   | 'auto'
   | BuiltInAggregationType
   | keyof TGenerics['AggregationFns']
@@ -44,7 +45,7 @@ export type GroupingTableState = {
   grouping: GroupingState
 }
 
-export type GroupingColumnDef<TGenerics extends PartialGenerics> = {
+export type GroupingColumnDef<TGenerics extends AnyGenerics> = {
   aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   aggregateValue?: (columnValue: unknown) => any
   aggregatedCell?: Renderable<
@@ -61,7 +62,7 @@ export type GroupingColumnDef<TGenerics extends PartialGenerics> = {
   defaultCanGroup?: boolean
 }
 
-export type GroupingColumn<TGenerics extends PartialGenerics> = {
+export type GroupingColumn<TGenerics extends AnyGenerics> = {
   aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   getCanGroup: () => boolean
   getIsGrouped: () => boolean
@@ -78,7 +79,7 @@ export type GroupingRow = {
   getIsGrouped: () => boolean
 }
 
-export type GroupingCell<TGenerics extends PartialGenerics> = {
+export type GroupingCell<TGenerics extends AnyGenerics> = {
   getIsGrouped: () => boolean
   getIsPlaceholder: () => boolean
   getIsAggregated: () => boolean
@@ -92,7 +93,7 @@ export type ColumnDefaultOptions = {
   enableGrouping: boolean
 }
 
-export type GroupingOptions<TGenerics extends PartialGenerics> = {
+export type GroupingOptions<TGenerics extends AnyGenerics> = {
   aggregationTypes?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
   autoResetGrouping?: boolean
@@ -113,7 +114,7 @@ export type ToggleGroupingProps = {
   onClick?: (event: MouseEvent | TouchEvent) => void
 }
 
-export type GroupingInstance<TGenerics extends PartialGenerics> = {
+export type GroupingInstance<TGenerics extends AnyGenerics> = {
   _notifyGroupingReset: () => void
   getColumnAutoAggregationFn: (
     columnId: string
@@ -140,7 +141,7 @@ export type GroupingInstance<TGenerics extends PartialGenerics> = {
 
 export const Grouping = {
   getDefaultColumn: <
-    TGenerics extends PartialGenerics
+    TGenerics extends AnyGenerics
   >(): GroupingColumnDef<TGenerics> => {
     return {
       aggregationType: 'auto',
@@ -153,7 +154,7 @@ export const Grouping = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): GroupingOptions<TGenerics> => {
     return {
@@ -163,7 +164,7 @@ export const Grouping = {
     }
   },
 
-  createColumn: <TGenerics extends PartialGenerics>(
+  createColumn: <TGenerics extends AnyGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): GroupingColumn<TGenerics> => {
@@ -178,7 +179,7 @@ export const Grouping = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): GroupingInstance<TGenerics> => {
     let registered = false
@@ -321,7 +322,7 @@ export const Grouping = {
     }
   },
 
-  createRow: <TGenerics extends PartialGenerics>(
+  createRow: <TGenerics extends AnyGenerics>(
     row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
   ): GroupingRow => {
@@ -330,7 +331,7 @@ export const Grouping = {
     }
   },
 
-  createCell: <TGenerics extends PartialGenerics>(
+  createCell: <TGenerics extends AnyGenerics>(
     cell: Cell<TGenerics>,
     column: Column<TGenerics>,
     row: Row<TGenerics>,
@@ -360,7 +361,7 @@ export const Grouping = {
     }
   },
 
-  orderColumns: <TGenerics extends PartialGenerics>(
+  orderColumns: <TGenerics extends AnyGenerics>(
     leafColumns: Column<TGenerics>[],
     grouping: string[],
     groupedColumnMode?: GroupingColumnMode

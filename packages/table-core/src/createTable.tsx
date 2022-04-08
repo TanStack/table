@@ -1,10 +1,16 @@
 import { CustomFilterTypes } from './features/Filters'
 import { CustomAggregationTypes } from './features/Grouping'
 import { CustomSortingTypes } from './features/Sorting'
-import { ColumnDef, AccessorFn, PartialGenerics, AnyRender } from './types'
+import {
+  ColumnDef,
+  AccessorFn,
+  PartialGenerics,
+  AnyRender,
+  AnyGenerics,
+} from './types'
 import { Overwrite, PartialKeys } from './utils'
 
-export type CreateTableFactory<TGenerics extends PartialGenerics> = <
+export type CreateTableFactory<TGenerics extends AnyGenerics> = <
   TSubGenerics extends {
     Row: any
     ColumnMeta?: object
@@ -28,7 +34,7 @@ export type CreateTableFactoryOptions<
   aggregationFns?: TAggregationFns
 }
 
-export type Table<TGenerics extends PartialGenerics> = {
+export type Table<TGenerics extends AnyGenerics> = {
   generics: TGenerics
   __options: CreateTableFactoryOptions<any, any, any, any>
   createColumns: <TColumnDef extends ColumnDef<any>>(
@@ -94,8 +100,8 @@ export type Table<TGenerics extends PartialGenerics> = {
 }
 
 type InitTable<TRender extends AnyRender> = {
-  createTableFactory: <TGenerics extends PartialGenerics>(
-    options?: CreateTableFactoryOptions<TRender, any, any, any>
+  createTableFactory: <TGenerics extends AnyGenerics>(
+    options: CreateTableFactoryOptions<TRender, any, any, any>
   ) => CreateTableFactory<Overwrite<TGenerics, { Render: TRender }>>
   createTable: CreateTableFactory<
     Overwrite<PartialGenerics, { Render: TRender }>
@@ -108,16 +114,16 @@ export function init<TRender extends AnyRender>(opts: {
   render: TRender
 }): InitTable<TRender> {
   return {
-    createTableFactory: options => () =>
-      _createTable(undefined, undefined, { ...options, ...opts }),
+    createTableFactory: factoryOptions => () =>
+      _createTable(undefined, undefined, { ...factoryOptions, ...opts }),
     createTable: () => _createTable(undefined, undefined, opts),
   }
 }
 
-function _createTable<TGenerics extends PartialGenerics>(
-  _?: undefined,
-  __?: undefined,
-  __options?: CreateTableFactoryOptions<any, any, any, any>
+function _createTable<TGenerics extends AnyGenerics>(
+  _: undefined,
+  __: undefined,
+  __options: CreateTableFactoryOptions<any, any, any, any>
 ): Table<TGenerics> {
   return {
     generics: undefined!,

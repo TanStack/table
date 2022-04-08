@@ -26,7 +26,7 @@ export type VisibilityTableState = {
   columnVisibility: VisibilityState
 }
 
-export type VisibilityInstance<TGenerics extends PartialGenerics> = {
+export type VisibilityInstance<TGenerics extends AnyGenerics> = {
   getVisibleFlatColumns: () => Column<TGenerics>[]
   getVisibleLeafColumns: () => Column<TGenerics>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
@@ -52,7 +52,7 @@ export type VisibilityColumnDef = {
   defaultIsVisible?: boolean
 }
 
-export type VisibilityRow<TGenerics extends PartialGenerics> = {
+export type VisibilityRow<TGenerics extends AnyGenerics> = {
   getVisibleCells: () => Cell<TGenerics>[]
 }
 
@@ -74,7 +74,7 @@ export const Visibility = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): VisibilityDefaultOptions => {
     return {
@@ -88,7 +88,7 @@ export const Visibility = {
     }
   },
 
-  createColumn: <TGenerics extends PartialGenerics>(
+  createColumn: <TGenerics extends AnyGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): VisibilityColumn => {
@@ -112,7 +112,7 @@ export const Visibility = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): VisibilityInstance<TGenerics> => {
     return {

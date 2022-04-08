@@ -18,7 +18,7 @@ import {
 import { propGetter, memo } from '../utils'
 import { ColumnSizing } from './ColumnSizing'
 
-export type HeadersRow<TGenerics extends PartialGenerics> = {
+export type HeadersRow<TGenerics extends AnyGenerics> = {
   _getAllVisibleCells: () => Cell<TGenerics>[]
   getVisibleCells: () => Cell<TGenerics>[]
   getLeftVisibleCells: () => Cell<TGenerics>[]
@@ -26,7 +26,7 @@ export type HeadersRow<TGenerics extends PartialGenerics> = {
   getRightVisibleCells: () => Cell<TGenerics>[]
 }
 
-export type HeadersInstance<TGenerics extends PartialGenerics> = {
+export type HeadersInstance<TGenerics extends AnyGenerics> = {
   createHeader: (
     column: Column<TGenerics>,
     options: {
@@ -80,7 +80,7 @@ export type HeadersInstance<TGenerics extends PartialGenerics> = {
 //
 
 export const Headers = {
-  createRow: <TGenerics extends PartialGenerics>(
+  createRow: <TGenerics extends AnyGenerics>(
     row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
   ): HeadersRow<TGenerics> => {
@@ -167,7 +167,7 @@ export const Headers = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): HeadersInstance<TGenerics> => {
     return {
@@ -607,7 +607,7 @@ export const Headers = {
   },
 }
 
-export function buildHeaderGroups<TGenerics extends PartialGenerics>(
+export function buildHeaderGroups<TGenerics extends AnyGenerics>(
   allColumns: Column<TGenerics>[],
   columnsToGroup: Column<TGenerics>[],
   instance: TableInstance<TGenerics>,

@@ -24,17 +24,17 @@ export type ColumnFilter = {
 
 export type ColumnFiltersState = ColumnFilter[]
 
-export type FilterFn<TGenerics extends PartialGenerics> = {
+export type FilterFn<TGenerics extends AnyGenerics> = {
   (rows: Row<TGenerics>[], columnIds: string[], filterValue: any): any
   autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
 }
 
-export type ColumnFilterAutoRemoveTestFn<TGenerics extends PartialGenerics> = (
+export type ColumnFilterAutoRemoveTestFn<TGenerics extends AnyGenerics> = (
   value: unknown,
   column?: Column<TGenerics>
 ) => boolean
 
-export type CustomFilterTypes<TGenerics extends PartialGenerics> = Record<
+export type CustomFilterTypes<TGenerics extends AnyGenerics> = Record<
   string,
   FilterFn<TGenerics>
 >
@@ -44,13 +44,13 @@ export type FiltersTableState = {
   globalFilter: any
 }
 
-export type FilterType<TGenerics extends PartialGenerics> =
+export type FilterType<TGenerics extends AnyGenerics> =
   | 'auto'
   | BuiltInFilterType
   | TGenerics['FilterFns']
   | FilterFn<TGenerics>
 
-export type FiltersColumnDef<TGenerics extends PartialGenerics> = {
+export type FiltersColumnDef<TGenerics extends AnyGenerics> = {
   filterType?: FilterType<Overwrite<TGenerics, { Value: any }>>
   enableAllFilters?: boolean
   enableColumnFilter?: boolean
@@ -60,7 +60,7 @@ export type FiltersColumnDef<TGenerics extends PartialGenerics> = {
   defaultCanGlobalFilter?: boolean
 }
 
-export type FiltersColumn<TGenerics extends PartialGenerics> = {
+export type FiltersColumn<TGenerics extends AnyGenerics> = {
   filterType: FilterType<Overwrite<TGenerics, { Value: any }>>
   getCanColumnFilter: () => boolean
   getCanGlobalFilter: () => boolean
@@ -73,7 +73,7 @@ export type FiltersColumn<TGenerics extends PartialGenerics> = {
   getPreFilteredMinMaxValues: () => [any, any]
 }
 
-export type FiltersOptions<TGenerics extends PartialGenerics> = {
+export type FiltersOptions<TGenerics extends AnyGenerics> = {
   filterFromLeafRows?: boolean
   filterTypes?: TGenerics['FilterFns']
   enableFilters?: boolean
@@ -98,7 +98,7 @@ export type FiltersOptions<TGenerics extends PartialGenerics> = {
   getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 }
 
-export type FiltersInstance<TGenerics extends PartialGenerics> = {
+export type FiltersInstance<TGenerics extends AnyGenerics> = {
   _notifyFiltersReset: () => void
   getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
@@ -135,7 +135,7 @@ export type FiltersInstance<TGenerics extends PartialGenerics> = {
 
 export const Filters = {
   getDefaultColumn: <
-    TGenerics extends PartialGenerics
+    TGenerics extends AnyGenerics
   >(): FiltersColumnDef<TGenerics> => {
     return {
       filterType: 'auto',
@@ -149,7 +149,7 @@ export const Filters = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): FiltersOptions<TGenerics> => {
     return {
@@ -169,7 +169,7 @@ export const Filters = {
     }
   },
 
-  createColumn: <TGenerics extends PartialGenerics>(
+  createColumn: <TGenerics extends AnyGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): FiltersColumn<TGenerics> => {
@@ -228,7 +228,7 @@ export const Filters = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): FiltersInstance<TGenerics> => {
     let registered = false
@@ -553,7 +553,7 @@ export const Filters = {
   },
 }
 
-export function shouldAutoRemoveFilter<TGenerics extends PartialGenerics>(
+export function shouldAutoRemoveFilter<TGenerics extends AnyGenerics>(
   filterFn?: FilterFn<TGenerics>,
   value?: any,
   column?: Column<TGenerics>

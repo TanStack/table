@@ -155,7 +155,7 @@ export function groupRowsFn<TGenerics extends AnyGenerics>(
   }
 }
 
-function groupBy<TGenerics extends PartialGenerics>(
+function groupBy<TGenerics extends AnyGenerics>(
   rows: Row<TGenerics>[],
   columnId: string
 ) {
