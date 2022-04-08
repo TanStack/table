@@ -10,7 +10,11 @@ import {
   Column,
   TableInstance,
   PaginationState,
+  functionalUpdate,
   useTable,
+  GroupingState,
+  groupRowsFn,
+  expandRowsFn,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -72,22 +76,20 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-    pageCount: -1, // -1 allows the table to calculate the page count for us via instance.getPageCount()
-  })
+  const [grouping, setGrouping] = React.useState<GroupingState>([])
 
   const instance = useTable(table, {
     data,
     columns,
     state: {
-      pagination,
+      grouping,
     },
-    onPaginationChange: setPagination,
+    onGroupingChange: setGrouping,
+    groupRowsFn: groupRowsFn,
+    expandRowsFn: expandRowsFn,
     paginateRowsFn: paginateRowsFn,
     columnFilterRowsFn: columnFilterRowsFn,
-    // debugTable: true,
+    debugTable: true,
   })
 
   return (
@@ -102,15 +104,22 @@ function App() {
                   <th {...header.getHeaderProps()}>
                     {header.isPlaceholder ? null : (
                       <div>
+                        {header.column.getCanGroup() ? (
+                          // If the header can be grouped, let's add a toggle
+                          <span
+                            {...header.column.getToggleGroupingProps(props => ({
+                              ...props,
+                              style: {
+                                cursor: 'pointer',
+                              },
+                            }))}
+                          >
+                            {header.column.getIsGrouped()
+                              ? `🛑(${header.column.getGroupedIndex()}) `
+                              : `👊 `}
+                          </span>
+                        ) : null}{' '}
                         {header.renderHeader()}
-                        {header.column.getCanColumnFilter() ? (
-                          <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
-                          </div>
-                        ) : null}
                       </div>
                     )}
                   </th>
@@ -124,7 +133,48 @@ function App() {
             return (
               <tr {...row.getRowProps()}>
                 {row.getVisibleCells().map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                  return (
+                    <td
+                      {...cell.getCellProps(props => ({
+                        ...props,
+                        style: {
+                          ...props.style,
+                          background: cell.getIsGrouped()
+                            ? '#0aff0082'
+                            : cell.getIsAggregated()
+                            ? '#ffa50078'
+                            : cell.getIsPlaceholder()
+                            ? '#ff000042'
+                            : 'white',
+                        },
+                      }))}
+                    >
+                      {cell.getIsGrouped() ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <span
+                            {...row.getToggleExpandedProps(props => ({
+                              ...props,
+                              style: {
+                                ...props.style,
+                                cursor: props.onClick ? 'pointer' : 'normal',
+                              },
+                            }))}
+                          >
+                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                            {cell.renderCell()} ({row.subRows.length})
+                          </span>
+                        </>
+                      ) : cell.getIsAggregated() ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        cell.renderAggregatedCell()
+                      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        cell.renderCell()
+                      )}
+                    </td>
+                  )
                 })}
               </tr>
             )
@@ -200,7 +250,7 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(pagination, null, 2)}</pre>
+      <pre>{JSON.stringify(grouping, null, 2)}</pre>
     </div>
   )
 }
