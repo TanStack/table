@@ -154,16 +154,18 @@ function reducer(state, action, previousState, instance) {
     const handleRowById = id => {
       const row = rowsById[id]
 
-      if (!row.isGrouped) {
-        if (shouldExist) {
-          newSelectedRowIds[id] = true
-        } else {
-          delete newSelectedRowIds[id]
+      if (row) {
+        if (!row.isGrouped) {
+          if (shouldExist) {
+            newSelectedRowIds[id] = true
+          } else {
+            delete newSelectedRowIds[id]
+          }
         }
-      }
 
-      if (selectSubRows && getSubRows(row)) {
-        return getSubRows(row).forEach(row => handleRowById(row.id))
+        if (selectSubRows && getSubRows(row)) {
+          return getSubRows(row).forEach(row => handleRowById(row.id))
+        }
       }
     }
 
