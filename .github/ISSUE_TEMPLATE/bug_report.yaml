@@ -30,8 +30,15 @@ body:
       label: Your minimal, reproducible example
       description: |
         Please add a link to a minimal reproduction.
-        Note: - Your bug may get fixed much faster if we can run your code and it doesn't have dependencies other than React. - To create a shareable code example for web, you can use CodeSandbox (https://codesandbox.io/s/new) or Stackblitz (https://stackblitz.com/). - Please make sure the example is complete and runnable without prior dependencies and free of unnecessary abstractions - Feel free to fork any of the official CodeSandbox examples to reproduce your issue: https://github.com/tanstack/react-table/tree/main/examples/ - For React Native, you can use: https://snack.expo.dev/ - For TypeScript related issues only, a TypeScript Playground link might be sufficient: https://www.typescriptlang.org/play - Please read these tips for providing a minimal example: https://stackoverflow.com/help/mcve.
-        placeholder: |
+        Note:
+          - Your bug may get fixed much faster if we can run your code and it doesn't have dependencies other than React.
+          - To create a shareable code example for web, you can use CodeSandbox (https://codesandbox.io/s/new) or Stackblitz (https://stackblitz.com/).
+          - Please make sure the example is complete and runnable without prior dependencies and free of unnecessary abstractions
+          - Feel free to fork any of the official CodeSandbox examples to reproduce your issue: https://github.com/tanstack/react-table/tree/main/examples/
+          - For React Native, you can use: https://snack.expo.dev/
+          - For TypeScript related issues only, a TypeScript Playground link might be sufficient: https://www.typescriptlang.org/play
+          - Please read these tips for providing a minimal example: https://stackoverflow.com/help/mcve.
+      placeholder: |
         e.g. Code Sandbox, Stackblitz, Expo Snack or TypeScript playground
     validations:
       required: true
@@ -72,7 +79,7 @@ body:
         If applicable, add screenshots or a video to help explain your problem.
         For more information on the supported file image/file types and the file size limits, please refer
         to the following link: https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files
-        placeholder: |
+      placeholder: |
         You can drag your video or image files inside of this editor ↓
   - type: textarea
     id: platform
