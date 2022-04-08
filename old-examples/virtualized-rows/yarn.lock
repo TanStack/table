@@ -6932,9 +6932,9 @@ path-key@^2.0.0, path-key@^2.0.1:
   integrity sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
 
 path-parse@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
-  integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
+  integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 path-to-regexp@0.1.7:
   version "0.1.7"
@@ -8092,10 +8092,10 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
-react-table@next:
-  version "7.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-alpha.7.tgz#0cb6da6f32adb397e68505b7cdd4880d15d73017"
-  integrity sha512-oXE9RRkE2CFk1OloNCSTPQ9qxOdujgkCoW5b/srbJsBog/ySkWuozBTQkxH1wGNmnSxGyTrTxJqXdXPQam7VAw==
+react-table@latest:
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.7.0.tgz#e2ce14d7fe3a559f7444e9ecfe8231ea8373f912"
+  integrity sha512-jBlj70iBwOTvvImsU9t01LjFjy4sXEtclBovl3mTiqjz23Reu0DKnRza4zlLtOPACx6j2/7MrQIthIK1Wi+LIA==
 
 react-window@^1.8.5:
   version "1.8.5"
