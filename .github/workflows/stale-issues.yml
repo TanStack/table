@@ -11,11 +11,11 @@ jobs:
       - uses: actions/stale@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          days-before-stale: 100000
-          days-before-close: 30
+          days-before-stale: 10000000
+          days-before-close: 14
           stale-issue-message: 'This issue is being closed as stale'
           close-issue-message: |
-            This issue has been marked as stale and automatically closed. It's very likely that your issue has remained here this long because it would require breaking changes to v7. **React Table v8** is currently in alpha (soon beta!) and already contains bug fixes, performance improvements and architectural changes that likely address this issue.
+            This issue has been detected as stale (no activity in the last 14 days) and automatically closed. It's very likely that your issue has remained here this long because it would require breaking changes to v7. **React Table v8** is currently in alpha (soon beta!) and already contains bug fixes, performance improvements and architectural changes that likely address this issue.
 
             - If your v7 issue has been previously labeled as requiring breaking changes, please try the new v8 alpha/beta releases
             - If your v7 issue **has not already been labeled as a breaking change**, open a new issue.
