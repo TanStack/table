@@ -167,6 +167,14 @@ const sizesAfter = [
   '179.26829268292684px',
 ]
 
+beforeEach(() => {
+  jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => cb())
+})
+
+afterEach(() => {
+  window.requestAnimationFrame.mockRestore()
+})
+
 test('table can be resized by a mouse', () => {
   const rtl = render(<App />)
 
