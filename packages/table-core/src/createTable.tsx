@@ -133,11 +133,12 @@ function _createTable<TGenerics extends AnyGenerics>(
       },
     },
     createColumns: columns => columns,
-    createDisplayColumn: column => column as any,
-    createGroup: column => column as any,
+    createDisplayColumn: column => ({ ...column, columnDefType: 'display' }),
+    createGroup: column => ({ ...column, columnDefType: 'group' } as any),
     createDataColumn: (accessor, column): any => {
       column = {
         ...column,
+        columnDefType: 'data',
         id: column.id,
       }
 
