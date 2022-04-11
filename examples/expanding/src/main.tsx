@@ -9,7 +9,6 @@ import {
   paginateRowsFn,
   Column,
   TableInstance,
-  PaginationState,
   useTable,
   ExpandedState,
   expandRowsFn,
