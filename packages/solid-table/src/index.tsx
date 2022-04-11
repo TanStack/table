@@ -1,17 +1,19 @@
-export * from '@tanstack/table-core'
-export { createCoreTable, createTableFactory }
-
+/** @jsxImportSource solid-js */
 import {
   AnyGenerics,
   CreateTableFactoryOptions,
-  createTableInstance,
-  init,
   Options,
   PartialKeys,
   Table,
+  createTableInstance,
+  init,
+  TableFeature,
 } from '@tanstack/table-core'
-import { createComputed } from 'solid-js'
+import { createComputed, mergeProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
+
+export * from '@tanstack/table-core'
+export { createCoreTable, createTableFactory }
 
 function render<TProps extends {}>(Comp: any, props: TProps) {
   if (!Comp) return null
@@ -35,36 +37,35 @@ export function createTable<TGenerics extends AnyGenerics>(
     'state' | 'onStateChange'
   >
 ) {
-  const resolvedOptions: Options<TGenerics> = {
-    ...(table.__options ?? {}),
-    state: {}, // Dummy state
-    onStateChange: () => {}, // noop
-    render,
-    ...options,
-  }
+  const resolvedOptions: Options<TGenerics> = mergeProps(
+    {
+      ...(table.__options ?? {}),
+      state: {}, // Dummy state
+      onStateChange: () => {}, // noop
+      render,
+      mergeOptions(defaultOptions: TableFeature, options: Options<TGenerics>) {
+        return mergeProps(defaultOptions, options)
+      },
+    },
+    options
+  )
 
   const instance = createTableInstance<TGenerics>(resolvedOptions)
-  const [state, setState] = createStore({
-    ...instance.initialState,
-    ...options.state,
-  })
+  const [state, setState] = createStore(instance.initialState)
 
   createComputed(() => {
     instance.setOptions(prev => {
-      console.log('UPDATE')
-      return {
-        ...prev,
-        ...options,
-        state,
+      return mergeProps(prev, options, {
+        state: mergeProps(state, options.state || {}),
         // Similarly, we'll maintain both our internal state and any user-provided
         // state.
-        onStateChange: updater => {
+        onStateChange: (updater: any) => {
           // merging isn't required because stores shallow update
           setState(updater)
 
           options.onStateChange?.(updater)
         },
-      }
+      })
     })
   })
 

@@ -133,7 +133,12 @@ export type Options<TGenerics extends AnyGenerics> = CoreOptions<TGenerics> &
   ExpandedOptions<TGenerics> &
   ColumnSizingOptions &
   PaginationOptions<TGenerics> &
-  RowSelectionOptions<TGenerics>
+  RowSelectionOptions<TGenerics> & {
+    mergeOptions?: (
+      defaultOptions: TableFeature,
+      options: Partial<Options<TGenerics>>
+    ) => Options<TGenerics>
+  }
 
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
