@@ -7,10 +7,6 @@ import {
   createTable,
   columnFilterRowsFn,
   paginateRowsFn,
-  Column,
-  TableInstance,
-  PaginationState,
-  functionalUpdate,
   useTable,
   GroupingState,
   groupRowsFn,
@@ -252,52 +248,6 @@ function App() {
       </div>
       <pre>{JSON.stringify(grouping, null, 2)}</pre>
     </div>
-  )
-}
-
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: TableInstance<any>
-}) {
-  const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
-
-  return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
-        type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[0] ?? '') as string}
-        onChange={e =>
-          column.setColumnFilterValue(old => [e.target.value, old?.[1]])
-        }
-        placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
-        className="w-24 border shadow rounded"
-      />
-      <input
-        type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[1] ?? '') as string}
-        onChange={e =>
-          column.setColumnFilterValue(old => [old?.[0], e.target.value])
-        }
-        placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
-        className="w-24 border shadow rounded"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(column.getColumnFilterValue() ?? '') as string}
-      onChange={e => column.setColumnFilterValue(e.target.value)}
-      placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
-      className="w-36 border shadow rounded"
-    />
   )
 }
 
