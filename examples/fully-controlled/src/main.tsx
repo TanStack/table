@@ -91,7 +91,7 @@ const defaultColumns = table.createColumns([
 ])
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(1000))
+  const [data] = React.useState(() => makeData(1000))
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
