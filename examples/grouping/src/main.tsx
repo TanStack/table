@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
@@ -10,8 +10,10 @@ import {
   Column,
   TableInstance,
   PaginationState,
+  functionalUpdate,
   useTable,
-  ExpandedState,
+  GroupingState,
+  groupRowsFn,
   expandRowsFn,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -29,47 +31,7 @@ function App() {
           footer: props => props.column.id,
           columns: [
             table.createDataColumn('firstName', {
-              header: ({ instance }) => (
-                <>
-                  <IndeterminateCheckbox
-                    {...instance.getToggleAllRowsSelectedProps()}
-                  />{' '}
-                  <span {...instance.getToggleAllRowsExpandedProps()}>
-                    {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
-                  </span>{' '}
-                  First Name
-                </>
-              ),
-              cell: ({ row, value }) => (
-                // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-                // to build the toggle for expanding a row
-                <div
-                  style={{
-                    // Since rows are flattened by default,
-                    // we can use the row.depth property
-                    // and paddingLeft to visually indicate the depth
-                    // of the row
-                    paddingLeft: `${row.depth * 2}rem`,
-                  }}
-                >
-                  <IndeterminateCheckbox {...row.getToggleSelectedProps()} />{' '}
-                  <span
-                    {...row.getToggleExpandedProps(props => ({
-                      ...props,
-                      style: {
-                        cursor: props.onClick ? 'pointer' : 'normal',
-                      },
-                    }))}
-                  >
-                    {row.getCanExpand()
-                      ? row.getIsExpanded()
-                        ? '👇'
-                        : '👉'
-                      : '🔵'}{' '}
-                    {value}
-                  </span>
-                </div>
-              ),
+              cell: info => info.value,
               footer: props => props.column.id,
             }),
             table.createDataColumn(row => row.lastName, {
@@ -111,22 +73,22 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100, 5, 3))
-  const refreshData = () => setData(() => makeData(100, 5, 3))
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(() => makeData(100000))
 
-  const [expanded, setExpanded] = React.useState<ExpandedState>({})
+  const [grouping, setGrouping] = React.useState<GroupingState>([])
 
   const instance = useTable(table, {
     data,
     columns,
     state: {
-      expanded,
+      grouping,
     },
-    onExpandedChange: setExpanded,
-    paginateRowsFn: paginateRowsFn,
+    onGroupingChange: setGrouping,
+    groupRowsFn: groupRowsFn,
     expandRowsFn: expandRowsFn,
+    paginateRowsFn: paginateRowsFn,
     columnFilterRowsFn: columnFilterRowsFn,
-    getSubRows: row => row.subRows,
     debugTable: true,
   })
 
@@ -142,15 +104,22 @@ function App() {
                   <th {...header.getHeaderProps()}>
                     {header.isPlaceholder ? null : (
                       <div>
+                        {header.column.getCanGroup() ? (
+                          // If the header can be grouped, let's add a toggle
+                          <span
+                            {...header.column.getToggleGroupingProps(props => ({
+                              ...props,
+                              style: {
+                                cursor: 'pointer',
+                              },
+                            }))}
+                          >
+                            {header.column.getIsGrouped()
+                              ? `🛑(${header.column.getGroupedIndex()}) `
+                              : `👊 `}
+                          </span>
+                        ) : null}{' '}
                         {header.renderHeader()}
-                        {header.column.getCanColumnFilter() ? (
-                          <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
-                          </div>
-                        ) : null}
                       </div>
                     )}
                   </th>
@@ -164,7 +133,48 @@ function App() {
             return (
               <tr {...row.getRowProps()}>
                 {row.getVisibleCells().map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                  return (
+                    <td
+                      {...cell.getCellProps(props => ({
+                        ...props,
+                        style: {
+                          ...props.style,
+                          background: cell.getIsGrouped()
+                            ? '#0aff0082'
+                            : cell.getIsAggregated()
+                            ? '#ffa50078'
+                            : cell.getIsPlaceholder()
+                            ? '#ff000042'
+                            : 'white',
+                        },
+                      }))}
+                    >
+                      {cell.getIsGrouped() ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <span
+                            {...row.getToggleExpandedProps(props => ({
+                              ...props,
+                              style: {
+                                ...props.style,
+                                cursor: props.onClick ? 'pointer' : 'normal',
+                              },
+                            }))}
+                          >
+                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                            {cell.renderCell()} ({row.subRows.length})
+                          </span>
+                        </>
+                      ) : cell.getIsAggregated() ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        cell.renderAggregatedCell()
+                      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        cell.renderCell()
+                      )}
+                    </td>
+                  )
                 })}
               </tr>
             )
@@ -240,7 +250,7 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(expanded, null, 2)}</pre>
+      <pre>{JSON.stringify(grouping, null, 2)}</pre>
     </div>
   )
 }
@@ -287,27 +297,6 @@ function Filter({
       onChange={e => column.setColumnFilterValue(e.target.value)}
       placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
       className="w-36 border shadow rounded"
-    />
-  )
-}
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = '',
-  ...rest
-}: { indeterminate: boolean } & HTMLAttributes<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
-
-  React.useEffect(() => {
-    ref.current.indeterminate = indeterminate
-  }, [ref, indeterminate])
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className + ' cursor-pointer'}
-      {...rest}
     />
   )
 }

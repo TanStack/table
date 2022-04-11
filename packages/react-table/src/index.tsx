@@ -6,7 +6,6 @@ import {
   PartialKeys,
   Options,
   TableInstance,
-  PartialGenerics,
   CreateTableFactoryOptions,
   Table,
   init,

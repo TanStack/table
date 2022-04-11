@@ -25,7 +25,7 @@ export type ColumnOrderDefaultOptions = {
   onColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
-export type ColumnOrderInstance<TGenerics extends PartialGenerics> = {
+export type ColumnOrderInstance<TGenerics extends AnyGenerics> = {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
   resetColumnOrder: () => void
   getOrderColumnsFn: () => (columns: Column<TGenerics>[]) => Column<TGenerics>[]
@@ -40,7 +40,7 @@ export const Ordering = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnOrderDefaultOptions => {
     return {
@@ -48,7 +48,7 @@ export const Ordering = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnOrderInstance<TGenerics> => {
     return {

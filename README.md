@@ -91,11 +91,9 @@ Currently migration will involve rewrites to:
   - [x] column-sizing
   - [x] row-selection
   - [x] expanding
-  - [ ] grouping-and-aggregation
+  - [x] grouping-and-aggregation
   - [ ] editable-data
-  - [ ] pagination-controlled
   - [ ] kitchen-sink
-  - [ ] kitchen-sink-controlled
   - [ ] row-dnd
   - [ ] streaming-rows
   - [ ] sub-components
@@ -158,4 +156,4 @@ yarn add @tanstack/react-table@alpha
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 
-<!-- USE THE FORCE, LUKE -->
+<!-- USE THE FORCE LUKE -->

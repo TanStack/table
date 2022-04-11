@@ -88,7 +88,7 @@ export type DefaultGenerics = {
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export type UseRenderer<TGenerics extends PartialGenerics> =
+export type UseRenderer<TGenerics extends AnyGenerics> =
   TGenerics['Render'] extends (...args: any) => any ? TGenerics['Render'] : any
 
 export type PartialGenerics = Partial<DefaultGenerics>
@@ -97,7 +97,17 @@ export type AnyGenerics = {
   [TKey in keyof PartialGenerics]?: any
 }
 
-export type TableInstance<TGenerics extends PartialGenerics> =
+export type TableFeature = {
+  getDefaultOptions?: (instance: any) => any
+  getInitialState?: () => any
+  getInstance?: (instance: any) => any
+  getDefaultColumn?: () => any
+  createColumn?: (column: any, instance: any) => any
+  createCell?: (cell: any, column: any, row: any, instance: any) => any
+  createRow?: (row: any, instance: any) => any
+}
+
+export type TableInstance<TGenerics extends AnyGenerics> =
   TableCore<TGenerics> &
     VisibilityInstance<TGenerics> &
     ColumnOrderInstance<TGenerics> &
@@ -113,18 +123,17 @@ export type TableInstance<TGenerics extends PartialGenerics> =
 
 //
 
-export type Options<TGenerics extends PartialGenerics> =
-  CoreOptions<TGenerics> &
-    VisibilityOptions &
-    ColumnOrderOptions &
-    ColumnPinningOptions &
-    FiltersOptions<TGenerics> &
-    SortingOptions<TGenerics> &
-    GroupingOptions<TGenerics> &
-    ExpandedOptions<TGenerics> &
-    ColumnSizingOptions &
-    PaginationOptions<TGenerics> &
-    RowSelectionOptions<TGenerics>
+export type Options<TGenerics extends AnyGenerics> = CoreOptions<TGenerics> &
+  VisibilityOptions &
+  ColumnOrderOptions &
+  ColumnPinningOptions &
+  FiltersOptions<TGenerics> &
+  SortingOptions<TGenerics> &
+  GroupingOptions<TGenerics> &
+  ExpandedOptions<TGenerics> &
+  ColumnSizingOptions &
+  PaginationOptions<TGenerics> &
+  RowSelectionOptions<TGenerics>
 
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
@@ -140,7 +149,7 @@ export type TableState = VisibilityTableState &
   PaginationTableState &
   RowSelectionTableState
 
-export type Row<TGenerics extends PartialGenerics> = CoreRow<TGenerics> &
+export type Row<TGenerics extends AnyGenerics> = CoreRow<TGenerics> &
   VisibilityRow<TGenerics> &
   HeadersRow<TGenerics> &
   GroupingRow &
@@ -151,7 +160,7 @@ export type RowValues = {
   [key: string]: any
 }
 
-export type RowModel<TGenerics extends PartialGenerics> = {
+export type RowModel<TGenerics extends AnyGenerics> = {
   rows: Row<TGenerics>[]
   flatRows: Row<TGenerics>[]
   rowsById: Record<string, Row<TGenerics>>
@@ -159,7 +168,7 @@ export type RowModel<TGenerics extends PartialGenerics> = {
 
 export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 
-// export type UserColumnDef<TGenerics extends PartialGenerics> = Overwrite<
+// export type UserColumnDef<TGenerics extends AnyGenerics> = Overwrite<
 //   ColumnDef<TGenerics>,
 //   GeneratedProperties<false>
 // >
@@ -178,11 +187,11 @@ export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 //     }
 // : never
 
-export type Renderable<TGenerics extends PartialGenerics, TProps> =
+export type Renderable<TGenerics extends AnyGenerics, TProps> =
   | string
   | ((props: TProps) => ReturnType<UseRenderer<TGenerics>>)
 
-export type ColumnDef<TGenerics extends PartialGenerics> =
+export type ColumnDef<TGenerics extends AnyGenerics> =
   CoreColumnDef<TGenerics> &
     VisibilityColumnDef &
     ColumnPinningColumnDef &
@@ -191,7 +200,7 @@ export type ColumnDef<TGenerics extends PartialGenerics> =
     GroupingColumnDef<TGenerics> &
     ColumnSizingColumnDef
 
-export type Column<TGenerics extends PartialGenerics> = ColumnDef<TGenerics> &
+export type Column<TGenerics extends AnyGenerics> = ColumnDef<TGenerics> &
   CoreColumn<TGenerics> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
@@ -200,10 +209,10 @@ export type Column<TGenerics extends PartialGenerics> = ColumnDef<TGenerics> &
   GroupingColumn<TGenerics> &
   ColumnSizingColumn<TGenerics>
 
-export type Cell<TGenerics extends PartialGenerics> = CoreCell<TGenerics> &
+export type Cell<TGenerics extends AnyGenerics> = CoreCell<TGenerics> &
   GroupingCell<TGenerics>
 
-export type CoreCell<TGenerics extends PartialGenerics> = {
+export type CoreCell<TGenerics extends AnyGenerics> = {
   id: string
   rowId: string
   columnId: string
@@ -214,10 +223,10 @@ export type CoreCell<TGenerics extends PartialGenerics> = {
   renderCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
-export type Header<TGenerics extends PartialGenerics> = CoreHeader<TGenerics> &
+export type Header<TGenerics extends AnyGenerics> = CoreHeader<TGenerics> &
   ColumnSizingHeader<TGenerics>
 
-export type CoreHeader<TGenerics extends PartialGenerics> = {
+export type CoreHeader<TGenerics extends AnyGenerics> = {
   id: string
   depth: number
   column: Column<TGenerics>
@@ -238,7 +247,7 @@ export type CoreHeader<TGenerics extends PartialGenerics> = {
   }) => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
-export type HeaderGroup<TGenerics extends PartialGenerics> = {
+export type HeaderGroup<TGenerics extends AnyGenerics> = {
   id: string
   depth: number
   headers: Header<TGenerics>[]

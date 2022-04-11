@@ -18,7 +18,7 @@ export type PaginationTableState = {
   pagination: PaginationState
 }
 
-export type PaginationOptions<TGenerics extends PartialGenerics> = {
+export type PaginationOptions<TGenerics extends AnyGenerics> = {
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
   paginateRowsFn?: (
@@ -32,7 +32,7 @@ export type PaginationDefaultOptions = {
   autoResetPageIndex: boolean
 }
 
-export type PaginationInstance<TGenerics extends PartialGenerics> = {
+export type PaginationInstance<TGenerics extends AnyGenerics> = {
   _notifyPageIndexReset: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: () => void
@@ -64,7 +64,7 @@ export const Pagination = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): PaginationDefaultOptions => {
     return {
@@ -73,7 +73,7 @@ export const Pagination = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): PaginationInstance<TGenerics> => {
     let registered = false

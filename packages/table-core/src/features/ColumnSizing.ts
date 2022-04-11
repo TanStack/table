@@ -52,7 +52,8 @@ export type ColumnResizerProps = {
   role?: string
 }
 
-export type ColumnSizingInstance<TGenerics extends PartialGenerics> = {
+export type ColumnSizingInstance<TGenerics extends AnyGenerics> = {
+  getColumnWidth: (columnId: string) => number
   setColumnSizing: (updater: Updater<ColumnSizing>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
   resetColumnSizing: () => void
@@ -72,15 +73,18 @@ export type ColumnSizingInstance<TGenerics extends PartialGenerics> = {
 export type ColumnSizingColumnDef = {
   enableResizing?: boolean
   defaultCanResize?: boolean
+  width?: number
+  minWidth?: number
+  maxWidth?: number
 }
 
-export type ColumnSizingColumn<TGenerics extends PartialGenerics> = {
+export type ColumnSizingColumn<TGenerics extends AnyGenerics> = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
   resetSize: () => void
 }
 
-export type ColumnSizingHeader<TGenerics extends PartialGenerics> = {
+export type ColumnSizingHeader<TGenerics extends AnyGenerics> = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
   getResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
@@ -98,6 +102,9 @@ export const defaultColumnSizing = {
 }
 
 export const ColumnSizing = {
+  getDefaultColumn: (): ColumnSizingColumnDef => {
+    return defaultColumnSizing
+  },
   getInitialState: (): ColumnSizingTableState => {
     return {
       columnSizing: {},
@@ -112,7 +119,7 @@ export const ColumnSizing = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnSizingDefaultOptions => {
     return {
@@ -122,10 +129,27 @@ export const ColumnSizing = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnSizingInstance<TGenerics> => {
     return {
+      getColumnWidth: (columnId: string) => {
+        const column = instance.getColumn(columnId)
+
+        if (!column) {
+          throw new Error()
+        }
+
+        const columnSize = instance.getState().columnSizing[column.id]
+
+        return Math.min(
+          Math.max(
+            column.minWidth ?? defaultColumnSizing.minWidth,
+            columnSize ?? column.width ?? defaultColumnSizing.width
+          ),
+          column.maxWidth ?? defaultColumnSizing.maxWidth
+        )
+      },
       setColumnSizing: updater =>
         instance.options.onColumnSizingChange?.(
           updater,
@@ -373,7 +397,7 @@ export const ColumnSizing = {
     }
   },
 
-  createColumn: <TGenerics extends PartialGenerics>(
+  createColumn: <TGenerics extends AnyGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ColumnSizingColumn<TGenerics> => {
@@ -384,7 +408,7 @@ export const ColumnSizing = {
     }
   },
 
-  createHeader: <TGenerics extends PartialGenerics>(
+  createHeader: <TGenerics extends AnyGenerics>(
     header: Header<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ColumnSizingHeader<TGenerics> => {

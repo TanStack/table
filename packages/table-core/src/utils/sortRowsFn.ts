@@ -1,10 +1,4 @@
-import {
-  TableInstance,
-  Row,
-  RowModel,
-  AnyGenerics,
-  PartialGenerics,
-} from '../types'
+import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
 import { SortingFn } from '../features/Sorting'
 
 export function sortRowsFn<TGenerics extends AnyGenerics>(
@@ -58,7 +52,11 @@ export function sortRowsFn<TGenerics extends AnyGenerics>(
           const bUndefined = typeof bValue === 'undefined'
 
           if (aUndefined || bUndefined) {
-            return aUndefined && bUndefined ? 0 : aUndefined ? 1 : -1
+            return aUndefined && bUndefined
+              ? 0
+              : aUndefined
+              ? columnInfo.sortUndefined
+              : -columnInfo.sortUndefined
           }
         }
 

@@ -64,7 +64,7 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(makeData(100000))
+  const refreshData = () => setData(() => makeData(100000))
 
   const instance = useTable(table, {
     data,

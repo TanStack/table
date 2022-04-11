@@ -27,7 +27,7 @@ export type ExpandedRow = {
   ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
 }
 
-export type ExpandedOptions<TGenerics extends PartialGenerics> = {
+export type ExpandedOptions<TGenerics extends AnyGenerics> = {
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
   enableExpanded?: boolean
@@ -47,7 +47,7 @@ export type ToggleExpandedProps = {
   onClick?: (event: MouseEvent | TouchEvent) => void
 }
 
-export type ExpandedInstance<TGenerics extends PartialGenerics> = {
+export type ExpandedInstance<TGenerics extends AnyGenerics> = {
   _notifyExpandedReset: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
@@ -62,6 +62,7 @@ export type ExpandedInstance<TGenerics extends PartialGenerics> = {
   getToggleAllRowsExpandedProps: <TGetter extends Getter<ToggleExpandedProps>>(
     userProps?: TGetter
   ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
+  getIsSomeRowsExpanded: () => boolean
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
   getExpandedRowModel: () => RowModel<TGenerics>
@@ -77,7 +78,7 @@ export const Expanding = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends PartialGenerics>(
+  getDefaultOptions: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ExpandedOptions<TGenerics> => {
     return {
@@ -88,7 +89,7 @@ export const Expanding = {
     }
   },
 
-  getInstance: <TGenerics extends PartialGenerics>(
+  getInstance: <TGenerics extends AnyGenerics>(
     instance: TableInstance<TGenerics>
   ): ExpandedInstance<TGenerics> => {
     let registered = false
@@ -229,6 +230,10 @@ export const Expanding = {
 
         return propGetter(initialProps, userProps)
       },
+      getIsSomeRowsExpanded: () => {
+        const expanded = instance.getState().expanded
+        return expanded === true || Object.values(expanded).some(Boolean)
+      },
       getIsAllRowsExpanded: () => {
         const expanded = instance.getState().expanded
 
@@ -293,7 +298,7 @@ export const Expanding = {
     }
   },
 
-  createRow: <TGenerics extends PartialGenerics>(
+  createRow: <TGenerics extends AnyGenerics>(
     row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ExpandedRow => {
@@ -302,16 +307,8 @@ export const Expanding = {
         void instance.toggleRowExpanded(row.id, expanded),
       getIsExpanded: () => instance.getIsRowExpanded(row.id),
       getCanExpand: () => row.subRows && !!row.subRows.length,
-      getToggleExpandedProps: userProps => {
-        const initialProps: ToggleExpandedProps = {
-          title: 'Toggle Row Expanded',
-          onClick: (e: MouseEvent | TouchEvent) => {
-            e.stopPropagation()
-            instance.toggleRowExpanded(row.id)
-          },
-        }
-        return propGetter(initialProps, userProps)
-      },
+      getToggleExpandedProps: userProps =>
+        instance.getToggleExpandedProps(row.id, userProps),
     }
   },
 }

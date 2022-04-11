@@ -1,24 +1,19 @@
+import { AnyGenerics, TableInstance, Row, RowModel } from '../types'
 import {
-  AnyGenerics,
-  TableInstance,
-  Row,
-  RowModel,
-  PartialGenerics,
-} from '../types'
+  filterRowModelFromLeafs,
+  filterRowModelFromRoot,
+} from './filterRowsUtils'
 
 export function columnFilterRowsFn<TGenerics extends AnyGenerics>(
   instance: TableInstance<TGenerics>,
   rowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {
   const columnFilters = instance.getState().columnFilters
-
-  const newFilteredFlatRows: Row<TGenerics>[] = []
-  const newFilteredRowsById: Record<string, Row<TGenerics>> = {}
-
-  const filterFromChildrenUp = instance.options.filterFromChildrenUp
+  const filterFromLeafRows = instance.options.filterFromLeafRows
 
   const filterRows = (rowsToFilter: Row<TGenerics>[], depth: number) => {
-    columnFilters.forEach(({ id: columnId, value: filterValue }) => {
+    for (let i = 0; i < columnFilters.length; i++) {
+      const { id: columnId, value: filterValue } = columnFilters[i]
       // Find the columnFilters column
       const column = instance.getColumn(columnId)
 
@@ -42,76 +37,20 @@ export function columnFilterRowsFn<TGenerics extends AnyGenerics>(
             `Could not find a valid 'column.filterType' for column with the ID: ${column.id}.`
           )
         }
-        return
+        continue
       }
 
       // Pass the rows, id, filterValue and column to the filterFn
       // to get the filtered rows back
       rowsToFilter = filterFn(rowsToFilter, [columnId], filterValue)
-    })
+    }
 
     return rowsToFilter
   }
 
-  if (filterFromChildrenUp) {
-    const recurseFilterRows = (rowsToFilter: Row<TGenerics>[], depth = 0) => {
-      // Filter from children up
-      rowsToFilter = rowsToFilter.filter(row => {
-        if (!row.subRows?.length) {
-          return true
-        }
-
-        row.subRows = recurseFilterRows(row.subRows, depth + 1)
-
-        return row.subRows.length
-      })
-
-      rowsToFilter = filterRows(rowsToFilter, depth)
-
-      // Apply the filter to any subRows
-      rowsToFilter.forEach(row => {
-        newFilteredFlatRows.push(row)
-        newFilteredRowsById[row.id] = row
-      })
-
-      return rowsToFilter
-    }
-
-    return {
-      rows: recurseFilterRows(rowModel.rows),
-      flatRows: newFilteredFlatRows,
-      rowsById: newFilteredRowsById,
-    }
+  if (filterFromLeafRows) {
+    return filterRowModelFromLeafs(rowModel.rows, filterRows, instance)
   }
 
-  // Filters top level and nested rows
-  const recurseFilterRows = (rowsToFilter: Row<TGenerics>[], depth = 0) => {
-    // Filter from parents downward
-    rowsToFilter = filterRows(rowsToFilter, depth)
-
-    // Apply the filter to any subRows
-    // We technically could do this recursively in the above loop,
-    // but that would severely hinder the API for the user, since they
-    // would be required to do that recursion in some scenarios
-    rowsToFilter.forEach(row => {
-      newFilteredFlatRows.push(row)
-      newFilteredRowsById[row.id] = row
-
-      if (!filterFromChildrenUp) {
-        if (!row.subRows?.length) {
-          return
-        }
-
-        row.subRows = recurseFilterRows(row.subRows, depth + 1)
-      }
-    })
-
-    return rowsToFilter
-  }
-
-  return {
-    rows: recurseFilterRows(rowModel.rows),
-    flatRows: newFilteredFlatRows,
-    rowsById: newFilteredRowsById,
-  }
+  return filterRowModelFromRoot(rowModel.rows, filterRows, instance)
 }

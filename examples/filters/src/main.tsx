@@ -8,6 +8,7 @@ import {
   columnFilterRowsFn,
   createTable,
   globalFilterRowsFn,
+  paginateRowsFn,
   TableInstance,
   useTable,
 } from '@tanstack/react-table'
@@ -86,6 +87,7 @@ function App() {
     onGlobalFilterChange: setGlobalFilter,
     columnFilterRowsFn: columnFilterRowsFn,
     globalFilterRowsFn: globalFilterRowsFn,
+    paginateRowsFn: paginateRowsFn,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
@@ -129,21 +131,18 @@ function App() {
           ))}
         </thead>
         <tbody {...instance.getTableBodyProps()}>
-          {instance
-            .getRowModel()
-            .rows.slice(0, 10)
-            .map(row => {
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.getVisibleCells().map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
-                  })}
-                </tr>
-              )
-            })}
+          {instance.getRowModel().rows.map(row => {
+            return (
+              <tr {...row.getRowProps()}>
+                {row.getVisibleCells().map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{instance.getGlobalFilteredRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
@@ -202,8 +201,9 @@ function Filter({
 }
 
 ReactDOM.render(
-  <div>
+  <React.StrictMode>
     <App />
-  </div>,
+  </React.StrictMode>,
+
   document.getElementById('root')
 )
