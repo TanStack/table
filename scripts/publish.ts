@@ -520,6 +520,19 @@ async function updateExamplesPackageConfig(
   let json = await jsonfile.readFile(file)
   transform(json)
   await jsonfile.writeFile(file, json, { spaces: 2 })
+
+  updateExampleLockFile(example)
+}
+
+function updateExampleLockFile(packageName: string) {
+  const cwd = path.join(
+    rootDir,
+    'examples',
+    getPackageDir(packageName)
+  )
+
+  // execute yarn to update lockfile, ignoring any stdout or stderr
+  execSync('yarn', { cwd, stdio: 'ignore' })
 }
 
 function packageJson(packageName: string, directory = 'packages') {

@@ -236,11 +236,6 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
-"@reach/observe-rect@^1.1.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
-  integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
-
 "@rollup/plugin-replace@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-replace/-/plugin-replace-3.0.1.tgz#f774550f482091719e52e9f14f67ffc0046a883d"
@@ -265,6 +260,18 @@
   dependencies:
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
+
+"@tanstack/react-table@8.0.0-alpha.28":
+  version "8.0.0-alpha.28"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.28.tgz#e902849607c80f76fe83b7beeb4cd5312212f59d"
+  integrity sha512-DB/fsXWjNzwqAGbM+f5/Lc4B2Isrjnfr0jB50oP4WjFlCKEFh0ph3z7ldFO3U5lg1RPWMuSjJAkCGeUWQEbiGQ==
+  dependencies:
+    "@tanstack/table-core" "8.0.0-alpha.28"
+
+"@tanstack/table-core@8.0.0-alpha.28":
+  version "8.0.0-alpha.28"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.28.tgz#e8ac1bd2275df44d6bbcdd9a531961595c98f07c"
+  integrity sha512-SXP1rFWKfYhrwpZkP/gnlqUvscXONKnFTT5aFtzW03+o+AxfW8Q8ulDnVsXZ7Ed8OsA93d63eYdCdv9vfc/68Q==
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -608,18 +615,6 @@ react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
-
-react-table@^7.7.0:
-  version "7.7.0"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.7.0.tgz#e2ce14d7fe3a559f7444e9ecfe8231ea8373f912"
-  integrity sha512-jBlj70iBwOTvvImsU9t01LjFjy4sXEtclBovl3mTiqjz23Reu0DKnRza4zlLtOPACx6j2/7MrQIthIK1Wi+LIA==
-
-react-virtual@2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/react-virtual/-/react-virtual-2.10.0.tgz#110cc0f48bb6edffd253f532123a074e6bbec4cb"
-  integrity sha512-Mgy//1Ty0YMcELTooFq5mMrEb4dLRzS9PbPrgDbpdgGRgG9RuQrXBxgPCm1vNBonoiNZjbsGSEPLuJ7MuHLvLg==
-  dependencies:
-    "@reach/observe-rect" "^1.1.0"
 
 react@^17.0.2:
   version "17.0.2"
