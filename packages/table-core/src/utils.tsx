@@ -1,3 +1,4 @@
+import { performance } from 'perf_hooks' //needed until node 16 is more universal
 import { Getter, NoInfer, PropGetterValue, TableState, Updater } from './types'
 
 export type IsAny<T> = 0 extends 1 & T ? true : false
