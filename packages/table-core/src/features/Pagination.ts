@@ -187,7 +187,7 @@ export const Pagination = {
       getCanPreviousPage: () => instance.getState().pagination.pageIndex > 0,
 
       getCanNextPage: () => {
-        const { pageIndex, pageSize } = instance.getState().pagination
+        const { pageIndex } = instance.getState().pagination
 
         const pageCount = instance.getPageCount()
 
@@ -199,13 +199,7 @@ export const Pagination = {
           return false
         }
 
-        return (
-          pageIndex <
-          Math.ceil(
-            instance.getPrePaginationRowModel().rows.length / pageSize
-          ) -
-            1
-        )
+        return pageIndex < pageCount - 1
       },
 
       previousPage: () => {
