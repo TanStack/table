@@ -457,7 +457,7 @@ async function run() {
     console.log(
       `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
     )
-    execSync(`${cmd} --token ${process.env.NPM_TOKEN}`, { stdio: 'inherit' })
+    execSync(`${cmd} --token ${process.env.NPM_TOKEN}`)
   })
 
   // Update example lock files to use new dependencies
@@ -469,6 +469,8 @@ async function run() {
 
     updateExampleLockfile(example)
   }
+
+  console.log()
 
   console.log(`Pushing new tags to branch.`)
   execSync(`git push --tags`)
