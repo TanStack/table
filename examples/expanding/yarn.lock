@@ -266,6 +266,18 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
+"@tanstack/react-table@8.0.0-alpha.28":
+  version "8.0.0-alpha.28"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.28.tgz#e902849607c80f76fe83b7beeb4cd5312212f59d"
+  integrity sha512-DB/fsXWjNzwqAGbM+f5/Lc4B2Isrjnfr0jB50oP4WjFlCKEFh0ph3z7ldFO3U5lg1RPWMuSjJAkCGeUWQEbiGQ==
+  dependencies:
+    "@tanstack/table-core" "8.0.0-alpha.28"
+
+"@tanstack/table-core@8.0.0-alpha.28":
+  version "8.0.0-alpha.28"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.28.tgz#e8ac1bd2275df44d6bbcdd9a531961595c98f07c"
+  integrity sha512-SXP1rFWKfYhrwpZkP/gnlqUvscXONKnFTT5aFtzW03+o+AxfW8Q8ulDnVsXZ7Ed8OsA93d63eYdCdv9vfc/68Q==
+
 "@types/estree@0.0.39":
   version "0.0.39"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
@@ -613,11 +625,6 @@ react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
-
-react-table@^7.7.0:
-  version "7.7.0"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.7.0.tgz#e2ce14d7fe3a559f7444e9ecfe8231ea8373f912"
-  integrity sha512-jBlj70iBwOTvvImsU9t01LjFjy4sXEtclBovl3mTiqjz23Reu0DKnRza4zlLtOPACx6j2/7MrQIthIK1Wi+LIA==
 
 react@^17.0.2:
   version "17.0.2"

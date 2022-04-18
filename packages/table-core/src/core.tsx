@@ -198,11 +198,14 @@ export type CoreColumnDef<TGenerics extends AnyGenerics> = {
 }
 // & GeneratedProperties<true>
 
+export type CoreColumnDefType = 'data' | 'display' | 'group'
+
 export type CoreColumn<TGenerics extends AnyGenerics> = {
   id: string
   depth: number
   accessorFn?: AccessorFn<TGenerics['Row']>
   columnDef: ColumnDef<TGenerics>
+  columnDefType: CoreColumnDefType
   getWidth: () => number
   columns: Column<TGenerics>[]
   parent?: Column<TGenerics>
@@ -300,7 +303,11 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
 
     getColumnDefs: () => instance.options.columns,
 
-    createColumn: (columnDef, depth: number, parent) => {
+    createColumn: (
+      columnDef: ColumnDef<TGenerics> & { columnDefType?: CoreColumnDefType },
+      depth: number,
+      parent
+    ) => {
       const defaultColumn = instance.getDefaultColumn()
 
       let id =
@@ -336,6 +343,7 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
         parent: parent as any,
         depth,
         columnDef,
+        columnDefType: columnDef.columnDefType as CoreColumnDefType,
         columns: [],
         getWidth: () => instance.getColumnWidth(column.id),
         getFlatColumns: memo(
