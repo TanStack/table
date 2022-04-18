@@ -537,7 +537,7 @@ async function updateExamplesPackageConfig(
 function updateExampleLockfile(example: string) {
   // execute yarn to update lockfile, ignoring any stdout or stderr
   const exampleDir = path.join(rootDir, 'examples', example)
-  execSync(`cd ${exampleDir} && yarn`)
+  execSync(`cd ${exampleDir} && yarn`, { stdio: 'ignore' })
 }
 
 function packageJson(packageName: string, directory = 'packages') {
