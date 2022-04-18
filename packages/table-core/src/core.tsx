@@ -87,7 +87,8 @@ export type CoreOptions<TGenerics extends AnyGenerics> = {
   mergeOptions?: (
     defaultOptions: TableFeature,
     options: Partial<Options<TGenerics>>
-  ) => Options<TGenerics>
+  ) => Options<TGenerics>,
+  meta?: TGenerics['TableMeta']
 }
 
 export type TableCore<TGenerics extends AnyGenerics> = {

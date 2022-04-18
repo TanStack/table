@@ -14,13 +14,9 @@ export type CreateTableFactory<TGenerics extends AnyGenerics> = <
   TSubGenerics extends {
     Row: any
     ColumnMeta?: object
+    TableMeta?: object
   }
->() => Table<
-  Overwrite<
-    TGenerics,
-    { Row: TSubGenerics['Row']; ColumnMeta: TSubGenerics['ColumnMeta'] }
-  >
->
+>() => Table<Overwrite<TGenerics, TSubGenerics>>
 
 export type CreateTableFactoryOptions<
   TRender extends AnyRender,
