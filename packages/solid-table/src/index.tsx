@@ -1,4 +1,4 @@
-/** @jsxImportSource solid-js */
+// /** @jsxImportSource solid-js */
 import {
   AnyGenerics,
   CreateTableFactoryOptions,

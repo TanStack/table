@@ -2126,6 +2126,11 @@
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.1.tgz#47ab73a3872b3fc10468259993f1a3121aa327c8"
   integrity sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==
 
+"@tanstack/table-core@8.0.0-alpha.26":
+  version "8.0.0-alpha.26"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.26.tgz#890f980ef53de4bdbd5eebefa656b94496e25408"
+  integrity sha512-Jeu7H44S0xQzgpe7xYhds3irMLmTHvh3q14ZaaulXOMGe0tzMG8cUSNcQADrQ3/pv/lvzx6cK2pfLRjnDGjyGw==
+
 "@testing-library/dom@^8.0.0":
   version "8.11.2"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.11.2.tgz#fc110c665a066c2287be765e4a35ba8dad737015"
