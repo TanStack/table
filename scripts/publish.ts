@@ -460,6 +460,16 @@ async function run() {
     execSync(`${cmd} --token ${process.env.NPM_TOKEN}`, { stdio: 'inherit' })
   })
 
+  // Update example lock files to use new dependencies
+  for (const example of examples) {
+    let stat = await fsp.stat(path.join(examplesDir, example))
+    if (!stat.isDirectory()) continue
+
+    console.log(`  Updating example ${example} dependencies/lockfile...`)
+
+    updateExampleLockfile(example)
+  }
+
   console.log(`Pushing new tags to branch.`)
   execSync(`git push --tags`)
   console.log(`  Pushed tags to branch.`)
@@ -520,19 +530,12 @@ async function updateExamplesPackageConfig(
   let json = await jsonfile.readFile(file)
   transform(json)
   await jsonfile.writeFile(file, json, { spaces: 2 })
-
-  updateExampleLockFile(example)
 }
 
-function updateExampleLockFile(packageName: string) {
-  const cwd = path.join(
-    rootDir,
-    'examples',
-    getPackageDir(packageName)
-  )
-
+function updateExampleLockfile(example: string) {
   // execute yarn to update lockfile, ignoring any stdout or stderr
-  execSync('yarn', { cwd, stdio: 'ignore' })
+  const exampleDir = path.join(rootDir, 'examples', example)
+  execSync(`cd ${exampleDir} && yarn`)
 }
 
 function packageJson(packageName: string, directory = 'packages') {
