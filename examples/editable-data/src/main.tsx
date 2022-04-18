@@ -11,7 +11,6 @@ import {
   paginateRowsFn,
   Column,
   TableInstance,
-  PaginationState,
   useTable,
   ColumnDef,
 } from '@tanstack/react-table'
@@ -105,8 +104,8 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(1000))
+  const refreshData = () => setData(() => makeData(1000))
 
   const instance = useTable(table, {
     data,
