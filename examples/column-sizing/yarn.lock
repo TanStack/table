@@ -261,17 +261,17 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@tanstack/react-table@8.0.0-alpha.28":
-  version "8.0.0-alpha.28"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.28.tgz#e902849607c80f76fe83b7beeb4cd5312212f59d"
-  integrity sha512-DB/fsXWjNzwqAGbM+f5/Lc4B2Isrjnfr0jB50oP4WjFlCKEFh0ph3z7ldFO3U5lg1RPWMuSjJAkCGeUWQEbiGQ==
+"@tanstack/react-table@8.0.0-alpha.30":
+  version "8.0.0-alpha.30"
+  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.0.0-alpha.30.tgz#4471f7ce47a7c9c9ce7d9fa9a475d93413e2a0d7"
+  integrity sha512-fkc8+r7vcvbTXu6MUnjEWjFS7zojjyUdHO99bBfckp5UaSP96Uhv0nqiuVDOadxQ0SnKd24hp65DODjpOLU56g==
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.28"
+    "@tanstack/table-core" "8.0.0-alpha.30"
 
-"@tanstack/table-core@8.0.0-alpha.28":
-  version "8.0.0-alpha.28"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.28.tgz#e8ac1bd2275df44d6bbcdd9a531961595c98f07c"
-  integrity sha512-SXP1rFWKfYhrwpZkP/gnlqUvscXONKnFTT5aFtzW03+o+AxfW8Q8ulDnVsXZ7Ed8OsA93d63eYdCdv9vfc/68Q==
+"@tanstack/table-core@8.0.0-alpha.30":
+  version "8.0.0-alpha.30"
+  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.0.0-alpha.30.tgz#cec207bc869af82cfcbe314ed840a2756a17e900"
+  integrity sha512-oz15xICZ7zwQvt/KUUCrvpKt569c5/f83p19CDKvFCcyXC1Yls/WfdSgodqYAuHEgQER0HCn8UDXZyMIcnrTkg==
 
 "@types/estree@0.0.39":
   version "0.0.39"
