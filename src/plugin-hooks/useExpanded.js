@@ -69,7 +69,10 @@ function reducer(state, action, previousState, instance) {
 
   if (action.type === actions.toggleAllRowsExpanded) {
     const { value } = action
-    const { isAllRowsExpanded, rowsById } = instance
+    const { rowsById } = instance
+
+    const isAllRowsExpanded =
+      Object.keys(rowsById).length === Object.keys(state.expanded).length
 
     const expandAll = typeof value !== 'undefined' ? value : !isAllRowsExpanded
 
