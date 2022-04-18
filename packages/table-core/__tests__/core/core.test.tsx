@@ -14,7 +14,7 @@ type Row = {
   progress: number
 }
 
-const table = createTable<Row>()
+const table = createTable<{ Row: Row }>()
 
 const defaultData: Row[] = [
   {
@@ -55,7 +55,7 @@ const defaultColumns = table.createColumns([
       table.createDataColumn(row => row.lastName, {
         id: 'lastName',
         cell: info => info.value,
-        header: <span>Last Name</span>,
+        header: () => <span>Last Name</span>,
         footer: props => props.column.id,
       }),
     ],

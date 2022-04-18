@@ -63,12 +63,7 @@ export function useTable<TGenerics extends AnyGenerics>(
       keyof CreateTableFactoryOptions<any, any, any, any>
     >,
     'state' | 'onStateChange'
-  > &
-    (TGenerics['TableMeta'] extends {}
-      ? {
-          meta: TGenerics['TableMeta']
-        }
-      : any)
+  >
 ): TableInstance<TGenerics> {
   // Compose in the generic options to the user options
   const resolvedOptions: Options<TGenerics> = {

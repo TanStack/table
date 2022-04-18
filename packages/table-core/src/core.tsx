@@ -84,7 +84,7 @@ export type CoreOptions<TGenerics extends AnyGenerics> = {
     parent?: Row<TGenerics>
   ) => string
   autoResetAll?: boolean
-  meta?: TGenerics['TableMeta']
+  meta?: TGenerics['TableMeta'] extends {} ? TGenerics['TableMeta'] : any
 }
 
 export type TableCore<TGenerics extends AnyGenerics> = {
