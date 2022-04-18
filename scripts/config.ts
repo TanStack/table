@@ -10,6 +10,11 @@ export const packages: Package[] = [
     dependencies: ['@tanstack/table-core'],
   },
   {
+    name: '@tanstack/solid-table',
+    srcDir: 'packages/solid-table/src',
+    dependencies: ['@tanstack/table-core'],
+  },
+  {
     name: '@tanstack/react-table-devtools',
     srcDir: 'packages/react-table-devtools/src',
     peerDependencies: ['@tanstack/react-table'],
