@@ -5,7 +5,7 @@ import {
   Options,
   PartialKeys,
   Table,
-  createTableInstance,
+  createTableInstance as coreCreateTableInstance,
   init,
   TableFeature,
 } from '@tanstack/table-core'
@@ -28,7 +28,7 @@ const { createTable, createTableFactory } = init({ render })
 
 export { createTable, createTableFactory }
 
-export function useTable<TGenerics extends AnyGenerics>(
+export function createTableInstance<TGenerics extends AnyGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
     Omit<
@@ -51,7 +51,7 @@ export function useTable<TGenerics extends AnyGenerics>(
     options
   )
 
-  const instance = createTableInstance<TGenerics>(resolvedOptions)
+  const instance = coreCreateTableInstance<TGenerics>(resolvedOptions)
   const [state, setState] = createStore(instance.initialState)
 
   createComputed(() => {
