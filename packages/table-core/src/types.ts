@@ -84,6 +84,7 @@ export type DefaultGenerics = {
   AggregationFns: object
   Render: unknown
   ColumnMeta: object
+  TableMeta: object
 }
 
 export type AnyRender = (Comp: any, props: any) => any

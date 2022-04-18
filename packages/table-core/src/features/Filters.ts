@@ -350,7 +350,7 @@ export const Filters = {
       },
 
       resetGlobalFilter: () => {
-        instance.setGlobalFilter(undefined)
+        instance.setGlobalFilter(instance.initialState.globalFilter)
       },
 
       getColumnCanColumnFilter: columnId => {
