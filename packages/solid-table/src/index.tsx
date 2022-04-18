@@ -9,7 +9,7 @@ import {
   init,
   TableFeature,
 } from '@tanstack/table-core'
-import { createComputed, mergeProps } from 'solid-js'
+import { createComputed, mergeProps, createComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 export * from '@tanstack/table-core'
@@ -19,7 +19,7 @@ function render<TProps extends {}>(Comp: any, props: TProps) {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
-    return <Comp {...props} />
+    return createComponent(Comp, props)
   }
 
   return Comp
