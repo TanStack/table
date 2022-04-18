@@ -84,6 +84,10 @@ export type CoreOptions<TGenerics extends AnyGenerics> = {
     parent?: Row<TGenerics>
   ) => string
   autoResetAll?: boolean
+  mergeOptions?: (
+    defaultOptions: TableFeature,
+    options: Partial<Options<TGenerics>>
+  ) => Options<TGenerics>
 }
 
 export type TableCore<TGenerics extends AnyGenerics> = {
