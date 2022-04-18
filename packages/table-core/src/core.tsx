@@ -84,6 +84,10 @@ export type CoreOptions<TGenerics extends AnyGenerics> = {
     parent?: Row<TGenerics>
   ) => string
   autoResetAll?: boolean
+  mergeOptions?: (
+    defaultOptions: TableFeature,
+    options: Partial<Options<TGenerics>>
+  ) => Options<TGenerics>
   meta?: TGenerics['TableMeta'] extends {} ? TGenerics['TableMeta'] : any
 }
 
@@ -250,9 +254,15 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
       instance.setState(instance.initialState)
     },
     setOptions: updater => {
-      instance.options = buildOptions(
-        functionalUpdate(updater, instance.options)
-      )
+      const newOptions = functionalUpdate(updater, instance.options)
+      if (instance.options.mergeOptions) {
+        instance.options = instance.options.mergeOptions(
+          defaultOptions,
+          newOptions
+        )
+      } else {
+        instance.options = buildOptions(newOptions)
+      }
     },
     render: (template, props) => {
       if (typeof instance.options.render === 'function') {

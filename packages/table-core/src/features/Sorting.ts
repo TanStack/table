@@ -428,7 +428,7 @@ export const Sorting = {
           title: canSort ? 'Toggle Sorting' : undefined,
           onClick: canSort
             ? (e: MouseEvent | TouchEvent) => {
-                e.persist()
+                e.persist?.()
                 column.toggleSorting?.(
                   undefined,
                   column.getCanMultiSort()

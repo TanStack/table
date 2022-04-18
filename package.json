@@ -2,7 +2,7 @@
   "private": true,
   "repository": "https://github.com/tanstack/react-table.git",
   "scripts": {
-    "linkAll": "lerna exec 'yarn link' && lerna exec 'yarn link @tanstack/react-table'",
+    "linkAll": "lerna exec 'yarn link' && lerna exec 'yarn link @tanstack/react-table' && lerna exec 'yarn link @tanstack/solid-table'",
     "unlinkAll": "lerna exec yarn unlink",
     "test": "(is-ci && yarn test:ci) || yarn test:dev",
     "test:ci": "jest",
@@ -18,6 +18,7 @@
   "workspaces": [
     "./packages/table-core",
     "./packages/react-table",
+    "./packages/solid-table",
     "./packages/react-table-devtools"
   ],
   "devDependencies": {
@@ -49,6 +50,7 @@
     "rollup-plugin-size": "^0.2.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-visualizer": "^5.5.4",
+    "solid-js": "^1.3.13",
     "stream-to-array": "^2.3.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.5"

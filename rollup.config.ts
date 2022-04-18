@@ -18,8 +18,11 @@ type Options = {
 
 const globals = {
   react: 'React',
+  'solid-js': 'Solid',
+  'solid-js/store': 'SolidStore',
   'react-dom': 'ReactDOM',
   '@tanstack/table-core': 'TableCore',
+  '@tanstack/solid-table': 'SolidTable',
   '@tanstack/react-table': 'ReactTable',
   '@tanstack/react-table-devtools': 'ReactTableDevtools',
 }
@@ -53,6 +56,13 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       packageDir: 'packages/react-table',
       jsName: 'ReactTable',
       outputFile: 'react-table',
+      entryFile: 'src/index.tsx',
+    }),
+    ...buildConfigs({
+      name: 'solid-table',
+      packageDir: 'packages/solid-table',
+      jsName: 'SolidTable',
+      outputFile: 'solid-table',
       entryFile: 'src/index.tsx',
     }),
     ...buildConfigs({
