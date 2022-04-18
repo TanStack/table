@@ -13,7 +13,6 @@ import { createComputed, mergeProps, createComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 export * from '@tanstack/table-core'
-export { createCoreTable, createTableFactory }
 
 function render<TProps extends {}>(Comp: any, props: TProps) {
   if (!Comp) return null
@@ -25,9 +24,11 @@ function render<TProps extends {}>(Comp: any, props: TProps) {
   return Comp
 }
 
-const { createTable: createCoreTable, createTableFactory } = init({ render })
+const { createTable, createTableFactory } = init({ render })
 
-export function createTable<TGenerics extends AnyGenerics>(
+export { createTable, createTableFactory }
+
+export function useTable<TGenerics extends AnyGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
     Omit<
