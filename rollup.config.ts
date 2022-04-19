@@ -49,7 +49,7 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       packageDir: 'packages/table-core',
       jsName: 'TableCore',
       outputFile: 'table-core',
-      entryFile: 'src/index.tsx',
+      entryFile: 'src/index.ts',
     }),
     ...buildConfigs({
       name: 'react-table',
