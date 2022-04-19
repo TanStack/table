@@ -4,6 +4,7 @@ import {
   propGetter,
   memo,
   RequiredKeys,
+  getProp,
 } from './utils'
 
 import {
@@ -331,7 +332,7 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
         accessorFn = columnDef.accessorFn
       } else if (columnDef.accessorKey) {
         accessorFn = (originalRow?: TGenerics['Row']) =>
-          (originalRow as any)[columnDef.accessorKey]
+          getProp(originalRow as any, columnDef.accessorKey)
       }
 
       if (!id) {

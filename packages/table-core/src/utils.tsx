@@ -163,6 +163,27 @@ export function memo<TDeps extends readonly any[], TResult>(
   }
 }
 
+export function getProp(
+  dataObj: Record<string, any>,
+  accessorKeys: string | string[] = '',
+  defaultVal = ''
+): string {
+  const keys = Array.isArray(accessorKeys)
+    ? accessorKeys
+    : accessorKeys
+        .replace(/(\[(\d)\])/g, '.$2')
+        .split('.')
+        .filter(key => !['', undefined].includes(key))
+
+  const value = dataObj[keys[0]]
+
+  if (value && keys.length > 1) {
+    return getProp(value, keys.slice(1), defaultVal)
+  }
+
+  return value ?? defaultVal
+}
+
 // export function hashString(str: string, seed = 0): string {
 //   let h1 = 0xdeadbeef ^ seed,
 //     h2 = 0x41c6ce57 ^ seed
