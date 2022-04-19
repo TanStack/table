@@ -381,12 +381,12 @@ export const ColumnSizing = {
               title: 'Toggle Grouping',
               draggable: false,
               role: 'separator',
-              onMouseDown: (e: MouseEvent & { persist?: () => void }) => {
-                e.persist?.()
+              onMouseDown: (e: MouseEvent) => {
+                ;(e as any).persist?.()
                 onResizeStart(e)
               },
-              onTouchStart: (e: TouchEvent & { persist?: () => void }) => {
-                e.persist?.()
+              onTouchStart: (e: TouchEvent) => {
+                ;(e as any).persist?.()
                 onResizeStart(e)
               },
             }
