@@ -34,7 +34,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.31"
+    "@tanstack/table-core": "8.0.0-alpha.30"
   },
   "peerDependencies": {
     "solid-js": "^1.3.13"
