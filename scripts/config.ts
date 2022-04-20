@@ -15,6 +15,11 @@ export const packages: Package[] = [
     dependencies: ['@tanstack/table-core'],
   },
   {
+    name: '@tanstack/vue-table',
+    srcDir: 'packages/vue-table/src',
+    dependencies: ['@tanstack/table-core'],
+  },
+  {
     name: '@tanstack/react-table-devtools',
     srcDir: 'packages/react-table-devtools/src',
     peerDependencies: ['@tanstack/react-table'],
