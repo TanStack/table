@@ -5,12 +5,13 @@ import './index.css'
 
 import {
   createTable,
-  columnFilterRowsFn,
-  paginateRowsFn,
   Column,
   TableInstance,
   PaginationState,
-  useTable,
+  useTableInstance,
+  getCoreRowModelAsync,
+  getColumnFilteredRowModelSync,
+  getPaginationRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -78,16 +79,19 @@ function App() {
     pageCount: -1, // -1 allows the table to calculate the page count for us via instance.getPageCount()
   })
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     state: {
       pagination,
     },
     onPaginationChange: setPagination,
-    paginateRowsFn: paginateRowsFn,
-    columnFilterRowsFn: columnFilterRowsFn,
-    // debugTable: true,
+    // Pipeline
+    getCoreRowModel: getCoreRowModelAsync(),
+    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getPaginationRowModel: getPaginationRowModel(),
+    //
+    debugTable: true,
   })
 
   return (
@@ -131,6 +135,15 @@ function App() {
           })}
         </tbody>
       </table>
+      <div className="h-2" />
+      {instance.getOverallProgress() < 1 ? (
+        <div className="p-2">
+          <div>Loading data...</div>
+          <div>
+            <progress value={instance.getOverallProgress()} />
+          </div>
+        </div>
+      ) : null}
       <div className="h-2" />
       <div className="flex items-center gap-2">
         <button
@@ -213,7 +226,7 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
+    instance.getPreColumnFilteredRowModel().flatRows[0]?.values[column.id]
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
@@ -252,8 +265,11 @@ function Filter({
 }
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <App />
-  </React.StrictMode>,
+  </>,
+  // <React.StrictMode>
+  //   <App />
+  // </React.StrictMode>,
   document.getElementById('root')
 )

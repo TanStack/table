@@ -5,14 +5,14 @@ import './index.css'
 
 import {
   createTable,
-  columnFilterRowsFn,
-  paginateRowsFn,
   Column,
   TableInstance,
-  PaginationState,
-  useTable,
   ExpandedState,
-  expandRowsFn,
+  useTableInstance,
+  getCoreRowModelSync,
+  getPaginationRowModel,
+  getColumnFilteredRowModelSync,
+  getExpandedRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -116,17 +116,18 @@ function App() {
 
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     state: {
       expanded,
     },
     onExpandedChange: setExpanded,
-    paginateRowsFn: paginateRowsFn,
-    expandRowsFn: expandRowsFn,
-    columnFilterRowsFn: columnFilterRowsFn,
     getSubRows: row => row.subRows,
+    getCoreRowModel: getCoreRowModelSync(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getExpandedRowModel: getExpandedRowModel(),
     debugTable: true,
   })
 

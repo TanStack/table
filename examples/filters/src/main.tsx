@@ -5,12 +5,14 @@ import './index.css'
 
 import {
   Column,
-  columnFilterRowsFn,
   createTable,
-  globalFilterRowsFn,
-  paginateRowsFn,
+  getColumnFilteredRowModelSync,
+  getCoreRowModelAsync,
+  getCoreRowModelSync,
+  getGlobalFilteredRowModelSync,
+  getPaginationRowModel,
   TableInstance,
-  useTable,
+  useTableInstance,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -76,7 +78,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(old => [...old])
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     state: {
@@ -85,9 +87,10 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    columnFilterRowsFn: columnFilterRowsFn,
-    globalFilterRowsFn: globalFilterRowsFn,
-    paginateRowsFn: paginateRowsFn,
+    getCoreRowModel: getCoreRowModelSync(),
+    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getGlobalFilteredRowModel: getGlobalFilteredRowModelSync(),
+    getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

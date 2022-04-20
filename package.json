@@ -54,7 +54,7 @@
     "solid-js": "^1.3.13",
     "stream-to-array": "^2.3.0",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.5",
+    "typescript": "^4.7.0-beta",
     "vue": "^3.2.33"
   }
 }

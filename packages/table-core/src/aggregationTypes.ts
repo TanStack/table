@@ -72,7 +72,7 @@ function extent(
   return [min, max]
 }
 
-function mean(getLeafValues: () => unknown[]) {
+export function mean(getLeafValues: () => unknown[]) {
   let count = 0
   let sum = 0
 

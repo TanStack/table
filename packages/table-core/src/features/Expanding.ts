@@ -31,10 +31,9 @@ export type ExpandedOptions<TGenerics extends AnyGenerics> = {
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
   enableExpanded?: boolean
-  expandRowsFn?: (
-    instance: TableInstance<TGenerics>,
-    rowModel: RowModel<TGenerics>
-  ) => RowModel<TGenerics>
+  getExpandedRowModel?: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
   expandSubRows?: boolean
   defaultCanExpand?: boolean
   getIsRowExpanded?: (row: Row<TGenerics>) => boolean
@@ -66,6 +65,7 @@ export type ExpandedInstance<TGenerics extends AnyGenerics> = {
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
   getExpandedRowModel: () => RowModel<TGenerics>
+  _getExpandedRowModel?: () => RowModel<TGenerics>
   getPreExpandedRowModel: () => RowModel<TGenerics>
 }
 
@@ -96,6 +96,8 @@ export const Expanding = {
 
     return {
       _notifyExpandedReset: () => {
+        instance._notifyPageIndexReset()
+
         if (!registered) {
           registered = true
           return
@@ -269,32 +271,22 @@ export const Expanding = {
 
         return maxDepth
       },
-      getExpandedRowModel: memo(
-        () => [
-          instance.getState().expanded,
-          instance.getGroupedRowModel(),
-          instance.options.expandRowsFn,
-          instance.options.paginateExpandedRows,
-        ],
-        (expanded, rowModel, expandRowsFn, paginateExpandedRows) => {
-          if (
-            !expandRowsFn ||
-            // Do not expand if rows are not included in pagination
-            !paginateExpandedRows ||
-            (expanded !== true && !Object.keys(expanded ?? {}).length)
-          ) {
-            return rowModel
-          }
-
-          return expandRowsFn(instance, rowModel)
-        },
-        {
-          key: 'getExpandedRowModel',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
-        }
-      ),
-
       getPreExpandedRowModel: () => instance.getGroupedRowModel(),
+      getExpandedRowModel: () => {
+        if (
+          !instance._getExpandedRowModel &&
+          instance.options.getExpandedRowModel
+        ) {
+          instance._getExpandedRowModel =
+            instance.options.getExpandedRowModel(instance)
+        }
+
+        if (!instance._getExpandedRowModel) {
+          return instance.getPreExpandedRowModel()
+        }
+
+        return instance._getExpandedRowModel()
+      },
     }
   },
 

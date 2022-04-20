@@ -3,6 +3,7 @@ import {
   CoreColumnDef,
   CoreOptions,
   CoreRow,
+  CoreTableState,
   TableCore,
 } from './core'
 import {
@@ -139,7 +140,8 @@ export type Options<TGenerics extends AnyGenerics> = CoreOptions<TGenerics> &
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
 
-export type TableState = VisibilityTableState &
+export type TableState = CoreTableState &
+  VisibilityTableState &
   ColumnOrderTableState &
   ColumnPinningTableState &
   FiltersTableState &

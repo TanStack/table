@@ -2,7 +2,11 @@ import * as React from 'react'
 
 // import { renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
-import { createTable, useTable } from '@tanstack/react-table'
+import {
+  createTable,
+  useTableInstance,
+  getCoreRowModelSync,
+} from '@tanstack/react-table'
 import { act, renderHook } from '@testing-library/react-hooks'
 
 type Row = {
@@ -100,13 +104,14 @@ describe('core', () => {
 
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useTable(table, {
+      const instance = useTableInstance(table, {
         data,
         columns,
         onColumnVisibilityChange: setColumnVisibility,
         state: {
           columnVisibility,
         },
+        getCoreRowModel: getCoreRowModelSync(),
         // debug: true,
       })
 
@@ -195,9 +200,10 @@ describe('core', () => {
     const { result } = renderHook(() => {
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useTable(table, {
+      const instance = useTableInstance(table, {
         data: defaultData,
         columns: defaultColumns,
+        getCoreRowModel: getCoreRowModelSync(),
       })
 
       return {
@@ -221,9 +227,10 @@ describe('core', () => {
     const { result } = renderHook(() => {
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useTable(table, {
+      const instance = useTableInstance(table, {
         data: defaultData,
         columns: defaultColumns,
+        getCoreRowModel: getCoreRowModelSync(),
       })
 
       return {
