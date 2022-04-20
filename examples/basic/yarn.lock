@@ -286,17 +286,17 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@tanstack/react-table@8.0.0-alpha.32":
-  version "8.0.0-alpha.31"
-  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.0.0-alpha.32.tgz#c2e7e738d83627718b87a24166a39b92e26c2116"
-  integrity sha512-FZ6Hqod/T33/KQP2hFt14nsIyo82OU48WiErgCDxW78gUBpvuOZQ54oAIXG4ppqnVIQCZdmvMLNcOKd1OqvT4A==
+"@tanstack/react-table@8.0.0-alpha.37":
+  version "8.0.0-alpha.37"
+  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.0.0-alpha.37.tgz#491a6d0641fa83341405885675fa3327371405bf"
+  integrity sha512-44hkn1qdIVGQp5jLQWPRAjCMkNYzhv+v9SCQbIpqsRDZgxPaqGVSZY07D2rIIv7ThAswLzmJL8jIW+SEc+CFfQ==
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.31"
+    "@tanstack/table-core" "8.0.0-alpha.37"
 
-"@tanstack/table-core@8.0.0-alpha.32":
-  version "8.0.0-alpha.31"
-  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.0.0-alpha.32.tgz#dc48ad75dfbbf1ebceae5ec3f17bdc8ddef70ac4"
-  integrity sha512-aPAQg4+duqMJpTLsdRKQrI89WmdF4ZMlDBKoy1OT+oAu7Yr6YkDhwVwSn76itbtKVSQVsmQiDfXLBlS3tSSBWw==
+"@tanstack/table-core@8.0.0-alpha.37":
+  version "8.0.0-alpha.37"
+  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.0.0-alpha.37.tgz#0a84c7c489caaac2c6716183c8f8291b99d3039c"
+  integrity sha512-8PLNs8R35MvlQgMWlBO8feab1n3CRZnbuU0LRfnsI3OOrlx8/7NJsjfdnkRnfsqHJYPJ2fL0Ij5yD3D5LXwAiw==
 
 "@types/estree@0.0.39":
   version "0.0.39"
