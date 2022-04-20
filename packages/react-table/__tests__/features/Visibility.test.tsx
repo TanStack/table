@@ -3,7 +3,11 @@ import * as React from 'react'
 // import { renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { createTable, useTable } from '@tanstack/react-table'
+import {
+  createTable,
+  useTableInstance,
+  getCoreRowModelSync,
+} from '@tanstack/react-table'
 
 type Row = {
   firstName: string
@@ -89,7 +93,7 @@ const defaultColumns = table.createColumns([
   }),
 ])
 
-describe('useTable', () => {
+describe('useTableInstance', () => {
   it('can toggle column visibility', () => {
     const Table = () => {
       const [data] = React.useState<Row[]>(() => [...defaultData])
@@ -100,13 +104,14 @@ describe('useTable', () => {
 
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useTable(table, {
+      const instance = useTableInstance(table, {
         data,
         columns,
         onColumnVisibilityChange: setColumnVisibility,
         state: {
           columnVisibility,
         },
+        getCoreRowModel: getCoreRowModelSync(),
         // debug: true,
       })
 

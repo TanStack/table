@@ -99,10 +99,9 @@ export type GroupingOptions<TGenerics extends AnyGenerics> = {
   autoResetGrouping?: boolean
   enableGrouping?: boolean
   enableGroupingRemoval?: boolean
-  groupRowsFn?: (
-    instance: TableInstance<TGenerics>,
-    rowModel: RowModel<TGenerics>
-  ) => RowModel<TGenerics>
+  getGroupedRowModel?: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
 
   groupedColumnMode?: false | 'reorder' | 'remove'
 }
@@ -135,6 +134,7 @@ export type GroupingInstance<TGenerics extends AnyGenerics> = {
   getRowIsGrouped: (rowId: string) => boolean
   getPreGroupedRowModel: () => RowModel<TGenerics>
   getGroupedRowModel: () => RowModel<TGenerics>
+  _getGroupedRowModel?: () => RowModel<TGenerics>
 }
 
 //
@@ -186,6 +186,8 @@ export const Grouping = {
 
     return {
       _notifyGroupingReset: () => {
+        instance._notifyExpandedReset()
+
         if (!registered) {
           registered = true
           return
@@ -300,25 +302,21 @@ export const Grouping = {
       getRowIsGrouped: rowId => !!instance.getRow(rowId)?.groupingColumnId,
 
       getPreGroupedRowModel: () => instance.getSortedRowModel(),
-      getGroupedRowModel: memo(
-        () => [
-          instance.getState().grouping,
-          instance.getSortedRowModel(),
-          instance.options.groupRowsFn,
-        ],
-        (grouping, rowModel, groupRowsFn) => {
-          if (!groupRowsFn || !grouping.length) {
-            return rowModel
-          }
-
-          return groupRowsFn(instance, rowModel)
-        },
-        {
-          key: 'getGroupedRowModel',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance._notifyExpandedReset(),
+      getGroupedRowModel: () => {
+        if (
+          !instance._getGroupedRowModel &&
+          instance.options.getGroupedRowModel
+        ) {
+          instance._getGroupedRowModel =
+            instance.options.getGroupedRowModel(instance)
         }
-      ),
+
+        if (!instance._getGroupedRowModel) {
+          return instance.getPreGroupedRowModel()
+        }
+
+        return instance._getGroupedRowModel()
+      },
     }
   },
 

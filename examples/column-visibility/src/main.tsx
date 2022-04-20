@@ -3,7 +3,11 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { createTable, useTable } from '@tanstack/react-table'
+import {
+  createTable,
+  getCoreRowModelSync,
+  useTableInstance,
+} from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -98,13 +102,14 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
-    onColumnVisibilityChange: setColumnVisibility,
     state: {
       columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModelSync(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

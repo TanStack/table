@@ -5,16 +5,15 @@ import './index.css'
 
 import {
   createTable,
-  columnFilterRowsFn,
-  paginateRowsFn,
   Column,
   TableInstance,
-  PaginationState,
-  functionalUpdate,
-  useTable,
   GroupingState,
-  groupRowsFn,
-  expandRowsFn,
+  useTableInstance,
+  getPaginationRowModel,
+  getColumnFilteredRowModelSync,
+  getCoreRowModelSync,
+  getGroupedRowModelSync,
+  getExpandedRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -78,17 +77,18 @@ function App() {
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     state: {
       grouping,
     },
     onGroupingChange: setGrouping,
-    groupRowsFn: groupRowsFn,
-    expandRowsFn: expandRowsFn,
-    paginateRowsFn: paginateRowsFn,
-    columnFilterRowsFn: columnFilterRowsFn,
+    getExpandedRowModel: getExpandedRowModel(),
+    getGroupedRowModel: getGroupedRowModelSync(),
+    getCoreRowModel: getCoreRowModelSync(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
     debugTable: true,
   })
 

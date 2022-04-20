@@ -4,7 +4,11 @@ import faker from 'faker'
 
 import './index.css'
 
-import { createTable, useTable } from '@tanstack/react-table'
+import {
+  createTable,
+  getCoreRowModelSync,
+  useTableInstance,
+} from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
 let table = createTable<{ Row: Person }>()
@@ -64,7 +68,7 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     state: {
@@ -73,6 +77,7 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
+    getCoreRowModel: getCoreRowModelSync(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

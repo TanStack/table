@@ -7,12 +7,13 @@ import './index.css'
 //
 import {
   createTable,
-  columnFilterRowsFn,
-  paginateRowsFn,
   Column,
   TableInstance,
-  useTable,
   ColumnDef,
+  useTableInstance,
+  getCoreRowModelSync,
+  getColumnFilteredRowModelSync,
+  getPaginationRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -107,12 +108,13 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1000))
   const refreshData = () => setData(() => makeData(1000))
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     defaultColumn,
-    paginateRowsFn: paginateRowsFn,
-    columnFilterRowsFn: columnFilterRowsFn,
+    getCoreRowModel: getCoreRowModelSync(),
+    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getPaginationRowModel: getPaginationRowModel(),
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {

@@ -46,6 +46,8 @@ import { RowSelection } from './features/RowSelection'
 import { Sorting } from './features/Sorting'
 import { Visibility } from './features/Visibility'
 import { Headers } from './features/Headers'
+import { mean } from './aggregationTypes'
+import React from 'react'
 
 const features: TableFeature[] = [
   Headers,
@@ -61,12 +63,19 @@ const features: TableFeature[] = [
   ColumnSizing,
 ]
 
+export type CoreTableState = {
+  coreProgress: number
+}
+
 export type CoreOptions<TGenerics extends AnyGenerics> = {
   data: TGenerics['Row'][]
   columns: ColumnDef<TGenerics>[]
   state: Partial<TableState>
   onStateChange: (updater: Updater<TableState>) => void
   render: TGenerics['Render']
+  getCoreRowModel: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
   debugAll?: boolean
   debugTable?: boolean
   debugHeaders?: boolean
@@ -96,6 +105,8 @@ export type TableCore<TGenerics extends AnyGenerics> = {
   reset: () => void
   options: RequiredKeys<Options<TGenerics>, 'state'>
   setOptions: (newOptions: Updater<Options<TGenerics>>) => void
+  queue: (cb: () => void) => void
+  willUpdate: () => void
   getRowId: (
     _: TGenerics['Row'],
     index: number,
@@ -129,6 +140,7 @@ export type TableCore<TGenerics extends AnyGenerics> = {
     values: Record<string, any>
   ) => Row<TGenerics>
   getCoreRowModel: () => RowModel<TGenerics>
+  _getCoreRowModel?: () => RowModel<TGenerics>
   getRowModel: () => RowModel<TGenerics>
   getRow: (id: string) => Row<TGenerics>
   getCell: (rowId: string, columnId: string) => Cell<TGenerics>
@@ -151,6 +163,7 @@ export type TableCore<TGenerics extends AnyGenerics> = {
     template: Renderable<TGenerics, TProps>,
     props: TProps
   ) => string | null | ReturnType<UseRenderer<TGenerics>>
+  getOverallProgress: () => number
 }
 
 export type CoreRow<TGenerics extends AnyGenerics> = {
@@ -237,18 +250,40 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
 
   instance.options = buildOptions(options)
 
+  const coreInitialState: CoreTableState = {
+    coreProgress: 1,
+  }
+
   const initialState = {
+    ...coreInitialState,
     ...features.reduce((obj, feature) => {
       return Object.assign(obj, feature.getInitialState?.())
     }, {}),
     ...(options.initialState ?? {}),
   } as TableState
 
+  const queued: (() => void)[] = []
+  let queuedTimeout: NodeJS.Timeout
+
   const finalInstance: TableInstance<TGenerics> = {
     ...instance,
     ...features.reduce((obj, feature) => {
       return Object.assign(obj, feature.getInstance?.(instance))
     }, {}),
+    queue: cb => {
+      queued.push(cb)
+      if (!queuedTimeout) {
+        queuedTimeout = setTimeout(() => {
+          instance.setState(old => ({ ...old }))
+        })
+      }
+    },
+    willUpdate: () => {
+      clearTimeout(queuedTimeout)
+      while (queued.length) {
+        queued.shift()!()
+      }
+    },
     initialState,
     reset: () => {
       instance.setState(instance.initialState)
@@ -568,103 +603,13 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
       return row as Row<TGenerics>
     },
 
-    getCoreRowModel: memo(
-      () => [instance.options.data],
-      (
-        data
-      ): {
-        rows: Row<TGenerics>[]
-        flatRows: Row<TGenerics>[]
-        rowsById: Record<string, Row<TGenerics>>
-      } => {
-        // Access the row model using initial columns
-        const rows: Row<TGenerics>[] = []
-        const flatRows: Row<TGenerics>[] = []
-        const rowsById: Record<string, Row<TGenerics>> = {}
-
-        const leafColumns = instance.getAllLeafColumns()
-
-        const accessRow = (
-          originalRow: TGenerics['Row'],
-          rowIndex: number,
-          depth = 0,
-          parentRows: Row<TGenerics>[],
-          parent?: Row<TGenerics>
-        ) => {
-          const id = instance.getRowId(originalRow, rowIndex, parent)
-
-          if (!id) {
-            if (process.env.NODE_ENV !== 'production') {
-              throw new Error(`getRowId expected an ID, but got ${id}`)
-            }
-          }
-
-          const values: Record<string, any> = {}
-
-          for (let i = 0; i < leafColumns.length; i++) {
-            const column = leafColumns[i]
-            if (column && column.accessorFn) {
-              values[column.id] = column.accessorFn(originalRow, rowIndex)
-            }
-          }
-
-          // Make the row
-          const row = instance.createRow(
-            id,
-            originalRow,
-            rowIndex,
-            depth,
-            values
-          )
-
-          // Push instance row into the parentRows array
-          parentRows.push(row)
-          // Keep track of every row in a flat array
-          flatRows.push(row)
-          // Also keep track of every row by its ID
-          rowsById[id] = row
-
-          // Get the original subrows
-          if (instance.options.getSubRows) {
-            const originalSubRows = instance.options.getSubRows(
-              originalRow,
-              rowIndex
-            )
-
-            // Then recursively access them
-            if (originalSubRows?.length) {
-              row.originalSubRows = originalSubRows
-              const subRows: Row<TGenerics>[] = []
-
-              for (let i = 0; i < row.originalSubRows.length; i++) {
-                accessRow(
-                  row.originalSubRows[i] as TGenerics['Row'],
-                  i,
-                  depth + 1,
-                  subRows,
-                  row
-                )
-              }
-              row.subRows = subRows
-            }
-          }
-        }
-
-        for (let i = 0; i < data.length; i++) {
-          accessRow(data[i] as TGenerics['Row'], i, 0, rows)
-        }
-
-        return { rows, flatRows, rowsById }
-      },
-      {
-        key: 'getRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
-        onChange: () => {
-          instance._notifyFiltersReset()
-          instance._notifyRowSelectionReset()
-        },
+    getCoreRowModel: () => {
+      if (!instance._getCoreRowModel) {
+        instance._getCoreRowModel = instance.options.getCoreRowModel(instance)
       }
-    ),
+
+      return instance._getCoreRowModel()
+    },
 
     // The final calls start at the bottom of the model,
     // expanded rows, which then work their way up
@@ -775,6 +720,17 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
       instance.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
         return sum + header.getWidth()
       }, 0) ?? 0,
+
+    getOverallProgress: () => {
+      const { coreProgress, columnFiltersProgress, globalFilterProgress } =
+        instance.getState()
+
+      return mean(() =>
+        [coreProgress, columnFiltersProgress, globalFilterProgress].filter(
+          d => d < 1
+        )
+      ) as number
+    },
   }
 
   instance = Object.assign(instance, finalInstance)
