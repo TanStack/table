@@ -6,10 +6,9 @@ import './index.css'
 import {
   Column,
   createTable,
-  getColumnFilteredRowModelSync,
-  getCoreRowModelAsync,
   getCoreRowModelSync,
   getGlobalFilteredRowModelSync,
+  getColumnFilteredRowModelSync,
   getPaginationRowModel,
   TableInstance,
   useTableInstance,

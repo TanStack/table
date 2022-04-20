@@ -39,7 +39,7 @@ export function getGlobalFilteredRowModelSync<
           }
 
           if (filterFromLeafRows) {
-            filterRowModelFromLeafs(rowModel.rows, filterRows, instance)
+            return filterRowModelFromLeafs(rowModel.rows, filterRows, instance)
           }
 
           return filterRowModelFromRoot(rowModel.rows, filterRows, instance)
