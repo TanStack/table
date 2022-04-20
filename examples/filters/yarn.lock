@@ -267,14 +267,14 @@
     picomatch "^2.2.2"
 
 "@tanstack/react-table@8.0.0-alpha.32":
-  version "8.0.0-alpha.32"
+  version "8.0.0-alpha.31"
   resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.0.0-alpha.32.tgz#c2e7e738d83627718b87a24166a39b92e26c2116"
   integrity sha512-FZ6Hqod/T33/KQP2hFt14nsIyo82OU48WiErgCDxW78gUBpvuOZQ54oAIXG4ppqnVIQCZdmvMLNcOKd1OqvT4A==
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.32"
+    "@tanstack/table-core" "8.0.0-alpha.31"
 
 "@tanstack/table-core@8.0.0-alpha.32":
-  version "8.0.0-alpha.32"
+  version "8.0.0-alpha.31"
   resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.0.0-alpha.32.tgz#dc48ad75dfbbf1ebceae5ec3f17bdc8ddef70ac4"
   integrity sha512-aPAQg4+duqMJpTLsdRKQrI89WmdF4ZMlDBKoy1OT+oAu7Yr6YkDhwVwSn76itbtKVSQVsmQiDfXLBlS3tSSBWw==
 
