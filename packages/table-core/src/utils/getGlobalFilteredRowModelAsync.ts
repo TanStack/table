@@ -88,7 +88,9 @@ export function getGlobalFilteredRowModelAsync<
         },
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance._notifySortingReset()
+          instance.queue(() => {
+            instance._notifySortingReset()
+          })
         },
       }
     )

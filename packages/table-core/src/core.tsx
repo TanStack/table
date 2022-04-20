@@ -47,6 +47,7 @@ import { Sorting } from './features/Sorting'
 import { Visibility } from './features/Visibility'
 import { Headers } from './features/Headers'
 import { mean } from './aggregationTypes'
+import React from 'react'
 
 const features: TableFeature[] = [
   Headers,
@@ -104,6 +105,8 @@ export type TableCore<TGenerics extends AnyGenerics> = {
   reset: () => void
   options: RequiredKeys<Options<TGenerics>, 'state'>
   setOptions: (newOptions: Updater<Options<TGenerics>>) => void
+  queue: (cb: () => void) => void
+  willUpdate: () => void
   getRowId: (
     _: TGenerics['Row'],
     index: number,
@@ -259,11 +262,28 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
     ...(options.initialState ?? {}),
   } as TableState
 
+  const queued: (() => void)[] = []
+  let queuedTimeout: NodeJS.Timeout
+
   const finalInstance: TableInstance<TGenerics> = {
     ...instance,
     ...features.reduce((obj, feature) => {
       return Object.assign(obj, feature.getInstance?.(instance))
     }, {}),
+    queue: cb => {
+      queued.push(cb)
+      if (!queuedTimeout) {
+        queuedTimeout = setTimeout(() => {
+          instance.setState(old => ({ ...old }))
+        })
+      }
+    },
+    willUpdate: () => {
+      clearTimeout(queuedTimeout)
+      while (queued.length) {
+        queued.shift()!()
+      }
+    },
     initialState,
     reset: () => {
       instance.setState(instance.initialState)

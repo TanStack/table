@@ -99,5 +99,9 @@ export function useTableInstance<TGenerics extends AnyGenerics>(
     },
   }))
 
+  React.useLayoutEffect(() => {
+    instance.willUpdate()
+  })
+
   return instance
 }

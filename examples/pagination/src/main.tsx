@@ -12,6 +12,9 @@ import {
   getCoreRowModelSync,
   getColumnFilteredRowModelSync,
   getPaginationRowModel,
+  ColumnDef,
+  Updater,
+  OnChangeFn,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -79,6 +82,39 @@ function App() {
     pageCount: -1, // -1 allows the table to calculate the page count for us via instance.getPageCount()
   })
 
+  return (
+    <>
+      <Table
+        {...{
+          data,
+          columns,
+          pagination,
+          setPagination,
+        }}
+      />
+      <hr />
+      <div>
+        <button onClick={() => rerender()}>Force Rerender</button>
+      </div>
+      <div>
+        <button onClick={() => refreshData()}>Refresh Data</button>
+      </div>
+      <pre>{JSON.stringify(pagination, null, 2)}</pre>
+    </>
+  )
+}
+
+function Table<TTableGenerics>({
+  data,
+  columns,
+  pagination,
+  setPagination,
+}: {
+  data: Person[]
+  columns: ColumnDef<typeof table.generics>[]
+  pagination: PaginationState
+  setPagination: OnChangeFn<PaginationState>
+}) {
   const instance = useTableInstance(table, {
     data,
     columns,
@@ -207,13 +243,6 @@ function App() {
         </select>
       </div>
       <div>{instance.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>{JSON.stringify(pagination, null, 2)}</pre>
     </div>
   )
 }

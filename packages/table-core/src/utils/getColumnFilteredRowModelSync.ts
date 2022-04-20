@@ -90,7 +90,9 @@ export function getColumnFilteredRowModelSync<
         key: 'getColumnFilteredRowModelSync',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance._notifySortingReset()
+          instance.queue(() => {
+            instance._notifySortingReset()
+          })
         },
       }
     )

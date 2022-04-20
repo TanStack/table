@@ -8,7 +8,7 @@ import {
   init,
   TableFeature,
 } from '@tanstack/table-core'
-import { h, watchEffect, ref } from 'vue'
+import { h, watchEffect, ref, onBeforeUpdate } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
@@ -78,6 +78,10 @@ export function useTableInstance<TGenerics extends AnyGenerics>(
         },
       })
     })
+  })
+
+  onBeforeUpdate(() => {
+    instance.willUpdate()
   })
 
   return instance

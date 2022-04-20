@@ -9,7 +9,12 @@ import {
   init,
   TableFeature,
 } from '@tanstack/table-core'
-import { createComputed, mergeProps, createComponent } from 'solid-js'
+import {
+  createComputed,
+  mergeProps,
+  createComponent,
+  createRenderEffect,
+} from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 export * from '@tanstack/table-core'
@@ -68,6 +73,10 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
         },
       })
     })
+  })
+
+  createRenderEffect(() => {
+    instance.willUpdate()
   })
 
   return instance

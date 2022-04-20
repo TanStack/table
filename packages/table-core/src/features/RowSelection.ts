@@ -287,7 +287,9 @@ export const RowSelection = {
         {
           key: 'getSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance._notifyExpandedReset(),
+          onChange: () => {
+            instance.queue(() => instance._notifyExpandedReset())
+          },
         }
       ),
 
@@ -310,7 +312,7 @@ export const RowSelection = {
         {
           key: 'getFilteredSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance._notifyExpandedReset(),
+          onChange: () => instance.queue(() => instance._notifyExpandedReset()),
         }
       ),
 
@@ -330,7 +332,7 @@ export const RowSelection = {
         {
           key: 'getGroupedSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance._notifyExpandedReset(),
+          onChange: () => instance.queue(() => instance._notifyExpandedReset()),
         }
       ),
 
