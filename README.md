@@ -6,7 +6,7 @@
 
 > [Looking for version 7? Click here!](https://github.com/tanstack/react-table/tree/v7)
 
-Hooks for building **lightweight, fast and extendable datagrids** for React
+Hooks for building **lightweight, fast and extendable datagrids** for React, Vue, Solid and TS/JS
 
 <a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
   <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack" />
@@ -32,6 +32,8 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 
 ## Quick Features
 
+- Agnostic core (JS/TS)
+- 1st-class framework bindings for React, Vue, Solid
 - ~14kb or less (with tree-shaking)
 - 100% TypeScript (but not required)
 - Headless (100% customizable, Bring-your-own-UI)
@@ -55,19 +57,23 @@ Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley
 - Vastly larger and improved API
 - Better controlled state management
 - Better support for server-side operations
-- Agnostic Core (+ other framework adapters!)
+- Complete (but optional) data pipeline control
+- Agnostic Core
+- Framework Adapters
 
 ## Migration
 
-Currently migration will involve rewrites to:
+There are a fair amount of breaking changes (they're worth it, trust us!):
 
-- Any table logic and API surrounding the `useTable` hook
-- Any custom plugins must be rewritten to wrap/compose the new `useTable` hook
-- Table markup API must be rewritten to use the new API. Don't worry, this is not as big of a deal as it sounds :)
+- Turns out that TypeScript makes your code **a lot** better/safer, but also usually requires breaking changes to architecture.
+- Plugin system has been removed so plugins must be rewritten to wrap/compose the new `useTable` hook. Contact us if you need help!
+- Column configuration options have changed, but only slightly.
+- Table options are mostly the same, with some larger changes around optional state management/control and data pipeline control
+- The `tableInstance` while similar in spirit to v7 has been reconfigured to be much faster.
 
 ## Todo (in order of priority)
 
-- [ ] Rewrite Core
+- [x] Rewrite Core
   - [x] Core
   - [x] Columns
   - [x] Headers
@@ -92,7 +98,7 @@ Currently migration will involve rewrites to:
   - [x] row-selection
   - [x] expanding
   - [x] grouping-and-aggregation
-  - [ ] editable-data
+  - [x] editable-data
   - [ ] kitchen-sink
   - [ ] row-dnd
   - [ ] streaming-rows
