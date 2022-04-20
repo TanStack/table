@@ -4,7 +4,7 @@
   "compilerOptions": {
     "outDir": "./build/types"
   },
-  "files": ["src/index.tsx"],
+  "files": ["src/index.ts"],
   "include": [
     "src"
     //  "__tests__/**/*.test.*"

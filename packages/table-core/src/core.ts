@@ -47,7 +47,6 @@ import { Sorting } from './features/Sorting'
 import { Visibility } from './features/Visibility'
 import { Headers } from './features/Headers'
 import { mean } from './aggregationTypes'
-import React from 'react'
 
 const features: TableFeature[] = [
   Headers,

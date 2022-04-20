@@ -1,4 +1,3 @@
-import { MouseEvent, TouchEvent } from 'react'
 import { RowModel } from '..'
 import { BuiltInSortType, reSplitAlphaNumeric, sortTypes } from '../sortTypes'
 
@@ -430,7 +429,7 @@ export const Sorting = {
           title: canSort ? 'Toggle Sorting' : undefined,
           onClick: canSort
             ? (e: MouseEvent | TouchEvent) => {
-                e.persist?.()
+                ;(e as any).persist?.()
                 column.toggleSorting?.(
                   undefined,
                   column.getCanMultiSort()
