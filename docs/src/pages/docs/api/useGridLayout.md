@@ -10,3 +10,14 @@
 - `getTableProps`
   - **Usage Required**
   - This core prop getter is required to get the correct stying for the layout
+
+### Row Properties
+
+- `getRowProps`
+  - This core prop getter is required for rendering sub-components as a full row
+
+### Header Properties
+
+- `getHeaderProps`
+  - **Usage Required**
+  - This core prop getter is required to to enable absolute layout for headers
