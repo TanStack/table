@@ -35,31 +35,31 @@ import {
   AnyGenerics,
 } from './types'
 
-// import { ColumnSizing } from './features/ColumnSizing'
-// import { Expanding } from './features/Expanding'
-// import { Filters } from './features/Filters'
-// import { Grouping } from './features/Grouping'
-// import { Ordering } from './features/Ordering'
-// import { Pagination } from './features/Pagination'
-// import { Pinning } from './features/Pinning'
-// import { RowSelection } from './features/RowSelection'
-// import { Sorting } from './features/Sorting'
-// import { Visibility } from './features/Visibility'
-// import { Headers } from './features/Headers'
+import { ColumnSizing } from './features/ColumnSizing'
+import { Expanding } from './features/Expanding'
+import { Filters } from './features/Filters'
+import { Grouping } from './features/Grouping'
+import { Ordering } from './features/Ordering'
+import { Pagination } from './features/Pagination'
+import { Pinning } from './features/Pinning'
+import { RowSelection } from './features/RowSelection'
+import { Sorting } from './features/Sorting'
+import { Visibility } from './features/Visibility'
+import { Headers } from './features/Headers'
 import { mean } from './aggregationTypes'
 
 const features: TableFeature[] = [
-  // Headers,
-  // Visibility,
-  // Ordering,
-  // Pinning,
-  // Filters,
-  // Sorting,
-  // Grouping,
-  // Expanding,
-  // Pagination,
-  // RowSelection,
-  // ColumnSizing,
+  Headers,
+  Visibility,
+  Ordering,
+  Pinning,
+  Filters,
+  Sorting,
+  Grouping,
+  Expanding,
+  Pagination,
+  RowSelection,
+  ColumnSizing,
 ]
 
 export type CoreTableState = {
