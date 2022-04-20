@@ -22,6 +22,35 @@ export function noop() {
   //
 }
 
+export function getBatchGroups<T>(arr: T[], count: number) {
+  const groups: { start: number; end: number; items: T[] }[] = [
+    {
+      start: 0,
+      end: count - 1,
+      items: [],
+    },
+  ]
+
+  let groupIndex = 0
+  let group = groups[groupIndex]
+
+  for (let i = 0; i < arr.length; i++) {
+    if (i > group.end) {
+      groupIndex++
+      groups[groupIndex] = {
+        start: i,
+        end: i + count - 1,
+        items: [],
+      }
+    }
+    group = groups[groupIndex]
+    const item = arr[i]
+    group.items.push(item)
+  }
+
+  return groups
+}
+
 export function makeStateUpdater(key: keyof TableState, instance: unknown) {
   return (updater: Updater<any>) => {
     ;(instance as any).setState(<TTableState,>(old: TTableState) => {
@@ -163,19 +192,163 @@ export function memo<TDeps extends readonly any[], TResult>(
   }
 }
 
-// export function hashString(str: string, seed = 0): string {
-//   let h1 = 0xdeadbeef ^ seed,
-//     h2 = 0x41c6ce57 ^ seed
-//   for (let i = 0, ch; i < str.length; i++) {
-//     ch = str.charCodeAt(i)
-//     h1 = Math.imul(h1 ^ ch, 2654435761)
-//     h2 = Math.imul(h2 ^ ch, 1597334677)
-//   }
-//   h1 =
-//     Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
-//     Math.imul(h2 ^ (h2 >>> 13), 3266489909)
-//   h2 =
-//     Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
-//     Math.imul(h1 ^ (h1 >>> 13), 3266489909)
-//   return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString()
-// }
+type WorkFn = () => void
+
+export function incrementalMemo<TDeps extends readonly any[], TResult>(
+  getDeps: () => [...TDeps],
+  getInitialValue: (...args: NoInfer<[...TDeps]>) => TResult,
+  schedule: (
+    ...args: NoInfer<[...TDeps]>
+  ) => (resultRef: {
+    current: TResult
+  }) => (scheduler: (workFn: WorkFn) => void) => void,
+  opts: {
+    key: string
+    onProgress: (
+      progress: number,
+      nextResult: TResult,
+      result?: TResult
+    ) => void
+    onChange: (result: TResult, previousResult?: TResult) => void
+    initialSync?: boolean
+    timeout?: number
+    debug?: () => any
+  }
+): () => TResult {
+  let oldDeps: any[]
+  let deps: any[]
+  let result: TResult | undefined
+  let nextResultRef: { current: TResult }
+  let tasks: WorkFn[] = []
+  let totalTaskCount = 0
+  let resultStartTime: number
+  let batchIndex = 0
+  let progress = 0
+  let working = false
+  let callback: ReturnType<typeof requestIdleCallback>
+
+  const timeout = opts.timeout ?? 100
+
+  const onProgress = (latestResult: TResult, previousResult?: TResult) => {
+    progress = 1 - tasks.length / totalTaskCount
+    opts.onProgress(progress, latestResult, previousResult)
+  }
+
+  return () => {
+    const scheduleFn = (workFn: WorkFn) => {
+      totalTaskCount++
+      tasks.push(workFn)
+    }
+
+    const newDeps = getDeps()
+
+    let first = false
+
+    if (!deps) {
+      first = true
+      deps = []
+      result = getInitialValue(...newDeps)
+    }
+
+    const depsChanged =
+      newDeps.length !== deps.length ||
+      newDeps.some((dep: any, index: number) => deps[index] !== dep)
+
+    if (depsChanged) {
+      cancelIdleCallback(callback)
+      oldDeps = deps
+      deps = newDeps
+      totalTaskCount = 0
+      tasks = []
+      nextResultRef = { current: getInitialValue(...newDeps) }
+      resultStartTime = Date.now()
+      schedule(...newDeps)(nextResultRef)(scheduleFn)
+    }
+
+    const commitResult = () => {
+      cancelIdleCallback(callback)
+
+      if (opts.key && opts.debug) {
+        if (opts?.debug()) {
+          const resultEndTime =
+            Math.round((Date.now() - resultStartTime!) * 100) / 100
+          const resultFpsPercentage = resultEndTime / batchIndex / 16
+
+          console.info(
+            `%c⏱ ${resultEndTime} ms / ${batchIndex} tasks = ${Math.round(
+              resultEndTime / batchIndex
+            )} ms/task`,
+            `
+      font-size: .6rem;
+      font-weight: bold;
+      color: hsl(${Math.max(
+        0,
+        Math.min(120 - 120 * resultFpsPercentage, 120)
+      )}deg 100% 31%);`,
+            opts?.key,
+            {
+              length: `${oldDeps.length} -> ${deps.length}`,
+              ...deps
+                .map((_, index) => {
+                  if (oldDeps[index] !== deps[index]) {
+                    return [index, oldDeps[index], deps[index]]
+                  }
+
+                  return false
+                })
+                .filter(Boolean)
+                .reduce(
+                  (accu, [a, b]: any) => ({
+                    ...accu,
+                    [a]: b,
+                  }),
+                  {}
+                ),
+              parent,
+            }
+          )
+        }
+      }
+
+      working = false
+      let previousResult = result
+      result = nextResultRef.current
+      onProgress(result, previousResult)
+      opts.onChange(result, previousResult)
+    }
+
+    if (opts.initialSync && first) {
+      batchIndex = 1
+      first = false
+      for (let i = 0; i < tasks.length; i++) {
+        tasks[i]()
+      }
+      tasks = []
+      commitResult()
+    } else if (!working && tasks.length) {
+      cancelIdleCallback(callback)
+      working = true
+      batchIndex = 0
+
+      const workLoop = (deadline: any) => {
+        while (tasks.length && deadline.timeRemaining() > 0) {
+          tasks.shift()!()
+        }
+
+        if (!tasks.length) {
+          commitResult()
+        } else {
+          ++batchIndex
+          onProgress(nextResultRef.current, result)
+          callback = requestIdleCallback(workLoop, { timeout })
+        }
+      }
+
+      callback = requestIdleCallback(workLoop, { timeout })
+    }
+
+    return result!
+  }
+}
+
+// opts?.onChange?.(result, oldResult)

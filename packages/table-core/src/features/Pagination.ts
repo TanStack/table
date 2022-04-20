@@ -21,10 +21,9 @@ export type PaginationTableState = {
 export type PaginationOptions<TGenerics extends AnyGenerics> = {
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
-  paginateRowsFn?: (
-    instance: TableInstance<TGenerics>,
-    rowModel: RowModel<TGenerics>
-  ) => RowModel<TGenerics>
+  getPaginationRowModel?: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
 }
 
 export type PaginationDefaultOptions = {
@@ -48,6 +47,7 @@ export type PaginationInstance<TGenerics extends AnyGenerics> = {
   nextPage: () => void
   getPrePaginationRowModel: () => RowModel<TGenerics>
   getPaginationRowModel: () => RowModel<TGenerics>
+  _getPaginationRowModel?: () => RowModel<TGenerics>
   getPageCount: () => number
 }
 
@@ -213,24 +213,21 @@ export const Pagination = {
       },
 
       getPrePaginationRowModel: () => instance.getExpandedRowModel(),
-      getPaginationRowModel: memo(
-        () => [
-          instance.getState().pagination,
-          instance.getExpandedRowModel(),
-          instance.options.paginateRowsFn,
-        ],
-        (_pagination, rowModel, paginateRowsFn) => {
-          if (!paginateRowsFn || !rowModel.rows.length) {
-            return rowModel
-          }
-
-          return paginateRowsFn(instance, rowModel)
-        },
-        {
-          key: 'getPaginationRowModel',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
+      getPaginationRowModel: () => {
+        if (
+          !instance._getPaginationRowModel &&
+          instance.options.getPaginationRowModel
+        ) {
+          instance._getPaginationRowModel =
+            instance.options.getPaginationRowModel(instance)
         }
-      ),
+
+        if (!instance._getPaginationRowModel) {
+          return instance.getPrePaginationRowModel()
+        }
+
+        return instance._getPaginationRowModel()
+      },
 
       getPageCount: () => {
         const { pageCount } = instance.getState().pagination

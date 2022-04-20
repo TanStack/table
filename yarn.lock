@@ -2126,10 +2126,8 @@
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.1.tgz#47ab73a3872b3fc10468259993f1a3121aa327c8"
   integrity sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==
 
-"@tanstack/table-core@8.0.0-alpha.26":
-  version "8.0.0-alpha.26"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.26.tgz#890f980ef53de4bdbd5eebefa656b94496e25408"
-  integrity sha512-Jeu7H44S0xQzgpe7xYhds3irMLmTHvh3q14ZaaulXOMGe0tzMG8cUSNcQADrQ3/pv/lvzx6cK2pfLRjnDGjyGw==
+"@tanstack/table-core@8.0.0-alpha.31":
+  version "8.0.0-alpha.30"
 
 "@testing-library/dom@^8.0.0":
   version "8.11.2"
@@ -7429,10 +7427,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.5.5:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
-  integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
+typescript@^4.7.0-beta:
+  version "4.7.0-beta"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.0-beta.tgz#15952f24d4177479ca3d19f09436ad8c69a30563"
+  integrity sha512-m+CNL8lzHyHDxYYDTI+pm5hw5/bufYVGan2bokPyJY/y9C/4W/PCWMtYZ0vV9fLXbEL57elMeoaz9Evxs8UQ+A==
 
 uglify-js@^3.1.4:
   version "3.14.5"

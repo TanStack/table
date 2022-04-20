@@ -55,7 +55,7 @@ const { createTable, createTableFactory } = init({ render })
 
 export { createTable, createTableFactory }
 
-export function useTable<TGenerics extends AnyGenerics>(
+export function useTableInstance<TGenerics extends AnyGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
     Omit<

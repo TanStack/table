@@ -42,6 +42,8 @@ export type CustomFilterTypes<TGenerics extends AnyGenerics> = Record<
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
   globalFilter: any
+  columnFiltersProgress: number
+  globalFilterProgress: number
 }
 
 export type FilterType<TGenerics extends AnyGenerics> =
@@ -81,20 +83,18 @@ export type FiltersOptions<TGenerics extends AnyGenerics> = {
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
   autoResetColumnFilters?: boolean
   enableColumnFilters?: boolean
-  columnFilterRowsFn?: (
-    instance: TableInstance<TGenerics>,
-    coreRowModel: RowModel<TGenerics>
-  ) => RowModel<TGenerics>
+  getColumnFilteredRowModel?: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
   // Global
   globalFilterType?: FilterType<TGenerics>
   onGlobalFilterChange?: OnChangeFn<any>
   enableGlobalFilters?: boolean
   autoResetGlobalFilter?: boolean
   enableGlobalFilter?: boolean
-  globalFilterRowsFn?: (
-    instance: TableInstance<TGenerics>,
-    rowModel: RowModel<TGenerics>
-  ) => RowModel<TGenerics>
+  getGlobalFilteredRowModel?: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
   getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 }
 
@@ -120,6 +120,7 @@ export type FiltersInstance<TGenerics extends AnyGenerics> = {
   // Column Filters
   getPreColumnFilteredRowModel: () => RowModel<TGenerics>
   getColumnFilteredRowModel: () => RowModel<TGenerics>
+  _getColumnFilteredRowModel?: () => RowModel<TGenerics>
 
   // Global Filters
   setGlobalFilter: (updater: Updater<any>) => void
@@ -129,6 +130,7 @@ export type FiltersInstance<TGenerics extends AnyGenerics> = {
   getColumnCanGlobalFilter: (columnId: string) => boolean
   getPreGlobalFilteredRowModel: () => RowModel<TGenerics>
   getGlobalFilteredRowModel: () => RowModel<TGenerics>
+  _getGlobalFilteredRowModel?: () => RowModel<TGenerics>
 }
 
 //
@@ -146,6 +148,8 @@ export const Filters = {
     return {
       columnFilters: [],
       globalFilter: undefined,
+      columnFiltersProgress: 1,
+      globalFilterProgress: 1,
     }
   },
 
@@ -235,6 +239,8 @@ export const Filters = {
 
     return {
       _notifyFiltersReset: () => {
+        instance._notifySortingReset()
+
         if (!registered) {
           registered = true
           return
@@ -244,15 +250,18 @@ export const Filters = {
           return
         }
 
-        if (instance.options.autoResetAll === true) {
-          instance.resetSorting()
-        } else {
-          if (instance.options.autoResetColumnFilters) {
-            instance.resetColumnFilters()
-          }
-          if (instance.options.autoResetGlobalFilter) {
-            instance.resetGlobalFilter()
-          }
+        if (
+          instance.options.autoResetAll === true ||
+          instance.options.autoResetColumnFilters
+        ) {
+          instance.resetColumnFilters()
+        }
+
+        if (
+          instance.options.autoResetAll === true ||
+          instance.options.autoResetGlobalFilter
+        ) {
+          instance.resetGlobalFilter()
         }
       },
       getColumnAutoFilterFn: columnId => {
@@ -462,93 +471,37 @@ export const Filters = {
 
       getPreFilteredRowModel: () => instance.getCoreRowModel(),
       getPreColumnFilteredRowModel: () => instance.getCoreRowModel(),
-      getColumnFilteredRowModel: memo(
-        () => [
-          instance.getState().columnFilters,
-          instance.getCoreRowModel(),
-          instance.options.columnFilterRowsFn,
-        ],
-        (columnFilters, rowModel, columnFiltersFn) => {
-          const columnFilteredRowModel = (() => {
-            if (!columnFilters?.length || !columnFiltersFn) {
-              return rowModel
-            }
-
-            return columnFiltersFn(instance as any, rowModel)
-          })()
-
-          // Now that each filtered column has it's partially filtered rows,
-          // lets assign the final filtered rows to all of the other columns
-          const nonFilteredColumns = instance
-            .getAllLeafColumns()
-            .filter(
-              column =>
-                !instance
-                  .getState()
-                  .columnFilters?.find(d => d.id === column.id)
-            )
-
-          // This essentially enables faceted filter options to be built easily
-          // using every column's preFilteredRows value
-
-          nonFilteredColumns.forEach(column => {
-            column.getPreFilteredRows = () => columnFilteredRowModel.rows
-          })
-
-          return columnFilteredRowModel
-        },
-        {
-          key: 'getColumnFilteredRowModel',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
+      getColumnFilteredRowModel: () => {
+        if (
+          !instance._getColumnFilteredRowModel &&
+          instance.options.getColumnFilteredRowModel
+        ) {
+          instance._getColumnFilteredRowModel =
+            instance.options.getColumnFilteredRowModel(instance)
         }
-      ),
+
+        if (!instance._getColumnFilteredRowModel) {
+          return instance.getPreColumnFilteredRowModel()
+        }
+
+        return instance._getColumnFilteredRowModel()
+      },
       getPreGlobalFilteredRowModel: () => instance.getColumnFilteredRowModel(),
-      getGlobalFilteredRowModel: memo(
-        () => [
-          instance.getState().globalFilter,
-          instance.getColumnFilteredRowModel(),
-          instance.options.globalFilterRowsFn,
-        ],
-        (globalFilterValue, columnFilteredRowModel, globalFiltersFn) => {
-          const globalFilteredRowModel = (() => {
-            if (!globalFiltersFn || !globalFilterValue) {
-              return columnFilteredRowModel
-            }
-
-            return globalFiltersFn(
-              instance as TableInstance<TGenerics>,
-              columnFilteredRowModel
-            )
-          })()
-
-          // Now that each filtered column has it's partially filtered rows,
-          // lets assign the final filtered rows to all of the other columns
-          const nonFilteredColumns = instance
-            .getAllLeafColumns()
-            .filter(
-              column =>
-                !instance
-                  .getState()
-                  .columnFilters?.find(d => d.id === column.id)
-            )
-
-          // This essentially enables faceted filter options to be built easily
-          // using every column's preFilteredRows value
-
-          nonFilteredColumns.forEach(column => {
-            column.getPreFilteredRows = () => globalFilteredRowModel.rows
-          })
-
-          return globalFilteredRowModel
-        },
-        {
-          key: 'getGlobalFilteredRowModel',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => {
-            instance._notifySortingReset()
-          },
+      getGlobalFilteredRowModel: () => {
+        if (
+          !instance._getGlobalFilteredRowModel &&
+          instance.options.getGlobalFilteredRowModel
+        ) {
+          instance._getGlobalFilteredRowModel =
+            instance.options.getGlobalFilteredRowModel(instance)
         }
-      ),
+
+        if (!instance._getGlobalFilteredRowModel) {
+          return instance.getPreGlobalFilteredRowModel()
+        }
+
+        return instance._getGlobalFilteredRowModel()
+      },
     }
   },
 }

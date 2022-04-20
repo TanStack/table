@@ -7,12 +7,13 @@ import { makeData, Person } from './makeData'
 
 import {
   Column,
-  columnFilterRowsFn,
   createTable,
-  globalFilterRowsFn,
-  paginateRowsFn,
+  getColumnFilteredRowModelSync,
+  getCoreRowModelSync,
+  getGlobalFilteredRowModelSync,
+  getPaginationRowModel,
   TableInstance,
-  useTable,
+  useTableInstance,
 } from '@tanstack/react-table'
 
 let table = createTable<{ Row: Person }>()
@@ -89,16 +90,17 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const instance = useTable(table, {
+  const instance = useTableInstance(table, {
     data,
     columns,
     state: {
       rowSelection,
     },
     onRowSelectionChange: setRowSelection,
-    columnFilterRowsFn: columnFilterRowsFn,
-    globalFilterRowsFn: globalFilterRowsFn,
-    paginateRowsFn: paginateRowsFn,
+    getCoreRowModel: getCoreRowModelSync(),
+    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getGlobalFilteredRowModel: getGlobalFilteredRowModelSync(),
+    getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   })
 

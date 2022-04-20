@@ -84,10 +84,9 @@ export type SortingOptions<TGenerics extends AnyGenerics> = {
   enableMultiRemove?: boolean
   enableMultiSort?: boolean
   sortDescFirst?: boolean
-  sortRowsFn?: (
-    instance: TableInstance<TGenerics>,
-    rowModel: RowModel<TGenerics>
-  ) => RowModel<TGenerics>
+  getSortedRowModel?: (
+    instance: TableInstance<TGenerics>
+  ) => () => RowModel<TGenerics>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: MouseEvent | TouchEvent) => boolean
 }
@@ -121,6 +120,7 @@ export type SortingInstance<TGenerics extends AnyGenerics> = {
   ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
   getPreSortedRowModel: () => RowModel<TGenerics>
   getSortedRowModel: () => RowModel<TGenerics>
+  _getSortedRowModel?: () => RowModel<TGenerics>
 }
 
 //
@@ -177,6 +177,8 @@ export const Sorting = {
 
     return {
       _notifySortingReset: () => {
+        instance._notifyGroupingReset()
+
         if (!registered) {
           registered = true
           return
@@ -443,27 +445,21 @@ export const Sorting = {
       },
 
       getPreSortedRowModel: () => instance.getGlobalFilteredRowModel(),
-      getSortedRowModel: memo(
-        () => [
-          instance.getState().sorting,
-          instance.getGlobalFilteredRowModel(),
-          instance.options.sortRowsFn,
-        ],
-        (sorting, rowModel, sortingFn) => {
-          if (!sortingFn || !sorting?.length) {
-            return rowModel
-          }
-
-          return sortingFn(instance, rowModel)
-        },
-        {
-          key: 'getSortedRowModel',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => {
-            instance._notifyGroupingReset()
-          },
+      getSortedRowModel: () => {
+        if (
+          !instance._getSortedRowModel &&
+          instance.options.getSortedRowModel
+        ) {
+          instance._getSortedRowModel =
+            instance.options.getSortedRowModel(instance)
         }
-      ),
+
+        if (!instance._getSortedRowModel) {
+          return instance.getPreSortedRowModel()
+        }
+
+        return instance._getSortedRowModel()
+      },
     }
   },
 }
