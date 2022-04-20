@@ -460,15 +460,18 @@ async function run() {
     execSync(`${cmd} --token ${process.env.NPM_TOKEN}`)
   })
 
+  // TODO: currently, the package registry isn't fast enough for us to do
+  // this immediately after publishing. So not sure what to do here...
+
   // Update example lock files to use new dependencies
-  for (const example of examples) {
-    let stat = await fsp.stat(path.join(examplesDir, example))
-    if (!stat.isDirectory()) continue
+  // for (const example of examples) {
+  //   let stat = await fsp.stat(path.join(examplesDir, example))
+  //   if (!stat.isDirectory()) continue
 
-    console.log(`  Updating example ${example} dependencies/lockfile...`)
+  //   console.log(`  Updating example ${example} dependencies/lockfile...`)
 
-    updateExampleLockfile(example)
-  }
+  //   updateExampleLockfile(example)
+  // }
 
   console.log()
 
