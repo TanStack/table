@@ -9,7 +9,7 @@ import {
   TableInstance,
   PaginationState,
   useTableInstance,
-  getCoreRowModelAsync,
+  getCoreRowModelSync,
   getColumnFilteredRowModelSync,
   getPaginationRowModel,
 } from '@tanstack/react-table'
@@ -87,7 +87,7 @@ function App() {
     },
     onPaginationChange: setPagination,
     // Pipeline
-    getCoreRowModel: getCoreRowModelAsync(),
+    getCoreRowModel: getCoreRowModelSync(),
     getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
     //
