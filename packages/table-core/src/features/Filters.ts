@@ -89,7 +89,6 @@ export type FiltersOptions<TGenerics extends AnyGenerics> = {
   // Global
   globalFilterType?: FilterType<TGenerics>
   onGlobalFilterChange?: OnChangeFn<any>
-  enableGlobalFilters?: boolean
   autoResetGlobalFilter?: boolean
   enableGlobalFilter?: boolean
   getGlobalFilteredRowModel?: (
