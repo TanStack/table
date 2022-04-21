@@ -52,6 +52,7 @@ export type ExpandedInstance<TGenerics extends AnyGenerics> = {
   toggleAllRowsExpanded: (expanded?: boolean) => void
   resetExpanded: () => void
   getRowCanExpand: (rowId: string) => boolean
+  getCanSomeRowsExpand: () => boolean
   getIsRowExpanded: (rowId: string) => boolean
   getToggleExpandedProps: <TGetter extends Getter<ToggleExpandedProps>>(
     rowId: string,
@@ -197,6 +198,11 @@ export const Expanding = {
           instance.options.enableExpanded ??
           instance.options.defaultCanExpand ??
           !!row.subRows?.length
+        )
+      },
+      getCanSomeRowsExpand: () => {
+        return Object.keys(instance.getRowModel().rowsById).some(id =>
+          instance.getRowCanExpand(id)
         )
       },
       getToggleExpandedProps: (rowId, userProps) => {
