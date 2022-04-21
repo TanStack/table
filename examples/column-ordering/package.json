@@ -11,7 +11,7 @@
     "faker": "^5.5.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "@tanstack/react-table": "8.0.0-alpha.41"
+    "@tanstack/react-table": "8.0.0-alpha.42"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^3.0.1",
