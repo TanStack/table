@@ -7,7 +7,7 @@ export function getSortedRowModelSync<TGenerics extends AnyGenerics>(opts?: {
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     incrementalMemo(
-      () => [instance.getState().sorting, instance.getGlobalFilteredRowModel()],
+      () => [instance.getState().sorting, instance.getPreSortedRowModel()],
       (_sorting, rowModel): RowModel<TGenerics> => {
         return {
           rows: rowModel.rows.slice(),

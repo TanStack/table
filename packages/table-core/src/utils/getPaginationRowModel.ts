@@ -7,7 +7,10 @@ export function getPaginationRowModel<TGenerics extends AnyGenerics>(opts?: {
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     memo(
-      () => [instance.getState().pagination, instance.getExpandedRowModel()],
+      () => [
+        instance.getState().pagination,
+        instance.getPrePaginationRowModel(),
+      ],
       (pagination, rowModel) => {
         if (!rowModel.rows.length) {
           return rowModel

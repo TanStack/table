@@ -10,10 +10,13 @@ export function getColumnFilteredRowModelSync<
 >(): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     memo(
-      () => [instance.getState().columnFilters, instance.getCoreRowModel()],
+      () => [
+        instance.getState().columnFilters,
+        instance.getPreColumnFilteredRowModel(),
+      ],
       (columnFilters, rowModel) => {
         const columnFilteredRowModel: RowModel<TGenerics> = (() => {
-          if (!rowModel.rows.length || !columnFilters) {
+          if (!rowModel.rows.length || !columnFilters?.length) {
             return rowModel
           }
 

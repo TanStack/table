@@ -8,7 +8,7 @@ export function getExpandedRowModel<TGenerics extends AnyGenerics>(): (
     memo(
       () => [
         instance.getState().expanded,
-        instance.getGroupedRowModel(),
+        instance.getPreExpandedRowModel(),
         instance.options.paginateExpandedRows,
       ],
       (expanded, rowModel, paginateExpandedRows) => {

@@ -591,7 +591,7 @@ export function selectRowsFn<TGenerics extends AnyGenerics>(
   const newSelectedRowsById: Record<string, Row<TGenerics>> = {}
 
   // Filters top level and nested rows
-  const recurseRows = (rows: Row<TGenerics>[], depth = 0) => {
+  const recurseRows = (rows: Row<TGenerics>[], depth = 0): Row<TGenerics>[] => {
     return rows
       .map(row => {
         const isSelected = isRowSelected(row, rowSelection, instance) === true

@@ -7,7 +7,7 @@ export function getSortedRowModelSync<TGenerics extends AnyGenerics>(): (
 ) => () => RowModel<TGenerics> {
   return instance =>
     memo(
-      () => [instance.getState().sorting, instance.getGlobalFilteredRowModel()],
+      () => [instance.getState().sorting, instance.getPreSortedRowModel()],
       (sorting, rowModel) => {
         if (!rowModel.rows.length || !sorting?.length) {
           return rowModel

@@ -10,7 +10,10 @@ export function getGlobalFilteredRowModelSync<
 >(): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     memo(
-      () => [instance.getState().globalFilter, instance.getCoreRowModel()],
+      () => [
+        instance.getState().globalFilter,
+        instance.getPreGlobalFilteredRowModel(),
+      ],
       (globalFilter, rowModel) => {
         const globalFilteredRowModel: RowModel<TGenerics> = (() => {
           if (!rowModel.rows.length || !globalFilter) {

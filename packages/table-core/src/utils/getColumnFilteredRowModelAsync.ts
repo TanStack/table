@@ -12,7 +12,10 @@ export function getColumnFilteredRowModelAsync<
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     incrementalMemo(
-      () => [instance.getState().columnFilters, instance.getCoreRowModel()],
+      () => [
+        instance.getState().columnFilters,
+        instance.getPreColumnFilteredRowModel(),
+      ],
       (_sorting, rowModel): RowModel<TGenerics> => {
         return {
           rows: rowModel.rows.slice(),

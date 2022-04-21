@@ -6,7 +6,7 @@ export function getGroupedRowModelSync<TGenerics extends AnyGenerics>(): (
 ) => () => RowModel<TGenerics> {
   return instance =>
     memo(
-      () => [instance.getState().grouping, instance.getSortedRowModel()],
+      () => [instance.getState().grouping, instance.getPreGroupedRowModel()],
       (grouping, rowModel) => {
         if (!rowModel.rows.length || !grouping.length) {
           return rowModel

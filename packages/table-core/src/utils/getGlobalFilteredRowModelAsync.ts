@@ -12,7 +12,10 @@ export function getGlobalFilteredRowModelAsync<
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     incrementalMemo(
-      () => [instance.getState().globalFilter, instance.getCoreRowModel()],
+      () => [
+        instance.getState().globalFilter,
+        instance.getPreGlobalFilteredRowModel(),
+      ],
       (_globalFilter, rowModel): RowModel<TGenerics> => {
         return {
           rows: rowModel.rows.slice(),
