@@ -310,7 +310,8 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
       return template
     },
 
-    getRowId: (_: TGenerics['Row'], index: number, parent?: Row<TGenerics>) =>
+    getRowId: (row: TGenerics['Row'], index: number, parent?: Row<TGenerics>) =>
+      instance.options.getRowId?.(row, index, parent) ??
       `${parent ? [parent.id, index].join('.') : index}`,
 
     getState: () => {
