@@ -48,6 +48,7 @@ export type ColumnPinningInstance<TGenerics extends AnyGenerics> = {
   getColumnIsPinned: (columnId: string) => ColumnPinningPosition
   getColumnPinnedIndex: (columnId: string) => number
   getIsSomeColumnsPinned: () => boolean
+  getIsSomeVisibleColumnsPinned: () => boolean
 }
 
 //
@@ -179,6 +180,10 @@ export const Pinning = {
         const { left, right } = instance.getState().columnPinning
 
         return Boolean(left?.length || right?.length)
+      },
+
+      getIsSomeVisibleColumnsPinned: () => {
+        return instance.getVisibleLeafColumns().some(d => d.getIsPinned())
       },
     }
   },
