@@ -110,7 +110,7 @@ export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export type ToggleGroupingProps = {
   title?: string
-  onClick?: (event: MouseEvent | TouchEvent) => void
+  onClick?: (event: unknown) => void
 }
 
 export type GroupingInstance<TGenerics extends AnyGenerics> = {
@@ -290,7 +290,7 @@ export const Grouping = {
         const initialProps: ToggleGroupingProps = {
           title: canGroup ? 'Toggle Grouping' : undefined,
           onClick: canGroup
-            ? (e: MouseEvent | TouchEvent) => {
+            ? (e: unknown) => {
                 column.toggleGrouping?.()
               }
             : undefined,

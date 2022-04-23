@@ -87,12 +87,12 @@ export type SortingOptions<TGenerics extends AnyGenerics> = {
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
   maxMultiSortColCount?: number
-  isMultiSortEvent?: (e: MouseEvent | TouchEvent) => boolean
+  isMultiSortEvent?: (e: unknown) => boolean
 }
 
 export type ToggleSortingProps = {
   title?: string
-  onClick?: (event: MouseEvent | TouchEvent) => void
+  onClick?: (event: unknown) => void
 }
 
 export type SortingInstance<TGenerics extends AnyGenerics> = {
@@ -145,8 +145,8 @@ export const Sorting = {
     return {
       onSortingChange: makeStateUpdater('sorting', instance),
       autoResetSorting: true,
-      isMultiSortEvent: (e: MouseEvent | TouchEvent) => {
-        return e.shiftKey
+      isMultiSortEvent: (e: unknown) => {
+        return (e as MouseEvent).shiftKey
       },
     }
   },
@@ -428,7 +428,7 @@ export const Sorting = {
         const initialProps: ToggleSortingProps = {
           title: canSort ? 'Toggle Sorting' : undefined,
           onClick: canSort
-            ? (e: MouseEvent | TouchEvent) => {
+            ? (e: unknown) => {
                 ;(e as any).persist?.()
                 column.toggleSorting?.(
                   undefined,

@@ -42,7 +42,7 @@ export type ExpandedOptions<TGenerics extends AnyGenerics> = {
 
 export type ToggleExpandedProps = {
   title?: string
-  onClick?: (event: MouseEvent | TouchEvent) => void
+  onClick?: (event: unknown) => void
 }
 
 export type ExpandedInstance<TGenerics extends AnyGenerics> = {
@@ -217,7 +217,7 @@ export const Expanding = {
         const initialProps: ToggleExpandedProps = {
           title: canExpand ? 'Toggle Expanded' : undefined,
           onClick: canExpand
-            ? (e: MouseEvent | TouchEvent) => {
+            ? (e: unknown) => {
                 ;(e as any).persist?.()
                 instance.toggleRowExpanded(rowId)
               }
@@ -229,7 +229,7 @@ export const Expanding = {
       getToggleAllRowsExpandedProps: userProps => {
         const initialProps: ToggleExpandedProps = {
           title: 'Toggle All Expanded',
-          onClick: (e: MouseEvent | TouchEvent) => {
+          onClick: (e: unknown) => {
             ;(e as any).persist?.()
             instance.toggleAllRowsExpanded()
           },

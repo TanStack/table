@@ -28,8 +28,8 @@ export type RowSelectionOptions<TGenerics extends AnyGenerics> = {
   //   | ((
   //       row: Row<TGenerics>
   //     ) => boolean)
-  // isAdditiveSelectEvent?: (e: MouseEvent | TouchEvent) => boolean
-  // isInclusiveSelectEvent?: (e: MouseEvent | TouchEvent) => boolean
+  // isAdditiveSelectEvent?: (e: unknown) => boolean
+  // isInclusiveSelectEvent?: (e: unknown) => boolean
   // selectRowsFn?: (
   //   instance: TableInstance<
   //     TData,
@@ -43,7 +43,7 @@ export type RowSelectionOptions<TGenerics extends AnyGenerics> = {
 }
 
 type ToggleRowSelectedProps = {
-  onChange?: (e: MouseEvent | TouchEvent) => void
+  onChange?: (e: unknown) => void
   checked?: boolean
   title?: string
   indeterminate?: boolean
@@ -116,8 +116,8 @@ export const RowSelection = {
       enableMultiRowSelection: true,
       enableSubRowSelection: true,
       // enableGroupingRowSelection: false,
-      // isAdditiveSelectEvent: (e: MouseEvent | TouchEvent) => !!e.metaKey,
-      // isInclusiveSelectEvent: (e: MouseEvent | TouchEvent) => !!e.shiftKey,
+      // isAdditiveSelectEvent: (e: unknown) => !!e.metaKey,
+      // isInclusiveSelectEvent: (e: unknown) => !!e.shiftKey,
     }
   },
 
@@ -473,8 +473,10 @@ export const RowSelection = {
 
         const initialProps: ToggleRowSelectedProps = {
           onChange: canSelect
-            ? (e: MouseEvent | TouchEvent) => {
-                row.toggleSelected((e.target as HTMLInputElement).checked)
+            ? (e: unknown) => {
+                row.toggleSelected(
+                  ((e as MouseEvent).target as HTMLInputElement).checked
+                )
               }
             : undefined,
           checked: isSelected,
@@ -504,9 +506,9 @@ export const RowSelection = {
         const isAllRowsSelected = instance.getIsAllRowsSelected()
 
         const initialProps: ToggleRowSelectedProps = {
-          onChange: (e: MouseEvent | TouchEvent) => {
+          onChange: (e: unknown) => {
             instance.toggleAllRowsSelected(
-              (e.target as HTMLInputElement).checked
+              ((e as MouseEvent).target as HTMLInputElement).checked
             )
           },
           checked: isAllRowsSelected,
@@ -522,9 +524,9 @@ export const RowSelection = {
         const isAllPageRowsSelected = instance.getIsAllPageRowsSelected()
 
         const initialProps: ToggleRowSelectedProps = {
-          onChange: (e: MouseEvent | TouchEvent) => {
+          onChange: (e: unknown) => {
             instance.toggleAllPageRowsSelected(
-              (e.target as HTMLInputElement).checked
+              ((e as MouseEvent).target as HTMLInputElement).checked
             )
           },
           checked: isAllPageRowsSelected,

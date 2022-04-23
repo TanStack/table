@@ -102,8 +102,10 @@ export const Visibility = {
           type: 'checkbox',
           checked: column.getIsVisible?.(),
           title: 'Toggle Column Visibility',
-          onChange: (e: MouseEvent | TouchEvent) => {
-            column.toggleVisibility?.((e.target as HTMLInputElement).checked)
+          onChange: (e: unknown) => {
+            column.toggleVisibility?.(
+              ((e as MouseEvent).target as HTMLInputElement).checked
+            )
           },
         }
 

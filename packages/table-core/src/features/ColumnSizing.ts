@@ -228,7 +228,7 @@ export const ColumnSizing = {
 
         const canResize = column.getCanResize()
 
-        const onResizeStart = (e: MouseEvent | TouchEvent) => {
+        const onResizeStart = (e: unknown) => {
           if (isTouchStartEvent(e)) {
             // lets not respond to multiple touches (e.g. 2 or 3 fingers)
             if (e.touches && e.touches.length > 1) {
@@ -246,7 +246,7 @@ export const ColumnSizing = {
 
           const clientX = isTouchStartEvent(e)
             ? Math.round(e.touches[0].clientX)
-            : e.clientX
+            : (e as MouseEvent).clientX
 
           const updateOffset = (
             eventType: 'move' | 'end',
@@ -446,6 +446,6 @@ export function passiveEventSupported() {
   return passiveSupported
 }
 
-function isTouchStartEvent(e: TouchEvent | MouseEvent): e is TouchEvent {
-  return e.type === 'touchstart'
+function isTouchStartEvent(e: unknown): e is TouchEvent {
+  return (e as TouchEvent).type === 'touchstart'
 }
