@@ -1,5 +1,5 @@
 import { RowModel } from '..'
-import { BuiltInAggregationType, aggregationTypes } from '../aggregationTypes'
+import { BuiltInAggregationType, aggregationFns } from '../aggregationFns'
 import {
   Cell,
   Column,
@@ -46,7 +46,7 @@ export type GroupingTableState = {
 }
 
 export type GroupingColumnDef<TGenerics extends AnyGenerics> = {
-  aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
+  aggregationFn?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   aggregateValue?: (columnValue: unknown) => any
   aggregatedCell?: Renderable<
     TGenerics,
@@ -63,7 +63,7 @@ export type GroupingColumnDef<TGenerics extends AnyGenerics> = {
 }
 
 export type GroupingColumn<TGenerics extends AnyGenerics> = {
-  aggregationType?: AggregationType<Overwrite<TGenerics, { Value: any }>>
+  aggregationFn?: AggregationType<Overwrite<TGenerics, { Value: any }>>
   getCanGroup: () => boolean
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
@@ -94,7 +94,7 @@ export type ColumnDefaultOptions = {
 }
 
 export type GroupingOptions<TGenerics extends AnyGenerics> = {
-  aggregationTypes?: TGenerics['AggregationFns']
+  aggregationFns?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
   autoResetGrouping?: boolean
   enableGrouping?: boolean
@@ -144,7 +144,7 @@ export const Grouping = {
     TGenerics extends AnyGenerics
   >(): GroupingColumnDef<TGenerics> => {
     return {
-      aggregationType: 'auto',
+      aggregationFn: 'auto',
     }
   },
 
@@ -169,7 +169,7 @@ export const Grouping = {
     instance: TableInstance<TGenerics>
   ): GroupingColumn<TGenerics> => {
     return {
-      aggregationType: column.aggregationType,
+      aggregationFn: column.aggregationFn,
       getCanGroup: () => instance.getColumnCanGroup(column.id),
       getGroupedIndex: () => instance.getColumnGroupedIndex(column.id),
       getIsGrouped: () => instance.getColumnIsGrouped(column.id),
@@ -210,32 +210,32 @@ export const Grouping = {
         const value = firstRow?.values[columnId]
 
         if (typeof value === 'number') {
-          return aggregationTypes.sum
+          return aggregationFns.sum
         }
 
         if (Object.prototype.toString.call(value) === '[object Date]') {
-          return aggregationTypes.extent
+          return aggregationFns.extent
         }
 
-        return aggregationTypes.count
+        return aggregationFns.count
       },
       getColumnAggregationFn: columnId => {
         const column = instance.getColumn(columnId)
-        const userAggregationTypes = instance.options.aggregationTypes
+        const userAggregationTypes = instance.options.aggregationFns
 
         if (!column) {
           throw new Error()
         }
 
-        return isFunction(column.aggregationType)
-          ? column.aggregationType
-          : column.aggregationType === 'auto'
+        return isFunction(column.aggregationFn)
+          ? column.aggregationFn
+          : column.aggregationFn === 'auto'
           ? instance.getColumnAutoAggregationFn(columnId)
           : (userAggregationTypes as Record<string, any>)?.[
-              column.aggregationType as string
+              column.aggregationFn as string
             ] ??
-            (aggregationTypes[
-              column.aggregationType as BuiltInAggregationType
+            (aggregationFns[
+              column.aggregationFn as BuiltInAggregationType
             ] as AggregationFn<TGenerics>)
       },
 

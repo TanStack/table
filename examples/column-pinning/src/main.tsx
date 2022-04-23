@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable<{ Row: Person }>()
+let table = createTable().setRowType<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({

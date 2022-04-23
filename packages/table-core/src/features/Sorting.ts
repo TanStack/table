@@ -1,5 +1,5 @@
 import { RowModel } from '..'
-import { BuiltInSortType, reSplitAlphaNumeric, sortTypes } from '../sortTypes'
+import { BuiltInSortType, reSplitAlphaNumeric, sortingFns } from '../sortingFns'
 
 import {
   Column,
@@ -52,7 +52,7 @@ export type SortType<TGenerics extends AnyGenerics> =
   | SortingFn<TGenerics>
 
 export type SortingColumnDef<TGenerics extends AnyGenerics> = {
-  sortType?: SortType<Overwrite<TGenerics, { Value: any }>>
+  sortingFn?: SortType<Overwrite<TGenerics, { Value: any }>>
   sortDescFirst?: boolean
   enableSorting?: boolean
   enableMultiSort?: boolean
@@ -62,7 +62,7 @@ export type SortingColumnDef<TGenerics extends AnyGenerics> = {
 }
 
 export type SortingColumn<TGenerics extends AnyGenerics> = {
-  sortType: SortType<Overwrite<TGenerics, { Value: any }>>
+  sortingFn: SortType<Overwrite<TGenerics, { Value: any }>>
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
@@ -75,7 +75,7 @@ export type SortingColumn<TGenerics extends AnyGenerics> = {
 }
 
 export type SortingOptions<TGenerics extends AnyGenerics> = {
-  sortTypes?: TGenerics['SortingFns']
+  sortingFns?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
   autoResetSorting?: boolean
   enableSorting?: boolean
@@ -129,7 +129,7 @@ export const Sorting = {
     TGenerics extends AnyGenerics
   >(): SortingColumnDef<TGenerics> => {
     return {
-      sortType: 'auto',
+      sortingFn: 'auto',
     }
   },
 
@@ -156,7 +156,7 @@ export const Sorting = {
     instance: TableInstance<TGenerics>
   ): SortingColumn<TGenerics> => {
     return {
-      sortType: column.sortType,
+      sortingFn: column.sortingFn,
       getCanSort: () => instance.getColumnCanSort(column.id),
       getCanMultiSort: () => instance.getColumnCanMultiSort(column.id),
       getSortIndex: () => instance.getColumnSortIndex(column.id),
@@ -205,23 +205,23 @@ export const Sorting = {
           const value = row?.values[columnId]
 
           if (Object.prototype.toString.call(value) === '[object Date]') {
-            return sortTypes.datetime
+            return sortingFns.datetime
           }
 
           if (typeof value === 'string') {
             isString = true
 
             if (value.split(reSplitAlphaNumeric).length > 1) {
-              return sortTypes.alphanumeric
+              return sortingFns.alphanumeric
             }
           }
         }
 
         if (isString) {
-          return sortTypes.text
+          return sortingFns.text
         }
 
-        return sortTypes.basic
+        return sortingFns.basic
       },
       getColumnAutoSortDir: columnId => {
         const firstRow = instance.getGlobalFilteredRowModel().flatRows[0]
@@ -236,21 +236,21 @@ export const Sorting = {
       },
       getColumnSortingFn: columnId => {
         const column = instance.getColumn(columnId)
-        const userSortTypes = instance.options.sortTypes
+        const userSortTypes = instance.options.sortingFns
 
         if (!column) {
           throw new Error()
         }
 
-        return isFunction(column.sortType)
-          ? column.sortType
-          : column.sortType === 'auto'
+        return isFunction(column.sortingFn)
+          ? column.sortingFn
+          : column.sortingFn === 'auto'
           ? instance.getColumnAutoSortingFn(columnId)
           : (userSortTypes as Record<string, any>)?.[
-              column.sortType as string
+              column.sortingFn as string
             ] ??
-            (sortTypes[
-              column.sortType as BuiltInSortType
+            (sortingFns[
+              column.sortingFn as BuiltInSortType
             ] as SortingFn<TGenerics>)
       },
 

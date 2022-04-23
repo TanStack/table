@@ -1,5 +1,5 @@
 import { RowModel } from '..'
-import { BuiltInFilterType, filterTypes } from '../filterTypes'
+import { BuiltInFilterType, filterFns } from '../filterFns'
 import {
   Column,
   OnChangeFn,
@@ -49,11 +49,11 @@ export type FiltersTableState = {
 export type FilterType<TGenerics extends AnyGenerics> =
   | 'auto'
   | BuiltInFilterType
-  | TGenerics['FilterFns']
+  | keyof TGenerics['FilterFns']
   | FilterFn<TGenerics>
 
 export type FiltersColumnDef<TGenerics extends AnyGenerics> = {
-  filterType?: FilterType<Overwrite<TGenerics, { Value: any }>>
+  filterFn?: FilterType<Overwrite<TGenerics, { Value: any }>>
   enableAllFilters?: boolean
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
@@ -63,7 +63,7 @@ export type FiltersColumnDef<TGenerics extends AnyGenerics> = {
 }
 
 export type FiltersColumn<TGenerics extends AnyGenerics> = {
-  filterType: FilterType<Overwrite<TGenerics, { Value: any }>>
+  filterFn: FilterType<Overwrite<TGenerics, { Value: any }>>
   getCanColumnFilter: () => boolean
   getCanGlobalFilter: () => boolean
   getColumnFilterIndex: () => number
@@ -77,7 +77,7 @@ export type FiltersColumn<TGenerics extends AnyGenerics> = {
 
 export type FiltersOptions<TGenerics extends AnyGenerics> = {
   filterFromLeafRows?: boolean
-  filterTypes?: TGenerics['FilterFns']
+  filterFns?: TGenerics['FilterFns']
   enableFilters?: boolean
   // Column
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
@@ -139,7 +139,7 @@ export const Filters = {
     TGenerics extends AnyGenerics
   >(): FiltersColumnDef<TGenerics> => {
     return {
-      filterType: 'auto',
+      filterFn: 'auto',
     }
   },
 
@@ -217,7 +217,7 @@ export const Filters = {
     )
 
     return {
-      filterType: column.filterType,
+      filterFn: column.filterFn,
       getCanColumnFilter: () => instance.getColumnCanColumnFilter(column.id),
       getCanGlobalFilter: () => instance.getColumnCanGlobalFilter(column.id),
       getColumnFilterIndex: () => instance.getColumnFilterIndex(column.id),
@@ -269,48 +269,48 @@ export const Filters = {
         const value = firstRow?.values[columnId]
 
         if (typeof value === 'string') {
-          return filterTypes.includesString
+          return filterFns.includesString
         }
 
         if (typeof value === 'number') {
-          return filterTypes.betweenNumberRange
+          return filterFns.betweenNumberRange
         }
 
         if (value !== null && typeof value === 'object') {
-          return filterTypes.equals
+          return filterFns.equals
         }
 
         if (Array.isArray(value)) {
-          return filterTypes.arrIncludes
+          return filterFns.arrIncludes
         }
 
-        return filterTypes.weakEquals
+        return filterFns.weakEquals
       },
       getGlobalAutoFilterFn: () => {
-        return filterTypes.includesString
+        return filterFns.includesString
       },
       getColumnFilterFn: columnId => {
         const column = instance.getColumn(columnId)
-        const userFilterTypes = instance.options.filterTypes
+        const userFilterTypes = instance.options.filterFns
 
         if (!column) {
           throw new Error()
         }
 
-        return isFunction(column.filterType)
-          ? column.filterType
-          : column.filterType === 'auto'
+        return isFunction(column.filterFn)
+          ? column.filterFn
+          : column.filterFn === 'auto'
           ? instance.getColumnAutoFilterFn(columnId)
           : (userFilterTypes as Record<string, any>)?.[
-              column.filterType as string
+              column.filterFn as string
             ] ??
-            (filterTypes[
-              column.filterType as BuiltInFilterType
+            (filterFns[
+              column.filterFn as BuiltInFilterType
             ] as FilterFn<TGenerics>)
       },
 
       getGlobalFilterFn: () => {
-        const { filterTypes: userFilterTypes, globalFilterType } =
+        const { filterFns: userFilterTypes, globalFilterType } =
           instance.options
 
         return isFunction(globalFilterType)
@@ -320,7 +320,7 @@ export const Filters = {
           : (userFilterTypes as Record<string, any>)?.[
               globalFilterType as string
             ] ??
-            (filterTypes[
+            (filterFns[
               globalFilterType as BuiltInFilterType
             ] as FilterFn<TGenerics>)
       },

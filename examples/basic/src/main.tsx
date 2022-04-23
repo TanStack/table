@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
@@ -17,6 +17,8 @@ type Person = {
   status: string
   progress: number
 }
+
+const table = createTable().setRowType<Person>()
 
 const defaultData: Person[] = [
   {
@@ -44,8 +46,6 @@ const defaultData: Person[] = [
     progress: 10,
   },
 ]
-
-const table = createTable<{ Row: Person }>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({

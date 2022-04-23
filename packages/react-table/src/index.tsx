@@ -6,10 +6,9 @@ import {
   PartialKeys,
   Options,
   TableInstance,
-  CreateTableFactoryOptions,
   Table,
-  init,
   AnyGenerics,
+  createTableFactory,
 } from '@tanstack/table-core'
 
 export type Renderable<TProps> =
@@ -51,23 +50,18 @@ function isExoticComponent(component: any) {
   )
 }
 
-const { createTable, createTableFactory } = init({ render })
-
-export { createTable, createTableFactory }
+export const createTable = createTableFactory({ render })
 
 export function useTableInstance<TGenerics extends AnyGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
-    Omit<
-      Options<TGenerics>,
-      keyof CreateTableFactoryOptions<any, any, any, any>
-    >,
+    Omit<Options<TGenerics>, 'render'>,
     'state' | 'onStateChange'
   >
 ): TableInstance<TGenerics> {
   // Compose in the generic options to the user options
   const resolvedOptions: Options<TGenerics> = {
-    ...(table.__options ?? {}),
+    ...table.options,
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
     render,

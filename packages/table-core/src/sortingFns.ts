@@ -2,7 +2,7 @@ import { PartialGenerics, AnyGenerics, Row } from './types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
-export const sortTypes = {
+export const sortingFns = {
   alphanumeric,
   alphanumericCaseSensitive,
   text,
@@ -11,7 +11,7 @@ export const sortTypes = {
   basic,
 }
 
-export type BuiltInSortType = keyof typeof sortTypes
+export type BuiltInSortType = keyof typeof sortingFns
 
 function alphanumeric<TGenerics extends AnyGenerics>(
   rowA: Row<TGenerics>,

@@ -1,6 +1,6 @@
 import { PartialGenerics, AnyGenerics, Row } from './types'
 
-export const filterTypes = {
+export const filterFns = {
   includesString,
   includesStringSensitive,
   equalsString,
@@ -12,7 +12,7 @@ export const filterTypes = {
   betweenNumberRange,
 }
 
-export type BuiltInFilterType = keyof typeof filterTypes
+export type BuiltInFilterType = keyof typeof filterFns
 
 function includesString<TGenerics extends AnyGenerics>(
   rows: Row<TGenerics>[],

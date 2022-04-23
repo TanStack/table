@@ -16,7 +16,7 @@ import {
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable<{ Row: Person }>()
+let table = createTable().setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]

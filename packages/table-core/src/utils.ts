@@ -10,6 +10,17 @@ export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
 > &
   U
 
+export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
+
+// export type DefinedGenericKeys<T extends AnyGenerics> = {
+//   [K in keyof T]: 0 extends 1 & T[K] ? never : T[K] extends {} ? K : never
+// }[keyof T]
+
+// export type DefinedGenerics<T extends AnyGenerics> = Pick<
+//   T,
+//   DefinedGenericKeys<T>
+// >
+
 export type DataUpdateFunction<T> = (input: T) => T
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
@@ -53,7 +64,7 @@ export function getBatchGroups<T>(arr: T[], count: number) {
 
 export function makeStateUpdater(key: keyof TableState, instance: unknown) {
   return (updater: Updater<any>) => {
-    ;(instance as any).setState(<TTableState,>(old: TTableState) => {
+    ;(instance as any).setState(<TTableState>(old: TTableState) => {
       return {
         ...old,
         [key]: functionalUpdate(updater, (old as any)[key]),

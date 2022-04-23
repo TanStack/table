@@ -1,38 +1,60 @@
-import { CustomFilterTypes } from './features/Filters'
-import { CustomAggregationTypes } from './features/Grouping'
-import { CustomSortingTypes } from './features/Sorting'
-import {
-  ColumnDef,
-  AccessorFn,
-  PartialGenerics,
-  AnyRender,
-  AnyGenerics,
-} from './types'
-import { Overwrite, PartialKeys } from './utils'
+import { CustomFilterTypes, FilterFn } from './features/Filters'
+import { AggregationFn, CustomAggregationTypes } from './features/Grouping'
+import { CustomSortingTypes, SortingFn } from './features/Sorting'
+import { ColumnDef, AccessorFn, AnyRender, AnyGenerics, Options } from './types'
+import { IfDefined, Overwrite, PartialKeys } from './utils'
 
-export type CreateTableFactory<TGenerics extends AnyGenerics> = <
-  TSubGenerics extends {
-    Row: any
-    ColumnMeta?: object
-    TableMeta?: object
-  }
->() => Table<Overwrite<TGenerics, TSubGenerics>>
+export type TableFactory<TGenerics extends AnyGenerics> = () => Table<TGenerics>
 
-export type CreateTableFactoryOptions<
+export type CreateTableOptions<
   TRender extends AnyRender,
   TFilterFns extends CustomFilterTypes<any>,
   TSortingFns extends CustomSortingTypes<any>,
-  TAggregationFns extends CustomAggregationTypes<any>
-> = {
-  render: TRender
-  filterFns?: TFilterFns
-  sortingFns?: TSortingFns
-  aggregationFns?: TAggregationFns
-}
+  TAggregationFns extends CustomAggregationTypes<any>,
+  TGenerics extends AnyGenerics
+> = Partial<
+  {
+    render?: TRender
+    filterFns?: TFilterFns
+    sortingFns?: TSortingFns
+    aggregationFns?: TAggregationFns
+  } & Omit<Options<TGenerics>, 'filterFns' | 'sortingFns' | 'aggregationFns'>
+>
 
 export type Table<TGenerics extends AnyGenerics> = {
   generics: TGenerics
-  __options: CreateTableFactoryOptions<any, any, any, any>
+  options: Partial<Options<TGenerics>>
+  setRowType: <TRow extends object>() => Table<
+    Overwrite<TGenerics, { Row: TRow }>
+  >
+  setTableMetaType: <TTableMeta extends object>() => Table<
+    Overwrite<TGenerics, { TableMeta: TTableMeta }>
+  >
+  setColumnMetaType: <TColumnMeta extends object>() => Table<
+    Overwrite<TGenerics, { ColumnMeta: TColumnMeta }>
+  >
+  setOptions: <
+    TFilterFns extends Record<string, FilterFn<any>>,
+    TSortingFns extends Record<string, SortingFn<any>>,
+    TAggregationFns extends Record<string, AggregationFn<any>>
+  >(
+    options: CreateTableOptions<
+      any,
+      TFilterFns,
+      TSortingFns,
+      TAggregationFns,
+      TGenerics
+    >
+  ) => Table<
+    Overwrite<
+      TGenerics,
+      {
+        FilterFns: IfDefined<TFilterFns, TGenerics['FilterFns']>
+        SortingFns: IfDefined<TSortingFns, TGenerics['SortingFns']>
+        AggregationFns: IfDefined<TAggregationFns, TGenerics['AggregationFns']>
+      }
+    >
+  >
   createColumns: <TColumnDef extends ColumnDef<any>>(
     columns: TColumnDef[]
   ) => TColumnDef[]
@@ -95,39 +117,36 @@ export type Table<TGenerics extends AnyGenerics> = {
   ) => ColumnDef<TGenerics>
 }
 
-type InitTable<TRender extends AnyRender> = {
-  createTableFactory: <TGenerics extends AnyGenerics>(
-    options: CreateTableFactoryOptions<TRender, any, any, any>
-  ) => CreateTableFactory<Overwrite<TGenerics, { Render: TRender }>>
-  createTable: CreateTableFactory<
-    Overwrite<PartialGenerics, { Render: TRender }>
-  >
-}
-
 //
 
-export function init<TRender extends AnyRender>(opts: {
+export function createTableFactory<TRender extends AnyRender>(opts: {
   render: TRender
-}): InitTable<TRender> {
-  return {
-    createTableFactory: factoryOptions => () =>
-      _createTable(undefined, undefined, { ...factoryOptions, ...opts }),
-    createTable: () => _createTable(undefined, undefined, opts),
-  }
+}): () => Table<{ Render: TRender }> {
+  return () => createTable(undefined, undefined, opts)
 }
 
-function _createTable<TGenerics extends AnyGenerics>(
-  _: undefined,
-  __: undefined,
-  __options: CreateTableFactoryOptions<any, any, any, any>
+// A lot of returns in here are `as any` for a reason. Unless you
+// can find a better way to do this, then don't worry about them
+function createTable<TGenerics extends AnyGenerics>(
+  _?: undefined,
+  __?: undefined,
+  options?: CreateTableOptions<any, any, any, any, TGenerics>
 ): Table<TGenerics> {
-  return {
+  const table: Table<TGenerics> = {
     generics: undefined!,
-    __options: __options ?? {
-      render: () => {
-        throw new Error()
-      },
+    options: options ?? {
+      render: (() => {
+        throw new Error('')
+      })(),
     },
+    setRowType: () => table as any,
+    setTableMetaType: () => table as any,
+    setColumnMetaType: () => table as any,
+    setOptions: newOptions =>
+      createTable(_, __, {
+        ...options,
+        ...newOptions,
+      } as any),
     createColumns: columns => columns,
     createDisplayColumn: column => ({ ...column, columnDefType: 'display' }),
     createGroup: column => ({ ...column, columnDefType: 'group' } as any),
@@ -156,4 +175,6 @@ function _createTable<TGenerics extends AnyGenerics>(
       throw new Error('Invalid accessor')
     },
   }
+
+  return table
 }

@@ -52,7 +52,7 @@ export function getGroupedRowModelSync<TGenerics extends AnyGenerics>(): (
                   }),
                 () => groupedRows.map(row => row.values[column.id])
               )
-            } else if (column.aggregationType) {
+            } else if (column.aggregationFn) {
               console.info({ column })
               throw new Error(
                 process.env.NODE_ENV !== 'production'

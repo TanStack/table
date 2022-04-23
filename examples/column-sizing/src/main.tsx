@@ -46,7 +46,7 @@ const defaultData: Person[] = [
   },
 ]
 
-let table = createTable<{ Row: Person }>()
+let table = createTable().setRowType<Person>()
 
 const defaultColumns = table.createColumns([
   table.createGroup({

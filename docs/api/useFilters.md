@@ -27,7 +27,7 @@ The following options are supported via the main options object passed to `useTa
   - Optional
   - Defaults to `false`
   - If set to `true`, all columns will be filterable, regardless if they have a valid `accessor`
-- `filterTypes: Object<filterKey: filterType>`
+- `filterFns: Object<filterKey: filterFn>`
   - Must be **memoized**
   - Allows overriding or adding additional filter types for columns to use. If a column's filter type isn't found on this object, it will default to using the built-in filter types.
   - For more information on filter types, see Filtering
@@ -58,7 +58,7 @@ The following options are supported on any `Column` object passed to the `column
   - Optional
   - Defaults to `text`
   - The resolved function from the this string/function will be used to filter the this column's data.
-    - If a `string` is passed, the function with that name located on either the custom `filterTypes` option or the built-in filtering types object will be used. If
+    - If a `string` is passed, the function with that name located on either the custom `filterFns` option or the built-in filtering types object will be used. If
     - If a `function` is passed, it will be used directly.
   - For more information on filter types, see Filtering
   - If a **function** is passed, it must be **memoized**

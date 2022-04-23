@@ -1,12 +1,11 @@
 import {
   AnyGenerics,
-  CreateTableFactoryOptions,
   Options,
   PartialKeys,
   Table,
   createTableInstance,
-  init,
   TableFeature,
+  createTableFactory,
 } from '@tanstack/table-core'
 import { h, watchEffect, ref, onBeforeUpdate } from 'vue'
 import { mergeProxy } from './merge-proxy'
@@ -23,23 +22,18 @@ function render<TProps extends {}>(Comp: any, props: TProps) {
   return Comp
 }
 
-const { createTable, createTableFactory } = init({ render })
-
-export { createTable, createTableFactory }
+export const createTable = createTableFactory({ render })
 
 export function useTableInstance<TGenerics extends AnyGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
-    Omit<
-      Options<TGenerics>,
-      keyof CreateTableFactoryOptions<any, any, any, any>
-    >,
+    Omit<Options<TGenerics>, 'render'>,
     'state' | 'onStateChange'
   >
 ) {
   const resolvedOptions: Options<TGenerics> = mergeProxy(
     {
-      ...(table.__options ?? {}),
+      ...table.options,
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       render,

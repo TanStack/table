@@ -46,7 +46,7 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Defaults to the built-in default orderBy function
   - This function is responsible for composing multiple sorting functions together for multi-sorting, and also handles both the directional sorting and stable-sorting tie breaking. Rarely would you want to override this function unless you have a very advanced use-case that requires it.
-- `sortTypes: Object<sortKey: sortType>`
+- `sortingFns: Object<sortKey: sortingFn>`
   - Must be **memoized**
   - Allows overriding or adding additional sort types for columns to use. If a column's sort type isn't found on this object, it will default to using the built-in sort types.
   - For more information on sort types, see Sorting
@@ -78,12 +78,12 @@ The following options are supported on any `Column` object passed to the `column
   - Defaults to `false`
   - If set to `true`, the underlying sorting direction will be inverted, but the UI will not.
   - This may be useful in situations where positive and negative connotation is inverted, eg. a Golfing score where a lower score is considered more positive than a higher one.
-- `sortType: String | Function(rowA: <Row>, rowB: <Row>, columnId: String, desc: Bool)`
+- `sortingFn: String | Function(rowA: <Row>, rowB: <Row>, columnId: String, desc: Bool)`
   - Used to compare 2 rows of data and order them correctly.
   - If a **function** is passed, it must be **memoized**
   - String options: `basic`, `datetime`, `alphanumeric`. Defaults to `alphanumeric`.
   - The resolved function from the this string/function will be used to sort the this column's data.
-    - If a `string` is passed, the function with that name located on either the custom `sortTypes` option or the built-in sorting types object will be used.
+    - If a `string` is passed, the function with that name located on either the custom `sortingFns` option or the built-in sorting types object will be used.
     - If a `function` is passed, it will be used.
   - For more information on sort types, see Sorting
 

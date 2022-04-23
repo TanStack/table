@@ -17,13 +17,12 @@ import {
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable<{
-  Row: Person
-  TableMeta: {
-    // We can tell our table about a custom "updateData" method we will provide it
+let table = createTable()
+  .setRowType<Person>()
+  // In addition to our row type, we can also tell our table about a custom "updateData" method we will provide it
+  .setTableMetaType<{
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
-  }
-}>()
+  }>()
 
 // Get our table generics
 type TableGenerics = typeof table.generics

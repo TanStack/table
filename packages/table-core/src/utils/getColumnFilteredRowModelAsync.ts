@@ -65,7 +65,7 @@ export function getColumnFilteredRowModelAsync<
         //       if (!filterFn) {
         //         if (process.env.NODE_ENV !== 'production') {
         //           console.warn(
-        //             `Could not find a valid 'column.filterType' for column with the ID: ${column.id}.`
+        //             `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`
         //           )
         //         }
         //         continue

@@ -231,7 +231,7 @@ function App() {
         Header: 'Order Date',
         id: 'date',
         accessor: d => new Date(d.date),
-        sortType: 'basic',
+        sortingFn: 'basic',
         aggregate: 'count',
         Cell: ({ value }) => (value ? dayjs(value).format('l') : ''),
         Aggregated: ({ value }) => `${value} Orders`,

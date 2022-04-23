@@ -26,7 +26,6 @@ import {
   CellProps,
   TableInstance,
   RowValues,
-  PartialGenerics,
   CoreCell,
   Renderable,
   UseRenderer,
@@ -46,7 +45,7 @@ import { RowSelection } from './features/RowSelection'
 import { Sorting } from './features/Sorting'
 import { Visibility } from './features/Visibility'
 import { Headers } from './features/Headers'
-import { mean } from './aggregationTypes'
+import { mean } from './aggregationFns'
 
 const features: TableFeature[] = [
   Headers,
