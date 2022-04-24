@@ -15,7 +15,9 @@
     "paths": {
       "@tanstack/table-core": ["packages/table-core"],
       "@tanstack/react-table": ["packages/react-table"],
-      "@tanstack/react-table-devtools": ["packages/react-table-devtools"]
+      "@tanstack/react-table-devtools": ["packages/react-table-devtools"],
+      "@tanstack/solid-table": ["packages/solid-table"],
+      "@tanstack/vue-table": ["packages/vue-table"]
     }
   }
 }
