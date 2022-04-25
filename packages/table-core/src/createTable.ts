@@ -1,6 +1,6 @@
-import { CustomFilterTypes, FilterFn } from './features/Filters'
-import { AggregationFn, CustomAggregationTypes } from './features/Grouping'
-import { CustomSortingTypes, SortingFn } from './features/Sorting'
+import { CustomFilterFns, FilterFn } from './features/Filters'
+import { AggregationFn, CustomAggregationFns } from './features/Grouping'
+import { CustomSortingFns, SortingFn } from './features/Sorting'
 import { ColumnDef, AccessorFn, AnyRender, AnyGenerics, Options } from './types'
 import { IfDefined, Overwrite, PartialKeys } from './utils'
 
@@ -8,9 +8,9 @@ export type TableFactory<TGenerics extends AnyGenerics> = () => Table<TGenerics>
 
 export type CreateTableOptions<
   TRender extends AnyRender,
-  TFilterFns extends CustomFilterTypes<any>,
-  TSortingFns extends CustomSortingTypes<any>,
-  TAggregationFns extends CustomAggregationTypes<any>,
+  TFilterFns extends CustomFilterFns<any>,
+  TSortingFns extends CustomSortingFns<any>,
+  TAggregationFns extends CustomAggregationFns<any>,
   TGenerics extends AnyGenerics
 > = Partial<
   {

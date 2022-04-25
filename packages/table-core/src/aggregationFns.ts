@@ -10,7 +10,7 @@ export const aggregationFns = {
   count,
 }
 
-export type BuiltInAggregationType = keyof typeof aggregationFns
+export type BuiltInAggregationFn = keyof typeof aggregationFns
 
 function sum(_getLeafValues: () => unknown[], getChildValues: () => unknown[]) {
   // It's faster to just add the aggregations together instead of

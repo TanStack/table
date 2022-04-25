@@ -16,7 +16,13 @@ import {
 
 import { makeData, Person } from './makeData'
 
-let table = createTable().setRowType<Person>()
+let table = createTable()
+  .setOptions({
+    filterFns: {
+      test: rows => rows,
+    },
+  })
+  .setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -34,6 +40,7 @@ function App() {
             table.createDataColumn('firstName', {
               cell: info => info.value,
               footer: props => props.column.id,
+              filterFn: 'test',
             }),
             table.createDataColumn(row => row.lastName, {
               id: 'lastName',
@@ -80,6 +87,7 @@ function App() {
   const instance = useTableInstance(table, {
     data,
     columns,
+    globalFilterFn: 'test',
     state: {
       columnFilters,
       globalFilter,

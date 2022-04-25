@@ -1,5 +1,9 @@
 import { RowModel } from '..'
-import { BuiltInSortType, reSplitAlphaNumeric, sortingFns } from '../sortingFns'
+import {
+  BuiltInSortingFn,
+  reSplitAlphaNumeric,
+  sortingFns,
+} from '../sortingFns'
 
 import {
   Column,
@@ -36,7 +40,7 @@ export type SortingFn<TGenerics extends AnyGenerics> = {
   (rowA: Row<TGenerics>, rowB: Row<TGenerics>, columnId: string): number
 }
 
-export type CustomSortingTypes<TGenerics extends AnyGenerics> = Record<
+export type CustomSortingFns<TGenerics extends AnyGenerics> = Record<
   string,
   SortingFn<TGenerics>
 >
@@ -45,14 +49,14 @@ export type SortingTableState = {
   sorting: SortingState
 }
 
-export type SortType<TGenerics extends AnyGenerics> =
+export type SortingFnOption<TGenerics extends AnyGenerics> =
   | 'auto'
-  | BuiltInSortType
+  | BuiltInSortingFn
   | keyof TGenerics['SortingFns']
   | SortingFn<TGenerics>
 
 export type SortingColumnDef<TGenerics extends AnyGenerics> = {
-  sortingFn?: SortType<Overwrite<TGenerics, { Value: any }>>
+  sortingFn?: SortingFnOption<Overwrite<TGenerics, { Value: any }>>
   sortDescFirst?: boolean
   enableSorting?: boolean
   enableMultiSort?: boolean
@@ -62,7 +66,7 @@ export type SortingColumnDef<TGenerics extends AnyGenerics> = {
 }
 
 export type SortingColumn<TGenerics extends AnyGenerics> = {
-  sortingFn: SortType<Overwrite<TGenerics, { Value: any }>>
+  sortingFn: SortingFnOption<Overwrite<TGenerics, { Value: any }>>
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
@@ -236,7 +240,7 @@ export const Sorting = {
       },
       getColumnSortingFn: columnId => {
         const column = instance.getColumn(columnId)
-        const userSortTypes = instance.options.sortingFns
+        const userSortingFn = instance.options.sortingFns
 
         if (!column) {
           throw new Error()
@@ -246,11 +250,11 @@ export const Sorting = {
           ? column.sortingFn
           : column.sortingFn === 'auto'
           ? instance.getColumnAutoSortingFn(columnId)
-          : (userSortTypes as Record<string, any>)?.[
+          : (userSortingFn as Record<string, any>)?.[
               column.sortingFn as string
             ] ??
             (sortingFns[
-              column.sortingFn as BuiltInSortType
+              column.sortingFn as BuiltInSortingFn
             ] as SortingFn<TGenerics>)
       },
 

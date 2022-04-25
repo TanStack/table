@@ -1,5 +1,5 @@
 import { RowModel } from '..'
-import { BuiltInAggregationType, aggregationFns } from '../aggregationFns'
+import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
 import {
   Cell,
   Column,
@@ -30,14 +30,14 @@ export type AggregationFn<TGenerics extends AnyGenerics> = (
   getChildValues: () => TGenerics['Row'][]
 ) => any
 
-export type CustomAggregationTypes<TGenerics extends AnyGenerics> = Record<
+export type CustomAggregationFns<TGenerics extends AnyGenerics> = Record<
   string,
   AggregationFn<TGenerics>
 >
 
-export type AggregationType<TGenerics extends AnyGenerics> =
+export type AggregationFnOption<TGenerics extends AnyGenerics> =
   | 'auto'
-  | BuiltInAggregationType
+  | BuiltInAggregationFn
   | keyof TGenerics['AggregationFns']
   | AggregationFn<TGenerics>
 
@@ -46,7 +46,7 @@ export type GroupingTableState = {
 }
 
 export type GroupingColumnDef<TGenerics extends AnyGenerics> = {
-  aggregationFn?: AggregationType<Overwrite<TGenerics, { Value: any }>>
+  aggregationFn?: AggregationFnOption<Overwrite<TGenerics, { Value: any }>>
   aggregateValue?: (columnValue: unknown) => any
   aggregatedCell?: Renderable<
     TGenerics,
@@ -63,7 +63,7 @@ export type GroupingColumnDef<TGenerics extends AnyGenerics> = {
 }
 
 export type GroupingColumn<TGenerics extends AnyGenerics> = {
-  aggregationFn?: AggregationType<Overwrite<TGenerics, { Value: any }>>
+  aggregationFn?: AggregationFnOption<Overwrite<TGenerics, { Value: any }>>
   getCanGroup: () => boolean
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
@@ -221,7 +221,7 @@ export const Grouping = {
       },
       getColumnAggregationFn: columnId => {
         const column = instance.getColumn(columnId)
-        const userAggregationTypes = instance.options.aggregationFns
+        const userAggregationFns = instance.options.aggregationFns
 
         if (!column) {
           throw new Error()
@@ -231,11 +231,11 @@ export const Grouping = {
           ? column.aggregationFn
           : column.aggregationFn === 'auto'
           ? instance.getColumnAutoAggregationFn(columnId)
-          : (userAggregationTypes as Record<string, any>)?.[
+          : (userAggregationFns as Record<string, any>)?.[
               column.aggregationFn as string
             ] ??
             (aggregationFns[
-              column.aggregationFn as BuiltInAggregationType
+              column.aggregationFn as BuiltInAggregationFn
             ] as AggregationFn<TGenerics>)
       },
 

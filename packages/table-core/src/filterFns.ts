@@ -12,7 +12,7 @@ export const filterFns = {
   betweenNumberRange,
 }
 
-export type BuiltInFilterType = keyof typeof filterFns
+export type BuiltInFilterFn = keyof typeof filterFns
 
 function includesString<TGenerics extends AnyGenerics>(
   rows: Row<TGenerics>[],
