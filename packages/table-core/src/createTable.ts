@@ -24,13 +24,11 @@ export type CreateTableOptions<
 export type Table<TGenerics extends AnyGenerics> = {
   generics: TGenerics
   options: Partial<Options<TGenerics>>
-  setRowType: <TRow extends object>() => Table<
-    Overwrite<TGenerics, { Row: TRow }>
-  >
-  setTableMetaType: <TTableMeta extends object>() => Table<
+  setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
+  setTableMetaType: <TTableMeta>() => Table<
     Overwrite<TGenerics, { TableMeta: TTableMeta }>
   >
-  setColumnMetaType: <TColumnMeta extends object>() => Table<
+  setColumnMetaType: <TColumnMeta>() => Table<
     Overwrite<TGenerics, { ColumnMeta: TColumnMeta }>
   >
   setOptions: <
