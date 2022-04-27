@@ -312,7 +312,7 @@ If provided, this function is called **once** per table instance and should retu
 Example:
 
 ```tsx
-import { getColumnFilteredRowModel } from 'react-table'
+import { getColumnFilteredRowModel } from '@tanstack/[adapter]-table'
 
 useTable(table, {
   getColumnFilteredRowModel: getColumnFilteredRowModel,
@@ -375,7 +375,7 @@ If provided, this function is called **once** per table instance and should retu
 Example:
 
 ```tsx
-import { getGlobalFilteredRowModel } from 'react-table'
+import { getGlobalFilteredRowModel } from '@tanstack/[adapter]-table'
 
 useTable(table, {
   getGlobalFilteredRowModel: getGlobalFilteredRowModel,
