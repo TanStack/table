@@ -17,12 +17,23 @@ import {
   Overwrite,
 } from '../utils'
 
+export type FiltersTableState = {
+  columnFilters: ColumnFiltersState
+  globalFilter: any
+  columnFiltersProgress: number
+  globalFilterProgress: number
+}
+
+export type ColumnFiltersState = ColumnFilter[]
+
 export type ColumnFilter = {
   id: string
   value: unknown
 }
 
-export type ColumnFiltersState = ColumnFilter[]
+/*
+A filter function is any function that takes an array of rows and returns an array of rows. Because filter functions can be used for both column and global filters, they are passed an array of columnIds to filter on. 
+*/
 
 export type FilterFn<TGenerics extends AnyGenerics> = {
   (rows: Row<TGenerics>[], columnIds: string[], filterValue: any): any
@@ -38,13 +49,6 @@ export type CustomFilterFns<TGenerics extends AnyGenerics> = Record<
   string,
   FilterFn<TGenerics>
 >
-
-export type FiltersTableState = {
-  columnFilters: ColumnFiltersState
-  globalFilter: any
-  columnFiltersProgress: number
-  globalFilterProgress: number
-}
 
 export type FilterFnOption<TGenerics extends AnyGenerics> =
   | 'auto'
@@ -373,8 +377,8 @@ export const Filters = {
           column.enableColumnFilter ??
           instance.options.enableFilters ??
           instance.options.enableColumnFilters ??
-          column.defaultCanFilter ??
           column.defaultCanColumnFilter ??
+          column.defaultCanFilter ??
           !!column.accessorFn
         )
       },
@@ -391,8 +395,8 @@ export const Filters = {
             instance.options.enableGlobalFilter ??
             column.enableAllFilters ??
             column.enableGlobalFilter ??
-            column.defaultCanFilter ??
             column.defaultCanGlobalFilter ??
+            column.defaultCanFilter ??
             !!column.accessorFn) &&
             instance.options.getColumnCanGlobalFilterFn?.(column)) ??
           true
