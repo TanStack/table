@@ -341,30 +341,49 @@ async function run() {
   console.log(
     `Updating all changed packages and their dependencies to version ${version}...`
   )
-  // Update each package to the new version along with any dependencies
+  // Update each package to the new version
   for (const pkg of changedPackages) {
     console.log(`  Updating ${pkg.name} version to ${version}...`)
 
     await updatePackageConfig(pkg.name, config => {
       config.version = version
+    })
+  }
 
-      pkg.dependencies?.forEach(dep => {
-        if (config.dependencies?.[dep]) {
-          console.log(
-            `    Updating dependency on ${pkg.name} to version ${version}.`
-          )
-          config.dependencies[dep] = version
-        }
-      })
+  // Update all packagee dependencies to their correct versions
+  for (const pkg of changedPackages) {
+    console.log(`  Updating ${pkg.name} dependencies...`)
 
-      pkg.peerDependencies?.forEach(peerDep => {
-        if (config.peerDependencies?.[peerDep]) {
-          console.log(
-            `    Updating peerDependency on ${pkg.name} to version ${version}.`
-          )
-          config.peerDependencies[peerDep] = version
-        }
-      })
+    await updatePackageConfig(pkg.name, async config => {
+      await Promise.all(
+        (pkg.dependencies ?? []).map(async dep => {
+          const depVersion = await getPackageVersion(dep)
+          if (
+            config.dependencies?.[dep] &&
+            config.dependencies?.[dep] !== depVersion
+          ) {
+            console.log(
+              `    Updating dependency on ${pkg.name} to version ${depVersion}.`
+            )
+            config.dependencies[dep] = depVersion
+          }
+        })
+      )
+
+      await Promise.all(
+        (pkg.peerDependencies ?? []).map(async peerDep => {
+          const depVersion = await getPackageVersion(peerDep)
+          if (
+            config.peerDependencies?.[peerDep] &&
+            config.peerDependencies?.[peerDep] !== depVersion
+          ) {
+            console.log(
+              `    Updating peerDependency on ${pkg.name} to version ${depVersion}.`
+            )
+            config.peerDependencies[peerDep] = depVersion
+          }
+        })
+      )
     })
   }
 
@@ -374,15 +393,19 @@ async function run() {
     let stat = await fsp.stat(path.join(examplesDir, example))
     if (!stat.isDirectory()) continue
 
-    console.log(`  Updating example ${example} to version ${version}...`)
+    console.log(`  Updating example ${example} dependencies...`)
 
     await updateExamplesPackageConfig(example, config => {
-      changedPackages.forEach(pkg => {
-        if (config.dependencies?.[pkg.name]) {
+      changedPackages.forEach(async pkg => {
+        const depVersion = await getPackageVersion(pkg.name)
+        if (
+          config.dependencies?.[pkg.name] &&
+          config.dependencies?.[pkg.name] !== depVersion
+        ) {
           console.log(
-            `    Updating dependency ${pkg.name} to version ${version}...`
+            `    Updating peerDependency on ${pkg.name} to version ${depVersion}.`
           )
-          config.dependencies[pkg.name] = version
+          config.dependencies[pkg.name] = depVersion
         }
       })
     })
@@ -405,47 +428,6 @@ async function run() {
       'Missing the tagged release version. Something weird is afoot!'
     )
   }
-
-  console.log()
-  console.log(`Verifying packages are on version ${version}`)
-
-  // Ensure packages are up to date and ready
-  await Promise.all(
-    changedPackages.map(async pkg => {
-      let file = path.join(
-        rootDir,
-        'packages',
-        getPackageDir(pkg.name),
-        'package.json'
-      )
-      let json = (await jsonfile.readFile(file)) as PackageJson
-
-      if (json.version !== version) {
-        throw new Error(
-          `Package ${pkg.name} is on version ${json.version}, but should be on ${version}`
-        )
-      }
-
-      ;(pkg.dependencies ?? []).forEach(dependency => {
-        if (json.dependencies?.[dependency]) {
-          if (json.dependencies[dependency] !== version) {
-            throw new Error(
-              `Package ${pkg.name}'s dependency of ${dependency} is on version ${json.dependencies[dependency]}, but should be on ${version}`
-            )
-          }
-        }
-      })
-      ;(pkg.dependencies ?? []).forEach(peerDependency => {
-        if (json.peerDependencies?.[peerDependency]) {
-          if (json.peerDependencies[peerDependency] !== version) {
-            throw new Error(
-              `Package ${pkg.name}'s peerDependency of ${peerDependency} is on version ${json.peerDependencies[peerDependency]}, but should be on ${version}`
-            )
-          }
-        }
-      })
-    })
-  )
 
   console.log()
   console.log(`Publishing all packages to npm with tag "${npmTag}"`)
@@ -535,6 +517,22 @@ async function updateExamplesPackageConfig(
   let json = await jsonfile.readFile(file)
   transform(json)
   await jsonfile.writeFile(file, json, { spaces: 2 })
+}
+
+async function readPackageJson(name: string) {
+  let file = path.join(rootDir, 'packages', getPackageDir(name), 'package.json')
+
+  return (await jsonfile.readFile(file)) as PackageJson
+}
+
+async function getPackageVersion(name: string) {
+  const json = await readPackageJson(name)
+
+  if (!json.version) {
+    throw new Error(`No version found for package: ${name}`)
+  }
+
+  return json.version
 }
 
 function updateExampleLockfile(example: string) {
