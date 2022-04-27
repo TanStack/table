@@ -84,7 +84,7 @@ export function getSortedRowModelSync<TGenerics extends AnyGenerics>(opts?: {
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance._notifyGroupingReset()
+            instance.queueResetGrouping()
           })
         },
       }

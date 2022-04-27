@@ -46,7 +46,7 @@ export type ToggleExpandedProps = {
 }
 
 export type ExpandedInstance<TGenerics extends AnyGenerics> = {
-  _notifyExpandedReset: () => void
+  queueResetExpanded: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void
@@ -95,8 +95,8 @@ export const Expanding = {
     let registered = false
 
     return {
-      _notifyExpandedReset: () => {
-        instance._notifyPageIndexReset()
+      queueResetExpanded: () => {
+        instance.queueResetPageIndex()
 
         if (!registered) {
           registered = true
@@ -114,11 +114,7 @@ export const Expanding = {
           instance.resetExpanded()
         }
       },
-      setExpanded: updater =>
-        instance.options.onExpandedChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().expanded)
-        ),
+      setExpanded: updater => instance.options.onExpandedChange?.(updater),
       toggleRowExpanded: (rowId, expanded) => {
         if (!rowId) return
 

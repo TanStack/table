@@ -32,7 +32,7 @@ export type PaginationDefaultOptions = {
 }
 
 export type PaginationInstance<TGenerics extends AnyGenerics> = {
-  _notifyPageIndexReset: () => void
+  queueResetPageIndex: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: () => void
   setPageIndex: (updater: Updater<number>) => void
@@ -78,7 +78,7 @@ export const Pagination = {
   ): PaginationInstance<TGenerics> => {
     let registered = false
     return {
-      _notifyPageIndexReset: () => {
+      queueResetPageIndex: () => {
         if (!registered) {
           registered = true
           return
@@ -102,10 +102,7 @@ export const Pagination = {
           return newState
         }
 
-        return instance.options.onPaginationChange?.(
-          safeUpdater,
-          functionalUpdate(safeUpdater, instance.getState().pagination)
-        )
+        return instance.options.onPaginationChange?.(safeUpdater)
       },
       resetPagination: () => {
         instance.setPagination(

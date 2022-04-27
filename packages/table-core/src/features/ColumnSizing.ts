@@ -151,15 +151,9 @@ export const ColumnSizing = {
         )
       },
       setColumnSizing: updater =>
-        instance.options.onColumnSizingChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().columnSizing)
-        ),
+        instance.options.onColumnSizingChange?.(updater),
       setColumnSizingInfo: updater =>
-        instance.options.onColumnSizingInfoChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().columnSizingInfo)
-        ),
+        instance.options.onColumnSizingInfoChange?.(updater),
       resetColumnSizing: () => {
         instance.setColumnSizing(instance.initialState.columnSizing ?? {})
       },

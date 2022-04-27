@@ -157,10 +157,7 @@ export const Visibility = {
       ),
 
       setColumnVisibility: updater =>
-        instance.options.onColumnVisibilityChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().columnVisibility)
-        ),
+        instance.options.onColumnVisibilityChange?.(updater),
 
       toggleColumnVisibility: (columnId, value) => {
         if (!columnId) return

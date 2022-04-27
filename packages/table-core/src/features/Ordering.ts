@@ -53,10 +53,7 @@ export const Ordering = {
   ): ColumnOrderInstance<TGenerics> => {
     return {
       setColumnOrder: updater =>
-        instance.options.onColumnOrderChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().columnOrder)
-        ),
+        instance.options.onColumnOrderChange?.(updater),
       resetColumnOrder: () => {
         instance.setColumnOrder(instance.initialState.columnOrder ?? [])
       },

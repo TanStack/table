@@ -221,7 +221,8 @@ function App() {
       <br />
       <div>
         {Object.keys(rowSelection).length} of{' '}
-        {instance.getPreFilteredRowModel().rows.length} Total Rows Selected
+        {instance.getPreColumnFilteredRowModel().rows.length} Total Rows
+        Selected
       </div>
       <hr />
       <br />

@@ -61,7 +61,7 @@ export type RowSelectionRow = {
 }
 
 export type RowSelectionInstance<TGenerics extends AnyGenerics> = {
-  _notifyRowSelectionReset: () => void
+  queueResetRowSelection: () => void
   getToggleRowSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
     rowId: string,
     userProps?: TGetter
@@ -129,7 +129,7 @@ export const RowSelection = {
     // const pageRows = instance.getPageRows()
 
     return {
-      _notifyRowSelectionReset: () => {
+      queueResetRowSelection: () => {
         if (!registered) {
           registered = true
           return
@@ -147,10 +147,7 @@ export const RowSelection = {
         }
       },
       setRowSelection: updater =>
-        instance.options.onRowSelectionChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().rowSelection)
-        ),
+        instance.options.onRowSelectionChange?.(updater),
       resetRowSelection: () =>
         instance.setRowSelection(instance.initialState.rowSelection ?? {}),
       toggleAllRowsSelected: value => {
@@ -288,7 +285,7 @@ export const RowSelection = {
           key: 'getSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
           onChange: () => {
-            instance.queue(() => instance._notifyExpandedReset())
+            instance.queue(() => instance.queueResetExpanded())
           },
         }
       ),
@@ -312,7 +309,7 @@ export const RowSelection = {
         {
           key: 'getFilteredSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance.queue(() => instance._notifyExpandedReset()),
+          onChange: () => instance.queue(() => instance.queueResetExpanded()),
         }
       ),
 
@@ -332,7 +329,7 @@ export const RowSelection = {
         {
           key: 'getGroupedSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance.queue(() => instance._notifyExpandedReset()),
+          onChange: () => instance.queue(() => instance.queueResetExpanded()),
         }
       ),
 

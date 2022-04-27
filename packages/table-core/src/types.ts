@@ -138,7 +138,7 @@ export type Options<TGenerics extends AnyGenerics> = CoreOptions<TGenerics> &
   RowSelectionOptions<TGenerics>
 
 export type Updater<T> = T | ((old: T) => T)
-export type OnChangeFn<T> = (updaterOrValue: Updater<T>, value: T) => void
+export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
 export type TableState = CoreTableState &
   VisibilityTableState &

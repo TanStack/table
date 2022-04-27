@@ -98,8 +98,8 @@ export function getCoreRowModelSync<TGenerics extends AnyGenerics>(): (
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance._notifyFiltersReset()
-            instance._notifyRowSelectionReset()
+            instance.queueResetFilters()
+            instance.queueResetRowSelection()
           })
         },
       }

@@ -71,9 +71,9 @@ export type FiltersColumn<TGenerics extends AnyGenerics> = {
   getCanColumnFilter: () => boolean
   getCanGlobalFilter: () => boolean
   getColumnFilterIndex: () => number
-  getIsColumnFiltered: () => boolean
+  getColumnIsFiltered: () => boolean
   getColumnFilterValue: () => unknown
-  setColumnFilterValue: (value: any) => void
+  setColumnFilterValue: (updater: Updater<any>) => void
   getPreFilteredRows: () => Row<TGenerics>[] | undefined
   getPreFilteredUniqueValues: () => Map<any, number>
   getPreFilteredMinMaxValues: () => [any, any]
@@ -102,23 +102,19 @@ export type FiltersOptions<TGenerics extends AnyGenerics> = {
 }
 
 export type FiltersInstance<TGenerics extends AnyGenerics> = {
-  _notifyFiltersReset: () => void
+  queueResetFilters: () => void
   getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
   getColumnFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
-  setColumnFilterValue: (columnId: string, value: any) => void
+  setColumnFilterValue: (columnId: string, updater: Updater<any>) => void
   resetColumnFilters: () => void
   getColumnCanColumnFilter: (columnId: string) => boolean
-  getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 
   getColumnIsFiltered: (columnId: string) => boolean
   getColumnFilterValue: (columnId: string) => unknown
   getColumnFilterIndex: (columnId: string) => number
-
-  // All
-  getPreFilteredRowModel: () => RowModel<TGenerics>
 
   // Column Filters
   getPreColumnFilteredRowModel: () => RowModel<TGenerics>
@@ -225,7 +221,7 @@ export const Filters = {
       getCanColumnFilter: () => instance.getColumnCanColumnFilter(column.id),
       getCanGlobalFilter: () => instance.getColumnCanGlobalFilter(column.id),
       getColumnFilterIndex: () => instance.getColumnFilterIndex(column.id),
-      getIsColumnFiltered: () => instance.getColumnIsFiltered(column.id),
+      getColumnIsFiltered: () => instance.getColumnIsFiltered(column.id),
       getColumnFilterValue: () => instance.getColumnFilterValue(column.id),
       setColumnFilterValue: val =>
         instance.setColumnFilterValue(column.id, val),
@@ -241,8 +237,8 @@ export const Filters = {
     let registered = false
 
     return {
-      _notifyFiltersReset: () => {
-        instance._notifySortingReset()
+      queueResetFilters: () => {
+        instance.queueResetSorting()
 
         if (!registered) {
           registered = true
@@ -348,17 +344,11 @@ export const Filters = {
           })
         }
 
-        instance.options.onColumnFiltersChange?.(
-          updateFn,
-          updateFn(instance.getState().columnFilters)
-        )
+        instance.options.onColumnFiltersChange?.(updateFn)
       },
 
       setGlobalFilter: updater => {
-        instance.options.onGlobalFilterChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().globalFilter)
-        )
+        instance.options.onGlobalFilterChange?.(updater)
       },
 
       resetGlobalFilter: () => {
@@ -472,7 +462,6 @@ export const Filters = {
         instance.setColumnFilters(instance.initialState?.columnFilters ?? [])
       },
 
-      getPreFilteredRowModel: () => instance.getCoreRowModel(),
       getPreColumnFilteredRowModel: () => instance.getCoreRowModel(),
       getColumnFilteredRowModel: () => {
         if (

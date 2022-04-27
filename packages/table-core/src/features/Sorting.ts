@@ -100,7 +100,7 @@ export type ToggleSortingProps = {
 }
 
 export type SortingInstance<TGenerics extends AnyGenerics> = {
-  _notifySortingReset: () => void
+  queueResetSorting: () => void
   getColumnAutoSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
   getColumnAutoSortDir: (columnId: string) => SortDirection
 
@@ -179,8 +179,8 @@ export const Sorting = {
     let registered = false
 
     return {
-      _notifySortingReset: () => {
-        instance._notifyGroupingReset()
+      queueResetSorting: () => {
+        instance.queueResetGrouping()
 
         if (!registered) {
           registered = true
@@ -258,11 +258,7 @@ export const Sorting = {
             ] as SortingFn<TGenerics>)
       },
 
-      setSorting: updater =>
-        instance.options.onSortingChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().sorting)
-        ),
+      setSorting: updater => instance.options.onSortingChange?.(updater),
 
       toggleColumnSorting: (columnId, desc, multi) => {
         const column = instance.getColumn(columnId)

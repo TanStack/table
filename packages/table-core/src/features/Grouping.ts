@@ -114,7 +114,7 @@ export type ToggleGroupingProps = {
 }
 
 export type GroupingInstance<TGenerics extends AnyGenerics> = {
-  _notifyGroupingReset: () => void
+  queueResetGrouping: () => void
   getColumnAutoAggregationFn: (
     columnId: string
   ) => AggregationFn<TGenerics> | undefined
@@ -185,8 +185,8 @@ export const Grouping = {
     let registered = false
 
     return {
-      _notifyGroupingReset: () => {
-        instance._notifyExpandedReset()
+      queueResetGrouping: () => {
+        instance.queueResetExpanded()
 
         if (!registered) {
           registered = true
@@ -239,11 +239,7 @@ export const Grouping = {
             ] as AggregationFn<TGenerics>)
       },
 
-      setGrouping: updater =>
-        instance.options.onGroupingChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().grouping)
-        ),
+      setGrouping: updater => instance.options.onGroupingChange?.(updater),
 
       toggleColumnGrouping: columnId => {
         instance.setGrouping(old => {

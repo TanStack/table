@@ -165,7 +165,7 @@ export function getGroupedRowModelSync<TGenerics extends AnyGenerics>(): (
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance._notifyExpandedReset()
+            instance.queueResetExpanded()
           })
         },
       }

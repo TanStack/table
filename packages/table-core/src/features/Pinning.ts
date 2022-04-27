@@ -87,10 +87,7 @@ export const Pinning = {
   ): ColumnPinningInstance<TGenerics> => {
     return {
       setColumnPinning: updater =>
-        instance.options.onColumnPinningChange?.(
-          updater,
-          functionalUpdate(updater, instance.getState().columnPinning)
-        ),
+        instance.options.onColumnPinningChange?.(updater),
 
       resetColumnPinning: () =>
         instance.setColumnPinning(instance.initialState?.columnPinning ?? {}),
