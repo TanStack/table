@@ -34,7 +34,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.50"
+    "@tanstack/table-core": "8.0.0-alpha.49"
   },
   "peerDependencies": {
     "react": ">=16",
