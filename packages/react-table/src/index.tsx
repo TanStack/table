@@ -52,6 +52,9 @@ function isExoticComponent(component: any) {
 
 export const createTable = createTableFactory({ render })
 
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
+
 export function useTableInstance<TGenerics extends AnyGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
@@ -93,7 +96,7 @@ export function useTableInstance<TGenerics extends AnyGenerics>(
     },
   }))
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     instance.willUpdate()
   })
 
