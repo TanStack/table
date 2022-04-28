@@ -4,9 +4,9 @@ route: /api/filtering
 menu: API
 ---
 
-- [Read Guide](../guides/filters)
-
 ## Examples
+
+Want to skip to the implementation? Check out these examples:
 
 - [filters](../examples/filters)
 - [editable-data](../examples/editable-data)
@@ -15,6 +15,49 @@ menu: API
 - [grouping](../examples/grouping)
 - [pagination](../examples/pagination)
 - [row-selection](../examples/row-selection)
+
+Filters come in two flavors:
+
+- Column filters
+  - A filter that is applied to a single column's accessor value.
+  - Stored in the `state.columnFilters` array as an object containing the columnId and the filter value.
+- Global filters
+  - A single filter value that is applied to all or some of columns' accessor values.
+  - Stored in the `state.globalFilter` array as any value, usually a string.
+
+> ℹ️ Column filters are applied in the order they are specified. Normally this order isn't important unless you are provided faceted filter information to your users, or have filters that vary greatly in performance across your dataset. The order of slow/fast filters can have various performance implications depending on how each filter is implemented and the resulting rows from each filter.
+
+## Can-Filter Option Priority
+
+The ability for a column to be **column** filtered is determined by the following fallback logic:
+
+```tsx
+const canColumnFilter =
+  column.enableAllFilters ??
+  column.enableColumnFilter ??
+  instance.options.enableFilters ??
+  instance.options.enableColumnFilters ??
+  column.defaultCanColumnFilter ??
+  column.defaultCanFilter ??
+  !!column.accessorFn
+```
+
+The ability for a column to be **globally** filtered is determined by the following fallback logic:
+
+```tsx
+const canGlobalFiler =
+  ((instance.options.enableFilters ??
+    instance.options.enableGlobalFilter ??
+    column.enableAllFilters ??
+    column.enableGlobalFilter ??
+    column.defaultCanFilter ??
+    column.defaultCanGlobalFilter ??
+    !!column.accessorFn) &&
+    instance.options.getColumnCanGlobalFilterFn?.(column)) ??
+  true
+```
+
+Each option can be set to `true` or `false` to override the default behavior below it. These options are described in greater detail in the API below.
 
 ## State
 
@@ -62,17 +105,17 @@ The following filter functions are built-in to the table core:
 Every filter function adheres to the following shape:
 
 ```tsx
-export type FilterFn<TGenerics extends AnyGenerics> = {
+export type FilterFn<TGenerics extends TableGenerics> = {
   (rows: Row<TGenerics>[], columnIds: string[], filterValue: any): any
   autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
 }
 
-export type ColumnFilterAutoRemoveTestFn<TGenerics extends AnyGenerics> = (
+export type ColumnFilterAutoRemoveTestFn<TGenerics extends TableGenerics> = (
   value: unknown,
   column?: Column<TGenerics>
 ) => boolean
 
-export type CustomFilterFns<TGenerics extends AnyGenerics> = Record<
+export type CustomFilterFns<TGenerics extends TableGenerics> = Record<
   string,
   FilterFn<TGenerics>
 >
@@ -87,7 +130,7 @@ Filter functions can be referenced/defined in the following ways:
 The final list of filter functions available for the `columnDefnition.filterFn` and ``tableOptions.globalFilterFn` options use the following type:
 
 ```tsx
-export type FilterFnOption<TGenerics extends AnyGenerics> =
+export type FilterFnOption<TGenerics extends TableGenerics> =
   | 'auto'
   | BuiltInFilterFn
   | keyof TGenerics['FilterFns']
