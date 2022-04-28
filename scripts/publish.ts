@@ -338,9 +338,7 @@ async function run() {
   execSync(`yarn test:ci`, { encoding: 'utf8' })
   console.log('')
 
-  console.log(
-    `Updating all changed packages and their dependencies to version ${version}...`
-  )
+  console.log(`Updating all changed packages to version ${version}...`)
   // Update each package to the new version
   for (const pkg of changedPackages) {
     console.log(`  Updating ${pkg.name} version to ${version}...`)
@@ -350,10 +348,9 @@ async function run() {
     })
   }
 
-  // Update all packagee dependencies to their correct versions
-  for (const pkg of changedPackages) {
-    console.log(`  Updating ${pkg.name} dependencies...`)
-
+  console.log(`Updating all package dependencies to latest versions...`)
+  // Update all changed packagee dependencies to their correct versions
+  for (const pkg of packages) {
     await updatePackageJson('packages', pkg.name, async config => {
       await Promise.all(
         (pkg.dependencies ?? []).map(async dep => {
