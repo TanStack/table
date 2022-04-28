@@ -1,3 +1,57 @@
-TODO
+---
+name: Column Ordering
+route: /api/column-ordering
+menu: API
+---
 
-Please duplicate a completed api file as a template to get started!
+- [Read Guide](../guides/column-ordering)
+
+## Examples
+
+- [column-ordering](../examples/column-ordering)
+
+## State
+
+Column ordering state is stored on the table instance using the following shape:
+
+```tsx
+export type ColumnOrderTableState = {
+  columnOrder: ColumnOrderState
+}
+
+export type ColumnOrderState = string[]
+```
+
+## Table Options
+
+### `onColumnOrderChange`
+
+```tsx
+onColumnOrderChange?: OnChangeFn<ColumnOrderState>
+```
+
+If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+
+## Table Instance API
+
+### `setColumnFilters`
+
+```tsx
+setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
+```
+
+Sets or updates the `state.columnFilters` state.
+
+### `resetColumnFilters`
+
+```tsx
+resetColumnFilters: () => void
+```
+
+Resets the **column** filter state for the table.
+
+### `getOrderColumnsFn`
+
+```tsx
+getOrderColumnsFn: () => void
+```

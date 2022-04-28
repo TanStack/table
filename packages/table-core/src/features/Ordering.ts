@@ -1,4 +1,4 @@
-import { functionalUpdate, makeStateUpdater, memo } from '../utils'
+import { makeStateUpdater, memo } from '../utils'
 
 import {
   TableInstance,
@@ -11,11 +11,11 @@ import {
 
 import { Grouping } from './Grouping'
 
-export type ColumnOrderState = string[]
-
 export type ColumnOrderTableState = {
   columnOrder: ColumnOrderState
 }
+
+export type ColumnOrderState = string[]
 
 export type ColumnOrderOptions = {
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>

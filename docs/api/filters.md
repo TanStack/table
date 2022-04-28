@@ -8,9 +8,13 @@ menu: API
 
 ## Examples
 
-- TODO
-- TODO
-- TODO
+- [filters](../examples/filters)
+- [editable-data](../examples/editable-data)
+- [expanding](../examples/expanding)
+- [filters](../examples/filters)
+- [grouping](../examples/grouping)
+- [pagination](../examples/pagination)
+- [row-selection](../examples/row-selection)
 
 ## State
 
