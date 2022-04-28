@@ -12,6 +12,11 @@ import { makeStateUpdater, propGetter } from '../utils'
 
 //
 
+export type ColumnSizingTableState = {
+  columnSizing: ColumnSizing
+  columnSizingInfo: ColumnSizingInfoState
+}
+
 export type ColumnSizing = Record<string, number>
 
 export type ColumnSizingInfoState = {
@@ -21,11 +26,6 @@ export type ColumnSizingInfoState = {
   deltaPercentage: null | number
   isResizingColumn: false | string
   columnSizingStart: [string, number][]
-}
-
-export type ColumnSizingTableState = {
-  columnSizing: ColumnSizing
-  columnSizingInfo: ColumnSizingInfoState
 }
 
 export type ColumnResizeMode = 'onChange' | 'onEnd'
