@@ -384,25 +384,27 @@ async function run() {
     })
   }
 
-  console.log(`Updating examples dependencies...`)
+  console.log(`Updating all example dependencies...`)
   let examples = await fsp.readdir(examplesDir)
   for (const example of examples) {
     let stat = await fsp.stat(path.join(examplesDir, example))
     if (!stat.isDirectory()) continue
 
-    await updatePackageJson('examples', example, config => {
-      changedPackages.forEach(async pkg => {
-        const depVersion = await getPackageVersion('packages', pkg.name)
-        if (
-          config.dependencies?.[pkg.name] &&
-          config.dependencies?.[pkg.name] !== depVersion
-        ) {
-          console.log(
-            `  Updating dependency on ${pkg.name} to version ${depVersion}.`
-          )
-          config.dependencies[pkg.name] = depVersion
-        }
-      })
+    await updatePackageJson('examples', example, async config => {
+      await Promise.all(
+        changedPackages.map(async pkg => {
+          const depVersion = await getPackageVersion('packages', pkg.name)
+          if (
+            config.dependencies?.[pkg.name] &&
+            config.dependencies?.[pkg.name] !== depVersion
+          ) {
+            console.log(
+              `  Updating ${example}'s dependency on ${pkg.name} to version ${depVersion}.`
+            )
+            config.dependencies[pkg.name] = depVersion
+          }
+        })
+      )
     })
   }
 
@@ -503,10 +505,10 @@ async function readPackageJson(subRoot: 'packages' | 'examples', name: string) {
 async function updatePackageJson(
   subRoot: 'packages' | 'examples',
   name: string,
-  transform: (json: PackageJson) => void
+  transform: (json: PackageJson) => Promise<void> | void
 ) {
   const json = await readPackageJson(subRoot, name)
-  transform(json)
+  await transform(json)
   await jsonfile.writeFile(getPackageJsonPath(subRoot, name), json, {
     spaces: 2,
   })
