@@ -345,7 +345,7 @@ async function run() {
   for (const pkg of changedPackages) {
     console.log(`  Updating ${pkg.name} version to ${version}...`)
 
-    await updatePackageConfig(pkg.name, config => {
+    await updatePackageJson('packages', pkg.name, config => {
       config.version = version
     })
   }
@@ -354,10 +354,10 @@ async function run() {
   for (const pkg of changedPackages) {
     console.log(`  Updating ${pkg.name} dependencies...`)
 
-    await updatePackageConfig(pkg.name, async config => {
+    await updatePackageJson('packages', pkg.name, async config => {
       await Promise.all(
         (pkg.dependencies ?? []).map(async dep => {
-          const depVersion = await getPackageVersion(dep)
+          const depVersion = await getPackageVersion('packages', dep)
           if (
             config.dependencies?.[dep] &&
             config.dependencies?.[dep] !== depVersion
@@ -372,7 +372,7 @@ async function run() {
 
       await Promise.all(
         (pkg.peerDependencies ?? []).map(async peerDep => {
-          const depVersion = await getPackageVersion(peerDep)
+          const depVersion = await getPackageVersion('packages', peerDep)
           if (
             config.peerDependencies?.[peerDep] &&
             config.peerDependencies?.[peerDep] !== depVersion
@@ -395,9 +395,9 @@ async function run() {
 
     console.log(`  Updating example ${example} dependencies...`)
 
-    await updateExamplesPackageConfig(example, config => {
+    await updatePackageJson('examples', example, config => {
       changedPackages.forEach(async pkg => {
-        const depVersion = await getPackageVersion(pkg.name)
+        const depVersion = await getPackageVersion('packages', pkg.name)
         if (
           config.dependencies?.[pkg.name] &&
           config.dependencies?.[pkg.name] !== depVersion
@@ -499,34 +499,29 @@ function capitalize(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1)
 }
 
-async function updatePackageConfig(
-  packageName: string,
+async function readPackageJson(subRoot: 'packages' | 'examples', name: string) {
+  return (await jsonfile.readFile(
+    getPackageJsonPath(subRoot, name)
+  )) as PackageJson
+}
+
+async function updatePackageJson(
+  subRoot: 'packages' | 'examples',
+  name: string,
   transform: (json: PackageJson) => void
 ) {
-  let file = packageJson(packageName)
-  let json = await jsonfile.readFile(file)
+  const json = await readPackageJson(subRoot, name)
   transform(json)
-  await jsonfile.writeFile(file, json, { spaces: 2 })
+  await jsonfile.writeFile(getPackageJsonPath(subRoot, name), json, {
+    spaces: 2,
+  })
 }
 
-async function updateExamplesPackageConfig(
-  example: string,
-  transform: (json: PackageJson) => void
+async function getPackageVersion(
+  subRoot: 'packages' | 'examples',
+  name: string
 ) {
-  let file = packageJson(example, 'examples')
-  let json = await jsonfile.readFile(file)
-  transform(json)
-  await jsonfile.writeFile(file, json, { spaces: 2 })
-}
-
-async function readPackageJson(name: string) {
-  let file = path.join(rootDir, 'packages', getPackageDir(name), 'package.json')
-
-  return (await jsonfile.readFile(file)) as PackageJson
-}
-
-async function getPackageVersion(name: string) {
-  const json = await readPackageJson(name)
+  const json = await readPackageJson(subRoot, name)
 
   if (!json.version) {
     throw new Error(`No version found for package: ${name}`)
@@ -541,13 +536,11 @@ function updateExampleLockfile(example: string) {
   execSync(`cd ${exampleDir} && yarn`, { stdio: 'ignore' })
 }
 
-function packageJson(packageName: string, directory = 'packages') {
-  return path.join(
-    rootDir,
-    directory,
-    getPackageDir(packageName),
-    'package.json'
-  )
+function getPackageJsonPath(
+  subRoot: 'packages' | 'examples',
+  packageName: string
+) {
+  return path.join(rootDir, subRoot, getPackageDir(packageName), 'package.json')
 }
 
 function getTaggedVersion() {
