@@ -236,6 +236,11 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
+"@faker-js/faker@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-6.2.0.tgz#6d836ee8a580589b60c9088a3bdb0b669a468825"
+  integrity sha512-3kIcQ+aTr3I+LqDbJwbINFk5oA+a63LH57GPJt9PM8AWqN7nCwnubuSiWosHYQlyf2NicrvpzXQxllyLeEdpyQ==
+
 "@rollup/plugin-replace@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-replace/-/plugin-replace-3.0.1.tgz#f774550f482091719e52e9f14f67ffc0046a883d"
@@ -261,17 +266,17 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@tanstack/react-table@8.0.0-alpha.37":
-  version "8.0.0-alpha.37"
-  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.0.0-alpha.37.tgz#491a6d0641fa83341405885675fa3327371405bf"
-  integrity sha512-44hkn1qdIVGQp5jLQWPRAjCMkNYzhv+v9SCQbIpqsRDZgxPaqGVSZY07D2rIIv7ThAswLzmJL8jIW+SEc+CFfQ==
+"@tanstack/react-table@8.0.0-alpha.50":
+  version "8.0.0-alpha.50"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.50.tgz#69fb3763583f595afb3a9069a1660883fd73f554"
+  integrity sha512-v7Br+uba4ZhV7GOVhxBr5EqIILy/NLm+R1kzhc2s8iXfMbNx97ktfQ3oLcTn+flQ4yjkoAmBNAafEq+IXQKURA==
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.37"
+    "@tanstack/table-core" "8.0.0-alpha.50"
 
-"@tanstack/table-core@8.0.0-alpha.37":
-  version "8.0.0-alpha.37"
-  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.0.0-alpha.37.tgz#0a84c7c489caaac2c6716183c8f8291b99d3039c"
-  integrity sha512-8PLNs8R35MvlQgMWlBO8feab1n3CRZnbuU0LRfnsI3OOrlx8/7NJsjfdnkRnfsqHJYPJ2fL0Ij5yD3D5LXwAiw==
+"@tanstack/table-core@8.0.0-alpha.50":
+  version "8.0.0-alpha.54"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.54.tgz#ea7ba6d32d9b5eb92bcfe1ddeff26f641dfb08b8"
+  integrity sha512-LSTWri0HG9T8ug/PdnjroBej2y2VHJoaVm4hDympuOQNEOXPTcABv5uWKQVNNc6ldR5WD2rGgMDDb+grcjlkcg==
 
 "@types/estree@0.0.39":
   version "0.0.39"
