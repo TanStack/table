@@ -360,7 +360,7 @@ async function run() {
             config.dependencies?.[dep] !== depVersion
           ) {
             console.log(
-              `    Updating dependency on ${pkg.name} to version ${depVersion}.`
+              `  Updating dependency on ${pkg.name} to version ${depVersion}.`
             )
             config.dependencies[dep] = depVersion
           }
@@ -375,7 +375,7 @@ async function run() {
             config.peerDependencies?.[peerDep] !== depVersion
           ) {
             console.log(
-              `    Updating peerDependency on ${pkg.name} to version ${depVersion}.`
+              `  Updating peerDependency on ${pkg.name} to version ${depVersion}.`
             )
             config.peerDependencies[peerDep] = depVersion
           }
@@ -390,8 +390,6 @@ async function run() {
     let stat = await fsp.stat(path.join(examplesDir, example))
     if (!stat.isDirectory()) continue
 
-    console.log(`  Updating example ${example} dependencies...`)
-
     await updatePackageJson('examples', example, config => {
       changedPackages.forEach(async pkg => {
         const depVersion = await getPackageVersion('packages', pkg.name)
@@ -400,7 +398,7 @@ async function run() {
           config.dependencies?.[pkg.name] !== depVersion
         ) {
           console.log(
-            `    Updating peerDependency on ${pkg.name} to version ${depVersion}.`
+            `  Updating dependency on ${pkg.name} to version ${depVersion}.`
           )
           config.dependencies[pkg.name] = depVersion
         }
