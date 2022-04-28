@@ -119,7 +119,7 @@ export const Headers = {
           instance.getState().columnPinning.right,
         ],
         (allCells, left, right) => {
-          const leftAndRight = [...(left ?? []), ...(right ?? [])]
+          const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
 
           return allCells.filter(d => !leftAndRight.includes(d.columnId))
         },
