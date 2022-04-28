@@ -349,7 +349,7 @@ async function run() {
   }
 
   console.log(`Updating all package dependencies to latest versions...`)
-  // Update all changed packagee dependencies to their correct versions
+  // Update all changed package dependencies to their correct versions
   for (const pkg of packages) {
     await updatePackageJson('packages', pkg.name, async config => {
       await Promise.all(
@@ -360,7 +360,7 @@ async function run() {
             config.dependencies?.[dep] !== depVersion
           ) {
             console.log(
-              `  Updating dependency on ${pkg.name} to version ${depVersion}.`
+              `  Updating ${pkg.name}'s dependency on ${dep} to version ${depVersion}.`
             )
             config.dependencies[dep] = depVersion
           }
@@ -375,7 +375,7 @@ async function run() {
             config.peerDependencies?.[peerDep] !== depVersion
           ) {
             console.log(
-              `  Updating peerDependency on ${pkg.name} to version ${depVersion}.`
+              `  Updating ${pkg.name}'s peerDependency on ${peerDep} to version ${depVersion}.`
             )
             config.peerDependencies[peerDep] = depVersion
           }
