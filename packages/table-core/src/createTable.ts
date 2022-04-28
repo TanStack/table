@@ -1,17 +1,24 @@
 import { CustomFilterFns, FilterFn } from './features/Filters'
 import { AggregationFn, CustomAggregationFns } from './features/Grouping'
 import { CustomSortingFns, SortingFn } from './features/Sorting'
-import { ColumnDef, AccessorFn, AnyRender, AnyGenerics, Options } from './types'
+import {
+  ColumnDef,
+  AccessorFn,
+  AnyRender,
+  TableGenerics,
+  Options,
+} from './types'
 import { IfDefined, Overwrite, PartialKeys } from './utils'
 
-export type TableFactory<TGenerics extends AnyGenerics> = () => Table<TGenerics>
+export type TableFactory<TGenerics extends TableGenerics> =
+  () => Table<TGenerics>
 
 export type CreateTableOptions<
   TRender extends AnyRender,
   TFilterFns extends CustomFilterFns<any>,
   TSortingFns extends CustomSortingFns<any>,
   TAggregationFns extends CustomAggregationFns<any>,
-  TGenerics extends AnyGenerics
+  TGenerics extends TableGenerics
 > = Partial<
   {
     render?: TRender
@@ -21,7 +28,7 @@ export type CreateTableOptions<
   } & Omit<Options<TGenerics>, 'filterFns' | 'sortingFns' | 'aggregationFns'>
 >
 
-export type Table<TGenerics extends AnyGenerics> = {
+export type Table<TGenerics extends TableGenerics> = {
   generics: TGenerics
   options: Partial<Options<TGenerics>>
   setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
@@ -125,7 +132,7 @@ export function createTableFactory<TRender extends AnyRender>(opts: {
 
 // A lot of returns in here are `as any` for a reason. Unless you
 // can find a better way to do this, then don't worry about them
-function createTable<TGenerics extends AnyGenerics>(
+function createTable<TGenerics extends TableGenerics>(
   _?: undefined,
   __?: undefined,
   options?: CreateTableOptions<any, any, any, any, TGenerics>

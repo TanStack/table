@@ -1,7 +1,7 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { flattenBy, memo } from '../utils'
 
-export function getGroupedRowModelSync<TGenerics extends AnyGenerics>(): (
+export function getGroupedRowModelSync<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>
@@ -172,7 +172,7 @@ export function getGroupedRowModelSync<TGenerics extends AnyGenerics>(): (
     )
 }
 
-function groupBy<TGenerics extends AnyGenerics>(
+function groupBy<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnId: string
 ) {

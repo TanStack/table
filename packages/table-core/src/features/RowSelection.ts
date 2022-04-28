@@ -1,8 +1,7 @@
 import {
   Getter,
   OnChangeFn,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
   PropGetterValue,
   TableInstance,
   Row,
@@ -17,7 +16,7 @@ export type RowSelectionTableState = {
   rowSelection: RowSelectionState
 }
 
-export type RowSelectionOptions<TGenerics extends AnyGenerics> = {
+export type RowSelectionOptions<TGenerics extends TableGenerics> = {
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
   autoResetRowSelection?: boolean
   enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
@@ -60,7 +59,7 @@ export type RowSelectionRow = {
   ) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
 }
 
-export type RowSelectionInstance<TGenerics extends AnyGenerics> = {
+export type RowSelectionInstance<TGenerics extends TableGenerics> = {
   queueResetRowSelection: () => void
   getToggleRowSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
     rowId: string,
@@ -106,7 +105,7 @@ export const RowSelection = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): RowSelectionOptions<TGenerics> => {
     return {
@@ -121,7 +120,7 @@ export const RowSelection = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): RowSelectionInstance<TGenerics> => {
     let registered = false
@@ -536,7 +535,7 @@ export const RowSelection = {
     }
   },
 
-  createRow: <TGenerics extends AnyGenerics>(
+  createRow: <TGenerics extends TableGenerics>(
     row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
   ): RowSelectionRow => {
@@ -552,7 +551,7 @@ export const RowSelection = {
   },
 }
 
-const mutateRowIsSelected = <TGenerics extends AnyGenerics>(
+const mutateRowIsSelected = <TGenerics extends TableGenerics>(
   selectedRowIds: Record<string, boolean>,
   id: string,
   value: boolean,
@@ -580,7 +579,7 @@ const mutateRowIsSelected = <TGenerics extends AnyGenerics>(
   }
 }
 
-export function selectRowsFn<TGenerics extends AnyGenerics>(
+export function selectRowsFn<TGenerics extends TableGenerics>(
   instance: TableInstance<TGenerics>,
   rowModel: RowModel<TGenerics>
 ): RowModel<TGenerics> {
@@ -621,7 +620,7 @@ export function selectRowsFn<TGenerics extends AnyGenerics>(
   }
 }
 
-export function isRowSelected<TGenerics extends AnyGenerics>(
+export function isRowSelected<TGenerics extends TableGenerics>(
   row: Row<TGenerics>,
   selection: Record<string, boolean>,
   instance: TableInstance<TGenerics>

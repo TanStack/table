@@ -1,7 +1,7 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { memo } from '../utils'
 
-export function getExpandedRowModel<TGenerics extends AnyGenerics>(): (
+export function getExpandedRowModel<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>
@@ -30,7 +30,7 @@ export function getExpandedRowModel<TGenerics extends AnyGenerics>(): (
     )
 }
 
-export function expandRows<TGenerics extends AnyGenerics>(
+export function expandRows<TGenerics extends TableGenerics>(
   rowModel: RowModel<TGenerics>,
   instance: TableInstance<TGenerics>
 ) {

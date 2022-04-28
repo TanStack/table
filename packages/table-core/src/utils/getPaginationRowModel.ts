@@ -1,8 +1,8 @@
-import { TableInstance, RowModel, AnyGenerics } from '../types'
+import { TableInstance, RowModel, TableGenerics } from '../types'
 import { memo } from '../utils'
 import { expandRows } from './getExpandedRowModel'
 
-export function getPaginationRowModel<TGenerics extends AnyGenerics>(opts?: {
+export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
   initialSync: boolean
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>

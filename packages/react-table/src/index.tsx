@@ -7,7 +7,7 @@ import {
   Options,
   TableInstance,
   Table,
-  AnyGenerics,
+  TableGenerics,
   createTableFactory,
 } from '@tanstack/table-core'
 
@@ -55,7 +55,7 @@ export const createTable = createTableFactory({ render })
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
-export function useTableInstance<TGenerics extends AnyGenerics>(
+export function useTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
     Omit<Options<TGenerics>, 'render'>,

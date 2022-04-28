@@ -9,8 +9,7 @@ import {
   HeaderGroup,
   HeaderGroupProps,
   HeaderProps,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
   PropGetterValue,
   TableInstance,
   Row,
@@ -18,7 +17,7 @@ import {
 import { propGetter, memo } from '../utils'
 import { ColumnSizing } from './ColumnSizing'
 
-export type HeadersRow<TGenerics extends AnyGenerics> = {
+export type HeadersRow<TGenerics extends TableGenerics> = {
   _getAllVisibleCells: () => Cell<TGenerics>[]
   getVisibleCells: () => Cell<TGenerics>[]
   getLeftVisibleCells: () => Cell<TGenerics>[]
@@ -26,7 +25,7 @@ export type HeadersRow<TGenerics extends AnyGenerics> = {
   getRightVisibleCells: () => Cell<TGenerics>[]
 }
 
-export type HeadersInstance<TGenerics extends AnyGenerics> = {
+export type HeadersInstance<TGenerics extends TableGenerics> = {
   createHeader: (
     column: Column<TGenerics>,
     options: {
@@ -80,7 +79,7 @@ export type HeadersInstance<TGenerics extends AnyGenerics> = {
 //
 
 export const Headers = {
-  createRow: <TGenerics extends AnyGenerics>(
+  createRow: <TGenerics extends TableGenerics>(
     row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
   ): HeadersRow<TGenerics> => {
@@ -167,7 +166,7 @@ export const Headers = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): HeadersInstance<TGenerics> => {
     return {
@@ -607,7 +606,7 @@ export const Headers = {
   },
 }
 
-export function buildHeaderGroups<TGenerics extends AnyGenerics>(
+export function buildHeaderGroups<TGenerics extends TableGenerics>(
   allColumns: Column<TGenerics>[],
   columnsToGroup: Column<TGenerics>[],
   instance: TableInstance<TGenerics>,

@@ -1,8 +1,8 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { SortingFn } from '../features/Sorting'
 import { memo } from '../utils'
 
-export function getSortedRowModelSync<TGenerics extends AnyGenerics>(): (
+export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>

@@ -1,4 +1,4 @@
-import { TableInstance, RowModel, AnyGenerics, Row } from '../types'
+import { TableInstance, RowModel, TableGenerics, Row } from '../types'
 import { incrementalMemo, memo } from '../utils'
 import {
   filterRowModelFromLeafs,
@@ -6,7 +6,7 @@ import {
 } from './filterRowsUtils'
 
 export function getGlobalFilteredRowModelAsync<
-  TGenerics extends AnyGenerics
+  TGenerics extends TableGenerics
 >(opts?: {
   initialSync?: boolean
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {

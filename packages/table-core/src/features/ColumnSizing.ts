@@ -3,13 +3,12 @@ import {
   Getter,
   Header,
   OnChangeFn,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
   PropGetterValue,
   TableInstance,
   Updater,
 } from '../types'
-import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
+import { makeStateUpdater, propGetter } from '../utils'
 
 //
 
@@ -52,7 +51,7 @@ export type ColumnResizerProps = {
   role?: string
 }
 
-export type ColumnSizingInstance<TGenerics extends AnyGenerics> = {
+export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
   getColumnWidth: (columnId: string) => number
   setColumnSizing: (updater: Updater<ColumnSizing>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
@@ -78,13 +77,13 @@ export type ColumnSizingColumnDef = {
   maxWidth?: number
 }
 
-export type ColumnSizingColumn<TGenerics extends AnyGenerics> = {
+export type ColumnSizingColumn<TGenerics extends TableGenerics> = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
   resetSize: () => void
 }
 
-export type ColumnSizingHeader<TGenerics extends AnyGenerics> = {
+export type ColumnSizingHeader<TGenerics extends TableGenerics> = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
   getResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
@@ -119,7 +118,7 @@ export const ColumnSizing = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnSizingDefaultOptions => {
     return {
@@ -129,7 +128,7 @@ export const ColumnSizing = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnSizingInstance<TGenerics> => {
     return {
@@ -391,7 +390,7 @@ export const ColumnSizing = {
     }
   },
 
-  createColumn: <TGenerics extends AnyGenerics>(
+  createColumn: <TGenerics extends TableGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ColumnSizingColumn<TGenerics> => {
@@ -402,7 +401,7 @@ export const ColumnSizing = {
     }
   },
 
-  createHeader: <TGenerics extends AnyGenerics>(
+  createHeader: <TGenerics extends TableGenerics>(
     header: Header<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ColumnSizingHeader<TGenerics> => {

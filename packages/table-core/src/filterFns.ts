@@ -1,4 +1,4 @@
-import { PartialGenerics, AnyGenerics, Row } from './types'
+import { TableGenerics, Row } from './types'
 
 export const filterFns = {
   includesString,
@@ -14,7 +14,7 @@ export const filterFns = {
 
 export type BuiltInFilterFn = keyof typeof filterFns
 
-function includesString<TGenerics extends AnyGenerics>(
+function includesString<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -31,7 +31,7 @@ function includesString<TGenerics extends AnyGenerics>(
 
 includesString.autoRemove = (val: any) => testFalsey(val)
 
-function includesStringSensitive<TGenerics extends AnyGenerics>(
+function includesStringSensitive<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -48,7 +48,7 @@ function includesStringSensitive<TGenerics extends AnyGenerics>(
 
 includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
 
-function equalsString<TGenerics extends AnyGenerics>(
+function equalsString<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -67,7 +67,7 @@ function equalsString<TGenerics extends AnyGenerics>(
 
 equalsString.autoRemove = (val: any) => testFalsey(val)
 
-function equalsStringSensitive<TGenerics extends AnyGenerics>(
+function equalsStringSensitive<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -83,7 +83,7 @@ function equalsStringSensitive<TGenerics extends AnyGenerics>(
 
 equalsStringSensitive.autoRemove = (val: any) => testFalsey(val)
 
-function arrIncludes<TGenerics extends AnyGenerics>(
+function arrIncludes<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -98,7 +98,7 @@ function arrIncludes<TGenerics extends AnyGenerics>(
 
 arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function arrIncludesAll<TGenerics extends AnyGenerics>(
+function arrIncludesAll<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown[]
@@ -117,7 +117,7 @@ function arrIncludesAll<TGenerics extends AnyGenerics>(
 
 arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function equals<TGenerics extends AnyGenerics>(
+function equals<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -132,7 +132,7 @@ function equals<TGenerics extends AnyGenerics>(
 
 equals.autoRemove = (val: any) => testFalsey(val)
 
-function weakEquals<TGenerics extends AnyGenerics>(
+function weakEquals<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: unknown
@@ -148,7 +148,7 @@ function weakEquals<TGenerics extends AnyGenerics>(
 
 weakEquals.autoRemove = (val: any) => testFalsey(val)
 
-function betweenNumberRange<TGenerics extends AnyGenerics>(
+function betweenNumberRange<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   columnIds: string[],
   filterValue: [unknown, unknown]

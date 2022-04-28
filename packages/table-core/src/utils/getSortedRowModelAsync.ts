@@ -1,8 +1,8 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { SortingFn } from '../features/Sorting'
 import { incrementalMemo, memo } from '../utils'
 
-export function getSortedRowModelSync<TGenerics extends AnyGenerics>(opts?: {
+export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
   initialSync?: boolean
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
@@ -91,7 +91,7 @@ export function getSortedRowModelSync<TGenerics extends AnyGenerics>(opts?: {
     )
 }
 
-type Sorter<TGenerics extends AnyGenerics> = {
+type Sorter<TGenerics extends TableGenerics> = {
   id: string
   compare: (a: Row<TGenerics>, b: Row<TGenerics>) => number
   desc?: boolean
@@ -99,7 +99,7 @@ type Sorter<TGenerics extends AnyGenerics> = {
   invertSorting?: boolean
 }
 
-export function quicksort<TGenerics extends AnyGenerics>(
+export function quicksort<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],
   sorters: Sorter<TGenerics>[]
 ): Row<TGenerics>[] {

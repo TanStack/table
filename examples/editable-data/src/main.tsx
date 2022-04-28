@@ -25,10 +25,10 @@ let table = createTable()
   }>()
 
 // Get our table generics
-type TableGenerics = typeof table.generics
+type MyTableGenerics = typeof table.generics
 
 // Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<TableGenerics>> = {
+const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
   cell: ({ value: initialValue, row: { index }, column: { id }, instance }) => {
     // We need to keep and update the state of the cell normally
     const [value, setValue] = React.useState(initialValue)

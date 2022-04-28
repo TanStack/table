@@ -3,8 +3,7 @@ import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
   OnChangeFn,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
   TableInstance,
   Row,
   Updater,
@@ -35,28 +34,28 @@ export type ColumnFilter = {
 A filter function is any function that takes an array of rows and returns an array of rows. Because filter functions can be used for both column and global filters, they are passed an array of columnIds to filter on. 
 */
 
-export type FilterFn<TGenerics extends AnyGenerics> = {
+export type FilterFn<TGenerics extends TableGenerics> = {
   (rows: Row<TGenerics>[], columnIds: string[], filterValue: any): any
   autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
 }
 
-export type ColumnFilterAutoRemoveTestFn<TGenerics extends AnyGenerics> = (
+export type ColumnFilterAutoRemoveTestFn<TGenerics extends TableGenerics> = (
   value: unknown,
   column?: Column<TGenerics>
 ) => boolean
 
-export type CustomFilterFns<TGenerics extends AnyGenerics> = Record<
+export type CustomFilterFns<TGenerics extends TableGenerics> = Record<
   string,
   FilterFn<TGenerics>
 >
 
-export type FilterFnOption<TGenerics extends AnyGenerics> =
+export type FilterFnOption<TGenerics extends TableGenerics> =
   | 'auto'
   | BuiltInFilterFn
   | keyof TGenerics['FilterFns']
   | FilterFn<TGenerics>
 
-export type FiltersColumnDef<TGenerics extends AnyGenerics> = {
+export type FiltersColumnDef<TGenerics extends TableGenerics> = {
   filterFn?: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
   enableAllFilters?: boolean
   enableColumnFilter?: boolean
@@ -66,7 +65,7 @@ export type FiltersColumnDef<TGenerics extends AnyGenerics> = {
   defaultCanGlobalFilter?: boolean
 }
 
-export type FiltersColumn<TGenerics extends AnyGenerics> = {
+export type FiltersColumn<TGenerics extends TableGenerics> = {
   filterFn: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
   getCanColumnFilter: () => boolean
   getCanGlobalFilter: () => boolean
@@ -79,7 +78,7 @@ export type FiltersColumn<TGenerics extends AnyGenerics> = {
   getPreFilteredMinMaxValues: () => [any, any]
 }
 
-export type FiltersOptions<TGenerics extends AnyGenerics> = {
+export type FiltersOptions<TGenerics extends TableGenerics> = {
   filterFromLeafRows?: boolean
   filterFns?: TGenerics['FilterFns']
   enableFilters?: boolean
@@ -101,7 +100,7 @@ export type FiltersOptions<TGenerics extends AnyGenerics> = {
   getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 }
 
-export type FiltersInstance<TGenerics extends AnyGenerics> = {
+export type FiltersInstance<TGenerics extends TableGenerics> = {
   queueResetFilters: () => void
   getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
@@ -136,7 +135,7 @@ export type FiltersInstance<TGenerics extends AnyGenerics> = {
 
 export const Filters = {
   getDefaultColumn: <
-    TGenerics extends AnyGenerics
+    TGenerics extends TableGenerics
   >(): FiltersColumnDef<TGenerics> => {
     return {
       filterFn: 'auto',
@@ -152,7 +151,7 @@ export const Filters = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): FiltersOptions<TGenerics> => {
     return {
@@ -172,7 +171,7 @@ export const Filters = {
     }
   },
 
-  createColumn: <TGenerics extends AnyGenerics>(
+  createColumn: <TGenerics extends TableGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): FiltersColumn<TGenerics> => {
@@ -231,7 +230,7 @@ export const Filters = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): FiltersInstance<TGenerics> => {
     let registered = false
@@ -498,7 +497,7 @@ export const Filters = {
   },
 }
 
-export function shouldAutoRemoveFilter<TGenerics extends AnyGenerics>(
+export function shouldAutoRemoveFilter<TGenerics extends TableGenerics>(
   filterFn?: FilterFn<TGenerics>,
   value?: any,
   column?: Column<TGenerics>

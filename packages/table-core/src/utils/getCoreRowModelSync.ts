@@ -1,7 +1,7 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { memo } from '../utils'
 
-export function getCoreRowModelSync<TGenerics extends AnyGenerics>(): (
+export function getCoreRowModelSync<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>

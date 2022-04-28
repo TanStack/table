@@ -1,5 +1,5 @@
 import {
-  AnyGenerics,
+  TableGenerics,
   Options,
   PartialKeys,
   Table,
@@ -24,7 +24,7 @@ function render<TProps extends {}>(Comp: any, props: TProps) {
 
 export const createTable = createTableFactory({ render })
 
-export function useTableInstance<TGenerics extends AnyGenerics>(
+export function useTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
     Omit<Options<TGenerics>, 'render'>,

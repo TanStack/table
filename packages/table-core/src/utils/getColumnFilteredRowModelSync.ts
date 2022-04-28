@@ -1,4 +1,4 @@
-import { TableInstance, RowModel, AnyGenerics, Row } from '../types'
+import { TableInstance, RowModel, TableGenerics, Row } from '../types'
 import { memo } from '../utils'
 import {
   filterRowModelFromLeafs,
@@ -6,7 +6,7 @@ import {
 } from './filterRowsUtils'
 
 export function getColumnFilteredRowModelSync<
-  TGenerics extends AnyGenerics
+  TGenerics extends TableGenerics
 >(): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     memo(

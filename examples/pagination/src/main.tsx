@@ -13,7 +13,6 @@ import {
   getColumnFilteredRowModelSync,
   getPaginationRowModel,
   ColumnDef,
-  Updater,
   OnChangeFn,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -104,7 +103,7 @@ function App() {
   )
 }
 
-function Table<TTableGenerics>({
+function Table({
   data,
   columns,
   pagination,

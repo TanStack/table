@@ -1,7 +1,7 @@
-import { TableInstance, Row, RowModel, AnyGenerics } from '../types'
+import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { getBatchGroups, incrementalMemo } from '../utils'
 
-export function getCoreRowModelAsync<TGenerics extends AnyGenerics>(opts?: {
+export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
   initialSync: boolean
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>

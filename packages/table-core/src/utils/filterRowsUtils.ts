@@ -1,6 +1,6 @@
-import { AnyGenerics, Row, RowModel, TableInstance } from '../types'
+import { TableGenerics, Row, RowModel, TableInstance } from '../types'
 
-export function filterRowModelFromLeafs<TGenerics extends AnyGenerics>(
+export function filterRowModelFromLeafs<TGenerics extends TableGenerics>(
   rowsToFilter: Row<TGenerics>[],
   filterRows: (
     rowsToFilter: Row<TGenerics>[],
@@ -56,7 +56,7 @@ export function filterRowModelFromLeafs<TGenerics extends AnyGenerics>(
   }
 }
 
-export function filterRowModelFromRoot<TGenerics extends AnyGenerics>(
+export function filterRowModelFromRoot<TGenerics extends TableGenerics>(
   rowsToFilter: Row<TGenerics>[],
   filterRows: (
     rowsToFilter: Row<TGenerics>[],

@@ -5,8 +5,7 @@ import {
   OnChangeFn,
   Updater,
   Column,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
 } from '../types'
 
 import { Grouping } from './Grouping'
@@ -25,10 +24,12 @@ export type ColumnOrderDefaultOptions = {
   onColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
-export type ColumnOrderInstance<TGenerics extends AnyGenerics> = {
+export type ColumnOrderInstance<TGenerics extends TableGenerics> = {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
   resetColumnOrder: () => void
-  getOrderColumnsFn: () => (columns: Column<TGenerics>[]) => Column<TGenerics>[]
+  _getOrderColumnsFn: () => (
+    columns: Column<TGenerics>[]
+  ) => Column<TGenerics>[]
 }
 
 //
@@ -40,7 +41,7 @@ export const Ordering = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnOrderDefaultOptions => {
     return {
@@ -48,7 +49,7 @@ export const Ordering = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnOrderInstance<TGenerics> => {
     return {
@@ -57,7 +58,7 @@ export const Ordering = {
       resetColumnOrder: () => {
         instance.setColumnOrder(instance.initialState.columnOrder ?? [])
       },
-      getOrderColumnsFn: memo(
+      _getOrderColumnsFn: memo(
         () => [
           instance.getState().columnOrder,
           instance.getState().grouping,

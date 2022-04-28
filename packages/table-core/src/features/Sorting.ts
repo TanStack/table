@@ -10,8 +10,7 @@ import {
   Getter,
   Header,
   OnChangeFn,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
   PropGetterValue,
   TableInstance,
   Row,
@@ -36,11 +35,11 @@ export type ColumnSort = {
 
 export type SortingState = ColumnSort[]
 
-export type SortingFn<TGenerics extends AnyGenerics> = {
+export type SortingFn<TGenerics extends TableGenerics> = {
   (rowA: Row<TGenerics>, rowB: Row<TGenerics>, columnId: string): number
 }
 
-export type CustomSortingFns<TGenerics extends AnyGenerics> = Record<
+export type CustomSortingFns<TGenerics extends TableGenerics> = Record<
   string,
   SortingFn<TGenerics>
 >
@@ -49,13 +48,13 @@ export type SortingTableState = {
   sorting: SortingState
 }
 
-export type SortingFnOption<TGenerics extends AnyGenerics> =
+export type SortingFnOption<TGenerics extends TableGenerics> =
   | 'auto'
   | BuiltInSortingFn
   | keyof TGenerics['SortingFns']
   | SortingFn<TGenerics>
 
-export type SortingColumnDef<TGenerics extends AnyGenerics> = {
+export type SortingColumnDef<TGenerics extends TableGenerics> = {
   sortingFn?: SortingFnOption<Overwrite<TGenerics, { Value: any }>>
   sortDescFirst?: boolean
   enableSorting?: boolean
@@ -65,7 +64,7 @@ export type SortingColumnDef<TGenerics extends AnyGenerics> = {
   sortUndefined?: false | -1 | 1
 }
 
-export type SortingColumn<TGenerics extends AnyGenerics> = {
+export type SortingColumn<TGenerics extends TableGenerics> = {
   sortingFn: SortingFnOption<Overwrite<TGenerics, { Value: any }>>
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
@@ -78,7 +77,7 @@ export type SortingColumn<TGenerics extends AnyGenerics> = {
   ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
 }
 
-export type SortingOptions<TGenerics extends AnyGenerics> = {
+export type SortingOptions<TGenerics extends TableGenerics> = {
   sortingFns?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
   autoResetSorting?: boolean
@@ -99,7 +98,7 @@ export type ToggleSortingProps = {
   onClick?: (event: unknown) => void
 }
 
-export type SortingInstance<TGenerics extends AnyGenerics> = {
+export type SortingInstance<TGenerics extends TableGenerics> = {
   queueResetSorting: () => void
   getColumnAutoSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
   getColumnAutoSortDir: (columnId: string) => SortDirection
@@ -130,7 +129,7 @@ export type SortingInstance<TGenerics extends AnyGenerics> = {
 
 export const Sorting = {
   getDefaultColumn: <
-    TGenerics extends AnyGenerics
+    TGenerics extends TableGenerics
   >(): SortingColumnDef<TGenerics> => {
     return {
       sortingFn: 'auto',
@@ -143,7 +142,7 @@ export const Sorting = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): SortingOptions<TGenerics> => {
     return {
@@ -155,7 +154,7 @@ export const Sorting = {
     }
   },
 
-  createColumn: <TGenerics extends AnyGenerics>(
+  createColumn: <TGenerics extends TableGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): SortingColumn<TGenerics> => {
@@ -173,7 +172,7 @@ export const Sorting = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): SortingInstance<TGenerics> => {
     let registered = false

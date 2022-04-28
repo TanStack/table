@@ -1,6 +1,6 @@
 // /** @jsxImportSource solid-js */
 import {
-  AnyGenerics,
+  TableGenerics,
   Options,
   PartialKeys,
   Table,
@@ -30,7 +30,7 @@ function render<TProps extends {}>(Comp: any, props: TProps) {
 
 export const createTable = createTableFactory({ render })
 
-export function createTableInstance<TGenerics extends AnyGenerics>(
+export function createTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
     Omit<Options<TGenerics>, 'render'>,

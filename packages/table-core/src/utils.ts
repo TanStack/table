@@ -12,11 +12,11 @@ export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
 
 export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
 
-// export type DefinedGenericKeys<T extends AnyGenerics> = {
+// export type DefinedGenericKeys<T extends TableGenerics> = {
 //   [K in keyof T]: 0 extends 1 & T[K] ? never : T[K] extends {} ? K : never
 // }[keyof T]
 
-// export type DefinedGenerics<T extends AnyGenerics> = Pick<
+// export type DefinedGenerics<T extends TableGenerics> = Pick<
 //   T,
 //   DefinedGenericKeys<T>
 // >

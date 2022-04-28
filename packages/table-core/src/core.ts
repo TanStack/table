@@ -31,7 +31,7 @@ import {
   UseRenderer,
   RowModel,
   TableFeature,
-  AnyGenerics,
+  TableGenerics,
 } from './types'
 
 import { ColumnSizing } from './features/ColumnSizing'
@@ -65,7 +65,7 @@ export type CoreTableState = {
   coreProgress: number
 }
 
-export type CoreOptions<TGenerics extends AnyGenerics> = {
+export type CoreOptions<TGenerics extends TableGenerics> = {
   data: TGenerics['Row'][]
   columns: ColumnDef<TGenerics>[]
   state: Partial<TableState>
@@ -98,7 +98,7 @@ export type CoreOptions<TGenerics extends AnyGenerics> = {
   meta?: TGenerics['TableMeta']
 }
 
-export type TableCore<TGenerics extends AnyGenerics> = {
+export type TableCore<TGenerics extends TableGenerics> = {
   initialState: TableState
   reset: () => void
   options: RequiredKeys<Options<TGenerics>, 'state'>
@@ -164,7 +164,7 @@ export type TableCore<TGenerics extends AnyGenerics> = {
   getOverallProgress: () => number
 }
 
-export type CoreRow<TGenerics extends AnyGenerics> = {
+export type CoreRow<TGenerics extends TableGenerics> = {
   id: string
   index: number
   original?: TGenerics['Row']
@@ -178,7 +178,7 @@ export type CoreRow<TGenerics extends AnyGenerics> = {
   getAllCellsByColumnId: () => Record<string, Cell<TGenerics>>
 }
 
-export type CoreColumnDef<TGenerics extends AnyGenerics> = {
+export type CoreColumnDef<TGenerics extends TableGenerics> = {
   id: string
   accessorKey?: string & keyof TGenerics['Row']
   accessorFn?: AccessorFn<TGenerics['Row']>
@@ -215,7 +215,7 @@ export type CoreColumnDef<TGenerics extends AnyGenerics> = {
 
 export type CoreColumnDefType = 'data' | 'display' | 'group'
 
-export type CoreColumn<TGenerics extends AnyGenerics> = {
+export type CoreColumn<TGenerics extends TableGenerics> = {
   id: string
   depth: number
   accessorFn?: AccessorFn<TGenerics['Row']>
@@ -228,7 +228,7 @@ export type CoreColumn<TGenerics extends AnyGenerics> = {
   getLeafColumns: () => Column<TGenerics>[]
 }
 
-export function createTableInstance<TGenerics extends AnyGenerics>(
+export function createTableInstance<TGenerics extends TableGenerics>(
   options: Options<TGenerics>
 ): TableInstance<TGenerics> {
   if (options.debugAll || options.debugTable) {
@@ -405,7 +405,7 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
           }
         ),
         getLeafColumns: memo(
-          () => [instance.getOrderColumnsFn()],
+          () => [instance._getOrderColumnsFn()],
           orderColumns => {
             if (column.columns?.length) {
               let leafColumns = column.columns.flatMap(column =>
@@ -488,7 +488,7 @@ export function createTableInstance<TGenerics extends AnyGenerics>(
     ),
 
     getAllLeafColumns: memo(
-      () => [instance.getAllColumns(), instance.getOrderColumnsFn()],
+      () => [instance.getAllColumns(), instance._getOrderColumnsFn()],
       (allColumns, orderColumns) => {
         let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
         return orderColumns(leafColumns)

@@ -1,4 +1,4 @@
-import { AnyGenerics, Row } from './types'
+import { TableGenerics, Row } from './types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
@@ -13,7 +13,7 @@ export const sortingFns = {
 
 export type BuiltInSortingFn = keyof typeof sortingFns
 
-function alphanumeric<TGenerics extends AnyGenerics>(
+function alphanumeric<TGenerics extends TableGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -24,7 +24,7 @@ function alphanumeric<TGenerics extends AnyGenerics>(
   )
 }
 
-function alphanumericCaseSensitive<TGenerics extends AnyGenerics>(
+function alphanumericCaseSensitive<TGenerics extends TableGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -84,7 +84,7 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-function text<TGenerics extends AnyGenerics>(
+function text<TGenerics extends TableGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -97,7 +97,7 @@ function text<TGenerics extends AnyGenerics>(
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-function textCaseSensitive<TGenerics extends AnyGenerics>(
+function textCaseSensitive<TGenerics extends TableGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -108,7 +108,7 @@ function textCaseSensitive<TGenerics extends AnyGenerics>(
   )
 }
 
-function datetime<TGenerics extends AnyGenerics>(
+function datetime<TGenerics extends TableGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string
@@ -119,7 +119,7 @@ function datetime<TGenerics extends AnyGenerics>(
   )
 }
 
-function basic<TGenerics extends AnyGenerics>(
+function basic<TGenerics extends TableGenerics>(
   rowA: Row<TGenerics>,
   rowB: Row<TGenerics>,
   columnId: string

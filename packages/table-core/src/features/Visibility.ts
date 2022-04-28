@@ -3,13 +3,12 @@ import {
   Column,
   Getter,
   OnChangeFn,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
   PropGetterValue,
   TableInstance,
   Updater,
 } from '../types'
-import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
+import { makeStateUpdater, memo, propGetter } from '../utils'
 
 export type VisibilityOptions = {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
@@ -26,7 +25,7 @@ export type VisibilityTableState = {
   columnVisibility: VisibilityState
 }
 
-export type VisibilityInstance<TGenerics extends AnyGenerics> = {
+export type VisibilityInstance<TGenerics extends TableGenerics> = {
   getVisibleFlatColumns: () => Column<TGenerics>[]
   getVisibleLeafColumns: () => Column<TGenerics>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
@@ -52,7 +51,7 @@ export type VisibilityColumnDef = {
   defaultIsVisible?: boolean
 }
 
-export type VisibilityRow<TGenerics extends AnyGenerics> = {
+export type VisibilityRow<TGenerics extends TableGenerics> = {
   getVisibleCells: () => Cell<TGenerics>[]
 }
 
@@ -74,7 +73,7 @@ export const Visibility = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): VisibilityDefaultOptions => {
     return {
@@ -88,7 +87,7 @@ export const Visibility = {
     }
   },
 
-  createColumn: <TGenerics extends AnyGenerics>(
+  createColumn: <TGenerics extends TableGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): VisibilityColumn => {
@@ -114,7 +113,7 @@ export const Visibility = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): VisibilityInstance<TGenerics> => {
     return {

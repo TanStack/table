@@ -77,27 +77,21 @@ import {
   RowSelectionTableState,
 } from './features/RowSelection'
 
-export type DefaultGenerics = {
-  Row: unknown
-  Value: unknown
-  FilterFns: object
-  SortingFns: object
-  AggregationFns: object
-  Render: unknown
-  ColumnMeta: object
-  TableMeta: object
+export type TableGenerics = {
+  Row?: any
+  Value?: any
+  FilterFns?: any
+  SortingFns?: any
+  AggregationFns?: any
+  Render?: any
+  ColumnMeta?: any
+  TableMeta?: any
 }
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export type UseRenderer<TGenerics extends AnyGenerics> =
+export type UseRenderer<TGenerics extends TableGenerics> =
   TGenerics['Render'] extends (...args: any) => any ? TGenerics['Render'] : any
-
-export type PartialGenerics = Partial<DefaultGenerics>
-
-export type AnyGenerics = {
-  [TKey in keyof PartialGenerics]?: any
-}
 
 export type TableFeature = {
   getDefaultOptions?: (instance: any) => any
@@ -109,7 +103,7 @@ export type TableFeature = {
   createRow?: (row: any, instance: any) => any
 }
 
-export type TableInstance<TGenerics extends AnyGenerics> =
+export type TableInstance<TGenerics extends TableGenerics> =
   TableCore<TGenerics> &
     VisibilityInstance<TGenerics> &
     ColumnOrderInstance<TGenerics> &
@@ -125,7 +119,7 @@ export type TableInstance<TGenerics extends AnyGenerics> =
 
 //
 
-export type Options<TGenerics extends AnyGenerics> = CoreOptions<TGenerics> &
+export type Options<TGenerics extends TableGenerics> = CoreOptions<TGenerics> &
   VisibilityOptions &
   ColumnOrderOptions &
   ColumnPinningOptions &
@@ -152,7 +146,7 @@ export type TableState = CoreTableState &
   PaginationTableState &
   RowSelectionTableState
 
-export type Row<TGenerics extends AnyGenerics> = CoreRow<TGenerics> &
+export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
   VisibilityRow<TGenerics> &
   HeadersRow<TGenerics> &
   GroupingRow &
@@ -163,7 +157,7 @@ export type RowValues = {
   [key: string]: any
 }
 
-export type RowModel<TGenerics extends AnyGenerics> = {
+export type RowModel<TGenerics extends TableGenerics> = {
   rows: Row<TGenerics>[]
   flatRows: Row<TGenerics>[]
   rowsById: Record<string, Row<TGenerics>>
@@ -171,7 +165,7 @@ export type RowModel<TGenerics extends AnyGenerics> = {
 
 export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 
-// export type UserColumnDef<TGenerics extends AnyGenerics> = Overwrite<
+// export type UserColumnDef<TGenerics extends TableGenerics> = Overwrite<
 //   ColumnDef<TGenerics>,
 //   GeneratedProperties<false>
 // >
@@ -190,11 +184,11 @@ export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 //     }
 // : never
 
-export type Renderable<TGenerics extends AnyGenerics, TProps> =
+export type Renderable<TGenerics extends TableGenerics, TProps> =
   | string
   | ((props: TProps) => ReturnType<UseRenderer<TGenerics>>)
 
-export type ColumnDef<TGenerics extends AnyGenerics> =
+export type ColumnDef<TGenerics extends TableGenerics> =
   CoreColumnDef<TGenerics> &
     VisibilityColumnDef &
     ColumnPinningColumnDef &
@@ -203,7 +197,7 @@ export type ColumnDef<TGenerics extends AnyGenerics> =
     GroupingColumnDef<TGenerics> &
     ColumnSizingColumnDef
 
-export type Column<TGenerics extends AnyGenerics> = ColumnDef<TGenerics> &
+export type Column<TGenerics extends TableGenerics> = ColumnDef<TGenerics> &
   CoreColumn<TGenerics> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
@@ -212,10 +206,10 @@ export type Column<TGenerics extends AnyGenerics> = ColumnDef<TGenerics> &
   GroupingColumn<TGenerics> &
   ColumnSizingColumn<TGenerics>
 
-export type Cell<TGenerics extends AnyGenerics> = CoreCell<TGenerics> &
+export type Cell<TGenerics extends TableGenerics> = CoreCell<TGenerics> &
   GroupingCell<TGenerics>
 
-export type CoreCell<TGenerics extends AnyGenerics> = {
+export type CoreCell<TGenerics extends TableGenerics> = {
   id: string
   rowId: string
   columnId: string
@@ -226,10 +220,10 @@ export type CoreCell<TGenerics extends AnyGenerics> = {
   renderCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
-export type Header<TGenerics extends AnyGenerics> = CoreHeader<TGenerics> &
+export type Header<TGenerics extends TableGenerics> = CoreHeader<TGenerics> &
   ColumnSizingHeader<TGenerics>
 
-export type CoreHeader<TGenerics extends AnyGenerics> = {
+export type CoreHeader<TGenerics extends TableGenerics> = {
   id: string
   depth: number
   column: Column<TGenerics>
@@ -250,7 +244,7 @@ export type CoreHeader<TGenerics extends AnyGenerics> = {
   }) => string | null | ReturnType<UseRenderer<TGenerics>>
 }
 
-export type HeaderGroup<TGenerics extends AnyGenerics> = {
+export type HeaderGroup<TGenerics extends TableGenerics> = {
   id: string
   depth: number
   headers: Header<TGenerics>[]

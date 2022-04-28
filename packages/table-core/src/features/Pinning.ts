@@ -3,8 +3,7 @@ import {
   Updater,
   TableInstance,
   Column,
-  AnyGenerics,
-  PartialGenerics,
+  TableGenerics,
 } from '../types'
 import { functionalUpdate, makeStateUpdater } from '../utils'
 
@@ -40,7 +39,7 @@ export type ColumnPinningColumn = {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export type ColumnPinningInstance<TGenerics extends AnyGenerics> = {
+export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: () => void
   pinColumn: (columnId: string, position: ColumnPinningPosition) => void
@@ -62,7 +61,7 @@ export const Pinning = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends AnyGenerics>(
+  getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnPinningDefaultOptions => {
     return {
@@ -70,7 +69,7 @@ export const Pinning = {
     }
   },
 
-  createColumn: <TGenerics extends AnyGenerics>(
+  createColumn: <TGenerics extends TableGenerics>(
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): ColumnPinningColumn => {
@@ -82,7 +81,7 @@ export const Pinning = {
     }
   },
 
-  getInstance: <TGenerics extends AnyGenerics>(
+  getInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnPinningInstance<TGenerics> => {
     return {
