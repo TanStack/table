@@ -53,7 +53,7 @@ function isExoticComponent(component: any) {
 export const createTable = createTableFactory({ render })
 
 const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
+  typeof document !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
 export function useTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
