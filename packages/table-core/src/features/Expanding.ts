@@ -8,7 +8,7 @@ import {
   Row,
   Updater,
 } from '../types'
-import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
+import { makeStateUpdater, propGetter } from '../utils'
 
 export type ExpandedStateList = Record<string, boolean>
 export type ExpandedState = true | Record<string, boolean>
@@ -26,6 +26,7 @@ export type ExpandedRow = {
 }
 
 export type ExpandedOptions<TGenerics extends TableGenerics> = {
+  manualExpanding?: boolean
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
   enableExpanded?: boolean
@@ -281,7 +282,10 @@ export const Expanding = {
             instance.options.getExpandedRowModel(instance)
         }
 
-        if (!instance._getExpandedRowModel) {
+        if (
+          instance.options.manualExpanding ||
+          !instance._getExpandedRowModel
+        ) {
           return instance.getPreExpandedRowModel()
         }
 

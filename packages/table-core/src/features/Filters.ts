@@ -83,6 +83,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   filterFns?: TGenerics['FilterFns']
   enableFilters?: boolean
   // Column
+  manualColumnFiltering?: boolean
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
   autoResetColumnFilters?: boolean
   enableColumnFilters?: boolean
@@ -90,6 +91,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
   // Global
+  manualGlobalFiltering?: boolean
   globalFilterFn?: FilterFnOption<TGenerics>
   onGlobalFilterChange?: OnChangeFn<any>
   autoResetGlobalFilter?: boolean
@@ -471,7 +473,10 @@ export const Filters = {
             instance.options.getColumnFilteredRowModel(instance)
         }
 
-        if (!instance._getColumnFilteredRowModel) {
+        if (
+          instance.options.manualColumnFiltering ||
+          !instance._getColumnFilteredRowModel
+        ) {
           return instance.getPreColumnFilteredRowModel()
         }
 
@@ -487,7 +492,10 @@ export const Filters = {
             instance.options.getGlobalFilteredRowModel(instance)
         }
 
-        if (!instance._getGlobalFilteredRowModel) {
+        if (
+          instance.options.manualGlobalFiltering ||
+          !instance._getGlobalFilteredRowModel
+        ) {
           return instance.getPreGlobalFilteredRowModel()
         }
 

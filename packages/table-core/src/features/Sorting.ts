@@ -78,6 +78,7 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
 }
 
 export type SortingOptions<TGenerics extends TableGenerics> = {
+  manualSorting?: boolean
   sortingFns?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
   autoResetSorting?: boolean
@@ -452,7 +453,7 @@ export const Sorting = {
             instance.options.getSortedRowModel(instance)
         }
 
-        if (!instance._getSortedRowModel) {
+        if (instance.options.manualSorting || !instance._getSortedRowModel) {
           return instance.getPreSortedRowModel()
         }
 

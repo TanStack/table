@@ -93,6 +93,7 @@ export type ColumnDefaultOptions = {
 }
 
 export type GroupingOptions<TGenerics extends TableGenerics> = {
+  manualGrouping?: boolean
   aggregationFns?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
   autoResetGrouping?: boolean
@@ -306,7 +307,7 @@ export const Grouping = {
             instance.options.getGroupedRowModel(instance)
         }
 
-        if (!instance._getGroupedRowModel) {
+        if (instance.options.manualGrouping || !instance._getGroupedRowModel) {
           return instance.getPreGroupedRowModel()
         }
 

@@ -18,6 +18,7 @@ export type PaginationTableState = {
 }
 
 export type PaginationOptions<TGenerics extends TableGenerics> = {
+  manualPagination?: boolean
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
   getPaginationRowModel?: (
@@ -218,7 +219,10 @@ export const Pagination = {
             instance.options.getPaginationRowModel(instance)
         }
 
-        if (!instance._getPaginationRowModel) {
+        if (
+          instance.options.manualPagination ||
+          !instance._getPaginationRowModel
+        ) {
           return instance.getPrePaginationRowModel()
         }
 

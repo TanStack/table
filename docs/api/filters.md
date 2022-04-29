@@ -315,7 +315,15 @@ const column = table.createDataColumn('key', {
 enableFilters?: boolean
 ```
 
-Enabled/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+
+### `manualColumnFiltering`
+
+```tsx
+manualColumnFiltering?: boolean
+```
+
+Disables the `getColumnFilteredRowModel` from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.
 
 ### `onColumnFiltersChange`
 
@@ -343,6 +351,14 @@ enableColumnFilters?: boolean
 
 Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
 
+### `manualGlobalFiltering`
+
+```tsx
+manualGlobalFiltering?: boolean
+```
+
+Disables the `getGlobalFilteredRowModel` from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.
+
 ### `getColumnFilteredRowModel`
 
 ```tsx
@@ -362,7 +378,7 @@ Example:
 import { getColumnFilteredRowModel } from '@tanstack/[adapter]-table'
 
 useTable(table, {
-  getColumnFilteredRowModel: getColumnFilteredRowModel,
+  getColumnFilteredRowModel: getColumnFilteredRowModel(),
 })
 ```
 
@@ -425,7 +441,7 @@ Example:
 import { getGlobalFilteredRowModel } from '@tanstack/[adapter]-table'
 
 useTable(table, {
-  getGlobalFilteredRowModel: getGlobalFilteredRowModel,
+  getGlobalFilteredRowModel: getGlobalFilteredRowModel(),
 })
 ```
 
