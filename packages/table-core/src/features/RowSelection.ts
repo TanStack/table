@@ -120,7 +120,7 @@ export const RowSelection = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): RowSelectionInstance<TGenerics> => {
     let registered = false

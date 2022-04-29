@@ -131,11 +131,7 @@ function App() {
         <table
           {...instance.getTableProps({
             style: {
-              width: instance
-                .getHeaderGroups()[0]
-                .headers.reduce((acc, header) => {
-                  return acc + header.getWidth()
-                }, 0),
+              width: instance.getTotalSize(),
             },
           })}
         >
@@ -148,7 +144,7 @@ function App() {
                       ...props,
                       style: {
                         ...props.style,
-                        width: header.getWidth(),
+                        width: header.getSize(),
                       },
                     }))}
                   >
@@ -186,7 +182,7 @@ function App() {
                       ...props,
                       style: {
                         ...props.style,
-                        width: cell.column.getWidth(),
+                        width: cell.column.getSize(),
                       },
                     }))}
                   >
@@ -199,13 +195,13 @@ function App() {
         </table>
       </div>
       <div className="h-4" />
-      <div className="text-xl">{'<div/>'}</div>
+      <div className="text-xl">{'<div/> (relative)'}</div>
       <div className="overflow-x-auto">
         <div
           {...instance.getTableProps({
             className: 'divTable',
             style: {
-              width: instance.getTableWidth(),
+              width: instance.getTotalSize(),
             },
           })}
         >
@@ -223,7 +219,7 @@ function App() {
                       className: 'th',
                       style: {
                         ...props.style,
-                        width: header.getWidth(),
+                        width: header.getSize(),
                       },
                     }))}
                   >
@@ -270,7 +266,101 @@ function App() {
                       className: 'td',
                       style: {
                         ...props.style,
-                        width: cell.column.getWidth(),
+                        width: cell.column.getSize(),
+                      },
+                    }))}
+                  >
+                    {cell.renderCell()}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="h-4" />
+      <div className="text-xl">{'<div/> (absolute positioning)'}</div>
+      <div className="overflow-x-auto">
+        <div
+          {...instance.getTableProps({
+            className: 'divTable',
+            style: {
+              width: instance.getTotalSize(),
+            },
+          })}
+        >
+          <div className="thead">
+            {instance.getHeaderGroups().map(headerGroup => (
+              <div
+                {...headerGroup.getHeaderGroupProps({
+                  className: 'tr',
+                  style: {
+                    position: 'relative',
+                  },
+                })}
+              >
+                {headerGroup.headers.map(header => (
+                  <div
+                    {...header.getHeaderProps(props => ({
+                      ...props,
+                      className: 'th',
+                      style: {
+                        ...props.style,
+                        position: 'absolute',
+                        left: header.getStart(),
+                        width: header.getSize(),
+                      },
+                    }))}
+                  >
+                    {header.isPlaceholder ? null : header.renderHeader()}
+                    <div
+                      {...header.getResizerProps(props => ({
+                        ...props,
+                        className: `${props.className} resizer ${
+                          header.column.getIsResizing() ? 'isResizing' : ''
+                        }`,
+                        style: {
+                          ...props.style,
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  instance.getState().columnSizingInfo
+                                    .deltaOffset
+                                }px)`
+                              : '',
+                        },
+                      }))}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div
+            {...instance.getTableBodyProps({
+              className: 'tbody',
+            })}
+          >
+            {instance.getRowModel().rows.map(row => (
+              <div
+                {...row.getRowProps({
+                  className: 'tr',
+                  style: {
+                    position: 'relative',
+                  },
+                })}
+              >
+                {row.getVisibleCells().map(cell => (
+                  <div
+                    {...cell.getCellProps(props => ({
+                      ...props,
+                      className: 'td',
+                      style: {
+                        ...props.style,
+                        position: 'absolute',
+                        left: cell.column.getStart(),
+                        width: cell.column.getSize(),
                       },
                     }))}
                   >

@@ -1,11 +1,5 @@
-import {
-  CoreColumn,
-  CoreColumnDef,
-  CoreOptions,
-  CoreRow,
-  CoreTableState,
-  TableCore,
-} from './core'
+import { CoreOptions, CoreTableState, TableCore } from './core'
+import { ColumnsOptions, CoreColumn, CoreColumnDef } from './features/Columns'
 import {
   VisibilityInstance,
   VisibilityTableState,
@@ -24,9 +18,11 @@ import {
   ColumnPinningColumnDef,
   ColumnPinningInstance,
   ColumnPinningOptions,
+  ColumnPinningPosition,
+  ColumnPinningRow,
   ColumnPinningTableState,
 } from './features/Pinning'
-import { HeadersInstance, HeadersRow } from './features/Headers'
+import { HeadersInstance } from './features/Headers'
 import {
   FiltersColumn,
   FiltersColumnDef,
@@ -56,7 +52,7 @@ import {
   ExpandedTableState,
   ExpandedRow,
 } from './features/Expanding'
-import { Overwrite, PartialKeys } from './utils'
+import { Overwrite } from './utils'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
@@ -76,6 +72,12 @@ import {
   RowSelectionRow,
   RowSelectionTableState,
 } from './features/RowSelection'
+import { ColumnsInstance } from './features/Columns'
+import { CellsInstance, CellsRow } from './features/Cells'
+import { CoreRow, RowsInstance, RowsOptions } from './features/Rows'
+
+export type Updater<T> = T | ((old: T) => T)
+export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
 export type TableGenerics = {
   Row?: any
@@ -96,15 +98,19 @@ export type UseRenderer<TGenerics extends TableGenerics> =
 export type TableFeature = {
   getDefaultOptions?: (instance: any) => any
   getInitialState?: () => any
-  getInstance?: (instance: any) => any
+  createInstance?: (instance: any) => any
   getDefaultColumn?: () => any
   createColumn?: (column: any, instance: any) => any
+  createHeader?: (column: any, instance: any) => any
   createCell?: (cell: any, column: any, row: any, instance: any) => any
   createRow?: (row: any, instance: any) => any
 }
 
 export type TableInstance<TGenerics extends TableGenerics> =
   TableCore<TGenerics> &
+    ColumnsInstance<TGenerics> &
+    RowsInstance<TGenerics> &
+    CellsInstance<TGenerics> &
     VisibilityInstance<TGenerics> &
     ColumnOrderInstance<TGenerics> &
     ColumnPinningInstance<TGenerics> &
@@ -117,9 +123,9 @@ export type TableInstance<TGenerics extends TableGenerics> =
     PaginationInstance<TGenerics> &
     RowSelectionInstance<TGenerics>
 
-//
-
 export type Options<TGenerics extends TableGenerics> = CoreOptions<TGenerics> &
+  ColumnsOptions<TGenerics> &
+  RowsOptions<TGenerics> &
   VisibilityOptions &
   ColumnOrderOptions &
   ColumnPinningOptions &
@@ -130,9 +136,6 @@ export type Options<TGenerics extends TableGenerics> = CoreOptions<TGenerics> &
   ColumnSizingOptions &
   PaginationOptions<TGenerics> &
   RowSelectionOptions<TGenerics>
-
-export type Updater<T> = T | ((old: T) => T)
-export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
 export type TableState = CoreTableState &
   VisibilityTableState &
@@ -147,8 +150,9 @@ export type TableState = CoreTableState &
   RowSelectionTableState
 
 export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
+  CellsRow<TGenerics> &
   VisibilityRow<TGenerics> &
-  HeadersRow<TGenerics> &
+  ColumnPinningRow<TGenerics> &
   GroupingRow &
   RowSelectionRow &
   ExpandedRow
@@ -164,25 +168,6 @@ export type RowModel<TGenerics extends TableGenerics> = {
 }
 
 export type AccessorFn<TData> = (originalRow: TData, index: number) => any
-
-// export type UserColumnDef<TGenerics extends TableGenerics> = Overwrite<
-//   ColumnDef<TGenerics>,
-//   GeneratedProperties<false>
-// >
-
-// type _GeneratedProperties = {
-//   ['Column definitions should be generated with the table.createColumn() (and related) utilities']: false
-// }
-
-// export type GeneratedProperties<T> = T extends true
-//   ? {
-//       [TKey in keyof _GeneratedProperties]: true
-//     }
-//   : T extends false
-//   ? {
-//       [TKey in keyof _GeneratedProperties]?: false
-//     }
-// : never
 
 export type Renderable<TGenerics extends TableGenerics, TProps> =
   | string
@@ -225,9 +210,12 @@ export type Header<TGenerics extends TableGenerics> = CoreHeader<TGenerics> &
 
 export type CoreHeader<TGenerics extends TableGenerics> = {
   id: string
+  index: number
   depth: number
   column: Column<TGenerics>
-  getWidth: () => number
+  getStart: () => number
+  getSize: () => number
+  headerGroup: HeaderGroup<TGenerics>
   subHeaders: Header<TGenerics>[]
   colSpan?: number
   rowSpan?: number

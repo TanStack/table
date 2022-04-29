@@ -21,11 +21,9 @@ export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
 //   DefinedGenericKeys<T>
 // >
 
-export type DataUpdateFunction<T> = (input: T) => T
-
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
-    ? (updater as DataUpdateFunction<T>)(input)
+    ? (updater as (input: T) => T)(input)
     : updater
 }
 

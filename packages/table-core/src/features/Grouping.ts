@@ -178,7 +178,7 @@ export const Grouping = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): GroupingInstance<TGenerics> => {
     let registered = false

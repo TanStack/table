@@ -72,7 +72,7 @@ export const Pagination = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): PaginationInstance<TGenerics> => {
     let registered = false

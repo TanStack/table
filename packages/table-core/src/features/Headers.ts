@@ -15,15 +15,6 @@ import {
   Row,
 } from '../types'
 import { propGetter, memo } from '../utils'
-import { ColumnSizing } from './ColumnSizing'
-
-export type HeadersRow<TGenerics extends TableGenerics> = {
-  _getAllVisibleCells: () => Cell<TGenerics>[]
-  getVisibleCells: () => Cell<TGenerics>[]
-  getLeftVisibleCells: () => Cell<TGenerics>[]
-  getCenterVisibleCells: () => Cell<TGenerics>[]
-  getRightVisibleCells: () => Cell<TGenerics>[]
-}
 
 export type HeadersInstance<TGenerics extends TableGenerics> = {
   createHeader: (
@@ -32,6 +23,7 @@ export type HeadersInstance<TGenerics extends TableGenerics> = {
       id?: string
       isPlaceholder?: boolean
       placeholderId?: string
+      index: number
       depth: number
     }
   ) => Header<TGenerics>
@@ -73,100 +65,12 @@ export type HeadersInstance<TGenerics extends TableGenerics> = {
     headerId: string,
     userProps?: TGetter
   ) => undefined | PropGetterValue<FooterProps, TGetter>
-  getTotalWidth: () => number
 }
 
 //
 
 export const Headers = {
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): HeadersRow<TGenerics> => {
-    return {
-      _getAllVisibleCells: memo(
-        () => [
-          row
-            .getAllCells()
-            .filter(cell => cell.column.getIsVisible())
-            .map(d => d.id)
-            .join('_'),
-        ],
-        _ => {
-          return row.getAllCells().filter(cell => cell.column.getIsVisible())
-        },
-        {
-          key: 'row._getAllVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-      getVisibleCells: memo(
-        () => [
-          row.getLeftVisibleCells(),
-          row.getCenterVisibleCells(),
-          row.getRightVisibleCells(),
-        ],
-        (left, center, right) => [...left, ...center, ...right],
-        {
-          key: 'row.getVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-      getCenterVisibleCells: memo(
-        () => [
-          row._getAllVisibleCells(),
-          instance.getState().columnPinning.left,
-          instance.getState().columnPinning.right,
-        ],
-        (allCells, left, right) => {
-          const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
-
-          return allCells.filter(d => !leftAndRight.includes(d.columnId))
-        },
-        {
-          key: 'row.getCenterVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-      getLeftVisibleCells: memo(
-        () => [
-          row._getAllVisibleCells(),
-          instance.getState().columnPinning.left,
-          ,
-        ],
-        (allCells, left) => {
-          const cells = (left ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
-            .filter(Boolean)
-
-          return cells
-        },
-        {
-          key: 'row.getLeftVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-      getRightVisibleCells: memo(
-        () => [
-          row._getAllVisibleCells(),
-          instance.getState().columnPinning.right,
-        ],
-        (allCells, right) => {
-          const cells = (right ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
-            .filter(Boolean)
-
-          return cells
-        },
-        {
-          key: 'row.getRightVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-    }
-  },
-
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): HeadersInstance<TGenerics> => {
     return {
@@ -176,6 +80,7 @@ export const Headers = {
           id?: string
           isPlaceholder?: boolean
           placeholderId?: string
+          index: number
           depth: number
         }
       ) => {
@@ -184,26 +89,37 @@ export const Headers = {
         let header: CoreHeader<TGenerics> = {
           id,
           column,
+          index: options.index,
           isPlaceholder: options.isPlaceholder,
           placeholderId: options.placeholderId,
           depth: options.depth,
           subHeaders: [],
           colSpan: 0,
           rowSpan: 0,
-          getWidth: () => {
+          headerGroup: null!,
+          getSize: () => {
             let sum = 0
 
             const recurse = (header: CoreHeader<TGenerics>) => {
               if (header.subHeaders.length) {
                 header.subHeaders.forEach(recurse)
               } else {
-                sum += header.column.getWidth() ?? 0
+                sum += header.column.getSize() ?? 0
               }
             }
 
             recurse(header)
 
             return sum
+          },
+          getStart: () => {
+            if (header.index > 0) {
+              const prevSiblingHeader =
+                header.headerGroup.headers[header.index - 1]
+              return prevSiblingHeader.getStart() + prevSiblingHeader.getSize()
+            }
+
+            return 0
           },
           getLeafHeaders: (): Header<TGenerics>[] => {
             const leafHeaders: CoreHeader<TGenerics>[] = []
@@ -241,11 +157,11 @@ export const Headers = {
               : null,
         }
 
-        // Yes, we have to convert instance to unknown, because we know more than the compiler here.
-        return Object.assign(
-          header,
-          ColumnSizing.createHeader(header as Header<TGenerics>, instance)
-        ) as Header<TGenerics>
+        instance._features.forEach(feature => {
+          Object.assign(header, feature.createHeader?.(header, instance))
+        })
+
+        return header as Header<TGenerics>
       },
 
       // Header Groups
@@ -592,16 +508,6 @@ export const Headers = {
 
         return propGetter(initialProps, userProps)
       },
-
-      getTotalWidth: () => {
-        let width = 0
-
-        instance.getVisibleLeafColumns().forEach(column => {
-          width += column.getWidth() ?? 0
-        })
-
-        return width
-      },
     }
   },
 }
@@ -652,13 +558,13 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
     }
 
     // The parent columns we're going to scan next
-    const parentHeaders: Header<TGenerics>[] = []
+    const pendingParentHeaders: Header<TGenerics>[] = []
 
     // Scan each column for parents
     headersToGroup.forEach(headerToGroup => {
       // What is the latest (last) parent column?
 
-      const latestParentHeader = [...parentHeaders].reverse()[0]
+      const latestPendingParentHeader = [...pendingParentHeaders].reverse()[0]
 
       const isLeafHeader = headerToGroup.column.depth === headerGroup.depth
 
@@ -674,41 +580,45 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
         isPlaceholder = true
       }
 
-      const header = instance.createHeader(column, {
-        id: [headerFamily, depth, column.id, headerToGroup?.id]
-          .filter(Boolean)
-          .join('_'),
-        isPlaceholder,
-        placeholderId: isPlaceholder
-          ? `${parentHeaders.filter(d => d.column === column).length}`
-          : undefined,
-        depth,
-      })
-
-      if (!latestParentHeader || latestParentHeader.column !== header.column) {
-        header.subHeaders.push(headerToGroup)
-        parentHeaders.push(header)
+      if (latestPendingParentHeader?.column === column) {
+        // This column is repeated. Add it as a sub header to the next batch
+        latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
-        latestParentHeader.subHeaders.push(headerToGroup)
+        // This is a new header. Let's create it
+        const header = instance.createHeader(column, {
+          id: [headerFamily, depth, column.id, headerToGroup?.id]
+            .filter(Boolean)
+            .join('_'),
+          isPlaceholder,
+          placeholderId: isPlaceholder
+            ? `${pendingParentHeaders.filter(d => d.column === column).length}`
+            : undefined,
+          depth,
+          index: pendingParentHeaders.length,
+        })
+
+        // Add the headerToGroup as a subHeader of the new header
+        header.subHeaders.push(headerToGroup)
+        // Add the new header to the pendingParentHeaders to get grouped
+        // in the next batch
+        pendingParentHeaders.push(header)
       }
 
-      // if (!headerToGroup.isPlaceholder) {
-      //   headerToGroup.column.header = headerToGroup;
-      // }
-
       headerGroup.headers.push(headerToGroup)
+      headerToGroup.headerGroup = headerGroup
     })
 
     headerGroups.push(headerGroup)
 
     if (depth > 0) {
-      createHeaderGroup(parentHeaders, depth - 1)
+      createHeaderGroup(pendingParentHeaders, depth - 1)
     }
   }
 
-  const bottomHeaders = columnsToGroup.map(column =>
+  const bottomHeaders = columnsToGroup.map((column, index) =>
     instance.createHeader(column, {
       depth: maxDepth,
+      index,
     })
   )
 

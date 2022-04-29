@@ -88,7 +88,7 @@ export const Expanding = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ExpandedInstance<TGenerics> => {
     let registered = false

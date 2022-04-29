@@ -7,6 +7,7 @@ import {
   PropGetterValue,
   TableInstance,
   Updater,
+  Row,
 } from '../types'
 import { makeStateUpdater, memo, propGetter } from '../utils'
 
@@ -28,6 +29,9 @@ export type VisibilityTableState = {
 export type VisibilityInstance<TGenerics extends TableGenerics> = {
   getVisibleFlatColumns: () => Column<TGenerics>[]
   getVisibleLeafColumns: () => Column<TGenerics>[]
+  getLeftVisibleLeafColumns: () => Column<TGenerics>[]
+  getRightVisibleLeafColumns: () => Column<TGenerics>[]
+  getCenterVisibleLeafColumns: () => Column<TGenerics>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
   toggleColumnVisibility: (columnId: string, value?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
@@ -52,6 +56,7 @@ export type VisibilityColumnDef = {
 }
 
 export type VisibilityRow<TGenerics extends TableGenerics> = {
+  _getAllVisibleCells: () => Cell<TGenerics>[]
   getVisibleCells: () => Cell<TGenerics>[]
 }
 
@@ -113,46 +118,88 @@ export const Visibility = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createRow: <TGenerics extends TableGenerics>(
+    row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
-  ): VisibilityInstance<TGenerics> => {
+  ): VisibilityRow<TGenerics> => {
     return {
-      getVisibleFlatColumns: memo(
+      _getAllVisibleCells: memo(
         () => [
-          instance.getAllFlatColumns(),
-          instance
-            .getAllFlatColumns()
-            .filter(d => d.getIsVisible?.())
+          row
+            .getAllCells()
+            .filter(cell => cell.column.getIsVisible())
             .map(d => d.id)
             .join('_'),
         ],
-        allFlatColumns => {
-          return allFlatColumns.filter(d => d.getIsVisible?.())
+        _ => {
+          return row.getAllCells().filter(cell => cell.column.getIsVisible())
         },
         {
-          key: 'getVisibleFlatColumns',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugColumns,
+          key: 'row._getAllVisibleCells',
+          debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
-
-      getVisibleLeafColumns: memo(
+      getVisibleCells: memo(
         () => [
-          instance.getAllLeafColumns(),
-          instance
-            .getAllLeafColumns()
-            .filter(d => d.getIsVisible?.())
+          row.getLeftVisibleCells(),
+          row.getCenterVisibleCells(),
+          row.getRightVisibleCells(),
+        ],
+        (left, center, right) => [...left, ...center, ...right],
+        {
+          key: 'row.getVisibleCells',
+          debug: () => instance.options.debugAll ?? instance.options.debugRows,
+        }
+      ),
+    }
+  },
+
+  createInstance: <TGenerics extends TableGenerics>(
+    instance: TableInstance<TGenerics>
+  ): VisibilityInstance<TGenerics> => {
+    const makeVisibleColumnsMethod = (
+      key: string,
+      getColumns: () => Column<TGenerics>[]
+    ): (() => Column<TGenerics>[]) => {
+      return memo(
+        () => [
+          getColumns(),
+          getColumns()
+            .filter(d => d.getIsVisible())
             .map(d => d.id)
             .join('_'),
         ],
-        allFlatColumns => {
-          return allFlatColumns.filter(d => d.getIsVisible?.())
+        columns => {
+          return columns.filter(d => d.getIsVisible?.())
         },
         {
-          key: 'getVisibleLeafColumns',
+          key,
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
+      )
+    }
+
+    return {
+      getVisibleFlatColumns: makeVisibleColumnsMethod(
+        'getVisibleFlatColumns',
+        () => instance.getAllFlatColumns()
+      ),
+      getVisibleLeafColumns: makeVisibleColumnsMethod(
+        'getVisibleLeafColumns',
+        () => instance.getAllLeafColumns()
+      ),
+      getLeftVisibleLeafColumns: makeVisibleColumnsMethod(
+        'getLeftVisibleLeafColumns',
+        () => instance.getLeftLeafColumns()
+      ),
+      getRightVisibleLeafColumns: makeVisibleColumnsMethod(
+        'getRightVisibleLeafColumns',
+        () => instance.getRightLeafColumns()
+      ),
+      getCenterVisibleLeafColumns: makeVisibleColumnsMethod(
+        'getCenterVisibleLeafColumns',
+        () => instance.getCenterLeafColumns()
       ),
 
       setColumnVisibility: updater =>

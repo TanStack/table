@@ -172,7 +172,7 @@ export const Sorting = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): SortingInstance<TGenerics> => {
     let registered = false

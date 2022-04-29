@@ -230,7 +230,7 @@ export const Filters = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): FiltersInstance<TGenerics> => {
     let registered = false

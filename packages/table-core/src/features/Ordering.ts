@@ -49,7 +49,7 @@ export const Ordering = {
     }
   },
 
-  getInstance: <TGenerics extends TableGenerics>(
+  createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnOrderInstance<TGenerics> => {
     return {
