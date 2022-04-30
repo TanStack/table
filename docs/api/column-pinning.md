@@ -87,7 +87,7 @@ Sets or updates the `state.columnPinning` state.
 resetColumnPinning: () => void
 ```
 
-Resets the **columnPinning** state for the table.
+Resets the **columnPinning** state for the table back to its initial state.
 
 ### `pinColumn`
 
