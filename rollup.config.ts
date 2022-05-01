@@ -6,6 +6,7 @@ import visualizer from 'rollup-plugin-visualizer'
 import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import path from 'path'
+import svelte from 'rollup-plugin-svelte'
 
 type Options = {
   input: string
@@ -21,9 +22,13 @@ const globals = {
   vue: 'Vue',
   'solid-js': 'Solid',
   'solid-js/store': 'SolidStore',
+  svelte: 'Svelte',
+  'svelte/internal': 'SvelteInternal',
+  'svelte/store': 'SvelteStore',
   'react-dom': 'ReactDOM',
   '@tanstack/table-core': 'TableCore',
   '@tanstack/vue-table': 'VueTable',
+  '@tanstack/svelte-table': 'SvelteTable',
   '@tanstack/solid-table': 'SolidTable',
   '@tanstack/react-table': 'ReactTable',
   '@tanstack/react-table-devtools': 'ReactTableDevtools',
@@ -75,6 +80,13 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       entryFile: 'src/index.ts',
     }),
     ...buildConfigs({
+      name: 'svelte-table',
+      packageDir: 'packages/svelte-table',
+      jsName: 'SvelteTable',
+      outputFile: 'svelte-table',
+      entryFile: 'src/index.ts',
+    }),
+    ...buildConfigs({
       name: 'react-table-devtools',
       packageDir: 'packages/react-table-devtools',
       jsName: 'ReactTableDevtools',
@@ -120,7 +132,11 @@ function esm({ input, packageDir, external, banner }: Options): RollupOptions {
       dir: `${packageDir}/build/esm`,
       banner,
     },
-    plugins: [babelPlugin, nodeResolve({ extensions: ['.ts', '.tsx'] })],
+    plugins: [
+      svelte(),
+      babelPlugin,
+      nodeResolve({ extensions: ['.ts', '.tsx'] }),
+    ],
   }
 }
 
@@ -137,7 +153,11 @@ function cjs({ input, external, packageDir, banner }: Options): RollupOptions {
       exports: 'named',
       banner,
     },
-    plugins: [babelPlugin, nodeResolve({ extensions: ['.ts', '.tsx'] })],
+    plugins: [
+      svelte(),
+      babelPlugin,
+      nodeResolve({ extensions: ['.ts', '.tsx'] }),
+    ],
   }
 }
 
@@ -162,6 +182,7 @@ function umdDev({
       banner,
     },
     plugins: [
+      svelte(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       umdDevPlugin('development'),
@@ -190,6 +211,7 @@ function umdProd({
       banner,
     },
     plugins: [
+      svelte(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       umdDevPlugin('production'),

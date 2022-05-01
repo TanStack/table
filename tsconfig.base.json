@@ -17,6 +17,7 @@
       "@tanstack/react-table": ["packages/react-table"],
       "@tanstack/react-table-devtools": ["packages/react-table-devtools"],
       "@tanstack/solid-table": ["packages/solid-table"],
+      "@tanstack/svelte-table": ["packages/svelte-table"],
       "@tanstack/vue-table": ["packages/vue-table"]
     }
   }

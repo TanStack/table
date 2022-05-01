@@ -1,0 +1,42 @@
+{
+  "name": "@tanstack/svelte-table",
+  "author": "Tanner Linsley",
+  "version": "8.0.0-alpha.58",
+  "description": "Composables for building lightweight, fast and extendable datagrids for Vue",
+  "license": "MIT",
+  "homepage": "https://github.com/tanstack/react-table#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanstack/react-table.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "svelte",
+    "table",
+    "svelte-table",
+    "datagrid"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "module": "build/esm/index.js",
+  "main": "build/cjs/index.js",
+  "browser": "build/umd/index.production.min.js",
+  "types": "build/types/index.d.ts",
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "dependencies": {
+    "@tanstack/table-core": "8.0.0-alpha.58"
+  },
+  "peerDependencies": {
+    "svelte": "^3.48.0"
+  }
+}
