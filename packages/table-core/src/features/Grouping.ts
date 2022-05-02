@@ -10,7 +10,6 @@ import {
   Row,
   Updater,
   Renderable,
-  UseRenderer,
   TableGenerics,
 } from '../types'
 import {
@@ -82,7 +81,7 @@ export type GroupingCell<TGenerics extends TableGenerics> = {
   getIsGrouped: () => boolean
   getIsPlaceholder: () => boolean
   getIsAggregated: () => boolean
-  renderAggregatedCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
+  renderAggregatedCell: () => string | null | TGenerics['Rendered']
 }
 
 export type ColumnDefaultOptions = {

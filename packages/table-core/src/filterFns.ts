@@ -7,6 +7,7 @@ export const filterFns = {
   equalsStringSensitive,
   arrIncludes,
   arrIncludesAll,
+  arrIncludesSome,
   equals,
   weakEquals,
   betweenNumberRange,
@@ -116,6 +117,25 @@ function arrIncludesAll<TGenerics extends TableGenerics>(
 }
 
 arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
+
+function arrIncludesSome<TGenerics extends TableGenerics>(
+  rows: Row<TGenerics>[],
+  columnIds: string[],
+  filterValue: unknown[]
+) {
+  return rows.filter(row => {
+    return columnIds.some(id => {
+      const rowValue = row.values[id]
+      return (
+        rowValue &&
+        rowValue.length &&
+        filterValue.some(val => rowValue.includes(val))
+      )
+    })
+  })
+}
+
+arrIncludesSome.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
 function equals<TGenerics extends TableGenerics>(
   rows: Row<TGenerics>[],

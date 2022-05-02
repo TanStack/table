@@ -14,7 +14,7 @@ import { makeData, Person } from './makeData'
 
 let table = createTable().setRowType<Person>()
 
-const defaultColumns = table.createColumns([
+const defaultColumns = [
   table.createGroup({
     header: 'Name',
     footer: props => props.column.id,
@@ -58,7 +58,7 @@ const defaultColumns = table.createColumns([
       }),
     ],
   }),
-])
+]
 
 function App() {
   const [data, setData] = React.useState(() => makeData(5000))

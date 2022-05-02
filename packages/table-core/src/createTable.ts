@@ -6,9 +6,9 @@ import {
   AccessorFn,
   AnyRender,
   TableGenerics,
-  Options,
+  TableOptions,
 } from './types'
-import { IfDefined, Overwrite, PartialKeys } from './utils'
+import { IfDefined, Overwrite } from './utils'
 
 export type TableFactory<TGenerics extends TableGenerics> =
   () => Table<TGenerics>
@@ -25,12 +25,16 @@ export type CreateTableOptions<
     filterFns?: TFilterFns
     sortingFns?: TSortingFns
     aggregationFns?: TAggregationFns
-  } & Omit<Options<TGenerics>, 'filterFns' | 'sortingFns' | 'aggregationFns'>
+  } & Omit<
+    TableOptions<TGenerics>,
+    'filterFns' | 'sortingFns' | 'aggregationFns'
+  >
 >
 
 export type Table<TGenerics extends TableGenerics> = {
   generics: TGenerics
-  options: Partial<Options<TGenerics>>
+  options: Partial<TableOptions<TGenerics>>
+  setGenerics: <T extends TableGenerics>() => Table<T>
   setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
   setTableMetaType: <TTableMeta>() => Table<
     Overwrite<TGenerics, { TableMeta: TTableMeta }>
@@ -60,9 +64,6 @@ export type Table<TGenerics extends TableGenerics> = {
       }
     >
   >
-  createColumns: <TColumnDef extends ColumnDef<any>>(
-    columns: TColumnDef[]
-  ) => TColumnDef[]
   createGroup: (
     column: Overwrite<
       | Overwrite<
@@ -87,12 +88,7 @@ export type Table<TGenerics extends TableGenerics> = {
     >
   ) => ColumnDef<TGenerics>
   createDisplayColumn: (
-    column: Overwrite<
-      PartialKeys<ColumnDef<TGenerics>, 'accessorFn' | 'accessorKey'>,
-      {
-        columns?: ColumnDef<any>[]
-      }
-    >
+    column: Omit<ColumnDef<TGenerics>, 'columns'>
   ) => ColumnDef<TGenerics>
   createDataColumn: <
     TAccessor extends AccessorFn<TGenerics['Row']> | keyof TGenerics['Row']
@@ -124,9 +120,9 @@ export type Table<TGenerics extends TableGenerics> = {
 
 //
 
-export function createTableFactory<TRender extends AnyRender>(opts: {
-  render: TRender
-}): () => Table<{ Render: TRender }> {
+export function createTableFactory<TRenderer extends AnyRender>(opts: {
+  render: TRenderer
+}): () => Table<{ Renderer: TRenderer; Rendered: ReturnType<TRenderer> }> {
   return () => createTable(undefined, undefined, opts)
 }
 
@@ -144,6 +140,7 @@ function createTable<TGenerics extends TableGenerics>(
         throw new Error('')
       })(),
     },
+    setGenerics: () => table as any,
     setRowType: () => table as any,
     setTableMetaType: () => table as any,
     setColumnMetaType: () => table as any,
@@ -152,7 +149,6 @@ function createTable<TGenerics extends TableGenerics>(
         ...options,
         ...newOptions,
       } as any),
-    createColumns: columns => columns,
     createDisplayColumn: column => ({ ...column, columnDefType: 'display' }),
     createGroup: column => ({ ...column, columnDefType: 'group' } as any),
     createDataColumn: (accessor, column): any => {

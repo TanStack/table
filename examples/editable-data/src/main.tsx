@@ -56,7 +56,7 @@ function App() {
 
   const columns = React.useMemo(
     () =>
-      table.createColumns([
+      [
         table.createGroup({
           header: 'Name',
           footer: props => props.column.id,

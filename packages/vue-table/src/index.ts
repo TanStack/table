@@ -1,18 +1,18 @@
 import {
   TableGenerics,
-  Options,
+  TableOptions,
   PartialKeys,
   Table,
   createTableInstance,
   TableFeature,
   createTableFactory,
 } from '@tanstack/table-core'
-import { h, watchEffect, ref, onBeforeUpdate } from 'vue'
+import { h, watchEffect, ref, onBeforeUpdate, VNode } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-function render<TProps extends {}>(Comp: any, props: TProps) {
+function render<TProps extends {}>(Comp: any, props: TProps): VNode | null {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
@@ -27,17 +27,20 @@ export const createTable = createTableFactory({ render })
 export function useTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
-    Omit<Options<TGenerics>, 'render'>,
+    Omit<TableOptions<TGenerics>, 'render'>,
     'state' | 'onStateChange'
   >
 ) {
-  const resolvedOptions: Options<TGenerics> = mergeProxy(
+  const resolvedOptions: TableOptions<TGenerics> = mergeProxy(
     {
       ...table.options,
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       render,
-      mergeOptions(defaultOptions: TableFeature, options: Options<TGenerics>) {
+      mergeOptions(
+        defaultOptions: TableFeature,
+        options: TableOptions<TGenerics>
+      ) {
         return mergeProxy(defaultOptions, options)
       },
     },

@@ -95,6 +95,8 @@ The following filter functions are built-in to the table core:
   - Item inclusion within an array
 - `arrIncludesAll`
   - All items included in an array
+- `arrIncludesSome`
+  - Some items included in an array
 - `equals`
   - Object/referential equality `Object.is`/`===`
 - `weakEquals`

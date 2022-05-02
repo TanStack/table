@@ -25,65 +25,64 @@ function App() {
   const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo(
-    () =>
-      table.createColumns([
-        table.createDisplayColumn({
-          id: 'select',
-          header: ({ instance }) => (
-            <IndeterminateCheckbox
-              {...instance.getToggleAllRowsSelectedProps()}
-            />
-          ),
-          cell: ({ row }) => (
-            <div className="px-1">
-              <IndeterminateCheckbox {...row.getToggleSelectedProps()} />
-            </div>
-          ),
-        }),
-        table.createGroup({
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('firstName', {
-              cell: info => info.value,
-              footer: props => props.column.id,
-            }),
-            table.createDataColumn(row => row.lastName, {
-              id: 'lastName',
-              cell: info => info.value,
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            }),
-          ],
-        }),
-        table.createGroup({
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('age', {
-              header: () => 'Age',
-              footer: props => props.column.id,
-            }),
-            table.createGroup({
-              header: 'More Info',
-              columns: [
-                table.createDataColumn('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('status', {
-                  header: 'Status',
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('progress', {
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ]),
+    () => [
+      table.createDisplayColumn({
+        id: 'select',
+        header: ({ instance }) => (
+          <IndeterminateCheckbox
+            {...instance.getToggleAllRowsSelectedProps()}
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
+            <IndeterminateCheckbox {...row.getToggleSelectedProps()} />
+          </div>
+        ),
+      }),
+      table.createGroup({
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('firstName', {
+            cell: info => info.value,
+            footer: props => props.column.id,
+          }),
+          table.createDataColumn(row => row.lastName, {
+            id: 'lastName',
+            cell: info => info.value,
+            header: () => <span>Last Name</span>,
+            footer: props => props.column.id,
+          }),
+        ],
+      }),
+      table.createGroup({
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('age', {
+            header: () => 'Age',
+            footer: props => props.column.id,
+          }),
+          table.createGroup({
+            header: 'More Info',
+            columns: [
+              table.createDataColumn('visits', {
+                header: () => <span>Visits</span>,
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('status', {
+                header: 'Status',
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('progress', {
+                header: 'Profile Progress',
+                footer: props => props.column.id,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
     []
   )
 
@@ -280,9 +279,9 @@ function Filter({
         type="number"
         min={Number(column.getPreFilteredMinMaxValues()[0])}
         max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[0] ?? '') as string}
+        value={((column.getColumnFilterValue() as any)?.[0] ?? '') as string}
         onChange={e =>
-          column.setColumnFilterValue(old => [e.target.value, old?.[1]])
+          column.setColumnFilterValue((old: any) => [e.target.value, old?.[1]])
         }
         placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
@@ -291,9 +290,9 @@ function Filter({
         type="number"
         min={Number(column.getPreFilteredMinMaxValues()[0])}
         max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[1] ?? '') as string}
+        value={((column.getColumnFilterValue() as any)?.[1] ?? '') as string}
         onChange={e =>
-          column.setColumnFilterValue(old => [old?.[0], e.target.value])
+          column.setColumnFilterValue((old: any) => [old?.[0], e.target.value])
         }
         placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
@@ -314,11 +313,13 @@ function IndeterminateCheckbox({
   indeterminate,
   className = '',
   ...rest
-}: { indeterminate: boolean } & HTMLAttributes<HTMLInputElement>) {
+}: { indeterminate?: boolean } & HTMLAttributes<HTMLInputElement>) {
   const ref = React.useRef<HTMLInputElement>(null!)
 
   React.useEffect(() => {
-    ref.current.indeterminate = indeterminate
+    if (typeof indeterminate === 'boolean') {
+      ref.current.indeterminate = indeterminate
+    }
   }, [ref, indeterminate])
 
   return (

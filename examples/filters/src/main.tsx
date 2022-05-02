@@ -31,53 +31,52 @@ function App() {
   const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo(
-    () =>
-      table.createColumns([
-        table.createGroup({
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('firstName', {
-              cell: info => info.value,
-              footer: props => props.column.id,
-              filterFn: 'test',
-            }),
-            table.createDataColumn(row => row.lastName, {
-              id: 'lastName',
-              cell: info => info.value,
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            }),
-          ],
-        }),
-        table.createGroup({
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('age', {
-              header: () => 'Age',
-              footer: props => props.column.id,
-            }),
-            table.createGroup({
-              header: 'More Info',
-              columns: [
-                table.createDataColumn('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('status', {
-                  header: 'Status',
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('progress', {
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ]),
+    () => [
+      table.createGroup({
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('firstName', {
+            cell: info => info.value,
+            footer: props => props.column.id,
+            filterFn: 'test',
+          }),
+          table.createDataColumn(row => row.lastName, {
+            id: 'lastName',
+            cell: info => info.value,
+            header: () => <span>Last Name</span>,
+            footer: props => props.column.id,
+          }),
+        ],
+      }),
+      table.createGroup({
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('age', {
+            header: () => 'Age',
+            footer: props => props.column.id,
+          }),
+          table.createGroup({
+            header: 'More Info',
+            columns: [
+              table.createDataColumn('visits', {
+                header: () => <span>Visits</span>,
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('status', {
+                header: 'Status',
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('progress', {
+                header: 'Profile Progress',
+                footer: props => props.column.id,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
     []
   )
 

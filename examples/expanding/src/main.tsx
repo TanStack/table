@@ -22,92 +22,91 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const columns = React.useMemo(
-    () =>
-      table.createColumns([
-        table.createGroup({
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('firstName', {
-              header: ({ instance }) => (
-                <>
-                  <IndeterminateCheckbox
-                    {...instance.getToggleAllRowsSelectedProps()}
-                  />{' '}
-                  <span {...instance.getToggleAllRowsExpandedProps()}>
-                    {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
-                  </span>{' '}
-                  First Name
-                </>
-              ),
-              cell: ({ row, value }) => (
-                // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-                // to build the toggle for expanding a row
-                <div
-                  style={{
-                    // Since rows are flattened by default,
-                    // we can use the row.depth property
-                    // and paddingLeft to visually indicate the depth
-                    // of the row
-                    paddingLeft: `${row.depth * 2}rem`,
-                  }}
+    () => [
+      table.createGroup({
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('firstName', {
+            header: ({ instance }) => (
+              <>
+                <IndeterminateCheckbox
+                  {...instance.getToggleAllRowsSelectedProps()}
+                />{' '}
+                <span {...instance.getToggleAllRowsExpandedProps()}>
+                  {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
+                </span>{' '}
+                First Name
+              </>
+            ),
+            cell: ({ row, value }) => (
+              // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+              // to build the toggle for expanding a row
+              <div
+                style={{
+                  // Since rows are flattened by default,
+                  // we can use the row.depth property
+                  // and paddingLeft to visually indicate the depth
+                  // of the row
+                  paddingLeft: `${row.depth * 2}rem`,
+                }}
+              >
+                <IndeterminateCheckbox {...row.getToggleSelectedProps()} />{' '}
+                <span
+                  {...row.getToggleExpandedProps(props => ({
+                    ...props,
+                    style: {
+                      cursor: props.onClick ? 'pointer' : 'normal',
+                    },
+                  }))}
                 >
-                  <IndeterminateCheckbox {...row.getToggleSelectedProps()} />{' '}
-                  <span
-                    {...row.getToggleExpandedProps(props => ({
-                      ...props,
-                      style: {
-                        cursor: props.onClick ? 'pointer' : 'normal',
-                      },
-                    }))}
-                  >
-                    {row.getCanExpand()
-                      ? row.getIsExpanded()
-                        ? '👇'
-                        : '👉'
-                      : '🔵'}{' '}
-                    {value}
-                  </span>
-                </div>
-              ),
-              footer: props => props.column.id,
-            }),
-            table.createDataColumn(row => row.lastName, {
-              id: 'lastName',
-              cell: info => info.value,
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            }),
-          ],
-        }),
-        table.createGroup({
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('age', {
-              header: () => 'Age',
-              footer: props => props.column.id,
-            }),
-            table.createGroup({
-              header: 'More Info',
-              columns: [
-                table.createDataColumn('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('status', {
-                  header: 'Status',
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('progress', {
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ]),
+                  {row.getCanExpand()
+                    ? row.getIsExpanded()
+                      ? '👇'
+                      : '👉'
+                    : '🔵'}{' '}
+                  {value}
+                </span>
+              </div>
+            ),
+            footer: props => props.column.id,
+          }),
+          table.createDataColumn(row => row.lastName, {
+            id: 'lastName',
+            cell: info => info.value,
+            header: () => <span>Last Name</span>,
+            footer: props => props.column.id,
+          }),
+        ],
+      }),
+      table.createGroup({
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('age', {
+            header: () => 'Age',
+            footer: props => props.column.id,
+          }),
+          table.createGroup({
+            header: 'More Info',
+            columns: [
+              table.createDataColumn('visits', {
+                header: () => <span>Visits</span>,
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('status', {
+                header: 'Status',
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('progress', {
+                header: 'Profile Progress',
+                footer: props => props.column.id,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
     []
   )
 

@@ -5,7 +5,20 @@
     { "path": "packages/react-table" },
     { "path": "packages/solid-table" },
     { "path": "packages/vue-table" },
-    { "path": "packages/react-table-devtools" }
+    { "path": "packages/react-table-devtools" },
+    { "path": "examples/basic" },
+    { "path": "examples/column-ordering" },
+    { "path": "examples/column-pinning" },
+    { "path": "examples/column-sizing" },
+    { "path": "examples/column-visibility" },
+    { "path": "examples/editable-data" },
+    { "path": "examples/expanding" },
+    { "path": "examples/filters" },
+    { "path": "examples/fully-controlled" },
+    { "path": "examples/grouping" },
+    { "path": "examples/pagination" },
+    { "path": "examples/row-selection" },
+    { "path": "examples/sorting" }
   ]
   // "exclude": ["node_modules"]
 }

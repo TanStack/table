@@ -3,12 +3,13 @@ export * from '@tanstack/table-core'
 
 import {
   createTableInstance,
-  PartialKeys,
-  Options,
+  TableOptions,
   TableInstance,
   Table,
   TableGenerics,
   createTableFactory,
+  Overwrite,
+  PartialKeys,
 } from '@tanstack/table-core'
 
 export type Renderable<TProps> =
@@ -16,13 +17,20 @@ export type Renderable<TProps> =
   | React.FunctionComponent<TProps>
   | React.Component<TProps>
 
-export const render = <TProps extends {}>(
+export type Render = <TProps extends {}>(
   Comp: Renderable<TProps>,
   props: TProps
-): React.ReactNode =>
-  !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
+) => React.ReactNode | JSX.Element
 
-export type Render = typeof render
+export type ReactTableGenerics = Overwrite<
+  TableGenerics,
+  { Renderer: Render; Rendered: ReturnType<Render> }
+>
+
+//
+
+export const render: Render = (Comp, props) =>
+  !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
 
 function isReactComponent(component: unknown): component is React.FC {
   return (
@@ -55,15 +63,18 @@ export const createTable = createTableFactory({ render })
 const useIsomorphicLayoutEffect =
   typeof document !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
-export function useTableInstance<TGenerics extends TableGenerics>(
-  table: Table<TGenerics>,
-  options: PartialKeys<
-    Omit<Options<TGenerics>, 'render'>,
+export type UseTableInstanceOptions<TGenerics extends ReactTableGenerics> =
+  PartialKeys<
+    Omit<TableOptions<TGenerics>, 'render'>,
     'state' | 'onStateChange'
   >
+
+export function useTableInstance<TGenerics extends ReactTableGenerics>(
+  table: Table<TGenerics>,
+  options: UseTableInstanceOptions<TGenerics>
 ): TableInstance<TGenerics> {
   // Compose in the generic options to the user options
-  const resolvedOptions: Options<TGenerics> = {
+  const resolvedOptions: TableOptions<TGenerics> = {
     ...table.options,
     state: {}, // Dummy state
     onStateChange: () => {}, // noop

@@ -1,6 +1,6 @@
 import { Getter, NoInfer, PropGetterValue, TableState, Updater } from './types'
 
-export type IsAny<T> = 0 extends 1 & T ? true : false
+// export type IsAny<T> = 0 extends 1 & T ? true : false
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>

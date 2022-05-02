@@ -1,7 +1,7 @@
 // /** @jsxImportSource solid-js */
 import {
   TableGenerics,
-  Options,
+  TableOptions,
   PartialKeys,
   Table,
   createTableInstance as coreCreateTableInstance,
@@ -33,17 +33,20 @@ export const createTable = createTableFactory({ render })
 export function createTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
   options: PartialKeys<
-    Omit<Options<TGenerics>, 'render'>,
+    Omit<TableOptions<TGenerics>, 'render'>,
     'state' | 'onStateChange'
   >
 ) {
-  const resolvedOptions: Options<TGenerics> = mergeProps(
+  const resolvedOptions: TableOptions<TGenerics> = mergeProps(
     {
       ...table.options,
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       render,
-      mergeOptions(defaultOptions: TableFeature, options: Options<TGenerics>) {
+      mergeOptions(
+        defaultOptions: TableFeature,
+        options: TableOptions<TGenerics>
+      ) {
         return mergeProps(defaultOptions, options)
       },
     },
