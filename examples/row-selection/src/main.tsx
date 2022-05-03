@@ -30,12 +30,22 @@ function App() {
         id: 'select',
         header: ({ instance }) => (
           <IndeterminateCheckbox
-            {...instance.getToggleAllRowsSelectedProps()}
+            {...{
+              checked: instance.getIsAllRowsSelected(),
+              indeterminate: instance.getIsSomeRowsSelected(),
+              onChange: instance.getToggleAllRowsSelectedHandler(),
+            }}
           />
         ),
         cell: ({ row }) => (
           <div className="px-1">
-            <IndeterminateCheckbox {...row.getToggleSelectedProps()} />
+            <IndeterminateCheckbox
+              {...{
+                checked: row.getIsSelected(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
           </div>
         ),
       }),
@@ -114,13 +124,13 @@ function App() {
         />
       </div>
       <div className="h-2" />
-      <table {...instance.getTableProps({})}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th {...header.getHeaderProps()}>
+                  <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <>
                         {header.renderHeader()}
@@ -140,15 +150,15 @@ function App() {
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance
             .getRowModel()
             .rows.slice(0, 10)
             .map(row => {
               return (
-                <tr {...row.getRowProps()}>
+                <tr key={row.id}>
                   {row.getVisibleCells().map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                    return <td key={cell.id}>{cell.renderCell()}</td>
                   })}
                 </tr>
               )

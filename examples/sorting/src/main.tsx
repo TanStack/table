@@ -7,6 +7,7 @@ import {
   createTable,
   getCoreRowModelSync,
   getSortedRowModelSync,
+  SortingState,
   useTableInstance,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -16,7 +17,7 @@ let table = createTable().setRowType<Person>()
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const [sorting, setSorting] = React.useState([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const columns = React.useMemo(
     () => [
@@ -85,20 +86,21 @@ function App() {
   return (
     <div className="p-2">
       <div className="h-2" />
-      <table {...instance.getTableProps({})}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th {...header.getHeaderProps()}>
+                  <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div
-                        {...(header.column.getCanSort()
-                          ? header.column.getToggleSortingProps({
-                              className: 'cursor-pointer select-none',
-                            })
-                          : {})}
+                        {...{
+                          className: header.column.getCanSort()
+                            ? 'cursor-pointer select-none'
+                            : '',
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
                       >
                         {header.renderHeader()}
                         {{
@@ -113,15 +115,15 @@ function App() {
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance
             .getRowModel()
             .rows.slice(0, 10)
             .map(row => {
               return (
-                <tr {...row.getRowProps()}>
+                <tr key={row.id}>
                   {row.getVisibleCells().map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                    return <td key={cell.id}>{cell.renderCell()}</td>
                   })}
                 </tr>
               )

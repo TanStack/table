@@ -109,32 +109,32 @@ function App() {
 
   return (
     <div className="p-2">
-      <table {...instance.getTableProps()}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th {...header.getHeaderProps()}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : header.renderHeader()}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance.getRowModel().rows.map(row => (
-            <tr {...row.getRowProps()}>
+            <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                <td key={cell.id}>{cell.renderCell()}</td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot>
           {instance.getFooterGroups().map(footerGroup => (
-            <tr {...footerGroup.getFooterGroupProps()}>
+            <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
-                <th {...header.getFooterProps()}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : header.renderFooter()}
                 </th>
               ))}

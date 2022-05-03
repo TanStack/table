@@ -131,13 +131,13 @@ function Table({
   return (
     <div className="p-2">
       <div className="h-2" />
-      <table {...instance.getTableProps({})}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th {...header.getHeaderProps()}>
+                  <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
                         {header.renderHeader()}
@@ -157,12 +157,12 @@ function Table({
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance.getRowModel().rows.map(row => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                  return <td key={cell.id}>{cell.renderCell()}</td>
                 })}
               </tr>
             )
@@ -244,7 +244,6 @@ function Table({
     </div>
   )
 }
-
 function Filter({
   column,
   instance,
@@ -253,7 +252,9 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0]?.values[column.id]
+    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
+
+  const columnFilterValue = column.getColumnFilterValue()
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
@@ -261,9 +262,12 @@ function Filter({
         type="number"
         min={Number(column.getPreFilteredMinMaxValues()[0])}
         max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[0] ?? '') as string}
+        value={(columnFilterValue as [number, number])?.[0] ?? ''}
         onChange={e =>
-          column.setColumnFilterValue(old => [e.target.value, old?.[1]])
+          column.setColumnFilterValue((old: [number, number]) => [
+            e.target.value,
+            old?.[1],
+          ])
         }
         placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
@@ -272,9 +276,12 @@ function Filter({
         type="number"
         min={Number(column.getPreFilteredMinMaxValues()[0])}
         max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[1] ?? '') as string}
+        value={(columnFilterValue as [number, number])?.[1] ?? ''}
         onChange={e =>
-          column.setColumnFilterValue(old => [old?.[0], e.target.value])
+          column.setColumnFilterValue((old: [number, number]) => [
+            old?.[0],
+            e.target.value,
+          ])
         }
         placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
@@ -283,7 +290,7 @@ function Filter({
   ) : (
     <input
       type="text"
-      value={(column.getColumnFilterValue() ?? '') as string}
+      value={(columnFilterValue ?? '') as string}
       onChange={e => column.setColumnFilterValue(e.target.value)}
       placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
       className="w-36 border shadow rounded"

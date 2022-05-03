@@ -20,33 +20,6 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
-
 const table = createTable().setRowType<Person>()
 
 const defaultColumns = [
@@ -96,7 +69,7 @@ const defaultColumns = [
 ]
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(1000))
+  const [data] = React.useState(() => makeData(1000))
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
@@ -130,32 +103,32 @@ function App() {
 
   return (
     <div className="p-2">
-      <table {...instance.getTableProps()}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th {...header.getHeaderProps()}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : header.renderHeader()}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance.getRowModel().rows.map(row => (
-            <tr {...row.getRowProps()}>
+            <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                <td key={cell.id}>{cell.renderCell()}</td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot>
           {instance.getFooterGroups().map(footerGroup => (
-            <tr {...footerGroup.getFooterGroupProps()}>
+            <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
-                <th {...header.getFooterProps()}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : header.renderFooter()}
                 </th>
               ))}

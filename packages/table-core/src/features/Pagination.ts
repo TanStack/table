@@ -4,6 +4,7 @@ import {
   TableInstance,
   RowModel,
   Updater,
+  TableFeature,
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
@@ -15,6 +16,10 @@ export type PaginationState = {
 
 export type PaginationTableState = {
   pagination: PaginationState
+}
+
+export type PaginationInitialTableState = {
+  pagination?: Partial<PaginationState>
 }
 
 export type PaginationOptions<TGenerics extends TableGenerics> = {
@@ -53,13 +58,14 @@ export type PaginationInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Pagination = {
-  getInitialState: (): PaginationTableState => {
+export const Pagination: TableFeature = {
+  getInitialState: (initialState): PaginationTableState => {
     return {
       pagination: {
         pageCount: -1,
         pageIndex: 0,
         pageSize: 10,
+        ...initialState?.pagination,
       },
     }
   },

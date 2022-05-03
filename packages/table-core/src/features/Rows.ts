@@ -1,19 +1,11 @@
 import {
-  Cell,
   TableGenerics,
   TableInstance,
   Row,
-  Column,
-  CoreCell,
-  Getter,
-  CellProps,
-  PropGetterValue,
-  RowProps,
   RowModel,
   RowValues,
-  PropGetter,
 } from '../types'
-import { flattenBy, memo, propGetter } from '../utils'
+import { flattenBy } from '../utils'
 
 export type CoreRow<TGenerics extends TableGenerics> = {
   id: string
@@ -23,7 +15,6 @@ export type CoreRow<TGenerics extends TableGenerics> = {
   values: RowValues
   subRows: Row<TGenerics>[]
   getLeafRows: () => Row<TGenerics>[]
-  getRowProps: PropGetter<RowProps>
   originalSubRows?: TGenerics['Row'][]
 }
 
@@ -34,7 +25,7 @@ export type RowsOptions<TGenerics extends TableGenerics> = {
   getSubRows?: (
     originalRow: TGenerics['Row'],
     index: number
-  ) => TGenerics['Row'][]
+  ) => undefined | TGenerics['Row'][]
   getRowId?: (
     originalRow: TGenerics['Row'],
     index: number,
@@ -59,10 +50,6 @@ export type RowsInstance<TGenerics extends TableGenerics> = {
   _getCoreRowModel?: () => RowModel<TGenerics>
   getRowModel: () => RowModel<TGenerics>
   getRow: (id: string) => Row<TGenerics>
-  getRowProps: <TGetter extends Getter<RowProps>>(
-    rowId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<RowProps, TGetter>
 }
 
 //
@@ -95,7 +82,6 @@ export const Rows = {
           values,
           subRows: [],
           getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
-          getRowProps: userProps => instance.getRowProps(row.id, userProps)!,
         }
 
         for (let i = 0; i < instance._features.length; i++) {
@@ -131,20 +117,6 @@ export const Rows = {
         }
 
         return row
-      },
-      getRowProps: (rowId, userProps) => {
-        const row = instance.getRow(rowId)
-        if (!row) {
-          return
-        }
-
-        return propGetter(
-          {
-            key: row.id,
-            role: 'row',
-          },
-          userProps
-        )
       },
     }
   },

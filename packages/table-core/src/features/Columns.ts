@@ -1,4 +1,3 @@
-import { features } from 'process'
 import {
   Cell,
   Column,
@@ -12,7 +11,6 @@ import {
   HeaderRenderProps,
 } from '../types'
 import { memo } from '../utils'
-import { ColumnPinningPosition } from './Pinning'
 
 export type CoreColumnDefType = 'data' | 'display' | 'group'
 

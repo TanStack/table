@@ -1,14 +1,13 @@
 import {
   Column,
-  Getter,
   Header,
   OnChangeFn,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
   Updater,
+  TableFeature,
 } from '../types'
-import { makeStateUpdater, propGetter } from '../utils'
+import { makeStateUpdater } from '../utils'
 import { ColumnPinningPosition } from './Pinning'
 
 //
@@ -44,14 +43,6 @@ export type ColumnSizingDefaultOptions = {
   onColumnSizingInfoChange: OnChangeFn<ColumnSizingInfoState>
 }
 
-export type ColumnResizerProps = {
-  title?: string
-  onMouseDown?: (e: MouseEvent) => void
-  onTouchStart?: (e: TouchEvent) => void
-  draggable?: boolean
-  role?: string
-}
-
 export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
   getColumnSize: (columnId: string) => number
   getColumnStart: (columnId: string, position?: ColumnPinningPosition) => number
@@ -63,10 +54,7 @@ export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
   resetHeaderSizeInfo: () => void
   getColumnCanResize: (columnId: string) => boolean
   getHeaderCanResize: (headerId: string) => boolean
-  getHeaderResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
-    headerId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ColumnResizerProps, TGetter>
+  getResizeHandler: (headerId: string) => (event: unknown) => void
   getColumnIsResizing: (columnId: string) => boolean
   getHeaderIsResizing: (headerId: string) => boolean
   getTotalSize: () => number
@@ -94,9 +82,7 @@ export type ColumnSizingColumn<TGenerics extends TableGenerics> = {
 export type ColumnSizingHeader<TGenerics extends TableGenerics> = {
   getCanResize: () => boolean
   getIsResizing: () => boolean
-  getResizerProps: <TGetter extends Getter<ColumnResizerProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ColumnResizerProps, TGetter>
+  getResizeHandler: () => (event: unknown) => void
   resetSize: () => void
 }
 
@@ -108,7 +94,7 @@ export const defaultColumnSizing = {
   maxSize: Number.MAX_SAFE_INTEGER,
 }
 
-export const ColumnSizing = {
+export const ColumnSizing: TableFeature = {
   getDefaultColumn: (): ColumnSizingColumnDef => {
     return defaultColumnSizing
   },
@@ -157,8 +143,7 @@ export const ColumnSizing = {
       getIsResizing: () => instance.getColumnIsResizing(header.column.id),
       getCanResize: () => instance.getColumnCanResize(header.column.id),
       resetSize: () => instance.resetColumnSize(header.column.id),
-      getResizerProps: userProps =>
-        instance.getHeaderResizerProps(header.id, userProps),
+      getResizeHandler: () => instance.getResizeHandler(header.id),
     }
   },
 
@@ -274,14 +259,18 @@ export const ColumnSizing = {
 
         return instance.getColumnIsResizing(header.column.id)
       },
-
-      getHeaderResizerProps: (headerId, userProps) => {
+      getResizeHandler: (headerId: string) => {
         const header = instance.getHeader(headerId)
         const column = instance.getColumn(header.column.id)
-
         const canResize = column.getCanResize()
 
-        const onResizeStart = (e: unknown) => {
+        return (e: unknown) => {
+          if (!canResize) {
+            return
+          }
+
+          ;(e as any).persist?.()
+
           if (isTouchStartEvent(e)) {
             // lets not respond to multiple touches (e.g. 2 or 3 fingers)
             if (e.touches && e.touches.length > 1) {
@@ -427,26 +416,7 @@ export const ColumnSizing = {
             isResizingColumn: column.id,
           }))
         }
-
-        const initialProps: ColumnResizerProps = canResize
-          ? {
-              title: 'Toggle Grouping',
-              draggable: false,
-              role: 'separator',
-              onMouseDown: (e: MouseEvent) => {
-                ;(e as any).persist?.()
-                onResizeStart(e)
-              },
-              onTouchStart: (e: TouchEvent) => {
-                ;(e as any).persist?.()
-                onResizeStart(e)
-              },
-            }
-          : {}
-
-        return propGetter(initialProps, userProps)
       },
-
       getTotalSize: () =>
         instance.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
           return sum + header.getSize()

@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import faker from 'faker'
+import faker from '@faker-js/faker'
 
 import './index.css'
 
 import {
+  ColumnOrderState,
   createTable,
   getCoreRowModelSync,
   useTableInstance,
@@ -64,7 +65,7 @@ function App() {
   const [columns] = React.useState(() => [...defaultColumns])
 
   const [columnVisibility, setColumnVisibility] = React.useState({})
-  const [columnOrder, setColumnOrder] = React.useState([])
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
 
   const rerender = () => setData(() => makeData(20))
 
@@ -94,15 +95,28 @@ function App() {
       <div className="inline-block border border-black shadow rounded">
         <div className="px-1 border-b border-black">
           <label>
-            <input {...instance.getToggleAllColumnsVisibilityProps()} /> Toggle
-            All
+            <input
+              {...{
+                type: 'checkbox',
+                checked: instance.getIsAllColumnsVisible(),
+                onChange: instance.getToggleAllColumnsVisibilityHandler(),
+              }}
+            />{' '}
+            Toggle All
           </label>
         </div>
         {instance.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
-                <input {...column.getToggleVisibilityProps()} /> {column.id}
+                <input
+                  {...{
+                    type: 'checkbox',
+                    checked: column.getIsVisible(),
+                    onChange: column.getToggleVisibilityHandler(),
+                  }}
+                />{' '}
+                {column.id}
               </label>
             </div>
           )
@@ -118,32 +132,32 @@ function App() {
         </button>
       </div>
       <div className="h-4" />
-      <table {...instance.getTableProps()}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th {...header.getHeaderProps()}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : header.renderHeader()}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance.getRowModel().rows.map(row => (
-            <tr {...row.getRowProps()}>
+            <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                <td key={cell.id}>{cell.renderCell()}</td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot>
           {instance.getFooterGroups().map(footerGroup => (
-            <tr {...footerGroup.getFooterGroupProps()}>
+            <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
-                <th {...header.getFooterProps()}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : header.renderFooter()}
                 </th>
               ))}

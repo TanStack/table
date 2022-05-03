@@ -5,11 +5,8 @@ import {
   Row,
   Column,
   CoreCell,
-  Getter,
-  CellProps,
-  PropGetterValue,
 } from '../types'
-import { memo, propGetter } from '../utils'
+import { memo } from '../utils'
 
 export type CellsRow<TGenerics extends TableGenerics> = {
   getAllCells: () => Cell<TGenerics>[]
@@ -23,11 +20,6 @@ export type CellsInstance<TGenerics extends TableGenerics> = {
     value: any
   ) => Cell<TGenerics>
   getCell: (rowId: string, columnId: string) => Cell<TGenerics>
-  getCellProps: <TGetter extends Getter<CellProps>>(
-    rowId: string,
-    columnId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<CellProps, TGetter>
 }
 
 //
@@ -83,8 +75,6 @@ export const Cells = {
           row,
           column,
           value,
-          getCellProps: userProps =>
-            instance.getCellProps(row.id, column.id, userProps)!,
           renderCell: () =>
             column.cell
               ? instance.render(column.cell, {
@@ -134,22 +124,6 @@ export const Cells = {
         }
 
         return cell
-      },
-
-      getCellProps: (rowId, columnId, userProps) => {
-        const cell = instance.getCell(rowId, columnId)
-
-        if (!cell) {
-          return
-        }
-
-        return propGetter(
-          {
-            key: cell.id,
-            role: 'gridcell',
-          },
-          userProps
-        )
       },
     }
   },

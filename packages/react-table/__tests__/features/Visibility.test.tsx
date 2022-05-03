@@ -9,7 +9,7 @@ import {
   getCoreRowModelSync,
 } from '@tanstack/react-table'
 
-type Row = {
+type Person = {
   firstName: string
   lastName: string
   age: number
@@ -18,9 +18,9 @@ type Row = {
   progress: number
 }
 
-const table = createTable<{ Row: Row }>()
+const table = createTable().setRowType<Person>()
 
-const defaultData: Row[] = [
+const defaultData: Person[] = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -47,7 +47,7 @@ const defaultData: Row[] = [
   },
 ]
 
-const defaultColumns = table.createColumns([
+const defaultColumns = [
   table.createGroup({
     header: 'Name',
     footer: props => props.column.id,
@@ -91,12 +91,12 @@ const defaultColumns = table.createColumns([
       }),
     ],
   }),
-])
+]
 
 describe('useTableInstance', () => {
   it('can toggle column visibility', () => {
     const Table = () => {
-      const [data] = React.useState<Row[]>(() => [...defaultData])
+      const [data] = React.useState<Person[]>(() => [...defaultData])
       const [columns] = React.useState<typeof defaultColumns>(() => [
         ...defaultColumns,
       ])
@@ -120,7 +120,13 @@ describe('useTableInstance', () => {
           <div className="inline-block border border-black shadow rounded">
             <div className="px-1 border-b border-black">
               <label>
-                <input {...instance.getToggleAllColumnsVisibilityProps()} />{' '}
+                <input
+                  {...{
+                    type: 'checkbox',
+                    checked: instance.getIsAllColumnsVisible(),
+                    onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                  }}
+                />{' '}
                 Toggle All
               </label>
             </div>
@@ -128,39 +134,46 @@ describe('useTableInstance', () => {
               return (
                 <div key={column.id} className="px-1">
                   <label>
-                    <input {...column.getToggleVisibilityProps()} /> {column.id}
+                    <input
+                      {...{
+                        type: 'checkbox',
+                        checked: column.getIsVisible(),
+                        onChange: column.getToggleVisibilityHandler(),
+                      }}
+                    />{' '}
+                    {column.id}
                   </label>
                 </div>
               )
             })}
           </div>
           <div className="h-4" />
-          <table {...instance.getTableProps()}>
+          <table>
             <thead>
               {instance.getHeaderGroups().map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th {...header.getHeaderProps()}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : header.renderHeader()}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody {...instance.getTableBodyProps()}>
+            <tbody>
               {instance.getRowModel().rows.map(row => (
-                <tr {...row.getRowProps()}>
+                <tr key={row.id}>
                   {row.getVisibleCells().map(cell => (
-                    <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                    <td key={cell.id}>{cell.renderCell()}</td>
                   ))}
                 </tr>
               ))}
             </tbody>
             <tfoot>
               {instance.getFooterGroups().map(footerGroup => (
-                <tr {...footerGroup.getFooterGroupProps()}>
+                <tr key={footerGroup.id}>
                   {footerGroup.headers.map(header => (
-                    <th {...header.getFooterProps()}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : header.renderFooter()}
                     </th>
                   ))}

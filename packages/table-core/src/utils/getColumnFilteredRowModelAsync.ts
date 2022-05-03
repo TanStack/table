@@ -1,9 +1,5 @@
 import { TableInstance, RowModel, TableGenerics, Row } from '../types'
-import { incrementalMemo, memo } from '../utils'
-import {
-  filterRowModelFromLeafs,
-  filterRowModelFromRoot,
-} from './filterRowsUtils'
+import { incrementalMemo } from '../utils'
 
 export function getColumnFilteredRowModelAsync<
   TGenerics extends TableGenerics

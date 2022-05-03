@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import ReactDOM from 'react-dom'
 
 //
@@ -33,13 +33,9 @@ const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
     // We need to keep and update the state of the cell normally
     const [value, setValue] = React.useState(initialValue)
 
-    const onChange = e => {
-      setValue(e.target.value)
-    }
-
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
-      instance.options.meta.updateData(index, id, value)
+      instance.options.meta?.updateData(index, id, value)
     }
 
     // If the initialValue is changed external, sync it up with our state
@@ -47,7 +43,13 @@ const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
       setValue(initialValue)
     }, [initialValue])
 
-    return <input value={value as string} onChange={onChange} onBlur={onBlur} />
+    return (
+      <input
+        value={value as string}
+        onChange={e => setValue(e.target.value)}
+        onBlur={onBlur}
+      />
+    )
   },
 }
 
@@ -55,57 +57,68 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const columns = React.useMemo(
-    () =>
-      [
-        table.createGroup({
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('firstName', {
-              cell: info => info.value,
-              footer: props => props.column.id,
-            }),
-            table.createDataColumn(row => row.lastName, {
-              id: 'lastName',
-              cell: info => info.value,
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            }),
-          ],
-        }),
-        table.createGroup({
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('age', {
-              header: () => 'Age',
-              footer: props => props.column.id,
-            }),
-            table.createGroup({
-              header: 'More Info',
-              columns: [
-                table.createDataColumn('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('status', {
-                  header: 'Status',
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('progress', {
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ]),
+    () => [
+      table.createGroup({
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('firstName', {
+            footer: props => props.column.id,
+          }),
+          table.createDataColumn(row => row.lastName, {
+            id: 'lastName',
+            header: () => <span>Last Name</span>,
+            footer: props => props.column.id,
+          }),
+        ],
+      }),
+      table.createGroup({
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('age', {
+            header: () => 'Age',
+            footer: props => props.column.id,
+          }),
+          table.createGroup({
+            header: 'More Info',
+            columns: [
+              table.createDataColumn('visits', {
+                header: () => <span>Visits</span>,
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('status', {
+                header: 'Status',
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('progress', {
+                header: 'Profile Progress',
+                footer: props => props.column.id,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
     []
   )
 
   const [data, setData] = React.useState(() => makeData(1000))
   const refreshData = () => setData(() => makeData(1000))
+
+  const autoResetPageIndexRef = React.useRef(true)
+  const autoResetPageIndex = autoResetPageIndexRef.current
+
+  // Wrap a function with this to skip a pagination reset temporarily
+  const skipAutoPageReset = (cb: () => void) => {
+    autoResetPageIndexRef.current = false
+    let result = cb()
+    setTimeout(() => {
+      // Allow a tick to pass, then turn on autoResetPageIndex again
+      autoResetPageIndexRef.current = true
+    })
+    return result
+  }
 
   const instance = useTableInstance(table, {
     data,
@@ -114,20 +127,23 @@ function App() {
     getCoreRowModel: getCoreRowModelSync(),
     getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
+    autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        setData(old =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex],
-                [columnId]: value,
+        skipAutoPageReset(() => {
+          setData(old =>
+            old.map((row, index) => {
+              if (index === rowIndex) {
+                return {
+                  ...old[rowIndex],
+                  [columnId]: value,
+                }
               }
-            }
-            return row
-          })
-        )
+              return row
+            })
+          )
+        })
       },
     },
     debugTable: true,
@@ -136,13 +152,13 @@ function App() {
   return (
     <div className="p-2">
       <div className="h-2" />
-      <table {...instance.getTableProps({})}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th {...header.getHeaderProps()}>
+                  <th key={header.id}>
                     {header.isPlaceholder ? null : (
                       <div>
                         {header.renderHeader()}
@@ -162,12 +178,12 @@ function App() {
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance.getRowModel().rows.map(row => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                  return <td key={cell.id}>{cell.renderCell()}</td>
                 })}
               </tr>
             )
@@ -246,7 +262,6 @@ function App() {
     </div>
   )
 }
-
 function Filter({
   column,
   instance,
@@ -257,15 +272,20 @@ function Filter({
   const firstValue =
     instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
 
+  const columnFilterValue = column.getColumnFilterValue()
+
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
       <input
         type="number"
         min={Number(column.getPreFilteredMinMaxValues()[0])}
         max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[0] ?? '') as string}
+        value={(columnFilterValue as [number, number])?.[0] ?? ''}
         onChange={e =>
-          column.setColumnFilterValue(old => [e.target.value, old?.[1]])
+          column.setColumnFilterValue((old: [number, number]) => [
+            e.target.value,
+            old?.[1],
+          ])
         }
         placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
@@ -274,9 +294,12 @@ function Filter({
         type="number"
         min={Number(column.getPreFilteredMinMaxValues()[0])}
         max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[1] ?? '') as string}
+        value={(columnFilterValue as [number, number])?.[1] ?? ''}
         onChange={e =>
-          column.setColumnFilterValue(old => [old?.[0], e.target.value])
+          column.setColumnFilterValue((old: [number, number]) => [
+            old?.[0],
+            e.target.value,
+          ])
         }
         placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
@@ -285,7 +308,7 @@ function Filter({
   ) : (
     <input
       type="text"
-      value={(column.getColumnFilterValue() ?? '') as string}
+      value={(columnFilterValue ?? '') as string}
       onChange={e => column.setColumnFilterValue(e.target.value)}
       placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
       className="w-36 border shadow rounded"

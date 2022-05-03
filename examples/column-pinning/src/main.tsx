@@ -1,14 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import faker from 'faker'
+import faker from '@faker-js/faker'
 
 import './index.css'
 
 import {
+  ColumnOrderState,
   createTable,
   getCoreRowModelAsync,
   getCoreRowModelSync,
   useTableInstance,
+  VisibilityState,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -64,8 +66,9 @@ function App() {
   const [data, setData] = React.useState(() => makeData(5000))
   const [columns] = React.useState(() => [...defaultColumns])
 
-  const [columnVisibility, setColumnVisibility] = React.useState({})
-  const [columnOrder, setColumnOrder] = React.useState([])
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
   const [columnPinning, setColumnPinning] = React.useState({})
 
   const [isSplit, setIsSplit] = React.useState(false)
@@ -94,29 +97,33 @@ function App() {
     )
   }
 
-  const getHeaderProps = (
-    headerProps: ReturnType<typeof instance.getHeaderProps>
-  ) => {
-    return {
-      ...headerProps,
-      className: `h-16`,
-    }
-  }
-
   return (
     <div className="p-2">
       <div className="inline-block border border-black shadow rounded">
         <div className="px-1 border-b border-black">
           <label>
-            <input {...instance.getToggleAllColumnsVisibilityProps()} /> Toggle
-            All
+            <input
+              {...{
+                type: 'checkbox',
+                checked: instance.getIsAllColumnsVisible(),
+                onChange: instance.getToggleAllColumnsVisibilityHandler(),
+              }}
+            />{' '}
+            Toggle All
           </label>
         </div>
         {instance.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
-                <input {...column.getToggleVisibilityProps()} /> {column.id}
+                <input
+                  {...{
+                    type: 'checkbox',
+                    checked: instance.getIsAllColumnsVisible(),
+                    onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                  }}
+                />{' '}
+                {column.id}
               </label>
             </div>
           )
@@ -144,15 +151,12 @@ function App() {
       </div>
       <div className={`flex ${isSplit ? 'gap-4' : ''}`}>
         {isSplit ? (
-          <table
-            {...instance.getTableProps({})}
-            className="border-2 border-black"
-          >
+          <table className="border-2 border-black">
             <thead>
               {instance.getLeftHeaderGroups().map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th {...getHeaderProps(header.getHeaderProps())}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder ? null : header.renderHeader()}
                       </div>
@@ -195,17 +199,15 @@ function App() {
                 </tr>
               ))}
             </thead>
-            <tbody {...instance.getTableBodyProps()}>
+            <tbody>
               {instance
                 .getRowModel()
                 .rows.slice(0, 20)
                 .map(row => {
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr key={row.id}>
                       {row.getLeftVisibleCells().map(cell => {
-                        return (
-                          <td {...cell.getCellProps()}>{cell.renderCell()}</td>
-                        )
+                        return <td key={cell.id}>{cell.renderCell()}</td>
                       })}
                     </tr>
                   )
@@ -213,18 +215,15 @@ function App() {
             </tbody>
           </table>
         ) : null}
-        <table
-          {...instance.getTableProps({})}
-          className="border-2 border-black"
-        >
+        <table className="border-2 border-black">
           <thead>
             {(isSplit
               ? instance.getCenterHeaderGroups()
               : instance.getHeaderGroups()
             ).map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
+              <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <th {...getHeaderProps(header.getHeaderProps())}>
+                  <th key={header.id} colSpan={header.colSpan}>
                     <div className="whitespace-nowrap">
                       {header.isPlaceholder ? null : header.renderHeader()}
                     </div>
@@ -267,20 +266,18 @@ function App() {
               </tr>
             ))}
           </thead>
-          <tbody {...instance.getTableBodyProps()}>
+          <tbody>
             {instance
               .getRowModel()
               .rows.slice(0, 20)
               .map(row => {
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr key={row.id}>
                     {(isSplit
                       ? row.getCenterVisibleCells()
                       : row.getVisibleCells()
                     ).map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.renderCell()}</td>
-                      )
+                      return <td key={cell.id}>{cell.renderCell()}</td>
                     })}
                   </tr>
                 )
@@ -288,15 +285,12 @@ function App() {
           </tbody>
         </table>
         {isSplit ? (
-          <table
-            {...instance.getTableProps({})}
-            className="border-2 border-black"
-          >
+          <table className="border-2 border-black">
             <thead>
               {instance.getRightHeaderGroups().map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th {...getHeaderProps(header.getHeaderProps())}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder ? null : header.renderHeader()}
                       </div>
@@ -339,17 +333,15 @@ function App() {
                 </tr>
               ))}
             </thead>
-            <tbody {...instance.getTableBodyProps()}>
+            <tbody>
               {instance
                 .getRowModel()
                 .rows.slice(0, 20)
                 .map(row => {
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr key={row.id}>
                       {row.getRightVisibleCells().map(cell => {
-                        return (
-                          <td {...cell.getCellProps()}>{cell.renderCell()}</td>
-                        )
+                        return <td key={cell.id}>{cell.renderCell()}</td>
                       })}
                     </tr>
                   )

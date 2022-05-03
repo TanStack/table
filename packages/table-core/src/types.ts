@@ -62,6 +62,7 @@ import {
   ColumnSizingTableState,
 } from './features/ColumnSizing'
 import {
+  PaginationInitialTableState,
   PaginationInstance,
   PaginationOptions,
   PaginationTableState,
@@ -95,7 +96,7 @@ export type AnyRender = (Comp: any, props: any) => any
 
 export type TableFeature = {
   getDefaultOptions?: (instance: any) => any
-  getInitialState?: () => any
+  getInitialState?: (initialState?: InitialTableState) => any
   createInstance?: (instance: any) => any
   getDefaultColumn?: () => any
   createColumn?: (column: any, instance: any) => any
@@ -147,6 +148,20 @@ export type TableState = CoreTableState &
   ColumnSizingTableState &
   PaginationTableState &
   RowSelectionTableState
+
+export type InitialTableState = Partial<
+  CoreTableState &
+    VisibilityTableState &
+    ColumnOrderTableState &
+    ColumnPinningTableState &
+    FiltersTableState &
+    SortingTableState &
+    ExpandedTableState &
+    GroupingTableState &
+    ColumnSizingTableState &
+    PaginationInitialTableState &
+    RowSelectionTableState
+>
 
 export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
   CellsRow<TGenerics> &
@@ -200,7 +215,6 @@ export type CoreCell<TGenerics extends TableGenerics> = {
   value: TGenerics['Value']
   row: Row<TGenerics>
   column: Column<TGenerics>
-  getCellProps: PropGetter<CellProps>
   renderCell: () => string | null | TGenerics['Rendered']
 }
 
@@ -218,8 +232,6 @@ export type CoreHeader<TGenerics extends TableGenerics> = {
   subHeaders: Header<TGenerics>[]
   colSpan?: number
   rowSpan?: number
-  getHeaderProps: PropGetter<HeaderProps>
-  getFooterProps: PropGetter<HeaderProps>
   getLeafHeaders: () => Header<TGenerics>[]
   isPlaceholder?: boolean
   placeholderId?: string
@@ -235,8 +247,6 @@ export type HeaderGroup<TGenerics extends TableGenerics> = {
   id: string
   depth: number
   headers: Header<TGenerics>[]
-  getHeaderGroupProps: PropGetter<HeaderGroupProps>
-  getFooterGroupProps: PropGetter<FooterGroupProps>
 }
 
 export type HeaderRenderProps<THeader> = {
@@ -251,76 +261,5 @@ export type CellRenderProps<TCell, TRow> = {
   cell: TCell
   row: TRow
 }
-
-export type TableProps = {
-  role: string
-}
-
-export type TableBodyProps = {
-  role: string
-}
-
-export type TableHeadProps = {
-  key: string
-  role: string
-}
-
-export type TableFooterProps = {
-  key: string
-  role: string
-}
-
-export type HeaderGroupProps = {
-  key: string
-  role: string
-}
-
-export type FooterGroupProps = {
-  key: string
-  role: string
-}
-
-export type HeaderProps = {
-  key: string
-  role: string
-  colSpan?: number
-  rowSpan?: number
-}
-
-export type FooterProps = {
-  key: string
-  role: string
-  colSpan?: number
-  rowSpan?: number
-}
-
-export type RowProps = {
-  key: string
-  role: string
-}
-
-export type CellProps = {
-  key: string
-  role: string
-}
-
-//
-
-export type PropGetter<TBase> = <TGetter extends Getter<TBase>>(
-  userProps?: TGetter
-) => PropGetterValue<TBase, TGetter>
-
-export type Getter<TInitial> =
-  | ((initial: TInitial) => object)
-  | object
-  | undefined
-
-export type PropGetterValue<TBase, TGetter> = TGetter extends undefined
-  ? TBase
-  : TGetter extends (...args: any[]) => infer TReturn
-  ? Overwrite<TBase, TReturn>
-  : TGetter extends object
-  ? Overwrite<TBase, TGetter>
-  : never
 
 export type NoInfer<A extends any> = [A][A extends any ? 0 : never]

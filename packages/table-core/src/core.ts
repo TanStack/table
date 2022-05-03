@@ -1,16 +1,14 @@
-import { functionalUpdate, propGetter, RequiredKeys } from './utils'
+import { functionalUpdate, RequiredKeys } from './utils'
 
 import {
   Updater,
   TableOptions,
   TableState,
-  TableProps,
-  TableBodyProps,
-  PropGetter,
   TableInstance,
   Renderable,
   TableFeature,
   TableGenerics,
+  InitialTableState,
 } from './types'
 
 import { Columns } from './features/Columns'
@@ -44,7 +42,7 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   debugHeaders?: boolean
   debugColumns?: boolean
   debugRows?: boolean
-  initialState?: Partial<TableState>
+  initialState?: InitialTableState
   autoResetAll?: boolean
   mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
   meta?: TGenerics['TableMeta']
@@ -60,8 +58,6 @@ export type TableCore<TGenerics extends TableGenerics> = {
   willUpdate: () => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
-  getTableProps: PropGetter<TableProps>
-  getTableBodyProps: PropGetter<TableBodyProps>
   render: <TProps>(
     template: Renderable<TGenerics, TProps>,
     props: TProps
@@ -111,7 +107,10 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     }
   }
 
-  instance.options = mergeOptions(options)
+  instance.options = {
+    ...defaultOptions,
+    ...options,
+  }
 
   const coreInitialState: CoreTableState = {
     coreProgress: 1,
@@ -119,10 +118,10 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   const initialState = {
     ...coreInitialState,
-    ...instance._features.reduce((obj, feature) => {
-      return Object.assign(obj, feature.getInitialState?.())
-    }, {}),
     ...(options.initialState ?? {}),
+    ...instance._features.reduce((obj, feature) => {
+      return Object.assign(obj, feature.getInitialState?.(options.initialState))
+    }, {}),
   } as TableState
 
   const queued: (() => void)[] = []
@@ -173,24 +172,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
     setState: (updater: Updater<TableState>) => {
       instance.options.onStateChange?.(updater)
-    },
-
-    getTableProps: userProps => {
-      return propGetter(
-        {
-          role: 'table',
-        },
-        userProps
-      )
-    },
-
-    getTableBodyProps: userProps => {
-      return propGetter(
-        {
-          role: 'rowgroup',
-        },
-        userProps
-      )
     },
 
     getOverallProgress: () => {

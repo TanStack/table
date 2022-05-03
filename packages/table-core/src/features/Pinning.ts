@@ -7,7 +7,7 @@ import {
   Row,
   Cell,
 } from '../types'
-import { functionalUpdate, makeStateUpdater, memo } from '../utils'
+import { makeStateUpdater, memo } from '../utils'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
 

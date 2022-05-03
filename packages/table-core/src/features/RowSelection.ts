@@ -1,14 +1,12 @@
 import {
-  Getter,
   OnChangeFn,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
   Row,
   RowModel,
   Updater,
 } from '../types'
-import { functionalUpdate, makeStateUpdater, memo, propGetter } from '../utils'
+import { makeStateUpdater, memo } from '../utils'
 
 export type RowSelectionState = Record<string, boolean>
 
@@ -41,40 +39,22 @@ export type RowSelectionOptions<TGenerics extends TableGenerics> = {
   // ) => RowModel<TGenerics>
 }
 
-type ToggleRowSelectedProps = {
-  onChange?: (e: unknown) => void
-  checked?: boolean
-  title?: string
-  indeterminate?: boolean
-}
-
 export type RowSelectionRow = {
   getIsSelected: () => boolean
   getIsSomeSelected: () => boolean
   getCanSelect: () => boolean
   getCanMultiSelect: () => boolean
   toggleSelected: (value?: boolean) => void
-  getToggleSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
+  getToggleSelectedHandler: () => (event: unknown) => void
 }
 
 export type RowSelectionInstance<TGenerics extends TableGenerics> = {
   queueResetRowSelection: () => void
-  getToggleRowSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
-    rowId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
-  getToggleAllRowsSelectedProps: <
-    TGetter extends Getter<ToggleRowSelectedProps>
-  >(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
-  getToggleAllPageRowsSelectedProps: <
-    TGetter extends Getter<ToggleRowSelectedProps>
-  >(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
+  getToggleRowSelectedHandler: (
+    rowId: string
+  ) => undefined | ((e: unknown) => void)
+  getToggleAllRowsSelectedHandler: () => (event: unknown) => void
+  getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
   setRowSelection: (updater: Updater<RowSelectionState>) => void
   resetRowSelection: () => void
   toggleRowSelected: (rowId: string, value?: boolean) => void
@@ -460,77 +440,35 @@ export const RowSelection = {
           : !!paginationFlatRows?.length
       },
 
-      getToggleRowSelectedProps: (rowId, userProps) => {
+      getToggleRowSelectedHandler: rowId => {
         const row = instance.getRow(rowId)
 
         const isSelected = row.getIsSelected()
         const isSomeSelected = row.getIsSomeSelected()
         const canSelect = row.getCanSelect()
 
-        const initialProps: ToggleRowSelectedProps = {
-          onChange: canSelect
-            ? (e: unknown) => {
-                row.toggleSelected(
-                  ((e as MouseEvent).target as HTMLInputElement).checked
-                )
-              }
-            : undefined,
-          checked: isSelected,
-          title: 'Toggle Row Selected',
-          indeterminate: isSomeSelected,
-          // onChange: forInput
-          //   ? (e: Event) => e.stopPropagation()
-          //   : (e: Event) => {
-          //       if (instance.options.isAdditiveSelectEvent(e)) {
-          //         row.toggleSelected()
-          //       } else if (instance.options.isInclusiveSelectEvent(e)) {
-          //         instance.addRowSelectionRange(row.id)
-          //       } else {
-          //         instance.setRowSelection({})
-          //         row.toggleSelected()
-          //       }
-
-          //       if (props.onClick) props.onClick(e)
-          //     },
+        return (e: unknown) => {
+          if (!canSelect) return
+          row.toggleSelected(
+            ((e as MouseEvent).target as HTMLInputElement)?.checked
+          )
         }
-
-        return propGetter(initialProps, userProps)
       },
 
-      getToggleAllRowsSelectedProps: userProps => {
-        const isSomeRowsSelected = instance.getIsSomeRowsSelected()
-        const isAllRowsSelected = instance.getIsAllRowsSelected()
-
-        const initialProps: ToggleRowSelectedProps = {
-          onChange: (e: unknown) => {
-            instance.toggleAllRowsSelected(
-              ((e as MouseEvent).target as HTMLInputElement).checked
-            )
-          },
-          checked: isAllRowsSelected,
-          title: 'Toggle All Rows Selected',
-          indeterminate: isSomeRowsSelected,
+      getToggleAllRowsSelectedHandler: () => {
+        return (e: unknown) => {
+          instance.toggleAllRowsSelected(
+            ((e as MouseEvent).target as HTMLInputElement).checked
+          )
         }
-
-        return propGetter(initialProps, userProps)
       },
 
-      getToggleAllPageRowsSelectedProps: userProps => {
-        const isSomePageRowsSelected = instance.getIsSomePageRowsSelected()
-        const isAllPageRowsSelected = instance.getIsAllPageRowsSelected()
-
-        const initialProps: ToggleRowSelectedProps = {
-          onChange: (e: unknown) => {
-            instance.toggleAllPageRowsSelected(
-              ((e as MouseEvent).target as HTMLInputElement).checked
-            )
-          },
-          checked: isAllPageRowsSelected,
-          title: 'Toggle All Current Page Rows Selected',
-          indeterminate: isSomePageRowsSelected,
+      getToggleAllPageRowsSelectedHandler: () => {
+        return (e: unknown) => {
+          instance.toggleAllPageRowsSelected(
+            ((e as MouseEvent).target as HTMLInputElement).checked
+          )
         }
-
-        return propGetter(initialProps, userProps)
       },
     }
   },
@@ -543,8 +481,8 @@ export const RowSelection = {
       getIsSelected: () => instance.getRowIsSelected(row.id),
       getIsSomeSelected: () => instance.getRowIsSomeSelected(row.id),
       toggleSelected: value => instance.toggleRowSelected(row.id, value),
-      getToggleSelectedProps: userProps =>
-        instance.getToggleRowSelectedProps(row.id, userProps),
+      getToggleSelectedHandler: () =>
+        instance.getToggleRowSelectedHandler(row.id)!,
       getCanMultiSelect: () => instance.getRowCanMultiSelect(row.id),
       getCanSelect: () => instance.getRowCanSelect(row.id),
     }

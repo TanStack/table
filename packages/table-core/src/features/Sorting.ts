@@ -7,24 +7,14 @@ import {
 
 import {
   Column,
-  Getter,
-  Header,
   OnChangeFn,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
   Row,
   Updater,
 } from '../types'
 
-import {
-  functionalUpdate,
-  isFunction,
-  makeStateUpdater,
-  memo,
-  Overwrite,
-  propGetter,
-} from '../utils'
+import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -72,9 +62,7 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getIsSorted: () => false | SortDirection
   resetSorting: () => void
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
-  getToggleSortingProps: <TGetter extends Getter<ToggleSortingProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
+  getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 }
 
 export type SortingOptions<TGenerics extends TableGenerics> = {
@@ -92,11 +80,6 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
   ) => () => RowModel<TGenerics>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: unknown) => boolean
-}
-
-export type ToggleSortingProps = {
-  title?: string
-  onClick?: (event: unknown) => void
 }
 
 export type SortingInstance<TGenerics extends TableGenerics> = {
@@ -117,10 +100,9 @@ export type SortingInstance<TGenerics extends TableGenerics> = {
   getColumnCanMultiSort: (columnId: string) => boolean
   getColumnIsSorted: (columnId: string) => false | 'asc' | 'desc'
   getColumnSortIndex: (columnId: string) => number
-  getToggleSortingProps: <TGetter extends Getter<ToggleSortingProps>>(
-    columnId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
+  getToggleSortingHandler: (
+    columnId: string
+  ) => undefined | ((event: unknown) => void)
   getPreSortedRowModel: () => RowModel<TGenerics>
   getSortedRowModel: () => RowModel<TGenerics>
   _getSortedRowModel?: () => RowModel<TGenerics>
@@ -168,8 +150,8 @@ export const Sorting = {
       resetSorting: () => instance.resetSorting(column.id),
       toggleSorting: (desc, isMulti) =>
         instance.toggleColumnSorting(column.id, desc, isMulti),
-      getToggleSortingProps: userProps =>
-        instance.getToggleSortingProps(column.id, userProps),
+      getToggleSortingHandler: () =>
+        instance.getToggleSortingHandler(column.id)!,
     }
   },
 
@@ -416,7 +398,7 @@ export const Sorting = {
         }
       },
 
-      getToggleSortingProps: (columnId, userProps) => {
+      getToggleSortingHandler: columnId => {
         const column = instance.getColumn(columnId)
 
         if (!column) {
@@ -425,22 +407,16 @@ export const Sorting = {
 
         const canSort = column.getCanSort()
 
-        const initialProps: ToggleSortingProps = {
-          title: canSort ? 'Toggle Sorting' : undefined,
-          onClick: canSort
-            ? (e: unknown) => {
-                ;(e as any).persist?.()
-                column.toggleSorting?.(
-                  undefined,
-                  column.getCanMultiSort()
-                    ? instance.options.isMultiSortEvent?.(e)
-                    : false
-                )
-              }
-            : undefined,
+        return (e: unknown) => {
+          if (!canSort) return
+          ;(e as any).persist?.()
+          column.toggleSorting?.(
+            undefined,
+            column.getCanMultiSort()
+              ? instance.options.isMultiSortEvent?.(e)
+              : false
+          )
         }
-
-        return propGetter(initialProps, userProps)
       },
 
       getPreSortedRowModel: () => instance.getGlobalFilteredRowModel(),

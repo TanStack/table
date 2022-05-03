@@ -1,6 +1,5 @@
-import { Getter, NoInfer, PropGetterValue, TableState, Updater } from './types'
+import { NoInfer, TableState, Updater } from './types'
 
-// export type IsAny<T> = 0 extends 1 & T ? true : false
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>
@@ -11,15 +10,6 @@ export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
   U
 
 export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
-
-// export type DefinedGenericKeys<T extends TableGenerics> = {
-//   [K in keyof T]: 0 extends 1 & T[K] ? never : T[K] extends {} ? K : never
-// }[keyof T]
-
-// export type DefinedGenerics<T extends TableGenerics> = Pick<
-//   T,
-//   DefinedGenericKeys<T>
-// >
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
@@ -96,23 +86,6 @@ export function flattenBy<TNode>(
   recurse(arr)
 
   return flat
-}
-
-type PropGetterImpl = <TBaseProps, TGetter extends Getter<TBaseProps>>(
-  initial: TBaseProps,
-  userProps?: TGetter
-) => PropGetterValue<TBaseProps, TGetter>
-
-// @ts-ignore // Just rely on the type, not the implementation
-export const propGetter: PropGetterImpl = (initial, getter) => {
-  if (isFunction(getter)) {
-    return getter(initial)
-  }
-
-  return {
-    ...initial,
-    ...(getter ?? {}),
-  }
 }
 
 export function memo<TDeps extends readonly any[], TResult>(

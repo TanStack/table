@@ -1,5 +1,4 @@
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
-import { SortingFn } from '../features/Sorting'
 import { incrementalMemo, memo } from '../utils'
 
 export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {

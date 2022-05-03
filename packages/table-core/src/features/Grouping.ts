@@ -3,23 +3,14 @@ import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
 import {
   Cell,
   Column,
-  Getter,
   OnChangeFn,
-  PropGetterValue,
   TableInstance,
   Row,
   Updater,
   Renderable,
   TableGenerics,
 } from '../types'
-import {
-  functionalUpdate,
-  isFunction,
-  makeStateUpdater,
-  memo,
-  Overwrite,
-  propGetter,
-} from '../utils'
+import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 
 export type GroupingState = string[]
 
@@ -66,9 +57,7 @@ export type GroupingColumn<TGenerics extends TableGenerics> = {
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
   toggleGrouping: () => void
-  getToggleGroupingProps: <TGetter extends Getter<ToggleGroupingProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleGroupingProps, TGetter>
+  getToggleGroupingHandler: () => () => void
 }
 
 export type GroupingRow = {
@@ -107,11 +96,6 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
-export type ToggleGroupingProps = {
-  title?: string
-  onClick?: (event: unknown) => void
-}
-
 export type GroupingInstance<TGenerics extends TableGenerics> = {
   queueResetGrouping: () => void
   getColumnAutoAggregationFn: (
@@ -126,10 +110,7 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
   getColumnCanGroup: (columnId: string) => boolean
   getColumnIsGrouped: (columnId: string) => boolean
   getColumnGroupedIndex: (columnId: string) => number
-  getToggleGroupingProps: <TGetter extends Getter<ToggleGroupingProps>>(
-    columnId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleGroupingProps, TGetter>
+  getToggleGroupingHandler: (columnId: string) => undefined | (() => void)
   getRowIsGrouped: (rowId: string) => boolean
   getPreGroupedRowModel: () => RowModel<TGenerics>
   getGroupedRowModel: () => RowModel<TGenerics>
@@ -173,8 +154,8 @@ export const Grouping = {
       getGroupedIndex: () => instance.getColumnGroupedIndex(column.id),
       getIsGrouped: () => instance.getColumnIsGrouped(column.id),
       toggleGrouping: () => instance.toggleColumnGrouping(column.id),
-      getToggleGroupingProps: userProps =>
-        instance.getToggleGroupingProps(column.id, userProps),
+      getToggleGroupingHandler: () =>
+        instance.getToggleGroupingHandler(column.id)!,
     }
   },
 
@@ -277,21 +258,14 @@ export const Grouping = {
         instance.setGrouping(instance.initialState?.grouping ?? [])
       },
 
-      getToggleGroupingProps: (columnId, userProps) => {
+      getToggleGroupingHandler: columnId => {
         const column = instance.getColumn(columnId)
-
         const canGroup = column.getCanGroup()
 
-        const initialProps: ToggleGroupingProps = {
-          title: canGroup ? 'Toggle Grouping' : undefined,
-          onClick: canGroup
-            ? (e: unknown) => {
-                column.toggleGrouping?.()
-              }
-            : undefined,
+        return () => {
+          if (!canGroup) return
+          column.toggleGrouping?.()
         }
-
-        return propGetter(initialProps, userProps)
       },
 
       getRowIsGrouped: rowId => !!instance.getRow(rowId)?.groupingColumnId,
