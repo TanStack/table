@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/solid-table",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.59",
+  "version": "8.0.0-alpha.60",
   "description": "Helpers for building lightweight, fast and extendable datagrids for Solid",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
@@ -34,7 +34,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.59"
+    "@tanstack/table-core": "8.0.0-alpha.60"
   },
   "peerDependencies": {
     "solid-js": "^1.3.13"
