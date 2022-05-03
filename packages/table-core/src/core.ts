@@ -125,7 +125,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   } as TableState
 
   const queued: (() => void)[] = []
-  let queuedTimeout: NodeJS.Timeout
+  let queuedTimeout: ReturnType<typeof setTimeout>
 
   const finalInstance: TableInstance<TGenerics> = {
     ...instance,
