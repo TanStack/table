@@ -2,8 +2,6 @@
   "private": true,
   "repository": "https://github.com/tanstack/react-table.git",
   "scripts": {
-    "linkAll": "lerna exec 'yarn link' && lerna exec 'yarn link @tanstack/react-table' && lerna exec 'yarn link @tanstack/solid-table'  && lerna exec 'yarn link @tanstack/vue-table'",
-    "unlinkAll": "lerna exec yarn unlink",
     "test": "(is-ci && yarn test:ci) || yarn test:dev",
     "test:ci": "jest",
     "test:dev": "jest --watch",

@@ -29,14 +29,15 @@ Before proceeding with development, ensure you match one of the following criter
 
 - Fork this repository, we prefer the `feat-*` branch name style
 - Ensure you have `yarn` installed
-- Install projects dependencies by running `yarn`
-- Link projects locally by running `yarn linkAll`
+- Install projects dependencies and linkages by running `yarn`
 - Auto-build and auto-test files as you edit by running `yarn dev`
 - Implement your changes and tests
 - To run examples, follow their individual directions. Usually this includes:
   - Installing dependencies with `yarn`
-  - Linking any dependencies to your local versions, eg. `yarn link @tanstack/react-table`
   - Starting the dev server with `yarn start`
+- To test in your own projects:
+  - Build/watch for changes with `yarn build`/`yarn dev`
+  - Link the appropriate package eg. `yarn link @tanstack/react-table`
 - Document your changes in the appropriate documentation website markdown pages
 - Commit your work and open a pull request
 - Submit PR for review
