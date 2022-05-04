@@ -6,19 +6,19 @@
     { "path": "packages/solid-table" },
     { "path": "packages/vue-table" },
     { "path": "packages/react-table-devtools" },
-    { "path": "examples/basic" },
-    { "path": "examples/column-ordering" },
-    { "path": "examples/column-pinning" },
-    { "path": "examples/column-sizing" },
-    { "path": "examples/column-visibility" },
-    { "path": "examples/editable-data" },
-    { "path": "examples/expanding" },
-    { "path": "examples/filters" },
-    { "path": "examples/fully-controlled" },
-    { "path": "examples/grouping" },
-    { "path": "examples/pagination" },
-    { "path": "examples/row-selection" },
-    { "path": "examples/sorting" }
+    { "path": "examples/basic/tsconfig.dev.json" },
+    { "path": "examples/column-ordering/tsconfig.dev.json" },
+    { "path": "examples/column-pinning/tsconfig.dev.json" },
+    { "path": "examples/column-sizing/tsconfig.dev.json" },
+    { "path": "examples/column-visibility/tsconfig.dev.json" },
+    { "path": "examples/editable-data/tsconfig.dev.json" },
+    { "path": "examples/expanding/tsconfig.dev.json" },
+    { "path": "examples/filters/tsconfig.dev.json" },
+    { "path": "examples/fully-controlled/tsconfig.dev.json" },
+    { "path": "examples/grouping/tsconfig.dev.json" },
+    { "path": "examples/pagination/tsconfig.dev.json" },
+    { "path": "examples/row-selection/tsconfig.dev.json" },
+    { "path": "examples/sorting/tsconfig.dev.json" }
   ]
   // "exclude": ["node_modules"]
 }
