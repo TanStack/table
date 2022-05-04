@@ -5,6 +5,7 @@ import {
   TableInstance,
   Row,
   Updater,
+  TableFeature,
 } from '../types'
 import { makeStateUpdater } from '../utils'
 
@@ -57,10 +58,11 @@ export type ExpandedInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Expanding = {
-  getInitialState: (): ExpandedTableState => {
+export const Expanding: TableFeature = {
+  getInitialState: (state): ExpandedTableState => {
     return {
       expanded: {},
+      ...state,
     }
   },
 

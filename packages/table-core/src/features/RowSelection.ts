@@ -5,6 +5,7 @@ import {
   Row,
   RowModel,
   Updater,
+  TableFeature,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -76,10 +77,11 @@ export type RowSelectionInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const RowSelection = {
-  getInitialState: (): RowSelectionTableState => {
+export const RowSelection: TableFeature = {
+  getInitialState: (state): RowSelectionTableState => {
     return {
       rowSelection: {},
+      ...state,
     }
   },
 

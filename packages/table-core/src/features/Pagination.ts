@@ -59,13 +59,14 @@ export type PaginationInstance<TGenerics extends TableGenerics> = {
 //
 
 export const Pagination: TableFeature = {
-  getInitialState: (initialState): PaginationTableState => {
+  getInitialState: (state): PaginationTableState => {
     return {
+      ...state,
       pagination: {
         pageCount: -1,
         pageIndex: 0,
         pageSize: 10,
-        ...initialState?.pagination,
+        ...state?.pagination,
       },
     }
   },

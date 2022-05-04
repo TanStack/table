@@ -7,6 +7,7 @@ import {
   TableInstance,
   Row,
   Updater,
+  TableFeature,
 } from '../types'
 import {
   functionalUpdate,
@@ -129,7 +130,7 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Filters = {
+export const Filters: TableFeature = {
   getDefaultColumn: <
     TGenerics extends TableGenerics
   >(): FiltersColumnDef<TGenerics> => {
@@ -138,12 +139,13 @@ export const Filters = {
     }
   },
 
-  getInitialState: (): FiltersTableState => {
+  getInitialState: (state): FiltersTableState => {
     return {
       columnFilters: [],
       globalFilter: undefined,
       columnFiltersProgress: 1,
       globalFilterProgress: 1,
+      ...state,
     }
   },
 

@@ -9,6 +9,7 @@ import {
   Updater,
   Renderable,
   TableGenerics,
+  TableFeature,
 } from '../types'
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 
@@ -116,7 +117,7 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Grouping = {
+export const Grouping: TableFeature = {
   getDefaultColumn: <
     TGenerics extends TableGenerics
   >(): GroupingColumnDef<TGenerics> => {
@@ -125,9 +126,10 @@ export const Grouping = {
     }
   },
 
-  getInitialState: (): GroupingTableState => {
+  getInitialState: (state): GroupingTableState => {
     return {
       grouping: [],
+      ...state,
     }
   },
 
@@ -302,28 +304,28 @@ export const Grouping = {
       },
     }
   },
+}
 
-  orderColumns: <TGenerics extends TableGenerics>(
-    leafColumns: Column<TGenerics>[],
-    grouping: string[],
-    groupedColumnMode?: GroupingColumnMode
-  ) => {
-    if (!grouping?.length || !groupedColumnMode) {
-      return leafColumns
-    }
+export function orderColumns<TGenerics extends TableGenerics>(
+  leafColumns: Column<TGenerics>[],
+  grouping: string[],
+  groupedColumnMode?: GroupingColumnMode
+) {
+  if (!grouping?.length || !groupedColumnMode) {
+    return leafColumns
+  }
 
-    const nonGroupingColumns = leafColumns.filter(
-      col => !grouping.includes(col.id)
-    )
+  const nonGroupingColumns = leafColumns.filter(
+    col => !grouping.includes(col.id)
+  )
 
-    if (groupedColumnMode === 'remove') {
-      return nonGroupingColumns
-    }
+  if (groupedColumnMode === 'remove') {
+    return nonGroupingColumns
+  }
 
-    const groupingColumns = grouping
-      .map(g => leafColumns.find(col => col.id === g)!)
-      .filter(Boolean)
+  const groupingColumns = grouping
+    .map(g => leafColumns.find(col => col.id === g)!)
+    .filter(Boolean)
 
-    return [...groupingColumns, ...nonGroupingColumns]
-  },
+  return [...groupingColumns, ...nonGroupingColumns]
 }

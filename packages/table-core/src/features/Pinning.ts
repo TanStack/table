@@ -6,6 +6,7 @@ import {
   TableGenerics,
   Row,
   Cell,
+  TableFeature,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -61,13 +62,14 @@ export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Pinning = {
-  getInitialState: (): ColumnPinningTableState => {
+export const Pinning: TableFeature = {
+  getInitialState: (state): ColumnPinningTableState => {
     return {
       columnPinning: {
         left: [],
         right: [],
       },
+      ...state,
     }
   },
 

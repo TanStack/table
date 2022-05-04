@@ -116,13 +116,14 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     coreProgress: 1,
   }
 
-  const initialState = {
+  let initialState = {
     ...coreInitialState,
     ...(options.initialState ?? {}),
-    ...instance._features.reduce((obj, feature) => {
-      return Object.assign(obj, feature.getInitialState?.(options.initialState))
-    }, {}),
   } as TableState
+
+  instance._features.forEach(feature => {
+    initialState = feature.getInitialState?.(initialState) ?? initialState
+  })
 
   const queued: (() => void)[] = []
   let queuedTimeout = false

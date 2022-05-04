@@ -6,9 +6,10 @@ import {
   Updater,
   Column,
   TableGenerics,
+  TableFeature,
 } from '../types'
 
-import { Grouping } from './Grouping'
+import { Grouping, orderColumns } from './Grouping'
 
 export type ColumnOrderTableState = {
   columnOrder: ColumnOrderState
@@ -34,10 +35,11 @@ export type ColumnOrderInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Ordering = {
-  getInitialState: (): ColumnOrderTableState => {
+export const Ordering: TableFeature = {
+  getInitialState: (state): ColumnOrderTableState => {
     return {
       columnOrder: [],
+      ...state,
     }
   },
 
@@ -95,11 +97,7 @@ export const Ordering = {
             orderedColumns = [...orderedColumns, ...columnsCopy]
           }
 
-          return Grouping.orderColumns(
-            orderedColumns,
-            grouping,
-            groupedColumnMode
-          )
+          return orderColumns(orderedColumns, grouping, groupedColumnMode)
         },
         {
           key: 'getOrderColumnsFn',

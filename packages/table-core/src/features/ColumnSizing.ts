@@ -98,7 +98,7 @@ export const ColumnSizing: TableFeature = {
   getDefaultColumn: (): ColumnSizingColumnDef => {
     return defaultColumnSizing
   },
-  getInitialState: (): ColumnSizingTableState => {
+  getInitialState: (state): ColumnSizingTableState => {
     return {
       columnSizing: {},
       columnSizingInfo: {
@@ -109,6 +109,7 @@ export const ColumnSizing: TableFeature = {
         isResizingColumn: false,
         columnSizingStart: [],
       },
+      ...state,
     }
   },
 

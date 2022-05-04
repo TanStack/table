@@ -115,32 +115,20 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
 - [ ] [Documentation](https://github.com/tanstack/react-table/tree/alpha/docs/)
-  - [ ] API
-    - [ ] Core
-    - [ ] Columns
-    - [ ] Headers
-    - [ ] Visibility
-    - [ ] Pinning
-    - [ ] Filters
-    - [ ] Sorting
-    - [ ] Grouping
-    - [ ] Expanding
-    - [ ] Column Resizing
-    - [ ] Pagination
-    - [ ] Row Selection
-  - [ ] Guides
-    - [ ] Core
-    - [ ] Columns
-    - [ ] Headers
-    - [ ] Visibility
-    - [ ] Pinning
-    - [ ] Filters
-    - [ ] Sorting
-    - [ ] Grouping
-    - [ ] Expanding
-    - [ ] Column Resizing
-    - [ ] Pagination
-    - [ ] Row Selection
+  - [ ] Core
+  - [ ] Columns
+  - [ ] Headers
+  - [ ] Rows
+  - [ ] Cells
+  - [ ] Column Visibility
+  - [x] Column Pinning
+  - [x] Filters
+  - [ ] Sorting
+  - [ ] Grouping
+  - [ ] Expanding
+  - [ ] Column Resizing
+  - [ ] Pagination
+  - [x] Row Selection
 
 ## Installation
 

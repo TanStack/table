@@ -12,6 +12,7 @@ import {
   TableInstance,
   Row,
   Updater,
+  TableFeature,
 } from '../types'
 
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'
@@ -108,18 +109,19 @@ export type SortingInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Sorting = {
+export const Sorting: TableFeature = {
+  getInitialState: (state): SortingTableState => {
+    return {
+      sorting: [],
+      ...state,
+    }
+  },
+
   getDefaultColumn: <
     TGenerics extends TableGenerics
   >(): SortingColumnDef<TGenerics> => {
     return {
       sortingFn: 'auto',
-    }
-  },
-
-  getInitialState: (): SortingTableState => {
-    return {
-      sorting: [],
     }
   },
 

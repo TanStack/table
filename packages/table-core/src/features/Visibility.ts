@@ -6,6 +6,7 @@ import {
   TableInstance,
   Updater,
   Row,
+  TableFeature,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -62,10 +63,11 @@ export type VisibilityColumn = {
 
 //
 
-export const Visibility = {
-  getInitialState: (): VisibilityTableState => {
+export const Visibility: TableFeature = {
+  getInitialState: (state): VisibilityTableState => {
     return {
       columnVisibility: {},
+      ...state,
     }
   },
 
