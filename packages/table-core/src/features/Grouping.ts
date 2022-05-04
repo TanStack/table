@@ -76,7 +76,6 @@ export type GroupingCell<TGenerics extends TableGenerics> = {
 export type ColumnDefaultOptions = {
   // Column
   onGroupingChange: OnChangeFn<GroupingState>
-  autoResetGrouping: boolean
   enableGrouping: boolean
 }
 
@@ -84,7 +83,6 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
   manualGrouping?: boolean
   aggregationFns?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
-  autoResetGrouping?: boolean
   enableGrouping?: boolean
   enableGroupingRemoval?: boolean
   getGroupedRowModel?: (
@@ -97,7 +95,6 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export type GroupingInstance<TGenerics extends TableGenerics> = {
-  queueResetGrouping: () => void
   getColumnAutoAggregationFn: (
     columnId: string
   ) => AggregationFn<TGenerics> | undefined
@@ -139,7 +136,6 @@ export const Grouping = {
   ): GroupingOptions<TGenerics> => {
     return {
       onGroupingChange: makeStateUpdater('grouping', instance),
-      autoResetGrouping: true,
       groupedColumnMode: 'reorder',
     }
   },
@@ -162,28 +158,7 @@ export const Grouping = {
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): GroupingInstance<TGenerics> => {
-    let registered = false
-
     return {
-      queueResetGrouping: () => {
-        instance.queueResetExpanded()
-
-        if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetGrouping
-        ) {
-          instance.resetGrouping()
-        }
-      },
       getColumnAutoAggregationFn: columnId => {
         const firstRow = instance.getCoreRowModel().flatRows[0]
 

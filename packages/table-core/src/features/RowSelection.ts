@@ -16,7 +16,6 @@ export type RowSelectionTableState = {
 
 export type RowSelectionOptions<TGenerics extends TableGenerics> = {
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
-  autoResetRowSelection?: boolean
   enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
   enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
   enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
@@ -49,7 +48,6 @@ export type RowSelectionRow = {
 }
 
 export type RowSelectionInstance<TGenerics extends TableGenerics> = {
-  queueResetRowSelection: () => void
   getToggleRowSelectedHandler: (
     rowId: string
   ) => undefined | ((e: unknown) => void)
@@ -90,7 +88,6 @@ export const RowSelection = {
   ): RowSelectionOptions<TGenerics> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', instance),
-      autoResetRowSelection: true,
       enableRowSelection: true,
       enableMultiRowSelection: true,
       enableSubRowSelection: true,
@@ -103,28 +100,7 @@ export const RowSelection = {
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): RowSelectionInstance<TGenerics> => {
-    let registered = false
-
-    // const pageRows = instance.getPageRows()
-
     return {
-      queueResetRowSelection: () => {
-        if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetRowSelection
-        ) {
-          instance.resetRowSelection()
-        }
-      },
       setRowSelection: updater =>
         instance.options.onRowSelectionChange?.(updater),
       resetRowSelection: () =>
@@ -263,9 +239,6 @@ export const RowSelection = {
         {
           key: 'getSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => {
-            instance.queue(() => instance.queueResetExpanded())
-          },
         }
       ),
 
@@ -288,7 +261,6 @@ export const RowSelection = {
         {
           key: 'getFilteredSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance.queue(() => instance.queueResetExpanded()),
         }
       ),
 
@@ -308,7 +280,6 @@ export const RowSelection = {
         {
           key: 'getGroupedSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
-          onChange: () => instance.queue(() => instance.queueResetExpanded()),
         }
       ),
 

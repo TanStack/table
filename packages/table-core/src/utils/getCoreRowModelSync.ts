@@ -98,8 +98,7 @@ export function getCoreRowModelSync<TGenerics extends TableGenerics>(): (
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetFilters()
-            instance.queueResetRowSelection()
+            instance._autoResetPageIndex()
           })
         },
       }

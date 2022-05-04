@@ -110,7 +110,7 @@ export function getColumnFilteredRowModelAsync<
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetSorting()
+            instance._autoResetPageIndex()
           })
         },
       }

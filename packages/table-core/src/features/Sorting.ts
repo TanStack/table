@@ -69,7 +69,6 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
   manualSorting?: boolean
   sortingFns?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
-  autoResetSorting?: boolean
   enableSorting?: boolean
   enableSortingRemoval?: boolean
   enableMultiRemove?: boolean
@@ -83,7 +82,6 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
 }
 
 export type SortingInstance<TGenerics extends TableGenerics> = {
-  queueResetSorting: () => void
   getColumnAutoSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
   getColumnAutoSortDir: (columnId: string) => SortDirection
 
@@ -130,7 +128,6 @@ export const Sorting = {
   ): SortingOptions<TGenerics> => {
     return {
       onSortingChange: makeStateUpdater('sorting', instance),
-      autoResetSorting: true,
       isMultiSortEvent: (e: unknown) => {
         return (e as MouseEvent).shiftKey
       },
@@ -161,25 +158,6 @@ export const Sorting = {
     let registered = false
 
     return {
-      queueResetSorting: () => {
-        instance.queueResetGrouping()
-
-        if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetSorting
-        ) {
-          instance.resetSorting()
-        }
-      },
       getColumnAutoSortingFn: columnId => {
         const firstRows = instance
           .getGlobalFilteredRowModel()

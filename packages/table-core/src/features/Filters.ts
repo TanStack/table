@@ -85,7 +85,6 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   // Column
   manualColumnFiltering?: boolean
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
-  autoResetColumnFilters?: boolean
   enableColumnFilters?: boolean
   getColumnFilteredRowModel?: (
     instance: TableInstance<TGenerics>
@@ -94,7 +93,6 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   manualGlobalFiltering?: boolean
   globalFilterFn?: FilterFnOption<TGenerics>
   onGlobalFilterChange?: OnChangeFn<any>
-  autoResetGlobalFilter?: boolean
   enableGlobalFilter?: boolean
   getGlobalFilteredRowModel?: (
     instance: TableInstance<TGenerics>
@@ -103,7 +101,6 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
 }
 
 export type FiltersInstance<TGenerics extends TableGenerics> = {
-  queueResetFilters: () => void
   getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
   getColumnFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
@@ -159,9 +156,7 @@ export const Filters = {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', instance),
       onGlobalFilterChange: makeStateUpdater('globalFilter', instance),
-      autoResetColumnFilters: true,
       filterFromLeafRows: true,
-      autoResetGlobalFilter: true,
       globalFilterFn: 'auto',
       getColumnCanGlobalFilterFn: column => {
         const value = instance
@@ -235,35 +230,7 @@ export const Filters = {
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): FiltersInstance<TGenerics> => {
-    let registered = false
-
     return {
-      queueResetFilters: () => {
-        instance.queueResetSorting()
-
-        if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetColumnFilters
-        ) {
-          instance.resetColumnFilters()
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetGlobalFilter
-        ) {
-          instance.resetGlobalFilter()
-        }
-      },
       getColumnAutoFilterFn: columnId => {
         const firstRow = instance.getCoreRowModel().flatRows[0]
 

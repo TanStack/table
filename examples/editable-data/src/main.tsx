@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 
 //
@@ -51,6 +51,22 @@ const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
       />
     )
   },
+}
+
+function useSkipper() {
+  const shouldSkipRef = React.useRef(true)
+  const shouldSkip = shouldSkipRef.current
+
+  // Wrap a function with this to skip a pagination reset temporarily
+  const skip = React.useCallback(() => {
+    shouldSkipRef.current = false
+  }, [])
+
+  React.useEffect(() => {
+    shouldSkipRef.current = true
+  })
+
+  return [shouldSkip, skip] as const
 }
 
 function App() {
@@ -106,19 +122,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1000))
   const refreshData = () => setData(() => makeData(1000))
 
-  const autoResetPageIndexRef = React.useRef(true)
-  const autoResetPageIndex = autoResetPageIndexRef.current
-
-  // Wrap a function with this to skip a pagination reset temporarily
-  const skipAutoPageReset = (cb: () => void) => {
-    autoResetPageIndexRef.current = false
-    let result = cb()
-    setTimeout(() => {
-      // Allow a tick to pass, then turn on autoResetPageIndex again
-      autoResetPageIndexRef.current = true
-    })
-    return result
-  }
+  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
   const instance = useTableInstance(table, {
     data,
@@ -131,19 +135,19 @@ function App() {
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        skipAutoPageReset(() => {
-          setData(old =>
-            old.map((row, index) => {
-              if (index === rowIndex) {
-                return {
-                  ...old[rowIndex],
-                  [columnId]: value,
-                }
+        // Skip age index reset until after next rerender
+        skipAutoResetPageIndex()
+        setData(old =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
               }
-              return row
-            })
-          )
-        })
+            }
+            return row
+          })
+        )
       },
     },
     debugTable: true,

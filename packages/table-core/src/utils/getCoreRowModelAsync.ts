@@ -96,8 +96,7 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetFilters()
-            instance.queueResetRowSelection()
+            instance._autoResetPageIndex()
           })
         },
       }

@@ -37,7 +37,7 @@ export type ExpandedOptions<TGenerics extends TableGenerics> = {
 }
 
 export type ExpandedInstance<TGenerics extends TableGenerics> = {
-  queueResetExpanded: () => void
+  _autoResetExpanded: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void
@@ -81,9 +81,7 @@ export const Expanding = {
     let registered = false
 
     return {
-      queueResetExpanded: () => {
-        instance.queueResetPageIndex()
-
+      _autoResetExpanded: () => {
         if (!registered) {
           registered = true
           return

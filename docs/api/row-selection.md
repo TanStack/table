@@ -24,14 +24,6 @@ export type RowSelectionTableState = {
 
 ## Table Options
 
-### `autoResetRowSelection`
-
-```tsx
-autoResetRowSelection?: boolean
-```
-
-If set will enable/disable the automatic reset of row selection when it's dependent rows/states change.
-
 ### `enableRowSelection`
 
 ```tsx

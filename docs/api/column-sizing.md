@@ -305,16 +305,6 @@ onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 
 If provided, this function will be called with an `updaterFn` when `state.columnFilters` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-### `autoResetColumnFilters`
-
-```tsx
-autoResetColumnFilters?: boolean
-```
-
-**Default: `true`**
-
-If set will enable/disable the automatic reset of column filters when it's dependent rows/states change.
-
 ### `enableColumnFilters`
 
 ```tsx
@@ -368,15 +358,6 @@ onGlobalFilterChange?: OnChangeFn<GlobalFilterState>
 
 If provided, this function will be called with an `updaterFn` when `state.globalFilter` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-### `autoResetGlobalFilter`
-
-```tsx
-autoResetGlobalFilter?: boolean
-```
-
-**Default: `true`**
-
-If set will enable/disable the automatic reset of the global filter when it's dependent rows/states change.
 
 ### `enableGlobalFilter`
 
@@ -418,16 +399,6 @@ getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
 
 ## Table Instance API
-
-### `queueResetFilters`
-
-```tsx
-queueResetFilters: () => void
-```
-
-Queues a reset of all filters for the table.
-
-> ℹ️ Normally, this is called internally when memoization dependencies change and if `autoResetColumnFilters` or `autoResetGlobalFilter` is on. By queuing instead of directly resetting, you can indicate the reset in the middle of a call to methods like `getRowModel()` or during your frameworks current lifecycle event without having adverse effects. This reset will be applied as soon as possible after the current lifecycle phase (the exact implementation of this timing depends on the framework adapter).
 
 ### `getColumnAutoFilterFn`
 

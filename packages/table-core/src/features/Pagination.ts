@@ -37,7 +37,7 @@ export type PaginationDefaultOptions = {
 }
 
 export type PaginationInstance<TGenerics extends TableGenerics> = {
-  queueResetPageIndex: () => void
+  _autoResetPageIndex: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: () => void
   setPageIndex: (updater: Updater<number>) => void
@@ -83,8 +83,9 @@ export const Pagination: TableFeature = {
     instance: TableInstance<TGenerics>
   ): PaginationInstance<TGenerics> => {
     let registered = false
+
     return {
-      queueResetPageIndex: () => {
+      _autoResetPageIndex: () => {
         if (!registered) {
           registered = true
           return

@@ -110,7 +110,7 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetGrouping()
+            instance._autoResetPageIndex()
           })
         },
       }

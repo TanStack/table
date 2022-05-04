@@ -165,7 +165,8 @@ export function getGroupedRowModelSync<TGenerics extends TableGenerics>(): (
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetExpanded()
+            instance._autoResetExpanded()
+            instance._autoResetPageIndex()
           })
         },
       }
