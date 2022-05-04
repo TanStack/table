@@ -31,7 +31,6 @@ export type ColumnPinningDefaultOptions = {
 
 export type ColumnPinningColumnDef = {
   enablePinning?: boolean
-  defaultCanPin?: boolean
 }
 
 export type ColumnPinningColumn = {
@@ -42,12 +41,6 @@ export type ColumnPinningColumn = {
 }
 
 export type ColumnPinningRow<TGenerics extends TableGenerics> = {
-  getLeftVisibleCells: () => Cell<TGenerics>[]
-  getCenterVisibleCells: () => Cell<TGenerics>[]
-  getRightVisibleCells: () => Cell<TGenerics>[]
-}
-
-export type ColumnPinningCell<TGenerics extends TableGenerics> = {
   getLeftVisibleCells: () => Cell<TGenerics>[]
   getCenterVisibleCells: () => Cell<TGenerics>[]
   getRightVisibleCells: () => Cell<TGenerics>[]
@@ -159,67 +152,6 @@ export const Pinning = {
     }
   },
 
-  createCell: <TGenerics extends TableGenerics>(
-    cell: Cell<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): ColumnPinningCell<TGenerics> => {
-    return {
-      getCenterVisibleCells: memo(
-        () => [
-          cell.row._getAllVisibleCells(),
-          instance.getState().columnPinning.left,
-          instance.getState().columnPinning.right,
-        ],
-        (allCells, left, right) => {
-          const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
-
-          return allCells.filter(d => !leftAndRight.includes(d.columnId))
-        },
-        {
-          key: 'row.getCenterVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-      getLeftVisibleCells: memo(
-        () => [
-          cell.row._getAllVisibleCells(),
-          instance.getState().columnPinning.left,
-          ,
-        ],
-        (allCells, left) => {
-          const cells = (left ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
-            .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
-
-          return cells
-        },
-        {
-          key: 'row.getLeftVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-      getRightVisibleCells: memo(
-        () => [
-          cell.row._getAllVisibleCells(),
-          instance.getState().columnPinning.right,
-        ],
-        (allCells, right) => {
-          const cells = (right ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
-            .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
-
-          return cells
-        },
-        {
-          key: 'row.getRightVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
-        }
-      ),
-    }
-  },
-
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): ColumnPinningInstance<TGenerics> => {
@@ -277,10 +209,8 @@ export const Pinning = {
 
         return leafColumns.some(
           d =>
-            d.enablePinning ??
-            instance.options.enablePinning ??
-            d.defaultCanPin ??
-            !!d.accessorFn
+            (d.enablePinning ?? true) &&
+            (instance.options.enablePinning ?? true)
         )
       },
 

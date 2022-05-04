@@ -27,37 +27,20 @@ Filters come in two flavors:
 
 > ℹ️ Column filters are applied in the order they are specified. Normally this order isn't important unless you are provided faceted filter information to your users, or have filters that vary greatly in performance across your dataset. The order of slow/fast filters can have various performance implications depending on how each filter is implemented and the resulting rows from each filter.
 
-## Can-Filter Option Priority
+## Can-Filter
 
-The ability for a column to be **column** filtered is determined by the following fallback logic:
+The ability for a column to be **column** filtered is determined by the following:
 
-```tsx
-const canColumnFilter =
-  column.enableAllFilters ??
-  column.enableColumnFilter ??
-  instance.options.enableFilters ??
-  instance.options.enableColumnFilters ??
-  column.defaultCanColumnFilter ??
-  column.defaultCanFilter ??
-  !!column.accessorFn
-```
+- The column was defined with `createDataColumn` or a valid `accessorKey`/`accessorFn`.
+- `options.enableColumnFilters` is not set to `false`
+- `column.enableColumnFilter` is not set to `false`
 
-The ability for a column to be **globally** filtered is determined by the following fallback logic:
+The ability for a column to be **globally** filtered is determined by the following:
 
-```tsx
-const canGlobalFiler =
-  ((instance.options.enableFilters ??
-    instance.options.enableGlobalFilter ??
-    column.enableAllFilters ??
-    column.enableGlobalFilter ??
-    column.defaultCanFilter ??
-    column.defaultCanGlobalFilter ??
-    !!column.accessorFn) &&
-    instance.options.getColumnCanGlobalFilterFn?.(column)) ??
-  true
-```
-
-Each option can be set to `true` or `false` to override the default behavior below it. These options are described in greater detail in the API below.
+- The column was defined with `createDataColumn` or a valid `accessorKey`/`accessorFn`.
+- If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable.
+- `options.enableColumnFilters` is not set to `false`
+- `column.enableColumnFilter` is not set to `false`
 
 ## State
 
@@ -161,7 +144,7 @@ Options:
 enableAllFilters?: boolean
 ```
 
-Enables/disables **all** filters for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables **all** filters for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
 ### `enableColumnFilter`
 
@@ -169,7 +152,7 @@ Enables/disables **all** filters for this column. For option priority, see [Can-
 enableColumnFilter?: boolean
 ```
 
-Enables/disables the **column** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables the **column** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
 ### `enableGlobalFilter`
 
@@ -177,31 +160,7 @@ Enables/disables the **column** filter for this column. For option priority, see
 enableGlobalFilter?: boolean
 ```
 
-Enables/disables the **global** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
-
-### `defaultCanFilter`
-
-```tsx
-defaultCanFilter?: boolean
-```
-
-If set, will serve as a fallback for enabling/disabling **all** filters for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
-
-### `defaultCanColumnFilter`
-
-```tsx
-defaultCanColumnFilter?: boolean
-```
-
-If set, will serve as a fallback for enabling/disabling **column** filters for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
-
-### `defaultCanGlobalFilter`
-
-```tsx
-defaultCanGlobalFilter?: boolean
-```
-
-If set, will serve as a fallback for enabling/disabling the **global** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables the **global** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
 ## Column API
 
@@ -317,7 +276,7 @@ const column = table.createDataColumn('key', {
 enableFilters?: boolean
 ```
 
-Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
 ### `manualColumnFiltering`
 
@@ -341,7 +300,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 enableColumnFilters?: boolean
 ```
 
-Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
 ### `manualGlobalFiltering`
 
@@ -402,7 +361,7 @@ If provided, this function will be called with an `updaterFn` when `state.global
 enableGlobalFilter?: boolean
 ```
 
-Enables/disables the global filter for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter-option-priority).
+Enables/disables the global filter for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
 ### `getGlobalFilteredRowModel`
 
@@ -427,10 +386,10 @@ useTable(table, {
 })
 ```
 
-### `getColumnCanGlobalFilterFn`
+### `getColumnCanGlobalFilter`
 
 ```tsx
-getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
+getColumnCanGlobalFilter?: (column: Column<TGenerics>) => boolean
 ```
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.

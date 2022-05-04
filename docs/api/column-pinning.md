@@ -18,6 +18,13 @@ There are 3 table features that can reorder columns, which happen in the followi
 
 The API below described how to use the **Column Pinning** features.
 
+## Can-Pin
+
+The ability for a column to be **pinned** is determined by the following:
+
+- `options.enablePinning` is not set to `false`
+- `column.enablePinning` is not set to `false`
+
 ## State
 
 Column pinning state is stored on the table instance using the following shape:
@@ -62,14 +69,6 @@ enablePinning?: boolean
 ```
 
 Enables/disables pinning for the column.
-
-### `defaultCanPin`
-
-```tsx
-defaultCanPin?: boolean
-```
-
-If set, will serve as a fallback for enabling/disabling **all** pinning for this column.
 
 ## Table Instance API
 

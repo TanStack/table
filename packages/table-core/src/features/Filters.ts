@@ -57,12 +57,8 @@ export type FilterFnOption<TGenerics extends TableGenerics> =
 
 export type FiltersColumnDef<TGenerics extends TableGenerics> = {
   filterFn?: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
-  enableAllFilters?: boolean
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
-  defaultCanFilter?: boolean
-  defaultCanColumnFilter?: boolean
-  defaultCanGlobalFilter?: boolean
 }
 
 export type FiltersColumn<TGenerics extends TableGenerics> = {
@@ -81,7 +77,7 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
 export type FiltersOptions<TGenerics extends TableGenerics> = {
   filterFromLeafRows?: boolean
   filterFns?: TGenerics['FilterFns']
-  enableFilters?: boolean
+
   // Column
   manualColumnFiltering?: boolean
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
@@ -89,6 +85,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   getColumnFilteredRowModel?: (
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
+
   // Global
   manualGlobalFiltering?: boolean
   globalFilterFn?: FilterFnOption<TGenerics>
@@ -97,7 +94,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   getGlobalFilteredRowModel?: (
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
-  getColumnCanGlobalFilterFn?: (column: Column<TGenerics>) => boolean
+  getColumnCanGlobalFilter?: (column: Column<TGenerics>) => boolean
 }
 
 export type FiltersInstance<TGenerics extends TableGenerics> = {
@@ -158,7 +155,7 @@ export const Filters = {
       onGlobalFilterChange: makeStateUpdater('globalFilter', instance),
       filterFromLeafRows: true,
       globalFilterFn: 'auto',
-      getColumnCanGlobalFilterFn: column => {
+      getColumnCanGlobalFilter: column => {
         const value = instance
           .getCoreRowModel()
           .flatRows[0]?.getAllCellsByColumnId()[column.id]?.value
@@ -281,6 +278,8 @@ export const Filters = {
         const { filterFns: userFilterFns, globalFilterFn: globalFilterFn } =
           instance.options
 
+        debugger
+
         return isFunction(globalFilterFn)
           ? globalFilterFn
           : globalFilterFn === 'auto'
@@ -331,12 +330,8 @@ export const Filters = {
         }
 
         return (
-          column.enableAllFilters ??
-          column.enableColumnFilter ??
-          instance.options.enableFilters ??
-          instance.options.enableColumnFilters ??
-          column.defaultCanColumnFilter ??
-          column.defaultCanFilter ??
+          (column.enableColumnFilter ?? true) &&
+          (instance.options.enableColumnFilters ?? true) &&
           !!column.accessorFn
         )
       },
@@ -349,15 +344,10 @@ export const Filters = {
         }
 
         return (
-          ((instance.options.enableFilters ??
-            instance.options.enableGlobalFilter ??
-            column.enableAllFilters ??
-            column.enableGlobalFilter ??
-            column.defaultCanGlobalFilter ??
-            column.defaultCanFilter ??
-            !!column.accessorFn) &&
-            instance.options.getColumnCanGlobalFilterFn?.(column)) ??
-          true
+          (column.enableGlobalFilter ?? true) &&
+          (instance.options.enableGlobalFilter ?? true) &&
+          (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+          !!column.accessorFn
         )
       },
 

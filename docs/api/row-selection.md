@@ -9,6 +9,7 @@ menu: API
 Want to skip to the implementation? Check out these examples:
 
 - [row-selection](../examples/row-selection)
+- [expanding](../examples/expanding)
 
 ## State
 
@@ -30,7 +31,8 @@ export type RowSelectionTableState = {
 enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 ```
 
-Enables/disables row selection for all rows in the table, or a funtion that enables/disables row selection for each row.
+- Enables/disables row selection for all rows in the table OR
+- A function that given a row, returns whether to enable/disable row selection for that row
 
 ### `enableMultiRowSelection`
 
@@ -38,9 +40,8 @@ Enables/disables row selection for all rows in the table, or a funtion that enab
 enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 ```
 
-Enables/disables multiple row selection for all rows in the table, or a funtion that enables/disables multiple row selection for each row.
-
-TODO clarify
+- Enables/disables multiple row selection for all rows in the table OR
+- A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
 
 ### `enableSubRowSelection`
 
@@ -48,7 +49,7 @@ TODO clarify
 enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 ```
 
-Enables/disables automatic sub-row selection when a parent row is selected, or a funtion that enables/disables automatic sub-row selection for each row.
+Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
 
 (Use in combination with expanding or grouping features)
 
@@ -62,28 +63,12 @@ If provided, this function will be called with an `updaterFn` when `state.rowSel
 
 ## Table Instance API
 
-### `queueResetRowSelection`
+### `getToggleRowSelectedHandler`
 
 ```tsx
-queueResetRowSelection: () => void
-```
-
-TODO
-
-### `getToggleRowSelectedProps`
-
-```tsx
-type ToggleRowSelectedProps = {
-  onChange?: (e: unknown) => void
-  checked?: boolean
-  title?: string
-  indeterminate?: boolean
-}
-
-getToggleRowSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
-  rowId: string,
-  userProps?: TGetter
-) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
+type getToggleRowSelectedHandler = (
+  rowId: string
+) => undefined | ((e: unknown) => void)
 ```
 
 Returns the props for the `<input type="checkbox" />` element in a row that will toggle row selection and provides checked/indeterminate state.

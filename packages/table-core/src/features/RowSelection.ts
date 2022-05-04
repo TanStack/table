@@ -15,10 +15,10 @@ export type RowSelectionTableState = {
 }
 
 export type RowSelectionOptions<TGenerics extends TableGenerics> = {
-  onRowSelectionChange?: OnChangeFn<RowSelectionState>
   enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
   enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
   enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+  onRowSelectionChange?: OnChangeFn<RowSelectionState>
   // enableGroupingRowSelection?:
   //   | boolean
   //   | ((
