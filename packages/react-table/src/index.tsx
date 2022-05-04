@@ -107,9 +107,9 @@ export function useTableInstance<TGenerics extends ReactTableGenerics>(
     },
   }))
 
-  useIsomorphicLayoutEffect(() => {
-    instance.willUpdate()
-  })
+  // useIsomorphicLayoutEffect(() => {
+  //   instance.willUpdate()
+  // })
 
   return instance
 }

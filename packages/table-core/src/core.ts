@@ -55,7 +55,7 @@ export type TableCore<TGenerics extends TableGenerics> = {
   options: RequiredKeys<TableOptions<TGenerics>, 'state'>
   setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
   queue: (cb: () => void) => void
-  willUpdate: () => void
+  // willUpdate: () => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
   render: <TProps>(
@@ -125,7 +125,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   } as TableState
 
   const queued: (() => void)[] = []
-  let queuedTimeout: ReturnType<typeof setTimeout>
+  let queuedTimeout = false
 
   const finalInstance: TableInstance<TGenerics> = {
     ...instance,
@@ -134,18 +134,28 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     }, {}) as unknown as TableInstance<TGenerics>),
     queue: cb => {
       queued.push(cb)
+
       if (!queuedTimeout) {
-        queuedTimeout = setTimeout(() => {
-          instance.setState(old => ({ ...old }))
-        })
+        queuedTimeout = true
+
+        // Schedule a microtask to run the queued callbacks after
+        // the current call stack (render, etc) has finished.
+        Promise.resolve()
+          .then(() => {
+            console.log(queued)
+            while (queued.length) {
+              queued.shift()!()
+            }
+            queuedTimeout = false
+          })
+          .catch(error =>
+            setTimeout(() => {
+              throw error
+            })
+          )
       }
     },
-    willUpdate: () => {
-      clearTimeout(queuedTimeout)
-      while (queued.length) {
-        queued.shift()!()
-      }
-    },
+    // willUpdate: () => {},
     initialState,
     reset: () => {
       instance.setState(instance.initialState)

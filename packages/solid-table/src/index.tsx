@@ -72,9 +72,9 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     })
   })
 
-  createRenderEffect(() => {
-    instance.willUpdate()
-  })
+  // createRenderEffect(() => {
+  //   instance.willUpdate()
+  // })
 
   return instance
 }

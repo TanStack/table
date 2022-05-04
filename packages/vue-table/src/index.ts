@@ -77,9 +77,9 @@ export function useTableInstance<TGenerics extends TableGenerics>(
     })
   })
 
-  onBeforeUpdate(() => {
-    instance.willUpdate()
-  })
+  // onBeforeUpdate(() => {
+  //   instance.willUpdate()
+  // })
 
   return instance
 }
