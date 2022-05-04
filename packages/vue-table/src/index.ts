@@ -7,7 +7,7 @@ import {
   TableFeature,
   createTableFactory,
 } from '@tanstack/table-core'
-import { h, watchEffect, ref, onBeforeUpdate, VNode } from 'vue'
+import { h, watchEffect, ref, VNode } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'

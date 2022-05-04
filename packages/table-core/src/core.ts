@@ -142,7 +142,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
         // the current call stack (render, etc) has finished.
         Promise.resolve()
           .then(() => {
-            console.log(queued)
             while (queued.length) {
               queued.shift()!()
             }
