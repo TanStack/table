@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/vue-table",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.62",
+  "version": "8.0.0-alpha.63",
   "description": "Composables for building lightweight, fast and extendable datagrids for Vue",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
@@ -34,7 +34,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.62"
+    "@tanstack/table-core": "8.0.0-alpha.63"
   },
   "peerDependencies": {
     "vue": "^3.2.33"
