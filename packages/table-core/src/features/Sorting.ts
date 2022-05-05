@@ -378,7 +378,6 @@ export const Sorting: TableFeature = {
       },
 
       resetSorting: defaultState => {
-        console.log('resetSorting')
         instance.setSorting(
           defaultState ? [] : instance.initialState?.sorting ?? []
         )
