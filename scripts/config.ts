@@ -20,6 +20,11 @@ export const packages: Package[] = [
     dependencies: ['@tanstack/table-core'],
   },
   {
+    name: '@tanstack/svelte-table',
+    srcDir: 'packages/svelte-table/src',
+    dependencies: ['@tanstack/table-core'],
+  },
+  {
     name: '@tanstack/react-table-devtools',
     srcDir: 'packages/react-table-devtools/src',
     peerDependencies: ['@tanstack/react-table'],

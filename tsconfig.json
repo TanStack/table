@@ -5,6 +5,7 @@
     { "path": "packages/react-table" },
     { "path": "packages/solid-table" },
     { "path": "packages/vue-table" },
+    { "path": "packages/svelte-table" },
     { "path": "packages/react-table-devtools" },
     { "path": "examples/basic/tsconfig.dev.json" },
     { "path": "examples/column-ordering/tsconfig.dev.json" },
