@@ -1,20 +1,12 @@
 import {
-  Cell,
   Column,
   CoreHeader,
-  FooterGroupProps,
-  FooterProps,
-  Getter,
   Header,
   HeaderGroup,
-  HeaderGroupProps,
-  HeaderProps,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
-  Row,
 } from '../types'
-import { propGetter, memo } from '../utils'
+import { memo } from '../utils'
 
 export type HeadersInstance<TGenerics extends TableGenerics> = {
   createHeader: (
@@ -48,23 +40,6 @@ export type HeadersInstance<TGenerics extends TableGenerics> = {
   getRightLeafHeaders: () => Header<TGenerics>[]
 
   getHeader: (id: string) => Header<TGenerics>
-
-  getHeaderGroupProps: <TGetter extends Getter<HeaderGroupProps>>(
-    id: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<HeaderGroupProps, TGetter>
-  getFooterGroupProps: <TGetter extends Getter<FooterGroupProps>>(
-    id: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<FooterGroupProps, TGetter>
-  getHeaderProps: <TGetter extends Getter<HeaderProps>>(
-    headerId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<HeaderProps, TGetter>
-  getFooterProps: <TGetter extends Getter<FooterProps>>(
-    headerId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<FooterProps, TGetter>
 }
 
 //
@@ -135,10 +110,6 @@ export const Headers = {
 
             return leafHeaders as Header<TGenerics>[]
           },
-          getHeaderProps: userProps =>
-            instance.getHeaderProps(header.id, userProps)!,
-          getFooterProps: userProps =>
-            instance.getFooterProps(header.id, userProps)!,
           renderHeader: () =>
             column.header
               ? instance.render(column.header, {
@@ -192,7 +163,7 @@ export const Headers = {
           return headerGroups
         },
         {
-          key: 'getHeaderGroups',
+          key: process.env.NODE_ENV === 'production' && 'getHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -212,7 +183,7 @@ export const Headers = {
           return buildHeaderGroups(allColumns, leafColumns, instance, 'center')
         },
         {
-          key: 'getCenterHeaderGroups',
+          key: process.env.NODE_ENV === 'production' && 'getCenterHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -229,7 +200,7 @@ export const Headers = {
           return buildHeaderGroups(allColumns, leafColumns, instance, 'left')
         },
         {
-          key: 'getLeftHeaderGroups',
+          key: process.env.NODE_ENV === 'production' && 'getLeftHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -246,7 +217,7 @@ export const Headers = {
           return buildHeaderGroups(allColumns, leafColumns, instance, 'right')
         },
         {
-          key: 'getRightHeaderGroups',
+          key: process.env.NODE_ENV === 'production' && 'getRightHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -260,7 +231,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: 'getFooterGroups',
+          key: process.env.NODE_ENV === 'production' && 'getFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -272,7 +243,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: 'getLeftFooterGroups',
+          key: process.env.NODE_ENV === 'production' && 'getLeftFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -284,7 +255,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: 'getCenterFooterGroups',
+          key: process.env.NODE_ENV === 'production' && 'getCenterFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -296,7 +267,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: 'getRightFooterGroups',
+          key: process.env.NODE_ENV === 'production' && 'getRightFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -314,7 +285,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: 'getFlatHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -330,7 +301,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: 'getLeftFlatHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getLeftFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -346,7 +317,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: 'getCenterFlatHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getCenterFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -362,7 +333,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: 'getRightFlatHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getRightFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -376,7 +347,7 @@ export const Headers = {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
-          key: 'getCenterLeafHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getCenterLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -388,7 +359,7 @@ export const Headers = {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
-          key: 'getLeftLeafHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getLeftLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -400,7 +371,7 @@ export const Headers = {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
-          key: 'getRightLeafHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getRightLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -424,7 +395,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: 'getLeafHeaders',
+          key: process.env.NODE_ENV === 'production' && 'getLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -446,67 +417,6 @@ export const Headers = {
         }
 
         return header
-      },
-
-      getHeaderGroupProps: (id, userProps) => {
-        const headerGroup = instance.getHeaderGroups().find(d => d.id === id)
-
-        if (!headerGroup) {
-          return
-        }
-
-        return propGetter(
-          {
-            key: headerGroup.id,
-            role: 'row',
-          },
-          userProps
-        )
-      },
-
-      getFooterGroupProps: (id, userProps) => {
-        const headerGroup = instance.getFooterGroups().find(d => d.id === id)
-
-        if (!headerGroup) {
-          return
-        }
-
-        const initialProps = {
-          key: headerGroup.id,
-          role: 'row',
-        }
-
-        return propGetter(initialProps, userProps)
-      },
-
-      getHeaderProps: (id, userProps) => {
-        const header = instance.getHeader(id)
-
-        if (!header) {
-          throw new Error()
-        }
-
-        const initialProps: HeaderProps = {
-          key: header.id,
-          role: 'columnheader',
-          colSpan: header.colSpan,
-          rowSpan: header.rowSpan,
-        }
-
-        return propGetter(initialProps, userProps)
-      },
-
-      getFooterProps: (id, userProps) => {
-        const header = instance.getHeader(id)
-
-        const initialProps: FooterProps = {
-          key: header.id,
-          role: 'columnfooter',
-          colSpan: header.colSpan,
-          rowSpan: header.rowSpan,
-        }
-
-        return propGetter(initialProps, userProps)
       },
     }
   },
@@ -551,10 +461,6 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
       depth,
       id: [headerFamily, `${depth}`].filter(Boolean).join('_'),
       headers: [],
-      getHeaderGroupProps: getterValue =>
-        instance.getHeaderGroupProps(`${depth}`, getterValue)!,
-      getFooterGroupProps: getterValue =>
-        instance.getFooterGroupProps(`${depth}`, getterValue)!,
     }
 
     // The parent columns we're going to scan next

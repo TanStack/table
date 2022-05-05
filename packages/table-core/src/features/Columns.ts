@@ -1,4 +1,3 @@
-import { features } from 'process'
 import {
   Cell,
   Column,
@@ -12,7 +11,6 @@ import {
   HeaderRenderProps,
 } from '../types'
 import { memo } from '../utils'
-import { ColumnPinningPosition } from './Pinning'
 
 export type CoreColumnDefType = 'data' | 'display' | 'group'
 
@@ -110,7 +108,7 @@ export const Columns = {
         {
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
-          key: 'getDefaultColumn',
+          key: process.env.NODE_ENV === 'production' && 'getDefaultColumn',
         }
       ),
 
@@ -167,7 +165,9 @@ export const Columns = {
               ]
             },
             {
-              key: 'column.getFlatColumns',
+              key:
+                process.env.NODE_ENV === 'production' &&
+                'column.getFlatColumns',
               debug: () =>
                 instance.options.debugAll ?? instance.options.debugColumns,
             }
@@ -186,7 +186,9 @@ export const Columns = {
               return [column as Column<TGenerics>]
             },
             {
-              key: 'column.getLeafColumns',
+              key:
+                process.env.NODE_ENV === 'production' &&
+                'column.getLeafColumns',
               debug: () =>
                 instance.options.debugAll ?? instance.options.debugColumns,
             }
@@ -223,7 +225,7 @@ export const Columns = {
           return recurseColumns(columnDefs)
         },
         {
-          key: 'getAllColumns',
+          key: process.env.NODE_ENV === 'production' && 'getAllColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -237,7 +239,7 @@ export const Columns = {
           })
         },
         {
-          key: 'getAllFlatColumns',
+          key: process.env.NODE_ENV === 'production' && 'getAllFlatColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -252,7 +254,7 @@ export const Columns = {
           }, {} as Record<string, Column<TGenerics>>)
         },
         {
-          key: 'getAllFlatColumnsById',
+          key: process.env.NODE_ENV === 'production' && 'getAllFlatColumnsById',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -267,7 +269,7 @@ export const Columns = {
           return orderColumns(leafColumns)
         },
         {
-          key: 'getAllLeafColumns',
+          key: process.env.NODE_ENV === 'production' && 'getAllLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }

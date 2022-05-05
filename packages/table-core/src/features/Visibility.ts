@@ -1,15 +1,14 @@
 import {
   Cell,
   Column,
-  Getter,
   OnChangeFn,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
   Updater,
   Row,
+  TableFeature,
 } from '../types'
-import { makeStateUpdater, memo, propGetter } from '../utils'
+import { makeStateUpdater, memo } from '../utils'
 
 export type VisibilityOptions = {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
@@ -39,15 +38,10 @@ export type VisibilityInstance<TGenerics extends TableGenerics> = {
   getColumnCanHide: (columnId: string) => boolean
   getIsAllColumnsVisible: () => boolean
   getIsSomeColumnsVisible: () => boolean
-  getToggleAllColumnsVisibilityProps: <
-    TGetter extends Getter<ToggleAllColumnsVisibilityProps>
-  >(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleAllColumnsVisibilityProps, TGetter>
+  getToggleAllColumnsVisibilityHandler: () =>
+    | undefined
+    | ((event: unknown) => void)
 }
-
-type ToggleVisibilityProps = {}
-type ToggleAllColumnsVisibilityProps = {}
 
 export type VisibilityColumnDef = {
   enableHiding?: boolean
@@ -64,17 +58,16 @@ export type VisibilityColumn = {
   getCanHide: () => boolean
   getIsVisible: () => boolean
   toggleVisibility: (value?: boolean) => void
-  getToggleVisibilityProps: <TGetter extends Getter<ToggleVisibilityProps>>(
-    userProps?: TGetter
-  ) => PropGetterValue<ToggleVisibilityProps, TGetter>
+  getToggleVisibilityHandler: () => (event: unknown) => void
 }
 
 //
 
-export const Visibility = {
-  getInitialState: (): VisibilityTableState => {
+export const Visibility: TableFeature = {
+  getInitialState: (state): VisibilityTableState => {
     return {
       columnVisibility: {},
+      ...state,
     }
   },
 
@@ -101,19 +94,12 @@ export const Visibility = {
       getIsVisible: () => instance.getColumnIsVisible(column.id),
       toggleVisibility: value =>
         instance.toggleColumnVisibility(column.id, value),
-      getToggleVisibilityProps: userProps => {
-        const props: ToggleVisibilityProps = {
-          type: 'checkbox',
-          checked: column.getIsVisible?.(),
-          title: 'Toggle Column Visibility',
-          onChange: (e: unknown) => {
-            column.toggleVisibility?.(
-              ((e as MouseEvent).target as HTMLInputElement).checked
-            )
-          },
+      getToggleVisibilityHandler: () => {
+        return (e: unknown) => {
+          column.toggleVisibility?.(
+            ((e as MouseEvent).target as HTMLInputElement).checked
+          )
         }
-
-        return propGetter(props, userProps)
       },
     }
   },
@@ -135,7 +121,8 @@ export const Visibility = {
           return row.getAllCells().filter(cell => cell.column.getIsVisible())
         },
         {
-          key: 'row._getAllVisibleCells',
+          key:
+            process.env.NODE_ENV === 'production' && 'row._getAllVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -147,7 +134,7 @@ export const Visibility = {
         ],
         (left, center, right) => [...left, ...center, ...right],
         {
-          key: 'row.getVisibleCells',
+          key: process.env.NODE_ENV === 'production' && 'row.getVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -265,24 +252,12 @@ export const Visibility = {
       getIsSomeColumnsVisible: () =>
         instance.getAllLeafColumns().some(column => column.getIsVisible?.()),
 
-      getToggleAllColumnsVisibilityProps: userProps => {
-        const props: ToggleAllColumnsVisibilityProps = {
-          onChange: (e: MouseEvent) => {
-            instance.toggleAllColumnsVisible(
-              (e.target as HTMLInputElement)?.checked
-            )
-          },
-          type: 'checkbox',
-          title: 'Toggle visibility for all columns',
-          checked: instance.getIsAllColumnsVisible(),
-          indeterminate:
-            !instance.getIsAllColumnsVisible() &&
-            instance.getIsSomeColumnsVisible()
-              ? 'indeterminate'
-              : undefined,
+      getToggleAllColumnsVisibilityHandler: () => {
+        return (e: unknown) => {
+          instance.toggleAllColumnsVisible(
+            ((e as MouseEvent).target as HTMLInputElement)?.checked
+          )
         }
-
-        return propGetter(props, userProps)
       },
     }
   },

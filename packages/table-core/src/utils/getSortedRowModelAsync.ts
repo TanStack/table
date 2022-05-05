@@ -1,5 +1,4 @@
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
-import { SortingFn } from '../features/Sorting'
 import { incrementalMemo, memo } from '../utils'
 
 export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
@@ -76,7 +75,7 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
         // sortData(rowModelRef.current.rows)
       },
       {
-        key: 'getSortedRowModel',
+        key: process.env.NODE_ENV === 'production' && 'getSortedRowModel',
         initialSync: opts?.initialSync,
         onProgress: progress => {
           instance.setState(old => ({ ...old, sortingProgress: progress }))
@@ -84,7 +83,7 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetGrouping()
+            instance._autoResetPageIndex()
           })
         },
       }

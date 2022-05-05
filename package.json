@@ -2,8 +2,6 @@
   "private": true,
   "repository": "https://github.com/tanstack/react-table.git",
   "scripts": {
-    "linkAll": "lerna exec 'yarn link' && lerna exec 'yarn link @tanstack/react-table' && lerna exec 'yarn link @tanstack/solid-table'  && lerna exec 'yarn link @tanstack/vue-table'",
-    "unlinkAll": "lerna exec yarn unlink",
     "test": "(is-ci && yarn test:ci) || yarn test:dev",
     "test:ci": "jest",
     "test:dev": "jest --watch",
@@ -21,7 +19,20 @@
     "./packages/solid-table",
     "./packages/vue-table",
     "./packages/svelte-table",
-    "./packages/react-table-devtools"
+    "./packages/react-table-devtools",
+    "./examples/basic",
+    "./examples/column-ordering",
+    "./examples/column-pinning",
+    "./examples/column-sizing",
+    "./examples/column-visibility",
+    "./examples/editable-data",
+    "./examples/expanding",
+    "./examples/filters",
+    "./examples/fully-controlled",
+    "./examples/grouping",
+    "./examples/pagination",
+    "./examples/row-selection",
+    "./examples/sorting"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",
@@ -29,6 +40,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@commitlint/parse": "^16.2.1",
+    "@faker-js/faker": "^6.3.1",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-node-resolve": "^13.2.1",
     "@rollup/plugin-replace": "^4.0.0",

@@ -331,9 +331,6 @@ async function run() {
   console.log('Building packages...')
   execSync(`yarn build`, { encoding: 'utf8' })
 
-  console.log('Linking packages...')
-  execSync(`yarn linkAll`, { encoding: 'utf8' })
-
   console.log('Testing packages...')
   execSync(`yarn test:ci`, { encoding: 'utf8' })
   console.log('')

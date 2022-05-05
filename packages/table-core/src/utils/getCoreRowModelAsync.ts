@@ -88,7 +88,7 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
         accessRows(data)
       },
       {
-        key: 'getRowModel',
+        key: process.env.NODE_ENV === 'production' && 'getRowModel',
         initialSync: opts?.initialSync,
         onProgress: progress => {
           instance.setState(old => ({ ...old, coreProgress: progress }))
@@ -96,8 +96,7 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetFilters()
-            instance.queueResetRowSelection()
+            instance._autoResetPageIndex()
           })
         },
       }

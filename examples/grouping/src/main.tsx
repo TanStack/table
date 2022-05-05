@@ -5,12 +5,10 @@ import './index.css'
 
 import {
   createTable,
-  Column,
-  TableInstance,
   GroupingState,
   useTableInstance,
   getPaginationRowModel,
-  getColumnFilteredRowModelSync,
+  getFilteredRowModelSync,
   getCoreRowModelSync,
   getGroupedRowModelSync,
   getExpandedRowModel,
@@ -23,52 +21,59 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const columns = React.useMemo(
-    () =>
-      table.createColumns([
-        table.createGroup({
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('firstName', {
-              cell: info => info.value,
-              footer: props => props.column.id,
-            }),
-            table.createDataColumn(row => row.lastName, {
-              id: 'lastName',
-              cell: info => info.value,
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            }),
-          ],
-        }),
-        table.createGroup({
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('age', {
-              header: () => 'Age',
-              footer: props => props.column.id,
-            }),
-            table.createGroup({
-              header: 'More Info',
-              columns: [
-                table.createDataColumn('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('status', {
-                  header: 'Status',
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('progress', {
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ]),
+    () => [
+      table.createGroup({
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('firstName', {
+            header: 'First Name',
+            cell: info => info.value,
+            footer: props => props.column.id,
+          }),
+          table.createDataColumn(row => row.lastName, {
+            id: 'lastName',
+            header: () => <span>Last Name</span>,
+            cell: info => info.value,
+            footer: props => props.column.id,
+          }),
+        ],
+      }),
+      table.createGroup({
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('age', {
+            header: () => 'Age',
+            aggregatedCell: ({ value }) => Math.round(value * 100) / 100,
+            footer: props => props.column.id,
+            aggregationFn: 'median',
+          }),
+          table.createGroup({
+            header: 'More Info',
+            columns: [
+              table.createDataColumn('visits', {
+                header: () => <span>Visits</span>,
+                aggregatedCell: ({ value }) => value.toLocaleString(),
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('status', {
+                header: 'Status',
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('progress', {
+                header: 'Profile Progress',
+                cell: ({ value }) => Math.round(value * 100) / 100 + '%',
+                aggregationFn: 'mean',
+                aggregatedCell: ({ value }) =>
+                  Math.round(value * 100) / 100 + '%',
+                footer: props => props.column.id,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
     []
   )
 
@@ -88,31 +93,31 @@ function App() {
     getGroupedRowModel: getGroupedRowModelSync(),
     getCoreRowModel: getCoreRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
-    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModelSync(),
     debugTable: true,
   })
 
   return (
     <div className="p-2">
       <div className="h-2" />
-      <table {...instance.getTableProps({})}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th {...header.getHeaderProps()}>
+                  <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
                         {header.column.getCanGroup() ? (
                           // If the header can be grouped, let's add a toggle
                           <span
-                            {...header.column.getToggleGroupingProps(props => ({
-                              ...props,
+                            {...{
+                              onClick: header.column.getToggleGroupingHandler(),
                               style: {
                                 cursor: 'pointer',
                               },
-                            }))}
+                            }}
                           >
                             {header.column.getIsGrouped()
                               ? `🛑(${header.column.getGroupedIndex()}) `
@@ -128,17 +133,16 @@ function App() {
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance.getRowModel().rows.map(row => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
                   return (
                     <td
-                      {...cell.getCellProps(props => ({
-                        ...props,
+                      {...{
+                        key: cell.id,
                         style: {
-                          ...props.style,
                           background: cell.getIsGrouped()
                             ? '#0aff0082'
                             : cell.getIsAggregated()
@@ -147,19 +151,20 @@ function App() {
                             ? '#ff000042'
                             : 'white',
                         },
-                      }))}
+                      }}
                     >
                       {cell.getIsGrouped() ? (
                         // If it's a grouped cell, add an expander and row count
                         <>
                           <span
-                            {...row.getToggleExpandedProps(props => ({
-                              ...props,
+                            {...{
+                              onClick: row.getToggleExpandedHandler(),
                               style: {
-                                ...props.style,
-                                cursor: props.onClick ? 'pointer' : 'normal',
+                                cursor: row.getCanExpand()
+                                  ? 'pointer'
+                                  : 'normal',
                               },
-                            }))}
+                            }}
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
                             {cell.renderCell()} ({row.subRows.length})
@@ -252,52 +257,6 @@ function App() {
       </div>
       <pre>{JSON.stringify(grouping, null, 2)}</pre>
     </div>
-  )
-}
-
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: TableInstance<any>
-}) {
-  const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
-
-  return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
-        type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[0] ?? '') as string}
-        onChange={e =>
-          column.setColumnFilterValue(old => [e.target.value, old?.[1]])
-        }
-        placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
-        className="w-24 border shadow rounded"
-      />
-      <input
-        type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[1] ?? '') as string}
-        onChange={e =>
-          column.setColumnFilterValue(old => [old?.[0], e.target.value])
-        }
-        placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
-        className="w-24 border shadow rounded"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(column.getColumnFilterValue() ?? '') as string}
-      onChange={e => column.setColumnFilterValue(e.target.value)}
-      placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
-      className="w-36 border shadow rounded"
-    />
   )
 }
 

@@ -24,7 +24,7 @@ export function getExpandedRowModel<TGenerics extends TableGenerics>(): (
         return expandRows(rowModel, instance)
       },
       {
-        key: 'getExpandedRowModel',
+        key: process.env.NODE_ENV === 'production' && 'getExpandedRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
       }
     )

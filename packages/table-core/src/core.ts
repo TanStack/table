@@ -1,18 +1,14 @@
-import { functionalUpdate, propGetter, RequiredKeys } from './utils'
+import { functionalUpdate, RequiredKeys } from './utils'
 
 import {
   Updater,
-  Options,
+  TableOptions,
   TableState,
-  ColumnDef,
-  TableProps,
-  TableBodyProps,
-  PropGetter,
   TableInstance,
   Renderable,
-  UseRenderer,
   TableFeature,
   TableGenerics,
+  InitialTableState,
 } from './types'
 
 import { Columns } from './features/Columns'
@@ -40,42 +36,38 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   data: TGenerics['Row'][]
   state: Partial<TableState>
   onStateChange: (updater: Updater<TableState>) => void
-  render: TGenerics['Render']
+  render: TGenerics['Renderer']
   debugAll?: boolean
   debugTable?: boolean
   debugHeaders?: boolean
   debugColumns?: boolean
   debugRows?: boolean
-  initialState?: Partial<TableState>
+  initialState?: InitialTableState
   autoResetAll?: boolean
-  mergeOptions?: (
-    defaultOptions: TableFeature,
-    options: Partial<Options<TGenerics>>
-  ) => Options<TGenerics>
+  mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
   meta?: TGenerics['TableMeta']
 }
 
 export type TableCore<TGenerics extends TableGenerics> = {
+  // generics: TGenerics
   initialState: TableState
   reset: () => void
-  options: RequiredKeys<Options<TGenerics>, 'state'>
-  setOptions: (newOptions: Updater<Options<TGenerics>>) => void
+  options: RequiredKeys<TableOptions<TGenerics>, 'state'>
+  setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
   queue: (cb: () => void) => void
-  willUpdate: () => void
+  // willUpdate: () => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
-  getTableProps: PropGetter<TableProps>
-  getTableBodyProps: PropGetter<TableBodyProps>
   render: <TProps>(
     template: Renderable<TGenerics, TProps>,
     props: TProps
-  ) => string | null | ReturnType<UseRenderer<TGenerics>>
+  ) => string | null | TGenerics['Rendered']
   getOverallProgress: () => number
   _features: readonly TableFeature[]
 }
 
 export function createTableInstance<TGenerics extends TableGenerics>(
-  options: Options<TGenerics>
+  options: TableOptions<TGenerics>
 ): TableInstance<TGenerics> {
   if (options.debugAll || options.debugTable) {
     console.info('Creating Table Instance...')
@@ -102,29 +94,39 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   const defaultOptions = instance._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(instance))
-  }, {})
+  }, {}) as TableOptions<TGenerics>
 
-  const buildOptions = (options: Options<TGenerics>) => ({
+  const mergeOptions = (options: TableOptions<TGenerics>) => {
+    if (instance.options.mergeOptions) {
+      return instance.options.mergeOptions(defaultOptions, options)
+    }
+
+    return {
+      ...defaultOptions,
+      ...options,
+    }
+  }
+
+  instance.options = {
     ...defaultOptions,
     ...options,
-  })
-
-  instance.options = buildOptions(options)
+  }
 
   const coreInitialState: CoreTableState = {
     coreProgress: 1,
   }
 
-  const initialState = {
+  let initialState = {
     ...coreInitialState,
-    ...instance._features.reduce((obj, feature) => {
-      return Object.assign(obj, feature.getInitialState?.())
-    }, {}),
     ...(options.initialState ?? {}),
   } as TableState
 
+  instance._features.forEach(feature => {
+    initialState = feature.getInitialState?.(initialState) ?? initialState
+  })
+
   const queued: (() => void)[] = []
-  let queuedTimeout: NodeJS.Timeout
+  let queuedTimeout = false
 
   const finalInstance: TableInstance<TGenerics> = {
     ...instance,
@@ -133,32 +135,35 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     }, {}) as unknown as TableInstance<TGenerics>),
     queue: cb => {
       queued.push(cb)
+
       if (!queuedTimeout) {
-        queuedTimeout = setTimeout(() => {
-          instance.setState(old => ({ ...old }))
-        })
+        queuedTimeout = true
+
+        // Schedule a microtask to run the queued callbacks after
+        // the current call stack (render, etc) has finished.
+        Promise.resolve()
+          .then(() => {
+            while (queued.length) {
+              console.log('queue')
+              queued.shift()!()
+            }
+            queuedTimeout = false
+          })
+          .catch(error =>
+            setTimeout(() => {
+              throw error
+            })
+          )
       }
     },
-    willUpdate: () => {
-      clearTimeout(queuedTimeout)
-      while (queued.length) {
-        queued.shift()!()
-      }
-    },
+    // willUpdate: () => {},
     initialState,
     reset: () => {
       instance.setState(instance.initialState)
     },
     setOptions: updater => {
       const newOptions = functionalUpdate(updater, instance.options)
-      if (instance.options.mergeOptions) {
-        instance.options = instance.options.mergeOptions(
-          defaultOptions,
-          newOptions
-        )
-      } else {
-        instance.options = buildOptions(newOptions)
-      }
+      instance.options = mergeOptions(newOptions)
     },
     render: (template, props) => {
       if (typeof instance.options.render === 'function') {
@@ -178,24 +183,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
     setState: (updater: Updater<TableState>) => {
       instance.options.onStateChange?.(updater)
-    },
-
-    getTableProps: userProps => {
-      return propGetter(
-        {
-          role: 'table',
-        },
-        userProps
-      )
-    },
-
-    getTableBodyProps: userProps => {
-      return propGetter(
-        {
-          role: 'rowgroup',
-        },
-        userProps
-      )
     },
 
     getOverallProgress: () => {

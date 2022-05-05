@@ -7,24 +7,15 @@ import {
 
 import {
   Column,
-  Getter,
-  Header,
   OnChangeFn,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
   Row,
   Updater,
+  TableFeature,
 } from '../types'
 
-import {
-  functionalUpdate,
-  isFunction,
-  makeStateUpdater,
-  memo,
-  Overwrite,
-  propGetter,
-} from '../utils'
+import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -72,16 +63,13 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getIsSorted: () => false | SortDirection
   resetSorting: () => void
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
-  getToggleSortingProps: <TGetter extends Getter<ToggleSortingProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
+  getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 }
 
 export type SortingOptions<TGenerics extends TableGenerics> = {
   manualSorting?: boolean
   sortingFns?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
-  autoResetSorting?: boolean
   enableSorting?: boolean
   enableSortingRemoval?: boolean
   enableMultiRemove?: boolean
@@ -94,13 +82,7 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
   isMultiSortEvent?: (e: unknown) => boolean
 }
 
-export type ToggleSortingProps = {
-  title?: string
-  onClick?: (event: unknown) => void
-}
-
 export type SortingInstance<TGenerics extends TableGenerics> = {
-  queueResetSorting: () => void
   getColumnAutoSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
   getColumnAutoSortDir: (columnId: string) => SortDirection
 
@@ -117,10 +99,9 @@ export type SortingInstance<TGenerics extends TableGenerics> = {
   getColumnCanMultiSort: (columnId: string) => boolean
   getColumnIsSorted: (columnId: string) => false | 'asc' | 'desc'
   getColumnSortIndex: (columnId: string) => number
-  getToggleSortingProps: <TGetter extends Getter<ToggleSortingProps>>(
-    columnId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleSortingProps, TGetter>
+  getToggleSortingHandler: (
+    columnId: string
+  ) => undefined | ((event: unknown) => void)
   getPreSortedRowModel: () => RowModel<TGenerics>
   getSortedRowModel: () => RowModel<TGenerics>
   _getSortedRowModel?: () => RowModel<TGenerics>
@@ -128,7 +109,14 @@ export type SortingInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Sorting = {
+export const Sorting: TableFeature = {
+  getInitialState: (state): SortingTableState => {
+    return {
+      sorting: [],
+      ...state,
+    }
+  },
+
   getDefaultColumn: <
     TGenerics extends TableGenerics
   >(): SortingColumnDef<TGenerics> => {
@@ -137,18 +125,11 @@ export const Sorting = {
     }
   },
 
-  getInitialState: (): SortingTableState => {
-    return {
-      sorting: [],
-    }
-  },
-
   getDefaultOptions: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): SortingOptions<TGenerics> => {
     return {
       onSortingChange: makeStateUpdater('sorting', instance),
-      autoResetSorting: true,
       isMultiSortEvent: (e: unknown) => {
         return (e as MouseEvent).shiftKey
       },
@@ -168,8 +149,8 @@ export const Sorting = {
       resetSorting: () => instance.resetSorting(column.id),
       toggleSorting: (desc, isMulti) =>
         instance.toggleColumnSorting(column.id, desc, isMulti),
-      getToggleSortingProps: userProps =>
-        instance.getToggleSortingProps(column.id, userProps),
+      getToggleSortingHandler: () =>
+        instance.getToggleSortingHandler(column.id)!,
     }
   },
 
@@ -179,29 +160,8 @@ export const Sorting = {
     let registered = false
 
     return {
-      queueResetSorting: () => {
-        instance.queueResetGrouping()
-
-        if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetSorting
-        ) {
-          instance.resetSorting()
-        }
-      },
       getColumnAutoSortingFn: columnId => {
-        const firstRows = instance
-          .getGlobalFilteredRowModel()
-          .flatRows.slice(100)
+        const firstRows = instance.getFilteredRowModel().flatRows.slice(100)
 
         let isString = false
 
@@ -228,7 +188,7 @@ export const Sorting = {
         return sortingFns.basic
       },
       getColumnAutoSortDir: columnId => {
-        const firstRow = instance.getGlobalFilteredRowModel().flatRows[0]
+        const firstRow = instance.getFilteredRowModel().flatRows[0]
 
         const value = firstRow?.values[columnId]
 
@@ -416,7 +376,7 @@ export const Sorting = {
         }
       },
 
-      getToggleSortingProps: (columnId, userProps) => {
+      getToggleSortingHandler: columnId => {
         const column = instance.getColumn(columnId)
 
         if (!column) {
@@ -425,25 +385,19 @@ export const Sorting = {
 
         const canSort = column.getCanSort()
 
-        const initialProps: ToggleSortingProps = {
-          title: canSort ? 'Toggle Sorting' : undefined,
-          onClick: canSort
-            ? (e: unknown) => {
-                ;(e as any).persist?.()
-                column.toggleSorting?.(
-                  undefined,
-                  column.getCanMultiSort()
-                    ? instance.options.isMultiSortEvent?.(e)
-                    : false
-                )
-              }
-            : undefined,
+        return (e: unknown) => {
+          if (!canSort) return
+          ;(e as any).persist?.()
+          column.toggleSorting?.(
+            undefined,
+            column.getCanMultiSort()
+              ? instance.options.isMultiSortEvent?.(e)
+              : false
+          )
         }
-
-        return propGetter(initialProps, userProps)
       },
 
-      getPreSortedRowModel: () => instance.getGlobalFilteredRowModel(),
+      getPreSortedRowModel: () => instance.getFilteredRowModel(),
       getSortedRowModel: () => {
         if (
           !instance._getSortedRowModel &&

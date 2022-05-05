@@ -8,9 +8,8 @@ import { makeData, Person } from './makeData'
 import {
   Column,
   createTable,
-  getColumnFilteredRowModelSync,
   getCoreRowModelSync,
-  getGlobalFilteredRowModelSync,
+  getFilteredRowModelSync,
   getPaginationRowModel,
   TableInstance,
   useTableInstance,
@@ -25,65 +24,74 @@ function App() {
   const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo(
-    () =>
-      table.createColumns([
-        table.createDisplayColumn({
-          id: 'select',
-          header: ({ instance }) => (
+    () => [
+      table.createDisplayColumn({
+        id: 'select',
+        header: ({ instance }) => (
+          <IndeterminateCheckbox
+            {...{
+              checked: instance.getIsAllRowsSelected(),
+              indeterminate: instance.getIsSomeRowsSelected(),
+              onChange: instance.getToggleAllRowsSelectedHandler(),
+            }}
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
             <IndeterminateCheckbox
-              {...instance.getToggleAllRowsSelectedProps()}
+              {...{
+                checked: row.getIsSelected(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
             />
-          ),
-          cell: ({ row }) => (
-            <div className="px-1">
-              <IndeterminateCheckbox {...row.getToggleSelectedProps()} />
-            </div>
-          ),
-        }),
-        table.createGroup({
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('firstName', {
-              cell: info => info.value,
-              footer: props => props.column.id,
-            }),
-            table.createDataColumn(row => row.lastName, {
-              id: 'lastName',
-              cell: info => info.value,
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            }),
-          ],
-        }),
-        table.createGroup({
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            table.createDataColumn('age', {
-              header: () => 'Age',
-              footer: props => props.column.id,
-            }),
-            table.createGroup({
-              header: 'More Info',
-              columns: [
-                table.createDataColumn('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('status', {
-                  header: 'Status',
-                  footer: props => props.column.id,
-                }),
-                table.createDataColumn('progress', {
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ]),
+          </div>
+        ),
+      }),
+      table.createGroup({
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('firstName', {
+            cell: info => info.value,
+            footer: props => props.column.id,
+          }),
+          table.createDataColumn(row => row.lastName, {
+            id: 'lastName',
+            cell: info => info.value,
+            header: () => <span>Last Name</span>,
+            footer: props => props.column.id,
+          }),
+        ],
+      }),
+      table.createGroup({
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          table.createDataColumn('age', {
+            header: () => 'Age',
+            footer: props => props.column.id,
+          }),
+          table.createGroup({
+            header: 'More Info',
+            columns: [
+              table.createDataColumn('visits', {
+                header: () => <span>Visits</span>,
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('status', {
+                header: 'Status',
+                footer: props => props.column.id,
+              }),
+              table.createDataColumn('progress', {
+                header: 'Profile Progress',
+                footer: props => props.column.id,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
     []
   )
 
@@ -98,8 +106,7 @@ function App() {
     },
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModelSync(),
-    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
-    getGlobalFilteredRowModel: getGlobalFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   })
@@ -115,13 +122,13 @@ function App() {
         />
       </div>
       <div className="h-2" />
-      <table {...instance.getTableProps({})}>
+      <table>
         <thead>
           {instance.getHeaderGroups().map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th {...header.getHeaderProps()}>
+                  <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <>
                         {header.renderHeader()}
@@ -141,15 +148,15 @@ function App() {
             </tr>
           ))}
         </thead>
-        <tbody {...instance.getTableBodyProps()}>
+        <tbody>
           {instance
             .getRowModel()
             .rows.slice(0, 10)
             .map(row => {
               return (
-                <tr {...row.getRowProps()}>
+                <tr key={row.id}>
                   {row.getVisibleCells().map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                    return <td key={cell.id}>{cell.renderCell()}</td>
                   })}
                 </tr>
               )
@@ -221,8 +228,7 @@ function App() {
       <br />
       <div>
         {Object.keys(rowSelection).length} of{' '}
-        {instance.getPreColumnFilteredRowModel().rows.length} Total Rows
-        Selected
+        {instance.getPreFilteredRowModel().rows.length} Total Rows Selected
       </div>
       <hr />
       <br />
@@ -272,30 +278,30 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
+    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
       <input
         type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[0] ?? '') as string}
+        min={Number(column.getFacetedMinMaxValues()[0])}
+        max={Number(column.getFacetedMinMaxValues()[1])}
+        value={((column.getColumnFilterValue() as any)?.[0] ?? '') as string}
         onChange={e =>
-          column.setColumnFilterValue(old => [e.target.value, old?.[1]])
+          column.setColumnFilterValue((old: any) => [e.target.value, old?.[1]])
         }
-        placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
+        placeholder={`Min (${column.getFacetedMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
       />
       <input
         type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
-        value={(column.getColumnFilterValue()?.[1] ?? '') as string}
+        min={Number(column.getFacetedMinMaxValues()[0])}
+        max={Number(column.getFacetedMinMaxValues()[1])}
+        value={((column.getColumnFilterValue() as any)?.[1] ?? '') as string}
         onChange={e =>
-          column.setColumnFilterValue(old => [old?.[0], e.target.value])
+          column.setColumnFilterValue((old: any) => [old?.[0], e.target.value])
         }
-        placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
+        placeholder={`Max (${column.getFacetedMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
       />
     </div>
@@ -304,7 +310,7 @@ function Filter({
       type="text"
       value={(column.getColumnFilterValue() ?? '') as string}
       onChange={e => column.setColumnFilterValue(e.target.value)}
-      placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
+      placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
       className="w-36 border shadow rounded"
     />
   )
@@ -314,11 +320,13 @@ function IndeterminateCheckbox({
   indeterminate,
   className = '',
   ...rest
-}: { indeterminate: boolean } & HTMLAttributes<HTMLInputElement>) {
+}: { indeterminate?: boolean } & HTMLAttributes<HTMLInputElement>) {
   const ref = React.useRef<HTMLInputElement>(null!)
 
   React.useEffect(() => {
-    ref.current.indeterminate = indeterminate
+    if (typeof indeterminate === 'boolean') {
+      ref.current.indeterminate = indeterminate
+    }
   }, [ref, indeterminate])
 
   return (

@@ -106,11 +106,11 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
         }
       },
       {
-        key: 'getSortedRowModel',
+        key: process.env.NODE_ENV === 'production' && 'getSortedRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {
-            instance.queueResetGrouping()
+            instance._autoResetPageIndex()
           })
         },
       }

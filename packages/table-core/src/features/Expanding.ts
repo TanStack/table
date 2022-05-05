@@ -1,14 +1,13 @@
 import { RowModel } from '..'
 import {
-  Getter,
   OnChangeFn,
   TableGenerics,
-  PropGetterValue,
   TableInstance,
   Row,
   Updater,
+  TableFeature,
 } from '../types'
-import { makeStateUpdater, propGetter } from '../utils'
+import { makeStateUpdater } from '../utils'
 
 export type ExpandedStateList = Record<string, boolean>
 export type ExpandedState = true | Record<string, boolean>
@@ -20,9 +19,7 @@ export type ExpandedRow = {
   toggleExpanded: (expanded?: boolean) => void
   getIsExpanded: () => boolean
   getCanExpand: () => boolean
-  getToggleExpandedProps: <TGetter extends Getter<ToggleExpandedProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
+  getToggleExpandedHandler: () => () => void
 }
 
 export type ExpandedOptions<TGenerics extends TableGenerics> = {
@@ -40,13 +37,8 @@ export type ExpandedOptions<TGenerics extends TableGenerics> = {
   paginateExpandedRows?: boolean
 }
 
-export type ToggleExpandedProps = {
-  title?: string
-  onClick?: (event: unknown) => void
-}
-
 export type ExpandedInstance<TGenerics extends TableGenerics> = {
-  queueResetExpanded: () => void
+  _autoResetExpanded: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void
@@ -54,13 +46,8 @@ export type ExpandedInstance<TGenerics extends TableGenerics> = {
   getRowCanExpand: (rowId: string) => boolean
   getCanSomeRowsExpand: () => boolean
   getIsRowExpanded: (rowId: string) => boolean
-  getToggleExpandedProps: <TGetter extends Getter<ToggleExpandedProps>>(
-    rowId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
-  getToggleAllRowsExpandedProps: <TGetter extends Getter<ToggleExpandedProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleExpandedProps, TGetter>
+  getToggleExpandedHandler: (rowId: string) => undefined | (() => void)
+  getToggleAllRowsExpandedHandler: () => (event: unknown) => void
   getIsSomeRowsExpanded: () => boolean
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
@@ -71,10 +58,11 @@ export type ExpandedInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Expanding = {
-  getInitialState: (): ExpandedTableState => {
+export const Expanding: TableFeature = {
+  getInitialState: (state): ExpandedTableState => {
     return {
       expanded: {},
+      ...state,
     }
   },
 
@@ -95,9 +83,7 @@ export const Expanding = {
     let registered = false
 
     return {
-      queueResetExpanded: () => {
-        instance.queueResetPageIndex()
-
+      _autoResetExpanded: () => {
         if (!registered) {
           registered = true
           return
@@ -201,7 +187,7 @@ export const Expanding = {
           instance.getRowCanExpand(id)
         )
       },
-      getToggleExpandedProps: (rowId, userProps) => {
+      getToggleExpandedHandler: rowId => {
         const row = instance.getRow(rowId)
 
         if (!row) {
@@ -210,28 +196,16 @@ export const Expanding = {
 
         const canExpand = instance.getRowCanExpand(rowId)
 
-        const initialProps: ToggleExpandedProps = {
-          title: canExpand ? 'Toggle Expanded' : undefined,
-          onClick: canExpand
-            ? (e: unknown) => {
-                ;(e as any).persist?.()
-                instance.toggleRowExpanded(rowId)
-              }
-            : undefined,
+        return () => {
+          if (!canExpand) return
+          instance.toggleRowExpanded(rowId)
         }
-
-        return propGetter(initialProps, userProps)
       },
-      getToggleAllRowsExpandedProps: userProps => {
-        const initialProps: ToggleExpandedProps = {
-          title: 'Toggle All Expanded',
-          onClick: (e: unknown) => {
-            ;(e as any).persist?.()
-            instance.toggleAllRowsExpanded()
-          },
+      getToggleAllRowsExpandedHandler: () => {
+        return (e: unknown) => {
+          ;(e as any).persist?.()
+          instance.toggleAllRowsExpanded()
         }
-
-        return propGetter(initialProps, userProps)
       },
       getIsSomeRowsExpanded: () => {
         const expanded = instance.getState().expanded
@@ -303,8 +277,8 @@ export const Expanding = {
         void instance.toggleRowExpanded(row.id, expanded),
       getIsExpanded: () => instance.getIsRowExpanded(row.id),
       getCanExpand: () => row.subRows && !!row.subRows.length,
-      getToggleExpandedProps: userProps =>
-        instance.getToggleExpandedProps(row.id, userProps),
+      getToggleExpandedHandler: () =>
+        instance.getToggleExpandedHandler(row.id)!,
     }
   },
 }

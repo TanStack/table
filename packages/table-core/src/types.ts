@@ -28,6 +28,7 @@ import {
   FiltersColumnDef,
   FiltersInstance,
   FiltersOptions,
+  FiltersRow,
   FiltersTableState,
 } from './features/Filters'
 import {
@@ -62,6 +63,7 @@ import {
   ColumnSizingTableState,
 } from './features/ColumnSizing'
 import {
+  PaginationInitialTableState,
   PaginationInstance,
   PaginationOptions,
   PaginationTableState,
@@ -85,19 +87,17 @@ export type TableGenerics = {
   FilterFns?: any
   SortingFns?: any
   AggregationFns?: any
-  Render?: any
+  Renderer?: any
+  Rendered?: any
   ColumnMeta?: any
   TableMeta?: any
 }
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export type UseRenderer<TGenerics extends TableGenerics> =
-  TGenerics['Render'] extends (...args: any) => any ? TGenerics['Render'] : any
-
 export type TableFeature = {
   getDefaultOptions?: (instance: any) => any
-  getInitialState?: () => any
+  getInitialState?: (initialState?: InitialTableState) => any
   createInstance?: (instance: any) => any
   getDefaultColumn?: () => any
   createColumn?: (column: any, instance: any) => any
@@ -123,19 +123,20 @@ export type TableInstance<TGenerics extends TableGenerics> =
     PaginationInstance<TGenerics> &
     RowSelectionInstance<TGenerics>
 
-export type Options<TGenerics extends TableGenerics> = CoreOptions<TGenerics> &
-  ColumnsOptions<TGenerics> &
-  RowsOptions<TGenerics> &
-  VisibilityOptions &
-  ColumnOrderOptions &
-  ColumnPinningOptions &
-  FiltersOptions<TGenerics> &
-  SortingOptions<TGenerics> &
-  GroupingOptions<TGenerics> &
-  ExpandedOptions<TGenerics> &
-  ColumnSizingOptions &
-  PaginationOptions<TGenerics> &
-  RowSelectionOptions<TGenerics>
+export type TableOptions<TGenerics extends TableGenerics> =
+  CoreOptions<TGenerics> &
+    ColumnsOptions<TGenerics> &
+    RowsOptions<TGenerics> &
+    VisibilityOptions &
+    ColumnOrderOptions &
+    ColumnPinningOptions &
+    FiltersOptions<TGenerics> &
+    SortingOptions<TGenerics> &
+    GroupingOptions<TGenerics> &
+    ExpandedOptions<TGenerics> &
+    ColumnSizingOptions &
+    PaginationOptions<TGenerics> &
+    RowSelectionOptions<TGenerics>
 
 export type TableState = CoreTableState &
   VisibilityTableState &
@@ -149,10 +150,25 @@ export type TableState = CoreTableState &
   PaginationTableState &
   RowSelectionTableState
 
+export type InitialTableState = Partial<
+  CoreTableState &
+    VisibilityTableState &
+    ColumnOrderTableState &
+    ColumnPinningTableState &
+    FiltersTableState &
+    SortingTableState &
+    ExpandedTableState &
+    GroupingTableState &
+    ColumnSizingTableState &
+    PaginationInitialTableState &
+    RowSelectionTableState
+>
+
 export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
   CellsRow<TGenerics> &
   VisibilityRow<TGenerics> &
   ColumnPinningRow<TGenerics> &
+  FiltersRow<TGenerics> &
   GroupingRow &
   RowSelectionRow &
   ExpandedRow
@@ -171,7 +187,7 @@ export type AccessorFn<TData> = (originalRow: TData, index: number) => any
 
 export type Renderable<TGenerics extends TableGenerics, TProps> =
   | string
-  | ((props: TProps) => ReturnType<UseRenderer<TGenerics>>)
+  | ((props: TProps) => TGenerics['Rendered'])
 
 export type ColumnDef<TGenerics extends TableGenerics> =
   CoreColumnDef<TGenerics> &
@@ -201,8 +217,7 @@ export type CoreCell<TGenerics extends TableGenerics> = {
   value: TGenerics['Value']
   row: Row<TGenerics>
   column: Column<TGenerics>
-  getCellProps: PropGetter<CellProps>
-  renderCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
+  renderCell: () => string | null | TGenerics['Rendered']
 }
 
 export type Header<TGenerics extends TableGenerics> = CoreHeader<TGenerics> &
@@ -219,25 +234,21 @@ export type CoreHeader<TGenerics extends TableGenerics> = {
   subHeaders: Header<TGenerics>[]
   colSpan?: number
   rowSpan?: number
-  getHeaderProps: PropGetter<HeaderProps>
-  getFooterProps: PropGetter<HeaderProps>
   getLeafHeaders: () => Header<TGenerics>[]
   isPlaceholder?: boolean
   placeholderId?: string
   renderHeader: (options?: {
     renderPlaceholder?: boolean
-  }) => string | null | ReturnType<UseRenderer<TGenerics>>
+  }) => string | null | TGenerics['Rendered']
   renderFooter: (options?: {
     renderPlaceholder?: boolean
-  }) => string | null | ReturnType<UseRenderer<TGenerics>>
+  }) => string | null | TGenerics['Rendered']
 }
 
 export type HeaderGroup<TGenerics extends TableGenerics> = {
   id: string
   depth: number
   headers: Header<TGenerics>[]
-  getHeaderGroupProps: PropGetter<HeaderGroupProps>
-  getFooterGroupProps: PropGetter<FooterGroupProps>
 }
 
 export type HeaderRenderProps<THeader> = {
@@ -252,76 +263,5 @@ export type CellRenderProps<TCell, TRow> = {
   cell: TCell
   row: TRow
 }
-
-export type TableProps = {
-  role: string
-}
-
-export type TableBodyProps = {
-  role: string
-}
-
-export type TableHeadProps = {
-  key: string
-  role: string
-}
-
-export type TableFooterProps = {
-  key: string
-  role: string
-}
-
-export type HeaderGroupProps = {
-  key: string
-  role: string
-}
-
-export type FooterGroupProps = {
-  key: string
-  role: string
-}
-
-export type HeaderProps = {
-  key: string
-  role: string
-  colSpan?: number
-  rowSpan?: number
-}
-
-export type FooterProps = {
-  key: string
-  role: string
-  colSpan?: number
-  rowSpan?: number
-}
-
-export type RowProps = {
-  key: string
-  role: string
-}
-
-export type CellProps = {
-  key: string
-  role: string
-}
-
-//
-
-export type PropGetter<TBase> = <TGetter extends Getter<TBase>>(
-  userProps?: TGetter
-) => PropGetterValue<TBase, TGetter>
-
-export type Getter<TInitial> =
-  | ((initial: TInitial) => object)
-  | object
-  | undefined
-
-export type PropGetterValue<TBase, TGetter> = TGetter extends undefined
-  ? TBase
-  : TGetter extends (...args: any[]) => infer TReturn
-  ? Overwrite<TBase, TReturn>
-  : TGetter extends object
-  ? Overwrite<TBase, TGetter>
-  : never
 
 export type NoInfer<A extends any> = [A][A extends any ? 0 : never]

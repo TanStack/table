@@ -4,6 +4,7 @@ import {
   TableInstance,
   RowModel,
   Updater,
+  TableFeature,
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
@@ -15,6 +16,10 @@ export type PaginationState = {
 
 export type PaginationTableState = {
   pagination: PaginationState
+}
+
+export type PaginationInitialTableState = {
+  pagination?: Partial<PaginationState>
 }
 
 export type PaginationOptions<TGenerics extends TableGenerics> = {
@@ -32,7 +37,7 @@ export type PaginationDefaultOptions = {
 }
 
 export type PaginationInstance<TGenerics extends TableGenerics> = {
-  queueResetPageIndex: () => void
+  _autoResetPageIndex: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: () => void
   setPageIndex: (updater: Updater<number>) => void
@@ -53,13 +58,15 @@ export type PaginationInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Pagination = {
-  getInitialState: (): PaginationTableState => {
+export const Pagination: TableFeature = {
+  getInitialState: (state): PaginationTableState => {
     return {
+      ...state,
       pagination: {
         pageCount: -1,
         pageIndex: 0,
         pageSize: 10,
+        ...state?.pagination,
       },
     }
   },
@@ -77,8 +84,9 @@ export const Pagination = {
     instance: TableInstance<TGenerics>
   ): PaginationInstance<TGenerics> => {
     let registered = false
+
     return {
-      queueResetPageIndex: () => {
+      _autoResetPageIndex: () => {
         if (!registered) {
           registered = true
           return
@@ -176,7 +184,7 @@ export const Pagination = {
           return pageOptions
         },
         {
-          key: 'getPageOptions',
+          key: process.env.NODE_ENV === 'production' && 'getPageOptions',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),

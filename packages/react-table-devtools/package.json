@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/react-table-devtools",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.55",
+  "version": "8.0.0-alpha.65",
   "description": "Devtools for React Table",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
@@ -26,6 +26,7 @@
   "main": "build/cjs/index.js",
   "browser": "build/umd/index.production.min.js",
   "types": "build/types/index.d.ts",
+  "sideEffects": false,
   "engines": {
     "node": ">=12"
   },

@@ -3,24 +3,15 @@ import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
 import {
   Cell,
   Column,
-  Getter,
   OnChangeFn,
-  PropGetterValue,
   TableInstance,
   Row,
   Updater,
   Renderable,
-  UseRenderer,
   TableGenerics,
+  TableFeature,
 } from '../types'
-import {
-  functionalUpdate,
-  isFunction,
-  makeStateUpdater,
-  memo,
-  Overwrite,
-  propGetter,
-} from '../utils'
+import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 
 export type GroupingState = string[]
 
@@ -67,9 +58,7 @@ export type GroupingColumn<TGenerics extends TableGenerics> = {
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
   toggleGrouping: () => void
-  getToggleGroupingProps: <TGetter extends Getter<ToggleGroupingProps>>(
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleGroupingProps, TGetter>
+  getToggleGroupingHandler: () => () => void
 }
 
 export type GroupingRow = {
@@ -82,13 +71,12 @@ export type GroupingCell<TGenerics extends TableGenerics> = {
   getIsGrouped: () => boolean
   getIsPlaceholder: () => boolean
   getIsAggregated: () => boolean
-  renderAggregatedCell: () => string | null | ReturnType<UseRenderer<TGenerics>>
+  renderAggregatedCell: () => string | null | TGenerics['Rendered']
 }
 
 export type ColumnDefaultOptions = {
   // Column
   onGroupingChange: OnChangeFn<GroupingState>
-  autoResetGrouping: boolean
   enableGrouping: boolean
 }
 
@@ -96,7 +84,6 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
   manualGrouping?: boolean
   aggregationFns?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
-  autoResetGrouping?: boolean
   enableGrouping?: boolean
   enableGroupingRemoval?: boolean
   getGroupedRowModel?: (
@@ -108,13 +95,7 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
-export type ToggleGroupingProps = {
-  title?: string
-  onClick?: (event: unknown) => void
-}
-
 export type GroupingInstance<TGenerics extends TableGenerics> = {
-  queueResetGrouping: () => void
   getColumnAutoAggregationFn: (
     columnId: string
   ) => AggregationFn<TGenerics> | undefined
@@ -127,10 +108,7 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
   getColumnCanGroup: (columnId: string) => boolean
   getColumnIsGrouped: (columnId: string) => boolean
   getColumnGroupedIndex: (columnId: string) => number
-  getToggleGroupingProps: <TGetter extends Getter<ToggleGroupingProps>>(
-    columnId: string,
-    userProps?: TGetter
-  ) => undefined | PropGetterValue<ToggleGroupingProps, TGetter>
+  getToggleGroupingHandler: (columnId: string) => undefined | (() => void)
   getRowIsGrouped: (rowId: string) => boolean
   getPreGroupedRowModel: () => RowModel<TGenerics>
   getGroupedRowModel: () => RowModel<TGenerics>
@@ -139,7 +117,7 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
 
 //
 
-export const Grouping = {
+export const Grouping: TableFeature = {
   getDefaultColumn: <
     TGenerics extends TableGenerics
   >(): GroupingColumnDef<TGenerics> => {
@@ -148,9 +126,10 @@ export const Grouping = {
     }
   },
 
-  getInitialState: (): GroupingTableState => {
+  getInitialState: (state): GroupingTableState => {
     return {
       grouping: [],
+      ...state,
     }
   },
 
@@ -159,7 +138,6 @@ export const Grouping = {
   ): GroupingOptions<TGenerics> => {
     return {
       onGroupingChange: makeStateUpdater('grouping', instance),
-      autoResetGrouping: true,
       groupedColumnMode: 'reorder',
     }
   },
@@ -174,36 +152,15 @@ export const Grouping = {
       getGroupedIndex: () => instance.getColumnGroupedIndex(column.id),
       getIsGrouped: () => instance.getColumnIsGrouped(column.id),
       toggleGrouping: () => instance.toggleColumnGrouping(column.id),
-      getToggleGroupingProps: userProps =>
-        instance.getToggleGroupingProps(column.id, userProps),
+      getToggleGroupingHandler: () =>
+        instance.getToggleGroupingHandler(column.id)!,
     }
   },
 
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): GroupingInstance<TGenerics> => {
-    let registered = false
-
     return {
-      queueResetGrouping: () => {
-        instance.queueResetExpanded()
-
-        if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
-        if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetGrouping
-        ) {
-          instance.resetGrouping()
-        }
-      },
       getColumnAutoAggregationFn: columnId => {
         const firstRow = instance.getCoreRowModel().flatRows[0]
 
@@ -278,21 +235,14 @@ export const Grouping = {
         instance.setGrouping(instance.initialState?.grouping ?? [])
       },
 
-      getToggleGroupingProps: (columnId, userProps) => {
+      getToggleGroupingHandler: columnId => {
         const column = instance.getColumn(columnId)
-
         const canGroup = column.getCanGroup()
 
-        const initialProps: ToggleGroupingProps = {
-          title: canGroup ? 'Toggle Grouping' : undefined,
-          onClick: canGroup
-            ? (e: unknown) => {
-                column.toggleGrouping?.()
-              }
-            : undefined,
+        return () => {
+          if (!canGroup) return
+          column.toggleGrouping?.()
         }
-
-        return propGetter(initialProps, userProps)
       },
 
       getRowIsGrouped: rowId => !!instance.getRow(rowId)?.groupingColumnId,
@@ -354,28 +304,28 @@ export const Grouping = {
       },
     }
   },
+}
 
-  orderColumns: <TGenerics extends TableGenerics>(
-    leafColumns: Column<TGenerics>[],
-    grouping: string[],
-    groupedColumnMode?: GroupingColumnMode
-  ) => {
-    if (!grouping?.length || !groupedColumnMode) {
-      return leafColumns
-    }
+export function orderColumns<TGenerics extends TableGenerics>(
+  leafColumns: Column<TGenerics>[],
+  grouping: string[],
+  groupedColumnMode?: GroupingColumnMode
+) {
+  if (!grouping?.length || !groupedColumnMode) {
+    return leafColumns
+  }
 
-    const nonGroupingColumns = leafColumns.filter(
-      col => !grouping.includes(col.id)
-    )
+  const nonGroupingColumns = leafColumns.filter(
+    col => !grouping.includes(col.id)
+  )
 
-    if (groupedColumnMode === 'remove') {
-      return nonGroupingColumns
-    }
+  if (groupedColumnMode === 'remove') {
+    return nonGroupingColumns
+  }
 
-    const groupingColumns = grouping
-      .map(g => leafColumns.find(col => col.id === g)!)
-      .filter(Boolean)
+  const groupingColumns = grouping
+    .map(g => leafColumns.find(col => col.id === g)!)
+    .filter(Boolean)
 
-    return [...groupingColumns, ...nonGroupingColumns]
-  },
+  return [...groupingColumns, ...nonGroupingColumns]
 }

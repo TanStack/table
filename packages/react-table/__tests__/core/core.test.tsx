@@ -1,15 +1,15 @@
 import * as React from 'react'
 
-// import { renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
+import '@testing-library/jest-dom'
 import {
   createTable,
   useTableInstance,
   getCoreRowModelSync,
 } from '@tanstack/react-table'
-import { act, renderHook } from '@testing-library/react-hooks'
 
-type Row = {
+type Person = {
   firstName: string
   lastName: string
   age: number
@@ -18,9 +18,9 @@ type Row = {
   progress: number
 }
 
-const table = createTable<{ Row: Row }>()
+const table = createTable().setRowType<Person>()
 
-const defaultData: Row[] = [
+const defaultData: Person[] = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -47,7 +47,7 @@ const defaultData: Row[] = [
   },
 ]
 
-const defaultColumns = table.createColumns([
+const defaultColumns = [
   table.createGroup({
     header: 'Name',
     footer: props => props.column.id,
@@ -91,12 +91,12 @@ const defaultColumns = table.createColumns([
       }),
     ],
   }),
-])
+]
 
 describe('core', () => {
   it('renders a table with markup', () => {
     const Table = () => {
-      const [data] = React.useState<Row[]>(() => [...defaultData])
+      const [data] = React.useState<Person[]>(() => [...defaultData])
       const [columns] = React.useState<typeof defaultColumns>(() => [
         ...defaultColumns,
       ])
@@ -117,32 +117,32 @@ describe('core', () => {
 
       return (
         <div className="p-2">
-          <table {...instance.getTableProps()}>
+          <table>
             <thead>
               {instance.getHeaderGroups().map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th {...header.getHeaderProps()}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : header.renderHeader()}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody {...instance.getTableBodyProps()}>
+            <tbody>
               {instance.getRowModel().rows.map(row => (
-                <tr {...row.getRowProps()}>
+                <tr key={row.id}>
                   {row.getVisibleCells().map(cell => (
-                    <td {...cell.getCellProps()}>{cell.renderCell()}</td>
+                    <td key={cell.id}>{cell.renderCell()}</td>
                   ))}
                 </tr>
               ))}
             </tbody>
             <tfoot>
               {instance.getFooterGroups().map(footerGroup => (
-                <tr {...footerGroup.getFooterGroupProps()}>
+                <tr key={footerGroup.id}>
                   {footerGroup.headers.map(header => (
-                    <th {...header.getFooterProps()}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : header.renderFooter()}
                     </th>
                   ))}
@@ -162,14 +162,13 @@ describe('core', () => {
 
     const rendered = RTL.render(<Table />)
 
-    // RTL.screen.logTestingPlaygroundURL();
+    // RTL.screen.logTestingPlaygroundURL()
 
     RTL.screen.getByRole('table')
     expect(RTL.screen.getAllByRole('rowgroup').length).toEqual(3)
     expect(RTL.screen.getAllByRole('row').length).toEqual(9)
-    expect(RTL.screen.getAllByRole('columnheader').length).toEqual(12)
-    expect(RTL.screen.getAllByRole('columnfooter').length).toEqual(12)
-    expect(RTL.screen.getAllByRole('gridcell').length).toEqual(18)
+    expect(RTL.screen.getAllByRole('columnheader').length).toEqual(24)
+    expect(RTL.screen.getAllByRole('cell').length).toEqual(18)
 
     expect(
       Array.from(rendered.container.querySelectorAll('thead > tr')).map(d =>
