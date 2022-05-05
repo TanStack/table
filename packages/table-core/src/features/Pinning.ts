@@ -49,7 +49,7 @@ export type ColumnPinningRow<TGenerics extends TableGenerics> = {
 
 export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
-  resetColumnPinning: () => void
+  resetColumnPinning: (defaultState?: boolean) => void
   pinColumn: (columnId: string, position: ColumnPinningPosition) => void
   getColumnCanPin: (columnId: string) => boolean
   getColumnIsPinned: (columnId: string) => ColumnPinningPosition
@@ -62,13 +62,15 @@ export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
 
 //
 
+const getDefaultPinningState = (): ColumnPinningState => ({
+  left: [],
+  right: [],
+})
+
 export const Pinning: TableFeature = {
   getInitialState: (state): ColumnPinningTableState => {
     return {
-      columnPinning: {
-        left: [],
-        right: [],
-      },
+      columnPinning: getDefaultPinningState(),
       ...state,
     }
   },
@@ -165,8 +167,12 @@ export const Pinning: TableFeature = {
       setColumnPinning: updater =>
         instance.options.onColumnPinningChange?.(updater),
 
-      resetColumnPinning: () =>
-        instance.setColumnPinning(instance.initialState?.columnPinning ?? {}),
+      resetColumnPinning: defaultState =>
+        instance.setColumnPinning(
+          defaultState
+            ? getDefaultPinningState()
+            : instance.initialState?.columnPinning ?? getDefaultPinningState()
+        ),
 
       pinColumn: (columnId, position) => {
         const column = instance.getColumn(columnId)

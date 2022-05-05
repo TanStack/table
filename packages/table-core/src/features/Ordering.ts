@@ -27,7 +27,7 @@ export type ColumnOrderDefaultOptions = {
 
 export type ColumnOrderInstance<TGenerics extends TableGenerics> = {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
-  resetColumnOrder: () => void
+  resetColumnOrder: (defaultState?: boolean) => void
   _getOrderColumnsFn: () => (
     columns: Column<TGenerics>[]
   ) => Column<TGenerics>[]
@@ -57,8 +57,10 @@ export const Ordering: TableFeature = {
     return {
       setColumnOrder: updater =>
         instance.options.onColumnOrderChange?.(updater),
-      resetColumnOrder: () => {
-        instance.setColumnOrder(instance.initialState.columnOrder ?? [])
+      resetColumnOrder: defaultState => {
+        instance.setColumnOrder(
+          defaultState ? [] : instance.initialState.columnOrder ?? []
+        )
       },
       _getOrderColumnsFn: memo(
         () => [

@@ -103,7 +103,7 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
     columnId: string
   ) => AggregationFn<TGenerics> | undefined
   setGrouping: (updater: Updater<GroupingState>) => void
-  resetGrouping: () => void
+  resetGrouping: (defaultState?: boolean) => void
   toggleColumnGrouping: (columnId: string) => void
   getColumnCanGroup: (columnId: string) => boolean
   getColumnIsGrouped: (columnId: string) => boolean
@@ -231,8 +231,10 @@ export const Grouping: TableFeature = {
       getColumnGroupedIndex: columnId =>
         instance.getState().grouping?.indexOf(columnId),
 
-      resetGrouping: () => {
-        instance.setGrouping(instance.initialState?.grouping ?? [])
+      resetGrouping: defaultState => {
+        instance.setGrouping(
+          defaultState ? [] : instance.initialState?.grouping ?? []
+        )
       },
 
       getToggleGroupingHandler: columnId => {
