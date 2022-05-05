@@ -301,27 +301,22 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
                 defaultExpanded={false}
               />
               <Explorer
-                label="Column Filtered Rows"
+                label="Filtered Model"
                 value={instance.getFilteredRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
-                label="Global Filtered Rows"
-                value={instance.getFilteredRowModel()}
-                defaultExpanded={false}
-              />
-              <Explorer
-                label="Sorted Rows"
+                label="Sorted Model"
                 value={instance.getSortedRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
-                label="Grouped Rows"
+                label="Grouped Model"
                 value={instance.getGroupedRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
-                label="Expanded Rows"
+                label="Expanded Model"
                 value={instance.getExpandedRowModel()}
                 defaultExpanded={false}
               />
