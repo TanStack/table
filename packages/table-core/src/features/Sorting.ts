@@ -161,9 +161,7 @@ export const Sorting: TableFeature = {
 
     return {
       getColumnAutoSortingFn: columnId => {
-        const firstRows = instance
-          .getGlobalFilteredRowModel()
-          .flatRows.slice(100)
+        const firstRows = instance.getFilteredRowModel().flatRows.slice(100)
 
         let isString = false
 
@@ -190,7 +188,7 @@ export const Sorting: TableFeature = {
         return sortingFns.basic
       },
       getColumnAutoSortDir: columnId => {
-        const firstRow = instance.getGlobalFilteredRowModel().flatRows[0]
+        const firstRow = instance.getFilteredRowModel().flatRows[0]
 
         const value = firstRow?.values[columnId]
 
@@ -399,7 +397,7 @@ export const Sorting: TableFeature = {
         }
       },
 
-      getPreSortedRowModel: () => instance.getGlobalFilteredRowModel(),
+      getPreSortedRowModel: () => instance.getFilteredRowModel(),
       getSortedRowModel: () => {
         if (
           !instance._getSortedRowModel &&

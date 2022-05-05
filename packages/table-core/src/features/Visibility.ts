@@ -121,7 +121,8 @@ export const Visibility: TableFeature = {
           return row.getAllCells().filter(cell => cell.column.getIsVisible())
         },
         {
-          key: 'row._getAllVisibleCells',
+          key:
+            process.env.NODE_ENV === 'production' && 'row._getAllVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -133,7 +134,7 @@ export const Visibility: TableFeature = {
         ],
         (left, center, right) => [...left, ...center, ...right],
         {
-          key: 'row.getVisibleCells',
+          key: process.env.NODE_ENV === 'production' && 'row.getVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),

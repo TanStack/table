@@ -110,7 +110,9 @@ export const Pinning: TableFeature = {
           return allCells.filter(d => !leftAndRight.includes(d.columnId))
         },
         {
-          key: 'row.getCenterVisibleCells',
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'row.getCenterVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -129,7 +131,8 @@ export const Pinning: TableFeature = {
           return cells
         },
         {
-          key: 'row.getLeftVisibleCells',
+          key:
+            process.env.NODE_ENV === 'production' && 'row.getLeftVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -147,7 +150,8 @@ export const Pinning: TableFeature = {
           return cells
         },
         {
-          key: 'row.getRightVisibleCells',
+          key:
+            process.env.NODE_ENV === 'production' && 'row.getRightVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -259,7 +263,7 @@ export const Pinning: TableFeature = {
             .filter(Boolean)
         },
         {
-          key: 'getLeftLeafColumns',
+          key: process.env.NODE_ENV === 'production' && 'getLeftLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -276,7 +280,7 @@ export const Pinning: TableFeature = {
             .filter(Boolean)
         },
         {
-          key: 'getRightLeafColumns',
+          key: process.env.NODE_ENV === 'production' && 'getRightLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -294,7 +298,7 @@ export const Pinning: TableFeature = {
           return allColumns.filter(d => !leftAndRight.includes(d.id))
         },
         {
-          key: 'getCenterLeafColumns',
+          key: process.env.NODE_ENV === 'production' && 'getCenterLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }

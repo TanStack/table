@@ -56,7 +56,9 @@ export const Cells = {
           }, {} as Record<string, Cell<TGenerics>>)
         },
         {
-          key: 'row.getAllCellsByColumnId',
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'row.getAllCellsByColumnId',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),

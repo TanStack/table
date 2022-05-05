@@ -1,179 +1,95 @@
-import { TableGenerics, Row } from './types'
+import { FilterFn } from './features/Filters'
 
-export const filterFns = {
-  includesString,
-  includesStringSensitive,
-  equalsString,
-  equalsStringSensitive,
-  arrIncludes,
-  arrIncludesAll,
-  arrIncludesSome,
-  equals,
-  weakEquals,
-  betweenNumberRange,
-}
-
-export type BuiltInFilterFn = keyof typeof filterFns
-
-function includesString<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
-  filterValue: unknown
-) {
-  const search = String(filterValue).toLowerCase()
-
-  rows = rows.filter(row => {
-    return columnIds.some(id => {
-      return String(row.values[id]).toLowerCase().includes(search)
-    })
-  })
-  return rows
+const includesString: FilterFn<any> = (
+  row,
+  columnId: string,
+  filterValue: string
+) => {
+  const search = filterValue.toLowerCase()
+  return row.values[columnId].toLowerCase().includes(search)
 }
 
 includesString.autoRemove = (val: any) => testFalsey(val)
 
-function includesStringSensitive<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
-  filterValue: unknown
-) {
-  const search = String(filterValue)
-
-  rows = rows.filter(row => {
-    return columnIds.some(id => {
-      return String(row.values[id]).includes(search)
-    })
-  })
-  return rows
+const includesStringSensitive: FilterFn<any> = (
+  row,
+  columnId: string,
+  filterValue: string
+) => {
+  return row.values[columnId].includes(filterValue)
 }
 
 includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
 
-function equalsString<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
-  filterValue: unknown
-) {
-  const search = String(filterValue).toLowerCase()
-
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return rowValue !== undefined
-        ? String(rowValue).toLowerCase() === search
-        : true
-    })
-  })
+const equalsString: FilterFn<any> = (
+  row,
+  columnId: string,
+  filterValue: string
+) => {
+  return row.values[columnId].toLowerCase() === filterValue.toLowerCase()
 }
 
 equalsString.autoRemove = (val: any) => testFalsey(val)
 
-function equalsStringSensitive<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
+const arrIncludes: FilterFn<any> = (
+  row,
+  columnId: string,
   filterValue: unknown
-) {
-  const search = String(filterValue)
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return rowValue !== undefined ? String(rowValue) === search : true
-    })
-  })
-}
-
-equalsStringSensitive.autoRemove = (val: any) => testFalsey(val)
-
-function arrIncludes<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
-  filterValue: unknown
-) {
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return rowValue.includes(filterValue)
-    })
-  })
+) => {
+  return row.values[columnId].includes(filterValue)
 }
 
 arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function arrIncludesAll<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
+const arrIncludesAll: FilterFn<any> = (
+  row,
+  columnId: string,
   filterValue: unknown[]
-) {
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return (
-        rowValue &&
-        rowValue.length &&
-        filterValue.every(val => rowValue.includes(val))
-      )
-    })
-  })
+) => {
+  return !filterValue.some(val => !row.values[columnId].includes(val))
 }
 
 arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function arrIncludesSome<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
+const arrIncludesSome: FilterFn<any> = (
+  row,
+  columnId: string,
   filterValue: unknown[]
-) {
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return (
-        rowValue &&
-        rowValue.length &&
-        filterValue.some(val => rowValue.includes(val))
-      )
-    })
-  })
+) => {
+  return filterValue.some(val => row.values[columnId].includes(val))
 }
 
 arrIncludesSome.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-function equals<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
-  filterValue: unknown
-) {
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return rowValue === filterValue
-    })
-  })
+const equals: FilterFn<any> = (row, columnId: string, filterValue: unknown) => {
+  return row.values[columnId] === filterValue
 }
 
 equals.autoRemove = (val: any) => testFalsey(val)
 
-function weakEquals<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
+const weakEquals: FilterFn<any> = (
+  row,
+  columnId: string,
   filterValue: unknown
-) {
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      // eslint-disable-next-line eqeqeq
-      return rowValue == filterValue
-    })
-  })
+) => {
+  return row.values[columnId] == filterValue
 }
 
 weakEquals.autoRemove = (val: any) => testFalsey(val)
 
-function betweenNumberRange<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnIds: string[],
-  filterValue: [unknown, unknown]
-) {
-  let [unsafeMin, unsafeMax] = filterValue || []
+const inNumberRange: FilterFn<any> = (
+  row,
+  columnId: string,
+  filterValue: [number, number]
+) => {
+  let [min, max] = filterValue
+
+  const rowValue = row.values[columnId]
+  return rowValue >= min && rowValue <= max
+}
+
+inNumberRange.resolveFilterValue = (val: [any, any]) => {
+  let [unsafeMin, unsafeMax] = val
 
   let parsedMin =
     typeof unsafeMin !== 'number' ? parseFloat(unsafeMin as string) : unsafeMin
@@ -190,16 +106,27 @@ function betweenNumberRange<TGenerics extends TableGenerics>(
     max = temp
   }
 
-  return rows.filter(row => {
-    return columnIds.some(id => {
-      const rowValue = row.values[id]
-      return rowValue >= min && rowValue <= max
-    })
-  })
+  return [min, max] as const
 }
 
-betweenNumberRange.autoRemove = (val: any) =>
+inNumberRange.autoRemove = (val: any) =>
   testFalsey(val) || (testFalsey(val[0]) && testFalsey(val[1]))
+
+// Export
+
+export const filterFns = {
+  includesString,
+  includesStringSensitive,
+  equalsString,
+  arrIncludes,
+  arrIncludesAll,
+  arrIncludesSome,
+  equals,
+  weakEquals,
+  inNumberRange,
+}
+
+export type BuiltInFilterFn = keyof typeof filterFns
 
 // Utils
 

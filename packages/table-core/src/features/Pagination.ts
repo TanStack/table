@@ -184,7 +184,7 @@ export const Pagination: TableFeature = {
           return pageOptions
         },
         {
-          key: 'getPageOptions',
+          key: process.env.NODE_ENV === 'production' && 'getPageOptions',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),

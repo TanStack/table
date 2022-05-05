@@ -1,5 +1,29 @@
 import { TableGenerics, Row, RowModel, TableInstance } from '../types'
 
+export function filterRows<TGenerics extends TableGenerics>(
+  rows: Row<TGenerics>[],
+  columnIds: string[],
+  instance: TableInstance<TGenerics>
+) {
+  const filterRowImpl = (rowsToFilter: Row<TGenerics>[]) => {
+    // Horizontally filter rows through each column
+    return rowsToFilter.filter(row => {
+      for (let i = 0; i < columnIds.length; i++) {
+        if (row.columnFilterMap[columnIds[i]] === false) {
+          return false
+        }
+      }
+      return true
+    })
+  }
+
+  if (instance.options.filterFromLeafRows) {
+    return filterRowModelFromLeafs(rows, filterRowImpl, instance)
+  }
+
+  return filterRowModelFromRoot(rows, filterRowImpl, instance)
+}
+
 export function filterRowModelFromLeafs<TGenerics extends TableGenerics>(
   rowsToFilter: Row<TGenerics>[],
   filterRows: (

@@ -94,7 +94,7 @@ export function getCoreRowModelSync<TGenerics extends TableGenerics>(): (
         return { rows, flatRows, rowsById }
       },
       {
-        key: 'getRowModel',
+        key: process.env.NODE_ENV === 'production' && 'getRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {

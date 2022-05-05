@@ -28,6 +28,7 @@ import {
   FiltersColumnDef,
   FiltersInstance,
   FiltersOptions,
+  FiltersRow,
   FiltersTableState,
 } from './features/Filters'
 import {
@@ -167,6 +168,7 @@ export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
   CellsRow<TGenerics> &
   VisibilityRow<TGenerics> &
   ColumnPinningRow<TGenerics> &
+  FiltersRow<TGenerics> &
   GroupingRow &
   RowSelectionRow &
   ExpandedRow

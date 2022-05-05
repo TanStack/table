@@ -16,6 +16,7 @@ import {
   memo,
   Overwrite,
 } from '../utils'
+import { filterRows } from '../utils/filterRowsUtils'
 
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
@@ -31,17 +32,19 @@ export type ColumnFilter = {
   value: unknown
 }
 
-/*
-A filter function is any function that takes an array of rows and returns an array of rows. Because filter functions can be used for both column and global filters, they are passed an array of columnIds to filter on. 
-*/
-
 export type FilterFn<TGenerics extends TableGenerics> = {
-  (rows: Row<TGenerics>[], columnIds: string[], filterValue: any): any
+  (row: Row<TGenerics>, columnId: string, filterValue: any): boolean
+  resolveFilterValue?: TransformFilterValueFn<TGenerics>
   autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
 }
 
+export type TransformFilterValueFn<TGenerics extends TableGenerics> = (
+  value: any,
+  column?: Column<TGenerics>
+) => unknown
+
 export type ColumnFilterAutoRemoveTestFn<TGenerics extends TableGenerics> = (
-  value: unknown,
+  value: any,
   column?: Column<TGenerics>
 ) => boolean
 
@@ -60,6 +63,7 @@ export type FiltersColumnDef<TGenerics extends TableGenerics> = {
   filterFn?: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
+  enableFaceting?: boolean
 }
 
 export type FiltersColumn<TGenerics extends TableGenerics> = {
@@ -70,31 +74,33 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
   getColumnIsFiltered: () => boolean
   getColumnFilterValue: () => unknown
   setColumnFilterValue: (updater: Updater<any>) => void
-  getPreFilteredRows: () => Row<TGenerics>[] | undefined
-  getPreFilteredUniqueValues: () => Map<any, number>
-  getPreFilteredMinMaxValues: () => [any, any]
+  getFacetedRowModel: () => RowModel<TGenerics>
+  getFacetedUniqueValues: () => Map<any, number>
+  getFacetedMinMaxValues: () => [any, any]
+}
+
+export type FiltersRow<TGenerics extends TableGenerics> = {
+  columnFilterMap: Record<string, boolean>
+  subRowsByFacetId: Record<string, Row<TGenerics>[]>
 }
 
 export type FiltersOptions<TGenerics extends TableGenerics> = {
+  enableFilters?: boolean
+  manualFiltering?: boolean
   filterFromLeafRows?: boolean
   filterFns?: TGenerics['FilterFns']
 
   // Column
-  manualColumnFiltering?: boolean
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
   enableColumnFilters?: boolean
-  getColumnFilteredRowModel?: (
+  getFilteredRowModel?: (
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
 
   // Global
-  manualGlobalFiltering?: boolean
   globalFilterFn?: FilterFnOption<TGenerics>
   onGlobalFilterChange?: OnChangeFn<any>
   enableGlobalFilter?: boolean
-  getGlobalFilteredRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
   getColumnCanGlobalFilter?: (column: Column<TGenerics>) => boolean
 }
 
@@ -107,15 +113,16 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
   setColumnFilterValue: (columnId: string, updater: Updater<any>) => void
   resetColumnFilters: () => void
   getColumnCanColumnFilter: (columnId: string) => boolean
+  getColumnFacetedRowModel: (columnId: string) => RowModel<TGenerics>
 
   getColumnIsFiltered: (columnId: string) => boolean
   getColumnFilterValue: (columnId: string) => unknown
   getColumnFilterIndex: (columnId: string) => number
 
   // Column Filters
-  getPreColumnFilteredRowModel: () => RowModel<TGenerics>
-  getColumnFilteredRowModel: () => RowModel<TGenerics>
-  _getColumnFilteredRowModel?: () => RowModel<TGenerics>
+  getPreFilteredRowModel: () => RowModel<TGenerics>
+  getFilteredRowModel: () => RowModel<TGenerics>
+  _getFilteredRowModel?: () => RowModel<TGenerics>
 
   // Global Filters
   setGlobalFilter: (updater: Updater<any>) => void
@@ -123,9 +130,9 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
   getGlobalAutoFilterFn: () => FilterFn<TGenerics> | undefined
   getGlobalFilterFn: () => FilterFn<TGenerics> | undefined
   getColumnCanGlobalFilter: (columnId: string) => boolean
-  getPreGlobalFilteredRowModel: () => RowModel<TGenerics>
-  getGlobalFilteredRowModel: () => RowModel<TGenerics>
-  _getGlobalFilteredRowModel?: () => RowModel<TGenerics>
+  getGlobalFacetedRowModel: () => RowModel<TGenerics>
+  getGlobalFacetedUniqueValues: () => Map<any, number>
+  getGlobalFacetedMinMaxValues: () => [number, number]
 }
 
 //
@@ -171,46 +178,6 @@ export const Filters: TableFeature = {
     column: Column<TGenerics>,
     instance: TableInstance<TGenerics>
   ): FiltersColumn<TGenerics> => {
-    const getFacetInfo = memo(
-      () => [column.getPreFilteredRows()],
-      (rows = []) => {
-        let preFilteredUniqueValues = new Map<any, number>()
-
-        let preFilteredMinMaxValues: [any, any] = [
-          rows[0]?.values[column.id] ?? null,
-          rows[0]?.values[column.id] ?? null,
-        ]
-
-        for (let i = 0; i < rows.length; i++) {
-          const value = rows[i]?.values[column.id]
-
-          if (preFilteredUniqueValues.has(value)) {
-            preFilteredUniqueValues.set(
-              value,
-              (preFilteredUniqueValues.get(value) ?? 0) + 1
-            )
-          } else {
-            preFilteredUniqueValues.set(value, 1)
-          }
-
-          if (value < preFilteredMinMaxValues[0]) {
-            preFilteredMinMaxValues[0] = value
-          } else if (value > preFilteredMinMaxValues[1]) {
-            preFilteredMinMaxValues[1] = value
-          }
-        }
-
-        return {
-          preFilteredUniqueValues,
-          preFilteredMinMaxValues,
-        }
-      },
-      {
-        key: 'column.getFacetInfo',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
-      }
-    )
-
     return {
       filterFn: column.filterFn,
       getCanColumnFilter: () => instance.getColumnCanColumnFilter(column.id),
@@ -220,9 +187,68 @@ export const Filters: TableFeature = {
       getColumnFilterValue: () => instance.getColumnFilterValue(column.id),
       setColumnFilterValue: val =>
         instance.setColumnFilterValue(column.id, val),
-      getPreFilteredUniqueValues: () => getFacetInfo().preFilteredUniqueValues,
-      getPreFilteredMinMaxValues: () => getFacetInfo().preFilteredMinMaxValues,
-      getPreFilteredRows: () => undefined,
+      getFacetedRowModel: memo(
+        () => [
+          instance.getPreFilteredRowModel(),
+          instance.getState().columnFilters,
+          instance.getState().globalFilter,
+          // Include this to force the filtered facet info to be calculated
+          instance.getFilteredRowModel(),
+        ],
+        (rowModel, columnFilters, globalFilter, _) => {
+          if (!columnFilters?.length && !globalFilter) {
+            return rowModel
+          }
+
+          return filterRows(
+            rowModel.rows,
+            [
+              ...columnFilters.map(d => d.id).filter(d => d !== column.id),
+              globalFilter ? '__global__' : undefined,
+            ].filter(Boolean) as string[],
+            instance
+          )
+        },
+        {
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'getFacetedRowModel_' + column.id,
+          debug: () =>
+            instance.options.debugAll ?? instance.options.debugColumns,
+        }
+      ),
+      getFacetedUniqueValues: memo(
+        () => [column.getFacetedRowModel()],
+        facetedRowModel => getRowModelUniqueValues(facetedRowModel, column.id),
+        {
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'column.getFacetedUniqueValues',
+          debug: () =>
+            instance.options.debugAll ?? instance.options.debugColumns,
+        }
+      ),
+      getFacetedMinMaxValues: memo(
+        () => [column.getFacetedRowModel()],
+        facetedRowModel => getRowModelMinMaxValues(facetedRowModel, column.id),
+        {
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'column.getFacetedMinMaxValues',
+          debug: () =>
+            instance.options.debugAll ?? instance.options.debugColumns,
+        }
+      ),
+    }
+  },
+
+  createRow: <TGenerics extends TableGenerics>(
+    row: Row<TGenerics>,
+    instance: TableInstance<TGenerics>
+  ): FiltersRow<TGenerics> => {
+    return {
+      columnFilterMap: {},
+      subRowsByFacetId: {},
     }
   },
 
@@ -240,7 +266,7 @@ export const Filters: TableFeature = {
         }
 
         if (typeof value === 'number') {
-          return filterFns.betweenNumberRange
+          return filterFns.inNumberRange
         }
 
         if (value !== null && typeof value === 'object') {
@@ -252,6 +278,15 @@ export const Filters: TableFeature = {
         }
 
         return filterFns.weakEquals
+      },
+      getColumnFacetedRowModel: columnId => {
+        const column = instance.getColumn(columnId)
+
+        if (!column) {
+          throw new Error()
+        }
+
+        return column.getFacetedRowModel()
       },
       getGlobalAutoFilterFn: () => {
         return filterFns.includesString
@@ -279,8 +314,6 @@ export const Filters: TableFeature = {
       getGlobalFilterFn: () => {
         const { filterFns: userFilterFns, globalFilterFn: globalFilterFn } =
           instance.options
-
-        debugger
 
         return isFunction(globalFilterFn)
           ? globalFilterFn
@@ -334,6 +367,7 @@ export const Filters: TableFeature = {
         return (
           (column.enableColumnFilter ?? true) &&
           (instance.options.enableColumnFilters ?? true) &&
+          (instance.options.enableFilters ?? true) &&
           !!column.accessorFn
         )
       },
@@ -348,6 +382,7 @@ export const Filters: TableFeature = {
         return (
           (column.enableGlobalFilter ?? true) &&
           (instance.options.enableGlobalFilter ?? true) &&
+          (instance.options.enableFilters ?? true) &&
           (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&
           !!column.accessorFn
         )
@@ -422,44 +457,76 @@ export const Filters: TableFeature = {
         instance.setColumnFilters(instance.initialState?.columnFilters ?? [])
       },
 
-      getPreColumnFilteredRowModel: () => instance.getCoreRowModel(),
-      getColumnFilteredRowModel: () => {
+      getPreFilteredRowModel: () => instance.getCoreRowModel(),
+      getFilteredRowModel: () => {
         if (
-          !instance._getColumnFilteredRowModel &&
-          instance.options.getColumnFilteredRowModel
+          !instance._getFilteredRowModel &&
+          instance.options.getFilteredRowModel
         ) {
-          instance._getColumnFilteredRowModel =
-            instance.options.getColumnFilteredRowModel(instance)
+          instance._getFilteredRowModel =
+            instance.options.getFilteredRowModel(instance)
         }
 
         if (
-          instance.options.manualColumnFiltering ||
-          !instance._getColumnFilteredRowModel
+          instance.options.manualFiltering ||
+          !instance._getFilteredRowModel
         ) {
-          return instance.getPreColumnFilteredRowModel()
+          return instance.getPreFilteredRowModel()
         }
 
-        return instance._getColumnFilteredRowModel()
+        return instance._getFilteredRowModel()
       },
-      getPreGlobalFilteredRowModel: () => instance.getColumnFilteredRowModel(),
-      getGlobalFilteredRowModel: () => {
-        if (
-          !instance._getGlobalFilteredRowModel &&
-          instance.options.getGlobalFilteredRowModel
-        ) {
-          instance._getGlobalFilteredRowModel =
-            instance.options.getGlobalFilteredRowModel(instance)
-        }
 
-        if (
-          instance.options.manualGlobalFiltering ||
-          !instance._getGlobalFilteredRowModel
-        ) {
-          return instance.getPreGlobalFilteredRowModel()
-        }
+      getGlobalFacetedRowModel: memo(
+        () => [
+          instance.getPreFilteredRowModel(),
+          instance.getState().columnFilters,
+          instance.getState().globalFilter,
+          // Include this to force the filtered facet info to be calculated
+          instance.getFilteredRowModel(),
+        ],
+        (rowModel, columnFilters, globalFilter, _) => {
+          if (!columnFilters?.length && !globalFilter) {
+            return rowModel
+          }
 
-        return instance._getGlobalFilteredRowModel()
-      },
+          return filterRows(
+            rowModel.rows,
+            columnFilters.map(d => d.id),
+            instance
+          )
+        },
+        {
+          key:
+            process.env.NODE_ENV === 'production' && 'getGlobalFacetedRowModel',
+          debug: () =>
+            instance.options.debugAll ?? instance.options.debugColumns,
+        }
+      ),
+      getGlobalFacetedUniqueValues: memo(
+        () => [instance.getGlobalFacetedRowModel()],
+        facetedRowModel =>
+          getRowModelUniqueValues(facetedRowModel, '__global__'),
+        {
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'getGlobalFacetedUniqueValues',
+          debug: () =>
+            instance.options.debugAll ?? instance.options.debugColumns,
+        }
+      ),
+      getGlobalFacetedMinMaxValues: memo(
+        () => [instance.getGlobalFacetedRowModel()],
+        facetedRowModel =>
+          getRowModelMinMaxValues(facetedRowModel, '__global__'),
+        {
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'getGlobalFacetedMinMaxValues',
+          debug: () =>
+            instance.options.debugAll ?? instance.options.debugColumns,
+        }
+      ),
     }
   },
 }
@@ -476,4 +543,45 @@ export function shouldAutoRemoveFilter<TGenerics extends TableGenerics>(
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)
   )
+}
+
+export function getRowModelMinMaxValues<TGenerics extends TableGenerics>(
+  rowModel: RowModel<TGenerics>,
+  columnId: string
+) {
+  let facetedMinMaxValues: [any, any] = [
+    rowModel.flatRows[0]?.values[columnId] ?? null,
+    rowModel.flatRows[0]?.values[columnId] ?? null,
+  ]
+
+  for (let i = 0; i < rowModel.flatRows.length; i++) {
+    const value = rowModel.flatRows[i]?.values[columnId]
+
+    if (value < facetedMinMaxValues[0]) {
+      facetedMinMaxValues[0] = value
+    } else if (value > facetedMinMaxValues[1]) {
+      facetedMinMaxValues[1] = value
+    }
+  }
+
+  return facetedMinMaxValues
+}
+
+export function getRowModelUniqueValues<TGenerics extends TableGenerics>(
+  rowModel: RowModel<TGenerics>,
+  columnId: string
+) {
+  let facetedUniqueValues = new Map<any, number>()
+
+  for (let i = 0; i < rowModel.flatRows.length; i++) {
+    const value = rowModel.flatRows[i]?.values[columnId]
+
+    if (facetedUniqueValues.has(value)) {
+      facetedUniqueValues.set(value, (facetedUniqueValues.get(value) ?? 0) + 1)
+    } else {
+      facetedUniqueValues.set(value, 1)
+    }
+  }
+
+  return facetedUniqueValues
 }

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
+    "serve": "vite preview --port 3001",
     "start": "vite"
   },
   "dependencies": {

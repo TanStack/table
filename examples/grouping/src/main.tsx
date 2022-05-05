@@ -8,7 +8,7 @@ import {
   GroupingState,
   useTableInstance,
   getPaginationRowModel,
-  getColumnFilteredRowModelSync,
+  getFilteredRowModelSync,
   getCoreRowModelSync,
   getGroupedRowModelSync,
   getExpandedRowModel,
@@ -93,7 +93,7 @@ function App() {
     getGroupedRowModel: getGroupedRowModelSync(),
     getCoreRowModel: getCoreRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
-    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModelSync(),
     debugTable: true,
   })
 

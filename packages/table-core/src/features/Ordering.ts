@@ -100,7 +100,7 @@ export const Ordering: TableFeature = {
           return orderColumns(orderedColumns, grouping, groupedColumnMode)
         },
         {
-          key: 'getOrderColumnsFn',
+          key: process.env.NODE_ENV === 'production' && 'getOrderColumnsFn',
           // debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),

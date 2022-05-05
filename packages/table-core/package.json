@@ -28,6 +28,7 @@
   "main": "build/cjs/index.js",
   "browser": "build/umd/index.production.min.js",
   "types": "build/types/index.d.ts",
+  "sideEffects": false,
   "engines": {
     "node": ">=12"
   },

@@ -302,12 +302,12 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
               />
               <Explorer
                 label="Column Filtered Rows"
-                value={instance.getColumnFilteredRowModel()}
+                value={instance.getFilteredRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
                 label="Global Filtered Rows"
-                value={instance.getGlobalFilteredRowModel()}
+                value={instance.getFilteredRowModel()}
                 defaultExpanded={false}
               />
               <Explorer

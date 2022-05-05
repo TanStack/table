@@ -10,7 +10,7 @@ import {
   PaginationState,
   useTableInstance,
   getCoreRowModelSync,
-  getColumnFilteredRowModelSync,
+  getFilteredRowModelSync,
   getPaginationRowModel,
   ColumnDef,
   OnChangeFn,
@@ -122,7 +122,7 @@ function Table({
     onPaginationChange: setPagination,
     // Pipeline
     getCoreRowModel: getCoreRowModelSync(),
-    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
     //
     debugTable: true,
@@ -252,7 +252,7 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
+    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
 
   const columnFilterValue = column.getColumnFilterValue()
 
@@ -260,8 +260,8 @@ function Filter({
     <div className="flex space-x-2">
       <input
         type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
+        min={Number(column.getFacetedMinMaxValues()[0])}
+        max={Number(column.getFacetedMinMaxValues()[1])}
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
         onChange={e =>
           column.setColumnFilterValue((old: [number, number]) => [
@@ -269,13 +269,13 @@ function Filter({
             old?.[1],
           ])
         }
-        placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
+        placeholder={`Min (${column.getFacetedMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
       />
       <input
         type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
+        min={Number(column.getFacetedMinMaxValues()[0])}
+        max={Number(column.getFacetedMinMaxValues()[1])}
         value={(columnFilterValue as [number, number])?.[1] ?? ''}
         onChange={e =>
           column.setColumnFilterValue((old: [number, number]) => [
@@ -283,7 +283,7 @@ function Filter({
             e.target.value,
           ])
         }
-        placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
+        placeholder={`Max (${column.getFacetedMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
       />
     </div>
@@ -292,7 +292,7 @@ function Filter({
       type="text"
       value={(columnFilterValue ?? '') as string}
       onChange={e => column.setColumnFilterValue(e.target.value)}
-      placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
+      placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
       className="w-36 border shadow rounded"
     />
   )

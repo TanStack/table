@@ -88,7 +88,7 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
         accessRows(data)
       },
       {
-        key: 'getRowModel',
+        key: process.env.NODE_ENV === 'production' && 'getRowModel',
         initialSync: opts?.initialSync,
         onProgress: progress => {
           instance.setState(old => ({ ...old, coreProgress: progress }))

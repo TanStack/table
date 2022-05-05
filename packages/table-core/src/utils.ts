@@ -92,7 +92,7 @@ export function memo<TDeps extends readonly any[], TResult>(
   getDeps: () => [...TDeps],
   fn: (...args: NoInfer<[...TDeps]>) => TResult,
   opts: {
-    key: string
+    key: any
     debug?: () => any
     onChange?: (result: TResult, previousResult?: TResult) => void
   }
@@ -161,7 +161,6 @@ export function memo<TDeps extends readonly any[], TResult>(
                   }),
                   {}
                 ),
-              parent,
             }
           )
         }
@@ -185,7 +184,7 @@ export function incrementalMemo<TDeps extends readonly any[], TResult>(
     current: TResult
   }) => (scheduler: (workFn: WorkFn) => void) => void,
   opts: {
-    key: string
+    key: any
     onProgress: (
       progress: number,
       nextResult: TResult,
@@ -286,7 +285,6 @@ export function incrementalMemo<TDeps extends readonly any[], TResult>(
                   }),
                   {}
                 ),
-              parent,
             }
           )
         }

@@ -8,9 +8,8 @@ import { makeData, Person } from './makeData'
 import {
   Column,
   createTable,
-  getColumnFilteredRowModelSync,
   getCoreRowModelSync,
-  getGlobalFilteredRowModelSync,
+  getFilteredRowModelSync,
   getPaginationRowModel,
   TableInstance,
   useTableInstance,
@@ -107,8 +106,7 @@ function App() {
     },
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModelSync(),
-    getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
-    getGlobalFilteredRowModel: getGlobalFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   })
@@ -230,8 +228,7 @@ function App() {
       <br />
       <div>
         {Object.keys(rowSelection).length} of{' '}
-        {instance.getPreColumnFilteredRowModel().rows.length} Total Rows
-        Selected
+        {instance.getPreFilteredRowModel().rows.length} Total Rows Selected
       </div>
       <hr />
       <br />
@@ -281,30 +278,30 @@ function Filter({
   instance: TableInstance<any>
 }) {
   const firstValue =
-    instance.getPreColumnFilteredRowModel().flatRows[0].values[column.id]
+    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
       <input
         type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
+        min={Number(column.getFacetedMinMaxValues()[0])}
+        max={Number(column.getFacetedMinMaxValues()[1])}
         value={((column.getColumnFilterValue() as any)?.[0] ?? '') as string}
         onChange={e =>
           column.setColumnFilterValue((old: any) => [e.target.value, old?.[1]])
         }
-        placeholder={`Min (${column.getPreFilteredMinMaxValues()[0]})`}
+        placeholder={`Min (${column.getFacetedMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
       />
       <input
         type="number"
-        min={Number(column.getPreFilteredMinMaxValues()[0])}
-        max={Number(column.getPreFilteredMinMaxValues()[1])}
+        min={Number(column.getFacetedMinMaxValues()[0])}
+        max={Number(column.getFacetedMinMaxValues()[1])}
         value={((column.getColumnFilterValue() as any)?.[1] ?? '') as string}
         onChange={e =>
           column.setColumnFilterValue((old: any) => [old?.[0], e.target.value])
         }
-        placeholder={`Max (${column.getPreFilteredMinMaxValues()[1]})`}
+        placeholder={`Max (${column.getFacetedMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
       />
     </div>
@@ -313,7 +310,7 @@ function Filter({
       type="text"
       value={(column.getColumnFilterValue() ?? '') as string}
       onChange={e => column.setColumnFilterValue(e.target.value)}
-      placeholder={`Search... (${column.getPreFilteredUniqueValues().size})`}
+      placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
       className="w-36 border shadow rounded"
     />
   )

@@ -239,7 +239,7 @@ export const RowSelection: TableFeature = {
           return selectRowsFn(instance, rowModel)
         },
         {
-          key: 'getSelectedRowModel',
+          key: process.env.NODE_ENV === 'production' && 'getSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),
@@ -247,7 +247,7 @@ export const RowSelection: TableFeature = {
       getFilteredSelectedRowModel: memo(
         () => [
           instance.getState().rowSelection,
-          instance.getGlobalFilteredRowModel(),
+          instance.getFilteredRowModel(),
         ],
         (rowSelection, rowModel) => {
           if (!Object.keys(rowSelection).length) {
@@ -261,7 +261,9 @@ export const RowSelection: TableFeature = {
           return selectRowsFn(instance, rowModel)
         },
         {
-          key: 'getFilteredSelectedRowModel',
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'getFilteredSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),
@@ -280,7 +282,9 @@ export const RowSelection: TableFeature = {
           return selectRowsFn(instance, rowModel)
         },
         {
-          key: 'getGroupedSelectedRowModel',
+          key:
+            process.env.NODE_ENV === 'production' &&
+            'getGroupedSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),
@@ -366,8 +370,7 @@ export const RowSelection: TableFeature = {
       // },
 
       getIsAllRowsSelected: () => {
-        const preFilteredFlatRows =
-          instance.getPreGlobalFilteredRowModel().flatRows
+        const preFilteredFlatRows = instance.getPreFilteredRowModel().flatRows
         const { rowSelection } = instance.getState()
 
         let isAllRowsSelected = Boolean(
