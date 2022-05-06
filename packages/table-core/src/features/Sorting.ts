@@ -94,7 +94,6 @@ export type SortingInstance<TGenerics extends TableGenerics> = {
     desc?: boolean,
     multi?: boolean
   ) => void
-  clearSorting: (columnId?: string) => void
   resetSorting: (defaultState?: boolean) => void
   getColumnCanSort: (columnId: string) => boolean
   getColumnCanMultiSort: (columnId: string) => boolean
@@ -147,7 +146,10 @@ export const Sorting: TableFeature = {
       getCanMultiSort: () => instance.getColumnCanMultiSort(column.id),
       getSortIndex: () => instance.getColumnSortIndex(column.id),
       getIsSorted: () => instance.getColumnIsSorted(column.id),
-      clearSorting: () => instance.clearSorting(column.id),
+      clearSorting: () =>
+        instance.setSorting(old =>
+          old?.length ? old.filter(d => d.id !== column.id) : []
+        ),
       toggleSorting: (desc, isMulti) =>
         instance.toggleColumnSorting(column.id, desc, isMulti),
       getToggleSortingHandler: () =>
@@ -366,16 +368,6 @@ export const Sorting: TableFeature = {
 
       getColumnSortIndex: columnId =>
         instance.getState().sorting?.findIndex(d => d.id === columnId) ?? -1,
-
-      clearSorting: columnId => {
-        if (columnId) {
-          instance.setSorting(old =>
-            old?.length ? old.filter(d => d.id !== columnId) : []
-          )
-        } else {
-          instance.resetSorting(true)
-        }
-      },
 
       resetSorting: defaultState => {
         instance.setSorting(
