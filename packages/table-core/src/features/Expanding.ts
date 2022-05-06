@@ -42,7 +42,7 @@ export type ExpandedInstance<TGenerics extends TableGenerics> = {
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleRowExpanded: (rowId: string, expanded?: boolean) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void
-  resetExpanded: () => void
+  resetExpanded: (defaultState?: boolean) => void
   getRowCanExpand: (rowId: string) => boolean
   getCanSomeRowsExpand: () => boolean
   getIsRowExpanded: (rowId: string) => boolean
@@ -141,8 +141,10 @@ export const Expanding: TableFeature = {
           instance.setExpanded({})
         }
       },
-      resetExpanded: () => {
-        instance.setExpanded(instance.initialState?.expanded ?? {})
+      resetExpanded: defaultState => {
+        instance.setExpanded(
+          defaultState ? {} : instance.initialState?.expanded ?? {}
+        )
       },
       getIsRowExpanded: rowId => {
         const row = instance.getPreExpandedRowModel().rowsById[rowId]

@@ -48,10 +48,10 @@ export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
   getColumnStart: (columnId: string, position?: ColumnPinningPosition) => number
   setColumnSizing: (updater: Updater<ColumnSizingState>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
-  resetColumnSizing: () => void
+  resetColumnSizing: (defaultState?: boolean) => void
   resetColumnSize: (columnId: string) => void
   resetHeaderSize: (headerId: string) => void
-  resetHeaderSizeInfo: () => void
+  resetHeaderSizeInfo: (defaultState?: boolean) => void
   getColumnCanResize: (columnId: string) => boolean
   getHeaderCanResize: (headerId: string) => boolean
   getResizeHandler: (headerId: string) => (event: unknown) => void
@@ -94,6 +94,15 @@ export const defaultColumnSizing = {
   maxSize: Number.MAX_SAFE_INTEGER,
 }
 
+const getDefaultColumnSizingInfoState = (): ColumnSizingInfoState => ({
+  startOffset: null,
+  startSize: null,
+  deltaOffset: null,
+  deltaPercentage: null,
+  isResizingColumn: false,
+  columnSizingStart: [],
+})
+
 export const ColumnSizing: TableFeature = {
   getDefaultColumn: (): ColumnSizingColumnDef => {
     return defaultColumnSizing
@@ -101,14 +110,7 @@ export const ColumnSizing: TableFeature = {
   getInitialState: (state): ColumnSizingTableState => {
     return {
       columnSizing: {},
-      columnSizingInfo: {
-        startOffset: null,
-        startSize: null,
-        deltaOffset: null,
-        deltaPercentage: null,
-        isResizingColumn: false,
-        columnSizingStart: [],
-      },
+      columnSizingInfo: getDefaultColumnSizingInfoState(),
       ...state,
     }
   },
@@ -199,12 +201,17 @@ export const ColumnSizing: TableFeature = {
         instance.options.onColumnSizingChange?.(updater),
       setColumnSizingInfo: updater =>
         instance.options.onColumnSizingInfoChange?.(updater),
-      resetColumnSizing: () => {
-        instance.setColumnSizing(instance.initialState.columnSizing ?? {})
+      resetColumnSizing: defaultState => {
+        instance.setColumnSizing(
+          defaultState ? {} : instance.initialState.columnSizing ?? {}
+        )
       },
-      resetHeaderSizeInfo: () => {
+      resetHeaderSizeInfo: defaultState => {
         instance.setColumnSizingInfo(
-          instance.initialState.columnSizingInfo ?? {}
+          defaultState
+            ? getDefaultColumnSizingInfoState()
+            : instance.initialState.columnSizingInfo ??
+                getDefaultColumnSizingInfoState()
         )
       },
       resetColumnSize: columnId => {

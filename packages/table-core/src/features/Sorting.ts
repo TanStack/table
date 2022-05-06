@@ -61,7 +61,7 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getCanMultiSort: () => boolean
   getSortIndex: () => number
   getIsSorted: () => false | SortDirection
-  resetSorting: () => void
+  clearSorting: () => void
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
   getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 }
@@ -94,7 +94,7 @@ export type SortingInstance<TGenerics extends TableGenerics> = {
     desc?: boolean,
     multi?: boolean
   ) => void
-  resetSorting: (columnId?: string) => void
+  resetSorting: (defaultState?: boolean) => void
   getColumnCanSort: (columnId: string) => boolean
   getColumnCanMultiSort: (columnId: string) => boolean
   getColumnIsSorted: (columnId: string) => false | 'asc' | 'desc'
@@ -146,7 +146,10 @@ export const Sorting: TableFeature = {
       getCanMultiSort: () => instance.getColumnCanMultiSort(column.id),
       getSortIndex: () => instance.getColumnSortIndex(column.id),
       getIsSorted: () => instance.getColumnIsSorted(column.id),
-      resetSorting: () => instance.resetSorting(column.id),
+      clearSorting: () =>
+        instance.setSorting(old =>
+          old?.length ? old.filter(d => d.id !== column.id) : []
+        ),
       toggleSorting: (desc, isMulti) =>
         instance.toggleColumnSorting(column.id, desc, isMulti),
       getToggleSortingHandler: () =>
@@ -366,14 +369,10 @@ export const Sorting: TableFeature = {
       getColumnSortIndex: columnId =>
         instance.getState().sorting?.findIndex(d => d.id === columnId) ?? -1,
 
-      resetSorting: (columnId?: string) => {
-        if (columnId) {
-          instance.setSorting(old =>
-            old?.length ? old.filter(d => d.id !== columnId) : []
-          )
-        } else {
-          instance.setSorting(instance.initialState?.sorting ?? [])
-        }
+      resetSorting: defaultState => {
+        instance.setSorting(
+          defaultState ? [] : instance.initialState?.sorting ?? []
+        )
       },
 
       getToggleSortingHandler: columnId => {
