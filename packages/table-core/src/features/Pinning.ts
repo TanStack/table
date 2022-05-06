@@ -50,10 +50,6 @@ export type ColumnPinningRow<TGenerics extends TableGenerics> = {
 export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: () => void
-  pinColumn: (columnId: string, position: ColumnPinningPosition) => void
-  getColumnCanPin: (columnId: string) => boolean
-  getColumnIsPinned: (columnId: string) => ColumnPinningPosition
-  getColumnPinnedIndex: (columnId: string) => number
   getIsSomeColumnsPinned: () => boolean
   getLeftLeafColumns: () => Column<TGenerics>[]
   getRightLeafColumns: () => Column<TGenerics>[]
@@ -86,10 +82,69 @@ export const Pinning: TableFeature = {
     instance: TableInstance<TGenerics>
   ): ColumnPinningColumn => {
     return {
-      getCanPin: () => instance.getColumnCanPin(column.id),
-      getPinnedIndex: () => instance.getColumnPinnedIndex(column.id),
-      getIsPinned: () => instance.getColumnIsPinned(column.id),
-      pin: position => instance.pinColumn(column.id, position),
+      pin: position => {
+        const columnIds = column
+          .getLeafColumns()
+          .map(d => d.id)
+          .filter(Boolean) as string[]
+
+        instance.setColumnPinning(old => {
+          if (position === 'right') {
+            return {
+              left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
+              right: [
+                ...(old?.right ?? []).filter(d => !columnIds?.includes(d)),
+                ...columnIds,
+              ],
+            }
+          }
+
+          if (position === 'left') {
+            return {
+              left: [
+                ...(old?.left ?? []).filter(d => !columnIds?.includes(d)),
+                ...columnIds,
+              ],
+              right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
+            }
+          }
+
+          return {
+            left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
+            right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
+          }
+        })
+      },
+
+      getCanPin: () => {
+        const leafColumns = column.getLeafColumns()
+
+        return leafColumns.some(
+          d =>
+            (d.enablePinning ?? true) &&
+            (instance.options.enablePinning ?? true)
+        )
+      },
+
+      getIsPinned: () => {
+        const leafColumnIds = column.getLeafColumns().map(d => d.id)
+
+        const { left, right } = instance.getState().columnPinning
+
+        const isLeft = leafColumnIds.some(d => left?.includes(d))
+        const isRight = leafColumnIds.some(d => right?.includes(d))
+
+        return isLeft ? 'left' : isRight ? 'right' : false
+      },
+
+      getPinnedIndex: () => {
+        const position = column.getIsPinned()
+
+        return position
+          ? instance.getState().columnPinning?.[position]?.indexOf(column.id) ??
+              -1
+          : 0
+      },
     }
   },
 
@@ -167,84 +222,6 @@ export const Pinning: TableFeature = {
 
       resetColumnPinning: () =>
         instance.setColumnPinning(instance.initialState?.columnPinning ?? {}),
-
-      pinColumn: (columnId, position) => {
-        const column = instance.getColumn(columnId)
-
-        const columnIds = column
-          ?.getLeafColumns()
-          .map(d => d.id)
-          .filter(Boolean) as string[]
-
-        instance.setColumnPinning(old => {
-          if (position === 'right') {
-            return {
-              left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
-              right: [
-                ...(old?.right ?? []).filter(d => !columnIds?.includes(d)),
-                ...columnIds,
-              ],
-            }
-          }
-
-          if (position === 'left') {
-            return {
-              left: [
-                ...(old?.left ?? []).filter(d => !columnIds?.includes(d)),
-                ...columnIds,
-              ],
-              right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
-            }
-          }
-
-          return {
-            left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
-            right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
-          }
-        })
-      },
-
-      getColumnCanPin: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        const leafColumns = column.getLeafColumns()
-
-        return leafColumns.some(
-          d =>
-            (d.enablePinning ?? true) &&
-            (instance.options.enablePinning ?? true)
-        )
-      },
-
-      getColumnIsPinned: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        const leafColumnIds = column.getLeafColumns().map(d => d.id)
-
-        const { left, right } = instance.getState().columnPinning
-
-        const isLeft = leafColumnIds.some(d => left?.includes(d))
-        const isRight = leafColumnIds.some(d => right?.includes(d))
-
-        return isLeft ? 'left' : isRight ? 'right' : false
-      },
-
-      getColumnPinnedIndex: columnId => {
-        const position = instance.getColumnIsPinned(columnId)
-
-        return position
-          ? instance.getState().columnPinning?.[position]?.indexOf(columnId) ??
-              -1
-          : 0
-      },
 
       getIsSomeColumnsPinned: () => {
         const { left, right } = instance.getState().columnPinning

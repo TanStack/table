@@ -32,10 +32,7 @@ export type VisibilityInstance<TGenerics extends TableGenerics> = {
   getRightVisibleLeafColumns: () => Column<TGenerics>[]
   getCenterVisibleLeafColumns: () => Column<TGenerics>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
-  toggleColumnVisibility: (columnId: string, value?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
-  getColumnIsVisible: (columId: string) => boolean
-  getColumnCanHide: (columnId: string) => boolean
   getIsAllColumnsVisible: () => boolean
   getIsSomeColumnsVisible: () => boolean
   getToggleAllColumnsVisibilityHandler: () =>
@@ -45,7 +42,6 @@ export type VisibilityInstance<TGenerics extends TableGenerics> = {
 
 export type VisibilityColumnDef = {
   enableHiding?: boolean
-  defaultCanHide?: boolean
   defaultIsVisible?: boolean
 }
 
@@ -90,10 +86,24 @@ export const Visibility: TableFeature = {
     instance: TableInstance<TGenerics>
   ): VisibilityColumn => {
     return {
-      getCanHide: () => instance.getColumnCanHide(column.id),
-      getIsVisible: () => instance.getColumnIsVisible(column.id),
-      toggleVisibility: value =>
-        instance.toggleColumnVisibility(column.id, value),
+      toggleVisibility: value => {
+        if (column.getCanHide()) {
+          instance.setColumnVisibility(old => ({
+            ...old,
+            [column.id]: value ?? !column.getIsVisible(),
+          }))
+        }
+      },
+      getIsVisible: () => {
+        return instance.getState().columnVisibility?.[column.id] ?? true
+      },
+
+      getCanHide: () => {
+        return (
+          (column.enableHiding ?? true) &&
+          (instance.options.enableHiding ?? true)
+        )
+      },
       getToggleVisibilityHandler: () => {
         return (e: unknown) => {
           column.toggleVisibility?.(
@@ -192,17 +202,6 @@ export const Visibility: TableFeature = {
       setColumnVisibility: updater =>
         instance.options.onColumnVisibilityChange?.(updater),
 
-      toggleColumnVisibility: (columnId, value) => {
-        if (!columnId) return
-
-        if (instance.getColumnCanHide(columnId)) {
-          instance.setColumnVisibility(old => ({
-            ...old,
-            [columnId]: value ?? !instance.getColumnIsVisible(columnId),
-          }))
-        }
-      },
-
       toggleAllColumnsVisible: value => {
         value = value ?? !instance.getIsAllColumnsVisible()
 
@@ -214,35 +213,6 @@ export const Visibility: TableFeature = {
             }),
             {}
           )
-        )
-      },
-
-      getColumnIsVisible: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return (
-          instance.getState().columnVisibility?.[columnId] ??
-          column.defaultIsVisible ??
-          true
-        )
-      },
-
-      getColumnCanHide: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return (
-          instance.options.enableHiding ??
-          column.enableHiding ??
-          column.defaultCanHide ??
-          true
         )
       },
 

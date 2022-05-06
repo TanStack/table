@@ -1,12 +1,11 @@
 import {
   createTableFactory,
   createTableInstance as coreCreateTableInstance,
-  Options,
   PartialKeys,
   Table,
   TableGenerics,
+  TableOptions,
 } from '@tanstack/table-core'
-import { beforeUpdate } from 'svelte'
 import Placeholder from './placeholder.svelte'
 import { readable, writable, derived, Readable, get } from 'svelte/store'
 import { renderComponent } from './render-component'
@@ -35,11 +34,17 @@ type ReadableOrVal<T> = T | Readable<T>
 export function createTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
   options: ReadableOrVal<
-    PartialKeys<Omit<Options<TGenerics>, 'render'>, 'state' | 'onStateChange'>
+    PartialKeys<
+      Omit<TableOptions<TGenerics>, 'render'>,
+      'state' | 'onStateChange'
+    >
   >
 ) {
   let optionsStore: Readable<
-    PartialKeys<Omit<Options<TGenerics>, 'render'>, 'state' | 'onStateChange'>
+    PartialKeys<
+      Omit<TableOptions<TGenerics>, 'render'>,
+      'state' | 'onStateChange'
+    >
   >
 
   if ('subscribe' in options) {
@@ -48,7 +53,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     optionsStore = readable(options)
   }
 
-  let resolvedOptions: Options<TGenerics> = {
+  let resolvedOptions: TableOptions<TGenerics> = {
     ...table.options,
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
@@ -58,9 +63,9 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   let instance = coreCreateTableInstance(resolvedOptions)
 
-  beforeUpdate(() => {
-    instance.willUpdate()
-  })
+  // beforeUpdate(() => {
+  //   instance.willUpdate()
+  // })
 
   let stateStore = writable(/** @type {number} */ instance.initialState)
   // combine stores

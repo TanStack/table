@@ -50,13 +50,14 @@ export type SortingColumnDef<TGenerics extends TableGenerics> = {
   sortDescFirst?: boolean
   enableSorting?: boolean
   enableMultiSort?: boolean
-  defaultCanSort?: boolean
   invertSorting?: boolean
   sortUndefined?: false | -1 | 1
 }
 
 export type SortingColumn<TGenerics extends TableGenerics> = {
-  sortingFn: SortingFnOption<Overwrite<TGenerics, { Value: any }>>
+  getAutoSortingFn: () => SortingFn<TGenerics>
+  getAutoSortDir: () => SortDirection
+  getSortingFn: () => SortingFn<TGenerics>
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
@@ -83,25 +84,7 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
 }
 
 export type SortingInstance<TGenerics extends TableGenerics> = {
-  getColumnAutoSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
-  getColumnAutoSortDir: (columnId: string) => SortDirection
-
-  getColumnSortingFn: (columnId: string) => SortingFn<TGenerics> | undefined
-
   setSorting: (updater: Updater<SortingState>) => void
-  toggleColumnSorting: (
-    columnId: string,
-    desc?: boolean,
-    multi?: boolean
-  ) => void
-  resetSorting: (columnId?: string) => void
-  getColumnCanSort: (columnId: string) => boolean
-  getColumnCanMultiSort: (columnId: string) => boolean
-  getColumnIsSorted: (columnId: string) => false | 'asc' | 'desc'
-  getColumnSortIndex: (columnId: string) => number
-  getToggleSortingHandler: (
-    columnId: string
-  ) => undefined | ((event: unknown) => void)
   getPreSortedRowModel: () => RowModel<TGenerics>
   getSortedRowModel: () => RowModel<TGenerics>
   _getSortedRowModel?: () => RowModel<TGenerics>
@@ -141,32 +124,13 @@ export const Sorting: TableFeature = {
     instance: TableInstance<TGenerics>
   ): SortingColumn<TGenerics> => {
     return {
-      sortingFn: column.sortingFn,
-      getCanSort: () => instance.getColumnCanSort(column.id),
-      getCanMultiSort: () => instance.getColumnCanMultiSort(column.id),
-      getSortIndex: () => instance.getColumnSortIndex(column.id),
-      getIsSorted: () => instance.getColumnIsSorted(column.id),
-      resetSorting: () => instance.resetSorting(column.id),
-      toggleSorting: (desc, isMulti) =>
-        instance.toggleColumnSorting(column.id, desc, isMulti),
-      getToggleSortingHandler: () =>
-        instance.getToggleSortingHandler(column.id)!,
-    }
-  },
-
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): SortingInstance<TGenerics> => {
-    let registered = false
-
-    return {
-      getColumnAutoSortingFn: columnId => {
+      getAutoSortingFn: () => {
         const firstRows = instance.getFilteredRowModel().flatRows.slice(100)
 
         let isString = false
 
         for (const row of firstRows) {
-          const value = row?.values[columnId]
+          const value = row?.values[column.id]
 
           if (Object.prototype.toString.call(value) === '[object Date]') {
             return sortingFns.datetime
@@ -187,10 +151,10 @@ export const Sorting: TableFeature = {
 
         return sortingFns.basic
       },
-      getColumnAutoSortDir: columnId => {
+      getAutoSortDir: () => {
         const firstRow = instance.getFilteredRowModel().flatRows[0]
 
-        const value = firstRow?.values[columnId]
+        const value = firstRow?.values[column.id]
 
         if (typeof value === 'string') {
           return 'asc'
@@ -198,8 +162,7 @@ export const Sorting: TableFeature = {
 
         return 'desc'
       },
-      getColumnSortingFn: columnId => {
-        const column = instance.getColumn(columnId)
+      getSortingFn: () => {
         const userSortingFn = instance.options.sortingFns
 
         if (!column) {
@@ -209,7 +172,7 @@ export const Sorting: TableFeature = {
         return isFunction(column.sortingFn)
           ? column.sortingFn
           : column.sortingFn === 'auto'
-          ? instance.getColumnAutoSortingFn(columnId)
+          ? column.getAutoSortingFn()
           : (userSortingFn as Record<string, any>)?.[
               column.sortingFn as string
             ] ??
@@ -217,16 +180,7 @@ export const Sorting: TableFeature = {
               column.sortingFn as BuiltInSortingFn
             ] as SortingFn<TGenerics>)
       },
-
-      setSorting: updater => instance.options.onSortingChange?.(updater),
-
-      toggleColumnSorting: (columnId, desc, multi) => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      toggleSorting: (desc, multi) => {
         // if (column.columns.length) {
         //   column.columns.forEach((c, i) => {
         //     if (c.id) {
@@ -238,8 +192,8 @@ export const Sorting: TableFeature = {
 
         instance.setSorting(old => {
           // Find any existing sorting for this column
-          const existingSorting = old?.find(d => d.id === columnId)
-          const existingIndex = old?.findIndex(d => d.id === columnId)
+          const existingSorting = old?.find(d => d.id === column.id)
+          const existingIndex = old?.findIndex(d => d.id === column.id)
           const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
           let newSorting: SortingState = []
@@ -267,7 +221,7 @@ export const Sorting: TableFeature = {
           const sortDescFirst =
             column.sortDescFirst ??
             instance.options.sortDescFirst ??
-            instance.getColumnAutoSortDir(columnId) === 'desc'
+            column.getAutoSortDir() === 'desc'
 
           // Handle toggle states that will remove the sorting
           if (
@@ -285,7 +239,7 @@ export const Sorting: TableFeature = {
           if (sortAction === 'replace') {
             newSorting = [
               {
-                id: columnId,
+                id: column.id,
                 desc: hasDescDefined ? desc! : !!sortDescFirst,
               },
             ]
@@ -293,7 +247,7 @@ export const Sorting: TableFeature = {
             newSorting = [
               ...old,
               {
-                id: columnId,
+                id: column.id,
                 desc: hasDescDefined ? desc! : !!sortDescFirst,
               },
             ]
@@ -307,7 +261,7 @@ export const Sorting: TableFeature = {
           } else if (sortAction === 'toggle' && old?.length) {
             // This flips (or sets) the
             newSorting = old.map(d => {
-              if (d.id === columnId) {
+              if (d.id === column.id) {
                 return {
                   ...d,
                   desc: hasDescDefined ? desc! : !existingSorting?.desc,
@@ -316,38 +270,22 @@ export const Sorting: TableFeature = {
               return d
             })
           } else if (sortAction === 'remove' && old?.length) {
-            newSorting = old.filter(d => d.id !== columnId)
+            newSorting = old.filter(d => d.id !== column.id)
           }
 
           return newSorting
         })
       },
 
-      getColumnCanSort: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getCanSort: () => {
         return (
-          column.enableSorting ??
-          instance.options.enableSorting ??
-          column.defaultCanSort ??
+          (column.enableSorting ?? true) &&
+          (instance.options.enableSorting ?? true) &&
           !!column.accessorFn
-          // (!!column.accessorFn ||
-          //   column.columns?.some(c => c.id && instance.getColumnCanSort(c.id))) ??
-          // false
         )
       },
 
-      getColumnCanMultiSort: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getCanMultiSort: () => {
         return (
           column.enableMultiSort ??
           instance.options.enableMultiSort ??
@@ -355,16 +293,16 @@ export const Sorting: TableFeature = {
         )
       },
 
-      getColumnIsSorted: columnId => {
+      getIsSorted: () => {
         const columnSort = instance
           .getState()
-          .sorting?.find(d => d.id === columnId)
+          .sorting?.find(d => d.id === column.id)
 
         return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
       },
 
-      getColumnSortIndex: columnId =>
-        instance.getState().sorting?.findIndex(d => d.id === columnId) ?? -1,
+      getSortIndex: () =>
+        instance.getState().sorting?.findIndex(d => d.id === column.id) ?? -1,
 
       resetSorting: (columnId?: string) => {
         if (columnId) {
@@ -376,13 +314,7 @@ export const Sorting: TableFeature = {
         }
       },
 
-      getToggleSortingHandler: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getToggleSortingHandler: () => {
         const canSort = column.getCanSort()
 
         return (e: unknown) => {
@@ -396,6 +328,16 @@ export const Sorting: TableFeature = {
           )
         }
       },
+    }
+  },
+
+  createInstance: <TGenerics extends TableGenerics>(
+    instance: TableInstance<TGenerics>
+  ): SortingInstance<TGenerics> => {
+    let registered = false
+
+    return {
+      setSorting: updater => instance.options.onSortingChange?.(updater),
 
       getPreSortedRowModel: () => instance.getFilteredRowModel(),
       getSortedRowModel: () => {

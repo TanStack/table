@@ -42,7 +42,7 @@ export function expandRows<TGenerics extends TableGenerics>(
     if (
       instance.options.expandSubRows &&
       row.subRows?.length &&
-      instance.getIsRowExpanded(row.id)
+      row.getIsExpanded()
     ) {
       row.subRows.forEach(handleRow)
     }

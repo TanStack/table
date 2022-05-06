@@ -32,6 +32,12 @@ export type ColumnFilter = {
   value: unknown
 }
 
+export type ResolvedColumnFilter<TGenerics extends TableGenerics> = {
+  id: string
+  resolvedValue: unknown
+  filterFn: FilterFn<TGenerics>
+}
+
 export type FilterFn<TGenerics extends TableGenerics> = {
   (row: Row<TGenerics>, columnId: string, filterValue: any): boolean
   resolveFilterValue?: TransformFilterValueFn<TGenerics>
@@ -68,13 +74,15 @@ export type FiltersColumnDef<TGenerics extends TableGenerics> = {
 
 export type FiltersColumn<TGenerics extends TableGenerics> = {
   filterFn: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
-  getCanColumnFilter: () => boolean
+  getAutoFilterFn: () => FilterFn<TGenerics> | undefined
+  getFilterFn: () => FilterFn<TGenerics> | undefined
+  setFilterValue: (updater: Updater<any>) => void
+  getCanFilter: () => boolean
   getCanGlobalFilter: () => boolean
-  getColumnFilterIndex: () => number
-  getColumnIsFiltered: () => boolean
-  getColumnFilterValue: () => unknown
-  setColumnFilterValue: (updater: Updater<any>) => void
   getFacetedRowModel: () => RowModel<TGenerics>
+  getIsFiltered: () => boolean
+  getFilterValue: () => unknown
+  getFilterIndex: () => number
   getFacetedUniqueValues: () => Map<any, number>
   getFacetedMinMaxValues: () => [any, any]
 }
@@ -105,19 +113,9 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
 }
 
 export type FiltersInstance<TGenerics extends TableGenerics> = {
-  getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
-
-  getColumnFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
-
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
-  setColumnFilterValue: (columnId: string, updater: Updater<any>) => void
-  resetColumnFilters: () => void
-  getColumnCanColumnFilter: (columnId: string) => boolean
-  getColumnFacetedRowModel: (columnId: string) => RowModel<TGenerics>
 
-  getColumnIsFiltered: (columnId: string) => boolean
-  getColumnFilterValue: (columnId: string) => unknown
-  getColumnFilterIndex: (columnId: string) => number
+  resetColumnFilters: () => void
 
   // Column Filters
   getPreFilteredRowModel: () => RowModel<TGenerics>
@@ -129,7 +127,7 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
   resetGlobalFilter: () => void
   getGlobalAutoFilterFn: () => FilterFn<TGenerics> | undefined
   getGlobalFilterFn: () => FilterFn<TGenerics> | undefined
-  getColumnCanGlobalFilter: (columnId: string) => boolean
+
   getGlobalFacetedRowModel: () => RowModel<TGenerics>
   getGlobalFacetedUniqueValues: () => Map<any, number>
   getGlobalFacetedMinMaxValues: () => [number, number]
@@ -180,13 +178,112 @@ export const Filters: TableFeature = {
   ): FiltersColumn<TGenerics> => {
     return {
       filterFn: column.filterFn,
-      getCanColumnFilter: () => instance.getColumnCanColumnFilter(column.id),
-      getCanGlobalFilter: () => instance.getColumnCanGlobalFilter(column.id),
-      getColumnFilterIndex: () => instance.getColumnFilterIndex(column.id),
-      getColumnIsFiltered: () => instance.getColumnIsFiltered(column.id),
-      getColumnFilterValue: () => instance.getColumnFilterValue(column.id),
-      setColumnFilterValue: val =>
-        instance.setColumnFilterValue(column.id, val),
+      getAutoFilterFn: () => {
+        const firstRow = instance.getCoreRowModel().flatRows[0]
+
+        const value = firstRow?.values[column.id]
+
+        if (typeof value === 'string') {
+          return filterFns.includesString
+        }
+
+        if (typeof value === 'number') {
+          return filterFns.inNumberRange
+        }
+
+        if (value !== null && typeof value === 'object') {
+          return filterFns.equals
+        }
+
+        if (Array.isArray(value)) {
+          return filterFns.arrIncludes
+        }
+
+        return filterFns.weakEquals
+      },
+      getFilterFn: () => {
+        const userFilterFns = instance.options.filterFns
+
+        return isFunction(column.filterFn)
+          ? column.filterFn
+          : column.filterFn === 'auto'
+          ? column.getAutoFilterFn()
+          : (userFilterFns as Record<string, any>)?.[
+              column.filterFn as string
+            ] ??
+            (filterFns[
+              column.filterFn as BuiltInFilterFn
+            ] as FilterFn<TGenerics>)
+      },
+      getCanFilter: () => {
+        return (
+          (column.enableColumnFilter ?? true) &&
+          (instance.options.enableColumnFilters ?? true) &&
+          (instance.options.enableFilters ?? true) &&
+          !!column.accessorFn
+        )
+      },
+
+      getCanGlobalFilter: () => {
+        return (
+          (column.enableGlobalFilter ?? true) &&
+          (instance.options.enableGlobalFilter ?? true) &&
+          (instance.options.enableFilters ?? true) &&
+          (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+          !!column.accessorFn
+        )
+      },
+
+      getIsFiltered: () => column.getFilterIndex() > -1,
+
+      getFilterValue: () =>
+        instance.getState().columnFilters?.find(d => d.id === column.id)?.value,
+
+      getFilterIndex: () =>
+        instance.getState().columnFilters?.findIndex(d => d.id === column.id) ??
+        -1,
+
+      setFilterValue: value => {
+        instance.setColumnFilters(old => {
+          const filterFn = column.getFilterFn()
+          const previousfilter = old?.find(d => d.id === column.id)
+
+          const newFilter = functionalUpdate(
+            value,
+            previousfilter ? previousfilter.value : undefined
+          )
+
+          //
+          if (
+            shouldAutoRemoveFilter(
+              filterFn as FilterFn<TGenerics>,
+              newFilter,
+              column
+            )
+          ) {
+            return old?.filter(d => d.id !== column.id) ?? []
+          }
+
+          const newFilterObj = { id: column.id, value: newFilter }
+
+          if (previousfilter) {
+            return (
+              old?.map(d => {
+                if (d.id === column.id) {
+                  return newFilterObj
+                }
+                return d
+              }) ?? []
+            )
+          }
+
+          if (old?.length) {
+            return [...old, newFilterObj]
+          }
+
+          return [newFilterObj]
+        })
+      },
       getFacetedRowModel: memo(
         () => [
           instance.getPreFilteredRowModel(),
@@ -256,59 +353,8 @@ export const Filters: TableFeature = {
     instance: TableInstance<TGenerics>
   ): FiltersInstance<TGenerics> => {
     return {
-      getColumnAutoFilterFn: columnId => {
-        const firstRow = instance.getCoreRowModel().flatRows[0]
-
-        const value = firstRow?.values[columnId]
-
-        if (typeof value === 'string') {
-          return filterFns.includesString
-        }
-
-        if (typeof value === 'number') {
-          return filterFns.inNumberRange
-        }
-
-        if (value !== null && typeof value === 'object') {
-          return filterFns.equals
-        }
-
-        if (Array.isArray(value)) {
-          return filterFns.arrIncludes
-        }
-
-        return filterFns.weakEquals
-      },
-      getColumnFacetedRowModel: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return column.getFacetedRowModel()
-      },
       getGlobalAutoFilterFn: () => {
         return filterFns.includesString
-      },
-      getColumnFilterFn: columnId => {
-        const column = instance.getColumn(columnId)
-        const userFilterFns = instance.options.filterFns
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return isFunction(column.filterFn)
-          ? column.filterFn
-          : column.filterFn === 'auto'
-          ? instance.getColumnAutoFilterFn(columnId)
-          : (userFilterFns as Record<string, any>)?.[
-              column.filterFn as string
-            ] ??
-            (filterFns[
-              column.filterFn as BuiltInFilterFn
-            ] as FilterFn<TGenerics>)
       },
 
       getGlobalFilterFn: () => {
@@ -335,7 +381,7 @@ export const Filters: TableFeature = {
             const column = leafColumns.find(d => d.id === filter.id)
 
             if (column) {
-              const filterFn = instance.getColumnFilterFn(column.id)
+              const filterFn = column.getFilterFn()
 
               if (shouldAutoRemoveFilter(filterFn, filter.value, column)) {
                 return false
@@ -355,102 +401,6 @@ export const Filters: TableFeature = {
 
       resetGlobalFilter: () => {
         instance.setGlobalFilter(instance.initialState.globalFilter)
-      },
-
-      getColumnCanColumnFilter: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return (
-          (column.enableColumnFilter ?? true) &&
-          (instance.options.enableColumnFilters ?? true) &&
-          (instance.options.enableFilters ?? true) &&
-          !!column.accessorFn
-        )
-      },
-
-      getColumnCanGlobalFilter: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return (
-          (column.enableGlobalFilter ?? true) &&
-          (instance.options.enableGlobalFilter ?? true) &&
-          (instance.options.enableFilters ?? true) &&
-          (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&
-          !!column.accessorFn
-        )
-      },
-
-      getColumnIsFiltered: columnId =>
-        instance.getColumnFilterIndex(columnId) > -1,
-
-      getColumnFilterValue: columnId =>
-        instance.getState().columnFilters?.find(d => d.id === columnId)?.value,
-
-      getColumnFilterIndex: columnId =>
-        instance.getState().columnFilters?.findIndex(d => d.id === columnId) ??
-        -1,
-
-      setColumnFilterValue: (columnId, value) => {
-        if (!columnId) return
-
-        instance.setColumnFilters(old => {
-          const column = instance.getColumn(columnId)
-
-          if (!column) {
-            if (process.env.NODE_ENV !== 'production') {
-              console.warn(
-                `Table: Could not find a column with id: ${columnId}`
-              )
-            }
-            throw new Error()
-          }
-
-          const filterFn = instance.getColumnFilterFn(column.id)
-          const previousfilter = old?.find(d => d.id === columnId)
-
-          const newFilter = functionalUpdate(
-            value,
-            previousfilter ? previousfilter.value : undefined
-          )
-
-          //
-          if (
-            shouldAutoRemoveFilter(
-              filterFn as FilterFn<TGenerics>,
-              newFilter,
-              column
-            )
-          ) {
-            return old?.filter(d => d.id !== columnId) ?? []
-          }
-
-          const newFilterObj = { id: columnId, value: newFilter }
-
-          if (previousfilter) {
-            return (
-              old?.map(d => {
-                if (d.id === columnId) {
-                  return newFilterObj
-                }
-                return d
-              }) ?? []
-            )
-          }
-
-          if (old?.length) {
-            return [...old, newFilterObj]
-          }
-
-          return [newFilterObj]
-        })
       },
 
       resetColumnFilters: () => {

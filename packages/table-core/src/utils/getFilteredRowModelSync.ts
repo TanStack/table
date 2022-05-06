@@ -1,13 +1,11 @@
-import { ColumnFilter, FilterFn } from '../features/Filters'
+import {
+  ColumnFilter,
+  FilterFn,
+  ResolvedColumnFilter,
+} from '../features/Filters'
 import { TableInstance, RowModel, TableGenerics, Row } from '../types'
 import { memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
-
-type ResolvedColumnFilter<TGenerics extends TableGenerics> = {
-  id: string
-  filterFn: FilterFn<TGenerics>
-  resolvedFilterValue: unknown
-}
 
 export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
@@ -41,7 +39,7 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
             }
           }
 
-          const filterFn = instance.getColumnFilterFn(column.id)!
+          const filterFn = column.getFilterFn()
 
           if (!filterFn) {
             if (process.env.NODE_ENV !== 'production') {
@@ -55,8 +53,7 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
           resolvedColumnFilters.push({
             id: d.id,
             filterFn,
-            resolvedFilterValue:
-              filterFn.resolveFilterValue?.(d.value) ?? d.value,
+            resolvedValue: filterFn.resolveFilterValue?.(d.value) ?? d.value,
           })
         })
 
@@ -79,7 +76,7 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
             resolvedGlobalFilters.push({
               id: column.id,
               filterFn: globalFilterFn,
-              resolvedFilterValue:
+              resolvedValue:
                 globalFilterFn.resolveFilterValue?.(globalFilter) ??
                 globalFilter,
             })
@@ -100,7 +97,7 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
               row.columnFilterMap[columnFilter.id] = columnFilter.filterFn(
                 row,
                 columnFilter.id,
-                columnFilter.resolvedFilterValue
+                columnFilter.resolvedValue
               )
             }
           }
@@ -113,7 +110,7 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
                 globalFilter.filterFn(
                   row,
                   globalFilter.id,
-                  globalFilter.resolvedFilterValue
+                  globalFilter.resolvedValue
                 )
               ) {
                 row.columnFilterMap.__global__ = true

@@ -49,7 +49,6 @@ export type GroupingColumnDef<TGenerics extends TableGenerics> = {
     }
   >
   enableGrouping?: boolean
-  defaultCanGroup?: boolean
 }
 
 export type GroupingColumn<TGenerics extends TableGenerics> = {
@@ -104,12 +103,6 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
   ) => AggregationFn<TGenerics> | undefined
   setGrouping: (updater: Updater<GroupingState>) => void
   resetGrouping: () => void
-  toggleColumnGrouping: (columnId: string) => void
-  getColumnCanGroup: (columnId: string) => boolean
-  getColumnIsGrouped: (columnId: string) => boolean
-  getColumnGroupedIndex: (columnId: string) => number
-  getToggleGroupingHandler: (columnId: string) => undefined | (() => void)
-  getRowIsGrouped: (rowId: string) => boolean
   getPreGroupedRowModel: () => RowModel<TGenerics>
   getGroupedRowModel: () => RowModel<TGenerics>
   _getGroupedRowModel?: () => RowModel<TGenerics>
@@ -147,13 +140,41 @@ export const Grouping: TableFeature = {
     instance: TableInstance<TGenerics>
   ): GroupingColumn<TGenerics> => {
     return {
-      aggregationFn: column.aggregationFn,
-      getCanGroup: () => instance.getColumnCanGroup(column.id),
-      getGroupedIndex: () => instance.getColumnGroupedIndex(column.id),
-      getIsGrouped: () => instance.getColumnIsGrouped(column.id),
-      toggleGrouping: () => instance.toggleColumnGrouping(column.id),
-      getToggleGroupingHandler: () =>
-        instance.getToggleGroupingHandler(column.id)!,
+      toggleGrouping: () => {
+        instance.setGrouping(old => {
+          // Find any existing grouping for this column
+          if (old?.includes(column.id)) {
+            return old.filter(d => d !== column.id)
+          }
+
+          return [...(old ?? []), column.id]
+        })
+      },
+
+      getCanGroup: () => {
+        return (
+          column.enableGrouping ??
+          true ??
+          instance.options.enableGrouping ??
+          true ??
+          !!column.accessorFn
+        )
+      },
+
+      getIsGrouped: () => {
+        return instance.getState().grouping?.includes(column.id)
+      },
+
+      getGroupedIndex: () => instance.getState().grouping?.indexOf(column.id),
+
+      getToggleGroupingHandler: () => {
+        const canGroup = column.getCanGroup()
+
+        return () => {
+          if (!canGroup) return
+          column.toggleGrouping()
+        }
+      },
     }
   },
 
@@ -198,54 +219,9 @@ export const Grouping: TableFeature = {
 
       setGrouping: updater => instance.options.onGroupingChange?.(updater),
 
-      toggleColumnGrouping: columnId => {
-        instance.setGrouping(old => {
-          // Find any existing grouping for this column
-          if (old?.includes(columnId)) {
-            return old.filter(d => d !== columnId)
-          }
-
-          return [...(old ?? []), columnId]
-        })
-      },
-
-      getColumnCanGroup: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
-        return (
-          column.enableGrouping ??
-          instance.options.enableGrouping ??
-          column.defaultCanGroup ??
-          !!column.accessorFn
-        )
-      },
-
-      getColumnIsGrouped: columnId => {
-        return instance.getState().grouping?.includes(columnId)
-      },
-
-      getColumnGroupedIndex: columnId =>
-        instance.getState().grouping?.indexOf(columnId),
-
       resetGrouping: () => {
         instance.setGrouping(instance.initialState?.grouping ?? [])
       },
-
-      getToggleGroupingHandler: columnId => {
-        const column = instance.getColumn(columnId)
-        const canGroup = column.getCanGroup()
-
-        return () => {
-          if (!canGroup) return
-          column.toggleGrouping?.()
-        }
-      },
-
-      getRowIsGrouped: rowId => !!instance.getRow(rowId)?.groupingColumnId,
 
       getPreGroupedRowModel: () => instance.getSortedRowModel(),
       getGroupedRowModel: () => {
@@ -271,7 +247,7 @@ export const Grouping: TableFeature = {
     instance: TableInstance<TGenerics>
   ): GroupingRow => {
     return {
-      getIsGrouped: () => instance.getRowIsGrouped(row.id),
+      getIsGrouped: () => !!row.groupingColumnId,
     }
   },
 

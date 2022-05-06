@@ -19,7 +19,7 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter(sort =>
-          instance.getColumnCanSort(sort.id)
+          instance.getColumn(sort.id).getCanSort()
         )
 
         const columnInfoById: Record<
@@ -32,12 +32,12 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
         > = {}
 
         availableSorting.forEach(sortEntry => {
-          const column = instance.getColumn(sortEntry.id)!
+          const column = instance.getColumn(sortEntry.id)
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.sortUndefined,
             invertSorting: column.invertSorting,
-            sortingFn: instance.getColumnSortingFn(sortEntry.id)!,
+            sortingFn: column.getSortingFn(),
           }
         })
 

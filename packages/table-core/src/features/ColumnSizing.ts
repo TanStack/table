@@ -44,19 +44,10 @@ export type ColumnSizingDefaultOptions = {
 }
 
 export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
-  getColumnSize: (columnId: string) => number
-  getColumnStart: (columnId: string, position?: ColumnPinningPosition) => number
   setColumnSizing: (updater: Updater<ColumnSizingState>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
   resetColumnSizing: () => void
-  resetColumnSize: (columnId: string) => void
-  resetHeaderSize: (headerId: string) => void
   resetHeaderSizeInfo: () => void
-  getColumnCanResize: (columnId: string) => boolean
-  getHeaderCanResize: (headerId: string) => boolean
-  getResizeHandler: (headerId: string) => (event: unknown) => void
-  getColumnIsResizing: (columnId: string) => boolean
-  getHeaderIsResizing: (headerId: string) => boolean
   getTotalSize: () => number
   getLeftTotalSize: () => number
   getCenterTotalSize: () => number
@@ -65,7 +56,6 @@ export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
 
 export type ColumnSizingColumnDef = {
   enableResizing?: boolean
-  defaultCanResize?: boolean
   size?: number
   minSize?: number
   maxSize?: number
@@ -80,10 +70,7 @@ export type ColumnSizingColumn<TGenerics extends TableGenerics> = {
 }
 
 export type ColumnSizingHeader<TGenerics extends TableGenerics> = {
-  getCanResize: () => boolean
-  getIsResizing: () => boolean
   getResizeHandler: () => (event: unknown) => void
-  resetSize: () => void
 }
 
 //
@@ -128,37 +115,7 @@ export const ColumnSizing: TableFeature = {
     instance: TableInstance<TGenerics>
   ): ColumnSizingColumn<TGenerics> => {
     return {
-      getSize: () => instance.getColumnSize(column.id),
-      getStart: position => instance.getColumnStart(column.id, position),
-      getIsResizing: () => instance.getColumnIsResizing(column.id),
-      getCanResize: () => instance.getColumnCanResize(column.id),
-      resetSize: () => instance.resetColumnSize(column.id),
-    }
-  },
-
-  createHeader: <TGenerics extends TableGenerics>(
-    header: Header<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): ColumnSizingHeader<TGenerics> => {
-    return {
-      getIsResizing: () => instance.getColumnIsResizing(header.column.id),
-      getCanResize: () => instance.getColumnCanResize(header.column.id),
-      resetSize: () => instance.resetColumnSize(header.column.id),
-      getResizeHandler: () => instance.getResizeHandler(header.id),
-    }
-  },
-
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ColumnSizingInstance<TGenerics> => {
-    return {
-      getColumnSize: (columnId: string) => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getSize: () => {
         const columnSize = instance.getState().columnSizing[column.id]
 
         return Math.min(
@@ -169,99 +126,50 @@ export const ColumnSizing: TableFeature = {
           column.maxSize ?? defaultColumnSizing.maxSize
         )
       },
-      getColumnStart: (columnId, position) => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getStart: position => {
         const columns = !position
           ? instance.getVisibleLeafColumns()
           : position === 'left'
           ? instance.getLeftVisibleLeafColumns()
           : instance.getRightVisibleLeafColumns()
 
-        const index = columns.findIndex(d => d.id === columnId)
+        const index = columns.findIndex(d => d.id === column.id)
 
         if (index > 0) {
           const prevSiblingColumn = columns[index - 1]
 
           return (
-            instance.getColumnStart(prevSiblingColumn.id, position) +
-            prevSiblingColumn.getSize()
+            prevSiblingColumn.getStart(position) + prevSiblingColumn.getSize()
           )
         }
 
         return 0
       },
-      setColumnSizing: updater =>
-        instance.options.onColumnSizingChange?.(updater),
-      setColumnSizingInfo: updater =>
-        instance.options.onColumnSizingInfoChange?.(updater),
-      resetColumnSizing: () => {
-        instance.setColumnSizing(instance.initialState.columnSizing ?? {})
-      },
-      resetHeaderSizeInfo: () => {
-        instance.setColumnSizingInfo(
-          instance.initialState.columnSizingInfo ?? {}
-        )
-      },
-      resetColumnSize: columnId => {
-        instance.setColumnSizing(({ [columnId]: _, ...rest }) => {
+      resetSize: () => {
+        instance.setColumnSizing(({ [column.id]: _, ...rest }) => {
           return rest
         })
       },
-      resetHeaderSize: headerId => {
-        const header = instance.getHeader(headerId)
-
-        return instance.resetColumnSize(header.column.id)
-      },
-      getHeaderCanResize: headerId => {
-        const header = instance.getHeader(headerId)
-
-        if (!header) {
-          throw new Error()
-        }
-
-        return instance.getColumnCanResize(header.column.id)
-      },
-      getColumnCanResize: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getCanResize: () => {
         return (
-          column.enableResizing ??
-          instance.options.enableColumnResizing ??
-          column.defaultCanResize ??
-          true
+          (column.enableResizing ?? true) &&
+          (instance.options.enableColumnResizing ?? true)
         )
       },
-      getColumnIsResizing: columnId => {
-        const column = instance.getColumn(columnId)
-
-        if (!column) {
-          throw new Error()
-        }
-
+      getIsResizing: () => {
         return (
-          instance.getState().columnSizingInfo.isResizingColumn === columnId
+          instance.getState().columnSizingInfo.isResizingColumn === column.id
         )
       },
-      getHeaderIsResizing: headerId => {
-        const header = instance.getHeader(headerId)
+    }
+  },
 
-        if (!header) {
-          throw new Error()
-        }
-
-        return instance.getColumnIsResizing(header.column.id)
-      },
-      getResizeHandler: (headerId: string) => {
-        const header = instance.getHeader(headerId)
+  createHeader: <TGenerics extends TableGenerics>(
+    header: Header<TGenerics>,
+    instance: TableInstance<TGenerics>
+  ): ColumnSizingHeader<TGenerics> => {
+    return {
+      getResizeHandler: () => {
         const column = instance.getColumn(header.column.id)
         const canResize = column.getCanResize()
 
@@ -279,9 +187,7 @@ export const ColumnSizing: TableFeature = {
             }
           }
 
-          const header = headerId ? instance.getHeader(headerId) : undefined
-
-          const startSize = header ? header.getSize() : column.getSize()
+          const startSize = column.getSize()
 
           const columnSizingStart: [string, number][] = header
             ? header.getLeafHeaders().map(d => [d.column.id, d.getSize()])
@@ -384,16 +290,6 @@ export const ColumnSizing: TableFeature = {
             : false
 
           if (isTouchStartEvent(e)) {
-            document.addEventListener(
-              'touchmove',
-              touchEvents.moveHandler,
-              passiveIfSupported
-            )
-            document.addEventListener(
-              'touchend',
-              touchEvents.upHandler,
-              passiveIfSupported
-            )
           } else {
             document.addEventListener(
               'mousemove',
@@ -417,6 +313,25 @@ export const ColumnSizing: TableFeature = {
             isResizingColumn: column.id,
           }))
         }
+      },
+    }
+  },
+
+  createInstance: <TGenerics extends TableGenerics>(
+    instance: TableInstance<TGenerics>
+  ): ColumnSizingInstance<TGenerics> => {
+    return {
+      setColumnSizing: updater =>
+        instance.options.onColumnSizingChange?.(updater),
+      setColumnSizingInfo: updater =>
+        instance.options.onColumnSizingInfoChange?.(updater),
+      resetColumnSizing: () => {
+        instance.setColumnSizing(instance.initialState.columnSizing ?? {})
+      },
+      resetHeaderSizeInfo: () => {
+        instance.setColumnSizingInfo(
+          instance.initialState.columnSizingInfo ?? {}
+        )
       },
       getTotalSize: () =>
         instance.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
