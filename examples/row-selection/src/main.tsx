@@ -132,7 +132,7 @@ function App() {
                     {header.isPlaceholder ? null : (
                       <>
                         {header.renderHeader()}
-                        {header.column.getCanColumnFilter() ? (
+                        {header.column.getCanFilter() ? (
                           <div>
                             <Filter
                               column={header.column}
@@ -286,9 +286,9 @@ function Filter({
         type="number"
         min={Number(column.getFacetedMinMaxValues()[0])}
         max={Number(column.getFacetedMinMaxValues()[1])}
-        value={((column.getColumnFilterValue() as any)?.[0] ?? '') as string}
+        value={((column.getFilterValue() as any)?.[0] ?? '') as string}
         onChange={e =>
-          column.setColumnFilterValue((old: any) => [e.target.value, old?.[1]])
+          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
         }
         placeholder={`Min (${column.getFacetedMinMaxValues()[0]})`}
         className="w-24 border shadow rounded"
@@ -297,9 +297,9 @@ function Filter({
         type="number"
         min={Number(column.getFacetedMinMaxValues()[0])}
         max={Number(column.getFacetedMinMaxValues()[1])}
-        value={((column.getColumnFilterValue() as any)?.[1] ?? '') as string}
+        value={((column.getFilterValue() as any)?.[1] ?? '') as string}
         onChange={e =>
-          column.setColumnFilterValue((old: any) => [old?.[0], e.target.value])
+          column.setFilterValue((old: any) => [old?.[0], e.target.value])
         }
         placeholder={`Max (${column.getFacetedMinMaxValues()[1]})`}
         className="w-24 border shadow rounded"
@@ -308,8 +308,8 @@ function Filter({
   ) : (
     <input
       type="text"
-      value={(column.getColumnFilterValue() ?? '') as string}
-      onChange={e => column.setColumnFilterValue(e.target.value)}
+      value={(column.getFilterValue() ?? '') as string}
+      onChange={e => column.setFilterValue(e.target.value)}
       placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
       className="w-36 border shadow rounded"
     />

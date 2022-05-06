@@ -141,7 +141,7 @@ function Table({
                     {header.isPlaceholder ? null : (
                       <div>
                         {header.renderHeader()}
-                        {header.column.getCanColumnFilter() ? (
+                        {header.column.getCanFilter() ? (
                           <div>
                             <Filter
                               column={header.column}
@@ -254,7 +254,7 @@ function Filter({
   const firstValue =
     instance.getPreFilteredRowModel().flatRows[0].values[column.id]
 
-  const columnFilterValue = column.getColumnFilterValue()
+  const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
@@ -264,7 +264,7 @@ function Filter({
         max={Number(column.getFacetedMinMaxValues()[1])}
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
         onChange={e =>
-          column.setColumnFilterValue((old: [number, number]) => [
+          column.setFilterValue((old: [number, number]) => [
             e.target.value,
             old?.[1],
           ])
@@ -278,7 +278,7 @@ function Filter({
         max={Number(column.getFacetedMinMaxValues()[1])}
         value={(columnFilterValue as [number, number])?.[1] ?? ''}
         onChange={e =>
-          column.setColumnFilterValue((old: [number, number]) => [
+          column.setFilterValue((old: [number, number]) => [
             old?.[0],
             e.target.value,
           ])
@@ -291,7 +291,7 @@ function Filter({
     <input
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setColumnFilterValue(e.target.value)}
+      onChange={e => column.setFilterValue(e.target.value)}
       placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
       className="w-36 border shadow rounded"
     />

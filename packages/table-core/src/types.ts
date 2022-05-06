@@ -228,8 +228,6 @@ export type CoreHeader<TGenerics extends TableGenerics> = {
   index: number
   depth: number
   column: Column<TGenerics>
-  getStart: () => number
-  getSize: () => number
   headerGroup: HeaderGroup<TGenerics>
   subHeaders: Header<TGenerics>[]
   colSpan?: number

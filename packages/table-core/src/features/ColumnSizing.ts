@@ -190,7 +190,9 @@ export const ColumnSizing: TableFeature = {
           const startSize = column.getSize()
 
           const columnSizingStart: [string, number][] = header
-            ? header.getLeafHeaders().map(d => [d.column.id, d.getSize()])
+            ? header
+                .getLeafHeaders()
+                .map(d => [d.column.id, d.column.getSize()])
             : [[column.id, column.getSize()]]
 
           const clientX = isTouchStartEvent(e)
@@ -335,19 +337,19 @@ export const ColumnSizing: TableFeature = {
       },
       getTotalSize: () =>
         instance.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.getSize()
+          return sum + header.column.getSize()
         }, 0) ?? 0,
       getLeftTotalSize: () =>
         instance.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.getSize()
+          return sum + header.column.getSize()
         }, 0) ?? 0,
       getCenterTotalSize: () =>
         instance.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.getSize()
+          return sum + header.column.getSize()
         }, 0) ?? 0,
       getRightTotalSize: () =>
         instance.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.getSize()
+          return sum + header.column.getSize()
         }, 0) ?? 0,
     }
   },

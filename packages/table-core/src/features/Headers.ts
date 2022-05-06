@@ -72,30 +72,6 @@ export const Headers = {
           colSpan: 0,
           rowSpan: 0,
           headerGroup: null!,
-          getSize: () => {
-            let sum = 0
-
-            const recurse = (header: CoreHeader<TGenerics>) => {
-              if (header.subHeaders.length) {
-                header.subHeaders.forEach(recurse)
-              } else {
-                sum += header.column.getSize() ?? 0
-              }
-            }
-
-            recurse(header)
-
-            return sum
-          },
-          getStart: () => {
-            if (header.index > 0) {
-              const prevSiblingHeader =
-                header.headerGroup.headers[header.index - 1]
-              return prevSiblingHeader.getStart() + prevSiblingHeader.getSize()
-            }
-
-            return 0
-          },
           getLeafHeaders: (): Header<TGenerics>[] => {
             const leafHeaders: CoreHeader<TGenerics>[] = []
 
