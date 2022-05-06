@@ -70,6 +70,8 @@ export type ColumnSizingColumn<TGenerics extends TableGenerics> = {
 }
 
 export type ColumnSizingHeader<TGenerics extends TableGenerics> = {
+  getSize: () => number
+  getStart: (position?: ColumnPinningPosition) => number
   getResizeHandler: () => (event: unknown) => void
 }
 
@@ -169,6 +171,29 @@ export const ColumnSizing: TableFeature = {
     instance: TableInstance<TGenerics>
   ): ColumnSizingHeader<TGenerics> => {
     return {
+      getSize: () => {
+        let sum = 0
+
+        const recurse = (header: Header<TGenerics>) => {
+          if (header.subHeaders.length) {
+            header.subHeaders.forEach(recurse)
+          } else {
+            sum += header.column.getSize() ?? 0
+          }
+        }
+
+        recurse(header)
+
+        return sum
+      },
+      getStart: () => {
+        if (header.index > 0) {
+          const prevSiblingHeader = header.headerGroup.headers[header.index - 1]
+          return prevSiblingHeader.getStart() + prevSiblingHeader.getSize()
+        }
+
+        return 0
+      },
       getResizeHandler: () => {
         const column = instance.getColumn(header.column.id)
         const canResize = column.getCanResize()
