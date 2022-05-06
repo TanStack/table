@@ -42,7 +42,7 @@ function create_fragment(ctx: any, Comp: any, props: any) {
   }
 }
 
-function renderClient(Comp: any, props: any) {
+function renderClient(Comp: any, props: any): any {
   return class WrapperComp extends SvelteComponent {
     constructor(options: any) {
       super()
