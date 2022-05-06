@@ -75,7 +75,7 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
         // sortData(rowModelRef.current.rows)
       },
       {
-        key: process.env.NODE_ENV === 'production' && 'getSortedRowModel',
+        key: process.env.NODE_ENV === 'development' && 'getSortedRowModel',
         initialSync: opts?.initialSync,
         onProgress: progress => {
           instance.setState(old => ({ ...old, sortingProgress: progress }))

@@ -263,7 +263,7 @@ export const Pinning: TableFeature = {
             .filter(Boolean)
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getLeftLeafColumns',
+          key: process.env.NODE_ENV === 'development' && 'getLeftLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -280,7 +280,7 @@ export const Pinning: TableFeature = {
             .filter(Boolean)
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getRightLeafColumns',
+          key: process.env.NODE_ENV === 'development' && 'getRightLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }
@@ -298,7 +298,7 @@ export const Pinning: TableFeature = {
           return allColumns.filter(d => !leftAndRight.includes(d.id))
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getCenterLeafColumns',
+          key: process.env.NODE_ENV === 'development' && 'getCenterLeafColumns',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
         }

@@ -239,7 +239,7 @@ export const RowSelection: TableFeature = {
           return selectRowsFn(instance, rowModel)
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getSelectedRowModel',
+          key: process.env.NODE_ENV === 'development' && 'getSelectedRowModel',
           debug: () => instance.options.debugAll ?? instance.options.debugTable,
         }
       ),

@@ -161,7 +161,7 @@ export function getGroupedRowModelSync<TGenerics extends TableGenerics>(): (
         }
       },
       {
-        key: process.env.NODE_ENV === 'production' && 'getGroupedRowModel',
+        key: process.env.NODE_ENV === 'development' && 'getGroupedRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {

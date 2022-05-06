@@ -144,7 +144,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
         Promise.resolve()
           .then(() => {
             while (queued.length) {
-              console.log('queue')
               queued.shift()!()
             }
             queuedTimeout = false
@@ -156,7 +155,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
           )
       }
     },
-    // willUpdate: () => {},
     initialState,
     reset: () => {
       instance.setState(instance.initialState)

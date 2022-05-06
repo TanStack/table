@@ -41,7 +41,7 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
         }
       },
       {
-        key: process.env.NODE_ENV === 'production' && 'getPaginationRowModel',
+        key: process.env.NODE_ENV === 'development' && 'getPaginationRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
       }
     )

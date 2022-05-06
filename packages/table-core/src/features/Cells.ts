@@ -42,7 +42,7 @@ export const Cells = {
           })
         },
         {
-          key: process.env.NODE_ENV !== 'production' ? 'row.getAllCells' : '',
+          key: process.env.NODE_ENV === 'development' ? 'row.getAllCells' : '',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),

@@ -134,7 +134,7 @@ export const Visibility: TableFeature = {
         ],
         (left, center, right) => [...left, ...center, ...right],
         {
-          key: process.env.NODE_ENV === 'production' && 'row.getVisibleCells',
+          key: process.env.NODE_ENV === 'development' && 'row.getVisibleCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),

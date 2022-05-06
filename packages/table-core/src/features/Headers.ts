@@ -163,7 +163,7 @@ export const Headers = {
           return headerGroups
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getHeaderGroups',
+          key: process.env.NODE_ENV === 'development' && 'getHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -183,7 +183,8 @@ export const Headers = {
           return buildHeaderGroups(allColumns, leafColumns, instance, 'center')
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getCenterHeaderGroups',
+          key:
+            process.env.NODE_ENV === 'development' && 'getCenterHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -200,7 +201,7 @@ export const Headers = {
           return buildHeaderGroups(allColumns, leafColumns, instance, 'left')
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getLeftHeaderGroups',
+          key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -217,7 +218,7 @@ export const Headers = {
           return buildHeaderGroups(allColumns, leafColumns, instance, 'right')
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getRightHeaderGroups',
+          key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -231,7 +232,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getFooterGroups',
+          key: process.env.NODE_ENV === 'development' && 'getFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -243,7 +244,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getLeftFooterGroups',
+          key: process.env.NODE_ENV === 'development' && 'getLeftFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -255,7 +256,8 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getCenterFooterGroups',
+          key:
+            process.env.NODE_ENV === 'development' && 'getCenterFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -267,7 +269,7 @@ export const Headers = {
           return [...headerGroups].reverse()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getRightFooterGroups',
+          key: process.env.NODE_ENV === 'development' && 'getRightFooterGroups',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -285,7 +287,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getFlatHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -301,7 +303,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getLeftFlatHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getLeftFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -317,7 +319,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getCenterFlatHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getCenterFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -333,7 +335,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getRightFlatHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getRightFlatHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -347,7 +349,7 @@ export const Headers = {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getCenterLeafHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getCenterLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -359,7 +361,7 @@ export const Headers = {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getLeftLeafHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getLeftLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -371,7 +373,7 @@ export const Headers = {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getRightLeafHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getRightLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
@@ -395,7 +397,7 @@ export const Headers = {
             .flat()
         },
         {
-          key: process.env.NODE_ENV === 'production' && 'getLeafHeaders',
+          key: process.env.NODE_ENV === 'development' && 'getLeafHeaders',
           debug: () =>
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
