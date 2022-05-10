@@ -63,46 +63,21 @@ If provided, this function will be called with an `updaterFn` when `state.rowSel
 
 ## Table Instance API
 
-### `getToggleRowSelectedHandler`
+### `getToggleAllRowsSelectedHandler`
 
 ```tsx
-type getToggleRowSelectedHandler = (
-  rowId: string
-) => undefined | ((e: unknown) => void)
+getToggleAllRowsSelectedHandler: () => (event: unknown) => void
 ```
 
-Returns the props for the `<input type="checkbox" />` element in a row that will toggle row selection and provides checked/indeterminate state.
+Returns a handler that can be used to toggle all rows in the table.
 
-### `getToggleAllRowsSelectedProps`
+### `getToggleAllPageRowsSelectedHandler`
 
 ```tsx
-type ToggleRowSelectedProps = {
-  onChange?: (e: unknown) => void
-  checked?: boolean
-  title?: string
-  indeterminate?: boolean
-}
-
-getToggleAllRowsSelectedProps: <
-  TGetter extends Getter<ToggleRowSelectedProps>
->(
-  userProps?: TGetter
-) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
+getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
 ```
 
-Returns the props for the `<input type="checkbox" />` element in a column header that will toggle row selection for all rows in the table and provides checked/indeterminate state.
-
-### `getToggleAllPageRowsSelectedProps`
-
-```tsx
-getToggleAllPageRowsSelectedProps: <
-  TGetter extends Getter<ToggleRowSelectedProps>
->(
-  userProps?: TGetter
-) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
-```
-
-Returns the props for the `<input type="checkbox" />` element in a column header that will toggle row selection for all rows on the current page and provides checked/indeterminate state.
+Returns a handler that can be used to toggle all rows on the current page.
 
 ### `setRowSelection`
 
@@ -119,54 +94,6 @@ resetRowSelection: () => void
 ```
 
 Resets the **rowSelection** state for the table back to its initial state.
-
-### `toggleRowSelected`
-
-```tsx
-toggleRowSelected: (rowId: string, value?: boolean) => void
-```
-
-Selects/deselects a row.
-
-### `getRowCanSelect`
-
-```tsx
-getRowCanSelect: (rowId: string) => boolean
-```
-
-Returns whether or not a row can be selected.
-
-### `getRowCanSelectSubRows`
-
-```tsx
-getRowCanSelectSubRows: (rowId: string) => boolean
-```
-
-Returns whether or not a row's sub-rows can be automatically selected when the parent row is selected.
-
-### `getRowCanMultiSelect`
-
-```tsx
-getRowCanMultiSelect: (rowId: string) => boolean
-```
-
-Returns whether or not a row can be multi-selected. TODO clarify
-
-### `getRowIsSelected`
-
-```tsx
-getRowIsSelected: (rowId: string) => boolean
-```
-
-Returns whether or not a row is selected.
-
-### `getRowIsSomeSelected`
-
-```tsx
-getRowIsSomeSelected: (rowId: string) => boolean
-```
-
-Returns whether or not any sub-rows of a row are selected.
 
 ### `getIsAllRowsSelected`
 
@@ -200,14 +127,6 @@ getIsSomePageRowsSelected: () => boolean
 
 Returns whether or not any rows on the current page are selected.
 
-### `queueResetRowSelection`
-
-```tsx
-queueResetRowSelection: () => void
-```
-
-TODO
-
 ### `toggleAllRowsSelected`
 
 ```tsx
@@ -228,14 +147,6 @@ Selects/deselects all rows on the current page.
 
 ```tsx
 getPreSelectedRowModel: () => RowModel<TGenerics>
-```
-
-TODO
-
-### `queueResetRowSelection`
-
-```tsx
-queueResetRowSelection: () => void
 ```
 
 TODO
@@ -298,6 +209,14 @@ getCanMultiSelect: () => boolean
 
 Returns whether or not the row can multi-select. TODO clarify
 
+### `getCanSelectSubRows`
+
+```tsx
+getCanSelectSubRows: () => boolean
+```
+
+Returns whether or not the row can select sub rows automatically when the parent row is selected.
+
 ### `toggleSelected`
 
 ```tsx
@@ -306,19 +225,10 @@ toggleSelected: (value?: boolean) => void
 
 Selects/deselects the row.
 
-### `getToggleSelectedProps`
+### `getToggleSelectedHandler`
 
 ```tsx
-type ToggleRowSelectedProps = {
-  onChange?: (e: unknown) => void
-  checked?: boolean
-  title?: string
-  indeterminate?: boolean
-}
-
-getToggleSelectedProps: <TGetter extends Getter<ToggleRowSelectedProps>>(
-  userProps?: TGetter
-) => undefined | PropGetterValue<ToggleRowSelectedProps, TGetter>
+getToggleSelectedHandler: () => (event: unknown) => void
 ```
 
-Returns the props for the `<input type="checkbox" />` element in the row that will toggle row selection and provides checked/indeterminate state.
+Returns a handler that can be used to toggle the row.
