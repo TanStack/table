@@ -63,10 +63,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   let instance = coreCreateTableInstance(resolvedOptions)
 
-  // beforeUpdate(() => {
-  //   instance.willUpdate()
-  // })
-
   let stateStore = writable(/** @type {number} */ instance.initialState)
   // combine stores
   let stateOptionsStore = derived([stateStore, optionsStore], s => s)

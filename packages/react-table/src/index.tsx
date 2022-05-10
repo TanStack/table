@@ -104,27 +104,10 @@ export function useTableInstance<TGenerics extends ReactTableGenerics>(
     // Similarly, we'll maintain both our internal state and any user-provided
     // state.
     onStateChange: updater => {
-      Promise.resolve().then(() => {
-        setState(updater)
-        options.onStateChange?.(updater)
-      })
+      setState(updater)
+      options.onStateChange?.(updater)
     },
   }))
-
-  useIsomorphicLayoutEffect(() => {
-    // On mount run instance side effects
-    instanceRef.current.init()
-
-    // On unmount, clear instance side effects
-    return () => {
-      instanceRef.current.destroy()
-      instanceRef.current = undefined!
-    }
-  }, [])
-
-  useIsomorphicLayoutEffect(() => {
-    instanceRef.current.willUpdate()
-  })
 
   return instanceRef.current
 }
