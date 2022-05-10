@@ -1,9 +1,12 @@
 import {
   branchConfigs,
-  examplesDir,
   latestBranch,
   packages,
+  reactExamplesDir,
   rootDir,
+  solidExamplesDir,
+  svelteExamplesDir,
+  vueExamplesDir,
 } from './config'
 import { BranchConfig, Commit, Package } from './types'
 import { getPackageDir } from './utils'
@@ -382,27 +385,40 @@ async function run() {
   }
 
   console.log(`Updating all example dependencies...`)
-  let examples = await fsp.readdir(examplesDir)
-  for (const example of examples) {
-    let stat = await fsp.stat(path.join(examplesDir, example))
-    if (!stat.isDirectory()) continue
+  let reactExamples = await fsp.readdir(reactExamplesDir)
+  let solidExamples = await fsp.readdir(solidExamplesDir)
+  let svelteExamples = await fsp.readdir(svelteExamplesDir)
+  let vueExamples = await fsp.readdir(vueExamplesDir)
 
-    await updatePackageJson('examples', example, async config => {
-      await Promise.all(
-        changedPackages.map(async pkg => {
-          const depVersion = await getPackageVersion('packages', pkg.name)
-          if (
-            config.dependencies?.[pkg.name] &&
-            config.dependencies?.[pkg.name] !== depVersion
-          ) {
-            console.log(
-              `  Updating ${example}'s dependency on ${pkg.name} to version ${depVersion}.`
-            )
-            config.dependencies[pkg.name] = depVersion
-          }
-        })
-      )
-    })
+  const allFrameworkExamples = {
+    [reactExamplesDir]: reactExamples,
+    [solidExamplesDir]: solidExamples,
+    [svelteExamplesDir]: svelteExamples,
+    [vueExamplesDir]: vueExamples,
+  }
+
+  for (const [examplesDir, frameworkExample] of Object.entries(allFrameworkExamples)) {
+    for (const example of frameworkExample) {
+      let stat = await fsp.stat(path.join(examplesDir, example))
+      if (!stat.isDirectory()) continue
+
+      await updatePackageJson('examples', example, async config => {
+        await Promise.all(
+          changedPackages.map(async pkg => {
+            const depVersion = await getPackageVersion('packages', pkg.name)
+            if (
+              config.dependencies?.[pkg.name] &&
+              config.dependencies?.[pkg.name] !== depVersion
+            ) {
+              console.log(
+                `  Updating ${example}'s dependency on ${pkg.name} to version ${depVersion}.`
+              )
+              config.dependencies[pkg.name] = depVersion
+            }
+          })
+        )
+      })
+    }
   }
 
   if (!process.env.CI) {
