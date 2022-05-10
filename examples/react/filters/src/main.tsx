@@ -225,17 +225,6 @@ function Filter({
         />
       </div>
       <div className="h-1" />
-      <div className="w-full bg-gray-300 rounded-sm">
-        <div
-          className="h-[2px] bg-green-400 rounded-sm"
-          style={{
-            width: `${
-              instance.getState().facetProgress[`${column.id}_minMaxValues`]! *
-              100
-            }%`,
-          }}
-        />
-      </div>
     </div>
   ) : (
     <>
@@ -253,17 +242,6 @@ function Filter({
         list={column.id + 'list'}
       />
       <div className="h-1" />
-      <div className="w-full bg-gray-300 rounded-sm">
-        <div
-          className="h-[2px] bg-green-400 rounded-sm"
-          style={{
-            width: `${
-              instance.getState().facetProgress[`${column.id}_uniqueValues`]! *
-              100
-            }%`,
-          }}
-        />
-      </div>
     </>
   )
 }
