@@ -3,6 +3,7 @@ const cjs = NODE_ENV === 'test' || BABEL_ENV === 'commonjs'
 const loose = true
 
 module.exports = {
+  targets: 'defaults, not ie 11, not ie_mob 11',
   presets: [
     [
       '@babel/env',
@@ -16,7 +17,7 @@ module.exports = {
     '@babel/preset-typescript',
   ],
   plugins: [
-    'babel-plugin-transform-async-to-promises',
+    // 'babel-plugin-transform-async-to-promises',
     cjs && ['@babel/transform-modules-commonjs', { loose }],
     // [
     //   '@babel/transform-runtime',
