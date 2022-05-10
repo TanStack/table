@@ -1,7 +1,7 @@
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { memo } from '../utils'
 
-export function getCoreRowModelSync<TGenerics extends TableGenerics>(): (
+export function getCoreRowModel<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>
@@ -46,13 +46,7 @@ export function getCoreRowModelSync<TGenerics extends TableGenerics>(): (
           }
 
           // Make the row
-          const row = instance.createRow(
-            id,
-            originalRow,
-            rowIndex,
-            depth,
-            values
-          )
+          const row = instance.createRow(id, originalRow, rowIndex, depth)
 
           // Push instance row into the parentRows array
           parentRows.push(row)

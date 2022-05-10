@@ -1,20 +1,21 @@
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { incrementalMemo, memo } from '../utils'
 
-export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
+export function getSortedRowModelAsync<TGenerics extends TableGenerics>(opts?: {
   initialSync?: boolean
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     incrementalMemo(
       () => [instance.getState().sorting, instance.getPreSortedRowModel()],
-      (_sorting, rowModel): RowModel<TGenerics> => {
-        return {
-          rows: rowModel.rows.slice(),
-          flatRows: [],
-          rowsById: rowModel.rowsById,
-        }
-      },
-      (sorting, rowModel) => rowModelRef => scheduleTask => {
+      () =>
+        (_sorting, rowModel): RowModel<TGenerics> => {
+          return {
+            rows: rowModel.rows.slice(),
+            flatRows: [],
+            rowsById: rowModel.rowsById,
+          }
+        },
+      () => (sorting, rowModel) => async scheduleTask => {
         // TODO: Figure out how to do async sorting
         // We probably need to use a sorting algo that is "divide and
         // conquer", since that will probably distribute the easiest into
@@ -75,8 +76,10 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(opts?: {
         // sortData(rowModelRef.current.rows)
       },
       {
+        instance,
+        priority: 'data',
         key: process.env.NODE_ENV === 'development' && 'getSortedRowModel',
-        initialSync: opts?.initialSync,
+        keepPrevious: () => instance.options.keepPreviousData,
         onProgress: progress => {
           instance.setState(old => ({ ...old, sortingProgress: progress }))
         },
@@ -133,16 +136,16 @@ export function quicksort<TGenerics extends TableGenerics>(
     let j = end
 
     const compare = (a: number, b: number) => {
-      const rowA = rows[a]
-      const rowB = rows[b]
+      const rowA = rows[a]!
+      const rowB = rows[b]!
 
       for (let i = 0; i < sorters.length; i += 1) {
         const sorter = sorters[i]!
         const isDesc = sorter?.desc ?? false
 
         if (sorter.sortUndefined) {
-          const aValue = rowA.values[sorter.id]
-          const bValue = rowB.values[sorter.id]
+          const aValue = rowA.getValue(sorter.id)
+          const bValue = rowB.getValue(sorter.id)
 
           const aUndefined = typeof aValue === 'undefined'
           const bUndefined = typeof bValue === 'undefined'
@@ -193,8 +196,8 @@ export function quicksort<TGenerics extends TableGenerics>(
   }
 
   function swap<T>(arr: T[], a: number, b: number) {
-    const t = arr[a]
-    arr[a] = arr[b]
+    const t = arr[a]!
+    arr[a] = arr[b]!
     arr[b] = t
   }
 }

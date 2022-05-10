@@ -1,7 +1,8 @@
+import { CoreRow } from '../features/Rows'
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { flattenBy, memo } from '../utils'
 
-export function getGroupedRowModelSync<TGenerics extends TableGenerics>(): (
+export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>
@@ -16,56 +17,6 @@ export function getGroupedRowModelSync<TGenerics extends TableGenerics>(): (
         const existingGrouping = grouping.filter(columnId =>
           instance.getColumn(columnId)
         )
-
-        // Find the columns that can or are aggregating
-        // Uses each column to aggregate rows into a single value
-        const aggregateRowsToValues = (
-          leafRows: Row<TGenerics>[],
-          groupedRows: Row<TGenerics>[],
-          depth: number
-        ) => {
-          const values: Record<string, unknown> = {}
-
-          instance.getAllLeafColumns().forEach(column => {
-            // Don't aggregate columns that are in the grouping
-            if (existingGrouping.includes(column.id)) {
-              values[column.id] = groupedRows[0]
-                ? groupedRows[0].values[column.id]
-                : null
-              return
-            }
-
-            // Aggregate the values
-            const aggregateFn = instance.getColumnAggregationFn(column.id)
-
-            if (aggregateFn) {
-              values[column.id] = aggregateFn(
-                () =>
-                  leafRows.map(row => {
-                    let columnValue = row.values[column.id]
-
-                    if (!depth && column.aggregateValue) {
-                      columnValue = column.aggregateValue(columnValue)
-                    }
-
-                    return columnValue
-                  }),
-                () => groupedRows.map(row => row.values[column.id])
-              )
-            } else if (column.aggregationFn) {
-              console.info({ column })
-              throw new Error(
-                process.env.NODE_ENV !== 'production'
-                  ? `Table: Invalid column.aggregateType option for column listed above`
-                  : ''
-              )
-            } else {
-              values[column.id] = null
-            }
-          })
-
-          return values
-        }
 
         const groupedFlatRows: Row<TGenerics>[] = []
         const groupedRowsById: Record<string, Row<TGenerics>> = {}
@@ -104,21 +55,61 @@ export function getGroupedRowModelSync<TGenerics extends TableGenerics>(): (
                 ? flattenBy(groupedRows, row => row.subRows)
                 : groupedRows
 
-              const values = aggregateRowsToValues(leafRows, groupedRows, depth)
-
-              const row = instance.createRow(
-                id,
-                undefined,
-                index,
-                depth,
-                values
-              )
+              const row = instance.createRow(id, undefined, index, depth)
 
               Object.assign(row, {
                 groupingColumnId: columnId,
                 groupingValue,
                 subRows,
                 leafRows,
+                getValue: (columnId: string) => {
+                  // Don't aggregate columns that are in the grouping
+                  if (existingGrouping.includes(columnId)) {
+                    if (row.valuesCache.hasOwnProperty(columnId)) {
+                      return row.valuesCache[columnId]
+                    }
+
+                    if (groupedRows[0]) {
+                      row.valuesCache[columnId] =
+                        groupedRows[0].getValue(columnId) ?? undefined
+                    }
+
+                    return row.valuesCache[columnId]
+                  }
+
+                  if (row.groupingValuesCache.hasOwnProperty(columnId)) {
+                    return row.groupingValuesCache[columnId]
+                  }
+
+                  // Aggregate the values
+                  const column = instance.getColumn(columnId)
+                  const aggregateFn = column.getColumnAggregationFn()
+
+                  if (aggregateFn) {
+                    row.groupingValuesCache[columnId] = aggregateFn(
+                      () =>
+                        leafRows.map(row => {
+                          let columnValue = row.getValue(columnId)
+
+                          if (!depth && column.aggregateValue) {
+                            columnValue = column.aggregateValue(columnValue)
+                          }
+
+                          return columnValue
+                        }),
+                      () => groupedRows.map(row => row.getValue(columnId))
+                    )
+
+                    return row.groupingValuesCache[columnId]
+                  } else if (column.aggregationFn) {
+                    console.info({ column })
+                    throw new Error(
+                      process.env.NODE_ENV !== 'production'
+                        ? `Table: Invalid column.aggregateType option for column listed above`
+                        : ''
+                    )
+                  }
+                },
               })
 
               subRows.forEach(subRow => {
@@ -180,7 +171,7 @@ function groupBy<TGenerics extends TableGenerics>(
   const groupMap = new Map<any, Row<TGenerics>[]>()
 
   return rows.reduce((map, row) => {
-    const resKey = `${row.values[columnId]}`
+    const resKey = `${row.getValue(columnId)}`
     const previous = map.get(resKey)
     if (!previous) {
       map.set(resKey, [row])

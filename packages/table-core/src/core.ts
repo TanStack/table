@@ -26,10 +26,9 @@ import { Sorting } from './features/Sorting'
 import { Visibility } from './features/Visibility'
 import { Headers } from './features/Headers'
 //
-import { mean } from './aggregationFns'
 
 export type CoreTableState = {
-  coreProgress: number
+  // coreProgress: number
 }
 
 export type CoreOptions<TGenerics extends TableGenerics> = {
@@ -45,26 +44,51 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   initialState?: InitialTableState
   autoResetAll?: boolean
   mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
+  keepPreviousData?: boolean
   meta?: TGenerics['TableMeta']
 }
 
-export type TableCore<TGenerics extends TableGenerics> = {
+export type CoreInstance<TGenerics extends TableGenerics> = {
   // generics: TGenerics
   initialState: TableState
   reset: () => void
   options: RequiredKeys<TableOptions<TGenerics>, 'state'>
   setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
   queue: (cb: () => void) => void
-  // willUpdate: () => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
   render: <TProps>(
     template: Renderable<TGenerics, TProps>,
     props: TProps
   ) => string | null | TGenerics['Rendered']
-  getOverallProgress: () => number
+  // getOverallProgress: () => number
+  // getProgressStage: () =>
+  //   | undefined
+  //   | 'coreRowModel'
+  //   | 'filteredRowModel'
+  //   | 'facetedRowModel'
   _features: readonly TableFeature[]
+  // createBatch: (priority: keyof CoreBatches) => Batch
+  // init: () => void
+  // willUpdate: () => void
+  // destroy: () => void
+  // batches: CoreBatches
 }
+
+// export type Batch = {
+//   id: number
+//   priority: keyof CoreBatches
+//   tasks: (() => void)[]
+//   schedule: (cb: () => void) => void
+//   cancel: () => void
+// }
+
+// type CoreBatches = {
+//   data: Batch[]
+//   facets: Batch[]
+// }
+
+// export type TaskPriority = keyof CoreBatches
 
 export function createTableInstance<TGenerics extends TableGenerics>(
   options: TableOptions<TGenerics>
@@ -73,24 +97,24 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     console.info('Creating Table Instance...')
   }
 
-  let instance = {} as TableInstance<TGenerics>
-
-  instance._features = [
-    Columns,
-    Rows,
-    Cells,
-    Headers,
-    Visibility,
-    Ordering,
-    Pinning,
-    Filters,
-    Sorting,
-    Grouping,
-    Expanding,
-    Pagination,
-    RowSelection,
-    ColumnSizing,
-  ] as const
+  let instance = {
+    _features: [
+      Columns,
+      Rows,
+      Cells,
+      Headers,
+      Visibility,
+      Ordering,
+      Pinning,
+      Filters,
+      Sorting,
+      Grouping,
+      Expanding,
+      Pagination,
+      RowSelection,
+      ColumnSizing,
+    ] as const,
+  } as unknown as CoreInstance<TGenerics>
 
   const defaultOptions = instance._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(instance))
@@ -107,13 +131,8 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     }
   }
 
-  instance.options = {
-    ...defaultOptions,
-    ...options,
-  }
-
   const coreInitialState: CoreTableState = {
-    coreProgress: 1,
+    // coreProgress: 1,
   }
 
   let initialState = {
@@ -128,11 +147,90 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
-  const finalInstance: TableInstance<TGenerics> = {
+  // let workScheduled = false
+  // let working = false
+  // let latestCallback: ReturnType<typeof requestIdleCallback>
+  // let batchUid = 0
+  // const onProgress = () => {}
+  // const getBatch = () => {
+  //   instance.batches.data = instance.batches.data.filter(d => d.tasks.length)
+  //   instance.batches.facets = instance.batches.facets.filter(
+  //     d => d.tasks.length
+  //   )
+
+  //   return (
+  //     instance.batches.data.find(d => d.tasks.length) ??
+  //     instance.batches.facets.find(d => d.tasks.length)
+  //   )
+  // }
+
+  // const startWorkLoop = () => {
+  //   working = true
+
+  //   const workLoop = (deadline: IdleDeadline) => {
+  //     const batch = getBatch()
+
+  //     if (!batch) {
+  //       working = false
+  //       return
+  //     }
+  //     // Prioritize tasks
+  //     while (deadline.timeRemaining() > 0 && batch.tasks.length) {
+  //       batch.tasks.shift()!()
+  //     }
+
+  //     onProgress()
+
+  //     if (working) {
+  //       latestCallback = requestIdleCallback(workLoop, { timeout: 10000 })
+  //     }
+  //   }
+
+  //   latestCallback = requestIdleCallback(workLoop, { timeout: 10000 })
+  // }
+
+  // const startWork = () => {
+  //   if (getBatch() && !working) {
+  //     if (
+  //       (process.env.NODE_ENV === 'development' && instance.options.debugAll) ??
+  //       instance.options.debugTable
+  //     ) {
+  //       console.info('Starting work...')
+  //     }
+  //     startWorkLoop()
+  //   }
+  // }
+
+  // const stopWork = () => {
+  //   if (working) {
+  //     if (
+  //       (process.env.NODE_ENV === 'development' && instance.options.debugAll) ??
+  //       instance.options.debugTable
+  //     ) {
+  //       console.info('Stopping work...')
+  //     }
+
+  //     working = false
+  //     cancelIdleCallback(latestCallback)
+  //   }
+  // }
+
+  const midInstance: CoreInstance<TGenerics> = {
     ...instance,
-    ...(instance._features.reduce((obj, feature) => {
-      return Object.assign(obj, feature.createInstance?.(instance))
-    }, {}) as unknown as TableInstance<TGenerics>),
+    // init: () => {
+    //   startWork()
+    // },
+    // willUpdate: () => {
+    //   startWork()
+    // },
+    // destroy: () => {
+    //   stopWork()
+    // },
+    options: {
+      ...defaultOptions,
+      ...options,
+    },
+    initialState,
     queue: cb => {
       queued.push(cb)
 
@@ -155,7 +253,43 @@ export function createTableInstance<TGenerics extends TableGenerics>(
           )
       }
     },
-    initialState,
+    // batches: {
+    //   data: [],
+    //   facets: [],
+    // },
+    // createBatch: priority => {
+    //   const batchId = batchUid++
+    //   let canceled: boolean
+
+    //   const batch: Batch = {
+    //     id: batchId,
+    //     priority,
+    //     tasks: [],
+    //     schedule: cb => {
+    //       if (canceled) return
+    //       batch.tasks.push(cb)
+
+    //       if (!working && !workScheduled) {
+    //         workScheduled = true
+    //         instance.queue(() => {
+    //           workScheduled = false
+    //           instance.setState(old => ({ ...old }))
+    //         })
+    //       }
+    //     },
+    //     cancel: () => {
+    //       canceled = true
+    //       batch.tasks = []
+    //       instance.batches[priority] = instance.batches[priority].filter(
+    //         b => b.id !== batchId
+    //       )
+    //     },
+    //   }
+
+    //   instance.batches[priority].push(batch)
+
+    //   return batch
+    // },
     reset: () => {
       instance.setState(instance.initialState)
     },
@@ -183,19 +317,37 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       instance.options.onStateChange?.(updater)
     },
 
-    getOverallProgress: () => {
-      const { coreProgress, columnFiltersProgress, globalFilterProgress } =
-        instance.getState()
+    // getOverallProgress: () => {
+    //   const { coreProgress, filtersProgress, facetProgress } =
+    //     instance.getState()
 
-      return mean(() =>
-        [coreProgress, columnFiltersProgress, globalFilterProgress].filter(
-          d => d < 1
-        )
-      ) as number
-    },
+    //   return mean(() =>
+    //     [coreProgress, filtersProgress].filter(d => d < 1)
+    //   ) as number
+    // },
+    // getProgressStage: () => {
+    //   const { coreProgress, filtersProgress, facetProgress } =
+    //     instance.getState()
+
+    //   if (coreProgress < 1) {
+    //     return 'coreRowModel'
+    //   }
+
+    //   if (filtersProgress < 1) {
+    //     return 'filteredRowModel'
+    //   }
+
+    //   if (Object.values(facetProgress).some(d => d < 1)) {
+    //     return 'facetedRowModel'
+    //   }
+    // },
   }
 
-  instance = Object.assign(instance, finalInstance)
+  instance = Object.assign(instance, midInstance)
 
-  return instance
+  instance._features.forEach(feature => {
+    return Object.assign(instance, feature.createInstance?.(instance))
+  })
+
+  return instance as TableInstance<TGenerics>
 }

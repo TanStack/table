@@ -9,8 +9,8 @@ import {
   TableInstance,
   PaginationState,
   useTableInstance,
-  getCoreRowModelSync,
-  getFilteredRowModelSync,
+  getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   ColumnDef,
   OnChangeFn,
@@ -29,12 +29,12 @@ function App() {
         footer: props => props.column.id,
         columns: [
           table.createDataColumn('firstName', {
-            cell: info => info.value,
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
-            cell: info => info.value,
+            cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
           }),
@@ -121,8 +121,8 @@ function Table({
     },
     onPaginationChange: setPagination,
     // Pipeline
-    getCoreRowModel: getCoreRowModelSync(),
-    getFilteredRowModel: getFilteredRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     //
     debugTable: true,
@@ -169,15 +169,6 @@ function Table({
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      {instance.getOverallProgress() < 1 ? (
-        <div className="p-2">
-          <div>Loading data...</div>
-          <div>
-            <progress value={instance.getOverallProgress()} />
-          </div>
-        </div>
-      ) : null}
       <div className="h-2" />
       <div className="flex items-center gap-2">
         <button
@@ -251,8 +242,9 @@ function Filter({
   column: Column<any>
   instance: TableInstance<any>
 }) {
-  const firstValue =
-    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
+  const firstValue = instance
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
 

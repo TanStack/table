@@ -2,7 +2,7 @@ import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { SortingFn } from '../features/Sorting'
 import { memo } from '../utils'
 
-export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
+export function getSortedRowModel<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>
 ) => () => RowModel<TGenerics> {
   return instance =>
@@ -53,8 +53,8 @@ export function getSortedRowModelSync<TGenerics extends TableGenerics>(): (
               const isDesc = sortEntry?.desc ?? false
 
               if (columnInfo.sortUndefined) {
-                const aValue = rowA.values[sortEntry.id]
-                const bValue = rowB.values[sortEntry.id]
+                const aValue = rowA.getValue(sortEntry.id)
+                const bValue = rowB.getValue(sortEntry.id)
 
                 const aUndefined = typeof aValue === 'undefined'
                 const bUndefined = typeof bValue === 'undefined'

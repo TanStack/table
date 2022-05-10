@@ -50,8 +50,7 @@ Filter state is stored on the table instance using the following shape:
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
   globalFilter: any
-  columnFiltersProgress: number
-  globalFilterProgress: number
+  filtersProgress: number
 }
 
 export type ColumnFiltersState = ColumnFilter[]

@@ -2265,11 +2265,6 @@
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.1.tgz#47ab73a3872b3fc10468259993f1a3121aa327c8"
   integrity sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==
 
-"@tanstack/table-core@8.0.0-alpha.58":
-  version "8.0.0-alpha.58"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.58.tgz#df4fa14573a14e251fa5d970cf5f71ef1c698619"
-  integrity sha512-RgrzZrp9w268WyPXP19vkAp0Eq+MNAdFGJR9mBDChxI3d40yb87c1gGCmQ0Go4E84dQtt/2stD8ZlJFX9lni9A==
-
 "@testing-library/dom@^8.0.0":
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.13.0.tgz#bc00bdd64c7d8b40841e27a70211399ad3af46f5"
@@ -2975,6 +2970,11 @@ babel-plugin-polyfill-regenerator@^0.3.0:
   integrity sha512-Y2B06tvgHYt1x0yz17jGkGeeMr5FeKUu+ASJ+N6nB5lQ8Dapfg42i0OVrf8PNGJ3zKL4A23snMi1IRwrqqND7A==
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.1"
+
+babel-plugin-transform-async-to-promises@^0.8.18:
+  version "0.8.18"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-async-to-promises/-/babel-plugin-transform-async-to-promises-0.8.18.tgz#f4dc5980b8afa0fc9c784b8d931afde913413e39"
+  integrity sha512-WpOrF76nUHijnNn10eBGOHZmXQC8JYRME9rOLxStOga7Av2VO53ehVFvVNImMksVtQuL2/7ZNxEgxnx7oo/3Hw==
 
 babel-preset-current-node-syntax@^1.0.0:
   version "1.0.1"

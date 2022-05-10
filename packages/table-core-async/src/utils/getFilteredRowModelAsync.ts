@@ -1,28 +1,34 @@
-import {
-  ColumnFilter,
-  FilterFn,
-  ResolvedColumnFilter,
-} from '../features/Filters'
+import { ResolvedColumnFilter } from '../features/Filters'
 import { TableInstance, RowModel, TableGenerics, Row } from '../types'
-import { memo } from '../utils'
-import { filterRows } from './filterRowsUtils'
+import { batchLoop, incrementalMemo } from '../utils'
+import {
+  filterRowModelFromLeafsAsync,
+  filterRowModelFromRootAsync,
+  filterRowsAsync,
+} from './filterRowsUtils'
 
-export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
+export function getFilteredRowModelAsync<
+  TGenerics extends TableGenerics
+>(opts?: {
+  initialSync?: boolean
+}): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
-    memo(
+    incrementalMemo(
       () => [
         instance.getPreFilteredRowModel(),
         instance.getState().columnFilters,
         instance.getState().globalFilter,
       ],
-      (rowModel, columnFilters, globalFilter) => {
+      () =>
+        (preRowModel): RowModel<TGenerics> => {
+          return preRowModel
+        },
+      () => (preRowModel, columnFilters, globalFilter) => async scheduleTask => {
         if (
-          !rowModel.rows.length ||
+          !preRowModel.rows.length ||
           (!columnFilters?.length && !globalFilter)
         ) {
-          return rowModel
+          return preRowModel
         }
 
         const resolvedColumnFilters: ResolvedColumnFilter<TGenerics>[] = []
@@ -39,7 +45,7 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
             }
           }
 
-          const filterFn = column.getFilterFn()
+          const filterFn = column.getFilterFn()!
 
           if (!filterFn) {
             if (process.env.NODE_ENV !== 'production') {
@@ -83,34 +89,35 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
           })
         }
 
-        // Flag the prefiltered row model with each filter state
-        for (let j = 0; j < rowModel.flatRows.length; j++) {
-          const row = rowModel.flatRows[j]
+        let currentColumnFilter
+        let currentGlobalFilter
 
+        await batchLoop(preRowModel.flatRows, 1000, scheduleTask, row => {
           row.columnFilterMap = {}
 
           if (resolvedColumnFilters.length) {
             for (let i = 0; i < resolvedColumnFilters.length; i++) {
-              const columnFilter = resolvedColumnFilters[i]
+              currentColumnFilter = resolvedColumnFilters[i]!
 
               // Tag the row with the column filter state
-              row.columnFilterMap[columnFilter.id] = columnFilter.filterFn(
-                row,
-                columnFilter.id,
-                columnFilter.resolvedValue
-              )
+              row.columnFilterMap[currentColumnFilter.id] =
+                currentColumnFilter.filterFn(
+                  row,
+                  currentColumnFilter.id,
+                  currentColumnFilter.resolvedValue
+                )
             }
           }
 
           if (resolvedGlobalFilters.length) {
             for (let i = 0; i < resolvedGlobalFilters.length; i++) {
-              const globalFilter = resolvedGlobalFilters[i]
+              currentGlobalFilter = resolvedGlobalFilters[i]!
               // Tag the row with the first truthy global filter state
               if (
-                globalFilter.filterFn(
+                currentGlobalFilter.filterFn(
                   row,
-                  globalFilter.id,
-                  globalFilter.resolvedValue
+                  currentGlobalFilter.id,
+                  currentGlobalFilter.resolvedValue
                 )
               ) {
                 row.columnFilterMap.__global__ = true
@@ -122,14 +129,38 @@ export function getFilteredRowModelSync<TGenerics extends TableGenerics>(): (
               row.columnFilterMap.__global__ = false
             }
           }
+        })
+
+        const filterRow = (row: Row<TGenerics>) => {
+          // Horizontally filter rows through each column
+          for (let i = 0; i < filterableIds.length; i++) {
+            if (row.columnFilterMap[filterableIds[i]!] === false) {
+              return false
+            }
+          }
+          return true
         }
 
-        // Filter final rows using all of the active filters
-        return filterRows(rowModel.rows, filterableIds, instance)
+        return filterRowsAsync(
+          preRowModel,
+          1000,
+          scheduleTask,
+          filterRow,
+          instance
+        )
       },
       {
+        instance,
+        priority: 'data',
+        keepPrevious: () => instance.options.keepPreviousData,
         key:
-          process.env.NODE_ENV === 'development' && 'getFilteredRowModelSync',
+          process.env.NODE_ENV === 'production' && 'getFilteredRowModelAsync',
+        onProgress: progress => {
+          instance.setState(old => ({
+            ...old,
+            filtersProgress: progress,
+          }))
+        },
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {

@@ -9,9 +9,9 @@ import {
   TableInstance,
   ExpandedState,
   useTableInstance,
-  getCoreRowModelSync,
+  getCoreRowModel,
   getPaginationRowModel,
-  getFilteredRowModelSync,
+  getFilteredRowModel,
   getExpandedRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -47,7 +47,7 @@ function App() {
                 First Name
               </>
             ),
-            cell: ({ row, value }) => (
+            cell: ({ row, getValue }) => (
               <div
                 style={{
                   // Since rows are flattened by default,
@@ -76,14 +76,14 @@ function App() {
                 ) : (
                   '🔵'
                 )}{' '}
-                {value}
+                {getValue()}
               </div>
             ),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
-            cell: info => info.value,
+            cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
           }),
@@ -133,9 +133,9 @@ function App() {
     },
     onExpandedChange: setExpanded,
     getSubRows: row => row.subRows,
-    getCoreRowModel: getCoreRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     debugTable: true,
   })
@@ -262,8 +262,9 @@ function Filter({
   column: Column<any>
   instance: TableInstance<any>
 }) {
-  const firstValue =
-    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
+  const firstValue = instance
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
 

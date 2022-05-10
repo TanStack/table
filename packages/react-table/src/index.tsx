@@ -83,16 +83,18 @@ export function useTableInstance<TGenerics extends ReactTableGenerics>(
   }
 
   // Create a new table instance and store it in state
-  const [instance] = React.useState(() =>
-    createTableInstance<TGenerics>(resolvedOptions)
-  )
+  const [instanceRef] = React.useState(() => ({
+    current: createTableInstance<TGenerics>(resolvedOptions),
+  }))
 
   // By default, manage table state here using the instance's initial state
-  const [state, setState] = React.useState(() => instance.initialState)
+  const [state, setState] = React.useState(
+    () => instanceRef.current.initialState
+  )
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
-  instance.setOptions(prev => ({
+  instanceRef.current.setOptions(prev => ({
     ...prev,
     ...options,
     state: {
@@ -107,9 +109,5 @@ export function useTableInstance<TGenerics extends ReactTableGenerics>(
     },
   }))
 
-  // useIsomorphicLayoutEffect(() => {
-  //   instance.willUpdate()
-  // })
-
-  return instance
+  return instanceRef.current
 }

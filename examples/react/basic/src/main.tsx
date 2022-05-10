@@ -5,7 +5,7 @@ import './index.css'
 
 import {
   createTable,
-  getCoreRowModelSync,
+  getCoreRowModel,
   useTableInstance,
 } from '@tanstack/react-table'
 
@@ -53,12 +53,12 @@ const defaultColumns = [
     footer: props => props.column.id,
     columns: [
       table.createDataColumn('firstName', {
-        cell: info => info.value,
+        cell: info => info.getValue(),
         footer: props => props.column.id,
       }),
       table.createDataColumn(row => row.lastName, {
         id: 'lastName',
-        cell: info => info.value,
+        cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
       }),
@@ -104,7 +104,7 @@ function App() {
   const instance = useTableInstance(table, {
     data,
     columns,
-    getCoreRowModel: getCoreRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
   })
 
   return (

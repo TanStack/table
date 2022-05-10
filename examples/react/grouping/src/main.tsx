@@ -8,9 +8,9 @@ import {
   GroupingState,
   useTableInstance,
   getPaginationRowModel,
-  getFilteredRowModelSync,
-  getCoreRowModelSync,
-  getGroupedRowModelSync,
+  getFilteredRowModel,
+  getCoreRowModel,
+  getGroupedRowModel,
   getExpandedRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -28,13 +28,13 @@ function App() {
         columns: [
           table.createDataColumn('firstName', {
             header: 'First Name',
-            cell: info => info.value,
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
             header: () => <span>Last Name</span>,
-            cell: info => info.value,
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
         ],
@@ -45,7 +45,8 @@ function App() {
         columns: [
           table.createDataColumn('age', {
             header: () => 'Age',
-            aggregatedCell: ({ value }) => Math.round(value * 100) / 100,
+            aggregatedCell: ({ getValue }) =>
+              Math.round(getValue() * 100) / 100,
             footer: props => props.column.id,
             aggregationFn: 'median',
           }),
@@ -54,7 +55,7 @@ function App() {
             columns: [
               table.createDataColumn('visits', {
                 header: () => <span>Visits</span>,
-                aggregatedCell: ({ value }) => value.toLocaleString(),
+                aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
                 footer: props => props.column.id,
               }),
               table.createDataColumn('status', {
@@ -63,10 +64,11 @@ function App() {
               }),
               table.createDataColumn('progress', {
                 header: 'Profile Progress',
-                cell: ({ value }) => Math.round(value * 100) / 100 + '%',
+                cell: ({ getValue }) =>
+                  Math.round(getValue() * 100) / 100 + '%',
                 aggregationFn: 'mean',
-                aggregatedCell: ({ value }) =>
-                  Math.round(value * 100) / 100 + '%',
+                aggregatedCell: ({ getValue }) =>
+                  Math.round(getValue() * 100) / 100 + '%',
                 footer: props => props.column.id,
               }),
             ],
@@ -90,10 +92,10 @@ function App() {
     },
     onGroupingChange: setGrouping,
     getExpandedRowModel: getExpandedRowModel(),
-    getGroupedRowModel: getGroupedRowModelSync(),
-    getCoreRowModel: getCoreRowModelSync(),
+    getGroupedRowModel: getGroupedRowModel(),
+    getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModelSync(),
+    getFilteredRowModel: getFilteredRowModel(),
     debugTable: true,
   })
 

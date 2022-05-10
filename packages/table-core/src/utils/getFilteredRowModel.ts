@@ -1,34 +1,24 @@
 import { ResolvedColumnFilter } from '../features/Filters'
 import { TableInstance, RowModel, TableGenerics, Row } from '../types'
-import { incrementalMemo } from '../utils'
+import { memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
-export function getFilteredRowModelAsync<
-  TGenerics extends TableGenerics
->(opts?: {
-  initialSync?: boolean
-}): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
+export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
+  instance: TableInstance<TGenerics>
+) => () => RowModel<TGenerics> {
   return instance =>
-    incrementalMemo(
+    memo(
       () => [
         instance.getPreFilteredRowModel(),
         instance.getState().columnFilters,
         instance.getState().globalFilter,
       ],
-      (rowModel): RowModel<TGenerics> => {
-        return {
-          rows: rowModel.rows.slice(),
-          flatRows: [],
-          rowsById: rowModel.rowsById,
-        }
-      },
-      (rowModel, columnFilters, globalFilter) => rowModelRef => scheduleTask => {
+      (rowModel, columnFilters, globalFilter) => {
         if (
           !rowModel.rows.length ||
           (!columnFilters?.length && !globalFilter)
         ) {
-          rowModelRef.current = rowModel
-          return
+          return rowModel
         }
 
         const resolvedColumnFilters: ResolvedColumnFilter<TGenerics>[] = []
@@ -45,7 +35,7 @@ export function getFilteredRowModelAsync<
             }
           }
 
-          const filterFn = column.getFilterFn()!
+          const filterFn = column.getFilterFn()
 
           if (!filterFn) {
             if (process.env.NODE_ENV !== 'production') {
@@ -89,39 +79,40 @@ export function getFilteredRowModelAsync<
           })
         }
 
+        let currentColumnFilter
+        let currentGlobalFilter
+
         // Flag the prefiltered row model with each filter state
         for (let j = 0; j < rowModel.flatRows.length; j++) {
-          const row = rowModel.flatRows[j]
+          const row = rowModel.flatRows[j]!
 
           row.columnFilterMap = {}
 
           if (resolvedColumnFilters.length) {
             for (let i = 0; i < resolvedColumnFilters.length; i++) {
-              const columnFilter = resolvedColumnFilters[i]
+              currentColumnFilter = resolvedColumnFilters[i]!
 
               // Tag the row with the column filter state
-              row.columnFilterMap[columnFilter.id] = columnFilter.filterFn(
-                row,
-                columnFilter.id,
-                columnFilter.resolvedValue
-              )
+              row.columnFilterMap[currentColumnFilter.id] =
+                currentColumnFilter.filterFn(
+                  row,
+                  currentColumnFilter.id,
+                  currentColumnFilter.resolvedValue
+                )
             }
           }
 
           if (resolvedGlobalFilters.length) {
-            let hit = false
-
             for (let i = 0; i < resolvedGlobalFilters.length; i++) {
-              const globalFilter = resolvedGlobalFilters[i]
+              currentGlobalFilter = resolvedGlobalFilters[i]!
               // Tag the row with the first truthy global filter state
               if (
-                globalFilter.filterFn(
+                currentGlobalFilter.filterFn(
                   row,
-                  globalFilter.id,
-                  globalFilter.resolvedValue
+                  currentGlobalFilter.id,
+                  currentGlobalFilter.resolvedValue
                 )
               ) {
-                hit = true
                 row.columnFilterMap.__global__ = true
                 break
               }
@@ -133,19 +124,23 @@ export function getFilteredRowModelAsync<
           }
         }
 
+        const filterRowsImpl = (rowsToFilter: Row<TGenerics>[]) => {
+          // Horizontally filter rows through each column
+          return rowsToFilter.filter(row => {
+            for (let i = 0; i < filterableIds.length; i++) {
+              if (row.columnFilterMap[filterableIds[i]!] === false) {
+                return false
+              }
+            }
+            return true
+          })
+        }
+
         // Filter final rows using all of the active filters
-        return filterRows(rowModel.rows, filterableIds, instance)
+        return filterRows(rowModel.rows, filterRowsImpl, instance)
       },
       {
-        key:
-          process.env.NODE_ENV === 'production' && 'getFilteredRowModelAsync',
-        initialSync: opts?.initialSync,
-        onProgress: progress => {
-          instance.setState(old => ({
-            ...old,
-            columnFiltersProgress: progress,
-          }))
-        },
+        key: process.env.NODE_ENV === 'development' && 'getFilteredRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
           instance.queue(() => {

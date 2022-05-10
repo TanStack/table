@@ -17,7 +17,7 @@ export type CellsInstance<TGenerics extends TableGenerics> = {
   createCell: (
     row: Row<TGenerics>,
     column: Column<TGenerics>,
-    value: any
+    columnId: string
   ) => Cell<TGenerics>
   getCell: (rowId: string, columnId: string) => Cell<TGenerics>
 }
@@ -34,15 +34,11 @@ export const Cells = {
         () => [instance.getAllLeafColumns()],
         leafColumns => {
           return leafColumns.map(column => {
-            return instance.createCell(
-              row as Row<TGenerics>,
-              column,
-              row.values[column.id]
-            )
+            return instance.createCell(row as Row<TGenerics>, column, column.id)
           })
         },
         {
-          key: process.env.NODE_ENV === 'development' ? 'row.getAllCells' : '',
+          key: process.env.NODE_ENV === 'development' && 'row.getAllCells',
           debug: () => instance.options.debugAll ?? instance.options.debugRows,
         }
       ),
@@ -69,14 +65,14 @@ export const Cells = {
     instance: TableInstance<TGenerics>
   ): CellsInstance<TGenerics> => {
     return {
-      createCell: (row, column, value) => {
+      createCell: (row, column, columnId) => {
         const cell: CoreCell<TGenerics> = {
           id: `${row.id}_${column.id}`,
           rowId: row.id,
-          columnId: column.id,
+          columnId,
           row,
           column,
-          value,
+          getValue: () => row.getValue(columnId),
           renderCell: () =>
             column.cell
               ? instance.render(column.cell, {
@@ -84,7 +80,7 @@ export const Cells = {
                   column,
                   row,
                   cell: cell as Cell<TGenerics>,
-                  value,
+                  getValue: cell.getValue,
                 })
               : null,
         }

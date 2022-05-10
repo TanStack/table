@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 import {
   createTable,
   useTableInstance,
-  getCoreRowModelSync,
+  getCoreRowModel,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -53,12 +53,12 @@ const defaultColumns = [
     footer: props => props.column.id,
     columns: [
       table.createDataColumn('firstName', {
-        cell: info => info.value,
+        cell: info => info.getValue(),
         footer: props => props.column.id,
       }),
       table.createDataColumn(row => row.lastName, {
         id: 'lastName',
-        cell: info => info.value,
+        cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
       }),
@@ -111,7 +111,7 @@ describe('core', () => {
         state: {
           columnVisibility,
         },
-        getCoreRowModel: getCoreRowModelSync(),
+        getCoreRowModel: getCoreRowModel(),
         // debug: true,
       })
 
@@ -202,7 +202,7 @@ describe('core', () => {
       const instance = useTableInstance(table, {
         data: defaultData,
         columns: defaultColumns,
-        getCoreRowModel: getCoreRowModelSync(),
+        getCoreRowModel: getCoreRowModel(),
       })
 
       return {
@@ -229,7 +229,7 @@ describe('core', () => {
       const instance = useTableInstance(table, {
         data: defaultData,
         columns: defaultColumns,
-        getCoreRowModel: getCoreRowModelSync(),
+        getCoreRowModel: getCoreRowModel(),
       })
 
       return {

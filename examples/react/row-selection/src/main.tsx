@@ -8,8 +8,8 @@ import { makeData, Person } from './makeData'
 import {
   Column,
   createTable,
-  getCoreRowModelSync,
-  getFilteredRowModelSync,
+  getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   TableInstance,
   useTableInstance,
@@ -53,12 +53,12 @@ function App() {
         footer: props => props.column.id,
         columns: [
           table.createDataColumn('firstName', {
-            cell: info => info.value,
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
-            cell: info => info.value,
+            cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
           }),
@@ -105,8 +105,8 @@ function App() {
       rowSelection,
     },
     onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModelSync(),
-    getFilteredRowModel: getFilteredRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   })
@@ -277,8 +277,9 @@ function Filter({
   column: Column<any>
   instance: TableInstance<any>
 }) {
-  const firstValue =
-    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
+  const firstValue = instance
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">

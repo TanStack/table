@@ -29,13 +29,13 @@ const newPerson = (): Person => {
       'relationship',
       'complicated',
       'single',
-    ])[0],
+    ])[0]!,
   }
 }
 
 export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0) => {
-    const len = lens[depth]
+  const makeDataLevel = (depth = 0): Person[] => {
+    const len = lens[depth]!
     return range(len).map((d): Person => {
       return {
         ...newPerson(),
