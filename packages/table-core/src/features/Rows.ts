@@ -12,7 +12,8 @@ export type CoreRow<TGenerics extends TableGenerics> = {
   index: number
   original?: TGenerics['Row']
   depth: number
-  values: RowValues
+  valuesCache: Record<string, any>
+  getValue: (columnId: string) => any
   subRows: Row<TGenerics>[]
   getLeafRows: () => Row<TGenerics>[]
   originalSubRows?: TGenerics['Row'][]
@@ -44,7 +45,7 @@ export type RowsInstance<TGenerics extends TableGenerics> = {
     original: TGenerics['Row'] | undefined,
     rowIndex: number,
     depth: number,
-    values: Record<string, any>
+    subRows?: Row<TGenerics>[]
   ) => Row<TGenerics>
   getCoreRowModel: () => RowModel<TGenerics>
   _getCoreRowModel?: () => RowModel<TGenerics>
@@ -73,20 +74,34 @@ export const Rows = {
       ) =>
         instance.options.getRowId?.(row, index, parent) ??
         `${parent ? [parent.id, index].join('.') : index}`,
-      createRow: (id, original, rowIndex, depth, values) => {
+      createRow: (id, original, rowIndex, depth, subRows) => {
         let row: CoreRow<TGenerics> = {
           id,
           index: rowIndex,
           original,
           depth,
-          values,
-          subRows: [],
+          valuesCache: {},
+          getValue: columnId => {
+            if (row.valuesCache.hasOwnProperty(columnId)) {
+              return row.valuesCache[columnId]
+            }
+            const column = instance.getColumn(columnId)
+            if (!column.accessorFn) {
+              throw new Error()
+            }
+            row.valuesCache[columnId] = column.accessorFn(
+              row.original,
+              rowIndex
+            )
+            return row.valuesCache[columnId]
+          },
+          subRows: subRows ?? [],
           getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
         }
 
         for (let i = 0; i < instance._features.length; i++) {
           const feature = instance._features[i]
-          Object.assign(row, feature.createRow?.(row, instance))
+          Object.assign(row, feature?.createRow?.(row, instance))
         }
 
         return row as Row<TGenerics>

@@ -7,7 +7,7 @@ import './index.css'
 import {
   ColumnOrderState,
   createTable,
-  getCoreRowModelSync,
+  getCoreRowModel,
   useTableInstance,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -20,12 +20,12 @@ const defaultColumns = [
     footer: props => props.column.id,
     columns: [
       table.createDataColumn('firstName', {
-        cell: info => info.value,
+        cell: info => info.getValue(),
         footer: props => props.column.id,
       }),
       table.createDataColumn(row => row.lastName, {
         id: 'lastName',
-        cell: info => info.value,
+        cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
       }),
@@ -78,7 +78,7 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
-    getCoreRowModel: getCoreRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

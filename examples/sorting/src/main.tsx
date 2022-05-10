@@ -5,8 +5,8 @@ import './index.css'
 
 import {
   createTable,
-  getCoreRowModelSync,
-  getSortedRowModelSync,
+  getCoreRowModel,
+  getSortedRowModel,
   SortingState,
   useTableInstance,
 } from '@tanstack/react-table'
@@ -26,12 +26,12 @@ function App() {
         footer: props => props.column.id,
         columns: [
           table.createDataColumn('firstName', {
-            cell: info => info.value,
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
-            cell: info => info.value,
+            cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
           }),
@@ -78,8 +78,8 @@ function App() {
       sorting,
     },
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModelSync(),
-    getSortedRowModel: getSortedRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     debugTable: true,
   })
 

@@ -80,7 +80,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
           // Similarly, we'll maintain both our internal state and any user-provided
           // state.
           onStateChange: updater => {
-            console.log('STATE CHANGE')
             if (updater instanceof Function) {
               stateStore.update(updater)
             } else {

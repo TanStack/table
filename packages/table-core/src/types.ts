@@ -1,4 +1,4 @@
-import { CoreOptions, CoreTableState, TableCore } from './core'
+import { CoreOptions, CoreTableState, CoreInstance } from './core'
 import { ColumnsOptions, CoreColumn, CoreColumnDef } from './features/Columns'
 import {
   VisibilityInstance,
@@ -107,7 +107,7 @@ export type TableFeature = {
 }
 
 export type TableInstance<TGenerics extends TableGenerics> =
-  TableCore<TGenerics> &
+  CoreInstance<TGenerics> &
     ColumnsInstance<TGenerics> &
     RowsInstance<TGenerics> &
     CellsInstance<TGenerics> &
@@ -214,7 +214,7 @@ export type CoreCell<TGenerics extends TableGenerics> = {
   id: string
   rowId: string
   columnId: string
-  value: TGenerics['Value']
+  getValue: () => TGenerics['Value']
   row: Row<TGenerics>
   column: Column<TGenerics>
   renderCell: () => string | null | TGenerics['Rendered']
@@ -247,19 +247,6 @@ export type HeaderGroup<TGenerics extends TableGenerics> = {
   id: string
   depth: number
   headers: Header<TGenerics>[]
-}
-
-export type HeaderRenderProps<THeader> = {
-  header: THeader
-}
-
-export type FooterRenderProps<THeader> = {
-  header: THeader
-}
-
-export type CellRenderProps<TCell, TRow> = {
-  cell: TCell
-  row: TRow
 }
 
 export type NoInfer<A extends any> = [A][A extends any ? 0 : never]

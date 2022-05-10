@@ -19,8 +19,8 @@ function alphanumeric<TGenerics extends TableGenerics>(
   columnId: string
 ) {
   return compareAlphanumeric(
-    toString(rowA.values[columnId]).toLowerCase(),
-    toString(rowB.values[columnId]).toLowerCase()
+    toString(rowA.getValue(columnId)).toLowerCase(),
+    toString(rowB.getValue(columnId)).toLowerCase()
   )
 }
 
@@ -30,8 +30,8 @@ function alphanumericCaseSensitive<TGenerics extends TableGenerics>(
   columnId: string
 ) {
   return compareAlphanumeric(
-    toString(rowA.values[columnId]),
-    toString(rowB.values[columnId])
+    toString(rowA.getValue(columnId)),
+    toString(rowB.getValue(columnId))
   )
 }
 
@@ -90,8 +90,8 @@ function text<TGenerics extends TableGenerics>(
   columnId: string
 ) {
   return compareBasic(
-    toString(rowA.values[columnId]).toLowerCase(),
-    toString(rowB.values[columnId]).toLowerCase()
+    toString(rowA.getValue(columnId)).toLowerCase(),
+    toString(rowB.getValue(columnId)).toLowerCase()
   )
 }
 
@@ -103,8 +103,8 @@ function textCaseSensitive<TGenerics extends TableGenerics>(
   columnId: string
 ) {
   return compareBasic(
-    toString(rowA.values[columnId]),
-    toString(rowB.values[columnId])
+    toString(rowA.getValue(columnId)),
+    toString(rowB.getValue(columnId))
   )
 }
 
@@ -114,8 +114,8 @@ function datetime<TGenerics extends TableGenerics>(
   columnId: string
 ) {
   return compareBasic(
-    (rowA.values[columnId] as Date).getTime(),
-    (rowB.values[columnId] as Date).getTime()
+    (rowA.getValue(columnId) as Date).getTime(),
+    (rowB.getValue(columnId) as Date).getTime()
   )
 }
 
@@ -124,7 +124,7 @@ function basic<TGenerics extends TableGenerics>(
   rowB: Row<TGenerics>,
   columnId: string
 ) {
-  return compareBasic(rowA.values[columnId], rowB.values[columnId])
+  return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))
 }
 
 // Utils

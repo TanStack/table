@@ -1,4 +1,11 @@
-import { NoInfer, TableState, Updater } from './types'
+// import { Batch, TaskPriority } from './core'
+import {
+  NoInfer,
+  TableGenerics,
+  TableInstance,
+  TableState,
+  Updater,
+} from './types'
 
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
@@ -21,33 +28,53 @@ export function noop() {
   //
 }
 
-export function getBatchGroups<T>(arr: T[], count: number) {
-  const groups: { start: number; end: number; items: T[] }[] = [
-    {
-      start: 0,
-      end: count - 1,
-      items: [],
-    },
-  ]
+export async function batchLoop<T>(
+  arr: T[],
+  count: number,
+  schedule: (itemCb: () => void) => void,
+  itemCb: (item: T, index: number) => void | Promise<void>
+): Promise<void[]> {
+  const size = arr.length
+  let promises: (Promise<void> | void)[] = []
+  const groupCount = Math.ceil(size / count)
 
-  let groupIndex = 0
-  let group = groups[groupIndex]
+  for (let i = 0; i < groupCount; i++) {
+    promises.push(
+      new Promise(resolve => {
+        schedule(() => {
+          let subPromises: (Promise<void> | void)[] = []
+          // Flag the prefiltered row model with each filter state
+          for (let j = 0; j < count; j++) {
+            const index = i * count + j
+            if (index > size - 1) {
+              break
+            }
+            subPromises.push(itemCb(arr[index]!, index))
+          }
 
-  for (let i = 0; i < arr.length; i++) {
-    if (i > group.end) {
-      groupIndex++
-      groups[groupIndex] = {
-        start: i,
-        end: i + count - 1,
-        items: [],
-      }
-    }
-    group = groups[groupIndex]
-    const item = arr[i]
-    group.items.push(item)
+          Promise.all(subPromises).then(() => resolve())
+        })
+      })
+    )
   }
 
-  return groups
+  return Promise.all(promises)
+}
+
+export async function batchReduce<T, TReturn>(
+  arr: T[],
+  count: number,
+  schedule: (itemCb: () => void) => void,
+  initialValue: TReturn,
+  itemCb: (ref: { current: TReturn }, item: T, index: number) => Promise<void>
+): Promise<TReturn> {
+  const ref = { current: initialValue }
+
+  await batchLoop(arr, count, schedule, (item, index) =>
+    itemCb(ref, item, index)
+  )
+
+  return initialValue
 }
 
 export function makeStateUpdater(key: keyof TableState, instance: unknown) {
@@ -94,7 +121,7 @@ export function memo<TDeps extends readonly any[], TResult>(
   opts: {
     key: any
     debug?: () => any
-    onChange?: (result: TResult, previousResult?: TResult) => void
+    onChange?: (result: TResult) => void
   }
 ): () => TResult {
   let deps: any[] = []
@@ -110,225 +137,169 @@ export function memo<TDeps extends readonly any[], TResult>(
       newDeps.length !== deps.length ||
       newDeps.some((dep: any, index: number) => deps[index] !== dep)
 
-    if (depsChanged) {
-      let oldResult = result
-      let resultTime: number
-      if (opts.key && opts.debug) resultTime = Date.now()
-      result = fn(...newDeps)
-      deps = newDeps
-      opts?.onChange?.(result, oldResult)
+    if (!depsChanged) {
+      return result!
+    }
 
-      if (opts.key && opts.debug) {
-        if (opts?.debug()) {
-          const depEndTime = Math.round((Date.now() - depTime!) * 100) / 100
-          const resultEndTime =
-            Math.round((Date.now() - resultTime!) * 100) / 100
-          const resultFpsPercentage = resultEndTime / 16
+    deps = newDeps
 
-          const pad = (str: number | string, num: number) => {
-            str = String(str)
-            while (str.length < num) {
-              str = ' ' + str
-            }
-            return str
+    let resultTime: number
+    if (opts.key && opts.debug) resultTime = Date.now()
+
+    result = fn(...newDeps)
+    opts?.onChange?.(result)
+
+    if (opts.key && opts.debug) {
+      if (opts?.debug()) {
+        const depEndTime = Math.round((Date.now() - depTime!) * 100) / 100
+        const resultEndTime = Math.round((Date.now() - resultTime!) * 100) / 100
+        const resultFpsPercentage = resultEndTime / 16
+
+        const pad = (str: number | string, num: number) => {
+          str = String(str)
+          while (str.length < num) {
+            str = ' ' + str
           }
+          return str
+        }
 
-          console.info(
-            `%c⏱ ${pad(resultEndTime, 5)} /${pad(depEndTime, 5)} ms`,
-            `
+        console.info(
+          `%c⏱ ${pad(resultEndTime, 5)} /${pad(depEndTime, 5)} ms`,
+          `
             font-size: .6rem;
             font-weight: bold;
             color: hsl(${Math.max(
               0,
               Math.min(120 - 120 * resultFpsPercentage, 120)
             )}deg 100% 31%);`,
-            opts?.key,
-            {
-              length: `${deps.length} -> ${newDeps.length}`,
-              ...newDeps
-                .map((_, index) => {
-                  if (deps[index] !== newDeps[index]) {
-                    return [index, deps[index], newDeps[index]]
-                  }
-
-                  return false
-                })
-                .filter(Boolean)
-                .reduce(
-                  (accu, [a, b]: any) => ({
-                    ...accu,
-                    [a]: b,
-                  }),
-                  {}
-                ),
-            }
-          )
-        }
+          opts?.key
+        )
       }
-
-      oldResult = undefined
     }
 
     return result!
   }
 }
 
-type WorkFn = () => void
+// type WorkFn = () => void
 
-export function incrementalMemo<TDeps extends readonly any[], TResult>(
-  getDeps: () => [...TDeps],
-  getInitialValue: (...args: NoInfer<[...TDeps]>) => TResult,
-  schedule: (
-    ...args: NoInfer<[...TDeps]>
-  ) => (resultRef: {
-    current: TResult
-  }) => (scheduler: (workFn: WorkFn) => void) => void,
-  opts: {
-    key: any
-    onProgress: (
-      progress: number,
-      nextResult: TResult,
-      result?: TResult
-    ) => void
-    onChange: (result: TResult, previousResult?: TResult) => void
-    initialSync?: boolean
-    timeout?: number
-    debug?: () => any
-  }
-): () => TResult {
-  let oldDeps: any[]
-  let deps: any[]
-  let result: TResult | undefined
-  let nextResultRef: { current: TResult }
-  let tasks: WorkFn[] = []
-  let totalTaskCount = 0
-  let resultStartTime: number
-  let batchIndex = 0
-  let progress = 0
-  let working = false
-  let callback: ReturnType<typeof requestIdleCallback>
+// export function incrementalMemo<
+//   TDeps extends readonly any[],
+//   TArgs extends readonly any[],
+//   TResult,
+//   TGenerics extends TableGenerics
+// >(
+//   getDeps: () => [...TDeps],
+//   getInitialValue: (
+//     ...args: [...TArgs]
+//   ) => (...deps: NoInfer<[...TDeps]>) => TResult,
+//   schedule: (
+//     ...args: [...TArgs]
+//   ) => (
+//     ...deps: NoInfer<[...TDeps]>
+//   ) => (scheduler: (workFn: WorkFn) => void) => Promise<TResult>,
+//   opts: {
+//     instance: TableInstance<TGenerics>
+//     priority: TaskPriority
+//     keepPrevious: () => any
+//     key: any
+//     onProgress: (progress: number) => void
+//     onChange: (result: TResult) => void
+//     initialSync?: boolean
+//     timeout?: number
+//     debug?: () => any
+//   }
+// ): (...args: TArgs) => TResult {
+//   let deps: any[]
+//   let result: TResult | undefined
+//   let queueTime: number
+//   let currentBatch: undefined | Batch
 
-  const timeout = opts.timeout ?? 100
+//   return (...args) => {
+//     let newDeps = getDeps()
 
-  const onProgress = (latestResult: TResult, previousResult?: TResult) => {
-    progress = 1 - tasks.length / totalTaskCount
-    opts.onProgress(progress, latestResult, previousResult)
-  }
+//     if (!deps) {
+//       deps = []
+//     }
 
-  return () => {
-    const scheduleFn = (workFn: WorkFn) => {
-      totalTaskCount++
-      tasks.push(workFn)
-    }
+//     const depsChanged =
+//       newDeps.length !== deps.length ||
+//       newDeps.some((dep: any, index: number) => deps[index] !== dep)
 
-    const newDeps = getDeps()
+//     if (!depsChanged) {
+//       return result!
+//     }
 
-    let first = false
+//     if (currentBatch) {
+//       currentBatch.cancel()
+//     }
 
-    if (!deps) {
-      first = true
-      deps = []
-      result = getInitialValue(...newDeps)
-    }
+//     if (!opts.keepPrevious?.() || !queueTime) {
+//       result = getInitialValue(...args)(...newDeps)
+//     }
 
-    const depsChanged =
-      newDeps.length !== deps.length ||
-      newDeps.some((dep: any, index: number) => deps[index] !== dep)
+//     queueTime = Date.now()
+//     const queueTimeSnap = queueTime
+//     let doneTaskCount = 1
+//     let totalTaskCount = 1
+//     let progress = 0
+//     let startTime = Date.now()
 
-    if (depsChanged) {
-      cancelIdleCallback(callback)
-      oldDeps = deps
-      deps = newDeps
-      totalTaskCount = 0
-      tasks = []
-      nextResultRef = { current: getInitialValue(...newDeps) }
-      resultStartTime = Date.now()
-      schedule(...newDeps)(nextResultRef)(scheduleFn)
-    }
+//     deps = newDeps
 
-    const commitResult = () => {
-      cancelIdleCallback(callback)
+//     opts.onProgress(progress)
 
-      if (opts.key && opts.debug) {
-        if (opts?.debug()) {
-          const resultEndTime =
-            Math.round((Date.now() - resultStartTime!) * 100) / 100
-          const resultFpsPercentage = resultEndTime / batchIndex / 16
+//     const batch = opts.instance.createBatch(opts.priority)
+//     currentBatch = batch
 
-          console.info(
-            `%c⏱ ${resultEndTime} ms / ${batchIndex} tasks = ${Math.round(
-              resultEndTime / batchIndex
-            )} ms/task`,
-            `
-      font-size: .6rem;
-      font-weight: bold;
-      color: hsl(${Math.max(
-        0,
-        Math.min(120 - 120 * resultFpsPercentage, 120)
-      )}deg 100% 31%);`,
-            opts?.key,
-            {
-              length: `${oldDeps.length} -> ${deps.length}`,
-              ...deps
-                .map((_, index) => {
-                  if (oldDeps[index] !== deps[index]) {
-                    return [index, oldDeps[index], deps[index]]
-                  }
+//     const scheduleFn = (workFn: WorkFn) => {
+//       totalTaskCount++
+//       batch.schedule(() => {
+//         workFn()
+//         if (doneTaskCount === 1) {
+//           startTime = Date.now()
+//         }
+//         doneTaskCount++
+//         progress = Math.max(progress, doneTaskCount / totalTaskCount)
+//         opts.onProgress(progress)
+//       })
+//     }
 
-                  return false
-                })
-                .filter(Boolean)
-                .reduce(
-                  (accu, [a, b]: any) => ({
-                    ...accu,
-                    [a]: b,
-                  }),
-                  {}
-                ),
-            }
-          )
-        }
-      }
+//     schedule(...args)(...newDeps)(scheduleFn).then(nextResult => {
+//       // Do not commit outdated results
+//       if (queueTime !== queueTimeSnap) {
+//         return
+//       }
 
-      working = false
-      let previousResult = result
-      result = nextResultRef.current
-      onProgress(result, previousResult)
-      opts.onChange(result, previousResult)
-    }
+//       if (opts.key && opts.debug) {
+//         if (opts?.debug()) {
+//           const resultEndTime =
+//             Math.round((Date.now() - startTime!) * 100) / 100
+//           const resultFpsPercentage = !totalTaskCount
+//             ? 0
+//             : resultEndTime / totalTaskCount / 16
 
-    if (opts.initialSync && first) {
-      batchIndex = 1
-      first = false
-      for (let i = 0; i < tasks.length; i++) {
-        tasks[i]()
-      }
-      tasks = []
-      commitResult()
-    } else if (!working && tasks.length) {
-      cancelIdleCallback(callback)
-      working = true
-      batchIndex = 0
+//           console.info(
+//             `%c⏱ ${resultEndTime} ms / ${totalTaskCount} tasks = ${
+//               !totalTaskCount ? 0 : Math.round(resultEndTime / totalTaskCount)
+//             } ms/task`,
+//             `
+//       font-size: .6rem;
+//       font-weight: bold;
+//       color: hsl(${Math.max(
+//         0,
+//         Math.min(120 - 120 * resultFpsPercentage, 120)
+//       )}deg 100% 31%);`,
+//             opts?.key
+//           )
+//         }
+//       }
 
-      const workLoop = (deadline: any) => {
-        while (tasks.length && deadline.timeRemaining() > 0) {
-          tasks.shift()!()
-        }
+//       result = nextResult
+//       opts.onChange(result)
+//       opts.onProgress(1)
+//     })
 
-        if (!tasks.length) {
-          commitResult()
-        } else {
-          ++batchIndex
-          onProgress(nextResultRef.current, result)
-          callback = requestIdleCallback(workLoop, { timeout })
-        }
-      }
-
-      callback = requestIdleCallback(workLoop, { timeout })
-    }
-
-    return result!
-  }
-}
-
-// opts?.onChange?.(result, oldResult)
+//     return result!
+//   }
+// }

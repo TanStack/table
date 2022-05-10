@@ -6,12 +6,15 @@ import './index.css'
 import {
   Column,
   createTable,
-  getCoreRowModelSync,
-  getFilteredRowModelSync,
-  getPaginationRowModel,
   TableInstance,
   useTableInstance,
   ColumnFiltersState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
+  getPaginationRowModel,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -33,12 +36,12 @@ function App() {
         footer: props => props.column.id,
         columns: [
           table.createDataColumn('firstName', {
-            cell: info => info.value,
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
-            cell: info => info.value,
+            cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
           }),
@@ -75,8 +78,8 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(old => [...old])
+  const [data, setData] = React.useState(() => makeData(10000))
+  const refreshData = () => setData(old => makeData(10000))
 
   const instance = useTableInstance(table, {
     data,
@@ -87,9 +90,13 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModelSync(),
-    getFilteredRowModel: getFilteredRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    keepPreviousData: true,
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
@@ -144,14 +151,14 @@ function App() {
           })}
         </tbody>
       </table>
-      <div>{instance.getFilteredRowModel().rows.length} Rows</div>
+      <div className="h-2" />
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(columnFilters, null, 2)}</pre>
+      <pre>{JSON.stringify(instance.getState(), null, 2)}</pre>
     </div>
   )
 }
@@ -163,50 +170,101 @@ function Filter({
   column: Column<any>
   instance: TableInstance<any>
 }) {
-  const firstValue =
-    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
+  const firstValue = instance
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
 
+  const sortedUniqueValues = React.useMemo(
+    () =>
+      typeof firstValue === 'number'
+        ? []
+        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
+    [column.getFacetedUniqueValues()]
+  )
+
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
-        type="number"
-        min={Number(column.getFacetedMinMaxValues()[0])}
-        max={Number(column.getFacetedMinMaxValues()[1])}
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
-            old?.[1],
-          ])
-        }
-        placeholder={`Min (${column.getFacetedMinMaxValues()[0]})`}
-        className="w-24 border shadow rounded"
-      />
-      <input
-        type="number"
-        min={Number(column.getFacetedMinMaxValues()[0])}
-        max={Number(column.getFacetedMinMaxValues()[1])}
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            old?.[0],
-            e.target.value,
-          ])
-        }
-        placeholder={`Max (${column.getFacetedMinMaxValues()[1]})`}
-        className="w-24 border shadow rounded"
-      />
+    <div>
+      <div className="flex space-x-2">
+        <input
+          type="number"
+          min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
+          max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
+          value={(columnFilterValue as [number, number])?.[0] ?? ''}
+          onChange={e =>
+            column.setFilterValue((old: [number, number]) => [
+              e.target.value,
+              old?.[1],
+            ])
+          }
+          placeholder={`Min ${
+            column.getFacetedMinMaxValues()[0]
+              ? `(${column.getFacetedMinMaxValues()[0]})`
+              : ''
+          }`}
+          className="w-24 border shadow rounded"
+        />
+        <input
+          type="number"
+          min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
+          max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
+          value={(columnFilterValue as [number, number])?.[1] ?? ''}
+          onChange={e =>
+            column.setFilterValue((old: [number, number]) => [
+              old?.[0],
+              e.target.value,
+            ])
+          }
+          placeholder={`Max ${
+            column.getFacetedMinMaxValues()[1]
+              ? `(${column.getFacetedMinMaxValues()[1]})`
+              : ''
+          }`}
+          className="w-24 border shadow rounded"
+        />
+      </div>
+      <div className="h-1" />
+      <div className="w-full bg-gray-300 rounded-sm">
+        <div
+          className="h-[2px] bg-green-400 rounded-sm"
+          style={{
+            width: `${
+              instance.getState().facetProgress[`${column.id}_minMaxValues`]! *
+              100
+            }%`,
+          }}
+        />
+      </div>
     </div>
   ) : (
-    <input
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
-      placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-      className="w-36 border shadow rounded"
-    />
+    <>
+      <datalist id={column.id + 'list'}>
+        {sortedUniqueValues.map(value => (
+          <option value={value} key={value} />
+        ))}
+      </datalist>
+      <input
+        type="text"
+        value={(columnFilterValue ?? '') as string}
+        onChange={e => column.setFilterValue(e.target.value)}
+        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
+        className="w-36 border shadow rounded"
+        list={column.id + 'list'}
+      />
+      <div className="h-1" />
+      <div className="w-full bg-gray-300 rounded-sm">
+        <div
+          className="h-[2px] bg-green-400 rounded-sm"
+          style={{
+            width: `${
+              instance.getState().facetProgress[`${column.id}_uniqueValues`]! *
+              100
+            }%`,
+          }}
+        />
+      </div>
+    </>
   )
 }
 
@@ -214,6 +272,5 @@ ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-
   document.getElementById('root')
 )

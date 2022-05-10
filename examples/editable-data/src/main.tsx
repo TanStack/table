@@ -11,8 +11,8 @@ import {
   TableInstance,
   ColumnDef,
   useTableInstance,
-  getCoreRowModelSync,
-  getFilteredRowModelSync,
+  getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -29,7 +29,8 @@ type MyTableGenerics = typeof table.generics
 
 // Give our default column cell renderer editing superpowers!
 const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
-  cell: ({ value: initialValue, row: { index }, column: { id }, instance }) => {
+  cell: ({ getValue, row: { index }, column: { id }, instance }) => {
+    const initialValue = getValue()
     // We need to keep and update the state of the cell normally
     const [value, setValue] = React.useState(initialValue)
 
@@ -128,8 +129,8 @@ function App() {
     data,
     columns,
     defaultColumn,
-    getCoreRowModel: getCoreRowModelSync(),
-    getFilteredRowModel: getFilteredRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     autoResetPageIndex,
     // Provide our updateData function to our table meta
@@ -141,7 +142,7 @@ function App() {
           old.map((row, index) => {
             if (index === rowIndex) {
               return {
-                ...old[rowIndex],
+                ...old[rowIndex]!,
                 [columnId]: value,
               }
             }
@@ -273,8 +274,9 @@ function Filter({
   column: Column<any>
   instance: TableInstance<any>
 }) {
-  const firstValue =
-    instance.getPreFilteredRowModel().flatRows[0].values[column.id]
+  const firstValue = instance
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
 

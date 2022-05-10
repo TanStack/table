@@ -45,7 +45,7 @@ export type GroupingColumnDef<TGenerics extends TableGenerics> = {
       row: Row<TGenerics>
       column: Column<TGenerics>
       cell: Cell<TGenerics>
-      value: TGenerics['Value']
+      getValue: () => TGenerics['Value']
     }
   >
   enableGrouping?: boolean
@@ -58,12 +58,15 @@ export type GroupingColumn<TGenerics extends TableGenerics> = {
   getGroupedIndex: () => number
   toggleGrouping: () => void
   getToggleGroupingHandler: () => () => void
+  getColumnAutoAggregationFn: () => AggregationFn<TGenerics> | undefined
+  getColumnAggregationFn: () => AggregationFn<TGenerics> | undefined
 }
 
 export type GroupingRow = {
   groupingColumnId?: string
   groupingValue?: any
   getIsGrouped: () => boolean
+  groupingValuesCache: Record<string, any>
 }
 
 export type GroupingCell<TGenerics extends TableGenerics> = {
@@ -95,12 +98,6 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export type GroupingInstance<TGenerics extends TableGenerics> = {
-  getColumnAutoAggregationFn: (
-    columnId: string
-  ) => AggregationFn<TGenerics> | undefined
-  getColumnAggregationFn: (
-    columnId: string
-  ) => AggregationFn<TGenerics> | undefined
   setGrouping: (updater: Updater<GroupingState>) => void
   resetGrouping: () => void
   getPreGroupedRowModel: () => RowModel<TGenerics>
@@ -175,17 +172,10 @@ export const Grouping: TableFeature = {
           column.toggleGrouping()
         }
       },
-    }
-  },
-
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): GroupingInstance<TGenerics> => {
-    return {
-      getColumnAutoAggregationFn: columnId => {
+      getColumnAutoAggregationFn: () => {
         const firstRow = instance.getCoreRowModel().flatRows[0]
 
-        const value = firstRow?.values[columnId]
+        const value = firstRow?.getValue(column.id)
 
         if (typeof value === 'number') {
           return aggregationFns.sum
@@ -197,8 +187,7 @@ export const Grouping: TableFeature = {
 
         return aggregationFns.count
       },
-      getColumnAggregationFn: columnId => {
-        const column = instance.getColumn(columnId)
+      getColumnAggregationFn: () => {
         const userAggregationFns = instance.options.aggregationFns
 
         if (!column) {
@@ -208,7 +197,7 @@ export const Grouping: TableFeature = {
         return isFunction(column.aggregationFn)
           ? column.aggregationFn
           : column.aggregationFn === 'auto'
-          ? instance.getColumnAutoAggregationFn(columnId)
+          ? column.getColumnAutoAggregationFn()
           : (userAggregationFns as Record<string, any>)?.[
               column.aggregationFn as string
             ] ??
@@ -216,7 +205,13 @@ export const Grouping: TableFeature = {
               column.aggregationFn as BuiltInAggregationFn
             ] as AggregationFn<TGenerics>)
       },
+    }
+  },
 
+  createInstance: <TGenerics extends TableGenerics>(
+    instance: TableInstance<TGenerics>
+  ): GroupingInstance<TGenerics> => {
+    return {
       setGrouping: updater => instance.options.onGroupingChange?.(updater),
 
       resetGrouping: () => {
@@ -248,6 +243,7 @@ export const Grouping: TableFeature = {
   ): GroupingRow => {
     return {
       getIsGrouped: () => !!row.groupingColumnId,
+      groupingValuesCache: {},
     }
   },
 
@@ -274,7 +270,7 @@ export const Grouping: TableFeature = {
               column,
               row,
               cell,
-              value: cell.value,
+              getValue: cell.getValue,
             })
           : null
       },

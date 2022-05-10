@@ -130,7 +130,7 @@ export const Sorting: TableFeature = {
         let isString = false
 
         for (const row of firstRows) {
-          const value = row?.values[column.id]
+          const value = row?.getValue(column.id)
 
           if (Object.prototype.toString.call(value) === '[object Date]') {
             return sortingFns.datetime
@@ -154,7 +154,7 @@ export const Sorting: TableFeature = {
       getAutoSortDir: () => {
         const firstRow = instance.getFilteredRowModel().flatRows[0]
 
-        const value = firstRow?.values[column.id]
+        const value = firstRow?.getValue(column.id)
 
         if (typeof value === 'string') {
           return 'asc'

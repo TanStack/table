@@ -51,50 +51,50 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
         react: 'React',
       },
     }),
-    ...buildConfigs({
-      name: 'solid-table',
-      packageDir: 'packages/solid-table',
-      jsName: 'SolidTable',
-      outputFile: 'solid-table',
-      entryFile: 'src/index.tsx',
-      globals: {
-        'solid-js': 'Solid',
-        'solid-js/store': 'SolidStore',
-      },
-    }),
-    ...buildConfigs({
-      name: 'vue-table',
-      packageDir: 'packages/vue-table',
-      jsName: 'VueTable',
-      outputFile: 'vue-table',
-      entryFile: 'src/index.ts',
-      globals: {
-        vue: 'Vue',
-      },
-    }),
-    ...buildConfigs({
-      name: 'svelte-table',
-      packageDir: 'packages/svelte-table',
-      jsName: 'SvelteTable',
-      outputFile: 'svelte-table',
-      entryFile: 'src/index.ts',
-      globals: {
-        svelte: 'Svelte',
-        'svelte/internal': 'SvelteInternal',
-        'svelte/store': 'SvelteStore',
-      },
-    }),
-    ...buildConfigs({
-      name: 'react-table-devtools',
-      packageDir: 'packages/react-table-devtools',
-      jsName: 'ReactTableDevtools',
-      outputFile: 'react-table-devtools',
-      entryFile: 'src/index.tsx',
-      globals: {
-        react: 'React',
-        '@tanstack/react-table': 'ReactTable',
-      },
-    }),
+    // ...buildConfigs({
+    //   name: 'solid-table',
+    //   packageDir: 'packages/solid-table',
+    //   jsName: 'SolidTable',
+    //   outputFile: 'solid-table',
+    //   entryFile: 'src/index.tsx',
+    //   globals: {
+    //     'solid-js': 'Solid',
+    //     'solid-js/store': 'SolidStore',
+    //   },
+    // }),
+    // ...buildConfigs({
+    //   name: 'vue-table',
+    //   packageDir: 'packages/vue-table',
+    //   jsName: 'VueTable',
+    //   outputFile: 'vue-table',
+    //   entryFile: 'src/index.ts',
+    //   globals: {
+    //     vue: 'Vue',
+    //   },
+    // }),
+    // ...buildConfigs({
+    //   name: 'svelte-table',
+    //   packageDir: 'packages/svelte-table',
+    //   jsName: 'SvelteTable',
+    //   outputFile: 'svelte-table',
+    //   entryFile: 'src/index.ts',
+    //   globals: {
+    //     svelte: 'Svelte',
+    //     'svelte/internal': 'SvelteInternal',
+    //     'svelte/store': 'SvelteStore',
+    //   },
+    // }),
+    // ...buildConfigs({
+    //   name: 'react-table-devtools',
+    //   packageDir: 'packages/react-table-devtools',
+    //   jsName: 'ReactTableDevtools',
+    //   outputFile: 'react-table-devtools',
+    //   entryFile: 'src/index.tsx',
+    //   globals: {
+    //     react: 'React',
+    //     '@tanstack/react-table': 'ReactTable',
+    //   },
+    // }),
   ]
 }
 

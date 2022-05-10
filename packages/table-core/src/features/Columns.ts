@@ -8,7 +8,6 @@ import {
   AccessorFn,
   ColumnDef,
   Renderable,
-  HeaderRenderProps,
 } from '../types'
 import { memo } from '../utils'
 
@@ -42,7 +41,7 @@ export type CoreColumnDef<TGenerics extends TableGenerics> = {
       row: Row<TGenerics>
       column: Column<TGenerics>
       cell: Cell<TGenerics>
-      value: TGenerics['Value']
+      getValue: () => TGenerics['Value']
     }
   >
   meta?: TGenerics['ColumnMeta']
@@ -93,12 +92,9 @@ export const Columns = {
           defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TGenerics>>
 
           return {
-            header: (props: HeaderRenderProps<Header<TGenerics>>) =>
-              props.header.column.id,
-            footer: (props: HeaderRenderProps<Header<TGenerics>>) =>
-              props.header.column.id,
-            cell: ({ value = '' }: { value: any }): JSX.Element =>
-              typeof value === 'boolean' ? value.toString() : value,
+            header: props => props.header.column.id,
+            footer: props => props.header.column.id,
+            cell: props => props.getValue().toString?.() ?? null,
             ...instance._features.reduce((obj, feature) => {
               return Object.assign(obj, feature.getDefaultColumn?.())
             }, {}),

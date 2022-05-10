@@ -1,0 +1,39 @@
+{
+  "name": "@tanstack/table-core-async",
+  "author": "Tanner Linsley",
+  "version": "8.0.0-alpha.65",
+  "description": "Hooks for building lightweight, fast and extendable datagrids for React",
+  "license": "MIT",
+  "homepage": "https://github.com/tanstack/react-table#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanstack/react-table.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "react",
+    "vue",
+    "solid",
+    "table",
+    "table-core",
+    "datagrid"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "module": "build/esm/index.js",
+  "main": "build/cjs/index.js",
+  "browser": "build/umd/index.production.min.js",
+  "types": "build/types/index.d.ts",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "build",
+    "src"
+  ]
+}
