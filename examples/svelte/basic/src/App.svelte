@@ -97,7 +97,7 @@
     data = data
   }
 
-  $: instance = createTableInstance(table, {
+  const instance = createTableInstance(table, {
     data,
     columns,
     getCoreRowModel: getCoreRowModelSync(),
@@ -111,7 +111,9 @@
         <tr>
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
-              {header.isPlaceholder ? null : header.renderHeader()}
+              {#if !header.isPlaceholder}
+                <svelte:component this={header.renderHeader()} />
+              {/if}
             </th>
           {/each}
         </tr>
@@ -121,7 +123,7 @@
       {#each $instance.getRowModel().rows as row}
         <tr>
           {#each row.getVisibleCells() as cell}
-            <td>{cell.renderCell()}</td>
+            <td><svelte:component this={cell.renderCell} /></td>
           {/each}
         </tr>
       {/each}
@@ -131,7 +133,9 @@
         <tr>
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
-              {header.isPlaceholder ? null : header.renderFooter()}
+              {#if !header.isPlaceholder}
+                <svelte:component this={header.renderFooter} />
+              {/if}
             </th>
           {/each}
         </tr>
