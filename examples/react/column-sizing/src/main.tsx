@@ -131,7 +131,7 @@ function App() {
         <table
           {...{
             style: {
-              width: instance.getTotalSize(),
+              width: instance.getCenterTotalSize(),
             },
           }}
         >
@@ -179,6 +179,7 @@ function App() {
                 {row.getVisibleCells().map(cell => (
                   <td
                     {...{
+                      key: cell.id,
                       style: {
                         width: cell.column.getSize(),
                       },
@@ -207,12 +208,14 @@ function App() {
             {instance.getHeaderGroups().map(headerGroup => (
               <div
                 {...{
+                  key: headerGroup.id,
                   className: 'tr',
                 }}
               >
                 {headerGroup.headers.map(header => (
                   <div
                     {...{
+                      key: header.id,
                       className: 'th',
                       style: {
                         width: header.getSize(),
@@ -222,6 +225,8 @@ function App() {
                     {header.isPlaceholder ? null : header.renderHeader()}
                     <div
                       {...{
+                        onMouseDown: header.getResizeHandler(),
+                        onTouchStart: header.getResizeHandler(),
                         className: `resizer ${
                           header.column.getIsResizing() ? 'isResizing' : ''
                         }`,
@@ -250,12 +255,14 @@ function App() {
             {instance.getRowModel().rows.map(row => (
               <div
                 {...{
+                  key: row.id,
                   className: 'tr',
                 }}
               >
                 {row.getVisibleCells().map(cell => (
                   <div
                     {...{
+                      key: cell.id,
                       className: 'td',
                       style: {
                         width: cell.column.getSize(),
@@ -285,6 +292,7 @@ function App() {
             {instance.getHeaderGroups().map(headerGroup => (
               <div
                 {...{
+                  key: headerGroup.id,
                   className: 'tr',
                   style: {
                     position: 'relative',
@@ -294,6 +302,7 @@ function App() {
                 {headerGroup.headers.map(header => (
                   <div
                     {...{
+                      key: header.id,
                       className: 'th',
                       style: {
                         position: 'absolute',
@@ -335,6 +344,7 @@ function App() {
             {instance.getRowModel().rows.map(row => (
               <div
                 {...{
+                  key: row.id,
                   className: 'tr',
                   style: {
                     position: 'relative',
@@ -344,6 +354,7 @@ function App() {
                 {row.getVisibleCells().map(cell => (
                   <div
                     {...{
+                      key: cell.id,
                       className: 'td',
                       style: {
                         position: 'absolute',
