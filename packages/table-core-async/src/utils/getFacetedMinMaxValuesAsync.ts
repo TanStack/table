@@ -8,20 +8,21 @@ export function getFacetedMinMaxValuesAsync<
 }): (
   instance: TableInstance<TGenerics>,
   columnId: string
-) => () => [number, number] {
+) => () => undefined | [number, number] {
   return (instance, columnId) =>
     incrementalMemo(
       () => [instance.getColumn(columnId).getFacetedRowModel()],
-      () => facetedRowModel =>
-        [
-          facetedRowModel.flatRows[0]?.getValue(columnId) ?? undefined,
-          facetedRowModel.flatRows[0]?.getValue(columnId) ?? undefined,
-        ],
+      () => () => {
+        return undefined
+      },
       () => facetedRowModel => async scheduleTask => {
-        const range = [
-          facetedRowModel.flatRows[0]?.getValue(columnId) ?? undefined,
-          facetedRowModel.flatRows[0]?.getValue(columnId) ?? undefined,
-        ] as [number, number]
+        const firstValue = facetedRowModel.flatRows[0]?.getValue(columnId)
+
+        if (typeof firstValue === 'undefined') {
+          return
+        }
+
+        const range: [number, number] = [firstValue, firstValue]
 
         await batchLoop(facetedRowModel.flatRows, 2500, scheduleTask, row => {
           const value = row?.getValue(columnId)

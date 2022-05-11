@@ -85,8 +85,8 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
   getFilterIndex: () => number
   getFacetedUniqueValues: () => Map<any, number>
   _getFacetedUniqueValues?: () => Map<any, number>
-  getFacetedMinMaxValues: () => [any, any]
-  _getFacetedMinMaxValues?: () => [any, any]
+  getFacetedMinMaxValues: () => undefined | [number, number]
+  _getFacetedMinMaxValues?: () => undefined | [number, number]
 }
 
 export type FiltersRow<TGenerics extends TableGenerics> = {
@@ -125,7 +125,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   getFacetedMinMaxValues?: (
     instance: TableInstance<TGenerics>,
     columnId: string
-  ) => () => [number, number]
+  ) => () => undefined | [number, number]
 }
 
 export type FiltersInstance<TGenerics extends TableGenerics> = {
@@ -147,8 +147,8 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
   _getGlobalFacetedRowModel?: () => RowModel<TGenerics>
   getGlobalFacetedUniqueValues: () => Map<any, number>
   _getGlobalFacetedUniqueValues?: () => Map<any, number>
-  getGlobalFacetedMinMaxValues: () => [number, number]
-  _getGlobalFacetedMinMaxValues?: () => [number, number]
+  getGlobalFacetedMinMaxValues: () => undefined | [number, number]
+  _getGlobalFacetedMinMaxValues?: () => undefined | [number, number]
 }
 
 //
@@ -328,7 +328,7 @@ export const Filters: TableFeature = {
         instance.options.getFacetedMinMaxValues(instance, column.id),
       getFacetedMinMaxValues: () => {
         if (!column._getFacetedMinMaxValues) {
-          return [NaN, NaN]
+          return undefined
         }
 
         return column._getFacetedMinMaxValues()
@@ -456,7 +456,7 @@ export const Filters: TableFeature = {
         instance.options.getFacetedMinMaxValues(instance, '__global__'),
       getGlobalFacetedMinMaxValues: () => {
         if (!instance._getGlobalFacetedMinMaxValues) {
-          return [NaN, NaN]
+          return
         }
 
         return instance._getGlobalFacetedMinMaxValues()

@@ -4,15 +4,18 @@ import { memo } from '../utils'
 export function getFacetedMinMaxValues<TGenerics extends TableGenerics>(): (
   instance: TableInstance<TGenerics>,
   columnId: string
-) => () => [number, number] {
+) => () => undefined | [number, number] {
   return (instance, columnId) =>
     memo(
       () => [instance.getColumn(columnId).getFacetedRowModel()],
       facetedRowModel => {
-        let facetedMinMaxValues: [any, any] = [
-          facetedRowModel.flatRows[0]?.getValue(columnId) ?? null,
-          facetedRowModel.flatRows[0]?.getValue(columnId) ?? null,
-        ]
+        const firstValue = facetedRowModel.flatRows[0]?.getValue(columnId)
+
+        if (typeof firstValue === 'undefined') {
+          return undefined
+        }
+
+        let facetedMinMaxValues: [any, any] = [firstValue, firstValue]
 
         for (let i = 0; i < facetedRowModel.flatRows.length; i++) {
           const value = facetedRowModel.flatRows[i]?.getValue(columnId)
