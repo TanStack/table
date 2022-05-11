@@ -32,6 +32,7 @@
     "./examples/react/fully-controlled",
     "./examples/react/grouping",
     "./examples/react/pagination",
+    "./examples/react/pagination-controlled",
     "./examples/react/row-selection",
     "./examples/react/sorting"
   ],
