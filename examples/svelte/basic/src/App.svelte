@@ -2,9 +2,10 @@
   import './index.css'
   import {
     createTable,
-    getCoreRowModelSync,
+    getCoreRowModel,
     createTableInstance,
   } from '@tanstack/svelte-table'
+  import { writable } from 'svelte/store'
 
   type Person = {
     firstName: string
@@ -50,12 +51,12 @@
       footer: props => props.column.id,
       columns: [
         table.createDataColumn('firstName', {
-          cell: info => info.value,
+          cell: info => info.getValue(),
           footer: props => props.column.id,
         }),
         table.createDataColumn(row => row.lastName, {
           id: 'lastName',
-          cell: info => info.value,
+          cell: info => info.getValue(),
           header: () => 'Last Name',
           footer: props => props.column.id,
         }),
@@ -90,17 +91,17 @@
     }),
   ]
 
-  let data = defaultData
-  let columns = defaultColumns
+  let data = writable<Person[]>(defaultData)
+  let columns = writable(defaultColumns)
 
   const rerender = () => {
     data = data
   }
 
   const instance = createTableInstance(table, {
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModelSync(),
+    data: $data,
+    columns: $columns,
+    getCoreRowModel: getCoreRowModel(),
   })
 </script>
 
