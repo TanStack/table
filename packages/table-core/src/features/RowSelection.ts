@@ -53,7 +53,7 @@ export type RowSelectionInstance<TGenerics extends TableGenerics> = {
   getToggleAllRowsSelectedHandler: () => (event: unknown) => void
   getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
   setRowSelection: (updater: Updater<RowSelectionState>) => void
-  resetRowSelection: () => void
+  resetRowSelection: (defaultState?: boolean) => void
   getIsAllRowsSelected: () => boolean
   getIsAllPageRowsSelected: () => boolean
   getIsSomeRowsSelected: () => boolean
@@ -96,8 +96,10 @@ export const RowSelection: TableFeature = {
     return {
       setRowSelection: updater =>
         instance.options.onRowSelectionChange?.(updater),
-      resetRowSelection: () =>
-        instance.setRowSelection(instance.initialState.rowSelection ?? {}),
+      resetRowSelection: defaultState =>
+        instance.setRowSelection(
+          defaultState ? {} : instance.initialState.rowSelection ?? {}
+        ),
       toggleAllRowsSelected: value => {
         instance.setRowSelection(old => {
           value =

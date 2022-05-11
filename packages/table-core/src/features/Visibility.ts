@@ -32,6 +32,7 @@ export type VisibilityInstance<TGenerics extends TableGenerics> = {
   getRightVisibleLeafColumns: () => Column<TGenerics>[]
   getCenterVisibleLeafColumns: () => Column<TGenerics>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
+  resetColumnVisibility: (defaultState?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
   getIsAllColumnsVisible: () => boolean
   getIsSomeColumnsVisible: () => boolean
@@ -201,6 +202,12 @@ export const Visibility: TableFeature = {
 
       setColumnVisibility: updater =>
         instance.options.onColumnVisibilityChange?.(updater),
+
+      resetColumnVisibility: defaultState => {
+        instance.setColumnVisibility(
+          defaultState ? {} : instance.initialState.columnVisibility ?? {}
+        )
+      },
 
       toggleAllColumnsVisible: value => {
         value = value ?? !instance.getIsAllColumnsVisible()

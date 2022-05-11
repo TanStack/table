@@ -62,7 +62,7 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getCanMultiSort: () => boolean
   getSortIndex: () => number
   getIsSorted: () => false | SortDirection
-  resetSorting: () => void
+  clearSorting: () => void
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
   getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 }
@@ -85,6 +85,7 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
 
 export type SortingInstance<TGenerics extends TableGenerics> = {
   setSorting: (updater: Updater<SortingState>) => void
+  resetSorting: (defaultState?: boolean) => void
   getPreSortedRowModel: () => RowModel<TGenerics>
   getSortedRowModel: () => RowModel<TGenerics>
   _getSortedRowModel?: () => RowModel<TGenerics>
@@ -304,14 +305,11 @@ export const Sorting: TableFeature = {
       getSortIndex: () =>
         instance.getState().sorting?.findIndex(d => d.id === column.id) ?? -1,
 
-      resetSorting: (columnId?: string) => {
-        if (columnId) {
-          instance.setSorting(old =>
-            old?.length ? old.filter(d => d.id !== columnId) : []
-          )
-        } else {
-          instance.setSorting(instance.initialState?.sorting ?? [])
-        }
+      clearSorting: () => {
+        //clear sorting for just 1 column
+        instance.setSorting(old =>
+          old?.length ? old.filter(d => d.id !== column.id) : []
+        )
       },
 
       getToggleSortingHandler: () => {
@@ -338,7 +336,11 @@ export const Sorting: TableFeature = {
 
     return {
       setSorting: updater => instance.options.onSortingChange?.(updater),
-
+      resetSorting: defaultState => {
+        instance.setSorting(
+          defaultState ? [] : instance.initialState?.sorting ?? []
+        )
+      },
       getPreSortedRowModel: () => instance.getFilteredRowModel(),
       getSortedRowModel: () => {
         if (

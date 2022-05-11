@@ -131,7 +131,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
 export type FiltersInstance<TGenerics extends TableGenerics> = {
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 
-  resetColumnFilters: () => void
+  resetColumnFilters: (defaultState?: boolean) => void
 
   // Column Filters
   getPreFilteredRowModel: () => RowModel<TGenerics>
@@ -140,7 +140,7 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
 
   // Global Filters
   setGlobalFilter: (updater: Updater<any>) => void
-  resetGlobalFilter: () => void
+  resetGlobalFilter: (defaultState?: boolean) => void
   getGlobalAutoFilterFn: () => FilterFn<TGenerics> | undefined
   getGlobalFilterFn: () => FilterFn<TGenerics> | undefined
   getGlobalFacetedRowModel: () => RowModel<TGenerics>
@@ -398,12 +398,16 @@ export const Filters: TableFeature = {
         instance.options.onGlobalFilterChange?.(updater)
       },
 
-      resetGlobalFilter: () => {
-        instance.setGlobalFilter(instance.initialState.globalFilter)
+      resetGlobalFilter: defaultState => {
+        instance.setGlobalFilter(
+          defaultState ? undefined : instance.initialState.globalFilter
+        )
       },
 
-      resetColumnFilters: () => {
-        instance.setColumnFilters(instance.initialState?.columnFilters ?? [])
+      resetColumnFilters: defaultState => {
+        instance.setColumnFilters(
+          defaultState ? [] : instance.initialState?.columnFilters ?? []
+        )
       },
 
       getPreFilteredRowModel: () => instance.getCoreRowModel(),
