@@ -13,6 +13,7 @@
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true yarn cipublish"
   },
+  "namespace": "@tanstack",
   "workspaces": [
     "./packages/table-core",
     "./packages/react-table",
