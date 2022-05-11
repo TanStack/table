@@ -105,9 +105,9 @@ function App() {
   return (
     <div className="p-2">
       <div>
-        <input
+        <DebouncedInput
           value={globalFilter ?? ''}
-          onChange={e => setGlobalFilter(e.target.value)}
+          onChange={value => setGlobalFilter(String(value))}
           className="p-2 font-lg shadow border border-block"
           placeholder="Search all columns..."
         />
@@ -251,7 +251,7 @@ function DebouncedInput({
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
-} & React.InputHTMLAttributes<HTMLInputElement>) {
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = React.useState(initialValue)
 
   React.useEffect(() => {
