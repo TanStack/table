@@ -88,38 +88,6 @@ resetColumnPinning: () => void
 
 Resets the **columnPinning** state for the table back to its initial state.
 
-### `pinColumn`
-
-```tsx
-pinColumn: (columnId: string, position: ColumnPinningPosition) => void
-```
-
-Pins a column to the `'left'` or `'right'`, or unpins the column to the center if `false` is passed.
-
-### `getColumnCanPin`
-
-```tsx
-getColumnCanPin: (columnId: string) => boolean
-```
-
-Returns whether or not the column can be pinned.
-
-### `getColumnIsPinned`
-
-```tsx
-getColumnIsPinned: (columnId: string) => ColumnPinningPosition
-```
-
-Returns the pinned position of the column. (`'left'`, `'right'` or `false`)
-
-### `getColumnPinnedIndex`
-
-```tsx
-getColumnPinnedIndex: (columnId: string) => number
-```
-
-Returns the numeric pinned index of the column within a pinned column group.
-
 ### `getIsSomeColumnsPinned`
 
 ```tsx
