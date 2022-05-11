@@ -239,7 +239,7 @@ export const Pagination: TableFeature = {
 
       getPageCount: () => {
         const { pageCount } = instance.getState().pagination
-        if (pageCount > 0) {
+        if (typeof pageCount !== 'undefined') {
           return pageCount
         }
 
