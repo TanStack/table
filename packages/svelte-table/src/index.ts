@@ -63,10 +63,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   let instance = coreCreateTableInstance(resolvedOptions)
 
-  // beforeUpdate(() => {
-  //   instance.willUpdate()
-  // })
-
   let stateStore = writable(/** @type {number} */ instance.initialState)
   // combine stores
   let stateOptionsStore = derived([stateStore, optionsStore], s => s)
@@ -80,7 +76,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
           // Similarly, we'll maintain both our internal state and any user-provided
           // state.
           onStateChange: updater => {
-            console.log('STATE CHANGE')
             if (updater instanceof Function) {
               stateStore.update(updater)
             } else {

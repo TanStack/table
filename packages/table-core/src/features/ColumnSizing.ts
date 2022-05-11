@@ -140,7 +140,7 @@ export const ColumnSizing: TableFeature = {
         const index = columns.findIndex(d => d.id === column.id)
 
         if (index > 0) {
-          const prevSiblingColumn = columns[index - 1]
+          const prevSiblingColumn = columns[index - 1]!
 
           return (
             prevSiblingColumn.getStart(position) + prevSiblingColumn.getSize()
@@ -190,7 +190,8 @@ export const ColumnSizing: TableFeature = {
       },
       getStart: () => {
         if (header.index > 0) {
-          const prevSiblingHeader = header.headerGroup.headers[header.index - 1]
+          const prevSiblingHeader =
+            header.headerGroup.headers[header.index - 1]!
           return prevSiblingHeader.getStart() + prevSiblingHeader.getSize()
         }
 
@@ -223,7 +224,7 @@ export const ColumnSizing: TableFeature = {
             : [[column.id, column.getSize()]]
 
           const clientX = isTouchStartEvent(e)
-            ? Math.round(e.touches[0].clientX)
+            ? Math.round(e.touches[0]!.clientX)
             : (e as MouseEvent).clientX
 
           const updateOffset = (
@@ -300,7 +301,7 @@ export const ColumnSizing: TableFeature = {
                 e.preventDefault()
                 e.stopPropagation()
               }
-              onMove(e.touches[0].clientX)
+              onMove(e.touches[0]!.clientX)
               return false
             },
             upHandler: (e: TouchEvent) => {
@@ -310,7 +311,7 @@ export const ColumnSizing: TableFeature = {
                 e.preventDefault()
                 e.stopPropagation()
               }
-              onEnd(e.touches[0].clientX)
+              onEnd(e.touches[0]!.clientX)
             },
           }
 
