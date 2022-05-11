@@ -124,16 +124,14 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
           }
         }
 
-        const filterRowsImpl = (rowsToFilter: Row<TGenerics>[]) => {
+        const filterRowsImpl = (row: Row<TGenerics>) => {
           // Horizontally filter rows through each column
-          return rowsToFilter.filter(row => {
-            for (let i = 0; i < filterableIds.length; i++) {
-              if (row.columnFilterMap[filterableIds[i]!] === false) {
-                return false
-              }
+          for (let i = 0; i < filterableIds.length; i++) {
+            if (row.columnFilterMap[filterableIds[i]!] === false) {
+              return false
             }
-            return true
-          })
+          }
+          return true
         }
 
         // Filter final rows using all of the active filters

@@ -27,16 +27,14 @@ export function getFacetedRowModel<TGenerics extends TableGenerics>(): (
           globalFilter ? '__global__' : undefined,
         ].filter(Boolean) as string[]
 
-        const filterRowsImpl = (rows: Row<TGenerics>[]) => {
+        const filterRowsImpl = (row: Row<TGenerics>) => {
           // Horizontally filter rows through each column
-          return rows.filter(row => {
-            for (let i = 0; i < filterableIds.length; i++) {
-              if (row.columnFilterMap[filterableIds[i]!] === false) {
-                return false
-              }
+          for (let i = 0; i < filterableIds.length; i++) {
+            if (row.columnFilterMap[filterableIds[i]!] === false) {
+              return false
             }
-            return true
-          })
+          }
+          return true
         }
 
         return filterRows(preRowModel.rows, filterRowsImpl, instance)
