@@ -11,7 +11,7 @@ import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 export type PaginationState = {
   pageIndex: number
   pageSize: number
-  pageCount: number
+  pageCount?: number
 }
 
 export type PaginationTableState = {
@@ -58,12 +58,10 @@ export type PaginationInstance<TGenerics extends TableGenerics> = {
 
 //
 
-const defaultPageCount = -1
 const defaultPageIndex = 0
 const defaultPageSize = 10
 
 const getDefaultPaginationState = (): PaginationState => ({
-  pageCount: defaultPageCount,
   pageIndex: defaultPageIndex,
   pageSize: defaultPageSize,
 })
@@ -173,7 +171,7 @@ export const Pagination: TableFeature = {
       },
       setPageCount: updater =>
         instance.setPagination(old => {
-          let newPageCount = functionalUpdate(updater, old.pageCount)
+          let newPageCount = functionalUpdate(updater, old.pageCount ?? -1)
 
           if (typeof newPageCount === 'number') {
             newPageCount = Math.max(-1, newPageCount)
@@ -253,6 +251,7 @@ export const Pagination: TableFeature = {
 
       getPageCount: () => {
         const { pageCount } = instance.getState().pagination
+
         if (typeof pageCount !== 'undefined') {
           return pageCount
         }
