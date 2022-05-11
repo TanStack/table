@@ -90,11 +90,14 @@ export const Pagination: TableFeature = {
     instance: TableInstance<TGenerics>
   ): PaginationInstance<TGenerics> => {
     let registered = false
+    let queued = false
 
     return {
       _autoResetPageIndex: () => {
         if (!registered) {
-          registered = true
+          instance.queue(() => {
+            registered = true
+          })
           return
         }
 
@@ -106,7 +109,12 @@ export const Pagination: TableFeature = {
           instance.options.autoResetAll === true ||
           instance.options.autoResetPageIndex
         ) {
-          instance.resetPageIndex()
+          if (queued) return
+          queued = true
+          instance.queue(() => {
+            instance.resetPageIndex()
+            queued = false
+          })
         }
       },
       setPagination: updater => {

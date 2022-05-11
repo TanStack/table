@@ -77,11 +77,14 @@ export const Expanding: TableFeature = {
     instance: TableInstance<TGenerics>
   ): ExpandedInstance<TGenerics> => {
     let registered = false
+    let queued = false
 
     return {
       _autoResetExpanded: () => {
         if (!registered) {
-          registered = true
+          instance.queue(() => {
+            registered = true
+          })
           return
         }
 
@@ -93,7 +96,12 @@ export const Expanding: TableFeature = {
           instance.options.autoResetAll === true ||
           instance.options.autoResetExpanded
         ) {
-          instance.resetExpanded()
+          if (queued) return
+          queued = true
+          instance.queue(() => {
+            instance.resetExpanded()
+            queued = false
+          })
         }
       },
       setExpanded: updater => instance.options.onExpandedChange?.(updater),

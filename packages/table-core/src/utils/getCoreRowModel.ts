@@ -91,9 +91,7 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
         key: process.env.NODE_ENV === 'development' && 'getRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance.queue(() => {
-            instance._autoResetPageIndex()
-          })
+          instance._autoResetPageIndex()
         },
       }
     )
