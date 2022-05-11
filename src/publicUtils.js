@@ -106,7 +106,7 @@ export function ensurePluginOrder(plugins, befores, pluginName, afters) {
     )
   }
   const pluginIndex = plugins.findIndex(
-    plugin => plugin.pluginName === pluginName
+    plugin => plugin && plugin.pluginName === pluginName
   )
 
   if (pluginIndex === -1) {
@@ -121,7 +121,7 @@ This usually means you need to need to name your plugin hook by setting the 'plu
 
   befores.forEach(before => {
     const beforeIndex = plugins.findIndex(
-      plugin => plugin.pluginName === before
+      plugin => plugin && plugin.pluginName === before
     )
     if (beforeIndex > -1 && beforeIndex > pluginIndex) {
       if (process.env.NODE_ENV !== 'production') {
