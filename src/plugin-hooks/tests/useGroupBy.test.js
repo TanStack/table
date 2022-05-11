@@ -85,6 +85,7 @@ function Table({ columns, data }) {
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
+            <th>Depth</th>
             {headerGroup.headers.map(column => (
               <th {...column.getHeaderProps()}>
                 {column.canGroupBy ? (
@@ -104,6 +105,7 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <tr {...row.getRowProps()}>
+                <td>Depth: {row.depth}</td>
                 {row.cells.map(cell => {
                   return (
                     <td {...cell.getCellProps()}>
@@ -251,6 +253,10 @@ test('renders a groupable table', () => {
   fireEvent.click(rendered.getByText('Group lastName'))
 
   rendered.getByText('lastName: linsley (2)')
+
+  fireEvent.click(rendered.getAllByText('👉')[0])
+
+  rendered.getAllByText('Depth: 1')
 
   fireEvent.click(rendered.getByText('Group visits'))
 
