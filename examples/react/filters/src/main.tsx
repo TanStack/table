@@ -96,7 +96,6 @@ function App() {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    keepPreviousData: true,
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

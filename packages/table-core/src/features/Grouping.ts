@@ -267,7 +267,7 @@ export const Grouping: TableFeature = {
         const template = column.aggregatedCell ?? column.cell
 
         return template
-          ? instance.render(template, {
+          ? instance._render(template, {
               instance,
               column,
               row,

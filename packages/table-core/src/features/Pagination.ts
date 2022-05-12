@@ -93,7 +93,7 @@ export const Pagination: TableFeature = {
     return {
       _autoResetPageIndex: () => {
         if (!registered) {
-          instance.queue(() => {
+          instance._queue(() => {
             registered = true
           })
           return
@@ -106,7 +106,7 @@ export const Pagination: TableFeature = {
         ) {
           if (queued) return
           queued = true
-          instance.queue(() => {
+          instance._queue(() => {
             instance.resetPageIndex()
             queued = false
           })

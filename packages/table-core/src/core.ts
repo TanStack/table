@@ -44,8 +44,8 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   initialState?: InitialTableState
   autoResetAll?: boolean
   mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
-  keepPreviousData?: boolean
   meta?: TGenerics['TableMeta']
+  // keepPreviousData?: boolean
 }
 
 export type CoreInstance<TGenerics extends TableGenerics> = {
@@ -54,20 +54,20 @@ export type CoreInstance<TGenerics extends TableGenerics> = {
   reset: () => void
   options: RequiredKeys<TableOptions<TGenerics>, 'state'>
   setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
-  queue: (cb: () => void) => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
-  render: <TProps>(
+  _queue: (cb: () => void) => void
+  _render: <TProps>(
     template: Renderable<TGenerics, TProps>,
     props: TProps
   ) => string | null | TGenerics['Rendered']
+  _features: readonly TableFeature[]
   // getOverallProgress: () => number
   // getProgressStage: () =>
   //   | undefined
   //   | 'coreRowModel'
   //   | 'filteredRowModel'
   //   | 'facetedRowModel'
-  _features: readonly TableFeature[]
   // createBatch: (priority: keyof CoreBatches) => Batch
   // init: () => void
   // willUpdate: () => void
@@ -231,7 +231,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       ...options,
     },
     initialState,
-    queue: cb => {
+    _queue: cb => {
       queued.push(cb)
 
       if (!queuedTimeout) {
@@ -297,7 +297,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       const newOptions = functionalUpdate(updater, instance.options)
       instance.options = mergeOptions(newOptions)
     },
-    render: (template, props) => {
+    _render: (template, props) => {
       if (typeof instance.options.render === 'function') {
         return instance.options.render(template, props)
       }

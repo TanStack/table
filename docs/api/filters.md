@@ -8,10 +8,9 @@ menu: API
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../examples/filters)
+- [filters](../examples/filters) (includes faceting)
 - [editable-data](../examples/editable-data)
 - [expanding](../examples/expanding)
-- [filters](../examples/filters)
 - [grouping](../examples/grouping)
 - [pagination](../examples/pagination)
 - [row-selection](../examples/row-selection)
@@ -50,7 +49,6 @@ Filter state is stored on the table instance using the following shape:
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
   globalFilter: any
-  filtersProgress: number
 }
 
 export type ColumnFiltersState = ColumnFilter[]
@@ -86,7 +84,15 @@ The following filter functions are built-in to the table core:
 - `inNumberRange`
   - Number range inclusion
 
-Every filter function adheres to the following shape:
+Every filter function receives:
+
+- The row to filter
+- The columnId to use to retrieve the row's value
+- The filter value
+
+and should return `true` if the row should be included in the filtered rows, and `false` if it should be removed.
+
+This is the type signature for every filter function:
 
 ```tsx
 export type FilterFn<TGenerics extends TableGenerics> = {
@@ -111,11 +117,21 @@ export type CustomFilterFns<TGenerics extends TableGenerics> = Record<
 >
 ```
 
-Filter functions can be referenced/defined in the following ways:
+### `filterFn.resolveFilterValue`
 
-- Built-in filter functions
-- Custom filter functions provided via the `tableOptions.filterFns` option
-- Inline-filter functions defined on `columnDefinition.filterFn` properties
+This optional "hanging" method on any given `filterFn` allows the filter function to transform/sanitize/format the filter value before it is passed to the filter function.
+
+### `filterFn.autoRemove`
+
+This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
+
+### Using Filter Functions
+
+Filter functions can be used/referenced/defined by passing the following to `columnDefinition.filterFn` or `options.globalFilterFn`:
+
+- A `string` that references a built-in filter function
+- A `string` that references a custom filter functions provided via the `tableOptions.filterFns` option
+- A function directly provided to the `columnDefinition.filterFn` option
 
 The final list of filter functions available for the `columnDefnition.filterFn` and ``tableOptions.globalFilterFn` options use the following type:
 
@@ -126,14 +142,6 @@ export type FilterFnOption<TGenerics extends TableGenerics> =
   | keyof TGenerics['FilterFns']
   | FilterFn<TGenerics>
 ```
-
-### `filterFn.resolveFilterValue`
-
-This optional "hanging" method on any given `filterFn` allows the filter function to transform/sanitize/format the filter value before it is passed to the filter function.
-
-### `filterFn.autoRemove`
-
-This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
 
 ## Column Definition Options
 
@@ -225,13 +233,15 @@ setColumnFilterValue: (updater: Updater<any>) => void
 
 A function that sets the current filter value for the column. You can pass it a value or an updater function for immutability-safe operations on existing values.
 
-### `getFacetedRows`
+### `getFacetedRowModel`
 
 ```tsx
-getFacetedRows: () => (Row < TGenerics > []) | undefined
+type getFacetedRowModel = () => RowModel<TGenerics>
 ```
 
-Returns the rows that were present before this column's filter has been applied. Useful for displaying faceted result counts.
+> ⚠️ Requires that you pass a valid `getFacetedRowModel` function to `options.facetedRowModel`. A default implementation is provided via the exported `getFacetedRowModel` function.
+
+Returns the row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
 
 ### `getFacetedUniqueValues`
 
@@ -239,7 +249,9 @@ Returns the rows that were present before this column's filter has been applied.
 getFacetedUniqueValues: () => Map<any, number>
 ```
 
-A function that **computes and returns** a `Map` of unique values and their occurences that were present before this column's filter was applied. Useful for displaying faceted result values.
+> ⚠️ Requires that you pass a valid `getFacetedUniqueValues` function to `options.getFacetedUniqueValues`. A default implementation is provided via the exported `getFacetedUniqueValues` function.
+
+A function that **computes and returns** a `Map` of unique values and their occurences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
 
 ### `getFacetedMinMaxValues`
 
@@ -247,7 +259,9 @@ A function that **computes and returns** a `Map` of unique values and their occu
 getFacetedMinMaxValues: () => Map<any, number>
 ```
 
-A function that **computes and returns** a min/max tuple derived from the values that were present before this column's filter was applied. Useful for displaying faceted result values.
+> ⚠️ Requires that you pass a valid `getFacetedMinMaxValues` function to `options.getFacetedMinMaxValues`. A default implementation is provided via the exported `getFacetedMinMaxValues` function.
+
+A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
 
 ## Table Options
 

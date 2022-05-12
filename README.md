@@ -94,6 +94,7 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [x] filters
   - [x] sorting
   - [x] pagination
+  - [x] pagination-controlled
   - [x] column-sizing
   - [x] row-selection
   - [x] expanding
@@ -115,7 +116,7 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
 - [ ] [Documentation](https://github.com/tanstack/react-table/tree/alpha/docs/)
-  - [ ] Core
+  - [x] Core
   - [ ] Columns
   - [ ] Headers
   - [ ] Rows

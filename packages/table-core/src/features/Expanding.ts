@@ -82,7 +82,7 @@ export const Expanding: TableFeature = {
     return {
       _autoResetExpanded: () => {
         if (!registered) {
-          instance.queue(() => {
+          instance._queue(() => {
             registered = true
           })
           return
@@ -98,7 +98,7 @@ export const Expanding: TableFeature = {
         ) {
           if (queued) return
           queued = true
-          instance.queue(() => {
+          instance._queue(() => {
             instance.resetExpanded()
             queued = false
           })
