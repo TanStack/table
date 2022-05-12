@@ -11,7 +11,7 @@ import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 export type PaginationState = {
   pageIndex: number
   pageSize: number
-  pageCount: number
+  pageCount?: number
 }
 
 export type PaginationTableState = {
@@ -39,11 +39,11 @@ export type PaginationDefaultOptions = {
 export type PaginationInstance<TGenerics extends TableGenerics> = {
   _autoResetPageIndex: () => void
   setPagination: (updater: Updater<PaginationState>) => void
-  resetPagination: () => void
+  resetPagination: (defaultState?: boolean) => void
   setPageIndex: (updater: Updater<number>) => void
-  resetPageIndex: () => void
+  resetPageIndex: (defaultState?: boolean) => void
   setPageSize: (updater: Updater<number>) => void
-  resetPageSize: () => void
+  resetPageSize: (defaultState?: boolean) => void
   setPageCount: (updater: Updater<number>) => void
   getPageOptions: () => number[]
   getCanPreviousPage: () => boolean
@@ -58,14 +58,20 @@ export type PaginationInstance<TGenerics extends TableGenerics> = {
 
 //
 
+const defaultPageIndex = 0
+const defaultPageSize = 10
+
+const getDefaultPaginationState = (): PaginationState => ({
+  pageIndex: defaultPageIndex,
+  pageSize: defaultPageSize,
+})
+
 export const Pagination: TableFeature = {
   getInitialState: (state): PaginationTableState => {
     return {
       ...state,
       pagination: {
-        pageCount: -1,
-        pageIndex: 0,
-        pageSize: 10,
+        ...getDefaultPaginationState(),
         ...state?.pagination,
       },
     }
@@ -112,13 +118,11 @@ export const Pagination: TableFeature = {
 
         return instance.options.onPaginationChange?.(safeUpdater)
       },
-      resetPagination: () => {
+      resetPagination: defaultState => {
         instance.setPagination(
-          instance.initialState.pagination ?? {
-            pageIndex: 0,
-            pageSize: 10,
-            pageCount: -1,
-          }
+          defaultState
+            ? getDefaultPaginationState()
+            : instance.initialState.pagination ?? getDefaultPaginationState()
         )
       },
       setPageIndex: updater => {
@@ -138,11 +142,19 @@ export const Pagination: TableFeature = {
           }
         })
       },
-      resetPageIndex: () => {
-        instance.setPageIndex(0)
+      resetPageIndex: defaultState => {
+        instance.setPageIndex(
+          defaultState
+            ? defaultPageIndex
+            : instance.initialState?.pagination?.pageIndex ?? defaultPageIndex
+        )
       },
-      resetPageSize: () => {
-        instance.setPageSize(instance.initialState?.pagination?.pageSize ?? 10)
+      resetPageSize: defaultState => {
+        instance.setPageSize(
+          defaultState
+            ? defaultPageSize
+            : instance.initialState?.pagination?.pageSize ?? defaultPageSize
+        )
       },
       setPageSize: updater => {
         instance.setPagination(old => {
@@ -159,7 +171,7 @@ export const Pagination: TableFeature = {
       },
       setPageCount: updater =>
         instance.setPagination(old => {
-          let newPageCount = functionalUpdate(updater, old.pageCount)
+          let newPageCount = functionalUpdate(updater, old.pageCount ?? -1)
 
           if (typeof newPageCount === 'number') {
             newPageCount = Math.max(-1, newPageCount)
@@ -239,7 +251,8 @@ export const Pagination: TableFeature = {
 
       getPageCount: () => {
         const { pageCount } = instance.getState().pagination
-        if (pageCount > 0) {
+
+        if (typeof pageCount !== 'undefined') {
           return pageCount
         }
 

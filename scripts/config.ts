@@ -3,30 +3,39 @@ import { BranchConfig, Package } from './types'
 
 // TODO: List your npm packages here. The first package will be used as the versioner.
 export const packages: Package[] = [
-  { name: '@tanstack/table-core', srcDir: 'packages/table-core/src' },
+  {
+    name: '@tanstack/table-core',
+    packageDir: 'table-core',
+    srcDir: 'src',
+  },
   {
     name: '@tanstack/react-table',
-    srcDir: 'packages/react-table/src',
+    packageDir: 'react-table',
+    srcDir: 'src',
     dependencies: ['@tanstack/table-core'],
   },
   {
     name: '@tanstack/solid-table',
-    srcDir: 'packages/solid-table/src',
+    packageDir: 'solid-table',
+    srcDir: 'src',
     dependencies: ['@tanstack/table-core'],
   },
   {
     name: '@tanstack/vue-table',
-    srcDir: 'packages/vue-table/src',
+    packageDir: 'vue-table',
+    srcDir: 'src',
     dependencies: ['@tanstack/table-core'],
   },
   {
     name: '@tanstack/svelte-table',
-    srcDir: 'packages/svelte-table/src',
+    packageDir: 'svelte-table',
+    srcDir: 'src',
     dependencies: ['@tanstack/table-core'],
   },
   {
     name: '@tanstack/react-table-devtools',
-    srcDir: 'packages/react-table-devtools/src',
+    packageDir: 'react-table-devtools',
+    srcDir: 'src',
     peerDependencies: ['@tanstack/react-table'],
   },
 ]
@@ -53,9 +62,9 @@ export const branchConfigs: Record<string, BranchConfig> = {
 }
 
 export const rootDir = path.resolve(__dirname, '..')
-export const exampleDirs = [
-  path.resolve(rootDir, 'examples/react'),
-  path.resolve(rootDir, 'examples/solid'),
-  path.resolve(rootDir, 'examples/svelte'),
-  path.resolve(rootDir, 'examples/vue'),
+export const examplesDirs = [
+  'examples/react',
+  'examples/solid',
+  'examples/svelte',
+  'examples/vue',
 ]

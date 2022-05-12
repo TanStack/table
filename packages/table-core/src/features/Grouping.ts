@@ -99,7 +99,7 @@ export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export type GroupingInstance<TGenerics extends TableGenerics> = {
   setGrouping: (updater: Updater<GroupingState>) => void
-  resetGrouping: () => void
+  resetGrouping: (defaultState?: boolean) => void
   getPreGroupedRowModel: () => RowModel<TGenerics>
   getGroupedRowModel: () => RowModel<TGenerics>
   _getGroupedRowModel?: () => RowModel<TGenerics>
@@ -214,8 +214,10 @@ export const Grouping: TableFeature = {
     return {
       setGrouping: updater => instance.options.onGroupingChange?.(updater),
 
-      resetGrouping: () => {
-        instance.setGrouping(instance.initialState?.grouping ?? [])
+      resetGrouping: defaultState => {
+        instance.setGrouping(
+          defaultState ? [] : instance.initialState?.grouping ?? []
+        )
       },
 
       getPreGroupedRowModel: () => instance.getSortedRowModel(),

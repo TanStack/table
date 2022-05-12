@@ -1,12 +1,11 @@
 import {
   branchConfigs,
-  exampleDirs,
+  examplesDirs,
   latestBranch,
   packages,
   rootDir,
 } from './config'
 import { BranchConfig, Commit, Package } from './types'
-import { getPackageDir } from './utils'
 
 // Originally ported to TS from https://github.com/remix-run/react-router/tree/main/scripts/{version,publish}.js
 import path from 'path'
@@ -157,7 +156,9 @@ async function run() {
   let changedPackages = RELEASE_ALL
     ? packages
     : changedFiles.reduce((changedPackages, file) => {
-        const pkg = packages.find(p => file.startsWith(p.srcDir))
+        const pkg = packages.find(p =>
+          file.startsWith(path.join('packages', p.packageDir, p.srcDir))
+        )
         if (pkg && !changedPackages.find(d => d.name === pkg.name)) {
           changedPackages.push(pkg)
         }
@@ -340,71 +341,118 @@ async function run() {
   for (const pkg of changedPackages) {
     console.log(`  Updating ${pkg.name} version to ${version}...`)
 
-    await updatePackageJson('packages', pkg.name, config => {
-      config.version = version
-    })
+    await updatePackageJson(
+      path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json'),
+      config => {
+        config.version = version
+      }
+    )
   }
 
   console.log(`Updating all package dependencies to latest versions...`)
   // Update all changed package dependencies to their correct versions
   for (const pkg of packages) {
-    await updatePackageJson('packages', pkg.name, async config => {
-      await Promise.all(
-        (pkg.dependencies ?? []).map(async dep => {
-          const depVersion = await getPackageVersion('packages', dep)
-          if (
-            config.dependencies?.[dep] &&
-            config.dependencies?.[dep] !== depVersion
-          ) {
-            console.log(
-              `  Updating ${pkg.name}'s dependency on ${dep} to version ${depVersion}.`
-            )
-            config.dependencies[dep] = depVersion
-          }
-        })
-      )
+    await updatePackageJson(
+      path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json'),
+      async config => {
+        await Promise.all(
+          (pkg.dependencies ?? []).map(async dep => {
+            const depPackage = packages.find(d => d.name === dep)
 
-      await Promise.all(
-        (pkg.peerDependencies ?? []).map(async peerDep => {
-          const depVersion = await getPackageVersion('packages', peerDep)
-          if (
-            config.peerDependencies?.[peerDep] &&
-            config.peerDependencies?.[peerDep] !== depVersion
-          ) {
-            console.log(
-              `  Updating ${pkg.name}'s peerDependency on ${peerDep} to version ${depVersion}.`
+            if (!depPackage) {
+              throw new Error(`Could not find package ${dep}`)
+            }
+
+            const depVersion = await getPackageVersion(
+              path.resolve(
+                rootDir,
+                'packages',
+                depPackage.packageDir,
+                'package.json'
+              )
             )
-            config.peerDependencies[peerDep] = depVersion
-          }
-        })
-      )
-    })
+
+            if (
+              config.dependencies?.[dep] &&
+              config.dependencies?.[dep] !== depVersion
+            ) {
+              console.log(
+                `  Updating ${pkg.name}'s dependency on ${dep} to version ${depVersion}.`
+              )
+              config.dependencies[dep] = depVersion
+            }
+          })
+        )
+
+        await Promise.all(
+          (pkg.peerDependencies ?? []).map(async peerDep => {
+            const peerDepPackage = packages.find(d => d.name === peerDep)
+
+            if (!peerDepPackage) {
+              throw new Error(`Could not find package ${peerDep}`)
+            }
+
+            const depVersion = await getPackageVersion(
+              path.resolve(
+                rootDir,
+                'packages',
+                peerDepPackage.packageDir,
+                'package.json'
+              )
+            )
+
+            if (
+              config.peerDependencies?.[peerDep] &&
+              config.peerDependencies?.[peerDep] !== depVersion
+            ) {
+              console.log(
+                `  Updating ${pkg.name}'s peerDependency on ${peerDep} to version ${depVersion}.`
+              )
+              config.peerDependencies[peerDep] = depVersion
+            }
+          })
+        )
+      }
+    )
   }
 
   console.log(`Updating all example dependencies...`)
   await Promise.all(
-    exampleDirs.map(async exampleDir => {
-      let examples = await fsp.readdir(exampleDir)
-      for (const example of examples) {
-        let stat = await fsp.stat(path.join(exampleDir, example))
+    examplesDirs.map(async examplesDir => {
+      examplesDir = path.resolve(rootDir, examplesDir)
+      let exampleDirs = await fsp.readdir(examplesDir)
+      for (let exampleName of exampleDirs) {
+        const exampleDir = path.resolve(examplesDir, exampleName)
+        let stat = await fsp.stat(exampleDir)
         if (!stat.isDirectory()) continue
 
-        await updatePackageJson('examples', example, async config => {
-          await Promise.all(
-            changedPackages.map(async pkg => {
-              const depVersion = await getPackageVersion('packages', pkg.name)
-              if (
-                config.dependencies?.[pkg.name] &&
-                config.dependencies?.[pkg.name] !== depVersion
-              ) {
-                console.log(
-                  `  Updating ${example}'s dependency on ${pkg.name} to version ${depVersion}.`
+        await updatePackageJson(
+          path.resolve(exampleDir, 'package.json'),
+          async config => {
+            await Promise.all(
+              changedPackages.map(async pkg => {
+                const depVersion = await getPackageVersion(
+                  path.resolve(
+                    rootDir,
+                    'packages',
+                    pkg.packageDir,
+                    'package.json'
+                  )
                 )
-                config.dependencies[pkg.name] = depVersion
-              }
-            })
-          )
-        })
+
+                if (
+                  config.dependencies?.[pkg.name] &&
+                  config.dependencies?.[pkg.name] !== depVersion
+                ) {
+                  console.log(
+                    `  Updating ${exampleName}'s dependency on ${pkg.name} to version ${depVersion}.`
+                  )
+                  config.dependencies[pkg.name] = depVersion
+                }
+              })
+            )
+          }
+        )
       }
     })
   )
@@ -432,7 +480,7 @@ async function run() {
 
   // Publish each package
   changedPackages.map(pkg => {
-    let packageDir = path.join(rootDir, 'packages', getPackageDir(pkg.name))
+    let packageDir = path.join(rootDir, 'packages', pkg.packageDir)
     const cmd = `cd ${packageDir} && yarn publish --tag ${npmTag} --access=public`
     console.log(
       `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
@@ -497,29 +545,23 @@ function capitalize(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1)
 }
 
-async function readPackageJson(subRoot: 'packages' | 'examples', name: string) {
-  return (await jsonfile.readFile(
-    getPackageJsonPath(subRoot, name)
-  )) as PackageJson
+async function readPackageJson(pathName: string) {
+  return (await jsonfile.readFile(pathName)) as PackageJson
 }
 
 async function updatePackageJson(
-  subRoot: 'packages' | 'examples',
-  name: string,
+  pathName: string,
   transform: (json: PackageJson) => Promise<void> | void
 ) {
-  const json = await readPackageJson(subRoot, name)
+  const json = await readPackageJson(pathName)
   await transform(json)
-  await jsonfile.writeFile(getPackageJsonPath(subRoot, name), json, {
+  await jsonfile.writeFile(pathName, json, {
     spaces: 2,
   })
 }
 
-async function getPackageVersion(
-  subRoot: 'packages' | 'examples',
-  name: string
-) {
-  const json = await readPackageJson(subRoot, name)
+async function getPackageVersion(pathName: string) {
+  const json = await readPackageJson(pathName)
 
   if (!json.version) {
     throw new Error(`No version found for package: ${name}`)
@@ -534,11 +576,11 @@ function updateExampleLockfile(example: string) {
   execSync(`cd ${exampleDir} && yarn`, { stdio: 'ignore' })
 }
 
-function getPackageJsonPath(
-  subRoot: 'packages' | 'examples',
-  packageName: string
-) {
-  return path.join(rootDir, subRoot, getPackageDir(packageName), 'package.json')
+function getPackageNameDirectory(pathName: string) {
+  return pathName
+    .split('/')
+    .filter(d => !d.startsWith('@'))
+    .join('/')
 }
 
 function getTaggedVersion() {
