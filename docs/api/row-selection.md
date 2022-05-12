@@ -4,47 +4,6 @@ route: /api/row-selection
 menu: API
 ---
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-**Table of Contents**
-
-- [name: Row Selection
-  route: /api/row-selection
-  menu: API](#name-row-selection%0Aroute-apirow-selection%0Amenu-api)
-- [Examples](#examples)
-- [State](#state)
-- [Table Options](#table-options)
-  - [`enableRowSelection`](#enablerowselection)
-  - [`enableMultiRowSelection`](#enablemultirowselection)
-  - [`enableSubRowSelection`](#enablesubrowselection)
-  - [`onRowSelectionChange`](#onrowselectionchange)
-- [Table Instance API](#table-instance-api)
-  - [`getToggleAllRowsSelectedHandler`](#gettoggleallrowsselectedhandler)
-  - [`getToggleAllPageRowsSelectedHandler`](#gettoggleallpagerowsselectedhandler)
-  - [`setRowSelection`](#setrowselection)
-  - [`resetRowSelection`](#resetrowselection)
-  - [`getIsAllRowsSelected`](#getisallrowsselected)
-  - [`getIsAllPageRowsSelected`](#getisallpagerowsselected)
-  - [`getIsSomeRowsSelected`](#getissomerowsselected)
-  - [`getIsSomePageRowsSelected`](#getissomepagerowsselected)
-  - [`toggleAllRowsSelected`](#toggleallrowsselected)
-  - [`toggleAllPageRowsSelected`](#toggleallpagerowsselected)
-  - [`getPreSelectedRowModel`](#getpreselectedrowmodel)
-  - [`getSelectedRowModel`](#getselectedrowmodel)
-  - [`getFilteredSelectedRowModel`](#getfilteredselectedrowmodel)
-  - [`getGroupedSelectedRowModel`](#getgroupedselectedrowmodel)
-- [Row API](#row-api)
-  - [`getIsSelected`](#getisselected)
-  - [`getIsSomeSelected`](#getissomeselected)
-  - [`getCanSelect`](#getcanselect)
-  - [`getCanMultiSelect`](#getcanmultiselect)
-  - [`getCanSelectSubRows`](#getcanselectsubrows)
-  - [`toggleSelected`](#toggleselected)
-  - [`getToggleSelectedHandler`](#gettoggleselectedhandler)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## Examples
 
 Want to skip to the implementation? Check out these examples:

@@ -58,7 +58,6 @@
     "babel-plugin-transform-async-to-promises": "^0.8.18",
     "concurrently": "^7.1.0",
     "current-git-branch": "^1.1.0",
-    "doctoc": "^2.2.0",
     "git-log-parser": "^1.2.0",
     "jest": "^27.5.1",
     "lerna": "^4.0.0",

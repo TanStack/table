@@ -3,16 +3,7 @@ name: Installation
 route: /installation
 ---
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-**Table of Contents**
-
-- [name: Installation
-  route: /installation](#name-installation%0Aroute-installation)
-- [Installation](#installation)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+# Installation
 
 Install React Table as a dependency using `npm` or `yarn`
 

@@ -3,20 +3,7 @@ name: FAQ
 route: /faq
 ---
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-**Table of Contents**
-
-- [name: FAQ
-  route: /faq](#name-faq%0Aroute-faq)
-- [FAQ](#faq)
-  - [How can I manually control the table state?](#how-can-i-manually-control-the-table-state)
-  - [How can I use the table state to fetch new data?](#how-can-i-use-the-table-state-to-fetch-new-data)
-  - [How can I debounce rapid table state changes?](#how-can-i-debounce-rapid-table-state-changes)
-  - [How do I stop my table state from automatically resetting when my data changes?](#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+# FAQ
 
 Below are some of the most frequently asked questions on how to use the React Table API to solve various table challenges you may encounter
 
@@ -29,16 +16,16 @@ Occasionally, you may want to store or override some or all of the table state f
 For example, to control a table's `pageIndex` from a parent component:
 
 ```js
-const [controlledPageIndex, setControlledPage] = React.useState(0)
+const [controlledPageIndex, setControlledPage] = React.useState(0);
 
 useTable({
   onStateChange: (newState, oldState) => {
     if (newState.pageIndex !== oldState.pageIndex) {
       // Update the pageIndex in our parent state
-      setControlledPage(newState.pageIndex)
-      return oldState // This will cancel the update and not rerender the table at this point
+      setControlledPage(newState.pageIndex);
+      return oldState; // This will cancel the update and not rerender the table at this point
     }
-    return newState
+    return newState;
   },
   state: React.useMemo(
     () => ({
@@ -48,21 +35,21 @@ useTable({
     }),
     []
   ),
-})
+});
 ```
 
 Here is another example of controlling **all** of the table state:
 
 ```js
-const [tableState, setTableState] = React.useState({})
+const [tableState, setTableState] = React.useState({});
 
 useTable({
   onStateChange: (newState, oldState) => {
-    setTableState(newState)
-    return oldState // Return old state, essentially a no-op
+    setTableState(newState);
+    return oldState; // Return old state, essentially a no-op
   },
   state: tableState,
-})
+});
 ```
 
 ## How can I use the table state to fetch new data?
