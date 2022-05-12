@@ -4,6 +4,24 @@ route: /api/column-ordering
 menu: API
 ---
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+**Table of Contents**
+
+- [name: Column Ordering
+  route: /api/column-ordering
+  menu: API](#name-column-ordering%0Aroute-apicolumn-ordering%0Amenu-api)
+- [Examples](#examples)
+- [State](#state)
+- [Table Options](#table-options)
+  - [`onColumnOrderChange`](#oncolumnorderchange)
+- [Table Instance API](#table-instance-api)
+  - [`setColumnOrder`](#setcolumnorder)
+  - [`resetColumnOrder`](#resetcolumnorder)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Examples
 
 Want to skip to the implementation? Check out these examples:

@@ -3,7 +3,19 @@ name: Concepts
 route: /concepts
 ---
 
-# Concepts
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+**Table of Contents**
+
+- [name: Concepts
+  route: /concepts](#name-concepts%0Aroute-concepts)
+- [Concepts](#concepts)
+  - [React Table is a "headless" UI library](#react-table-is-a-headless-ui-library)
+  - [The React Table instance](#the-react-table-instance)
+  - [Rendering your own UI](#rendering-your-own-ui)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## React Table is a "headless" UI library
 
@@ -33,6 +45,7 @@ As of React Table v7, **you the developer** are responsible for rendering your o
 ---
 
 After reading about React Table's concepts, you should:
+
 - [Follow the Quick Start](./quickstart)
 - [Check Out Some Examples](./examples)
 - [Study the API](./api)

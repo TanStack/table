@@ -4,6 +4,72 @@ route: /api/filtering
 menu: API
 ---
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+**Table of Contents**
+
+- [name: Filters
+  route: /api/filtering
+  menu: API](#name-filters%0Aroute-apifiltering%0Amenu-api)
+- [Examples](#examples)
+- [Can-Filter](#can-filter)
+- [State](#state)
+- [Filter Functions](#filter-functions)
+  - [`filterFn.resolveFilterValue`](#filterfnresolvefiltervalue)
+  - [`filterFn.autoRemove`](#filterfnautoremove)
+  - [Using Filter Functions](#using-filter-functions)
+- [Column Definition Options](#column-definition-options)
+  - [`filterFn`](#filterfn)
+  - [`enableAllFilters`](#enableallfilters)
+  - [`enableColumnFilter`](#enablecolumnfilter)
+  - [`enableGlobalFilter`](#enableglobalfilter)
+- [Column API](#column-api)
+  - [`getCanColumnFilter`](#getcancolumnfilter)
+  - [`getCanGlobalFilter`](#getcanglobalfilter)
+  - [`getColumnFilterIndex`](#getcolumnfilterindex)
+  - [`getColumnIsFiltered`](#getcolumnisfiltered)
+  - [`getColumnFilterValue`](#getcolumnfiltervalue)
+  - [`setColumnFilterValue`](#setcolumnfiltervalue)
+  - [`getFacetedRowModel`](#getfacetedrowmodel)
+  - [`getFacetedUniqueValues`](#getfaceteduniquevalues)
+  - [`getFacetedMinMaxValues`](#getfacetedminmaxvalues)
+- [Table Options](#table-options)
+  - [`filterFromLeafRows`](#filterfromleafrows)
+  - [`filterFns`](#filterfns)
+  - [`enableFilters`](#enablefilters)
+  - [`manualFiltering`](#manualfiltering)
+  - [`onColumnFiltersChange`](#oncolumnfilterschange)
+  - [`enableColumnFilters`](#enablecolumnfilters)
+  - [`getFilteredRowModel`](#getfilteredrowmodel)
+  - [`getColumnFacetedRowModel`](#getcolumnfacetedrowmodel)
+  - [`globalFilterFn`](#globalfilterfn)
+  - [`onGlobalFilterChange`](#onglobalfilterchange)
+  - [`enableGlobalFilter`](#enableglobalfilter-1)
+  - [`getColumnCanGlobalFilter`](#getcolumncanglobalfilter)
+- [Table Instance API](#table-instance-api)
+  - [`getColumnAutoFilterFn`](#getcolumnautofilterfn)
+  - [`getColumnFilterFn`](#getcolumnfilterfn)
+  - [`setColumnFilters`](#setcolumnfilters)
+  - [`setColumnFilterValue`](#setcolumnfiltervalue-1)
+  - [`resetColumnFilters`](#resetcolumnfilters)
+  - [`getColumnCanColumnFilter`](#getcolumncancolumnfilter)
+  - [`getColumnIsFiltered`](#getcolumnisfiltered-1)
+  - [`getColumnFilterValue`](#getcolumnfiltervalue-1)
+  - [`getColumnFilterIndex`](#getcolumnfilterindex-1)
+  - [`getPreFilteredRowModel`](#getprefilteredrowmodel)
+  - [`getFilteredRowModel`](#getfilteredrowmodel-1)
+  - [`setGlobalFilter`](#setglobalfilter)
+  - [`resetGlobalFilter`](#resetglobalfilter)
+  - [`getGlobalAutoFilterFn`](#getglobalautofilterfn)
+  - [`getGlobalFilterFn`](#getglobalfilterfn)
+  - [`getColumnCanGlobalFilter`](#getcolumncanglobalfilter-1)
+  - [`getGlobalFacetedRowModel`](#getglobalfacetedrowmodel)
+  - [`getGlobalFacetedUniqueValues`](#getglobalfaceteduniquevalues)
+  - [`getGlobalFacetedMinMaxValues`](#getglobalfacetedminmaxvalues)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Examples
 
 Want to skip to the implementation? Check out these examples:
