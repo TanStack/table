@@ -91,18 +91,20 @@
     }),
   ]
 
-  let data = writable<Person[]>(defaultData)
-  let columns = writable(defaultColumns)
-
-  const rerender = () => {
-    data = data
-  }
-
-  const instance = createTableInstance(table, {
-    data: $data,
-    columns: $columns,
+  const options = writable({
+    data: defaultData,
+    columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  const rerender = () => {
+    options.update(options => ({
+      ...options,
+      data: defaultData,
+    }))
+  }
+
+  const instance = createTableInstance(table, options)
 </script>
 
 <div class="p-2">
@@ -123,9 +125,11 @@
     <tbody>
       {#each $instance.getRowModel().rows as row}
         <tr>
-          {#each row.getVisibleCells() as cell}
-            <td><svelte:component this={cell.renderCell} /></td>
-          {/each}
+          <td>
+            {#each row.getVisibleCells() as cell}
+              <svelte:component this={cell.renderCell} />
+            {/each}
+          </td>
         </tr>
       {/each}
     </tbody>
