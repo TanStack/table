@@ -117,15 +117,15 @@ export type CustomFilterFns<TGenerics extends TableGenerics> = Record<
 >
 ```
 
-### `filterFn.resolveFilterValue`
+#### `filterFn.resolveFilterValue`
 
 This optional "hanging" method on any given `filterFn` allows the filter function to transform/sanitize/format the filter value before it is passed to the filter function.
 
-### `filterFn.autoRemove`
+#### `filterFn.autoRemove`
 
 This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
 
-### Using Filter Functions
+#### Using Filter Functions
 
 Filter functions can be used/referenced/defined by passing the following to `columnDefinition.filterFn` or `options.globalFilterFn`:
 
@@ -145,7 +145,7 @@ export type FilterFnOption<TGenerics extends TableGenerics> =
 
 ## Column Definition Options
 
-### `filterFn`
+#### `filterFn`
 
 ```tsx
 filterFn?: FilterFn | keyof TGenerics['FilterFns'] | keyof BuiltInFilterFns
@@ -159,7 +159,7 @@ Options:
 - A `string` referencing a custom filter function defined on the `filterFns` table option
 - A [custom filter function](#filter-functions)
 
-### `enableAllFilters`
+#### `enableAllFilters`
 
 ```tsx
 enableAllFilters?: boolean
@@ -167,7 +167,7 @@ enableAllFilters?: boolean
 
 Enables/disables **all** filters for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
-### `enableColumnFilter`
+#### `enableColumnFilter`
 
 ```tsx
 enableColumnFilter?: boolean
@@ -175,7 +175,7 @@ enableColumnFilter?: boolean
 
 Enables/disables the **column** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
-### `enableGlobalFilter`
+#### `enableGlobalFilter`
 
 ```tsx
 enableGlobalFilter?: boolean
@@ -185,7 +185,7 @@ Enables/disables the **global** filter for this column. For option priority, see
 
 ## Column API
 
-### `getCanColumnFilter`
+#### `getCanColumnFilter`
 
 ```tsx
 getCanColumnFilter: () => boolean
@@ -193,7 +193,7 @@ getCanColumnFilter: () => boolean
 
 Returns whether or not the column can be **column** filtered.
 
-### `getCanGlobalFilter`
+#### `getCanGlobalFilter`
 
 ```tsx
 getCanGlobalFilter: () => boolean
@@ -201,7 +201,7 @@ getCanGlobalFilter: () => boolean
 
 Returns whether or not the column can be **globally** filtered.
 
-### `getColumnFilterIndex`
+#### `getColumnFilterIndex`
 
 ```tsx
 getColumnFilterIndex: () => number
@@ -209,7 +209,7 @@ getColumnFilterIndex: () => number
 
 Returns the index (including `-1`) of the column filter in the table's `state.columnFilters` array.
 
-### `getColumnIsFiltered`
+#### `getColumnIsFiltered`
 
 ```tsx
 getColumnIsFiltered: () => boolean
@@ -217,7 +217,7 @@ getColumnIsFiltered: () => boolean
 
 Returns whether or not the column is currently filtered.
 
-### `getColumnFilterValue`
+#### `getColumnFilterValue`
 
 ```tsx
 getColumnFilterValue: () => unknown
@@ -225,7 +225,7 @@ getColumnFilterValue: () => unknown
 
 Returns the current filter value of the column.
 
-### `setColumnFilterValue`
+#### `setColumnFilterValue`
 
 ```tsx
 setColumnFilterValue: (updater: Updater<any>) => void
@@ -233,7 +233,7 @@ setColumnFilterValue: (updater: Updater<any>) => void
 
 A function that sets the current filter value for the column. You can pass it a value or an updater function for immutability-safe operations on existing values.
 
-### `getFacetedRowModel`
+#### `getFacetedRowModel`
 
 ```tsx
 type getFacetedRowModel = () => RowModel<TGenerics>
@@ -243,7 +243,7 @@ type getFacetedRowModel = () => RowModel<TGenerics>
 
 Returns the row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
 
-### `getFacetedUniqueValues`
+#### `getFacetedUniqueValues`
 
 ```tsx
 getFacetedUniqueValues: () => Map<any, number>
@@ -253,7 +253,7 @@ getFacetedUniqueValues: () => Map<any, number>
 
 A function that **computes and returns** a `Map` of unique values and their occurences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
 
-### `getFacetedMinMaxValues`
+#### `getFacetedMinMaxValues`
 
 ```tsx
 getFacetedMinMaxValues: () => Map<any, number>
@@ -265,7 +265,7 @@ A function that **computes and returns** a min/max tuple derived from `column.ge
 
 ## Table Options
 
-### `filterFromLeafRows`
+#### `filterFromLeafRows`
 
 ```tsx
 filterFromLeafRows?: boolean
@@ -273,7 +273,7 @@ filterFromLeafRows?: boolean
 
 By default, filtering is done from parent rows down (so if a parent row is filtered out, all of its children will be filtered out as well). Setting this option to `true` will cause filtering to be done from leaf rows up (which means parent rows will be included so long as one of their child or grand-child rows is also included).
 
-### `filterFns`
+#### `filterFns`
 
 ```tsx
 filterFns?: Record<string, FilterFn>
@@ -297,7 +297,7 @@ const column = table.createDataColumn('key', {
 })
 ```
 
-### `enableFilters`
+#### `enableFilters`
 
 ```tsx
 enableFilters?: boolean
@@ -305,7 +305,7 @@ enableFilters?: boolean
 
 Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
-### `manualFiltering`
+#### `manualFiltering`
 
 ```tsx
 manualFiltering?: boolean
@@ -313,7 +313,7 @@ manualFiltering?: boolean
 
 Disables the `getFilteredRowModel` from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.
 
-### `onColumnFiltersChange`
+#### `onColumnFiltersChange`
 
 ```tsx
 onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
@@ -321,7 +321,7 @@ onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 
 If provided, this function will be called with an `updaterFn` when `state.columnFilters` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-### `enableColumnFilters`
+#### `enableColumnFilters`
 
 ```tsx
 enableColumnFilters?: boolean
@@ -329,7 +329,7 @@ enableColumnFilters?: boolean
 
 Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
-### `getFilteredRowModel`
+#### `getFilteredRowModel`
 
 ```tsx
 getFilteredRowModel?: (
@@ -352,7 +352,7 @@ useTable(table, {
 })
 ```
 
-### `getColumnFacetedRowModel`
+#### `getColumnFacetedRowModel`
 
 ```tsx
 getColumnFacetedRowModel: (columnId: string) => RowModel<TGenerics>
@@ -360,7 +360,7 @@ getColumnFacetedRowModel: (columnId: string) => RowModel<TGenerics>
 
 Returns the faceted row model for a given columnId.
 
-### `globalFilterFn`
+#### `globalFilterFn`
 
 ```tsx
 globalFilterFn?: FilterFn | keyof TGenerics['FilterFns'] | keyof BuiltInFilterFns
@@ -374,7 +374,7 @@ Options:
 - A `string` referencing a custom filter function defined on the `filterFns` table option
 - A [custom filter function](#filter-functions)
 
-### `onGlobalFilterChange`
+#### `onGlobalFilterChange`
 
 ```tsx
 onGlobalFilterChange?: OnChangeFn<GlobalFilterState>
@@ -382,7 +382,7 @@ onGlobalFilterChange?: OnChangeFn<GlobalFilterState>
 
 If provided, this function will be called with an `updaterFn` when `state.globalFilter` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-### `enableGlobalFilter`
+#### `enableGlobalFilter`
 
 ```tsx
 enableGlobalFilter?: boolean
@@ -390,7 +390,7 @@ enableGlobalFilter?: boolean
 
 Enables/disables the global filter for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
 
-### `getColumnCanGlobalFilter`
+#### `getColumnCanGlobalFilter`
 
 ```tsx
 getColumnCanGlobalFilter?: (column: Column<TGenerics>) => boolean
@@ -400,7 +400,7 @@ If provided, this function will be called with the column and should return `tru
 
 ## Table Instance API
 
-### `getColumnAutoFilterFn`
+#### `getColumnAutoFilterFn`
 
 ```tsx
 getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
@@ -408,7 +408,7 @@ getColumnAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
 Returns an automatically calculated filter function for the column based off of the columns first known value.
 
-### `getColumnFilterFn`
+#### `getColumnFilterFn`
 
 ```tsx
 getColumnFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
@@ -416,7 +416,7 @@ getColumnFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
 Returns the filter function (either user-defined or automatic, depending on configuration) for the columnId specified.
 
-### `setColumnFilters`
+#### `setColumnFilters`
 
 ```tsx
 setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
@@ -424,7 +424,7 @@ setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 
 Sets or updates the `state.columnFilters` state.
 
-### `setColumnFilterValue`
+#### `setColumnFilterValue`
 
 ```tsx
 setColumnFilterValue: (columnId: string, updater: Updater<any>) => void
@@ -432,7 +432,7 @@ setColumnFilterValue: (columnId: string, updater: Updater<any>) => void
 
 Sets or updates the filter value for the columnId specified.
 
-### `resetColumnFilters`
+#### `resetColumnFilters`
 
 ```tsx
 resetColumnFilters: () => void
@@ -440,7 +440,7 @@ resetColumnFilters: () => void
 
 Resets the **column** filter state for the table.
 
-### `getColumnCanColumnFilter`
+#### `getColumnCanColumnFilter`
 
 ```tsx
 getColumnCanColumnFilter: (columnId: string) => boolean
@@ -448,7 +448,7 @@ getColumnCanColumnFilter: (columnId: string) => boolean
 
 Returns if the column with specified columnId can be filtered.
 
-### `getColumnIsFiltered`
+#### `getColumnIsFiltered`
 
 ```tsx
 getColumnIsFiltered: (columnId: string) => boolean
@@ -456,7 +456,7 @@ getColumnIsFiltered: (columnId: string) => boolean
 
 Returns if the column with the specified columnId is currently filtered.
 
-### `getColumnFilterValue`
+#### `getColumnFilterValue`
 
 ```tsx
 getColumnFilterValue: (columnId: string) => unknown
@@ -464,7 +464,7 @@ getColumnFilterValue: (columnId: string) => unknown
 
 Returns the current filter value of the column.
 
-### `getColumnFilterIndex`
+#### `getColumnFilterIndex`
 
 ```tsx
 getColumnFilterIndex: (columnId: string) => unknown
@@ -472,7 +472,7 @@ getColumnFilterIndex: (columnId: string) => unknown
 
 Returns the index (including `-1`) of the column filter with the specified columnId in the table's `state.columnFilters` array.
 
-### `getPreFilteredRowModel`
+#### `getPreFilteredRowModel`
 
 ```tsx
 getPreFilteredRowModel: () => RowModel<TGenerics>
@@ -480,7 +480,7 @@ getPreFilteredRowModel: () => RowModel<TGenerics>
 
 Returns the row model for the table before any **column** filtering has been applied.
 
-### `getFilteredRowModel`
+#### `getFilteredRowModel`
 
 ```tsx
 getFilteredRowModel: () => RowModel<TGenerics>
@@ -488,7 +488,7 @@ getFilteredRowModel: () => RowModel<TGenerics>
 
 Returns the row model for the table after **column** filtering has been applied.
 
-### `setGlobalFilter`
+#### `setGlobalFilter`
 
 ```tsx
 setGlobalFilter: (updater: Updater<any>) => void
@@ -496,7 +496,7 @@ setGlobalFilter: (updater: Updater<any>) => void
 
 Sets or updates the `state.globalFilter` state.
 
-### `resetGlobalFilter`
+#### `resetGlobalFilter`
 
 ```tsx
 resetGlobalFilter: () => void
@@ -504,7 +504,7 @@ resetGlobalFilter: () => void
 
 Resets the **global** filter state for the table.
 
-### `getGlobalAutoFilterFn`
+#### `getGlobalAutoFilterFn`
 
 ```tsx
 getGlobalAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
@@ -512,7 +512,7 @@ getGlobalAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
 Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
 
-### `getGlobalFilterFn`
+#### `getGlobalFilterFn`
 
 ```tsx
 getGlobalFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
@@ -520,7 +520,7 @@ getGlobalFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
 
 Returns the global filter function (either user-defined or automatic, depending on configuration) for the table.
 
-### `getColumnCanGlobalFilter`
+#### `getColumnCanGlobalFilter`
 
 ```tsx
 getColumnCanGlobalFilter: (columnId: string) => boolean
@@ -528,7 +528,7 @@ getColumnCanGlobalFilter: (columnId: string) => boolean
 
 Returns if the column with specified columnId can be **globally** filtered.
 
-### `getGlobalFacetedRowModel`
+#### `getGlobalFacetedRowModel`
 
 ```tsx
 getGlobalFacetedRowModel: () => RowModel<TGenerics>
@@ -536,7 +536,7 @@ getGlobalFacetedRowModel: () => RowModel<TGenerics>
 
 Returns the faceted row model for the global filter.
 
-### `getGlobalFacetedUniqueValues`
+#### `getGlobalFacetedUniqueValues`
 
 ```tsx
 getGlobalFacetedUniqueValues: () => Map<any, number>
@@ -544,7 +544,7 @@ getGlobalFacetedUniqueValues: () => Map<any, number>
 
 Returns the faceted unique values for the global filter.
 
-### `getGlobalFacetedMinMaxValues`
+#### `getGlobalFacetedMinMaxValues`
 
 ```tsx
 getGlobalFacetedMinMaxValues: () => [number, number]

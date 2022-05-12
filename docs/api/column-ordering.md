@@ -32,7 +32,7 @@ export type ColumnOrderState = string[]
 
 ## Table Options
 
-### `onColumnOrderChange`
+#### `onColumnOrderChange`
 
 ```tsx
 onColumnOrderChange?: OnChangeFn<ColumnOrderState>
@@ -42,7 +42,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 
 ## Table Instance API
 
-### `setColumnOrder`
+#### `setColumnOrder`
 
 ```tsx
 setColumnOrder: (updater: Updater<ColumnOrderState>) => void
@@ -50,7 +50,7 @@ setColumnOrder: (updater: Updater<ColumnOrderState>) => void
 
 Sets or updates the `state.columnOrder` state.
 
-### `resetColumnOrder`
+#### `resetColumnOrder`
 
 ```tsx
 resetColumnOrder: () => void

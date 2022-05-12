@@ -6,7 +6,7 @@ menu: API
 
 ## Table Options
 
-### `data`
+#### `data`
 
 ```tsx
 data: TGenerics['Row'][]
@@ -18,7 +18,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 
 > 🧠 Make sure your `data` option is only changing when you want the table to reprocess. Providing an inline `[]` or construction the data array as a new object every time you want to render the table will result in a _lot_ of unnecessary re-processing. This can easily go unnoticed in smaller tables, but you will likely notice it in larger tables.
 
-### `initialState`
+#### `initialState`
 
 ```tsx
 initialState?: Partial<
@@ -39,7 +39,7 @@ Use this option to optionally pass initial state to the table. This state will b
 
 > 🧠 Table state will not be reset when this object changes, which also means that the initial state object does not need to be stable.
 
-### `autoResetAll`
+#### `autoResetAll`
 
 ```tsx
 autoResetAll?: boolean
@@ -47,7 +47,7 @@ autoResetAll?: boolean
 
 Set this option to override any of the `autoReset...` feature options.
 
-### `meta`
+#### `meta`
 
 ```tsx
 meta?: TGenerics['TableMeta']
@@ -57,7 +57,7 @@ After calling `table.setTableMetaType<{...your meta type...}>()`, you can pass a
 
 > 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table instance without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/editable-data.mdx).
 
-### `state`
+#### `state`
 
 ```tsx
 state?: Partial<
@@ -76,7 +76,7 @@ state?: Partial<
 
 The `state` option can be used to optionally _control_ part or all of the table state. The state you pass here will merge with and overwrite the internal automatically-managed state to produce the final state for the table. You can also listen to state changes via the `onStateChange` option.
 
-### `onStateChange`
+#### `onStateChange`
 
 ```tsx
 onStateChange: (updater: Updater<TableState>) => void
@@ -84,7 +84,7 @@ onStateChange: (updater: Updater<TableState>) => void
 
 The `onStateChange` option can be used to optionally listen to state changes within the table. If you provide this options, you will be responsible for controlling and updating the table state yourself. You can provide the state back to the table with the `state` option.
 
-### `debugAll`
+#### `debugAll`
 
 > ⚠️ Debugging is only available in development mode.
 
@@ -94,7 +94,7 @@ debugAll?: boolean
 
 Set this option to true to output all debugging information to the console.
 
-### `debugTable`
+#### `debugTable`
 
 > ⚠️ Debugging is only available in development mode.
 
@@ -104,7 +104,7 @@ debugTable?: boolean
 
 Set this option to true to output table debugging information to the console.
 
-### `debugHeaders`
+#### `debugHeaders`
 
 > ⚠️ Debugging is only available in development mode.
 
@@ -114,7 +114,7 @@ debugHeaders?: boolean
 
 Set this option to true to output header debugging information to the console.
 
-### `debugColumns`
+#### `debugColumns`
 
 > ⚠️ Debugging is only available in development mode.
 
@@ -124,7 +124,7 @@ debugColumns?: boolean
 
 Set this option to true to output column debugging information to the console.
 
-### `debugRows`
+#### `debugRows`
 
 > ⚠️ Debugging is only available in development mode.
 
@@ -134,7 +134,7 @@ debugRows?: boolean
 
 Set this option to true to output row debugging information to the console.
 
-### `render`
+#### `render`
 
 > ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
 
@@ -147,7 +147,7 @@ type render = <TProps>(
 
 The `render` option provides a renderer implementation for the table. This implementation is used to turn a table's various column header and cell templates into a result that is supported by the user's framework.
 
-### `mergeOptions`
+#### `mergeOptions`
 
 > ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
 
@@ -159,7 +159,7 @@ This option is used to optionally implement the merging of table options. Some f
 
 ## Table Instance API
 
-### `initialState`
+#### `initialState`
 
 ```tsx
 initialState: VisibilityTableState &
@@ -176,7 +176,7 @@ initialState: VisibilityTableState &
 
 This is the resolved initial state of the table.
 
-### `reset`
+#### `reset`
 
 ```tsx
 reset: () => void
@@ -184,7 +184,7 @@ reset: () => void
 
 Call this function to reset the table state to the initial state.
 
-### `getState`
+#### `getState`
 
 ```tsx
 getState: () => TableState
@@ -194,7 +194,7 @@ Call this function to get the table's current state. It's recommended to use thi
 
 > 🧠 The state returned by this function is the shallow-merged result of the automatically-managed internal table-state and any manually-managed state passed via `options.state`.
 
-### `setState`
+#### `setState`
 
 ```tsx
 setState: (updater: Updater<TableState>) => void
@@ -204,7 +204,7 @@ Call this function to update the table state. It's recommended you pass an updat
 
 > 🧠 If `options.onStateChange` is provided, it will be triggered by this function with the new state.
 
-### `options`
+#### `options`
 
 ```tsx
 options: TableOptions<TGenerics>
@@ -214,7 +214,7 @@ A read-only reference to the table instance's current options.
 
 > ⚠️ This property is generally used internally or by adapters. It can be updated by passing new options to your table instance. This is different per adapter. For adapters themselves, table options must be updated via the `setOptions` function.
 
-### `setOptions`
+#### `setOptions`
 
 ```tsx
 setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
