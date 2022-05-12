@@ -11,8 +11,7 @@
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
     "visualize": "lerna exec 'open build/stats-html.html'",
     "cipublish": "ts-node scripts/publish.ts",
-    "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true yarn cipublish",
-    "doctoc": "doctoc ./docs --title '**Table Of Contents**'"
+    "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true yarn cipublish"
   },
   "namespace": "@tanstack",
   "workspaces": [

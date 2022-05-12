@@ -5,12 +5,16 @@ route: /faq
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table Of Contents**
 
-- [How can I manually control the table state?](#how-can-i-manually-control-the-table-state)
-- [How can I use the table state to fetch new data?](#how-can-i-use-the-table-state-to-fetch-new-data)
-- [How can I debounce rapid table state changes?](#how-can-i-debounce-rapid-table-state-changes)
-- [How do I stop my table state from automatically resetting when my data changes?](#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
+**Table of Contents**
+
+- [name: FAQ
+  route: /faq](#name-faq%0Aroute-faq)
+- [FAQ](#faq)
+  - [How can I manually control the table state?](#how-can-i-manually-control-the-table-state)
+  - [How can I use the table state to fetch new data?](#how-can-i-use-the-table-state-to-fetch-new-data)
+  - [How can I debounce rapid table state changes?](#how-can-i-debounce-rapid-table-state-changes)
+  - [How do I stop my table state from automatically resetting when my data changes?](#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

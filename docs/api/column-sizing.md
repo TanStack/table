@@ -6,8 +6,12 @@ menu: API
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table Of Contents**
 
+**Table of Contents**
+
+- [name: Column Sizing
+  route: /api/column-sizing
+  menu: API](#name-column-sizing%0Aroute-apicolumn-sizing%0Amenu-api)
 - [Examples](#examples)
 - [State](#state)
 - [Column Definition Options](#column-definition-options)

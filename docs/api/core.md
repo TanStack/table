@@ -6,29 +6,30 @@ menu: API
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table Of Contents**
+
+**Table of Contents**
 
 - [Table Options](#table-options)
-    - [`data`](#data)
-    - [`initialState`](#initialstate)
-    - [`autoResetAll`](#autoresetall)
-    - [`meta`](#meta)
-    - [`state`](#state)
-    - [`onStateChange`](#onstatechange)
-    - [`debugAll`](#debugall)
-    - [`debugTable`](#debugtable)
-    - [`debugHeaders`](#debugheaders)
-    - [`debugColumns`](#debugcolumns)
-    - [`debugRows`](#debugrows)
-    - [`render`](#render)
-    - [`mergeOptions`](#mergeoptions)
+  - [`data`](#data)
+  - [`initialState`](#initialstate)
+  - [`autoResetAll`](#autoresetall)
+  - [`meta`](#meta)
+  - [`state`](#state)
+  - [`onStateChange`](#onstatechange)
+  - [`debugAll`](#debugall)
+  - [`debugTable`](#debugtable)
+  - [`debugHeaders`](#debugheaders)
+  - [`debugColumns`](#debugcolumns)
+  - [`debugRows`](#debugrows)
+  - [`render`](#render)
+  - [`mergeOptions`](#mergeoptions)
 - [Table Instance API](#table-instance-api)
-    - [`initialState`](#initialstate-1)
-    - [`reset`](#reset)
-    - [`getState`](#getstate)
-    - [`setState`](#setstate)
-    - [`options`](#options)
-    - [`setOptions`](#setoptions)
+  - [`initialState`](#initialstate-1)
+  - [`reset`](#reset)
+  - [`getState`](#getstate)
+  - [`setState`](#setstate)
+  - [`options`](#options)
+  - [`setOptions`](#setoptions)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
