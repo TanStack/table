@@ -6,36 +6,32 @@ menu: API
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table Of Contents**
 
-**Table of Contents**
-
-- [name: Column Pinning
-  route: /api/column-pinning
-  menu: API](#name-column-pinning%0Aroute-apicolumn-pinning%0Amenu-api)
 - [Examples](#examples)
 - [Can-Pin](#can-pin)
 - [State](#state)
 - [Table Options](#table-options)
-  - [`enablePinning`](#enablepinning)
-  - [`onColumnPinningChange`](#oncolumnpinningchange)
+    - [`enablePinning`](#enablepinning)
+    - [`onColumnPinningChange`](#oncolumnpinningchange)
 - [Column Definition Options](#column-definition-options)
-  - [`enablePinning`](#enablepinning-1)
+    - [`enablePinning`](#enablepinning-1)
 - [Table Instance API](#table-instance-api)
-  - [`setColumnPinning`](#setcolumnpinning)
-  - [`resetColumnPinning`](#resetcolumnpinning)
-  - [`getIsSomeColumnsPinned`](#getissomecolumnspinned)
-  - [`getLeftLeafColumns`](#getleftleafcolumns)
-  - [`getRightLeafColumns`](#getrightleafcolumns)
-  - [`getCenterLeafColumns`](#getcenterleafcolumns)
+    - [`setColumnPinning`](#setcolumnpinning)
+    - [`resetColumnPinning`](#resetcolumnpinning)
+    - [`getIsSomeColumnsPinned`](#getissomecolumnspinned)
+    - [`getLeftLeafColumns`](#getleftleafcolumns)
+    - [`getRightLeafColumns`](#getrightleafcolumns)
+    - [`getCenterLeafColumns`](#getcenterleafcolumns)
 - [Column API](#column-api)
-  - [`getCanPin`](#getcanpin)
-  - [`getPinnedIndex`](#getpinnedindex)
-  - [`getIsPinned`](#getispinned)
-  - [`pin`](#pin)
+    - [`getCanPin`](#getcanpin)
+    - [`getPinnedIndex`](#getpinnedindex)
+    - [`getIsPinned`](#getispinned)
+    - [`pin`](#pin)
 - [Row API](#row-api)
-  - [`getLeftVisibleCells`](#getleftvisiblecells)
-  - [`getRightVisibleCells`](#getrightvisiblecells)
-  - [`getCenterVisibleCells`](#getcentervisiblecells)
+    - [`getLeftVisibleCells`](#getleftvisiblecells)
+    - [`getRightVisibleCells`](#getrightvisiblecells)
+    - [`getCenterVisibleCells`](#getcentervisiblecells)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
