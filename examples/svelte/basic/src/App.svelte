@@ -1,11 +1,11 @@
 <script lang="ts">
-  import './index.css'
+  import { writable } from 'svelte/store'
   import {
     createTable,
     getCoreRowModel,
     createTableInstance,
   } from '@tanstack/svelte-table'
-  import { writable } from 'svelte/store'
+  import './index.css'
 
   type Person = {
     firstName: string
@@ -127,7 +127,7 @@
         <tr>
           <td>
             {#each row.getVisibleCells() as cell}
-              <svelte:component this={cell.renderCell} />
+              <svelte:component this={cell.renderCell()} />
             {/each}
           </td>
         </tr>
@@ -139,7 +139,7 @@
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={header.renderFooter} />
+                <svelte:component this={header.renderFooter()} />
               {/if}
             </th>
           {/each}
