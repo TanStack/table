@@ -104,7 +104,7 @@
     }))
   }
 
-  const instance = createTableInstance(table, options)
+  const instance = createTableInstance(table, $options)
 </script>
 
 <div class="p-2">
