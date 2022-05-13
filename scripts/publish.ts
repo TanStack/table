@@ -331,9 +331,9 @@ async function run() {
 
   console.log('Building packages...')
   execSync(`yarn build`, { encoding: 'utf8' })
+  console.log('')
 
   console.log('Validating packages...')
-
   await Promise.all(
     packages.map(async pkg => {
       const pkgJson = await readPackageJson(
@@ -359,6 +359,7 @@ async function run() {
       )
     })
   )
+  console.log('')
 
   console.log('Testing packages...')
   execSync(`yarn test:ci`, { encoding: 'utf8' })
