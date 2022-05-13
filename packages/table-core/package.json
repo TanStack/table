@@ -26,7 +26,7 @@
   },
   "module": "build/esm/index.js",
   "main": "build/cjs/index.js",
-  "browser": "build/umd/index.production.min.js",
+  "browser": "build/umd/index.production.js",
   "types": "build/types/index.d.ts",
   "sideEffects": false,
   "engines": {

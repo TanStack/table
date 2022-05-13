@@ -332,6 +332,34 @@ async function run() {
   console.log('Building packages...')
   execSync(`yarn build`, { encoding: 'utf8' })
 
+  console.log('Validating packages...')
+
+  await Promise.all(
+    packages.map(async pkg => {
+      const pkgJson = await readPackageJson(
+        path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json')
+      )
+
+      await Promise.all(
+        (['module', 'main', 'browser', 'types'] as const).map(
+          async entryKey => {
+            const entry = pkgJson[entryKey] as string
+
+            if (!entry) {
+              throw new Error(
+                `Missing entry for "${entryKey}" in ${pkg.packageDir}/package.json!`
+              )
+            }
+
+            await fsp.access(
+              path.resolve(rootDir, 'packages', pkg.packageDir, entry)
+            )
+          }
+        )
+      )
+    })
+  )
+
   console.log('Testing packages...')
   execSync(`yarn test:ci`, { encoding: 'utf8' })
   console.log('')
