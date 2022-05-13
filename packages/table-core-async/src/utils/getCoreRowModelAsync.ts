@@ -1,8 +1,14 @@
-import { TableInstance, Row, RowModel, TableGenerics } from '../types'
-import { incrementalMemo, batchReduce } from '../utils'
+import type {
+  Row,
+  RowModel,
+  TableGenerics,
+  TableInstance,
+} from '@tanstack/react-table'
 
-export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
-  initialSync: boolean
+import { incrementalMemo } from '../utils'
+
+export function getCoreRowModelWorker<TGenerics extends TableGenerics>(opts?: {
+  keepPreviousData?: boolean
 }): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
   return instance =>
     incrementalMemo(
@@ -13,7 +19,9 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
           flatRows: [],
           rowsById: {},
         } as RowModel<TGenerics>),
-      () => (data, leafColumns) => async scheduleTask => {
+      () => async data => {
+        console.log('progress', 0)
+
         const rowModel: RowModel<TGenerics> = {
           rows: [],
           flatRows: [],
@@ -21,77 +29,77 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
         }
 
         let id
-        let values: Record<string, any>
-        let column
+        let rows
         let row
+        let originalRow
         let originalSubRows
 
         const accessRows = (
           originalRows: TGenerics['Row'][],
           depth = 0,
           parent?: Row<TGenerics>
-        ): Promise<Row<TGenerics>[]> => {
-          return batchReduce(
-            originalRows,
-            1000,
-            scheduleTask,
-            [] as Row<TGenerics>[],
-            async (ref, originalRow, rowIndex) => {
-              id = instance.getRowId(originalRow, rowIndex, parent)
+        ): Row<TGenerics>[] => {
+          rows = []
 
-              if (!id) {
-                if (process.env.NODE_ENV !== 'production') {
-                  throw new Error(`getRowId expected an ID, but got ${id}`)
-                }
-              }
+          for (let i = 0; i < originalRows.length; i++) {
+            if (i % 100 === 0) {
+              console.log('progress', i / originalRows.length)
+            }
+            originalRow = originalRows[i]
+            id = instance.getRowId(originalRow, i, parent)
 
-              // Make the row
-              row = instance.createRow(id, originalRow, rowIndex, depth)
-
-              // Keep track of every row in a flat array
-              rowModel.flatRows.push(row)
-              // Also keep track of every row by its ID
-              rowModel.rowsById[id] = row
-              // Push instance row into parent
-              ref.current.push(row)
-
-              // Get the original subrows
-              if (instance.options.getSubRows) {
-                originalSubRows = instance.options.getSubRows(
-                  originalRow,
-                  rowIndex
-                )
-
-                // Then recursively access them
-                if (originalSubRows?.length) {
-                  row.originalSubRows = originalSubRows
-                  row.subRows = await accessRows(
-                    row.originalSubRows,
-                    depth + 1,
-                    row
-                  )
-                }
+            if (!id) {
+              if (process.env.NODE_ENV !== 'production') {
+                throw new Error(`getRowId expected an ID, but got ${id}`)
               }
             }
-          )
+
+            // Make the row
+            row = instance.createRow(id, originalRow, i, depth)
+
+            // Keep track of every row in a flat array
+            rowModel.flatRows.push(row)
+            // Also keep track of every row by its ID
+            rowModel.rowsById[id] = row
+            // Push instance row into parent
+            rows.push(row)
+
+            // Get the original subrows
+            if (instance.options.getSubRows) {
+              originalSubRows = instance.options.getSubRows(originalRow, i)
+
+              // Then recursively access them
+              if (originalSubRows?.length) {
+                row.originalSubRows = originalSubRows
+                row.subRows = accessRows(row.originalSubRows, depth + 1, row)
+              }
+            }
+          }
+
+          return rows
         }
 
-        rowModel.rows = await accessRows(data)
+        rowModel.rows = accessRows(data)
+
+        console.log('progress', 1)
 
         return rowModel
       },
       {
-        priority: 'data',
-        keepPrevious: () => instance.options.keepPreviousData,
+        // priority: 'data',
+        keepPrevious: () => opts?.keepPreviousData,
         instance,
         key: process.env.NODE_ENV === 'development' && 'getCoreRowModelAsync',
-        onProgress: progress => {
-          instance.setState(old => ({ ...old, coreProgress: progress }))
+        onChange: () => {
+          console.log('progress', 0)
+          instance.setState(old => ({ ...old }))
+        },
+        onComplete: () => {
+          console.log('progress', 0)
+          instance._autoResetPageIndex()
+          instance.setState(old => ({ ...old }))
         },
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
-        onChange: () => {
-          instance._autoResetPageIndex()
-        },
       }
     )
 }

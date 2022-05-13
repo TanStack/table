@@ -29,6 +29,7 @@
     "./examples/react/editable-data",
     "./examples/react/expanding",
     "./examples/react/filters",
+    "./examples/react/wip-filters-async",
     "./examples/react/fully-controlled",
     "./examples/react/grouping",
     "./examples/react/pagination",
