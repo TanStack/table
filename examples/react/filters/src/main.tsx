@@ -78,8 +78,8 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(10000))
-  const refreshData = () => setData(old => makeData(10000))
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(old => makeData(100000))
 
   const instance = useTableInstance(table, {
     data,
@@ -96,7 +96,6 @@ function App() {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    keepPreviousData: true,
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
@@ -105,9 +104,9 @@ function App() {
   return (
     <div className="p-2">
       <div>
-        <input
+        <DebouncedInput
           value={globalFilter ?? ''}
-          onChange={e => setGlobalFilter(e.target.value)}
+          onChange={value => setGlobalFilter(String(value))}
           className="p-2 font-lg shadow border border-block"
           placeholder="Search all columns..."
         />
@@ -152,6 +151,7 @@ function App() {
         </tbody>
       </table>
       <div className="h-2" />
+      <div>{instance.getPrePaginationRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
@@ -187,38 +187,32 @@ function Filter({
   return typeof firstValue === 'number' ? (
     <div>
       <div className="flex space-x-2">
-        <input
+        <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
+          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
+          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          onChange={e =>
-            column.setFilterValue((old: [number, number]) => [
-              e.target.value,
-              old?.[1],
-            ])
+          onChange={value =>
+            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
           placeholder={`Min ${
-            column.getFacetedMinMaxValues()[0]
-              ? `(${column.getFacetedMinMaxValues()[0]})`
+            column.getFacetedMinMaxValues()?.[0]
+              ? `(${column.getFacetedMinMaxValues()?.[0]})`
               : ''
           }`}
           className="w-24 border shadow rounded"
         />
-        <input
+        <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
+          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
+          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          onChange={e =>
-            column.setFilterValue((old: [number, number]) => [
-              old?.[0],
-              e.target.value,
-            ])
+          onChange={value =>
+            column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
           placeholder={`Max ${
-            column.getFacetedMinMaxValues()[1]
-              ? `(${column.getFacetedMinMaxValues()[1]})`
+            column.getFacetedMinMaxValues()?.[1]
+              ? `(${column.getFacetedMinMaxValues()?.[1]})`
               : ''
           }`}
           className="w-24 border shadow rounded"
@@ -233,16 +227,46 @@ function Filter({
           <option value={value} key={value} />
         ))}
       </datalist>
-      <input
+      <DebouncedInput
         type="text"
         value={(columnFilterValue ?? '') as string}
-        onChange={e => column.setFilterValue(e.target.value)}
+        onChange={value => column.setFilterValue(value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
       />
       <div className="h-1" />
     </>
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value])
+
+  return (
+    <input {...props} value={value} onChange={e => setValue(e.target.value)} />
   )
 }
 

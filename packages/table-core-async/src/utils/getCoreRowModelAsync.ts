@@ -90,9 +90,7 @@ export function getCoreRowModelAsync<TGenerics extends TableGenerics>(opts?: {
         },
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance.queue(() => {
-            instance._autoResetPageIndex()
-          })
+          instance._autoResetPageIndex()
         },
       }
     )

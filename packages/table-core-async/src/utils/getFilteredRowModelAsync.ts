@@ -163,9 +163,7 @@ export function getFilteredRowModelAsync<
         },
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance.queue(() => {
-            instance._autoResetPageIndex()
-          })
+          instance._autoResetPageIndex()
         },
       }
     )

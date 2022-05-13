@@ -271,7 +271,7 @@ async function run() {
                 }
 
                 const scope = commit.parsed.scope
-                  ? `(${commit.parsed.scope}): `
+                  ? `${commit.parsed.scope}: `
                   : ''
                 const subject = commit.parsed.subject ?? commit.subject
                 // const commitUrl = `${remoteURL}/commit/${commit.commit.long}`;

@@ -1,74 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-//
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+
 import './index.css'
 
-//
 import {
   createTable,
-  Column,
-  TableInstance,
-  ColumnDef,
+  PaginationState,
   useTableInstance,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
 
-let table = createTable()
-  .setRowType<Person>()
-  // In addition to our row type, we can also tell our table about a custom "updateData" method we will provide it
-  .setTableMetaType<{
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
-  }>()
+//
 
-// Get our table generics
-type MyTableGenerics = typeof table.generics
+import { fetchData, Person } from './fetchData'
 
-// Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
-  cell: ({ getValue, row: { index }, column: { id }, instance }) => {
-    const initialValue = getValue()
-    // We need to keep and update the state of the cell normally
-    const [value, setValue] = React.useState(initialValue)
+const queryClient = new QueryClient()
 
-    // When the input is blurred, we'll call our table meta's updateData function
-    const onBlur = () => {
-      instance.options.meta?.updateData(index, id, value)
-    }
-
-    // If the initialValue is changed external, sync it up with our state
-    React.useEffect(() => {
-      setValue(initialValue)
-    }, [initialValue])
-
-    return (
-      <input
-        value={value as string}
-        onChange={e => setValue(e.target.value)}
-        onBlur={onBlur}
-      />
-    )
-  },
-}
-
-function useSkipper() {
-  const shouldSkipRef = React.useRef(true)
-  const shouldSkip = shouldSkipRef.current
-
-  // Wrap a function with this to skip a pagination reset temporarily
-  const skip = React.useCallback(() => {
-    shouldSkipRef.current = false
-  }, [])
-
-  React.useEffect(() => {
-    shouldSkipRef.current = true
-  })
-
-  return [shouldSkip, skip] as const
-}
+let table = createTable().setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -80,10 +30,12 @@ function App() {
         footer: props => props.column.id,
         columns: [
           table.createDataColumn('firstName', {
+            cell: info => info.getValue(),
             footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
+            cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
           }),
@@ -120,37 +72,44 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(1000))
-  const refreshData = () => setData(() => makeData(1000))
+  const [{ pageIndex, pageSize }, setPagination] =
+    React.useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 10,
+    })
 
-  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
+  const fetchDataOptions = {
+    pageIndex,
+    pageSize,
+  }
+
+  const dataQuery = useQuery(
+    ['data', fetchDataOptions],
+    () => fetchData(fetchDataOptions),
+    { keepPreviousData: true }
+  )
+
+  const defaultData = React.useMemo(() => [], [])
+
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+      pageCount: dataQuery.data?.pageCount ?? -1,
+    }),
+    [pageIndex, pageSize, dataQuery.data?.pageCount]
+  )
 
   const instance = useTableInstance(table, {
-    data,
+    data: dataQuery.data?.rows ?? defaultData,
     columns,
-    defaultColumn,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    autoResetPageIndex,
-    // Provide our updateData function to our table meta
-    meta: {
-      updateData: (rowIndex, columnId, value) => {
-        // Skip age index reset until after next rerender
-        skipAutoResetPageIndex()
-        setData(old =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex]!,
-                [columnId]: value,
-              }
-            }
-            return row
-          })
-        )
-      },
+    state: {
+      pagination,
     },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    // getPaginationRowModel: getPaginationRowModel(), // If only doing manual pagination, you don't need this
     debugTable: true,
   })
 
@@ -165,17 +124,7 @@ function App() {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
-                      <div>
-                        {header.renderHeader()}
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
-                          </div>
-                        ) : null}
-                      </div>
+                      <div>{header.renderHeader()}</div>
                     )}
                   </th>
                 )
@@ -256,71 +205,22 @@ function App() {
             </option>
           ))}
         </select>
+        {dataQuery.isFetching ? 'Loading...' : null}
       </div>
       <div>{instance.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+      <pre>{JSON.stringify(pagination, null, 2)}</pre>
     </div>
-  )
-}
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: TableInstance<any>
-}) {
-  const firstValue = instance
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
-        type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
-            old?.[1],
-          ])
-        }
-        placeholder={`Min`}
-        className="w-24 border shadow rounded"
-      />
-      <input
-        type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            old?.[0],
-            e.target.value,
-          ])
-        }
-        placeholder={`Max`}
-        className="w-24 border shadow rounded"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      className="w-36 border shadow rounded"
-    />
   )
 }
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )

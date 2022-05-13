@@ -370,19 +370,19 @@ export const ColumnSizing: TableFeature = {
       },
       getTotalSize: () =>
         instance.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.column.getSize()
+          return sum + header.getSize()
         }, 0) ?? 0,
       getLeftTotalSize: () =>
         instance.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.column.getSize()
+          return sum + header.getSize()
         }, 0) ?? 0,
       getCenterTotalSize: () =>
         instance.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.column.getSize()
+          return sum + header.getSize()
         }, 0) ?? 0,
       getRightTotalSize: () =>
         instance.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
-          return sum + header.column.getSize()
+          return sum + header.getSize()
         }, 0) ?? 0,
     }
   },

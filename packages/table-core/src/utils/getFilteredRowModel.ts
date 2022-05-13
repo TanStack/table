@@ -141,9 +141,7 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
         key: process.env.NODE_ENV === 'development' && 'getFilteredRowModel',
         debug: () => instance.options.debugAll ?? instance.options.debugTable,
         onChange: () => {
-          instance.queue(() => {
-            instance._autoResetPageIndex()
-          })
+          instance._autoResetPageIndex()
         },
       }
     )

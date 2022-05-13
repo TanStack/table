@@ -44,7 +44,7 @@ export type ColumnPinningTableState = {
 
 ## Table Options
 
-### `enablePinning`
+#### `enablePinning`
 
 ```tsx
 enablePinning?: boolean
@@ -52,7 +52,7 @@ enablePinning?: boolean
 
 Enables/disables all pinning for the table.
 
-### `onColumnPinningChange`
+#### `onColumnPinningChange`
 
 ```tsx
 onColumnPinningChange?: OnChangeFn<ColumnPinningState>
@@ -62,7 +62,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 
 ## Column Definition Options
 
-### `enablePinning`
+#### `enablePinning`
 
 ```tsx
 enablePinning?: boolean
@@ -72,7 +72,7 @@ Enables/disables pinning for the column.
 
 ## Table Instance API
 
-### `setColumnPinning`
+#### `setColumnPinning`
 
 ```tsx
 setColumnPinning: (updater: Updater<ColumnPinningState>) => void
@@ -80,7 +80,7 @@ setColumnPinning: (updater: Updater<ColumnPinningState>) => void
 
 Sets or updates the `state.columnPinning` state.
 
-### `resetColumnPinning`
+#### `resetColumnPinning`
 
 ```tsx
 resetColumnPinning: () => void
@@ -88,7 +88,7 @@ resetColumnPinning: () => void
 
 Resets the **columnPinning** state for the table back to its initial state.
 
-### `getIsSomeColumnsPinned`
+#### `getIsSomeColumnsPinned`
 
 ```tsx
 getIsSomeColumnsPinned: () => boolean
@@ -98,7 +98,7 @@ Returns whether or not any columns are pinned.
 
 _Note: Does not account for column visibility_
 
-### `getLeftLeafColumns`
+#### `getLeftLeafColumns`
 
 ```tsx
 getLeftLeafColumns: () => Column < TGenerics > []
@@ -106,7 +106,7 @@ getLeftLeafColumns: () => Column < TGenerics > []
 
 Returns all left pinned leaf columns.
 
-### `getRightLeafColumns`
+#### `getRightLeafColumns`
 
 ```tsx
 getRightLeafColumns: () => Column < TGenerics > []
@@ -114,7 +114,7 @@ getRightLeafColumns: () => Column < TGenerics > []
 
 Returns all right pinned leaf columns.
 
-### `getCenterLeafColumns`
+#### `getCenterLeafColumns`
 
 ```tsx
 getCenterLeafColumns: () => Column < TGenerics > []
@@ -124,7 +124,7 @@ Returns all center pinned (unpinned) leaf columns.
 
 ## Column API
 
-### `getCanPin`
+#### `getCanPin`
 
 ```tsx
 getCanPin: () => boolean
@@ -132,7 +132,7 @@ getCanPin: () => boolean
 
 Returns whether or not the column can be pinned.
 
-### `getPinnedIndex`
+#### `getPinnedIndex`
 
 ```tsx
 getPinnedIndex: () => number
@@ -140,7 +140,7 @@ getPinnedIndex: () => number
 
 Returns the numeric pinned index of the column within a pinned column group.
 
-### `getIsPinned`
+#### `getIsPinned`
 
 ```tsx
 getIsPinned: () => ColumnPinningPosition
@@ -148,7 +148,7 @@ getIsPinned: () => ColumnPinningPosition
 
 Returns the pinned position of the column. (`'left'`, `'right'` or `false`)
 
-### `pin`
+#### `pin`
 
 ```tsx
 pin: (position: ColumnPinningPosition) => void
@@ -158,7 +158,7 @@ Pins a column to the `'left'` or `'right'`, or unpins the column to the center i
 
 ## Row API
 
-### `getLeftVisibleCells`
+#### `getLeftVisibleCells`
 
 ```tsx
 getLeftVisibleCells: () => Cell < TGenerics > []
@@ -166,7 +166,7 @@ getLeftVisibleCells: () => Cell < TGenerics > []
 
 Returns all left pinned leaf cells in the row.
 
-### `getRightVisibleCells`
+#### `getRightVisibleCells`
 
 ```tsx
 getRightVisibleCells: () => Cell < TGenerics > []
@@ -174,7 +174,7 @@ getRightVisibleCells: () => Cell < TGenerics > []
 
 Returns all right pinned leaf cells in the row.
 
-### `getCenterVisibleCells`
+#### `getCenterVisibleCells`
 
 ```tsx
 getCenterVisibleCells: () => Cell < TGenerics > []

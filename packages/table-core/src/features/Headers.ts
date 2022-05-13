@@ -88,7 +88,7 @@ export const Headers = {
           },
           renderHeader: () =>
             column.header
-              ? instance.render(column.header, {
+              ? instance._render(column.header, {
                   instance,
                   header: header as Header<TGenerics>,
                   column,
@@ -96,7 +96,7 @@ export const Headers = {
               : null,
           renderFooter: () =>
             column.footer
-              ? instance.render(column.footer, {
+              ? instance._render(column.footer, {
                   instance,
                   header: header as Header<TGenerics>,
                   column,

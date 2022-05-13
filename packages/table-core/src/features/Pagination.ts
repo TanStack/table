@@ -33,7 +33,6 @@ export type PaginationOptions<TGenerics extends TableGenerics> = {
 
 export type PaginationDefaultOptions = {
   onPaginationChange: OnChangeFn<PaginationState>
-  autoResetPageIndex: boolean
 }
 
 export type PaginationInstance<TGenerics extends TableGenerics> = {
@@ -82,7 +81,6 @@ export const Pagination: TableFeature = {
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', instance),
-      autoResetPageIndex: true,
     }
   },
 
@@ -90,23 +88,28 @@ export const Pagination: TableFeature = {
     instance: TableInstance<TGenerics>
   ): PaginationInstance<TGenerics> => {
     let registered = false
+    let queued = false
 
     return {
       _autoResetPageIndex: () => {
         if (!registered) {
-          registered = true
-          return
-        }
-
-        if (instance.options.autoResetAll === false) {
+          instance._queue(() => {
+            registered = true
+          })
           return
         }
 
         if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetPageIndex
+          instance.options.autoResetAll ??
+          instance.options.autoResetPageIndex ??
+          !instance.options.manualPagination
         ) {
-          instance.resetPageIndex()
+          if (queued) return
+          queued = true
+          instance._queue(() => {
+            instance.resetPageIndex()
+            queued = false
+          })
         }
       },
       setPagination: updater => {
@@ -130,7 +133,7 @@ export const Pagination: TableFeature = {
           let pageIndex = functionalUpdate(updater, old.pageIndex)
 
           const maxPageIndex =
-            old.pageCount && old.pageCount > 0
+            typeof old.pageCount !== 'undefined'
               ? old.pageCount - 1
               : Number.MAX_SAFE_INTEGER
 

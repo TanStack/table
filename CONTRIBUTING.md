@@ -41,3 +41,14 @@ Before proceeding with development, ensure you match one of the following criter
 - Document your changes in the appropriate documentation website markdown pages
 - Commit your work and open a pull request
 - Submit PR for review
+
+## Adding a new example
+
+- Clone an existing example into the appropriate `examples` directory
+- Name it the example name in kebab-case
+- Update the new example's package.json to match the new example name and any other details
+- Check dependencies for unused packages
+- Install any additional packages to the exmaple that you may need
+- Add the example to the workspace packages array in `package.json`
+- Add the example to the `tsconfig.json` file for type checking
+- Commit the example eg. `examples: Add example-name`
