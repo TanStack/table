@@ -4,48 +4,14 @@
     createTable,
     getCoreRowModel,
     createTableInstance,
+    getSortedRowModel,
   } from '@tanstack/svelte-table'
+  import { makeData, Person } from './makeData'
   import './index.css'
-
-  type Person = {
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    status: string
-    progress: number
-  }
 
   const table = createTable().setRowType<Person>()
 
-  const defaultData: Person[] = [
-    {
-      firstName: 'tanner',
-      lastName: 'linsley',
-      age: 24,
-      visits: 100,
-      status: 'In Relationship',
-      progress: 50,
-    },
-    {
-      firstName: 'tandy',
-      lastName: 'miller',
-      age: 40,
-      visits: 40,
-      status: 'Single',
-      progress: 80,
-    },
-    {
-      firstName: 'joe',
-      lastName: 'dirte',
-      age: 45,
-      visits: 20,
-      status: 'Complicated',
-      progress: 10,
-    },
-  ]
-
-  const defaultColumns = [
+  const columns = [
     table.createGroup({
       header: 'Name',
       footer: props => props.column.id,
@@ -91,16 +57,28 @@
     }),
   ]
 
+  const data = makeData(100_000)
+
   const options = writable({
-    data: defaultData,
-    columns: defaultColumns,
+    data,
+    columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
   })
+
+  const refreshData = () => {
+    console.log('refresh')
+    options.update(prev => ({
+      ...prev,
+      data: makeData(100_000),
+    }))
+  }
 
   const rerender = () => {
     options.update(options => ({
       ...options,
-      data: defaultData,
+      data,
     }))
   }
 
@@ -108,6 +86,7 @@
 </script>
 
 <div class="p-2">
+  <div class="h-2" />
   <table>
     <thead>
       {#each $instance.getHeaderGroups() as headerGroup}
@@ -115,7 +94,17 @@
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={header.renderHeader()} />
+                <div
+                  class:cursor-pointer={header.column.getCanSort()}
+                  class:select-none={header.column.getCanSort()}
+                  on:click={header.column.getToggleSortingHandler()}
+                >
+                  <svelte:component this={header.renderHeader()} />
+                  {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[header.column.getIsSorted().toString()] ?? ''}
+                </div>
               {/if}
             </th>
           {/each}
@@ -123,7 +112,7 @@
       {/each}
     </thead>
     <tbody>
-      {#each $instance.getRowModel().rows as row}
+      {#each $instance.getRowModel().rows.slice(0, 10) as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
@@ -147,6 +136,12 @@
       {/each}
     </tfoot>
   </table>
-  <div class="h-4" />
-  <button on:click={() => rerender()} class="border p-2"> Rerender </button>
+  <div>{$instance.getRowModel().rows.length} Rows</div>
+  <div>
+    <button on:click={() => rerender()}>Force Rerender</button>
+  </div>
+  <div>
+    <button on:click={() => refreshData()}>Refresh Data</button>
+  </div>
+  <pre>{JSON.stringify($instance.getState().sorting, null, 2)}</pre>
 </div>
