@@ -3,6 +3,14 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
+// const tableWorker = new Worker(new URL('./tableWorker', import.meta.url), {
+//   type: 'module',
+// })
+
+// console.log(tableWorker)
+
+// tableWorker.postMessage(['hello', { foo: 'world' }])
+
 import {
   Column,
   createTable,
@@ -10,21 +18,12 @@ import {
   useTableInstance,
   ColumnFiltersState,
   //
-  getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
   getPaginationRowModel,
-  //
-  getCoreRowModelAsync,
-  getFilteredRowModelAsync,
-  getFacetedRowModelAsync,
-  getFacetedUniqueValuesAsync,
-  getFacetedMinMaxValuesAsync,
+  getCoreRowModel,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
+import { TableWorker } from './tableWorker'
 
 let table = createTable().setRowType<Person>()
 
@@ -85,8 +84,8 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(10000))
-  const refreshData = () => setData(old => makeData(10000))
+  const [data, setData] = React.useState(() => makeData(500000))
+  const refreshData = () => setData(old => makeData(500000))
 
   const instance = useTableInstance(table, {
     data,
@@ -98,12 +97,12 @@ function App() {
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    // getFilteredRowModel: tableWorker.getFilteredRowModel(),
+    // getFacetedRowModel: tableWorker.getFacetedRowModel(),
+    // getFacetedUniqueValues: tableWorker.getFacetedUniqueValues(),
+    // getFacetedMinMaxValues: tableWorker.getFacetedMinMaxValues(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    keepPreviousData: true,
+    // keepPreviousData: true,
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
@@ -130,14 +129,14 @@ function App() {
                     {header.isPlaceholder ? null : (
                       <>
                         {header.renderHeader()}
-                        {header.column.getCanFilter() ? (
+                        {/* {header.column.getCanFilter() ? (
                           <div>
                             <Filter
                               column={header.column}
                               instance={instance}
                             />
                           </div>
-                        ) : null}
+                        ) : null} */}
                       </>
                     )}
                   </th>
@@ -161,7 +160,7 @@ function App() {
       <div className="h-2" />
       <div className="flex items-center gap-2">
         <div>{instance.getCoreRowModel().rows.length} Rows</div>
-        {instance.getOverallProgress() < 1 ? (
+        {/* {instance.getOverallProgress() < 1 ? (
           <>
             <div>
               -{' '}
@@ -184,7 +183,7 @@ function App() {
               </div>
             </div>
           </>
-        ) : null}
+        ) : null} */}
       </div>
       <div className="h-2" />
       <div>
@@ -224,8 +223,8 @@ function Filter({
       <div className="flex space-x-2">
         <input
           type="number"
-          min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
+          // min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
+          // max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[0] ?? ''}
           onChange={e =>
             column.setFilterValue((old: [number, number]) => [
@@ -233,17 +232,17 @@ function Filter({
               old?.[1],
             ])
           }
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()[0]
-              ? `(${column.getFacetedMinMaxValues()[0]})`
-              : ''
-          }`}
+          // placeholder={`Min ${
+          //   column.getFacetedMinMaxValues()[0]
+          //     ? `(${column.getFacetedMinMaxValues()[0]})`
+          //     : ''
+          // }`}
           className="w-24 border shadow rounded"
         />
         <input
           type="number"
-          min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
+          // min={Number(column.getFacetedMinMaxValues()[0] ?? '')}
+          // max={Number(column.getFacetedMinMaxValues()[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[1] ?? ''}
           onChange={e =>
             column.setFilterValue((old: [number, number]) => [
@@ -251,16 +250,16 @@ function Filter({
               e.target.value,
             ])
           }
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()[1]
-              ? `(${column.getFacetedMinMaxValues()[1]})`
-              : ''
-          }`}
+          // placeholder={`Max ${
+          //   column.getFacetedMinMaxValues()[1]
+          //     ? `(${column.getFacetedMinMaxValues()[1]})`
+          //     : ''
+          // }`}
           className="w-24 border shadow rounded"
         />
       </div>
       <div className="h-1" />
-      <div className="w-full bg-gray-300 rounded-sm">
+      {/* <div className="w-full bg-gray-300 rounded-sm">
         <div
           className="h-[2px] bg-green-400 rounded-sm"
           style={{
@@ -270,7 +269,7 @@ function Filter({
             }%`,
           }}
         />
-      </div>
+      </div> */}
     </div>
   ) : (
     <>
@@ -288,7 +287,7 @@ function Filter({
         list={column.id + 'list'}
       />
       <div className="h-1" />
-      <div className="w-full bg-gray-300 rounded-sm">
+      {/* <div className="w-full bg-gray-300 rounded-sm">
         <div
           className="h-[2px] bg-green-400 rounded-sm"
           style={{
@@ -298,14 +297,17 @@ function Filter({
             }%`,
           }}
         />
-      </div>
+      </div> */}
     </>
   )
 }
 
+const strictMode = false
+const StrictWrapper = strictMode ? React.StrictMode : React.Fragment
+
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictWrapper>
     <App />
-  </React.StrictMode>,
+  </StrictWrapper>,
   document.getElementById('root')
 )

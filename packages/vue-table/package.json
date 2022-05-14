@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/vue-table",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.73",
+  "version": "8.0.0-alpha.76",
   "description": "Composables for building lightweight, fast and extendable datagrids for Vue",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
@@ -23,8 +23,8 @@
     "url": "https://github.com/sponsors/tannerlinsley"
   },
   "module": "build/esm/index.js",
-  "main": "build/cjs/index.js",
-  "browser": "build/umd/index.production.min.js",
+  "main": "build/cjs/vue-table/src/index.js",
+  "browser": "build/umd/index.production.js",
   "types": "build/types/index.d.ts",
   "sideEffects": false,
   "engines": {
@@ -35,7 +35,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.73"
+    "@tanstack/table-core": "8.0.0-alpha.76"
   },
   "peerDependencies": {
     "vue": "^3.2.33"

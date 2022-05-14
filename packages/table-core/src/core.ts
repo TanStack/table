@@ -88,8 +88,6 @@ export type CoreInstance<TGenerics extends TableGenerics> = {
 //   facets: Batch[]
 // }
 
-// export type TaskPriority = keyof CoreBatches
-
 export function createTableInstance<TGenerics extends TableGenerics>(
   options: TableOptions<TGenerics>
 ): TableInstance<TGenerics> {
@@ -147,74 +145,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
-  // let workScheduled = false
-  // let working = false
-  // let latestCallback: ReturnType<typeof requestIdleCallback>
-  // let batchUid = 0
-  // const onProgress = () => {}
-  // const getBatch = () => {
-  //   instance.batches.data = instance.batches.data.filter(d => d.tasks.length)
-  //   instance.batches.facets = instance.batches.facets.filter(
-  //     d => d.tasks.length
-  //   )
-
-  //   return (
-  //     instance.batches.data.find(d => d.tasks.length) ??
-  //     instance.batches.facets.find(d => d.tasks.length)
-  //   )
-  // }
-
-  // const startWorkLoop = () => {
-  //   working = true
-
-  //   const workLoop = (deadline: IdleDeadline) => {
-  //     const batch = getBatch()
-
-  //     if (!batch) {
-  //       working = false
-  //       return
-  //     }
-  //     // Prioritize tasks
-  //     while (deadline.timeRemaining() > 0 && batch.tasks.length) {
-  //       batch.tasks.shift()!()
-  //     }
-
-  //     onProgress()
-
-  //     if (working) {
-  //       latestCallback = requestIdleCallback(workLoop, { timeout: 10000 })
-  //     }
-  //   }
-
-  //   latestCallback = requestIdleCallback(workLoop, { timeout: 10000 })
-  // }
-
-  // const startWork = () => {
-  //   if (getBatch() && !working) {
-  //     if (
-  //       (process.env.NODE_ENV === 'development' && instance.options.debugAll) ??
-  //       instance.options.debugTable
-  //     ) {
-  //       console.info('Starting work...')
-  //     }
-  //     startWorkLoop()
-  //   }
-  // }
-
-  // const stopWork = () => {
-  //   if (working) {
-  //     if (
-  //       (process.env.NODE_ENV === 'development' && instance.options.debugAll) ??
-  //       instance.options.debugTable
-  //     ) {
-  //       console.info('Stopping work...')
-  //     }
-
-  //     working = false
-  //     cancelIdleCallback(latestCallback)
-  //   }
-  // }
-
   const midInstance: CoreInstance<TGenerics> = {
     ...instance,
     // init: () => {
@@ -253,43 +183,6 @@ export function createTableInstance<TGenerics extends TableGenerics>(
           )
       }
     },
-    // batches: {
-    //   data: [],
-    //   facets: [],
-    // },
-    // createBatch: priority => {
-    //   const batchId = batchUid++
-    //   let canceled: boolean
-
-    //   const batch: Batch = {
-    //     id: batchId,
-    //     priority,
-    //     tasks: [],
-    //     schedule: cb => {
-    //       if (canceled) return
-    //       batch.tasks.push(cb)
-
-    //       if (!working && !workScheduled) {
-    //         workScheduled = true
-    //         instance.queue(() => {
-    //           workScheduled = false
-    //           instance.setState(old => ({ ...old }))
-    //         })
-    //       }
-    //     },
-    //     cancel: () => {
-    //       canceled = true
-    //       batch.tasks = []
-    //       instance.batches[priority] = instance.batches[priority].filter(
-    //         b => b.id !== batchId
-    //       )
-    //     },
-    //   }
-
-    //   instance.batches[priority].push(batch)
-
-    //   return batch
-    // },
     reset: () => {
       instance.setState(instance.initialState)
     },

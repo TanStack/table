@@ -14,78 +14,65 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
         flatRows: Row<TGenerics>[]
         rowsById: Record<string, Row<TGenerics>>
       } => {
-        // Access the row model using initial columns
-        const rows: Row<TGenerics>[] = []
-        const flatRows: Row<TGenerics>[] = []
-        const rowsById: Record<string, Row<TGenerics>> = {}
+        const rowModel: RowModel<TGenerics> = {
+          rows: [],
+          flatRows: [],
+          rowsById: {},
+        }
 
-        const leafColumns = instance.getAllLeafColumns()
+        let rows
+        let row
+        let originalRow
 
-        const accessRow = (
-          originalRow: TGenerics['Row'],
-          rowIndex: number,
+        const accessRows = (
+          originalRows: TGenerics['Row'][],
           depth = 0,
-          parentRows: Row<TGenerics>[],
           parent?: Row<TGenerics>
-        ) => {
-          const id = instance.getRowId(originalRow, rowIndex, parent)
+        ): Row<TGenerics>[] => {
+          rows = []
 
-          if (!id) {
-            if (process.env.NODE_ENV !== 'production') {
-              throw new Error(`getRowId expected an ID, but got ${id}`)
-            }
-          }
+          for (let i = 0; i < originalRows.length; i++) {
+            originalRow = originalRows[i]
 
-          const values: Record<string, any> = {}
+            // This could be an expensive check at scale, so we should move it somewhere else, but where?
+            // if (!id) {
+            //   if (process.env.NODE_ENV !== 'production') {
+            //     throw new Error(`getRowId expected an ID, but got ${id}`)
+            //   }
+            // }
 
-          for (let i = 0; i < leafColumns.length; i++) {
-            const column = leafColumns[i]
-            if (column && column.accessorFn) {
-              values[column.id] = column.accessorFn(originalRow, rowIndex)
-            }
-          }
-
-          // Make the row
-          const row = instance.createRow(id, originalRow, rowIndex, depth)
-
-          // Push instance row into the parentRows array
-          parentRows.push(row)
-          // Keep track of every row in a flat array
-          flatRows.push(row)
-          // Also keep track of every row by its ID
-          rowsById[id] = row
-
-          // Get the original subrows
-          if (instance.options.getSubRows) {
-            const originalSubRows = instance.options.getSubRows(
+            // Make the row
+            row = instance.createRow(
+              instance.getRowId(originalRow, i, parent),
               originalRow,
-              rowIndex
+              i,
+              depth
             )
 
-            // Then recursively access them
-            if (originalSubRows?.length) {
-              row.originalSubRows = originalSubRows
-              const subRows: Row<TGenerics>[] = []
+            // Keep track of every row in a flat array
+            rowModel.flatRows.push(row)
+            // Also keep track of every row by its ID
+            rowModel.rowsById[row.id] = row
+            // Push instance row into parent
+            rows.push(row)
 
-              for (let i = 0; i < row.originalSubRows.length; i++) {
-                accessRow(
-                  row.originalSubRows[i] as TGenerics['Row'],
-                  i,
-                  depth + 1,
-                  subRows,
-                  row
-                )
+            // Get the original subrows
+            if (instance.options.getSubRows) {
+              row.originalSubRows = instance.options.getSubRows(originalRow, i)
+
+              // Then recursively access them
+              if (row.originalSubRows?.length) {
+                row.subRows = accessRows(row.originalSubRows, depth + 1, row)
               }
-              row.subRows = subRows
             }
           }
+
+          return rows
         }
 
-        for (let i = 0; i < data.length; i++) {
-          accessRow(data[i] as TGenerics['Row'], i, 0, rows)
-        }
+        rowModel.rows = accessRows(data)
 
-        return { rows, flatRows, rowsById }
+        return rowModel
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getRowModel',
