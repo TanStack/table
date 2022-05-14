@@ -125,11 +125,11 @@
     <tbody>
       {#each $instance.getRowModel().rows as row}
         <tr>
-          <td>
-            {#each row.getVisibleCells() as cell}
+          {#each row.getVisibleCells() as cell}
+            <td>
               <svelte:component this={cell.renderCell()} />
-            {/each}
-          </td>
+            </td>
+          {/each}
         </tr>
       {/each}
     </tbody>
