@@ -7,6 +7,7 @@ import {
   TableOptions,
 } from '@tanstack/table-core'
 import Placeholder from './placeholder.svelte'
+import { SvelteComponent } from 'svelte/internal'
 import { readable, writable, derived, Readable, get } from 'svelte/store'
 import { renderComponent } from './render-component'
 
@@ -14,17 +15,48 @@ export { renderComponent } from './render-component'
 
 export * from '@tanstack/table-core'
 
-export function render(Comp: any, props: any) {
-  if (!Comp) return null
+function isSvelteServerComponent(component: any) {
+  return (
+    typeof component === 'object' &&
+    typeof component.$$render === 'function' &&
+    typeof component.render === 'function'
+  )
+}
 
-  if (Comp instanceof Function) {
-    let res = Comp(props)
-    return res
+function isSvelteClientComponent(component: any) {
+  return component.prototype instanceof SvelteComponent
+}
+
+function isSvelteComponent(component: any) {
+  if (typeof document === 'undefined') {
+    return isSvelteServerComponent(component)
   } else {
-    return renderComponent(Placeholder, { content: Comp })
+    return isSvelteClientComponent(component)
+  }
+}
+
+function wrapInPlaceholder(content: any) {
+  return renderComponent(Placeholder, { content })
+}
+
+export function render(component: any, props: any) {
+  if (!component) return null
+
+  if (isSvelteComponent(component)) {
+    return renderComponent(component, props)
   }
 
-  // return Comp
+  if (typeof component === 'function') {
+    const result = component(props)
+
+    if (isSvelteComponent(result)) {
+      return result
+    }
+
+    return wrapInPlaceholder(result)
+  }
+
+  return wrapInPlaceholder(component)
 }
 
 export const createTable = createTableFactory({ render })
