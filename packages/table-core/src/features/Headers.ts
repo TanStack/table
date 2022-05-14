@@ -173,8 +173,17 @@ export const Headers = {
           instance.getState().columnPinning.left,
         ],
         (allColumns, leafColumns, left) => {
-          leafColumns = leafColumns.filter(column => left?.includes(column.id))
-          return buildHeaderGroups(allColumns, leafColumns, instance, 'left')
+          const orderedLeafColumns =
+            left
+              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+              .filter(Boolean) ?? []
+
+          return buildHeaderGroups(
+            allColumns,
+            orderedLeafColumns,
+            instance,
+            'left'
+          )
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
@@ -190,8 +199,17 @@ export const Headers = {
           instance.getState().columnPinning.right,
         ],
         (allColumns, leafColumns, right) => {
-          leafColumns = leafColumns.filter(column => right?.includes(column.id))
-          return buildHeaderGroups(allColumns, leafColumns, instance, 'right')
+          const orderedLeafColumns =
+            right
+              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+              .filter(Boolean) ?? []
+
+          return buildHeaderGroups(
+            allColumns,
+            orderedLeafColumns,
+            instance,
+            'right'
+          )
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
