@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/svelte-table",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.74",
+  "version": "8.0.0-alpha.76",
   "description": "Composables for building lightweight, fast and extendable datagrids for Vue",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
@@ -34,7 +34,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.74"
+    "@tanstack/table-core": "8.0.0-alpha.76"
   },
   "peerDependencies": {
     "svelte": "^3.48.0"
