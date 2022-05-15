@@ -121,15 +121,20 @@ export const Headers = {
           instance.getState().columnPinning.right,
         ],
         (allColumns, leafColumns, left, right) => {
-          const leftColumns = leafColumns.filter(column =>
-            left?.includes(column.id)
-          )
-          const rightColumns = leafColumns.filter(column =>
-            right?.includes(column.id)
-          )
+          const leftColumns =
+            left
+              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+              .filter(Boolean) ?? []
+
+          const rightColumns =
+            right
+              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+              .filter(Boolean) ?? []
+
           const centerColumns = leafColumns.filter(
             column => !left?.includes(column.id) && !right?.includes(column.id)
           )
+
           const headerGroups = buildHeaderGroups(
             allColumns,
             [...leftColumns, ...centerColumns, ...rightColumns],
