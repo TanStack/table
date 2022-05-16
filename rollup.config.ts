@@ -95,6 +95,14 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
         '@tanstack/react-table': 'ReactTable',
       },
     }),
+    ...buildConfigs({
+      name: 'match-sorter-utils',
+      packageDir: 'packages/match-sorter-utils',
+      jsName: 'MatchSorterUtils',
+      outputFile: 'match-sorter-utils',
+      entryFile: 'src/index.ts',
+      globals: {},
+    }),
   ]
 }
 

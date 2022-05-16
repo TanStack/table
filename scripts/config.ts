@@ -38,6 +38,11 @@ export const packages: Package[] = [
     srcDir: 'src',
     peerDependencies: ['@tanstack/react-table'],
   },
+  {
+    name: '@tanstack/match-sorter-utils',
+    packageDir: 'match-sorter-utils',
+    srcDir: 'src',
+  },
 ]
 
 export const latestBranch = 'main'

@@ -30,7 +30,7 @@ export function getFacetedRowModel<TGenerics extends TableGenerics>(): (
         const filterRowsImpl = (row: Row<TGenerics>) => {
           // Horizontally filter rows through each column
           for (let i = 0; i < filterableIds.length; i++) {
-            if (row.columnFilterMap[filterableIds[i]!] === false) {
+            if (row.columnFilters[filterableIds[i]!] === false) {
               return false
             }
           }

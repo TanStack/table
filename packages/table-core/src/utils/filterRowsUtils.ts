@@ -32,7 +32,7 @@ export function filterRowModelFromLeafs<TGenerics extends TableGenerics>(
 
       if (row.subRows?.length) {
         newRow = instance.createRow(row.id, row.original, row.index, row.depth)
-        newRow.columnFilterMap = row.columnFilterMap
+        newRow.columnFilters = row.columnFilters
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
         if (!newRow.subRows.length) {
           continue

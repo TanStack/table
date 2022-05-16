@@ -18,6 +18,10 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
           !rowModel.rows.length ||
           (!columnFilters?.length && !globalFilter)
         ) {
+          for (let i = 0; i < rowModel.flatRows.length; i++) {
+            rowModel.flatRows[i]!.columnFilters = {}
+            rowModel.flatRows[i]!.columnFiltersMeta = {}
+          }
           return rowModel
         }
 
@@ -86,40 +90,47 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
         for (let j = 0; j < rowModel.flatRows.length; j++) {
           const row = rowModel.flatRows[j]!
 
-          row.columnFilterMap = {}
+          row.columnFilters = {}
 
           if (resolvedColumnFilters.length) {
             for (let i = 0; i < resolvedColumnFilters.length; i++) {
               currentColumnFilter = resolvedColumnFilters[i]!
+              const id = currentColumnFilter.id
 
               // Tag the row with the column filter state
-              row.columnFilterMap[currentColumnFilter.id] =
-                currentColumnFilter.filterFn(
-                  row,
-                  currentColumnFilter.id,
-                  currentColumnFilter.resolvedValue
-                )
+              row.columnFilters[id] = currentColumnFilter.filterFn(
+                row,
+                id,
+                currentColumnFilter.resolvedValue,
+                filterMeta => {
+                  row.columnFiltersMeta[id] = filterMeta
+                }
+              )
             }
           }
 
           if (resolvedGlobalFilters.length) {
             for (let i = 0; i < resolvedGlobalFilters.length; i++) {
               currentGlobalFilter = resolvedGlobalFilters[i]!
+              const id = currentGlobalFilter.id
               // Tag the row with the first truthy global filter state
               if (
                 currentGlobalFilter.filterFn(
                   row,
-                  currentGlobalFilter.id,
-                  currentGlobalFilter.resolvedValue
+                  id,
+                  currentGlobalFilter.resolvedValue,
+                  filterMeta => {
+                    row.columnFiltersMeta[id] = filterMeta
+                  }
                 )
               ) {
-                row.columnFilterMap.__global__ = true
+                row.columnFilters.__global__ = true
                 break
               }
             }
 
-            if (row.columnFilterMap.__global__ !== true) {
-              row.columnFilterMap.__global__ = false
+            if (row.columnFilters.__global__ !== true) {
+              row.columnFilters.__global__ = false
             }
           }
         }
@@ -127,7 +138,7 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
         const filterRowsImpl = (row: Row<TGenerics>) => {
           // Horizontally filter rows through each column
           for (let i = 0; i < filterableIds.length; i++) {
-            if (row.columnFilterMap[filterableIds[i]!] === false) {
+            if (row.columnFilters[filterableIds[i]!] === false) {
               return false
             }
           }

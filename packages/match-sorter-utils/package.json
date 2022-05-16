@@ -1,8 +1,11 @@
 {
-  "name": "@tanstack/vue-table",
-  "author": "Tanner Linsley",
+  "name": "@tanstack/match-sorter-utils",
+  "authors": [
+    "Kent C. Dodds",
+    "Tanner Linsley"
+  ],
   "version": "8.0.0-alpha.82",
-  "description": "Composables for building lightweight, fast and extendable datagrids for Vue",
+  "description": "A fork of match-sorter with separated filtering and sorting phases",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/react-table#readme",
   "repository": {
@@ -13,17 +16,20 @@
     "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
-    "vue",
+    "react",
     "table",
-    "vue-table",
+    "match-sorter",
+    "utils",
+    "split",
+    "separate",
     "datagrid"
   ],
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/tannerlinsley"
+    "url": "https://github.com/sponsors/kentcdodds"
   },
   "module": "build/esm/index.js",
-  "main": "build/cjs/vue-table/src/index.js",
+  "main": "build/cjs/index.js",
   "browser": "build/umd/index.production.js",
   "types": "build/types/index.d.ts",
   "sideEffects": false,
@@ -35,9 +41,6 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.82"
-  },
-  "peerDependencies": {
-    "vue": "^3.2.33"
+    "remove-accents": "0.4.2"
   }
 }

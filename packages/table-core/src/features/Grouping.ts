@@ -16,8 +16,8 @@ import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 export type GroupingState = string[]
 
 export type AggregationFn<TGenerics extends TableGenerics> = (
-  getLeafValues: () => TGenerics['Row'][],
-  getChildValues: () => TGenerics['Row'][]
+  getLeafValues: () => TGenerics['Value'][],
+  getChildValues: () => TGenerics['Value'][]
 ) => any
 
 export type CustomAggregationFns<TGenerics extends TableGenerics> = Record<
