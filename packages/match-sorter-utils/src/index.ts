@@ -8,20 +8,13 @@
 // This is a fork of match-sorter. Instead of offering
 // a unified API for filtering and sorting in a single pass,
 // match-sorter-utils provides the lower-level utilities of
-// ranking and comparison that can be incrementally applied to
-// individual items instead of entire arrays of items.
+// ranking items and comparing ranks in a way that can
+// be incrementally applied to a system rather than
+// all-at-once.
 
-// Filtering (which is really just ranking, then using the threshold)
-// operates at the individual item level, allowing
-// it to be distributed and non-mutating to the original array.
-
-// Sorting (which is really just comparing two ranked items)
-// also operates at the lowest level by allowing you to compare
-// 2 ranked items. This
-
-// By breaking these utilities down to their primitive forms
-// They can be used to build custom
-// match-sorter implementations that are incrementally applied
+// 1. Use the rankItem function to rank an item
+// 2. Use the resulting rankingInfo.passed to filter
+// 3. Use the resulting rankingInfo.rank to sort
 
 // For bundling purposes (mainly remove-accents not being esm safe/ready),
 // we've also hard-coded remove-accents into this source.
