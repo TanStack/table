@@ -1,7 +1,7 @@
 /**
  * @name match-sorter
  * @license MIT license.
- * @copyright (c) 2099 Kent C. Dodds, Tanner Linsley
+ * @copyright (c) 2099 Kent C. Dodds
  * @author Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)
  */
 
