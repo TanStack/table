@@ -7,6 +7,7 @@
     { "path": "packages/vue-table" },
     { "path": "packages/svelte-table" },
     { "path": "packages/react-table-devtools" },
+    { "path": "packages/match-sorter-utils" },
     { "path": "examples/react/basic/tsconfig.dev.json" },
     { "path": "examples/react/column-ordering/tsconfig.dev.json" },
     { "path": "examples/react/column-pinning/tsconfig.dev.json" },

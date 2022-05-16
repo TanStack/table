@@ -91,6 +91,7 @@ export type TableGenerics = {
   Rendered?: any
   ColumnMeta?: any
   TableMeta?: any
+  FilterMeta?: any
 }
 
 export type AnyRender = (Comp: any, props: any) => any

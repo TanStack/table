@@ -126,7 +126,7 @@ export const Sorting: TableFeature = {
   ): SortingColumn<TGenerics> => {
     return {
       getAutoSortingFn: () => {
-        const firstRows = instance.getFilteredRowModel().flatRows.slice(100)
+        const firstRows = instance.getFilteredRowModel().flatRows.slice(10)
 
         let isString = false
 

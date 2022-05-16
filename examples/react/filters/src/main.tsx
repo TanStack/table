@@ -15,11 +15,54 @@ import {
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
   getPaginationRowModel,
+  sortingFns,
+  getSortedRowModel,
 } from '@tanstack/react-table'
+
+import {
+  RankingInfo,
+  rankItem,
+  compareItems,
+  rankings,
+} from '@tanstack/match-sorter-utils'
 
 import { makeData, Person } from './makeData'
 
-let table = createTable().setRowType<Person>()
+let table = createTable()
+  .setRowType<Person>()
+  .setFilterMetaType<RankingInfo>()
+  .setOptions({
+    filterFns: {
+      fuzzy: (row, columnId, value, addMeta) => {
+        // Rank the item
+        const itemRank = rankItem(row.getValue(columnId), value, {
+          threshold: rankings.MATCHES,
+        })
+
+        // Store the ranking info
+        addMeta(itemRank)
+
+        // Return if the item should be filtered in/out
+        return itemRank.passed
+      },
+    },
+    sortingFns: {
+      fuzzy: (rowA, rowB, columnId) => {
+        let dir = 0
+
+        // Only sort by rank if the column has ranking information
+        if (rowA.columnFiltersMeta[columnId]) {
+          dir = compareItems(
+            rowA.columnFiltersMeta[columnId]!,
+            rowB.columnFiltersMeta[columnId]!
+          )
+        }
+
+        // Provide a fallback for when the item ranks are equal
+        return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+      },
+    },
+  })
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -44,6 +87,14 @@ function App() {
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
+          }),
+          table.createDataColumn(row => `${row.firstName} ${row.lastName}`, {
+            id: 'fullName',
+            header: 'Full Name',
+            cell: info => info.getValue(),
+            footer: props => props.column.id,
+            filterFn: 'fuzzy',
+            sortingFn: 'fuzzy',
           }),
         ],
       }),
@@ -90,8 +141,10 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'fuzzy',
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -100,6 +153,14 @@ function App() {
     debugHeaders: true,
     debugColumns: false,
   })
+
+  React.useEffect(() => {
+    if (instance.getState().columnFilters[0]?.id === 'fullName') {
+      if (instance.getState().sorting[0]?.id !== 'fullName') {
+        instance.setSorting([{ id: 'fullName', desc: false }])
+      }
+    }
+  }, [instance.getState().columnFilters[0]?.id])
 
   return (
     <div className="p-2">
@@ -121,7 +182,20 @@ function App() {
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <>
-                        {header.renderHeader()}
+                        <div
+                          {...{
+                            className: header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : '',
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {header.renderHeader()}
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
                         {header.column.getCanFilter() ? (
                           <div>
                             <Filter
@@ -151,6 +225,67 @@ function App() {
         </tbody>
       </table>
       <div className="h-2" />
+      <div className="flex items-center gap-2">
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(0)}
+          disabled={!instance.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.previousPage()}
+          disabled={!instance.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.nextPage()}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
+          disabled={!instance.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {instance.getState().pagination.pageIndex + 1} of{' '}
+            {instance.getPageCount()}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            defaultValue={instance.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              instance.setPageIndex(page)
+            }}
+            className="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={instance.getState().pagination.pageSize}
+          onChange={e => {
+            instance.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
       <div>{instance.getPrePaginationRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
@@ -223,7 +358,7 @@ function Filter({
   ) : (
     <>
       <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.map(value => (
+        {sortedUniqueValues.slice(0, 5000).map(value => (
           <option value={value} key={value} />
         ))}
       </datalist>

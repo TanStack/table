@@ -23,6 +23,7 @@
     "./packages/vue-table",
     "./packages/svelte-table",
     "./packages/react-table-devtools",
+    "./packages/match-sorter-utils",
     "./examples/react/basic",
     "./examples/react/column-ordering",
     "./examples/react/column-pinning",

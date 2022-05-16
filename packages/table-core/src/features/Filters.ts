@@ -38,7 +38,13 @@ export type ResolvedColumnFilter<TGenerics extends TableGenerics> = {
 }
 
 export type FilterFn<TGenerics extends TableGenerics> = {
-  (row: Row<TGenerics>, columnId: string, filterValue: any): boolean
+  (
+    row: Row<TGenerics>,
+    columnId: string,
+    filterValue: any,
+    addMeta: (meta: TGenerics['FilterMeta']) => void
+  ): boolean
+
   resolveFilterValue?: TransformFilterValueFn<TGenerics>
   autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
 }
@@ -90,7 +96,8 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
 }
 
 export type FiltersRow<TGenerics extends TableGenerics> = {
-  columnFilterMap: Record<string, boolean>
+  columnFilters: Record<string, boolean>
+  columnFiltersMeta: Record<string, TGenerics['FilterMeta']>
   subRowsByFacetId: Record<string, Row<TGenerics>[]>
 }
 
@@ -343,7 +350,8 @@ export const Filters: TableFeature = {
     instance: TableInstance<TGenerics>
   ): FiltersRow<TGenerics> => {
     return {
-      columnFilterMap: {},
+      columnFilters: {},
+      columnFiltersMeta: {},
       subRowsByFacetId: {},
     }
   },

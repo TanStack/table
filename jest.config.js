@@ -60,5 +60,17 @@ module.exports = {
       },
       moduleNameMapper,
     },
+    {
+      displayName: 'match-sorter-utils',
+      testEnvironment: 'jsdom',
+      testMatch: ['<rootDir>/packages/match-sorter-utils/**/*.test.[jt]s?(x)'],
+      setupFilesAfterEnv: [
+        '<rootDir>/packages/match-sorter-utils/__tests__/jest.setup.js',
+      ],
+      snapshotFormat: {
+        printBasicPrototype: false,
+      },
+      moduleNameMapper,
+    },
   ],
 }

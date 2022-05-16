@@ -96,9 +96,15 @@ This is the type signature for every filter function:
 
 ```tsx
 export type FilterFn<TGenerics extends TableGenerics> = {
-  (row: Row<TGenerics>, columnId: string, filterValue: any): boolean
+  (
+    row: Row<TGenerics>,
+    columnId: string,
+    filterValue: any,
+    addMeta: (meta: TGenerics['FilterMeta']) => void
+  ): boolean
   resolveFilterValue?: TransformFilterValueFn<TGenerics>
   autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
+  addMeta?: (meta?: TGenerics['FilterMeta']) => void
 }
 
 export type TransformFilterValueFn<TGenerics extends TableGenerics> = (
@@ -158,6 +164,70 @@ Options:
 - A `string` referencing a [built-in filter function](#filter-functions))
 - A `string` referencing a custom filter function defined on the `filterFns` table option
 - A [custom filter function](#filter-functions)
+
+#### Filter Meta
+
+Filtering data can often expose additional information about the data that can be used to aid other future operations on the same data. A good exmaple of this concept is a ranking-system like that of [`match-sorter`](https://github.com/kentcdodds/match-sorter) that simutaneously ranks, filters and sorts data. While utilities like `match-sorter` make a lot of sense for single-dimensional filter+sort tasks, the decoupled filtering/sorting architecture of building a table makes them very difficult and unperformant to use.
+
+To make a ranking/filtering/sorting system work with tables, `filterFn`s can optionally mark results with a **filter meta** value that can be used later to sort/group/etc the data to your liking. This is done by calling the `addMeta` function supplied to your custom `filterFn`.
+
+Below is an example using our own `match-sorter-utils` package (a utility fork of `match-sorter`) to rank, filter, and sort the data
+
+```tsx
+import {
+  Column,
+  createTable,
+  TableInstance,
+  useTableInstance,
+  ColumnFiltersState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
+  getPaginationRowModel,
+  sortingFns,
+} from '@tanstack/react-table'
+
+import {
+  RankingInfo,
+  rankItem,
+  compareItems,
+} from '@tanstack/match-sorter-utils'
+
+let table = createTable()
+  .setFilterMetaType<RankingInfo>()
+  .setOptions({
+    filterFns: {
+      fuzzy: (row, columnId, value, addMeta) => {
+        // Rank the item
+        const itemRank = rankItem(row.getValue(columnId), value)
+
+        // Store the ranking info
+        addMeta(itemRank)
+
+        // Return if the item should be filtered in/out
+        return itemRank.passed
+      },
+    },
+    sortingFns: {
+      fuzzy: (rowA, rowB, columnId) => {
+        let dir = 0
+
+        // Only sort by rank if the column has ranking information
+        if (rowA.columnFiltersMeta[columnId]) {
+          dir = compareItems(
+            rowA.columnFiltersMeta[columnId]!,
+            rowB.columnFiltersMeta[columnId]!
+          )
+        }
+
+        // Provide an alphanumeric fallback for when the item ranks are equal
+        return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+      },
+    },
+  })
+```
 
 #### `enableAllFilters`
 

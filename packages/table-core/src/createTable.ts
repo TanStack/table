@@ -42,10 +42,13 @@ export type Table<TGenerics extends TableGenerics> = {
   setColumnMetaType: <TColumnMeta>() => Table<
     Overwrite<TGenerics, { ColumnMeta: TColumnMeta }>
   >
+  setFilterMetaType: <TFilterMeta>() => Table<
+    Overwrite<TGenerics, { FilterMeta: TFilterMeta }>
+  >
   setOptions: <
-    TFilterFns extends Record<string, FilterFn<any>>,
-    TSortingFns extends Record<string, SortingFn<any>>,
-    TAggregationFns extends Record<string, AggregationFn<any>>
+    TFilterFns extends Record<string, FilterFn<TGenerics>>,
+    TSortingFns extends Record<string, SortingFn<TGenerics>>,
+    TAggregationFns extends Record<string, AggregationFn<TGenerics>>
   >(
     options: CreateTableOptions<
       any,
@@ -144,6 +147,7 @@ function createTable<TGenerics extends TableGenerics>(
     setRowType: () => table as any,
     setTableMetaType: () => table as any,
     setColumnMetaType: () => table as any,
+    setFilterMetaType: () => table as any,
     setOptions: newOptions =>
       createTable(_, __, {
         ...options,
