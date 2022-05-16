@@ -62,7 +62,7 @@
   let sorting = []
 
   const setSorting = updater => {
-    sorting = updater()
+    sorting = updater(sorting)
     options.update(old => ({
       ...old,
       state: {
