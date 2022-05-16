@@ -85,14 +85,18 @@ export const Rows = {
             if (row.valuesCache.hasOwnProperty(columnId)) {
               return row.valuesCache[columnId]
             }
+
             const column = instance.getColumn(columnId)
+
             if (!column.accessorFn) {
-              throw new Error()
+              return undefined
             }
+
             row.valuesCache[columnId] = column.accessorFn(
               row.original,
               rowIndex
             )
+
             return row.valuesCache[columnId]
           },
           subRows: subRows ?? [],

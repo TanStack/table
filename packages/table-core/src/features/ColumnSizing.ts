@@ -215,7 +215,7 @@ export const ColumnSizing: TableFeature = {
             }
           }
 
-          const startSize = column.getSize()
+          const startSize = header.getSize()
 
           const columnSizingStart: [string, number][] = header
             ? header
