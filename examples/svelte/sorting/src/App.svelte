@@ -59,9 +59,26 @@
 
   const data = makeData(100_000)
 
+  let sorting = []
+
+  const setSorting = updater => {
+    sorting = updater()
+    options.update(old => ({
+      ...old,
+      state: {
+        ...old.state,
+        sorting,
+      },
+    }))
+  }
+
   const options = writable({
     data,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
