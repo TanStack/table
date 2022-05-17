@@ -22,7 +22,9 @@
     { "path": "examples/react/pagination/tsconfig.dev.json" },
     { "path": "examples/react/pagination-controlled/tsconfig.dev.json" },
     { "path": "examples/react/row-selection/tsconfig.dev.json" },
-    { "path": "examples/react/sorting/tsconfig.dev.json" }
+    { "path": "examples/react/sorting/tsconfig.dev.json" },
+    { "path": "examples/svelte/basic/tsconfig.dev.json" },
+    { "path": "examples/svelte/sorting/tsconfig.dev.json" }
   ]
   // "exclude": ["node_modules"]
 }
