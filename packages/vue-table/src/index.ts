@@ -12,7 +12,7 @@ import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-function render<TProps extends {}>(Comp: any, props: TProps): VNode | null {
+function render<TProps extends {}>(Comp: any, props: TProps): VNode | string | number | boolean | null {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
