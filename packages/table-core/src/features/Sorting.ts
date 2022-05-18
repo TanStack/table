@@ -101,7 +101,7 @@ export const Sorting: TableFeature = {
     }
   },
 
-  getDefaultColumn: <
+  getDefaultColumnDef: <
     TGenerics extends TableGenerics
   >(): SortingColumnDef<TGenerics> => {
     return {
@@ -170,15 +170,15 @@ export const Sorting: TableFeature = {
           throw new Error()
         }
 
-        return isFunction(column.sortingFn)
-          ? column.sortingFn
-          : column.sortingFn === 'auto'
+        return isFunction(column.columnDef.sortingFn)
+          ? column.columnDef.sortingFn
+          : column.columnDef.sortingFn === 'auto'
           ? column.getAutoSortingFn()
           : (userSortingFn as Record<string, any>)?.[
-              column.sortingFn as string
+              column.columnDef.sortingFn as string
             ] ??
             (sortingFns[
-              column.sortingFn as BuiltInSortingFn
+              column.columnDef.sortingFn as BuiltInSortingFn
             ] as SortingFn<TGenerics>)
       },
       toggleSorting: (desc, multi) => {
@@ -220,7 +220,7 @@ export const Sorting: TableFeature = {
           }
 
           const sortDescFirst =
-            column.sortDescFirst ??
+            column.columnDef.sortDescFirst ??
             instance.options.sortDescFirst ??
             column.getAutoSortDir() === 'desc'
 
@@ -280,7 +280,7 @@ export const Sorting: TableFeature = {
 
       getCanSort: () => {
         return (
-          (column.enableSorting ?? true) &&
+          (column.columnDef.enableSorting ?? true) &&
           (instance.options.enableSorting ?? true) &&
           !!column.accessorFn
         )
@@ -288,7 +288,7 @@ export const Sorting: TableFeature = {
 
       getCanMultiSort: () => {
         return (
-          column.enableMultiSort ??
+          column.columnDef.enableMultiSort ??
           instance.options.enableMultiSort ??
           !!column.accessorFn
         )

@@ -7,7 +7,13 @@ id: column-sizing
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-sizing](../examples/column-sizing)
+- [column-sizing](../examples/react/column-sizing)
+
+## API
+
+[Columm Sizing API](../api/column-sizing.md)
+
+## Guide
 
 The column sizing feature allows you to optionally specify the width of each column including min and max widths. It also allows you and your users the ability to dynamically change the width of all columns at will, eg. by dragging the column headers.
 
@@ -34,41 +40,3 @@ As a headless utility, table logic for column sizing is really only a collection
 - Really any layout mechanism that can interpolate cell widths into a table structure.
 
 Each of these approaches has its own tradeoffs and limitations which are usually opinions held by a UI/component library or design system, luckily not you 😉.
-
-## State
-
-Column sizing state is stored on the table instance using the following shape:
-
-```tsx
-export type ColumnSizingTableState = {
-  columnSizing: ColumnSizing
-  columnSizingInfo: ColumnSizingInfoState
-}
-
-export type ColumnSizing = Record<string, number>
-
-export type ColumnSizingInfoState = {
-  startOffset: null | number
-  startSize: null | number
-  deltaOffset: null | number
-  deltaPercentage: null | number
-  isResizingColumn: false | string
-  columnSizingStart: [string, number][]
-}
-```
-
-## Column Definition Options
-
-TODO
-
-## Column API
-
-TODO
-
-## Table Options
-
-TODO
-
-## Table Instance API
-
-TODO
