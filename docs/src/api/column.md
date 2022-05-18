@@ -17,9 +17,9 @@ id: string
 
 The resolved unique identifier for the column resolved in this priority:
 
-- A manual `id` property from the column definition
-- The accessor key from the column definition
-- The header string from the column definition
+- A manual `id` property from the column def
+- The accessor key from the column def
+- The header string from the column def
 
 #### `depth`
 
@@ -27,7 +27,7 @@ The resolved unique identifier for the column resolved in this priority:
 id: number
 ```
 
-The depth of the column (if grouped) relative to the root column definition array.
+The depth of the column (if grouped) relative to the root column def array.
 
 #### `accessorFn`
 
@@ -35,7 +35,7 @@ The depth of the column (if grouped) relative to the root column definition arra
 accessorFn?: AccessorFn<TGenerics['Row']>
 ```
 
-The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column definition has a valid accessor key or function defined.
+The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
 
 #### `columnDef`
 
@@ -43,7 +43,7 @@ The resolved accessor function to use when extracting the value for the column f
 columnDef: ColumnDef<TGenerics>
 ```
 
-The original column definition used to create the column.
+The original column def used to create the column.
 
 #### `columnDefType`
 
@@ -51,7 +51,7 @@ The original column definition used to create the column.
 columnDefType: 'data' | 'display' | 'group'
 ```
 
-The type of column definition that was used to create the column. See the [`createTable()` API](../guide/tables.md#createtable) for more information.
+The type of column def that was used to create the column. See the [`createTable()` API](../guide/tables.md#createtable) for more information.
 
 #### `columns`
 

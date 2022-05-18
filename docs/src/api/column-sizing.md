@@ -25,7 +25,7 @@ export type ColumnSizingInfoState = {
 }
 ```
 
-## Column Definition Options
+## Column Def Options
 
 TODO
 

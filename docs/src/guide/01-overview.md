@@ -18,21 +18,21 @@ As it was mentioned extensively in the [Intro](../intro) section, React Table is
 At the heart of the table core, a few structures are consistent common and consistent:
 
 - [Table Factories](./core/tables)
-  - Used to create table factories, pre-define table types, set default options, create column definitions
-- Column Definitions
+  - Used to create table factories, pre-define table types, set default options, create column defs
+- Column Defs
   - Objects used to configure a column and its data model, display templates, and more
 - Table Instances
   - Stateful objects that expose the core Table API
 - Table Data
   - The core data array you provide the table.
 - Columns
-  - Each column mirrors its respective column definition and also provide column-specific APIs
+  - Each column mirrors its respective column def and also provide column-specific APIs
 - Rows
   - Each row mirrors its respective row data and provide row-specific APIs
 - Header Groups
   - Header groups are computed slices of nested header levels, each containing a group of headers
 - Headers
-  - Each header is either directly associated with or derived from its column definition and provides header-specific APIs
+  - Each header is either directly associated with or derived from its column def and provides header-specific APIs
 - Cells
   - Each cell mirrors its respective row-column intersection and provides cell-specific APIs
 

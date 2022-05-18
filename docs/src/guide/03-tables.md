@@ -3,6 +3,10 @@ name: Tables
 id: tables
 ---
 
+## API
+
+[Table API](../api/table.md)
+
 ## Creating a new table
 
 Creating a table starts with calling your adapter's exported `createTable` function:
@@ -17,7 +21,7 @@ const table = createTable()
 
 ## Setting your table's `RowType`
 
-If you are using TypeScript (recommended), you should set the `RowType` of your table to ensure typesafety in your column definitions and assist with autocomplete where applicable:
+If you are using TypeScript (recommended), you should set the `RowType` of your table to ensure typesafety in your column defs and assist with autocomplete where applicable:
 
 ```tsx
 type Person = {

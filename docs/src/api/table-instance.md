@@ -36,7 +36,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 type columns = ColumnDef<TGenerics>[]
 ```
 
-The array of column definitions to use for the table instance.
+The array of column defs to use for the table instance.
 
 #### `defaultColumnDef`
 
@@ -44,7 +44,7 @@ The array of column definitions to use for the table instance.
 defaultColumnDef?: Partial<ColumnDef<TGenerics>>[]
 ```
 
-Default column options to use for all column definitions supplied to the table instance. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
+Default column options to use for all column defs supplied to the table instance. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
 
 #### `initialState`
 

@@ -9,7 +9,7 @@ id: table
 createTable: () => Table
 ```
 
-Creates a new `Table` factory, from which you can set types, pre-set options and create column definitions.
+Creates a new `Table` factory, from which you can set types, pre-set options and create column defs.
 
 ## `Table` API
 
@@ -21,7 +21,7 @@ Creates a new `Table` factory, from which you can set types, pre-set options and
 setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
 ```
 
-Call this function to set the type of rows in your table. The type you provide here will be used to autocomplete column definition accessor keys and functions, among many other places where the row generic type is used.
+Call this function to set the type of rows in your table. The type you provide here will be used to autocomplete column def accessor keys and functions, among many other places where the row generic type is used.
 
 ```tsx
 const table = createTable().setRowType<Row>()
@@ -49,7 +49,7 @@ setColumnMetaType: <TColumnMeta>() => Table<
 >
 ```
 
-Call this function to set the type of `columnDefinition.meta` objects that you can provide to your column definitions.
+Call this function to set the type of `columnDefinition.meta` objects that you can provide to your column defs.
 
 #### `setFilterMetaType`
 
@@ -90,7 +90,7 @@ setOptions: <
 >
 ```
 
-Call this function to pre-set options for your table before creating your table instance. This is specifically useful for providing **custom `filterFns`, `sortingFns`, and `aggregationFns`** that you can reference by key to filter, sort, and aggregate your table data. These options will be autocompleted and type-checked in your column definitions.
+Call this function to pre-set options for your table before creating your table instance. This is specifically useful for providing **custom `filterFns`, `sortingFns`, and `aggregationFns`** that you can reference by key to filter, sort, and aggregate your table data. These options will be autocompleted and type-checked in your column defs.
 
 #### `createGroup`
 
@@ -120,7 +120,7 @@ createGroup: (
 ) => ColumnDef<TGenerics>
 ```
 
-Call this function to create a grouping column. See [Creating Column Definitions](../03-columns.md) for more details.
+Call this function to create a grouping column. See [Creating Column Defs](../03-columns.md) for more details.
 
 #### `createDisplayColumn`
 
@@ -130,11 +130,11 @@ createDisplayColumn: (
 ) => ColumnDef<TGenerics>
 ```
 
-Call this function to create a display column. See [Creating Column Definitions](../03-columns.md) for more details.
+Call this function to create a display column. See [Creating Column Defs](../03-columns.md) for more details.
 
 #### `createDataColumn`
 
-Call this function to create a data column. See [Creating Column Definitions](../03-columns.md) for more details.
+Call this function to create a data column. See [Creating Column Defs](../03-columns.md) for more details.
 
 ```tsx
 type Person = {

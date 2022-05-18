@@ -128,7 +128,7 @@ export type FilterFnOption<TGenerics extends TableGenerics> =
   | FilterFn<TGenerics>
 ```
 
-## Column Definition Options
+## Column Def Options
 
 #### `filterFn`
 

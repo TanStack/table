@@ -3,7 +3,7 @@ name: column-def
 id: column-def
 ---
 
-## Column Definition Options
+## Column Def Options
 
 #### `id`
 
@@ -24,7 +24,7 @@ The unique identifier for the column.
 accessorKey?: string & typeof TGenerics['Row']
 ```
 
-> ⚠️ While column definitions _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
+> ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
 
 The key of the row object to use when extracting the value for the column.
 
@@ -34,7 +34,7 @@ The key of the row object to use when extracting the value for the column.
 accessorFn?: (originalRow: TGenerics['Row'], index: number) => any
 ```
 
-> ⚠️ While column definitions _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
+> ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
 
 The accessor function to use when extracting the value for the column from each row.
 
@@ -44,9 +44,9 @@ The accessor function to use when extracting the value for the column from each 
 columns?: ColumnDef<TGenerics>[]
 ```
 
-> ⚠️ While column definitions _are_ just objects and this is a valid option, you should probably be using the [`table.createGroup()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
+> ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createGroup()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
 
-The child column definitions to include in a group column.
+The child column defs to include in a group column.
 
 #### `header`
 

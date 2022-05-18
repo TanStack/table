@@ -45,7 +45,7 @@ onColumnPinningChange?: OnChangeFn<ColumnPinningState>
 
 If provided, this function will be called with an `updaterFn` when `state.columnPinning` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-## Column Definition Options
+## Column Def Options
 
 #### `enablePinning`
 

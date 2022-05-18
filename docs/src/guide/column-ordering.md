@@ -20,3 +20,5 @@ There are 3 table features that can reorder columns, which happen in the followi
 1. [Column Pinning](../column-pinning) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
 2. Manual **Column Ordering** - A manually specified column order is applied.
 3. [Grouping](../grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.columnGroupingMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+
+TODO
