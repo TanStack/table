@@ -83,7 +83,7 @@ meta?: TGenerics['TableMeta']
 
 After calling `table.setTableMetaType<{...your meta type...}>()`, you can pass a meta object of the same type to this table option. This meta object will remain available anywhere the table `instance` is available.
 
-> 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table instance without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/editable-data.mdx).
+> 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table instance without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/react/editable-data.mdx).
 
 #### `state`
 

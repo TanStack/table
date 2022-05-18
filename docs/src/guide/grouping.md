@@ -1,3 +1,18 @@
-TODO
+---
+name: Grouping
+id: grouping
+---
 
-Please duplicate a completed api file as a template to get started!
+## Examples
+
+Want to skip to the implementation? Check out these examples:
+
+- [grouping](../examples/react/grouping)
+
+## API
+
+[Grouping API](../api/grouping.md)
+
+## Guide
+
+TODO
