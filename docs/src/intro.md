@@ -21,8 +21,8 @@ When you use a headless UI utility, the complex task of **data-processing, state
 
 In the ecosystem of table/datagrid libraries, there are two main categories:
 
-- Headless, utility-first table libraries
 - Traditional, batteries-included libraries
+- Headless, utility-first table libraries
 
 ### Which kind of table library should I use?
 
@@ -30,7 +30,7 @@ Each approach has subtle tradeoffs. Understanding these subtleties will help you
 
 ### Traditional/Batteries-Included
 
-Traditional/batteries-included table libraries will typically supply you with a feature-rich drop-in solution with ready-to-use components/markup complete with styles/theming. [AG Grid](https://www.ag-grid.com/) is a great example of a traditional/batteries-included table library.
+Traditional/batteries-included table libraries will typically supply you with a feature-rich drop-in solution and ready-to-use components/markup complete with styles/theming. [AG Grid](https://www.ag-grid.com/) is a great example of a traditional/batteries-included table library.
 
 **Pros:**
 
@@ -46,7 +46,7 @@ Traditional/batteries-included table libraries will typically supply you with a 
 
 **If you want a ready-to-use table and design/bundle-size are not hard requirements**, then you should consider using a traditional table library.
 
-There are a lot of traditional table libraries out there, but [AG Grid](https://www.ag-grid.com/) is our favorite.
+There are a lot of traditional table libraries out there, but we believe [AG Grid](https://www.ag-grid.com/) is the gold standard and is by far our favorite grid-sibling (don't tell the others 🤫).
 
 ### Headless/Utilty-First
 
