@@ -217,6 +217,10 @@ export const Filters: TableFeature = {
           return filterFns.inNumberRange
         }
 
+        if (typeof value === 'boolean') {
+          return filterFns.equals
+        }
+
         if (value !== null && typeof value === 'object') {
           return filterFns.equals
         }
