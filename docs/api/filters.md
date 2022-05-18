@@ -505,10 +505,10 @@ Sets or updates the filter value for the columnId specified.
 #### `resetColumnFilters`
 
 ```tsx
-resetColumnFilters: () => void
+resetColumnFilters: (defaultState?: boolean) => void
 ```
 
-Resets the **column** filter state for the table.
+Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
 
 #### `getColumnCanColumnFilter`
 
@@ -569,10 +569,10 @@ Sets or updates the `state.globalFilter` state.
 #### `resetGlobalFilter`
 
 ```tsx
-resetGlobalFilter: () => void
+resetGlobalFilter: (defaultState?: boolean) => void
 ```
 
-Resets the **global** filter state for the table.
+Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can be passed to force a default blank state reset to `undefined`.
 
 #### `getGlobalAutoFilterFn`
 

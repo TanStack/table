@@ -53,7 +53,7 @@ Sets or updates the `state.columnOrder` state.
 #### `resetColumnOrder`
 
 ```tsx
-resetColumnOrder: () => void
+resetColumnOrder: (defaultState?: boolean) => void
 ```
 
-Resets the **columnOrder** state for the table.
+Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
