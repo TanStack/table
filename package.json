@@ -38,7 +38,9 @@
     "./examples/react/pagination",
     "./examples/react/pagination-controlled",
     "./examples/react/row-selection",
-    "./examples/react/sorting"
+    "./examples/react/sorting",
+    "./examples/svelte/basic",
+    "./examples/svelte/sorting"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",
