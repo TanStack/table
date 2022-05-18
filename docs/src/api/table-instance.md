@@ -1,11 +1,23 @@
 ---
-name: columns
-id: columns
+name: table-instance
+id: table-instance
 ---
 
-## Table Options
+## `useTableInstance` / `createTableInstance`
 
-<!--
+```tsx
+type useTableInstance = <TGenerics extends ReactTableGenerics>(
+  table: Table<TGenerics>,
+  options: UseTableInstanceOptions<TGenerics>
+) => TableInstance<TGenerics>
+```
+
+These hooks / functions used to create a table instance. Which one you use depends on which framework adapter you are using.
+
+## Options
+
+These are **core** options and API properties for the table instance. More options and API properties are available for other [table features](../guide/09-features.md).
+
 #### `data`
 
 ```tsx
@@ -17,6 +29,22 @@ The data for the table to display. This is array should match the type you provi
 When the `data` option changes reference (compared via `Object.is`), the table will reprocess the data. Any other data processing that relies on the core data model (such as grouping, sorting, filtering, etc) will also be reprocessed.
 
 > 🧠 Make sure your `data` option is only changing when you want the table to reprocess. Providing an inline `[]` or construction the data array as a new object every time you want to render the table will result in a _lot_ of unnecessary re-processing. This can easily go unnoticed in smaller tables, but you will likely notice it in larger tables.
+
+#### `columns`
+
+```tsx
+type columns = ColumnDef<TGenerics>[]
+```
+
+The array of column definitions to use for the table instance.
+
+#### `defaultColumnDef`
+
+```tsx
+defaultColumnDef?: Partial<ColumnDef<TGenerics>>[]
+```
+
+Default column options to use for all column definitions supplied to the table instance. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
 
 #### `initialState`
 
@@ -155,11 +183,12 @@ The `render` option provides a renderer implementation for the table. This imple
 type mergeOptions = <T>(defaultOptions: T, options: Partial<T>) => T
 ```
 
-This option is used to optionally implement the merging of table options. Some framework like solid-js use proxies to track reactivity and usage, so merging reactive objects needs to be handled carefully. This option inverts control of this process to the adapter. -->
+This option is used to optionally implement the merging of table options. Some framework like solid-js use proxies to track reactivity and usage, so merging reactive objects needs to be handled carefully. This option inverts control of this process to the adapter.
 
-## Table Instance API
+## Table Instance
 
-<!--
+These properties and methods are available on the table instance object:
+
 #### `initialState`
 
 ```tsx
@@ -221,4 +250,4 @@ A read-only reference to the table instance's current options.
 setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
 ```
 
-> ⚠️ This function is generally used by adapters to update the table options. It can be used to update the table options directly, but it is generally not recommended to bypass your adapters strategy for updating table options. -->
+> ⚠️ This function is generally used by adapters to update the table options. It can be used to update the table options directly, but it is generally not recommended to bypass your adapters strategy for updating table options.

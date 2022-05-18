@@ -100,7 +100,7 @@ export type TableFeature = {
   getDefaultOptions?: (instance: any) => any
   getInitialState?: (initialState?: InitialTableState) => any
   createInstance?: (instance: any) => any
-  getDefaultColumn?: () => any
+  getDefaultColumnDef?: () => any
   createColumn?: (column: any, instance: any) => any
   createHeader?: (column: any, instance: any) => any
   createCell?: (cell: any, column: any, row: any, instance: any) => any
@@ -199,8 +199,7 @@ export type ColumnDef<TGenerics extends TableGenerics> =
     GroupingColumnDef<TGenerics> &
     ColumnSizingColumnDef
 
-export type Column<TGenerics extends TableGenerics> = ColumnDef<TGenerics> &
-  CoreColumn<TGenerics> &
+export type Column<TGenerics extends TableGenerics> = CoreColumn<TGenerics> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
   FiltersColumn<TGenerics> &

@@ -22,7 +22,7 @@ The API below described how to use the **Column Pinning** features.
 The ability for a column to be **pinned** is determined by the following:
 
 - `options.enablePinning` is not set to `false`
-- `column.enablePinning` is not set to `false`
+- `columnDefinition.enablePinning` is not set to `false`
 
 ## State
 

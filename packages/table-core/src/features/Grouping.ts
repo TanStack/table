@@ -108,7 +108,7 @@ export type GroupingInstance<TGenerics extends TableGenerics> = {
 //
 
 export const Grouping: TableFeature = {
-  getDefaultColumn: <
+  getDefaultColumnDef: <
     TGenerics extends TableGenerics
   >(): GroupingColumnDef<TGenerics> => {
     return {
@@ -150,7 +150,7 @@ export const Grouping: TableFeature = {
 
       getCanGroup: () => {
         return (
-          column.enableGrouping ??
+          column.columnDef.enableGrouping ??
           true ??
           instance.options.enableGrouping ??
           true ??
@@ -264,7 +264,8 @@ export const Grouping: TableFeature = {
         !cell.getIsPlaceholder() &&
         row.subRows?.length > 1,
       renderAggregatedCell: () => {
-        const template = column.aggregatedCell ?? column.cell
+        const template =
+          column.columnDef.aggregatedCell ?? column.columnDef.cell
 
         return template
           ? instance._render(template, {

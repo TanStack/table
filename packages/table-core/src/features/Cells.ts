@@ -74,8 +74,8 @@ export const Cells = {
           column,
           getValue: () => row.getValue(columnId),
           renderCell: () =>
-            column.cell
-              ? instance._render(column.cell, {
+            column.columnDef.cell
+              ? instance._render(column.columnDef.cell, {
                   instance,
                   column,
                   row,

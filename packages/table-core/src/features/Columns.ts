@@ -61,11 +61,11 @@ export type CoreColumn<TGenerics extends TableGenerics> = {
 
 export type ColumnsOptions<TGenerics extends TableGenerics> = {
   columns: ColumnDef<TGenerics>[]
-  defaultColumn?: Partial<ColumnDef<TGenerics>>
+  defaultColumnDef?: Partial<ColumnDef<TGenerics>>
 }
 
 export type ColumnsInstance<TGenerics extends TableGenerics> = {
-  getDefaultColumn: () => Partial<ColumnDef<TGenerics>>
+  getDefaultColumnDef: () => Partial<ColumnDef<TGenerics>>
   getColumnDefs: () => ColumnDef<TGenerics>[]
   createColumn: (
     columnDef: ColumnDef<TGenerics>,
@@ -86,8 +86,8 @@ export const Columns = {
     instance: TableInstance<TGenerics>
   ): ColumnsInstance<TGenerics> => {
     return {
-      getDefaultColumn: memo(
-        () => [instance.options.defaultColumn],
+      getDefaultColumnDef: memo(
+        () => [instance.options.defaultColumnDef],
         defaultColumn => {
           defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TGenerics>>
 
@@ -96,7 +96,7 @@ export const Columns = {
             footer: props => props.header.column.id,
             cell: props => props.getValue().toString?.() ?? null,
             ...instance._features.reduce((obj, feature) => {
-              return Object.assign(obj, feature.getDefaultColumn?.())
+              return Object.assign(obj, feature.getDefaultColumnDef?.())
             }, {}),
             ...defaultColumn,
           } as Partial<ColumnDef<TGenerics>>
@@ -104,7 +104,7 @@ export const Columns = {
         {
           debug: () =>
             instance.options.debugAll ?? instance.options.debugColumns,
-          key: process.env.NODE_ENV === 'development' && 'getDefaultColumn',
+          key: process.env.NODE_ENV === 'development' && 'getDefaultColumnDef',
         }
       ),
 
@@ -115,7 +115,12 @@ export const Columns = {
         depth: number,
         parent
       ) => {
-        const defaultColumn = instance.getDefaultColumn()
+        const defaultColumnDef = instance.getDefaultColumnDef()
+
+        columnDef = {
+          ...defaultColumnDef,
+          ...columnDef,
+        }
 
         let id =
           columnDef.id ??
@@ -143,7 +148,6 @@ export const Columns = {
         }
 
         let column: CoreColumn<TGenerics> = {
-          ...defaultColumn,
           ...columnDef,
           id: `${id}`,
           accessorFn,

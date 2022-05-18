@@ -35,8 +35,8 @@ export function getSortedRowModel<TGenerics extends TableGenerics>(): (
           const column = instance.getColumn(sortEntry.id)
 
           columnInfoById[sortEntry.id] = {
-            sortUndefined: column.sortUndefined,
-            invertSorting: column.invertSorting,
+            sortUndefined: column.columnDef.sortUndefined,
+            invertSorting: column.columnDef.invertSorting,
             sortingFn: column.getSortingFn(),
           }
         })

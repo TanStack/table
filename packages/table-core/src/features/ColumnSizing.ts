@@ -93,7 +93,7 @@ const getDefaultColumnSizingInfoState = (): ColumnSizingInfoState => ({
 })
 
 export const ColumnSizing: TableFeature = {
-  getDefaultColumn: (): ColumnSizingColumnDef => {
+  getDefaultColumnDef: (): ColumnSizingColumnDef => {
     return defaultColumnSizing
   },
   getInitialState: (state): ColumnSizingTableState => {
@@ -124,10 +124,10 @@ export const ColumnSizing: TableFeature = {
 
         return Math.min(
           Math.max(
-            column.minSize ?? defaultColumnSizing.minSize,
-            columnSize ?? column.size ?? defaultColumnSizing.size
+            column.columnDef.minSize ?? defaultColumnSizing.minSize,
+            columnSize ?? column.columnDef.size ?? defaultColumnSizing.size
           ),
-          column.maxSize ?? defaultColumnSizing.maxSize
+          column.columnDef.maxSize ?? defaultColumnSizing.maxSize
         )
       },
       getStart: position => {
@@ -156,7 +156,7 @@ export const ColumnSizing: TableFeature = {
       },
       getCanResize: () => {
         return (
-          (column.enableResizing ?? true) &&
+          (column.columnDef.enableResizing ?? true) &&
           (instance.options.enableColumnResizing ?? true)
         )
       },
