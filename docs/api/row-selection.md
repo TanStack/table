@@ -90,10 +90,10 @@ Sets or updates the `state.rowSelection` state.
 #### `resetRowSelection`
 
 ```tsx
-resetRowSelection: () => void
+resetRowSelection: (defaultState?: boolean) => void
 ```
 
-Resets the **rowSelection** state for the table back to its initial state.
+Resets the **rowSelection** state to the `initialState.rowSelection`, or `true` can be passed to force a default blank state reset to `{}`.
 
 #### `getIsAllRowsSelected`
 

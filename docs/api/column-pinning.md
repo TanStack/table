@@ -83,10 +83,10 @@ Sets or updates the `state.columnPinning` state.
 #### `resetColumnPinning`
 
 ```tsx
-resetColumnPinning: () => void
+resetColumnPinning: (defaultState?: boolean) => void
 ```
 
-Resets the **columnPinning** state for the table back to its initial state.
+Resets the **columnPinning** state to `initialState.columnPinning`, or `true` can be passed to force a default blank state reset to `{ left: [], right: [], }`.
 
 #### `getIsSomeColumnsPinned`
 
