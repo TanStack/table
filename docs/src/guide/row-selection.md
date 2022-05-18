@@ -1,7 +1,6 @@
 ---
 name: Row Selection
-route: /api/row-selection
-menu: API
+id: row-selection
 ---
 
 ## Examples

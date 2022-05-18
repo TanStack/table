@@ -1,7 +1,6 @@
 ---
 name: Column Pinning
-route: /api/column-pinning
-menu: API
+id: column-pinning
 ---
 
 ## Examples

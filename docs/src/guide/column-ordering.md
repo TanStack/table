@@ -1,7 +1,6 @@
 ---
 name: Column Ordering
-route: /api/column-ordering
-menu: API
+id: column-ordering
 ---
 
 ## Examples

@@ -1,7 +1,6 @@
 ---
 name: Column Sizing
-route: /api/column-sizing
-menu: API
+id: column-sizing
 ---
 
 ## Examples

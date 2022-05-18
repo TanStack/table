@@ -1,7 +1,6 @@
 ---
 name: Filters
-route: /api/filtering
-menu: API
+id: filtering
 ---
 
 ## Examples
