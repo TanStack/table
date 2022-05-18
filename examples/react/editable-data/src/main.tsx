@@ -28,7 +28,7 @@ let table = createTable()
 type MyTableGenerics = typeof table.generics
 
 // Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
+const defaultColumnDef: Partial<ColumnDef<MyTableGenerics>> = {
   cell: ({ getValue, row: { index }, column: { id }, instance }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -128,7 +128,7 @@ function App() {
   const instance = useTableInstance(table, {
     data,
     columns,
-    defaultColumn,
+    defaultColumnDef,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

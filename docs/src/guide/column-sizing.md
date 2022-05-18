@@ -27,7 +27,7 @@ export const defaultColumnSizing = {
 }
 ```
 
-These defaults can be overridden by both `tableOptions.defaultColumn` and individual column defs, in that order.
+These defaults can be overridden by both `tableOptions.defaultColumnDef` and individual column defs, in that order.
 
 As a headless utility, table logic for column sizing is really only a collection of states that you can apply to your own layouts how you see fit (our example above implements 2 styles of this logic). You can apply these width measurements in a variety of ways:
 
