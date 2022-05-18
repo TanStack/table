@@ -40,7 +40,8 @@
     "./examples/react/row-selection",
     "./examples/react/sorting",
     "./examples/svelte/basic",
-    "./examples/svelte/sorting"
+    "./examples/svelte/sorting",
+    "./examples/vue/basic"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",

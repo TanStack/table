@@ -91,8 +91,9 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
                         leafRows.map(row => {
                           let columnValue = row.getValue(columnId)
 
-                          if (!depth && column.aggregateValue) {
-                            columnValue = column.aggregateValue(columnValue)
+                          if (!depth && column.columnDef.aggregateValue) {
+                            columnValue =
+                              column.columnDef.aggregateValue(columnValue)
                           }
 
                           return columnValue

@@ -34,7 +34,7 @@ export type CreateTableOptions<
 export type Table<TGenerics extends TableGenerics> = {
   generics: TGenerics
   options: Partial<TableOptions<TGenerics>>
-  setGenerics: <T extends TableGenerics>() => Table<T>
+  // setGenerics: <T extends TableGenerics>() => Table<T>
   setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
   setTableMetaType: <TTableMeta>() => Table<
     Overwrite<TGenerics, { TableMeta: TTableMeta }>
@@ -143,7 +143,7 @@ function createTable<TGenerics extends TableGenerics>(
         throw new Error('')
       })(),
     },
-    setGenerics: () => table as any,
+    // setGenerics: () => table as any,
     setRowType: () => table as any,
     setTableMetaType: () => table as any,
     setColumnMetaType: () => table as any,

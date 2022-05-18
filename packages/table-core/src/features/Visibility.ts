@@ -76,7 +76,7 @@ export const Visibility: TableFeature = {
     }
   },
 
-  getDefaultColumn: () => {
+  getDefaultColumnDef: () => {
     return {
       defaultIsVisible: true,
     }
@@ -101,7 +101,7 @@ export const Visibility: TableFeature = {
 
       getCanHide: () => {
         return (
-          (column.enableHiding ?? true) &&
+          (column.columnDef.enableHiding ?? true) &&
           (instance.options.enableHiding ?? true)
         )
       },

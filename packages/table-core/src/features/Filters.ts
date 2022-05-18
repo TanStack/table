@@ -161,7 +161,7 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
 //
 
 export const Filters: TableFeature = {
-  getDefaultColumn: <
+  getDefaultColumnDef: <
     TGenerics extends TableGenerics
   >(): FiltersColumnDef<TGenerics> => {
     return {
@@ -217,6 +217,10 @@ export const Filters: TableFeature = {
           return filterFns.inNumberRange
         }
 
+        if (typeof value === 'boolean') {
+          return filterFns.equals
+        }
+
         if (value !== null && typeof value === 'object') {
           return filterFns.equals
         }
@@ -243,7 +247,7 @@ export const Filters: TableFeature = {
       },
       getCanFilter: () => {
         return (
-          (column.enableColumnFilter ?? true) &&
+          (column.columnDef.enableColumnFilter ?? true) &&
           (instance.options.enableColumnFilters ?? true) &&
           (instance.options.enableFilters ?? true) &&
           !!column.accessorFn
@@ -252,7 +256,7 @@ export const Filters: TableFeature = {
 
       getCanGlobalFilter: () => {
         return (
-          (column.enableGlobalFilter ?? true) &&
+          (column.columnDef.enableGlobalFilter ?? true) &&
           (instance.options.enableGlobalFilter ?? true) &&
           (instance.options.enableFilters ?? true) &&
           (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&

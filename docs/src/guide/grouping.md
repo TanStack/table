@@ -1,0 +1,18 @@
+---
+name: Grouping
+id: grouping
+---
+
+## Examples
+
+Want to skip to the implementation? Check out these examples:
+
+- [grouping](../examples/react/grouping)
+
+## API
+
+[Grouping API](../api/grouping.md)
+
+## Guide
+
+TODO

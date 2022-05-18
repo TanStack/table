@@ -87,16 +87,16 @@ export const Headers = {
             return leafHeaders as Header<TGenerics>[]
           },
           renderHeader: () =>
-            column.header
-              ? instance._render(column.header, {
+            column.columnDef.header
+              ? instance._render(column.columnDef.header, {
                   instance,
                   header: header as Header<TGenerics>,
                   column,
                 })
               : null,
           renderFooter: () =>
-            column.footer
-              ? instance._render(column.footer, {
+            column.columnDef.footer
+              ? instance._render(column.columnDef.footer, {
                   instance,
                   header: header as Header<TGenerics>,
                   column,

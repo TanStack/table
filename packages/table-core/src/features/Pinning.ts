@@ -123,7 +123,7 @@ export const Pinning: TableFeature = {
 
         return leafColumns.some(
           d =>
-            (d.enablePinning ?? true) &&
+            (d.columnDef.enablePinning ?? true) &&
             (instance.options.enablePinning ?? true)
         )
       },
