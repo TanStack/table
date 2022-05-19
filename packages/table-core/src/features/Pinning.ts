@@ -1,3 +1,4 @@
+import { TableFeature } from '../core/features'
 import {
   OnChangeFn,
   Updater,
@@ -6,7 +7,6 @@ import {
   TableGenerics,
   Row,
   Cell,
-  TableFeature,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -164,7 +164,7 @@ export const Pinning: TableFeature = {
         (allCells, left, right) => {
           const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
 
-          return allCells.filter(d => !leftAndRight.includes(d.columnId))
+          return allCells.filter(d => !leftAndRight.includes(d.column.id))
         },
         {
           key:
@@ -181,7 +181,9 @@ export const Pinning: TableFeature = {
         ],
         (allCells, left) => {
           const cells = (left ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
+            .map(
+              columnId => allCells.find(cell => cell.column.id === columnId)!
+            )
             .filter(Boolean)
             .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
 
@@ -200,7 +202,9 @@ export const Pinning: TableFeature = {
         ],
         (allCells, right) => {
           const cells = (right ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
+            .map(
+              columnId => allCells.find(cell => cell.column.id === columnId)!
+            )
             .filter(Boolean)
             .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
 

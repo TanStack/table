@@ -1,5 +1,5 @@
-import { CoreOptions, CoreTableState, CoreInstance } from './core'
-import { ColumnsOptions, CoreColumn, CoreColumnDef } from './features/Columns'
+import { CoreOptions, CoreTableState, CoreInstance } from './core/instance'
+import { CoreColumn, CoreColumnDef } from './core/column'
 import {
   VisibilityInstance,
   VisibilityTableState,
@@ -18,11 +18,10 @@ import {
   ColumnPinningColumnDef,
   ColumnPinningInstance,
   ColumnPinningOptions,
-  ColumnPinningPosition,
   ColumnPinningRow,
   ColumnPinningTableState,
 } from './features/Pinning'
-import { HeadersInstance } from './features/Headers'
+import { CoreHeader, CoreHeaderGroup, HeadersInstance } from './core/headers'
 import {
   FiltersColumn,
   FiltersColumnDef,
@@ -53,7 +52,6 @@ import {
   ExpandedTableState,
   ExpandedRow,
 } from './features/Expanding'
-import { Overwrite, PartialKeys } from './utils'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
@@ -74,9 +72,9 @@ import {
   RowSelectionRow,
   RowSelectionTableState,
 } from './features/RowSelection'
-import { ColumnsInstance } from './features/Columns'
-import { CellsInstance, CellsRow } from './features/Cells'
-import { CoreRow, RowsInstance, RowsOptions } from './features/Rows'
+import { CoreRow } from './core/Rows'
+import { PartialKeys } from './utils'
+import { CoreCell } from './core/cell'
 
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
@@ -96,26 +94,12 @@ export type TableGenerics = {
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export type TableFeature = {
-  getDefaultOptions?: (instance: any) => any
-  getInitialState?: (initialState?: InitialTableState) => any
-  createInstance?: (instance: any) => any
-  getDefaultColumnDef?: () => any
-  createColumn?: (column: any, instance: any) => any
-  createHeader?: (column: any, instance: any) => any
-  createCell?: (cell: any, column: any, row: any, instance: any) => any
-  createRow?: (row: any, instance: any) => any
-}
-
 export type TableInstance<TGenerics extends TableGenerics> =
   CoreInstance<TGenerics> &
-    ColumnsInstance<TGenerics> &
-    RowsInstance<TGenerics> &
-    CellsInstance<TGenerics> &
+    HeadersInstance<TGenerics> &
     VisibilityInstance<TGenerics> &
     ColumnOrderInstance<TGenerics> &
     ColumnPinningInstance<TGenerics> &
-    HeadersInstance<TGenerics> &
     FiltersInstance<TGenerics> &
     SortingInstance<TGenerics> &
     GroupingInstance<TGenerics> &
@@ -126,8 +110,6 @@ export type TableInstance<TGenerics extends TableGenerics> =
 
 export type TableOptionsResolved<TGenerics extends TableGenerics> =
   CoreOptions<TGenerics> &
-    ColumnsOptions<TGenerics> &
-    RowsOptions<TGenerics> &
     VisibilityOptions &
     ColumnOrderOptions &
     ColumnPinningOptions &
@@ -171,7 +153,6 @@ export type InitialTableState = Partial<
 >
 
 export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
-  CellsRow<TGenerics> &
   VisibilityRow<TGenerics> &
   ColumnPinningRow<TGenerics> &
   FiltersRow<TGenerics> &
@@ -215,43 +196,10 @@ export type Column<TGenerics extends TableGenerics> = CoreColumn<TGenerics> &
 export type Cell<TGenerics extends TableGenerics> = CoreCell<TGenerics> &
   GroupingCell<TGenerics>
 
-export type CoreCell<TGenerics extends TableGenerics> = {
-  id: string
-  rowId: string
-  columnId: string
-  getValue: () => TGenerics['Value']
-  row: Row<TGenerics>
-  column: Column<TGenerics>
-  renderCell: () => string | null | TGenerics['Rendered']
-}
-
 export type Header<TGenerics extends TableGenerics> = CoreHeader<TGenerics> &
   ColumnSizingHeader<TGenerics>
 
-export type CoreHeader<TGenerics extends TableGenerics> = {
-  id: string
-  index: number
-  depth: number
-  column: Column<TGenerics>
-  headerGroup: HeaderGroup<TGenerics>
-  subHeaders: Header<TGenerics>[]
-  colSpan?: number
-  rowSpan?: number
-  getLeafHeaders: () => Header<TGenerics>[]
-  isPlaceholder?: boolean
-  placeholderId?: string
-  renderHeader: (options?: {
-    renderPlaceholder?: boolean
-  }) => string | null | TGenerics['Rendered']
-  renderFooter: (options?: {
-    renderPlaceholder?: boolean
-  }) => string | null | TGenerics['Rendered']
-}
-
-export type HeaderGroup<TGenerics extends TableGenerics> = {
-  id: string
-  depth: number
-  headers: Header<TGenerics>[]
-}
+export type HeaderGroup<TGenerics extends TableGenerics> =
+  CoreHeaderGroup<TGenerics>
 
 export type NoInfer<A extends any> = [A][A extends any ? 0 : never]

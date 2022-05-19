@@ -1,4 +1,5 @@
 import { RowModel } from '..'
+import { TableFeature } from '../core/features'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
@@ -7,7 +8,6 @@ import {
   TableInstance,
   Row,
   Updater,
-  TableFeature,
 } from '../types'
 import {
   functionalUpdate,
@@ -190,7 +190,7 @@ export const Filters: TableFeature = {
       getColumnCanGlobalFilter: column => {
         const value = instance
           .getCoreRowModel()
-          .flatRows[0]?.getAllCellsByColumnId()
+          .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
 
         return typeof value === 'string'

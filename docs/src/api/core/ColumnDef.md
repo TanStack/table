@@ -1,9 +1,11 @@
 ---
-name: column-def
-id: column-def
+name: ColumnDef
+id: ColumnDef
 ---
 
-## Column Def Options
+Column definitions are created using various helpers [available on the `table` object](./Table.md).
+
+## Options
 
 #### `id`
 

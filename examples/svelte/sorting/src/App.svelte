@@ -72,7 +72,7 @@
     }))
   }
 
-  const options = writable({
+  const options = writable(table.createOptions({
     data,
     columns,
     state: {
@@ -82,7 +82,7 @@
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
-  })
+  }))
 
   const refreshData = () => {
     console.log('refresh')

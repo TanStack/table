@@ -83,6 +83,102 @@ Returns whether or not any columns are pinned. Optionally specify to only check 
 
 _Note: Does not account for column visibility_
 
+#### `getLeftHeaderGroups`
+
+```tsx
+getLeftHeaderGroups: () => HeaderGroup < TGenerics > []
+```
+
+Returns the left pinned header groups for the table.
+
+#### `getCenterHeaderGroups`
+
+```tsx
+getCenterHeaderGroups: () => HeaderGroup < TGenerics > []
+```
+
+Returns the unpinned/center header groups for the table.
+
+#### `getRightHeaderGroups`
+
+```tsx
+getRightHeaderGroups: () => HeaderGroup < TGenerics > []
+```
+
+Returns the right pinned header groups for the table.
+
+#### `getLeftFooterGroups`
+
+```tsx
+getLeftFooterGroups: () => HeaderGroup < TGenerics > []
+```
+
+Returns the left pinned footer groups for the table.
+
+#### `getCenterFooterGroups`
+
+```tsx
+getCenterFooterGroups: () => HeaderGroup < TGenerics > []
+```
+
+Returns the unpinned/center footer groups for the table.
+
+#### `getRightFooterGroups`
+
+```tsx
+getRightFooterGroups: () => HeaderGroup < TGenerics > []
+```
+
+Returns the right pinned footer groups for the table.
+
+#### `getLeftFlatHeaders`
+
+```tsx
+getLeftFlatHeaders: () => Header < TGenerics > []
+```
+
+Returns a flat array of left pinned headers for the table, including parent headers.
+
+#### `getCenterFlatHeaders`
+
+```tsx
+getCenterFlatHeaders: () => Header < TGenerics > []
+```
+
+Returns a flat array of unpinned/center headers for the table, including parent headers.
+
+#### `getRightFlatHeaders`
+
+```tsx
+getRightFlatHeaders: () => Header < TGenerics > []
+```
+
+Returns a flat array of right pinned headers for the table, including parent headers.
+
+#### `getLeftLeafHeaders`
+
+```tsx
+getLeftLeafHeaders: () => Header < TGenerics > []
+```
+
+Returns a flat array of leaf-node left pinned headers for the table.
+
+#### `getCenterLeafHeaders`
+
+```tsx
+getCenterLeafHeaders: () => Header < TGenerics > []
+```
+
+Returns a flat array of leaf-node unpinned/center headers for the table.
+
+#### `getRightLeafHeaders`
+
+```tsx
+getRightLeafHeaders: () => Header < TGenerics > []
+```
+
+Returns a flat array of leaf-node right pinned headers for the table.
+
 #### `getLeftLeafColumns`
 
 ```tsx

@@ -1,6 +1,6 @@
 ---
-name: table
-id: table
+name: Table
+id: Table
 ---
 
 ## `createTable`

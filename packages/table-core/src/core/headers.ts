@@ -1,24 +1,40 @@
 import {
   Column,
-  CoreHeader,
   Header,
   HeaderGroup,
   TableGenerics,
   TableInstance,
 } from '../types'
 import { memo } from '../utils'
+import { features, TableFeature } from './features'
+
+export type CoreHeaderGroup<TGenerics extends TableGenerics> = {
+  id: string
+  depth: number
+  headers: Header<TGenerics>[]
+}
+
+export type CoreHeader<TGenerics extends TableGenerics> = {
+  id: string
+  index: number
+  depth: number
+  column: Column<TGenerics>
+  headerGroup: HeaderGroup<TGenerics>
+  subHeaders: Header<TGenerics>[]
+  colSpan: number
+  rowSpan: number
+  getLeafHeaders: () => Header<TGenerics>[]
+  isPlaceholder: boolean
+  placeholderId?: string
+  renderHeader: (options?: {
+    renderPlaceholder?: boolean
+  }) => string | null | TGenerics['Rendered']
+  renderFooter: (options?: {
+    renderPlaceholder?: boolean
+  }) => string | null | TGenerics['Rendered']
+}
 
 export type HeadersInstance<TGenerics extends TableGenerics> = {
-  createHeader: (
-    column: Column<TGenerics>,
-    options: {
-      id?: string
-      isPlaceholder?: boolean
-      placeholderId?: string
-      index: number
-      depth: number
-    }
-  ) => Header<TGenerics>
   getHeaderGroups: () => HeaderGroup<TGenerics>[]
   getLeftHeaderGroups: () => HeaderGroup<TGenerics>[]
   getCenterHeaderGroups: () => HeaderGroup<TGenerics>[]
@@ -38,79 +54,78 @@ export type HeadersInstance<TGenerics extends TableGenerics> = {
   getLeftLeafHeaders: () => Header<TGenerics>[]
   getCenterLeafHeaders: () => Header<TGenerics>[]
   getRightLeafHeaders: () => Header<TGenerics>[]
-
-  getHeader: (id: string) => Header<TGenerics>
 }
 
 //
 
-export const Headers = {
+function createHeader<TGenerics extends TableGenerics>(
+  instance: TableInstance<TGenerics>,
+  column: Column<TGenerics>,
+  options: {
+    id?: string
+    isPlaceholder?: boolean
+    placeholderId?: string
+    index: number
+    depth: number
+  }
+) {
+  const id = options.id ?? column.id
+
+  let header: CoreHeader<TGenerics> = {
+    id,
+    column,
+    index: options.index,
+    isPlaceholder: !!options.isPlaceholder,
+    placeholderId: options.placeholderId,
+    depth: options.depth,
+    subHeaders: [],
+    colSpan: 0,
+    rowSpan: 0,
+    headerGroup: null!,
+    getLeafHeaders: (): Header<TGenerics>[] => {
+      const leafHeaders: CoreHeader<TGenerics>[] = []
+
+      const recurseHeader = (h: CoreHeader<TGenerics>) => {
+        if (h.subHeaders && h.subHeaders.length) {
+          h.subHeaders.map(recurseHeader)
+        }
+        leafHeaders.push(h)
+      }
+
+      recurseHeader(header)
+
+      return leafHeaders as Header<TGenerics>[]
+    },
+    renderHeader: () =>
+      column.columnDef.header
+        ? instance._render(column.columnDef.header, {
+            instance,
+            header: header as Header<TGenerics>,
+            column,
+          })
+        : null,
+    renderFooter: () =>
+      column.columnDef.footer
+        ? instance._render(column.columnDef.footer, {
+            instance,
+            header: header as Header<TGenerics>,
+            column,
+          })
+        : null,
+  }
+
+  features.forEach(feature => {
+    Object.assign(header, feature.createHeader?.(header, instance))
+  })
+
+  return header as Header<TGenerics>
+}
+
+export const Headers: TableFeature = {
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): HeadersInstance<TGenerics> => {
     return {
-      createHeader: (
-        column: Column<TGenerics>,
-        options: {
-          id?: string
-          isPlaceholder?: boolean
-          placeholderId?: string
-          index: number
-          depth: number
-        }
-      ) => {
-        const id = options.id ?? column.id
-
-        let header: CoreHeader<TGenerics> = {
-          id,
-          column,
-          index: options.index,
-          isPlaceholder: options.isPlaceholder,
-          placeholderId: options.placeholderId,
-          depth: options.depth,
-          subHeaders: [],
-          colSpan: 0,
-          rowSpan: 0,
-          headerGroup: null!,
-          getLeafHeaders: (): Header<TGenerics>[] => {
-            const leafHeaders: CoreHeader<TGenerics>[] = []
-
-            const recurseHeader = (h: CoreHeader<TGenerics>) => {
-              if (h.subHeaders && h.subHeaders.length) {
-                h.subHeaders.map(recurseHeader)
-              }
-              leafHeaders.push(h)
-            }
-
-            recurseHeader(header)
-
-            return leafHeaders as Header<TGenerics>[]
-          },
-          renderHeader: () =>
-            column.columnDef.header
-              ? instance._render(column.columnDef.header, {
-                  instance,
-                  header: header as Header<TGenerics>,
-                  column,
-                })
-              : null,
-          renderFooter: () =>
-            column.columnDef.footer
-              ? instance._render(column.columnDef.footer, {
-                  instance,
-                  header: header as Header<TGenerics>,
-                  column,
-                })
-              : null,
-        }
-
-        instance._features.forEach(feature => {
-          Object.assign(header, feature.createHeader?.(header, instance))
-        })
-
-        return header as Header<TGenerics>
-      },
-
       // Header Groups
 
       getHeaderGroups: memo(
@@ -401,24 +416,6 @@ export const Headers = {
             instance.options.debugAll ?? instance.options.debugHeaders,
         }
       ),
-
-      getHeader: (id: string) => {
-        const header = [
-          ...instance.getFlatHeaders(),
-          ...instance.getCenterFlatHeaders(),
-          ...instance.getLeftFlatHeaders(),
-          ...instance.getRightFlatHeaders(),
-        ].find(d => d.id === id)
-
-        if (!header) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn(`Could not find header with id: ${id}`)
-          }
-          throw new Error()
-        }
-
-        return header
-      },
     }
   },
 }
@@ -492,7 +489,7 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
         latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
         // This is a new header. Let's create it
-        const header = instance.createHeader(column, {
+        const header = createHeader(instance, column, {
           id: [headerFamily, depth, column.id, headerToGroup?.id]
             .filter(Boolean)
             .join('_'),
@@ -523,7 +520,7 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
   }
 
   const bottomHeaders = columnsToGroup.map((column, index) =>
-    instance.createHeader(column, {
+    createHeader(instance, column, {
       depth: maxDepth,
       index,
     })
@@ -537,7 +534,9 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
   //   return !headerGroup.headers.every(header => header.isPlaceholder)
   // })
 
-  const recurseHeadersForSpans = (headers: Header<TGenerics>[]) => {
+  const recurseHeadersForSpans = (
+    headers: Header<TGenerics>[]
+  ): { colSpan: number; rowSpan: number }[] => {
     const filteredHeaders = headers.filter(header =>
       header.column.getIsVisible()
     )
@@ -563,8 +562,8 @@ export function buildHeaderGroups<TGenerics extends TableGenerics>(
       const minChildRowSpan = Math.min(...childRowSpans)
       rowSpan = rowSpan + minChildRowSpan
 
-      header.colSpan = colSpan > 0 ? colSpan : undefined
-      header.rowSpan = rowSpan > 0 ? rowSpan : undefined
+      header.colSpan = colSpan
+      header.rowSpan = rowSpan
 
       return { colSpan, rowSpan }
     })

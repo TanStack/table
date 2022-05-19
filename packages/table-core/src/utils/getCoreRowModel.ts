@@ -1,3 +1,4 @@
+import { createRow } from '../core/Rows'
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { memo } from '../utils'
 
@@ -42,8 +43,9 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
             // }
 
             // Make the row
-            row = instance.createRow(
-              instance.getRowId(originalRow, i, parent),
+            row = createRow(
+              instance,
+              instance._getRowId(originalRow, i, parent),
               originalRow,
               i,
               depth

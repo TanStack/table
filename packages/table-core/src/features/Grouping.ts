@@ -1,5 +1,6 @@
 import { RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
+import { TableFeature } from '../core/features'
 import {
   Cell,
   Column,
@@ -9,7 +10,6 @@ import {
   Updater,
   Renderable,
   TableGenerics,
-  TableFeature,
 } from '../types'
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 

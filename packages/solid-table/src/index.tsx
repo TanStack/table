@@ -2,10 +2,8 @@
 import {
   TableGenerics,
   TableOptions,
-  PartialKeys,
   Table,
   createTableInstance as coreCreateTableInstance,
-  TableFeature,
   createTableFactory,
   TableOptionsResolved,
 } from '@tanstack/table-core'
@@ -42,7 +40,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       onStateChange: () => {}, // noop
       render,
       mergeOptions(
-        defaultOptions: TableFeature,
+        defaultOptions: TableOptions<TGenerics>,
         options: TableOptions<TGenerics>
       ) {
         return mergeProps(defaultOptions, options)

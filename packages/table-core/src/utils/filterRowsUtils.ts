@@ -1,3 +1,4 @@
+import { createRow } from '../core/Rows'
 import { TableGenerics, Row, RowModel, TableInstance } from '../types'
 
 export function filterRows<TGenerics extends TableGenerics>(
@@ -31,7 +32,7 @@ export function filterRowModelFromLeafs<TGenerics extends TableGenerics>(
       row = rowsToFilter[i]!
 
       if (row.subRows?.length) {
-        newRow = instance.createRow(row.id, row.original, row.index, row.depth)
+        newRow = createRow(instance, row.id, row.original, row.index, row.depth)
         newRow.columnFilters = row.columnFilters
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
         if (!newRow.subRows.length) {
@@ -83,7 +84,8 @@ export function filterRowModelFromRoot<TGenerics extends TableGenerics>(
 
       if (pass) {
         if (row.subRows?.length) {
-          newRow = instance.createRow(
+          newRow = createRow(
+            instance,
             row.id,
             row.original,
             row.index,

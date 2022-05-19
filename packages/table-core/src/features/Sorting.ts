@@ -1,4 +1,5 @@
 import { RowModel } from '..'
+import { TableFeature } from '../core/features'
 import {
   BuiltInSortingFn,
   reSplitAlphaNumeric,
@@ -12,7 +13,6 @@ import {
   TableInstance,
   Row,
   Updater,
-  TableFeature,
 } from '../types'
 
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'

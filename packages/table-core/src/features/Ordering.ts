@@ -6,10 +6,10 @@ import {
   Updater,
   Column,
   TableGenerics,
-  TableFeature,
 } from '../types'
 
 import { Grouping, orderColumns } from './Grouping'
+import { TableFeature } from '../core/features'
 
 export type ColumnOrderTableState = {
   columnOrder: ColumnOrderState

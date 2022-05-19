@@ -1,3 +1,4 @@
+import { TableFeature } from '../core/features'
 import {
   Column,
   Header,
@@ -5,7 +6,6 @@ import {
   TableGenerics,
   TableInstance,
   Updater,
-  TableFeature,
 } from '../types'
 import { makeStateUpdater } from '../utils'
 import { ColumnPinningPosition } from './Pinning'

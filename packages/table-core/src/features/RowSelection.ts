@@ -1,3 +1,4 @@
+import { TableFeature } from '../core/features'
 import {
   OnChangeFn,
   TableGenerics,
@@ -5,7 +6,6 @@ import {
   Row,
   RowModel,
   Updater,
-  TableFeature,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 

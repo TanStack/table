@@ -1,6 +1,6 @@
 ---
-name: table-instance
-id: table-instance
+name: TableInstance
+id: TableInstance
 ---
 
 ## `useTableInstance` / `createTableInstance`
@@ -38,10 +38,10 @@ type columns = ColumnDef<TGenerics>[]
 
 The array of column defs to use for the table instance.
 
-#### `defaultColumnDef`
+#### `defaultColumn`
 
 ```tsx
-defaultColumnDef?: Partial<ColumnDef<TGenerics>>[]
+defaultColumn?: Partial<ColumnDef<TGenerics>>[]
 ```
 
 Default column options to use for all column defs supplied to the table instance. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
@@ -185,6 +185,57 @@ type mergeOptions = <T>(defaultOptions: T, options: Partial<T>) => T
 
 This option is used to optionally implement the merging of table options. Some framework like solid-js use proxies to track reactivity and usage, so merging reactive objects needs to be handled carefully. This option inverts control of this process to the adapter.
 
+#### `getCoreRowModel`
+
+```tsx
+getCoreRowModel: (
+  instance: TableInstance<TGenerics>
+) => () => RowModel<TGenerics>
+```
+
+This required option is a factory for a function that computes and returns the core row model for the table. It is called **once** per table instance and should return a **new function** which will calculate and return the row model for the table.
+
+A default implementation is provided via any table adapter's `{ getCoreRowModel }` export.
+
+#### `getSubRows`
+
+```tsx
+getSubRows?: (
+  originalRow: TGenerics['Row'],
+  index: number
+) => undefined | TGenerics['Row'][]
+```
+
+This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
+
+#### `getRowId`
+
+```tsx
+getRowId?: (
+  originalRow: TGenerics['Row'],
+  index: number,
+  parent?: Row<TGenerics>
+) => string
+```
+
+This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/amiguity eg. a userId, taskId, database ID field, etc.
+
+#### `columns`
+
+```tsx
+type columns = ColumnDef<TGenerics>[]
+```
+
+The column defs to use for this table instance. See the [Table API](../table.md) for more information on creating column definitions.
+
+#### `defaultColumn`
+
+```tsx
+defaultColumn?: Partial<ColumnDef<TGenerics>>
+```
+
+An optional, partial column default column definition. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
+
 ## Table Instance
 
 These properties and methods are available on the table instance object:
@@ -251,3 +302,91 @@ setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
 ```
 
 > ⚠️ This function is generally used by adapters to update the table options. It can be used to update the table options directly, but it is generally not recommended to bypass your adapters strategy for updating table options.
+
+#### `getCoreRowModel`
+
+```tsx
+getCoreRowModel: () => {
+  rows: Row<TGenerics>[],
+  flatRows: Row<TGenerics>[],
+  rowsById: Record<string, Row<TGenerics>>,
+}
+```
+
+Returns the core row model before any processing has been applied.
+
+#### `getRowModel`
+
+```tsx
+getRowModel: () => {
+  rows: Row<TGenerics>[],
+  flatRows: Row<TGenerics>[],
+  rowsById: Record<string, Row<TGenerics>>,
+}
+```
+
+Returns the final model after all processing from other used features has been applied.
+
+#### `getAllColumns`
+
+```tsx
+type getAllColumns = () => Column<TGenerics>[]
+```
+
+Returns all columns in the table in their normalized and nested hierarchy, mirrored from the column defs passed to the table instance.
+
+#### `getAllFlatColumns`
+
+```tsx
+type getAllFlatColumns = () => Column<TGenerics>[]
+```
+
+Returns all columns in the table flattened to a single level. This includes parent column objects throughout the hierarchy.
+
+#### `getAllLeafColumns`
+
+```tsx
+type getAllLeafColumns = () => Column<TGenerics>[]
+```
+
+Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
+
+#### `getColumn`
+
+```tsx
+type getColumn = (id: string) => Column<TGenerics>
+```
+
+Returns a single column by its ID.
+
+#### `getHeaderGroups`
+
+```tsx
+type getHeaderGroups = () => HeaderGroup<TGenerics>[]
+```
+
+Returns the header groups for the table.
+
+#### `getFooterGroups`
+
+```tsx
+type getFooterGroups = () => HeaderGroup<TGenerics>[]
+```
+
+Returns the footer groups for the table.
+
+#### `getFlatHeaders`
+
+```tsx
+type getFlatHeaders = () => Header<TGenerics>[]
+```
+
+Returns a flattened array of Header objects for the table, including parent headers.
+
+#### `getLeafHeaders`
+
+```tsx
+type getLeafHeaders = () => Header<TGenerics>[]
+```
+
+Returns a flattened array of leaf-node Header objects for the table.

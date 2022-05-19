@@ -1,6 +1,6 @@
 ---
-name: column
-id: column
+name: Column
+id: Column
 ---
 
 These are **core** options and API properties for all columns. More options and API properties are available for other [table features](../guide/09-features.md).
