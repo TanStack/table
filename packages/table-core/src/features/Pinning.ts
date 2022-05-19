@@ -50,7 +50,7 @@ export type ColumnPinningRow<TGenerics extends TableGenerics> = {
 export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
-  getIsSomeColumnsPinned: () => boolean
+  getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
   getLeftLeafColumns: () => Column<TGenerics>[]
   getRightLeafColumns: () => Column<TGenerics>[]
   getCenterLeafColumns: () => Column<TGenerics>[]
@@ -229,10 +229,15 @@ export const Pinning: TableFeature = {
             : instance.initialState?.columnPinning ?? getDefaultPinningState()
         ),
 
-      getIsSomeColumnsPinned: () => {
-        const { left, right } = instance.getState().columnPinning
+      getIsSomeColumnsPinned: position => {
+        const pinningState = instance.getState().columnPinning
 
-        return Boolean(left?.length || right?.length)
+        if (!position) {
+          return Boolean(
+            pinningState.left?.length || pinningState.right?.length
+          )
+        }
+        return Boolean(pinningState[position]?.length)
       },
 
       getLeftLeafColumns: memo(

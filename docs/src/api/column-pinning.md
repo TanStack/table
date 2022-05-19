@@ -76,10 +76,10 @@ Resets the **columnPinning** state to `initialState.columnPinning`, or `true` ca
 #### `getIsSomeColumnsPinned`
 
 ```tsx
-getIsSomeColumnsPinned: () => boolean
+getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
 ```
 
-Returns whether or not any columns are pinned.
+Returns whether or not any columns are pinned. Optionally specify to only check for pinned columns in either the `left` or `right` position.
 
 _Note: Does not account for column visibility_
 
