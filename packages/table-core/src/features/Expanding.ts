@@ -30,7 +30,6 @@ export type ExpandedOptions<TGenerics extends TableGenerics> = {
   getExpandedRowModel?: (
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
-  expandSubRows?: boolean
   getIsRowExpanded?: (row: Row<TGenerics>) => boolean
   getRowCanExpand?: (row: Row<TGenerics>) => boolean
   paginateExpandedRows?: boolean
@@ -67,7 +66,6 @@ export const Expanding: TableFeature = {
     return {
       onExpandedChange: makeStateUpdater('expanded', instance),
       autoResetExpanded: true,
-      expandSubRows: true,
       paginateExpandedRows: true,
     }
   },

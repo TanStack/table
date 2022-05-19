@@ -10,6 +10,12 @@ import {
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
+export type VisibilityState = Record<string, boolean>
+
+export type VisibilityTableState = {
+  columnVisibility: VisibilityState
+}
+
 export type VisibilityOptions = {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
   enableHiding?: boolean
@@ -17,12 +23,6 @@ export type VisibilityOptions = {
 
 export type VisibilityDefaultOptions = {
   onColumnVisibilityChange: OnChangeFn<VisibilityState>
-}
-
-export type VisibilityState = Record<string, boolean>
-
-export type VisibilityTableState = {
-  columnVisibility: VisibilityState
 }
 
 export type VisibilityInstance<TGenerics extends TableGenerics> = {
@@ -36,14 +36,11 @@ export type VisibilityInstance<TGenerics extends TableGenerics> = {
   toggleAllColumnsVisible: (value?: boolean) => void
   getIsAllColumnsVisible: () => boolean
   getIsSomeColumnsVisible: () => boolean
-  getToggleAllColumnsVisibilityHandler: () =>
-    | undefined
-    | ((event: unknown) => void)
+  getToggleAllColumnsVisibilityHandler: () => (event: unknown) => void
 }
 
 export type VisibilityColumnDef = {
   enableHiding?: boolean
-  defaultIsVisible?: boolean
 }
 
 export type VisibilityRow<TGenerics extends TableGenerics> = {
@@ -73,12 +70,6 @@ export const Visibility: TableFeature = {
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', instance),
-    }
-  },
-
-  getDefaultColumnDef: () => {
-    return {
-      defaultIsVisible: true,
     }
   },
 
