@@ -17,9 +17,44 @@ import {
 //
 import { createColumn } from './column'
 import { Headers } from './headers'
-import { createRow } from './Rows'
-import { createCell } from './cell'
-import { features } from './features'
+//
+
+import { ColumnSizing } from '../features/ColumnSizing'
+import { Expanding } from '../features/Expanding'
+import { Filters } from '../features/Filters'
+import { Grouping } from '../features/Grouping'
+import { Ordering } from '../features/Ordering'
+import { Pagination } from '../features/Pagination'
+import { Pinning } from '../features/Pinning'
+import { RowSelection } from '../features/RowSelection'
+import { Sorting } from '../features/Sorting'
+import { Visibility } from '../features/Visibility'
+
+export type TableFeature = {
+  getDefaultOptions?: (instance: any) => any
+  getInitialState?: (initialState?: InitialTableState) => any
+  createInstance?: (instance: any) => any
+  getDefaultColumnDef?: () => any
+  createColumn?: (column: any, instance: any) => any
+  createHeader?: (column: any, instance: any) => any
+  createCell?: (cell: any, column: any, row: any, instance: any) => any
+  createRow?: (row: any, instance: any) => any
+}
+
+const features = [
+  Headers,
+  Visibility,
+  Ordering,
+  Pinning,
+  Filters,
+  Sorting,
+  Grouping,
+  Expanding,
+  Pagination,
+  RowSelection,
+  ColumnSizing,
+] as const
+
 //
 
 export type CoreTableState = {}
@@ -61,6 +96,7 @@ export type CoreInstance<TGenerics extends TableGenerics> = {
   setOptions: (newOptions: Updater<TableOptionsResolved<TGenerics>>) => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
+  _features: readonly TableFeature[]
   _queue: (cb: () => void) => void
   _render: <TProps>(
     template: Renderable<TGenerics, TProps>,
@@ -91,9 +127,9 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     console.info('Creating Table Instance...')
   }
 
-  let instance = {} as unknown as TableInstance<TGenerics>
+  let instance = { _features: features } as unknown as TableInstance<TGenerics>
 
-  const defaultOptions = features.reduce((obj, feature) => {
+  const defaultOptions = instance._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(instance))
   }, {}) as TableOptionsResolved<TGenerics>
 
@@ -115,7 +151,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     ...(options.initialState ?? {}),
   } as TableState
 
-  features.forEach(feature => {
+  instance._features.forEach(feature => {
     initialState = feature.getInitialState?.(initialState) ?? initialState
   })
 
@@ -123,6 +159,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   let queuedTimeout = false
 
   const coreInstance: CoreInstance<TGenerics> = {
+    _features: features,
     options: {
       ...defaultOptions,
       ...options,
@@ -220,7 +257,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
           cell: props => props.getValue().toString?.() ?? null,
-          ...features.reduce((obj, feature) => {
+          ...instance._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
           ...defaultColumn,
@@ -316,7 +353,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   Object.assign(instance, coreInstance)
 
-  features.forEach(feature => {
+  instance._features.forEach(feature => {
     return Object.assign(instance, feature.createInstance?.(instance))
   })
 

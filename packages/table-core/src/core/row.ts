@@ -1,7 +1,6 @@
 import { Cell, Row, TableGenerics, TableInstance } from '../types'
 import { flattenBy, memo } from '../utils'
 import { createCell } from './cell'
-import { features } from './features'
 
 export type CoreRow<TGenerics extends TableGenerics> = {
   id: string
@@ -77,8 +76,8 @@ export const createRow = <TGenerics extends TableGenerics>(
     ),
   }
 
-  for (let i = 0; i < features.length; i++) {
-    const feature = features[i]
+  for (let i = 0; i < instance._features.length; i++) {
+    const feature = instance._features[i]
     Object.assign(row, feature?.createRow?.(row, instance))
   }
 

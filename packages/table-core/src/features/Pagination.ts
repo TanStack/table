@@ -1,4 +1,4 @@
-import { TableFeature } from '../core/features'
+import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   TableGenerics,

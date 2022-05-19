@@ -1,6 +1,6 @@
 import { RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
-import { TableFeature } from '../core/features'
+import { TableFeature } from '../core/instance'
 import {
   Cell,
   Column,

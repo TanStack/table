@@ -1,4 +1,4 @@
-import { createRow } from '../core/Rows'
+import { createRow } from '../core/row'
 import { TableGenerics, Row, RowModel, TableInstance } from '../types'
 
 export function filterRows<TGenerics extends TableGenerics>(

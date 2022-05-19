@@ -10,7 +10,6 @@ import {
   Renderable,
 } from '../types'
 import { memo } from '../utils'
-import { features } from './features'
 
 export type CoreColumnDefType = 'data' | 'display' | 'group'
 
@@ -140,7 +139,7 @@ export function createColumn<TGenerics extends TableGenerics>(
     ),
   }
 
-  column = features.reduce((obj, feature) => {
+  column = instance._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.createColumn?.(column, instance))
   }, column)
 

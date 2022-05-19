@@ -9,7 +9,7 @@ import {
 } from '../types'
 
 import { Grouping, orderColumns } from './Grouping'
-import { TableFeature } from '../core/features'
+import { TableFeature } from '../core/instance'
 
 export type ColumnOrderTableState = {
   columnOrder: ColumnOrderState

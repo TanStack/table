@@ -1,5 +1,4 @@
 import { Cell, Column, Row, TableGenerics, TableInstance } from '../types'
-import { features } from './features'
 
 export type CoreCell<TGenerics extends TableGenerics> = {
   id: string
@@ -32,7 +31,7 @@ export function createCell<TGenerics extends TableGenerics>(
         : null,
   }
 
-  features.forEach(feature => {
+  instance._features.forEach(feature => {
     Object.assign(
       cell,
       feature.createCell?.(

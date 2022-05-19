@@ -6,7 +6,7 @@ import {
   TableInstance,
 } from '../types'
 import { memo } from '../utils'
-import { features, TableFeature } from './features'
+import { TableFeature } from './instance'
 
 export type CoreHeaderGroup<TGenerics extends TableGenerics> = {
   id: string
@@ -114,7 +114,7 @@ function createHeader<TGenerics extends TableGenerics>(
         : null,
   }
 
-  features.forEach(feature => {
+  instance._features.forEach(feature => {
     Object.assign(header, feature.createHeader?.(header, instance))
   })
 

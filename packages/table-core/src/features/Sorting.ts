@@ -1,5 +1,5 @@
 import { RowModel } from '..'
-import { TableFeature } from '../core/features'
+import { TableFeature } from '../core/instance'
 import {
   BuiltInSortingFn,
   reSplitAlphaNumeric,

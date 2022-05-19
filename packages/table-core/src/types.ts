@@ -72,7 +72,7 @@ import {
   RowSelectionRow,
   RowSelectionTableState,
 } from './features/RowSelection'
-import { CoreRow } from './core/Rows'
+import { CoreRow } from './core/row'
 import { PartialKeys } from './utils'
 import { CoreCell } from './core/cell'
 
