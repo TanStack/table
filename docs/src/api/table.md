@@ -15,7 +15,7 @@ Creates a new `Table` factory, from which you can set types, pre-set options and
 
 #### `setRowType`
 
-> 🦺 This is a TypeScript-only function. If using JS, this is a noop.
+> 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
 ```tsx
 setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
@@ -29,7 +29,7 @@ const table = createTable().setRowType<Row>()
 
 #### `setTableMetaType`
 
-> 🦺 This is a TypeScript-only function. If using JS, this is a noop.
+> 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
 ```tsx
 setTableMetaType: <TTableMeta>() => Table<
@@ -41,7 +41,7 @@ Call this function to set the type of your `instanceOptions.meta` object that yo
 
 #### `setColumnMetaType`
 
-> 🦺 This is a TypeScript-only function. If using JS, this is a noop.
+> 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
 ```tsx
 setColumnMetaType: <TColumnMeta>() => Table<
@@ -53,7 +53,7 @@ Call this function to set the type of `columnDefinition.meta` objects that you c
 
 #### `setFilterMetaType`
 
-> 🦺 This is a TypeScript-only function. If using JS, this is a noop.
+> 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
 ```tsx
 setFilterMetaType: <TFilterMeta>() => Table<
@@ -146,3 +146,25 @@ type Person = {
   progress: number
 }
 ```
+
+#### `createOptions`
+
+```tsx
+createOptions: (
+  options: TableOptions<TGenerics>
+) => TableOptions<TGenerics>
+```
+
+> 🦺 This function is designed for TypeScript. If using JS, this is merely an identity function.
+
+Call this function to create an object of the `TableOptions` type using the generics from your table.
+
+```tsx
+const options = table.createOptions({
+  data: [...],
+  columns: [...],
+  getCoreRowModel: getCoreRowModel()
+})
+```
+
+The object returned from this function is functionally identical to the one you pass it, but it will be type-checked using the generics from your table.

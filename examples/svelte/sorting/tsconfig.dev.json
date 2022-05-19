@@ -6,16 +6,14 @@
     "useDefineForClassFields": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "baseUrl": "."
   },
-  "files": [
-    "src/main.ts"
-  ],
+  "files": ["src/main.ts"],
   "include": [
-    "src/**/*.d.ts",
-    "src/**/*.ts",
-    "src/**/*.js",
-    "src/**/*.svelte"
+    "src"
+    // "src/**/*.d.ts",
+    // "src/**/*.js",
+    // "src/**/*.svelte",
     // "__tests__/**/*.test.*"
   ]
 }

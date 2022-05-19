@@ -91,11 +91,11 @@
     }),
   ]
 
-  const options = writable({
+  const options = writable(table.createOptions({
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
-  })
+  }))
 
   const rerender = () => {
     options.update(options => ({

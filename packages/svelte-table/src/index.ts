@@ -5,6 +5,7 @@ import {
   Table,
   TableGenerics,
   TableOptions,
+  TableOptionsResolved,
 } from '@tanstack/table-core'
 import Placeholder from './placeholder.svelte'
 import { SvelteComponent } from 'svelte/internal'
@@ -65,19 +66,9 @@ type ReadableOrVal<T> = T | Readable<T>
 
 export function createTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
-  options: ReadableOrVal<
-    PartialKeys<
-      Omit<TableOptions<TGenerics>, 'render'>,
-      'state' | 'onStateChange'
-    >
-  >
+  options: ReadableOrVal<TableOptions<TGenerics>>
 ) {
-  let optionsStore: Readable<
-    PartialKeys<
-      Omit<TableOptions<TGenerics>, 'render'>,
-      'state' | 'onStateChange'
-    >
-  >
+  let optionsStore: Readable<TableOptions<TGenerics>>
 
   if ('subscribe' in options) {
     optionsStore = options
@@ -85,7 +76,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     optionsStore = readable(options)
   }
 
-  let resolvedOptions: TableOptions<TGenerics> = {
+  let resolvedOptions: TableOptionsResolved<TGenerics> = {
     ...table.options,
     state: {}, // Dummy state
     onStateChange: () => {}, // noop

@@ -53,7 +53,7 @@ import {
   ExpandedTableState,
   ExpandedRow,
 } from './features/Expanding'
-import { Overwrite } from './utils'
+import { Overwrite, PartialKeys } from './utils'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
@@ -124,7 +124,7 @@ export type TableInstance<TGenerics extends TableGenerics> =
     PaginationInstance<TGenerics> &
     RowSelectionInstance<TGenerics>
 
-export type TableOptions<TGenerics extends TableGenerics> =
+export type TableOptionsResolved<TGenerics extends TableGenerics> =
   CoreOptions<TGenerics> &
     ColumnsOptions<TGenerics> &
     RowsOptions<TGenerics> &
@@ -138,6 +138,11 @@ export type TableOptions<TGenerics extends TableGenerics> =
     ColumnSizingOptions &
     PaginationOptions<TGenerics> &
     RowSelectionOptions<TGenerics>
+
+export type TableOptions<TGenerics extends TableGenerics> = Omit<
+  PartialKeys<TableOptionsResolved<TGenerics>, 'state' | 'onStateChange'>,
+  'render'
+>
 
 export type TableState = CoreTableState &
   VisibilityTableState &

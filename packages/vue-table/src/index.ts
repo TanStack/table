@@ -6,13 +6,17 @@ import {
   createTableInstance,
   TableFeature,
   createTableFactory,
+  TableOptionsResolved,
 } from '@tanstack/table-core'
 import { h, watchEffect, ref, VNode } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-function render<TProps extends {}>(Comp: any, props: TProps): VNode | string | number | boolean | null {
+function render<TProps extends {}>(
+  Comp: any,
+  props: TProps
+): VNode | string | number | boolean | null {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
@@ -26,12 +30,9 @@ export const createTable = createTableFactory({ render })
 
 export function useTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
-  options: PartialKeys<
-    Omit<TableOptions<TGenerics>, 'render'>,
-    'state' | 'onStateChange'
-  >
+  options: TableOptions<TGenerics>
 ) {
-  const resolvedOptions: TableOptions<TGenerics> = mergeProxy(
+  const resolvedOptions: TableOptionsResolved<TGenerics> = mergeProxy(
     {
       ...table.options,
       state: {}, // Dummy state

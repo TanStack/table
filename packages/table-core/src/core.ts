@@ -2,7 +2,7 @@ import { functionalUpdate, RequiredKeys } from './utils'
 
 import {
   Updater,
-  TableOptions,
+  TableOptionsResolved,
   TableState,
   TableInstance,
   Renderable,
@@ -52,8 +52,8 @@ export type CoreInstance<TGenerics extends TableGenerics> = {
   // generics: TGenerics
   initialState: TableState
   reset: () => void
-  options: RequiredKeys<TableOptions<TGenerics>, 'state'>
-  setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
+  options: RequiredKeys<TableOptionsResolved<TGenerics>, 'state'>
+  setOptions: (newOptions: Updater<TableOptionsResolved<TGenerics>>) => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
   _queue: (cb: () => void) => void
@@ -89,7 +89,7 @@ export type CoreInstance<TGenerics extends TableGenerics> = {
 // }
 
 export function createTableInstance<TGenerics extends TableGenerics>(
-  options: TableOptions<TGenerics>
+  options: TableOptionsResolved<TGenerics>
 ): TableInstance<TGenerics> {
   if (options.debugAll || options.debugTable) {
     console.info('Creating Table Instance...')
@@ -116,9 +116,9 @@ export function createTableInstance<TGenerics extends TableGenerics>(
 
   const defaultOptions = instance._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(instance))
-  }, {}) as TableOptions<TGenerics>
+  }, {}) as TableOptionsResolved<TGenerics>
 
-  const mergeOptions = (options: TableOptions<TGenerics>) => {
+  const mergeOptions = (options: TableOptionsResolved<TGenerics>) => {
     if (instance.options.mergeOptions) {
       return instance.options.mergeOptions(defaultOptions, options)
     }
