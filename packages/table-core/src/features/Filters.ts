@@ -20,8 +20,6 @@ import {
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
   globalFilter: any
-  // filtersProgress: number
-  // facetProgress: Record<string, number>
 }
 
 export type ColumnFiltersState = ColumnFilter[]
@@ -74,7 +72,6 @@ export type FiltersColumnDef<TGenerics extends TableGenerics> = {
   filterFn?: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
-  enableFaceting?: boolean
 }
 
 export type FiltersColumn<TGenerics extends TableGenerics> = {
@@ -98,7 +95,6 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
 export type FiltersRow<TGenerics extends TableGenerics> = {
   columnFilters: Record<string, boolean>
   columnFiltersMeta: Record<string, TGenerics['FilterMeta']>
-  subRowsByFacetId: Record<string, Row<TGenerics>[]>
 }
 
 export type FiltersOptions<TGenerics extends TableGenerics> = {
@@ -356,7 +352,6 @@ export const Filters: TableFeature = {
     return {
       columnFilters: {},
       columnFiltersMeta: {},
-      subRowsByFacetId: {},
     }
   },
 

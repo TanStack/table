@@ -77,31 +77,22 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
                     return row._valuesCache[columnId]
                   }
 
-                  if (row.groupingValuesCache.hasOwnProperty(columnId)) {
-                    return row.groupingValuesCache[columnId]
+                  if (row._groupingValuesCache.hasOwnProperty(columnId)) {
+                    return row._groupingValuesCache[columnId]
                   }
 
                   // Aggregate the values
                   const column = instance.getColumn(columnId)
-                  const aggregateFn = column.getColumnAggregationFn()
+                  const aggregateFn = column.getAggregationFn()
 
                   if (aggregateFn) {
-                    row.groupingValuesCache[columnId] = aggregateFn(
-                      () =>
-                        leafRows.map(row => {
-                          let columnValue = row.getValue(columnId)
-
-                          if (!depth && column.columnDef.aggregateValue) {
-                            columnValue =
-                              column.columnDef.aggregateValue(columnValue)
-                          }
-
-                          return columnValue
-                        }),
-                      () => groupedRows.map(row => row.getValue(columnId))
+                    row._groupingValuesCache[columnId] = aggregateFn(
+                      columnId,
+                      leafRows,
+                      groupedRows
                     )
 
-                    return row.groupingValuesCache[columnId]
+                    return row._groupingValuesCache[columnId]
                   } else if (column.aggregationFn) {
                     console.info({ column })
                     throw new Error(
