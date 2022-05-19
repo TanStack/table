@@ -26,6 +26,10 @@ export type ColumnSort = {
 
 export type SortingState = ColumnSort[]
 
+export type SortingTableState = {
+  sorting: SortingState
+}
+
 export type SortingFn<TGenerics extends TableGenerics> = {
   (rowA: Row<TGenerics>, rowB: Row<TGenerics>, columnId: string): number
 }
@@ -34,10 +38,6 @@ export type CustomSortingFns<TGenerics extends TableGenerics> = Record<
   string,
   SortingFn<TGenerics>
 >
-
-export type SortingTableState = {
-  sorting: SortingState
-}
 
 export type SortingFnOption<TGenerics extends TableGenerics> =
   | 'auto'
