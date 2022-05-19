@@ -59,17 +59,17 @@
     magic-string "^0.26.1"
     svelte-hmr "^0.14.11"
 
-"@tanstack/svelte-table@^8.0.0-alpha.67":
-  version "8.0.0-alpha.67"
-  resolved "https://registry.yarnpkg.com/@tanstack/svelte-table/-/svelte-table-8.0.0-alpha.67.tgz#a322b43e0ec658f3daa59542b27aefe103f45935"
-  integrity sha512-2o8PsIPk6ZsooTnQnEpkP7CsDqEnPaQ7g1cgDzBDVZc6PdA0ikKiIyXXp1L1vH7+rMg2ml1OFk9wAR0jyVv3Cg==
+"@tanstack/svelte-table@^8.0.0-alpha.77":
+  version "8.0.0-alpha.83"
+  resolved "https://registry.yarnpkg.com/@tanstack/svelte-table/-/svelte-table-8.0.0-alpha.83.tgz#1435ba73432cb6fd31ea73140a02e977bd26dbe6"
+  integrity sha512-CHJAGDe+cKKKrbxKpzY8Pt1qrL4O4Uu/He7dF75pljDiXQ5/Bz4WQrt24MG8ZsskLf8mmkY0PuGZyIc7iaccug==
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.67"
+    "@tanstack/table-core" "8.0.0-alpha.83"
 
-"@tanstack/table-core@8.0.0-alpha.67":
-  version "8.0.0-alpha.67"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.67.tgz#b910bc4a3c03ffbcb8089c5f28de5943c83a466b"
-  integrity sha512-CkZGpfrP8zS3os6XHJ0nhr8vNnTdWNVm6lFlJ03knAY1Fl6NqGlg+nLbOWYm7zokPMDgEHCVoeMMKJI5UWB0+w==
+"@tanstack/table-core@8.0.0-alpha.83":
+  version "8.0.0-alpha.83"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.83.tgz#0e728355a7c6116afada2746bca82449c923be10"
+  integrity sha512-yHS+q2bKPjWMw58pObDqn1fTt3YnsOGR206eWyT5wMFWmXN2wqLWmrygbhOFh0/GQTvlXF7OJGPSl57v6KbTKQ==
 
 "@tsconfig/svelte@^2.0.1":
   version "2.0.1"
