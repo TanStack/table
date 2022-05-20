@@ -3,7 +3,7 @@
     {
       "label": "Guide",
       "children": [
-        { "label": "Introduction", "to": "introduction" },
+        { "label": "Introduction", "to": "guide/00-introduction" },
         { "label": "Overview", "to": "guide/01-overview" },
         { "label": "Installation", "to": "guide/02-installation" },
         { "label": "Tables", "to": "guide/03-tables" },
