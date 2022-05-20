@@ -1,0 +1,69 @@
+{
+  "exampleGroups": [
+    {
+      "label": "React",
+      "examples": [
+        { "src": "examples/react/basic", "label": "React Basic" },
+        {
+          "src": "examples/react/column-ordering",
+          "label": "React Column Ordering"
+        },
+        {
+          "src": "examples/react/column-pinning",
+          "label": "React Column Pinning"
+        },
+        {
+          "src": "examples/react/column-sizing",
+          "label": "React Column Sizing"
+        },
+        {
+          "src": "examples/react/column-visibility",
+          "label": "React Column Visibility"
+        },
+        {
+          "src": "examples/react/editable-data",
+          "label": "React Editable Data"
+        },
+        { "src": "examples/react/expanding", "label": "React Expanding" },
+        { "src": "examples/react/filters", "label": "React Filters" },
+        {
+          "src": "examples/react/wip-filters-async",
+          "label": "React Wip Filters Async"
+        },
+        {
+          "src": "examples/react/fully-controlled",
+          "label": "React Fully Controlled"
+        },
+        { "src": "examples/react/grouping", "label": "React Grouping" },
+        { "src": "examples/react/pagination", "label": "React Pagination" },
+        {
+          "src": "examples/react/pagination-controlled",
+          "label": "React Pagination Controlled"
+        },
+        {
+          "src": "examples/react/row-selection",
+          "label": "React Row Selection"
+        },
+        { "src": "examples/react/sorting", "label": "React Sorting" }
+      ]
+    },
+    {
+      "label": "Solid",
+      "examples": [
+        { "src": "examples/solid/basic", "label": "Solid Basic" },
+        { "src": "examples/solid/sorting", "label": "Solid Sorting" }
+      ]
+    },
+    {
+      "label": "Svelte",
+      "examples": [
+        { "src": "examples/svelte/basic", "label": "Svelte Basic" },
+        { "src": "examples/svelte/sorting", "label": "Svelte Sorting" }
+      ]
+    },
+    {
+      "label": "Vue",
+      "examples": [{ "src": "examples/vue/basic", "label": "Vue Basic" }]
+    }
+  ]
+}
