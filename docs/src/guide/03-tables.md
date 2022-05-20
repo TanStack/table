@@ -1,5 +1,5 @@
 ---
-name: Tables
+title: Tables
 id: tables
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Filters
+title: Filters
 id: filters
 ---
 

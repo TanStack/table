@@ -1,5 +1,5 @@
 ---
-name: Code of Conduct
+title: Code of Conduct
 id: code-of-conduct
 ---
 

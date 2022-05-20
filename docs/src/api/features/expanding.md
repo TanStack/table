@@ -1,5 +1,5 @@
 ---
-name: Expanding
+title: Expanding
 id: expanding
 ---
 

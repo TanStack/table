@@ -1,5 +1,5 @@
 ---
-name: Column Sizing
+title: Column Sizing
 id: column-sizing
 ---
 

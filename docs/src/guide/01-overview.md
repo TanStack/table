@@ -1,5 +1,5 @@
 ---
-name: Overview
+title: Overview
 id: overview
 ---
 

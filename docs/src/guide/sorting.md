@@ -1,5 +1,5 @@
 ---
-name: Sorting
+title: Sorting
 id: sorting
 ---
 

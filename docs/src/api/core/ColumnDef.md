@@ -1,5 +1,5 @@
 ---
-name: ColumnDef
+title: ColumnDef
 id: ColumnDef
 ---
 

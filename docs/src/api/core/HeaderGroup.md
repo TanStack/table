@@ -1,5 +1,5 @@
 ---
-name: HeaderGroup
+title: HeaderGroup
 id: HeaderGroup
 ---
 

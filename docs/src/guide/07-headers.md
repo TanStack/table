@@ -1,5 +1,5 @@
 ---
-name: Headers
+title: Headers
 id: headers
 ---
 

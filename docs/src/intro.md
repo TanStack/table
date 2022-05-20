@@ -1,5 +1,5 @@
 ---
-name: Intro
+title: Intro
 id: intro
 ---
 

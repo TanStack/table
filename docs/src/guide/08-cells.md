@@ -1,5 +1,5 @@
 ---
-name: Cells
+title: Cells
 id: cells
 ---
 

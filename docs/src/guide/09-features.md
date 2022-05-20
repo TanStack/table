@@ -1,5 +1,5 @@
 ---
-name: Features
+title: Features
 id: features
 ---
 

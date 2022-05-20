@@ -1,5 +1,5 @@
 ---
-name: Row Selection
+title: Row Selection
 id: row-selection
 ---
 

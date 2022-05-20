@@ -1,5 +1,5 @@
 ---
-name: FAQ
+title: FAQ
 id: faq
 ---
 

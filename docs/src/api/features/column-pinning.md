@@ -1,5 +1,5 @@
 ---
-name: Column Pinning
+title: Column Pinning
 id: column-pinning
 ---
 

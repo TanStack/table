@@ -1,5 +1,5 @@
 ---
-name: Rows
+title: Rows
 id: rows
 ---
 

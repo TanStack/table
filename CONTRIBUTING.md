@@ -1,5 +1,5 @@
 ---
-name: Contributing
+title: Contributing
 id: contributing
 ---
 

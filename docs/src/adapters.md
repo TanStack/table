@@ -1,5 +1,5 @@
 ---
-name: Adapters
+title: Adapters
 id: adapters
 ---
 

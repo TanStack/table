@@ -1,5 +1,5 @@
 ---
-name: Column
+title: Column
 id: Column
 ---
 

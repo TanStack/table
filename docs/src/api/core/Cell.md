@@ -1,5 +1,5 @@
 ---
-name: Cell
+title: Cell
 id: Cell
 ---
 

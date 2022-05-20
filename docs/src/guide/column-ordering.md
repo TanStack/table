@@ -1,5 +1,5 @@
 ---
-name: Column Ordering
+title: Column Ordering
 id: column-ordering
 ---
 

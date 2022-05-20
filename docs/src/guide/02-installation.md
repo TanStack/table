@@ -1,5 +1,5 @@
 ---
-name: Installation
+title: Installation
 id: installation
 ---
 

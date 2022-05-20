@@ -1,5 +1,5 @@
 ---
-name: TableInstance
+title: TableInstance
 id: TableInstance
 ---
 

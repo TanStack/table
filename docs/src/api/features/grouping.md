@@ -1,5 +1,5 @@
 ---
-name: Grouping
+title: Grouping
 id: grouping
 ---
 

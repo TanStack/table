@@ -1,5 +1,5 @@
 ---
-name: Column Visibility
+title: Column Visibility
 id: column-visibility
 ---
 
