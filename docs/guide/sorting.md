@@ -1,6 +1,5 @@
 ---
 title: Sorting
-id: sorting
 ---
 
 ## Examples

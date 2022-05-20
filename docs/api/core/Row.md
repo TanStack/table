@@ -1,6 +1,5 @@
 ---
 title: Row
-id: Row
 ---
 
 These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../guide/09-features.md).

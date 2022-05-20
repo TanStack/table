@@ -1,6 +1,5 @@
 ---
 title: Expanding
-id: expanding
 ---
 
 ## Examples

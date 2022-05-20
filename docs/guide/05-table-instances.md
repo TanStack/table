@@ -1,6 +1,5 @@
 ---
 title: Table Instances
-id: table-instances
 ---
 
 ## API

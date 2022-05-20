@@ -1,6 +1,5 @@
 ---
 title: FAQ
-id: faq
 ---
 
 ## How do I stop my table state from automatically resetting when my data changes?

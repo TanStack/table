@@ -1,6 +1,5 @@
 ---
 title: ColumnDef
-id: ColumnDef
 ---
 
 Column definitions are created using various helpers [available on the `table` object](./Table.md).

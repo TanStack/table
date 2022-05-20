@@ -1,6 +1,5 @@
 ---
 title: Grouping
-id: grouping
 ---
 
 ## Examples

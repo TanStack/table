@@ -1,6 +1,5 @@
 ---
-title: Intro
-id: intro
+title: Getting Started
 ---
 
 React Table is a **Headless UI** library for building powerful tables & datagrids for TS/JS, React, Vue, Solid.

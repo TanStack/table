@@ -1,6 +1,5 @@
 ---
 title: Pagination
-id: pagination
 ---
 
 ## Examples

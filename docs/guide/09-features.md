@@ -1,6 +1,5 @@
 ---
 title: Features
-id: features
 ---
 
 React Table comes with many features, each with their own associated options and API:

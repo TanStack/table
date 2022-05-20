@@ -1,6 +1,5 @@
 ---
 title: Cells
-id: cells
 ---
 
 ## API

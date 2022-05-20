@@ -1,6 +1,5 @@
 ---
 title: Filters
-id: filters
 ---
 
 ## Examples

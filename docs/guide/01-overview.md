@@ -1,6 +1,5 @@
 ---
 title: Overview
-id: overview
 ---
 
 React table's core is **framework agnostic**, which means it's API is the same regardless of the framework you're using. Adapters are provided to make working with the table core easier depending on your framework. See the [adapters](../adapters) section for more information on available adapters.

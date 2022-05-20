@@ -1,6 +1,5 @@
 ---
 title: Rows
-id: rows
 ---
 
 ## API

@@ -1,6 +1,5 @@
 ---
 title: Column Visibility
-id: column-visibility
 ---
 
 ## Examples

@@ -1,6 +1,5 @@
 ---
 title: Headers
-id: headers
 ---
 
 ## API

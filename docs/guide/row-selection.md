@@ -1,6 +1,5 @@
 ---
 title: Row Selection
-id: row-selection
 ---
 
 ## Examples

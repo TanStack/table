@@ -1,6 +1,5 @@
 ---
 title: Columns
-id: columns
 ---
 
 ## API

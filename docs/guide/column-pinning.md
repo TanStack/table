@@ -1,6 +1,5 @@
 ---
 title: Column Pinning
-id: column-pinning
 ---
 
 ## Examples

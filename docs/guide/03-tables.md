@@ -1,6 +1,5 @@
 ---
 title: Tables
-id: tables
 ---
 
 ## API

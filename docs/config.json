@@ -1,69 +1,143 @@
 {
-  "exampleGroups": [
+  "menu": [
     {
-      "label": "React",
-      "examples": [
-        { "src": "examples/react/basic", "label": "React Basic" },
+      "label": "Introduction",
+      "to": "introduction"
+    },
+    {
+      "label": "Guide",
+      "children": [
+        { "label": "Overview", "to": "guide/01-overview" },
+        { "label": "Installation", "to": "guide/02-installation" },
+        { "label": "Tables", "to": "guide/03-tables" },
+        { "label": "Column Defs", "to": "guide/04-column-defs" },
         {
-          "src": "examples/react/column-ordering",
+          "label": "Table Instances",
+          "to": "guide/05-table-instances"
+        },
+        { "label": "Rows", "to": "guide/06-rows" },
+        { "label": "Headers", "to": "guide/07-headers" },
+        { "label": "Cells", "to": "guide/08-cells" },
+        { "label": "Features", "to": "guide/09-features" },
+        { "label": "Column Ordering", "to": "guide/column-ordering" },
+        { "label": "Column Pinning", "to": "guide/column-pinning" },
+        { "label": "Column Sizing", "to": "guide/column-sizing" },
+        { "label": "Column Visibility", "to": "guide/column-visibility" },
+        { "label": "Filters", "to": "guide/filters" },
+        { "label": "Sorting", "to": "guide/sorting" },
+        { "label": "Grouping", "to": "guide/grouping" },
+        { "label": "Expanding", "to": "guide/expanding" },
+        { "label": "Pagination", "to": "guide/pagination" },
+        { "label": "Row Selection", "to": "guide/row-selection" }
+      ]
+    },
+    {
+      "label": "Core APIs",
+      "children": [
+        { "label": "Table", "to": "api/core/table" },
+        { "label": "Column Def", "to": "api/core/column-def" },
+        { "label": "Table Instance", "to": "api/core/table-instance" },
+        { "label": "Column", "to": "api/core/column" },
+        { "label": "Header Group", "to": "api/core/header-group" },
+        { "label": "Header", "to": "api/core/header" },
+        { "label": "Row", "to": "api/core/row" },
+        { "label": "Cell", "to": "api/core/cell" }
+      ]
+    },
+    {
+      "label": "Feature APIs",
+      "children": [
+        { "label": "Column Ordering", "to": "api/column-ordering" },
+        { "label": "Column Pinning", "to": "api/column-pinning" },
+        { "label": "Column Sizing", "to": "api/column-sizing" },
+        { "label": "Column Visibility", "to": "api/column-visibility" },
+        { "label": "Filters", "to": "api/filters" },
+        { "label": "Sorting", "to": "api/sorting" },
+        { "label": "Grouping", "to": "api/grouping" },
+        { "label": "Expanding", "to": "api/expanding" },
+        { "label": "Pagination", "to": "api/pagination" },
+        { "label": "Row Selection", "to": "api/row-selection" }
+      ]
+    },
+
+    {
+      "label": "React Examples",
+      "children": [
+        { "to": "examples/react/basic", "label": "React Basic" },
+        {
+          "to": "examples/react/column-ordering",
           "label": "React Column Ordering"
         },
         {
-          "src": "examples/react/column-pinning",
+          "to": "examples/react/column-pinning",
           "label": "React Column Pinning"
         },
         {
-          "src": "examples/react/column-sizing",
+          "to": "examples/react/column-sizing",
           "label": "React Column Sizing"
         },
         {
-          "src": "examples/react/column-visibility",
+          "to": "examples/react/column-visibility",
           "label": "React Column Visibility"
         },
         {
-          "src": "examples/react/editable-data",
+          "to": "examples/react/editable-data",
           "label": "React Editable Data"
         },
-        { "src": "examples/react/expanding", "label": "React Expanding" },
-        { "src": "examples/react/filters", "label": "React Filters" },
         {
-          "src": "examples/react/wip-filters-async",
+          "to": "examples/react/expanding",
+          "label": "React Expanding"
+        },
+        { "to": "examples/react/filters", "label": "React Filters" },
+        {
+          "to": "examples/react/wip-filters-async",
           "label": "React Wip Filters Async"
         },
         {
-          "src": "examples/react/fully-controlled",
+          "to": "examples/react/fully-controlled",
           "label": "React Fully Controlled"
         },
-        { "src": "examples/react/grouping", "label": "React Grouping" },
-        { "src": "examples/react/pagination", "label": "React Pagination" },
         {
-          "src": "examples/react/pagination-controlled",
+          "to": "examples/react/grouping",
+          "label": "React Grouping"
+        },
+        {
+          "to": "examples/react/pagination",
+          "label": "React Pagination"
+        },
+        {
+          "to": "examples/react/pagination-controlled",
           "label": "React Pagination Controlled"
         },
         {
-          "src": "examples/react/row-selection",
+          "to": "examples/react/row-selection",
           "label": "React Row Selection"
         },
-        { "src": "examples/react/sorting", "label": "React Sorting" }
+        { "to": "examples/react/sorting", "label": "React Sorting" }
       ]
     },
     {
-      "label": "Solid",
-      "examples": [
-        { "src": "examples/solid/basic", "label": "Solid Basic" },
-        { "src": "examples/solid/sorting", "label": "Solid Sorting" }
+      "label": "Solid Examples",
+      "children": [
+        { "to": "examples/solid/basic", "label": "Solid Basic" },
+        { "to": "examples/solid/sorting", "label": "Solid Sorting" }
       ]
     },
     {
-      "label": "Svelte",
-      "examples": [
-        { "src": "examples/svelte/basic", "label": "Svelte Basic" },
-        { "src": "examples/svelte/sorting", "label": "Svelte Sorting" }
+      "label": "Svelte Examples",
+      "children": [
+        { "to": "examples/svelte/basic", "label": "Svelte Basic" },
+        { "to": "examples/svelte/sorting", "label": "Svelte Sorting" }
       ]
     },
     {
-      "label": "Vue",
-      "examples": [{ "src": "examples/vue/basic", "label": "Vue Basic" }]
+      "label": "Vue Examples",
+      "children": [{ "to": "examples/vue/basic", "label": "Vue Basic" }]
+    },
+    {
+      "label": "FAQ",
+      "heading": true,
+      "to": "faq"
     }
   ]
 }

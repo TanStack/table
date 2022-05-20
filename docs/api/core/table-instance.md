@@ -1,6 +1,5 @@
 ---
 title: TableInstance
-id: TableInstance
 ---
 
 ## `useTableInstance` / `createTableInstance`

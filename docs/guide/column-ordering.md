@@ -1,6 +1,5 @@
 ---
 title: Column Ordering
-id: column-ordering
 ---
 
 ## Examples

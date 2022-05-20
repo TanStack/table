@@ -1,6 +1,5 @@
 ---
 title: Table
-id: Table
 ---
 
 ## `createTable`

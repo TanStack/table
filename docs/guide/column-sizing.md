@@ -1,6 +1,5 @@
 ---
 title: Column Sizing
-id: column-sizing
 ---
 
 ## Examples
