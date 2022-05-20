@@ -41,7 +41,8 @@
     "./examples/react/sorting",
     "./examples/svelte/basic",
     "./examples/svelte/sorting",
-    "./examples/vue/basic"
+    "./examples/vue/basic",
+    "./examples/solid/basic"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",

@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./build/types",
+    "jsxImportSource": "solid-js"
+  },
+  "files": ["src/index.tsx"],
+  "include": [
+    "src"
+    // "__tests__/**/*.test.*"
+  ]
+}
