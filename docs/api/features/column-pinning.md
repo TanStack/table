@@ -29,7 +29,7 @@ export type ColumnPinningTableState = {
 
 ## Table Options
 
-#### `enablePinning`
+### `enablePinning`
 
 ```tsx
 enablePinning?: boolean
@@ -37,7 +37,7 @@ enablePinning?: boolean
 
 Enables/disables all pinning for the table.
 
-#### `onColumnPinningChange`
+### `onColumnPinningChange`
 
 ```tsx
 onColumnPinningChange?: OnChangeFn<ColumnPinningState>
@@ -47,7 +47,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 
 ## Column Def Options
 
-#### `enablePinning`
+### `enablePinning`
 
 ```tsx
 enablePinning?: boolean
@@ -57,7 +57,7 @@ Enables/disables pinning for the column.
 
 ## Table Instance API
 
-#### `setColumnPinning`
+### `setColumnPinning`
 
 ```tsx
 setColumnPinning: (updater: Updater<ColumnPinningState>) => void
@@ -65,7 +65,7 @@ setColumnPinning: (updater: Updater<ColumnPinningState>) => void
 
 Sets or updates the `state.columnPinning` state.
 
-#### `resetColumnPinning`
+### `resetColumnPinning`
 
 ```tsx
 resetColumnPinning: (defaultState?: boolean) => void
@@ -73,7 +73,7 @@ resetColumnPinning: (defaultState?: boolean) => void
 
 Resets the **columnPinning** state to `initialState.columnPinning`, or `true` can be passed to force a default blank state reset to `{ left: [], right: [], }`.
 
-#### `getIsSomeColumnsPinned`
+### `getIsSomeColumnsPinned`
 
 ```tsx
 getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
@@ -83,7 +83,7 @@ Returns whether or not any columns are pinned. Optionally specify to only check 
 
 _Note: Does not account for column visibility_
 
-#### `getLeftHeaderGroups`
+### `getLeftHeaderGroups`
 
 ```tsx
 getLeftHeaderGroups: () => HeaderGroup < TGenerics > []
@@ -91,7 +91,7 @@ getLeftHeaderGroups: () => HeaderGroup < TGenerics > []
 
 Returns the left pinned header groups for the table.
 
-#### `getCenterHeaderGroups`
+### `getCenterHeaderGroups`
 
 ```tsx
 getCenterHeaderGroups: () => HeaderGroup < TGenerics > []
@@ -99,7 +99,7 @@ getCenterHeaderGroups: () => HeaderGroup < TGenerics > []
 
 Returns the unpinned/center header groups for the table.
 
-#### `getRightHeaderGroups`
+### `getRightHeaderGroups`
 
 ```tsx
 getRightHeaderGroups: () => HeaderGroup < TGenerics > []
@@ -107,7 +107,7 @@ getRightHeaderGroups: () => HeaderGroup < TGenerics > []
 
 Returns the right pinned header groups for the table.
 
-#### `getLeftFooterGroups`
+### `getLeftFooterGroups`
 
 ```tsx
 getLeftFooterGroups: () => HeaderGroup < TGenerics > []
@@ -115,7 +115,7 @@ getLeftFooterGroups: () => HeaderGroup < TGenerics > []
 
 Returns the left pinned footer groups for the table.
 
-#### `getCenterFooterGroups`
+### `getCenterFooterGroups`
 
 ```tsx
 getCenterFooterGroups: () => HeaderGroup < TGenerics > []
@@ -123,7 +123,7 @@ getCenterFooterGroups: () => HeaderGroup < TGenerics > []
 
 Returns the unpinned/center footer groups for the table.
 
-#### `getRightFooterGroups`
+### `getRightFooterGroups`
 
 ```tsx
 getRightFooterGroups: () => HeaderGroup < TGenerics > []
@@ -131,7 +131,7 @@ getRightFooterGroups: () => HeaderGroup < TGenerics > []
 
 Returns the right pinned footer groups for the table.
 
-#### `getLeftFlatHeaders`
+### `getLeftFlatHeaders`
 
 ```tsx
 getLeftFlatHeaders: () => Header < TGenerics > []
@@ -139,7 +139,7 @@ getLeftFlatHeaders: () => Header < TGenerics > []
 
 Returns a flat array of left pinned headers for the table, including parent headers.
 
-#### `getCenterFlatHeaders`
+### `getCenterFlatHeaders`
 
 ```tsx
 getCenterFlatHeaders: () => Header < TGenerics > []
@@ -147,7 +147,7 @@ getCenterFlatHeaders: () => Header < TGenerics > []
 
 Returns a flat array of unpinned/center headers for the table, including parent headers.
 
-#### `getRightFlatHeaders`
+### `getRightFlatHeaders`
 
 ```tsx
 getRightFlatHeaders: () => Header < TGenerics > []
@@ -155,7 +155,7 @@ getRightFlatHeaders: () => Header < TGenerics > []
 
 Returns a flat array of right pinned headers for the table, including parent headers.
 
-#### `getLeftLeafHeaders`
+### `getLeftLeafHeaders`
 
 ```tsx
 getLeftLeafHeaders: () => Header < TGenerics > []
@@ -163,7 +163,7 @@ getLeftLeafHeaders: () => Header < TGenerics > []
 
 Returns a flat array of leaf-node left pinned headers for the table.
 
-#### `getCenterLeafHeaders`
+### `getCenterLeafHeaders`
 
 ```tsx
 getCenterLeafHeaders: () => Header < TGenerics > []
@@ -171,7 +171,7 @@ getCenterLeafHeaders: () => Header < TGenerics > []
 
 Returns a flat array of leaf-node unpinned/center headers for the table.
 
-#### `getRightLeafHeaders`
+### `getRightLeafHeaders`
 
 ```tsx
 getRightLeafHeaders: () => Header < TGenerics > []
@@ -179,7 +179,7 @@ getRightLeafHeaders: () => Header < TGenerics > []
 
 Returns a flat array of leaf-node right pinned headers for the table.
 
-#### `getLeftLeafColumns`
+### `getLeftLeafColumns`
 
 ```tsx
 getLeftLeafColumns: () => Column < TGenerics > []
@@ -187,7 +187,7 @@ getLeftLeafColumns: () => Column < TGenerics > []
 
 Returns all left pinned leaf columns.
 
-#### `getRightLeafColumns`
+### `getRightLeafColumns`
 
 ```tsx
 getRightLeafColumns: () => Column < TGenerics > []
@@ -195,7 +195,7 @@ getRightLeafColumns: () => Column < TGenerics > []
 
 Returns all right pinned leaf columns.
 
-#### `getCenterLeafColumns`
+### `getCenterLeafColumns`
 
 ```tsx
 getCenterLeafColumns: () => Column < TGenerics > []
@@ -205,7 +205,7 @@ Returns all center pinned (unpinned) leaf columns.
 
 ## Column API
 
-#### `getCanPin`
+### `getCanPin`
 
 ```tsx
 getCanPin: () => boolean
@@ -213,7 +213,7 @@ getCanPin: () => boolean
 
 Returns whether or not the column can be pinned.
 
-#### `getPinnedIndex`
+### `getPinnedIndex`
 
 ```tsx
 getPinnedIndex: () => number
@@ -221,7 +221,7 @@ getPinnedIndex: () => number
 
 Returns the numeric pinned index of the column within a pinned column group.
 
-#### `getIsPinned`
+### `getIsPinned`
 
 ```tsx
 getIsPinned: () => ColumnPinningPosition
@@ -229,7 +229,7 @@ getIsPinned: () => ColumnPinningPosition
 
 Returns the pinned position of the column. (`'left'`, `'right'` or `false`)
 
-#### `pin`
+### `pin`
 
 ```tsx
 pin: (position: ColumnPinningPosition) => void
@@ -239,7 +239,7 @@ Pins a column to the `'left'` or `'right'`, or unpins the column to the center i
 
 ## Row API
 
-#### `getLeftVisibleCells`
+### `getLeftVisibleCells`
 
 ```tsx
 getLeftVisibleCells: () => Cell < TGenerics > []
@@ -247,7 +247,7 @@ getLeftVisibleCells: () => Cell < TGenerics > []
 
 Returns all left pinned leaf cells in the row.
 
-#### `getRightVisibleCells`
+### `getRightVisibleCells`
 
 ```tsx
 getRightVisibleCells: () => Cell < TGenerics > []
@@ -255,7 +255,7 @@ getRightVisibleCells: () => Cell < TGenerics > []
 
 Returns all right pinned leaf cells in the row.
 
-#### `getCenterVisibleCells`
+### `getCenterVisibleCells`
 
 ```tsx
 getCenterVisibleCells: () => Cell < TGenerics > []

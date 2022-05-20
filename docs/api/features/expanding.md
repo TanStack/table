@@ -17,7 +17,7 @@ export type GroupingTableState = {
 
 ## Row API
 
-#### `toggleExpanded`
+### `toggleExpanded`
 
 ```tsx
 toggleExpanded: (expanded?: boolean) => void
@@ -25,7 +25,7 @@ toggleExpanded: (expanded?: boolean) => void
 
 Toggles the expanded state (or sets it if `expanded` is provided) for the row.
 
-#### `getIsExpanded`
+### `getIsExpanded`
 
 ```tsx
 getIsExpanded: () => boolean
@@ -33,7 +33,7 @@ getIsExpanded: () => boolean
 
 Returns whether the row is expanded.
 
-#### `getCanExpand`
+### `getCanExpand`
 
 ```tsx
 getCanExpand: () => boolean
@@ -41,7 +41,7 @@ getCanExpand: () => boolean
 
 Returns whether the row can be expanded.
 
-#### `getToggleExpandedHandler`
+### `getToggleExpandedHandler`
 
 ```tsx
 getToggleExpandedHandler: () => () => void
@@ -51,7 +51,7 @@ Returns a function that can be used to toggle the expanded state of the row. Thi
 
 ## Table Options
 
-#### `manualExpanding`
+### `manualExpanding`
 
 ```tsx
 manualExpanding?: boolean
@@ -59,7 +59,7 @@ manualExpanding?: boolean
 
 Enables manual row expansion. If this is set to `true`, `getExpandedRowModel` will not be used to expand rows and you would be expected to perform the expansion in your own data model. This is useful if you are doing server-side expansion.
 
-#### `onExpandedChange`
+### `onExpandedChange`
 
 ```tsx
 onExpandedChange?: OnChangeFn<ExpandedState>
@@ -67,7 +67,7 @@ onExpandedChange?: OnChangeFn<ExpandedState>
 
 This function is called when the `expanded` table state changes. If a function is provided, you will be responsible for managing this state on your own. To pass the managed state back to the table, use the `tableOptions.state.expanded` option.
 
-#### `autoResetExpanded`
+### `autoResetExpanded`
 
 ```tsx
 autoResetExpanded?: boolean
@@ -75,7 +75,7 @@ autoResetExpanded?: boolean
 
 Enable this setting to automatically reset the expanded state of the table when grouping state changes.
 
-#### `enableExpanding`
+### `enableExpanding`
 
 ```tsx
 enableExpanding?: boolean
@@ -83,7 +83,7 @@ enableExpanding?: boolean
 
 Enable/disable expanding for all rows.
 
-#### `getExpandedRowModel`
+### `getExpandedRowModel`
 
 ```tsx
 getExpandedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics>
@@ -91,7 +91,7 @@ getExpandedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGe
 
 This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
 
-#### `getIsRowExpanded`
+### `getIsRowExpanded`
 
 ```tsx
 getIsRowExpanded?: (row: Row<TGenerics>) => boolean
@@ -99,7 +99,7 @@ getIsRowExpanded?: (row: Row<TGenerics>) => boolean
 
 If provided, allows you to override the default behavior of determining whether a row is currently expanded.
 
-#### `getRowCanExpand`
+### `getRowCanExpand`
 
 ```tsx
 getRowCanExpand?: (row: Row<TGenerics>) => boolean
@@ -107,7 +107,7 @@ getRowCanExpand?: (row: Row<TGenerics>) => boolean
 
 If provided, allows you to override the default behavior of determining whether a row can be expanded.
 
-#### `paginateExpandedRows`
+### `paginateExpandedRows`
 
 ```tsx
 paginateExpandedRows?: boolean
@@ -119,7 +119,7 @@ If `false` expanded rows will not be considered for pagination (which means expa
 
 ## Table Instance API
 
-#### `setExpanded`
+### `setExpanded`
 
 ```tsx
 setExpanded: (updater: Updater<ExpandedState>) => void
@@ -127,7 +127,7 @@ setExpanded: (updater: Updater<ExpandedState>) => void
 
 Updates the expanded state of the table via an update function or value
 
-#### `toggleAllRowsExpanded`
+### `toggleAllRowsExpanded`
 
 ```tsx
 toggleAllRowsExpanded: (expanded?: boolean) => void
@@ -135,7 +135,7 @@ toggleAllRowsExpanded: (expanded?: boolean) => void
 
 Toggles the expanded state for all rows. Optionally, provide a value to set the expanded state to.
 
-#### `resetExpanded`
+### `resetExpanded`
 
 ```tsx
 resetExpanded: (defaultState?: boolean) => void
@@ -143,7 +143,7 @@ resetExpanded: (defaultState?: boolean) => void
 
 Reset the expanded state of the table to the initial state. If `defaultState` is provided, the expanded state will be reset to `{}`
 
-#### `getCanSomeRowsExpand`
+### `getCanSomeRowsExpand`
 
 ```tsx
 getCanSomeRowsExpand: () => boolean
@@ -151,7 +151,7 @@ getCanSomeRowsExpand: () => boolean
 
 Returns whether there are any rows that can be expanded.
 
-#### `getToggleAllRowsExpandedHandler`
+### `getToggleAllRowsExpandedHandler`
 
 ```tsx
 getToggleAllRowsExpandedHandler: () => (event: unknown) => void
@@ -159,7 +159,7 @@ getToggleAllRowsExpandedHandler: () => (event: unknown) => void
 
 Returns a handler that can be used to toggle the expanded state of all rows. This handler is meant to be used with an `input[type=checkbox]` element.
 
-#### `getIsSomeRowsExpanded`
+### `getIsSomeRowsExpanded`
 
 ```tsx
 getIsSomeRowsExpanded: () => boolean
@@ -167,7 +167,7 @@ getIsSomeRowsExpanded: () => boolean
 
 Returns whether there are any rows that are currently expanded.
 
-#### `getIsAllRowsExpanded`
+### `getIsAllRowsExpanded`
 
 ```tsx
 getIsAllRowsExpanded: () => boolean
@@ -175,7 +175,7 @@ getIsAllRowsExpanded: () => boolean
 
 Returns whether all rows are currently expanded.
 
-#### `getExpandedDepth`
+### `getExpandedDepth`
 
 ```tsx
 getExpandedDepth: () => number
@@ -183,7 +183,7 @@ getExpandedDepth: () => number
 
 Returns the maximum depth of the expanded rows.
 
-#### `getExpandedRowModel`
+### `getExpandedRowModel`
 
 ```tsx
 getExpandedRowModel: () => RowModel<TGenerics>
@@ -191,7 +191,7 @@ getExpandedRowModel: () => RowModel<TGenerics>
 
 Returns the row model after expansion has been applied.
 
-#### `getPreExpandedRowModel`
+### `getPreExpandedRowModel`
 
 ```tsx
 getPreExpandedRowModel: () => RowModel<TGenerics>

@@ -74,7 +74,7 @@ export type AggregationFnOption<TGenerics extends TableGenerics> =
 
 ## Column Def Options
 
-#### `aggregationFn`
+### `aggregationFn`
 
 ```tsx
 aggregationFn?: AggregationFn | keyof TGenerics['AggregationFns'] | keyof BuiltInAggregationFns
@@ -88,7 +88,7 @@ Options:
 - A `string` referencing a custom aggregation function defined on the `aggregationFns` table option
 - A [custom aggregation function](#aggregation-functions)
 
-#### `aggregatedCell`
+### `aggregatedCell`
 
 ```tsx
 aggregatedCell?: Renderable<
@@ -105,7 +105,7 @@ aggregatedCell?: Renderable<
 
 The cell to display each row for the column if the cell is an aggregate. If a function is passed, it will be passed a props object with the context of the cell and should return the property type for your adapter (the exact type depends on the adapter being used).
 
-#### `enableGrouping`
+### `enableGrouping`
 
 ```tsx
 enableGrouping?: boolean
@@ -115,7 +115,7 @@ Enables/disables grouping for this column.
 
 ## Column API
 
-#### `aggregationFn`
+### `aggregationFn`
 
 ```tsx
 aggregationFn?: AggregationFnOption<Overwrite<TGenerics, { Value: any }>>
@@ -123,7 +123,7 @@ aggregationFn?: AggregationFnOption<Overwrite<TGenerics, { Value: any }>>
 
 The resolved aggregation function for the column.
 
-#### `getCanGroup`
+### `getCanGroup`
 
 ```tsx
 getCanGroup: () => boolean
@@ -131,7 +131,7 @@ getCanGroup: () => boolean
 
 Returns whether or not the column can be grouped.
 
-#### `getIsGrouped`
+### `getIsGrouped`
 
 ```tsx
 getIsGrouped: () => boolean
@@ -139,7 +139,7 @@ getIsGrouped: () => boolean
 
 Returns whether or not the column is currently grouped.
 
-#### `getGroupedIndex`
+### `getGroupedIndex`
 
 ```tsx
 getGroupedIndex: () => number
@@ -147,7 +147,7 @@ getGroupedIndex: () => number
 
 Returns the index of the column in the grouping state.
 
-#### `toggleGrouping`
+### `toggleGrouping`
 
 ```tsx
 toggleGrouping: () => void
@@ -155,7 +155,7 @@ toggleGrouping: () => void
 
 Toggles the grouping state of the column.
 
-#### `getToggleGroupingHandler`
+### `getToggleGroupingHandler`
 
 ```tsx
 getToggleGroupingHandler: () => () => void
@@ -163,7 +163,7 @@ getToggleGroupingHandler: () => () => void
 
 Returns a function that toggles the grouping state of the column. This is useful for passing to the `onClick` prop of a button.
 
-#### `getAutoAggregationFn`
+### `getAutoAggregationFn`
 
 ```tsx
 getAutoAggregationFn: () => AggregationFn<TGenerics> | undefined
@@ -171,7 +171,7 @@ getAutoAggregationFn: () => AggregationFn<TGenerics> | undefined
 
 Returns the automatically inferred aggregation function for the column.
 
-#### `getAggregationFn`
+### `getAggregationFn`
 
 ```tsx
 getAggregationFn: () => AggregationFn<TGenerics> | undefined
@@ -179,7 +179,7 @@ getAggregationFn: () => AggregationFn<TGenerics> | undefined
 
 ## Row API
 
-#### `groupingColumnId`
+### `groupingColumnId`
 
 ```tsx
 groupingColumnId?: string
@@ -187,7 +187,7 @@ groupingColumnId?: string
 
 If this row is grouped, this is the id of the column that this row is grouped by.
 
-#### `groupingValue`
+### `groupingValue`
 
 ```tsx
 groupingValue?: any
@@ -195,7 +195,7 @@ groupingValue?: any
 
 If this row is grouped, this is the unique/shared value for the `groupingColumnId` for all of the rows in this group.
 
-#### `getIsGrouped`
+### `getIsGrouped`
 
 ```tsx
 getIsGrouped: () => boolean
@@ -205,7 +205,7 @@ Returns whether or not the row is currently grouped.
 
 ## Table Options
 
-#### `manualGrouping`
+### `manualGrouping`
 
 ```tsx
 manualGrouping?: boolean
@@ -213,7 +213,7 @@ manualGrouping?: boolean
 
 Enables manual grouping. If this option is set to `true`, the table will not automatically group rows using `getGroupedRowModel()` and instead will expect you to manually group the rows before passing them to the table. This is useful if you are doing server-side grouping and aggregation.
 
-#### `aggregationFns`
+### `aggregationFns`
 
 ```tsx
 aggregationFns?: TGenerics['AggregationFns']
@@ -237,7 +237,7 @@ const column = table.createDataColumn('key', {
 })
 ```
 
-#### `onGroupingChange`
+### `onGroupingChange`
 
 ```tsx
 onGroupingChange?: OnChangeFn<GroupingState>
@@ -245,7 +245,7 @@ onGroupingChange?: OnChangeFn<GroupingState>
 
 If this function is provided, it will be called when the grouping state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the `tableOptions.state.grouping` option.
 
-#### `enableGrouping`
+### `enableGrouping`
 
 ```tsx
 enableGrouping?: boolean
@@ -253,7 +253,7 @@ enableGrouping?: boolean
 
 Enables/disables grouping for all columns.
 
-#### `getGroupedRowModel`
+### `getGroupedRowModel`
 
 ```tsx
 getGroupedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics>
@@ -261,7 +261,7 @@ getGroupedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGen
 
 Returns the row model after grouping has taken place, but no further.
 
-#### `groupedColumnMode`
+### `groupedColumnMode`
 
 ```tsx
 groupedColumnMode?: false | 'reorder' | 'remove' // default: `reorder`
@@ -271,7 +271,7 @@ Grouping columns are automatically reordered by default to the start of the colu
 
 ## Table Instance API
 
-#### `setGrouping`
+### `setGrouping`
 
 ```tsx
 setGrouping: (updater: Updater<GroupingState>) => void
@@ -279,7 +279,7 @@ setGrouping: (updater: Updater<GroupingState>) => void
 
 Sets or updates the `state.grouping` state.
 
-#### `resetGrouping`
+### `resetGrouping`
 
 ```tsx
 resetGrouping: (defaultState?: boolean) => void
@@ -287,7 +287,7 @@ resetGrouping: (defaultState?: boolean) => void
 
 Resets the **grouping** state to `initialState.grouping`, or `true` can be passed to force a default blank state reset to `[]`.
 
-#### `getPreGroupedRowModel`
+### `getPreGroupedRowModel`
 
 ```tsx
 getPreGroupedRowModel: () => RowModel<TGenerics>
@@ -295,7 +295,7 @@ getPreGroupedRowModel: () => RowModel<TGenerics>
 
 Returns the row model for the table before any grouping has been applied.
 
-#### `getGroupedRowModel`
+### `getGroupedRowModel`
 
 ```tsx
 getGroupedRowModel: () => RowModel<TGenerics>

@@ -8,7 +8,7 @@ These are **core** options and API properties for all header groups. More option
 
 All header group objects have the following properties:
 
-#### `id`
+### `id`
 
 ```tsx
 id: string
@@ -16,7 +16,7 @@ id: string
 
 The unique identifier for the header group.
 
-#### `depth`
+### `depth`
 
 ```tsx
 id: number
@@ -24,7 +24,7 @@ id: number
 
 The depth of the header group, zero-indexed based.
 
-#### `headers`
+### `headers`
 
 ```tsx
 type headers = Header<TGenerics>[]

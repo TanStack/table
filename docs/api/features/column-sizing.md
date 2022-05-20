@@ -27,7 +27,7 @@ export type ColumnSizingInfoState = {
 
 ## Column Def Options
 
-#### `enableResizing`
+### `enableResizing`
 
 ```tsx
 enableResizing?: boolean
@@ -35,7 +35,7 @@ enableResizing?: boolean
 
 Enables or disables column resizing for the column.
 
-#### `size`
+### `size`
 
 ```tsx
 size?: number
@@ -43,7 +43,7 @@ size?: number
 
 The desired size for the column
 
-#### `minSize`
+### `minSize`
 
 ```tsx
 minSize?: number
@@ -51,7 +51,7 @@ minSize?: number
 
 The minimum allowed size for the column
 
-#### `maxSize`
+### `maxSize`
 
 ```tsx
 maxSize?: number
@@ -63,7 +63,7 @@ The maximum allowed size for the column
 
 ## Table Options
 
-#### `getSize`
+### `getSize`
 
 ```tsx
 getSize: () => number
@@ -71,7 +71,7 @@ getSize: () => number
 
 Returns the current size of the column
 
-#### `getStart`
+### `getStart`
 
 ```tsx
 getStart: (position?: ColumnPinningPosition) => number
@@ -79,7 +79,7 @@ getStart: (position?: ColumnPinningPosition) => number
 
 Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the column.
 
-#### `getCanResize`
+### `getCanResize`
 
 ```tsx
 getCanResize: () => boolean
@@ -87,7 +87,7 @@ getCanResize: () => boolean
 
 Returns `true` if the column can be resized.
 
-#### `getIsResizing`
+### `getIsResizing`
 
 ```tsx
 getIsResizing: () => boolean
@@ -95,7 +95,7 @@ getIsResizing: () => boolean
 
 Returns `true` if the column is currently being resized.
 
-#### `resetSize`
+### `resetSize`
 
 ```tsx
 resetSize: () => void
@@ -105,7 +105,7 @@ Resets the column size to its initial size.
 
 ## Header API
 
-#### `getSize`
+### `getSize`
 
 ```tsx
 getSize: () => number
@@ -113,7 +113,7 @@ getSize: () => number
 
 Returns the size for the header, calculated by summing the size of all leaf-columns that belong to it.
 
-#### `getStart`
+### `getStart`
 
 ```tsx
 getStart: (position?: ColumnPinningPosition) => number
@@ -121,7 +121,7 @@ getStart: (position?: ColumnPinningPosition) => number
 
 Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding headers.
 
-#### `getResizeHandler`
+### `getResizeHandler`
 
 ```tsx
 getResizeHandler: () => (event: unknown) => void
@@ -136,7 +136,7 @@ The dragging and release events are automatically handled for you.
 
 ## Table Instance Options
 
-#### `enableColumnResizing`
+### `enableColumnResizing`
 
 ```tsx
 enableColumnResizing?: boolean
@@ -144,7 +144,7 @@ enableColumnResizing?: boolean
 
 Enables/disables column resizing for \*all columns\*\*.
 
-#### `columnResizeMode`
+### `columnResizeMode`
 
 ```tsx
 columnResizeMode?: 'onChange' | 'onEnd'
@@ -152,7 +152,7 @@ columnResizeMode?: 'onChange' | 'onEnd'
 
 Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
 
-#### `onColumnSizingChange`
+### `onColumnSizingChange`
 
 ```tsx
 onColumnSizingChange?: OnChangeFn<ColumnSizingState>
@@ -160,7 +160,7 @@ onColumnSizingChange?: OnChangeFn<ColumnSizingState>
 
 This optional function will be called when the columnSizing state changes. If you provide this function, you will be responsible for maintaining its state yourself. You can pass this state back to the table via the `state.columnSizing` table option.
 
-#### `onColumnSizingInfoChange`
+### `onColumnSizingInfoChange`
 
 ```tsx
 onColumnSizingInfoChange?: OnChangeFn<ColumnSizingInfoState>
@@ -170,7 +170,7 @@ This optional function will be called when the columnSizingInfo state changes. I
 
 ## Table Instance API
 
-#### `setColumnSizing`
+### `setColumnSizing`
 
 ```tsx
 setColumnSizing: (updater: Updater<ColumnSizingState>) => void
@@ -178,7 +178,7 @@ setColumnSizing: (updater: Updater<ColumnSizingState>) => void
 
 Sets the column sizing state using an updater function or a value. This will trigger the underlying `onColumnSizingChange` function if one is passed to the table instance options, otherwise the state will be managed automatically by the table.
 
-#### `setColumnSizingInfo`
+### `setColumnSizingInfo`
 
 ```tsx
 setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
@@ -186,7 +186,7 @@ setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
 
 Sets the column sizing info state using an updater function or a value. This will trigger the underlying `onColumnSizingInfoChange` function if one is passed to the table instance options, otherwise the state will be managed automatically by the table.
 
-#### `resetColumnSizing`
+### `resetColumnSizing`
 
 ```tsx
 resetColumnSizing: (defaultState?: boolean) => void
@@ -194,7 +194,7 @@ resetColumnSizing: (defaultState?: boolean) => void
 
 Resets column sizing to its initial state. If `defaultState` is `true`, the default state for the table will be used instead of the initialValue provided to the table.
 
-#### `resetHeaderSizeInfo`
+### `resetHeaderSizeInfo`
 
 ```tsx
 resetHeaderSizeInfo: (defaultState?: boolean) => void
@@ -202,7 +202,7 @@ resetHeaderSizeInfo: (defaultState?: boolean) => void
 
 Resets column sizing info to its initial state. If `defaultState` is `true`, the default state for the table will be used instead of the initialValue provided to the table.
 
-#### `getTotalSize`
+### `getTotalSize`
 
 ```tsx
 getTotalSize: () => number
@@ -210,7 +210,7 @@ getTotalSize: () => number
 
 Returns the total size of the table by calculating the sum of the sizes of all leaf-columns.
 
-#### `getLeftTotalSize`
+### `getLeftTotalSize`
 
 ```tsx
 getLeftTotalSize: () => number
@@ -218,7 +218,7 @@ getLeftTotalSize: () => number
 
 If pinning, returns the total size of the left portion of the table by calculating the sum of the sizes of all left leaf-columns.
 
-#### `getCenterTotalSize`
+### `getCenterTotalSize`
 
 ```tsx
 getCenterTotalSize: () => number
@@ -226,7 +226,7 @@ getCenterTotalSize: () => number
 
 If pinning, returns the total size of the center portion of the table by calculating the sum of the sizes of all unpinned/center leaf-columns.
 
-#### `getRightTotalSize`
+### `getRightTotalSize`
 
 ```tsx
 getRightTotalSize: () => number

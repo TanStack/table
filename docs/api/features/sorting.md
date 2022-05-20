@@ -75,7 +75,7 @@ export type SortingFnOption<TGenerics extends TableGenerics> =
 
 ## Column Def Options
 
-#### `sortingFn`
+### `sortingFn`
 
 ```tsx
 sortingFn?: SortingFn | keyof TGenerics['SortingFns'] | keyof BuiltInSortingFns
@@ -89,7 +89,7 @@ Options:
 - A `string` referencing a custom sorting function defined on the `sortingFns` table option
 - A [custom sorting function](#sorting-functions)
 
-#### `sortDescFirst`
+### `sortDescFirst`
 
 ```tsx
 sortDescFirst?: boolean
@@ -97,7 +97,7 @@ sortDescFirst?: boolean
 
 Set to `true` for sorting toggles on this column to start in the descending direction.
 
-#### `enableSorting`
+### `enableSorting`
 
 ```tsx
 enableSorting?: boolean
@@ -105,7 +105,7 @@ enableSorting?: boolean
 
 Enables/Disables sorting for this column.
 
-#### `enableMultiSort`
+### `enableMultiSort`
 
 ```tsx
 enableMultiSort?: boolean
@@ -113,7 +113,7 @@ enableMultiSort?: boolean
 
 Enables/Disables multi-sorting for this column.
 
-#### `invertSorting`
+### `invertSorting`
 
 ```tsx
 invertSorting?: boolean
@@ -121,7 +121,7 @@ invertSorting?: boolean
 
 Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring
 
-#### `sortUndefined`
+### `sortUndefined`
 
 ```tsx
 sortUndefined?: false | -1 | 1 // defaults to false
@@ -135,7 +135,7 @@ sortUndefined?: false | -1 | 1 // defaults to false
 
 ## Column API
 
-#### `getAutoSortingFn`
+### `getAutoSortingFn`
 
 ```tsx
 getAutoSortingFn: () => SortingFn<TGenerics>
@@ -143,7 +143,7 @@ getAutoSortingFn: () => SortingFn<TGenerics>
 
 Returns a sorting function automatically inferred based on the columns values.
 
-#### `getAutoSortDir`
+### `getAutoSortDir`
 
 ```tsx
 getAutoSortDir: () => SortDirection
@@ -151,7 +151,7 @@ getAutoSortDir: () => SortDirection
 
 Returns a sort direction automatically inferred based on the columns values.
 
-#### `getSortingFn`
+### `getSortingFn`
 
 ```tsx
 getSortingFn: () => SortingFn<TGenerics>
@@ -159,7 +159,7 @@ getSortingFn: () => SortingFn<TGenerics>
 
 Returns the resolved sorting function to be used for this column
 
-#### `getCanSort`
+### `getCanSort`
 
 ```tsx
 getCanSort: () => boolean
@@ -167,7 +167,7 @@ getCanSort: () => boolean
 
 Returns whether this column can be sorted.
 
-#### `getCanMultiSort`
+### `getCanMultiSort`
 
 ```tsx
 getCanMultiSort: () => boolean
@@ -175,7 +175,7 @@ getCanMultiSort: () => boolean
 
 Returns whether this column can be multi-sorted.
 
-#### `getSortIndex`
+### `getSortIndex`
 
 ```tsx
 getSortIndex: () => number
@@ -183,7 +183,7 @@ getSortIndex: () => number
 
 Returns the index position of this column's sorting within the sorting state
 
-#### `getIsSorted`
+### `getIsSorted`
 
 ```tsx
 getIsSorted: () => false | SortDirection
@@ -191,7 +191,7 @@ getIsSorted: () => false | SortDirection
 
 Returns whether this column is sorted.
 
-#### `clearSorting`
+### `clearSorting`
 
 ```tsx
 clearSorting: () => void
@@ -199,7 +199,7 @@ clearSorting: () => void
 
 Removes this column from the table's sorting state
 
-#### `toggleSorting`
+### `toggleSorting`
 
 ```tsx
 toggleSorting: (desc?: boolean, isMulti?: boolean) => void
@@ -207,7 +207,7 @@ toggleSorting: (desc?: boolean, isMulti?: boolean) => void
 
 Toggles this columns sorting state. If `desc` is provided, it will force the sort direction to that value. If `isMulti` is provided, it will additivity multi-sort the column (or toggle it if it is already sorted).
 
-#### `getToggleSortingHandler`
+### `getToggleSortingHandler`
 
 ```tsx
 getToggleSortingHandler: () => undefined | ((event: unknown) => void)
@@ -217,7 +217,7 @@ Returns a function that can be used to toggle this column's sorting state. This 
 
 ## Table Options
 
-#### `manualSorting`
+### `manualSorting`
 
 ```tsx
 manualSorting?: boolean
@@ -225,7 +225,7 @@ manualSorting?: boolean
 
 Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table instance. This is useful if you are doing server-side sorting.
 
-#### `sortingFns`
+### `sortingFns`
 
 ```tsx
 sortingFns?: TGenerics['SortingFns']
@@ -249,7 +249,7 @@ const column = table.createDataColumn('key', {
 })
 ```
 
-#### `onSortingChange`
+### `onSortingChange`
 
 ```tsx
 onSortingChange?: OnChangeFn<SortingState>
@@ -257,7 +257,7 @@ onSortingChange?: OnChangeFn<SortingState>
 
 If provided, this function will be called with an `updaterFn` when `state.sorting` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-#### `enableSorting`
+### `enableSorting`
 
 ```tsx
 enableSorting?: boolean
@@ -265,7 +265,7 @@ enableSorting?: boolean
 
 Enables/Disables sorting for the table.
 
-#### `enableSortingRemoval`
+### `enableSortingRemoval`
 
 ```tsx
 enableSortingRemoval?: boolean
@@ -273,7 +273,7 @@ enableSortingRemoval?: boolean
 
 Enables/Disables the ability to remove sorting for the table.
 
-#### `enableMultiRemove`
+### `enableMultiRemove`
 
 ```tsx
 enableMultiRemove?: boolean
@@ -281,7 +281,7 @@ enableMultiRemove?: boolean
 
 Enables/disables the ability to remove multi-sorts
 
-#### `enableMultiSort`
+### `enableMultiSort`
 
 ```tsx
 enableMultiSort?: boolean
@@ -289,7 +289,7 @@ enableMultiSort?: boolean
 
 Enables/Disables multi-sorting for the table.
 
-#### `sortDescFirst`
+### `sortDescFirst`
 
 ```tsx
 sortDescFirst?: boolean
@@ -297,7 +297,7 @@ sortDescFirst?: boolean
 
 If `true`, all sorts will default to descending as their first toggle state.
 
-#### `getSortedRowModel`
+### `getSortedRowModel`
 
 ```tsx
 getSortedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics>
@@ -305,7 +305,7 @@ getSortedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGene
 
 This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table instance or implement your own.
 
-#### `maxMultiSortColCount`
+### `maxMultiSortColCount`
 
 ```tsx
 maxMultiSortColCount?: number
@@ -313,7 +313,7 @@ maxMultiSortColCount?: number
 
 Set a maximum number of columns that can be multi-sorted.
 
-#### `isMultiSortEvent`
+### `isMultiSortEvent`
 
 ```tsx
 isMultiSortEvent?: (e: unknown) => boolean
@@ -323,7 +323,7 @@ Pass a custom function that will be used to determine if a multi-sort event shou
 
 ## Table Instance API
 
-#### `setSorting`
+### `setSorting`
 
 ```tsx
 setSorting: (updater: Updater<SortingState>) => void
@@ -331,7 +331,7 @@ setSorting: (updater: Updater<SortingState>) => void
 
 Sets or updates the `state.sorting` state.
 
-#### `resetSorting`
+### `resetSorting`
 
 ```tsx
 resetSorting: (defaultState?: boolean) => void
@@ -339,7 +339,7 @@ resetSorting: (defaultState?: boolean) => void
 
 Resets the **sorting** state to `initialState.sorting`, or `true` can be passed to force a default blank state reset to `[]`.
 
-#### `getPreSortedRowModel`
+### `getPreSortedRowModel`
 
 ```tsx
 getPreSortedRowModel: () => RowModel<TGenerics>
@@ -347,7 +347,7 @@ getPreSortedRowModel: () => RowModel<TGenerics>
 
 Returns the row model for the table before any sorting has been applied.
 
-#### `getSortedRowModel`
+### `getSortedRowModel`
 
 ```tsx
 getSortedRowModel: () => RowModel<TGenerics>

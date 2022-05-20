@@ -6,7 +6,7 @@ Column definitions are created using various helpers [available on the `table` o
 
 ## Options
 
-#### `id`
+### `id`
 
 ```tsx
 id: string
@@ -19,7 +19,7 @@ The unique identifier for the column.
 > - A data column is created with an object key accessor
 > - The column header is defined as a string
 
-#### `accessorKey`
+### `accessorKey`
 
 ```tsx
 accessorKey?: string & typeof TGenerics['Row']
@@ -29,7 +29,7 @@ accessorKey?: string & typeof TGenerics['Row']
 
 The key of the row object to use when extracting the value for the column.
 
-#### `accessorFn`
+### `accessorFn`
 
 ```tsx
 accessorFn?: (originalRow: TGenerics['Row'], index: number) => any
@@ -39,7 +39,7 @@ accessorFn?: (originalRow: TGenerics['Row'], index: number) => any
 
 The accessor function to use when extracting the value for the column from each row.
 
-#### `columns`
+### `columns`
 
 ```tsx
 columns?: ColumnDef<TGenerics>[]
@@ -49,7 +49,7 @@ columns?: ColumnDef<TGenerics>[]
 
 The child column defs to include in a group column.
 
-#### `header`
+### `header`
 
 ```tsx
 header?:
@@ -63,7 +63,7 @@ header?:
 
 The header to display for the column. If a string is passed, it can be used as a default for the column ID. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
 
-#### `footer`
+### `footer`
 
 ```tsx
 footer?:
@@ -77,7 +77,7 @@ footer?:
 
 The footer to display for the column. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
 
-#### `cell`
+### `cell`
 
 ```tsx
 cell?: ((props: {
@@ -91,7 +91,7 @@ cell?: ((props: {
 
 The cell to display each row for the column. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
 
-#### `meta`
+### `meta`
 
 ```tsx
 meta?: TGenerics['ColumnMeta']

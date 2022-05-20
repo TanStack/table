@@ -17,7 +17,7 @@ export type RowSelectionTableState = {
 
 ## Table Options
 
-#### `enableRowSelection`
+### `enableRowSelection`
 
 ```tsx
 enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
@@ -26,7 +26,7 @@ enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 - Enables/disables row selection for all rows in the table OR
 - A function that given a row, returns whether to enable/disable row selection for that row
 
-#### `enableMultiRowSelection`
+### `enableMultiRowSelection`
 
 ```tsx
 enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
@@ -35,7 +35,7 @@ enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 - Enables/disables multiple row selection for all rows in the table OR
 - A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
 
-#### `enableSubRowSelection`
+### `enableSubRowSelection`
 
 ```tsx
 enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
@@ -45,7 +45,7 @@ Enables/disables automatic sub-row selection when a parent row is selected, or a
 
 (Use in combination with expanding or grouping features)
 
-#### `onRowSelectionChange`
+### `onRowSelectionChange`
 
 ```tsx
 onRowSelectionChange?: OnChangeFn<RowSelectionState>
@@ -55,7 +55,7 @@ If provided, this function will be called with an `updaterFn` when `state.rowSel
 
 ## Table Instance API
 
-#### `getToggleAllRowsSelectedHandler`
+### `getToggleAllRowsSelectedHandler`
 
 ```tsx
 getToggleAllRowsSelectedHandler: () => (event: unknown) => void
@@ -63,7 +63,7 @@ getToggleAllRowsSelectedHandler: () => (event: unknown) => void
 
 Returns a handler that can be used to toggle all rows in the table.
 
-#### `getToggleAllPageRowsSelectedHandler`
+### `getToggleAllPageRowsSelectedHandler`
 
 ```tsx
 getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
@@ -71,7 +71,7 @@ getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
 
 Returns a handler that can be used to toggle all rows on the current page.
 
-#### `setRowSelection`
+### `setRowSelection`
 
 ```tsx
 setRowSelection: (updater: Updater<RowSelectionState>) => void
@@ -79,7 +79,7 @@ setRowSelection: (updater: Updater<RowSelectionState>) => void
 
 Sets or updates the `state.rowSelection` state.
 
-#### `resetRowSelection`
+### `resetRowSelection`
 
 ```tsx
 resetRowSelection: (defaultState?: boolean) => void
@@ -87,7 +87,7 @@ resetRowSelection: (defaultState?: boolean) => void
 
 Resets the **rowSelection** state to the `initialState.rowSelection`, or `true` can be passed to force a default blank state reset to `{}`.
 
-#### `getIsAllRowsSelected`
+### `getIsAllRowsSelected`
 
 ```tsx
 getIsAllRowsSelected: () => boolean
@@ -95,7 +95,7 @@ getIsAllRowsSelected: () => boolean
 
 Returns whether or not all rows in the table are selected.
 
-#### `getIsAllPageRowsSelected`
+### `getIsAllPageRowsSelected`
 
 ```tsx
 getIsAllPageRowsSelected: () => boolean
@@ -103,7 +103,7 @@ getIsAllPageRowsSelected: () => boolean
 
 Returns whether or not all rows on the current page are selected.
 
-#### `getIsSomeRowsSelected`
+### `getIsSomeRowsSelected`
 
 ```tsx
 getIsSomeRowsSelected: () => boolean
@@ -111,7 +111,7 @@ getIsSomeRowsSelected: () => boolean
 
 Returns whether or not any rows in the table are selected.
 
-#### `getIsSomePageRowsSelected`
+### `getIsSomePageRowsSelected`
 
 ```tsx
 getIsSomePageRowsSelected: () => boolean
@@ -119,7 +119,7 @@ getIsSomePageRowsSelected: () => boolean
 
 Returns whether or not any rows on the current page are selected.
 
-#### `toggleAllRowsSelected`
+### `toggleAllRowsSelected`
 
 ```tsx
 toggleAllRowsSelected: (value: boolean) => void
@@ -127,7 +127,7 @@ toggleAllRowsSelected: (value: boolean) => void
 
 Selects/deselects all rows in the table.
 
-#### `toggleAllPageRowsSelected`
+### `toggleAllPageRowsSelected`
 
 ```tsx
 toggleAllPageRowsSelected: (value: boolean) => void
@@ -135,7 +135,7 @@ toggleAllPageRowsSelected: (value: boolean) => void
 
 Selects/deselects all rows on the current page.
 
-#### `getPreSelectedRowModel`
+### `getPreSelectedRowModel`
 
 ```tsx
 getPreSelectedRowModel: () => RowModel<TGenerics>
@@ -143,7 +143,7 @@ getPreSelectedRowModel: () => RowModel<TGenerics>
 
 TODO
 
-#### `getSelectedRowModel`
+### `getSelectedRowModel`
 
 ```tsx
 getSelectedRowModel: () => RowModel<TGenerics>
@@ -151,7 +151,7 @@ getSelectedRowModel: () => RowModel<TGenerics>
 
 TODO
 
-#### `getFilteredSelectedRowModel`
+### `getFilteredSelectedRowModel`
 
 ```tsx
 getFilteredSelectedRowModel: () => RowModel<TGenerics>
@@ -159,7 +159,7 @@ getFilteredSelectedRowModel: () => RowModel<TGenerics>
 
 TODO
 
-#### `getGroupedSelectedRowModel`
+### `getGroupedSelectedRowModel`
 
 ```tsx
 getGroupedSelectedRowModel: () => RowModel<TGenerics>
@@ -169,7 +169,7 @@ TODO
 
 ## Row API
 
-#### `getIsSelected`
+### `getIsSelected`
 
 ```tsx
 getIsSelected: () => boolean
@@ -177,7 +177,7 @@ getIsSelected: () => boolean
 
 Returns whether or not the row is selected.
 
-#### `getIsSomeSelected`
+### `getIsSomeSelected`
 
 ```tsx
 getIsSomeSelected: () => boolean
@@ -185,7 +185,7 @@ getIsSomeSelected: () => boolean
 
 Returns whether or not some of the row's sub rows are selected.
 
-#### `getCanSelect`
+### `getCanSelect`
 
 ```tsx
 getCanSelect: () => boolean
@@ -193,7 +193,7 @@ getCanSelect: () => boolean
 
 Returns whether or not the row can be selected.
 
-#### `getCanMultiSelect`
+### `getCanMultiSelect`
 
 ```tsx
 getCanMultiSelect: () => boolean
@@ -201,7 +201,7 @@ getCanMultiSelect: () => boolean
 
 Returns whether or not the row can multi-select. TODO clarify
 
-#### `getCanSelectSubRows`
+### `getCanSelectSubRows`
 
 ```tsx
 getCanSelectSubRows: () => boolean
@@ -209,7 +209,7 @@ getCanSelectSubRows: () => boolean
 
 Returns whether or not the row can select sub rows automatically when the parent row is selected.
 
-#### `toggleSelected`
+### `toggleSelected`
 
 ```tsx
 toggleSelected: (value?: boolean) => void
@@ -217,7 +217,7 @@ toggleSelected: (value?: boolean) => void
 
 Selects/deselects the row.
 
-#### `getToggleSelectedHandler`
+### `getToggleSelectedHandler`
 
 ```tsx
 getToggleSelectedHandler: () => (event: unknown) => void

@@ -17,7 +17,7 @@ export type VisibilityTableState = {
 
 ## Column Def Options
 
-#### `enableHiding`
+### `enableHiding`
 
 ```tsx
 enableHiding?: boolean
@@ -27,7 +27,7 @@ Enables/disables hiding the column
 
 ## Column API
 
-#### `getCanHide`
+### `getCanHide`
 
 ```tsx
 getCanHide: () => boolean
@@ -35,7 +35,7 @@ getCanHide: () => boolean
 
 Returns whether the column can be hidden
 
-#### `getIsVisible`
+### `getIsVisible`
 
 ```tsx
 getIsVisible: () => boolean
@@ -43,7 +43,7 @@ getIsVisible: () => boolean
 
 Returns whether the column is visible
 
-#### `toggleVisibility`
+### `toggleVisibility`
 
 ```tsx
 toggleVisibility: (value?: boolean) => void
@@ -51,7 +51,7 @@ toggleVisibility: (value?: boolean) => void
 
 Toggles the column visibility
 
-#### `getToggleVisibilityHandler`
+### `getToggleVisibilityHandler`
 
 ```tsx
 getToggleVisibilityHandler: () => (event: unknown) => void
@@ -61,7 +61,7 @@ Returns a function that can be used to toggle the column visibility. This functi
 
 ## Table Options
 
-#### `onColumnVisibilityChange`
+### `onColumnVisibilityChange`
 
 ```tsx
 onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
@@ -69,7 +69,7 @@ onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
 
 If provided, this function will be called with an `updaterFn` when `state.columnVisibility` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-#### `enableHiding`
+### `enableHiding`
 
 ```tsx
 enableHiding?: boolean
@@ -79,7 +79,7 @@ Enables/disables hiding of columns.
 
 ## Table Instance API
 
-#### `getVisibleFlatColumns`
+### `getVisibleFlatColumns`
 
 ```tsx
 getVisibleFlatColumns: () => Column < TGenerics > []
@@ -87,7 +87,7 @@ getVisibleFlatColumns: () => Column < TGenerics > []
 
 Returns a flat array of columns that are visible, including parent columns.
 
-#### `getVisibleLeafColumns`
+### `getVisibleLeafColumns`
 
 ```tsx
 getVisibleLeafColumns: () => Column < TGenerics > []
@@ -95,7 +95,7 @@ getVisibleLeafColumns: () => Column < TGenerics > []
 
 Returns a flat array of leaf-node columns that are visible.
 
-#### `getLeftVisibleLeafColumns`
+### `getLeftVisibleLeafColumns`
 
 ```tsx
 getLeftVisibleLeafColumns: () => Column < TGenerics > []
@@ -103,7 +103,7 @@ getLeftVisibleLeafColumns: () => Column < TGenerics > []
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the left portion of the table.
 
-#### `getRightVisibleLeafColumns`
+### `getRightVisibleLeafColumns`
 
 ```tsx
 getRightVisibleLeafColumns: () => Column < TGenerics > []
@@ -111,7 +111,7 @@ getRightVisibleLeafColumns: () => Column < TGenerics > []
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
 
-#### `getCenterVisibleLeafColumns`
+### `getCenterVisibleLeafColumns`
 
 ```tsx
 getCenterVisibleLeafColumns: () => Column < TGenerics > []
@@ -119,7 +119,7 @@ getCenterVisibleLeafColumns: () => Column < TGenerics > []
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.
 
-#### `setColumnVisibility`
+### `setColumnVisibility`
 
 ```tsx
 setColumnVisibility: (updater: Updater<VisibilityState>) => void
@@ -127,7 +127,7 @@ setColumnVisibility: (updater: Updater<VisibilityState>) => void
 
 Updates the column visibility state via an updater function or value
 
-#### `resetColumnVisibility`
+### `resetColumnVisibility`
 
 ```tsx
 resetColumnVisibility: (defaultState?: boolean) => void
@@ -135,7 +135,7 @@ resetColumnVisibility: (defaultState?: boolean) => void
 
 Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
 
-#### `toggleAllColumnsVisible`
+### `toggleAllColumnsVisible`
 
 ```tsx
 toggleAllColumnsVisible: (value?: boolean) => void
@@ -143,7 +143,7 @@ toggleAllColumnsVisible: (value?: boolean) => void
 
 Toggles the visibility of all columns
 
-#### `getIsAllColumnsVisible`
+### `getIsAllColumnsVisible`
 
 ```tsx
 getIsAllColumnsVisible: () => boolean
@@ -151,7 +151,7 @@ getIsAllColumnsVisible: () => boolean
 
 Returns whether all columns are visible
 
-#### `getIsSomeColumnsVisible`
+### `getIsSomeColumnsVisible`
 
 ```tsx
 getIsSomeColumnsVisible: () => boolean
@@ -159,7 +159,7 @@ getIsSomeColumnsVisible: () => boolean
 
 Returns whether some columns are visible
 
-#### `getToggleAllColumnsVisibilityHandler`
+### `getToggleAllColumnsVisibilityHandler`
 
 ```tsx
 getToggleAllColumnsVisibilityHandler: () => ((event: unknown) => void)
