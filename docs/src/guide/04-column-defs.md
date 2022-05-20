@@ -178,7 +178,7 @@ Columns are uniquely identified with 3 strategies:
   - The columns `id` property will be used to uniquely identify the column OR
   - If a primitive `string` header is supplied, that header string will be used to uniquely identify the column
 
-> 🧠 An easy way to remember: I you define a column with an accessor function, either provide a string header or provide a unique `id` property.
+> 🧠 An easy way to remember: If you define a column with an accessor function, either provide a string header or provide a unique `id` property.
 
 ## Column Formatting & Rendering
 
@@ -217,6 +217,6 @@ For more info on aggregated cells, see [grouping](../grouping.md).
 
 ## Header & Footer Formatting
 
-Headers and footer do not have acceess to row data, but still use the same concepts for displaying custom content.
+Headers and footer do not have access to row data, but still use the same concepts for displaying custom content.
 
 If all you need is a TODO
