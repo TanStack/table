@@ -44,16 +44,19 @@
     {
       "label": "Feature APIs",
       "children": [
-        { "label": "Column Ordering", "to": "api/column-ordering" },
-        { "label": "Column Pinning", "to": "api/column-pinning" },
-        { "label": "Column Sizing", "to": "api/column-sizing" },
-        { "label": "Column Visibility", "to": "api/column-visibility" },
-        { "label": "Filters", "to": "api/filters" },
-        { "label": "Sorting", "to": "api/sorting" },
-        { "label": "Grouping", "to": "api/grouping" },
-        { "label": "Expanding", "to": "api/expanding" },
-        { "label": "Pagination", "to": "api/pagination" },
-        { "label": "Row Selection", "to": "api/row-selection" }
+        { "label": "Column Ordering", "to": "api/features/column-ordering" },
+        { "label": "Column Pinning", "to": "api/features/column-pinning" },
+        { "label": "Column Sizing", "to": "api/features/column-sizing" },
+        {
+          "label": "Column Visibility",
+          "to": "api/features/column-visibility"
+        },
+        { "label": "Filters", "to": "api/features/filters" },
+        { "label": "Sorting", "to": "api/features/sorting" },
+        { "label": "Grouping", "to": "api/features/grouping" },
+        { "label": "Expanding", "to": "api/features/expanding" },
+        { "label": "Pagination", "to": "api/features/pagination" },
+        { "label": "Row Selection", "to": "api/features/row-selection" }
       ]
     },
 
