@@ -118,8 +118,8 @@ function App() {
                 <input
                   {...{
                     type: 'checkbox',
-                    checked: instance.getIsAllColumnsVisible(),
-                    onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                    checked: column.getIsVisible(),
+                    onChange: column.getToggleVisibilityHandler(),
                   }}
                 />{' '}
                 {column.id}
