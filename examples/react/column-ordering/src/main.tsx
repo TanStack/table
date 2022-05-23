@@ -165,6 +165,7 @@ function App() {
           ))}
         </tfoot>
       </table>
+      <pre>{JSON.stringify(instance.getState().columnOrder, null, 2)}</pre>
     </div>
   )
 }
