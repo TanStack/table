@@ -62,7 +62,11 @@
   let sorting = []
 
   const setSorting = updater => {
-    sorting = updater(sorting)
+    if (updater instanceof Function) {
+      sorting = updater(sorting)
+    } else {
+      sorting = updater
+    }
     options.update(old => ({
       ...old,
       state: {
@@ -72,17 +76,19 @@
     }))
   }
 
-  const options = writable(table.createOptions({
-    data,
-    columns,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
-  }))
+  const options = writable(
+    table.createOptions({
+      data,
+      columns,
+      state: {
+        sorting,
+      },
+      onSortingChange: setSorting,
+      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      debugTable: true,
+    })
+  )
 
   const refreshData = () => {
     console.log('refresh')

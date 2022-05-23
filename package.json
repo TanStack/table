@@ -40,6 +40,7 @@
     "./examples/react/row-selection",
     "./examples/react/sorting",
     "./examples/svelte/basic",
+    "./examples/svelte/column-pinning",
     "./examples/svelte/sorting",
     "./examples/vue/basic",
     "./examples/solid/basic",
