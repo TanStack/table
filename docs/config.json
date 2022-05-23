@@ -132,6 +132,8 @@
       "label": "Svelte Examples",
       "children": [
         { "to": "examples/svelte/basic", "label": "Basic" },
+        { "to": "examples/svelte/column-ordering", "label": "Column Ordering" },
+        { "to": "examples/svelte/column-pinning", "label": "Column Pinning" },
         { "to": "examples/svelte/sorting", "label": "Sorting" }
       ]
     },
