@@ -1,4 +1,9 @@
 {
+  "docSearch": {
+    "appId": "",
+    "indexName": "",
+    "apiKey": ""
+  },
   "menu": [
     {
       "label": "Guide",
