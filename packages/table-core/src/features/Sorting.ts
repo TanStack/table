@@ -58,6 +58,7 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getAutoSortingFn: () => SortingFn<TGenerics>
   getAutoSortDir: () => SortDirection
   getSortingFn: () => SortingFn<TGenerics>
+  getSortDescFirst: () => boolean
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
@@ -219,10 +220,7 @@ export const Sorting: TableFeature = {
             }
           }
 
-          const sortDescFirst =
-            column.columnDef.sortDescFirst ??
-            instance.options.sortDescFirst ??
-            column.getAutoSortDir() === 'desc'
+          const sortDescFirst = column.getSortDescFirst()
 
           // Handle toggle states that will remove the sorting
           if (
@@ -276,6 +274,14 @@ export const Sorting: TableFeature = {
 
           return newSorting
         })
+      },
+
+      getSortDescFirst: () => {
+        return (
+          column.columnDef.sortDescFirst ??
+          instance.options.sortDescFirst ??
+          column.getAutoSortDir() === 'desc'
+        )
       },
 
       getCanSort: () => {
