@@ -159,13 +159,13 @@ getSortingFn: () => SortingFn<TGenerics>
 
 Returns the resolved sorting function to be used for this column
 
-### `getSortDescFirst`
+### `getNextSortingOrder`
 
 ```tsx
-getSortDescFirst: () => boolean
+getNextSortingOrder: () => SortDirection | "none"
 ```
 
-Returns whether this column will be sorted descending first (this can depend on the data type if not set explicitly)
+Returns the next sorting order.
 
 ### `getCanSort`
 
