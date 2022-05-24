@@ -25,6 +25,7 @@
     { "path": "examples/react/sorting/tsconfig.dev.json" },
     { "path": "examples/vue/basic/tsconfig.dev.json" },
     { "path": "examples/solid/basic/tsconfig.dev.json" },
+    { "path": "examples/solid/column-visibility/tsconfig.dev.json" },
     { "path": "examples/solid/sorting/tsconfig.dev.json" },
     { "path": "examples/svelte/basic/tsconfig.dev.json" },
     { "path": "examples/svelte/column-ordering/tsconfig.dev.json"},

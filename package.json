@@ -46,6 +46,7 @@
     "./examples/svelte/sorting",
     "./examples/vue/basic",
     "./examples/solid/basic",
+    "./examples/solid/column-visibility",
     "./examples/solid/sorting"
   ],
   "devDependencies": {
