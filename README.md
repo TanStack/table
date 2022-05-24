@@ -1,8 +1,8 @@
-![React Table Header](https://github.com/tanstack/react-table/raw/alpha/media/repo-dark.png)
+![TanStack Table Header](https://github.com/tanstack/react-table/raw/alpha/media/repo-dark.png)
 
-# React Table v8 (alpha)
+# TanSTack Table v8 (alpha)
 
-> This is an **alpha** version of React Table v8. It is not ready for production use, but it is ready to be taste-tested!
+> This is an **alpha** version of TanStack Table v8. It is not ready for production use, but it is ready to be taste-tested!
 
 > [Looking for version 7? Click here!](https://github.com/tanstack/react-table/tree/v7)
 
@@ -28,7 +28,7 @@ Hooks for building **lightweight, fast and extendable datagrids** for React, Vue
 
 Enjoy this library? Try them all! [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
 
-## Visit [/docs](https://github.com/tanstack/react-table/tree/alpha/docs) for docs, guides, API and more!
+## Visit [/docs](https://tanstack.com/table) for docs, guides, API and more!
 
 ## Quick Features
 
