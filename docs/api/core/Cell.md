@@ -8,7 +8,7 @@ These are **core** options and API properties for all cells. More options and AP
 
 All cell objects have the following properties:
 
-#### `id`
+### `id`
 
 ```tsx
 id: string
@@ -16,7 +16,7 @@ id: string
 
 The unique ID for the cell across the entire table instance.
 
-#### `getValue`
+### `getValue`
 
 ```tsx
 getValue: () => TGenerics['Value']
@@ -24,7 +24,7 @@ getValue: () => TGenerics['Value']
 
 Returns the value for the cell, accessed via the associated column's accessor key or accessor function.
 
-#### `row`
+### `row`
 
 ```tsx
 row: Row<TGenerics>
@@ -32,7 +32,7 @@ row: Row<TGenerics>
 
 The associated Row object for the cell.
 
-#### `column`
+### `column`
 
 ```tsx
 column: Column<TGenerics>
@@ -40,7 +40,7 @@ column: Column<TGenerics>
 
 The associated Column object for the cell.
 
-#### `renderCell`
+### `renderCell`
 
 ```tsx
 renderCell: () => string | null | TGenerics['Rendered']

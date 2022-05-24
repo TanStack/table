@@ -17,7 +17,7 @@ body:
 
         The more information you fill in, the better the community can help you.
 
-        > ⚠️⚠️⚠️ React Table v8 is on the horizon with alpha/beta builds and v7 is entering
+        > ⚠️⚠️⚠️ TanStack Table v8 is on the horizon with alpha/beta builds and v7 is entering
         > an LTS phase and will only be receiving patch-level fixes. If you are experiencing
         > issues in v7 that require minor/feature or major/breaking changes, your issue will
         > be redirected to v8 or possibly even closed if the issue has already been fixed in v8.

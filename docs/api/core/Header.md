@@ -8,7 +8,7 @@ These are **core** options and API properties for all headers. More options and 
 
 All header objects have the following properties:
 
-#### `id`
+### `id`
 
 ```tsx
 id: string
@@ -16,7 +16,7 @@ id: string
 
 The unique identifier for the header.
 
-#### `index`
+### `index`
 
 ```tsx
 id: number
@@ -24,7 +24,7 @@ id: number
 
 The index for the header within the header group.
 
-#### `depth`
+### `depth`
 
 ```tsx
 id: number
@@ -32,7 +32,7 @@ id: number
 
 The depth of the header, zero-indexed based.
 
-#### `column`
+### `column`
 
 ```tsx
 column: Column<TGenerics>
@@ -40,7 +40,7 @@ column: Column<TGenerics>
 
 The header's associated [Column](./Column.md) object
 
-#### `headerGroup`
+### `headerGroup`
 
 ```tsx
 headerGroup: HeaderGroup<TGenerics>
@@ -48,7 +48,7 @@ headerGroup: HeaderGroup<TGenerics>
 
 The header's associated [HeaderGroup](./HeaderGroup.md) object
 
-#### `subHeaders`
+### `subHeaders`
 
 ```tsx
 type subHeaders = Header<TGenerics>[]
@@ -56,7 +56,7 @@ type subHeaders = Header<TGenerics>[]
 
 The header's hierarchical sub/child headers. Will be empty if the header's associated column is a leaf-column.
 
-#### `colSpan`
+### `colSpan`
 
 ```tsx
 colSpan: number
@@ -64,7 +64,7 @@ colSpan: number
 
 The col-span for the header.
 
-#### `rowSpan`
+### `rowSpan`
 
 ```tsx
 rowSpan: number
@@ -72,7 +72,7 @@ rowSpan: number
 
 The row-span for the header.
 
-#### `getLeafHeaders`
+### `getLeafHeaders`
 
 ```tsx
 type getLeafHeaders = () => Header<TGenerics>[]
@@ -80,7 +80,7 @@ type getLeafHeaders = () => Header<TGenerics>[]
 
 Returns the leaf headers hierarchically nested under this header.
 
-#### `isPlaceholder`
+### `isPlaceholder`
 
 ```tsx
 isPlaceholder: boolean
@@ -88,7 +88,7 @@ isPlaceholder: boolean
 
 A boolean denoting if the header is a placeholder header
 
-#### `placeholderId`
+### `placeholderId`
 
 ```tsx
 placeholderId?: string
@@ -96,7 +96,7 @@ placeholderId?: string
 
 If the header is a placeholder header, this will be a unique header ID that does not conflict with any other headers across the table
 
-#### `renderHeader`
+### `renderHeader`
 
 ```tsx
 renderHeader: (options?: { renderPlaceholder?: boolean }) =>
@@ -105,7 +105,7 @@ renderHeader: (options?: { renderPlaceholder?: boolean }) =>
 
 Returns the rendered header using the associated column's `header` template. The exact return type of this function depends on the adapter being used.
 
-#### `renderFooter`
+### `renderFooter`
 
 ```tsx
 renderFooter: (options?: { renderPlaceholder?: boolean }) =>

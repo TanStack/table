@@ -12,7 +12,7 @@ Creates a new `Table` factory, from which you can set types, pre-set options and
 
 ## `Table` API
 
-#### `setRowType`
+### `setRowType`
 
 > 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
@@ -26,7 +26,7 @@ Call this function to set the type of rows in your table. The type you provide h
 const table = createTable().setRowType<Row>()
 ```
 
-#### `setTableMetaType`
+### `setTableMetaType`
 
 > 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
@@ -38,7 +38,7 @@ setTableMetaType: <TTableMeta>() => Table<
 
 Call this function to set the type of your `instanceOptions.meta` object that you will use to create your table instance.
 
-#### `setColumnMetaType`
+### `setColumnMetaType`
 
 > 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
@@ -50,7 +50,7 @@ setColumnMetaType: <TColumnMeta>() => Table<
 
 Call this function to set the type of `columnDefinition.meta` objects that you can provide to your column defs.
 
-#### `setFilterMetaType`
+### `setFilterMetaType`
 
 > 🦺 This function is designed for TypeScript. If using JS, this is a noop.
 
@@ -62,7 +62,7 @@ setFilterMetaType: <TFilterMeta>() => Table<
 
 Call this function to set the type of the filter meta object that you can optionally provide during the row filtering process.
 
-#### `setOptions`
+### `setOptions`
 
 ```tsx
 setOptions: <
@@ -91,7 +91,7 @@ setOptions: <
 
 Call this function to pre-set options for your table before creating your table instance. This is specifically useful for providing **custom `filterFns`, `sortingFns`, and `aggregationFns`** that you can reference by key to filter, sort, and aggregate your table data. These options will be autocompleted and type-checked in your column defs.
 
-#### `createGroup`
+### `createGroup`
 
 ```tsx
 createGroup: (
@@ -121,7 +121,7 @@ createGroup: (
 
 Call this function to create a grouping column. See [Creating Column Defs](../03-columns.md) for more details.
 
-#### `createDisplayColumn`
+### `createDisplayColumn`
 
 ```tsx
 createDisplayColumn: (
@@ -131,7 +131,7 @@ createDisplayColumn: (
 
 Call this function to create a display column. See [Creating Column Defs](../03-columns.md) for more details.
 
-#### `createDataColumn`
+### `createDataColumn`
 
 Call this function to create a data column. See [Creating Column Defs](../03-columns.md) for more details.
 
@@ -146,7 +146,7 @@ type Person = {
 }
 ```
 
-#### `createOptions`
+### `createOptions`
 
 ```tsx
 createOptions: (

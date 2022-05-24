@@ -8,7 +8,7 @@ These are **core** options and API properties for all rows. More options and API
 
 All row objects have the following properties:
 
-#### `id`
+### `id`
 
 ```tsx
 id: string
@@ -16,7 +16,7 @@ id: string
 
 The resolved unique identifier for the row resolved via the `instanceOptions.getRowId` option. Defaults to the row's index (or relative index if it is a subRow)
 
-#### `depth`
+### `depth`
 
 ```tsx
 id: number
@@ -24,7 +24,7 @@ id: number
 
 The depth of the row (if nested or grouped) relative to the root row array.
 
-#### `index`
+### `index`
 
 ```tsx
 index: number
@@ -32,7 +32,7 @@ index: number
 
 The index of the row within its parent array (or the root data array)
 
-#### `original`
+### `original`
 
 ```tsx
 original?: TGenerics['Row']
@@ -40,7 +40,7 @@ original?: TGenerics['Row']
 
 The original row object provided to the table instance
 
-#### `getValue`
+### `getValue`
 
 ```tsx
 getValue: (columnId: string) => any
@@ -48,7 +48,7 @@ getValue: (columnId: string) => any
 
 Returns the value from the row for a given columnId
 
-#### `subRows`
+### `subRows`
 
 ```tsx
 type subRows = Row<TGenerics>[]
@@ -56,7 +56,7 @@ type subRows = Row<TGenerics>[]
 
 An array of subRows for the row as returned and created by the `instanceOptions.getSubRows` option.
 
-#### `getLeafRows`
+### `getLeafRows`
 
 ```tsx
 type getLeafRows = () => Row<TGenerics>[]
@@ -64,7 +64,7 @@ type getLeafRows = () => Row<TGenerics>[]
 
 Returns the leaf rows for the row, not including any parent rows.
 
-#### `originalSubRows`
+### `originalSubRows`
 
 ```tsx
 originalSubRows?: TGenerics['Row'][]
@@ -72,7 +72,7 @@ originalSubRows?: TGenerics['Row'][]
 
 An array of the original subRows as returned by the `instanceOptions.getSubRows` option.
 
-#### `getAllCells`
+### `getAllCells`
 
 ```tsx
 type getAllCells = () => Cell<TGenerics>[]

@@ -8,7 +8,7 @@ These are **core** options and API properties for all columns. More options and 
 
 All column objects have the following properties:
 
-#### `id`
+### `id`
 
 ```tsx
 id: string
@@ -20,7 +20,7 @@ The resolved unique identifier for the column resolved in this priority:
 - The accessor key from the column def
 - The header string from the column def
 
-#### `depth`
+### `depth`
 
 ```tsx
 id: number
@@ -28,7 +28,7 @@ id: number
 
 The depth of the column (if grouped) relative to the root column def array.
 
-#### `accessorFn`
+### `accessorFn`
 
 ```tsx
 accessorFn?: AccessorFn<TGenerics['Row']>
@@ -36,7 +36,7 @@ accessorFn?: AccessorFn<TGenerics['Row']>
 
 The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
 
-#### `columnDef`
+### `columnDef`
 
 ```tsx
 columnDef: ColumnDef<TGenerics>
@@ -44,7 +44,7 @@ columnDef: ColumnDef<TGenerics>
 
 The original column def used to create the column.
 
-#### `columnDefType`
+### `columnDefType`
 
 ```tsx
 columnDefType: 'data' | 'display' | 'group'
@@ -52,7 +52,7 @@ columnDefType: 'data' | 'display' | 'group'
 
 The type of column def that was used to create the column. See the [`createTable()` API](../guide/tables.md#createtable) for more information.
 
-#### `columns`
+### `columns`
 
 ```tsx
 type columns = ColumnDef<TGenerics>[]
@@ -60,7 +60,7 @@ type columns = ColumnDef<TGenerics>[]
 
 The child column (if the column is a group column). Will be an empty array if the column is not a group column.
 
-#### `parent`
+### `parent`
 
 ```tsx
 parent?: Column<TGenerics>
@@ -68,7 +68,7 @@ parent?: Column<TGenerics>
 
 The parent column for this column. Will be undefined if this is a root column.
 
-#### `getFlatColumns`
+### `getFlatColumns`
 
 ```tsx
 type getFlatColumns = () => Column<TGenerics>[]
@@ -76,7 +76,7 @@ type getFlatColumns = () => Column<TGenerics>[]
 
 Returns the flattened array of this column and all child/grand-child columns for this column.
 
-#### `getLeafColumns`
+### `getLeafColumns`
 
 ```tsx
 type getLeafColumns = () => Column<TGenerics>[]

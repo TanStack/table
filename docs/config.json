@@ -6,6 +6,15 @@
   },
   "menu": [
     {
+      "label": "Adapters",
+      "children": [
+        { "label": "React Table", "to": "adapters/react-table" },
+        { "label": "Solid Table", "to": "adapters/solid-table" },
+        { "label": "Svelte Table", "to": "adapters/svelte-table" },
+        { "label": "Vue Table", "to": "adapters/vue-table" }
+      ]
+    },
+    {
       "label": "Guide",
       "children": [
         { "label": "Introduction", "to": "guide/00-introduction" },
