@@ -58,7 +58,7 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getAutoSortingFn: () => SortingFn<TGenerics>
   getAutoSortDir: () => SortDirection
   getSortingFn: () => SortingFn<TGenerics>
-  getNextSortingOrder: () => SortDirection | 'none'
+  getNextSortingOrder: () => SortDirection | false
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
   getSortIndex: () => number
@@ -192,6 +192,9 @@ export const Sorting: TableFeature = {
         //   return
         // }
 
+        // this needs to be outside of instance.setSorting to be in sync with rerender
+        const nextSortingOrder = column.getNextSortingOrder()
+
         instance.setSorting(old => {
           // Find any existing sorting for this column
           const existingSorting = old?.find(d => d.id === column.id)
@@ -201,7 +204,7 @@ export const Sorting: TableFeature = {
           let newSorting: SortingState = []
 
           // What should we do with this sort action?
-          let sortAction
+          let sortAction: 'add' | 'remove' | 'toggle' | 'replace'
 
           if (column.getCanMultiSort() && multi) {
             if (existingSorting) {
@@ -220,20 +223,13 @@ export const Sorting: TableFeature = {
             }
           }
 
-          const sortDescFirst =
-            column.columnDef.sortDescFirst ??
-            instance.options.sortDescFirst ??
-            column.getAutoSortDir() === 'desc'
-
           // Handle toggle states that will remove the sorting
           if (
             sortAction === 'toggle' && // Must be toggling
             (instance.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
             !hasDescDefined && // Must not be setting desc
             (multi ? instance.options.enableMultiRemove ?? true : true) && // If multi, don't allow if enableMultiRemove
-            (existingSorting?.desc // Finally, detect if it should indeed be removed
-              ? !sortDescFirst
-              : sortDescFirst)
+            !nextSortingOrder // Finally, detect if it should indeed be removed
           ) {
             sortAction = 'remove'
           }
@@ -242,7 +238,7 @@ export const Sorting: TableFeature = {
             newSorting = [
               {
                 id: column.id,
-                desc: hasDescDefined ? desc! : !!sortDescFirst,
+                desc: hasDescDefined ? desc! : nextSortingOrder! === 'desc',
               },
             ]
           } else if (sortAction === 'add' && old?.length) {
@@ -250,7 +246,7 @@ export const Sorting: TableFeature = {
               ...old,
               {
                 id: column.id,
-                desc: hasDescDefined ? desc! : !!sortDescFirst,
+                desc: hasDescDefined ? desc! : nextSortingOrder! === 'desc',
               },
             ]
             // Take latest n columns
@@ -266,7 +262,7 @@ export const Sorting: TableFeature = {
               if (d.id === column.id) {
                 return {
                   ...d,
-                  desc: hasDescDefined ? desc! : !existingSorting?.desc,
+                  desc: hasDescDefined ? desc! : nextSortingOrder! === 'desc',
                 }
               }
               return d
@@ -293,7 +289,7 @@ export const Sorting: TableFeature = {
         if (isSorted === firstSortDirection) {
           return isSorted === 'desc' ? 'asc' : 'desc'
         } else {
-          return 'none'
+          return false
         }
       },
 

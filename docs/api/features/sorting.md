@@ -162,7 +162,7 @@ Returns the resolved sorting function to be used for this column
 ### `getNextSortingOrder`
 
 ```tsx
-getNextSortingOrder: () => SortDirection | "none"
+getNextSortingOrder: () => SortDirection | false
 ```
 
 Returns the next sorting order.
