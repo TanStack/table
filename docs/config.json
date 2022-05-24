@@ -125,6 +125,10 @@
       "label": "Solid Examples",
       "children": [
         { "to": "examples/solid/basic", "label": "Basic" },
+        {
+          "to": "examples/solid/column-visibility",
+          "label": "Column Visibility"
+        },
         { "to": "examples/solid/sorting", "label": "Sorting" }
       ]
     },
