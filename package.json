@@ -40,9 +40,13 @@
     "./examples/react/row-selection",
     "./examples/react/sorting",
     "./examples/svelte/basic",
+    "./examples/svelte/column-ordering",
+    "./examples/svelte/column-pinning",
+    "./examples/svelte/column-visibility",
     "./examples/svelte/sorting",
     "./examples/vue/basic",
     "./examples/solid/basic",
+    "./examples/solid/column-visibility",
     "./examples/solid/sorting"
   ],
   "devDependencies": {

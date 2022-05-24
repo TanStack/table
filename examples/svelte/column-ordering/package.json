@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-svelte-basic",
+  "name": "tanstack-table-example-svelte-column-ordering",
   "version": "0.0.0",
   "private": true,
   "type": "module",

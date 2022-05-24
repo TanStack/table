@@ -4,6 +4,7 @@
     createTable,
     getCoreRowModel,
     createTableInstance,
+    getSortedRowModel,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -45,7 +46,7 @@
     },
   ]
 
-  const defaultColumns = [
+  const columns = [
     table.createGroup({
       header: 'Name',
       footer: props => props.column.id,
@@ -91,11 +92,34 @@
     }),
   ]
 
+  let columnVisibility = {}
+
+  const setColumnVisibility = updater => {
+    if (updater instanceof Function) {
+      columnVisibility = updater(columnVisibility)
+    } else {
+      columnVisibility = updater
+    }
+    options.update(old => ({
+      ...old,
+      state: {
+        ...old.state,
+        columnVisibility,
+      },
+    }))
+  }
+
   const options = writable(
     table.createOptions({
       data: defaultData,
-      columns: defaultColumns,
+      columns,
+      state: {
+        columnVisibility,
+      },
+      onColumnVisibilityChange: setColumnVisibility,
       getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      debugTable: true,
     })
   )
 
@@ -105,11 +129,37 @@
       data: defaultData,
     }))
   }
-
   const instance = createTableInstance(table, options)
 </script>
 
 <div class="p-2">
+  <div class="inline-block border border-black shadow rounded">
+    <div class="px-1 border-b border-black">
+      <label>
+        <input
+          checked={$instance.getIsAllColumnsVisible()}
+          on:change={e => {
+            console.log($instance.getToggleAllColumnsVisibilityHandler()(e))
+          }}
+          type="checkbox"
+        />{' '}
+        Toggle All
+      </label>
+    </div>
+    {#each $instance.getAllLeafColumns() as column}
+      <div class="px-1">
+        <label>
+          <input
+            checked={column.getIsVisible()}
+            on:change={column.getToggleVisibilityHandler()}
+            type="checkbox"
+          />{' '}
+          {column.id}
+        </label>
+      </div>
+    {/each}
+  </div>
+  <div class="h-4" />
   <table>
     <thead>
       {#each $instance.getHeaderGroups() as headerGroup}
@@ -125,7 +175,7 @@
       {/each}
     </thead>
     <tbody>
-      {#each $instance.getRowModel().rows as row}
+      {#each $instance.getCoreRowModel().rows.slice(0, 20) as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
@@ -151,4 +201,6 @@
   </table>
   <div class="h-4" />
   <button on:click={() => rerender()} class="border p-2"> Rerender </button>
+  <div class="h-4" />
+  <pre>{JSON.stringify($instance.getState().columnVisibility, null, 2)}</pre>
 </div>

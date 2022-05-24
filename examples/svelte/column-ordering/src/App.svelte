@@ -7,6 +7,7 @@
     getSortedRowModel,
   } from '@tanstack/svelte-table'
   import { makeData, Person } from './makeData'
+  import faker from '@faker-js/faker'
   import './index.css'
 
   const table = createTable().setRowType<Person>()
@@ -57,21 +58,37 @@
     }),
   ]
 
-  const data = makeData(100_000)
+  const data = makeData(5000)
 
-  let sorting = []
+  let columnOrder = []
+  let columnVisibility = {}
 
-  const setSorting = updater => {
+  const setColumnOrder = updater => {
     if (updater instanceof Function) {
-      sorting = updater(sorting)
+      columnOrder = updater(columnOrder)
     } else {
-      sorting = updater
+      columnOrder = updater
     }
     options.update(old => ({
       ...old,
       state: {
         ...old.state,
-        sorting,
+        columnOrder,
+      },
+    }))
+  }
+
+  const setColumnVisibility = updater => {
+    if (updater instanceof Function) {
+      columnVisibility = updater(columnVisibility)
+    } else {
+      columnVisibility = updater
+    }
+    options.update(old => ({
+      ...old,
+      state: {
+        ...old.state,
+        columnVisibility,
       },
     }))
   }
@@ -81,27 +98,27 @@
       data,
       columns,
       state: {
-        sorting,
+        columnOrder,
+        columnVisibility,
       },
-      onSortingChange: setSorting,
+      onColumnOrderChange: setColumnOrder,
+      onColumnVisibilityChange: setColumnVisibility,
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
       debugTable: true,
     })
   )
 
-  const refreshData = () => {
-    console.log('refresh')
-    options.update(prev => ({
-      ...prev,
-      data: makeData(100_000),
-    }))
+  const randomizeColumns = () => {
+    $instance.setColumnOrder(_updater =>
+      faker.helpers.shuffle($instance.getAllLeafColumns().map(d => d.id))
+    )
   }
 
-  const rerender = () => {
+  const regenerate = () => {
     options.update(options => ({
       ...options,
-      data,
+      data: makeData(5000),
     }))
   }
 
@@ -109,25 +126,50 @@
 </script>
 
 <div class="p-2">
-  <div class="h-2" />
-  <table>
+  <div class="inline-block border border-black shadow rounded">
+    <div class="px-1 border-b border-black">
+      <label>
+        <input
+          checked={$instance.getIsAllColumnsVisible()}
+          on:change={e => {
+            console.log($instance.getToggleAllColumnsVisibilityHandler()(e))
+          }}
+          type="checkbox"
+        />{' '}
+        Toggle All
+      </label>
+    </div>
+    {#each $instance.getAllLeafColumns() as column}
+      <div class="px-1">
+        <label>
+          <input
+            checked={column.getIsVisible()}
+            on:change={column.getToggleVisibilityHandler()}
+            type="checkbox"
+          />{' '}
+          {column.id}
+        </label>
+      </div>
+    {/each}
+  </div>
+  <div class="h-4" />
+  <div class="flex flex-wrap gap-2">
+    <button on:click={() => regenerate()} class="border p-1">
+      Regenerate
+    </button>
+    <button on:click={() => randomizeColumns()} class="border p-1">
+      Shuffle Columns
+    </button>
+  </div>
+  <div class="h-4" />
+  <table class="border-2 border-black">
     <thead>
       {#each $instance.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <div
-                  class:cursor-pointer={header.column.getCanSort()}
-                  class:select-none={header.column.getCanSort()}
-                  on:click={header.column.getToggleSortingHandler()}
-                >
-                  <svelte:component this={header.renderHeader()} />
-                  {{
-                    asc: ' 🔼',
-                    desc: ' 🔽',
-                  }[header.column.getIsSorted().toString()] ?? ''}
-                </div>
+                <svelte:component this={header.renderHeader()} />
               {/if}
             </th>
           {/each}
@@ -135,7 +177,7 @@
       {/each}
     </thead>
     <tbody>
-      {#each $instance.getRowModel().rows.slice(0, 10) as row}
+      {#each $instance.getCoreRowModel().rows.slice(0, 20) as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
@@ -145,26 +187,6 @@
         </tr>
       {/each}
     </tbody>
-    <tfoot>
-      {#each $instance.getFooterGroups() as footerGroup}
-        <tr>
-          {#each footerGroup.headers as header}
-            <th colSpan={header.colSpan}>
-              {#if !header.isPlaceholder}
-                <svelte:component this={header.renderFooter()} />
-              {/if}
-            </th>
-          {/each}
-        </tr>
-      {/each}
-    </tfoot>
   </table>
-  <div>{$instance.getRowModel().rows.length} Rows</div>
-  <div>
-    <button on:click={() => rerender()}>Force Rerender</button>
-  </div>
-  <div>
-    <button on:click={() => refreshData()}>Refresh Data</button>
-  </div>
-  <pre>{JSON.stringify($instance.getState().sorting, null, 2)}</pre>
+  <pre>{JSON.stringify($instance.getState().columnOrder, null, 2)}</pre>
 </div>

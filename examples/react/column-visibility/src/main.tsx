@@ -185,6 +185,8 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
+      <div className="h-4" />
+      <pre>{JSON.stringify(instance.getState().columnVisibility, null, 2)}</pre>
     </div>
   )
 }
