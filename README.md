@@ -1,17 +1,6 @@
 ![TanStack Table Header](https://github.com/tanstack/react-table/raw/alpha/media/repo-dark.png)
 
-# TanStack Table v8 (alpha)
-
-Also known as:
-
-- [React Table](https://tanstack.com/table/v8/docs/adapters/react-table)
-- [Solid Table](https://tanstack.com/table/v8/docs/adapters/solid-table)
-- [Svelte Table](https://tanstack.com/table/v8/docs/adapters/svelte-table)
-- [Vue Table](https://tanstack.com/table/v8/docs/adapters/vue-table)
-
-> This is an **alpha** version of TanStack Table v8. It is not ready for production use, but it is ready to be taste-tested!
-
-> [Looking for version 7 of `react-table`? Click here!](https://github.com/tanstack/react-table/tree/v7)
+# [TanStack](https://tanstack.com) Table v8 (alpha)
 
 Hooks for building **lightweight, fast and extendable datagrids** for React, Sold, Vue, Svelte and TS/JS.
 
@@ -33,17 +22,30 @@ Hooks for building **lightweight, fast and extendable datagrids** for React, Sol
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
 
-Enjoy this library? Try all of the TanStack libraries! [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
+> This is an **alpha** version of TanStack Table v8. It is not ready for production use, but it is ready to be taste-tested!
+
+> [Looking for version 7 of `react-table`? Click here!](https://github.com/tanstack/react-table/tree/v7)
+
+## Enjoy this library?
+
+Try some other [TanStack](https://tanstack.com) like [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
 
 ## Visit [tanstack.com/table](https://tanstack.com/table) for docs, guides, API and more!
+
+You may know **TanStack Table** by our adapter names, too!
+
+- [React Table](https://tanstack.com/table/v8/docs/adapters/react-table)
+- [Solid Table](https://tanstack.com/table/v8/docs/adapters/solid-table)
+- [Svelte Table](https://tanstack.com/table/v8/docs/adapters/svelte-table)
+- [Vue Table](https://tanstack.com/table/v8/docs/adapters/vue-table)
 
 ## Summary
 
 TanStack Table is a **headless** table library, which means it does not ship with components, markup or styles. This meand that you have **full controll** over markup and styles (CSS, CSS-in-JS, UI Component Libraries, etc) and this is also what gives it its portable nature. You can even use it in React Native!
 
-If you want a **lighter-weight table with full control over the markup and implementation of your table**, then you should consider using **TanStack Table, a headless table library**.
+If you want a **lightweight table with full control over markup and implementation**, then you should consider using **TanStack Table, a headless table library**.
 
-If you want a **ready-to-use component-based table with more power but slightly more constraints around markup/styles/implementation **, you should consider using [AG Grid](https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable), a component-based table library from our OSS partner [AG Grid](https://ag-grid.com).
+If you want a **ready-to-use component-based table with more power but more constraints around markup/styles/implementation**, you should consider using [AG Grid](https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable), a component-based table library from our OSS partner [AG Grid](https://ag-grid.com).
 
 TanStack Table and AG Grid are respectfully the
 **best table/datagrid libraries around**. Instead
