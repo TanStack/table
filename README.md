@@ -1,6 +1,6 @@
 ![TanStack Table Header](https://github.com/tanstack/react-table/raw/alpha/media/repo-dark.png)
 
-# TanSTack Table v8 (alpha)
+# TanStack Table v8 (alpha)
 
 > This is an **alpha** version of TanStack Table v8. It is not ready for production use, but it is ready to be taste-tested!
 
