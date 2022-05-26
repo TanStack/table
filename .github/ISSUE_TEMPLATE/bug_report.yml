@@ -6,14 +6,14 @@ body:
       value: |
         Thank you for reporting an issue :pray:.
 
-        This issue tracker is for reporting reproducible bugs or regression's found in [react-table](https://github.com/tanstack/react-table)
+        This issue tracker is for reporting reproducible bugs or regression's found in [react-table](https://github.com/tanstack/table)
         If you have a question about how to achieve or implement something and are struggling, please post a question
-        inside of react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions) instead of filing an issue.
+        inside of react-table's [Discussions tab](https://github.com/tanstack/table/discussions) instead of filing an issue.
 
         Before submitting a new bug/issue, please check the links below to see if there is a solution or question posted there already:
-        - react-table's [Discussions tab](https://github.com/tanstack/react-table/discussions)
-        - react-table's [Open Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-        - react-table's [Closed Issues](https://github.com/tanstack/react-table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
+        - react-table's [Discussions tab](https://github.com/tanstack/table/discussions)
+        - react-table's [Open Issues](https://github.com/tanstack/table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+        - react-table's [Closed Issues](https://github.com/tanstack/table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
 
         The more information you fill in, the better the community can help you.
 
@@ -39,7 +39,7 @@ body:
           - Your bug may get fixed much faster if we can run your code and it doesn't have dependencies other than React.
           - To create a shareable code example for web, you can use CodeSandbox (https://codesandbox.io/s/new) or Stackblitz (https://stackblitz.com/).
           - Please make sure the example is complete and runnable without prior dependencies and free of unnecessary abstractions
-          - Feel free to fork any of the official CodeSandbox examples to reproduce your issue: https://github.com/tanstack/react-table/tree/main/examples/
+          - Feel free to fork any of the official CodeSandbox examples to reproduce your issue: https://github.com/tanstack/table/tree/main/examples/
           - For React Native, you can use: https://snack.expo.dev/
           - For TypeScript related issues only, a TypeScript Playground link might be sufficient: https://www.typescriptlang.org/play
           - Please read these tips for providing a minimal example: https://stackoverflow.com/help/mcve.

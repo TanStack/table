@@ -4,10 +4,10 @@
   "version": "8.0.0-alpha.87",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
   "license": "MIT",
-  "homepage": "https://github.com/tanstack/react-table#readme",
+  "homepage": "https://github.com/tanstack/table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanstack/react-table.git"
+    "url": "git+https://github.com/tanstack/table.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

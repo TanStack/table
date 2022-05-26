@@ -1,6 +1,6 @@
 {
   "private": true,
-  "repository": "https://github.com/tanstack/react-table.git",
+  "repository": "https://github.com/tanstack/table.git",
   "scripts": {
     "test": "(is-ci && yarn test:ci) || yarn test:dev",
     "test:ci": "jest",
