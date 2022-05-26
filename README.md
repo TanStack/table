@@ -41,7 +41,7 @@ You may know **TanStack Table** by our adapter names, too!
 
 ## Summary
 
-TanStack Table is a **headless** table library, which means it does not ship with components, markup or styles. This meand that you have **full controll** over markup and styles (CSS, CSS-in-JS, UI Component Libraries, etc) and this is also what gives it its portable nature. You can even use it in React Native!
+TanStack Table is a **headless** table library, which means it does not ship with components, markup or styles. This means that you have **full control** over markup and styles (CSS, CSS-in-JS, UI Component Libraries, etc) and this is also what gives it its portable nature. You can even use it in React Native!
 
 If you want a **lightweight table with full control over markup and implementation**, then you should consider using **TanStack Table, a headless table library**.
 
