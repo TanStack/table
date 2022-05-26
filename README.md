@@ -1,4 +1,4 @@
-![TanStack Table Header](https://github.com/tanstack/react-table/raw/alpha/media/repo-dark.png)
+![TanStack Table Header](https://github.com/tanstack/react-table/raw/alpha/media/repo-header.png)
 
 # [TanStack](https://tanstack.com) Table v8 (alpha)
 
