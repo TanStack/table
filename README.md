@@ -2,7 +2,7 @@
 
 # [TanStack](https://tanstack.com) Table v8 (alpha)
 
-Hooks for building **lightweight, fast and extendable datagrids** for React, Solid, Vue, Svelte and TS/JS.
+Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue, Svelte and TS/JS**.
 
 <a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
   <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack" />
@@ -89,7 +89,7 @@ JS/TS ecosystem and every use-case.
 There are a fair amount of breaking changes (they're worth it, trust us!):
 
 - Turns out that TypeScript makes your code **a lot** better/safer, but also usually requires breaking changes to architecture.
-- Plugin system has been removed so plugins must be rewritten to wrap/compose the new `useTable` hook. Contact us if you need help!
+- Plugin system has been removed so plugins must be rewritten to wrap/compose the new functional API. Contact us if you need help!
 - Column configuration options have changed, but only slightly.
 - Table options are mostly the same, with some larger changes around optional state management/control and data pipeline control
 - The `tableInstance` while similar in spirit to v7 has been reconfigured to be much faster.
@@ -170,7 +170,7 @@ yarn add @tanstack/react-table@alpha
 - [Read the contribution guidelines](https://github.com/tanstack/react-table/tree/alpha/CONTRIBUTING.md)
 - Write some docs! Start with the [API docs](https://github.com/TanStack/react-table/tree/alpha/docs/src/api) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
 - Try your hand at migrating an example to v8! The todo list for the examples is above!
-- **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a wrapping hook/function that uses `useTable` internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
+- **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a functional wrapper that uses TanStack Table internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
 

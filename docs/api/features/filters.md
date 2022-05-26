@@ -422,7 +422,7 @@ Example:
 ```tsx
 import { getFilteredRowModel } from '@tanstack/[adapter]-table'
 
-useTable(table, {
+useTableInstance(table, {
   getFilteredRowModel: getFilteredRowModel(),
 })
 ```

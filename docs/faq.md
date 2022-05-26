@@ -8,7 +8,7 @@ Most plugins use state that _should_ normally reset when the data sources change
 
 For those situations, each plugin provides a way to disable the state from automatically resetting internally when data or other dependencies for a piece of state change. By setting any of them to `false`, you can stop the automatic resets from being triggered.
 
-Here is an example of stopping basically every piece of state from changing as they normally do while we edit the `data` source for a table:
+Here is a React-based example of stopping basically every piece of state from changing as they normally do while we edit the `data` source for a table:
 
 ```js
 const [data, setData] = React.useState([])
@@ -27,15 +27,10 @@ React.useEffect(() => {
   skipPageResetRef.current = false
 })
 
-useTable({
+useTableInstance({
   ...
-  autoResetPage: !skipPageResetRef.current,
+  autoResetPageIndex: !skipPageResetRef.current,
   autoResetExpanded: !skipPageResetRef.current,
-  autoResetGroupBy: !skipPageResetRef.current,
-  autoResetSelectedRows: !skipPageResetRef.current,
-  autoResetSortBy: !skipPageResetRef.current,
-  autoResetFilters: !skipPageResetRef.current,
-  autoResetRowState: !skipPageResetRef.current,
 })
 ```
 

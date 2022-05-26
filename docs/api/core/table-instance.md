@@ -11,7 +11,7 @@ type useTableInstance = <TGenerics extends ReactTableGenerics>(
 ) => TableInstance<TGenerics>
 ```
 
-These hooks / functions used to create a table instance. Which one you use depends on which framework adapter you are using.
+These funtions are used to create a table instance. Which one you use depends on which framework adapter you are using.
 
 ## Options
 
