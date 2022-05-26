@@ -19,8 +19,8 @@ export function createCell<TGenerics extends TableGenerics>(
     row,
     column,
     getValue: () => row.getValue(columnId),
-    renderCell: () =>
-      column.columnDef.cell
+    renderCell: () => {
+      return column.columnDef.cell
         ? instance._render(column.columnDef.cell, {
             instance,
             column,
@@ -28,7 +28,8 @@ export function createCell<TGenerics extends TableGenerics>(
             cell: cell as Cell<TGenerics>,
             getValue: cell.getValue,
           })
-        : null,
+        : null
+    },
   }
 
   instance._features.forEach(feature => {

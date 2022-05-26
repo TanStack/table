@@ -98,7 +98,6 @@ export function createColumn<TGenerics extends TableGenerics>(
   }
 
   let column: CoreColumn<TGenerics> = {
-    ...columnDef,
     id: `${id}`,
     accessorFn,
     parent: parent as any,
