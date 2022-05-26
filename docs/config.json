@@ -157,11 +157,6 @@
     {
       "label": "Vue Examples",
       "children": [{ "to": "examples/vue/basic", "label": "Basic" }]
-    },
-    {
-      "label": "FAQ",
-      "heading": true,
-      "to": "faq"
     }
   ]
 }
