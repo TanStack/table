@@ -63,6 +63,6 @@ Headless/utility-first table libraries will typically supply you with functions,
 - More setup required
 - No markup, styles or themes provided
 
-**If you want a lighter-weight table or full control over the design**, then you should consider using a headles table library.
+**If you want a lighter-weight table or full control over the design**, then you should consider using a headless table library.
 
 There are very few headless table libraries out there and obviously, **TanStack Table** is our favorite!
