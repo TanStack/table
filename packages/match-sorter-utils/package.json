@@ -4,7 +4,7 @@
     "Kent C. Dodds",
     "Tanner Linsley"
   ],
-  "version": "8.0.0-alpha.83",
+  "version": "8.0.0-beta.0",
   "description": "A fork of match-sorter with separated filtering and sorting phases",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/table#readme",
