@@ -131,8 +131,12 @@ export const Expanding: TableFeature = {
         const expanded = instance.getState().expanded
 
         // If expanded is true, save some cycles and return true
-        if (expanded === true) {
-          return true
+        if (typeof expanded === 'boolean') {
+          return expanded === true
+        }
+
+        if (!Object.keys(expanded).length) {
+          return false
         }
 
         // If any row is not expanded, return false

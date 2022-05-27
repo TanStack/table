@@ -21,20 +21,14 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
           rowsById: {},
         }
 
-        let rows
-        let row
-        let originalRow
-
         const accessRows = (
           originalRows: TGenerics['Row'][],
           depth = 0,
           parent?: Row<TGenerics>
         ): Row<TGenerics>[] => {
-          rows = []
+          const rows = [] as Row<TGenerics>[]
 
           for (let i = 0; i < originalRows.length; i++) {
-            originalRow = originalRows[i]
-
             // This could be an expensive check at scale, so we should move it somewhere else, but where?
             // if (!id) {
             //   if (process.env.NODE_ENV !== 'production') {
@@ -43,10 +37,10 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
             // }
 
             // Make the row
-            row = createRow(
+            const row = createRow(
               instance,
-              instance._getRowId(originalRow, i, parent),
-              originalRow,
+              instance._getRowId(originalRows[i], i, parent),
+              originalRows[i],
               i,
               depth
             )
@@ -60,7 +54,10 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
 
             // Get the original subrows
             if (instance.options.getSubRows) {
-              row.originalSubRows = instance.options.getSubRows(originalRow, i)
+              row.originalSubRows = instance.options.getSubRows(
+                originalRows[i],
+                i
+              )
 
               // Then recursively access them
               if (row.originalSubRows?.length) {
@@ -73,6 +70,8 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
         }
 
         rowModel.rows = accessRows(data)
+
+        console.log(rowModel.rows)
 
         return rowModel
       },

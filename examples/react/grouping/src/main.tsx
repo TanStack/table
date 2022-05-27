@@ -113,7 +113,7 @@ function App() {
                       <div>
                         {header.column.getCanGroup() ? (
                           // If the header can be grouped, let's add a toggle
-                          <span
+                          <button
                             {...{
                               onClick: header.column.getToggleGroupingHandler(),
                               style: {
@@ -124,7 +124,7 @@ function App() {
                             {header.column.getIsGrouped()
                               ? `🛑(${header.column.getGroupedIndex()}) `
                               : `👊 `}
-                          </span>
+                          </button>
                         ) : null}{' '}
                         {header.renderHeader()}
                       </div>
@@ -158,7 +158,7 @@ function App() {
                       {cell.getIsGrouped() ? (
                         // If it's a grouped cell, add an expander and row count
                         <>
-                          <span
+                          <button
                             {...{
                               onClick: row.getToggleExpandedHandler(),
                               style: {
@@ -170,7 +170,7 @@ function App() {
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
                             {cell.renderCell()} ({row.subRows.length})
-                          </span>
+                          </button>
                         </>
                       ) : cell.getIsAggregated() ? (
                         // If the cell is aggregated, use the Aggregated
