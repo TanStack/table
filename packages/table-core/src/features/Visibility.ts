@@ -112,7 +112,7 @@ export const Visibility: TableFeature = {
   ): VisibilityRow<TGenerics> => {
     return {
       _getAllVisibleCells: memo(
-        () => [row.getAllCells()],
+        () => [row.getAllCells(), instance.getState().columnVisibility],
         cells => {
           return cells.filter(cell => cell.column.getIsVisible())
         },

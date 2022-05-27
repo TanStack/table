@@ -248,7 +248,7 @@ function App() {
       <div>
         <button
           className="border rounded p-2 mb-2"
-          onClick={() => console.log('rowSelection', rowSelection)}
+          onClick={() => console.info('rowSelection', rowSelection)}
         >
           Log `rowSelection` state
         </button>
@@ -257,7 +257,7 @@ function App() {
         <button
           className="border rounded p-2 mb-2"
           onClick={() =>
-            console.log(
+            console.info(
               'instance.getSelectedFlatRows()',
               instance.getSelectedRowModel().flatRows
             )

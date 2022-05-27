@@ -91,7 +91,7 @@
   )
 
   const refreshData = () => {
-    console.log('refresh')
+    console.info('refresh')
     options.update(prev => ({
       ...prev,
       data: makeData(100_000),

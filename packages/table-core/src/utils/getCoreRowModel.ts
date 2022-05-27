@@ -71,8 +71,6 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
 
         rowModel.rows = accessRows(data)
 
-        console.log(rowModel.rows)
-
         return rowModel
       },
       {

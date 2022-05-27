@@ -2,14 +2,14 @@ export type TableWorker = typeof test
 
 export const test = {
   sync: () => {
-    console.log('sync')
+    console.info('sync')
   },
   async: async () => {
     await new Promise(r => setTimeout(r, 1000))
-    console.log('hello')
+    console.info('hello')
   },
 }
 
 addEventListener('message', e => {
-  console.log(e.data)
+  console.info(e.data)
 })

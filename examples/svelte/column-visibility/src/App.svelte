@@ -139,7 +139,7 @@
         <input
           checked={$instance.getIsAllColumnsVisible()}
           on:change={e => {
-            console.log($instance.getToggleAllColumnsVisibilityHandler()(e))
+            console.info($instance.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
         />{' '}

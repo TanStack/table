@@ -7,8 +7,6 @@ import './index.css'
 //   type: 'module',
 // })
 
-// console.log(tableWorker)
-
 // tableWorker.postMessage(['hello', { foo: 'world' }])
 
 import {

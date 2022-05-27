@@ -75,7 +75,7 @@ async function run() {
           `process.env.TAG must start with "v", eg. v0.0.0. You supplied ${process.env.TAG}`
         )
       }
-      console.log(
+      console.info(
         chalk.yellow(
           `Tag is set to ${process.env.TAG}. This will force release all packages. Publishing...`
         )
@@ -118,7 +118,7 @@ async function run() {
     return !exclude
   })
 
-  console.log(
+  console.info(
     `Parsing ${commitsSinceLatestTag.length} commits since ${latestTag}...`
   )
 
@@ -180,14 +180,14 @@ async function run() {
 
   if (!process.env.TAG) {
     if (recommendedReleaseLevel === 2) {
-      console.log(
+      console.info(
         `Major versions releases must be tagged and released manually.`
       )
       return
     }
 
     if (recommendedReleaseLevel === -1) {
-      console.log(
+      console.info(
         `There have been no changes since the release of ${latestTag} that require a new version. You're good!`
       )
       return
@@ -324,16 +324,16 @@ async function run() {
     changedPackages.map(d => `- ${d.name}@${version}`).join('\n'),
   ].join('\n\n')
 
-  console.log('Generating changelog...')
-  console.log()
-  console.log(changelogMd)
-  console.log()
+  console.info('Generating changelog...')
+  console.info()
+  console.info(changelogMd)
+  console.info()
 
-  console.log('Building packages...')
+  console.info('Building packages...')
   execSync(`yarn build`, { encoding: 'utf8' })
-  console.log('')
+  console.info('')
 
-  console.log('Validating packages...')
+  console.info('Validating packages...')
   await Promise.all(
     packages.map(async pkg => {
       const pkgJson = await readPackageJson(
@@ -359,16 +359,16 @@ async function run() {
       )
     })
   )
-  console.log('')
+  console.info('')
 
-  console.log('Testing packages...')
+  console.info('Testing packages...')
   execSync(`yarn test:ci`, { encoding: 'utf8' })
-  console.log('')
+  console.info('')
 
-  console.log(`Updating all changed packages to version ${version}...`)
+  console.info(`Updating all changed packages to version ${version}...`)
   // Update each package to the new version
   for (const pkg of changedPackages) {
-    console.log(`  Updating ${pkg.name} version to ${version}...`)
+    console.info(`  Updating ${pkg.name} version to ${version}...`)
 
     await updatePackageJson(
       path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json'),
@@ -378,7 +378,7 @@ async function run() {
     )
   }
 
-  console.log(`Updating all package dependencies to latest versions...`)
+  console.info(`Updating all package dependencies to latest versions...`)
   // Update all changed package dependencies to their correct versions
   for (const pkg of packages) {
     await updatePackageJson(
@@ -405,7 +405,7 @@ async function run() {
               config.dependencies?.[dep] &&
               config.dependencies?.[dep] !== depVersion
             ) {
-              console.log(
+              console.info(
                 `  Updating ${pkg.name}'s dependency on ${dep} to version ${depVersion}.`
               )
               config.dependencies[dep] = depVersion
@@ -434,7 +434,7 @@ async function run() {
               config.peerDependencies?.[peerDep] &&
               config.peerDependencies?.[peerDep] !== depVersion
             ) {
-              console.log(
+              console.info(
                 `  Updating ${pkg.name}'s peerDependency on ${peerDep} to version ${depVersion}.`
               )
               config.peerDependencies[peerDep] = depVersion
@@ -445,7 +445,7 @@ async function run() {
     )
   }
 
-  console.log(`Updating all example dependencies...`)
+  console.info(`Updating all example dependencies...`)
   await Promise.all(
     examplesDirs.map(async examplesDir => {
       examplesDir = path.resolve(rootDir, examplesDir)
@@ -473,7 +473,7 @@ async function run() {
                   config.dependencies?.[pkg.name] &&
                   config.dependencies?.[pkg.name] !== depVersion
                 ) {
-                  console.log(
+                  console.info(
                     `  Updating ${exampleName}'s dependency on ${pkg.name} to version ${depVersion}.`
                   )
                   config.dependencies[pkg.name] = depVersion
@@ -494,7 +494,7 @@ async function run() {
   }
 
   // Tag and commit
-  console.log(`Creating new git tag v${version}`)
+  console.info(`Creating new git tag v${version}`)
   execSync(`git tag -a -m "v${version}" v${version}`)
 
   let taggedVersion = getTaggedVersion()
@@ -504,14 +504,14 @@ async function run() {
     )
   }
 
-  console.log()
-  console.log(`Publishing all packages to npm with tag "${npmTag}"`)
+  console.info()
+  console.info(`Publishing all packages to npm with tag "${npmTag}"`)
 
   // Publish each package
   changedPackages.map(pkg => {
     let packageDir = path.join(rootDir, 'packages', pkg.packageDir)
     const cmd = `cd ${packageDir} && yarn publish --tag ${npmTag} --access=public`
-    console.log(
+    console.info(
       `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
     )
     execSync(`${cmd} --token ${process.env.NPM_TOKEN}`)
@@ -525,48 +525,48 @@ async function run() {
   //   let stat = await fsp.stat(path.join(examplesDir, example))
   //   if (!stat.isDirectory()) continue
 
-  //   console.log(`  Updating example ${example} dependencies/lockfile...`)
+  //   console.info(`  Updating example ${example} dependencies/lockfile...`)
 
   //   updateExampleLockfile(example)
   // }
 
-  console.log()
+  console.info()
 
-  console.log(`Pushing new tags to branch.`)
+  console.info(`Pushing new tags to branch.`)
   execSync(`git push --tags`)
-  console.log(`  Pushed tags to branch.`)
+  console.info(`  Pushed tags to branch.`)
 
   if (branchConfig.ghRelease) {
-    console.log(`Creating github release...`)
+    console.info(`Creating github release...`)
     // Stringify the markdown to excape any quotes
     execSync(
       `gh release create v${version} ${
         isLatestBranch ? '--prerelease' : ''
       } --notes '${changelogMd}'`
     )
-    console.log(`  Github release created.`)
+    console.info(`  Github release created.`)
 
-    console.log(`Committing changes...`)
+    console.info(`Committing changes...`)
     execSync(`git add -A && git commit -m "${releaseCommitMsg(version)}"`)
-    console.log()
-    console.log(`  Committed Changes.`)
-    console.log(`Pushing changes...`)
+    console.info()
+    console.info(`  Committed Changes.`)
+    console.info(`Pushing changes...`)
     execSync(`git push`)
-    console.log()
-    console.log(`  Changes pushed.`)
+    console.info()
+    console.info(`  Changes pushed.`)
   } else {
-    console.log(`Skipping github release and change commit.`)
+    console.info(`Skipping github release and change commit.`)
   }
 
-  console.log(`Pushing tags...`)
+  console.info(`Pushing tags...`)
   execSync(`git push --tags`)
-  console.log()
-  console.log(`  Tags pushed.`)
-  console.log(`All done!`)
+  console.info()
+  console.info(`  Tags pushed.`)
+  console.info(`All done!`)
 }
 
 run().catch(err => {
-  console.log(err)
+  console.info(err)
   process.exit(1)
 })
 
