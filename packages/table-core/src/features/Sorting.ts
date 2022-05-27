@@ -76,9 +76,7 @@ export type SortingOptions<TGenerics extends TableGenerics> = {
   enableMultiRemove?: boolean
   enableMultiSort?: boolean
   sortDescFirst?: boolean
-  getSortedRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getSortedRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: unknown) => boolean
 }

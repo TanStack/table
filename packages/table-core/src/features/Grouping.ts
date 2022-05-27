@@ -87,9 +87,7 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
   aggregationFns?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
   enableGrouping?: boolean
-  getGroupedRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getGroupedRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
   groupedColumnMode?: false | 'reorder' | 'remove'
 }
 

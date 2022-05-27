@@ -73,9 +73,7 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   autoResetAll?: boolean
   mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
   meta?: TGenerics['TableMeta']
-  getCoreRowModel: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getCoreRowModel: (instance: TableInstance<any>) => () => RowModel<any>
   getSubRows?: (
     originalRow: TGenerics['Row'],
     index: number

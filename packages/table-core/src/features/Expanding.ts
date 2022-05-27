@@ -27,9 +27,7 @@ export type ExpandedOptions<TGenerics extends TableGenerics> = {
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
   enableExpanding?: boolean
-  getExpandedRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getExpandedRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
   getIsRowExpanded?: (row: Row<TGenerics>) => boolean
   getRowCanExpand?: (row: Row<TGenerics>) => boolean
   paginateExpandedRows?: boolean

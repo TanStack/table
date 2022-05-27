@@ -26,9 +26,7 @@ export type PaginationOptions<TGenerics extends TableGenerics> = {
   manualPagination?: boolean
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
-  getPaginationRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getPaginationRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
 }
 
 export type PaginationDefaultOptions = {

@@ -102,9 +102,7 @@ export type FiltersOptions<TGenerics extends TableGenerics> = {
   manualFiltering?: boolean
   filterFromLeafRows?: boolean
   filterFns?: TGenerics['FilterFns']
-  getFilteredRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getFilteredRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
 
   // Column
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
