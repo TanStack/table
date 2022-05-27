@@ -104,10 +104,6 @@
         },
         { "to": "examples/react/filters", "label": "Filters" },
         {
-          "to": "examples/react/wip-filters-async",
-          "label": "Wip Filters Async"
-        },
-        {
           "to": "examples/react/fully-controlled",
           "label": "Fully Controlled"
         },
