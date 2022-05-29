@@ -75,7 +75,6 @@ export type FiltersColumnDef<TGenerics extends TableGenerics> = {
 }
 
 export type FiltersColumn<TGenerics extends TableGenerics> = {
-  filterFn: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
   getAutoFilterFn: () => FilterFn<TGenerics> | undefined
   getFilterFn: () => FilterFn<TGenerics> | undefined
   setFilterValue: (updater: Updater<any>) => void
@@ -197,7 +196,6 @@ export const Filters: TableFeature = {
     instance: TableInstance<TGenerics>
   ): FiltersColumn<TGenerics> => {
     return {
-      filterFn: column.filterFn,
       getAutoFilterFn: () => {
         const firstRow = instance.getCoreRowModel().flatRows[0]
 
@@ -228,15 +226,15 @@ export const Filters: TableFeature = {
       getFilterFn: () => {
         const userFilterFns = instance.options.filterFns
 
-        return isFunction(column.filterFn)
-          ? column.filterFn
-          : column.filterFn === 'auto'
+        return isFunction(column.columnDef.filterFn)
+          ? column.columnDef.filterFn
+          : column.columnDef.filterFn === 'auto'
           ? column.getAutoFilterFn()
           : (userFilterFns as Record<string, any>)?.[
-              column.filterFn as string
+              column.columnDef.filterFn as string
             ] ??
             (filterFns[
-              column.filterFn as BuiltInFilterFn
+              column.columnDef.filterFn as BuiltInFilterFn
             ] as FilterFn<TGenerics>)
       },
       getCanFilter: () => {
