@@ -159,6 +159,14 @@ getSortingFn: () => SortingFn<TGenerics>
 
 Returns the resolved sorting function to be used for this column
 
+### `getNextSortingOrder`
+
+```tsx
+getNextSortingOrder: () => SortDirection | false
+```
+
+Returns the next sorting order.
+
 ### `getCanSort`
 
 ```tsx
