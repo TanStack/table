@@ -15,7 +15,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Filters API](../api/filters.md)
+[Filters API](../api/features/filters)
 
 ## Guide
 
