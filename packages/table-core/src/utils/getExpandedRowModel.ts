@@ -39,11 +39,7 @@ export function expandRows<TGenerics extends TableGenerics>(
   const handleRow = (row: Row<TGenerics>) => {
     expandedRows.push(row)
 
-    if (
-      instance.options.expandSubRows &&
-      row.subRows?.length &&
-      row.getIsExpanded()
-    ) {
+    if (row.subRows?.length && row.getIsExpanded()) {
       row.subRows.forEach(handleRow)
     }
   }

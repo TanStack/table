@@ -1,14 +1,13 @@
 import { RowModel } from '..'
+import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   TableGenerics,
   TableInstance,
   Row,
   Updater,
-  TableFeature,
 } from '../types'
 import { makeStateUpdater } from '../utils'
-import { Rows } from './Rows'
 
 export type ExpandedStateList = Record<string, boolean>
 export type ExpandedState = true | Record<string, boolean>
@@ -31,7 +30,6 @@ export type ExpandedOptions<TGenerics extends TableGenerics> = {
   getExpandedRowModel?: (
     instance: TableInstance<TGenerics>
   ) => () => RowModel<TGenerics>
-  expandSubRows?: boolean
   getIsRowExpanded?: (row: Row<TGenerics>) => boolean
   getRowCanExpand?: (row: Row<TGenerics>) => boolean
   paginateExpandedRows?: boolean
@@ -68,7 +66,6 @@ export const Expanding: TableFeature = {
     return {
       onExpandedChange: makeStateUpdater('expanded', instance),
       autoResetExpanded: true,
-      expandSubRows: true,
       paginateExpandedRows: true,
     }
   },
@@ -134,8 +131,12 @@ export const Expanding: TableFeature = {
         const expanded = instance.getState().expanded
 
         // If expanded is true, save some cycles and return true
-        if (expanded === true) {
-          return true
+        if (typeof expanded === 'boolean') {
+          return expanded === true
+        }
+
+        if (!Object.keys(expanded).length) {
+          return false
         }
 
         // If any row is not expanded, return false

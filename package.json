@@ -1,6 +1,6 @@
 {
   "private": true,
-  "repository": "https://github.com/tanstack/react-table.git",
+  "repository": "https://github.com/tanstack/table.git",
   "scripts": {
     "test": "(is-ci && yarn test:ci) || yarn test:dev",
     "test:ci": "jest",
@@ -38,7 +38,16 @@
     "./examples/react/pagination",
     "./examples/react/pagination-controlled",
     "./examples/react/row-selection",
-    "./examples/react/sorting"
+    "./examples/react/sorting",
+    "./examples/svelte/basic",
+    "./examples/svelte/column-ordering",
+    "./examples/svelte/column-pinning",
+    "./examples/svelte/column-visibility",
+    "./examples/svelte/sorting",
+    "./examples/vue/basic",
+    "./examples/solid/basic",
+    "./examples/solid/column-visibility",
+    "./examples/solid/sorting"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",

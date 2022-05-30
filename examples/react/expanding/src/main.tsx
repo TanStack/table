@@ -37,13 +37,13 @@ function App() {
                     onChange: instance.getToggleAllRowsSelectedHandler(),
                   }}
                 />{' '}
-                <span
+                <button
                   {...{
                     onClick: instance.getToggleAllRowsExpandedHandler(),
                   }}
                 >
                   {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
-                </span>{' '}
+                </button>{' '}
                 First Name
               </>
             ),
@@ -65,14 +65,14 @@ function App() {
                   }}
                 />{' '}
                 {row.getCanExpand() ? (
-                  <span
+                  <button
                     {...{
                       onClick: row.getToggleExpandedHandler(),
                       style: { cursor: 'pointer' },
                     }}
                   >
                     {row.getIsExpanded() ? '👇' : '👉'}
-                  </span>
+                  </button>
                 ) : (
                   '🔵'
                 )}{' '}

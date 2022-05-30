@@ -1,4 +1,4 @@
-import { CoreRow } from '../features/Rows'
+import { createRow } from '../core/row'
 import { TableInstance, Row, RowModel, TableGenerics } from '../types'
 import { flattenBy, memo } from '../utils'
 
@@ -55,7 +55,7 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
                 ? flattenBy(groupedRows, row => row.subRows)
                 : groupedRows
 
-              const row = instance.createRow(id, undefined, index, depth)
+              const row = createRow(instance, id, undefined, index, depth)
 
               Object.assign(row, {
                 groupingColumnId: columnId,
@@ -65,42 +65,34 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
                 getValue: (columnId: string) => {
                   // Don't aggregate columns that are in the grouping
                   if (existingGrouping.includes(columnId)) {
-                    if (row.valuesCache.hasOwnProperty(columnId)) {
-                      return row.valuesCache[columnId]
+                    if (row._valuesCache.hasOwnProperty(columnId)) {
+                      return row._valuesCache[columnId]
                     }
 
                     if (groupedRows[0]) {
-                      row.valuesCache[columnId] =
+                      row._valuesCache[columnId] =
                         groupedRows[0].getValue(columnId) ?? undefined
                     }
 
-                    return row.valuesCache[columnId]
+                    return row._valuesCache[columnId]
                   }
 
-                  if (row.groupingValuesCache.hasOwnProperty(columnId)) {
-                    return row.groupingValuesCache[columnId]
+                  if (row._groupingValuesCache.hasOwnProperty(columnId)) {
+                    return row._groupingValuesCache[columnId]
                   }
 
                   // Aggregate the values
                   const column = instance.getColumn(columnId)
-                  const aggregateFn = column.getColumnAggregationFn()
+                  const aggregateFn = column.getAggregationFn()
 
                   if (aggregateFn) {
-                    row.groupingValuesCache[columnId] = aggregateFn(
-                      () =>
-                        leafRows.map(row => {
-                          let columnValue = row.getValue(columnId)
-
-                          if (!depth && column.aggregateValue) {
-                            columnValue = column.aggregateValue(columnValue)
-                          }
-
-                          return columnValue
-                        }),
-                      () => groupedRows.map(row => row.getValue(columnId))
+                    row._groupingValuesCache[columnId] = aggregateFn(
+                      columnId,
+                      leafRows,
+                      groupedRows
                     )
 
-                    return row.groupingValuesCache[columnId]
+                    return row._groupingValuesCache[columnId]
                   } else if (column.aggregationFn) {
                     console.info({ column })
                     throw new Error(

@@ -1,38 +1,67 @@
-import { TableGenerics, Row } from './types'
+import { SortingFn } from './features/Sorting'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
-export const sortingFns = {
-  alphanumeric,
-  alphanumericCaseSensitive,
-  text,
-  textCaseSensitive,
-  datetime,
-  basic,
-}
-
-export type BuiltInSortingFn = keyof typeof sortingFns
-
-function alphanumeric<TGenerics extends TableGenerics>(
-  rowA: Row<TGenerics>,
-  rowB: Row<TGenerics>,
-  columnId: string
-) {
+const alphanumeric: SortingFn<any> = (rowA, rowB, columnId) => {
   return compareAlphanumeric(
     toString(rowA.getValue(columnId)).toLowerCase(),
     toString(rowB.getValue(columnId)).toLowerCase()
   )
 }
 
-function alphanumericCaseSensitive<TGenerics extends TableGenerics>(
-  rowA: Row<TGenerics>,
-  rowB: Row<TGenerics>,
-  columnId: string
-) {
+const alphanumericCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
   return compareAlphanumeric(
     toString(rowA.getValue(columnId)),
     toString(rowB.getValue(columnId))
   )
+}
+
+// The text filter is more basic (less numeric support)
+// but is much faster
+const text: SortingFn<any> = (rowA, rowB, columnId) => {
+  return compareBasic(
+    toString(rowA.getValue(columnId)).toLowerCase(),
+    toString(rowB.getValue(columnId)).toLowerCase()
+  )
+}
+
+// The text filter is more basic (less numeric support)
+// but is much faster
+const textCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
+  return compareBasic(
+    toString(rowA.getValue(columnId)),
+    toString(rowB.getValue(columnId))
+  )
+}
+
+const datetime: SortingFn<any> = (rowA, rowB, columnId) => {
+  return compareBasic(
+    (rowA.getValue(columnId) as Date).getTime(),
+    (rowB.getValue(columnId) as Date).getTime()
+  )
+}
+
+const basic: SortingFn<any> = (rowA, rowB, columnId) => {
+  return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))
+}
+
+// Utils
+
+function compareBasic(a: any, b: any) {
+  return a === b ? 0 : a > b ? 1 : -1
+}
+
+function toString(a: any) {
+  if (typeof a === 'number') {
+    if (isNaN(a) || a === Infinity || a === -Infinity) {
+      return ''
+    }
+    return String(a)
+  }
+  if (typeof a === 'string') {
+    return a
+  }
+  return ''
 }
 
 // Mixed sorting is slow, but very inclusive of many edge cases.
@@ -82,66 +111,15 @@ function compareAlphanumeric(aStr: string, bStr: string) {
   return a.length - b.length
 }
 
-// The text filter is more basic (less numeric support)
-// but is much faster
-function text<TGenerics extends TableGenerics>(
-  rowA: Row<TGenerics>,
-  rowB: Row<TGenerics>,
-  columnId: string
-) {
-  return compareBasic(
-    toString(rowA.getValue(columnId)).toLowerCase(),
-    toString(rowB.getValue(columnId)).toLowerCase()
-  )
+// Exports
+
+export const sortingFns = {
+  alphanumeric,
+  alphanumericCaseSensitive,
+  text,
+  textCaseSensitive,
+  datetime,
+  basic,
 }
 
-// The text filter is more basic (less numeric support)
-// but is much faster
-function textCaseSensitive<TGenerics extends TableGenerics>(
-  rowA: Row<TGenerics>,
-  rowB: Row<TGenerics>,
-  columnId: string
-) {
-  return compareBasic(
-    toString(rowA.getValue(columnId)),
-    toString(rowB.getValue(columnId))
-  )
-}
-
-function datetime<TGenerics extends TableGenerics>(
-  rowA: Row<TGenerics>,
-  rowB: Row<TGenerics>,
-  columnId: string
-) {
-  return compareBasic(
-    (rowA.getValue(columnId) as Date).getTime(),
-    (rowB.getValue(columnId) as Date).getTime()
-  )
-}
-
-function basic<TGenerics extends TableGenerics>(
-  rowA: Row<TGenerics>,
-  rowB: Row<TGenerics>,
-  columnId: string
-) {
-  return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))
-}
-
-// Utils
-
-function compareBasic(a: any, b: any) {
-  return a === b ? 0 : a > b ? 1 : -1
-}
-
-function toString(a: any) {
-  if (typeof a === 'number') {
-    if (isNaN(a) || a === Infinity || a === -Infinity) {
-      return ''
-    }
-    return String(a)
-  }
-  if (typeof a === 'string') {
-    return a
-  }
-  return ''
-}
+export type BuiltInSortingFn = keyof typeof sortingFns

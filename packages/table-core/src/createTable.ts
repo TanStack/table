@@ -6,6 +6,7 @@ import {
   AccessorFn,
   AnyRender,
   TableGenerics,
+  TableOptionsResolved,
   TableOptions,
 } from './types'
 import { IfDefined, Overwrite } from './utils'
@@ -26,15 +27,15 @@ export type CreateTableOptions<
     sortingFns?: TSortingFns
     aggregationFns?: TAggregationFns
   } & Omit<
-    TableOptions<TGenerics>,
+    TableOptionsResolved<TGenerics>,
     'filterFns' | 'sortingFns' | 'aggregationFns'
   >
 >
 
 export type Table<TGenerics extends TableGenerics> = {
   generics: TGenerics
-  options: Partial<TableOptions<TGenerics>>
-  setGenerics: <T extends TableGenerics>() => Table<T>
+  options: Partial<TableOptionsResolved<TGenerics>>
+  // setGenerics: <T extends TableGenerics>() => Table<T>
   setRowType: <TRow>() => Table<Overwrite<TGenerics, { Row: TRow }>>
   setTableMetaType: <TTableMeta>() => Table<
     Overwrite<TGenerics, { TableMeta: TTableMeta }>
@@ -119,6 +120,7 @@ export type Table<TGenerics extends TableGenerics> = {
       }
     >
   ) => ColumnDef<TGenerics>
+  createOptions: (options: TableOptions<TGenerics>) => TableOptions<TGenerics>
 }
 
 //
@@ -143,7 +145,7 @@ function createTable<TGenerics extends TableGenerics>(
         throw new Error('')
       })(),
     },
-    setGenerics: () => table as any,
+    // setGenerics: () => table as any,
     setRowType: () => table as any,
     setTableMetaType: () => table as any,
     setColumnMetaType: () => table as any,
@@ -179,6 +181,7 @@ function createTable<TGenerics extends TableGenerics>(
 
       throw new Error('Invalid accessor')
     },
+    createOptions: options => options,
   }
 
   return table

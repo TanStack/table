@@ -1,1 +1,0 @@
-Make Svelte examples

@@ -1,3 +1,4 @@
+import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   Updater,
@@ -6,7 +7,6 @@ import {
   TableGenerics,
   Row,
   Cell,
-  TableFeature,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -50,7 +50,7 @@ export type ColumnPinningRow<TGenerics extends TableGenerics> = {
 export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
-  getIsSomeColumnsPinned: () => boolean
+  getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
   getLeftLeafColumns: () => Column<TGenerics>[]
   getRightLeafColumns: () => Column<TGenerics>[]
   getCenterLeafColumns: () => Column<TGenerics>[]
@@ -123,7 +123,7 @@ export const Pinning: TableFeature = {
 
         return leafColumns.some(
           d =>
-            (d.enablePinning ?? true) &&
+            (d.columnDef.enablePinning ?? true) &&
             (instance.options.enablePinning ?? true)
         )
       },
@@ -164,7 +164,7 @@ export const Pinning: TableFeature = {
         (allCells, left, right) => {
           const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
 
-          return allCells.filter(d => !leftAndRight.includes(d.columnId))
+          return allCells.filter(d => !leftAndRight.includes(d.column.id))
         },
         {
           key:
@@ -181,7 +181,9 @@ export const Pinning: TableFeature = {
         ],
         (allCells, left) => {
           const cells = (left ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
+            .map(
+              columnId => allCells.find(cell => cell.column.id === columnId)!
+            )
             .filter(Boolean)
             .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
 
@@ -200,7 +202,9 @@ export const Pinning: TableFeature = {
         ],
         (allCells, right) => {
           const cells = (right ?? [])
-            .map(columnId => allCells.find(cell => cell.columnId === columnId)!)
+            .map(
+              columnId => allCells.find(cell => cell.column.id === columnId)!
+            )
             .filter(Boolean)
             .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
 
@@ -229,10 +233,15 @@ export const Pinning: TableFeature = {
             : instance.initialState?.columnPinning ?? getDefaultPinningState()
         ),
 
-      getIsSomeColumnsPinned: () => {
-        const { left, right } = instance.getState().columnPinning
+      getIsSomeColumnsPinned: position => {
+        const pinningState = instance.getState().columnPinning
 
-        return Boolean(left?.length || right?.length)
+        if (!position) {
+          return Boolean(
+            pinningState.left?.length || pinningState.right?.length
+          )
+        }
+        return Boolean(pinningState[position]?.length)
       },
 
       getLeftLeafColumns: memo(

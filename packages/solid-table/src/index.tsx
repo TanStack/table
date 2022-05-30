@@ -2,11 +2,10 @@
 import {
   TableGenerics,
   TableOptions,
-  PartialKeys,
   Table,
   createTableInstance as coreCreateTableInstance,
-  TableFeature,
   createTableFactory,
+  TableOptionsResolved,
 } from '@tanstack/table-core'
 import {
   createComputed,
@@ -32,19 +31,16 @@ export const createTable = createTableFactory({ render })
 
 export function createTableInstance<TGenerics extends TableGenerics>(
   table: Table<TGenerics>,
-  options: PartialKeys<
-    Omit<TableOptions<TGenerics>, 'render'>,
-    'state' | 'onStateChange'
-  >
+  options: TableOptions<TGenerics>
 ) {
-  const resolvedOptions: TableOptions<TGenerics> = mergeProps(
+  const resolvedOptions: TableOptionsResolved<TGenerics> = mergeProps(
     {
       ...table.options,
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       render,
       mergeOptions(
-        defaultOptions: TableFeature,
+        defaultOptions: TableOptions<TGenerics>,
         options: TableOptions<TGenerics>
       ) {
         return mergeProps(defaultOptions, options)

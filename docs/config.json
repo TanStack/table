@@ -1,0 +1,158 @@
+{
+  "docSearch": {
+    "appId": "",
+    "indexName": "",
+    "apiKey": ""
+  },
+  "menu": [
+    {
+      "label": "Adapters",
+      "children": [
+        { "label": "React Table", "to": "adapters/react-table" },
+        { "label": "Solid Table", "to": "adapters/solid-table" },
+        { "label": "Svelte Table", "to": "adapters/svelte-table" },
+        { "label": "Vue Table", "to": "adapters/vue-table" }
+      ]
+    },
+    {
+      "label": "Guide",
+      "children": [
+        { "label": "Introduction", "to": "guide/00-introduction" },
+        { "label": "Overview", "to": "guide/01-overview" },
+        { "label": "Installation", "to": "guide/02-installation" },
+        { "label": "Tables", "to": "guide/03-tables" },
+        { "label": "Column Defs", "to": "guide/04-column-defs" },
+        {
+          "label": "Table Instances",
+          "to": "guide/05-table-instances"
+        },
+        { "label": "Rows", "to": "guide/06-rows" },
+        { "label": "Headers", "to": "guide/07-headers" },
+        { "label": "Cells", "to": "guide/08-cells" },
+        { "label": "Features", "to": "guide/09-features" },
+        { "label": "Column Ordering", "to": "guide/column-ordering" },
+        { "label": "Column Pinning", "to": "guide/column-pinning" },
+        { "label": "Column Sizing", "to": "guide/column-sizing" },
+        { "label": "Column Visibility", "to": "guide/column-visibility" },
+        { "label": "Filters", "to": "guide/filters" },
+        { "label": "Sorting", "to": "guide/sorting" },
+        { "label": "Grouping", "to": "guide/grouping" },
+        { "label": "Expanding", "to": "guide/expanding" },
+        { "label": "Pagination", "to": "guide/pagination" },
+        { "label": "Row Selection", "to": "guide/row-selection" }
+      ]
+    },
+    {
+      "label": "Core APIs",
+      "children": [
+        { "label": "Table", "to": "api/core/table" },
+        { "label": "Column Def", "to": "api/core/column-def" },
+        { "label": "Table Instance", "to": "api/core/table-instance" },
+        { "label": "Column", "to": "api/core/column" },
+        { "label": "Header Group", "to": "api/core/header-group" },
+        { "label": "Header", "to": "api/core/header" },
+        { "label": "Row", "to": "api/core/row" },
+        { "label": "Cell", "to": "api/core/cell" }
+      ]
+    },
+    {
+      "label": "Feature APIs",
+      "children": [
+        { "label": "Column Ordering", "to": "api/features/column-ordering" },
+        { "label": "Column Pinning", "to": "api/features/column-pinning" },
+        { "label": "Column Sizing", "to": "api/features/column-sizing" },
+        {
+          "label": "Column Visibility",
+          "to": "api/features/column-visibility"
+        },
+        { "label": "Filters", "to": "api/features/filters" },
+        { "label": "Sorting", "to": "api/features/sorting" },
+        { "label": "Grouping", "to": "api/features/grouping" },
+        { "label": "Expanding", "to": "api/features/expanding" },
+        { "label": "Pagination", "to": "api/features/pagination" },
+        { "label": "Row Selection", "to": "api/features/row-selection" }
+      ]
+    },
+
+    {
+      "label": "React Examples",
+      "children": [
+        { "to": "examples/react/basic", "label": "Basic" },
+        {
+          "to": "examples/react/column-ordering",
+          "label": "Column Ordering"
+        },
+        {
+          "to": "examples/react/column-pinning",
+          "label": "Column Pinning"
+        },
+        {
+          "to": "examples/react/column-sizing",
+          "label": "Column Sizing"
+        },
+        {
+          "to": "examples/react/column-visibility",
+          "label": "Column Visibility"
+        },
+        {
+          "to": "examples/react/editable-data",
+          "label": "Editable Data"
+        },
+        {
+          "to": "examples/react/expanding",
+          "label": "Expanding"
+        },
+        { "to": "examples/react/filters", "label": "Filters" },
+        {
+          "to": "examples/react/fully-controlled",
+          "label": "Fully Controlled"
+        },
+        {
+          "to": "examples/react/grouping",
+          "label": "Grouping"
+        },
+        {
+          "to": "examples/react/pagination",
+          "label": "Pagination"
+        },
+        {
+          "to": "examples/react/pagination-controlled",
+          "label": "Pagination Controlled"
+        },
+        {
+          "to": "examples/react/row-selection",
+          "label": "Row Selection"
+        },
+        { "to": "examples/react/sorting", "label": "Sorting" }
+      ]
+    },
+    {
+      "label": "Solid Examples",
+      "children": [
+        { "to": "examples/solid/basic", "label": "Basic" },
+        {
+          "to": "examples/solid/column-visibility",
+          "label": "Column Visibility"
+        },
+        { "to": "examples/solid/sorting", "label": "Sorting" }
+      ]
+    },
+    {
+      "label": "Svelte Examples",
+      "children": [
+        { "to": "examples/svelte/basic", "label": "Basic" },
+        { "to": "examples/svelte/column-ordering", "label": "Column Ordering" },
+        { "to": "examples/svelte/column-pinning", "label": "Column Pinning" },
+        {
+          "to": "examples/svelte/column-visibility",
+          "label": "Column Visibility"
+        },
+        { "to": "examples/svelte/sorting", "label": "Sorting" }
+      ]
+    },
+    {
+      "label": "Vue Examples",
+      "children": [{ "to": "examples/vue/basic", "label": "Basic" }]
+    }
+  ]
+}

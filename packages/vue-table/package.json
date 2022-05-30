@@ -1,13 +1,13 @@
 {
   "name": "@tanstack/vue-table",
   "author": "Tanner Linsley",
-  "version": "8.0.0-alpha.82",
-  "description": "Composables for building lightweight, fast and extendable datagrids for Vue",
+  "version": "8.0.0-alpha.89",
+  "description": "Headless UI for building powerful tables & datagrids for Vue.",
   "license": "MIT",
-  "homepage": "https://github.com/tanstack/react-table#readme",
+  "homepage": "https://github.com/tanstack/table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanstack/react-table.git"
+    "url": "git+https://github.com/tanstack/table.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -35,7 +35,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.0-alpha.82"
+    "@tanstack/table-core": "8.0.0-alpha.89"
   },
   "peerDependencies": {
     "vue": "^3.2.33"

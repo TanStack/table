@@ -20,7 +20,7 @@ export function getCoreRowModelWorker<TGenerics extends TableGenerics>(opts?: {
           rowsById: {},
         } as RowModel<TGenerics>),
       () => async data => {
-        console.log('progress', 0)
+        console.info('progress', 0)
 
         const rowModel: RowModel<TGenerics> = {
           rows: [],
@@ -43,7 +43,7 @@ export function getCoreRowModelWorker<TGenerics extends TableGenerics>(opts?: {
 
           for (let i = 0; i < originalRows.length; i++) {
             if (i % 100 === 0) {
-              console.log('progress', i / originalRows.length)
+              console.info('progress', i / originalRows.length)
             }
             originalRow = originalRows[i]
             id = instance.getRowId(originalRow, i, parent)
@@ -81,7 +81,7 @@ export function getCoreRowModelWorker<TGenerics extends TableGenerics>(opts?: {
 
         rowModel.rows = accessRows(data)
 
-        console.log('progress', 1)
+        console.info('progress', 1)
 
         return rowModel
       },
@@ -91,11 +91,11 @@ export function getCoreRowModelWorker<TGenerics extends TableGenerics>(opts?: {
         instance,
         key: process.env.NODE_ENV === 'development' && 'getCoreRowModelAsync',
         onChange: () => {
-          console.log('progress', 0)
+          console.info('progress', 0)
           instance.setState(old => ({ ...old }))
         },
         onComplete: () => {
-          console.log('progress', 0)
+          console.info('progress', 0)
           instance._autoResetPageIndex()
           instance.setState(old => ({ ...old }))
         },

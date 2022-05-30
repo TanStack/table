@@ -1,4 +1,5 @@
 import { RowModel } from '..'
+import { TableFeature } from '../core/instance'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
@@ -7,7 +8,6 @@ import {
   TableInstance,
   Row,
   Updater,
-  TableFeature,
 } from '../types'
 import {
   functionalUpdate,
@@ -20,8 +20,6 @@ import {
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
   globalFilter: any
-  // filtersProgress: number
-  // facetProgress: Record<string, number>
 }
 
 export type ColumnFiltersState = ColumnFilter[]
@@ -74,7 +72,6 @@ export type FiltersColumnDef<TGenerics extends TableGenerics> = {
   filterFn?: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
-  enableFaceting?: boolean
 }
 
 export type FiltersColumn<TGenerics extends TableGenerics> = {
@@ -98,7 +95,6 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
 export type FiltersRow<TGenerics extends TableGenerics> = {
   columnFilters: Record<string, boolean>
   columnFiltersMeta: Record<string, TGenerics['FilterMeta']>
-  subRowsByFacetId: Record<string, Row<TGenerics>[]>
 }
 
 export type FiltersOptions<TGenerics extends TableGenerics> = {
@@ -161,7 +157,7 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
 //
 
 export const Filters: TableFeature = {
-  getDefaultColumn: <
+  getDefaultColumnDef: <
     TGenerics extends TableGenerics
   >(): FiltersColumnDef<TGenerics> => {
     return {
@@ -190,7 +186,7 @@ export const Filters: TableFeature = {
       getColumnCanGlobalFilter: column => {
         const value = instance
           .getCoreRowModel()
-          .flatRows[0]?.getAllCellsByColumnId()
+          .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
 
         return typeof value === 'string'
@@ -215,6 +211,10 @@ export const Filters: TableFeature = {
 
         if (typeof value === 'number') {
           return filterFns.inNumberRange
+        }
+
+        if (typeof value === 'boolean') {
+          return filterFns.equals
         }
 
         if (value !== null && typeof value === 'object') {
@@ -243,7 +243,7 @@ export const Filters: TableFeature = {
       },
       getCanFilter: () => {
         return (
-          (column.enableColumnFilter ?? true) &&
+          (column.columnDef.enableColumnFilter ?? true) &&
           (instance.options.enableColumnFilters ?? true) &&
           (instance.options.enableFilters ?? true) &&
           !!column.accessorFn
@@ -252,7 +252,7 @@ export const Filters: TableFeature = {
 
       getCanGlobalFilter: () => {
         return (
-          (column.enableGlobalFilter ?? true) &&
+          (column.columnDef.enableGlobalFilter ?? true) &&
           (instance.options.enableGlobalFilter ?? true) &&
           (instance.options.enableFilters ?? true) &&
           (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&
@@ -352,7 +352,6 @@ export const Filters: TableFeature = {
     return {
       columnFilters: {},
       columnFiltersMeta: {},
-      subRowsByFacetId: {},
     }
   },
 
