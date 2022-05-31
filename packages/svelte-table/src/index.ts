@@ -7,7 +7,7 @@ import {
   TableOptions,
   TableOptionsResolved,
 } from '@tanstack/table-core'
-import Placeholder from './placeholder.svelte'
+import Placeholder from './placeholder'
 import { SvelteComponent } from 'svelte/internal'
 import { readable, writable, derived, Readable, get } from 'svelte/store'
 import { renderComponent } from './render-component'
@@ -25,7 +25,14 @@ function isSvelteServerComponent(component: any) {
 }
 
 function isSvelteClientComponent(component: any) {
-  return component.prototype instanceof SvelteComponent
+  let isHMR = '__SVELTE_HMR' in window
+
+  return (
+    component.prototype instanceof SvelteComponent ||
+    (isHMR &&
+      component.name?.startsWith('Proxy<') &&
+      component.name?.endsWith('>'))
+  )
 }
 
 function isSvelteComponent(component: any) {

@@ -66,7 +66,7 @@ function renderClient(Comp: any, props: any): any {
 function renderServer(Comp: any, props: any) {
   const WrapperComp = create_ssr_component(
     ($$result: any, $$props: any, $$bindings: any, slots: any) => {
-      return `${validate_component(Comp, 'Comp').$$render(
+      return `${validate_component(Comp, 'TableComponent').$$render(
         $$result,
         props,
         {},
