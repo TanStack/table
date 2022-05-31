@@ -52,7 +52,6 @@ export type GroupingColumnDef<TGenerics extends TableGenerics> = {
 }
 
 export type GroupingColumn<TGenerics extends TableGenerics> = {
-  aggregationFn?: AggregationFnOption<Overwrite<TGenerics, { Value: any }>>
   getCanGroup: () => boolean
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
@@ -87,9 +86,7 @@ export type GroupingOptions<TGenerics extends TableGenerics> = {
   aggregationFns?: TGenerics['AggregationFns']
   onGroupingChange?: OnChangeFn<GroupingState>
   enableGrouping?: boolean
-  getGroupedRowModel?: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getGroupedRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
   groupedColumnMode?: false | 'reorder' | 'remove'
 }
 
@@ -110,6 +107,7 @@ export const Grouping: TableFeature = {
     TGenerics extends TableGenerics
   >(): GroupingColumnDef<TGenerics> => {
     return {
+      aggregatedCell: props => props.getValue()?.toString?.() ?? null,
       aggregationFn: 'auto',
     }
   },
@@ -182,8 +180,6 @@ export const Grouping: TableFeature = {
         if (Object.prototype.toString.call(value) === '[object Date]') {
           return aggregationFns.extent
         }
-
-        return aggregationFns.count
       },
       getAggregationFn: () => {
         const userAggregationFns = instance.options.aggregationFns
@@ -192,15 +188,15 @@ export const Grouping: TableFeature = {
           throw new Error()
         }
 
-        return isFunction(column.aggregationFn)
-          ? column.aggregationFn
-          : column.aggregationFn === 'auto'
+        return isFunction(column.columnDef.aggregationFn)
+          ? column.columnDef.aggregationFn
+          : column.columnDef.aggregationFn === 'auto'
           ? column.getAutoAggregationFn()
           : (userAggregationFns as Record<string, any>)?.[
-              column.aggregationFn as string
+              column.columnDef.aggregationFn as string
             ] ??
             (aggregationFns[
-              column.aggregationFn as BuiltInAggregationFn
+              column.columnDef.aggregationFn as BuiltInAggregationFn
             ] as AggregationFn<TGenerics>)
       },
     }

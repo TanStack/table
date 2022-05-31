@@ -47,9 +47,9 @@ export type Table<TGenerics extends TableGenerics> = {
     Overwrite<TGenerics, { FilterMeta: TFilterMeta }>
   >
   setOptions: <
-    TFilterFns extends Record<string, FilterFn<TGenerics>>,
-    TSortingFns extends Record<string, SortingFn<TGenerics>>,
-    TAggregationFns extends Record<string, AggregationFn<TGenerics>>
+    TFilterFns extends Record<string, FilterFn<any>>,
+    TSortingFns extends Record<string, SortingFn<any>>,
+    TAggregationFns extends Record<string, AggregationFn<any>>
   >(
     options: CreateTableOptions<
       any,
