@@ -20,9 +20,9 @@ Columns by default are given the following measurement options:
 
 ```tsx
 export const defaultColumnSizing = {
-  width: 150,
-  minWidth: 20,
-  maxWidth: Number.MAX_SAFE_INTEGER,
+  size: 150,
+  minSize: 20,
+  maxSize: Number.MAX_SAFE_INTEGER,
 }
 ```
 
