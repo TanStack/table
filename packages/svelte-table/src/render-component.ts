@@ -1,5 +1,6 @@
 import {
   SvelteComponent,
+  claim_component,
   create_component,
   destroy_component,
   init,
@@ -20,6 +21,9 @@ function create_fragment(ctx: any, Comp: any, props: any) {
   return {
     c() {
       create_component(c.$$.fragment)
+    },
+    l(nodes: any) {
+      claim_component(c.$$.fragment, nodes)
     },
     m(target: any, anchor: any) {
       // @ts-ignore
