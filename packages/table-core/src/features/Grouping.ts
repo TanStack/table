@@ -248,6 +248,9 @@ export const Grouping: TableFeature = {
     row: Row<TGenerics>,
     instance: TableInstance<TGenerics>
   ): GroupingCell<TGenerics> => {
+    const getRenderValue = () =>
+      cell.getValue() ?? instance.options.renderFallbackValue
+
     return {
       getIsGrouped: () =>
         column.getIsGrouped() && column.id === row.groupingColumnId,
@@ -257,8 +260,16 @@ export const Grouping: TableFeature = {
         !cell.getIsPlaceholder() &&
         row.subRows?.length > 1,
       renderAggregatedCell: () => {
+        if (process.env.NODE_ENV === 'development') {
+          if (!column.columnDef.aggregatedCell) {
+            console.warn(
+              'A columnDef.aggregatedCell template is recommended for displaying aggregated values.'
+            )
+          }
+        }
+
         const template =
-          column.columnDef.aggregatedCell ?? column.columnDef.cell
+          column.columnDef.aggregatedCell || column.columnDef.cell
 
         return template
           ? instance._render(template, {
@@ -266,7 +277,7 @@ export const Grouping: TableFeature = {
               column,
               row,
               cell,
-              getValue: cell.getValue,
+              getValue: getRenderValue,
             })
           : null
       },

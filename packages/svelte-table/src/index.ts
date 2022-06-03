@@ -81,6 +81,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
     render,
+    renderFallbackValue: null,
     ...get(optionsStore),
   }
 

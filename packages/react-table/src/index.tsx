@@ -77,6 +77,7 @@ export function useTableInstance<TGenerics extends ReactTableGenerics>(
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
     render,
+    renderFallbackValue: null,
     ...options,
   }
 

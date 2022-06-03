@@ -85,6 +85,7 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   ) => string
   columns: ColumnDef<TGenerics>[]
   defaultColumn?: Partial<ColumnDef<TGenerics>>
+  renderFallbackValue: any
 }
 
 export type CoreInstance<TGenerics extends TableGenerics> = {
