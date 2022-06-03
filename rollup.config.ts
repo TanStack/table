@@ -145,7 +145,11 @@ function esm({ input, packageDir, external, banner }: Options): RollupOptions {
       banner,
     },
     plugins: [
-      svelte(),
+      svelte({
+        compilerOptions: {
+          hydratable: true,
+        },
+      }),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
