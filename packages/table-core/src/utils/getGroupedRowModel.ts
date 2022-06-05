@@ -93,13 +93,6 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
                     )
 
                     return row._groupingValuesCache[columnId]
-                  } else if (column.aggregationFn) {
-                    console.info({ column })
-                    throw new Error(
-                      process.env.NODE_ENV !== 'production'
-                        ? `Table: Invalid column.aggregateType option for column listed above`
-                        : ''
-                    )
                   }
                 },
               })

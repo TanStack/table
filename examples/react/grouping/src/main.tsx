@@ -24,30 +24,25 @@ function App() {
     () => [
       table.createGroup({
         header: 'Name',
-        footer: props => props.column.id,
         columns: [
           table.createDataColumn('firstName', {
             header: 'First Name',
             cell: info => info.getValue(),
-            footer: props => props.column.id,
           }),
           table.createDataColumn(row => row.lastName, {
             id: 'lastName',
             header: () => <span>Last Name</span>,
             cell: info => info.getValue(),
-            footer: props => props.column.id,
           }),
         ],
       }),
       table.createGroup({
         header: 'Info',
-        footer: props => props.column.id,
         columns: [
           table.createDataColumn('age', {
             header: () => 'Age',
             aggregatedCell: ({ getValue }) =>
               Math.round(getValue() * 100) / 100,
-            footer: props => props.column.id,
             aggregationFn: 'median',
           }),
           table.createGroup({
@@ -55,12 +50,11 @@ function App() {
             columns: [
               table.createDataColumn('visits', {
                 header: () => <span>Visits</span>,
-                aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-                footer: props => props.column.id,
+                aggregationFn: 'sum',
+                // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
               }),
               table.createDataColumn('status', {
                 header: 'Status',
-                footer: props => props.column.id,
               }),
               table.createDataColumn('progress', {
                 header: 'Profile Progress',
@@ -69,7 +63,6 @@ function App() {
                 aggregationFn: 'mean',
                 aggregatedCell: ({ getValue }) =>
                   Math.round(getValue() * 100) / 100 + '%',
-                footer: props => props.column.id,
               }),
             ],
           }),

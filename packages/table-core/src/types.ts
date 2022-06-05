@@ -123,7 +123,7 @@ export type TableOptionsResolved<TGenerics extends TableGenerics> =
 
 export type TableOptions<TGenerics extends TableGenerics> = Omit<
   PartialKeys<TableOptionsResolved<TGenerics>, 'state' | 'onStateChange'>,
-  'render'
+  'render' | 'renderFallbackValue'
 >
 
 export type TableState = CoreTableState &

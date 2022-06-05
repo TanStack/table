@@ -1,5 +1,6 @@
 import {
   SvelteComponent,
+  claim_component,
   create_component,
   destroy_component,
   init,
@@ -20,6 +21,9 @@ function create_fragment(ctx: any, Comp: any, props: any) {
   return {
     c() {
       create_component(c.$$.fragment)
+    },
+    l(nodes: any) {
+      claim_component(c.$$.fragment, nodes)
     },
     m(target: any, anchor: any) {
       // @ts-ignore
@@ -62,7 +66,7 @@ function renderClient(Comp: any, props: any): any {
 function renderServer(Comp: any, props: any) {
   const WrapperComp = create_ssr_component(
     ($$result: any, $$props: any, $$bindings: any, slots: any) => {
-      return `${validate_component(Comp, 'Comp').$$render(
+      return `${validate_component(Comp, 'TableComponent').$$render(
         $$result,
         props,
         {},

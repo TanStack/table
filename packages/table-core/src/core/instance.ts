@@ -73,9 +73,7 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   autoResetAll?: boolean
   mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
   meta?: TGenerics['TableMeta']
-  getCoreRowModel: (
-    instance: TableInstance<TGenerics>
-  ) => () => RowModel<TGenerics>
+  getCoreRowModel: (instance: TableInstance<any>) => () => RowModel<any>
   getSubRows?: (
     originalRow: TGenerics['Row'],
     index: number
@@ -87,6 +85,7 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   ) => string
   columns: ColumnDef<TGenerics>[]
   defaultColumn?: Partial<ColumnDef<TGenerics>>
+  renderFallbackValue: any
 }
 
 export type CoreInstance<TGenerics extends TableGenerics> = {
@@ -256,7 +255,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
         return {
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
-          cell: props => props.getValue().toString?.() ?? null,
+          cell: props => props.getValue()?.toString?.() ?? null,
           ...instance._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),

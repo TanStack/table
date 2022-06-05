@@ -1,6 +1,6 @@
-![TanStack Table Header](https://github.com/tanstack/table/raw/alpha/media/repo-header.png)
+![TanStack Table Header](https://github.com/tanstack/table/raw/beta/media/repo-header.png)
 
-# [TanStack](https://tanstack.com) Table v8 (alpha)
+# [TanStack](https://tanstack.com) Table v8 (beta)
 
 Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue, Svelte and TS/JS**.
 
@@ -22,7 +22,7 @@ Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
 
-> This is an **alpha** version of TanStack Table v8. It is not ready for production use, but it is ready to be taste-tested!
+> This is a **beta** version of TanStack Table v8. It's ready to try in your projects, migrate from v7 and even ship to production as long as you lock in to a specific `-beta.N` semver tag!
 
 > [Looking for version 7 of `react-table`? Click here!](https://github.com/tanstack/table/tree/v7)
 
@@ -109,7 +109,7 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [x] Column Sizing
   - [x] Pagination
   - [x] Row Selection
-- [ ] Migrate [Examples](https://github.com/tanstack/table/tree/alpha/examples)
+- [ ] Migrate [Examples](https://github.com/tanstack/table/tree/beta/examples)
   - [x] column-visibility
   - [x] column-ordering
   - [x] column-pinning
@@ -138,7 +138,7 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [ ] full-width-table
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
-- [ ] [Documentation](https://github.com/tanstack/table/tree/alpha/docs/)
+- [ ] [Documentation](https://github.com/tanstack/table/tree/beta/docs/)
   - [x] Core
   - [ ] Columns
   - [ ] Headers
@@ -157,9 +157,9 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
 ## Installation
 
 ```bash
-npm install @tanstack/react-table@alpha
+npm install @tanstack/react-table@beta
 # or
-yarn add @tanstack/react-table@alpha
+yarn add @tanstack/react-table@beta
 ```
 
 ## How to help?
@@ -167,8 +167,8 @@ yarn add @tanstack/react-table@alpha
 - Try out the already-migrated examples
 - Try it out in your own projects.
 - Introspect the types! Even without the docs finished, the library ships with 100% typescript to help you explore its capabilities.
-- [Read the contribution guidelines](https://github.com/tanstack/table/tree/alpha/CONTRIBUTING.md)
-- Write some docs! Start with the [API docs](https://github.com/TanStack/react-table/tree/alpha/docs/src/api) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
+- [Read the contribution guidelines](https://github.com/tanstack/table/tree/beta/CONTRIBUTING.md)
+- Write some docs! Start with the [API docs](https://github.com/TanStack/react-table/tree/beta/docs/src/api) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
 - Try your hand at migrating an example to v8! The todo list for the examples is above!
 - **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a functional wrapper that uses TanStack Table internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
 

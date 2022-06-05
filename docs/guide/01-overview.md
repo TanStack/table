@@ -2,11 +2,11 @@
 title: Overview
 ---
 
-React table's core is **framework agnostic**, which means it's API is the same regardless of the framework you're using. Adapters are provided to make working with the table core easier depending on your framework. See the [adapters](../adapters) section for more information on available adapters.
+React table's core is **framework agnostic**, which means its API is the same regardless of the framework you're using. Adapters are provided to make working with the table core easier depending on your framework. See the [adapters](../adapters) section for more information on available adapters.
 
 ## Typescript
 
-While React Table is written in [TypeScript](https://www.typescriptlang.org/), using TypeScript in your application is optional (but recommended as it's comes with outstanding benefits to both you and your codebase)
+While React Table is written in [TypeScript](https://www.typescriptlang.org/), using TypeScript in your application is optional (but recommended as it comes with outstanding benefits to both you and your codebase)
 
 ## Headless
 
@@ -27,7 +27,7 @@ At the heart of the table core, a few structures are consistent common and consi
 - Columns
   - Each column mirrors its respective column def and also provide column-specific APIs
 - Rows
-  - Each row mirrors its respective row data and provide row-specific APIs
+  - Each row mirrors its respective row data and provides row-specific APIs
 - Header Groups
   - Header groups are computed slices of nested header levels, each containing a group of headers
 - Headers

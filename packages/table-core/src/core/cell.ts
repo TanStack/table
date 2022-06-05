@@ -14,6 +14,9 @@ export function createCell<TGenerics extends TableGenerics>(
   column: Column<TGenerics>,
   columnId: string
 ) {
+  const getRenderValue = () =>
+    cell.getValue() ?? instance.options.renderFallbackValue
+
   const cell: CoreCell<TGenerics> = {
     id: `${row.id}_${column.id}`,
     row,
@@ -26,7 +29,7 @@ export function createCell<TGenerics extends TableGenerics>(
             column,
             row,
             cell: cell as Cell<TGenerics>,
-            getValue: cell.getValue,
+            getValue: getRenderValue,
           })
         : null
     },

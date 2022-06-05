@@ -50,7 +50,7 @@ const table = createTable().setRowType<Person>()
 const defaultColumns = [
   table.createDisplayColumn({
     id: 'actions',
-    cell: props => <RowActions row={props.row}>
+    cell: props => <RowActions row={props.row} />
   }),
   table.createGroup({
     header: 'Name',
