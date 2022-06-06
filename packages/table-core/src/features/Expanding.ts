@@ -63,7 +63,6 @@ export const Expanding: TableFeature = {
   ): ExpandedOptions<TGenerics> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', instance),
-      autoResetExpanded: true,
       paginateExpandedRows: true,
     }
   },
@@ -83,13 +82,10 @@ export const Expanding: TableFeature = {
           return
         }
 
-        if (instance.options.autoResetAll === false) {
-          return
-        }
-
         if (
-          instance.options.autoResetAll === true ||
-          instance.options.autoResetExpanded
+          instance.options.autoResetAll ??
+          instance.options.autoResetExpanded ??
+          !instance.options.manualExpanding
         ) {
           if (queued) return
           queued = true
@@ -160,7 +156,7 @@ export const Expanding: TableFeature = {
 
         return maxDepth
       },
-      getPreExpandedRowModel: () => instance.getGroupedRowModel(),
+      getPreExpandedRowModel: () => instance.getSortedRowModel(),
       getExpandedRowModel: () => {
         if (
           !instance._getExpandedRowModel &&

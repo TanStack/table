@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, HTMLProps } from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
@@ -310,11 +310,13 @@ function IndeterminateCheckbox({
   indeterminate,
   className = '',
   ...rest
-}: { indeterminate: boolean } & HTMLAttributes<HTMLInputElement>) {
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
   const ref = React.useRef<HTMLInputElement>(null!)
 
   React.useEffect(() => {
-    ref.current.indeterminate = indeterminate
+    if (typeof indeterminate === 'boolean') {
+      ref.current.indeterminate = !rest.checked && indeterminate
+    }
   }, [ref, indeterminate])
 
   return (
