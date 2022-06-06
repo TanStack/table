@@ -245,7 +245,7 @@ export const RowSelection: TableFeature = {
       ),
 
       getGroupedSelectedRowModel: memo(
-        () => [instance.getState().rowSelection, instance.getGroupedRowModel()],
+        () => [instance.getState().rowSelection, instance.getSortedRowModel()],
         (rowSelection, rowModel) => {
           if (!Object.keys(rowSelection).length) {
             return {
