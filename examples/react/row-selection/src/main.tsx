@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, HTMLProps } from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
@@ -149,19 +149,32 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance
-            .getRowModel()
-            .rows.slice(0, 10)
-            .map(row => {
-              return (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
-                    return <td key={cell.id}>{cell.renderCell()}</td>
-                  })}
-                </tr>
-              )
-            })}
+          {instance.getRowModel().rows.map(row => {
+            return (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => {
+                  return <td key={cell.id}>{cell.renderCell()}</td>
+                })}
+              </tr>
+            )
+          })}
         </tbody>
+        <tfoot>
+          <tr>
+            <td className="p-1">
+              <IndeterminateCheckbox
+                {...{
+                  checked: instance.getIsAllPageRowsSelected(),
+                  indeterminate: instance.getIsSomePageRowsSelected(),
+                  onChange: instance.getToggleAllPageRowsSelectedHandler(),
+                }}
+              />
+            </td>
+            <td colSpan={20}>
+              Page Rows ({instance.getRowModel().rows.length})
+            </td>
+          </tr>
+        </tfoot>
       </table>
       <div className="h-2" />
       <div className="flex items-center gap-2">
@@ -317,7 +330,7 @@ function IndeterminateCheckbox({
   indeterminate,
   className = '',
   ...rest
-}: { indeterminate?: boolean } & HTMLAttributes<HTMLInputElement>) {
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
   const ref = React.useRef<HTMLInputElement>(null!)
 
   React.useEffect(() => {

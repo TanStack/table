@@ -58,8 +58,8 @@ export type RowSelectionInstance<TGenerics extends TableGenerics> = {
   getIsAllPageRowsSelected: () => boolean
   getIsSomeRowsSelected: () => boolean
   getIsSomePageRowsSelected: () => boolean
-  toggleAllRowsSelected: (value: boolean) => void
-  toggleAllPageRowsSelected: (value: boolean) => void
+  toggleAllRowsSelected: (value?: boolean) => void
+  toggleAllPageRowsSelected: (value?: boolean) => void
   getPreSelectedRowModel: () => RowModel<TGenerics>
   getSelectedRowModel: () => RowModel<TGenerics>
   getFilteredSelectedRowModel: () => RowModel<TGenerics>
@@ -128,7 +128,7 @@ export const RowSelection: TableFeature = {
       },
       toggleAllPageRowsSelected: value =>
         instance.setRowSelection(old => {
-          const selectAll =
+          const resolvedValue =
             typeof value !== 'undefined'
               ? value
               : !instance.getIsAllPageRowsSelected()
@@ -136,7 +136,7 @@ export const RowSelection: TableFeature = {
           const rowSelection: RowSelectionState = { ...old }
 
           instance.getRowModel().rows.forEach(row => {
-            mutateRowIsSelected(rowSelection, row.id, value, instance)
+            mutateRowIsSelected(rowSelection, row.id, resolvedValue, instance)
           })
 
           return rowSelection
@@ -325,7 +325,9 @@ export const RowSelection: TableFeature = {
         const paginationFlatRows = instance.getPaginationRowModel().flatRows
         return instance.getIsAllPageRowsSelected()
           ? false
-          : !!paginationFlatRows?.length
+          : paginationFlatRows.some(
+              d => d.getIsSelected() || d.getIsSomeSelected()
+            )
       },
 
       getToggleAllRowsSelectedHandler: () => {

@@ -1,4 +1,4 @@
-import { TableInstance, RowModel, TableGenerics } from '../types'
+import { TableInstance, RowModel, TableGenerics, Row } from '../types'
 import { memo } from '../utils'
 import { expandRows } from './getExpandedRowModel'
 
@@ -23,8 +23,10 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
 
         rows = rows.slice(pageStart, pageEnd)
 
+        let paginatedRowModel: RowModel<TGenerics>
+
         if (!instance.options.paginateExpandedRows) {
-          return expandRows(
+          paginatedRowModel = expandRows(
             {
               rows,
               flatRows,
@@ -32,13 +34,26 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
             },
             instance
           )
+        } else {
+          paginatedRowModel = {
+            rows,
+            flatRows,
+            rowsById,
+          }
         }
 
-        return {
-          rows,
-          flatRows,
-          rowsById,
+        paginatedRowModel.flatRows = []
+
+        const handleRow = (row: Row<TGenerics>) => {
+          paginatedRowModel.flatRows.push(row)
+          if (row.subRows.length) {
+            row.subRows.forEach(handleRow)
+          }
         }
+
+        paginatedRowModel.rows.forEach(handleRow)
+
+        return paginatedRowModel
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getPaginationRowModel',
