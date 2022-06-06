@@ -345,8 +345,6 @@ export const Sorting: TableFeature = {
   createInstance: <TGenerics extends TableGenerics>(
     instance: TableInstance<TGenerics>
   ): SortingInstance<TGenerics> => {
-    let registered = false
-
     return {
       setSorting: updater => instance.options.onSortingChange?.(updater),
       resetSorting: defaultState => {
@@ -354,7 +352,7 @@ export const Sorting: TableFeature = {
           defaultState ? [] : instance.initialState?.sorting ?? []
         )
       },
-      getPreSortedRowModel: () => instance.getFilteredRowModel(),
+      getPreSortedRowModel: () => instance.getGroupedRowModel(),
       getSortedRowModel: () => {
         if (
           !instance._getSortedRowModel &&

@@ -214,7 +214,7 @@ export const Grouping: TableFeature = {
         )
       },
 
-      getPreGroupedRowModel: () => instance.getSortedRowModel(),
+      getPreGroupedRowModel: () => instance.getFilteredRowModel(),
       getGroupedRowModel: () => {
         if (
           !instance._getGroupedRowModel &&
@@ -258,7 +258,7 @@ export const Grouping: TableFeature = {
       getIsAggregated: () =>
         !cell.getIsGrouped() &&
         !cell.getIsPlaceholder() &&
-        row.subRows?.length > 1,
+        !!row.subRows?.length,
       renderAggregatedCell: () => {
         if (process.env.NODE_ENV === 'development') {
           if (!column.columnDef.aggregatedCell) {

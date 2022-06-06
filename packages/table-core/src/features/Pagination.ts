@@ -11,7 +11,6 @@ import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 export type PaginationState = {
   pageIndex: number
   pageSize: number
-  pageCount?: number
 }
 
 export type PaginationTableState = {
@@ -23,6 +22,7 @@ export type PaginationInitialTableState = {
 }
 
 export type PaginationOptions<TGenerics extends TableGenerics> = {
+  pageCount?: number
   manualPagination?: boolean
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
@@ -131,8 +131,8 @@ export const Pagination: TableFeature = {
           let pageIndex = functionalUpdate(updater, old.pageIndex)
 
           const maxPageIndex =
-            typeof old.pageCount !== 'undefined'
-              ? old.pageCount - 1
+            typeof instance.options.pageCount !== 'undefined'
+              ? instance.options.pageCount - 1
               : Number.MAX_SAFE_INTEGER
 
           pageIndex = Math.min(Math.max(0, pageIndex), maxPageIndex)
@@ -172,7 +172,10 @@ export const Pagination: TableFeature = {
       },
       setPageCount: updater =>
         instance.setPagination(old => {
-          let newPageCount = functionalUpdate(updater, old.pageCount ?? -1)
+          let newPageCount = functionalUpdate(
+            updater,
+            instance.options.pageCount ?? -1
+          )
 
           if (typeof newPageCount === 'number') {
             newPageCount = Math.max(-1, newPageCount)
@@ -185,11 +188,8 @@ export const Pagination: TableFeature = {
         }),
 
       getPageOptions: memo(
-        () => [
-          instance.getState().pagination.pageSize,
-          instance.getState().pagination.pageCount,
-        ],
-        (pageSize, pageCount) => {
+        () => [instance.getPageCount()],
+        pageCount => {
           let pageOptions: number[] = []
           if (pageCount && pageCount > 0) {
             pageOptions = [...new Array(pageCount)].fill(null).map((_, i) => i)
@@ -251,15 +251,12 @@ export const Pagination: TableFeature = {
       },
 
       getPageCount: () => {
-        const { pageCount } = instance.getState().pagination
-
-        if (typeof pageCount !== 'undefined') {
-          return pageCount
-        }
-
-        return Math.ceil(
-          instance.getPrePaginationRowModel().rows.length /
-            instance.getState().pagination.pageSize
+        return (
+          instance.options.pageCount ??
+          Math.ceil(
+            instance.getPrePaginationRowModel().rows.length /
+              instance.getState().pagination.pageSize
+          )
         )
       },
     }
