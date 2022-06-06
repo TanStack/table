@@ -214,7 +214,7 @@ export const Grouping: TableFeature = {
         )
       },
 
-      getPreGroupedRowModel: () => instance.getSortedRowModel(),
+      getPreGroupedRowModel: () => instance.getFilteredRowModel(),
       getGroupedRowModel: () => {
         if (
           !instance._getGroupedRowModel &&
