@@ -335,7 +335,7 @@ function IndeterminateCheckbox({
 
   React.useEffect(() => {
     if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = indeterminate
+      ref.current.indeterminate = !rest.checked && indeterminate
     }
   }, [ref, indeterminate])
 
