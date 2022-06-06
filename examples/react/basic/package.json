@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-basic",
+  "name": "tanstack-table-example-vue-column-ordering",
   "version": "0.0.0",
   "private": true,
   "scripts": {
