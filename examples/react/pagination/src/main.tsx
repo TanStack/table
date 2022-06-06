@@ -77,8 +77,6 @@ function App() {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
-    pageCount: undefined, // allows the table to calculate the page count for us via instance.getPageCount()
-    // If we wanted to control the pageCount, we could provide it here (eg. if we were doing server-side pagination)
   })
 
   return (

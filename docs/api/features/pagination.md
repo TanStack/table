@@ -11,7 +11,6 @@ Pagination state is stored on the table instance using the following shape:
 export type PaginationState = {
   pageIndex: number
   pageSize: number
-  pageCount?: number
 }
 
 export type PaginationTableState = {
@@ -32,6 +31,14 @@ manualPagination?: boolean
 ```
 
 Enables manual pagination. If this option is set to `true`, the table will not automatically paginate rows using `getPaginationRowModel()` and instead will expect you to manually paginate the rows before passing them to the table. This is useful if you are doing server-side pagination and aggregation.
+
+### `pageCount`
+
+```tsx
+pageCount?: number
+```
+
+When manually controlling pagination, you should supply a total `pageCount` value to the table if you know it. If you do not know how many pages there are, you can set this to `-1`.
 
 ### `autoResetPagination`
 
@@ -165,7 +172,7 @@ Decrements the page index by one, if possible.
 getPageCount: () => number
 ```
 
-Returns the page count. If manually paginating or controll the pagination state, this will come directly from the controlled state value `state.pagination.pageCount`, otherwise it will be calculated from the table data using the total row count and current page size.
+Returns the page count. If manually paginating or controlling the pagination state, this will come directly from the `options.pageCount` table option, otherwise it will be calculated from the table data using the total row count and current page size.
 
 ### `getPrePaginatedRowModel`
 

@@ -95,14 +95,14 @@ function App() {
     () => ({
       pageIndex,
       pageSize,
-      pageCount: dataQuery.data?.pageCount ?? -1,
     }),
-    [pageIndex, pageSize, dataQuery.data?.pageCount]
+    [pageIndex, pageSize]
   )
 
   const instance = useTableInstance(table, {
     data: dataQuery.data?.rows ?? defaultData,
     columns,
+    pageCount: dataQuery.data?.pageCount ?? -1,
     state: {
       pagination,
     },
