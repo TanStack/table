@@ -131,6 +131,10 @@
       "children": [
         { "to": "examples/solid/basic", "label": "Basic" },
         {
+          "to": "examples/solid/column-ordering",
+          "label": "Column Ordering"
+        },
+        {
           "to": "examples/solid/column-visibility",
           "label": "Column Visibility"
         },
