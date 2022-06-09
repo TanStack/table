@@ -1,6 +1,4 @@
 node_modules/
-lib/
-es/
 docs/build
 *.log
 .idea
