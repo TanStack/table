@@ -14,7 +14,7 @@ As it was mentioned extensively in the [Intro](../intro) section, React Table is
 
 ## Core Objects and Types
 
-At the heart of the table core, a few structures are consistent common and consistent:
+The table core uses the following abstractions, commonly exposed by adapters:
 
 - [Table Factories](./core/tables)
   - Used to create table factories, pre-define table types, set default options, create column defs
