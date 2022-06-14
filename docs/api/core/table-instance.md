@@ -23,7 +23,7 @@ These are **core** options and API properties for the table instance. More optio
 data: TGenerics['Row'][]
 ```
 
-The data for the table to display. This is array should match the type you provided to `table.setRowType<...>`, but in theiry could be an array of anything. It's common for each item in the array ito be an object of key/values but this is not required. Columns can access this data via string/index or a functional accessor to return anything they want.
+The data for the table to display. This is array should match the type you provided to `table.setRowType<...>`, but in theiry could be an array of anything. It's common for each item in the array to be an object of key/values but this is not required. Columns can access this data via string/index or a functional accessor to return anything they want.
 
 When the `data` option changes reference (compared via `Object.is`), the table will reprocess the data. Any other data processing that relies on the core data model (such as grouping, sorting, filtering, etc) will also be reprocessed.
 
