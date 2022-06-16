@@ -245,15 +245,15 @@ Example:
 
 ```tsx
 const table = createTable().setOptions({
-  sortingFns: {
-    myCustomSortingFn: (rows, columnIds, sortingValue) => {
-      ///
+    sortingFns: {
+      sortComplexColumns: (rowA: any, rowB: any, columnId: any): number => (
+        rowA.getValue(columnId).value < rowB.getValue(columnId).value ? 1 : -1
+      ),
     },
-  },
-})
+  })
 
 const column = table.createDataColumn('key', {
-  sortingFn: 'myCustomSortingFn',
+  sortingFn: 'sortComplexColumns',
 })
 ```
 
