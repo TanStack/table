@@ -131,9 +131,9 @@ export const Pagination: TableFeature = {
           let pageIndex = functionalUpdate(updater, old.pageIndex)
 
           const maxPageIndex =
-            typeof instance.options.pageCount !== 'undefined'
-              ? instance.options.pageCount - 1
-              : Number.MAX_SAFE_INTEGER
+            (typeof instance.options.pageCount === 'undefined' || instance.options.pageCount === -1) ?
+              Number.MAX_SAFE_INTEGER
+              : instance.options.pageCount - 1
 
           pageIndex = Math.min(Math.max(0, pageIndex), maxPageIndex)
 
@@ -255,7 +255,7 @@ export const Pagination: TableFeature = {
           instance.options.pageCount ??
           Math.ceil(
             instance.getPrePaginationRowModel().rows.length /
-              instance.getState().pagination.pageSize
+            instance.getState().pagination.pageSize
           )
         )
       },
