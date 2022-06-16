@@ -2395,6 +2395,18 @@
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.1.tgz#47ab73a3872b3fc10468259993f1a3121aa327c8"
   integrity sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==
 
+"@tanstack/table-core@8.0.0-beta.7":
+  version "8.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-beta.7.tgz#aeba79221d7f52a81ce363034b359fdf9cf4cbb7"
+  integrity sha512-bE8o+cLhKGLj9OnlfsAiUPMPpTOcmQ/Rj176ybO1nGmUsCdOdaHBScjNskYEuV++sDkpkvgP602wv8ZJ2Td18Q==
+
+"@tanstack/vue-table@8.0.0-beta.7":
+  version "8.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/vue-table/-/vue-table-8.0.0-beta.7.tgz#c42a4a0cf5e9fae0834f0669362d1e0a508ff8ea"
+  integrity sha512-CSR2rGFxkoqo1riC2muwuGv+8ioRAceVFv9bwBDFs3Q/XxlVROGWkHguDObmc8oVOWNevMat+uIjGFpCpIE+8g==
+  dependencies:
+    "@tanstack/table-core" "8.0.0-beta.7"
+
 "@testing-library/dom@^8.0.0":
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.13.0.tgz#bc00bdd64c7d8b40841e27a70211399ad3af46f5"
@@ -2581,6 +2593,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.25.tgz#527051f3c2f77aa52e5dc74e45a3da5fb2301448"
   integrity sha512-wANk6fBrUwdpY4isjWrKTufkrXdu1D2YHCot2fD/DfWxF5sMrVSA+KN7ydckvaTCh0HiqX9IVl0L5/ZoXg5M7w==
 
+"@types/node@^16.11.27":
+  version "16.11.41"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.41.tgz#88eb485b1bfdb4c224d878b7832239536aa2f813"
+  integrity sha512-mqoYK2TnVjdkGk8qXAVGc/x9nSaTpSrFaGFm43BUH3IdoBV0nta6hYaGmdOvIMlbHJbUEVen3gvwpwovAZKNdQ==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
@@ -2702,7 +2719,7 @@
     react-refresh "^0.13.0"
     resolve "^1.22.0"
 
-"@vitejs/plugin-vue@^2.3.3":
+"@vitejs/plugin-vue@^2.3.1", "@vitejs/plugin-vue@^2.3.3":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-2.3.3.tgz#fbf80cc039b82ac21a1acb0f0478de8f61fbf600"
   integrity sha512-SmQLDyhz+6lGJhPELsBdzXGc+AcaT8stgkbiTFGpXPe8Tl1tJaBw1A6pxDqDuRsVkD8uscrkx3hA7QDOoKYtyw==
@@ -2830,6 +2847,11 @@
   version "3.2.33"
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.2.33.tgz#69a8c99ceb37c1b031d5cc4aec2ff1dc77e1161e"
   integrity sha512-UBc1Pg1T3yZ97vsA2ueER0F6GbJebLHYlEi4ou1H5YL4KWvMOOWwpYo9/QpWq93wxKG6Wo13IY74Hcn/f7c7Bg==
+
+"@vue/tsconfig@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@vue/tsconfig/-/tsconfig-0.1.3.tgz#4a61dbd29783d01ddab504276dcf0c2b6988654f"
+  integrity sha512-kQVsh8yyWPvHpb8gIc9l/HIDiiVUy1amynLNpCy8p+FoCiZXCo6fQos5/097MmnNZc9AtseDsCrfkhqCrJ8Olg==
 
 JSONStream@^1.0.4:
   version "1.3.5"
@@ -8344,7 +8366,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@*, typescript@^4.5.4, typescript@^4.6.3:
+typescript@*, typescript@^4.5.4, typescript@^4.6.3, typescript@~4.6.3:
   version "4.6.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.4.tgz#caa78bbc3a59e6a5c510d35703f6a09877ce45e9"
   integrity sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==
@@ -8546,6 +8568,18 @@ vite@^2.8.0, vite@^2.9.7, vite@^2.9.9:
   version "2.9.9"
   resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.9.tgz#8b558987db5e60fedec2f4b003b73164cb081c5e"
   integrity sha512-ffaam+NgHfbEmfw/Vuh6BHKKlI/XIAhxE5QSS7gFLIngxg171mg1P3a4LSRME0z2ZU1ScxoKzphkipcYwSD5Ew==
+  dependencies:
+    esbuild "^0.14.27"
+    postcss "^8.4.13"
+    resolve "^1.22.0"
+    rollup "^2.59.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+vite@^2.9.5:
+  version "2.9.12"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.12.tgz#b1d636b0a8ac636afe9d83e3792d4895509a941b"
+  integrity sha512-suxC36dQo9Rq1qMB2qiRorNJtJAdxguu5TMvBHOc/F370KvqAe9t48vYp+/TbPKRNrMh/J55tOUmkuIqstZaew==
   dependencies:
     esbuild "^0.14.27"
     postcss "^8.4.13"
