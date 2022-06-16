@@ -21,18 +21,16 @@ export function filterRowModelFromLeafs<TGenerics extends TableGenerics>(
   const newFilteredFlatRows: Row<TGenerics>[] = []
   const newFilteredRowsById: Record<string, Row<TGenerics>> = {}
 
-  let row
-  let newRow
 
   const recurseFilterRows = (rowsToFilter: Row<TGenerics>[], depth = 0) => {
     const rows: Row<TGenerics>[] = []
 
     // Filter from children up first
     for (let i = 0; i < rowsToFilter.length; i++) {
-      row = rowsToFilter[i]!
+      let row = rowsToFilter[i]!
 
       if (row.subRows?.length) {
-        newRow = createRow(instance, row.id, row.original, row.index, row.depth)
+        const newRow = createRow(instance, row.id, row.original, row.index, row.depth)
         newRow.columnFilters = row.columnFilters
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
         if (!newRow.subRows.length) {
@@ -66,25 +64,21 @@ export function filterRowModelFromRoot<TGenerics extends TableGenerics>(
   const newFilteredFlatRows: Row<TGenerics>[] = []
   const newFilteredRowsById: Record<string, Row<TGenerics>> = {}
 
-  let rows
-  let row
-  let newRow
-
   // Filters top level and nested rows
   const recurseFilterRows = (rowsToFilter: Row<TGenerics>[], depth = 0) => {
     // Filter from parents downward first
 
-    rows = []
+    const rows = []
 
     // Apply the filter to any subRows
     for (let i = 0; i < rowsToFilter.length; i++) {
-      row = rowsToFilter[i]!
+      let row = rowsToFilter[i]!
 
       const pass = filterRow(row)
 
       if (pass) {
         if (row.subRows?.length) {
-          newRow = createRow(
+          const newRow = createRow(
             instance,
             row.id,
             row.original,
