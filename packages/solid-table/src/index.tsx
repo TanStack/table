@@ -11,7 +11,6 @@ import {
   createComputed,
   mergeProps,
   createComponent,
-  createRenderEffect,
 } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
