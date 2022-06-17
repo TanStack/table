@@ -27,6 +27,12 @@ The following options are supported via the main options object passed to `useTa
   - Must be **memoized**
   - Defaults to `defaultGroupByFn`
   - This function is responsible for grouping rows based on the `state.groupBy` keys provided. It's very rare you would need to customize this function.
+- `autoResetGroupBy: Boolean`
+  - Defaults to `true`
+  - When `true`, the `expanded` state will automatically reset if any of the following conditions are met:
+    - `data` is changed
+  - To disable, set to `false`
+  - For more information see the FAQ ["How do I stop my table state from automatically resetting when my data changes?"](../faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes)
 
 ### Column Options
 
