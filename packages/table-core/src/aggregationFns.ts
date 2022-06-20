@@ -4,7 +4,10 @@ const sum: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
   return childRows.reduce(
-    (sum: number, next: unknown) => sum + (typeof next === 'number' ? next : 0),
+    (sum, next) => {
+      const nextValue = next.getValue(columnId)
+      return sum + (typeof nextValue === 'number' ? nextValue : 0)
+    },
     0
   )
 }
