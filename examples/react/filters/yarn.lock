@@ -203,13 +203,6 @@
     "@babel/plugin-syntax-jsx" "^7.16.5"
     "@babel/types" "^7.16.0"
 
-"@babel/runtime@^7.12.5":
-  version "7.17.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
-  integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
 "@babel/template@^7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.16.0.tgz#d16a35ebf4cd74e202083356fab21dd89363ddd6"
@@ -243,10 +236,10 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
-"@faker-js/faker@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-6.0.0.tgz#b613ebf5f5ebb2ab987afb567d8b7fe860199c13"
-  integrity sha512-10zLCKhp3YEmBuko71ivcMoIZcCLXgQVck6aNswX+AWwaek/L8S3yz9i8m3tHigRkcF6F2vI+qtdtyySHK+bGA==
+"@faker-js/faker@^6.3.1":
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-6.3.1.tgz#1ae963dd40405450a2945408cba553e1afa3e0fb"
+  integrity sha512-8YXBE2ZcU/pImVOHX7MWrSR/X5up7t6rPWZlk34RwZEcdr3ua6X+32pSd6XuOQRN+vbuvYNfA6iey8NbrjuMFQ==
 
 "@rollup/plugin-replace@^3.0.1":
   version "3.0.1"
@@ -273,17 +266,24 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@tanstack/react-table@8.0.0-alpha.80":
-  version "8.0.0-alpha.80"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.80.tgz#35c008c67d328210f3c9eb35ad9beee81f40761d"
-  integrity sha512-AETi+9wrV90RaYw7/V1jTalMSnN9SZ1LuIrszG//DbGgTBeYLPL1KPnmhTcmtr5Tyntm6uXapjrPUEIvFt6j4g==
+"@tanstack/match-sorter-utils@^8.0.0-alpha.82":
+  version "8.0.0-alpha.82"
+  resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.0.0-alpha.82.tgz#81132042898f4994d02e51d32534a77cc4d4bd32"
+  integrity sha512-ugMrs6vaqAE0GAlqo5vkWqXJEk+rhIiTZjX4tUcOItw7HJ2OfObJXpPHJsbTj0gLQXtMsYWUqjthRtR6KjmrDw==
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.80"
+    remove-accents "0.4.2"
 
-"@tanstack/table-core@8.0.0-alpha.80":
-  version "8.0.0-alpha.80"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-alpha.80.tgz#5821fd0d37cb9211d9ea303697c7e88fa8b77b2e"
-  integrity sha512-cN7bMj0ULDrjd8OpJLViK6U7guVhZdqu9zlxhk4d7xQX/TEfPLrweiSBTBXIl6vnmnNsG9Z/+k/0hBlvTQ6hXA==
+"@tanstack/react-table@8.0.0":
+  version "8.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-beta.9.tgz#cdfe51d40069cfdc50ae19d3e7bf09141f516d00"
+  integrity sha512-LajXCA9QEH/MOYI9p2KbC8iiXW/YO12pFBOj53epSLRAX7G3y4wI5euhk+URQW9TditYOcKGbNzA/mxZgqfoEw==
+  dependencies:
+    "@tanstack/table-core" "8.0.0-beta.9"
+
+"@tanstack/table-core@8.0.0-beta.9":
+  version "8.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.0.0-beta.9.tgz#59ebb34807918ff35f7ba81d513a403b6e6cdc0b"
+  integrity sha512-ymHz2mMVTBQ1eXdUQiGH5IGvPuJQY0b0yQwzfCvGUEqPfR4mOq3YUJGo61PqsjTevIWK6ti9aabA0qJeRX/Qiw==
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -570,14 +570,6 @@ magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.4"
 
-match-sorter@^6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/match-sorter/-/match-sorter-6.3.1.tgz#98cc37fda756093424ddf3cbc62bfe9c75b92bda"
-  integrity sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    remove-accents "0.4.2"
-
 minimist@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
@@ -649,15 +641,10 @@ react@^17.0.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-regenerator-runtime@^0.13.4:
-  version "0.13.9"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
-  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
-
 remove-accents@0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/remove-accents/-/remove-accents-0.4.2.tgz#0a43d3aaae1e80db919e07ae254b285d9e1c7bb5"
-  integrity sha1-CkPTqq4egNuRngeuJUsoXZ4ce7U=
+  integrity sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==
 
 resolve@^1.20.0:
   version "1.20.0"
