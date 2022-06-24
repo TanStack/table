@@ -62,6 +62,9 @@ function App() {
               }),
             ],
           }),
+          table.createDataColumn('createdAt', {
+            header: 'Created At',
+          }),
         ],
       }),
     ],
