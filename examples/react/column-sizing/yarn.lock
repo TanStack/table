@@ -261,17 +261,17 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@tanstack/react-table@8.0.0-alpha.37":
-  version "8.0.0-alpha.37"
-  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.0.0-alpha.37.tgz#491a6d0641fa83341405885675fa3327371405bf"
-  integrity sha512-44hkn1qdIVGQp5jLQWPRAjCMkNYzhv+v9SCQbIpqsRDZgxPaqGVSZY07D2rIIv7ThAswLzmJL8jIW+SEc+CFfQ==
+"@tanstack/react-table@8.0.0":
+  version "8.0.0-beta.9"
+  resolved "http://artprod.dev.bloomberg.com/artifactory/api/npm/npm-repos/@tanstack/react-table/-/react-table-8.0.0-beta.9.tgz#cdfe51d40069cfdc50ae19d3e7bf09141f516d00"
+  integrity sha1-zf5R1ABpz9xQrhnT578JFB9RbQA=
   dependencies:
-    "@tanstack/table-core" "8.0.0-alpha.37"
+    "@tanstack/table-core" "8.0.0-beta.9"
 
-"@tanstack/table-core@8.0.0-alpha.37":
-  version "8.0.0-alpha.37"
-  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.0.0-alpha.37.tgz#0a84c7c489caaac2c6716183c8f8291b99d3039c"
-  integrity sha512-8PLNs8R35MvlQgMWlBO8feab1n3CRZnbuU0LRfnsI3OOrlx8/7NJsjfdnkRnfsqHJYPJ2fL0Ij5yD3D5LXwAiw==
+"@tanstack/table-core@8.0.0-beta.9":
+  version "8.0.0-beta.9"
+  resolved "http://artprod.dev.bloomberg.com/artifactory/api/npm/npm-repos/@tanstack/table-core/-/table-core-8.0.0-beta.9.tgz#59ebb34807918ff35f7ba81d513a403b6e6cdc0b"
+  integrity sha1-WeuzSAeRj/Nfe6gdUTpAO25s3As=
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -573,11 +573,6 @@ node-releases@^2.0.1:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.1.tgz#3d1d395f204f1f2f29a54358b9fb678765ad2fc5"
   integrity sha512-CqyzN6z7Q6aMeF/ktcMVTzhAHCEpf8SOarwpzpf8pNBY2k5/oM34UHldUwp8VKI7uxct2HxSRdJjBaZeESzcxA==
 
-object-assign@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
-  integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
-
 path-parse@^1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
@@ -602,27 +597,25 @@ postcss@^8.4.5:
     picocolors "^1.0.0"
     source-map-js "^1.0.1"
 
-react-dom@^17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
-  integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
+react-dom@^18.0.2:
+  version "18.2.0"
+  resolved "http://artprod.dev.bloomberg.com/artifactory/api/npm/npm-repos/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
+  integrity sha1-IqrzhwjbJnTtmtoiTKSqcI2CHj0=
   dependencies:
     loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    scheduler "^0.20.2"
+    scheduler "^0.23.0"
 
 react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
 
-react@^17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
-  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+react@^18.0.2:
+  version "18.2.0"
+  resolved "http://artprod.dev.bloomberg.com/artifactory/api/npm/npm-repos/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
+  integrity sha1-VVvZhZKIMlX6AN4U8RUakXtdd9U=
   dependencies:
     loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 resolve@^1.20.0:
   version "1.20.0"
@@ -644,13 +637,12 @@ safe-buffer@~5.1.1:
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
-scheduler@^0.20.2:
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
-  integrity sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==
+scheduler@^0.23.0:
+  version "0.23.0"
+  resolved "http://artprod.dev.bloomberg.com/artifactory/api/npm/npm-repos/scheduler/-/scheduler-0.23.0.tgz#ba8041afc3d30eb206a487b6b384002e4e61fdfe"
+  integrity sha1-uoBBr8PTDrIGpIe2s4QALk5h/f4=
   dependencies:
     loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 semver@^6.3.0:
   version "6.3.0"
