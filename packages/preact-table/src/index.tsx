@@ -32,38 +32,40 @@ export type PreactTableGenerics = Overwrite<
 export const render: Render = (Comp, props) =>
   !Comp ? null : isPreactComponent(Comp) ? <Comp {...props} /> : Comp
 
+//TODO narrow down types
 function isPreactComponent(
   component: unknown
 ): component is Preact.FunctionalComponent {
   return (
-    // isClassComponent(component) ||
-    typeof component === 'function' || true
-    // isExoticComponent(component)
+    isClassComponent(component) ||
+    typeof component === 'function' ||
+    isExoticComponent(component)
   )
 }
 
-// function isClassComponent(component: any) {
-//   return (
-//     typeof component === 'function' &&
-//     (() => {
-//       const proto = Object.getPrototypeOf(component)
-//       return proto.prototype && proto.prototype.isReactComponent
-//     })()
-//   )
-// }
+//TODO refactor for better preact typing
+function isClassComponent(component: any) {
+  return (
+    typeof component === 'function' &&
+    (() => {
+      const proto = Object.getPrototypeOf(component)
+      return proto.prototype && proto.prototype.isPreactComponent
+    })()
+  )
+}
 
-// function isExoticComponent(component: any) {
-//   return (
-//     typeof component === 'object' &&
-//     typeof component.$$typeof === 'symbol' &&
-//     ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
-//   )
-// }
+//TODO refactor for better preact typing
+function isExoticComponent(component: any) {
+  return (
+    typeof component === 'object' &&
+    typeof component.$$typeof === 'symbol' &&
+    ['preact.memo', 'preact.forward_ref'].includes(
+      component.$$typeof.description
+    )
+  )
+}
 
 export const createTable = createTableFactory({ render })
-
-// const useIsomorphicLayoutEffect =
-//   typeof document !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
 export type UseTableInstanceOptions<TGenerics extends PreactTableGenerics> =
   TableOptions<TGenerics>
