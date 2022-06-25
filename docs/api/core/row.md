@@ -78,4 +78,4 @@ An array of the original subRows as returned by the `instanceOptions.getSubRows`
 type getAllCells = () => Cell<TGenerics>[]
 ```
 
-Returns all of the [Cell]s(./Cell.md) for the row.
+Returns all of the [Cells](./Cell.md) for the row.
