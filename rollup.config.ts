@@ -42,6 +42,16 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       globals: {},
     }),
     ...buildConfigs({
+      name: 'preact-table',
+      packageDir: 'packages/preact-table',
+      jsName: 'PreactTable',
+      outputFile: 'preact-table',
+      entryFile: 'src/index.tsx',
+      globals: {
+        react: 'Preact',
+      },
+    }),
+    ...buildConfigs({
       name: 'react-table',
       packageDir: 'packages/react-table',
       jsName: 'ReactTable',

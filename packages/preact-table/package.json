@@ -1,0 +1,43 @@
+{
+  "name": "@tanstack/preact-table",
+  "author": "Tanner Linsley",
+  "version": "8.0.0",
+  "description": "Headless UI for building powerful tables & datagrids for Preact.",
+  "license": "MIT",
+  "homepage": "https://github.com/tanstack/table#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanstack/table.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "preact",
+    "table",
+    "preact-table",
+    "datagrid"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "module": "build/esm/index.js",
+  "main": "build/cjs/preact-table/src/index.js",
+  "browser": "build/umd/index.production.js",
+  "types": "build/types/index.d.ts",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "dependencies": {
+    "@tanstack/table-core": "8.0.0"
+  },
+  "peerDependencies": {
+    "preact": ">=10"
+  }
+}

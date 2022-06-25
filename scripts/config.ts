@@ -9,6 +9,12 @@ export const packages: Package[] = [
     srcDir: 'src',
   },
   {
+    name: '@tanstack/preact-table',
+    packageDir: 'preact-table',
+    srcDir: 'src',
+    dependencies: ['@tanstack/table-core'],
+  },
+  {
     name: '@tanstack/react-table',
     packageDir: 'react-table',
     srcDir: 'src',
@@ -68,6 +74,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
 
 export const rootDir = path.resolve(__dirname, '..')
 export const examplesDirs = [
+  'examples/preact',
   'examples/react',
   'examples/solid',
   'examples/svelte',

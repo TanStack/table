@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2020"
+    ],
     "target": "ES2020",
     "module": "ES2020",
     "moduleResolution": "node",
@@ -15,13 +19,30 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@tanstack/table-core": ["packages/table-core"],
-      "@tanstack/react-table": ["packages/react-table"],
-      "@tanstack/solid-table": ["packages/solid-table"],
-      "@tanstack/vue-table": ["packages/vue-table"],
-      "@tanstack/svelte-table": ["packages/svelte-table"],
-      "@tanstack/react-table-devtools": ["packages/react-table-devtools"],
-      "@tanstack/match-sorter-utils": ["packages/match-sorter-utils"]
+      "@tanstack/table-core": [
+        "packages/table-core"
+      ],
+      "@tanstack/preact-table": [
+        "packages/preact-table"
+      ],
+      "@tanstack/react-table": [
+        "packages/react-table"
+      ],
+      "@tanstack/solid-table": [
+        "packages/solid-table"
+      ],
+      "@tanstack/vue-table": [
+        "packages/vue-table"
+      ],
+      "@tanstack/svelte-table": [
+        "packages/svelte-table"
+      ],
+      "@tanstack/react-table-devtools": [
+        "packages/react-table-devtools"
+      ],
+      "@tanstack/match-sorter-utils": [
+        "packages/match-sorter-utils"
+      ]
     }
   }
 }

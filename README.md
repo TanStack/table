@@ -32,6 +32,7 @@ Try some other [TanStack](https://tanstack.com) like [React Query](https://githu
 
 You may know **TanStack Table** by our adapter names, too!
 
+- [Preact Table](https://tanstack.com/table/v8/docs/adapters/preact-table)
 - [React Table](https://tanstack.com/table/v8/docs/adapters/react-table)
 - [Solid Table](https://tanstack.com/table/v8/docs/adapters/solid-table)
 - [Svelte Table](https://tanstack.com/table/v8/docs/adapters/svelte-table)
