@@ -26,6 +26,7 @@
     "./packages/react-table-devtools",
     "./packages/match-sorter-utils",
     "./examples/preact/basic",
+    "./examples/preact/sorting",
     "./examples/react/basic",
     "./examples/react/column-ordering",
     "./examples/react/column-pinning",

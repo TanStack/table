@@ -10,6 +10,7 @@
     { "path": "packages/react-table-devtools" },
     { "path": "packages/match-sorter-utils" },
     { "path": "examples/preact/basic/tsconfig.dev.json" },
+    { "path": "examples/preact/sorting/tsconfig.dev.json" },
     { "path": "examples/react/basic/tsconfig.dev.json" },
     { "path": "examples/react/column-ordering/tsconfig.dev.json" },
     { "path": "examples/react/column-pinning/tsconfig.dev.json" },
