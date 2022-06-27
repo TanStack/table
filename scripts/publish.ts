@@ -47,7 +47,7 @@ async function run() {
 
   // Filter tags to our branch/pre-release combo
   tags = tags
-    .filter(semver.valid)
+    .filter(tag => semver.valid(tag))
     .filter(tag => {
       if (isLatestBranch) {
         return semver.prerelease(tag) == null
@@ -81,8 +81,12 @@ async function run() {
         )
       )
       RELEASE_ALL = true
-      latestTag = process.env.TAG
-      range = ''
+
+      // Is it a major version?
+      if (!semver.patch(process.env.TAG) && !semver.minor(process.env.TAG)) {
+        range = process.env.TAG
+        latestTag = process.env.TAG
+      }
     } else {
       throw new Error(
         'Could not find latest tag! To make a release tag of v0.0.1, run with TAG=v0.0.1'
@@ -123,7 +127,7 @@ async function run() {
   )
 
   // Pares the commit messsages, log them, and determine the type of release needed
-  const recommendedReleaseLevel: number = commitsSinceLatestTag.reduce(
+  let recommendedReleaseLevel: number = commitsSinceLatestTag.reduce(
     (releaseLevel, commit) => {
       if (['fix', 'refactor', 'perf'].includes(commit.parsed.type)) {
         releaseLevel = Math.max(releaseLevel, 0)
@@ -217,7 +221,7 @@ async function run() {
   }
 
   const changelogCommitsMd = process.env.TAG
-    ? `Manual Release: ${latestTag}`
+    ? `Manual Release: ${process.env.TAG}`
     : await Promise.all(
         Object.entries(
           commitsSinceLatestTag.reduce((acc, next) => {
@@ -292,9 +296,13 @@ async function run() {
           .join('\n\n')
       })
 
+  if (process.env.TAG && recommendedReleaseLevel === -1) {
+    recommendedReleaseLevel = 0
+  }
+
   const releaseType = branchConfig.prerelease
     ? 'prerelease'
-    : { 0: 'patch', 1: 'minor', 2: 'major' }[recommendedReleaseLevel]
+    : ({ 0: 'patch', 1: 'minor', 2: 'major' } as const)[recommendedReleaseLevel]
 
   if (!releaseType) {
     throw new Error(`Invalid release level: ${recommendedReleaseLevel}`)
@@ -302,7 +310,7 @@ async function run() {
 
   const version = process.env.TAG
     ? semver.parse(process.env.TAG)?.version
-    : semver.inc(latestTag, releaseType, npmTag)
+    : semver.inc(latestTag!, releaseType, npmTag)
 
   if (!version) {
     throw new Error(
@@ -330,7 +338,7 @@ async function run() {
   console.info()
 
   console.info('Building packages...')
-  execSync(`yarn build`, { encoding: 'utf8' })
+  execSync(`npm run build`, { encoding: 'utf8' })
   console.info('')
 
   console.info('Validating packages...')
@@ -362,7 +370,7 @@ async function run() {
   console.info('')
 
   console.info('Testing packages...')
-  execSync(`yarn test:ci`, { encoding: 'utf8' })
+  execSync(`npm run test:ci`, { encoding: 'utf8' })
   console.info('')
 
   console.info(`Updating all changed packages to version ${version}...`)
@@ -510,7 +518,7 @@ async function run() {
   // Publish each package
   changedPackages.map(pkg => {
     let packageDir = path.join(rootDir, 'packages', pkg.packageDir)
-    const cmd = `cd ${packageDir} && yarn publish --tag ${npmTag} --access=public`
+    const cmd = `cd ${packageDir} && npm publish --tag ${npmTag} --access=public --non-interactive`
     console.info(
       `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
     )
@@ -600,9 +608,9 @@ async function getPackageVersion(pathName: string) {
 }
 
 function updateExampleLockfile(example: string) {
-  // execute yarn to update lockfile, ignoring any stdout or stderr
+  // execute npm to update lockfile, ignoring any stdout or stderr
   const exampleDir = path.join(rootDir, 'examples', example)
-  execSync(`cd ${exampleDir} && yarn`, { stdio: 'ignore' })
+  execSync(`cd ${exampleDir} && npm install`, { stdio: 'ignore' })
 }
 
 function getPackageNameDirectory(pathName: string) {

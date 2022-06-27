@@ -2,18 +2,18 @@
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
   "scripts": {
-    "test": "(is-ci && yarn test:ci) || yarn test:dev",
+    "test": "(is-ci && npm run test:ci) || npm run test:dev",
     "test:ci": "jest",
     "test:dev": "jest --watch",
     "build": "rollup --config rollup.config.js && tsc -b",
-    "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\" \"yarn test\"",
-    "linkAll": "lerna exec 'yarn link' --parallel",
-    "unlinkAll": "lerna exec 'yarn unlink' --parallel",
-    "dev": "yarn watch",
+    "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\" \"npm run test\"",
+    "linkAll": "lerna exec 'npm link' --parallel",
+    "unlinkAll": "lerna exec 'npm unlink' --parallel",
+    "dev": "npm run watch",
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
     "visualize": "lerna exec 'open build/stats-html.html'",
     "cipublish": "ts-node scripts/publish.ts",
-    "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true yarn cipublish"
+    "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true npm run cipublish"
   },
   "namespace": "@tanstack",
   "workspaces": [
@@ -70,6 +70,7 @@
     "@types/node": "^17.0.25",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^18.0.1",
+    "@types/semver": "^7.3.10",
     "axios": "^0.26.1",
     "babel-plugin-transform-async-to-promises": "^0.8.18",
     "concurrently": "^7.1.0",
