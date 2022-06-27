@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
@@ -303,9 +303,11 @@ function Filter({
 const strictMode = false
 const StrictWrapper = strictMode ? React.StrictMode : React.Fragment
 
-ReactDOM.render(
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+
+ReactDOM.createRoot(rootElement).render(
   <StrictWrapper>
     <App />
-  </StrictWrapper>,
-  document.getElementById('root')
+  </StrictWrapper>
 )
