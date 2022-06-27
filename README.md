@@ -71,6 +71,8 @@ JS/TS ecosystem and every use-case.
 - Virtualizable
 - Server-side/external data model support
 
+# Migrating from React Table v7
+
 ## Notable Changes
 
 - Full rewrite to TypeScript
