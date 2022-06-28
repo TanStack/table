@@ -7,6 +7,7 @@ import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import path from 'path'
 import svelte from 'rollup-plugin-svelte'
+import dts from 'rollup-plugin-dts'
 
 type Options = {
   input: string
@@ -130,7 +131,7 @@ function buildConfigs(opts: {
     globals: opts.globals,
   }
 
-  return [esm(options), cjs(options), umdDev(options), umdProd(options)]
+  return [esm(options), cjs(options), umdDev(options), umdProd(options), types(options)]
 }
 
 function esm({ input, packageDir, external, banner }: Options): RollupOptions {
@@ -247,6 +248,22 @@ function umdProd({
         json: true,
         gzipSize: true,
       }),
+    ],
+  }
+}
+
+function types({ input, packageDir, external, banner }: Options): RollupOptions {
+  return {
+    // TYPES
+    external,
+    input,
+    output: {
+      format: 'es',
+      file: `${packageDir}/build/types/index.d.ts`,
+      banner,
+    },
+    plugins: [
+      dts(),
     ],
   }
 }

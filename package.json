@@ -13,7 +13,8 @@
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
     "visualize": "lerna exec 'open build/stats-html.html'",
     "cipublish": "ts-node scripts/publish.ts",
-    "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true npm run cipublish"
+    "cipublishforce": "YARN_REGISTRY=https://registry.npmjs.org CI=true npm run cipublish",
+    "typecheck": "tsc -b"
   },
   "namespace": "@tanstack",
   "workspaces": [
@@ -87,6 +88,7 @@
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-visualizer": "^5.6.0",
+    "rollup-plugin-dts": "^4.2.2",
     "solid-js": "^1.3.15",
     "stream-to-array": "^2.3.0",
     "svelte": "^3.48.0",
