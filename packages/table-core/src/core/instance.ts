@@ -12,6 +12,7 @@ import {
   Column,
   RowModel,
   ColumnDef,
+  TableOptions,
 } from '../types'
 
 //
@@ -71,7 +72,10 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   debugRows?: boolean
   initialState?: InitialTableState
   autoResetAll?: boolean
-  mergeOptions?: <T>(defaultOptions: T, options: Partial<T>) => T
+  mergeOptions?: (
+    defaultOptions: TableOptions<TGenerics>,
+    options: Partial<TableOptions<TGenerics>>
+  ) => TableOptions<TGenerics>
   meta?: TGenerics['TableMeta']
   getCoreRowModel: (instance: TableInstance<any>) => () => RowModel<any>
   getSubRows?: (
@@ -191,7 +195,10 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     },
     setOptions: updater => {
       const newOptions = functionalUpdate(updater, instance.options)
-      instance.options = mergeOptions(newOptions)
+      instance.options = mergeOptions(newOptions) as RequiredKeys<
+        TableOptionsResolved<TGenerics>,
+        'state'
+      >
     },
     _render: (template, props) => {
       if (typeof instance.options.render === 'function') {

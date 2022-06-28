@@ -7,11 +7,7 @@ import {
   createTableFactory,
   TableOptionsResolved,
 } from '@tanstack/table-core'
-import {
-  createComputed,
-  mergeProps,
-  createComponent,
-} from 'solid-js'
+import { createComputed, mergeProps, createComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 export * from '@tanstack/table-core'
@@ -39,11 +35,11 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       onStateChange: () => {}, // noop
       render,
       renderFallbackValue: null,
-      mergeOptions(
+      mergeOptions: (
         defaultOptions: TableOptions<TGenerics>,
-        options: TableOptions<TGenerics>
-      ) {
-        return mergeProps(defaultOptions, options)
+        options: Partial<TableOptions<TGenerics>>
+      ) => {
+        return mergeProps(defaultOptions, options) as TableOptions<TGenerics>
       },
     },
     options
