@@ -337,6 +337,10 @@ async function run() {
   console.info(changelogMd)
   console.info()
 
+  console.info('Building types...')
+  execSync(`npm run types`, { encoding: 'utf8' })
+  console.info('')
+
   console.info('Building packages...')
   execSync(`npm run build`, { encoding: 'utf8' })
   console.info('')
