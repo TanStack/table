@@ -5,7 +5,7 @@
     "test": "(is-ci && npm run test:ci) || npm run test:dev",
     "test:ci": "jest",
     "test:dev": "jest --watch",
-    "build": "rollup --config rollup.config.js && tsc -b",
+    "build": "rollup --config rollup.config.js && tsc -b -v",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\" \"npm run test\"",
     "linkAll": "lerna exec 'npm link' --parallel",
     "unlinkAll": "lerna exec 'npm unlink' --parallel",
