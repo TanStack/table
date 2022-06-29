@@ -136,7 +136,7 @@ function buildConfigs(opts: {
     cjs(options),
     umdDev(options),
     umdProd(options),
-    // types(options),
+    types(options),
   ]
 }
 
