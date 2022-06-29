@@ -42,6 +42,7 @@ export type RowSelectionOptions<TGenerics extends TableGenerics> = {
 export type RowSelectionRow = {
   getIsSelected: () => boolean
   getIsSomeSelected: () => boolean
+  getIsAllSubrowsSelected: () => boolean
   getCanSelect: () => boolean
   getCanMultiSelect: () => boolean
   getCanSelectSubRows: () => boolean
@@ -372,12 +373,17 @@ export const RowSelection: TableFeature = {
       },
       getIsSelected: () => {
         const { rowSelection } = instance.getState()
-        return isRowSelected(row, rowSelection, instance) === true
+        return isRowSelected(row, rowSelection)
       },
 
       getIsSomeSelected: () => {
         const { rowSelection } = instance.getState()
-        return isRowSelected(row, rowSelection, instance) === 'some'
+        return isSubrowSelected(row, rowSelection, instance) === 'some'
+      },
+
+      getIsAllSubrowsSelected: () => {
+        const { rowSelection } = instance.getState()
+        return isSubrowSelected(row, rowSelection, instance) === 'all'
       },
 
       getCanSelect: () => {
@@ -458,7 +464,7 @@ export function selectRowsFn<TGenerics extends TableGenerics>(
   const recurseRows = (rows: Row<TGenerics>[], depth = 0): Row<TGenerics>[] => {
     return rows
       .map(row => {
-        const isSelected = isRowSelected(row, rowSelection, instance) === true
+        const isSelected = isRowSelected(row, rowSelection)
 
         if (isSelected) {
           newSelectedFlatRows.push(row)
@@ -488,13 +494,16 @@ export function selectRowsFn<TGenerics extends TableGenerics>(
 
 export function isRowSelected<TGenerics extends TableGenerics>(
   row: Row<TGenerics>,
+  selection: Record<string, boolean>
+): boolean {
+  return selection[row.id] ?? false
+}
+
+export function isSubrowSelected<TGenerics extends TableGenerics>(
+  row: Row<TGenerics>,
   selection: Record<string, boolean>,
   instance: TableInstance<TGenerics>
-): boolean | 'some' {
-  if (selection[row.id]) {
-    return true
-  }
-
+): boolean | 'some' | 'all' {
   if (row.subRows && row.subRows.length) {
     let allChildrenSelected = true
     let someSelected = false
@@ -505,14 +514,14 @@ export function isRowSelected<TGenerics extends TableGenerics>(
         return
       }
 
-      if (isRowSelected(subRow, selection, instance)) {
+      if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
         allChildrenSelected = false
       }
     })
 
-    return allChildrenSelected ? true : someSelected ? 'some' : false
+    return allChildrenSelected ? 'all' : someSelected ? 'some' : false
   }
 
   return false
