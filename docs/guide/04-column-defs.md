@@ -33,7 +33,7 @@ Here's an example of creating some of these different column types:
 ```tsx
 import { createTable } from '@tanstack/react-table'
 
-// Define you row shape
+// Define your row shape
 type Person = {
   firstName: string
   lastName: string
@@ -100,13 +100,13 @@ const defaultColumns = [
 
 ## Creating Data Columns
 
-Data columns are unique in that they must be configured to extract primitive values each item in your `data` array.
+Data columns are unique in that they must be configured to extract primitive values for each item in your `data` array.
 
 There are 2 ways to do this:
 
-- If your items are `objects`, using an object-key that corresponds to the value you want to extract.
-- If your items are nested arrays`, using an array index that corresponds to the value you want to extract.
-- Using an accessor function that returns the value you want to extract.
+- If your items are `objects`, use an object-key that corresponds to the value you want to extract.
+- If your items are nested `arrays`, use an array index that corresponds to the value you want to extract.
+- Use an accessor function that returns the value you want to extract.
 
 ## Object Keys
 
