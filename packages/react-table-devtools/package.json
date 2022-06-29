@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/react-table-devtools",
   "author": "Tanner Linsley",
-  "version": "8.0.8",
+  "version": "8.0.12",
   "description": "Devtools for React Table",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/table#readme",
@@ -31,7 +31,7 @@
     "node": ">=12"
   },
   "files": [
-    "build",
+    "build/**",
     "src"
   ],
   "peerDependencies": {
