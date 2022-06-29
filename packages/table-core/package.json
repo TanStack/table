@@ -33,7 +33,7 @@
     "node": ">=12"
   },
   "files": [
-    "build",
+    "build/**",
     "src"
   ]
 }
