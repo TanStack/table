@@ -6,7 +6,6 @@
     "test": "(is-ci && npm run test:ci) || npm run test:dev",
     "test:ci": "jest",
     "test:dev": "jest --watch",
-    "types": "tsc -b",
     "build": "rollup --config rollup.config.js",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\" \"npm run test\"",
     "linkAll": "lerna exec 'npm link' --parallel",
@@ -15,7 +14,8 @@
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
     "visualize": "lerna exec 'open build/stats-html.html'",
     "cipublish": "ts-node scripts/publish.ts",
-    "cipublishforce": "CI=true npm run cipublish"
+    "cipublishforce": "CI=true npm run cipublish",
+    "typecheck": "tsc -b"
   },
   "namespace": "@tanstack",
   "workspaces": [

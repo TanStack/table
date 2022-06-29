@@ -341,9 +341,9 @@ async function run() {
   execSync(`npm run build`, { encoding: 'utf8', stdio: 'inherit' })
   console.info('')
 
-  console.info('Building types...')
-  execSync(`npm run types`, { encoding: 'utf8', stdio: 'inherit' })
-  console.info('')
+  // console.info('Building types...')
+  // execSync(`npm run types`, { encoding: 'utf8', stdio: 'inherit' })
+  // console.info('')
 
   console.info('Validating packages...')
   await Promise.all(
