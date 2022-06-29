@@ -131,7 +131,13 @@ function buildConfigs(opts: {
     globals: opts.globals,
   }
 
-  return [esm(options), cjs(options), umdDev(options), umdProd(options), types(options)]
+  return [
+    esm(options),
+    cjs(options),
+    umdDev(options),
+    umdProd(options),
+    // types(options),
+  ]
 }
 
 function esm({ input, packageDir, external, banner }: Options): RollupOptions {
@@ -252,7 +258,12 @@ function umdProd({
   }
 }
 
-function types({ input, packageDir, external, banner }: Options): RollupOptions {
+function types({
+  input,
+  packageDir,
+  external,
+  banner,
+}: Options): RollupOptions {
   return {
     // TYPES
     external,
@@ -262,9 +273,7 @@ function types({ input, packageDir, external, banner }: Options): RollupOptions 
       file: `${packageDir}/build/types/index.d.ts`,
       banner,
     },
-    plugins: [
-      dts(),
-    ],
+    plugins: [dts()],
   }
 }
 
