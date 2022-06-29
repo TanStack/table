@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/react-table",
   "author": "Tanner Linsley",
-  "version": "8.0.11",
+  "version": "8.0.12",
   "description": "Headless UI for building powerful tables & datagrids for React.",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/table#readme",
@@ -35,7 +35,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.0.11"
+    "@tanstack/table-core": "8.0.12"
   },
   "peerDependencies": {
     "react": ">=16",
