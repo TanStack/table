@@ -1,10 +1,10 @@
 import { createRow } from '../core/row'
-import { TableInstance, Row, RowModel, TableGenerics } from '../types'
+import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { flattenBy, memo } from '../utils'
 
-export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
+export function getGroupedRowModel<TData extends RowData>(): (
+  instance: Table<TData>
+) => () => RowModel<TData> {
   return instance =>
     memo(
       () => [instance.getState().grouping, instance.getPreGroupedRowModel()],
@@ -18,8 +18,8 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
           instance.getColumn(columnId)
         )
 
-        const groupedFlatRows: Row<TGenerics>[] = []
-        const groupedRowsById: Record<string, Row<TGenerics>> = {}
+        const groupedFlatRows: Row<TData>[] = []
+        const groupedRowsById: Record<string, Row<TData>> = {}
         // const onlyGroupedFlatRows: Row[] = [];
         // const onlyGroupedRowsById: Record<RowId, Row> = {};
         // const nonGroupedFlatRows: Row[] = [];
@@ -27,7 +27,7 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
 
         // Recursively group the data
         const groupUpRecursively = (
-          rows: Row<TGenerics>[],
+          rows: Row<TData>[],
           depth = 0,
           parentId: string
         ) => {
@@ -149,11 +149,8 @@ export function getGroupedRowModel<TGenerics extends TableGenerics>(): (
     )
 }
 
-function groupBy<TGenerics extends TableGenerics>(
-  rows: Row<TGenerics>[],
-  columnId: string
-) {
-  const groupMap = new Map<any, Row<TGenerics>[]>()
+function groupBy<TData extends RowData>(rows: Row<TData>[], columnId: string) {
+  const groupMap = new Map<any, Row<TData>[]>()
 
   return rows.reduce((map, row) => {
     const resKey = `${row.getValue(columnId)}`

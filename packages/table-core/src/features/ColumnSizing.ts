@@ -1,10 +1,11 @@
 import { TableFeature } from '../core/instance'
 import {
+  RowData,
   Column,
   Header,
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Updater,
 } from '../types'
 import { makeStateUpdater } from '../utils'
@@ -43,7 +44,7 @@ export type ColumnSizingDefaultOptions = {
   onColumnSizingInfoChange: OnChangeFn<ColumnSizingInfoState>
 }
 
-export type ColumnSizingInstance<TGenerics extends TableGenerics> = {
+export type ColumnSizingInstance = {
   setColumnSizing: (updater: Updater<ColumnSizingState>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
   resetColumnSizing: (defaultState?: boolean) => void
@@ -61,7 +62,7 @@ export type ColumnSizingColumnDef = {
   maxSize?: number
 }
 
-export type ColumnSizingColumn<TGenerics extends TableGenerics> = {
+export type ColumnSizingColumn = {
   getSize: () => number
   getStart: (position?: ColumnPinningPosition) => number
   getCanResize: () => boolean
@@ -69,7 +70,7 @@ export type ColumnSizingColumn<TGenerics extends TableGenerics> = {
   resetSize: () => void
 }
 
-export type ColumnSizingHeader<TGenerics extends TableGenerics> = {
+export type ColumnSizingHeader = {
   getSize: () => number
   getStart: (position?: ColumnPinningPosition) => number
   getResizeHandler: () => (event: unknown) => void
@@ -104,8 +105,8 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
   ): ColumnSizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
@@ -114,10 +115,10 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): ColumnSizingColumn<TGenerics> => {
+  createColumn: <TData extends RowData>(
+    column: Column<TData, unknown>,
+    instance: Table<TData>
+  ): ColumnSizingColumn => {
     return {
       getSize: () => {
         const columnSize = instance.getState().columnSizing[column.id]
@@ -168,15 +169,15 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createHeader: <TGenerics extends TableGenerics>(
-    header: Header<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): ColumnSizingHeader<TGenerics> => {
+  createHeader: <TData extends RowData>(
+    header: Header<TData>,
+    instance: Table<TData>
+  ): ColumnSizingHeader => {
     return {
       getSize: () => {
         let sum = 0
 
-        const recurse = (header: Header<TGenerics>) => {
+        const recurse = (header: Header<TData>) => {
           if (header.subHeaders.length) {
             header.subHeaders.forEach(recurse)
           } else {
@@ -347,9 +348,9 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ColumnSizingInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): ColumnSizingInstance => {
     return {
       setColumnSizing: updater =>
         instance.options.onColumnSizingChange?.(updater),

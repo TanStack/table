@@ -2,9 +2,10 @@ import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   RowModel,
   Updater,
+  RowData,
 } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
@@ -21,19 +22,19 @@ export type PaginationInitialTableState = {
   pagination?: Partial<PaginationState>
 }
 
-export type PaginationOptions<TGenerics extends TableGenerics> = {
+export type PaginationOptions = {
   pageCount?: number
   manualPagination?: boolean
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
-  getPaginationRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
+  getPaginationRowModel?: (instance: Table<any>) => () => RowModel<any>
 }
 
 export type PaginationDefaultOptions = {
   onPaginationChange: OnChangeFn<PaginationState>
 }
 
-export type PaginationInstance<TGenerics extends TableGenerics> = {
+export type PaginationInstance<TData extends RowData> = {
   _autoResetPageIndex: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: (defaultState?: boolean) => void
@@ -47,9 +48,9 @@ export type PaginationInstance<TGenerics extends TableGenerics> = {
   getCanNextPage: () => boolean
   previousPage: () => void
   nextPage: () => void
-  getPrePaginationRowModel: () => RowModel<TGenerics>
-  getPaginationRowModel: () => RowModel<TGenerics>
-  _getPaginationRowModel?: () => RowModel<TGenerics>
+  getPrePaginationRowModel: () => RowModel<TData>
+  getPaginationRowModel: () => RowModel<TData>
+  _getPaginationRowModel?: () => RowModel<TData>
   getPageCount: () => number
 }
 
@@ -74,17 +75,17 @@ export const Pagination: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', instance),
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): PaginationInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): PaginationInstance<TData> => {
     let registered = false
     let queued = false
 
@@ -131,8 +132,9 @@ export const Pagination: TableFeature = {
           let pageIndex = functionalUpdate(updater, old.pageIndex)
 
           const maxPageIndex =
-            (typeof instance.options.pageCount === 'undefined' || instance.options.pageCount === -1) ?
-              Number.MAX_SAFE_INTEGER
+            typeof instance.options.pageCount === 'undefined' ||
+            instance.options.pageCount === -1
+              ? Number.MAX_SAFE_INTEGER
               : instance.options.pageCount - 1
 
           pageIndex = Math.min(Math.max(0, pageIndex), maxPageIndex)
@@ -255,7 +257,7 @@ export const Pagination: TableFeature = {
           instance.options.pageCount ??
           Math.ceil(
             instance.getPrePaginationRowModel().rows.length /
-            instance.getState().pagination.pageSize
+              instance.getState().pagination.pageSize
           )
         )
       },

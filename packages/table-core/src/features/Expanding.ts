@@ -3,9 +3,10 @@ import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Row,
   Updater,
+  RowData,
 } from '../types'
 import { makeStateUpdater } from '../utils'
 
@@ -22,18 +23,18 @@ export type ExpandedRow = {
   getToggleExpandedHandler: () => () => void
 }
 
-export type ExpandedOptions<TGenerics extends TableGenerics> = {
+export type ExpandedOptions<TData extends RowData> = {
   manualExpanding?: boolean
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
   enableExpanding?: boolean
-  getExpandedRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
-  getIsRowExpanded?: (row: Row<TGenerics>) => boolean
-  getRowCanExpand?: (row: Row<TGenerics>) => boolean
+  getExpandedRowModel?: (instance: Table<any>) => () => RowModel<any>
+  getIsRowExpanded?: (row: Row<TData>) => boolean
+  getRowCanExpand?: (row: Row<TData>) => boolean
   paginateExpandedRows?: boolean
 }
 
-export type ExpandedInstance<TGenerics extends TableGenerics> = {
+export type ExpandedInstance<TData extends RowData> = {
   _autoResetExpanded: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void
@@ -43,9 +44,9 @@ export type ExpandedInstance<TGenerics extends TableGenerics> = {
   getIsSomeRowsExpanded: () => boolean
   getIsAllRowsExpanded: () => boolean
   getExpandedDepth: () => number
-  getExpandedRowModel: () => RowModel<TGenerics>
-  _getExpandedRowModel?: () => RowModel<TGenerics>
-  getPreExpandedRowModel: () => RowModel<TGenerics>
+  getExpandedRowModel: () => RowModel<TData>
+  _getExpandedRowModel?: () => RowModel<TData>
+  getPreExpandedRowModel: () => RowModel<TData>
 }
 
 //
@@ -58,18 +59,18 @@ export const Expanding: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ExpandedOptions<TGenerics> => {
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
+  ): ExpandedOptions<TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', instance),
       paginateExpandedRows: true,
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ExpandedInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): ExpandedInstance<TData> => {
     let registered = false
     let queued = false
 
@@ -178,9 +179,9 @@ export const Expanding: TableFeature = {
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    instance: Table<TData>
   ): ExpandedRow => {
     return {
       toggleExpanded: expanded => {

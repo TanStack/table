@@ -5,10 +5,10 @@ title: TableInstance
 ## `useTableInstance` / `createTableInstance`
 
 ```tsx
-type useTableInstance = <TGenerics extends ReactTableGenerics>(
-  table: Table<TGenerics>,
-  options: UseTableInstanceOptions<TGenerics>
-) => TableInstance<TGenerics>
+type useTableInstance = <TData extends AnyData>(
+  table: Table<TData>,
+  options: UseTableInstanceOptions<TData>
+) => TableInstance<TData>
 ```
 
 These funtions are used to create a table instance. Which one you use depends on which framework adapter you are using.
@@ -20,7 +20,7 @@ These are **core** options and API properties for the table instance. More optio
 ### `data`
 
 ```tsx
-data: TGenerics['Row'][]
+data: TData[]
 ```
 
 The data for the table to display. This is array should match the type you provided to `table.setRowType<...>`, but in theiry could be an array of anything. It's common for each item in the array to be an object of key/values but this is not required. Columns can access this data via string/index or a functional accessor to return anything they want.
@@ -32,7 +32,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TGenerics>[]
+type columns = ColumnDef<TData, TValue>[]
 ```
 
 The array of column defs to use for the table instance.
@@ -40,7 +40,7 @@ The array of column defs to use for the table instance.
 ### `defaultColumn`
 
 ```tsx
-defaultColumn?: Partial<ColumnDef<TGenerics>>[]
+defaultColumn?: Partial<ColumnDef<TData, TValue>>[]
 ```
 
 Default column options to use for all column defs supplied to the table instance. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
@@ -77,10 +77,12 @@ Set this option to override any of the `autoReset...` feature options.
 ### `meta`
 
 ```tsx
-meta?: TGenerics['TableMeta']
+meta?: unknown
 ```
 
-After calling `table.setTableMetaType<{...your meta type...}>()`, you can pass a meta object of the same type to this table option. This meta object will remain available anywhere the table `instance` is available.
+You can pass any object to `options.meta` and access it anywhere the table `instance` is available via `instance.options.meta`
+
+> ⚠️ Because of generic limitations, this type must be cast to the correct type before use.
 
 > 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table instance without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/react/editable-data.mdx).
 
@@ -166,10 +168,7 @@ Set this option to true to output row debugging information to the console.
 > ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
 
 ```tsx
-type render = <TProps>(
-  template: Renderable<TGenerics, TProps>,
-  props: TProps
-) => string | null | TGenerics['Rendered']
+type render = <TProps>(template: Renderable<TProps>, props: TProps) => any
 ```
 
 The `render` option provides a renderer implementation for the table. This implementation is used to turn a table's various column header and cell templates into a result that is supported by the user's framework.
@@ -187,9 +186,7 @@ This option is used to optionally implement the merging of table options. Some f
 ### `getCoreRowModel`
 
 ```tsx
-getCoreRowModel: (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics>
+getCoreRowModel: (instance: TableInstance<TData>) => () => RowModel<TData>
 ```
 
 This required option is a factory for a function that computes and returns the core row model for the table. It is called **once** per table instance and should return a **new function** which will calculate and return the row model for the table.
@@ -200,9 +197,9 @@ A default implementation is provided via any table adapter's `{ getCoreRowModel 
 
 ```tsx
 getSubRows?: (
-  originalRow: TGenerics['Row'],
+  originalRow: TData,
   index: number
-) => undefined | TGenerics['Row'][]
+) => undefined | TData[]
 ```
 
 This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
@@ -211,9 +208,9 @@ This optional function is used to access the sub rows for any given row. If you 
 
 ```tsx
 getRowId?: (
-  originalRow: TGenerics['Row'],
+  originalRow: TData,
   index: number,
-  parent?: Row<TGenerics>
+  parent?: Row<TData>
 ) => string
 ```
 
@@ -222,7 +219,7 @@ This optional function is used to derive a unique ID for any given row. If not p
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TGenerics>[]
+type columns = ColumnDef<TData, TValue>[]
 ```
 
 The column defs to use for this table instance. See the [Table API](../table.md) for more information on creating column definitions.
@@ -230,7 +227,7 @@ The column defs to use for this table instance. See the [Table API](../table.md)
 ### `defaultColumn`
 
 ```tsx
-defaultColumn?: Partial<ColumnDef<TGenerics>>
+defaultColumn?: Partial<ColumnDef<TData, TValue>>
 ```
 
 An optional, partial column default column definition. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
@@ -287,7 +284,7 @@ Call this function to update the table state. It's recommended you pass an updat
 ### `options`
 
 ```tsx
-options: TableOptions<TGenerics>
+options: TableOptions<TData>
 ```
 
 A read-only reference to the table instance's current options.
@@ -297,7 +294,7 @@ A read-only reference to the table instance's current options.
 ### `setOptions`
 
 ```tsx
-setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
+setOptions: (newOptions: Updater<TableOptions<TData>>) => void
 ```
 
 > ⚠️ This function is generally used by adapters to update the table options. It can be used to update the table options directly, but it is generally not recommended to bypass your adapters strategy for updating table options.
@@ -306,9 +303,9 @@ setOptions: (newOptions: Updater<TableOptions<TGenerics>>) => void
 
 ```tsx
 getCoreRowModel: () => {
-  rows: Row<TGenerics>[],
-  flatRows: Row<TGenerics>[],
-  rowsById: Record<string, Row<TGenerics>>,
+  rows: Row<TData>[],
+  flatRows: Row<TData>[],
+  rowsById: Record<string, Row<TData>>,
 }
 ```
 
@@ -318,9 +315,9 @@ Returns the core row model before any processing has been applied.
 
 ```tsx
 getRowModel: () => {
-  rows: Row<TGenerics>[],
-  flatRows: Row<TGenerics>[],
-  rowsById: Record<string, Row<TGenerics>>,
+  rows: Row<TData>[],
+  flatRows: Row<TData>[],
+  rowsById: Record<string, Row<TData>>,
 }
 ```
 
@@ -329,7 +326,7 @@ Returns the final model after all processing from other used features has been a
 ### `getAllColumns`
 
 ```tsx
-type getAllColumns = () => Column<TGenerics>[]
+type getAllColumns = () => Column<TData, TValue>[]
 ```
 
 Returns all columns in the table in their normalized and nested hierarchy, mirrored from the column defs passed to the table instance.
@@ -337,7 +334,7 @@ Returns all columns in the table in their normalized and nested hierarchy, mirro
 ### `getAllFlatColumns`
 
 ```tsx
-type getAllFlatColumns = () => Column<TGenerics>[]
+type getAllFlatColumns = () => Column<TData, TValue>[]
 ```
 
 Returns all columns in the table flattened to a single level. This includes parent column objects throughout the hierarchy.
@@ -345,7 +342,7 @@ Returns all columns in the table flattened to a single level. This includes pare
 ### `getAllLeafColumns`
 
 ```tsx
-type getAllLeafColumns = () => Column<TGenerics>[]
+type getAllLeafColumns = () => Column<TData, TValue>[]
 ```
 
 Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
@@ -353,7 +350,7 @@ Returns all leaf-node columns in the table flattened to a single level. This doe
 ### `getColumn`
 
 ```tsx
-type getColumn = (id: string) => Column<TGenerics>
+type getColumn = (id: string) => Column<TData, TValue>
 ```
 
 Returns a single column by its ID.
@@ -361,7 +358,7 @@ Returns a single column by its ID.
 ### `getHeaderGroups`
 
 ```tsx
-type getHeaderGroups = () => HeaderGroup<TGenerics>[]
+type getHeaderGroups = () => HeaderGroup<TData>[]
 ```
 
 Returns the header groups for the table.
@@ -369,7 +366,7 @@ Returns the header groups for the table.
 ### `getFooterGroups`
 
 ```tsx
-type getFooterGroups = () => HeaderGroup<TGenerics>[]
+type getFooterGroups = () => HeaderGroup<TData>[]
 ```
 
 Returns the footer groups for the table.
@@ -377,7 +374,7 @@ Returns the footer groups for the table.
 ### `getFlatHeaders`
 
 ```tsx
-type getFlatHeaders = () => Header<TGenerics>[]
+type getFlatHeaders = () => Header<TData>[]
 ```
 
 Returns a flattened array of Header objects for the table, including parent headers.
@@ -385,7 +382,7 @@ Returns a flattened array of Header objects for the table, including parent head
 ### `getLeafHeaders`
 
 ```tsx
-type getLeafHeaders = () => Header<TGenerics>[]
+type getLeafHeaders = () => Header<TData>[]
 ```
 
 Returns a flattened array of leaf-node Header objects for the table.

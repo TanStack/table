@@ -9,6 +9,12 @@ export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
 > &
   U
 
+export type UnionToIntersection<T> = (
+  T extends any ? (x: T) => any : never
+) extends (x: infer R) => any
+  ? R
+  : never
+
 export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {

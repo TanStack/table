@@ -35,7 +35,7 @@ The index of the row within its parent array (or the root data array)
 ### `original`
 
 ```tsx
-original?: TGenerics['Row']
+original?: TData
 ```
 
 The original row object provided to the table instance
@@ -51,7 +51,7 @@ Returns the value from the row for a given columnId
 ### `subRows`
 
 ```tsx
-type subRows = Row<TGenerics>[]
+type subRows = Row<TData>[]
 ```
 
 An array of subRows for the row as returned and created by the `instanceOptions.getSubRows` option.
@@ -59,7 +59,7 @@ An array of subRows for the row as returned and created by the `instanceOptions.
 ### `getLeafRows`
 
 ```tsx
-type getLeafRows = () => Row<TGenerics>[]
+type getLeafRows = () => Row<TData>[]
 ```
 
 Returns the leaf rows for the row, not including any parent rows.
@@ -67,7 +67,7 @@ Returns the leaf rows for the row, not including any parent rows.
 ### `originalSubRows`
 
 ```tsx
-originalSubRows?: TGenerics['Row'][]
+originalSubRows?: TData[]
 ```
 
 An array of the original subRows as returned by the `instanceOptions.getSubRows` option.
@@ -75,7 +75,7 @@ An array of the original subRows as returned by the `instanceOptions.getSubRows`
 ### `getAllCells`
 
 ```tsx
-type getAllCells = () => Cell<TGenerics>[]
+type getAllCells = () => Cell<TData>[]
 ```
 
 Returns all of the [Cells](./Cell.md) for the row.

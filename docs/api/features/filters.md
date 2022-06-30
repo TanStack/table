@@ -74,31 +74,31 @@ and should return `true` if the row should be included in the filtered rows, and
 This is the type signature for every filter function:
 
 ```tsx
-export type FilterFn<TGenerics extends TableGenerics> = {
+export type FilterFn<TData extends AnyData> = {
   (
-    row: Row<TGenerics>,
+    row: Row<TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: TGenerics['FilterMeta']) => void
+    addMeta: (meta: any) => void
   ): boolean
-  resolveFilterValue?: TransformFilterValueFn<TGenerics>
-  autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
-  addMeta?: (meta?: TGenerics['FilterMeta']) => void
+  resolveFilterValue?: TransformFilterValueFn<TData>
+  autoRemove?: ColumnFilterAutoRemoveTestFn<TData>
+  addMeta?: (meta?: any) => void
 }
 
-export type TransformFilterValueFn<TGenerics extends TableGenerics> = (
+export type TransformFilterValueFn<TData extends AnyData> = (
   value: any,
-  column?: Column<TGenerics>
+  column?: Column<TData, TValue>
 ) => unknown
 
-export type ColumnFilterAutoRemoveTestFn<TGenerics extends TableGenerics> = (
+export type ColumnFilterAutoRemoveTestFn<TData extends AnyData> = (
   value: any,
-  column?: Column<TGenerics>
+  column?: Column<TData, TValue>
 ) => boolean
 
-export type CustomFilterFns<TGenerics extends TableGenerics> = Record<
+export type CustomFilterFns<TData extends AnyData> = Record<
   string,
-  FilterFn<TGenerics>
+  FilterFn<TData>
 >
 ```
 
@@ -121,11 +121,10 @@ Filter functions can be used/referenced/defined by passing the following to `col
 The final list of filter functions available for the `columnDef.filterFn` and ``tableOptions.globalFilterFn` options use the following type:
 
 ```tsx
-export type FilterFnOption<TGenerics extends TableGenerics> =
+export type FilterFnOption<TData extends AnyData> =
   | 'auto'
   | BuiltInFilterFn
-  | keyof TGenerics['FilterFns']
-  | FilterFn<TGenerics>
+  | FilterFn<TData>
 ```
 
 #### Filter Meta
@@ -197,7 +196,7 @@ let table = createTable()
 ### `filterFn`
 
 ```tsx
-filterFn?: FilterFn | keyof TGenerics['FilterFns'] | keyof BuiltInFilterFns
+filterFn?: FilterFn | keyof BuiltInFilterFns
 ```
 
 The filter function to use with this column.
@@ -205,7 +204,6 @@ The filter function to use with this column.
 Options:
 
 - A `string` referencing a [built-in filter function](#filter-functions))
-- A `string` referencing a custom filter function defined on the `filterFns` table option
 - A [custom filter function](#filter-functions)
 
 ### `enableColumnFilter`
@@ -277,7 +275,7 @@ A function that sets the current filter value for the column. You can pass it a 
 ### `getAutoFilterFn`
 
 ```tsx
-getAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
+getAutoFilterFn: (columnId: string) => FilterFn<TData> | undefined
 ```
 
 Returns an automatically calculated filter function for the column based off of the columns first known value.
@@ -285,7 +283,7 @@ Returns an automatically calculated filter function for the column based off of 
 ### `getFilterFn`
 
 ```tsx
-getFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
+getFilterFn: (columnId: string) => FilterFn<TData> | undefined
 ```
 
 Returns the filter function (either user-defined or automatic, depending on configuration) for the columnId specified.
@@ -293,7 +291,7 @@ Returns the filter function (either user-defined or automatic, depending on conf
 ### `getFacetedRowModel`
 
 ```tsx
-type getFacetedRowModel = () => RowModel<TGenerics>
+type getFacetedRowModel = () => RowModel<TData>
 ```
 
 > ⚠️ Requires that you pass a valid `getFacetedRowModel` function to `options.facetedRowModel`. A default implementation is provided via the exported `getFacetedRowModel` function.
@@ -333,7 +331,7 @@ The column filters map for the row. This object tracks whether a row is passing/
 ### `columnFiltersMeta`
 
 ```tsx
-columnFiltersMeta: Record<string, TGenerics['FilterMeta']>
+columnFiltersMeta: Record<string, any>
 ```
 
 The column filters meta map for the row. This object tracks any filter meta for a row as optionally provided during the filtering process.
@@ -408,8 +406,8 @@ Enables/disables **all** column filters for the table. For option priority, see 
 
 ```tsx
 getFilteredRowModel?: (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics>
+  instance: TableInstance<TData>
+) => () => RowModel<TData>
 ```
 
 If provided, this function is called **once** per table instance and should return a **new function** which will calculate and return the row model for the table when it's filtered.
@@ -430,7 +428,7 @@ useTableInstance(table, {
 ### `getColumnFacetedRowModel`
 
 ```tsx
-getColumnFacetedRowModel: (columnId: string) => RowModel<TGenerics>
+getColumnFacetedRowModel: (columnId: string) => RowModel<TData>
 ```
 
 Returns the faceted row model for a given columnId.
@@ -438,7 +436,7 @@ Returns the faceted row model for a given columnId.
 ### `globalFilterFn`
 
 ```tsx
-globalFilterFn?: FilterFn | keyof TGenerics['FilterFns'] | keyof BuiltInFilterFns
+globalFilterFn?: FilterFn | keyof BuiltInFilterFns
 ```
 
 The filter function to use for global filtering.
@@ -446,7 +444,6 @@ The filter function to use for global filtering.
 Options:
 
 - A `string` referencing a [built-in filter function](#filter-functions))
-- A `string` referencing a custom filter function defined on the `filterFns` table option
 - A [custom filter function](#filter-functions)
 
 ### `onGlobalFilterChange`
@@ -468,7 +465,7 @@ Enables/disables the global filter for the table. For option priority, see [Can-
 ### `getColumnCanGlobalFilter`
 
 ```tsx
-getColumnCanGlobalFilter?: (column: Column<TGenerics>) => boolean
+getColumnCanGlobalFilter?: (column: Column<TData, TValue>) => boolean
 ```
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
@@ -494,7 +491,7 @@ Resets the **columnFilters** state to `initialState.columnFilters`, or `true` ca
 ### `getPreFilteredRowModel`
 
 ```tsx
-getPreFilteredRowModel: () => RowModel<TGenerics>
+getPreFilteredRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table before any **column** filtering has been applied.
@@ -502,7 +499,7 @@ Returns the row model for the table before any **column** filtering has been app
 ### `getFilteredRowModel`
 
 ```tsx
-getFilteredRowModel: () => RowModel<TGenerics>
+getFilteredRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table after **column** filtering has been applied.
@@ -526,7 +523,7 @@ Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can 
 ### `getGlobalAutoFilterFn`
 
 ```tsx
-getGlobalAutoFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
+getGlobalAutoFilterFn: (columnId: string) => FilterFn<TData> | undefined
 ```
 
 Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
@@ -534,7 +531,7 @@ Currently, this function returns the built-in `includesString` filter function. 
 ### `getGlobalFilterFn`
 
 ```tsx
-getGlobalFilterFn: (columnId: string) => FilterFn<TGenerics> | undefined
+getGlobalFilterFn: (columnId: string) => FilterFn<TData> | undefined
 ```
 
 Returns the global filter function (either user-defined or automatic, depending on configuration) for the table.
@@ -542,7 +539,7 @@ Returns the global filter function (either user-defined or automatic, depending 
 ### `getGlobalFacetedRowModel`
 
 ```tsx
-getGlobalFacetedRowModel: () => RowModel<TGenerics>
+getGlobalFacetedRowModel: () => RowModel<TData>
 ```
 
 Returns the faceted row model for the global filter.

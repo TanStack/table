@@ -2,10 +2,11 @@ import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Row,
   RowModel,
   Updater,
+  RowData,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -15,15 +16,15 @@ export type RowSelectionTableState = {
   rowSelection: RowSelectionState
 }
 
-export type RowSelectionOptions<TGenerics extends TableGenerics> = {
-  enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
-  enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
-  enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+export type RowSelectionOptions<TData extends RowData> = {
+  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  enableMultiRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  enableSubRowSelection?: boolean | ((row: Row<TData>) => boolean)
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
   // enableGroupingRowSelection?:
   //   | boolean
   //   | ((
-  //       row: Row<TGenerics>
+  //       row: Row<TData>
   //     ) => boolean)
   // isAdditiveSelectEvent?: (e: unknown) => boolean
   // isInclusiveSelectEvent?: (e: unknown) => boolean
@@ -35,8 +36,8 @@ export type RowSelectionOptions<TGenerics extends TableGenerics> = {
   //     TSortingFns,
   //     TAggregationFns
   //   >,
-  //   rowModel: RowModel<TGenerics>
-  // ) => RowModel<TGenerics>
+  //   rowModel: RowModel<TData>
+  // ) => RowModel<TData>
 }
 
 export type RowSelectionRow = {
@@ -49,7 +50,7 @@ export type RowSelectionRow = {
   getToggleSelectedHandler: () => (event: unknown) => void
 }
 
-export type RowSelectionInstance<TGenerics extends TableGenerics> = {
+export type RowSelectionInstance<TData extends RowData> = {
   getToggleAllRowsSelectedHandler: () => (event: unknown) => void
   getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
   setRowSelection: (updater: Updater<RowSelectionState>) => void
@@ -60,10 +61,10 @@ export type RowSelectionInstance<TGenerics extends TableGenerics> = {
   getIsSomePageRowsSelected: () => boolean
   toggleAllRowsSelected: (value?: boolean) => void
   toggleAllPageRowsSelected: (value?: boolean) => void
-  getPreSelectedRowModel: () => RowModel<TGenerics>
-  getSelectedRowModel: () => RowModel<TGenerics>
-  getFilteredSelectedRowModel: () => RowModel<TGenerics>
-  getGroupedSelectedRowModel: () => RowModel<TGenerics>
+  getPreSelectedRowModel: () => RowModel<TData>
+  getSelectedRowModel: () => RowModel<TData>
+  getFilteredSelectedRowModel: () => RowModel<TData>
+  getGroupedSelectedRowModel: () => RowModel<TData>
 }
 
 //
@@ -76,9 +77,9 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): RowSelectionOptions<TGenerics> => {
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
+  ): RowSelectionOptions<TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', instance),
       enableRowSelection: true,
@@ -90,9 +91,9 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): RowSelectionInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): RowSelectionInstance<TData> => {
     return {
       setRowSelection: updater =>
         instance.options.onRowSelectionChange?.(updater),
@@ -348,9 +349,9 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    instance: Table<TData>
   ): RowSelectionRow => {
     return {
       toggleSelected: value => {
@@ -417,11 +418,11 @@ export const RowSelection: TableFeature = {
   },
 }
 
-const mutateRowIsSelected = <TGenerics extends TableGenerics>(
+const mutateRowIsSelected = <TData extends RowData>(
   selectedRowIds: Record<string, boolean>,
   id: string,
   value: boolean,
-  instance: TableInstance<TGenerics>
+  instance: Table<TData>
 ) => {
   const row = instance.getRow(id)
 
@@ -445,17 +446,17 @@ const mutateRowIsSelected = <TGenerics extends TableGenerics>(
   }
 }
 
-export function selectRowsFn<TGenerics extends TableGenerics>(
-  instance: TableInstance<TGenerics>,
-  rowModel: RowModel<TGenerics>
-): RowModel<TGenerics> {
+export function selectRowsFn<TData extends RowData>(
+  instance: Table<TData>,
+  rowModel: RowModel<TData>
+): RowModel<TData> {
   const rowSelection = instance.getState().rowSelection
 
-  const newSelectedFlatRows: Row<TGenerics>[] = []
-  const newSelectedRowsById: Record<string, Row<TGenerics>> = {}
+  const newSelectedFlatRows: Row<TData>[] = []
+  const newSelectedRowsById: Record<string, Row<TData>> = {}
 
   // Filters top level and nested rows
-  const recurseRows = (rows: Row<TGenerics>[], depth = 0): Row<TGenerics>[] => {
+  const recurseRows = (rows: Row<TData>[], depth = 0): Row<TData>[] => {
     return rows
       .map(row => {
         const isSelected = isRowSelected(row, rowSelection, instance) === true
@@ -476,7 +477,7 @@ export function selectRowsFn<TGenerics extends TableGenerics>(
           return row
         }
       })
-      .filter(Boolean) as Row<TGenerics>[]
+      .filter(Boolean) as Row<TData>[]
   }
 
   return {
@@ -486,10 +487,10 @@ export function selectRowsFn<TGenerics extends TableGenerics>(
   }
 }
 
-export function isRowSelected<TGenerics extends TableGenerics>(
-  row: Row<TGenerics>,
+export function isRowSelected<TData extends RowData>(
+  row: Row<TData>,
   selection: Record<string, boolean>,
-  instance: TableInstance<TGenerics>
+  instance: Table<TData>
 ): boolean | 'some' {
   if (selection[row.id]) {
     return true

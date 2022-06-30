@@ -1,11 +1,11 @@
-import { TableInstance, RowModel, TableGenerics, Row } from '../types'
+import { Table, RowModel, TableGenerics, Row, RowData } from '../types'
 import { memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
-export function getFacetedRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>,
+export function getFacetedRowModel<TData extends RowData>(): (
+  instance: Table<TData>,
   columnId: string
-) => () => RowModel<TGenerics> {
+) => () => RowModel<TData> {
   return (instance, columnId) =>
     memo(
       () => [
@@ -27,7 +27,7 @@ export function getFacetedRowModel<TGenerics extends TableGenerics>(): (
           globalFilter ? '__global__' : undefined,
         ].filter(Boolean) as string[]
 
-        const filterRowsImpl = (row: Row<TGenerics>) => {
+        const filterRowsImpl = (row: Row<TData>) => {
           // Horizontally filter rows through each column
           for (let i = 0; i < filterableIds.length; i++) {
             if (row.columnFilters[filterableIds[i]!] === false) {

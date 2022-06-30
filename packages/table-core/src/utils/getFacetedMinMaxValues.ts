@@ -1,8 +1,8 @@
-import { TableInstance, TableGenerics } from '../types'
+import { Table, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
-export function getFacetedMinMaxValues<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>,
+export function getFacetedMinMaxValues<TData extends RowData>(): (
+  instance: Table<TData>,
   columnId: string
 ) => () => undefined | [number, number] {
   return (instance, columnId) =>

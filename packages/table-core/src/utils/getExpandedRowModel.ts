@@ -1,9 +1,9 @@
-import { TableInstance, Row, RowModel, TableGenerics } from '../types'
+import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
-export function getExpandedRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
+export function getExpandedRowModel<TData extends RowData>(): (
+  instance: Table<TData>
+) => () => RowModel<TData> {
   return instance =>
     memo(
       () => [
@@ -30,13 +30,13 @@ export function getExpandedRowModel<TGenerics extends TableGenerics>(): (
     )
 }
 
-export function expandRows<TGenerics extends TableGenerics>(
-  rowModel: RowModel<TGenerics>,
-  instance: TableInstance<TGenerics>
+export function expandRows<TData extends RowData>(
+  rowModel: RowModel<TData>,
+  instance: Table<TData>
 ) {
-  const expandedRows: Row<TGenerics>[] = []
+  const expandedRows: Row<TData>[] = []
 
-  const handleRow = (row: Row<TGenerics>) => {
+  const handleRow = (row: Row<TData>) => {
     expandedRows.push(row)
 
     if (row.subRows?.length && row.getIsExpanded()) {

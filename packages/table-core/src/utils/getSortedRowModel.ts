@@ -1,10 +1,10 @@
-import { TableInstance, Row, RowModel, TableGenerics } from '../types'
+import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { SortingFn } from '../features/Sorting'
 import { memo } from '../utils'
 
-export function getSortedRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
+export function getSortedRowModel<TData extends RowData>(): (
+  instance: Table<TData>
+) => () => RowModel<TData> {
   return instance =>
     memo(
       () => [instance.getState().sorting, instance.getPreSortedRowModel()],
@@ -15,7 +15,7 @@ export function getSortedRowModel<TGenerics extends TableGenerics>(): (
 
         const sortingState = instance.getState().sorting
 
-        const sortedFlatRows: Row<TGenerics>[] = []
+        const sortedFlatRows: Row<TData>[] = []
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter(sort =>
@@ -27,7 +27,7 @@ export function getSortedRowModel<TGenerics extends TableGenerics>(): (
           {
             sortUndefined?: false | -1 | 1
             invertSorting?: boolean
-            sortingFn: SortingFn<TGenerics>
+            sortingFn: SortingFn<TData>
           }
         > = {}
 
@@ -41,7 +41,7 @@ export function getSortedRowModel<TGenerics extends TableGenerics>(): (
           }
         })
 
-        const sortData = (rows: Row<TGenerics>[]) => {
+        const sortData = (rows: Row<TData>[]) => {
           // This will also perform a stable sorting using the row index
           // if needed.
           const sortedData = rows.slice()

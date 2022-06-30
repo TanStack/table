@@ -3,93 +3,115 @@ import {
   Column,
   Header,
   TableGenerics,
-  TableInstance,
+  Table,
   Row,
   AccessorFn,
   ColumnDef,
-  Renderable,
+  ColumnDefTemplate,
+  RowData,
 } from '../types'
-import { memo } from '../utils'
+import { memo, UnionToIntersection } from '../utils'
+import { CoreCell } from './cell'
+import { CoreHeader } from './headers'
 
 export type CoreColumnDefType = 'data' | 'display' | 'group'
 
-export type CoreColumnDef<TGenerics extends TableGenerics> = {
-  id: string
-  accessorKey?: string & keyof TGenerics['Row']
-  accessorFn?: AccessorFn<TGenerics['Row']>
-  columns?: ColumnDef<TGenerics>[]
-  header?: Renderable<
-    TGenerics,
-    {
-      instance: TableInstance<TGenerics>
-      header: Header<TGenerics>
-      column: Column<TGenerics>
-    }
-  >
-  footer?: Renderable<
-    TGenerics,
-    {
-      instance: TableInstance<TGenerics>
-      header: Header<TGenerics>
-      column: Column<TGenerics>
-    }
-  >
-  cell?: Renderable<
-    TGenerics,
-    {
-      instance: TableInstance<TGenerics>
-      row: Row<TGenerics>
-      column: Column<TGenerics>
-      cell: Cell<TGenerics>
-      getValue: () => TGenerics['Value']
-    }
-  >
-  meta?: TGenerics['ColumnMeta']
+type CoreColumnDefBase<TData extends RowData, TValue> = {
+  columns?: ColumnDef<TData, TValue>[]
+  header?: ColumnDefTemplate<ReturnType<CoreHeader<TData>['getContext']>>
+  footer?: ColumnDefTemplate<ReturnType<CoreHeader<TData>['getContext']>>
+  cell?: ColumnDefTemplate<ReturnType<CoreCell<TData, TValue>['getContext']>>
+  meta?: unknown
 }
 
-export type CoreColumn<TGenerics extends TableGenerics> = {
+type CoreColumnDefDisplay<TData extends RowData, TValue> = CoreColumnDefBase<
+  TData,
+  TValue
+> & {
+  id: string
+}
+
+type CoreColumnDefDisplayWithStringHeader<
+  TData extends RowData,
+  TValue
+> = CoreColumnDefBase<TData, TValue> & {
+  header: string
+  id?: string
+}
+
+type CoreColumnDefAccessorFn<TData extends RowData, TValue> = CoreColumnDefBase<
+  TData,
+  TValue
+> & {
+  accessorFn: AccessorFn<TData>
+  id: string
+  // accessorKey?: never
+}
+
+type CoreColumnDefAccessorKey<
+  TData extends RowData,
+  TValue
+> = CoreColumnDefBase<TData, TValue> & {
+  accessorKey: keyof TData
+  id?: string
+  // accessorFn?: never
+}
+
+export type CoreColumnDef<TData extends RowData, TValue> =
+  | CoreColumnDefDisplay<TData, TValue>
+  | CoreColumnDefDisplayWithStringHeader<TData, TValue>
+  | CoreColumnDefAccessorFn<TData, TValue>
+  | CoreColumnDefAccessorKey<TData, TValue>
+
+export type CoreColumnDefResolved<TData extends RowData, TValue> = Partial<
+  UnionToIntersection<CoreColumnDef<TData, TValue>>
+>
+
+export type CoreColumn<TData extends RowData, TValue> = {
   id: string
   depth: number
-  accessorFn?: AccessorFn<TGenerics['Row']>
-  columnDef: ColumnDef<TGenerics>
+  accessorFn?: AccessorFn<TData>
+  columnDef: ColumnDef<TData, TValue>
   columnDefType: CoreColumnDefType
-  columns: Column<TGenerics>[]
-  parent?: Column<TGenerics>
-  getFlatColumns: () => Column<TGenerics>[]
-  getLeafColumns: () => Column<TGenerics>[]
+  columns: Column<TData, unknown>[]
+  parent?: Column<TData, unknown>
+  getFlatColumns: () => Column<TData, unknown>[]
+  getLeafColumns: () => Column<TData, unknown>[]
 }
 
-export function createColumn<TGenerics extends TableGenerics>(
-  instance: TableInstance<TGenerics>,
-  columnDef: ColumnDef<TGenerics> & { columnDefType?: CoreColumnDefType },
+export function createColumn<TData extends RowData, TValue>(
+  instance: Table<TData>,
+  columnDef: ColumnDef<TData, TValue> & { columnDefType?: CoreColumnDefType },
   depth: number,
-  parent?: Column<TGenerics>
+  parent?: Column<TData, TValue>
 ) {
   const defaultColumn = instance._getDefaultColumnDef()
 
-  columnDef = {
+  const resolvedColumnDef = {
     ...defaultColumn,
     ...columnDef,
-  }
+  } as CoreColumnDefResolved<TData, TValue>
 
   let id =
-    columnDef.id ??
-    columnDef.accessorKey ??
-    (typeof columnDef.header === 'string' ? columnDef.header : undefined)
+    resolvedColumnDef.id ??
+    resolvedColumnDef.accessorKey ??
+    (typeof resolvedColumnDef.header === 'string'
+      ? resolvedColumnDef.header
+      : undefined)
 
-  let accessorFn: AccessorFn<TGenerics['Row']> | undefined
+  let accessorFn: AccessorFn<TData> | undefined
 
-  if (columnDef.accessorFn) {
-    accessorFn = columnDef.accessorFn
-  } else if (columnDef.accessorKey) {
-    accessorFn = (originalRow?: TGenerics['Row']) =>
-      (originalRow as any)[columnDef.accessorKey]
+  if (resolvedColumnDef.accessorFn) {
+    accessorFn = resolvedColumnDef.accessorFn
+  } else if (resolvedColumnDef.accessorKey) {
+    accessorFn = (originalRow?: TData) =>
+      (originalRow as any)[resolvedColumnDef.accessorKey]
   }
 
   if (!id) {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(
-        columnDef.accessorFn
+        resolvedColumnDef.accessorFn
           ? `Columns require an id when using an accessorFn`
           : `Columns require an id when using a non-string header`
       )
@@ -97,8 +119,8 @@ export function createColumn<TGenerics extends TableGenerics>(
     throw new Error()
   }
 
-  let column: CoreColumn<TGenerics> = {
-    id: `${id}`,
+  let column: CoreColumn<TData, TValue> = {
+    id: `${String(id)}`,
     accessorFn,
     parent: parent as any,
     depth,
@@ -109,7 +131,7 @@ export function createColumn<TGenerics extends TableGenerics>(
       () => [true],
       () => {
         return [
-          column as Column<TGenerics>,
+          column as Column<TData, unknown>,
           ...column.columns?.flatMap(d => d.getFlatColumns()),
         ]
       },
@@ -129,7 +151,7 @@ export function createColumn<TGenerics extends TableGenerics>(
           return orderColumns(leafColumns)
         }
 
-        return [column as Column<TGenerics>]
+        return [column as Column<TData, unknown>]
       },
       {
         key: process.env.NODE_ENV === 'production' && 'column.getLeafColumns',
@@ -143,5 +165,5 @@ export function createColumn<TGenerics extends TableGenerics>(
   }, column)
 
   // Yes, we have to convert instance to uknown, because we know more than the compiler here.
-  return column as Column<TGenerics>
+  return column as Column<TData, TValue>
 }

@@ -22,7 +22,7 @@ The unique identifier for the column.
 ### `accessorKey`
 
 ```tsx
-accessorKey?: string & typeof TGenerics['Row']
+accessorKey?: string & typeof TData
 ```
 
 > ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
@@ -32,7 +32,7 @@ The key of the row object to use when extracting the value for the column.
 ### `accessorFn`
 
 ```tsx
-accessorFn?: (originalRow: TGenerics['Row'], index: number) => any
+accessorFn?: (originalRow: TData, index: number) => any
 ```
 
 > ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
@@ -42,7 +42,7 @@ The accessor function to use when extracting the value for the column from each 
 ### `columns`
 
 ```tsx
-columns?: ColumnDef<TGenerics>[]
+columns?: ColumnDef<TData, TValue>[]
 ```
 
 > ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createGroup()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
@@ -55,10 +55,10 @@ The child column defs to include in a group column.
 header?:
   | string
   | ((props: {
-      instance: TableInstance<TGenerics>
-      header: Header<TGenerics>
-      column: Column<TGenerics>
-    }) => TGenerics['Rendered'])
+      instance: TableInstance<TData>
+      header: Header<TData>
+      column: Column<TData, TValue>
+    }) => unknown)
 ```
 
 The header to display for the column. If a string is passed, it can be used as a default for the column ID. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
@@ -69,10 +69,10 @@ The header to display for the column. If a string is passed, it can be used as a
 footer?:
   | string
   | ((props: {
-      instance: TableInstance<TGenerics>
-      header: Header<TGenerics>
-      column: Column<TGenerics>
-    }) => TGenerics['Rendered'])
+      instance: TableInstance<TData>
+      header: Header<TData>
+      column: Column<TData, TValue>
+    }) => unknown)
 ```
 
 The footer to display for the column. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
@@ -81,12 +81,12 @@ The footer to display for the column. If a function is passed, it will be passed
 
 ```tsx
 cell?: ((props: {
-  instance: TableInstance<TGenerics>
-  row: Row<TGenerics>
-  column: Column<TGenerics>
-  cell: Cell<TGenerics>
-  getValue: () => TGenerics['Value']
-}) => TGenerics['Rendered'])
+  instance: TableInstance<TData>
+  row: Row<TData>
+  column: Column<TData, TValue>
+  cell: Cell<TData>
+  getValue: () => TValue
+}) => unknown)
 ```
 
 The cell to display each row for the column. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
@@ -94,7 +94,9 @@ The cell to display each row for the column. If a function is passed, it will be
 ### `meta`
 
 ```tsx
-meta?: TGenerics['ColumnMeta']
+meta?: unknown
 ```
 
-The meta data to associate with the column as defined with [`table.setColumnMeta<MetaType>()`](../guide/tables.md#setcolumnmeta). This is useful for providing additional information about the column in a typesafe way.
+The meta data to associated with the column.
+
+> ⚠️ Due to generic limitations, This meta object must be typecast to the correct type before usage.

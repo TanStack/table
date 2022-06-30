@@ -1,10 +1,10 @@
-import { TableInstance, RowModel, TableGenerics, Row } from '../types'
+import { Table, RowModel, TableGenerics, Row, RowData } from '../types'
 import { memo } from '../utils'
 import { expandRows } from './getExpandedRowModel'
 
-export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
+export function getPaginationRowModel<TData extends RowData>(opts?: {
   initialSync: boolean
-}): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
+}): (instance: Table<TData>) => () => RowModel<TData> {
   return instance =>
     memo(
       () => [
@@ -23,7 +23,7 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
 
         rows = rows.slice(pageStart, pageEnd)
 
-        let paginatedRowModel: RowModel<TGenerics>
+        let paginatedRowModel: RowModel<TData>
 
         if (!instance.options.paginateExpandedRows) {
           paginatedRowModel = expandRows(
@@ -44,7 +44,7 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
 
         paginatedRowModel.flatRows = []
 
-        const handleRow = (row: Row<TGenerics>) => {
+        const handleRow = (row: Row<TData>) => {
           paginatedRowModel.flatRows.push(row)
           if (row.subRows.length) {
             row.subRows.forEach(handleRow)

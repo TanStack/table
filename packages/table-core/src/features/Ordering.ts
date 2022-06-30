@@ -1,11 +1,12 @@
 import { makeStateUpdater, memo } from '../utils'
 
 import {
-  TableInstance,
+  Table,
   OnChangeFn,
   Updater,
   Column,
   TableGenerics,
+  RowData,
 } from '../types'
 
 import { Grouping, orderColumns } from './Grouping'
@@ -25,12 +26,12 @@ export type ColumnOrderDefaultOptions = {
   onColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
-export type ColumnOrderInstance<TGenerics extends TableGenerics> = {
+export type ColumnOrderInstance<TData extends RowData> = {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
   resetColumnOrder: (defaultState?: boolean) => void
   _getOrderColumnsFn: () => (
-    columns: Column<TGenerics>[]
-  ) => Column<TGenerics>[]
+    columns: Column<TData, unknown>[]
+  ) => Column<TData, unknown>[]
 }
 
 //
@@ -43,17 +44,17 @@ export const Ordering: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', instance),
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ColumnOrderInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): ColumnOrderInstance<TData> => {
     return {
       setColumnOrder: updater =>
         instance.options.onColumnOrderChange?.(updater),
@@ -71,7 +72,7 @@ export const Ordering: TableFeature = {
         (columnOrder, grouping, groupedColumnMode) => columns => {
           // Sort grouped columns to the start of the column list
           // before the headers are built
-          let orderedColumns: Column<TGenerics>[] = []
+          let orderedColumns: Column<TData, unknown>[] = []
 
           // If there is no order, return the normal columns
           if (!columnOrder?.length) {

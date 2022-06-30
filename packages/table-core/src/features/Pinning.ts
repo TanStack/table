@@ -2,11 +2,12 @@ import { TableFeature } from '../core/instance'
 import {
   OnChangeFn,
   Updater,
-  TableInstance,
+  Table,
   Column,
   TableGenerics,
   Row,
   Cell,
+  RowData,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -41,19 +42,19 @@ export type ColumnPinningColumn = {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export type ColumnPinningRow<TGenerics extends TableGenerics> = {
-  getLeftVisibleCells: () => Cell<TGenerics>[]
-  getCenterVisibleCells: () => Cell<TGenerics>[]
-  getRightVisibleCells: () => Cell<TGenerics>[]
+export type ColumnPinningRow<TData extends RowData> = {
+  getLeftVisibleCells: () => Cell<TData, unknown>[]
+  getCenterVisibleCells: () => Cell<TData, unknown>[]
+  getRightVisibleCells: () => Cell<TData, unknown>[]
 }
 
-export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
+export type ColumnPinningInstance<TData extends RowData> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
-  getLeftLeafColumns: () => Column<TGenerics>[]
-  getRightLeafColumns: () => Column<TGenerics>[]
-  getCenterLeafColumns: () => Column<TGenerics>[]
+  getLeftLeafColumns: () => Column<TData, unknown>[]
+  getRightLeafColumns: () => Column<TData, unknown>[]
+  getCenterLeafColumns: () => Column<TData, unknown>[]
 }
 
 //
@@ -71,17 +72,17 @@ export const Pinning: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
   ): ColumnPinningDefaultOptions => {
     return {
       onColumnPinningChange: makeStateUpdater('columnPinning', instance),
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
+  createColumn: <TData extends RowData>(
+    column: Column<TData, unknown>,
+    instance: Table<TData>
   ): ColumnPinningColumn => {
     return {
       pin: position => {
@@ -150,10 +151,10 @@ export const Pinning: TableFeature = {
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): ColumnPinningRow<TGenerics> => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    instance: Table<TData>
+  ): ColumnPinningRow<TData> => {
     return {
       getCenterVisibleCells: memo(
         () => [
@@ -185,7 +186,7 @@ export const Pinning: TableFeature = {
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
+            .map(d => ({ ...d, position: 'left' } as Cell<TData, unknown>))
 
           return cells
         },
@@ -206,7 +207,7 @@ export const Pinning: TableFeature = {
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
+            .map(d => ({ ...d, position: 'left' } as Cell<TData, unknown>))
 
           return cells
         },
@@ -219,9 +220,9 @@ export const Pinning: TableFeature = {
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ColumnPinningInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): ColumnPinningInstance<TData> => {
     return {
       setColumnPinning: updater =>
         instance.options.onColumnPinningChange?.(updater),

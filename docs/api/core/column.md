@@ -31,7 +31,7 @@ The depth of the column (if grouped) relative to the root column def array.
 ### `accessorFn`
 
 ```tsx
-accessorFn?: AccessorFn<TGenerics['Row']>
+accessorFn?: AccessorFn<TData>
 ```
 
 The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
@@ -39,7 +39,7 @@ The resolved accessor function to use when extracting the value for the column f
 ### `columnDef`
 
 ```tsx
-columnDef: ColumnDef<TGenerics>
+columnDef: ColumnDef<TData, TValue>
 ```
 
 The original column def used to create the column.
@@ -55,7 +55,7 @@ The type of column def that was used to create the column. See the [`createTable
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TGenerics>[]
+type columns = ColumnDef<TData, TValue>[]
 ```
 
 The child column (if the column is a group column). Will be an empty array if the column is not a group column.
@@ -63,7 +63,7 @@ The child column (if the column is a group column). Will be an empty array if th
 ### `parent`
 
 ```tsx
-parent?: Column<TGenerics>
+parent?: Column<TData, TValue>
 ```
 
 The parent column for this column. Will be undefined if this is a root column.
@@ -71,7 +71,7 @@ The parent column for this column. Will be undefined if this is a root column.
 ### `getFlatColumns`
 
 ```tsx
-type getFlatColumns = () => Column<TGenerics>[]
+type getFlatColumns = () => Column<TData, TValue>[]
 ```
 
 Returns the flattened array of this column and all child/grand-child columns for this column.
@@ -79,7 +79,7 @@ Returns the flattened array of this column and all child/grand-child columns for
 ### `getLeafColumns`
 
 ```tsx
-type getLeafColumns = () => Column<TGenerics>[]
+type getLeafColumns = () => Column<TData, TValue>[]
 ```
 
 Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.

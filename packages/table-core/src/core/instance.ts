@@ -4,15 +4,15 @@ import {
   Updater,
   TableOptionsResolved,
   TableState,
-  TableInstance,
-  Renderable,
-  TableGenerics,
+  Table,
+  ColumnDefTemplate,
   InitialTableState,
   Row,
   Column,
   RowModel,
   ColumnDef,
   TableOptions,
+  RowData,
 } from '../types'
 
 //
@@ -34,7 +34,7 @@ import { Visibility } from '../features/Visibility'
 export type TableFeature = {
   getDefaultOptions?: (instance: any) => any
   getInitialState?: (initialState?: InitialTableState) => any
-  createInstance?: (instance: any) => any
+  createTable?: (instance: any) => any
   getDefaultColumnDef?: () => any
   createColumn?: (column: any, instance: any) => any
   createHeader?: (column: any, instance: any) => any
@@ -60,11 +60,10 @@ const features = [
 
 export type CoreTableState = {}
 
-export type CoreOptions<TGenerics extends TableGenerics> = {
-  data: TGenerics['Row'][]
+export type CoreOptions<TData extends RowData> = {
+  data: TData[]
   state: Partial<TableState>
   onStateChange: (updater: Updater<TableState>) => void
-  render: TGenerics['Renderer']
   debugAll?: boolean
   debugTable?: boolean
   debugHeaders?: boolean
@@ -73,70 +72,55 @@ export type CoreOptions<TGenerics extends TableGenerics> = {
   initialState?: InitialTableState
   autoResetAll?: boolean
   mergeOptions?: (
-    defaultOptions: TableOptions<TGenerics>,
-    options: Partial<TableOptions<TGenerics>>
-  ) => TableOptions<TGenerics>
-  meta?: TGenerics['TableMeta']
-  getCoreRowModel: (instance: TableInstance<any>) => () => RowModel<any>
-  getSubRows?: (
-    originalRow: TGenerics['Row'],
-    index: number
-  ) => undefined | TGenerics['Row'][]
-  getRowId?: (
-    originalRow: TGenerics['Row'],
-    index: number,
-    parent?: Row<TGenerics>
-  ) => string
-  columns: ColumnDef<TGenerics>[]
-  defaultColumn?: Partial<ColumnDef<TGenerics>>
+    defaultOptions: TableOptions<TData>,
+    options: Partial<TableOptions<TData>>
+  ) => TableOptions<TData>
+  meta?: unknown
+  getCoreRowModel: (instance: Table<any>) => () => RowModel<any>
+  getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
+  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
+  columns: ColumnDef<TData, any>[]
+  defaultColumn?: Partial<ColumnDef<TData, any>>
   renderFallbackValue: any
 }
 
-export type CoreInstance<TGenerics extends TableGenerics> = {
+export type CoreInstance<TData extends RowData> = {
   initialState: TableState
   reset: () => void
-  options: RequiredKeys<TableOptionsResolved<TGenerics>, 'state'>
-  setOptions: (newOptions: Updater<TableOptionsResolved<TGenerics>>) => void
+  options: RequiredKeys<TableOptionsResolved<TData>, 'state'>
+  setOptions: (newOptions: Updater<TableOptionsResolved<TData>>) => void
   getState: () => TableState
   setState: (updater: Updater<TableState>) => void
   _features: readonly TableFeature[]
   _queue: (cb: () => void) => void
-  _render: <TProps>(
-    template: Renderable<TGenerics, TProps>,
-    props: TProps
-  ) => string | null | TGenerics['Rendered']
-  _getRowId: (
-    _: TGenerics['Row'],
-    index: number,
-    parent?: Row<TGenerics>
-  ) => string
-  getCoreRowModel: () => RowModel<TGenerics>
-  _getCoreRowModel?: () => RowModel<TGenerics>
-  getRowModel: () => RowModel<TGenerics>
-  getRow: (id: string) => Row<TGenerics>
-  _getDefaultColumnDef: () => Partial<ColumnDef<TGenerics>>
-  _getColumnDefs: () => ColumnDef<TGenerics>[]
-  _getAllFlatColumnsById: () => Record<string, Column<TGenerics>>
-  getAllColumns: () => Column<TGenerics>[]
-  getAllFlatColumns: () => Column<TGenerics>[]
-  getAllLeafColumns: () => Column<TGenerics>[]
-  getColumn: (columnId: string) => Column<TGenerics>
+  _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
+  getCoreRowModel: () => RowModel<TData>
+  _getCoreRowModel?: () => RowModel<TData>
+  getRowModel: () => RowModel<TData>
+  getRow: (id: string) => Row<TData>
+  _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
+  _getColumnDefs: () => ColumnDef<TData, unknown>[]
+  _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
+  getAllColumns: () => Column<TData, unknown>[]
+  getAllFlatColumns: () => Column<TData, unknown>[]
+  getAllLeafColumns: () => Column<TData, unknown>[]
+  getColumn: (columnId: string) => Column<TData, unknown>
 }
 
-export function createTableInstance<TGenerics extends TableGenerics>(
-  options: TableOptionsResolved<TGenerics>
-): TableInstance<TGenerics> {
+export function createTable<TData extends RowData>(
+  options: TableOptionsResolved<TData>
+): Table<TData> {
   if (options.debugAll || options.debugTable) {
     console.info('Creating Table Instance...')
   }
 
-  let instance = { _features: features } as unknown as TableInstance<TGenerics>
+  let instance = { _features: features } as unknown as Table<TData>
 
   const defaultOptions = instance._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(instance))
-  }, {}) as TableOptionsResolved<TGenerics>
+  }, {}) as TableOptionsResolved<TData>
 
-  const mergeOptions = (options: TableOptionsResolved<TGenerics>) => {
+  const mergeOptions = (options: TableOptionsResolved<TData>) => {
     if (instance.options.mergeOptions) {
       return instance.options.mergeOptions(defaultOptions, options)
     }
@@ -161,7 +145,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
-  const coreInstance: CoreInstance<TGenerics> = {
+  const coreInstance: CoreInstance<TData> = {
     _features: features,
     options: {
       ...defaultOptions,
@@ -196,20 +180,9 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     setOptions: updater => {
       const newOptions = functionalUpdate(updater, instance.options)
       instance.options = mergeOptions(newOptions) as RequiredKeys<
-        TableOptionsResolved<TGenerics>,
+        TableOptionsResolved<TData>,
         'state'
       >
-    },
-    _render: (template, props) => {
-      if (typeof instance.options.render === 'function') {
-        return instance.options.render(template, props)
-      }
-
-      if (typeof template === 'function') {
-        return (template as Function)(props)
-      }
-
-      return template
     },
 
     getState: () => {
@@ -220,11 +193,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       instance.options.onStateChange?.(updater)
     },
 
-    _getRowId: (
-      row: TGenerics['Row'],
-      index: number,
-      parent?: Row<TGenerics>
-    ) =>
+    _getRowId: (row: TData, index: number, parent?: Row<TData>) =>
       instance.options.getRowId?.(row, index, parent) ??
       `${parent ? [parent.id, index].join('.') : index}`,
 
@@ -233,7 +202,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
         instance._getCoreRowModel = instance.options.getCoreRowModel(instance)
       }
 
-      return instance._getCoreRowModel()
+      return instance._getCoreRowModel!()
     },
 
     // The final calls start at the bottom of the model,
@@ -257,17 +226,19 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     _getDefaultColumnDef: memo(
       () => [instance.options.defaultColumn],
       defaultColumn => {
-        defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TGenerics>>
+        defaultColumn = (defaultColumn ?? {}) as Partial<
+          ColumnDef<TData, unknown>
+        >
 
         return {
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
-          cell: props => props.getValue()?.toString?.() ?? null,
+          cell: props => (props.getValue() as any)?.toString?.() ?? null,
           ...instance._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
           ...defaultColumn,
-        } as Partial<ColumnDef<TGenerics>>
+        } as Partial<ColumnDef<TData, unknown>>
       },
       {
         debug: () => instance.options.debugAll ?? instance.options.debugColumns,
@@ -281,10 +252,10 @@ export function createTableInstance<TGenerics extends TableGenerics>(
       () => [instance._getColumnDefs()],
       columnDefs => {
         const recurseColumns = (
-          columnDefs: ColumnDef<TGenerics>[],
-          parent?: Column<TGenerics>,
+          columnDefs: ColumnDef<TData, unknown>[],
+          parent?: Column<TData, unknown>,
           depth = 0
-        ): Column<TGenerics>[] => {
+        ): Column<TData, unknown>[] => {
           return columnDefs.map(columnDef => {
             const column = createColumn(instance, columnDef, depth, parent)
 
@@ -323,7 +294,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
         return flatColumns.reduce((acc, column) => {
           acc[column.id] = column
           return acc
-        }, {} as Record<string, Column<TGenerics>>)
+        }, {} as Record<string, Column<TData, unknown>>)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',
@@ -360,7 +331,7 @@ export function createTableInstance<TGenerics extends TableGenerics>(
   Object.assign(instance, coreInstance)
 
   instance._features.forEach(feature => {
-    return Object.assign(instance, feature.createInstance?.(instance))
+    return Object.assign(instance, feature.createTable?.(instance))
   })
 
   return instance

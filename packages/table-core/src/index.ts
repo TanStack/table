@@ -1,6 +1,6 @@
 export * from './core/instance'
 export * from './types'
-export * from './createTable'
+// export * from './columnBuilder'
 export * from './core/column'
 export * from './core/headers'
 export * from './core/row'

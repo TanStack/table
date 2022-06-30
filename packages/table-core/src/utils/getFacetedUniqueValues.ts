@@ -1,8 +1,8 @@
-import { TableInstance, TableGenerics } from '../types'
+import { Table, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
-export function getFacetedUniqueValues<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>,
+export function getFacetedUniqueValues<TData extends RowData>(): (
+  instance: Table<TData>,
   columnId: string
 ) => () => Map<any, number> {
   return (instance, columnId) =>

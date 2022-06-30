@@ -1,32 +1,32 @@
 import { createRow } from '../core/row'
-import { TableInstance, Row, RowModel, TableGenerics } from '../types'
+import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
-export function getCoreRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
+export function getCoreRowModel<TData extends RowData>(): (
+  instance: Table<TData>
+) => () => RowModel<TData> {
   return instance =>
     memo(
       () => [instance.options.data],
       (
         data
       ): {
-        rows: Row<TGenerics>[]
-        flatRows: Row<TGenerics>[]
-        rowsById: Record<string, Row<TGenerics>>
+        rows: Row<TData>[]
+        flatRows: Row<TData>[]
+        rowsById: Record<string, Row<TData>>
       } => {
-        const rowModel: RowModel<TGenerics> = {
+        const rowModel: RowModel<TData> = {
           rows: [],
           flatRows: [],
           rowsById: {},
         }
 
         const accessRows = (
-          originalRows: TGenerics['Row'][],
+          originalRows: TData[],
           depth = 0,
-          parent?: Row<TGenerics>
-        ): Row<TGenerics>[] => {
-          const rows = [] as Row<TGenerics>[]
+          parent?: Row<TData>
+        ): Row<TData>[] => {
+          const rows = [] as Row<TData>[]
 
           for (let i = 0; i < originalRows.length; i++) {
             // This could be an expensive check at scale, so we should move it somewhere else, but where?
@@ -39,7 +39,7 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
             // Make the row
             const row = createRow(
               instance,
-              instance._getRowId(originalRows[i], i, parent),
+              instance._getRowId(originalRows[i]!, i, parent),
               originalRows[i],
               i,
               depth
@@ -55,7 +55,7 @@ export function getCoreRowModel<TGenerics extends TableGenerics>(): (
             // Get the original subrows
             if (instance.options.getSubRows) {
               row.originalSubRows = instance.options.getSubRows(
-                originalRows[i],
+                originalRows[i]!,
                 i
               )
 

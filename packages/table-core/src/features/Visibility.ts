@@ -4,9 +4,10 @@ import {
   Column,
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Updater,
   Row,
+  RowData,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -25,12 +26,12 @@ export type VisibilityDefaultOptions = {
   onColumnVisibilityChange: OnChangeFn<VisibilityState>
 }
 
-export type VisibilityInstance<TGenerics extends TableGenerics> = {
-  getVisibleFlatColumns: () => Column<TGenerics>[]
-  getVisibleLeafColumns: () => Column<TGenerics>[]
-  getLeftVisibleLeafColumns: () => Column<TGenerics>[]
-  getRightVisibleLeafColumns: () => Column<TGenerics>[]
-  getCenterVisibleLeafColumns: () => Column<TGenerics>[]
+export type VisibilityInstance<TData extends RowData> = {
+  getVisibleFlatColumns: () => Column<TData, unknown>[]
+  getVisibleLeafColumns: () => Column<TData, unknown>[]
+  getLeftVisibleLeafColumns: () => Column<TData, unknown>[]
+  getRightVisibleLeafColumns: () => Column<TData, unknown>[]
+  getCenterVisibleLeafColumns: () => Column<TData, unknown>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
   resetColumnVisibility: (defaultState?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
@@ -43,9 +44,9 @@ export type VisibilityColumnDef = {
   enableHiding?: boolean
 }
 
-export type VisibilityRow<TGenerics extends TableGenerics> = {
-  _getAllVisibleCells: () => Cell<TGenerics>[]
-  getVisibleCells: () => Cell<TGenerics>[]
+export type VisibilityRow<TData extends RowData> = {
+  _getAllVisibleCells: () => Cell<TData, unknown>[]
+  getVisibleCells: () => Cell<TData, unknown>[]
 }
 
 export type VisibilityColumn = {
@@ -65,17 +66,17 @@ export const Visibility: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    instance: Table<TData>
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', instance),
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
+  createColumn: <TData extends RowData>(
+    column: Column<TData, unknown>,
+    instance: Table<TData>
   ): VisibilityColumn => {
     return {
       toggleVisibility: value => {
@@ -106,10 +107,10 @@ export const Visibility: TableFeature = {
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): VisibilityRow<TGenerics> => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    instance: Table<TData>
+  ): VisibilityRow<TData> => {
     return {
       _getAllVisibleCells: memo(
         () => [row.getAllCells(), instance.getState().columnVisibility],
@@ -137,13 +138,13 @@ export const Visibility: TableFeature = {
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): VisibilityInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    instance: Table<TData>
+  ): VisibilityInstance<TData> => {
     const makeVisibleColumnsMethod = (
       key: string,
-      getColumns: () => Column<TGenerics>[]
-    ): (() => Column<TGenerics>[]) => {
+      getColumns: () => Column<TData, unknown>[]
+    ): (() => Column<TData, unknown>[]) => {
       return memo(
         () => [
           getColumns(),
