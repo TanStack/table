@@ -96,7 +96,10 @@ function App() {
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {header.renderHeader()}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -115,7 +118,14 @@ function App() {
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => <td>{cell.renderCell()}</td>}
+                  {cell => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )}
                 </For>
               </tr>
             )}

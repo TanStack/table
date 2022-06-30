@@ -202,7 +202,7 @@
                 <th colSpan={header.colSpan}>
                   <div class="whitespace-nowrap">
                     {#if !header.isPlaceholder}
-                      <svelte:component this={header.renderHeader()} />
+                      <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
                     {/if}
                   </div>
                   {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -249,7 +249,7 @@
             <tr>
               {#each row.getLeftVisibleCells() as cell}
                 <td>
-                  <svelte:component this={cell.renderCell()} />
+                  <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
                 </td>
               {/each}
             </tr>
@@ -265,7 +265,7 @@
               <th colSpan={header.colSpan}>
                 <div class="whitespace-nowrap">
                   {#if !header.isPlaceholder}
-                    <svelte:component this={header.renderHeader()} />
+                    <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
                   {/if}
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -312,7 +312,7 @@
           <tr>
             {#each isSplit ? row.getCenterVisibleCells() : row.getVisibleCells() as cell}
               <td>
-                <svelte:component this={cell.renderCell()} />
+                <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
               </td>
             {/each}
           </tr>
@@ -328,7 +328,7 @@
                 <th colSpan={header.colSpan}>
                   <div class="whitespace-nowrap">
                     {#if !header.isPlaceholder}
-                      <svelte:component this={header.renderHeader()} />
+                      <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
                     {/if}
                   </div>
                   {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -375,7 +375,7 @@
             <tr>
               {#each row.getRightVisibleCells() as cell}
                 <td>
-                  <svelte:component this={cell.renderCell()} />
+                  <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
                 </td>
               {/each}
             </tr>

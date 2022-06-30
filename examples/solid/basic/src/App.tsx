@@ -117,7 +117,12 @@ function App() {
                 <For each={headerGroup.headers}>
                   {header => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : header.renderHeader()}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </th>
                   )}
                 </For>
@@ -130,7 +135,14 @@ function App() {
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => <td>{cell.renderCell()}</td>}
+                  {cell => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )}
                 </For>
               </tr>
             )}
@@ -143,7 +155,12 @@ function App() {
                 <For each={footerGroup.headers}>
                   {header => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : header.renderFooter()}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext()
+                          )}
                     </th>
                   )}
                 </For>

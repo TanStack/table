@@ -117,7 +117,10 @@ function App() {
                               : `👊 `}
                           </button>
                         ) : null}{' '}
-                        {header.renderHeader()}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                       </div>
                     )}
                   </th>
@@ -160,7 +163,11 @@ function App() {
                             }}
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                            {cell.renderCell()} ({row.subRows.length})
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}{' '}
+                            ({row.subRows.length})
                           </button>
                         </>
                       ) : cell.getIsAggregated() ? (
@@ -169,7 +176,10 @@ function App() {
                         cell.renderAggregatedCell()
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
-                        cell.renderCell()
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       )}
                     </td>
                   )

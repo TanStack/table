@@ -122,7 +122,7 @@
                   class:select-none={header.column.getCanSort()}
                   on:click={header.column.getToggleSortingHandler()}
                 >
-                  <svelte:component this={header.renderHeader()} />
+                  <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
                   {{
                     asc: ' 🔼',
                     desc: ' 🔽',
@@ -139,7 +139,7 @@
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component this={cell.renderCell()} />
+              <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
             </td>
           {/each}
         </tr>
@@ -151,7 +151,7 @@
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={header.renderFooter()} />
+                <svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
               {/if}
             </th>
           {/each}

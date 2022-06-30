@@ -161,7 +161,12 @@ function App() {
                   {headerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
                       <div className="whitespace-nowrap">
-                        {header.isPlaceholder ? null : header.renderHeader()}
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
                         <div className="flex gap-1 justify-center">
@@ -210,7 +215,14 @@ function App() {
                   return (
                     <tr key={row.id}>
                       {row.getLeftVisibleCells().map(cell => {
-                        return <td key={cell.id}>{cell.renderCell()}</td>
+                        return (
+                          <td key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        )
                       })}
                     </tr>
                   )
@@ -228,7 +240,12 @@ function App() {
                 {headerGroup.headers.map(header => (
                   <th key={header.id} colSpan={header.colSpan}>
                     <div className="whitespace-nowrap">
-                      {header.isPlaceholder ? null : header.renderHeader()}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="flex gap-1 justify-center">
@@ -280,7 +297,14 @@ function App() {
                       ? row.getCenterVisibleCells()
                       : row.getVisibleCells()
                     ).map(cell => {
-                      return <td key={cell.id}>{cell.renderCell()}</td>
+                      return (
+                        <td key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      )
                     })}
                   </tr>
                 )
@@ -295,7 +319,12 @@ function App() {
                   {headerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
                       <div className="whitespace-nowrap">
-                        {header.isPlaceholder ? null : header.renderHeader()}
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
                         <div className="flex gap-1 justify-center">
@@ -344,7 +373,14 @@ function App() {
                   return (
                     <tr key={row.id}>
                       {row.getRightVisibleCells().map(cell => {
-                        return <td key={cell.id}>{cell.renderCell()}</td>
+                        return (
+                          <td key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        )
                       })}
                     </tr>
                   )

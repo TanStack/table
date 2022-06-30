@@ -152,7 +152,12 @@ function App() {
                       },
                     }}
                   >
-                    {header.isPlaceholder ? null : header.renderHeader()}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     <div
                       {...{
                         onMouseDown: header.getResizeHandler(),
@@ -189,7 +194,7 @@ function App() {
                       },
                     }}
                   >
-                    {cell.renderCell()}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>
@@ -226,7 +231,12 @@ function App() {
                       },
                     }}
                   >
-                    {header.isPlaceholder ? null : header.renderHeader()}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     <div
                       {...{
                         onMouseDown: header.getResizeHandler(),
@@ -273,7 +283,7 @@ function App() {
                       },
                     }}
                   >
-                    {cell.renderCell()}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </div>
                 ))}
               </div>
@@ -315,7 +325,12 @@ function App() {
                       },
                     }}
                   >
-                    {header.isPlaceholder ? null : header.renderHeader()}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     <div
                       {...{
                         onMouseDown: header.getResizeHandler(),
@@ -367,7 +382,7 @@ function App() {
                       },
                     }}
                   >
-                    {cell.renderCell()}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </div>
                 ))}
               </div>

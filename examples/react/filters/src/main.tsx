@@ -190,7 +190,10 @@ function App() {
                             onClick: header.column.getToggleSortingHandler(),
                           }}
                         >
-                          {header.renderHeader()}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -217,7 +220,14 @@ function App() {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
-                  return <td key={cell.id}>{cell.renderCell()}</td>
+                  return (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )
                 })}
               </tr>
             )

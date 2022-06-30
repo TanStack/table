@@ -143,7 +143,12 @@ function App() {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : header.renderHeader()}
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
@@ -153,7 +158,9 @@ function App() {
           {instance.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>{cell.renderCell()}</td>
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               ))}
             </tr>
           ))}
@@ -163,7 +170,12 @@ function App() {
             <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : header.renderFooter()}
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
