@@ -2,7 +2,7 @@ import { createSignal, For, Show } from 'solid-js'
 import { makeData, Person } from './makeData'
 import faker from '@faker-js/faker'
 import {
-  createTable,
+  flexRender,
   getCoreRowModel,
   createTable,
   ColumnOrderState,

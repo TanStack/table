@@ -7,7 +7,7 @@ import './index.css'
 import {
   ColumnDef,
   ColumnOrderState,
-  createTable,
+  flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'

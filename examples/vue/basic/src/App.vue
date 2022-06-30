@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  createTable,
+  flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/vue-table'

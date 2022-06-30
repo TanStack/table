@@ -7,7 +7,7 @@ import { makeData, Person } from './makeData'
 
 import {
   Column,
-  createTable,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,

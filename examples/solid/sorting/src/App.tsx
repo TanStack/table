@@ -1,5 +1,5 @@
 import {
-  createTable,
+  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   SortingState,

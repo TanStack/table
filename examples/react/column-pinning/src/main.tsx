@@ -6,7 +6,7 @@ import './index.css'
 
 import {
   ColumnOrderState,
-  createTable,
+  flexRender,
   getCoreRowModel,
   useReactTable,
   VisibilityState,

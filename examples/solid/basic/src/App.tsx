@@ -1,8 +1,4 @@
-import {
-  createTable,
-  getCoreRowModel,
-  createTable,
-} from '@tanstack/solid-table'
+import { flexRender, getCoreRowModel, createTable } from '@tanstack/solid-table'
 import { createSignal, For } from 'solid-js'
 
 type Person = {

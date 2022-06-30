@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   type ColumnOrderState,
-  createTable,
+  flexRender,
   getCoreRowModel,
   useReactTable,
   type Column,
