@@ -9,8 +9,6 @@ import {
   VisibilityState,
 } from '@tanstack/solid-table'
 
-const table = createTable().setRowType<Person>()
-
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',

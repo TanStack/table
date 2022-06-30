@@ -17,7 +17,7 @@
     progress: number
   }
 
-  const table = createTable().setRowType<Person>()
+  
 
   const defaultData: Person[] = [
     {

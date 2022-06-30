@@ -8,8 +8,6 @@ import {
 import { makeData, Person } from './makeData'
 import { createSignal, For, Show } from 'solid-js'
 
-const table = createTable().setRowType<Person>()
-
 function App() {
   const [data, setData] = createSignal(makeData(100_000))
   const [sorting, setSorting] = createSignal<SortingState>([])

@@ -20,51 +20,59 @@ import { makeData, Person } from './makeData'
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
-        header: 'Name',
-        footer: props => props.column.id,
-        columns: [
-          table.createDataColumn('firstName', {
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-      table.createGroup({
-        header: 'Info',
-        footer: props => props.column.id,
-        columns: [
-          table.createDataColumn('age', {
-            header: () => 'Age',
-            footer: props => props.column.id,
-          }),
-          table.createGroup({
-            header: 'More Info',
-            columns: [
-              table.createDataColumn('visits', {
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
-                header: 'Status',
-                footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-              }),
-            ],
-          }),
-        ],
-      }),
+      [
+        {
+          header: 'Name',
+          footer: props => props.column.id,
+          columns: [
+            {
+              accessorKey: 'firstName',
+              cell: info => info.getValue(),
+              footer: props => props.column.id,
+            },
+            {
+              accessorFn: row => row.lastName,
+              id: 'lastName',
+              cell: info => info.getValue(),
+              header: () => <span>Last Name</span>,
+              footer: props => props.column.id,
+            },
+          ],
+        },
+        {
+          header: 'Info',
+          footer: props => props.column.id,
+          columns: [
+            {
+              accessorKey: 'age',
+              header: () => 'Age',
+              footer: props => props.column.id,
+            },
+            {
+              header: 'More Info',
+              columns: [
+                {
+                  accessorKey: 'visits',
+                  header: () => <span>Visits</span>,
+                  footer: props => props.column.id,
+                },
+                {
+                  accessorKey: 'status',
+                  header: 'Status',
+                  footer: props => props.column.id,
+                },
+                {
+                  accessorKey: 'progress',
+                  header: 'Profile Progress',
+                  footer: props => props.column.id,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     ],
     []
   )

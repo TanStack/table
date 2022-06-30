@@ -8,6 +8,8 @@ import {
   useReactTable,
   ColumnResizeMode,
   getCoreRowModel,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 
 type Person = {

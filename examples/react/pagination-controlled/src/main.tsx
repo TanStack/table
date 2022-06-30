@@ -10,6 +10,8 @@ import {
   PaginationState,
   useReactTable,
   getCoreRowModel,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 
 //
@@ -21,51 +23,57 @@ const queryClient = new QueryClient()
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -97,7 +105,7 @@ function App() {
     [pageIndex, pageSize]
   )
 
-  const instance = 
+  const instance = useReactTable({
     data: dataQuery.data?.rows ?? defaultData,
     columns,
     pageCount: dataQuery.data?.pageCount ?? -1,
@@ -122,7 +130,12 @@ function App() {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
-                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                      <div>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </div>
                     )}
                   </th>
                 )
@@ -135,7 +148,14 @@ function App() {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
-                  return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  return (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )
                 })}
               </tr>
             )

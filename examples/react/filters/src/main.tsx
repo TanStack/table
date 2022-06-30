@@ -17,6 +17,10 @@ import {
   getPaginationRowModel,
   sortingFns,
   getSortedRowModel,
+  FilterFn,
+  SortingFn,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 
 import {
@@ -28,41 +32,31 @@ import {
 
 import { makeData, Person } from './makeData'
 
-let table = createTable()
-  .setRowType<Person>()
-  .setFilterMetaType<RankingInfo>()
-  .setOptions({
-    filterFns: {
-      fuzzy: (row, columnId, value, addMeta) => {
-        // Rank the item
-        const itemRank = rankItem(row.getValue(columnId), value, {
-          threshold: rankings.MATCHES,
-        })
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
 
-        // Store the ranking info
-        addMeta(itemRank)
+  // Store the ranking info
+  addMeta(itemRank)
 
-        // Return if the item should be filtered in/out
-        return itemRank.passed
-      },
-    },
-    sortingFns: {
-      fuzzy: (rowA, rowB, columnId) => {
-        let dir = 0
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
 
-        // Only sort by rank if the column has ranking information
-        if (rowA.columnFiltersMeta[columnId]) {
-          dir = compareItems(
-            rowA.columnFiltersMeta[columnId]!,
-            rowB.columnFiltersMeta[columnId]!
-          )
-        }
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0
 
-        // Provide a fallback for when the item ranks are equal
-        return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
-      },
-    },
-  })
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]!,
+      rowB.columnFiltersMeta[columnId]!
+    )
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -72,59 +66,66 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => `${row.firstName} ${row.lastName}`, {
+          },
+          {
+            accessorFn: row => `${row.firstName} ${row.lastName}`,
             id: 'fullName',
             header: 'Full Name',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-            filterFn: 'fuzzy',
-            sortingFn: 'fuzzy',
-          }),
+            filterFn: fuzzyFilter,
+            sortingFn: fuzzySort,
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -141,7 +142,7 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: 'fuzzy',
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -312,7 +313,7 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any>
+  column: Column<any, any>
   instance: Table<any>
 }) {
   const firstValue = instance

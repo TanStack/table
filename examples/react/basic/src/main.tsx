@@ -5,6 +5,7 @@ import './index.css'
 
 import {
   ColumnDef,
+  flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
@@ -45,7 +46,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const columns: ColumnDef<{ Row: Person }>[] = [
+const columns: ColumnDef<Person>[] = [
   {
     header: 'Name',
     footer: props => props.column.id,

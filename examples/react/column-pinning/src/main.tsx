@@ -5,6 +5,7 @@ import faker from '@faker-js/faker'
 import './index.css'
 
 import {
+  ColumnDef,
   ColumnOrderState,
   flexRender,
   getCoreRowModel,

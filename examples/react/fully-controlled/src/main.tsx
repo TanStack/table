@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -19,8 +20,6 @@ type Person = {
   status: string
   progress: number
 }
-
-const table = createTable().setRowType<Person>()
 
 const defaultColumns: ColumnDef<Person>[] = [
   {

@@ -9,7 +9,7 @@
   import { makeData, Person } from './makeData'
   import './index.css'
 
-  const table = createTable().setRowType<Person>()
+  
 
   const columns = [
     table.createGroup({

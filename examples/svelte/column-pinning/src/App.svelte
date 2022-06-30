@@ -10,7 +10,7 @@
   import faker from '@faker-js/faker'
   import './index.css'
 
-  const table = createTable().setRowType<Person>()
+  
 
   const columns = [
     table.createGroup({
