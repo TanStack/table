@@ -12,8 +12,6 @@ import {
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable().setRowType<Person>()
-
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -74,7 +72,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const instance = useReactTable(table, {
+  const instance = useReactTable({
     data,
     columns,
     state: {

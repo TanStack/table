@@ -13,8 +13,6 @@ import {
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable().setRowType<Person>()
-
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
@@ -76,7 +74,7 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const instance = useReactTable(table, {
+  const instance = useReactTable({
     data,
     columns,
     state: {

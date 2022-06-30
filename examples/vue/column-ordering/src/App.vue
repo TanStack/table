@@ -11,8 +11,6 @@ import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import faker from '@faker-js/faker'
 
-let table = createTable().setRowType<Person>()
-
 const defaultColumns = [
   table.createGroup({
     header: 'Name',
@@ -66,7 +64,7 @@ const columnOrder = ref<ColumnOrderState>([])
 
 const rerender = () => (data.value = makeData(20))
 
-const instance = useReactTable(table, {
+const instance =
   get data() {
     return data.value
   },

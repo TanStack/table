@@ -371,7 +371,7 @@ Example:
 ```tsx
 import { getFilteredRowModel } from '@tanstack/[adapter]-table'
 
-useReactTable(table, {
+
   getFilteredRowModel: getFilteredRowModel(),
 })
 ```

@@ -96,7 +96,7 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const instance = useReactTable(table, {
+const instance =
   get data() {
     return data.value
   },

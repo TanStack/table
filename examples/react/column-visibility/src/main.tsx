@@ -45,8 +45,6 @@ const defaultData: Person[] = [
   },
 ]
 
-let table = createTable().setRowType<Person>()
-
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
@@ -108,7 +106,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useReactTable(table, {
+  const instance = useReactTable({
     data,
     columns,
     state: {

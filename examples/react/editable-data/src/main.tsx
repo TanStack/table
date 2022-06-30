@@ -125,7 +125,7 @@ function App() {
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const instance = useReactTable(table, {
+  const instance = useReactTable({
     data,
     columns,
     defaultColumn,

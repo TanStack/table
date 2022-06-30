@@ -14,8 +14,6 @@ import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import faker from '@faker-js/faker'
 
-let table = createTable().setRowType<Person>()
-
 const defaultColumns = [
   table.createGroup({
     header: 'Name',
@@ -72,7 +70,7 @@ const isSplit = ref(false)
 
 const rerender = () => (data.value = makeData(5000))
 
-const instance = useReactTable(table, {
+const instance =
   get data() {
     return data.value
   },

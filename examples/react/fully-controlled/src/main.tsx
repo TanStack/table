@@ -83,7 +83,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // Create the instance and pass your options
-  const instance = useReactTable(table, {
+  const instance = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

@@ -18,8 +18,6 @@ import { fetchData, Person } from './fetchData'
 
 const queryClient = new QueryClient()
 
-let table = createTable().setRowType<Person>()
-
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -99,7 +97,7 @@ function App() {
     [pageIndex, pageSize]
   )
 
-  const instance = useReactTable(table, {
+  const instance = 
     data: dataQuery.data?.rows ?? defaultData,
     columns,
     pageCount: dataQuery.data?.pageCount ?? -1,

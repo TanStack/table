@@ -23,8 +23,6 @@ import {
 import { makeData, Person } from './makeData'
 import { TableWorker } from './tableWorker'
 
-let table = createTable().setRowType<Person>()
-
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -85,7 +83,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(500000))
   const refreshData = () => setData(old => makeData(500000))
 
-  const instance = useReactTable(table, {
+  const instance = useReactTable({
     data,
     columns,
     state: {
