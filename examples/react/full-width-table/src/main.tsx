@@ -5,7 +5,7 @@ import './index.css'
 import {
   createTable,
   PaginationState,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   ColumnDef,
@@ -103,7 +103,7 @@ function Table({
   pagination: PaginationState
   setPagination: OnChangeFn<PaginationState>
 }) {
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -214,8 +214,8 @@ function Table({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

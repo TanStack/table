@@ -3,7 +3,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  createTableInstance,
+  createTable,
 } from '@tanstack/solid-table'
 import { makeData, Person } from './makeData'
 import { createSignal, For, Show } from 'solid-js'
@@ -61,7 +61,7 @@ function App() {
     }),
   ]
 
-  const instance = createTableInstance(table, {
+  const instance = createTable(table, {
     get data() {
       return data()
     },

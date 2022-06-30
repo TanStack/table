@@ -12,7 +12,7 @@ import Logo from './Logo'
 
 interface DevtoolsOptions {
   /**
-   * The react table instance to attach the devtools to.
+   * The react table to attach the devtools to.
    */
   instance: any
   /**
@@ -50,7 +50,7 @@ interface DevtoolsOptions {
 
 interface DevtoolsPanelOptions {
   /**
-   * The react table instance to attach the devtools to.
+   * The react table to attach the devtools to.
    */
   instance: any
   /**

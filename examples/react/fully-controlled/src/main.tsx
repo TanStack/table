@@ -7,7 +7,7 @@ import {
   createTable,
   getCoreRowModel,
   getPaginationRowModel,
-  useTableInstance,
+  useReactTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 
@@ -77,7 +77,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // Create the instance and pass your options
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -87,7 +87,7 @@ function App() {
   // Manage your own state
   const [state, setState] = React.useState(instance.initialState)
 
-  // Override the state managers for the table instance to your own
+  // Override the state managers for the table to your own
   instance.setOptions(prev => ({
     ...prev,
     state,
@@ -206,8 +206,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

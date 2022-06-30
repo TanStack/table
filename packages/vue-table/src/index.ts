@@ -22,7 +22,7 @@ export function flexRender<TProps extends {}>(
   return Comp
 }
 
-export function useReactTable<TData extends RowData>(
+export function useVueTable<TData extends RowData>(
   options: TableOptions<TData>
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeProxy(

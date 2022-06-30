@@ -27,7 +27,7 @@ React.useEffect(() => {
   skipPageResetRef.current = false
 })
 
-useTableInstance({
+useReactTable({
   ...
   autoResetPageIndex: !skipPageResetRef.current,
   autoResetExpanded: !skipPageResetRef.current,

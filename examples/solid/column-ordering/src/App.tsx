@@ -4,7 +4,7 @@ import faker from '@faker-js/faker'
 import {
   createTable,
   getCoreRowModel,
-  createTableInstance,
+  createTable,
   ColumnOrderState,
   VisibilityState,
 } from '@tanstack/solid-table'
@@ -65,7 +65,7 @@ function App() {
   )
   const rerender = () => setData(() => makeData(20))
 
-  const instance = createTableInstance(table, {
+  const instance = createTable(table, {
     get data() {
       return data()
     },

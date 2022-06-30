@@ -98,7 +98,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   },
 ]
 
-describe('useTableInstance', () => {
+describe('useReactTable', () => {
   it('can toggle column visibility', () => {
     const Table = () => {
       const [data] = React.useState<Person[]>(() => [...defaultData])

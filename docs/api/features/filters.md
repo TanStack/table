@@ -22,7 +22,7 @@ The ability for a column to be **globally** filtered is determined by the follow
 
 ## State
 
-Filter state is stored on the table instance using the following shape:
+Filter state is stored on the table using the following shape:
 
 ```tsx
 export type FiltersTableState = {
@@ -115,7 +115,6 @@ This optional "hanging" method on any given `filterFn` is passed a filter value 
 Filter functions can be used/referenced/defined by passing the following to `columnDefinition.filterFn` or `options.globalFilterFn`:
 
 - A `string` that references a built-in filter function
-- A `string` that references a custom filter functions provided via the `tableOptions.filterFns` option
 - A function directly provided to the `columnDefinition.filterFn` option
 
 The final list of filter functions available for the `columnDef.filterFn` and ``tableOptions.globalFilterFn` options use the following type:
@@ -136,59 +135,35 @@ To make a ranking/filtering/sorting system work with tables, `filterFn`s can opt
 Below is an example using our own `match-sorter-utils` package (a utility fork of `match-sorter`) to rank, filter, and sort the data
 
 ```tsx
-import {
-  Column,
-  createTable,
-  TableInstance,
-  useTableInstance,
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  getPaginationRowModel,
-  sortingFns,
-} from '@tanstack/react-table'
+import { sortingFns } from '@tanstack/react-table'
 
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from '@tanstack/match-sorter-utils'
+import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
 
-let table = createTable()
-  .setFilterMetaType<RankingInfo>()
-  .setOptions({
-    filterFns: {
-      fuzzy: (row, columnId, value, addMeta) => {
-        // Rank the item
-        const itemRank = rankItem(row.getValue(columnId), value)
+const fuzzyFilter = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
 
-        // Store the ranking info
-        addMeta(itemRank)
+  // Store the ranking info
+  addMeta(itemRank)
 
-        // Return if the item should be filtered in/out
-        return itemRank.passed
-      },
-    },
-    sortingFns: {
-      fuzzy: (rowA, rowB, columnId) => {
-        let dir = 0
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
 
-        // Only sort by rank if the column has ranking information
-        if (rowA.columnFiltersMeta[columnId]) {
-          dir = compareItems(
-            rowA.columnFiltersMeta[columnId]!,
-            rowB.columnFiltersMeta[columnId]!
-          )
-        }
+const fuzzySort = (rowA, rowB, columnId) => {
+  let dir = 0
 
-        // Provide an alphanumeric fallback for when the item ranks are equal
-        return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
-      },
-    },
-  })
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]!,
+      rowB.columnFiltersMeta[columnId]!
+    )
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 ```
 
 ## Column Def Options
@@ -346,30 +321,6 @@ filterFromLeafRows?: boolean
 
 By default, filtering is done from parent rows down (so if a parent row is filtered out, all of its children will be filtered out as well). Setting this option to `true` will cause filtering to be done from leaf rows up (which means parent rows will be included so long as one of their child or grand-child rows is also included).
 
-### `filterFns`
-
-```tsx
-filterFns?: Record<string, FilterFn>
-```
-
-Normally set ahead of time when using the `createTable()` helper, this option allows you to define custom filter functions that can be referenced by their string key.
-
-Example:
-
-```tsx
-const table = createTable().setOptions({
-  filterFns: {
-    myCustomFilterFn: (rows, columnIds, filterValue) => {
-      // return the filtered rows
-    },
-  },
-})
-
-const column = table.createDataColumn('key', {
-  filterFn: 'myCustomFilterFn',
-})
-```
-
 ### `enableFilters`
 
 ```tsx
@@ -406,11 +357,11 @@ Enables/disables **all** column filters for the table. For option priority, see 
 
 ```tsx
 getFilteredRowModel?: (
-  instance: TableInstance<TData>
+  instance: Table<TData>
 ) => () => RowModel<TData>
 ```
 
-If provided, this function is called **once** per table instance and should return a **new function** which will calculate and return the row model for the table when it's filtered.
+If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
 
 - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
 - For client-side filtering, this function is required. A default implementation is provided via any table adapter's `{ getFilteredRowModel }` export.
@@ -420,7 +371,7 @@ Example:
 ```tsx
 import { getFilteredRowModel } from '@tanstack/[adapter]-table'
 
-useTableInstance(table, {
+useReactTable(table, {
   getFilteredRowModel: getFilteredRowModel(),
 })
 ```

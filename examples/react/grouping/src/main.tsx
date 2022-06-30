@@ -6,7 +6,7 @@ import './index.css'
 import {
   createTable,
   GroupingState,
-  useTableInstance,
+  useReactTable,
   getPaginationRowModel,
   getFilteredRowModel,
   getCoreRowModel,
@@ -77,7 +77,7 @@ function App() {
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -255,8 +255,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

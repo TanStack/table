@@ -8,7 +8,7 @@ import './index.css'
 import {
   createTable,
   PaginationState,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
 } from '@tanstack/react-table'
 
@@ -99,7 +99,7 @@ function App() {
     [pageIndex, pageSize]
   )
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data: dataQuery.data?.rows ?? defaultData,
     columns,
     pageCount: dataQuery.data?.pageCount ?? -1,
@@ -216,8 +216,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

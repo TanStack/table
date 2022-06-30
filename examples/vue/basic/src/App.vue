@@ -2,7 +2,7 @@
 import {
   createTable,
   getCoreRowModel,
-  useTableInstance,
+  useReactTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
@@ -96,7 +96,7 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const instance = useTableInstance(table, {
+const instance = useReactTable(table, {
   get data() {
     return data.value
   },

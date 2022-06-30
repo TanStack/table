@@ -59,7 +59,7 @@ export function useReactTable<TData extends RowData>(
     ...options,
   }
 
-  // Create a new table instance and store it in state
+  // Create a new table and store it in state
   const [instanceRef] = React.useState(() => ({
     current: createTable<TData>(resolvedOptions),
   }))

@@ -5,7 +5,7 @@ id: pagination
 
 ## State
 
-Pagination state is stored on the table instance using the following shape:
+Pagination state is stored on the table using the following shape:
 
 ```tsx
 export type PaginationState = {
@@ -61,7 +61,7 @@ If this function is provided, it will be called when the pagination state change
 ### `getPaginationRowModel`
 
 ```tsx
-getPaginationRowModel?: (instance: TableInstance<TData>) => () => RowModel<TData>
+getPaginationRowModel?: (instance: Table<TData>) => () => RowModel<TData>
 ```
 
 Returns the row model after pagination has taken place, but no further.

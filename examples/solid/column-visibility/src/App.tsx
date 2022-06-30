@@ -1,7 +1,7 @@
 import {
   createTable,
   getCoreRowModel,
-  createTableInstance,
+  createTable,
   VisibilityState,
 } from '@tanstack/solid-table'
 import { createSignal, For, Show } from 'solid-js'
@@ -97,7 +97,7 @@ function App() {
   )
   const rerender = () => setData(defaultData)
 
-  const instance = createTableInstance(table, {
+  const instance = createTable(table, {
     get data() {
       return data()
     },

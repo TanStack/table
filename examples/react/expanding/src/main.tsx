@@ -6,9 +6,9 @@ import './index.css'
 import {
   createTable,
   Column,
-  TableInstance,
+  Table,
   ExpandedState,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
@@ -125,7 +125,7 @@ function App() {
 
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -260,7 +260,7 @@ function Filter({
   instance,
 }: {
   column: Column<any>
-  instance: TableInstance<any>
+  instance: Table<any>
 }) {
   const firstValue = instance
     .getPreFilteredRowModel()
@@ -329,8 +329,8 @@ function IndeterminateCheckbox({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

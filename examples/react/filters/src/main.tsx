@@ -6,8 +6,8 @@ import './index.css'
 import {
   Column,
   createTable,
-  TableInstance,
-  useTableInstance,
+  Table,
+  useReactTable,
   ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
@@ -132,7 +132,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(50000))
   const refreshData = () => setData(old => makeData(50000))
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -303,7 +303,7 @@ function Filter({
   instance,
 }: {
   column: Column<any>
-  instance: TableInstance<any>
+  instance: Table<any>
 }) {
   const firstValue = instance
     .getPreFilteredRowModel()
@@ -405,8 +405,8 @@ function DebouncedInput({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

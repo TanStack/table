@@ -5,7 +5,7 @@ id: sorting
 
 ## State
 
-Sorting state is stored on the table instance using the following shape:
+Sorting state is stored on the table using the following shape:
 
 ```tsx
 export type SortDirection = 'asc' | 'desc'
@@ -229,7 +229,7 @@ Returns a function that can be used to toggle this column's sorting state. This 
 manualSorting?: boolean
 ```
 
-Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table instance. This is useful if you are doing server-side sorting.
+Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table. This is useful if you are doing server-side sorting.
 
 ### `onSortingChange`
 
@@ -282,10 +282,10 @@ If `true`, all sorts will default to descending as their first toggle state.
 ### `getSortedRowModel`
 
 ```tsx
-getSortedRowModel?: (instance: TableInstance<TData>) => () => RowModel<TData>
+getSortedRowModel?: (instance: Table<TData>) => () => RowModel<TData>
 ```
 
-This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table instance or implement your own.
+This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
 
 ### `maxMultiSortColCount`
 

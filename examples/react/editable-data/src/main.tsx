@@ -8,9 +8,9 @@ import './index.css'
 import {
   createTable,
   Column,
-  TableInstance,
+  Table,
   ColumnDef,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -125,7 +125,7 @@ function App() {
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     defaultColumn,
@@ -272,7 +272,7 @@ function Filter({
   instance,
 }: {
   column: Column<any>
-  instance: TableInstance<any>
+  instance: Table<any>
 }) {
   const firstValue = instance
     .getPreFilteredRowModel()
@@ -318,8 +318,8 @@ function Filter({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

@@ -5,7 +5,7 @@ import './index.css'
 
 import {
   createTable,
-  useTableInstance,
+  useReactTable,
   ColumnResizeMode,
   getCoreRowModel,
 } from '@tanstack/react-table'
@@ -105,7 +105,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     columnResizeMode,
@@ -389,8 +389,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

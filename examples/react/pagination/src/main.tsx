@@ -6,9 +6,9 @@ import './index.css'
 import {
   createTable,
   Column,
-  TableInstance,
+  Table,
   PaginationState,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -112,7 +112,7 @@ function Table({
   pagination: PaginationState
   setPagination: OnChangeFn<PaginationState>
 }) {
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -239,7 +239,7 @@ function Filter({
   instance,
 }: {
   column: Column<any>
-  instance: TableInstance<any>
+  instance: Table<any>
 }) {
   const firstValue = instance
     .getPreFilteredRowModel()
@@ -285,8 +285,8 @@ function Filter({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

@@ -5,7 +5,7 @@ id: grouping
 
 ## State
 
-Grouping state is stored on the table instance using the following shape:
+Grouping state is stored on the table using the following shape:
 
 ```tsx
 export type GroupingState = string[]
@@ -91,7 +91,7 @@ Options:
 ```tsx
 aggregatedCell?: Renderable<
   {
-    instance: TableInstance<TData>
+    instance: Table<TData>
     row: Row<TData>
     column: Column<TData, TValue>
     cell: Cell<TData, TValue>
@@ -229,7 +229,7 @@ Enables/disables grouping for all columns.
 ### `getGroupedRowModel`
 
 ```tsx
-getGroupedRowModel?: (instance: TableInstance<TData>) => () => RowModel<TData>
+getGroupedRowModel?: (instance: Table<TData>) => () => RowModel<TData>
 ```
 
 Returns the row model after grouping has taken place, but no further.

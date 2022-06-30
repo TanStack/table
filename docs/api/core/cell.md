@@ -14,7 +14,7 @@ All cell objects have the following properties:
 id: string
 ```
 
-The unique ID for the cell across the entire table instance.
+The unique ID for the cell across the entire table.
 
 ### `getValue`
 

@@ -3,7 +3,7 @@
   import {
     createTable,
     getCoreRowModel,
-    createTableInstance,
+    createTable,
     getSortedRowModel,
   } from '@tanstack/svelte-table'
   import { makeData, Person } from './makeData'
@@ -105,7 +105,7 @@
     }))
   }
 
-  const instance = createTableInstance(table, options)
+  const instance = createTable(table, options)
 </script>
 
 <div class="p-2">

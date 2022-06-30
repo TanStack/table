@@ -25,8 +25,6 @@ The unique identifier for the column.
 accessorKey?: string & typeof TData
 ```
 
-> ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
-
 The key of the row object to use when extracting the value for the column.
 
 ### `accessorFn`
@@ -34,8 +32,6 @@ The key of the row object to use when extracting the value for the column.
 ```tsx
 accessorFn?: (originalRow: TData, index: number) => any
 ```
-
-> ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createDataColumn()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
 
 The accessor function to use when extracting the value for the column from each row.
 
@@ -45,8 +41,6 @@ The accessor function to use when extracting the value for the column from each 
 columns?: ColumnDef<TData, TValue>[]
 ```
 
-> ⚠️ While column defs _are_ just objects and this is a valid option, you should probably be using the [`table.createGroup()` utility](../guide/tables.md) instead, which will provide much better type safety and autocomplete.
-
 The child column defs to include in a group column.
 
 ### `header`
@@ -55,7 +49,7 @@ The child column defs to include in a group column.
 header?:
   | string
   | ((props: {
-      instance: TableInstance<TData>
+      instance: Table<TData>
       header: Header<TData>
       column: Column<TData, TValue>
     }) => unknown)
@@ -69,7 +63,7 @@ The header to display for the column. If a string is passed, it can be used as a
 footer?:
   | string
   | ((props: {
-      instance: TableInstance<TData>
+      instance: Table<TData>
       header: Header<TData>
       column: Column<TData, TValue>
     }) => unknown)
@@ -81,7 +75,7 @@ The footer to display for the column. If a function is passed, it will be passed
 
 ```tsx
 cell?: ((props: {
-  instance: TableInstance<TData>
+  instance: Table<TData>
   row: Row<TData>
   column: Column<TData, TValue>
   cell: Cell<TData>

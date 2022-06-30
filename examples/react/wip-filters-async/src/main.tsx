@@ -12,8 +12,8 @@ import './index.css'
 import {
   Column,
   createTable,
-  TableInstance,
-  useTableInstance,
+  Table,
+  useReactTable,
   ColumnFiltersState,
   //
   getPaginationRowModel,
@@ -85,7 +85,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(500000))
   const refreshData = () => setData(old => makeData(500000))
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -200,7 +200,7 @@ function Filter({
   instance,
 }: {
   column: Column<any>
-  instance: TableInstance<any>
+  instance: Table<any>
 }) {
   const firstValue = instance
     .getPreFilteredRowModel()
@@ -303,8 +303,8 @@ function Filter({
 const strictMode = false
 const StrictWrapper = strictMode ? React.StrictMode : React.Fragment
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <StrictWrapper>

@@ -38,7 +38,7 @@ The index of the row within its parent array (or the root data array)
 original?: TData
 ```
 
-The original row object provided to the table instance
+The original row object provided to the table
 
 ### `getValue`
 

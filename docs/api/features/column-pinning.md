@@ -12,7 +12,7 @@ The ability for a column to be **pinned** is determined by the following:
 
 ## State
 
-Column pinning state is stored on the table instance using the following shape:
+Column pinning state is stored on the table using the following shape:
 
 ```tsx
 export type ColumnPinningPosition = false | 'left' | 'right'

@@ -29,7 +29,7 @@ export type RowSelectionOptions<TData extends RowData> = {
   // isAdditiveSelectEvent?: (e: unknown) => boolean
   // isInclusiveSelectEvent?: (e: unknown) => boolean
   // selectRowsFn?: (
-  //   instance: TableInstance<
+  //   instance: Table<
   //     TData,
   //     TValue,
   //     TFilterFns,

@@ -5,7 +5,7 @@ id: row-selection
 
 ## State
 
-Row selection state is stored on the table instance using the following shape:
+Row selection state is stored on the table using the following shape:
 
 ```tsx
 export type RowSelectionState = Record<string, boolean>

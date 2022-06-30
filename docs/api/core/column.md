@@ -44,14 +44,6 @@ columnDef: ColumnDef<TData, TValue>
 
 The original column def used to create the column.
 
-### `columnDefType`
-
-```tsx
-columnDefType: 'data' | 'display' | 'group'
-```
-
-The type of column def that was used to create the column. See the [`createTable()` API](../guide/tables.md#createtable) for more information.
-
 ### `columns`
 
 ```tsx

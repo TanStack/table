@@ -5,7 +5,7 @@ id: column-sizing
 
 ## State
 
-Column sizing state is stored on the table instance using the following shape:
+Column sizing state is stored on the table using the following shape:
 
 ```tsx
 export type ColumnSizingTableState = {
@@ -176,7 +176,7 @@ This optional function will be called when the columnSizingInfo state changes. I
 setColumnSizing: (updater: Updater<ColumnSizingState>) => void
 ```
 
-Sets the column sizing state using an updater function or a value. This will trigger the underlying `onColumnSizingChange` function if one is passed to the table instance options, otherwise the state will be managed automatically by the table.
+Sets the column sizing state using an updater function or a value. This will trigger the underlying `onColumnSizingChange` function if one is passed to the table options, otherwise the state will be managed automatically by the table.
 
 ### `setColumnSizingInfo`
 
@@ -184,7 +184,7 @@ Sets the column sizing state using an updater function or a value. This will tri
 setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
 ```
 
-Sets the column sizing info state using an updater function or a value. This will trigger the underlying `onColumnSizingInfoChange` function if one is passed to the table instance options, otherwise the state will be managed automatically by the table.
+Sets the column sizing info state using an updater function or a value. This will trigger the underlying `onColumnSizingInfoChange` function if one is passed to the table options, otherwise the state will be managed automatically by the table.
 
 ### `resetColumnSizing`
 

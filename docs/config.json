@@ -42,32 +42,28 @@
           "to": "guide/02-installation"
         },
         {
-          "label": "Tables",
-          "to": "guide/03-tables"
-        },
-        {
           "label": "Column Defs",
-          "to": "guide/04-column-defs"
+          "to": "guide/03-column-defs"
         },
         {
           "label": "Table Instances",
-          "to": "guide/05-table-instances"
+          "to": "guide/04-tables"
         },
         {
           "label": "Rows",
-          "to": "guide/06-rows"
+          "to": "guide/05-rows"
         },
         {
           "label": "Headers",
-          "to": "guide/07-headers"
+          "to": "guide/06-headers"
         },
         {
           "label": "Cells",
-          "to": "guide/08-cells"
+          "to": "guide/07-cells"
         },
         {
           "label": "Features",
-          "to": "guide/09-features"
+          "to": "guide/08-features"
         },
         {
           "label": "Column Ordering",
@@ -115,16 +111,12 @@
       "label": "Core APIs",
       "children": [
         {
-          "label": "Table",
-          "to": "api/core/table"
-        },
-        {
           "label": "Column Def",
           "to": "api/core/column-def"
         },
         {
-          "label": "Table Instance",
-          "to": "api/core/table-instance"
+          "label": "Table",
+          "to": "api/core/table"
         },
         {
           "label": "Column",

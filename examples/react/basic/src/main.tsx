@@ -6,7 +6,7 @@ import './index.css'
 import {
   ColumnDef,
   getCoreRowModel,
-  useTableInstance,
+  useReactTable,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -101,7 +101,7 @@ function App() {
   const [data, setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useTableInstance({
+  const instance = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

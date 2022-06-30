@@ -72,7 +72,6 @@ export type CoreColumn<TData extends RowData, TValue> = {
   depth: number
   accessorFn?: AccessorFn<TData>
   columnDef: ColumnDef<TData, TValue>
-  columnDefType: CoreColumnDefType
   columns: Column<TData, unknown>[]
   parent?: Column<TData, unknown>
   getFlatColumns: () => Column<TData, unknown>[]
@@ -81,7 +80,7 @@ export type CoreColumn<TData extends RowData, TValue> = {
 
 export function createColumn<TData extends RowData, TValue>(
   instance: Table<TData>,
-  columnDef: ColumnDef<TData, TValue> & { columnDefType?: CoreColumnDefType },
+  columnDef: ColumnDef<TData, TValue>,
   depth: number,
   parent?: Column<TData, TValue>
 ) {
@@ -125,7 +124,6 @@ export function createColumn<TData extends RowData, TValue>(
     parent: parent as any,
     depth,
     columnDef,
-    columnDefType: columnDef.columnDefType as CoreColumnDefType,
     columns: [],
     getFlatColumns: memo(
       () => [true],

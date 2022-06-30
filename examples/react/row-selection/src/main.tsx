@@ -11,8 +11,8 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  TableInstance,
-  useTableInstance,
+  Table,
+  useReactTable,
 } from '@tanstack/react-table'
 
 let table = createTable().setRowType<Person>()
@@ -98,7 +98,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -288,7 +288,7 @@ function Filter({
   instance,
 }: {
   column: Column<any>
-  instance: TableInstance<any>
+  instance: Table<any>
 }) {
   const firstValue = instance
     .getPreFilteredRowModel()
@@ -349,8 +349,8 @@ function IndeterminateCheckbox({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

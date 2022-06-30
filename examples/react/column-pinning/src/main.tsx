@@ -8,7 +8,7 @@ import {
   ColumnOrderState,
   createTable,
   getCoreRowModel,
-  useTableInstance,
+  useReactTable,
   VisibilityState,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -73,7 +73,7 @@ function App() {
   const [isSplit, setIsSplit] = React.useState(false)
   const rerender = () => setData(() => makeData(5000))
 
-  const instance = useTableInstance(table, {
+  const instance = useReactTable(table, {
     data,
     columns,
     state: {
@@ -354,8 +354,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
