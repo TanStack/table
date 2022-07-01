@@ -111,7 +111,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     columnResizeMode,
@@ -137,12 +137,12 @@ function App() {
         <table
           {...{
             style: {
-              width: instance.getCenterTotalSize(),
+              width: table.getCenterTotalSize(),
             },
           }}
         >
           <thead>
-            {instance.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                   <th
@@ -172,8 +172,7 @@ function App() {
                             columnResizeMode === 'onEnd' &&
                             header.column.getIsResizing()
                               ? `translateX(${
-                                  instance.getState().columnSizingInfo
-                                    .deltaOffset
+                                  table.getState().columnSizingInfo.deltaOffset
                                 }px)`
                               : '',
                         },
@@ -185,7 +184,7 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {instance.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map(row => (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => (
                   <td
@@ -211,12 +210,12 @@ function App() {
           {...{
             className: 'divTable',
             style: {
-              width: instance.getTotalSize(),
+              width: table.getTotalSize(),
             },
           }}
         >
           <div className="thead">
-            {instance.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map(headerGroup => (
               <div
                 {...{
                   key: headerGroup.id,
@@ -251,8 +250,7 @@ function App() {
                             columnResizeMode === 'onEnd' &&
                             header.column.getIsResizing()
                               ? `translateX(${
-                                  instance.getState().columnSizingInfo
-                                    .deltaOffset
+                                  table.getState().columnSizingInfo.deltaOffset
                                 }px)`
                               : '',
                         },
@@ -268,7 +266,7 @@ function App() {
               className: 'tbody',
             }}
           >
-            {instance.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map(row => (
               <div
                 {...{
                   key: row.id,
@@ -300,12 +298,12 @@ function App() {
           {...{
             className: 'divTable',
             style: {
-              width: instance.getTotalSize(),
+              width: table.getTotalSize(),
             },
           }}
         >
           <div className="thead">
-            {instance.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map(headerGroup => (
               <div
                 {...{
                   key: headerGroup.id,
@@ -345,8 +343,7 @@ function App() {
                             columnResizeMode === 'onEnd' &&
                             header.column.getIsResizing()
                               ? `translateX(${
-                                  instance.getState().columnSizingInfo
-                                    .deltaOffset
+                                  table.getState().columnSizingInfo.deltaOffset
                                 }px)`
                               : '',
                         },
@@ -362,7 +359,7 @@ function App() {
               className: 'tbody',
             }}
           >
-            {instance.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map(row => (
               <div
                 {...{
                   key: row.id,
@@ -399,8 +396,8 @@ function App() {
       <pre>
         {JSON.stringify(
           {
-            columnSizing: instance.getState().columnSizing,
-            columnSizingInfo: instance.getState().columnSizingInfo,
+            columnSizing: table.getState().columnSizing,
+            columnSizingInfo: table.getState().columnSizingInfo,
           },
           null,
           2

@@ -1,4 +1,4 @@
-import { CoreOptions, CoreTableState, CoreInstance } from './core/instance'
+import { CoreOptions, CoreTableState, CoreInstance } from './core/table'
 import { CoreColumn, CoreColumnDef } from './core/column'
 import {
   VisibilityInstance,

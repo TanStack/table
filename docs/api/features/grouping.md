@@ -91,7 +91,7 @@ Options:
 ```tsx
 aggregatedCell?: Renderable<
   {
-    instance: Table<TData>
+    table: Table<TData>
     row: Row<TData>
     column: Column<TData>
     cell: Cell<TData>
@@ -230,7 +230,7 @@ Enables/disables grouping for all columns.
 ### `getGroupedRowModel`
 
 ```tsx
-getGroupedRowModel?: (instance: Table<TData>) => () => RowModel<TData>
+getGroupedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 Returns the row model after grouping has taken place, but no further.

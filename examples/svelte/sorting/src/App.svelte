@@ -1,60 +1,66 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import {
-    createTable,
+    createSvelteTable,
     getCoreRowModel,
-    createTable,
     getSortedRowModel,
+    ColumnDef,
+    TableOptions,
+    flexRender
   } from '@tanstack/svelte-table'
   import { makeData, Person } from './makeData'
   import './index.css'
 
-  
-
-  const columns = [
-    table.createGroup({
+  const columns: ColumnDef<Person>[] = [
+    {
       header: 'Name',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('firstName', {
+        {
+          accessorKey: 'firstName',
           cell: info => info.getValue(),
           footer: props => props.column.id,
-        }),
-        table.createDataColumn(row => row.lastName, {
+        },
+         {
+          accessorFn: row => row.lastName,
           id: 'lastName',
           cell: info => info.getValue(),
           header: () => 'Last Name',
           footer: props => props.column.id,
-        }),
+        },
       ],
-    }),
-    table.createGroup({
+    },
+    {
       header: 'Info',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('age', {
+        {
+          accessorKey: 'age',
           header: () => 'Age',
           footer: props => props.column.id,
-        }),
-        table.createGroup({
+        },
+        {
           header: 'More Info',
           columns: [
-            table.createDataColumn('visits', {
+            {
+              accessorKey: 'visits',
               header: () => 'Visits',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('status', {
+            },
+            {
+              accessorKey: 'status',
               header: 'Status',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('progress', {
+            },
+            {
+              accessorKey: 'progress',
               header: 'Profile Progress',
               footer: props => props.column.id,
-            }),
+            },
           ],
-        }),
+        },
       ],
-    }),
+    },
   ]
 
   const data = makeData(100_000)
@@ -76,8 +82,8 @@
     }))
   }
 
-  const options = writable(
-    table.createOptions({
+  const options = writable<TableOptions<Person>>(
+    {
       data,
       columns,
       state: {
@@ -87,7 +93,7 @@
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
       debugTable: true,
-    })
+    }
   )
 
   const refreshData = () => {
@@ -105,14 +111,14 @@
     }))
   }
 
-  const instance = createTable(table, options)
+  const table = createSvelteTable(options)
 </script>
 
 <div class="p-2">
   <div class="h-2" />
   <table>
     <thead>
-      {#each $instance.getHeaderGroups() as headerGroup}
+      {#each $table.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
@@ -135,7 +141,7 @@
       {/each}
     </thead>
     <tbody>
-      {#each $instance.getRowModel().rows.slice(0, 10) as row}
+      {#each $table.getRowModel().rows.slice(0, 10) as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
@@ -146,7 +152,7 @@
       {/each}
     </tbody>
     <tfoot>
-      {#each $instance.getFooterGroups() as footerGroup}
+      {#each $table.getFooterGroups() as footerGroup}
         <tr>
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
@@ -159,12 +165,12 @@
       {/each}
     </tfoot>
   </table>
-  <div>{$instance.getRowModel().rows.length} Rows</div>
+  <div>{$table.getRowModel().rows.length} Rows</div>
   <div>
     <button on:click={() => rerender()}>Force Rerender</button>
   </div>
   <div>
     <button on:click={() => refreshData()}>Refresh Data</button>
   </div>
-  <pre>{JSON.stringify($instance.getState().sorting, null, 2)}</pre>
+  <pre>{JSON.stringify($table.getState().sorting, null, 2)}</pre>
 </div>

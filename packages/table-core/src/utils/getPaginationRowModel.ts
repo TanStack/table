@@ -4,13 +4,10 @@ import { expandRows } from './getExpandedRowModel'
 
 export function getPaginationRowModel<TData extends RowData>(opts?: {
   initialSync: boolean
-}): (instance: Table<TData>) => () => RowModel<TData> {
-  return instance =>
+}): (table: Table<TData>) => () => RowModel<TData> {
+  return table =>
     memo(
-      () => [
-        instance.getState().pagination,
-        instance.getPrePaginationRowModel(),
-      ],
+      () => [table.getState().pagination, table.getPrePaginationRowModel()],
       (pagination, rowModel) => {
         if (!rowModel.rows.length) {
           return rowModel
@@ -25,14 +22,14 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
 
         let paginatedRowModel: RowModel<TData>
 
-        if (!instance.options.paginateExpandedRows) {
+        if (!table.options.paginateExpandedRows) {
           paginatedRowModel = expandRows(
             {
               rows,
               flatRows,
               rowsById,
             },
-            instance
+            table
           )
         } else {
           paginatedRowModel = {
@@ -57,7 +54,7 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getPaginationRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
       }
     )
 }

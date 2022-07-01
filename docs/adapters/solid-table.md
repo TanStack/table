@@ -12,7 +12,7 @@ Takes a `table` and `options` object and returns a table.
 import { createSolidTable } from '@tanstack/solid-table'
 
 function App() {
-  const instance = createSolidTable(table, options)
+  const table = createSolidTable(table, options)
 
   // ...render your table
 }

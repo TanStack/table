@@ -78,7 +78,7 @@ function App() {
   const [isSplit, setIsSplit] = React.useState(false)
   const rerender = () => setData(() => makeData(5000))
 
-  const instance = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -96,8 +96,8 @@ function App() {
   })
 
   const randomizeColumns = () => {
-    instance.setColumnOrder(
-      faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+    table.setColumnOrder(
+      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
     )
   }
 
@@ -109,14 +109,14 @@ function App() {
             <input
               {...{
                 type: 'checkbox',
-                checked: instance.getIsAllColumnsVisible(),
-                onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                checked: table.getIsAllColumnsVisible(),
+                onChange: table.getToggleAllColumnsVisibilityHandler(),
               }}
             />{' '}
             Toggle All
           </label>
         </div>
-        {instance.getAllLeafColumns().map(column => {
+        {table.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
@@ -157,7 +157,7 @@ function App() {
         {isSplit ? (
           <table className="border-2 border-black">
             <thead>
-              {instance.getLeftHeaderGroups().map(headerGroup => (
+              {table.getLeftHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
@@ -209,7 +209,7 @@ function App() {
               ))}
             </thead>
             <tbody>
-              {instance
+              {table
                 .getRowModel()
                 .rows.slice(0, 20)
                 .map(row => {
@@ -234,8 +234,8 @@ function App() {
         <table className="border-2 border-black">
           <thead>
             {(isSplit
-              ? instance.getCenterHeaderGroups()
-              : instance.getHeaderGroups()
+              ? table.getCenterHeaderGroups()
+              : table.getHeaderGroups()
             ).map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
@@ -288,7 +288,7 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {instance
+            {table
               .getRowModel()
               .rows.slice(0, 20)
               .map(row => {
@@ -315,7 +315,7 @@ function App() {
         {isSplit ? (
           <table className="border-2 border-black">
             <thead>
-              {instance.getRightHeaderGroups().map(headerGroup => (
+              {table.getRightHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
@@ -367,7 +367,7 @@ function App() {
               ))}
             </thead>
             <tbody>
-              {instance
+              {table
                 .getRowModel()
                 .rows.slice(0, 20)
                 .map(row => {
@@ -390,7 +390,7 @@ function App() {
           </table>
         ) : null}
       </div>
-      <pre>{JSON.stringify(instance.getState().columnPinning, null, 2)}</pre>
+      <pre>{JSON.stringify(table.getState().columnPinning, null, 2)}</pre>
     </div>
   )
 }

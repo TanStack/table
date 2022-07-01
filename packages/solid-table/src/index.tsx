@@ -38,11 +38,11 @@ export function createSolidTable<TData extends RowData>(
     options
   )
 
-  const instance = createTable<TData>(resolvedOptions)
-  const [state, setState] = createStore(instance.initialState)
+  const table = createTable<TData>(resolvedOptions)
+  const [state, setState] = createStore(table.initialState)
 
   createComputed(() => {
-    instance.setOptions(prev => {
+    table.setOptions(prev => {
       return mergeProps(prev, options, {
         state: mergeProps(state, options.state || {}),
         // Similarly, we'll maintain both our internal state and any user-provided
@@ -57,5 +57,5 @@ export function createSolidTable<TData extends RowData>(
     })
   })
 
-  return instance
+  return table
 }

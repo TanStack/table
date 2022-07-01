@@ -4,14 +4,14 @@ import { memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
 export function getFilteredRowModel<TData extends RowData>(): (
-  instance: Table<TData>
+  table: Table<TData>
 ) => () => RowModel<TData> {
-  return instance =>
+  return table =>
     memo(
       () => [
-        instance.getPreFilteredRowModel(),
-        instance.getState().columnFilters,
-        instance.getState().globalFilter,
+        table.getPreFilteredRowModel(),
+        table.getState().columnFilters,
+        table.getState().globalFilter,
       ],
       (rowModel, columnFilters, globalFilter) => {
         if (
@@ -29,7 +29,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
         const resolvedGlobalFilters: ResolvedColumnFilter<TData>[] = []
 
         ;(columnFilters ?? []).forEach(d => {
-          const column = instance.getColumn(d.id)
+          const column = table.getColumn(d.id)
 
           if (!column) {
             if (process.env.NODE_ENV !== 'production') {
@@ -59,9 +59,9 @@ export function getFilteredRowModel<TData extends RowData>(): (
 
         const filterableIds = columnFilters.map(d => d.id)
 
-        const globalFilterFn = instance.getGlobalFilterFn()
+        const globalFilterFn = table.getGlobalFilterFn()
 
-        const globallyFilterableColumns = instance
+        const globallyFilterableColumns = table
           .getAllLeafColumns()
           .filter(column => column.getCanGlobalFilter())
 
@@ -146,13 +146,13 @@ export function getFilteredRowModel<TData extends RowData>(): (
         }
 
         // Filter final rows using all of the active filters
-        return filterRows(rowModel.rows, filterRowsImpl, instance)
+        return filterRows(rowModel.rows, filterRowsImpl, table)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getFilteredRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {
-          instance._autoResetPageIndex()
+          table._autoResetPageIndex()
         },
       }
     )

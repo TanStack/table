@@ -3,16 +3,16 @@ import { memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
 export function getFacetedRowModel<TData extends RowData>(): (
-  instance: Table<TData>,
+  table: Table<TData>,
   columnId: string
 ) => () => RowModel<TData> {
-  return (instance, columnId) =>
+  return (table, columnId) =>
     memo(
       () => [
-        instance.getPreFilteredRowModel(),
-        instance.getState().columnFilters,
-        instance.getState().globalFilter,
-        instance.getFilteredRowModel(),
+        table.getPreFilteredRowModel(),
+        table.getState().columnFilters,
+        table.getState().globalFilter,
+        table.getFilteredRowModel(),
       ],
       (preRowModel, columnFilters, globalFilter) => {
         if (
@@ -37,13 +37,13 @@ export function getFacetedRowModel<TData extends RowData>(): (
           return true
         }
 
-        return filterRows(preRowModel.rows, filterRowsImpl, instance)
+        return filterRows(preRowModel.rows, filterRowsImpl, table)
       },
       {
         key:
           process.env.NODE_ENV === 'development' &&
           'getFacetedRowModel_' + columnId,
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {},
       }
     )

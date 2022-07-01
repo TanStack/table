@@ -70,12 +70,12 @@ export type CoreColumn<TData extends RowData> = {
 }
 
 export function createColumn<TData extends RowData>(
-  instance: Table<TData>,
+  table: Table<TData>,
   columnDef: ColumnDef<TData>,
   depth: number,
   parent?: Column<TData>
 ) {
-  const defaultColumn = instance._getDefaultColumnDef()
+  const defaultColumn = table._getDefaultColumnDef()
 
   const resolvedColumnDef = {
     ...defaultColumn,
@@ -126,11 +126,11 @@ export function createColumn<TData extends RowData>(
       },
       {
         key: process.env.NODE_ENV === 'production' && 'column.getFlatColumns',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
       }
     ),
     getLeafColumns: memo(
-      () => [instance._getOrderColumnsFn()],
+      () => [table._getOrderColumnsFn()],
       orderColumns => {
         if (column.columns?.length) {
           let leafColumns = column.columns.flatMap(column =>
@@ -144,15 +144,15 @@ export function createColumn<TData extends RowData>(
       },
       {
         key: process.env.NODE_ENV === 'production' && 'column.getLeafColumns',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
       }
     ),
   }
 
-  column = instance._features.reduce((obj, feature) => {
-    return Object.assign(obj, feature.createColumn?.(column, instance))
+  column = table._features.reduce((obj, feature) => {
+    return Object.assign(obj, feature.createColumn?.(column, table))
   }, column)
 
-  // Yes, we have to convert instance to uknown, because we know more than the compiler here.
+  // Yes, we have to convert table to uknown, because we know more than the compiler here.
   return column as Column<TData>
 }

@@ -14,7 +14,7 @@ All row objects have the following properties:
 id: string
 ```
 
-The resolved unique identifier for the row resolved via the `instanceOptions.getRowId` option. Defaults to the row's index (or relative index if it is a subRow)
+The resolved unique identifier for the row resolved via the `options.getRowId` option. Defaults to the row's index (or relative index if it is a subRow)
 
 ### `depth`
 
@@ -54,7 +54,7 @@ Returns the value from the row for a given columnId
 type subRows = Row<TData>[]
 ```
 
-An array of subRows for the row as returned and created by the `instanceOptions.getSubRows` option.
+An array of subRows for the row as returned and created by the `options.getSubRows` option.
 
 ### `getLeafRows`
 
@@ -70,7 +70,7 @@ Returns the leaf rows for the row, not including any parent rows.
 originalSubRows?: TData[]
 ```
 
-An array of the original subRows as returned by the `instanceOptions.getSubRows` option.
+An array of the original subRows as returned by the `options.getSubRows` option.
 
 ### `getAllCells`
 

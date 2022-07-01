@@ -357,7 +357,7 @@ Enables/disables **all** column filters for the table. For option priority, see 
 
 ```tsx
 getFilteredRowModel?: (
-  instance: Table<TData>
+  table: Table<TData>
 ) => () => RowModel<TData>
 ```
 

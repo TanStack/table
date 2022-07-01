@@ -80,7 +80,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const instance = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -97,7 +97,7 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -128,7 +128,7 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance
+          {table
             .getRowModel()
             .rows.slice(0, 10)
             .map(row => {
@@ -149,7 +149,7 @@ function App() {
             })}
         </tbody>
       </table>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>

@@ -3,11 +3,11 @@ import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
 export function getCoreRowModel<TData extends RowData>(): (
-  instance: Table<TData>
+  table: Table<TData>
 ) => () => RowModel<TData> {
-  return instance =>
+  return table =>
     memo(
-      () => [instance.options.data],
+      () => [table.options.data],
       (
         data
       ): {
@@ -38,8 +38,8 @@ export function getCoreRowModel<TData extends RowData>(): (
 
             // Make the row
             const row = createRow(
-              instance,
-              instance._getRowId(originalRows[i]!, i, parent),
+              table,
+              table._getRowId(originalRows[i]!, i, parent),
               originalRows[i],
               i,
               depth
@@ -49,12 +49,12 @@ export function getCoreRowModel<TData extends RowData>(): (
             rowModel.flatRows.push(row)
             // Also keep track of every row by its ID
             rowModel.rowsById[row.id] = row
-            // Push instance row into parent
+            // Push table row into parent
             rows.push(row)
 
             // Get the original subrows
-            if (instance.options.getSubRows) {
-              row.originalSubRows = instance.options.getSubRows(
+            if (table.options.getSubRows) {
+              row.originalSubRows = table.options.getSubRows(
                 originalRows[i]!,
                 i
               )
@@ -75,9 +75,9 @@ export function getCoreRowModel<TData extends RowData>(): (
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {
-          instance._autoResetPageIndex()
+          table._autoResetPageIndex()
         },
       }
     )

@@ -102,7 +102,7 @@ function App() {
   const [data, setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -112,7 +112,7 @@ function App() {
     <div className="p-2">
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
@@ -128,7 +128,7 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id}>
@@ -139,7 +139,7 @@ function App() {
           ))}
         </tbody>
         <tfoot>
-          {instance.getFooterGroups().map(footerGroup => (
+          {table.getFooterGroups().map(footerGroup => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>

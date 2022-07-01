@@ -18,7 +18,7 @@ export type CoreRow<TData extends RowData> = {
 }
 
 export const createRow = <TData extends RowData>(
-  instance: Table<TData>,
+  table: Table<TData>,
   id: string,
   original: TData | undefined,
   rowIndex: number,
@@ -36,7 +36,7 @@ export const createRow = <TData extends RowData>(
         return row._valuesCache[columnId]
       }
 
-      const column = instance.getColumn(columnId)
+      const column = table.getColumn(columnId)
 
       if (!column.accessorFn) {
         return undefined
@@ -50,19 +50,19 @@ export const createRow = <TData extends RowData>(
       return row._valuesCache[columnId]
     },
     renderValue: columnId =>
-      row.getValue(columnId) ?? instance.options.renderFallbackValue,
+      row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
     getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
     getAllCells: memo(
-      () => [instance.getAllLeafColumns()],
+      () => [table.getAllLeafColumns()],
       leafColumns => {
         return leafColumns.map(column => {
-          return createCell(instance, row as Row<TData>, column, column.id)
+          return createCell(table, row as Row<TData>, column, column.id)
         })
       },
       {
         key: process.env.NODE_ENV === 'development' && 'row.getAllCells',
-        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+        debug: () => table.options.debugAll ?? table.options.debugRows,
       }
     ),
 
@@ -77,14 +77,14 @@ export const createRow = <TData extends RowData>(
       {
         key:
           process.env.NODE_ENV === 'production' && 'row.getAllCellsByColumnId',
-        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+        debug: () => table.options.debugAll ?? table.options.debugRows,
       }
     ),
   }
 
-  for (let i = 0; i < instance._features.length; i++) {
-    const feature = instance._features[i]
-    Object.assign(row, feature?.createRow?.(row, instance))
+  for (let i = 0; i < table._features.length; i++) {
+    const feature = table._features[i]
+    Object.assign(row, feature?.createRow?.(row, table))
   }
 
   return row as Row<TData>

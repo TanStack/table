@@ -102,7 +102,7 @@ function App() {
   )
   const rerender = () => setData(defaultData)
 
-  const instance = createSolidTable({
+  const table = createSolidTable({
     get data() {
       return data()
     },
@@ -122,14 +122,14 @@ function App() {
         <div class="px-1 border-b border-black">
           <label>
             <input
-              checked={instance.getIsAllColumnsVisible()}
-              onChange={instance.getToggleAllColumnsVisibilityHandler()}
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
               type="checkbox"
             />{' '}
             Toggle All
           </label>
         </div>
-        <For each={instance.getAllLeafColumns()}>
+        <For each={table.getAllLeafColumns()}>
           {column => (
             <div class="px-1">
               <label>
@@ -147,7 +147,7 @@ function App() {
       <div class="h-4" />
       <table>
         <thead>
-          <For each={instance.getHeaderGroups()}>
+          <For each={table.getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
@@ -167,7 +167,7 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={instance.getRowModel().rows}>
+          <For each={table.getRowModel().rows}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
@@ -185,7 +185,7 @@ function App() {
           </For>
         </tbody>
         <tfoot>
-          <For each={instance.getFooterGroups()}>
+          <For each={table.getFooterGroups()}>
             {footerGroup => (
               <tr>
                 <For each={footerGroup.headers}>
@@ -210,7 +210,7 @@ function App() {
         Rerender
       </button>
       <div class="h-4" />
-      <pre>{JSON.stringify(instance.getState().columnVisibility, null, 2)}</pre>
+      <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
     </div>
   )
 }

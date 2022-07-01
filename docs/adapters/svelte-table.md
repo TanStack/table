@@ -12,7 +12,7 @@ Takes a `table` and `options` object and returns a table.
 import { createSvelteTable } from '@tanstack/svelte-table'
 
 function App() {
-  const instance = createSvelteTable(table, options)
+  const table = createSvelteTable(table, options)
 
   // ...render your table
 }

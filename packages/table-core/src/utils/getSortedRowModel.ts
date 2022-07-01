@@ -3,23 +3,23 @@ import { SortingFn } from '../features/Sorting'
 import { memo } from '../utils'
 
 export function getSortedRowModel<TData extends RowData>(): (
-  instance: Table<TData>
+  table: Table<TData>
 ) => () => RowModel<TData> {
-  return instance =>
+  return table =>
     memo(
-      () => [instance.getState().sorting, instance.getPreSortedRowModel()],
+      () => [table.getState().sorting, table.getPreSortedRowModel()],
       (sorting, rowModel) => {
         if (!rowModel.rows.length || !sorting?.length) {
           return rowModel
         }
 
-        const sortingState = instance.getState().sorting
+        const sortingState = table.getState().sorting
 
         const sortedFlatRows: Row<TData>[] = []
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter(sort =>
-          instance.getColumn(sort.id).getCanSort()
+          table.getColumn(sort.id).getCanSort()
         )
 
         const columnInfoById: Record<
@@ -32,7 +32,7 @@ export function getSortedRowModel<TData extends RowData>(): (
         > = {}
 
         availableSorting.forEach(sortEntry => {
-          const column = instance.getColumn(sortEntry.id)
+          const column = table.getColumn(sortEntry.id)
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.columnDef.sortUndefined,
@@ -107,9 +107,9 @@ export function getSortedRowModel<TData extends RowData>(): (
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getSortedRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {
-          instance._autoResetPageIndex()
+          table._autoResetPageIndex()
         },
       }
     )

@@ -1,10 +1,10 @@
 ---
-title: Table Instances
+title: Tables
 ---
 
 ## API
 
-[Table Instance API](../api/table-instance.md)
+[Table API](../api/table.md)
 
 ## Guide
 

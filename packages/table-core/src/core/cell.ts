@@ -7,7 +7,7 @@ export type CoreCell<TData extends RowData> = {
   row: Row<TData>
   column: Column<TData>
   getContext: () => {
-    instance: Table<TData>
+    table: Table<TData>
     column: Column<TData>
     row: Row<TData>
     cell: Cell<TData>
@@ -17,13 +17,13 @@ export type CoreCell<TData extends RowData> = {
 }
 
 export function createCell<TData extends RowData>(
-  instance: Table<TData>,
+  table: Table<TData>,
   row: Row<TData>,
   column: Column<TData>,
   columnId: string
 ) {
   const getRenderValue = () =>
-    cell.getValue() ?? instance.options.renderFallbackValue
+    cell.getValue() ?? table.options.renderFallbackValue
 
   const cell: CoreCell<TData> = {
     id: `${row.id}_${column.id}`,
@@ -32,7 +32,7 @@ export function createCell<TData extends RowData>(
     getValue: () => row.getValue(columnId),
     renderValue: getRenderValue,
     getContext: () => ({
-      instance,
+      table,
       column,
       row,
       cell: cell as Cell<TData>,
@@ -41,14 +41,14 @@ export function createCell<TData extends RowData>(
     }),
   }
 
-  instance._features.forEach(feature => {
+  table._features.forEach(feature => {
     Object.assign(
       cell,
       feature.createCell?.(
         cell as Cell<TData>,
         column,
         row as Row<TData>,
-        instance
+        table
       )
     )
   }, {})

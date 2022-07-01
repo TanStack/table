@@ -96,7 +96,7 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const instance =
+const table =
   get data() {
     return data.value
   },
@@ -110,7 +110,7 @@ const instance =
     <table>
       <thead>
         <tr
-          v-for="headerGroup in instance.getHeaderGroups()"
+          v-for="headerGroup in table.getHeaderGroups()"
           :key="headerGroup.id"
         >
           <th
@@ -123,7 +123,7 @@ const instance =
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in instance.getRowModel().rows" :key="row.id">
+        <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
             <component :is="cell.renderCell" />
           </td>
@@ -131,7 +131,7 @@ const instance =
       </tbody>
       <tfoot>
         <tr
-          v-for="footerGroup in instance.getFooterGroups()"
+          v-for="footerGroup in table.getFooterGroups()"
           :key="footerGroup.id"
         >
           <th

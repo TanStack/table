@@ -3,11 +3,11 @@ import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { flattenBy, memo } from '../utils'
 
 export function getGroupedRowModel<TData extends RowData>(): (
-  instance: Table<TData>
+  table: Table<TData>
 ) => () => RowModel<TData> {
-  return instance =>
+  return table =>
     memo(
-      () => [instance.getState().grouping, instance.getPreGroupedRowModel()],
+      () => [table.getState().grouping, table.getPreGroupedRowModel()],
       (grouping, rowModel) => {
         if (!rowModel.rows.length || !grouping.length) {
           return rowModel
@@ -15,7 +15,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
 
         // Filter the grouping list down to columns that exist
         const existingGrouping = grouping.filter(columnId =>
-          instance.getColumn(columnId)
+          table.getColumn(columnId)
         )
 
         const groupedFlatRows: Row<TData>[] = []
@@ -55,7 +55,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 ? flattenBy(groupedRows, row => row.subRows)
                 : groupedRows
 
-              const row = createRow(instance, id, undefined, index, depth)
+              const row = createRow(table, id, undefined, index, depth)
 
               Object.assign(row, {
                 groupingColumnId: columnId,
@@ -82,7 +82,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
                   }
 
                   // Aggregate the values
-                  const column = instance.getColumn(columnId)
+                  const column = table.getColumn(columnId)
                   const aggregateFn = column.getAggregationFn()
 
                   if (aggregateFn) {
@@ -138,11 +138,11 @@ export function getGroupedRowModel<TData extends RowData>(): (
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getGroupedRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {
-          instance._queue(() => {
-            instance._autoResetExpanded()
-            instance._autoResetPageIndex()
+          table._queue(() => {
+            table._autoResetExpanded()
+            table._autoResetPageIndex()
           })
         },
       }

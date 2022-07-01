@@ -86,7 +86,7 @@ Enable/disable expanding for all rows.
 ### `getExpandedRowModel`
 
 ```tsx
-getExpandedRowModel?: (instance: Table<TData>) => () => RowModel<TData>
+getExpandedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.

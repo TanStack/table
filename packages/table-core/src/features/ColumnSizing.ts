@@ -1,4 +1,4 @@
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import {
   RowData,
   Column,
@@ -106,22 +106,22 @@ export const ColumnSizing: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): ColumnSizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
-      onColumnSizingChange: makeStateUpdater('columnSizing', instance),
-      onColumnSizingInfoChange: makeStateUpdater('columnSizingInfo', instance),
+      onColumnSizingChange: makeStateUpdater('columnSizing', table),
+      onColumnSizingInfoChange: makeStateUpdater('columnSizingInfo', table),
     }
   },
 
   createColumn: <TData extends RowData>(
     column: Column<TData>,
-    instance: Table<TData>
+    table: Table<TData>
   ): ColumnSizingColumn => {
     return {
       getSize: () => {
-        const columnSize = instance.getState().columnSizing[column.id]
+        const columnSize = table.getState().columnSizing[column.id]
 
         return Math.min(
           Math.max(
@@ -133,10 +133,10 @@ export const ColumnSizing: TableFeature = {
       },
       getStart: position => {
         const columns = !position
-          ? instance.getVisibleLeafColumns()
+          ? table.getVisibleLeafColumns()
           : position === 'left'
-          ? instance.getLeftVisibleLeafColumns()
-          : instance.getRightVisibleLeafColumns()
+          ? table.getLeftVisibleLeafColumns()
+          : table.getRightVisibleLeafColumns()
 
         const index = columns.findIndex(d => d.id === column.id)
 
@@ -151,27 +151,25 @@ export const ColumnSizing: TableFeature = {
         return 0
       },
       resetSize: () => {
-        instance.setColumnSizing(({ [column.id]: _, ...rest }) => {
+        table.setColumnSizing(({ [column.id]: _, ...rest }) => {
           return rest
         })
       },
       getCanResize: () => {
         return (
           (column.columnDef.enableResizing ?? true) &&
-          (instance.options.enableColumnResizing ?? true)
+          (table.options.enableColumnResizing ?? true)
         )
       },
       getIsResizing: () => {
-        return (
-          instance.getState().columnSizingInfo.isResizingColumn === column.id
-        )
+        return table.getState().columnSizingInfo.isResizingColumn === column.id
       },
     }
   },
 
   createHeader: <TData extends RowData>(
     header: Header<TData>,
-    instance: Table<TData>
+    table: Table<TData>
   ): ColumnSizingHeader => {
     return {
       getSize: () => {
@@ -199,7 +197,7 @@ export const ColumnSizing: TableFeature = {
         return 0
       },
       getResizeHandler: () => {
-        const column = instance.getColumn(header.column.id)
+        const column = table.getColumn(header.column.id)
         const canResize = column.getCanResize()
 
         return (e: unknown) => {
@@ -238,7 +236,7 @@ export const ColumnSizing: TableFeature = {
 
             let newColumnSizing: ColumnSizingState = {}
 
-            instance.setColumnSizingInfo(old => {
+            table.setColumnSizingInfo(old => {
               const deltaOffset = clientXPos - (old?.startOffset ?? 0)
               const deltaPercentage = Math.max(
                 deltaOffset / (old?.startSize ?? 0),
@@ -260,10 +258,10 @@ export const ColumnSizing: TableFeature = {
             })
 
             if (
-              instance.options.columnResizeMode === 'onChange' ||
+              table.options.columnResizeMode === 'onChange' ||
               eventType === 'end'
             ) {
-              instance.setColumnSizing(old => ({
+              table.setColumnSizing(old => ({
                 ...old,
                 ...newColumnSizing,
               }))
@@ -276,7 +274,7 @@ export const ColumnSizing: TableFeature = {
           const onEnd = (clientXPos?: number) => {
             updateOffset('end', clientXPos)
 
-            instance.setColumnSizingInfo(old => ({
+            table.setColumnSizingInfo(old => ({
               ...old,
               isResizingColumn: false,
               startOffset: null,
@@ -334,7 +332,7 @@ export const ColumnSizing: TableFeature = {
             )
           }
 
-          instance.setColumnSizingInfo(old => ({
+          table.setColumnSizingInfo(old => ({
             ...old,
             startOffset: clientX,
             startSize,
@@ -349,40 +347,39 @@ export const ColumnSizing: TableFeature = {
   },
 
   createTable: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): ColumnSizingInstance => {
     return {
-      setColumnSizing: updater =>
-        instance.options.onColumnSizingChange?.(updater),
+      setColumnSizing: updater => table.options.onColumnSizingChange?.(updater),
       setColumnSizingInfo: updater =>
-        instance.options.onColumnSizingInfoChange?.(updater),
+        table.options.onColumnSizingInfoChange?.(updater),
       resetColumnSizing: defaultState => {
-        instance.setColumnSizing(
-          defaultState ? {} : instance.initialState.columnSizing ?? {}
+        table.setColumnSizing(
+          defaultState ? {} : table.initialState.columnSizing ?? {}
         )
       },
       resetHeaderSizeInfo: defaultState => {
-        instance.setColumnSizingInfo(
+        table.setColumnSizingInfo(
           defaultState
             ? getDefaultColumnSizingInfoState()
-            : instance.initialState.columnSizingInfo ??
+            : table.initialState.columnSizingInfo ??
                 getDefaultColumnSizingInfoState()
         )
       },
       getTotalSize: () =>
-        instance.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        table.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
           return sum + header.getSize()
         }, 0) ?? 0,
       getLeftTotalSize: () =>
-        instance.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        table.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
           return sum + header.getSize()
         }, 0) ?? 0,
       getCenterTotalSize: () =>
-        instance.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        table.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
           return sum + header.getSize()
         }, 0) ?? 0,
       getRightTotalSize: () =>
-        instance.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
+        table.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
           return sum + header.getSize()
         }, 0) ?? 0,
     }

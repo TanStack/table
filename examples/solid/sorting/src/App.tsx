@@ -67,7 +67,7 @@ function App() {
     },
   ]
 
-  const instance = createSolidTable({
+  const table = createSolidTable({
     get data() {
       return data()
     },
@@ -87,7 +87,7 @@ function App() {
     <div class="p-2">
       <table>
         <thead>
-          <For each={instance.getHeaderGroups()}>
+          <For each={table.getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
@@ -120,7 +120,7 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={instance.getRowModel().rows.slice(0, 10)}>
+          <For each={table.getRowModel().rows.slice(0, 10)}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
@@ -138,7 +138,7 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>

@@ -1,4 +1,4 @@
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import {
   OnChangeFn,
   TableGenerics,
@@ -27,7 +27,7 @@ export type PaginationOptions = {
   manualPagination?: boolean
   onPaginationChange?: OnChangeFn<PaginationState>
   autoResetPageIndex?: boolean
-  getPaginationRowModel?: (instance: Table<any>) => () => RowModel<any>
+  getPaginationRowModel?: (table: Table<any>) => () => RowModel<any>
 }
 
 export type PaginationDefaultOptions = {
@@ -76,15 +76,15 @@ export const Pagination: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): PaginationDefaultOptions => {
     return {
-      onPaginationChange: makeStateUpdater('pagination', instance),
+      onPaginationChange: makeStateUpdater('pagination', table),
     }
   },
 
   createTable: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): PaginationInstance<TData> => {
     let registered = false
     let queued = false
@@ -92,21 +92,21 @@ export const Pagination: TableFeature = {
     return {
       _autoResetPageIndex: () => {
         if (!registered) {
-          instance._queue(() => {
+          table._queue(() => {
             registered = true
           })
           return
         }
 
         if (
-          instance.options.autoResetAll ??
-          instance.options.autoResetPageIndex ??
-          !instance.options.manualPagination
+          table.options.autoResetAll ??
+          table.options.autoResetPageIndex ??
+          !table.options.manualPagination
         ) {
           if (queued) return
           queued = true
-          instance._queue(() => {
-            instance.resetPageIndex()
+          table._queue(() => {
+            table.resetPageIndex()
             queued = false
           })
         }
@@ -118,24 +118,24 @@ export const Pagination: TableFeature = {
           return newState
         }
 
-        return instance.options.onPaginationChange?.(safeUpdater)
+        return table.options.onPaginationChange?.(safeUpdater)
       },
       resetPagination: defaultState => {
-        instance.setPagination(
+        table.setPagination(
           defaultState
             ? getDefaultPaginationState()
-            : instance.initialState.pagination ?? getDefaultPaginationState()
+            : table.initialState.pagination ?? getDefaultPaginationState()
         )
       },
       setPageIndex: updater => {
-        instance.setPagination(old => {
+        table.setPagination(old => {
           let pageIndex = functionalUpdate(updater, old.pageIndex)
 
           const maxPageIndex =
-            typeof instance.options.pageCount === 'undefined' ||
-            instance.options.pageCount === -1
+            typeof table.options.pageCount === 'undefined' ||
+            table.options.pageCount === -1
               ? Number.MAX_SAFE_INTEGER
-              : instance.options.pageCount - 1
+              : table.options.pageCount - 1
 
           pageIndex = Math.min(Math.max(0, pageIndex), maxPageIndex)
 
@@ -146,21 +146,21 @@ export const Pagination: TableFeature = {
         })
       },
       resetPageIndex: defaultState => {
-        instance.setPageIndex(
+        table.setPageIndex(
           defaultState
             ? defaultPageIndex
-            : instance.initialState?.pagination?.pageIndex ?? defaultPageIndex
+            : table.initialState?.pagination?.pageIndex ?? defaultPageIndex
         )
       },
       resetPageSize: defaultState => {
-        instance.setPageSize(
+        table.setPageSize(
           defaultState
             ? defaultPageSize
-            : instance.initialState?.pagination?.pageSize ?? defaultPageSize
+            : table.initialState?.pagination?.pageSize ?? defaultPageSize
         )
       },
       setPageSize: updater => {
-        instance.setPagination(old => {
+        table.setPagination(old => {
           const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
           const topRowIndex = old.pageSize * old.pageIndex!
           const pageIndex = Math.floor(topRowIndex / pageSize)
@@ -173,10 +173,10 @@ export const Pagination: TableFeature = {
         })
       },
       setPageCount: updater =>
-        instance.setPagination(old => {
+        table.setPagination(old => {
           let newPageCount = functionalUpdate(
             updater,
-            instance.options.pageCount ?? -1
+            table.options.pageCount ?? -1
           )
 
           if (typeof newPageCount === 'number') {
@@ -190,7 +190,7 @@ export const Pagination: TableFeature = {
         }),
 
       getPageOptions: memo(
-        () => [instance.getPageCount()],
+        () => [table.getPageCount()],
         pageCount => {
           let pageOptions: number[] = []
           if (pageCount && pageCount > 0) {
@@ -200,16 +200,16 @@ export const Pagination: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getPageOptions',
-          debug: () => instance.options.debugAll ?? instance.options.debugTable,
+          debug: () => table.options.debugAll ?? table.options.debugTable,
         }
       ),
 
-      getCanPreviousPage: () => instance.getState().pagination.pageIndex > 0,
+      getCanPreviousPage: () => table.getState().pagination.pageIndex > 0,
 
       getCanNextPage: () => {
-        const { pageIndex } = instance.getState().pagination
+        const { pageIndex } = table.getState().pagination
 
-        const pageCount = instance.getPageCount()
+        const pageCount = table.getPageCount()
 
         if (pageCount === -1) {
           return true
@@ -223,41 +223,38 @@ export const Pagination: TableFeature = {
       },
 
       previousPage: () => {
-        return instance.setPageIndex(old => old - 1)
+        return table.setPageIndex(old => old - 1)
       },
 
       nextPage: () => {
-        return instance.setPageIndex(old => {
+        return table.setPageIndex(old => {
           return old + 1
         })
       },
 
-      getPrePaginationRowModel: () => instance.getExpandedRowModel(),
+      getPrePaginationRowModel: () => table.getExpandedRowModel(),
       getPaginationRowModel: () => {
         if (
-          !instance._getPaginationRowModel &&
-          instance.options.getPaginationRowModel
+          !table._getPaginationRowModel &&
+          table.options.getPaginationRowModel
         ) {
-          instance._getPaginationRowModel =
-            instance.options.getPaginationRowModel(instance)
+          table._getPaginationRowModel =
+            table.options.getPaginationRowModel(table)
         }
 
-        if (
-          instance.options.manualPagination ||
-          !instance._getPaginationRowModel
-        ) {
-          return instance.getPrePaginationRowModel()
+        if (table.options.manualPagination || !table._getPaginationRowModel) {
+          return table.getPrePaginationRowModel()
         }
 
-        return instance._getPaginationRowModel()
+        return table._getPaginationRowModel()
       },
 
       getPageCount: () => {
         return (
-          instance.options.pageCount ??
+          table.options.pageCount ??
           Math.ceil(
-            instance.getPrePaginationRowModel().rows.length /
-              instance.getState().pagination.pageSize
+            table.getPrePaginationRowModel().rows.length /
+              table.getState().pagination.pageSize
           )
         )
       },

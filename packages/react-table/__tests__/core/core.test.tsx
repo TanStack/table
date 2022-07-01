@@ -109,7 +109,7 @@ describe('core', () => {
 
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useReactTable({
+      const table = useReactTable({
         data,
         columns,
         onColumnVisibilityChange: setColumnVisibility,
@@ -124,7 +124,7 @@ describe('core', () => {
         <div className="p-2">
           <table>
             <thead>
-              {instance.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
@@ -140,7 +140,7 @@ describe('core', () => {
               ))}
             </thead>
             <tbody>
-              {instance.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map(row => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id}>
@@ -154,7 +154,7 @@ describe('core', () => {
               ))}
             </tbody>
             <tfoot>
-              {instance.getFooterGroups().map(footerGroup => (
+              {table.getFooterGroups().map(footerGroup => (
                 <tr key={footerGroup.id}>
                   {footerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
@@ -219,14 +219,14 @@ describe('core', () => {
     const { result } = renderHook(() => {
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useReactTable({
+      const table = useReactTable({
         data: defaultData,
         columns: defaultColumns,
         getCoreRowModel: getCoreRowModel(),
       })
 
       return {
-        instance,
+        table,
         rerender,
       }
     })
@@ -246,19 +246,19 @@ describe('core', () => {
     const { result } = renderHook(() => {
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useReactTable({
+      const table = useReactTable({
         data: defaultData,
         columns: defaultColumns,
         getCoreRowModel: getCoreRowModel(),
       })
 
       return {
-        instance,
+        table,
         rerender,
       }
     })
 
-    const rowModel = result.current.instance.getRowModel()
+    const rowModel = result.current.table.getRowModel()
 
     expect(rowModel.rows.length).toEqual(3)
     expect(rowModel.flatRows.length).toEqual(3)

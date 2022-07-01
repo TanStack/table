@@ -61,7 +61,7 @@ initialState?: Partial<
 >
 ```
 
-Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPagination`) or via functions like `instance.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
+Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPagination`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
 
 > 🧠 Table state will not be reset when this object changes, which also means that the initial state object does not need to be stable.
 
@@ -79,7 +79,7 @@ Set this option to override any of the `autoReset...` feature options.
 meta?: unknown
 ```
 
-You can pass any object to `options.meta` and access it anywhere the table `instance` is available via `instance.options.meta`
+You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`
 
 > ⚠️ Because of generic limitations, this type must be cast to the correct type before use.
 
@@ -185,7 +185,7 @@ This option is used to optionally implement the merging of table options. Some f
 ### `getCoreRowModel`
 
 ```tsx
-getCoreRowModel: (instance: Table<TData>) => () => RowModel<TData>
+getCoreRowModel: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 This required option is a factory for a function that computes and returns the core row model for the table. It is called **once** per table and should return a **new function** which will calculate and return the row model for the table.

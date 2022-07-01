@@ -74,7 +74,7 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const instance = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -90,8 +90,8 @@ function App() {
   })
 
   const randomizeColumns = () => {
-    instance.setColumnOrder(
-      faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+    table.setColumnOrder(
+      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
     )
   }
 
@@ -103,14 +103,14 @@ function App() {
             <input
               {...{
                 type: 'checkbox',
-                checked: instance.getIsAllColumnsVisible(),
-                onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                checked: table.getIsAllColumnsVisible(),
+                onChange: table.getToggleAllColumnsVisibilityHandler(),
               }}
             />{' '}
             Toggle All
           </label>
         </div>
-        {instance.getAllLeafColumns().map(column => {
+        {table.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
@@ -139,7 +139,7 @@ function App() {
       <div className="h-4" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
@@ -155,7 +155,7 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id}>
@@ -166,7 +166,7 @@ function App() {
           ))}
         </tbody>
         <tfoot>
-          {instance.getFooterGroups().map(footerGroup => (
+          {table.getFooterGroups().map(footerGroup => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
@@ -182,7 +182,7 @@ function App() {
           ))}
         </tfoot>
       </table>
-      <pre>{JSON.stringify(instance.getState().columnOrder, null, 2)}</pre>
+      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
     </div>
   )
 }

@@ -49,7 +49,7 @@ The child column defs to include in a group column.
 header?:
   | string
   | ((props: {
-      instance: Table<TData>
+      table: Table<TData>
       header: Header<TData>
       column: Column<TData>
     }) => unknown)
@@ -63,7 +63,7 @@ The header to display for the column. If a string is passed, it can be used as a
 footer?:
   | string
   | ((props: {
-      instance: Table<TData>
+      table: Table<TData>
       header: Header<TData>
       column: Column<TData>
     }) => unknown)
@@ -75,7 +75,7 @@ The footer to display for the column. If a function is passed, it will be passed
 
 ```tsx
 cell?: ((props: {
-  instance: Table<TData>
+  table: Table<TData>
   row: Row<TData>
   column: Column<TData>
   cell: Cell<TData>

@@ -282,7 +282,7 @@ If `true`, all sorts will default to descending as their first toggle state.
 ### `getSortedRowModel`
 
 ```tsx
-getSortedRowModel?: (instance: Table<TData>) => () => RowModel<TData>
+getSortedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.

@@ -40,12 +40,12 @@ export function useVueTable<TData extends RowData>(
     options
   )
 
-  const instance = createTable<TData>(resolvedOptions)
+  const table = createTable<TData>(resolvedOptions)
   // can't use `reactive` because update needs to be immutable
-  const state = ref(instance.initialState)
+  const state = ref(table.initialState)
 
   watchEffect(() => {
-    instance.setOptions(prev => {
+    table.setOptions(prev => {
       const stateProxy = new Proxy({} as typeof state.value, {
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })
@@ -71,8 +71,8 @@ export function useVueTable<TData extends RowData>(
   })
 
   // onBeforeUpdate(() => {
-  //   instance.willUpdate()
+  //   table.willUpdate()
   // })
 
-  return instance
+  return table
 }

@@ -10,7 +10,7 @@ import {
 } from '../types'
 
 import { Grouping, orderColumns } from './Grouping'
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 
 export type ColumnOrderTableState = {
   columnOrder: ColumnOrderState
@@ -43,29 +43,28 @@ export const Ordering: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): ColumnOrderDefaultOptions => {
     return {
-      onColumnOrderChange: makeStateUpdater('columnOrder', instance),
+      onColumnOrderChange: makeStateUpdater('columnOrder', table),
     }
   },
 
   createTable: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): ColumnOrderInstance<TData> => {
     return {
-      setColumnOrder: updater =>
-        instance.options.onColumnOrderChange?.(updater),
+      setColumnOrder: updater => table.options.onColumnOrderChange?.(updater),
       resetColumnOrder: defaultState => {
-        instance.setColumnOrder(
-          defaultState ? [] : instance.initialState.columnOrder ?? []
+        table.setColumnOrder(
+          defaultState ? [] : table.initialState.columnOrder ?? []
         )
       },
       _getOrderColumnsFn: memo(
         () => [
-          instance.getState().columnOrder,
-          instance.getState().grouping,
-          instance.options.groupedColumnMode,
+          table.getState().columnOrder,
+          table.getState().grouping,
+          table.options.groupedColumnMode,
         ],
         (columnOrder, grouping, groupedColumnMode) => columns => {
           // Sort grouped columns to the start of the column list
@@ -102,7 +101,7 @@ export const Ordering: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getOrderColumnsFn',
-          // debug: () => instance.options.debugAll ?? instance.options.debugTable,
+          // debug: () => table.options.debugAll ?? table.options.debugTable,
         }
       ),
     }

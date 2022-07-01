@@ -64,7 +64,7 @@ const columnOrder = ref<ColumnOrderState>([])
 
 const rerender = () => (data.value = makeData(20))
 
-const instance =
+const table =
   get data() {
     return data.value
   },
@@ -90,8 +90,8 @@ const instance =
 })
 
 const randomizeColumns = () => {
-  instance.setColumnOrder(
-    faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+  table.setColumnOrder(
+    faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
   )
 }
 
@@ -103,7 +103,7 @@ function toggleColumnVisibility(column: Column<any>) {
 }
 
 function toggleAllColumnsVisibility() {
-  instance.getAllLeafColumns().forEach(column => {
+  table.getAllLeafColumns().forEach(column => {
     toggleColumnVisibility(column)
   })
 }
@@ -116,14 +116,14 @@ function toggleAllColumnsVisibility() {
         <label>
           <input
             type="checkbox"
-            :checked="instance.getIsAllColumnsVisible()"
+            :checked="table.getIsAllColumnsVisible()"
             @input="toggleAllColumnsVisibility"
           />
           Toggle All
         </label>
       </div>
       <div
-        v-for="column in instance.getAllLeafColumns()"
+        v-for="column in table.getAllLeafColumns()"
         :key="column.id"
         class="px-1"
       >
@@ -150,7 +150,7 @@ function toggleAllColumnsVisibility() {
     <table>
       <thead>
         <tr
-          v-for="headerGroup in instance.getHeaderGroups()"
+          v-for="headerGroup in table.getHeaderGroups()"
           :key="headerGroup.id"
         >
           <th
@@ -163,7 +163,7 @@ function toggleAllColumnsVisibility() {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in instance.getRowModel().rows" :key="row.id">
+        <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
             <component :is="cell.renderCell" />
           </td>
@@ -171,7 +171,7 @@ function toggleAllColumnsVisibility() {
       </tbody>
       <tfoot>
         <tr
-          v-for="footerGroup in instance.getFooterGroups()"
+          v-for="footerGroup in table.getFooterGroups()"
           :key="footerGroup.id"
         >
           <th
@@ -184,7 +184,7 @@ function toggleAllColumnsVisibility() {
         </tr>
       </tfoot>
     </table>
-    <pre>{{ JSON.stringify(instance.getState().columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.getState().columnOrder, null, 2) }}</pre>
   </div>
 </template>
 

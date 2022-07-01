@@ -70,7 +70,7 @@ const isSplit = ref(false)
 
 const rerender = () => (data.value = makeData(5000))
 
-const instance =
+const table =
   get data() {
     return data.value
   },
@@ -102,8 +102,8 @@ const instance =
 })
 
 const randomizeColumns = () => {
-  instance.setColumnOrder(
-    faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+  table.setColumnOrder(
+    faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
   )
 }
 
@@ -115,7 +115,7 @@ function toggleColumnVisibility(column: Column<any>) {
 }
 
 function toggleAllColumnsVisibility() {
-  instance.getAllLeafColumns().forEach(column => {
+  table.getAllLeafColumns().forEach(column => {
     toggleColumnVisibility(column)
   })
 }
@@ -128,14 +128,14 @@ function toggleAllColumnsVisibility() {
         <label>
           <input
             type="checkbox"
-            :checked="instance.getIsAllColumnsVisible()"
+            :checked="table.getIsAllColumnsVisible()"
             @input="toggleAllColumnsVisibility"
           />
           Toggle All
         </label>
       </div>
       <div
-        v-for="column in instance.getAllLeafColumns()"
+        v-for="column in table.getAllLeafColumns()"
         :key="column.id"
         class="px-1"
       >
@@ -169,7 +169,7 @@ function toggleAllColumnsVisibility() {
       <table v-if="isSplit" class="border-2 border-black table-left">
         <thead>
           <tr
-            v-for="headerGroup in instance.getLeftHeaderGroups()"
+            v-for="headerGroup in table.getLeftHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -214,7 +214,7 @@ function toggleAllColumnsVisibility() {
         </thead>
         <tbody>
           <tr
-            v-for="row in instance.getRowModel().rows.slice(0, 20)"
+            v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
             <td v-for="cell in row.getLeftVisibleCells()" :key="cell.id">
@@ -228,8 +228,8 @@ function toggleAllColumnsVisibility() {
         <thead>
           <tr
             v-for="headerGroup in isSplit
-              ? instance.getCenterHeaderGroups()
-              : instance.getHeaderGroups()"
+              ? table.getCenterHeaderGroups()
+              : table.getHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -274,7 +274,7 @@ function toggleAllColumnsVisibility() {
         </thead>
         <tbody>
           <tr
-            v-for="row in instance.getRowModel().rows.slice(0, 20)"
+            v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
             <td
@@ -292,7 +292,7 @@ function toggleAllColumnsVisibility() {
       <table v-if="isSplit" class="border-2 border-black table-right">
         <thead>
           <tr
-            v-for="headerGroup in instance.getRightHeaderGroups()"
+            v-for="headerGroup in table.getRightHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -337,7 +337,7 @@ function toggleAllColumnsVisibility() {
         </thead>
         <tbody>
           <tr
-            v-for="row in instance.getRowModel().rows.slice(0, 20)"
+            v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
             <td v-for="cell in row.getRightVisibleCells()" :key="cell.id">
@@ -347,7 +347,7 @@ function toggleAllColumnsVisibility() {
         </tbody>
       </table>
     </div>
-    <pre>{{ JSON.stringify(instance.getState().columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.getState().columnOrder, null, 2) }}</pre>
   </div>
 </template>
 

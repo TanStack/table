@@ -2,14 +2,14 @@ import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
 export function getExpandedRowModel<TData extends RowData>(): (
-  instance: Table<TData>
+  table: Table<TData>
 ) => () => RowModel<TData> {
-  return instance =>
+  return table =>
     memo(
       () => [
-        instance.getState().expanded,
-        instance.getPreExpandedRowModel(),
-        instance.options.paginateExpandedRows,
+        table.getState().expanded,
+        table.getPreExpandedRowModel(),
+        table.options.paginateExpandedRows,
       ],
       (expanded, rowModel, paginateExpandedRows) => {
         if (
@@ -21,18 +21,18 @@ export function getExpandedRowModel<TData extends RowData>(): (
           return rowModel
         }
 
-        return expandRows(rowModel, instance)
+        return expandRows(rowModel, table)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getExpandedRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
       }
     )
 }
 
 export function expandRows<TData extends RowData>(
   rowModel: RowModel<TData>,
-  instance: Table<TData>
+  table: Table<TData>
 ) {
   const expandedRows: Row<TData>[] = []
 

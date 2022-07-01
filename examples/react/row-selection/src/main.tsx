@@ -26,12 +26,12 @@ function App() {
     () => [
       {
         id: 'select',
-        header: ({ instance }) => (
+        header: ({ table }) => (
           <IndeterminateCheckbox
             {...{
-              checked: instance.getIsAllRowsSelected(),
-              indeterminate: instance.getIsSomeRowsSelected(),
-              onChange: instance.getToggleAllRowsSelectedHandler(),
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
             }}
           />
         ),
@@ -103,7 +103,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const instance = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -129,7 +129,7 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -142,10 +142,7 @@ function App() {
                         )}
                         {header.column.getCanFilter() ? (
                           <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
+                            <Filter column={header.column} table={table} />
                           </div>
                         ) : null}
                       </>
@@ -157,7 +154,7 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map(row => {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
@@ -179,15 +176,13 @@ function App() {
             <td className="p-1">
               <IndeterminateCheckbox
                 {...{
-                  checked: instance.getIsAllPageRowsSelected(),
-                  indeterminate: instance.getIsSomePageRowsSelected(),
-                  onChange: instance.getToggleAllPageRowsSelectedHandler(),
+                  checked: table.getIsAllPageRowsSelected(),
+                  indeterminate: table.getIsSomePageRowsSelected(),
+                  onChange: table.getToggleAllPageRowsSelectedHandler(),
                 }}
               />
             </td>
-            <td colSpan={20}>
-              Page Rows ({instance.getRowModel().rows.length})
-            </td>
+            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
           </tr>
         </tfoot>
       </table>
@@ -195,55 +190,55 @@ function App() {
       <div className="flex items-center gap-2">
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(0)}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.previousPage()}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.nextPage()}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {instance.getState().pagination.pageIndex + 1} of{' '}
-            {instance.getPageCount()}
+            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
           | Go to page:
           <input
             type="number"
-            defaultValue={instance.getState().pagination.pageIndex + 1}
+            defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
-              instance.setPageIndex(page)
+              table.setPageIndex(page)
             }}
             className="border p-1 rounded w-16"
           />
         </span>
         <select
-          value={instance.getState().pagination.pageSize}
+          value={table.getState().pagination.pageSize}
           onChange={e => {
-            instance.setPageSize(Number(e.target.value))
+            table.setPageSize(Number(e.target.value))
           }}
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
@@ -256,7 +251,7 @@ function App() {
       <br />
       <div>
         {Object.keys(rowSelection).length} of{' '}
-        {instance.getPreFilteredRowModel().rows.length} Total Rows Selected
+        {table.getPreFilteredRowModel().rows.length} Total Rows Selected
       </div>
       <hr />
       <br />
@@ -286,26 +281,20 @@ function App() {
           className="border rounded p-2 mb-2"
           onClick={() =>
             console.info(
-              'instance.getSelectedFlatRows()',
-              instance.getSelectedRowModel().flatRows
+              'table.getSelectedFlatRows()',
+              table.getSelectedRowModel().flatRows
             )
           }
         >
-          Log instance.getSelectedFlatRows()
+          Log table.getSelectedFlatRows()
         </button>
       </div>
     </div>
   )
 }
 
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: Table<any>
-}) {
-  const firstValue = instance
+function Filter({ column, table }: { column: Column<any>; table: Table<any> }) {
+  const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 

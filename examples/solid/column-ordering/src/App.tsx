@@ -71,7 +71,7 @@ function App() {
   )
   const rerender = () => setData(() => makeData(20))
 
-  const instance = createSolidTable({
+  const table = createSolidTable({
     get data() {
       return data()
     },
@@ -90,8 +90,8 @@ function App() {
   })
 
   const randomizeColumns = () => {
-    instance.setColumnOrder(
-      faker.helpers.shuffle(instance.getAllLeafColumns().map(d => d.id))
+    table.setColumnOrder(
+      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
     )
   }
 
@@ -101,14 +101,14 @@ function App() {
         <div class="px-1 border-b border-black">
           <label>
             <input
-              checked={instance.getIsAllColumnsVisible()}
-              onChange={instance.getToggleAllColumnsVisibilityHandler()}
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
               type="checkbox"
             />{' '}
             Toggle All
           </label>
         </div>
-        <For each={instance.getAllLeafColumns()}>
+        <For each={table.getAllLeafColumns()}>
           {column => (
             <div class="px-1">
               <label>
@@ -135,7 +135,7 @@ function App() {
       <div class="h-4" />
       <table>
         <thead>
-          <For each={instance.getHeaderGroups()}>
+          <For each={table.getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
@@ -155,7 +155,7 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={instance.getRowModel().rows}>
+          <For each={table.getRowModel().rows}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
@@ -173,7 +173,7 @@ function App() {
           </For>
         </tbody>
         <tfoot>
-          <For each={instance.getFooterGroups()}>
+          <For each={table.getFooterGroups()}>
             {footerGroup => (
               <tr>
                 <For each={footerGroup.headers}>
@@ -194,7 +194,7 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <pre>{JSON.stringify(instance.getState().columnOrder, null, 2)}</pre>
+      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
     </div>
   )
 }

@@ -109,7 +109,7 @@ describe('useReactTable', () => {
 
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const instance = useReactTable({
+      const table = useReactTable({
         data,
         columns,
         onColumnVisibilityChange: setColumnVisibility,
@@ -128,14 +128,14 @@ describe('useReactTable', () => {
                 <input
                   {...{
                     type: 'checkbox',
-                    checked: instance.getIsAllColumnsVisible(),
-                    onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                    checked: table.getIsAllColumnsVisible(),
+                    onChange: table.getToggleAllColumnsVisibilityHandler(),
                   }}
                 />{' '}
                 Toggle All
               </label>
             </div>
-            {instance.getAllLeafColumns().map(column => {
+            {table.getAllLeafColumns().map(column => {
               return (
                 <div key={column.id} className="px-1">
                   <label>
@@ -155,7 +155,7 @@ describe('useReactTable', () => {
           <div className="h-4" />
           <table>
             <thead>
-              {instance.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>
@@ -171,7 +171,7 @@ describe('useReactTable', () => {
               ))}
             </thead>
             <tbody>
-              {instance.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map(row => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id}>
@@ -185,7 +185,7 @@ describe('useReactTable', () => {
               ))}
             </tbody>
             <tfoot>
-              {instance.getFooterGroups().map(footerGroup => (
+              {table.getFooterGroups().map(footerGroup => (
                 <tr key={footerGroup.id}>
                   {footerGroup.headers.map(header => (
                     <th key={header.id} colSpan={header.colSpan}>

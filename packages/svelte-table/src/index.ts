@@ -86,14 +86,14 @@ export function createSvelteTable<TData extends RowData>(
     ...get(optionsStore),
   }
 
-  let instance = createTable(resolvedOptions)
+  let table = createTable(resolvedOptions)
 
-  let stateStore = writable(/** @type {number} */ instance.initialState)
+  let stateStore = writable(/** @type {number} */ table.initialState)
   // combine stores
   let stateOptionsStore = derived([stateStore, optionsStore], s => s)
-  const instanceReadable = readable(instance, function start(set) {
+  const tableReadable = readable(table, function start(set) {
     const unsubscribe = stateOptionsStore.subscribe(([state, options]) => {
-      instance.setOptions(prev => {
+      table.setOptions(prev => {
         return {
           ...prev,
           ...options,
@@ -112,8 +112,8 @@ export function createSvelteTable<TData extends RowData>(
         }
       })
 
-      // it didn't seem to rerender without setting the instance
-      set(instance)
+      // it didn't seem to rerender without setting the table
+      set(table)
     })
 
     return function stop() {
@@ -121,5 +121,5 @@ export function createSvelteTable<TData extends RowData>(
     }
   })
 
-  return instanceReadable
+  return tableReadable
 }

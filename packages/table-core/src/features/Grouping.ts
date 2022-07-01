@@ -1,6 +1,6 @@
 import { RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import {
   Cell,
   Column,
@@ -72,7 +72,7 @@ export type GroupingOptions = {
   manualGrouping?: boolean
   onGroupingChange?: OnChangeFn<GroupingState>
   enableGrouping?: boolean
-  getGroupedRowModel?: (instance: Table<any>) => () => RowModel<any>
+  getGroupedRowModel?: (table: Table<any>) => () => RowModel<any>
   groupedColumnMode?: false | 'reorder' | 'remove'
 }
 
@@ -104,21 +104,21 @@ export const Grouping: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): GroupingOptions => {
     return {
-      onGroupingChange: makeStateUpdater('grouping', instance),
+      onGroupingChange: makeStateUpdater('grouping', table),
       groupedColumnMode: 'reorder',
     }
   },
 
   createColumn: <TData extends RowData>(
     column: Column<TData>,
-    instance: Table<TData>
+    table: Table<TData>
   ): GroupingColumn<TData> => {
     return {
       toggleGrouping: () => {
-        instance.setGrouping(old => {
+        table.setGrouping(old => {
           // Find any existing grouping for this column
           if (old?.includes(column.id)) {
             return old.filter(d => d !== column.id)
@@ -132,17 +132,17 @@ export const Grouping: TableFeature = {
         return (
           column.columnDef.enableGrouping ??
           true ??
-          instance.options.enableGrouping ??
+          table.options.enableGrouping ??
           true ??
           !!column.accessorFn
         )
       },
 
       getIsGrouped: () => {
-        return instance.getState().grouping?.includes(column.id)
+        return table.getState().grouping?.includes(column.id)
       },
 
-      getGroupedIndex: () => instance.getState().grouping?.indexOf(column.id),
+      getGroupedIndex: () => table.getState().grouping?.indexOf(column.id),
 
       getToggleGroupingHandler: () => {
         const canGroup = column.getCanGroup()
@@ -153,7 +153,7 @@ export const Grouping: TableFeature = {
         }
       },
       getAutoAggregationFn: () => {
-        const firstRow = instance.getCoreRowModel().flatRows[0]
+        const firstRow = table.getCoreRowModel().flatRows[0]
 
         const value = firstRow?.getValue(column.id)
 
@@ -182,32 +182,28 @@ export const Grouping: TableFeature = {
   },
 
   createTable: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): GroupingInstance<TData> => {
     return {
-      setGrouping: updater => instance.options.onGroupingChange?.(updater),
+      setGrouping: updater => table.options.onGroupingChange?.(updater),
 
       resetGrouping: defaultState => {
-        instance.setGrouping(
-          defaultState ? [] : instance.initialState?.grouping ?? []
+        table.setGrouping(
+          defaultState ? [] : table.initialState?.grouping ?? []
         )
       },
 
-      getPreGroupedRowModel: () => instance.getFilteredRowModel(),
+      getPreGroupedRowModel: () => table.getFilteredRowModel(),
       getGroupedRowModel: () => {
-        if (
-          !instance._getGroupedRowModel &&
-          instance.options.getGroupedRowModel
-        ) {
-          instance._getGroupedRowModel =
-            instance.options.getGroupedRowModel(instance)
+        if (!table._getGroupedRowModel && table.options.getGroupedRowModel) {
+          table._getGroupedRowModel = table.options.getGroupedRowModel(table)
         }
 
-        if (instance.options.manualGrouping || !instance._getGroupedRowModel) {
-          return instance.getPreGroupedRowModel()
+        if (table.options.manualGrouping || !table._getGroupedRowModel) {
+          return table.getPreGroupedRowModel()
         }
 
-        return instance._getGroupedRowModel()
+        return table._getGroupedRowModel()
       },
     }
   },
@@ -223,10 +219,10 @@ export const Grouping: TableFeature = {
     cell: Cell<TData>,
     column: Column<TData>,
     row: Row<TData>,
-    instance: Table<TData>
+    table: Table<TData>
   ): GroupingCell => {
     const getRenderValue = () =>
-      cell.getValue() ?? instance.options.renderFallbackValue
+      cell.getValue() ?? table.options.renderFallbackValue
 
     return {
       getIsGrouped: () =>

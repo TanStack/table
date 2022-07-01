@@ -61,7 +61,7 @@ If this function is provided, it will be called when the pagination state change
 ### `getPaginationRowModel`
 
 ```tsx
-getPaginationRowModel?: (instance: Table<TData>) => () => RowModel<TData>
+getPaginationRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 Returns the row model after pagination has taken place, but no further.

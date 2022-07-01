@@ -98,7 +98,7 @@ function App() {
   const [data, setData] = createSignal(defaultData)
   const rerender = () => setData(defaultData)
 
-  const instance = createSolidTable({
+  const table = createSolidTable({
     get data() {
       return data()
     },
@@ -110,7 +110,7 @@ function App() {
     <div class="p-2">
       <table>
         <thead>
-          <For each={instance.getHeaderGroups()}>
+          <For each={table.getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
@@ -130,7 +130,7 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={instance.getRowModel().rows}>
+          <For each={table.getRowModel().rows}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
@@ -148,7 +148,7 @@ function App() {
           </For>
         </tbody>
         <tfoot>
-          <For each={instance.getFooterGroups()}>
+          <For each={table.getFooterGroups()}>
             {footerGroup => (
               <tr>
                 <For each={footerGroup.headers}>

@@ -27,9 +27,9 @@ export function noop() {
   //
 }
 
-export function makeStateUpdater(key: keyof TableState, instance: unknown) {
+export function makeStateUpdater(key: keyof TableState, table: unknown) {
   return (updater: Updater<any>) => {
-    ;(instance as any).setState(<TTableState>(old: TTableState) => {
+    ;(table as any).setState(<TTableState>(old: TTableState) => {
       return {
         ...old,
         [key]: functionalUpdate(updater, (old as any)[key]),

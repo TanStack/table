@@ -1,6 +1,6 @@
 import { RowData, Column, Header, HeaderGroup, Table } from '../types'
 import { memo } from '../utils'
-import { TableFeature } from './instance'
+import { TableFeature } from './table'
 
 export type CoreHeaderGroup<TData extends RowData> = {
   id: string
@@ -21,7 +21,7 @@ export type CoreHeader<TData extends RowData> = {
   isPlaceholder: boolean
   placeholderId?: string
   getContext: () => {
-    instance: Table<TData>
+    table: Table<TData>
     header: Header<TData>
     column: Column<TData>
   }
@@ -52,7 +52,7 @@ export type HeadersInstance<TData extends RowData> = {
 //
 
 function createHeader<TData extends RowData>(
-  instance: Table<TData>,
+  table: Table<TData>,
   column: Column<TData>,
   options: {
     id?: string
@@ -90,14 +90,14 @@ function createHeader<TData extends RowData>(
       return leafHeaders as Header<TData>[]
     },
     getContext: () => ({
-      instance,
+      table,
       header: header as Header<TData>,
       column,
     }),
   }
 
-  instance._features.forEach(feature => {
-    Object.assign(header, feature.createHeader?.(header, instance))
+  table._features.forEach(feature => {
+    Object.assign(header, feature.createHeader?.(header, table))
   })
 
   return header as Header<TData>
@@ -105,17 +105,17 @@ function createHeader<TData extends RowData>(
 
 export const Headers: TableFeature = {
   createTable: <TData extends RowData>(
-    instance: Table<TData>
+    table: Table<TData>
   ): HeadersInstance<TData> => {
     return {
       // Header Groups
 
       getHeaderGroups: memo(
         () => [
-          instance.getAllColumns(),
-          instance.getVisibleLeafColumns(),
-          instance.getState().columnPinning.left,
-          instance.getState().columnPinning.right,
+          table.getAllColumns(),
+          table.getVisibleLeafColumns(),
+          table.getState().columnPinning.left,
+          table.getState().columnPinning.right,
         ],
         (allColumns, leafColumns, left, right) => {
           const leftColumns =
@@ -135,44 +135,42 @@ export const Headers: TableFeature = {
           const headerGroups = buildHeaderGroups(
             allColumns,
             [...leftColumns, ...centerColumns, ...rightColumns],
-            instance
+            table
           )
 
           return headerGroups
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getHeaderGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getCenterHeaderGroups: memo(
         () => [
-          instance.getAllColumns(),
-          instance.getVisibleLeafColumns(),
-          instance.getState().columnPinning.left,
-          instance.getState().columnPinning.right,
+          table.getAllColumns(),
+          table.getVisibleLeafColumns(),
+          table.getState().columnPinning.left,
+          table.getState().columnPinning.right,
         ],
         (allColumns, leafColumns, left, right) => {
           leafColumns = leafColumns.filter(
             column => !left?.includes(column.id) && !right?.includes(column.id)
           )
-          return buildHeaderGroups(allColumns, leafColumns, instance, 'center')
+          return buildHeaderGroups(allColumns, leafColumns, table, 'center')
         },
         {
           key:
             process.env.NODE_ENV === 'development' && 'getCenterHeaderGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getLeftHeaderGroups: memo(
         () => [
-          instance.getAllColumns(),
-          instance.getVisibleLeafColumns(),
-          instance.getState().columnPinning.left,
+          table.getAllColumns(),
+          table.getVisibleLeafColumns(),
+          table.getState().columnPinning.left,
         ],
         (allColumns, leafColumns, left) => {
           const orderedLeafColumns =
@@ -183,22 +181,21 @@ export const Headers: TableFeature = {
           return buildHeaderGroups(
             allColumns,
             orderedLeafColumns,
-            instance,
+            table,
             'left'
           )
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getRightHeaderGroups: memo(
         () => [
-          instance.getAllColumns(),
-          instance.getVisibleLeafColumns(),
-          instance.getState().columnPinning.right,
+          table.getAllColumns(),
+          table.getVisibleLeafColumns(),
+          table.getState().columnPinning.right,
         ],
         (allColumns, leafColumns, right) => {
           const orderedLeafColumns =
@@ -209,72 +206,67 @@ export const Headers: TableFeature = {
           return buildHeaderGroups(
             allColumns,
             orderedLeafColumns,
-            instance,
+            table,
             'right'
           )
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       // Footer Groups
 
       getFooterGroups: memo(
-        () => [instance.getHeaderGroups()],
+        () => [table.getHeaderGroups()],
         headerGroups => {
           return [...headerGroups].reverse()
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getFooterGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getLeftFooterGroups: memo(
-        () => [instance.getLeftHeaderGroups()],
+        () => [table.getLeftHeaderGroups()],
         headerGroups => {
           return [...headerGroups].reverse()
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeftFooterGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getCenterFooterGroups: memo(
-        () => [instance.getCenterHeaderGroups()],
+        () => [table.getCenterHeaderGroups()],
         headerGroups => {
           return [...headerGroups].reverse()
         },
         {
           key:
             process.env.NODE_ENV === 'development' && 'getCenterFooterGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getRightFooterGroups: memo(
-        () => [instance.getRightHeaderGroups()],
+        () => [table.getRightHeaderGroups()],
         headerGroups => {
           return [...headerGroups].reverse()
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getRightFooterGroups',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       // Flat Headers
 
       getFlatHeaders: memo(
-        () => [instance.getHeaderGroups()],
+        () => [table.getHeaderGroups()],
         headerGroups => {
           return headerGroups
             .map(headerGroup => {
@@ -284,13 +276,12 @@ export const Headers: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getFlatHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getLeftFlatHeaders: memo(
-        () => [instance.getLeftHeaderGroups()],
+        () => [table.getLeftHeaderGroups()],
         left => {
           return left
             .map(headerGroup => {
@@ -300,13 +291,12 @@ export const Headers: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeftFlatHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getCenterFlatHeaders: memo(
-        () => [instance.getCenterHeaderGroups()],
+        () => [table.getCenterHeaderGroups()],
         left => {
           return left
             .map(headerGroup => {
@@ -316,13 +306,12 @@ export const Headers: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getCenterFlatHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getRightFlatHeaders: memo(
-        () => [instance.getRightHeaderGroups()],
+        () => [table.getRightHeaderGroups()],
         left => {
           return left
             .map(headerGroup => {
@@ -332,54 +321,50 @@ export const Headers: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getRightFlatHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       // Leaf Headers
 
       getCenterLeafHeaders: memo(
-        () => [instance.getCenterFlatHeaders()],
+        () => [table.getCenterFlatHeaders()],
         flatHeaders => {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getCenterLeafHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getLeftLeafHeaders: memo(
-        () => [instance.getLeftFlatHeaders()],
+        () => [table.getLeftFlatHeaders()],
         flatHeaders => {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeftLeafHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getRightLeafHeaders: memo(
-        () => [instance.getRightFlatHeaders()],
+        () => [table.getRightFlatHeaders()],
         flatHeaders => {
           return flatHeaders.filter(header => !header.subHeaders?.length)
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getRightLeafHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
 
       getLeafHeaders: memo(
         () => [
-          instance.getLeftHeaderGroups(),
-          instance.getCenterHeaderGroups(),
-          instance.getRightHeaderGroups(),
+          table.getLeftHeaderGroups(),
+          table.getCenterHeaderGroups(),
+          table.getRightHeaderGroups(),
         ],
         (left, center, right) => {
           return [
@@ -394,8 +379,7 @@ export const Headers: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeafHeaders',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugHeaders,
+          debug: () => table.options.debugAll ?? table.options.debugHeaders,
         }
       ),
     }
@@ -405,7 +389,7 @@ export const Headers: TableFeature = {
 export function buildHeaderGroups<TData extends RowData>(
   allColumns: Column<TData>[],
   columnsToGroup: Column<TData>[],
-  instance: Table<TData>,
+  table: Table<TData>,
   headerFamily?: 'center' | 'left' | 'right'
 ) {
   // Find the max depth of the columns:
@@ -474,7 +458,7 @@ export function buildHeaderGroups<TData extends RowData>(
         latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
         // This is a new header. Let's create it
-        const header = createHeader(instance, column, {
+        const header = createHeader(table, column, {
           id: [headerFamily, depth, column.id, headerToGroup?.id]
             .filter(Boolean)
             .join('_'),
@@ -505,7 +489,7 @@ export function buildHeaderGroups<TData extends RowData>(
   }
 
   const bottomHeaders = columnsToGroup.map((column, index) =>
-    createHeader(instance, column, {
+    createHeader(table, column, {
       depth: maxDepth,
       index,
     })

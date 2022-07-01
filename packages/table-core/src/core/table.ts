@@ -32,14 +32,14 @@ import { Sorting } from '../features/Sorting'
 import { Visibility } from '../features/Visibility'
 
 export type TableFeature = {
-  getDefaultOptions?: (instance: any) => any
+  getDefaultOptions?: (table: any) => any
   getInitialState?: (initialState?: InitialTableState) => any
-  createTable?: (instance: any) => any
+  createTable?: (table: any) => any
   getDefaultColumnDef?: () => any
-  createColumn?: (column: any, instance: any) => any
-  createHeader?: (column: any, instance: any) => any
-  createCell?: (cell: any, column: any, row: any, instance: any) => any
-  createRow?: (row: any, instance: any) => any
+  createColumn?: (column: any, table: any) => any
+  createHeader?: (column: any, table: any) => any
+  createCell?: (cell: any, column: any, row: any, table: any) => any
+  createRow?: (row: any, table: any) => any
 }
 
 const features = [
@@ -76,7 +76,7 @@ export type CoreOptions<TData extends RowData> = {
     options: Partial<TableOptions<TData>>
   ) => TableOptions<TData>
   meta?: unknown
-  getCoreRowModel: (instance: Table<any>) => () => RowModel<any>
+  getCoreRowModel: (table: Table<any>) => () => RowModel<any>
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
   columns: ColumnDef<TData>[]
@@ -114,15 +114,15 @@ export function createTable<TData extends RowData>(
     console.info('Creating Table Instance...')
   }
 
-  let instance = { _features: features } as unknown as Table<TData>
+  let table = { _features: features } as unknown as Table<TData>
 
-  const defaultOptions = instance._features.reduce((obj, feature) => {
-    return Object.assign(obj, feature.getDefaultOptions?.(instance))
+  const defaultOptions = table._features.reduce((obj, feature) => {
+    return Object.assign(obj, feature.getDefaultOptions?.(table))
   }, {}) as TableOptionsResolved<TData>
 
   const mergeOptions = (options: TableOptionsResolved<TData>) => {
-    if (instance.options.mergeOptions) {
-      return instance.options.mergeOptions(defaultOptions, options)
+    if (table.options.mergeOptions) {
+      return table.options.mergeOptions(defaultOptions, options)
     }
 
     return {
@@ -138,7 +138,7 @@ export function createTable<TData extends RowData>(
     ...(options.initialState ?? {}),
   } as TableState
 
-  instance._features.forEach(feature => {
+  table._features.forEach(feature => {
     initialState = feature.getInitialState?.(initialState) ?? initialState
   })
 
@@ -175,44 +175,44 @@ export function createTable<TData extends RowData>(
       }
     },
     reset: () => {
-      instance.setState(instance.initialState)
+      table.setState(table.initialState)
     },
     setOptions: updater => {
-      const newOptions = functionalUpdate(updater, instance.options)
-      instance.options = mergeOptions(newOptions) as RequiredKeys<
+      const newOptions = functionalUpdate(updater, table.options)
+      table.options = mergeOptions(newOptions) as RequiredKeys<
         TableOptionsResolved<TData>,
         'state'
       >
     },
 
     getState: () => {
-      return instance.options.state as TableState
+      return table.options.state as TableState
     },
 
     setState: (updater: Updater<TableState>) => {
-      instance.options.onStateChange?.(updater)
+      table.options.onStateChange?.(updater)
     },
 
     _getRowId: (row: TData, index: number, parent?: Row<TData>) =>
-      instance.options.getRowId?.(row, index, parent) ??
+      table.options.getRowId?.(row, index, parent) ??
       `${parent ? [parent.id, index].join('.') : index}`,
 
     getCoreRowModel: () => {
-      if (!instance._getCoreRowModel) {
-        instance._getCoreRowModel = instance.options.getCoreRowModel(instance)
+      if (!table._getCoreRowModel) {
+        table._getCoreRowModel = table.options.getCoreRowModel(table)
       }
 
-      return instance._getCoreRowModel!()
+      return table._getCoreRowModel!()
     },
 
     // The final calls start at the bottom of the model,
     // expanded rows, which then work their way up
 
     getRowModel: () => {
-      return instance.getPaginationRowModel()
+      return table.getPaginationRowModel()
     },
     getRow: (id: string) => {
-      const row = instance.getRowModel().rowsById[id]
+      const row = table.getRowModel().rowsById[id]
 
       if (!row) {
         if (process.env.NODE_ENV !== 'production') {
@@ -224,7 +224,7 @@ export function createTable<TData extends RowData>(
       return row
     },
     _getDefaultColumnDef: memo(
-      () => [instance.options.defaultColumn],
+      () => [table.options.defaultColumn],
       defaultColumn => {
         defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TData>>
 
@@ -232,22 +232,22 @@ export function createTable<TData extends RowData>(
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
           cell: props => (props.getValue() as any)?.toString?.() ?? null,
-          ...instance._features.reduce((obj, feature) => {
+          ...table._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
           ...defaultColumn,
         } as Partial<ColumnDef<TData>>
       },
       {
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
         key: process.env.NODE_ENV === 'development' && 'getDefaultColumnDef',
       }
     ),
 
-    _getColumnDefs: () => instance.options.columns,
+    _getColumnDefs: () => table.options.columns,
 
     getAllColumns: memo(
-      () => [instance._getColumnDefs()],
+      () => [table._getColumnDefs()],
       columnDefs => {
         const recurseColumns = (
           columnDefs: ColumnDef<TData>[],
@@ -255,7 +255,7 @@ export function createTable<TData extends RowData>(
           depth = 0
         ): Column<TData>[] => {
           return columnDefs.map(columnDef => {
-            const column = createColumn(instance, columnDef, depth, parent)
+            const column = createColumn(table, columnDef, depth, parent)
 
             column.columns = columnDef.columns
               ? recurseColumns(columnDef.columns, column, depth + 1)
@@ -269,12 +269,12 @@ export function createTable<TData extends RowData>(
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllColumns',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
       }
     ),
 
     getAllFlatColumns: memo(
-      () => [instance.getAllColumns()],
+      () => [table.getAllColumns()],
       allColumns => {
         return allColumns.flatMap(column => {
           return column.getFlatColumns()
@@ -282,12 +282,12 @@ export function createTable<TData extends RowData>(
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumns',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
       }
     ),
 
     _getAllFlatColumnsById: memo(
-      () => [instance.getAllFlatColumns()],
+      () => [table.getAllFlatColumns()],
       flatColumns => {
         return flatColumns.reduce((acc, column) => {
           acc[column.id] = column
@@ -296,24 +296,24 @@ export function createTable<TData extends RowData>(
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
       }
     ),
 
     getAllLeafColumns: memo(
-      () => [instance.getAllColumns(), instance._getOrderColumnsFn()],
+      () => [table.getAllColumns(), table._getOrderColumnsFn()],
       (allColumns, orderColumns) => {
         let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
         return orderColumns(leafColumns)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllLeafColumns',
-        debug: () => instance.options.debugAll ?? instance.options.debugColumns,
+        debug: () => table.options.debugAll ?? table.options.debugColumns,
       }
     ),
 
     getColumn: columnId => {
-      const column = instance._getAllFlatColumnsById()[columnId]
+      const column = table._getAllFlatColumnsById()[columnId]
 
       if (!column) {
         if (process.env.NODE_ENV !== 'production') {
@@ -326,11 +326,11 @@ export function createTable<TData extends RowData>(
     },
   }
 
-  Object.assign(instance, coreInstance)
+  Object.assign(table, coreInstance)
 
-  instance._features.forEach(feature => {
-    return Object.assign(instance, feature.createTable?.(instance))
+  table._features.forEach(feature => {
+    return Object.assign(table, feature.createTable?.(table))
   })
 
-  return instance
+  return table
 }

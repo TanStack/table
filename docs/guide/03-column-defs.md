@@ -213,7 +213,7 @@ You can provide a custom cell formatter by passing a function to the `cell` prop
 }
 ```
 
-Cell formatters are also provided the `row` and `instance` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
+Cell formatters are also provided the `row` and `table` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
 
 ```tsx
 {

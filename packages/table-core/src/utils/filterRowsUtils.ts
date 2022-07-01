@@ -4,19 +4,19 @@ import { TableGenerics, Row, RowModel, Table, RowData } from '../types'
 export function filterRows<TData extends RowData>(
   rows: Row<TData>[],
   filterRowImpl: (row: Row<TData>) => any,
-  instance: Table<TData>
+  table: Table<TData>
 ) {
-  if (instance.options.filterFromLeafRows) {
-    return filterRowModelFromLeafs(rows, filterRowImpl, instance)
+  if (table.options.filterFromLeafRows) {
+    return filterRowModelFromLeafs(rows, filterRowImpl, table)
   }
 
-  return filterRowModelFromRoot(rows, filterRowImpl, instance)
+  return filterRowModelFromRoot(rows, filterRowImpl, table)
 }
 
 export function filterRowModelFromLeafs<TData extends RowData>(
   rowsToFilter: Row<TData>[],
   filterRow: (row: Row<TData>) => Row<TData>[],
-  instance: Table<TData>
+  table: Table<TData>
 ): RowModel<TData> {
   const newFilteredFlatRows: Row<TData>[] = []
   const newFilteredRowsById: Record<string, Row<TData>> = {}
@@ -30,7 +30,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
 
       if (row.subRows?.length) {
         const newRow = createRow(
-          instance,
+          table,
           row.id,
           row.original,
           row.index,
@@ -64,7 +64,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
 export function filterRowModelFromRoot<TData extends RowData>(
   rowsToFilter: Row<TData>[],
   filterRow: (row: Row<TData>) => any,
-  instance: Table<TData>
+  table: Table<TData>
 ): RowModel<TData> {
   const newFilteredFlatRows: Row<TData>[] = []
   const newFilteredRowsById: Record<string, Row<TData>> = {}
@@ -84,7 +84,7 @@ export function filterRowModelFromRoot<TData extends RowData>(
       if (pass) {
         if (row.subRows?.length) {
           const newRow = createRow(
-            instance,
+            table,
             row.id,
             row.original,
             row.index,
