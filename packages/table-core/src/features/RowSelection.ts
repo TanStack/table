@@ -484,7 +484,7 @@ export function selectRowsFn<TData extends RowData>(
   }
 }
 
-export function isRowSelected<TData extends AnyData>(
+export function isRowSelected<TData extends RowData>(
   row: Row<TData>,
   selection: Record<string, boolean>
 ): boolean {
