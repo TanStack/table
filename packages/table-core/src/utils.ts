@@ -9,6 +9,12 @@ export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
 > &
   U
 
+export type UnionToIntersection<T> = (
+  T extends any ? (x: T) => any : never
+) extends (x: infer R) => any
+  ? R
+  : never
+
 export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
@@ -21,9 +27,9 @@ export function noop() {
   //
 }
 
-export function makeStateUpdater(key: keyof TableState, instance: unknown) {
+export function makeStateUpdater(key: keyof TableState, table: unknown) {
   return (updater: Updater<any>) => {
-    ;(instance as any).setState(<TTableState>(old: TTableState) => {
+    ;(table as any).setState(<TTableState>(old: TTableState) => {
       return {
         ...old,
         [key]: functionalUpdate(updater, (old as any)[key]),

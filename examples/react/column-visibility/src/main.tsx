@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createTable,
+  ColumnDef,
+  flexRender,
   getCoreRowModel,
-  useTableInstance,
+  useReactTable,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -45,52 +46,56 @@ const defaultData: Person[] = [
   },
 ]
 
-let table = createTable().setRowType<Person>()
-
-const defaultColumns = [
-  table.createGroup({
+const defaultColumns: ColumnDef<Person>[] = [
+  {
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('firstName', {
+      {
+        accessorKey: 'firstName',
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      }),
-      table.createDataColumn(row => row.lastName, {
+      },
+      {
+        accessorFn: row => row.lastName,
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
-      }),
+      },
     ],
-  }),
-  table.createGroup({
+  },
+  {
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('age', {
+      {
+        accessorKey: 'age',
         header: () => 'Age',
         footer: props => props.column.id,
-      }),
-      table.createGroup({
+      },
+      {
         header: 'More Info',
         columns: [
-          table.createDataColumn('visits', {
+          {
+            accessorKey: 'visits',
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('status', {
+          },
+          {
+            accessorKey: 'status',
             header: 'Status',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('progress', {
+          },
+          {
+            accessorKey: 'progress',
             header: 'Profile Progress',
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
+      },
     ],
-  }),
+  },
 ]
 
 function App() {
@@ -102,7 +107,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -123,14 +128,14 @@ function App() {
             <input
               {...{
                 type: 'checkbox',
-                checked: instance.getIsAllColumnsVisible(),
-                onChange: instance.getToggleAllColumnsVisibilityHandler(),
+                checked: table.getIsAllColumnsVisible(),
+                onChange: table.getToggleAllColumnsVisibilityHandler(),
               }}
             />{' '}
             Toggle All
           </label>
         </div>
-        {instance.getAllLeafColumns().map(column => {
+        {table.getAllLeafColumns().map(column => {
           return (
             <div key={column.id} className="px-1">
               <label>
@@ -150,31 +155,43 @@ function App() {
       <div className="h-4" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : header.renderHeader()}
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>{cell.renderCell()}</td>
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot>
-          {instance.getFooterGroups().map(footerGroup => (
+          {table.getFooterGroups().map(footerGroup => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : header.renderFooter()}
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
@@ -186,13 +203,13 @@ function App() {
         Rerender
       </button>
       <div className="h-4" />
-      <pre>{JSON.stringify(instance.getState().columnVisibility, null, 2)}</pre>
+      <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
     </div>
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

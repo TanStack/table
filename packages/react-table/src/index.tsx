@@ -2,15 +2,10 @@ import * as React from 'react'
 export * from '@tanstack/table-core'
 
 import {
-  createTableInstance,
+  createTable,
   TableOptions,
-  TableInstance,
-  Table,
-  TableGenerics,
-  createTableFactory,
-  Overwrite,
-  PartialKeys,
   TableOptionsResolved,
+  RowData,
 } from '@tanstack/table-core'
 
 export type Renderable<TProps> =
@@ -18,20 +13,14 @@ export type Renderable<TProps> =
   | React.FunctionComponent<TProps>
   | React.Component<TProps>
 
-export type Render = <TProps extends {}>(
-  Comp: Renderable<TProps>,
-  props: TProps
-) => React.ReactNode | JSX.Element
-
-export type ReactTableGenerics = Overwrite<
-  TableGenerics,
-  { Renderer: Render; Rendered: ReturnType<Render> }
->
-
 //
 
-export const render: Render = (Comp, props) =>
-  !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
+export function flexRender<TProps extends object>(
+  Comp: Renderable<TProps>,
+  props: TProps
+): React.ReactNode | JSX.Element {
+  return !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
+}
 
 function isReactComponent(component: unknown): component is React.FC {
   return (
@@ -59,41 +48,28 @@ function isExoticComponent(component: any) {
   )
 }
 
-export const createTable = createTableFactory({ render })
-
-// const useIsomorphicLayoutEffect =
-//   typeof document !== 'undefined' ? React.useLayoutEffect : React.useEffect
-
-export type UseTableInstanceOptions<TGenerics extends ReactTableGenerics> =
-  TableOptions<TGenerics>
-
-export function useTableInstance<TGenerics extends ReactTableGenerics>(
-  table: Table<TGenerics>,
-  options: UseTableInstanceOptions<TGenerics>
-): TableInstance<TGenerics> {
+export function useReactTable<TData extends RowData>(
+  options: TableOptions<TData>
+) {
   // Compose in the generic options to the user options
-  const resolvedOptions: TableOptionsResolved<TGenerics> = {
-    ...table.options,
+  const resolvedOptions: TableOptionsResolved<TData> = {
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
-    render,
     renderFallbackValue: null,
     ...options,
   }
 
-  // Create a new table instance and store it in state
-  const [instanceRef] = React.useState(() => ({
-    current: createTableInstance<TGenerics>(resolvedOptions),
+  // Create a new table and store it in state
+  const [tableRef] = React.useState(() => ({
+    current: createTable<TData>(resolvedOptions),
   }))
 
-  // By default, manage table state here using the instance's initial state
-  const [state, setState] = React.useState(
-    () => instanceRef.current.initialState
-  )
+  // By default, manage table state here using the table's initial state
+  const [state, setState] = React.useState(() => tableRef.current.initialState)
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
-  instanceRef.current.setOptions(prev => ({
+  tableRef.current.setOptions(prev => ({
     ...prev,
     ...options,
     state: {
@@ -108,5 +84,5 @@ export function useTableInstance<TGenerics extends ReactTableGenerics>(
     },
   }))
 
-  return instanceRef.current
+  return tableRef.current
 }

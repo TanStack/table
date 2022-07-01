@@ -1,9 +1,11 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import {
-    createTable,
+    ColumnDef,
+    createSvelteTable,
+    flexRender,
     getCoreRowModel,
-    createTableInstance,
+    TableOptions,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -16,7 +18,7 @@
     progress: number
   }
 
-  const table = createTable().setRowType<Person>()
+  
 
   const defaultData: Person[] = [
     {
@@ -45,58 +47,64 @@
     },
   ]
 
-  const defaultColumns = [
-    table.createGroup({
+  const defaultColumns: ColumnDef<Person>[] = [
+    {
       header: 'Name',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('firstName', {
+        {
+          accessorKey: 'firstName',
           cell: info => info.getValue(),
           footer: props => props.column.id,
-        }),
-        table.createDataColumn(row => row.lastName, {
+        },
+         {
+          accessorFn: row => row.lastName,
           id: 'lastName',
           cell: info => info.getValue(),
           header: () => 'Last Name',
           footer: props => props.column.id,
-        }),
+        },
       ],
-    }),
-    table.createGroup({
+    },
+    {
       header: 'Info',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('age', {
+        {
+          accessorKey: 'age',
           header: () => 'Age',
           footer: props => props.column.id,
-        }),
-        table.createGroup({
+        },
+        {
           header: 'More Info',
           columns: [
-            table.createDataColumn('visits', {
+            {
+              accessorKey: 'visits',
               header: () => 'Visits',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('status', {
+            },
+            {
+              accessorKey: 'status',
               header: 'Status',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('progress', {
+            },
+            {
+              accessorKey: 'progress',
               header: 'Profile Progress',
               footer: props => props.column.id,
-            }),
+            },
           ],
-        }),
+        },
       ],
-    }),
+    },
   ]
 
-  const options = writable(
-    table.createOptions({
+  const options = writable<TableOptions<Person>>(
+    {
       data: defaultData,
       columns: defaultColumns,
       getCoreRowModel: getCoreRowModel(),
-    })
+    }
   )
 
   const rerender = () => {
@@ -106,18 +114,18 @@
     }))
   }
 
-  const instance = createTableInstance(table, options)
+  const table = createSvelteTable(options)
 </script>
 
 <div class="p-2">
   <table>
     <thead>
-      {#each $instance.getHeaderGroups() as headerGroup}
+      {#each $table.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={header.renderHeader()} />
+                <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
               {/if}
             </th>
           {/each}
@@ -125,23 +133,23 @@
       {/each}
     </thead>
     <tbody>
-      {#each $instance.getRowModel().rows as row}
+      {#each $table.getRowModel().rows as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component this={cell.renderCell()} />
+              <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
             </td>
           {/each}
         </tr>
       {/each}
     </tbody>
     <tfoot>
-      {#each $instance.getFooterGroups() as footerGroup}
+      {#each $table.getFooterGroups() as footerGroup}
         <tr>
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={header.renderFooter()} />
+                <svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
               {/if}
             </th>
           {/each}

@@ -14,12 +14,12 @@ All cell objects have the following properties:
 id: string
 ```
 
-The unique ID for the cell across the entire table instance.
+The unique ID for the cell across the entire table.
 
 ### `getValue`
 
 ```tsx
-getValue: () => TGenerics['Value']
+getValue: () => any
 ```
 
 Returns the value for the cell, accessed via the associated column's accessor key or accessor function.
@@ -27,7 +27,7 @@ Returns the value for the cell, accessed via the associated column's accessor ke
 ### `row`
 
 ```tsx
-row: Row<TGenerics>
+row: Row<TData>
 ```
 
 The associated Row object for the cell.
@@ -35,7 +35,7 @@ The associated Row object for the cell.
 ### `column`
 
 ```tsx
-column: Column<TGenerics>
+column: Column<TData>
 ```
 
 The associated Column object for the cell.
@@ -43,7 +43,7 @@ The associated Column object for the cell.
 ### `renderCell`
 
 ```tsx
-renderCell: () => string | null | TGenerics['Rendered']
+renderCell: () => unknown
 ```
 
 Returns the rendered cell value using the associated column's `cell` template. The exact return type of this function depends on the adapter being used.

@@ -1,5 +1,5 @@
 import { RowModel } from '..'
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import {
   BuiltInSortingFn,
   reSplitAlphaNumeric,
@@ -10,9 +10,10 @@ import {
   Column,
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Row,
   Updater,
+  RowData,
 } from '../types'
 
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'
@@ -30,23 +31,22 @@ export type SortingTableState = {
   sorting: SortingState
 }
 
-export type SortingFn<TGenerics extends TableGenerics> = {
-  (rowA: Row<TGenerics>, rowB: Row<TGenerics>, columnId: string): number
+export type SortingFn<TData extends RowData> = {
+  (rowA: Row<TData>, rowB: Row<TData>, columnId: string): number
 }
 
-export type CustomSortingFns<TGenerics extends TableGenerics> = Record<
+export type CustomSortingFns<TData extends RowData> = Record<
   string,
-  SortingFn<TGenerics>
+  SortingFn<TData>
 >
 
-export type SortingFnOption<TGenerics extends TableGenerics> =
+export type SortingFnOption<TData extends RowData> =
   | 'auto'
   | BuiltInSortingFn
-  | keyof TGenerics['SortingFns']
-  | SortingFn<TGenerics>
+  | SortingFn<TData>
 
-export type SortingColumnDef<TGenerics extends TableGenerics> = {
-  sortingFn?: SortingFnOption<Overwrite<TGenerics, { Value: any }>>
+export type SortingColumnDef<TData extends RowData> = {
+  sortingFn?: SortingFnOption<TData>
   sortDescFirst?: boolean
   enableSorting?: boolean
   enableMultiSort?: boolean
@@ -54,10 +54,10 @@ export type SortingColumnDef<TGenerics extends TableGenerics> = {
   sortUndefined?: false | -1 | 1
 }
 
-export type SortingColumn<TGenerics extends TableGenerics> = {
-  getAutoSortingFn: () => SortingFn<TGenerics>
+export type SortingColumn<TData extends RowData> = {
+  getAutoSortingFn: () => SortingFn<TData>
   getAutoSortDir: () => SortDirection
-  getSortingFn: () => SortingFn<TGenerics>
+  getSortingFn: () => SortingFn<TData>
   getNextSortingOrder: () => SortDirection | false
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
@@ -68,26 +68,25 @@ export type SortingColumn<TGenerics extends TableGenerics> = {
   getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 }
 
-export type SortingOptions<TGenerics extends TableGenerics> = {
+export type SortingOptions<TData extends RowData> = {
   manualSorting?: boolean
-  sortingFns?: TGenerics['SortingFns']
   onSortingChange?: OnChangeFn<SortingState>
   enableSorting?: boolean
   enableSortingRemoval?: boolean
   enableMultiRemove?: boolean
   enableMultiSort?: boolean
   sortDescFirst?: boolean
-  getSortedRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
+  getSortedRowModel?: (table: Table<any>) => () => RowModel<any>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: unknown) => boolean
 }
 
-export type SortingInstance<TGenerics extends TableGenerics> = {
+export type SortingInstance<TData extends RowData> = {
   setSorting: (updater: Updater<SortingState>) => void
   resetSorting: (defaultState?: boolean) => void
-  getPreSortedRowModel: () => RowModel<TGenerics>
-  getSortedRowModel: () => RowModel<TGenerics>
-  _getSortedRowModel?: () => RowModel<TGenerics>
+  getPreSortedRowModel: () => RowModel<TData>
+  getSortedRowModel: () => RowModel<TData>
+  _getSortedRowModel?: () => RowModel<TData>
 }
 
 //
@@ -100,32 +99,30 @@ export const Sorting: TableFeature = {
     }
   },
 
-  getDefaultColumnDef: <
-    TGenerics extends TableGenerics
-  >(): SortingColumnDef<TGenerics> => {
+  getDefaultColumnDef: <TData extends RowData>(): SortingColumnDef<TData> => {
     return {
       sortingFn: 'auto',
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): SortingOptions<TGenerics> => {
+  getDefaultOptions: <TData extends RowData>(
+    table: Table<TData>
+  ): SortingOptions<TData> => {
     return {
-      onSortingChange: makeStateUpdater('sorting', instance),
+      onSortingChange: makeStateUpdater('sorting', table),
       isMultiSortEvent: (e: unknown) => {
         return (e as MouseEvent).shiftKey
       },
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): SortingColumn<TGenerics> => {
+  createColumn: <TData extends RowData>(
+    column: Column<TData>,
+    table: Table<TData>
+  ): SortingColumn<TData> => {
     return {
       getAutoSortingFn: () => {
-        const firstRows = instance.getFilteredRowModel().flatRows.slice(10)
+        const firstRows = table.getFilteredRowModel().flatRows.slice(10)
 
         let isString = false
 
@@ -152,7 +149,7 @@ export const Sorting: TableFeature = {
         return sortingFns.basic
       },
       getAutoSortDir: () => {
-        const firstRow = instance.getFilteredRowModel().flatRows[0]
+        const firstRow = table.getFilteredRowModel().flatRows[0]
 
         const value = firstRow?.getValue(column.id)
 
@@ -163,8 +160,6 @@ export const Sorting: TableFeature = {
         return 'desc'
       },
       getSortingFn: () => {
-        const userSortingFn = instance.options.sortingFns
-
         if (!column) {
           throw new Error()
         }
@@ -173,27 +168,24 @@ export const Sorting: TableFeature = {
           ? column.columnDef.sortingFn
           : column.columnDef.sortingFn === 'auto'
           ? column.getAutoSortingFn()
-          : (userSortingFn as Record<string, any>)?.[
-              column.columnDef.sortingFn as string
-            ] ??
-            (sortingFns[
+          : (sortingFns[
               column.columnDef.sortingFn as BuiltInSortingFn
-            ] as SortingFn<TGenerics>)
+            ] as SortingFn<TData>)
       },
       toggleSorting: (desc, multi) => {
         // if (column.columns.length) {
         //   column.columns.forEach((c, i) => {
         //     if (c.id) {
-        //       instance.toggleColumnSorting(c.id, undefined, multi || !!i)
+        //       table.toggleColumnSorting(c.id, undefined, multi || !!i)
         //     }
         //   })
         //   return
         // }
 
-        // this needs to be outside of instance.setSorting to be in sync with rerender
+        // this needs to be outside of table.setSorting to be in sync with rerender
         const nextSortingOrder = column.getNextSortingOrder()
 
-        instance.setSorting(old => {
+        table.setSorting(old => {
           // Find any existing sorting for this column
           const existingSorting = old?.find(d => d.id === column.id)
           const existingIndex = old?.findIndex(d => d.id === column.id)
@@ -224,9 +216,9 @@ export const Sorting: TableFeature = {
           // Handle toggle states that will remove the sorting
           if (
             sortAction === 'toggle' && // Must be toggling
-            (instance.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
+            (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
             !hasDescDefined && // Must not be setting desc
-            (multi ? instance.options.enableMultiRemove ?? true : true) && // If multi, don't allow if enableMultiRemove
+            (multi ? table.options.enableMultiRemove ?? true : true) && // If multi, don't allow if enableMultiRemove
             !nextSortingOrder // Finally, detect if it should indeed be removed
           ) {
             sortAction = 'remove'
@@ -251,8 +243,7 @@ export const Sorting: TableFeature = {
             newSorting.splice(
               0,
               newSorting.length -
-                (instance.options.maxMultiSortColCount ??
-                  Number.MAX_SAFE_INTEGER)
+                (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER)
             )
           } else if (sortAction === 'toggle' && old?.length) {
             // This flips (or sets) the
@@ -276,7 +267,7 @@ export const Sorting: TableFeature = {
       getNextSortingOrder: () => {
         const sortDescFirst =
           column.columnDef.sortDescFirst ??
-          instance.options.sortDescFirst ??
+          table.options.sortDescFirst ??
           column.getAutoSortDir() === 'desc'
         const firstSortDirection = sortDescFirst ? 'desc' : 'asc'
 
@@ -294,7 +285,7 @@ export const Sorting: TableFeature = {
       getCanSort: () => {
         return (
           (column.columnDef.enableSorting ?? true) &&
-          (instance.options.enableSorting ?? true) &&
+          (table.options.enableSorting ?? true) &&
           !!column.accessorFn
         )
       },
@@ -302,13 +293,13 @@ export const Sorting: TableFeature = {
       getCanMultiSort: () => {
         return (
           column.columnDef.enableMultiSort ??
-          instance.options.enableMultiSort ??
+          table.options.enableMultiSort ??
           !!column.accessorFn
         )
       },
 
       getIsSorted: () => {
-        const columnSort = instance
+        const columnSort = table
           .getState()
           .sorting?.find(d => d.id === column.id)
 
@@ -316,11 +307,11 @@ export const Sorting: TableFeature = {
       },
 
       getSortIndex: () =>
-        instance.getState().sorting?.findIndex(d => d.id === column.id) ?? -1,
+        table.getState().sorting?.findIndex(d => d.id === column.id) ?? -1,
 
       clearSorting: () => {
         //clear sorting for just 1 column
-        instance.setSorting(old =>
+        table.setSorting(old =>
           old?.length ? old.filter(d => d.id !== column.id) : []
         )
       },
@@ -334,7 +325,7 @@ export const Sorting: TableFeature = {
           column.toggleSorting?.(
             undefined,
             column.getCanMultiSort()
-              ? instance.options.isMultiSortEvent?.(e)
+              ? table.options.isMultiSortEvent?.(e)
               : false
           )
         }
@@ -342,31 +333,25 @@ export const Sorting: TableFeature = {
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): SortingInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    table: Table<TData>
+  ): SortingInstance<TData> => {
     return {
-      setSorting: updater => instance.options.onSortingChange?.(updater),
+      setSorting: updater => table.options.onSortingChange?.(updater),
       resetSorting: defaultState => {
-        instance.setSorting(
-          defaultState ? [] : instance.initialState?.sorting ?? []
-        )
+        table.setSorting(defaultState ? [] : table.initialState?.sorting ?? [])
       },
-      getPreSortedRowModel: () => instance.getGroupedRowModel(),
+      getPreSortedRowModel: () => table.getGroupedRowModel(),
       getSortedRowModel: () => {
-        if (
-          !instance._getSortedRowModel &&
-          instance.options.getSortedRowModel
-        ) {
-          instance._getSortedRowModel =
-            instance.options.getSortedRowModel(instance)
+        if (!table._getSortedRowModel && table.options.getSortedRowModel) {
+          table._getSortedRowModel = table.options.getSortedRowModel(table)
         }
 
-        if (instance.options.manualSorting || !instance._getSortedRowModel) {
-          return instance.getPreSortedRowModel()
+        if (table.options.manualSorting || !table._getSortedRowModel) {
+          return table.getPreSortedRowModel()
         }
 
-        return instance._getSortedRowModel()
+        return table._getSortedRowModel()
       },
     }
   },

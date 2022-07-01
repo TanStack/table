@@ -5,7 +5,7 @@ id: grouping
 
 ## State
 
-Grouping state is stored on the table instance using the following shape:
+Grouping state is stored on the table using the following shape:
 
 ```tsx
 export type GroupingState = string[]
@@ -48,9 +48,9 @@ and should return a value (usually primitive) to build the aggregated row model.
 This is the type signature for every aggregation function:
 
 ```tsx
-export type AggregationFn<TGenerics extends TableGenerics> = (
-  getLeafValues: () => TGenerics['Value'][],
-  getChildValues: () => TGenerics['Value'][]
+export type AggregationFn<TData extends AnyData> = (
+  getLeafRows: () => Row<TData>[],
+  getChildRows: () => Row<TData>[]
 ) => any
 ```
 
@@ -65,11 +65,10 @@ Aggregation functions can be used/referenced/defined by passing the following to
 The final list of aggregation functions available for the `columnDef.aggregationFn` use the following type:
 
 ```tsx
-export type AggregationFnOption<TGenerics extends TableGenerics> =
+export type AggregationFnOption<TData extends AnyData> =
   | 'auto'
   | BuiltInAggregationFn
-  | keyof TGenerics['AggregationFns']
-  | AggregationFn<TGenerics>
+  | AggregationFn<TData>
 ```
 
 ## Column Def Options
@@ -77,7 +76,7 @@ export type AggregationFnOption<TGenerics extends TableGenerics> =
 ### `aggregationFn`
 
 ```tsx
-aggregationFn?: AggregationFn | keyof TGenerics['AggregationFns'] | keyof BuiltInAggregationFns
+aggregationFn?: AggregationFn | keyof BuiltInAggregationFns
 ```
 
 The aggregation function to use with this column.
@@ -85,20 +84,19 @@ The aggregation function to use with this column.
 Options:
 
 - A `string` referencing a [built-in aggregation function](#aggregation-functions))
-- A `string` referencing a custom aggregation function defined on the `aggregationFns` table option
 - A [custom aggregation function](#aggregation-functions)
 
 ### `aggregatedCell`
 
 ```tsx
 aggregatedCell?: Renderable<
-  TGenerics,
   {
-    instance: TableInstance<TGenerics>
-    row: Row<TGenerics>
-    column: Column<TGenerics>
-    cell: Cell<TGenerics>
-    getValue: () => TGenerics['Value']
+    table: Table<TData>
+    row: Row<TData>
+    column: Column<TData>
+    cell: Cell<TData>
+    getValue: () => any
+    renderValue: () => any
   }
 >
 ```
@@ -118,7 +116,7 @@ Enables/disables grouping for this column.
 ### `aggregationFn`
 
 ```tsx
-aggregationFn?: AggregationFnOption<Overwrite<TGenerics, { Value: any }>>
+aggregationFn?: AggregationFnOption<TData>
 ```
 
 The resolved aggregation function for the column.
@@ -166,7 +164,7 @@ Returns a function that toggles the grouping state of the column. This is useful
 ### `getAutoAggregationFn`
 
 ```tsx
-getAutoAggregationFn: () => AggregationFn<TGenerics> | undefined
+getAutoAggregationFn: () => AggregationFn<TData> | undefined
 ```
 
 Returns the automatically inferred aggregation function for the column.
@@ -174,7 +172,7 @@ Returns the automatically inferred aggregation function for the column.
 ### `getAggregationFn`
 
 ```tsx
-getAggregationFn: () => AggregationFn<TGenerics> | undefined
+getAggregationFn: () => AggregationFn<TData> | undefined
 ```
 
 ## Row API
@@ -213,30 +211,6 @@ manualGrouping?: boolean
 
 Enables manual grouping. If this option is set to `true`, the table will not automatically group rows using `getGroupedRowModel()` and instead will expect you to manually group the rows before passing them to the table. This is useful if you are doing server-side grouping and aggregation.
 
-### `aggregationFns`
-
-```tsx
-aggregationFns?: TGenerics['AggregationFns']
-```
-
-Normally set ahead of time when using the `createTable()` helper, this option allows you to define custom aggregation functions that can be referenced by their string key.
-
-Example:
-
-```tsx
-const table = createTable().setOptions({
-  aggregationFns: {
-    myCustomAggregationFn: (columnId, leafRows, childRows) => {
-      // return the aggregated value
-    },
-  },
-})
-
-const column = table.createDataColumn('key', {
-  aggregationFn: 'myCustomAggregationFn',
-})
-```
-
 ### `onGroupingChange`
 
 ```tsx
@@ -256,7 +230,7 @@ Enables/disables grouping for all columns.
 ### `getGroupedRowModel`
 
 ```tsx
-getGroupedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics>
+getGroupedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 Returns the row model after grouping has taken place, but no further.
@@ -290,7 +264,7 @@ Resets the **grouping** state to `initialState.grouping`, or `true` can be passe
 ### `getPreGroupedRowModel`
 
 ```tsx
-getPreGroupedRowModel: () => RowModel<TGenerics>
+getPreGroupedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table before any grouping has been applied.
@@ -298,7 +272,7 @@ Returns the row model for the table before any grouping has been applied.
 ### `getGroupedRowModel`
 
 ```tsx
-getGroupedRowModel: () => RowModel<TGenerics>
+getGroupedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table after grouping has been applied.

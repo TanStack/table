@@ -5,7 +5,7 @@ id: row-selection
 
 ## State
 
-Row selection state is stored on the table instance using the following shape:
+Row selection state is stored on the table using the following shape:
 
 ```tsx
 export type RowSelectionState = Record<string, boolean>
@@ -20,7 +20,7 @@ export type RowSelectionTableState = {
 ### `enableRowSelection`
 
 ```tsx
-enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
 ```
 
 - Enables/disables row selection for all rows in the table OR
@@ -29,7 +29,7 @@ enableRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 ### `enableMultiRowSelection`
 
 ```tsx
-enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+enableMultiRowSelection?: boolean | ((row: Row<TData>) => boolean)
 ```
 
 - Enables/disables multiple row selection for all rows in the table OR
@@ -38,7 +38,7 @@ enableMultiRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
 ### `enableSubRowSelection`
 
 ```tsx
-enableSubRowSelection?: boolean | ((row: Row<TGenerics>) => boolean)
+enableSubRowSelection?: boolean | ((row: Row<TData>) => boolean)
 ```
 
 Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
@@ -138,7 +138,7 @@ Selects/deselects all rows on the current page.
 ### `getPreSelectedRowModel`
 
 ```tsx
-getPreSelectedRowModel: () => RowModel<TGenerics>
+getPreSelectedRowModel: () => RowModel<TData>
 ```
 
 TODO
@@ -146,7 +146,7 @@ TODO
 ### `getSelectedRowModel`
 
 ```tsx
-getSelectedRowModel: () => RowModel<TGenerics>
+getSelectedRowModel: () => RowModel<TData>
 ```
 
 TODO
@@ -154,7 +154,7 @@ TODO
 ### `getFilteredSelectedRowModel`
 
 ```tsx
-getFilteredSelectedRowModel: () => RowModel<TGenerics>
+getFilteredSelectedRowModel: () => RowModel<TData>
 ```
 
 TODO
@@ -162,7 +162,7 @@ TODO
 ### `getGroupedSelectedRowModel`
 
 ```tsx
-getGroupedSelectedRowModel: () => RowModel<TGenerics>
+getGroupedSelectedRowModel: () => RowModel<TData>
 ```
 
 TODO

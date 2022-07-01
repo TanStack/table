@@ -1,12 +1,13 @@
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import {
   Cell,
   Column,
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Updater,
   Row,
+  RowData,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -25,12 +26,12 @@ export type VisibilityDefaultOptions = {
   onColumnVisibilityChange: OnChangeFn<VisibilityState>
 }
 
-export type VisibilityInstance<TGenerics extends TableGenerics> = {
-  getVisibleFlatColumns: () => Column<TGenerics>[]
-  getVisibleLeafColumns: () => Column<TGenerics>[]
-  getLeftVisibleLeafColumns: () => Column<TGenerics>[]
-  getRightVisibleLeafColumns: () => Column<TGenerics>[]
-  getCenterVisibleLeafColumns: () => Column<TGenerics>[]
+export type VisibilityInstance<TData extends RowData> = {
+  getVisibleFlatColumns: () => Column<TData>[]
+  getVisibleLeafColumns: () => Column<TData>[]
+  getLeftVisibleLeafColumns: () => Column<TData>[]
+  getRightVisibleLeafColumns: () => Column<TData>[]
+  getCenterVisibleLeafColumns: () => Column<TData>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
   resetColumnVisibility: (defaultState?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
@@ -43,9 +44,9 @@ export type VisibilityColumnDef = {
   enableHiding?: boolean
 }
 
-export type VisibilityRow<TGenerics extends TableGenerics> = {
-  _getAllVisibleCells: () => Cell<TGenerics>[]
-  getVisibleCells: () => Cell<TGenerics>[]
+export type VisibilityRow<TData extends RowData> = {
+  _getAllVisibleCells: () => Cell<TData>[]
+  getVisibleCells: () => Cell<TData>[]
 }
 
 export type VisibilityColumn = {
@@ -65,35 +66,35 @@ export const Visibility: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    table: Table<TData>
   ): VisibilityDefaultOptions => {
     return {
-      onColumnVisibilityChange: makeStateUpdater('columnVisibility', instance),
+      onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
+  createColumn: <TData extends RowData>(
+    column: Column<TData>,
+    table: Table<TData>
   ): VisibilityColumn => {
     return {
       toggleVisibility: value => {
         if (column.getCanHide()) {
-          instance.setColumnVisibility(old => ({
+          table.setColumnVisibility(old => ({
             ...old,
             [column.id]: value ?? !column.getIsVisible(),
           }))
         }
       },
       getIsVisible: () => {
-        return instance.getState().columnVisibility?.[column.id] ?? true
+        return table.getState().columnVisibility?.[column.id] ?? true
       },
 
       getCanHide: () => {
         return (
           (column.columnDef.enableHiding ?? true) &&
-          (instance.options.enableHiding ?? true)
+          (table.options.enableHiding ?? true)
         )
       },
       getToggleVisibilityHandler: () => {
@@ -106,20 +107,20 @@ export const Visibility: TableFeature = {
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): VisibilityRow<TGenerics> => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    table: Table<TData>
+  ): VisibilityRow<TData> => {
     return {
       _getAllVisibleCells: memo(
-        () => [row.getAllCells(), instance.getState().columnVisibility],
+        () => [row.getAllCells(), table.getState().columnVisibility],
         cells => {
           return cells.filter(cell => cell.column.getIsVisible())
         },
         {
           key:
             process.env.NODE_ENV === 'production' && 'row._getAllVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
+          debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
       getVisibleCells: memo(
@@ -131,19 +132,19 @@ export const Visibility: TableFeature = {
         (left, center, right) => [...left, ...center, ...right],
         {
           key: process.env.NODE_ENV === 'development' && 'row.getVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
+          debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): VisibilityInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    table: Table<TData>
+  ): VisibilityInstance<TData> => {
     const makeVisibleColumnsMethod = (
       key: string,
-      getColumns: () => Column<TGenerics>[]
-    ): (() => Column<TGenerics>[]) => {
+      getColumns: () => Column<TData>[]
+    ): (() => Column<TData>[]) => {
       return memo(
         () => [
           getColumns(),
@@ -157,8 +158,7 @@ export const Visibility: TableFeature = {
         },
         {
           key,
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugColumns,
+          debug: () => table.options.debugAll ?? table.options.debugColumns,
         }
       )
     }
@@ -166,39 +166,39 @@ export const Visibility: TableFeature = {
     return {
       getVisibleFlatColumns: makeVisibleColumnsMethod(
         'getVisibleFlatColumns',
-        () => instance.getAllFlatColumns()
+        () => table.getAllFlatColumns()
       ),
       getVisibleLeafColumns: makeVisibleColumnsMethod(
         'getVisibleLeafColumns',
-        () => instance.getAllLeafColumns()
+        () => table.getAllLeafColumns()
       ),
       getLeftVisibleLeafColumns: makeVisibleColumnsMethod(
         'getLeftVisibleLeafColumns',
-        () => instance.getLeftLeafColumns()
+        () => table.getLeftLeafColumns()
       ),
       getRightVisibleLeafColumns: makeVisibleColumnsMethod(
         'getRightVisibleLeafColumns',
-        () => instance.getRightLeafColumns()
+        () => table.getRightLeafColumns()
       ),
       getCenterVisibleLeafColumns: makeVisibleColumnsMethod(
         'getCenterVisibleLeafColumns',
-        () => instance.getCenterLeafColumns()
+        () => table.getCenterLeafColumns()
       ),
 
       setColumnVisibility: updater =>
-        instance.options.onColumnVisibilityChange?.(updater),
+        table.options.onColumnVisibilityChange?.(updater),
 
       resetColumnVisibility: defaultState => {
-        instance.setColumnVisibility(
-          defaultState ? {} : instance.initialState.columnVisibility ?? {}
+        table.setColumnVisibility(
+          defaultState ? {} : table.initialState.columnVisibility ?? {}
         )
       },
 
       toggleAllColumnsVisible: value => {
-        value = value ?? !instance.getIsAllColumnsVisible()
+        value = value ?? !table.getIsAllColumnsVisible()
 
-        instance.setColumnVisibility(
-          instance.getAllLeafColumns().reduce(
+        table.setColumnVisibility(
+          table.getAllLeafColumns().reduce(
             (obj, column) => ({
               ...obj,
               [column.id]: !value ? !column.getCanHide?.() : value,
@@ -209,14 +209,14 @@ export const Visibility: TableFeature = {
       },
 
       getIsAllColumnsVisible: () =>
-        !instance.getAllLeafColumns().some(column => !column.getIsVisible?.()),
+        !table.getAllLeafColumns().some(column => !column.getIsVisible?.()),
 
       getIsSomeColumnsVisible: () =>
-        instance.getAllLeafColumns().some(column => column.getIsVisible?.()),
+        table.getAllLeafColumns().some(column => column.getIsVisible?.()),
 
       getToggleAllColumnsVisibilityHandler: () => {
         return (e: unknown) => {
-          instance.toggleAllColumnsVisible(
+          table.toggleAllColumnsVisible(
             ((e as MouseEvent).target as HTMLInputElement)?.checked
           )
         }

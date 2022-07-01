@@ -1,4 +1,4 @@
-import { CoreOptions, CoreTableState, CoreInstance } from './core/instance'
+import { CoreOptions, CoreTableState, CoreInstance } from './core/table'
 import { CoreColumn, CoreColumnDef } from './core/column'
 import {
   VisibilityInstance,
@@ -38,6 +38,7 @@ import {
   SortingTableState,
 } from './features/Sorting'
 import {
+  CustomAggregationFns,
   GroupingCell,
   GroupingColumn,
   GroupingColumnDef,
@@ -79,51 +80,45 @@ import { CoreCell } from './core/cell'
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
+export type RowData = object | any[]
+
 export type TableGenerics = {
   Row?: any
   Value?: any
-  FilterFns?: any
-  SortingFns?: any
-  AggregationFns?: any
-  Renderer?: any
-  Rendered?: any
   ColumnMeta?: any
   TableMeta?: any
-  FilterMeta?: any
 }
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export type TableInstance<TGenerics extends TableGenerics> =
-  CoreInstance<TGenerics> &
-    HeadersInstance<TGenerics> &
-    VisibilityInstance<TGenerics> &
-    ColumnOrderInstance<TGenerics> &
-    ColumnPinningInstance<TGenerics> &
-    FiltersInstance<TGenerics> &
-    SortingInstance<TGenerics> &
-    GroupingInstance<TGenerics> &
-    ColumnSizingInstance<TGenerics> &
-    ExpandedInstance<TGenerics> &
-    PaginationInstance<TGenerics> &
-    RowSelectionInstance<TGenerics>
+export type Table<TData extends RowData> = CoreInstance<TData> &
+  HeadersInstance<TData> &
+  VisibilityInstance<TData> &
+  ColumnOrderInstance<TData> &
+  ColumnPinningInstance<TData> &
+  FiltersInstance<TData> &
+  SortingInstance<TData> &
+  GroupingInstance<TData> &
+  ColumnSizingInstance &
+  ExpandedInstance<TData> &
+  PaginationInstance<TData> &
+  RowSelectionInstance<TData>
 
-export type TableOptionsResolved<TGenerics extends TableGenerics> =
-  CoreOptions<TGenerics> &
-    VisibilityOptions &
-    ColumnOrderOptions &
-    ColumnPinningOptions &
-    FiltersOptions<TGenerics> &
-    SortingOptions<TGenerics> &
-    GroupingOptions<TGenerics> &
-    ExpandedOptions<TGenerics> &
-    ColumnSizingOptions &
-    PaginationOptions<TGenerics> &
-    RowSelectionOptions<TGenerics>
+export type TableOptionsResolved<TData extends RowData> = CoreOptions<TData> &
+  VisibilityOptions &
+  ColumnOrderOptions &
+  ColumnPinningOptions &
+  FiltersOptions<TData> &
+  SortingOptions<TData> &
+  GroupingOptions &
+  ExpandedOptions<TData> &
+  ColumnSizingOptions &
+  PaginationOptions &
+  RowSelectionOptions<TData>
 
-export type TableOptions<TGenerics extends TableGenerics> = Omit<
-  PartialKeys<TableOptionsResolved<TGenerics>, 'state' | 'onStateChange'>,
-  'render' | 'renderFallbackValue'
+export type TableOptions<TData extends RowData> = PartialKeys<
+  TableOptionsResolved<TData>,
+  'state' | 'onStateChange' | 'renderFallbackValue'
 >
 
 export type TableState = CoreTableState &
@@ -152,10 +147,10 @@ export type InitialTableState = Partial<
     RowSelectionTableState
 >
 
-export type Row<TGenerics extends TableGenerics> = CoreRow<TGenerics> &
-  VisibilityRow<TGenerics> &
-  ColumnPinningRow<TGenerics> &
-  FiltersRow<TGenerics> &
+export type Row<TData extends RowData> = CoreRow<TData> &
+  VisibilityRow<TData> &
+  ColumnPinningRow<TData> &
+  FiltersRow<TData> &
   GroupingRow &
   RowSelectionRow &
   ExpandedRow
@@ -164,42 +159,42 @@ export type RowValues = {
   [key: string]: any
 }
 
-export type RowModel<TGenerics extends TableGenerics> = {
-  rows: Row<TGenerics>[]
-  flatRows: Row<TGenerics>[]
-  rowsById: Record<string, Row<TGenerics>>
+export type RowModel<TData extends RowData> = {
+  rows: Row<TData>[]
+  flatRows: Row<TData>[]
+  rowsById: Record<string, Row<TData>>
 }
 
-export type AccessorFn<TData> = (originalRow: TData, index: number) => any
+export type AccessorFn<TData extends RowData> = (
+  originalRow: TData,
+  index: number
+) => any
 
-export type Renderable<TGenerics extends TableGenerics, TProps> =
+export type ColumnDefTemplate<TProps extends object> =
   | string
-  | ((props: TProps) => TGenerics['Rendered'])
+  | ((props: TProps) => unknown)
 
-export type ColumnDef<TGenerics extends TableGenerics> =
-  CoreColumnDef<TGenerics> &
-    VisibilityColumnDef &
-    ColumnPinningColumnDef &
-    FiltersColumnDef<TGenerics> &
-    SortingColumnDef<TGenerics> &
-    GroupingColumnDef<TGenerics> &
-    ColumnSizingColumnDef
+export type ColumnDef<TData extends RowData> = CoreColumnDef<TData> &
+  VisibilityColumnDef &
+  ColumnPinningColumnDef &
+  FiltersColumnDef<TData> &
+  SortingColumnDef<TData> &
+  GroupingColumnDef<TData> &
+  ColumnSizingColumnDef
 
-export type Column<TGenerics extends TableGenerics> = CoreColumn<TGenerics> &
+export type Column<TData extends RowData> = CoreColumn<TData> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
-  FiltersColumn<TGenerics> &
-  SortingColumn<TGenerics> &
-  GroupingColumn<TGenerics> &
-  ColumnSizingColumn<TGenerics>
+  FiltersColumn<TData> &
+  SortingColumn<TData> &
+  GroupingColumn<TData> &
+  ColumnSizingColumn
 
-export type Cell<TGenerics extends TableGenerics> = CoreCell<TGenerics> &
-  GroupingCell<TGenerics>
+export type Cell<TData extends RowData> = CoreCell<TData> & GroupingCell
 
-export type Header<TGenerics extends TableGenerics> = CoreHeader<TGenerics> &
-  ColumnSizingHeader<TGenerics>
+export type Header<TData extends RowData> = CoreHeader<TData> &
+  ColumnSizingHeader
 
-export type HeaderGroup<TGenerics extends TableGenerics> =
-  CoreHeaderGroup<TGenerics>
+export type HeaderGroup<TData extends RowData> = CoreHeaderGroup<TData>
 
 export type NoInfer<A extends any> = [A][A extends any ? 0 : never]

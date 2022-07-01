@@ -1,16 +1,13 @@
-import { TableInstance, RowModel, TableGenerics, Row } from '../types'
+import { Table, RowModel, TableGenerics, Row, RowData } from '../types'
 import { memo } from '../utils'
 import { expandRows } from './getExpandedRowModel'
 
-export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
+export function getPaginationRowModel<TData extends RowData>(opts?: {
   initialSync: boolean
-}): (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics> {
-  return instance =>
+}): (table: Table<TData>) => () => RowModel<TData> {
+  return table =>
     memo(
-      () => [
-        instance.getState().pagination,
-        instance.getPrePaginationRowModel(),
-      ],
+      () => [table.getState().pagination, table.getPrePaginationRowModel()],
       (pagination, rowModel) => {
         if (!rowModel.rows.length) {
           return rowModel
@@ -23,16 +20,16 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
 
         rows = rows.slice(pageStart, pageEnd)
 
-        let paginatedRowModel: RowModel<TGenerics>
+        let paginatedRowModel: RowModel<TData>
 
-        if (!instance.options.paginateExpandedRows) {
+        if (!table.options.paginateExpandedRows) {
           paginatedRowModel = expandRows(
             {
               rows,
               flatRows,
               rowsById,
             },
-            instance
+            table
           )
         } else {
           paginatedRowModel = {
@@ -44,7 +41,7 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
 
         paginatedRowModel.flatRows = []
 
-        const handleRow = (row: Row<TGenerics>) => {
+        const handleRow = (row: Row<TData>) => {
           paginatedRowModel.flatRows.push(row)
           if (row.subRows.length) {
             row.subRows.forEach(handleRow)
@@ -57,7 +54,7 @@ export function getPaginationRowModel<TGenerics extends TableGenerics>(opts?: {
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getPaginationRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
       }
     )
 }

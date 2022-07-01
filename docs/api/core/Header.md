@@ -35,7 +35,7 @@ The depth of the header, zero-indexed based.
 ### `column`
 
 ```tsx
-column: Column<TGenerics>
+column: Column<TData>
 ```
 
 The header's associated [Column](./Column.md) object
@@ -43,7 +43,7 @@ The header's associated [Column](./Column.md) object
 ### `headerGroup`
 
 ```tsx
-headerGroup: HeaderGroup<TGenerics>
+headerGroup: HeaderGroup<TData>
 ```
 
 The header's associated [HeaderGroup](./HeaderGroup.md) object
@@ -51,7 +51,7 @@ The header's associated [HeaderGroup](./HeaderGroup.md) object
 ### `subHeaders`
 
 ```tsx
-type subHeaders = Header<TGenerics>[]
+type subHeaders = Header<TData>[]
 ```
 
 The header's hierarchical sub/child headers. Will be empty if the header's associated column is a leaf-column.
@@ -75,7 +75,7 @@ The row-span for the header.
 ### `getLeafHeaders`
 
 ```tsx
-type getLeafHeaders = () => Header<TGenerics>[]
+type getLeafHeaders = () => Header<TData>[]
 ```
 
 Returns the leaf headers hierarchically nested under this header.
@@ -99,8 +99,7 @@ If the header is a placeholder header, this will be a unique header ID that does
 ### `renderHeader`
 
 ```tsx
-renderHeader: (options?: { renderPlaceholder?: boolean }) =>
-  string | null | TGenerics['Rendered']
+renderHeader: (options?: { renderPlaceholder?: boolean }) => unknown
 ```
 
 Returns the rendered header using the associated column's `header` template. The exact return type of this function depends on the adapter being used.
@@ -108,8 +107,7 @@ Returns the rendered header using the associated column's `header` template. The
 ### `renderFooter`
 
 ```tsx
-renderFooter: (options?: { renderPlaceholder?: boolean }) =>
-  string | null | TGenerics['Rendered']
+renderFooter: (options?: { renderPlaceholder?: boolean }) => unknown
 ```
 
 Returns the rendered footer using the associated column's `footer` template. The exact return type of this function depends on the adapter being used.

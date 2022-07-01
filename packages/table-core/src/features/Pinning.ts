@@ -1,12 +1,13 @@
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import {
   OnChangeFn,
   Updater,
-  TableInstance,
+  Table,
   Column,
   TableGenerics,
   Row,
   Cell,
+  RowData,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -41,19 +42,19 @@ export type ColumnPinningColumn = {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export type ColumnPinningRow<TGenerics extends TableGenerics> = {
-  getLeftVisibleCells: () => Cell<TGenerics>[]
-  getCenterVisibleCells: () => Cell<TGenerics>[]
-  getRightVisibleCells: () => Cell<TGenerics>[]
+export type ColumnPinningRow<TData extends RowData> = {
+  getLeftVisibleCells: () => Cell<TData>[]
+  getCenterVisibleCells: () => Cell<TData>[]
+  getRightVisibleCells: () => Cell<TData>[]
 }
 
-export type ColumnPinningInstance<TGenerics extends TableGenerics> = {
+export type ColumnPinningInstance<TData extends RowData> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
-  getLeftLeafColumns: () => Column<TGenerics>[]
-  getRightLeafColumns: () => Column<TGenerics>[]
-  getCenterLeafColumns: () => Column<TGenerics>[]
+  getLeftLeafColumns: () => Column<TData>[]
+  getRightLeafColumns: () => Column<TData>[]
+  getCenterLeafColumns: () => Column<TData>[]
 }
 
 //
@@ -71,17 +72,17 @@ export const Pinning: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
+  getDefaultOptions: <TData extends RowData>(
+    table: Table<TData>
   ): ColumnPinningDefaultOptions => {
     return {
-      onColumnPinningChange: makeStateUpdater('columnPinning', instance),
+      onColumnPinningChange: makeStateUpdater('columnPinning', table),
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
+  createColumn: <TData extends RowData>(
+    column: Column<TData>,
+    table: Table<TData>
   ): ColumnPinningColumn => {
     return {
       pin: position => {
@@ -90,7 +91,7 @@ export const Pinning: TableFeature = {
           .map(d => d.id)
           .filter(Boolean) as string[]
 
-        instance.setColumnPinning(old => {
+        table.setColumnPinning(old => {
           if (position === 'right') {
             return {
               left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
@@ -124,14 +125,14 @@ export const Pinning: TableFeature = {
         return leafColumns.some(
           d =>
             (d.columnDef.enablePinning ?? true) &&
-            (instance.options.enablePinning ?? true)
+            (table.options.enablePinning ?? true)
         )
       },
 
       getIsPinned: () => {
         const leafColumnIds = column.getLeafColumns().map(d => d.id)
 
-        const { left, right } = instance.getState().columnPinning
+        const { left, right } = table.getState().columnPinning
 
         const isLeft = leafColumnIds.some(d => left?.includes(d))
         const isRight = leafColumnIds.some(d => right?.includes(d))
@@ -143,23 +144,22 @@ export const Pinning: TableFeature = {
         const position = column.getIsPinned()
 
         return position
-          ? instance.getState().columnPinning?.[position]?.indexOf(column.id) ??
-              -1
+          ? table.getState().columnPinning?.[position]?.indexOf(column.id) ?? -1
           : 0
       },
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): ColumnPinningRow<TGenerics> => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    table: Table<TData>
+  ): ColumnPinningRow<TData> => {
     return {
       getCenterVisibleCells: memo(
         () => [
           row._getAllVisibleCells(),
-          instance.getState().columnPinning.left,
-          instance.getState().columnPinning.right,
+          table.getState().columnPinning.left,
+          table.getState().columnPinning.right,
         ],
         (allCells, left, right) => {
           const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
@@ -170,13 +170,13 @@ export const Pinning: TableFeature = {
           key:
             process.env.NODE_ENV === 'production' &&
             'row.getCenterVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
+          debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
       getLeftVisibleCells: memo(
         () => [
           row._getAllVisibleCells(),
-          instance.getState().columnPinning.left,
+          table.getState().columnPinning.left,
           ,
         ],
         (allCells, left) => {
@@ -185,56 +185,53 @@ export const Pinning: TableFeature = {
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
+            .map(d => ({ ...d, position: 'left' } as Cell<TData>))
 
           return cells
         },
         {
           key:
             process.env.NODE_ENV === 'production' && 'row.getLeftVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
+          debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
       getRightVisibleCells: memo(
-        () => [
-          row._getAllVisibleCells(),
-          instance.getState().columnPinning.right,
-        ],
+        () => [row._getAllVisibleCells(), table.getState().columnPinning.right],
         (allCells, right) => {
           const cells = (right ?? [])
             .map(
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TGenerics>))
+            .map(d => ({ ...d, position: 'left' } as Cell<TData>))
 
           return cells
         },
         {
           key:
             process.env.NODE_ENV === 'production' && 'row.getRightVisibleCells',
-          debug: () => instance.options.debugAll ?? instance.options.debugRows,
+          debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): ColumnPinningInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    table: Table<TData>
+  ): ColumnPinningInstance<TData> => {
     return {
       setColumnPinning: updater =>
-        instance.options.onColumnPinningChange?.(updater),
+        table.options.onColumnPinningChange?.(updater),
 
       resetColumnPinning: defaultState =>
-        instance.setColumnPinning(
+        table.setColumnPinning(
           defaultState
             ? getDefaultPinningState()
-            : instance.initialState?.columnPinning ?? getDefaultPinningState()
+            : table.initialState?.columnPinning ?? getDefaultPinningState()
         ),
 
       getIsSomeColumnsPinned: position => {
-        const pinningState = instance.getState().columnPinning
+        const pinningState = table.getState().columnPinning
 
         if (!position) {
           return Boolean(
@@ -245,10 +242,7 @@ export const Pinning: TableFeature = {
       },
 
       getLeftLeafColumns: memo(
-        () => [
-          instance.getAllLeafColumns(),
-          instance.getState().columnPinning.left,
-        ],
+        () => [table.getAllLeafColumns(), table.getState().columnPinning.left],
         (allColumns, left) => {
           return (left ?? [])
             .map(columnId => allColumns.find(column => column.id === columnId)!)
@@ -256,16 +250,12 @@ export const Pinning: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getLeftLeafColumns',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugColumns,
+          debug: () => table.options.debugAll ?? table.options.debugColumns,
         }
       ),
 
       getRightLeafColumns: memo(
-        () => [
-          instance.getAllLeafColumns(),
-          instance.getState().columnPinning.right,
-        ],
+        () => [table.getAllLeafColumns(), table.getState().columnPinning.right],
         (allColumns, right) => {
           return (right ?? [])
             .map(columnId => allColumns.find(column => column.id === columnId)!)
@@ -273,16 +263,15 @@ export const Pinning: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getRightLeafColumns',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugColumns,
+          debug: () => table.options.debugAll ?? table.options.debugColumns,
         }
       ),
 
       getCenterLeafColumns: memo(
         () => [
-          instance.getAllLeafColumns(),
-          instance.getState().columnPinning.left,
-          instance.getState().columnPinning.right,
+          table.getAllLeafColumns(),
+          table.getState().columnPinning.left,
+          table.getState().columnPinning.right,
         ],
         (allColumns, left, right) => {
           const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
@@ -291,8 +280,7 @@ export const Pinning: TableFeature = {
         },
         {
           key: process.env.NODE_ENV === 'development' && 'getCenterLeafColumns',
-          debug: () =>
-            instance.options.debugAll ?? instance.options.debugColumns,
+          debug: () => table.options.debugAll ?? table.options.debugColumns,
         }
       ),
     }

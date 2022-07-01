@@ -4,17 +4,15 @@ title: Solid Table
 
 The `@tanstack/solid-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing state the "solid" way, providing types and the rendering implementation of cell/header/footer templates.
 
-## `createTableInstance`
+## `createSolidTable`
 
-Takes a `table` and `options` object and returns a table instance.
+Takes a `table` and `options` object and returns a table.
 
 ```tsx
-import { createTable, createTableInstance } from '@tanstack/solid-table'
-
-const table = createTable()
+import { createSolidTable } from '@tanstack/solid-table'
 
 function App() {
-  const instance = createTableInstance(table, options)
+  const table = createSolidTable(options)
 
   // ...render your table
 }

@@ -5,7 +5,7 @@ id: sorting
 
 ## State
 
-Sorting state is stored on the table instance using the following shape:
+Sorting state is stored on the table using the following shape:
 
 ```tsx
 export type SortDirection = 'asc' | 'desc'
@@ -50,8 +50,8 @@ Every sorting function receives 2 rows and a column ID and are expected to compa
 This is the type signature for every sorting function:
 
 ```tsx
-export type SortingFn<TGenerics extends TableGenerics> = {
-  (rowA: Row<TGenerics>, rowB: Row<TGenerics>, columnId: string): number
+export type SortingFn<TData extends AnyData> = {
+  (rowA: Row<TData>, rowB: Row<TData>, columnId: string): number
 }
 ```
 
@@ -66,11 +66,10 @@ Sorting functions can be used/referenced/defined by passing the following to `co
 The final list of sorting functions available for the `columnDef.sortingFn` use the following type:
 
 ```tsx
-export type SortingFnOption<TGenerics extends TableGenerics> =
+export type SortingFnOption<TData extends AnyData> =
   | 'auto'
   | BuiltInSortingFn
-  | keyof TGenerics['SortingFns']
-  | SortingFn<TGenerics>
+  | SortingFn<TData>
 ```
 
 ## Column Def Options
@@ -78,7 +77,7 @@ export type SortingFnOption<TGenerics extends TableGenerics> =
 ### `sortingFn`
 
 ```tsx
-sortingFn?: SortingFn | keyof TGenerics['SortingFns'] | keyof BuiltInSortingFns
+sortingFn?: SortingFn | keyof BuiltInSortingFns
 ```
 
 The sorting function to use with this column.
@@ -86,7 +85,6 @@ The sorting function to use with this column.
 Options:
 
 - A `string` referencing a [built-in sorting function](#sorting-functions))
-- A `string` referencing a custom sorting function defined on the `sortingFns` table option
 - A [custom sorting function](#sorting-functions)
 
 ### `sortDescFirst`
@@ -138,7 +136,7 @@ sortUndefined?: false | -1 | 1 // defaults to false
 ### `getAutoSortingFn`
 
 ```tsx
-getAutoSortingFn: () => SortingFn<TGenerics>
+getAutoSortingFn: () => SortingFn<TData>
 ```
 
 Returns a sorting function automatically inferred based on the columns values.
@@ -154,7 +152,7 @@ Returns a sort direction automatically inferred based on the columns values.
 ### `getSortingFn`
 
 ```tsx
-getSortingFn: () => SortingFn<TGenerics>
+getSortingFn: () => SortingFn<TData>
 ```
 
 Returns the resolved sorting function to be used for this column
@@ -231,31 +229,7 @@ Returns a function that can be used to toggle this column's sorting state. This 
 manualSorting?: boolean
 ```
 
-Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table instance. This is useful if you are doing server-side sorting.
-
-### `sortingFns`
-
-```tsx
-sortingFns?: TGenerics['SortingFns']
-```
-
-Normally set ahead of time when using the `createTable()` helper, this option allows you to define custom sorting functions that can be referenced by their string key.
-
-Example:
-
-```tsx
-const table = createTable().setOptions({
-    sortingFns: {
-      sortComplexColumns: (rowA: any, rowB: any, columnId: any): number => (
-        rowA.getValue(columnId).value < rowB.getValue(columnId).value ? 1 : -1
-      ),
-    },
-  })
-
-const column = table.createDataColumn('key', {
-  sortingFn: 'sortComplexColumns',
-})
-```
+Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table. This is useful if you are doing server-side sorting.
 
 ### `onSortingChange`
 
@@ -308,10 +282,10 @@ If `true`, all sorts will default to descending as their first toggle state.
 ### `getSortedRowModel`
 
 ```tsx
-getSortedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics>
+getSortedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
-This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table instance or implement your own.
+This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
 
 ### `maxMultiSortColCount`
 
@@ -350,7 +324,7 @@ Resets the **sorting** state to `initialState.sorting`, or `true` can be passed 
 ### `getPreSortedRowModel`
 
 ```tsx
-getPreSortedRowModel: () => RowModel<TGenerics>
+getPreSortedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table before any sorting has been applied.
@@ -358,7 +332,7 @@ Returns the row model for the table before any sorting has been applied.
 ### `getSortedRowModel`
 
 ```tsx
-getSortedRowModel: () => RowModel<TGenerics>
+getSortedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table after sorting has been applied.
