@@ -491,7 +491,7 @@ export function isRowSelected<TData extends RowData>(
   return selection[row.id] ?? false
 }
 
-export function isSubrowSelected<TData extends AnyData>(
+export function isSubrowSelected<TData extends RowData>(
   row: Row<TData>,
   selection: Record<string, boolean>,
   table: Table<TData>
