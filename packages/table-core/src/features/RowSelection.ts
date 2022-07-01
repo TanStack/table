@@ -37,6 +37,7 @@ export type RowSelectionOptions<TData extends RowData> = {
 export type RowSelectionRow = {
   getIsSelected: () => boolean
   getIsSomeSelected: () => boolean
+  getIsAllSubRowsSelected: () => boolean
   getCanSelect: () => boolean
   getCanMultiSelect: () => boolean
   getCanSelectSubRows: () => boolean
@@ -361,12 +362,17 @@ export const RowSelection: TableFeature = {
       },
       getIsSelected: () => {
         const { rowSelection } = table.getState()
-        return isRowSelected(row, rowSelection, table) === true
+        return isRowSelected(row, rowSelection)
       },
 
       getIsSomeSelected: () => {
         const { rowSelection } = table.getState()
-        return isRowSelected(row, rowSelection, table) === 'some'
+        return isSubRowSelected(row, rowSelection, table) === 'some'
+      },
+
+      getIsAllSubRowsSelected: () => {
+        const { rowSelection } = instance.getState()
+        return isSubRowSelected(row, rowSelection, table) === 'all'
       },
 
       getCanSelect: () => {
@@ -450,7 +456,7 @@ export function selectRowsFn<TData extends RowData>(
   const recurseRows = (rows: Row<TData>[], depth = 0): Row<TData>[] => {
     return rows
       .map(row => {
-        const isSelected = isRowSelected(row, rowSelection, table) === true
+        const isSelected = isRowSelected(row, rowSelection)
 
         if (isSelected) {
           newSelectedFlatRows.push(row)
@@ -480,13 +486,16 @@ export function selectRowsFn<TData extends RowData>(
 
 export function isRowSelected<TData extends RowData>(
   row: Row<TData>,
+  selection: Record<string, boolean>
+): boolean {
+  return selection[row.id] ?? false
+}
+
+export function isSubRowSelected<TData extends RowData>(
+  row: Row<TData>,
   selection: Record<string, boolean>,
   table: Table<TData>
-): boolean | 'some' {
-  if (selection[row.id]) {
-    return true
-  }
-
+): boolean | 'some' | 'all' {
   if (row.subRows && row.subRows.length) {
     let allChildrenSelected = true
     let someSelected = false
@@ -496,15 +505,15 @@ export function isRowSelected<TData extends RowData>(
       if (someSelected && !allChildrenSelected) {
         return
       }
-
-      if (isRowSelected(subRow, selection, table)) {
+      
+      if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
         allChildrenSelected = false
       }
     })
 
-    return allChildrenSelected ? true : someSelected ? 'some' : false
+    return allChildrenSelected ? 'all' : someSelected ? 'some' : false
   }
 
   return false
