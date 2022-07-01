@@ -7,14 +7,14 @@ id: filters
 
 The ability for a column to be **column** filtered is determined by the following:
 
-- The column was defined with `createDataColumn` or a valid `accessorKey`/`accessorFn`.
+- The column was defined with a valid `accessorKey`/`accessorFn`.
 - `column.enableColumnFilter` is not set to `false`
 - `options.enableColumnFilters` is not set to `false`
 - `options.enableFilters` is not set to `false`
 
 The ability for a column to be **globally** filtered is determined by the following:
 
-- The column was defined with `createDataColumn` or a valid `accessorKey`/`accessorFn`.
+- The column was defined a valid `accessorKey`/`accessorFn`.
 - If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable.
 - `column.enableColumnFilter` is not set to `false`
 - `options.enableColumnFilters` is not set to `false`
