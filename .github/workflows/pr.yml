@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [14, 16]
+        node: [16]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -15,4 +15,5 @@ jobs:
       - run: |
           npm install
           npm run build
+          npm run typecheck
           npm run test
