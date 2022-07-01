@@ -553,7 +553,7 @@ async function run() {
     // Stringify the markdown to excape any quotes
     execSync(
       `gh release create v${version} ${
-        isLatestBranch ? '--prerelease' : ''
+        !isLatestBranch ? '--prerelease' : ''
       } --notes '${changelogMd}'`
     )
     console.info(`  Github release created.`)
