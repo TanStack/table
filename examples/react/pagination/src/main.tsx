@@ -4,9 +4,8 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createTable,
   Column,
-  Table,
+  Table as ReactTable,
   PaginationState,
   useReactTable,
   getCoreRowModel,
@@ -246,7 +245,7 @@ function Table({
     </div>
   )
 }
-function Filter({ column, table }: { column: Column<any>; table: Table<any> }) {
+function Filter({ column, table }: { column: Column<any>; table: ReactTable<any> }) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
