@@ -12,7 +12,7 @@ Takes a `table` and `options` object and returns a table.
 import { useVueTable } from '@tanstack/vue-table'
 
 function App() {
-  const table = useVueTable(table, options)
+  const table = useVueTable(options)
 
   // ...render your table
 }

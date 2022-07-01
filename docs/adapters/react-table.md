@@ -12,7 +12,7 @@ Takes a `table` and `options` object and returns a table.
 import { useReactTable } from '@tanstack/react-table'
 
 function App() {
-  const table = useReactTable(table, options)
+  const table = useReactTable(options)
 
   // ...render your table
 }
