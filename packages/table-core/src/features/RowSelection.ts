@@ -371,7 +371,7 @@ export const RowSelection: TableFeature = {
       },
 
       getIsAllSubRowsSelected: () => {
-        const { rowSelection } = instance.getState()
+        const { rowSelection } = table.getState()
         return isSubRowSelected(row, rowSelection, table) === 'all'
       },
 
@@ -505,7 +505,7 @@ export function isSubRowSelected<TData extends RowData>(
       if (someSelected && !allChildrenSelected) {
         return
       }
-      
+
       if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
