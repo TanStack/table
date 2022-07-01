@@ -4,69 +4,75 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createTable,
+  ColumnDef,
+  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  useTableInstance,
+  useReactTable,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
-
-let table = createTable().setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
-          table.createDataColumn('createdAt', {
+          },
+          {
+            accessorKey: 'createdAt',
             header: 'Created At',
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -74,7 +80,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -91,7 +97,7 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -105,7 +111,10 @@ function App() {
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
-                        {header.renderHeader()}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                         {{
                           asc: ' 🔼',
                           desc: ' 🔽',
@@ -119,21 +128,28 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance
+          {table
             .getRowModel()
             .rows.slice(0, 10)
             .map(row => {
               return (
                 <tr key={row.id}>
                   {row.getVisibleCells().map(cell => {
-                    return <td key={cell.id}>{cell.renderCell()}</td>
+                    return (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    )
                   })}
                 </tr>
               )
             })}
         </tbody>
       </table>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
@@ -145,8 +161,9 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

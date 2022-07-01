@@ -5,7 +5,7 @@ id: expanding
 
 ## State
 
-Grouping state is stored on the table instance using the following shape:
+Grouping state is stored on the table using the following shape:
 
 ```tsx
 export type GroupingState = string[]
@@ -86,7 +86,7 @@ Enable/disable expanding for all rows.
 ### `getExpandedRowModel`
 
 ```tsx
-getExpandedRowModel?: (instance: TableInstance<TGenerics>) => () => RowModel<TGenerics>
+getExpandedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
@@ -94,7 +94,7 @@ This function is responsible for returning the expanded row model. If this funct
 ### `getIsRowExpanded`
 
 ```tsx
-getIsRowExpanded?: (row: Row<TGenerics>) => boolean
+getIsRowExpanded?: (row: Row<TData>) => boolean
 ```
 
 If provided, allows you to override the default behavior of determining whether a row is currently expanded.
@@ -102,7 +102,7 @@ If provided, allows you to override the default behavior of determining whether 
 ### `getRowCanExpand`
 
 ```tsx
-getRowCanExpand?: (row: Row<TGenerics>) => boolean
+getRowCanExpand?: (row: Row<TData>) => boolean
 ```
 
 If provided, allows you to override the default behavior of determining whether a row can be expanded.
@@ -186,7 +186,7 @@ Returns the maximum depth of the expanded rows.
 ### `getExpandedRowModel`
 
 ```tsx
-getExpandedRowModel: () => RowModel<TGenerics>
+getExpandedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model after expansion has been applied.
@@ -194,7 +194,7 @@ Returns the row model after expansion has been applied.
 ### `getPreExpandedRowModel`
 
 ```tsx
-getPreExpandedRowModel: () => RowModel<TGenerics>
+getPreExpandedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model before expansion has been applied.

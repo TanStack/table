@@ -1,51 +1,57 @@
-import { Cell, Column, Row, TableGenerics, TableInstance } from '../types'
+import { RowData, Cell, Column, Row, Table } from '../types'
 
-export type CoreCell<TGenerics extends TableGenerics> = {
+export type CoreCell<TData extends RowData> = {
   id: string
-  getValue: () => TGenerics['Value']
-  row: Row<TGenerics>
-  column: Column<TGenerics>
-  renderCell: () => string | null | TGenerics['Rendered']
+  getValue: () => any
+  renderValue: () => unknown
+  row: Row<TData>
+  column: Column<TData>
+  getContext: () => {
+    table: Table<TData>
+    column: Column<TData>
+    row: Row<TData>
+    cell: Cell<TData>
+    getValue: () => any
+    renderValue: () => any
+  }
 }
 
-export function createCell<TGenerics extends TableGenerics>(
-  instance: TableInstance<TGenerics>,
-  row: Row<TGenerics>,
-  column: Column<TGenerics>,
+export function createCell<TData extends RowData>(
+  table: Table<TData>,
+  row: Row<TData>,
+  column: Column<TData>,
   columnId: string
 ) {
   const getRenderValue = () =>
-    cell.getValue() ?? instance.options.renderFallbackValue
+    cell.getValue() ?? table.options.renderFallbackValue
 
-  const cell: CoreCell<TGenerics> = {
+  const cell: CoreCell<TData> = {
     id: `${row.id}_${column.id}`,
     row,
     column,
     getValue: () => row.getValue(columnId),
-    renderCell: () => {
-      return column.columnDef.cell
-        ? instance._render(column.columnDef.cell, {
-            instance,
-            column,
-            row,
-            cell: cell as Cell<TGenerics>,
-            getValue: getRenderValue,
-          })
-        : null
-    },
+    renderValue: getRenderValue,
+    getContext: () => ({
+      table,
+      column,
+      row,
+      cell: cell as Cell<TData>,
+      getValue: cell.getValue,
+      renderValue: cell.renderValue,
+    }),
   }
 
-  instance._features.forEach(feature => {
+  table._features.forEach(feature => {
     Object.assign(
       cell,
       feature.createCell?.(
-        cell as Cell<TGenerics>,
+        cell as Cell<TData>,
         column,
-        row as Row<TGenerics>,
-        instance
+        row as Row<TData>,
+        table
       )
     )
   }, {})
 
-  return cell as Cell<TGenerics>
+  return cell as Cell<TData>
 }

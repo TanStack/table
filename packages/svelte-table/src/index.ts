@@ -1,9 +1,8 @@
 import {
-  createTableFactory,
-  createTableInstance as coreCreateTableInstance,
+  RowData,
   PartialKeys,
-  Table,
   TableGenerics,
+  createTable,
   TableOptions,
   TableOptionsResolved,
 } from '@tanstack/table-core'
@@ -47,7 +46,7 @@ function wrapInPlaceholder(content: any) {
   return renderComponent(Placeholder, { content })
 }
 
-export function render(component: any, props: any) {
+export function flexRender(component: any, props: any) {
   if (!component) return null
 
   if (isSvelteComponent(component)) {
@@ -67,15 +66,12 @@ export function render(component: any, props: any) {
   return wrapInPlaceholder(component)
 }
 
-export const createTable = createTableFactory({ render })
-
 type ReadableOrVal<T> = T | Readable<T>
 
-export function createTableInstance<TGenerics extends TableGenerics>(
-  table: Table<TGenerics>,
-  options: ReadableOrVal<TableOptions<TGenerics>>
+export function createSvelteTable<TData extends RowData>(
+  options: ReadableOrVal<TableOptions<TData>>
 ) {
-  let optionsStore: Readable<TableOptions<TGenerics>>
+  let optionsStore: Readable<TableOptions<TData>>
 
   if ('subscribe' in options) {
     optionsStore = options
@@ -83,23 +79,21 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     optionsStore = readable(options)
   }
 
-  let resolvedOptions: TableOptionsResolved<TGenerics> = {
-    ...table.options,
+  let resolvedOptions: TableOptionsResolved<TData> = {
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
-    render,
     renderFallbackValue: null,
     ...get(optionsStore),
   }
 
-  let instance = coreCreateTableInstance(resolvedOptions)
+  let table = createTable(resolvedOptions)
 
-  let stateStore = writable(/** @type {number} */ instance.initialState)
+  let stateStore = writable(/** @type {number} */ table.initialState)
   // combine stores
   let stateOptionsStore = derived([stateStore, optionsStore], s => s)
-  const instanceReadable = readable(instance, function start(set) {
+  const tableReadable = readable(table, function start(set) {
     const unsubscribe = stateOptionsStore.subscribe(([state, options]) => {
-      instance.setOptions(prev => {
+      table.setOptions(prev => {
         return {
           ...prev,
           ...options,
@@ -118,8 +112,8 @@ export function createTableInstance<TGenerics extends TableGenerics>(
         }
       })
 
-      // it didn't seem to rerender without setting the instance
-      set(instance)
+      // it didn't seem to rerender without setting the table
+      set(table)
     })
 
     return function stop() {
@@ -127,5 +121,5 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     }
   })
 
-  return instanceReadable
+  return tableReadable
 }

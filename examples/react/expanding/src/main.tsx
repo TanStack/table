@@ -6,43 +6,44 @@ import './index.css'
 import {
   createTable,
   Column,
-  TableInstance,
+  Table,
   ExpandedState,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
   getExpandedRowModel,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
-
-let table = createTable().setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
-            header: ({ instance }) => (
+          {
+            accessorKey: 'firstName',
+            header: ({ table }) => (
               <>
                 <IndeterminateCheckbox
                   {...{
-                    checked: instance.getIsAllRowsSelected(),
-                    indeterminate: instance.getIsSomeRowsSelected(),
-                    onChange: instance.getToggleAllRowsSelectedHandler(),
+                    checked: table.getIsAllRowsSelected(),
+                    indeterminate: table.getIsSomeRowsSelected(),
+                    onChange: table.getToggleAllRowsSelectedHandler(),
                   }}
                 />{' '}
                 <button
                   {...{
-                    onClick: instance.getToggleAllRowsExpandedHandler(),
+                    onClick: table.getToggleAllRowsExpandedHandler(),
                   }}
                 >
-                  {instance.getIsAllRowsExpanded() ? '👇' : '👉'}
+                  {table.getIsAllRowsExpanded() ? '👇' : '👉'}
                 </button>{' '}
                 First Name
               </>
@@ -80,42 +81,47 @@ function App() {
               </div>
             ),
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -125,7 +131,7 @@ function App() {
 
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -145,20 +151,20 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
-                        {header.renderHeader()}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                         {header.column.getCanFilter() ? (
                           <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
+                            <Filter column={header.column} table={table} />
                           </div>
                         ) : null}
                       </div>
@@ -170,11 +176,18 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map(row => {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
-                  return <td key={cell.id}>{cell.renderCell()}</td>
+                  return (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )
                 })}
               </tr>
             )
@@ -185,55 +198,55 @@ function App() {
       <div className="flex items-center gap-2">
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(0)}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.previousPage()}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.nextPage()}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {instance.getState().pagination.pageIndex + 1} of{' '}
-            {instance.getPageCount()}
+            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
           | Go to page:
           <input
             type="number"
-            defaultValue={instance.getState().pagination.pageIndex + 1}
+            defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
-              instance.setPageIndex(page)
+              table.setPageIndex(page)
             }}
             className="border p-1 rounded w-16"
           />
         </span>
         <select
-          value={instance.getState().pagination.pageSize}
+          value={table.getState().pagination.pageSize}
           onChange={e => {
-            instance.setPageSize(Number(e.target.value))
+            table.setPageSize(Number(e.target.value))
           }}
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
@@ -243,7 +256,7 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
@@ -255,14 +268,8 @@ function App() {
   )
 }
 
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: TableInstance<any>
-}) {
-  const firstValue = instance
+function Filter({ column, table }: { column: Column<any>; table: Table<any> }) {
+  const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
@@ -329,8 +336,8 @@ function IndeterminateCheckbox({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

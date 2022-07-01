@@ -1,67 +1,73 @@
 import {
-  createTable,
+  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  createTableInstance,
+  createTable,
+  ColumnDef,
+  createSolidTable,
 } from '@tanstack/solid-table'
 import { makeData, Person } from './makeData'
 import { createSignal, For, Show } from 'solid-js'
-
-const table = createTable().setRowType<Person>()
 
 function App() {
   const [data, setData] = createSignal(makeData(100_000))
   const [sorting, setSorting] = createSignal<SortingState>([])
   const refreshData = () => setData(makeData(100_000))
 
-  const columns = [
-    table.createGroup({
+  const columns: ColumnDef<Person>[] = [
+    {
       header: 'Name',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('firstName', {
+        {
+          accessorKey: 'firstName',
           cell: info => info.getValue(),
           footer: props => props.column.id,
-        }),
-        table.createDataColumn(row => row.lastName, {
+        },
+        {
+          accessorFn: row => row.lastName,
           id: 'lastName',
           cell: info => info.getValue(),
           header: () => <span>Last Name</span>,
           footer: props => props.column.id,
-        }),
+        },
       ],
-    }),
-    table.createGroup({
+    },
+    {
       header: 'Info',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('age', {
+        {
+          accessorKey: 'age',
           header: () => 'Age',
           footer: props => props.column.id,
-        }),
-        table.createGroup({
+        },
+        {
           header: 'More Info',
           columns: [
-            table.createDataColumn('visits', {
+            {
+              accessorKey: 'visits',
               header: () => <span>Visits</span>,
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('status', {
+            },
+            {
+              accessorKey: 'status',
               header: 'Status',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('progress', {
+            },
+            {
+              accessorKey: 'progress',
               header: 'Profile Progress',
               footer: props => props.column.id,
-            }),
+            },
           ],
-        }),
+        },
       ],
-    }),
+    },
   ]
 
-  const instance = createTableInstance(table, {
+  const table = createSolidTable({
     get data() {
       return data()
     },
@@ -81,7 +87,7 @@ function App() {
     <div class="p-2">
       <table>
         <thead>
-          <For each={instance.getHeaderGroups()}>
+          <For each={table.getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
@@ -96,7 +102,10 @@ function App() {
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {header.renderHeader()}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -111,18 +120,25 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={instance.getRowModel().rows.slice(0, 10)}>
+          <For each={table.getRowModel().rows.slice(0, 10)}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => <td>{cell.renderCell()}</td>}
+                  {cell => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )}
                 </For>
               </tr>
             )}
           </For>
         </tbody>
       </table>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>

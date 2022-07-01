@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`useTableInstance can toggle column visibility: 0 - after toggling all off 1`] = `
+exports[`useReactTable can toggle column visibility: 0 - after toggling all off 1`] = `
 {
   "footers": [
     [],
@@ -20,7 +20,7 @@ exports[`useTableInstance can toggle column visibility: 0 - after toggling all o
 }
 `;
 
-exports[`useTableInstance can toggle column visibility: 1 - after toggling all on 1`] = `
+exports[`useReactTable can toggle column visibility: 1 - after toggling all on 1`] = `
 {
   "footers": [
     [
@@ -163,7 +163,7 @@ exports[`useTableInstance can toggle column visibility: 1 - after toggling all o
 }
 `;
 
-exports[`useTableInstance can toggle column visibility: 2 - after toggling firstName off 1`] = `
+exports[`useReactTable can toggle column visibility: 2 - after toggling firstName off 1`] = `
 {
   "footers": [
     [
@@ -287,7 +287,7 @@ exports[`useTableInstance can toggle column visibility: 2 - after toggling first
 }
 `;
 
-exports[`useTableInstance can toggle column visibility: 3 - after toggling More Info off 1`] = `
+exports[`useReactTable can toggle column visibility: 3 - after toggling More Info off 1`] = `
 {
   "footers": [
     [

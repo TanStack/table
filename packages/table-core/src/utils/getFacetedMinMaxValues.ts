@@ -1,13 +1,13 @@
-import { TableInstance, TableGenerics } from '../types'
+import { Table, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
-export function getFacetedMinMaxValues<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>,
+export function getFacetedMinMaxValues<TData extends RowData>(): (
+  table: Table<TData>,
   columnId: string
 ) => () => undefined | [number, number] {
-  return (instance, columnId) =>
+  return (table, columnId) =>
     memo(
-      () => [instance.getColumn(columnId).getFacetedRowModel()],
+      () => [table.getColumn(columnId).getFacetedRowModel()],
       facetedRowModel => {
         const firstValue = facetedRowModel.flatRows[0]?.getValue(columnId)
 
@@ -33,7 +33,7 @@ export function getFacetedMinMaxValues<TGenerics extends TableGenerics>(): (
         key:
           process.env.NODE_ENV === 'development' &&
           'getFacetedMinMaxValues_' + columnId,
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {},
       }
     )

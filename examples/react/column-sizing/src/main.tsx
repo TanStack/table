@@ -5,9 +5,11 @@ import './index.css'
 
 import {
   createTable,
-  useTableInstance,
+  useReactTable,
   ColumnResizeMode,
   getCoreRowModel,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -46,52 +48,56 @@ const defaultData: Person[] = [
   },
 ]
 
-let table = createTable().setRowType<Person>()
-
-const defaultColumns = [
-  table.createGroup({
+const defaultColumns: ColumnDef<Person>[] = [
+  {
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('firstName', {
+      {
+        accessorKey: 'firstName',
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      }),
-      table.createDataColumn(row => row.lastName, {
+      },
+      {
+        accessorFn: row => row.lastName,
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
-      }),
+      },
     ],
-  }),
-  table.createGroup({
+  },
+  {
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('age', {
+      {
+        accessorKey: 'age',
         header: () => 'Age',
         footer: props => props.column.id,
-      }),
-      table.createGroup({
+      },
+      {
         header: 'More Info',
         columns: [
-          table.createDataColumn('visits', {
+          {
+            accessorKey: 'visits',
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('status', {
+          },
+          {
+            accessorKey: 'status',
             header: 'Status',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('progress', {
+          },
+          {
+            accessorKey: 'progress',
             header: 'Profile Progress',
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
+      },
     ],
-  }),
+  },
 ]
 
 function App() {
@@ -105,7 +111,7 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     columnResizeMode,
@@ -131,12 +137,12 @@ function App() {
         <table
           {...{
             style: {
-              width: instance.getCenterTotalSize(),
+              width: table.getCenterTotalSize(),
             },
           }}
         >
           <thead>
-            {instance.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                   <th
@@ -148,7 +154,12 @@ function App() {
                       },
                     }}
                   >
-                    {header.isPlaceholder ? null : header.renderHeader()}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     <div
                       {...{
                         onMouseDown: header.getResizeHandler(),
@@ -161,8 +172,7 @@ function App() {
                             columnResizeMode === 'onEnd' &&
                             header.column.getIsResizing()
                               ? `translateX(${
-                                  instance.getState().columnSizingInfo
-                                    .deltaOffset
+                                  table.getState().columnSizingInfo.deltaOffset
                                 }px)`
                               : '',
                         },
@@ -174,7 +184,7 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {instance.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map(row => (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => (
                   <td
@@ -185,7 +195,7 @@ function App() {
                       },
                     }}
                   >
-                    {cell.renderCell()}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>
@@ -200,12 +210,12 @@ function App() {
           {...{
             className: 'divTable',
             style: {
-              width: instance.getTotalSize(),
+              width: table.getTotalSize(),
             },
           }}
         >
           <div className="thead">
-            {instance.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map(headerGroup => (
               <div
                 {...{
                   key: headerGroup.id,
@@ -222,7 +232,12 @@ function App() {
                       },
                     }}
                   >
-                    {header.isPlaceholder ? null : header.renderHeader()}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     <div
                       {...{
                         onMouseDown: header.getResizeHandler(),
@@ -235,8 +250,7 @@ function App() {
                             columnResizeMode === 'onEnd' &&
                             header.column.getIsResizing()
                               ? `translateX(${
-                                  instance.getState().columnSizingInfo
-                                    .deltaOffset
+                                  table.getState().columnSizingInfo.deltaOffset
                                 }px)`
                               : '',
                         },
@@ -252,7 +266,7 @@ function App() {
               className: 'tbody',
             }}
           >
-            {instance.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map(row => (
               <div
                 {...{
                   key: row.id,
@@ -269,7 +283,7 @@ function App() {
                       },
                     }}
                   >
-                    {cell.renderCell()}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </div>
                 ))}
               </div>
@@ -284,12 +298,12 @@ function App() {
           {...{
             className: 'divTable',
             style: {
-              width: instance.getTotalSize(),
+              width: table.getTotalSize(),
             },
           }}
         >
           <div className="thead">
-            {instance.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map(headerGroup => (
               <div
                 {...{
                   key: headerGroup.id,
@@ -311,7 +325,12 @@ function App() {
                       },
                     }}
                   >
-                    {header.isPlaceholder ? null : header.renderHeader()}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     <div
                       {...{
                         onMouseDown: header.getResizeHandler(),
@@ -324,8 +343,7 @@ function App() {
                             columnResizeMode === 'onEnd' &&
                             header.column.getIsResizing()
                               ? `translateX(${
-                                  instance.getState().columnSizingInfo
-                                    .deltaOffset
+                                  table.getState().columnSizingInfo.deltaOffset
                                 }px)`
                               : '',
                         },
@@ -341,7 +359,7 @@ function App() {
               className: 'tbody',
             }}
           >
-            {instance.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map(row => (
               <div
                 {...{
                   key: row.id,
@@ -363,7 +381,7 @@ function App() {
                       },
                     }}
                   >
-                    {cell.renderCell()}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </div>
                 ))}
               </div>
@@ -378,8 +396,8 @@ function App() {
       <pre>
         {JSON.stringify(
           {
-            columnSizing: instance.getState().columnSizing,
-            columnSizingInfo: instance.getState().columnSizingInfo,
+            columnSizing: table.getState().columnSizing,
+            columnSizingInfo: table.getState().columnSizingInfo,
           },
           null,
           2
@@ -389,8 +407,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

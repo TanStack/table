@@ -15,24 +15,18 @@ Column defs are the single most important part of building a table. They are res
 - Creating [header groups, headers and footers](../headers)
 - Creating columns for display-only purposes, eg. action buttons, checkboxes, expanders, sparklines, etc.
 
-## Creating Column Defs
+## Column Def Types
 
-There are 3 ways of creating a column def:
-
-- `table.createDisplayColumn()`
+- `Display Columns`
   - Display columns do _not_ have a data model which means they cannot be sorted, filtered, etc, but they can be used to display arbitrary content in the table, eg. a row actions button, checkbox, expander, etc.
-- `table.createGroup()`
+- `Grouping Columns`
   - Group columns do _not_ have a data model so they too cannot be sorted, filterd, etc, and are used to group other columns together. It's common to define a header or footer for a column group.
-- `table.createDataColumn()`
+- `Data Columns`
   - Data columns have an underlying data model which means they can be sorted, filtered, grouped, etc.
-
-Columns can be created using the `table` factory you receive from `createTable()`. You'll probably want to set up the types correctly for your columns as well.
 
 Here's an example of creating some of these different column types:
 
 ```tsx
-import { createTable } from '@tanstack/react-table'
-
 // Define your row shape
 type Person = {
   firstName: string
@@ -43,58 +37,71 @@ type Person = {
   progress: number
 }
 
-// Let your table know about your row shape
-const table = createTable().setRowType<Person>()
-
 // Make some columns!
-const defaultColumns = [
-  table.createDisplayColumn({
+const defaultColumns: ColumnDef<Person>[] = [
+  // Display Column
+  {
     id: 'actions',
-    cell: props => <RowActions row={props.row} />
-  }),
-  table.createGroup({
+    cell: props => <RowActions row={props.row} />,
+  },
+  // Grouping Column
+  {
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('firstName', {
+      // Data Column
+      {
+        accessorKey: 'firstName',
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      }),
-      table.createDataColumn(row => row.lastName, {
+      },
+      // Data Column
+      {
+        accessorFn: row => row.lastName,
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
-      }),
+      },
     ],
-  }),
-  table.createGroup({
+  },
+  // Grouping Column
+  {
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('age', {
+      // Data Column
+      {
+        accessorKey: 'age',
         header: () => 'Age',
         footer: props => props.column.id,
-      }),
-      table.createGroup({
+      },
+      // Grouping Column
+      {
         header: 'More Info',
         columns: [
-          table.createDataColumn('visits', {
+          // Data Column
+          {
+            accessorKey: 'visits',
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('status', {
+          },
+          // Data Column
+          {
+            accessorKey: 'status',
             header: 'Status',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('progress', {
+          },
+          // Data Column
+          {
+            accessorKey: 'progress',
             header: 'Profile Progress',
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
+      },
     ],
-  }),
+  },
 ]
 ```
 
@@ -126,7 +133,9 @@ type Person = {
 You could extract the `firstName` value like so:
 
 ```tsx
-table.createDataColumn('firstName')
+{
+  accessorKey: 'firstName',
+}
 ```
 
 ## Array Indices
@@ -140,7 +149,9 @@ type Sales = [Date, number]
 You could extract the `number` value like so:
 
 ```tsx
-table.createDataColumn(1)
+{
+  accessorKey: 1,
+}
 ```
 
 ## Accessor Functions
@@ -161,9 +172,10 @@ type Person = {
 You could extract a computed full-name value like so:
 
 ```tsx
-table.createDataColumn(row => `${row.firstName} ${row.lastName}`, {
+{
   id: 'fullName',
-})
+  accessorFn: row => `${row.firstName} ${row.lastName}`,
+}
 ```
 
 > 🧠 Remember, the accessed value is what is used to sort, filter, etc. so you'll want to make sure your accessor function returns a primitive value that can be manipulated in a meaningful way. If you return a non-primitive value like an object or array, you will need the appropriate filter/sort/grouping functions to manipulate them, or even supply your own! 😬
@@ -195,19 +207,19 @@ There are a couple of formatters available to you:
 You can provide a custom cell formatter by passing a function to the `cell` property and using the `props.getValue()` function to access your cell's value:
 
 ```tsx
-table.createDataColumn('firstName', {
-  cell: props => props.getValue().toUpperCase(),
-})
+{
+  accessorKey: 'firstName',
+  cell: props => <span>{props.renderValue().toUpperCase()}</span>,
+}
 ```
 
-Cell formatters are also provided the `row` and `instance` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
+Cell formatters are also provided the `row` and `table` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
 
 ```tsx
-table.createDataColumn('firstName', {
-  cell: props => {
-    return <span>{`${props.row.original.id} - ${props.getValue()}`}</span>
-  },
-})
+{
+  accessorKey: 'firstName',
+  cell: props => <span>{`${props.row.original.id} - ${props.getValue()}`}</span>
+}
 ```
 
 ## Aggregated Cell Formatting

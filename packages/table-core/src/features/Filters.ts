@@ -1,13 +1,14 @@
 import { RowModel } from '..'
-import { TableFeature } from '../core/instance'
+import { TableFeature } from '../core/table'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
   OnChangeFn,
   TableGenerics,
-  TableInstance,
+  Table,
   Row,
   Updater,
+  RowData,
 } from '../types'
 import {
   functionalUpdate,
@@ -29,59 +30,58 @@ export type ColumnFilter = {
   value: unknown
 }
 
-export type ResolvedColumnFilter<TGenerics extends TableGenerics> = {
+export type ResolvedColumnFilter<TData extends RowData> = {
   id: string
   resolvedValue: unknown
-  filterFn: FilterFn<TGenerics>
+  filterFn: FilterFn<TData>
 }
 
-export type FilterFn<TGenerics extends TableGenerics> = {
+export type FilterFn<TData extends RowData> = {
   (
-    row: Row<TGenerics>,
+    row: Row<TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: TGenerics['FilterMeta']) => void
+    addMeta: (meta: any) => void
   ): boolean
 
-  resolveFilterValue?: TransformFilterValueFn<TGenerics>
-  autoRemove?: ColumnFilterAutoRemoveTestFn<TGenerics>
+  resolveFilterValue?: TransformFilterValueFn<TData>
+  autoRemove?: ColumnFilterAutoRemoveTestFn<TData>
 }
 
-export type TransformFilterValueFn<TGenerics extends TableGenerics> = (
+export type TransformFilterValueFn<TData extends RowData> = (
   value: any,
-  column?: Column<TGenerics>
+  column?: Column<TData>
 ) => unknown
 
-export type ColumnFilterAutoRemoveTestFn<TGenerics extends TableGenerics> = (
+export type ColumnFilterAutoRemoveTestFn<TData extends RowData> = (
   value: any,
-  column?: Column<TGenerics>
+  column?: Column<TData>
 ) => boolean
 
-export type CustomFilterFns<TGenerics extends TableGenerics> = Record<
+export type CustomFilterFns<TData extends RowData> = Record<
   string,
-  FilterFn<TGenerics>
+  FilterFn<TData>
 >
 
-export type FilterFnOption<TGenerics extends TableGenerics> =
+export type FilterFnOption<TData extends RowData> =
   | 'auto'
   | BuiltInFilterFn
-  | keyof TGenerics['FilterFns']
-  | FilterFn<TGenerics>
+  | FilterFn<TData>
 
-export type FiltersColumnDef<TGenerics extends TableGenerics> = {
-  filterFn?: FilterFnOption<Overwrite<TGenerics, { Value: any }>>
+export type FiltersColumnDef<TData extends RowData> = {
+  filterFn?: FilterFnOption<TData>
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
 }
 
-export type FiltersColumn<TGenerics extends TableGenerics> = {
-  getAutoFilterFn: () => FilterFn<TGenerics> | undefined
-  getFilterFn: () => FilterFn<TGenerics> | undefined
+export type FiltersColumn<TData extends RowData> = {
+  getAutoFilterFn: () => FilterFn<TData> | undefined
+  getFilterFn: () => FilterFn<TData> | undefined
   setFilterValue: (updater: Updater<any>) => void
   getCanFilter: () => boolean
   getCanGlobalFilter: () => boolean
-  getFacetedRowModel: () => RowModel<TGenerics>
-  _getFacetedRowModel?: () => RowModel<TGenerics>
+  getFacetedRowModel: () => RowModel<TData>
+  _getFacetedRowModel?: () => RowModel<TData>
   getIsFiltered: () => boolean
   getFilterValue: () => unknown
   getFilterIndex: () => number
@@ -91,60 +91,59 @@ export type FiltersColumn<TGenerics extends TableGenerics> = {
   _getFacetedMinMaxValues?: () => undefined | [number, number]
 }
 
-export type FiltersRow<TGenerics extends TableGenerics> = {
+export type FiltersRow<TData extends RowData> = {
   columnFilters: Record<string, boolean>
-  columnFiltersMeta: Record<string, TGenerics['FilterMeta']>
+  columnFiltersMeta: Record<string, any>
 }
 
-export type FiltersOptions<TGenerics extends TableGenerics> = {
+export type FiltersOptions<TData extends RowData> = {
   enableFilters?: boolean
   manualFiltering?: boolean
   filterFromLeafRows?: boolean
-  filterFns?: TGenerics['FilterFns']
-  getFilteredRowModel?: (instance: TableInstance<any>) => () => RowModel<any>
+  getFilteredRowModel?: (table: Table<any>) => () => RowModel<any>
 
   // Column
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
   enableColumnFilters?: boolean
 
   // Global
-  globalFilterFn?: FilterFnOption<TGenerics>
+  globalFilterFn?: FilterFnOption<TData>
   onGlobalFilterChange?: OnChangeFn<any>
   enableGlobalFilter?: boolean
-  getColumnCanGlobalFilter?: (column: Column<TGenerics>) => boolean
+  getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
 
   // Faceting
   getFacetedRowModel?: (
-    instance: TableInstance<TGenerics>,
+    table: Table<TData>,
     columnId: string
-  ) => () => RowModel<TGenerics>
+  ) => () => RowModel<TData>
   getFacetedUniqueValues?: (
-    instance: TableInstance<TGenerics>,
+    table: Table<TData>,
     columnId: string
   ) => () => Map<any, number>
   getFacetedMinMaxValues?: (
-    instance: TableInstance<TGenerics>,
+    table: Table<TData>,
     columnId: string
   ) => () => undefined | [number, number]
 }
 
-export type FiltersInstance<TGenerics extends TableGenerics> = {
+export type FiltersInstance<TData extends RowData> = {
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 
   resetColumnFilters: (defaultState?: boolean) => void
 
   // Column Filters
-  getPreFilteredRowModel: () => RowModel<TGenerics>
-  getFilteredRowModel: () => RowModel<TGenerics>
-  _getFilteredRowModel?: () => RowModel<TGenerics>
+  getPreFilteredRowModel: () => RowModel<TData>
+  getFilteredRowModel: () => RowModel<TData>
+  _getFilteredRowModel?: () => RowModel<TData>
 
   // Global Filters
   setGlobalFilter: (updater: Updater<any>) => void
   resetGlobalFilter: (defaultState?: boolean) => void
-  getGlobalAutoFilterFn: () => FilterFn<TGenerics> | undefined
-  getGlobalFilterFn: () => FilterFn<TGenerics> | undefined
-  getGlobalFacetedRowModel: () => RowModel<TGenerics>
-  _getGlobalFacetedRowModel?: () => RowModel<TGenerics>
+  getGlobalAutoFilterFn: () => FilterFn<TData> | undefined
+  getGlobalFilterFn: () => FilterFn<TData> | undefined
+  getGlobalFacetedRowModel: () => RowModel<TData>
+  _getGlobalFacetedRowModel?: () => RowModel<TData>
   getGlobalFacetedUniqueValues: () => Map<any, number>
   _getGlobalFacetedUniqueValues?: () => Map<any, number>
   getGlobalFacetedMinMaxValues: () => undefined | [number, number]
@@ -154,9 +153,7 @@ export type FiltersInstance<TGenerics extends TableGenerics> = {
 //
 
 export const Filters: TableFeature = {
-  getDefaultColumnDef: <
-    TGenerics extends TableGenerics
-  >(): FiltersColumnDef<TGenerics> => {
+  getDefaultColumnDef: <TData extends RowData>(): FiltersColumnDef<TData> => {
     return {
       filterFn: 'auto',
     }
@@ -172,16 +169,16 @@ export const Filters: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): FiltersOptions<TGenerics> => {
+  getDefaultOptions: <TData extends RowData>(
+    table: Table<TData>
+  ): FiltersOptions<TData> => {
     return {
-      onColumnFiltersChange: makeStateUpdater('columnFilters', instance),
-      onGlobalFilterChange: makeStateUpdater('globalFilter', instance),
+      onColumnFiltersChange: makeStateUpdater('columnFilters', table),
+      onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       filterFromLeafRows: false,
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: column => {
-        const value = instance
+        const value = table
           .getCoreRowModel()
           .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
@@ -191,13 +188,13 @@ export const Filters: TableFeature = {
     }
   },
 
-  createColumn: <TGenerics extends TableGenerics>(
-    column: Column<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): FiltersColumn<TGenerics> => {
+  createColumn: <TData extends RowData>(
+    column: Column<TData>,
+    table: Table<TData>
+  ): FiltersColumn<TData> => {
     return {
       getAutoFilterFn: () => {
-        const firstRow = instance.getCoreRowModel().flatRows[0]
+        const firstRow = table.getCoreRowModel().flatRows[0]
 
         const value = firstRow?.getValue(column.id)
 
@@ -224,24 +221,19 @@ export const Filters: TableFeature = {
         return filterFns.weakEquals
       },
       getFilterFn: () => {
-        const userFilterFns = instance.options.filterFns
-
         return isFunction(column.columnDef.filterFn)
           ? column.columnDef.filterFn
           : column.columnDef.filterFn === 'auto'
           ? column.getAutoFilterFn()
-          : (userFilterFns as Record<string, any>)?.[
-              column.columnDef.filterFn as string
-            ] ??
-            (filterFns[
+          : (filterFns[
               column.columnDef.filterFn as BuiltInFilterFn
-            ] as FilterFn<TGenerics>)
+            ] as FilterFn<TData>)
       },
       getCanFilter: () => {
         return (
           (column.columnDef.enableColumnFilter ?? true) &&
-          (instance.options.enableColumnFilters ?? true) &&
-          (instance.options.enableFilters ?? true) &&
+          (table.options.enableColumnFilters ?? true) &&
+          (table.options.enableFilters ?? true) &&
           !!column.accessorFn
         )
       },
@@ -249,9 +241,9 @@ export const Filters: TableFeature = {
       getCanGlobalFilter: () => {
         return (
           (column.columnDef.enableGlobalFilter ?? true) &&
-          (instance.options.enableGlobalFilter ?? true) &&
-          (instance.options.enableFilters ?? true) &&
-          (instance.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+          (table.options.enableGlobalFilter ?? true) &&
+          (table.options.enableFilters ?? true) &&
+          (table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
           !!column.accessorFn
         )
       },
@@ -259,14 +251,14 @@ export const Filters: TableFeature = {
       getIsFiltered: () => column.getFilterIndex() > -1,
 
       getFilterValue: () =>
-        instance.getState().columnFilters?.find(d => d.id === column.id)?.value,
+        table.getState().columnFilters?.find(d => d.id === column.id)?.value,
 
       getFilterIndex: () =>
-        instance.getState().columnFilters?.findIndex(d => d.id === column.id) ??
+        table.getState().columnFilters?.findIndex(d => d.id === column.id) ??
         -1,
 
       setFilterValue: value => {
-        instance.setColumnFilters(old => {
+        table.setColumnFilters(old => {
           const filterFn = column.getFilterFn()
           const previousfilter = old?.find(d => d.id === column.id)
 
@@ -278,7 +270,7 @@ export const Filters: TableFeature = {
           //
           if (
             shouldAutoRemoveFilter(
-              filterFn as FilterFn<TGenerics>,
+              filterFn as FilterFn<TData>,
               newFilter,
               column
             )
@@ -307,18 +299,18 @@ export const Filters: TableFeature = {
         })
       },
       _getFacetedRowModel:
-        instance.options.getFacetedRowModel &&
-        instance.options.getFacetedRowModel(instance, column.id),
+        table.options.getFacetedRowModel &&
+        table.options.getFacetedRowModel(table, column.id),
       getFacetedRowModel: () => {
         if (!column._getFacetedRowModel) {
-          return instance.getPreFilteredRowModel()
+          return table.getPreFilteredRowModel()
         }
 
         return column._getFacetedRowModel()
       },
       _getFacetedUniqueValues:
-        instance.options.getFacetedUniqueValues &&
-        instance.options.getFacetedUniqueValues(instance, column.id),
+        table.options.getFacetedUniqueValues &&
+        table.options.getFacetedUniqueValues(table, column.id),
       getFacetedUniqueValues: () => {
         if (!column._getFacetedUniqueValues) {
           return new Map()
@@ -327,8 +319,8 @@ export const Filters: TableFeature = {
         return column._getFacetedUniqueValues()
       },
       _getFacetedMinMaxValues:
-        instance.options.getFacetedMinMaxValues &&
-        instance.options.getFacetedMinMaxValues(instance, column.id),
+        table.options.getFacetedMinMaxValues &&
+        table.options.getFacetedMinMaxValues(table, column.id),
       getFacetedMinMaxValues: () => {
         if (!column._getFacetedMinMaxValues) {
           return undefined
@@ -341,42 +333,36 @@ export const Filters: TableFeature = {
     }
   },
 
-  createRow: <TGenerics extends TableGenerics>(
-    row: Row<TGenerics>,
-    instance: TableInstance<TGenerics>
-  ): FiltersRow<TGenerics> => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    table: Table<TData>
+  ): FiltersRow<TData> => {
     return {
       columnFilters: {},
       columnFiltersMeta: {},
     }
   },
 
-  createInstance: <TGenerics extends TableGenerics>(
-    instance: TableInstance<TGenerics>
-  ): FiltersInstance<TGenerics> => {
+  createTable: <TData extends RowData>(
+    table: Table<TData>
+  ): FiltersInstance<TData> => {
     return {
       getGlobalAutoFilterFn: () => {
         return filterFns.includesString
       },
 
       getGlobalFilterFn: () => {
-        const { filterFns: userFilterFns, globalFilterFn: globalFilterFn } =
-          instance.options
+        const { globalFilterFn: globalFilterFn } = table.options
 
         return isFunction(globalFilterFn)
           ? globalFilterFn
           : globalFilterFn === 'auto'
-          ? instance.getGlobalAutoFilterFn()
-          : (userFilterFns as Record<string, any>)?.[
-              globalFilterFn as string
-            ] ??
-            (filterFns[
-              globalFilterFn as BuiltInFilterFn
-            ] as FilterFn<TGenerics>)
+          ? table.getGlobalAutoFilterFn()
+          : (filterFns[globalFilterFn as BuiltInFilterFn] as FilterFn<TData>)
       },
 
       setColumnFilters: (updater: Updater<ColumnFiltersState>) => {
-        const leafColumns = instance.getAllLeafColumns()
+        const leafColumns = table.getAllLeafColumns()
 
         const updateFn = (old: ColumnFiltersState) => {
           return functionalUpdate(updater, old)?.filter(filter => {
@@ -394,84 +380,78 @@ export const Filters: TableFeature = {
           })
         }
 
-        instance.options.onColumnFiltersChange?.(updateFn)
+        table.options.onColumnFiltersChange?.(updateFn)
       },
 
       setGlobalFilter: updater => {
-        instance.options.onGlobalFilterChange?.(updater)
+        table.options.onGlobalFilterChange?.(updater)
       },
 
       resetGlobalFilter: defaultState => {
-        instance.setGlobalFilter(
-          defaultState ? undefined : instance.initialState.globalFilter
+        table.setGlobalFilter(
+          defaultState ? undefined : table.initialState.globalFilter
         )
       },
 
       resetColumnFilters: defaultState => {
-        instance.setColumnFilters(
-          defaultState ? [] : instance.initialState?.columnFilters ?? []
+        table.setColumnFilters(
+          defaultState ? [] : table.initialState?.columnFilters ?? []
         )
       },
 
-      getPreFilteredRowModel: () => instance.getCoreRowModel(),
+      getPreFilteredRowModel: () => table.getCoreRowModel(),
       _getFilteredRowModel:
-        instance.options.getFilteredRowModel &&
-        instance.options.getFilteredRowModel(instance),
+        table.options.getFilteredRowModel &&
+        table.options.getFilteredRowModel(table),
       getFilteredRowModel: () => {
-        if (
-          instance.options.manualFiltering ||
-          !instance._getFilteredRowModel
-        ) {
-          return instance.getPreFilteredRowModel()
+        if (table.options.manualFiltering || !table._getFilteredRowModel) {
+          return table.getPreFilteredRowModel()
         }
 
-        return instance._getFilteredRowModel()
+        return table._getFilteredRowModel()
       },
 
       _getGlobalFacetedRowModel:
-        instance.options.getFacetedRowModel &&
-        instance.options.getFacetedRowModel(instance, '__global__'),
+        table.options.getFacetedRowModel &&
+        table.options.getFacetedRowModel(table, '__global__'),
 
       getGlobalFacetedRowModel: () => {
-        if (
-          instance.options.manualFiltering ||
-          !instance._getGlobalFacetedRowModel
-        ) {
-          return instance.getPreFilteredRowModel()
+        if (table.options.manualFiltering || !table._getGlobalFacetedRowModel) {
+          return table.getPreFilteredRowModel()
         }
 
-        return instance._getGlobalFacetedRowModel()
+        return table._getGlobalFacetedRowModel()
       },
 
       _getGlobalFacetedUniqueValues:
-        instance.options.getFacetedUniqueValues &&
-        instance.options.getFacetedUniqueValues(instance, '__global__'),
+        table.options.getFacetedUniqueValues &&
+        table.options.getFacetedUniqueValues(table, '__global__'),
       getGlobalFacetedUniqueValues: () => {
-        if (!instance._getGlobalFacetedUniqueValues) {
+        if (!table._getGlobalFacetedUniqueValues) {
           return new Map()
         }
 
-        return instance._getGlobalFacetedUniqueValues()
+        return table._getGlobalFacetedUniqueValues()
       },
 
       _getGlobalFacetedMinMaxValues:
-        instance.options.getFacetedMinMaxValues &&
-        instance.options.getFacetedMinMaxValues(instance, '__global__'),
+        table.options.getFacetedMinMaxValues &&
+        table.options.getFacetedMinMaxValues(table, '__global__'),
       getGlobalFacetedMinMaxValues: () => {
-        if (!instance._getGlobalFacetedMinMaxValues) {
+        if (!table._getGlobalFacetedMinMaxValues) {
           return
         }
 
-        return instance._getGlobalFacetedMinMaxValues()
+        return table._getGlobalFacetedMinMaxValues()
       },
     }
   },
 }
 
-export function shouldAutoRemoveFilter<TGenerics extends TableGenerics>(
-  filterFn?: FilterFn<TGenerics>,
+export function shouldAutoRemoveFilter<TData extends RowData>(
+  filterFn?: FilterFn<TData>,
   value?: any,
-  column?: Column<TGenerics>
+  column?: Column<TData>
 ) {
   return (
     (filterFn && filterFn.autoRemove

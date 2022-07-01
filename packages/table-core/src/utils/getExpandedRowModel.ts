@@ -1,15 +1,15 @@
-import { TableInstance, Row, RowModel, TableGenerics } from '../types'
+import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
 import { memo } from '../utils'
 
-export function getExpandedRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
-  return instance =>
+export function getExpandedRowModel<TData extends RowData>(): (
+  table: Table<TData>
+) => () => RowModel<TData> {
+  return table =>
     memo(
       () => [
-        instance.getState().expanded,
-        instance.getPreExpandedRowModel(),
-        instance.options.paginateExpandedRows,
+        table.getState().expanded,
+        table.getPreExpandedRowModel(),
+        table.options.paginateExpandedRows,
       ],
       (expanded, rowModel, paginateExpandedRows) => {
         if (
@@ -21,22 +21,22 @@ export function getExpandedRowModel<TGenerics extends TableGenerics>(): (
           return rowModel
         }
 
-        return expandRows(rowModel, instance)
+        return expandRows(rowModel, table)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getExpandedRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
       }
     )
 }
 
-export function expandRows<TGenerics extends TableGenerics>(
-  rowModel: RowModel<TGenerics>,
-  instance: TableInstance<TGenerics>
+export function expandRows<TData extends RowData>(
+  rowModel: RowModel<TData>,
+  table: Table<TData>
 ) {
-  const expandedRows: Row<TGenerics>[] = []
+  const expandedRows: Row<TData>[] = []
 
-  const handleRow = (row: Row<TGenerics>) => {
+  const handleRow = (row: Row<TData>) => {
     expandedRows.push(row)
 
     if (row.subRows?.length && row.getIsExpanded()) {
