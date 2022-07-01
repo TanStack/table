@@ -14,10 +14,10 @@ import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 
 import {
-  createTable,
   Column,
   Table as ReactTable,
   PaginationState,
+  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -28,8 +28,6 @@ import {
 
 import TablePaginationActions from './actions'
 import { makeData, Person } from './makeData'
-
-let table = createTable().setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -126,11 +124,11 @@ function LocalTable({
   setPagination,
 }: {
   data: Person[]
-  columns: ColumnDef<typeof table.generics>[]
+  columns: ColumnDef<Person>[]
   pagination: PaginationState
   setPagination: OnChangeFn<PaginationState>
 }) {
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -144,13 +142,14 @@ function LocalTable({
     //
     debugTable: true,
   })
-  const { pageSize, pageIndex } = instance.getState().pagination
+
+  const { pageSize, pageIndex } = table.getState().pagination
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -175,12 +174,17 @@ function LocalTable({
           ))}
         </TableHead>
         <TableBody>
-          {instance.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map(row => {
             return (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map(cell => {
                   return (
-                    <TableCell key={cell.id}>{cell.renderCell()}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
                   )
                 })}
               </TableRow>
@@ -197,7 +201,7 @@ function LocalTable({
                 { label: 'All', value: data.length },
               ]}
               colSpan={3}
-              count={instance.getFilteredRowModel().rows.length}
+              count={table.getFilteredRowModel().rows.length}
               rowsPerPage={pageSize}
               page={pageIndex}
               SelectProps={{
@@ -205,11 +209,11 @@ function LocalTable({
                 native: true,
               }}
               onPageChange={(e, page) => {
-                instance.setPageIndex(page)
+                table.setPageIndex(page)
               }}
               onRowsPerPageChange={e => {
                 const size = e.target.value ? Number(e.target.value) : 10
-                instance.setPageSize(size)
+                table.setPageSize(size)
               }}
               ActionsComponent={TablePaginationActions}
             />
@@ -220,7 +224,7 @@ function LocalTable({
   )
 }
 function Filter({ column, table }: { column: Column<any>; table: ReactTable<any> }) {
-  const firstValue = instance
+  const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
