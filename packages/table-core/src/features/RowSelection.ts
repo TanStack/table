@@ -37,7 +37,7 @@ export type RowSelectionOptions<TData extends RowData> = {
 export type RowSelectionRow = {
   getIsSelected: () => boolean
   getIsSomeSelected: () => boolean
-  getIsAllSubrowsSelected: () => boolean
+  getIsAllSubRowsSelected: () => boolean
   getCanSelect: () => boolean
   getCanMultiSelect: () => boolean
   getCanSelectSubRows: () => boolean
@@ -367,12 +367,12 @@ export const RowSelection: TableFeature = {
 
       getIsSomeSelected: () => {
         const { rowSelection } = table.getState()
-        return isSubrowSelected(row, rowSelection, table) === 'some'
+        return isSubRowSelected(row, rowSelection, table) === 'some'
       },
 
-      getIsAllSubrowsSelected: () => {
+      getIsAllSubRowsSelected: () => {
         const { rowSelection } = instance.getState()
-        return isSubrowSelected(row, rowSelection, table) === 'all'
+        return isSubRowSelected(row, rowSelection, table) === 'all'
       },
 
       getCanSelect: () => {
@@ -491,7 +491,7 @@ export function isRowSelected<TData extends RowData>(
   return selection[row.id] ?? false
 }
 
-export function isSubrowSelected<TData extends RowData>(
+export function isSubRowSelected<TData extends RowData>(
   row: Row<TData>,
   selection: Record<string, boolean>,
   table: Table<TData>
