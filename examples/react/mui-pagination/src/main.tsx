@@ -16,14 +16,14 @@ import Paper from '@mui/material/Paper'
 import {
   createTable,
   Column,
-  TableInstance,
+  Table as ReactTable,
   PaginationState,
-  useTableInstance,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   ColumnDef,
   OnChangeFn,
+  flexRender
 } from '@tanstack/react-table'
 
 import TablePaginationActions from './actions'
@@ -34,51 +34,57 @@ let table = createTable().setRowType<Person>()
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -151,13 +157,13 @@ function LocalTable({
                   <TableCell key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
-                        {header.renderHeader()}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                         {header.column.getCanFilter() ? (
                           <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
+                            <Filter column={header.column} table={table} />
                           </div>
                         ) : null}
                       </div>
@@ -213,13 +219,7 @@ function LocalTable({
     </TableContainer>
   )
 }
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: TableInstance<any>
-}) {
+function Filter({ column, table }: { column: Column<any>; table: ReactTable<any> }) {
   const firstValue = instance
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
