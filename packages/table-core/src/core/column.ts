@@ -114,7 +114,7 @@ export function createColumn<TData extends RowData>(
     accessorFn,
     parent: parent as any,
     depth,
-    columnDef,
+    columnDef: resolvedColumnDef as ColumnDef<TData>,
     columns: [],
     getFlatColumns: memo(
       () => [true],

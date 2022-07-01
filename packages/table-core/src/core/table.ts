@@ -231,7 +231,7 @@ export function createTable<TData extends RowData>(
         return {
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
-          cell: props => (props.getValue() as any)?.toString?.() ?? null,
+          cell: props => (props.renderValue() as any)?.toString?.() ?? null,
           ...table._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
