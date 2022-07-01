@@ -116,7 +116,7 @@ export const ColumnSizing: TableFeature = {
   },
 
   createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
+    column: Column<TData>,
     instance: Table<TData>
   ): ColumnSizingColumn => {
     return {

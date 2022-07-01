@@ -31,7 +31,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TData, TValue>[]
+type columns = ColumnDef<TData>[]
 ```
 
 The array of column defs to use for the table.
@@ -39,7 +39,7 @@ The array of column defs to use for the table.
 ### `defaultColumn`
 
 ```tsx
-defaultColumn?: Partial<ColumnDef<TData, TValue>>[]
+defaultColumn?: Partial<ColumnDef<TData>>[]
 ```
 
 Default column options to use for all column defs supplied to the table. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
@@ -218,7 +218,7 @@ This optional function is used to derive a unique ID for any given row. If not p
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TData, TValue>[]
+type columns = ColumnDef<TData>[]
 ```
 
 The column defs to use for this table. See the [Table API](../table.md) for more information on creating column definitions.
@@ -226,7 +226,7 @@ The column defs to use for this table. See the [Table API](../table.md) for more
 ### `defaultColumn`
 
 ```tsx
-defaultColumn?: Partial<ColumnDef<TData, TValue>>
+defaultColumn?: Partial<ColumnDef<TData>>
 ```
 
 An optional, partial column default column definition. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
@@ -325,7 +325,7 @@ Returns the final model after all processing from other used features has been a
 ### `getAllColumns`
 
 ```tsx
-type getAllColumns = () => Column<TData, TValue>[]
+type getAllColumns = () => Column<TData>[]
 ```
 
 Returns all columns in the table in their normalized and nested hierarchy, mirrored from the column defs passed to the table.
@@ -333,7 +333,7 @@ Returns all columns in the table in their normalized and nested hierarchy, mirro
 ### `getAllFlatColumns`
 
 ```tsx
-type getAllFlatColumns = () => Column<TData, TValue>[]
+type getAllFlatColumns = () => Column<TData>[]
 ```
 
 Returns all columns in the table flattened to a single level. This includes parent column objects throughout the hierarchy.
@@ -341,7 +341,7 @@ Returns all columns in the table flattened to a single level. This includes pare
 ### `getAllLeafColumns`
 
 ```tsx
-type getAllLeafColumns = () => Column<TData, TValue>[]
+type getAllLeafColumns = () => Column<TData>[]
 ```
 
 Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
@@ -349,7 +349,7 @@ Returns all leaf-node columns in the table flattened to a single level. This doe
 ### `getColumn`
 
 ```tsx
-type getColumn = (id: string) => Column<TData, TValue>
+type getColumn = (id: string) => Column<TData>
 ```
 
 Returns a single column by its ID.

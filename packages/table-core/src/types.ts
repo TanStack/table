@@ -174,18 +174,15 @@ export type ColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => unknown)
 
-export type ColumnDef<TData extends RowData, TValue = unknown> = CoreColumnDef<
-  TData,
-  TValue
-> &
+export type ColumnDef<TData extends RowData> = CoreColumnDef<TData> &
   VisibilityColumnDef &
   ColumnPinningColumnDef &
   FiltersColumnDef<TData> &
   SortingColumnDef<TData> &
-  GroupingColumnDef<TData, TValue> &
+  GroupingColumnDef<TData> &
   ColumnSizingColumnDef
 
-export type Column<TData extends RowData, TValue> = CoreColumn<TData, TValue> &
+export type Column<TData extends RowData> = CoreColumn<TData> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
   FiltersColumn<TData> &
@@ -193,8 +190,7 @@ export type Column<TData extends RowData, TValue> = CoreColumn<TData, TValue> &
   GroupingColumn<TData> &
   ColumnSizingColumn
 
-export type Cell<TData extends RowData, TValue> = CoreCell<TData, TValue> &
-  GroupingCell
+export type Cell<TData extends RowData> = CoreCell<TData> & GroupingCell
 
 export type Header<TData extends RowData> = CoreHeader<TData> &
   ColumnSizingHeader

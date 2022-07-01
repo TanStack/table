@@ -88,12 +88,12 @@ export type FilterFn<TData extends AnyData> = {
 
 export type TransformFilterValueFn<TData extends AnyData> = (
   value: any,
-  column?: Column<TData, TValue>
+  column?: Column<TData>
 ) => unknown
 
 export type ColumnFilterAutoRemoveTestFn<TData extends AnyData> = (
   value: any,
-  column?: Column<TData, TValue>
+  column?: Column<TData>
 ) => boolean
 
 export type CustomFilterFns<TData extends AnyData> = Record<
@@ -416,7 +416,7 @@ Enables/disables the global filter for the table. For option priority, see [Can-
 ### `getColumnCanGlobalFilter`
 
 ```tsx
-getColumnCanGlobalFilter?: (column: Column<TData, TValue>) => boolean
+getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
 ```
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.

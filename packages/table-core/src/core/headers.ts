@@ -12,7 +12,7 @@ export type CoreHeader<TData extends RowData> = {
   id: string
   index: number
   depth: number
-  column: Column<TData, unknown>
+  column: Column<TData>
   headerGroup: HeaderGroup<TData>
   subHeaders: Header<TData>[]
   colSpan: number
@@ -23,7 +23,7 @@ export type CoreHeader<TData extends RowData> = {
   getContext: () => {
     instance: Table<TData>
     header: Header<TData>
-    column: Column<TData, unknown>
+    column: Column<TData>
   }
 }
 
@@ -53,7 +53,7 @@ export type HeadersInstance<TData extends RowData> = {
 
 function createHeader<TData extends RowData>(
   instance: Table<TData>,
-  column: Column<TData, unknown>,
+  column: Column<TData>,
   options: {
     id?: string
     isPlaceholder?: boolean
@@ -403,8 +403,8 @@ export const Headers: TableFeature = {
 }
 
 export function buildHeaderGroups<TData extends RowData>(
-  allColumns: Column<TData, unknown>[],
-  columnsToGroup: Column<TData, unknown>[],
+  allColumns: Column<TData>[],
+  columnsToGroup: Column<TData>[],
   instance: Table<TData>,
   headerFamily?: 'center' | 'left' | 'right'
 ) {
@@ -416,7 +416,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
   let maxDepth = 0
 
-  const findMaxDepth = (columns: Column<TData, unknown>[], depth = 1) => {
+  const findMaxDepth = (columns: Column<TData>[], depth = 1) => {
     maxDepth = Math.max(maxDepth, depth)
 
     columns
@@ -454,7 +454,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
       const isLeafHeader = headerToGroup.column.depth === headerGroup.depth
 
-      let column: Column<TData, unknown>
+      let column: Column<TData>
       let isPlaceholder = false
 
       if (isLeafHeader && headerToGroup.column.parent) {

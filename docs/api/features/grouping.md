@@ -93,9 +93,10 @@ aggregatedCell?: Renderable<
   {
     instance: Table<TData>
     row: Row<TData>
-    column: Column<TData, TValue>
-    cell: Cell<TData, TValue>
-    getValue: () => TValue
+    column: Column<TData>
+    cell: Cell<TData>
+    getValue: () => any
+    renderValue: () => any
   }
 >
 ```

@@ -117,7 +117,7 @@ export const Sorting: TableFeature = {
   },
 
   createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
+    column: Column<TData>,
     instance: Table<TData>
   ): SortingColumn<TData> => {
     return {

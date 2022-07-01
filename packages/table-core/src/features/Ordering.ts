@@ -29,9 +29,7 @@ export type ColumnOrderDefaultOptions = {
 export type ColumnOrderInstance<TData extends RowData> = {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
   resetColumnOrder: (defaultState?: boolean) => void
-  _getOrderColumnsFn: () => (
-    columns: Column<TData, unknown>[]
-  ) => Column<TData, unknown>[]
+  _getOrderColumnsFn: () => (columns: Column<TData>[]) => Column<TData>[]
 }
 
 //
@@ -72,7 +70,7 @@ export const Ordering: TableFeature = {
         (columnOrder, grouping, groupedColumnMode) => columns => {
           // Sort grouped columns to the start of the column list
           // before the headers are built
-          let orderedColumns: Column<TData, unknown>[] = []
+          let orderedColumns: Column<TData>[] = []
 
           // If there is no order, return the normal columns
           if (!columnOrder?.length) {

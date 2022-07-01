@@ -79,8 +79,8 @@ export type CoreOptions<TData extends RowData> = {
   getCoreRowModel: (instance: Table<any>) => () => RowModel<any>
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
-  columns: ColumnDef<TData, any>[]
-  defaultColumn?: Partial<ColumnDef<TData, any>>
+  columns: ColumnDef<TData>[]
+  defaultColumn?: Partial<ColumnDef<TData>>
   renderFallbackValue: any
 }
 
@@ -98,13 +98,13 @@ export type CoreInstance<TData extends RowData> = {
   _getCoreRowModel?: () => RowModel<TData>
   getRowModel: () => RowModel<TData>
   getRow: (id: string) => Row<TData>
-  _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
-  _getColumnDefs: () => ColumnDef<TData, unknown>[]
-  _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
-  getAllColumns: () => Column<TData, unknown>[]
-  getAllFlatColumns: () => Column<TData, unknown>[]
-  getAllLeafColumns: () => Column<TData, unknown>[]
-  getColumn: (columnId: string) => Column<TData, unknown>
+  _getDefaultColumnDef: () => Partial<ColumnDef<TData>>
+  _getColumnDefs: () => ColumnDef<TData>[]
+  _getAllFlatColumnsById: () => Record<string, Column<TData>>
+  getAllColumns: () => Column<TData>[]
+  getAllFlatColumns: () => Column<TData>[]
+  getAllLeafColumns: () => Column<TData>[]
+  getColumn: (columnId: string) => Column<TData>
 }
 
 export function createTable<TData extends RowData>(
@@ -226,9 +226,7 @@ export function createTable<TData extends RowData>(
     _getDefaultColumnDef: memo(
       () => [instance.options.defaultColumn],
       defaultColumn => {
-        defaultColumn = (defaultColumn ?? {}) as Partial<
-          ColumnDef<TData, unknown>
-        >
+        defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TData>>
 
         return {
           header: props => props.header.column.id,
@@ -238,7 +236,7 @@ export function createTable<TData extends RowData>(
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
           ...defaultColumn,
-        } as Partial<ColumnDef<TData, unknown>>
+        } as Partial<ColumnDef<TData>>
       },
       {
         debug: () => instance.options.debugAll ?? instance.options.debugColumns,
@@ -252,10 +250,10 @@ export function createTable<TData extends RowData>(
       () => [instance._getColumnDefs()],
       columnDefs => {
         const recurseColumns = (
-          columnDefs: ColumnDef<TData, unknown>[],
-          parent?: Column<TData, unknown>,
+          columnDefs: ColumnDef<TData>[],
+          parent?: Column<TData>,
           depth = 0
-        ): Column<TData, unknown>[] => {
+        ): Column<TData>[] => {
           return columnDefs.map(columnDef => {
             const column = createColumn(instance, columnDef, depth, parent)
 
@@ -294,7 +292,7 @@ export function createTable<TData extends RowData>(
         return flatColumns.reduce((acc, column) => {
           acc[column.id] = column
           return acc
-        }, {} as Record<string, Column<TData, unknown>>)
+        }, {} as Record<string, Column<TData>>)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',

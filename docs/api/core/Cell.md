@@ -19,7 +19,7 @@ The unique ID for the cell across the entire table.
 ### `getValue`
 
 ```tsx
-getValue: () => TValue
+getValue: () => any
 ```
 
 Returns the value for the cell, accessed via the associated column's accessor key or accessor function.
@@ -35,7 +35,7 @@ The associated Row object for the cell.
 ### `column`
 
 ```tsx
-column: Column<TData, TValue>
+column: Column<TData>
 ```
 
 The associated Column object for the cell.

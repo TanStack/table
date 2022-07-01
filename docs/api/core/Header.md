@@ -35,7 +35,7 @@ The depth of the header, zero-indexed based.
 ### `column`
 
 ```tsx
-column: Column<TData, TValue>
+column: Column<TData>
 ```
 
 The header's associated [Column](./Column.md) object

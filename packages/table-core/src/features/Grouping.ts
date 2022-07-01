@@ -33,11 +33,9 @@ export type AggregationFnOption<TData extends RowData> =
   | BuiltInAggregationFn
   | AggregationFn<TData>
 
-export type GroupingColumnDef<TData extends RowData, TValue> = {
+export type GroupingColumnDef<TData extends RowData> = {
   aggregationFn?: AggregationFnOption<TData>
-  aggregatedCell?: ColumnDefTemplate<
-    ReturnType<Cell<TData, TValue>['getContext']>
-  >
+  aggregatedCell?: ColumnDefTemplate<ReturnType<Cell<TData>['getContext']>>
   enableGrouping?: boolean
 }
 
@@ -91,10 +89,7 @@ export type GroupingInstance<TData extends RowData> = {
 //
 
 export const Grouping: TableFeature = {
-  getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
-    TData,
-    unknown
-  > => {
+  getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<TData> => {
     return {
       aggregatedCell: props => (props.getValue() as any)?.toString?.() ?? null,
       aggregationFn: 'auto',
@@ -118,7 +113,7 @@ export const Grouping: TableFeature = {
   },
 
   createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
+    column: Column<TData>,
     instance: Table<TData>
   ): GroupingColumn<TData> => {
     return {
@@ -225,8 +220,8 @@ export const Grouping: TableFeature = {
   },
 
   createCell: <TData extends RowData>(
-    cell: Cell<TData, unknown>,
-    column: Column<TData, unknown>,
+    cell: Cell<TData>,
+    column: Column<TData>,
     row: Row<TData>,
     instance: Table<TData>
   ): GroupingCell => {
@@ -246,7 +241,7 @@ export const Grouping: TableFeature = {
 }
 
 export function orderColumns<TData extends RowData>(
-  leafColumns: Column<TData, unknown>[],
+  leafColumns: Column<TData>[],
   grouping: string[],
   groupedColumnMode?: GroupingColumnMode
 ) {

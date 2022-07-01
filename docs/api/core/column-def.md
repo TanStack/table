@@ -38,7 +38,7 @@ The accessor function to use when extracting the value for the column from each 
 ### `columns`
 
 ```tsx
-columns?: ColumnDef<TData, TValue>[]
+columns?: ColumnDef<TData>[]
 ```
 
 The child column defs to include in a group column.
@@ -51,7 +51,7 @@ header?:
   | ((props: {
       instance: Table<TData>
       header: Header<TData>
-      column: Column<TData, TValue>
+      column: Column<TData>
     }) => unknown)
 ```
 
@@ -65,7 +65,7 @@ footer?:
   | ((props: {
       instance: Table<TData>
       header: Header<TData>
-      column: Column<TData, TValue>
+      column: Column<TData>
     }) => unknown)
 ```
 
@@ -77,9 +77,10 @@ The footer to display for the column. If a function is passed, it will be passed
 cell?: ((props: {
   instance: Table<TData>
   row: Row<TData>
-  column: Column<TData, TValue>
+  column: Column<TData>
   cell: Cell<TData>
-  getValue: () => TValue
+  getValue: () => any
+  renderValue: () => any
 }) => unknown)
 ```
 
