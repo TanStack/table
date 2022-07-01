@@ -25,7 +25,7 @@ onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 
 If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-## Table Instance API
+## Table API API
 
 ### `setColumnOrder`
 

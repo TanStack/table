@@ -421,7 +421,7 @@ getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
 
-## Table Instance API
+## Table API API
 
 ### `setColumnFilters`
 

@@ -55,7 +55,7 @@ enablePinning?: boolean
 
 Enables/disables pinning for the column.
 
-## Table Instance API
+## Table API API
 
 ### `setColumnPinning`
 

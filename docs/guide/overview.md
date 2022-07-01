@@ -20,10 +20,10 @@ The table core uses the following abstractions, commonly exposed by adapters:
   - Used to create table factories, pre-define table types, set default options, create column defs
 - Column Defs
   - Objects used to configure a column and its data model, display templates, and more
-- Table Instances
-  - Stateful objects that expose the core Table API
+- Table
+  - The core Table object containing both state and API
 - Table Data
-  - The core data array you provide the table.
+  - The core data array you provide the table
 - Columns
   - Each column mirrors its respective column def and also provide column-specific APIs
 - Rows

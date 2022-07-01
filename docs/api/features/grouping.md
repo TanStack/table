@@ -243,7 +243,7 @@ groupedColumnMode?: false | 'reorder' | 'remove' // default: `reorder`
 
 Grouping columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
 
-## Table Instance API
+## Table API API
 
 ### `setGrouping`
 

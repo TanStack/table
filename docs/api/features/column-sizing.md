@@ -134,7 +134,7 @@ Returns an event handler function that can be used to resize the header. It can 
 
 The dragging and release events are automatically handled for you.
 
-## Table Instance Options
+## Table API Options
 
 ### `enableColumnResizing`
 
@@ -168,7 +168,7 @@ onColumnSizingInfoChange?: OnChangeFn<ColumnSizingInfoState>
 
 This optional function will be called when the columnSizingInfo state changes. If you provide this function, you will be responsible for maintaining its state yourself. You can pass this state back to the table via the `state.columnSizingInfo` table option.
 
-## Table Instance API
+## Table API API
 
 ### `setColumnSizing`
 

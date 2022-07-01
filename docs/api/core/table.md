@@ -231,7 +231,7 @@ defaultColumn?: Partial<ColumnDef<TData>>
 
 An optional, partial column default column definition. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
 
-## Table Instance
+## Table API
 
 These properties and methods are available on the table object:
 
