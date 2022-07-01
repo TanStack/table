@@ -13,7 +13,6 @@
     "faker": "^6.6.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.0",
     "@tanstack/react-table": "8.0.13",
     "react-query": "^3.39.0"
   },
