@@ -1,18 +1,15 @@
 import {
-  TableGenerics,
   TableOptions,
-  PartialKeys,
-  Table,
-  createTableInstance,
-  createTableFactory,
+  createTable,
   TableOptionsResolved,
+  RowData,
 } from '@tanstack/table-core'
 import { h, watchEffect, ref, VNode } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-function render<TProps extends {}>(
+export function flexRender<TProps extends {}>(
   Comp: any,
   props: TProps
 ): VNode | string | number | boolean | null {
@@ -25,22 +22,17 @@ function render<TProps extends {}>(
   return Comp
 }
 
-export const createTable = createTableFactory({ render })
-
-export function useTableInstance<TGenerics extends TableGenerics>(
-  table: Table<TGenerics>,
-  options: TableOptions<TGenerics>
+export function useVueTable<TData extends RowData>(
+  options: TableOptions<TData>
 ) {
-  const resolvedOptions: TableOptionsResolved<TGenerics> = mergeProxy(
+  const resolvedOptions: TableOptionsResolved<TData> = mergeProxy(
     {
-      ...table.options,
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
-      render,
       renderFallbackValue: null,
       mergeOptions(
-        defaultOptions: TableOptions<TGenerics>,
-        options: TableOptions<TGenerics>
+        defaultOptions: TableOptions<TData>,
+        options: TableOptions<TData>
       ) {
         return mergeProxy(defaultOptions, options)
       },
@@ -48,12 +40,12 @@ export function useTableInstance<TGenerics extends TableGenerics>(
     options
   )
 
-  const instance = createTableInstance<TGenerics>(resolvedOptions)
+  const table = createTable<TData>(resolvedOptions)
   // can't use `reactive` because update needs to be immutable
-  const state = ref(instance.initialState)
+  const state = ref(table.initialState)
 
   watchEffect(() => {
-    instance.setOptions(prev => {
+    table.setOptions(prev => {
       const stateProxy = new Proxy({} as typeof state.value, {
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })
@@ -79,8 +71,8 @@ export function useTableInstance<TGenerics extends TableGenerics>(
   })
 
   // onBeforeUpdate(() => {
-  //   instance.willUpdate()
+  //   table.willUpdate()
   // })
 
-  return instance
+  return table
 }

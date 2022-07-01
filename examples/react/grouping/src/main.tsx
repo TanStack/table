@@ -6,68 +6,74 @@ import './index.css'
 import {
   createTable,
   GroupingState,
-  useTableInstance,
+  useReactTable,
   getPaginationRowModel,
   getFilteredRowModel,
   getCoreRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
-
-let table = createTable().setRowType<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             header: 'First Name',
             cell: info => info.getValue(),
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             header: () => <span>Last Name</span>,
             cell: info => info.getValue(),
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             aggregatedCell: ({ getValue }) =>
               Math.round(getValue() * 100) / 100,
             aggregationFn: 'median',
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 aggregationFn: 'sum',
                 // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 cell: ({ getValue }) =>
                   Math.round(getValue() * 100) / 100 + '%',
                 aggregationFn: 'mean',
                 aggregatedCell: ({ getValue }) =>
                   Math.round(getValue() * 100) / 100 + '%',
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -77,7 +83,7 @@ function App() {
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
 
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -97,7 +103,7 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -119,7 +125,10 @@ function App() {
                               : `👊 `}
                           </button>
                         ) : null}{' '}
-                        {header.renderHeader()}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                       </div>
                     )}
                   </th>
@@ -129,7 +138,7 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map(row => {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
@@ -162,16 +171,27 @@ function App() {
                             }}
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                            {cell.renderCell()} ({row.subRows.length})
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}{' '}
+                            ({row.subRows.length})
                           </button>
                         </>
                       ) : cell.getIsAggregated() ? (
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
-                        cell.renderAggregatedCell()
+                        flexRender(
+                          cell.column.columnDef.aggregatedCell ??
+                            cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
-                        cell.renderCell()
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       )}
                     </td>
                   )
@@ -185,55 +205,55 @@ function App() {
       <div className="flex items-center gap-2">
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(0)}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.previousPage()}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.nextPage()}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {instance.getState().pagination.pageIndex + 1} of{' '}
-            {instance.getPageCount()}
+            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
           | Go to page:
           <input
             type="number"
-            defaultValue={instance.getState().pagination.pageIndex + 1}
+            defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
-              instance.setPageIndex(page)
+              table.setPageIndex(page)
             }}
             className="border p-1 rounded w-16"
           />
         </span>
         <select
-          value={instance.getState().pagination.pageSize}
+          value={table.getState().pagination.pageSize}
           onChange={e => {
-            instance.setPageSize(Number(e.target.value))
+            table.setPageSize(Number(e.target.value))
           }}
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
@@ -243,7 +263,7 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{instance.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
@@ -255,8 +275,8 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

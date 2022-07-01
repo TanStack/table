@@ -74,9 +74,9 @@ describe('withSorting', () => {
   it('renders a sortable table', () => {
     const { result } = renderHook(
       options => {
-        const instance = useTable(options, [withCore, withSorting])
+        const table = useTable(options, [withCore, withSorting])
 
-        return instance
+        return table
       },
       {
         initialProps: {
@@ -162,9 +162,9 @@ describe('withSorting', () => {
   it('renders a controlled sorted table', () => {
     const { result, rerender } = renderHook(
       options => {
-        const instance = useTable(options, [withSorting])
+        const table = useTable(options, [withSorting])
 
-        return instance
+        return table
       },
       {
         initialProps: {
@@ -245,7 +245,7 @@ describe('withSorting', () => {
       options => {
         const [sorting, setSorting] = React.useState<TableState['sorting']>([])
 
-        const instance = useTable(
+        const table = useTable(
           {
             ...options,
             state: {
@@ -256,7 +256,7 @@ describe('withSorting', () => {
           [withSorting]
         )
 
-        return instance
+        return table
       },
       {
         initialProps: {

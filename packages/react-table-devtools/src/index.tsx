@@ -1,5 +1,5 @@
 import React from 'react'
-import { TableInstance } from '@tanstack/react-table'
+import { Table } from '@tanstack/react-table'
 
 import useLocalStorage from './useLocalStorage'
 import { useIsMounted } from './utils'
@@ -12,9 +12,9 @@ import Logo from './Logo'
 
 interface DevtoolsOptions {
   /**
-   * The react table instance to attach the devtools to.
+   * The react table to attach the devtools to.
    */
-  instance: any
+  table: any
   /**
    * Set this true if you want the dev tools to default to being open
    */
@@ -50,9 +50,9 @@ interface DevtoolsOptions {
 
 interface DevtoolsPanelOptions {
   /**
-   * The react table instance to attach the devtools to.
+   * The react table to attach the devtools to.
    */
-  instance: any
+  table: any
   /**
    * The standard React style object used to style a component with inline styles
    */
@@ -73,7 +73,7 @@ interface DevtoolsPanelOptions {
 
 export function ReactTableDevtools({
   initialIsOpen,
-  instance,
+  table,
   panelProps = {},
   toggleButtonProps = {},
   containerElement: Container = 'footer',
@@ -127,7 +127,7 @@ export function ReactTableDevtools({
           <ReactTableDevtoolsPanel
             ref={panelRef as any}
             {...otherPanelProps}
-            instance={instance}
+            table={table}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             style={{
@@ -147,12 +147,12 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
   DevtoolsPanelOptions
 >(function ReactTableDevtoolsPanel(props, ref): React.ReactElement {
   const {
-    instance,
+    table,
     isOpen = true,
     setIsOpen,
     ...panelProps
   } = props as DevtoolsPanelOptions & {
-    instance: TableInstance<{}>
+    table: Table<any>
   }
 
   // const [activeMatchId, setActiveRouteId] = useLocalStorage(
@@ -265,7 +265,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
             >
               <Explorer
                 label="Instance"
-                value={instance}
+                value={table}
                 defaultExpanded={false}
               />
               <div
@@ -275,7 +275,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
               />
               <Explorer
                 label="State"
-                value={instance.getState()}
+                value={table.getState()}
                 defaultExpanded={false}
               />
               <div
@@ -285,7 +285,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
               />
               <Explorer
                 label="Columns"
-                value={instance.getAllColumns()}
+                value={table.getAllColumns()}
                 defaultExpanded={false}
               />
             </div>
@@ -297,27 +297,27 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
             >
               <Explorer
                 label="Core Model"
-                value={instance.getCoreRowModel()}
+                value={table.getCoreRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
                 label="Filtered Model"
-                value={instance.getFilteredRowModel()}
+                value={table.getFilteredRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
                 label="Sorted Model"
-                value={instance.getSortedRowModel()}
+                value={table.getSortedRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
                 label="Grouped Model"
-                value={instance.getGroupedRowModel()}
+                value={table.getGroupedRowModel()}
                 defaultExpanded={false}
               />
               <Explorer
                 label="Expanded Model"
-                value={instance.getExpandedRowModel()}
+                value={table.getExpandedRowModel()}
                 defaultExpanded={false}
               />
             </div>
@@ -329,7 +329,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
             >
               <Explorer
                 label="Row Model"
-                value={instance.getRowModel()}
+                value={table.getRowModel()}
                 defaultExpanded={false}
               />
             </div> */}

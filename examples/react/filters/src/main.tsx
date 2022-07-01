@@ -6,8 +6,8 @@ import './index.css'
 import {
   Column,
   createTable,
-  TableInstance,
-  useTableInstance,
+  Table,
+  useReactTable,
   ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
@@ -17,6 +17,10 @@ import {
   getPaginationRowModel,
   sortingFns,
   getSortedRowModel,
+  FilterFn,
+  SortingFn,
+  ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 
 import {
@@ -28,41 +32,31 @@ import {
 
 import { makeData, Person } from './makeData'
 
-let table = createTable()
-  .setRowType<Person>()
-  .setFilterMetaType<RankingInfo>()
-  .setOptions({
-    filterFns: {
-      fuzzy: (row, columnId, value, addMeta) => {
-        // Rank the item
-        const itemRank = rankItem(row.getValue(columnId), value, {
-          threshold: rankings.MATCHES,
-        })
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
 
-        // Store the ranking info
-        addMeta(itemRank)
+  // Store the ranking info
+  addMeta(itemRank)
 
-        // Return if the item should be filtered in/out
-        return itemRank.passed
-      },
-    },
-    sortingFns: {
-      fuzzy: (rowA, rowB, columnId) => {
-        let dir = 0
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
 
-        // Only sort by rank if the column has ranking information
-        if (rowA.columnFiltersMeta[columnId]) {
-          dir = compareItems(
-            rowA.columnFiltersMeta[columnId]!,
-            rowB.columnFiltersMeta[columnId]!
-          )
-        }
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0
 
-        // Provide a fallback for when the item ranks are equal
-        return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
-      },
-    },
-  })
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]!,
+      rowB.columnFiltersMeta[columnId]!
+    )
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -72,59 +66,66 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => `${row.firstName} ${row.lastName}`, {
+          },
+          {
+            accessorFn: row => `${row.firstName} ${row.lastName}`,
             id: 'fullName',
             header: 'Full Name',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-            filterFn: 'fuzzy',
-            sortingFn: 'fuzzy',
-          }),
+            filterFn: fuzzyFilter,
+            sortingFn: fuzzySort,
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -132,7 +133,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(50000))
   const refreshData = () => setData(old => makeData(50000))
 
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     state: {
@@ -141,7 +142,7 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: 'fuzzy',
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -155,12 +156,12 @@ function App() {
   })
 
   React.useEffect(() => {
-    if (instance.getState().columnFilters[0]?.id === 'fullName') {
-      if (instance.getState().sorting[0]?.id !== 'fullName') {
-        instance.setSorting([{ id: 'fullName', desc: false }])
+    if (table.getState().columnFilters[0]?.id === 'fullName') {
+      if (table.getState().sorting[0]?.id !== 'fullName') {
+        table.setSorting([{ id: 'fullName', desc: false }])
       }
     }
-  }, [instance.getState().columnFilters[0]?.id])
+  }, [table.getState().columnFilters[0]?.id])
 
   return (
     <div className="p-2">
@@ -175,7 +176,7 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -190,7 +191,10 @@ function App() {
                             onClick: header.column.getToggleSortingHandler(),
                           }}
                         >
-                          {header.renderHeader()}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -198,10 +202,7 @@ function App() {
                         </div>
                         {header.column.getCanFilter() ? (
                           <div>
-                            <Filter
-                              column={header.column}
-                              instance={instance}
-                            />
+                            <Filter column={header.column} table={table} />
                           </div>
                         ) : null}
                       </>
@@ -213,11 +214,18 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map(row => {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
-                  return <td key={cell.id}>{cell.renderCell()}</td>
+                  return (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )
                 })}
               </tr>
             )
@@ -228,55 +236,55 @@ function App() {
       <div className="flex items-center gap-2">
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(0)}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.previousPage()}
-          disabled={!instance.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.nextPage()}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => instance.setPageIndex(instance.getPageCount() - 1)}
-          disabled={!instance.getCanNextPage()}
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {instance.getState().pagination.pageIndex + 1} of{' '}
-            {instance.getPageCount()}
+            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
           | Go to page:
           <input
             type="number"
-            defaultValue={instance.getState().pagination.pageIndex + 1}
+            defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
-              instance.setPageIndex(page)
+              table.setPageIndex(page)
             }}
             className="border p-1 rounded w-16"
           />
         </span>
         <select
-          value={instance.getState().pagination.pageSize}
+          value={table.getState().pagination.pageSize}
           onChange={e => {
-            instance.setPageSize(Number(e.target.value))
+            table.setPageSize(Number(e.target.value))
           }}
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
@@ -286,26 +294,20 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{instance.getPrePaginationRowModel().rows.length} Rows</div>
+      <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(instance.getState(), null, 2)}</pre>
+      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
     </div>
   )
 }
 
-function Filter({
-  column,
-  instance,
-}: {
-  column: Column<any>
-  instance: TableInstance<any>
-}) {
-  const firstValue = instance
+function Filter({ column, table }: { column: Column<any>; table: Table<any> }) {
+  const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
@@ -358,7 +360,7 @@ function Filter({
   ) : (
     <>
       <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.slice(0, 5000).map(value => (
+        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
           <option value={value} key={value} />
         ))}
       </datalist>
@@ -405,8 +407,8 @@ function DebouncedInput({
   )
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

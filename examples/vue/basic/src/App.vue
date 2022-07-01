@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {
-  createTable,
+  flexRender,
   getCoreRowModel,
-  useTableInstance,
+  useVueTable,
+  ColumnDef,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
@@ -14,8 +15,6 @@ type Person = {
   status: string
   progress: number
 }
-
-const table = createTable().setRowType<Person>()
 
 const defaultData: Person[] = [
   {
@@ -44,50 +43,56 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns = [
-  table.createGroup({
+const defaultColumns: ColumnDef<Person>[] = [
+  {
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('firstName', {
+      {
+        accessorKey: 'firstName',
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      }),
-      table.createDataColumn(row => row.lastName, {
+      },
+      {
+        accessorFn: row => row.lastName,
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => 'Last Name',
         footer: props => props.column.id,
-      }),
+      },
     ],
-  }),
-  table.createGroup({
+  },
+  {
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('age', {
+      {
+        accessorKey: 'age',
         header: () => 'Age',
         footer: props => props.column.id,
-      }),
-      table.createGroup({
+      },
+      {
         header: 'More Info',
         columns: [
-          table.createDataColumn('visits', {
+          {
+            accessorKey: 'visits',
             header: () => 'Visits',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('status', {
+          },
+          {
+            accessorKey: 'status',
             header: 'Status',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('progress', {
+          },
+          {
+            accessorKey: 'progress',
             header: 'Profile Progress',
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
+      },
     ],
-  }),
+  },
 ]
 
 const data = ref(defaultData)
@@ -96,7 +101,7 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const instance = useTableInstance(table, {
+const table = useVueTable({
   get data() {
     return data.value
   },
@@ -110,7 +115,7 @@ const instance = useTableInstance(table, {
     <table>
       <thead>
         <tr
-          v-for="headerGroup in instance.getHeaderGroups()"
+          v-for="headerGroup in table.getHeaderGroups()"
           :key="headerGroup.id"
         >
           <th
@@ -123,7 +128,7 @@ const instance = useTableInstance(table, {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in instance.getRowModel().rows" :key="row.id">
+        <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
             <component :is="cell.renderCell" />
           </td>
@@ -131,7 +136,7 @@ const instance = useTableInstance(table, {
       </tbody>
       <tfoot>
         <tr
-          v-for="footerGroup in instance.getFooterGroups()"
+          v-for="footerGroup in table.getFooterGroups()"
           :key="footerGroup.id"
         >
           <th

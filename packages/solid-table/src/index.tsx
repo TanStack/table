@@ -1,18 +1,16 @@
 // /** @jsxImportSource solid-js */
 import {
-  TableGenerics,
   TableOptions,
-  Table,
-  createTableInstance as coreCreateTableInstance,
-  createTableFactory,
+  createTable,
   TableOptionsResolved,
+  RowData,
 } from '@tanstack/table-core'
 import { createComputed, mergeProps, createComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 export * from '@tanstack/table-core'
 
-function render<TProps extends {}>(Comp: any, props: TProps) {
+export function flexRender<TProps extends {}>(Comp: any, props: TProps) {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
@@ -22,34 +20,29 @@ function render<TProps extends {}>(Comp: any, props: TProps) {
   return Comp
 }
 
-export const createTable = createTableFactory({ render })
-
-export function createTableInstance<TGenerics extends TableGenerics>(
-  table: Table<TGenerics>,
-  options: TableOptions<TGenerics>
+export function createSolidTable<TData extends RowData>(
+  options: TableOptions<TData>
 ) {
-  const resolvedOptions: TableOptionsResolved<TGenerics> = mergeProps(
+  const resolvedOptions: TableOptionsResolved<TData> = mergeProps(
     {
-      ...table.options,
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
-      render,
       renderFallbackValue: null,
       mergeOptions: (
-        defaultOptions: TableOptions<TGenerics>,
-        options: Partial<TableOptions<TGenerics>>
+        defaultOptions: TableOptions<TData>,
+        options: Partial<TableOptions<TData>>
       ) => {
-        return mergeProps(defaultOptions, options) as TableOptions<TGenerics>
+        return mergeProps(defaultOptions, options) as TableOptions<TData>
       },
     },
     options
   )
 
-  const instance = coreCreateTableInstance<TGenerics>(resolvedOptions)
-  const [state, setState] = createStore(instance.initialState)
+  const table = createTable<TData>(resolvedOptions)
+  const [state, setState] = createStore(table.initialState)
 
   createComputed(() => {
-    instance.setOptions(prev => {
+    table.setOptions(prev => {
       return mergeProps(prev, options, {
         state: mergeProps(state, options.state || {}),
         // Similarly, we'll maintain both our internal state and any user-provided
@@ -64,5 +57,5 @@ export function createTableInstance<TGenerics extends TableGenerics>(
     })
   })
 
-  return instance
+  return table
 }

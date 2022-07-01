@@ -1,7 +1,8 @@
 import {
-  createTable,
+  flexRender,
   getCoreRowModel,
-  createTableInstance,
+  ColumnDef,
+  createSolidTable,
 } from '@tanstack/solid-table'
 import { createSignal, For } from 'solid-js'
 
@@ -13,8 +14,6 @@ type Person = {
   status: string
   progress: number
 }
-
-const table = createTable().setRowType<Person>()
 
 const defaultData: Person[] = [
   {
@@ -43,57 +42,63 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns = [
-  table.createGroup({
+const defaultColumns: ColumnDef<Person>[] = [
+  {
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('firstName', {
+      {
+        accessorKey: 'firstName',
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      }),
-      table.createDataColumn(row => row.lastName, {
+      },
+      {
+        accessorFn: row => row.lastName,
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
-      }),
+      },
     ],
-  }),
-  table.createGroup({
+  },
+  {
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      table.createDataColumn('age', {
+      {
+        accessorKey: 'age',
         header: () => 'Age',
         footer: props => props.column.id,
-      }),
-      table.createGroup({
+      },
+      {
         header: 'More Info',
         columns: [
-          table.createDataColumn('visits', {
+          {
+            accessorKey: 'visits',
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('status', {
+          },
+          {
+            accessorKey: 'status',
             header: 'Status',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('progress', {
+          },
+          {
+            accessorKey: 'progress',
             header: 'Profile Progress',
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
+      },
     ],
-  }),
+  },
 ]
 
 function App() {
   const [data, setData] = createSignal(defaultData)
   const rerender = () => setData(defaultData)
 
-  const instance = createTableInstance(table, {
+  const table = createSolidTable({
     get data() {
       return data()
     },
@@ -105,13 +110,18 @@ function App() {
     <div class="p-2">
       <table>
         <thead>
-          <For each={instance.getHeaderGroups()}>
+          <For each={table.getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
                   {header => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : header.renderHeader()}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </th>
                   )}
                 </For>
@@ -120,24 +130,36 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={instance.getRowModel().rows}>
+          <For each={table.getRowModel().rows}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => <td>{cell.renderCell()}</td>}
+                  {cell => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )}
                 </For>
               </tr>
             )}
           </For>
         </tbody>
         <tfoot>
-          <For each={instance.getFooterGroups()}>
+          <For each={table.getFooterGroups()}>
             {footerGroup => (
               <tr>
                 <For each={footerGroup.headers}>
                   {header => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : header.renderFooter()}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext()
+                          )}
                     </th>
                   )}
                 </For>

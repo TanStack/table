@@ -1,30 +1,31 @@
-import { Cell, Row, TableGenerics, TableInstance } from '../types'
+import { RowData, Cell, Row, TableGenerics, Table } from '../types'
 import { flattenBy, memo } from '../utils'
 import { createCell } from './cell'
 
-export type CoreRow<TGenerics extends TableGenerics> = {
+export type CoreRow<TData extends RowData> = {
   id: string
   index: number
-  original?: TGenerics['Row']
+  original?: TData
   depth: number
   _valuesCache: Record<string, any>
   getValue: (columnId: string) => any
-  subRows: Row<TGenerics>[]
-  getLeafRows: () => Row<TGenerics>[]
-  originalSubRows?: TGenerics['Row'][]
-  getAllCells: () => Cell<TGenerics>[]
-  _getAllCellsByColumnId: () => Record<string, Cell<TGenerics>>
+  renderValue: (columnId: string) => unknown
+  subRows: Row<TData>[]
+  getLeafRows: () => Row<TData>[]
+  originalSubRows?: TData[]
+  getAllCells: () => Cell<TData>[]
+  _getAllCellsByColumnId: () => Record<string, Cell<TData>>
 }
 
-export const createRow = <TGenerics extends TableGenerics>(
-  instance: TableInstance<TGenerics>,
+export const createRow = <TData extends RowData>(
+  table: Table<TData>,
   id: string,
-  original: TGenerics['Row'] | undefined,
+  original: TData | undefined,
   rowIndex: number,
   depth: number,
-  subRows?: Row<TGenerics>[]
-): Row<TGenerics> => {
-  let row: CoreRow<TGenerics> = {
+  subRows?: Row<TData>[]
+): Row<TData> => {
+  let row: CoreRow<TData> = {
     id,
     index: rowIndex,
     original,
@@ -35,28 +36,33 @@ export const createRow = <TGenerics extends TableGenerics>(
         return row._valuesCache[columnId]
       }
 
-      const column = instance.getColumn(columnId)
+      const column = table.getColumn(columnId)
 
       if (!column.accessorFn) {
         return undefined
       }
 
-      row._valuesCache[columnId] = column.accessorFn(row.original, rowIndex)
+      row._valuesCache[columnId] = column.accessorFn(
+        row.original as TData,
+        rowIndex
+      )
 
       return row._valuesCache[columnId]
     },
+    renderValue: columnId =>
+      row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
     getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
     getAllCells: memo(
-      () => [instance.getAllLeafColumns()],
+      () => [table.getAllLeafColumns()],
       leafColumns => {
         return leafColumns.map(column => {
-          return createCell(instance, row as Row<TGenerics>, column, column.id)
+          return createCell(table, row as Row<TData>, column, column.id)
         })
       },
       {
         key: process.env.NODE_ENV === 'development' && 'row.getAllCells',
-        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+        debug: () => table.options.debugAll ?? table.options.debugRows,
       }
     ),
 
@@ -66,20 +72,20 @@ export const createRow = <TGenerics extends TableGenerics>(
         return allCells.reduce((acc, cell) => {
           acc[cell.column.id] = cell
           return acc
-        }, {} as Record<string, Cell<TGenerics>>)
+        }, {} as Record<string, Cell<TData>>)
       },
       {
         key:
           process.env.NODE_ENV === 'production' && 'row.getAllCellsByColumnId',
-        debug: () => instance.options.debugAll ?? instance.options.debugRows,
+        debug: () => table.options.debugAll ?? table.options.debugRows,
       }
     ),
   }
 
-  for (let i = 0; i < instance._features.length; i++) {
-    const feature = instance._features[i]
-    Object.assign(row, feature?.createRow?.(row, instance))
+  for (let i = 0; i < table._features.length; i++) {
+    const feature = table._features[i]
+    Object.assign(row, feature?.createRow?.(row, table))
   }
 
-  return row as Row<TGenerics>
+  return row as Row<TData>
 }

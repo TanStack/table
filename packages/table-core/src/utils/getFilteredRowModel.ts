@@ -1,17 +1,17 @@
 import { ResolvedColumnFilter } from '../features/Filters'
-import { TableInstance, RowModel, TableGenerics, Row } from '../types'
+import { Table, RowModel, TableGenerics, Row, RowData } from '../types'
 import { memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
-export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
-  instance: TableInstance<TGenerics>
-) => () => RowModel<TGenerics> {
-  return instance =>
+export function getFilteredRowModel<TData extends RowData>(): (
+  table: Table<TData>
+) => () => RowModel<TData> {
+  return table =>
     memo(
       () => [
-        instance.getPreFilteredRowModel(),
-        instance.getState().columnFilters,
-        instance.getState().globalFilter,
+        table.getPreFilteredRowModel(),
+        table.getState().columnFilters,
+        table.getState().globalFilter,
       ],
       (rowModel, columnFilters, globalFilter) => {
         if (
@@ -25,11 +25,11 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
           return rowModel
         }
 
-        const resolvedColumnFilters: ResolvedColumnFilter<TGenerics>[] = []
-        const resolvedGlobalFilters: ResolvedColumnFilter<TGenerics>[] = []
+        const resolvedColumnFilters: ResolvedColumnFilter<TData>[] = []
+        const resolvedGlobalFilters: ResolvedColumnFilter<TData>[] = []
 
         ;(columnFilters ?? []).forEach(d => {
-          const column = instance.getColumn(d.id)
+          const column = table.getColumn(d.id)
 
           if (!column) {
             if (process.env.NODE_ENV !== 'production') {
@@ -59,9 +59,9 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
 
         const filterableIds = columnFilters.map(d => d.id)
 
-        const globalFilterFn = instance.getGlobalFilterFn()
+        const globalFilterFn = table.getGlobalFilterFn()
 
-        const globallyFilterableColumns = instance
+        const globallyFilterableColumns = table
           .getAllLeafColumns()
           .filter(column => column.getCanGlobalFilter())
 
@@ -135,7 +135,7 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
           }
         }
 
-        const filterRowsImpl = (row: Row<TGenerics>) => {
+        const filterRowsImpl = (row: Row<TData>) => {
           // Horizontally filter rows through each column
           for (let i = 0; i < filterableIds.length; i++) {
             if (row.columnFilters[filterableIds[i]!] === false) {
@@ -146,13 +146,13 @@ export function getFilteredRowModel<TGenerics extends TableGenerics>(): (
         }
 
         // Filter final rows using all of the active filters
-        return filterRows(rowModel.rows, filterRowsImpl, instance)
+        return filterRows(rowModel.rows, filterRowsImpl, table)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getFilteredRowModel',
-        debug: () => instance.options.debugAll ?? instance.options.debugTable,
+        debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {
-          instance._autoResetPageIndex()
+          table._autoResetPageIndex()
         },
       }
     )

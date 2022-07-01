@@ -4,17 +4,15 @@ title: React Table
 
 The `@tanstack/react-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing state the "react" way, providing types and the rendering implementation of cell/header/footer templates.
 
-## `useTableInstance`
+## `useReactTable`
 
-Takes a `table` and `options` object and returns a table instance.
+Takes a `table` and `options` object and returns a table.
 
 ```tsx
-import { createTable, useTableInstance } from '@tanstack/react-table'
-
-const table = createTable()
+import { useReactTable } from '@tanstack/react-table'
 
 function App() {
-  const instance = useTableInstance(table, options)
+  const table = useReactTable(options)
 
   // ...render your table
 }

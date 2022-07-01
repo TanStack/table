@@ -60,7 +60,7 @@ const EditableCell = ({
   value: initialValue,
   row: { index },
   column: { id },
-  updateMyData, // This is a custom function that we supplied to our table instance
+  updateMyData, // This is a custom function that we supplied to our table
   editable,
 }) => {
   // We need to keep and update the state of the cell normally

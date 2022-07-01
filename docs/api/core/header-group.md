@@ -27,7 +27,7 @@ The depth of the header group, zero-indexed based.
 ### `headers`
 
 ```tsx
-type headers = Header<TGenerics>[]
+type headers = Header<TData>[]
 ```
 
 An array of [Header](./Header) objects that belong to this header group

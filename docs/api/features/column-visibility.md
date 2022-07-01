@@ -5,7 +5,7 @@ id: column-visibility
 
 ## State
 
-Column ordering state is stored on the table instance using the following shape:
+Column ordering state is stored on the table using the following shape:
 
 ```tsx
 export type VisibilityState = Record<string, boolean>
@@ -82,7 +82,7 @@ Enables/disables hiding of columns.
 ### `getVisibleFlatColumns`
 
 ```tsx
-getVisibleFlatColumns: () => Column < TGenerics > []
+getVisibleFlatColumns: () => Column < TData > []
 ```
 
 Returns a flat array of columns that are visible, including parent columns.
@@ -90,7 +90,7 @@ Returns a flat array of columns that are visible, including parent columns.
 ### `getVisibleLeafColumns`
 
 ```tsx
-getVisibleLeafColumns: () => Column < TGenerics > []
+getVisibleLeafColumns: () => Column < TData > []
 ```
 
 Returns a flat array of leaf-node columns that are visible.
@@ -98,7 +98,7 @@ Returns a flat array of leaf-node columns that are visible.
 ### `getLeftVisibleLeafColumns`
 
 ```tsx
-getLeftVisibleLeafColumns: () => Column < TGenerics > []
+getLeftVisibleLeafColumns: () => Column < TData > []
 ```
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the left portion of the table.
@@ -106,7 +106,7 @@ If column pinning, returns a flat array of leaf-node columns that are visible in
 ### `getRightVisibleLeafColumns`
 
 ```tsx
-getRightVisibleLeafColumns: () => Column < TGenerics > []
+getRightVisibleLeafColumns: () => Column < TData > []
 ```
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
@@ -114,7 +114,7 @@ If column pinning, returns a flat array of leaf-node columns that are visible in
 ### `getCenterVisibleLeafColumns`
 
 ```tsx
-getCenterVisibleLeafColumns: () => Column < TGenerics > []
+getCenterVisibleLeafColumns: () => Column < TData > []
 ```
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.

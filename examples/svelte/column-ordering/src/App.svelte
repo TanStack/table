@@ -1,61 +1,69 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import {
-    createTable,
     getCoreRowModel,
-    createTableInstance,
+    createSvelteTable,
     getSortedRowModel,
+    TableOptions,
+    flexRender,
+    ColumnDef,
   } from '@tanstack/svelte-table'
   import { makeData, Person } from './makeData'
   import faker from '@faker-js/faker'
   import './index.css'
 
-  const table = createTable().setRowType<Person>()
+  
 
-  const columns = [
-    table.createGroup({
+  const columns: ColumnDef<Person>[] = [
+    {
       header: 'Name',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('firstName', {
+        {
+          accessorKey: 'firstName',
           cell: info => info.getValue(),
           footer: props => props.column.id,
-        }),
-        table.createDataColumn(row => row.lastName, {
+        },
+        {
+          accessorFn: row => row.lastName,
           id: 'lastName',
           cell: info => info.getValue(),
           header: () => 'Last Name',
           footer: props => props.column.id,
-        }),
+        },
       ],
-    }),
-    table.createGroup({
+    },
+    {
       header: 'Info',
       footer: props => props.column.id,
       columns: [
-        table.createDataColumn('age', {
+        {
+          accessorKey: 'age',
           header: () => 'Age',
           footer: props => props.column.id,
-        }),
-        table.createGroup({
+        },
+        {
           header: 'More Info',
           columns: [
-            table.createDataColumn('visits', {
+            {
+              accessorKey: 'visits',
               header: () => 'Visits',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('status', {
+            },
+            {
+              accessorKey: 'status',
               header: 'Status',
               footer: props => props.column.id,
-            }),
-            table.createDataColumn('progress', {
+            },
+            {
+              accessorKey: 'progress',
               header: 'Profile Progress',
               footer: props => props.column.id,
-            }),
+            },
           ],
-        }),
+        },
       ],
-    }),
+    },
   ]
 
   const data = makeData(5000)
@@ -93,8 +101,8 @@
     }))
   }
 
-  const options = writable(
-    table.createOptions({
+  const options = writable<TableOptions<Person>>(
+    {
       data,
       columns,
       state: {
@@ -106,12 +114,12 @@
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
       debugTable: true,
-    })
+    }
   )
 
   const randomizeColumns = () => {
-    $instance.setColumnOrder(_updater =>
-      faker.helpers.shuffle($instance.getAllLeafColumns().map(d => d.id))
+    $table.setColumnOrder(_updater =>
+      faker.helpers.shuffle($table.getAllLeafColumns().map(d => d.id))
     )
   }
 
@@ -122,7 +130,7 @@
     }))
   }
 
-  const instance = createTableInstance(table, options)
+  const table = createSvelteTable(options)
 </script>
 
 <div class="p-2">
@@ -130,16 +138,16 @@
     <div class="px-1 border-b border-black">
       <label>
         <input
-          checked={$instance.getIsAllColumnsVisible()}
+          checked={$table.getIsAllColumnsVisible()}
           on:change={e => {
-            console.info($instance.getToggleAllColumnsVisibilityHandler()(e))
+            console.info($table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
         />{' '}
         Toggle All
       </label>
     </div>
-    {#each $instance.getAllLeafColumns() as column}
+    {#each $table.getAllLeafColumns() as column}
       <div class="px-1">
         <label>
           <input
@@ -164,12 +172,12 @@
   <div class="h-4" />
   <table class="border-2 border-black">
     <thead>
-      {#each $instance.getHeaderGroups() as headerGroup}
+      {#each $table.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={header.renderHeader()} />
+                <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
               {/if}
             </th>
           {/each}
@@ -177,16 +185,16 @@
       {/each}
     </thead>
     <tbody>
-      {#each $instance.getCoreRowModel().rows.slice(0, 20) as row}
+      {#each $table.getCoreRowModel().rows.slice(0, 20) as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component this={cell.renderCell()} />
+              <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
             </td>
           {/each}
         </tr>
       {/each}
     </tbody>
   </table>
-  <pre>{JSON.stringify($instance.getState().columnOrder, null, 2)}</pre>
+  <pre>{JSON.stringify($table.getState().columnOrder, null, 2)}</pre>
 </div>
