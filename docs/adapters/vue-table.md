@@ -6,7 +6,7 @@ The `@tanstack/vue-table` adapter is a wrapper around the core table logic. Most
 
 ## `useVueTable`
 
-Takes a `table` and `options` object and returns a table.
+Takes an `options` object and returns a table.
 
 ```tsx
 import { useVueTable } from '@tanstack/vue-table'

@@ -23,6 +23,10 @@
         {
           "label": "Vue Table",
           "to": "adapters/vue-table"
+        },
+        {
+          "label": "Vanilla JS/TS",
+          "to": "adapters/vanilla"
         }
       ]
     },
