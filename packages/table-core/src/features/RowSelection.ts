@@ -421,6 +421,9 @@ const mutateRowIsSelected = <TData extends RowData>(
   //   (isGrouped && table.options.enableGroupingRowSelection)
   // ) {
   if (value) {
+    if (!row.getCanMultiSelect()) {
+      Object.keys(selectedRowIds).forEach(key => delete selectedRowIds[key])
+    }
     selectedRowIds[id] = true
   } else {
     delete selectedRowIds[id]
