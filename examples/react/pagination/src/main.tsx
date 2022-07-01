@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createTable,
   Column,
   Table as ReactTable,
   PaginationState,
