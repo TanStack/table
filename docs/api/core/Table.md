@@ -10,7 +10,7 @@ type useReactTable = <TData extends AnyData>(
 ) => Table<TData>
 ```
 
-These funtions are used to create a table. Which one you use depends on which framework adapter you are using.
+These functions are used to create a table. Which one you use depends on which framework adapter you are using.
 
 ## Options
 

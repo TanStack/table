@@ -31,39 +31,39 @@
       "children": [
         {
           "label": "Introduction",
-          "to": "guide/00-introduction"
+          "to": "guide/introduction"
         },
         {
           "label": "Overview",
-          "to": "guide/01-overview"
+          "to": "guide/overview"
         },
         {
           "label": "Installation",
-          "to": "guide/02-installation"
+          "to": "guide/installation"
         },
         {
           "label": "Column Defs",
-          "to": "guide/03-column-defs"
+          "to": "guide/column-defs"
         },
         {
           "label": "Table Instances",
-          "to": "guide/04-tables"
+          "to": "guide/tables"
         },
         {
           "label": "Rows",
-          "to": "guide/05-rows"
+          "to": "guide/rows"
         },
         {
           "label": "Headers",
-          "to": "guide/06-headers"
+          "to": "guide/headers"
         },
         {
           "label": "Cells",
-          "to": "guide/07-cells"
+          "to": "guide/cells"
         },
         {
           "label": "Features",
-          "to": "guide/08-features"
+          "to": "guide/features"
         },
         {
           "label": "Column Ordering",
