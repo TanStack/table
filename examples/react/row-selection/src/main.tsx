@@ -7,6 +7,7 @@ import { makeData, Person } from './makeData'
 
 import {
   Column,
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -21,9 +22,9 @@ function App() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createDisplayColumn({
+      {
         id: 'select',
         header: ({ instance }) => (
           <IndeterminateCheckbox
@@ -45,58 +46,56 @@ function App() {
             />
           </div>
         ),
-      }),
-      [
-        {
-          header: 'Name',
-          footer: props => props.column.id,
-          columns: [
-            {
-              accessorKey: 'firstName',
-              cell: info => info.getValue(),
-              footer: props => props.column.id,
-            },
-            {
-              accessorFn: row => row.lastName,
-              id: 'lastName',
-              cell: info => info.getValue(),
-              header: () => <span>Last Name</span>,
-              footer: props => props.column.id,
-            },
-          ],
-        },
-        {
-          header: 'Info',
-          footer: props => props.column.id,
-          columns: [
-            {
-              accessorKey: 'age',
-              header: () => 'Age',
-              footer: props => props.column.id,
-            },
-            {
-              header: 'More Info',
-              columns: [
-                {
-                  accessorKey: 'visits',
-                  header: () => <span>Visits</span>,
-                  footer: props => props.column.id,
-                },
-                {
-                  accessorKey: 'status',
-                  header: 'Status',
-                  footer: props => props.column.id,
-                },
-                {
-                  accessorKey: 'progress',
-                  header: 'Profile Progress',
-                  footer: props => props.column.id,
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      },
+      {
+        header: 'Name',
+        footer: props => props.column.id,
+        columns: [
+          {
+            accessorKey: 'firstName',
+            cell: info => info.getValue(),
+            footer: props => props.column.id,
+          },
+          {
+            accessorFn: row => row.lastName,
+            id: 'lastName',
+            cell: info => info.getValue(),
+            header: () => <span>Last Name</span>,
+            footer: props => props.column.id,
+          },
+        ],
+      },
+      {
+        header: 'Info',
+        footer: props => props.column.id,
+        columns: [
+          {
+            accessorKey: 'age',
+            header: () => 'Age',
+            footer: props => props.column.id,
+          },
+          {
+            header: 'More Info',
+            columns: [
+              {
+                accessorKey: 'visits',
+                header: () => <span>Visits</span>,
+                footer: props => props.column.id,
+              },
+              {
+                accessorKey: 'status',
+                header: 'Status',
+                footer: props => props.column.id,
+              },
+              {
+                accessorKey: 'progress',
+                header: 'Profile Progress',
+                footer: props => props.column.id,
+              },
+            ],
+          },
+        ],
+      },
     ],
     []
   )
@@ -303,7 +302,7 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any>
+  column: Column<any, any>
   instance: Table<any>
 }) {
   const firstValue = instance

@@ -12,60 +12,67 @@ import {
   getCoreRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
+  ColumnDef,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             header: 'First Name',
             cell: info => info.getValue(),
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             header: () => <span>Last Name</span>,
             cell: info => info.getValue(),
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             aggregatedCell: ({ getValue }) =>
               Math.round(getValue() * 100) / 100,
             aggregationFn: 'median',
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 aggregationFn: 'sum',
                 // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 cell: ({ getValue }) =>
                   Math.round(getValue() * 100) / 100 + '%',
                 aggregationFn: 'mean',
                 aggregatedCell: ({ getValue }) =>
                   Math.round(getValue() * 100) / 100 + '%',
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )

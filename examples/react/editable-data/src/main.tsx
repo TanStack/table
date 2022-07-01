@@ -14,21 +14,16 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  flexRender,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable()
-  .setRowType<Person>()
-  // In addition to our row type, we can also tell our table about a custom "updateData" method we will provide it
-  .setTableMetaType<{
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
-  }>()
-
-// Get our table generics
-type MyTableGenerics = typeof table.generics
+type TableMeta = {
+  updateData: (rowIndex: number, columnId: string, value: unknown) => void
+}
 
 // Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
+const defaultColumn: Partial<ColumnDef<Person>> = {
   cell: ({ getValue, row: { index }, column: { id }, instance }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -36,7 +31,7 @@ const defaultColumn: Partial<ColumnDef<MyTableGenerics>> = {
 
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
-      instance.options.meta?.updateData(index, id, value)
+      ;(instance.options.meta as TableMeta).updateData(index, id, value)
     }
 
     // If the initialValue is changed external, sync it up with our state
@@ -73,49 +68,55 @@ function useSkipper() {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
-      table.createGroup({
+      {
         header: 'Name',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('firstName', {
+          {
+            accessorKey: 'firstName',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
+          },
+          {
+            accessorFn: row => row.lastName,
             id: 'lastName',
             header: () => <span>Last Name</span>,
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
-      table.createGroup({
+      },
+      {
         header: 'Info',
         footer: props => props.column.id,
         columns: [
-          table.createDataColumn('age', {
+          {
+            accessorKey: 'age',
             header: () => 'Age',
             footer: props => props.column.id,
-          }),
-          table.createGroup({
+          },
+          {
             header: 'More Info',
             columns: [
-              table.createDataColumn('visits', {
+              {
+                accessorKey: 'visits',
                 header: () => <span>Visits</span>,
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('status', {
+              },
+              {
+                accessorKey: 'status',
                 header: 'Status',
                 footer: props => props.column.id,
-              }),
-              table.createDataColumn('progress', {
+              },
+              {
+                accessorKey: 'progress',
                 header: 'Profile Progress',
                 footer: props => props.column.id,
-              }),
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
@@ -150,7 +151,7 @@ function App() {
           })
         )
       },
-    },
+    } as TableMeta,
     debugTable: true,
   })
 
@@ -281,7 +282,7 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any>
+  column: Column<any, any>
   instance: Table<any>
 }) {
   const firstValue = instance
