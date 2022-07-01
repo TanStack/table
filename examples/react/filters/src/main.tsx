@@ -313,7 +313,7 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any, any>
+  column: Column<any>
   instance: Table<any>
 }) {
   const firstValue = instance
@@ -369,7 +369,7 @@ function Filter({
   ) : (
     <>
       <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.slice(0, 5000).map(value => (
+        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
           <option value={value} key={value} />
         ))}
       </datalist>

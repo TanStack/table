@@ -1,8 +1,9 @@
 import {
   flexRender,
   getCoreRowModel,
-  createTable,
   VisibilityState,
+  ColumnDef,
+  createSolidTable,
 } from '@tanstack/solid-table'
 import { createSignal, For, Show } from 'solid-js'
 
@@ -101,7 +102,7 @@ function App() {
   )
   const rerender = () => setData(defaultData)
 
-  const instance = createTable(table, {
+  const instance = createSolidTable({
     get data() {
       return data()
     },

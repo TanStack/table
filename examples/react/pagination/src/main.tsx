@@ -253,7 +253,7 @@ function Filter({
   column,
   instance,
 }: {
-  column: Column<any, any>
+  column: Column<any>
   instance: Table<any>
 }) {
   const firstValue = instance

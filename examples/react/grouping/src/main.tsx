@@ -13,6 +13,7 @@ import {
   getGroupedRowModel,
   getExpandedRowModel,
   ColumnDef,
+  flexRender,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -180,7 +181,11 @@ function App() {
                       ) : cell.getIsAggregated() ? (
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
-                        cell.renderAggregatedCell()
+                        flexRender(
+                          cell.column.columnDef.aggregatedCell ??
+                            cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         flexRender(
