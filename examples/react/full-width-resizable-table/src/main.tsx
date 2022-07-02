@@ -4,12 +4,9 @@ import './index.css'
 
 import {
   createTable,
-  PaginationState,
   useTableInstance,
   getCoreRowModel,
-  getPaginationRowModel,
   ColumnDef,
-  OnChangeFn,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
