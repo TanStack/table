@@ -39,3 +39,5 @@ stats.html
 node_modules
 .cache
 dist
+
+package-lock.json
