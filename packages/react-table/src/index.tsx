@@ -10,8 +10,7 @@ import {
 
 export type Renderable<TProps> =
   | React.ReactNode
-  | React.FunctionComponent<TProps>
-  | React.Component<TProps>
+  | React.ComponentType<TProps>
 
 //
 
@@ -19,10 +18,10 @@ export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
   props: TProps
 ): React.ReactNode | JSX.Element {
-  return !Comp ? null : isReactComponent(Comp) ? <Comp {...props} /> : Comp
+  return !Comp ? null : isReactComponent<TProps>(Comp) ? <Comp {...props} /> : Comp
 }
 
-function isReactComponent(component: unknown): component is React.FC {
+function isReactComponent<TProps>(component: unknown): component is React.ComponentType<TProps> {
   return (
     isClassComponent(component) ||
     typeof component === 'function' ||
