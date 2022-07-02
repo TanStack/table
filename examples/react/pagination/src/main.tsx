@@ -15,6 +15,7 @@ import {
   OnChangeFn,
   flexRender,
 } from '@tanstack/react-table'
+
 import { makeData, Person } from './makeData'
 
 function App() {
@@ -78,19 +79,12 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
   return (
     <>
       <Table
         {...{
           data,
-          columns,
-          pagination,
-          setPagination,
+          columns
         }}
       />
       <hr />
@@ -100,29 +94,20 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(pagination, null, 2)}</pre>
     </>
   )
 }
 
 function Table({
   data,
-  columns,
-  pagination,
-  setPagination,
+  columns
 }: {
   data: Person[]
   columns: ColumnDef<Person>[]
-  pagination: PaginationState
-  setPagination: OnChangeFn<PaginationState>
 }) {
   const table = useReactTable({
     data,
     columns,
-    state: {
-      pagination,
-    },
-    onPaginationChange: setPagination,
     // Pipeline
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -242,6 +227,7 @@ function Table({
         </select>
       </div>
       <div>{table.getRowModel().rows.length} Rows</div>
+      <pre>{JSON.stringify(table.getState().pagination, null, 2)}</pre>
     </div>
   )
 }
