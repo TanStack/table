@@ -172,7 +172,7 @@ export type AccessorFn<TData extends RowData> = (
 
 export type ColumnDefTemplate<TProps extends object> =
   | string
-  | ((props: TProps) => unknown)
+  | ((props: TProps) => any)
 
 export type ColumnDef<TData extends RowData> = CoreColumnDef<TData> &
   VisibilityColumnDef &
