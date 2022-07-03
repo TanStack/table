@@ -229,5 +229,3 @@ For more info on aggregated cells, see [grouping](../grouping.md).
 ## Header & Footer Formatting
 
 Headers and footer do not have access to row data, but still use the same concepts for displaying custom content.
-
-If all you need is a TODO
