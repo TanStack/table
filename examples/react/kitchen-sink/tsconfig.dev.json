@@ -1,0 +1,10 @@
+{
+  "composite": true,
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./build/types"
+  },
+  "jsxImportSource": "@emotion/react",
+  "files": ["**/*.ts", "**/*tsx"],
+  "include": ["src"]
+}
