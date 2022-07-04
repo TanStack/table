@@ -198,3 +198,5 @@ export type Header<TData extends RowData> = CoreHeader<TData> &
 export type HeaderGroup<TData extends RowData> = CoreHeaderGroup<TData>
 
 export type NoInfer<A extends any> = [A][A extends any ? 0 : never]
+
+export type GetValue<T = unknown> = () => T

@@ -8,7 +8,7 @@ export type CoreRow<TData extends RowData> = {
   original?: TData
   depth: number
   _valuesCache: Record<string, any>
-  getValue: (columnId: string) => any
+  getValue: <T = unknown>(columnId: string) => T
   renderValue: (columnId: string) => unknown
   subRows: Row<TData>[]
   getLeafRows: () => Row<TData>[]

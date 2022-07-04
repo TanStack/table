@@ -1,8 +1,8 @@
-import { RowData, Cell, Column, Row, Table } from '../types'
+import { RowData, Cell, Column, GetValue, Row, Table } from '../types'
 
 export type CoreCell<TData extends RowData> = {
   id: string
-  getValue: () => any
+  getValue: GetValue
   renderValue: () => unknown
   row: Row<TData>
   column: Column<TData>
@@ -11,7 +11,7 @@ export type CoreCell<TData extends RowData> = {
     column: Column<TData>
     row: Row<TData>
     cell: Cell<TData>
-    getValue: () => any
+    getValue: GetValue
     renderValue: () => any
   }
 }
