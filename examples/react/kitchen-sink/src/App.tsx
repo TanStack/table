@@ -95,6 +95,8 @@ export const App = () => {
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     autoResetPageIndex,
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
     // Provide our updateData function to our table meta
     meta: getTableMeta(setData, skipAutoResetPageIndex),
     state: {
@@ -130,7 +132,14 @@ export const App = () => {
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
+                <th
+                  className="relative"
+                  key={header.id}
+                  style={{
+                    width: header.getSize(),
+                  }}
+                  colSpan={header.colSpan}
+                >
                   {header.isPlaceholder ? null : (
                     <>
                       <div
@@ -157,6 +166,11 @@ export const App = () => {
                       ) : null}
                     </>
                   )}
+                  <div
+                    className="absolute right-0 top-0 h-full w-1 bg-blue-300 select-none touch-none hover:bg-blue-500 cursor-col-resize"
+                    onMouseDown={header.getResizeHandler()}
+                    onTouchStart={header.getResizeHandler()}
+                  />
                 </th>
               ))}
             </tr>
@@ -166,7 +180,12 @@ export const App = () => {
           {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
+                <td
+                  key={cell.id}
+                  style={{
+                    width: cell.column.getSize(),
+                  }}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
