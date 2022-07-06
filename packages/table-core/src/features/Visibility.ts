@@ -27,11 +27,11 @@ export type VisibilityDefaultOptions = {
 }
 
 export type VisibilityInstance<TData extends RowData> = {
-  getVisibleFlatColumns: () => Column<TData>[]
-  getVisibleLeafColumns: () => Column<TData>[]
-  getLeftVisibleLeafColumns: () => Column<TData>[]
-  getRightVisibleLeafColumns: () => Column<TData>[]
-  getCenterVisibleLeafColumns: () => Column<TData>[]
+  getVisibleFlatColumns: () => Column<TData, unknown>[]
+  getVisibleLeafColumns: () => Column<TData, unknown>[]
+  getLeftVisibleLeafColumns: () => Column<TData, unknown>[]
+  getRightVisibleLeafColumns: () => Column<TData, unknown>[]
+  getCenterVisibleLeafColumns: () => Column<TData, unknown>[]
   setColumnVisibility: (updater: Updater<VisibilityState>) => void
   resetColumnVisibility: (defaultState?: boolean) => void
   toggleAllColumnsVisible: (value?: boolean) => void
@@ -45,8 +45,8 @@ export type VisibilityColumnDef = {
 }
 
 export type VisibilityRow<TData extends RowData> = {
-  _getAllVisibleCells: () => Cell<TData>[]
-  getVisibleCells: () => Cell<TData>[]
+  _getAllVisibleCells: () => Cell<TData, unknown>[]
+  getVisibleCells: () => Cell<TData, unknown>[]
 }
 
 export type VisibilityColumn = {
@@ -74,8 +74,8 @@ export const Visibility: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>
   ): VisibilityColumn => {
     return {
@@ -143,8 +143,8 @@ export const Visibility: TableFeature = {
   ): VisibilityInstance<TData> => {
     const makeVisibleColumnsMethod = (
       key: string,
-      getColumns: () => Column<TData>[]
-    ): (() => Column<TData>[]) => {
+      getColumns: () => Column<TData, unknown>[]
+    ): (() => Column<TData, unknown>[]) => {
       return memo(
         () => [
           getColumns(),

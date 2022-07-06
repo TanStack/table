@@ -13,8 +13,8 @@ export type CoreRow<TData extends RowData> = {
   subRows: Row<TData>[]
   getLeafRows: () => Row<TData>[]
   originalSubRows?: TData[]
-  getAllCells: () => Cell<TData>[]
-  _getAllCellsByColumnId: () => Record<string, Cell<TData>>
+  getAllCells: () => Cell<TData, unknown>[]
+  _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
 }
 
 export const createRow = <TData extends RowData>(
@@ -72,7 +72,7 @@ export const createRow = <TData extends RowData>(
         return allCells.reduce((acc, cell) => {
           acc[cell.column.id] = cell
           return acc
-        }, {} as Record<string, Cell<TData>>)
+        }, {} as Record<string, Cell<TData, unknown>>)
       },
       {
         key:

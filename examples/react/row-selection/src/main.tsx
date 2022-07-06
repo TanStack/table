@@ -293,7 +293,13 @@ function App() {
   )
 }
 
-function Filter({ column, table }: { column: Column<any>; table: Table<any> }) {
+function Filter({
+  column,
+  table,
+}: {
+  column: Column<any, any>
+  table: Table<any>
+}) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)

@@ -125,7 +125,7 @@ function LocalTable({
   return (
     <Box sx={{ width: '100%' }}>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
@@ -173,7 +173,7 @@ function LocalTable({
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, { label: 'All', value: data.length }]}
-        component='div'
+        component="div"
         count={table.getFilteredRowModel().rows.length}
         rowsPerPage={pageSize}
         page={pageIndex}
@@ -198,7 +198,7 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any>
+  column: Column<any, any>
   table: ReactTable<any>
 }) {
   const firstValue = table
@@ -208,9 +208,9 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div className='flex space-x-2'>
+    <div className="flex space-x-2">
       <InputBase
-        type='number'
+        type="number"
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
         onChange={e =>
           column.setFilterValue((old: [number, number]) => [
@@ -219,10 +219,10 @@ function Filter({
           ])
         }
         placeholder={`Min`}
-        className='w-24 border shadow rounded'
+        className="w-24 border shadow rounded"
       />
       <InputBase
-        type='number'
+        type="number"
         value={(columnFilterValue as [number, number])?.[1] ?? ''}
         onChange={e =>
           column.setFilterValue((old: [number, number]) => [
@@ -231,7 +231,7 @@ function Filter({
           ])
         }
         placeholder={`Max`}
-        className='w-24 border shadow rounded'
+        className="w-24 border shadow rounded"
         inputProps={{ 'aria-label': 'search' }}
       />
     </div>
@@ -240,7 +240,7 @@ function Filter({
       value={(columnFilterValue ?? '') as string}
       onChange={e => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
-      className='w-36 border shadow rounded'
+      className="w-36 border shadow rounded"
       inputProps={{ 'aria-label': 'search' }}
     />
   )
