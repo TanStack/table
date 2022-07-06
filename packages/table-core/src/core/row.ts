@@ -7,9 +7,9 @@ export type CoreRow<TData extends RowData> = {
   index: number
   original?: TData
   depth: number
-  _valuesCache: Record<string, any>
-  getValue: (columnId: string) => any
-  renderValue: (columnId: string) => unknown
+  _valuesCache: Record<string, unknown>
+  getValue: <TValue>(columnId: string) => TValue
+  renderValue: <TValue>(columnId: string) => TValue
   subRows: Row<TData>[]
   getLeafRows: () => Row<TData>[]
   originalSubRows?: TData[]
@@ -47,7 +47,7 @@ export const createRow = <TData extends RowData>(
         rowIndex
       )
 
-      return row._valuesCache[columnId]
+      return row._valuesCache[columnId] as any
     },
     renderValue: columnId =>
       row.getValue(columnId) ?? table.options.renderFallbackValue,

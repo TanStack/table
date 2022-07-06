@@ -6,7 +6,7 @@ const includesString: FilterFn<any> = (
   filterValue: string
 ) => {
   const search = filterValue.toLowerCase()
-  return row.getValue(columnId)?.toLowerCase().includes(search)
+  return row.getValue<string>(columnId)?.toLowerCase().includes(search)
 }
 
 includesString.autoRemove = (val: any) => testFalsey(val)
@@ -16,7 +16,7 @@ const includesStringSensitive: FilterFn<any> = (
   columnId: string,
   filterValue: string
 ) => {
-  return row.getValue(columnId)?.includes(filterValue)
+  return row.getValue<string>(columnId)?.includes(filterValue)
 }
 
 includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
@@ -26,7 +26,9 @@ const equalsString: FilterFn<any> = (
   columnId: string,
   filterValue: string
 ) => {
-  return row.getValue(columnId)?.toLowerCase() === filterValue.toLowerCase()
+  return (
+    row.getValue<string>(columnId)?.toLowerCase() === filterValue.toLowerCase()
+  )
 }
 
 equalsString.autoRemove = (val: any) => testFalsey(val)
@@ -36,7 +38,7 @@ const arrIncludes: FilterFn<any> = (
   columnId: string,
   filterValue: unknown
 ) => {
-  return row.getValue(columnId)?.includes(filterValue)
+  return row.getValue<unknown[]>(columnId)?.includes(filterValue)
 }
 
 arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
@@ -46,7 +48,9 @@ const arrIncludesAll: FilterFn<any> = (
   columnId: string,
   filterValue: unknown[]
 ) => {
-  return !filterValue.some(val => !row.getValue(columnId)?.includes(val))
+  return !filterValue.some(
+    val => !row.getValue<unknown[]>(columnId)?.includes(val)
+  )
 }
 
 arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
@@ -56,7 +60,9 @@ const arrIncludesSome: FilterFn<any> = (
   columnId: string,
   filterValue: unknown[]
 ) => {
-  return filterValue.some(val => row.getValue(columnId)?.includes(val))
+  return filterValue.some(val =>
+    row.getValue<unknown[]>(columnId)?.includes(val)
+  )
 }
 
 arrIncludesSome.autoRemove = (val: any) => testFalsey(val) || !val?.length
@@ -84,7 +90,7 @@ const inNumberRange: FilterFn<any> = (
 ) => {
   let [min, max] = filterValue
 
-  const rowValue = row.getValue(columnId)
+  const rowValue = row.getValue<number>(columnId)
   return rowValue >= min && rowValue <= max
 }
 

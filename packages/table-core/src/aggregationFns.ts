@@ -3,20 +3,17 @@ import { AggregationFn } from './features/Grouping'
 const sum: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
-  return childRows.reduce(
-    (sum, next) => {
-      const nextValue = next.getValue(columnId)
-      return sum + (typeof nextValue === 'number' ? nextValue : 0)
-    },
-    0
-  )
+  return childRows.reduce((sum, next) => {
+    const nextValue = next.getValue(columnId)
+    return sum + (typeof nextValue === 'number' ? nextValue : 0)
+  }, 0)
 }
 
 const min: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   let min: number | undefined
 
   childRows.forEach(row => {
-    const value = row.getValue(columnId)
+    const value = row.getValue<number>(columnId)
 
     if (
       value != null &&
@@ -33,7 +30,7 @@ const max: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   let max: number | undefined
 
   childRows.forEach(row => {
-    const value = row.getValue(columnId)
+    const value = row.getValue<number>(columnId)
     if (
       value != null &&
       (max! < value || (max === undefined && value >= value))
@@ -50,7 +47,7 @@ const extent: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   let max: number | undefined
 
   childRows.forEach(row => {
-    const value = row.getValue(columnId)
+    const value = row.getValue<number>(columnId)
     if (value != null) {
       if (min === undefined) {
         if (value >= value) min = max = value
@@ -69,7 +66,7 @@ const mean: AggregationFn<any> = (columnId, leafRows) => {
   let sum = 0
 
   leafRows.forEach(row => {
-    let value = row.getValue(columnId)
+    let value = row.getValue<number>(columnId)
     if (value != null && (value = +value) >= value) {
       ++count, (sum += value)
     }
