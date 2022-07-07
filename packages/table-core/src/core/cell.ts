@@ -1,9 +1,11 @@
-import { RowData, Cell, Column, Row, Table } from '../types'
+import { RowData, Cell, Column, Row, Table, AdapterMeta } from '../types'
 
 export type CoreCell<TData extends RowData, TValue> = {
   id: string
-  getValue: () => TValue
-  renderValue: () => TValue | null
+  getValue: <TTValue = TValue>() => TTValue
+  renderValue: <TTValue = TValue>() =>
+    | TTValue
+    | AdapterMeta['renderFallbackValue']
   row: Row<TData>
   column: Column<TData, TValue>
   getContext: () => {
@@ -11,8 +13,10 @@ export type CoreCell<TData extends RowData, TValue> = {
     column: Column<TData, TValue>
     row: Row<TData>
     cell: Cell<TData, TValue>
-    getValue: () => TValue
-    renderValue: () => TValue | null
+    getValue: <TTValue = TValue>() => TTValue
+    renderValue: <TTValue = TValue>() =>
+      | TTValue
+      | AdapterMeta['renderFallbackValue']
   }
 }
 
