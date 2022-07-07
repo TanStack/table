@@ -9,6 +9,7 @@ import {
   Row,
   Updater,
   RowData,
+  FilterMeta,
 } from '../types'
 import { functionalUpdate, isFunction, makeStateUpdater } from '../utils'
 
@@ -35,7 +36,7 @@ export type FilterFn<TData extends RowData> = {
     row: Row<TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: any) => void
+    addMeta: (meta: FilterMeta) => void
   ): boolean
 
   resolveFilterValue?: TransformFilterValueFn<TData>
@@ -87,7 +88,7 @@ export type FiltersColumn<TData extends RowData> = {
 
 export type FiltersRow<TData extends RowData> = {
   columnFilters: Record<string, boolean>
-  columnFiltersMeta: Record<string, any>
+  columnFiltersMeta: Record<string, FilterMeta>
 }
 
 export type FiltersOptions<TData extends RowData> = {

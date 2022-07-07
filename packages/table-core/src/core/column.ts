@@ -5,6 +5,7 @@ import {
   ColumnDef,
   ColumnDefTemplate,
   RowData,
+  ColumnMeta,
 } from '../types'
 import { memo, UnionToIntersection } from '../utils'
 import { CoreCell } from './cell'
@@ -21,7 +22,7 @@ type CoreColumnDefBase<TData extends RowData, TValue> = {
     ReturnType<CoreHeader<TData, TValue>['getContext']>
   >
   cell?: ColumnDefTemplate<ReturnType<CoreCell<TData, TValue>['getContext']>>
-  meta?: unknown
+  meta?: ColumnMeta
 }
 
 type CoreColumnDefDisplay<TData extends RowData, TValue> = CoreColumnDefBase<

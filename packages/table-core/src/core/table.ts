@@ -13,6 +13,7 @@ import {
   ColumnDef,
   TableOptions,
   RowData,
+  TableMeta,
 } from '../types'
 
 //
@@ -75,7 +76,7 @@ export type CoreOptions<TData extends RowData> = {
     defaultOptions: TableOptions<TData>,
     options: Partial<TableOptions<TData>>
   ) => TableOptions<TData>
-  meta?: unknown
+  meta?: TableMeta
   getCoreRowModel: (table: Table<any>) => () => RowModel<any>
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
@@ -231,7 +232,7 @@ export function createTable<TData extends RowData>(
         return {
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
-          cell: props => (props.renderValue() as any)?.toString?.() ?? null,
+          cell: props => props.renderValue<any>()?.toString?.() ?? null,
           ...table._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),

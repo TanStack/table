@@ -77,6 +77,10 @@ import { CoreRow } from './core/row'
 import { PartialKeys } from './utils'
 import { CoreCell } from './core/cell'
 
+export interface TableMeta {}
+export interface ColumnMeta {}
+export interface FilterMeta {}
+
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
@@ -154,10 +158,6 @@ export type Row<TData extends RowData> = CoreRow<TData> &
   GroupingRow &
   RowSelectionRow &
   ExpandedRow
-
-export type RowValues = {
-  [key: string]: any
-}
 
 export type RowModel<TData extends RowData> = {
   rows: Row<TData>[]

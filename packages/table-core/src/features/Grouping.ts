@@ -53,7 +53,7 @@ export type GroupingColumn<TData extends RowData> = {
 
 export type GroupingRow = {
   groupingColumnId?: string
-  groupingValue?: any
+  groupingValue?: unknown
   getIsGrouped: () => boolean
   _groupingValuesCache: Record<string, any>
 }
