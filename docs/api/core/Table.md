@@ -164,7 +164,7 @@ Set this option to true to output row debugging information to the console.
 
 ### `render`
 
-> ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
+> ⚠️ This option is only necessary if you are implementing a table adapter.
 
 ```tsx
 type render = <TProps>(template: Renderable<TProps>, props: TProps) => any
@@ -174,7 +174,7 @@ The `render` option provides a renderer implementation for the table. This imple
 
 ### `mergeOptions`
 
-> ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
+> ⚠️ This option is only necessary if you are implementing a table adapter.
 
 ```tsx
 type mergeOptions = <T>(defaultOptions: T, options: Partial<T>) => T

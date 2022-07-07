@@ -2,7 +2,7 @@
 title: Overview
 ---
 
-TanStack Table's core is **framework agnostic**, which means its API is the same regardless of the framework you're using. Adapters are provided to make working with the table core easier depending on your framework. See the [adapters](../adapters) section for more information on available adapters.
+TanStack Table's core is **framework agnostic**, which means its API is the same regardless of the framework you're using. Adapters are provided to make working with the table core easier depending on your framework. See the Adapters menu for available adapters.
 
 ## Typescript
 
@@ -16,12 +16,10 @@ As it was mentioned extensively in the [Intro](../intro) section, TanStack Table
 
 The table core uses the following abstractions, commonly exposed by adapters:
 
-- [Table Factories](./core/tables)
-  - Used to create table factories, pre-define table types, set default options, create column defs
 - Column Defs
   - Objects used to configure a column and its data model, display templates, and more
 - Table
-  - The core Table object containing both state and API
+  - The core table object containing both state and API
 - Table Data
   - The core data array you provide the table
 - Columns

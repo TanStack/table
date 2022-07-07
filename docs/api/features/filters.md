@@ -187,7 +187,7 @@ Options:
 enableColumnFilter?: boolean
 ```
 
-Enables/disables the **column** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
+Enables/disables the **column** filter for this column. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
 
 ### `enableGlobalFilter`
 
@@ -195,7 +195,7 @@ Enables/disables the **column** filter for this column. For option priority, see
 enableGlobalFilter?: boolean
 ```
 
-Enables/disables the **global** filter for this column. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
+Enables/disables the **global** filter for this column. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
 
 ## Column API
 
@@ -327,7 +327,7 @@ By default, filtering is done from parent rows down (so if a parent row is filte
 enableFilters?: boolean
 ```
 
-Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
+Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
 
 ### `manualFiltering`
 
@@ -351,7 +351,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 enableColumnFilters?: boolean
 ```
 
-Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
+Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
 
 ### `getFilteredRowModel`
 
@@ -411,7 +411,7 @@ If provided, this function will be called with an `updaterFn` when `state.global
 enableGlobalFilter?: boolean
 ```
 
-Enables/disables the global filter for the table. For option priority, see [Can-Filter Option Priority](../guides/filters#can-filter).
+Enables/disables the global filter for the table. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
 
 ### `getColumnCanGlobalFilter`
 
