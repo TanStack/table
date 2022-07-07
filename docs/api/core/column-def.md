@@ -89,9 +89,15 @@ The cell to display each row for the column. If a function is passed, it will be
 ### `meta`
 
 ```tsx
-meta?: unknown
+meta?: ColumnMeta // This interface is extensible via declaration merging. See below!
 ```
 
-The meta data to associated with the column.
+The meta data to associated with the column. This type is global to all tables and can be extended like so:
 
-> ⚠️ Due to generic limitations, This meta object must be typecast to the correct type before usage.
+```tsx
+declare module '@tanstack/table-core' {
+  interface ColumnMeta {
+    foo: string
+  }
+}
+```
