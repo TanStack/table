@@ -11,7 +11,3 @@ Want to skip to the implementation? Check out these examples:
 ## API
 
 [Grouping API](../api/features/grouping)
-
-## Guide
-
-TODO

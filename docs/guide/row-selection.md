@@ -12,7 +12,3 @@ Want to skip to the implementation? Check out these examples:
 ## API
 
 [Row Selection API](../api/features/row-selection)
-
-## Guide
-
-TODO

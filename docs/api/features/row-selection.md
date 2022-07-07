@@ -141,15 +141,11 @@ Selects/deselects all rows on the current page.
 getPreSelectedRowModel: () => RowModel<TData>
 ```
 
-TODO
-
 ### `getSelectedRowModel`
 
 ```tsx
 getSelectedRowModel: () => RowModel<TData>
 ```
-
-TODO
 
 ### `getFilteredSelectedRowModel`
 
@@ -157,15 +153,11 @@ TODO
 getFilteredSelectedRowModel: () => RowModel<TData>
 ```
 
-TODO
-
 ### `getGroupedSelectedRowModel`
 
 ```tsx
 getGroupedSelectedRowModel: () => RowModel<TData>
 ```
-
-TODO
 
 ## Row API
 
@@ -199,7 +191,7 @@ Returns whether or not the row can be selected.
 getCanMultiSelect: () => boolean
 ```
 
-Returns whether or not the row can multi-select. TODO clarify
+Returns whether or not the row can multi-select.
 
 ### `getCanSelectSubRows`
 

@@ -12,7 +12,7 @@ Want to skip to the implementation? Check out these examples:
 
 [Columm Sizing API](../api/features/column-sizing)
 
-## Guide
+## Overview
 
 The column sizing feature allows you to optionally specify the width of each column including min and max widths. It also allows you and your users the ability to dynamically change the width of all columns at will, eg. by dragging the column headers.
 
@@ -39,5 +39,3 @@ As a headless utility, table logic for column sizing is really only a collection
 - Really any layout mechanism that can interpolate cell widths into a table structure.
 
 Each of these approaches has its own tradeoffs and limitations which are usually opinions held by a UI/component library or design system, luckily not you 😉.
-
-TODO
