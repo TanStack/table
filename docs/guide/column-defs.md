@@ -4,7 +4,7 @@ title: Columns
 
 ## API
 
-[Table API](../api/table.md)
+[Table API](../api/core/table.md)
 
 ## Guide
 
@@ -224,7 +224,7 @@ Cell formatters are also provided the `row` and `table` objects, allowing you to
 
 ## Aggregated Cell Formatting
 
-For more info on aggregated cells, see [grouping](../grouping.md).
+For more info on aggregated cells, see [grouping](./grouping).
 
 ## Header & Footer Formatting
 

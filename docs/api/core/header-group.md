@@ -2,7 +2,7 @@
 title: HeaderGroup
 ---
 
-These are **core** options and API properties for all header groups. More options and API properties may be available for other [table features](../guide/09-features.md).
+These are **core** options and API properties for all header groups. More options and API properties may be available for other [table features](../guide/features.md).
 
 ## Header Group API
 

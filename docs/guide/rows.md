@@ -4,7 +4,7 @@ title: Rows
 
 ## API
 
-[Row API](../api/row-api.md)
+[Row API](../api/core/row)
 
 ## Guide
 

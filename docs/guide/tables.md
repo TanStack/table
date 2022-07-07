@@ -4,7 +4,7 @@ title: Tables
 
 ## API
 
-[Table API](../api/table.md)
+[Table API](../api/core/table)
 
 ## Guide
 

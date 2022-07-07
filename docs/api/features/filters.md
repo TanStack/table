@@ -128,7 +128,7 @@ export type FilterFnOption<TData extends AnyData> =
 
 #### Filter Meta
 
-Filtering data can often expose additional information about the data that can be used to aid other future operations on the same data. A good exmaple of this concept is a ranking-system like that of [`match-sorter`](https://github.com/kentcdodds/match-sorter) that simutaneously ranks, filters and sorts data. While utilities like `match-sorter` make a lot of sense for single-dimensional filter+sort tasks, the decoupled filtering/sorting architecture of building a table makes them very difficult and unperformant to use.
+Filtering data can often expose additional information about the data that can be used to aid other future operations on the same data. A good exmaple of this concept is a ranking-system like that of [`match-sorter`](https://github.com/kentcdodds/match-sorter) that simultaneously ranks, filters and sorts data. While utilities like `match-sorter` make a lot of sense for single-dimensional filter+sort tasks, the decoupled filtering/sorting architecture of building a table makes them very difficult and slow to use.
 
 To make a ranking/filtering/sorting system work with tables, `filterFn`s can optionally mark results with a **filter meta** value that can be used later to sort/group/etc the data to your liking. This is done by calling the `addMeta` function supplied to your custom `filterFn`.
 
@@ -187,7 +187,7 @@ Options:
 enableColumnFilter?: boolean
 ```
 
-Enables/disables the **column** filter for this column. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
+Enables/disables the **column** filter for this column.
 
 ### `enableGlobalFilter`
 
@@ -195,7 +195,7 @@ Enables/disables the **column** filter for this column. For option priority, see
 enableGlobalFilter?: boolean
 ```
 
-Enables/disables the **global** filter for this column. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
+Enables/disables the **global** filter for this column.
 
 ## Column API
 
@@ -327,7 +327,7 @@ By default, filtering is done from parent rows down (so if a parent row is filte
 enableFilters?: boolean
 ```
 
-Enables/disables all filters for the table. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
+Enables/disables all filters for the table.
 
 ### `manualFiltering`
 
@@ -351,7 +351,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 enableColumnFilters?: boolean
 ```
 
-Enables/disables **all** column filters for the table. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
+Enables/disables **all** column filters for the table.
 
 ### `getFilteredRowModel`
 
@@ -411,7 +411,7 @@ If provided, this function will be called with an `updaterFn` when `state.global
 enableGlobalFilter?: boolean
 ```
 
-Enables/disables the global filter for the table. For option priority, see [Can-Filter Option Priority](../guide/filters#can-filter).
+Enables/disables the global filter for the table.
 
 ### `getColumnCanGlobalFilter`
 

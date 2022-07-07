@@ -16,7 +16,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Pagination API](../api/pagination.md)
+[Pagination API](../api/features/pagination)
 
 ## Guide
 

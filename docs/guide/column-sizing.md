@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Columm Sizing API](../api/column-sizing.md)
+[Columm Sizing API](../api/features/column-sizing)
 
 ## Guide
 

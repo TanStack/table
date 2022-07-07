@@ -2,7 +2,7 @@
 title: ColumnDef
 ---
 
-Column definitions are created using various helpers [available on the `table` object](./Table.md).
+Column definitions are plain objects with the following options:
 
 ## Options
 
