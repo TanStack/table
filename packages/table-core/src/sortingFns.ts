@@ -35,8 +35,8 @@ const textCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
 }
 
 const datetime: SortingFn<any> = (rowA, rowB, columnId) => {
-  const a = rowA.getValue(columnId)
-  const b = rowB.getValue(columnId)
+  const a = rowA.getValue<Date>(columnId)
+  const b = rowB.getValue<Date>(columnId)
 
   // Can handle nullish values
   // Use > and < because == (and ===) doesn't work with
