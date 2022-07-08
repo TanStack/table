@@ -58,6 +58,7 @@ export type SortingColumn<TData extends RowData> = {
   getAutoSortingFn: () => SortingFn<TData>
   getAutoSortDir: () => SortDirection
   getSortingFn: () => SortingFn<TData>
+  getFirstSortDir: () => SortDirection
   getNextSortingOrder: () => SortDirection | false
   getCanSort: () => boolean
   getCanMultiSort: () => boolean
@@ -184,19 +185,21 @@ export const Sorting: TableFeature = {
 
         // this needs to be outside of table.setSorting to be in sync with rerender
         const nextSortingOrder = column.getNextSortingOrder()
+        const hasManualValue = typeof desc !== 'undefined' && desc !== null
 
         table.setSorting(old => {
           // Find any existing sorting for this column
           const existingSorting = old?.find(d => d.id === column.id)
           const existingIndex = old?.findIndex(d => d.id === column.id)
-          const hasDescDefined = typeof desc !== 'undefined' && desc !== null
 
           let newSorting: SortingState = []
 
           // What should we do with this sort action?
           let sortAction: 'add' | 'remove' | 'toggle' | 'replace'
+          let nextDesc = hasManualValue ? desc : nextSortingOrder === 'desc'
 
-          if (column.getCanMultiSort() && multi) {
+          // Multi-mode
+          if (old?.length && column.getCanMultiSort() && multi) {
             if (existingSorting) {
               sortAction = 'toggle'
             } else {
@@ -214,29 +217,22 @@ export const Sorting: TableFeature = {
           }
 
           // Handle toggle states that will remove the sorting
-          if (
-            sortAction === 'toggle' && // Must be toggling
-            (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
-            !hasDescDefined && // Must not be setting desc
-            (multi ? table.options.enableMultiRemove ?? true : true) && // If multi, don't allow if enableMultiRemove
-            !nextSortingOrder // Finally, detect if it should indeed be removed
-          ) {
-            sortAction = 'remove'
+          if (sortAction === 'toggle') {
+            // If we are "actually" toggling (not a manual set value), should we remove the sorting?
+            if (!hasManualValue) {
+              // Is our intention to remove?
+              if (!nextSortingOrder) {
+                sortAction = 'remove'
+              }
+            }
           }
 
-          if (sortAction === 'replace') {
-            newSorting = [
-              {
-                id: column.id,
-                desc: hasDescDefined ? desc! : nextSortingOrder! === 'desc',
-              },
-            ]
-          } else if (sortAction === 'add' && old?.length) {
+          if (sortAction === 'add') {
             newSorting = [
               ...old,
               {
                 id: column.id,
-                desc: hasDescDefined ? desc! : nextSortingOrder! === 'desc',
+                desc: nextDesc,
               },
             ]
             // Take latest n columns
@@ -245,41 +241,56 @@ export const Sorting: TableFeature = {
               newSorting.length -
                 (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER)
             )
-          } else if (sortAction === 'toggle' && old?.length) {
+          } else if (sortAction === 'toggle') {
             // This flips (or sets) the
             newSorting = old.map(d => {
               if (d.id === column.id) {
                 return {
                   ...d,
-                  desc: hasDescDefined ? desc! : nextSortingOrder! === 'desc',
+                  desc: nextDesc,
                 }
               }
               return d
             })
-          } else if (sortAction === 'remove' && old?.length) {
+          } else if (sortAction === 'remove') {
             newSorting = old.filter(d => d.id !== column.id)
+          } else {
+            newSorting = [
+              {
+                id: column.id,
+                desc: nextDesc,
+              },
+            ]
           }
 
           return newSorting
         })
       },
 
-      getNextSortingOrder: () => {
+      getFirstSortDir: () => {
         const sortDescFirst =
           column.columnDef.sortDescFirst ??
           table.options.sortDescFirst ??
           column.getAutoSortDir() === 'desc'
-        const firstSortDirection = sortDescFirst ? 'desc' : 'asc'
+        return sortDescFirst ? 'desc' : 'asc'
+      },
 
+      getNextSortingOrder: (multi?: boolean) => {
+        const firstSortDirection = column.getFirstSortDir()
         const isSorted = column.getIsSorted()
+
         if (!isSorted) {
           return firstSortDirection
         }
-        if (isSorted === firstSortDirection) {
-          return isSorted === 'desc' ? 'asc' : 'desc'
-        } else {
+
+        if (
+          isSorted !== firstSortDirection &&
+          (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
+          (multi ? table.options.enableMultiRemove ?? true : true) // If multi, don't allow if enableMultiRemove))
+        ) {
           return false
         }
+        return isSorted === 'desc' ? 'asc' : 'desc'
       },
 
       getCanSort: () => {

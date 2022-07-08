@@ -125,11 +125,12 @@ Inverts the order of the sorting for this column. This is useful for values that
 sortUndefined?: false | -1 | 1 // defaults to false
 ```
 
-| Value   | Description                                                                                                                    |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `false` | Undefined values will be considered tied and need to be sorted by the next colum filter or original index (which ever applies) |
-| `-1`    | Undefined values will be sorted with higher priority (ascending)                                                               |
-| `1`     | Undefined values will be sorted with lower priority (descending)                                                               |
+- `false`
+  - Undefined values will be considered tied and need to be sorted by the next colum filter or original index (which ever applies)
+- `-1`
+  - Undefined values will be sorted with higher priority (ascending)
+- `1`
+  - Undefined values will be sorted with lower priority (descending)
 
 ## Column API
 
