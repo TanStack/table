@@ -28,11 +28,18 @@ const releaseCommitMsg = (version: string) => `release: v${version}`
 async function run() {
   let branchName: string =
     process.env.BRANCH ??
-    (process.env.PR_NUMBER ? `pr-${process.env.PR_NUMBER}` : currentGitBranch())
+    // (process.env.PR_NUMBER ? `pr-${process.env.PR_NUMBER}` : currentGitBranch())
+    currentGitBranch()
 
   const branchConfig: BranchConfig = branchConfigs[branchName] || {
     prerelease: true,
     ghRelease: false,
+  }
+
+  if (!branchConfig) {
+    console.log(`No publish config found for branch: ${branchName}`)
+    console.log('Exiting...')
+    process.exit(0)
   }
 
   const isLatestBranch = branchName === latestBranch
