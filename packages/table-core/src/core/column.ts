@@ -105,7 +105,7 @@ export function createColumn<TData extends RowData, TValue>(
   if (resolvedColumnDef.accessorFn) {
     accessorFn = resolvedColumnDef.accessorFn
   } else if (resolvedColumnDef.accessorKey) {
-    accessorFn = (originalRow?: TData) =>
+    accessorFn = (originalRow: TData) =>
       (originalRow as any)[resolvedColumnDef.accessorKey]
   }
 

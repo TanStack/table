@@ -5,7 +5,7 @@ import { createCell } from './cell'
 export type CoreRow<TData extends RowData> = {
   id: string
   index: number
-  original?: TData
+  original: TData
   depth: number
   _valuesCache: Record<string, unknown>
   getValue: <TValue>(columnId: string) => TValue
@@ -20,7 +20,7 @@ export type CoreRow<TData extends RowData> = {
 export const createRow = <TData extends RowData>(
   table: Table<TData>,
   id: string,
-  original: TData | undefined,
+  original: TData,
   rowIndex: number,
   depth: number,
   subRows?: Row<TData>[]

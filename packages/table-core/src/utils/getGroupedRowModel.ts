@@ -55,7 +55,13 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 ? flattenBy(groupedRows, row => row.subRows)
                 : groupedRows
 
-              const row = createRow(table, id, undefined, index, depth)
+              const row = createRow(
+                table,
+                id,
+                leafRows[0]!.original,
+                index,
+                depth
+              )
 
               Object.assign(row, {
                 groupingColumnId: columnId,

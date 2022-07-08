@@ -40,7 +40,7 @@ export function getCoreRowModel<TData extends RowData>(): (
             const row = createRow(
               table,
               table._getRowId(originalRows[i]!, i, parent),
-              originalRows[i],
+              originalRows[i]!,
               i,
               depth
             )

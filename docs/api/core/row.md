@@ -35,10 +35,12 @@ The index of the row within its parent array (or the root data array)
 ### `original`
 
 ```tsx
-original?: TData
+original: TData
 ```
 
-The original row object provided to the table
+The original row object provided to the table.
+
+> 🧠 If the row is a grouped row, the original row object will be the first original in the group.
 
 ### `getValue`
 
