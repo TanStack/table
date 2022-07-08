@@ -35,10 +35,13 @@ const textCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
 }
 
 const datetime: SortingFn<any> = (rowA, rowB, columnId) => {
-  return compareBasic(
-    (rowA.getValue(columnId) as Date).getTime(),
-    (rowB.getValue(columnId) as Date).getTime()
-  )
+  const a = rowA.getValue(columnId)
+  const b = rowB.getValue(columnId)
+
+  // Can handle nullish values
+  // Use > and < because == (and ===) doesn't work with
+  // Date objects (would require calling getTime()).
+  return a > b ? 1 : a < b ? -1 : 0
 }
 
 const basic: SortingFn<any> = (rowA, rowB, columnId) => {
