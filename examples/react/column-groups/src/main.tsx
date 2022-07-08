@@ -48,36 +48,53 @@ const defaultData: Person[] = [
 
 const columns: ColumnDef<Person>[] = [
   {
-    accessorKey: 'firstName',
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
+    header: 'Name',
+    footer: props => props.column.id,
+    columns: [
+      {
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
+        footer: props => props.column.id,
+      },
+      {
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: props => props.column.id,
+      },
+    ],
   },
   {
-    accessorFn: row => row.lastName,
-    id: 'lastName',
-    cell: info => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-    footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'age',
-    header: () => 'Age',
-    footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'visits',
-    header: () => <span>Visits</span>,
-    footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'progress',
-    header: 'Profile Progress',
-    footer: info => info.column.id,
+    header: 'Info',
+    footer: props => props.column.id,
+    columns: [
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        footer: props => props.column.id,
+      },
+      {
+        header: 'More Info',
+        columns: [
+          {
+            accessorKey: 'visits',
+            header: () => <span>Visits</span>,
+            footer: props => props.column.id,
+          },
+          {
+            accessorKey: 'status',
+            header: 'Status',
+            footer: props => props.column.id,
+          },
+          {
+            accessorKey: 'progress',
+            header: 'Profile Progress',
+            footer: props => props.column.id,
+          },
+        ],
+      },
+    ],
   },
 ]
 
@@ -98,7 +115,7 @@ function App() {
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th key={header.id}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -125,7 +142,7 @@ function App() {
           {table.getFooterGroups().map(footerGroup => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map(header => (
-                <th key={header.id}>
+                <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(

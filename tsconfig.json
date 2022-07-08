@@ -9,6 +9,7 @@
     { "path": "packages/react-table-devtools" },
     { "path": "packages/match-sorter-utils" },
     { "path": "examples/react/basic/tsconfig.dev.json" },
+    { "path": "examples/react/column-groups/tsconfig.dev.json" },
     { "path": "examples/react/column-ordering/tsconfig.dev.json" },
     { "path": "examples/react/column-pinning/tsconfig.dev.json" },
     { "path": "examples/react/column-sizing/tsconfig.dev.json" },
@@ -18,23 +19,24 @@
     { "path": "examples/react/filters/tsconfig.dev.json" },
     { "path": "examples/react/fully-controlled/tsconfig.dev.json" },
     { "path": "examples/react/grouping/tsconfig.dev.json" },
-    { "path": "examples/react/pagination/tsconfig.dev.json" },
     { "path": "examples/react/pagination-controlled/tsconfig.dev.json" },
+    { "path": "examples/react/pagination/tsconfig.dev.json" },
     { "path": "examples/react/row-selection/tsconfig.dev.json" },
     { "path": "examples/react/sorting/tsconfig.dev.json" },
-    { "path": "examples/vue/basic/tsconfig.dev.json" },
-    { "path": "examples/vue/column-ordering/tsconfig.dev.json" },
-    { "path": "examples/vue/column-pinning/tsconfig.dev.json" },
     { "path": "examples/solid/basic/tsconfig.dev.json" },
-    { "path": "examples/solid/column-ordering/tsconfig.dev.json" },
+    { "path": "examples/solid/column-groups/tsconfig.dev.json" },
     { "path": "examples/solid/column-ordering/tsconfig.dev.json" },
     { "path": "examples/solid/column-visibility/tsconfig.dev.json" },
     { "path": "examples/solid/sorting/tsconfig.dev.json" },
     { "path": "examples/svelte/basic/tsconfig.dev.json" },
+    { "path": "examples/svelte/column-groups/tsconfig.dev.json" },
     { "path": "examples/svelte/column-ordering/tsconfig.dev.json" },
     { "path": "examples/svelte/column-pinning/tsconfig.dev.json" },
     { "path": "examples/svelte/column-visibility/tsconfig.dev.json" },
-    { "path": "examples/svelte/sorting/tsconfig.dev.json" }
+    { "path": "examples/svelte/sorting/tsconfig.dev.json" },
+    { "path": "examples/vue/basic/tsconfig.dev.json" },
+    { "path": "examples/vue/column-ordering/tsconfig.dev.json" },
+    { "path": "examples/vue/column-pinning/tsconfig.dev.json" }
   ]
   // "exclude": ["node_modules"]
 }
