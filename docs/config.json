@@ -245,6 +245,10 @@
           "label": "Row Selection"
         },
         {
+          "to": "examples/react/simple-columns",
+          "label": "Simple Columns"
+        },
+        {
           "to": "examples/react/sorting",
           "label": "Sorting"
         }

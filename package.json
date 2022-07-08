@@ -39,7 +39,12 @@
     "./examples/react/pagination",
     "./examples/react/pagination-controlled",
     "./examples/react/row-selection",
+    "./examples/react/simple-columns",
     "./examples/react/sorting",
+    "./examples/solid/basic",
+    "./examples/solid/column-ordering",
+    "./examples/solid/column-visibility",
+    "./examples/solid/sorting",
     "./examples/svelte/basic",
     "./examples/svelte/column-ordering",
     "./examples/svelte/column-pinning",
@@ -47,11 +52,7 @@
     "./examples/svelte/sorting",
     "./examples/vue/basic",
     "./examples/vue/column-ordering",
-    "./examples/vue/column-pinning",
-    "./examples/solid/basic",
-    "./examples/solid/column-ordering",
-    "./examples/solid/column-visibility",
-    "./examples/solid/sorting"
+    "./examples/vue/column-pinning"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",
