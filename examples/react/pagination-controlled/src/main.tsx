@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import './index.css'
 
 import {
-  createTable,
   PaginationState,
   useReactTable,
   getCoreRowModel,

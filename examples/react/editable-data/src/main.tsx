@@ -6,7 +6,6 @@ import './index.css'
 
 //
 import {
-  createTable,
   Column,
   Table,
   ColumnDef,

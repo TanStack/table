@@ -2,10 +2,10 @@ import * as React from 'react'
 export * from '@tanstack/table-core'
 
 import {
-  createTable,
   TableOptions,
   TableOptionsResolved,
   RowData,
+  createTable,
 } from '@tanstack/table-core'
 
 export type Renderable<TProps> = React.ReactNode | React.ComponentType<TProps>
