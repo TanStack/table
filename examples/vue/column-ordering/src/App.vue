@@ -165,14 +165,21 @@ function toggleAllColumnsVisibility() {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <component v-if="!header.isPlaceholder" :is="header.renderHeader" />
+            <component
+              v-if="!header.isPlaceholder"
+              :is="
+                flexRender(header.column.columnDef.header, header.getContext)
+              "
+            />
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <component :is="cell.renderCell" />
+            <component
+              :is="flexRender(cell.column.columnDef.cell, cell.getContext())"
+            />
           </td>
         </tr>
       </tbody>
@@ -186,7 +193,12 @@ function toggleAllColumnsVisibility() {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <component v-if="!header.isPlaceholder" :is="header.renderFooter" />
+            <component
+              v-if="!header.isPlaceholder"
+              :is="
+                flexRender(header.column.columnDef.footer, header.getContext())
+              "
+            />
           </th>
         </tr>
       </tfoot>

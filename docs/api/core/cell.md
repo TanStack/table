@@ -40,10 +40,21 @@ column: Column<TData>
 
 The associated Column object for the cell.
 
-### `renderCell`
+### `getContext`
 
 ```tsx
-renderCell: () => unknown
+getContext: () => {
+  table: Table<TData>
+  column: Column<TData, TValue>
+  row: Row<TData>
+  cell: Cell<TData, TValue>
+  getValue: <TTValue = TValue>() => TTValue
+  renderValue: <TTValue = TValue>() => TTValue | null
+}
 ```
 
-Returns the rendered cell value using the associated column's `cell` template. The exact return type of this function depends on the adapter being used.
+Returns the rendering context (or props) for cell-based components like cells and aggregated cells. Use these props with your framework's `flexRender` utility to render these using the template of your choice:
+
+```tsx
+flexRender(cell.column.columnDef.cell, cell.getContext())
+```

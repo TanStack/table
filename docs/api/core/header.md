@@ -96,18 +96,18 @@ placeholderId?: string
 
 If the header is a placeholder header, this will be a unique header ID that does not conflict with any other headers across the table
 
-### `renderHeader`
+### `getContext`
 
 ```tsx
-renderHeader: (options?: { renderPlaceholder?: boolean }) => unknown
+getContext: () => {
+  table: Table<TData>
+  header: Header<TData, TValue>
+  column: Column<TData, TValue>
+}
 ```
 
-Returns the rendered header using the associated column's `header` template. The exact return type of this function depends on the adapter being used.
-
-### `renderFooter`
+Returns the rendering context (or props) for column-based components like headers, footers and filters. Use these props with your framework's `flexRender` utility to render these using the template of your choice:
 
 ```tsx
-renderFooter: (options?: { renderPlaceholder?: boolean }) => unknown
+flexRender(header.column.columnDef.header, header.getContext())
 ```
-
-Returns the rendered footer using the associated column's `footer` template. The exact return type of this function depends on the adapter being used.
