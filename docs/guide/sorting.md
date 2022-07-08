@@ -11,8 +11,4 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Sorting API](../api/sorting.md)
-
-## Guide
-
-TODO
+[Sorting API](../api/features/sorting)

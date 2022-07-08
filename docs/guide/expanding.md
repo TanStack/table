@@ -11,8 +11,4 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Expanding API](../api/expanding.md)
-
-## Guide
-
-TODO
+[Expanding API](../api/features/expanding)

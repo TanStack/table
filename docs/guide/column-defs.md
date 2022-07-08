@@ -4,7 +4,7 @@ title: Columns
 
 ## API
 
-[Table API](../api/table.md)
+[Table API](../api/core/table.md)
 
 ## Guide
 
@@ -12,7 +12,7 @@ Column defs are the single most important part of building a table. They are res
 
 - Building the underlying data model that will be used for everything including sorting, filtering, grouping, etc.
 - Formatting the data model into what will be displayed in the table
-- Creating [header groups, headers and footers](../headers)
+- Creating [header groups, headers and footers](./headers)
 - Creating columns for display-only purposes, eg. action buttons, checkboxes, expanders, sparklines, etc.
 
 ## Column Def Types
@@ -193,7 +193,7 @@ Columns are uniquely identified with 3 strategies:
 
 ## Column Formatting & Rendering
 
-By default, columns cells will display their data model value as a string. You can override this behavior by providing custom rendering implementations. Each implementation is provided relevant information about the cell, header or footer and returns something your framework [adapter](../guides/adapters.md) can render eg. JSX/Components/strings/etc. This will depend on which adapter you are using.
+By default, columns cells will display their data model value as a string. You can override this behavior by providing custom rendering implementations. Each implementation is provided relevant information about the cell, header or footer and returns something your framework adapter can render eg. JSX/Components/strings/etc. This will depend on which adapter you are using.
 
 There are a couple of formatters available to you:
 
@@ -224,7 +224,7 @@ Cell formatters are also provided the `row` and `table` objects, allowing you to
 
 ## Aggregated Cell Formatting
 
-For more info on aggregated cells, see [grouping](../grouping.md).
+For more info on aggregated cells, see [grouping](./grouping).
 
 ## Header & Footer Formatting
 

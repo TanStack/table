@@ -14,7 +14,7 @@ These functions are used to create a table. Which one you use depends on which f
 
 ## Options
 
-These are **core** options and API properties for the table. More options and API properties are available for other [table features](../guide/09-features.md).
+These are **core** options and API properties for the table. More options and API properties are available for other [table features](../guide/features.md).
 
 ### `data`
 
@@ -89,7 +89,7 @@ declare module '@tanstack/table-core' {
 }
 ```
 
-> 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/react/editable-data.mdx).
+> 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/react/editable-data).
 
 ### `state`
 
@@ -170,7 +170,7 @@ Set this option to true to output row debugging information to the console.
 
 ### `render`
 
-> ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
+> ⚠️ This option is only necessary if you are implementing a table adapter.
 
 ```tsx
 type render = <TProps>(template: Renderable<TProps>, props: TProps) => any
@@ -180,7 +180,7 @@ The `render` option provides a renderer implementation for the table. This imple
 
 ### `mergeOptions`
 
-> ⚠️ This option is only necessary if you are implementing a table adapter. See [Guides - Adapters](../guides/adapters) for more information.
+> ⚠️ This option is only necessary if you are implementing a table adapter.
 
 ```tsx
 type mergeOptions = <T>(defaultOptions: T, options: Partial<T>) => T
@@ -227,7 +227,7 @@ This optional function is used to derive a unique ID for any given row. If not p
 type columns = ColumnDef<TData>[]
 ```
 
-The column defs to use for this table. See the [Table API](../table.md) for more information on creating column definitions.
+The column defs to use for this table. See the [Column Defs Guide](../guide/column-defs.md) for more information on creating column definitions.
 
 ### `defaultColumn`
 

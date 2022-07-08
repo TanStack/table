@@ -16,8 +16,4 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Pagination API](../api/pagination.md)
-
-## Guide
-
-TODO
+[Pagination API](../api/features/pagination)

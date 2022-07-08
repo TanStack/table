@@ -17,7 +17,7 @@ Want to skip to the implementation? Check out these examples:
 
 [Filters API](../api/features/filters)
 
-## Guide
+## Overview
 
 Filters come in two flavors:
 
@@ -27,5 +27,3 @@ Filters come in two flavors:
 - Global filters
   - A single filter value that is applied to all or some of columns' accessor values.
   - Stored in the `state.globalFilter` array as any value, usually a string.
-
-TODO

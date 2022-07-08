@@ -11,8 +11,4 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Row Selection API](../api/row-selection.md)
-
-## Guide
-
-TODO
+[Row Selection API](../api/features/row-selection)

@@ -4,8 +4,4 @@ title: Rows
 
 ## API
 
-[Row API](../api/row-api.md)
-
-## Guide
-
-TODO
+[Row API](../api/core/row)

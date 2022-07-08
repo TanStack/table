@@ -4,8 +4,4 @@ title: Headers
 
 ## API
 
-[Header API](../api/header-api.md)
-
-## Guide
-
-TODO
+[Header API](../api/core/header)

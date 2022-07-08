@@ -10,8 +10,4 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Grouping API](../api/grouping.md)
-
-## Guide
-
-TODO
+[Grouping API](../api/features/grouping)
