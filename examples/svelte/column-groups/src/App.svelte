@@ -18,6 +18,8 @@
     progress: number
   }
 
+  
+
   const defaultData: Person[] = [
     {
       firstName: 'tanner',
@@ -47,44 +49,63 @@
 
   const defaultColumns: ColumnDef<Person>[] = [
     {
-      accessorKey: 'firstName',
-      cell: info => info.getValue(),
-      footer: info => info.column.id,
+      header: 'Name',
+      footer: props => props.column.id,
+      columns: [
+        {
+          accessorKey: 'firstName',
+          cell: info => info.getValue(),
+          footer: props => props.column.id,
+        },
+         {
+          accessorFn: row => row.lastName,
+          id: 'lastName',
+          cell: info => info.getValue(),
+          header: () => 'Last Name',
+          footer: props => props.column.id,
+        },
+      ],
     },
     {
-      accessorFn: row => row.lastName,
-      id: 'lastName',
-      cell: info => info.getValue(),
-      header: () => 'Last Name',
-      footer: info => info.column.id,
-    },
-    {
-      accessorKey: 'age',
-      header: () => 'Age',
-      footer: info => info.column.id,
-    },
-    {
-      accessorKey: 'visits',
-      header: () => 'Visits',
-      footer: info => info.column.id,
-    },
-    {
-      accessorKey: 'status',
-      header: 'Status',
-      footer: info => info.column.id,
-    },
-    {
-      accessorKey: 'progress',
-      header: 'Profile Progress',
-      footer: info => info.column.id,
+      header: 'Info',
+      footer: props => props.column.id,
+      columns: [
+        {
+          accessorKey: 'age',
+          header: () => 'Age',
+          footer: props => props.column.id,
+        },
+        {
+          header: 'More Info',
+          columns: [
+            {
+              accessorKey: 'visits',
+              header: () => 'Visits',
+              footer: props => props.column.id,
+            },
+            {
+              accessorKey: 'status',
+              header: 'Status',
+              footer: props => props.column.id,
+            },
+            {
+              accessorKey: 'progress',
+              header: 'Profile Progress',
+              footer: props => props.column.id,
+            },
+          ],
+        },
+      ],
     },
   ]
 
-  const options = writable<TableOptions<Person>>({
-    data: defaultData,
-    columns: defaultColumns,
-    getCoreRowModel: getCoreRowModel(),
-  })
+  const options = writable<TableOptions<Person>>(
+    {
+      data: defaultData,
+      columns: defaultColumns,
+      getCoreRowModel: getCoreRowModel(),
+    }
+  )
 
   const rerender = () => {
     options.update(options => ({
@@ -102,14 +123,9 @@
       {#each $table.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
-            <th>
+            <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                />
+                <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
               {/if}
             </th>
           {/each}
@@ -121,9 +137,7 @@
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component
-                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
-              />
+              <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
             </td>
           {/each}
         </tr>
@@ -133,14 +147,9 @@
       {#each $table.getFooterGroups() as footerGroup}
         <tr>
           {#each footerGroup.headers as header}
-            <th>
+            <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.footer,
-                    header.getContext()
-                  )}
-                />
+                <svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
               {/if}
             </th>
           {/each}

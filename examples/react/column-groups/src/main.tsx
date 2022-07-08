@@ -44,42 +44,57 @@ const defaultData: Person[] = [
     status: 'Complicated',
     progress: 10,
   },
-  {
-    firstName: 'Kevin',
-    lastName: 'Vandy',
-    age: 25,
-    visits: 11,
-    status: 'Single',
-    progress: 12,
-  },
 ]
 
 const columns: ColumnDef<Person>[] = [
   {
-    accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    header: 'Name',
+    footer: props => props.column.id,
+    columns: [
+      {
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
+        footer: props => props.column.id,
+      },
+      {
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: props => props.column.id,
+      },
+    ],
   },
   {
-    accessorFn: row => row.lastName,
-    id: 'lastName',
-    cell: info => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-  },
-  {
-    accessorKey: 'age',
-    header: () => 'Age',
-  },
-  {
-    accessorKey: 'visits',
-    header: () => <span>Visits</span>,
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
-    header: 'Profile Progress',
+    header: 'Info',
+    footer: props => props.column.id,
+    columns: [
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        footer: props => props.column.id,
+      },
+      {
+        header: 'More Info',
+        columns: [
+          {
+            accessorKey: 'visits',
+            header: () => <span>Visits</span>,
+            footer: props => props.column.id,
+          },
+          {
+            accessorKey: 'status',
+            header: 'Status',
+            footer: props => props.column.id,
+          },
+          {
+            accessorKey: 'progress',
+            header: 'Profile Progress',
+            footer: props => props.column.id,
+          },
+        ],
+      },
+    ],
   },
 ]
 
@@ -123,6 +138,22 @@ function App() {
             </tr>
           ))}
         </tbody>
+        <tfoot>
+          {table.getFooterGroups().map(footerGroup => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map(header => (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </tfoot>
       </table>
       <div className="h-4" />
       <button onClick={() => rerender()} className="border p-2">

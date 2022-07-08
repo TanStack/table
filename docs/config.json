@@ -197,6 +197,10 @@
           "label": "Basic"
         },
         {
+          "to": "examples/react/column-groups",
+          "label": "Column Groups"
+        },
+        {
           "to": "examples/react/column-ordering",
           "label": "Column Ordering"
         },
@@ -245,10 +249,6 @@
           "label": "Row Selection"
         },
         {
-          "to": "examples/react/simple-columns",
-          "label": "Simple Columns"
-        },
-        {
           "to": "examples/react/sorting",
           "label": "Sorting"
         }
@@ -260,6 +260,10 @@
         {
           "to": "examples/solid/basic",
           "label": "Basic"
+        },
+        {
+          "to": "examples/solid/column-groups",
+          "label": "Column Groups"
         },
         {
           "to": "examples/solid/column-ordering",
@@ -281,6 +285,10 @@
         {
           "to": "examples/svelte/basic",
           "label": "Basic"
+        },
+        {
+          "to": "examples/svelte/column-groups",
+          "label": "Column Groups"
         },
         {
           "to": "examples/svelte/column-ordering",

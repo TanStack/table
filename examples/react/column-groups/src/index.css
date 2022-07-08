@@ -16,3 +16,11 @@ th {
   border-right: 1px solid lightgray;
   padding: 2px 4px;
 }
+
+tfoot {
+  color: gray;
+}
+
+tfoot th {
+  font-weight: normal;
+}
