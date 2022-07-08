@@ -77,10 +77,14 @@ import { CoreRow } from './core/row'
 import { PartialKeys } from './utils'
 import { CoreCell } from './core/cell'
 
+export interface TableMeta {}
+export interface ColumnMeta {}
+export interface FilterMeta {}
+
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
-export type RowData = object | any[]
+export type RowData = unknown | object | any[]
 
 export type TableGenerics = {
   Row?: any
@@ -155,34 +159,33 @@ export type Row<TData extends RowData> = CoreRow<TData> &
   RowSelectionRow &
   ExpandedRow
 
-export type RowValues = {
-  [key: string]: any
-}
-
 export type RowModel<TData extends RowData> = {
   rows: Row<TData>[]
   flatRows: Row<TData>[]
   rowsById: Record<string, Row<TData>>
 }
 
-export type AccessorFn<TData extends RowData> = (
+export type AccessorFn<TData extends RowData, TValue = unknown> = (
   originalRow: TData,
   index: number
-) => any
+) => TValue
 
 export type ColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
 
-export type ColumnDef<TData extends RowData> = CoreColumnDef<TData> &
+export type ColumnDef<
+  TData extends RowData,
+  TValue extends any = unknown
+> = CoreColumnDef<TData, TValue> &
   VisibilityColumnDef &
   ColumnPinningColumnDef &
   FiltersColumnDef<TData> &
   SortingColumnDef<TData> &
-  GroupingColumnDef<TData> &
+  GroupingColumnDef<TData, TValue> &
   ColumnSizingColumnDef
 
-export type Column<TData extends RowData> = CoreColumn<TData> &
+export type Column<TData extends RowData, TValue> = CoreColumn<TData, TValue> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
   FiltersColumn<TData> &
@@ -190,9 +193,10 @@ export type Column<TData extends RowData> = CoreColumn<TData> &
   GroupingColumn<TData> &
   ColumnSizingColumn
 
-export type Cell<TData extends RowData> = CoreCell<TData> & GroupingCell
+export type Cell<TData extends RowData, TValue> = CoreCell<TData, TValue> &
+  GroupingCell
 
-export type Header<TData extends RowData> = CoreHeader<TData> &
+export type Header<TData extends RowData, TValue> = CoreHeader<TData, TValue> &
   ColumnSizingHeader
 
 export type HeaderGroup<TData extends RowData> = CoreHeaderGroup<TData>

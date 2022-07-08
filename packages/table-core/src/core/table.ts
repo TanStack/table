@@ -13,6 +13,7 @@ import {
   ColumnDef,
   TableOptions,
   RowData,
+  TableMeta,
 } from '../types'
 
 //
@@ -75,7 +76,7 @@ export type CoreOptions<TData extends RowData> = {
     defaultOptions: TableOptions<TData>,
     options: Partial<TableOptions<TData>>
   ) => TableOptions<TData>
-  meta?: unknown
+  meta?: TableMeta
   getCoreRowModel: (table: Table<any>) => () => RowModel<any>
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
@@ -100,11 +101,11 @@ export type CoreInstance<TData extends RowData> = {
   getRow: (id: string) => Row<TData>
   _getDefaultColumnDef: () => Partial<ColumnDef<TData>>
   _getColumnDefs: () => ColumnDef<TData>[]
-  _getAllFlatColumnsById: () => Record<string, Column<TData>>
-  getAllColumns: () => Column<TData>[]
-  getAllFlatColumns: () => Column<TData>[]
-  getAllLeafColumns: () => Column<TData>[]
-  getColumn: (columnId: string) => Column<TData>
+  _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
+  getAllColumns: () => Column<TData, unknown>[]
+  getAllFlatColumns: () => Column<TData, unknown>[]
+  getAllLeafColumns: () => Column<TData, unknown>[]
+  getColumn: (columnId: string) => Column<TData, unknown>
 }
 
 export function createTable<TData extends RowData>(
@@ -231,7 +232,7 @@ export function createTable<TData extends RowData>(
         return {
           header: props => props.header.column.id,
           footer: props => props.header.column.id,
-          cell: props => (props.renderValue() as any)?.toString?.() ?? null,
+          cell: props => props.renderValue<any>()?.toString?.() ?? null,
           ...table._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
@@ -251,9 +252,9 @@ export function createTable<TData extends RowData>(
       columnDefs => {
         const recurseColumns = (
           columnDefs: ColumnDef<TData>[],
-          parent?: Column<TData>,
+          parent?: Column<TData, unknown>,
           depth = 0
-        ): Column<TData>[] => {
+        ): Column<TData, unknown>[] => {
           return columnDefs.map(columnDef => {
             const column = createColumn(table, columnDef, depth, parent)
 
@@ -292,7 +293,7 @@ export function createTable<TData extends RowData>(
         return flatColumns.reduce((acc, column) => {
           acc[column.id] = column
           return acc
-        }, {} as Record<string, Column<TData>>)
+        }, {} as Record<string, Column<TData, unknown>>)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',

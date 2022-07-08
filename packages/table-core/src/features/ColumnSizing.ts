@@ -115,8 +115,8 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>
   ): ColumnSizingColumn => {
     return {
@@ -167,15 +167,15 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createHeader: <TData extends RowData>(
-    header: Header<TData>,
+  createHeader: <TData extends RowData, TValue>(
+    header: Header<TData, TValue>,
     table: Table<TData>
   ): ColumnSizingHeader => {
     return {
       getSize: () => {
         let sum = 0
 
-        const recurse = (header: Header<TData>) => {
+        const recurse = (header: Header<TData, TValue>) => {
           if (header.subHeaders.length) {
             header.subHeaders.forEach(recurse)
           } else {

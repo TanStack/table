@@ -43,18 +43,18 @@ export type ColumnPinningColumn = {
 }
 
 export type ColumnPinningRow<TData extends RowData> = {
-  getLeftVisibleCells: () => Cell<TData>[]
-  getCenterVisibleCells: () => Cell<TData>[]
-  getRightVisibleCells: () => Cell<TData>[]
+  getLeftVisibleCells: () => Cell<TData, unknown>[]
+  getCenterVisibleCells: () => Cell<TData, unknown>[]
+  getRightVisibleCells: () => Cell<TData, unknown>[]
 }
 
 export type ColumnPinningInstance<TData extends RowData> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
-  getLeftLeafColumns: () => Column<TData>[]
-  getRightLeafColumns: () => Column<TData>[]
-  getCenterLeafColumns: () => Column<TData>[]
+  getLeftLeafColumns: () => Column<TData, unknown>[]
+  getRightLeafColumns: () => Column<TData, unknown>[]
+  getCenterLeafColumns: () => Column<TData, unknown>[]
 }
 
 //
@@ -80,8 +80,8 @@ export const Pinning: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>
   ): ColumnPinningColumn => {
     return {
@@ -185,7 +185,7 @@ export const Pinning: TableFeature = {
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TData>))
+            .map(d => ({ ...d, position: 'left' } as Cell<TData, unknown>))
 
           return cells
         },
@@ -203,7 +203,7 @@ export const Pinning: TableFeature = {
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TData>))
+            .map(d => ({ ...d, position: 'left' } as Cell<TData, unknown>))
 
           return cells
         },

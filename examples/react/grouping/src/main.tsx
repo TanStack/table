@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createTable,
   GroupingState,
   useReactTable,
   getPaginationRowModel,
@@ -45,7 +44,7 @@ function App() {
             accessorKey: 'age',
             header: () => 'Age',
             aggregatedCell: ({ getValue }) =>
-              Math.round(getValue() * 100) / 100,
+              Math.round(getValue<number>() * 100) / 100,
             aggregationFn: 'median',
           },
           {
@@ -65,10 +64,10 @@ function App() {
                 accessorKey: 'progress',
                 header: 'Profile Progress',
                 cell: ({ getValue }) =>
-                  Math.round(getValue() * 100) / 100 + '%',
+                  Math.round(getValue<number>() * 100) / 100 + '%',
                 aggregationFn: 'mean',
                 aggregatedCell: ({ getValue }) =>
-                  Math.round(getValue() * 100) / 100 + '%',
+                  Math.round(getValue<number>() * 100) / 100 + '%',
               },
             ],
           },

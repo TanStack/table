@@ -1,14 +1,11 @@
 import {
-  Cell,
   Column,
-  Header,
-  TableGenerics,
   Table,
-  Row,
   AccessorFn,
   ColumnDef,
   ColumnDefTemplate,
   RowData,
+  ColumnMeta,
 } from '../types'
 import { memo, UnionToIntersection } from '../utils'
 import { CoreCell } from './cell'
@@ -16,64 +13,78 @@ import { CoreHeader } from './headers'
 
 export type CoreColumnDefType = 'data' | 'display' | 'group'
 
-type CoreColumnDefBase<TData extends RowData> = {
+type CoreColumnDefBase<TData extends RowData, TValue> = {
   columns?: ColumnDef<TData>[]
-  header?: ColumnDefTemplate<ReturnType<CoreHeader<TData>['getContext']>>
-  footer?: ColumnDefTemplate<ReturnType<CoreHeader<TData>['getContext']>>
-  cell?: ColumnDefTemplate<ReturnType<CoreCell<TData>['getContext']>>
-  meta?: unknown
+  header?: ColumnDefTemplate<
+    ReturnType<CoreHeader<TData, TValue>['getContext']>
+  >
+  footer?: ColumnDefTemplate<
+    ReturnType<CoreHeader<TData, TValue>['getContext']>
+  >
+  cell?: ColumnDefTemplate<ReturnType<CoreCell<TData, TValue>['getContext']>>
+  meta?: ColumnMeta
 }
 
-type CoreColumnDefDisplay<TData extends RowData> = CoreColumnDefBase<TData> & {
+type CoreColumnDefDisplay<TData extends RowData, TValue> = CoreColumnDefBase<
+  TData,
+  TValue
+> & {
   id: string
 }
 
-type CoreColumnDefDisplayWithStringHeader<TData extends RowData> =
-  CoreColumnDefBase<TData> & {
-    header: string
-    id?: string
-  }
+type CoreColumnDefDisplayWithStringHeader<
+  TData extends RowData,
+  TValue
+> = CoreColumnDefBase<TData, TValue> & {
+  header: string
+  id?: string
+}
 
-type CoreColumnDefAccessorFn<TData extends RowData> =
-  CoreColumnDefBase<TData> & {
-    accessorFn: AccessorFn<TData>
-    id: string
-    // accessorKey?: never
-  }
+type CoreColumnDefAccessorFn<
+  TData extends RowData,
+  TValue = unknown
+> = CoreColumnDefBase<TData, TValue> & {
+  accessorFn: AccessorFn<TData, TValue>
+  id: string
+  // accessorKey?: never
+}
 
-type CoreColumnDefAccessorKey<TData extends RowData> =
-  CoreColumnDefBase<TData> & {
-    accessorKey: keyof TData
-    id?: string
-    // accessorFn?: never
-  }
+type CoreColumnDefAccessorKey<
+  TData extends RowData,
+  TValue
+> = CoreColumnDefBase<TData, TValue> & {
+  accessorKey: keyof TData
+  id?: string
+  // accessorFn?: never
+}
 
-export type CoreColumnDef<TData extends RowData> =
-  | CoreColumnDefDisplay<TData>
-  | CoreColumnDefDisplayWithStringHeader<TData>
+export type CoreColumnDef<TData extends RowData, TValue> =
+  | CoreColumnDefDisplay<TData, TValue>
+  | CoreColumnDefDisplayWithStringHeader<TData, TValue>
   | CoreColumnDefAccessorFn<TData>
-  | CoreColumnDefAccessorKey<TData>
+  | CoreColumnDefAccessorKey<TData, TValue>
 
-export type CoreColumnDefResolved<TData extends RowData> = Partial<
-  UnionToIntersection<CoreColumnDef<TData>>
->
+export type CoreColumnDefResolved<
+  TData extends RowData,
+  TValue = unknown
+> = Partial<UnionToIntersection<CoreColumnDef<TData, TValue>>>
 
-export type CoreColumn<TData extends RowData> = {
+export type CoreColumn<TData extends RowData, TValue> = {
   id: string
   depth: number
-  accessorFn?: AccessorFn<TData>
+  accessorFn?: AccessorFn<TData, TValue>
   columnDef: ColumnDef<TData>
-  columns: Column<TData>[]
-  parent?: Column<TData>
-  getFlatColumns: () => Column<TData>[]
-  getLeafColumns: () => Column<TData>[]
+  columns: Column<TData, TValue>[]
+  parent?: Column<TData, TValue>
+  getFlatColumns: () => Column<TData, TValue>[]
+  getLeafColumns: () => Column<TData, TValue>[]
 }
 
-export function createColumn<TData extends RowData>(
+export function createColumn<TData extends RowData, TValue>(
   table: Table<TData>,
   columnDef: ColumnDef<TData>,
   depth: number,
-  parent?: Column<TData>
+  parent?: Column<TData, TValue>
 ) {
   const defaultColumn = table._getDefaultColumnDef()
 
@@ -109,7 +120,7 @@ export function createColumn<TData extends RowData>(
     throw new Error()
   }
 
-  let column: CoreColumn<TData> = {
+  let column: CoreColumn<TData, any> = {
     id: `${String(id)}`,
     accessorFn,
     parent: parent as any,
@@ -120,7 +131,7 @@ export function createColumn<TData extends RowData>(
       () => [true],
       () => {
         return [
-          column as Column<TData>,
+          column as Column<TData, TValue>,
           ...column.columns?.flatMap(d => d.getFlatColumns()),
         ]
       },
@@ -140,7 +151,7 @@ export function createColumn<TData extends RowData>(
           return orderColumns(leafColumns)
         }
 
-        return [column as Column<TData>]
+        return [column as Column<TData, TValue>]
       },
       {
         key: process.env.NODE_ENV === 'production' && 'column.getLeafColumns',
@@ -154,5 +165,5 @@ export function createColumn<TData extends RowData>(
   }, column)
 
   // Yes, we have to convert table to uknown, because we know more than the compiler here.
-  return column as Column<TData>
+  return column as Column<TData, TValue>
 }

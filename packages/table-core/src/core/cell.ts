@@ -1,31 +1,31 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
 
-export type CoreCell<TData extends RowData> = {
+export type CoreCell<TData extends RowData, TValue> = {
   id: string
-  getValue: () => any
-  renderValue: () => unknown
+  getValue: <TTValue = TValue>() => TTValue
+  renderValue: <TTValue = TValue>() => TTValue | null
   row: Row<TData>
-  column: Column<TData>
+  column: Column<TData, TValue>
   getContext: () => {
     table: Table<TData>
-    column: Column<TData>
+    column: Column<TData, TValue>
     row: Row<TData>
-    cell: Cell<TData>
-    getValue: () => any
-    renderValue: () => any
+    cell: Cell<TData, TValue>
+    getValue: <TTValue = TValue>() => TTValue
+    renderValue: <TTValue = TValue>() => TTValue | null
   }
 }
 
-export function createCell<TData extends RowData>(
+export function createCell<TData extends RowData, TValue>(
   table: Table<TData>,
   row: Row<TData>,
-  column: Column<TData>,
+  column: Column<TData, TValue>,
   columnId: string
 ) {
   const getRenderValue = () =>
     cell.getValue() ?? table.options.renderFallbackValue
 
-  const cell: CoreCell<TData> = {
+  const cell: CoreCell<TData, TValue> = {
     id: `${row.id}_${column.id}`,
     row,
     column,
@@ -35,7 +35,7 @@ export function createCell<TData extends RowData>(
       table,
       column,
       row,
-      cell: cell as Cell<TData>,
+      cell: cell as Cell<TData, TValue>,
       getValue: cell.getValue,
       renderValue: cell.renderValue,
     }),
@@ -45,7 +45,7 @@ export function createCell<TData extends RowData>(
     Object.assign(
       cell,
       feature.createCell?.(
-        cell as Cell<TData>,
+        cell as Cell<TData, TValue>,
         column,
         row as Row<TData>,
         table
@@ -53,5 +53,5 @@ export function createCell<TData extends RowData>(
     )
   }, {})
 
-  return cell as Cell<TData>
+  return cell as Cell<TData, TValue>
 }

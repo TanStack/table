@@ -84,7 +84,7 @@ function App() {
       <Table
         {...{
           data,
-          columns
+          columns,
         }}
       />
       <hr />
@@ -100,7 +100,7 @@ function App() {
 
 function Table({
   data,
-  columns
+  columns,
 }: {
   data: Person[]
   columns: ColumnDef<Person>[]
@@ -231,7 +231,13 @@ function Table({
     </div>
   )
 }
-function Filter({ column, table }: { column: Column<any>; table: ReactTable<any> }) {
+function Filter({
+  column,
+  table,
+}: {
+  column: Column<any, any>
+  table: ReactTable<any>
+}) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)

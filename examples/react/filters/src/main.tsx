@@ -5,7 +5,6 @@ import './index.css'
 
 import {
   Column,
-  createTable,
   Table,
   useReactTable,
   ColumnFiltersState,
@@ -27,17 +26,24 @@ import {
   RankingInfo,
   rankItem,
   compareItems,
-  rankings,
 } from '@tanstack/match-sorter-utils'
 
 import { makeData, Person } from './makeData'
+
+declare module '@tanstack/table-core' {
+  interface FilterMeta {
+    itemRank: RankingInfo
+  }
+}
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
-  // Store the ranking info
-  addMeta(itemRank)
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  })
 
   // Return if the item should be filtered in/out
   return itemRank.passed
@@ -49,8 +55,8 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId]!,
-      rowB.columnFiltersMeta[columnId]!
+      rowA.columnFiltersMeta[columnId]?.itemRank!,
+      rowB.columnFiltersMeta[columnId]?.itemRank!
     )
   }
 
@@ -306,7 +312,13 @@ function App() {
   )
 }
 
-function Filter({ column, table }: { column: Column<any>; table: Table<any> }) {
+function Filter({
+  column,
+  table,
+}: {
+  column: Column<any, unknown>
+  table: Table<any>
+}) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)

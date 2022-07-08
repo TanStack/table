@@ -33,9 +33,11 @@ export type AggregationFnOption<TData extends RowData> =
   | BuiltInAggregationFn
   | AggregationFn<TData>
 
-export type GroupingColumnDef<TData extends RowData> = {
+export type GroupingColumnDef<TData extends RowData, TValue> = {
   aggregationFn?: AggregationFnOption<TData>
-  aggregatedCell?: ColumnDefTemplate<ReturnType<Cell<TData>['getContext']>>
+  aggregatedCell?: ColumnDefTemplate<
+    ReturnType<Cell<TData, TValue>['getContext']>
+  >
   enableGrouping?: boolean
 }
 
@@ -51,7 +53,7 @@ export type GroupingColumn<TData extends RowData> = {
 
 export type GroupingRow = {
   groupingColumnId?: string
-  groupingValue?: any
+  groupingValue?: unknown
   getIsGrouped: () => boolean
   _groupingValuesCache: Record<string, any>
 }
@@ -89,7 +91,10 @@ export type GroupingInstance<TData extends RowData> = {
 //
 
 export const Grouping: TableFeature = {
-  getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<TData> => {
+  getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
+    TData,
+    unknown
+  > => {
     return {
       aggregatedCell: props => (props.getValue() as any)?.toString?.() ?? null,
       aggregationFn: 'auto',
@@ -112,8 +117,8 @@ export const Grouping: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>
   ): GroupingColumn<TData> => {
     return {
@@ -215,9 +220,9 @@ export const Grouping: TableFeature = {
     }
   },
 
-  createCell: <TData extends RowData>(
-    cell: Cell<TData>,
-    column: Column<TData>,
+  createCell: <TData extends RowData, TValue>(
+    cell: Cell<TData, TValue>,
+    column: Column<TData, TValue>,
     row: Row<TData>,
     table: Table<TData>
   ): GroupingCell => {
@@ -237,7 +242,7 @@ export const Grouping: TableFeature = {
 }
 
 export function orderColumns<TData extends RowData>(
-  leafColumns: Column<TData>[],
+  leafColumns: Column<TData, unknown>[],
   grouping: string[],
   groupedColumnMode?: GroupingColumnMode
 ) {

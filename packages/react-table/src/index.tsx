@@ -2,15 +2,13 @@ import * as React from 'react'
 export * from '@tanstack/table-core'
 
 import {
-  createTable,
   TableOptions,
   TableOptionsResolved,
   RowData,
+  createTable,
 } from '@tanstack/table-core'
 
-export type Renderable<TProps> =
-  | React.ReactNode
-  | React.ComponentType<TProps>
+export type Renderable<TProps> = React.ReactNode | React.ComponentType<TProps>
 
 //
 
@@ -18,10 +16,16 @@ export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
   props: TProps
 ): React.ReactNode | JSX.Element {
-  return !Comp ? null : isReactComponent<TProps>(Comp) ? <Comp {...props} /> : Comp
+  return !Comp ? null : isReactComponent<TProps>(Comp) ? (
+    <Comp {...props} />
+  ) : (
+    Comp
+  )
 }
 
-function isReactComponent<TProps>(component: unknown): component is React.ComponentType<TProps> {
+function isReactComponent<TProps>(
+  component: unknown
+): component is React.ComponentType<TProps> {
   return (
     isClassComponent(component) ||
     typeof component === 'function' ||

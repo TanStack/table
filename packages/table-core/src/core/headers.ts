@@ -5,25 +5,25 @@ import { TableFeature } from './table'
 export type CoreHeaderGroup<TData extends RowData> = {
   id: string
   depth: number
-  headers: Header<TData>[]
+  headers: Header<TData, unknown>[]
 }
 
-export type CoreHeader<TData extends RowData> = {
+export type CoreHeader<TData extends RowData, TValue> = {
   id: string
   index: number
   depth: number
-  column: Column<TData>
+  column: Column<TData, TValue>
   headerGroup: HeaderGroup<TData>
-  subHeaders: Header<TData>[]
+  subHeaders: Header<TData, TValue>[]
   colSpan: number
   rowSpan: number
-  getLeafHeaders: () => Header<TData>[]
+  getLeafHeaders: () => Header<TData, unknown>[]
   isPlaceholder: boolean
   placeholderId?: string
   getContext: () => {
     table: Table<TData>
-    header: Header<TData>
-    column: Column<TData>
+    header: Header<TData, TValue>
+    column: Column<TData, TValue>
   }
 }
 
@@ -38,22 +38,22 @@ export type HeadersInstance<TData extends RowData> = {
   getCenterFooterGroups: () => HeaderGroup<TData>[]
   getRightFooterGroups: () => HeaderGroup<TData>[]
 
-  getFlatHeaders: () => Header<TData>[]
-  getLeftFlatHeaders: () => Header<TData>[]
-  getCenterFlatHeaders: () => Header<TData>[]
-  getRightFlatHeaders: () => Header<TData>[]
+  getFlatHeaders: () => Header<TData, unknown>[]
+  getLeftFlatHeaders: () => Header<TData, unknown>[]
+  getCenterFlatHeaders: () => Header<TData, unknown>[]
+  getRightFlatHeaders: () => Header<TData, unknown>[]
 
-  getLeafHeaders: () => Header<TData>[]
-  getLeftLeafHeaders: () => Header<TData>[]
-  getCenterLeafHeaders: () => Header<TData>[]
-  getRightLeafHeaders: () => Header<TData>[]
+  getLeafHeaders: () => Header<TData, unknown>[]
+  getLeftLeafHeaders: () => Header<TData, unknown>[]
+  getCenterLeafHeaders: () => Header<TData, unknown>[]
+  getRightLeafHeaders: () => Header<TData, unknown>[]
 }
 
 //
 
-function createHeader<TData extends RowData>(
+function createHeader<TData extends RowData, TValue>(
   table: Table<TData>,
-  column: Column<TData>,
+  column: Column<TData, TValue>,
   options: {
     id?: string
     isPlaceholder?: boolean
@@ -64,7 +64,7 @@ function createHeader<TData extends RowData>(
 ) {
   const id = options.id ?? column.id
 
-  let header: CoreHeader<TData> = {
+  let header: CoreHeader<TData, TValue> = {
     id,
     column,
     index: options.index,
@@ -75,23 +75,23 @@ function createHeader<TData extends RowData>(
     colSpan: 0,
     rowSpan: 0,
     headerGroup: null!,
-    getLeafHeaders: (): Header<TData>[] => {
-      const leafHeaders: CoreHeader<TData>[] = []
+    getLeafHeaders: (): Header<TData, unknown>[] => {
+      const leafHeaders: Header<TData, unknown>[] = []
 
-      const recurseHeader = (h: CoreHeader<TData>) => {
+      const recurseHeader = (h: CoreHeader<TData, unknown>) => {
         if (h.subHeaders && h.subHeaders.length) {
           h.subHeaders.map(recurseHeader)
         }
-        leafHeaders.push(h)
+        leafHeaders.push(h as Header<TData, unknown>)
       }
 
       recurseHeader(header)
 
-      return leafHeaders as Header<TData>[]
+      return leafHeaders
     },
     getContext: () => ({
       table,
-      header: header as Header<TData>,
+      header: header as Header<TData, TValue>,
       column,
     }),
   }
@@ -100,7 +100,7 @@ function createHeader<TData extends RowData>(
     Object.assign(header, feature.createHeader?.(header, table))
   })
 
-  return header as Header<TData>
+  return header as Header<TData, TValue>
 }
 
 export const Headers: TableFeature = {
@@ -387,8 +387,8 @@ export const Headers: TableFeature = {
 }
 
 export function buildHeaderGroups<TData extends RowData>(
-  allColumns: Column<TData>[],
-  columnsToGroup: Column<TData>[],
+  allColumns: Column<TData, unknown>[],
+  columnsToGroup: Column<TData, unknown>[],
   table: Table<TData>,
   headerFamily?: 'center' | 'left' | 'right'
 ) {
@@ -400,7 +400,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
   let maxDepth = 0
 
-  const findMaxDepth = (columns: Column<TData>[], depth = 1) => {
+  const findMaxDepth = (columns: Column<TData, unknown>[], depth = 1) => {
     maxDepth = Math.max(maxDepth, depth)
 
     columns
@@ -417,7 +417,7 @@ export function buildHeaderGroups<TData extends RowData>(
   let headerGroups: HeaderGroup<TData>[] = []
 
   const createHeaderGroup = (
-    headersToGroup: Header<TData>[],
+    headersToGroup: Header<TData, unknown>[],
     depth: number
   ) => {
     // The header group we are creating
@@ -428,7 +428,7 @@ export function buildHeaderGroups<TData extends RowData>(
     }
 
     // The parent columns we're going to scan next
-    const pendingParentHeaders: Header<TData>[] = []
+    const pendingParentHeaders: Header<TData, unknown>[] = []
 
     // Scan each column for parents
     headersToGroup.forEach(headerToGroup => {
@@ -438,7 +438,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
       const isLeafHeader = headerToGroup.column.depth === headerGroup.depth
 
-      let column: Column<TData>
+      let column: Column<TData, unknown>
       let isPlaceholder = false
 
       if (isLeafHeader && headerToGroup.column.parent) {
@@ -504,7 +504,7 @@ export function buildHeaderGroups<TData extends RowData>(
   // })
 
   const recurseHeadersForSpans = (
-    headers: Header<TData>[]
+    headers: Header<TData, unknown>[]
   ): { colSpan: number; rowSpan: number }[] => {
     const filteredHeaders = headers.filter(header =>
       header.column.getIsVisible()

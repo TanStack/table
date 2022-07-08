@@ -9,14 +9,9 @@ import {
   Row,
   Updater,
   RowData,
+  FilterMeta,
 } from '../types'
-import {
-  functionalUpdate,
-  isFunction,
-  makeStateUpdater,
-  memo,
-  Overwrite,
-} from '../utils'
+import { functionalUpdate, isFunction, makeStateUpdater } from '../utils'
 
 export type FiltersTableState = {
   columnFilters: ColumnFiltersState
@@ -41,7 +36,7 @@ export type FilterFn<TData extends RowData> = {
     row: Row<TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: any) => void
+    addMeta: (meta: FilterMeta) => void
   ): boolean
 
   resolveFilterValue?: TransformFilterValueFn<TData>
@@ -50,12 +45,12 @@ export type FilterFn<TData extends RowData> = {
 
 export type TransformFilterValueFn<TData extends RowData> = (
   value: any,
-  column?: Column<TData>
+  column?: Column<TData, unknown>
 ) => unknown
 
 export type ColumnFilterAutoRemoveTestFn<TData extends RowData> = (
   value: any,
-  column?: Column<TData>
+  column?: Column<TData, unknown>
 ) => boolean
 
 export type CustomFilterFns<TData extends RowData> = Record<
@@ -93,7 +88,7 @@ export type FiltersColumn<TData extends RowData> = {
 
 export type FiltersRow<TData extends RowData> = {
   columnFilters: Record<string, boolean>
-  columnFiltersMeta: Record<string, any>
+  columnFiltersMeta: Record<string, FilterMeta>
 }
 
 export type FiltersOptions<TData extends RowData> = {
@@ -110,7 +105,7 @@ export type FiltersOptions<TData extends RowData> = {
   globalFilterFn?: FilterFnOption<TData>
   onGlobalFilterChange?: OnChangeFn<any>
   enableGlobalFilter?: boolean
-  getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
+  getColumnCanGlobalFilter?: (column: Column<TData, unknown>) => boolean
 
   // Faceting
   getFacetedRowModel?: (
@@ -189,7 +184,7 @@ export const Filters: TableFeature = {
   },
 
   createColumn: <TData extends RowData>(
-    column: Column<TData>,
+    column: Column<TData, unknown>,
     table: Table<TData>
   ): FiltersColumn<TData> => {
     return {
@@ -451,7 +446,7 @@ export const Filters: TableFeature = {
 export function shouldAutoRemoveFilter<TData extends RowData>(
   filterFn?: FilterFn<TData>,
   value?: any,
-  column?: Column<TData>
+  column?: Column<TData, unknown>
 ) {
   return (
     (filterFn && filterFn.autoRemove

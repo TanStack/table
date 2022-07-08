@@ -7,14 +7,14 @@ export type CoreRow<TData extends RowData> = {
   index: number
   original?: TData
   depth: number
-  _valuesCache: Record<string, any>
-  getValue: (columnId: string) => any
-  renderValue: (columnId: string) => unknown
+  _valuesCache: Record<string, unknown>
+  getValue: <TValue>(columnId: string) => TValue
+  renderValue: <TValue>(columnId: string) => TValue
   subRows: Row<TData>[]
   getLeafRows: () => Row<TData>[]
   originalSubRows?: TData[]
-  getAllCells: () => Cell<TData>[]
-  _getAllCellsByColumnId: () => Record<string, Cell<TData>>
+  getAllCells: () => Cell<TData, unknown>[]
+  _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
 }
 
 export const createRow = <TData extends RowData>(
@@ -47,7 +47,7 @@ export const createRow = <TData extends RowData>(
         rowIndex
       )
 
-      return row._valuesCache[columnId]
+      return row._valuesCache[columnId] as any
     },
     renderValue: columnId =>
       row.getValue(columnId) ?? table.options.renderFallbackValue,
@@ -72,7 +72,7 @@ export const createRow = <TData extends RowData>(
         return allCells.reduce((acc, cell) => {
           acc[cell.column.id] = cell
           return acc
-        }, {} as Record<string, Cell<TData>>)
+        }, {} as Record<string, Cell<TData, unknown>>)
       },
       {
         key:

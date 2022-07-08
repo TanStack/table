@@ -76,12 +76,18 @@ Set this option to override any of the `autoReset...` feature options.
 ### `meta`
 
 ```tsx
-meta?: unknown
+meta?: TableMeta // This interface is extensible via declaration merging. See below!
 ```
 
-You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`
+You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta` This type is global to all tables and can be extended like so:
 
-> ⚠️ Because of generic limitations, this type must be cast to the correct type before use.
+```tsx
+declare module '@tanstack/table-core' {
+  interface TableMeta {
+    foo: string
+  }
+}
+```
 
 > 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to updated editable data like in the [editable-data example](../examples/react/editable-data).
 
