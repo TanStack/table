@@ -5,6 +5,7 @@ concurrency:
 on: [push]
 jobs:
   test-and-publish:
+    if: github.event_name != 'pull_request'
     name: 'Test & Publish'
     runs-on: ubuntu-latest
     steps:
