@@ -251,6 +251,10 @@
         {
           "to": "examples/react/sorting",
           "label": "Sorting"
+        },
+        {
+          "to": "examples/react/virtualized-rows",
+          "label": "Virtualized Rows"
         }
       ]
     },
