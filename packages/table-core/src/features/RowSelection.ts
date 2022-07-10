@@ -108,6 +108,9 @@ export const RowSelection: TableFeature = {
           // All of the rows are flat already, so it wouldn't be worth it
           if (value) {
             preGroupedFlatRows.forEach(row => {
+              if (!row.getCanSelect()) {
+                return
+              }
               rowSelection[row.id] = true
             })
           } else {
@@ -430,7 +433,9 @@ const mutateRowIsSelected = <TData extends RowData>(
     if (!row.getCanMultiSelect()) {
       Object.keys(selectedRowIds).forEach(key => delete selectedRowIds[key])
     }
-    selectedRowIds[id] = true
+    if (row.getCanSelect()) {
+      selectedRowIds[id] = true
+    }
   } else {
     delete selectedRowIds[id]
   }
