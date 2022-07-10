@@ -1,101 +1,79 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createTable,
-  useTableInstance,
   getCoreRowModel,
   ColumnDef,
+  flexRender,
+  useReactTable,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-let table = createTable().setRowType<Person>()
-
-function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const columns = React.useMemo(
-    () => [
-      table.createGroup({
-        header: 'Name',
+const columns: ColumnDef<Person>[] = [
+  {
+    header: 'Name',
+    footer: props => props.column.id,
+    columns: [
+      {
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
         footer: props => props.column.id,
-        columns: [
-          table.createDataColumn('firstName', {
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-          }),
-          table.createDataColumn(row => row.lastName, {
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-      table.createGroup({
-        header: 'Info',
+      },
+      {
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
         footer: props => props.column.id,
+      },
+    ],
+  },
+  {
+    header: 'Info',
+    footer: props => props.column.id,
+    columns: [
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        footer: props => props.column.id,
+      },
+      {
+        header: 'More Info',
         columns: [
-          table.createDataColumn('age', {
-            header: () => 'Age',
-            footer: props => props.column.id,
-          }),
-          table.createDataColumn('visits', {
+          {
+            accessorKey: 'visits',
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('status', {
+          },
+          {
+            accessorKey: 'status',
             header: 'Status',
             footer: props => props.column.id,
-          }),
-          table.createDataColumn('progress', {
+          },
+          {
+            accessorKey: 'progress',
             header: 'Profile Progress',
             footer: props => props.column.id,
-          }),
+          },
         ],
-      }),
+      },
     ],
-    []
-  )
+  },
+]
 
+function App() {
   const [data, setData] = React.useState(() => makeData(20))
-  const refreshData = () => setData(() => makeData(20))
 
-  return (
-    <>
-      <Table
-        {...{
-          data,
-          columns,
-        }}
-      />
-      <hr />
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-    </>
-  )
-}
-
-function Table({
-  data,
-  columns,
-}: {
-  data: Person[]
-  columns: ColumnDef<typeof table.generics>[]
-}) {
-  const instance = useTableInstance(table, {
+  const table = useReactTable({
     data,
     columns,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
-
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   })
 
   return (
@@ -103,7 +81,7 @@ function Table({
       <div className="h-2" />
       <table className="w-full ">
         <thead>
-          {instance.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
@@ -112,9 +90,12 @@ function Table({
                     colSpan={header.colSpan}
                     style={{ position: 'relative', width: header.getSize() }}
                   >
-                    {header.isPlaceholder ? null : (
-                      <div>{header.renderHeader()}</div>
-                    )}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     {header.column.getCanResize() && (
                       <div
                         onMouseDown={header.getResizeHandler()}
@@ -131,13 +112,16 @@ function Table({
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map(row => {
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
                   return (
                     <td key={cell.id} style={{ width: cell.column.getSize() }}>
-                      {cell.renderCell()}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </td>
                   )
                 })}
@@ -150,9 +134,11 @@ function Table({
   )
 }
 
-ReactDOM.render(
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 )
