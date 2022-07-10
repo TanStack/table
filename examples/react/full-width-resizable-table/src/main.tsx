@@ -63,7 +63,7 @@ const columns: ColumnDef<Person>[] = [
 ]
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(20))
+  const data = React.useMemo(() => makeData(20), [])
 
   const table = useReactTable({
     data,
@@ -130,6 +130,7 @@ function App() {
           })}
         </tbody>
       </table>
+      <div className="h-4" />
     </div>
   )
 }
