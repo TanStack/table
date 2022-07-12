@@ -4,4 +4,4 @@ title: Cells
 
 ## API
 
-[Cell API](../api/core/cell.md)
+[Cell API](../api/core/cell)

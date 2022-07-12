@@ -4,7 +4,7 @@ title: Columns
 
 ## API
 
-[Table API](../api/core/table.md)
+[Table API](../api/core/table)
 
 ## Guide
 
