@@ -423,7 +423,7 @@ const mutateRowIsSelected = <TData extends RowData>(
 ) => {
   const row = table.getRow(id)
 
-  const isGrouped = row.getIsGrouped()
+  // const isGrouped = row.getIsGrouped()
 
   // if ( // TODO: enforce grouping row selection rules
   //   !isGrouped ||

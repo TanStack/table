@@ -29,11 +29,23 @@ export function getGroupedRowModel<TData extends RowData>(): (
         const groupUpRecursively = (
           rows: Row<TData>[],
           depth = 0,
-          parentId: string
+          parentId?: string
         ) => {
-          // This is the last level, just return the rows
-          if (depth === existingGrouping.length) {
-            return rows
+          // Grouping depth has been been met
+          // Stop grouping and simply rewrite thd depth and row relationships
+          if (depth >= existingGrouping.length) {
+            return rows.map(row => {
+              row.depth = depth
+
+              groupedFlatRows.push(row)
+              groupedRowsById[row.id] = row
+
+              if (row.subRows) {
+                row.subRows = groupUpRecursively(row.subRows, depth + 1)
+              }
+
+              return row
+            })
           }
 
           const columnId = existingGrouping[depth]!
