@@ -218,9 +218,11 @@ export const Expanding: TableFeature = {
       },
       getCanExpand: () => {
         return (
-          (table.options.getRowCanExpand?.(row) ?? true) &&
-          (table.options.enableExpanding ?? true) &&
-          !!row.subRows?.length
+          table.options.getRowCanExpand?.(row) ??
+          (
+            (table.options.enableExpanding ?? true) &&
+            !!row.subRows?.length
+          )
         )
       },
       getToggleExpandedHandler: () => {
