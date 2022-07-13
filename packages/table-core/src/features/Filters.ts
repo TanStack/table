@@ -178,7 +178,7 @@ export const Filters: TableFeature = {
           .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
 
-        return typeof value === 'string'
+        return typeof value === 'string' || typeof value === 'number'
       },
     }
   },
