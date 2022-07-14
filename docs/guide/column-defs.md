@@ -224,7 +224,7 @@ Cell formatters are also provided the `row` and `table` objects, allowing you to
 
 ## Aggregated Cell Formatting
 
-For more info on aggregated cells, see [grouping](./grouping).
+For more info on aggregated cells, see [grouping](./guide/grouping).
 
 ## Header & Footer Formatting
 
