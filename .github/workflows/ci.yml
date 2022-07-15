@@ -18,7 +18,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
       - run: |
-          npm i
+          npm i --legacy-peer-deps
           git config --global user.name 'Tanner Linsley'
           git config --global user.email 'tannerlinsley@users.noreply.github.com'
           npm run cipublish
