@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Columm Pinning API](../api/features/column-pinning)
+[Column Pinning API](../api/features/column-pinning)
 
 ## Overview
 
