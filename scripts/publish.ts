@@ -26,15 +26,12 @@ import { PackageJson } from 'type-fest'
 const releaseCommitMsg = (version: string) => `release: v${version}`
 
 async function run() {
-  let branchName: string =
+  const branchName: string =
     process.env.BRANCH ??
     // (process.env.PR_NUMBER ? `pr-${process.env.PR_NUMBER}` : currentGitBranch())
     currentGitBranch()
 
-  const branchConfig: BranchConfig = branchConfigs[branchName] || {
-    prerelease: true,
-    ghRelease: false,
-  }
+  const branchConfig: BranchConfig = branchConfigs[branchName]
 
   if (!branchConfig) {
     console.log(`No publish config found for branch: ${branchName}`)
@@ -91,7 +88,7 @@ async function run() {
 
       // Is it a major version?
       if (!semver.patch(process.env.TAG) && !semver.minor(process.env.TAG)) {
-        range = process.env.TAG
+        range = `beta..HEAD`
         latestTag = process.env.TAG
       }
     } else {
@@ -101,8 +98,10 @@ async function run() {
     }
   }
 
+  console.info(`Git Range: ${range}`)
+
   // Get the commits since the latest tag
-  let commitsSinceLatestTag = (
+  const commitsSinceLatestTag = (
     await new Promise<Commit[]>((resolve, reject) => {
       const strm = log.parse({
         _: range,
@@ -136,10 +135,10 @@ async function run() {
   // Pares the commit messsages, log them, and determine the type of release needed
   let recommendedReleaseLevel: number = commitsSinceLatestTag.reduce(
     (releaseLevel, commit) => {
-      if (['fix', 'refactor', 'perf'].includes(commit.parsed.type)) {
+      if (['fix', 'refactor', 'perf'].includes(commit.parsed.type!)) {
         releaseLevel = Math.max(releaseLevel, 0)
       }
-      if (['feat'].includes(commit.parsed.type)) {
+      if (['feat'].includes(commit.parsed.type!)) {
         releaseLevel = Math.max(releaseLevel, 1)
       }
       if (commit.body.includes('BREAKING CHANGE')) {
@@ -164,7 +163,7 @@ async function run() {
         .split('\n')
         .filter(Boolean)
 
-  let changedPackages = RELEASE_ALL
+  const changedPackages = RELEASE_ALL
     ? packages
     : changedFiles.reduce((changedPackages, file) => {
         const pkg = packages.find(p =>
@@ -353,6 +352,8 @@ async function run() {
   // console.info('')
 
   console.info('Validating packages...')
+  const failedValidations: string[] = []
+
   await Promise.all(
     packages.map(async pkg => {
       const pkgJson = await readPackageJson(
@@ -370,15 +371,29 @@ async function run() {
               )
             }
 
-            await fsp.access(
-              path.resolve(rootDir, 'packages', pkg.packageDir, entry)
+            const filePath = path.resolve(
+              rootDir,
+              'packages',
+              pkg.packageDir,
+              entry
             )
+
+            try {
+              await fsp.access(filePath)
+            } catch (err) {
+              failedValidations.push(`Missing build file: ${filePath}`)
+            }
           }
         )
       )
     })
   )
   console.info('')
+  if (failedValidations.length > 0) {
+    throw new Error(
+      'Some packages failed validation:\n\n' + failedValidations.join('\n')
+    )
+  }
 
   console.info('Testing packages...')
   execSync(`npm run test:ci`, { encoding: 'utf8' })
@@ -422,7 +437,7 @@ async function run() {
 
             if (
               config.dependencies?.[dep] &&
-              config.dependencies?.[dep] !== depVersion
+              config.dependencies[dep] !== depVersion
             ) {
               console.info(
                 `  Updating ${pkg.name}'s dependency on ${dep} to version ${depVersion}.`
@@ -451,7 +466,7 @@ async function run() {
 
             if (
               config.peerDependencies?.[peerDep] &&
-              config.peerDependencies?.[peerDep] !== depVersion
+              config.peerDependencies[peerDep] !== depVersion
             ) {
               console.info(
                 `  Updating ${pkg.name}'s peerDependency on ${peerDep} to version ${depVersion}.`
@@ -468,10 +483,10 @@ async function run() {
   await Promise.all(
     examplesDirs.map(async examplesDir => {
       examplesDir = path.resolve(rootDir, examplesDir)
-      let exampleDirs = await fsp.readdir(examplesDir)
-      for (let exampleName of exampleDirs) {
+      const exampleDirs = await fsp.readdir(examplesDir)
+      for (const exampleName of exampleDirs) {
         const exampleDir = path.resolve(examplesDir, exampleName)
-        let stat = await fsp.stat(exampleDir)
+        const stat = await fsp.stat(exampleDir)
         if (!stat.isDirectory()) continue
 
         await updatePackageJson(
@@ -490,7 +505,7 @@ async function run() {
 
                 if (
                   config.dependencies?.[pkg.name] &&
-                  config.dependencies?.[pkg.name] !== depVersion
+                  config.dependencies[pkg.name] !== depVersion
                 ) {
                   console.info(
                     `  Updating ${exampleName}'s dependency on ${pkg.name} to version ${depVersion}.`
@@ -516,7 +531,7 @@ async function run() {
   console.info(`Creating new git tag v${version}`)
   execSync(`git tag -a -m "v${version}" v${version}`)
 
-  let taggedVersion = getTaggedVersion()
+  const taggedVersion = getTaggedVersion()
   if (!taggedVersion) {
     throw new Error(
       'Missing the tagged release version. Something weird is afoot!'
@@ -528,7 +543,7 @@ async function run() {
 
   // Publish each package
   changedPackages.map(pkg => {
-    let packageDir = path.join(rootDir, 'packages', pkg.packageDir)
+    const packageDir = path.join(rootDir, 'packages', pkg.packageDir)
     const cmd = `cd ${packageDir} && npm publish --tag ${npmTag} --access=public --non-interactive`
     console.info(
       `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
@@ -612,7 +627,7 @@ async function getPackageVersion(pathName: string) {
   const json = await readPackageJson(pathName)
 
   if (!json.version) {
-    throw new Error(`No version found for package: ${name}`)
+    throw new Error(`No version found for package: ${pathName}`)
   }
 
   return json.version
@@ -632,6 +647,6 @@ function getPackageNameDirectory(pathName: string) {
 }
 
 function getTaggedVersion() {
-  let output = execSync('git tag --list --points-at HEAD').toString()
+  const output = execSync('git tag --list --points-at HEAD').toString()
   return output.replace(/^v|\n+$/g, '')
 }

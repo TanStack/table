@@ -15,7 +15,55 @@ export type UnionToIntersection<T> = (
   ? R
   : never
 
-export type IfDefined<T, N> = 0 extends 1 & T ? N : T extends {} ? T : N
+export type IsAny<T, Y, N> = 1 extends 0 & T ? Y : N
+export type IsKnown<T, Y, N> = unknown extends T ? N : Y
+
+type ComputeRange<
+  N extends number,
+  Result extends Array<unknown> = []
+> = Result['length'] extends N
+  ? Result
+  : ComputeRange<N, [...Result, Result['length']]>
+type Index100 = ComputeRange<100>[number]
+
+// Is this type a tuple?
+type IsTuple<T> = T extends readonly any[] & { length: infer Length }
+  ? Length extends Index100
+    ? T
+    : never
+  : never
+
+// If this type is a tuple, what indices are allowed?
+type AllowedIndexes<
+  Tuple extends ReadonlyArray<any>,
+  Keys extends number = never
+> = Tuple extends readonly []
+  ? Keys
+  : Tuple extends readonly [infer _, ...infer Tail]
+  ? AllowedIndexes<Tail, Keys | Tail['length']>
+  : Keys
+
+export type DeepKeys<T> = object extends T
+  ? string
+  : T extends readonly any[] & IsTuple<T>
+  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>>
+  : T extends any[]
+  ? never & 'Dynamic length array indexing is not supported'
+  : T extends object
+  ? (keyof T & string) | DeepKeysPrefix<T, keyof T>
+  : never
+
+type DeepKeysPrefix<T, TPrefix> = TPrefix extends keyof T & (number | string)
+  ? `${TPrefix}.${DeepKeys<T[TPrefix]>}`
+  : never
+
+export type DeepValue<T, TProp> = T extends Record<string | number, any>
+  ? TProp extends `${infer TBranch}.${infer TDeepProp}`
+    ? DeepValue<T[TBranch], TDeepProp>
+    : T[TProp & string]
+  : never
+
+///
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
