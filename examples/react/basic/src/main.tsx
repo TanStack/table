@@ -19,7 +19,7 @@ type Person = {
   progress: number
 }
 
-const defaultData = [
+const defaultData: Person[] = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -44,7 +44,7 @@ const defaultData = [
     status: 'Complicated',
     progress: 10,
   },
-] as Person[]
+]
 
 const columnHelper = createColumnHelper<Person>()
 
