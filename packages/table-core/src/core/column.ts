@@ -11,9 +11,7 @@ import { DeepKeys, IsKnown, memo, UnionToIntersection } from '../utils'
 import { CellContext } from './cell'
 import { HeaderContext } from './headers'
 
-export type CoreColumnDefType = 'data' | 'display' | 'group'
-
-type CoreColumnDefBase<TData extends RowData, TValue> = {
+export type CoreColumnDefBase<TData extends RowData, TValue> = {
   columns?: ColumnDef<TData, unknown>[]
   header?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
@@ -21,14 +19,14 @@ type CoreColumnDefBase<TData extends RowData, TValue> = {
   meta?: ColumnMeta
 }
 
-type CoreColumnDefDisplay<TData extends RowData, TValue> = CoreColumnDefBase<
-  TData,
+export type CoreColumnDefDisplay<
+  TData extends RowData,
   TValue
-> & {
+> = CoreColumnDefBase<TData, TValue> & {
   id: string
 }
 
-type CoreColumnDefDisplayWithStringHeader<
+export type CoreColumnDefDisplayWithStringHeader<
   TData extends RowData,
   TValue
 > = CoreColumnDefBase<TData, TValue> & {
@@ -36,22 +34,20 @@ type CoreColumnDefDisplayWithStringHeader<
   id?: string
 }
 
-type CoreColumnDefAccessorFn<TData extends RowData, TValue> = CoreColumnDefBase<
-  TData,
+export type CoreColumnDefAccessorFn<
+  TData extends RowData,
   TValue
-> & {
+> = CoreColumnDefBase<TData, TValue> & {
   accessorFn: AccessorFn<TData, TValue>
   id: string
-  // accessorKey?: never
 }
 
-type CoreColumnDefAccessorKey<
+export type CoreColumnDefAccessorKey<
   TData extends RowData,
   TValue
 > = CoreColumnDefBase<TData, TValue> & {
   accessorKey: IsKnown<TData, DeepKeys<TData>, string>
   id?: string
-  // accessorFn?: never
 }
 
 export type CoreColumnDef<TData extends RowData, TValue> =
