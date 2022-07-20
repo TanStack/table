@@ -8,6 +8,12 @@ export type CoreHeaderGroup<TData extends RowData> = {
   headers: Header<TData, unknown>[]
 }
 
+export type HeaderContext<TData, TValue> = {
+  table: Table<TData>
+  header: Header<TData, TValue>
+  column: Column<TData, TValue>
+}
+
 export type CoreHeader<TData extends RowData, TValue> = {
   id: string
   index: number
@@ -20,11 +26,7 @@ export type CoreHeader<TData extends RowData, TValue> = {
   getLeafHeaders: () => Header<TData, unknown>[]
   isPlaceholder: boolean
   placeholderId?: string
-  getContext: () => {
-    table: Table<TData>
-    header: Header<TData, TValue>
-    column: Column<TData, TValue>
-  }
+  getContext: () => HeaderContext<TData, TValue>
 }
 
 export type HeadersInstance<TData extends RowData> = {
@@ -78,7 +80,7 @@ function createHeader<TData extends RowData, TValue>(
     getLeafHeaders: (): Header<TData, unknown>[] => {
       const leafHeaders: Header<TData, unknown>[] = []
 
-      const recurseHeader = (h: CoreHeader<TData, unknown>) => {
+      const recurseHeader = (h: CoreHeader<TData, any>) => {
         if (h.subHeaders && h.subHeaders.length) {
           h.subHeaders.map(recurseHeader)
         }

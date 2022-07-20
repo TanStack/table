@@ -1,19 +1,26 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
+import { IsAny, IsKnown } from '../utils'
+
+type NoInfer<T> = [T][T extends any ? 0 : never]
+
+type Getter<TValue> = <TTValue = TValue>() => NoInfer<TTValue>
+
+export type CellContext<TData extends RowData, TValue> = {
+  table: Table<TData>
+  column: Column<TData, TValue>
+  row: Row<TData>
+  cell: Cell<TData, TValue>
+  getValue: Getter<TValue>
+  renderValue: Getter<TValue | null>
+}
 
 export type CoreCell<TData extends RowData, TValue> = {
   id: string
-  getValue: <TTValue = TValue>() => TTValue
-  renderValue: <TTValue = TValue>() => TTValue | null
+  getValue: CellContext<TData, TValue>['getValue']
+  renderValue: CellContext<TData, TValue>['renderValue']
   row: Row<TData>
   column: Column<TData, TValue>
-  getContext: () => {
-    table: Table<TData>
-    column: Column<TData, TValue>
-    row: Row<TData>
-    cell: Cell<TData, TValue>
-    getValue: <TTValue = TValue>() => TTValue
-    renderValue: <TTValue = TValue>() => TTValue | null
-  }
+  getContext: () => CellContext<TData, TValue>
 }
 
 export function createCell<TData extends RowData, TValue>(

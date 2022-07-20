@@ -80,8 +80,8 @@ export type CoreOptions<TData extends RowData> = {
   getCoreRowModel: (table: Table<any>) => () => RowModel<any>
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
-  columns: ColumnDef<TData>[]
-  defaultColumn?: Partial<ColumnDef<TData>>
+  columns: ColumnDef<TData, any>[]
+  defaultColumn?: Partial<ColumnDef<TData, unknown>>
   renderFallbackValue: any
 }
 
@@ -99,8 +99,8 @@ export type CoreInstance<TData extends RowData> = {
   _getCoreRowModel?: () => RowModel<TData>
   getRowModel: () => RowModel<TData>
   getRow: (id: string) => Row<TData>
-  _getDefaultColumnDef: () => Partial<ColumnDef<TData>>
-  _getColumnDefs: () => ColumnDef<TData>[]
+  _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
+  _getColumnDefs: () => ColumnDef<TData, unknown>[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
   getAllColumns: () => Column<TData, unknown>[]
   getAllFlatColumns: () => Column<TData, unknown>[]
@@ -227,7 +227,9 @@ export function createTable<TData extends RowData>(
     _getDefaultColumnDef: memo(
       () => [table.options.defaultColumn],
       defaultColumn => {
-        defaultColumn = (defaultColumn ?? {}) as Partial<ColumnDef<TData>>
+        defaultColumn = (defaultColumn ?? {}) as Partial<
+          ColumnDef<TData, unknown>
+        >
 
         return {
           header: props => props.header.column.id,
@@ -237,7 +239,7 @@ export function createTable<TData extends RowData>(
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
           ...defaultColumn,
-        } as Partial<ColumnDef<TData>>
+        } as Partial<ColumnDef<TData, unknown>>
       },
       {
         debug: () => table.options.debugAll ?? table.options.debugColumns,
@@ -251,7 +253,7 @@ export function createTable<TData extends RowData>(
       () => [table._getColumnDefs()],
       columnDefs => {
         const recurseColumns = (
-          columnDefs: ColumnDef<TData>[],
+          columnDefs: ColumnDef<TData, unknown>[],
           parent?: Column<TData, unknown>,
           depth = 0
         ): Column<TData, unknown>[] => {

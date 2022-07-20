@@ -7,32 +7,26 @@ import {
   RowData,
   ColumnMeta,
 } from '../types'
-import { memo, UnionToIntersection } from '../utils'
-import { CoreCell } from './cell'
-import { CoreHeader } from './headers'
+import { DeepKeys, IsKnown, memo, UnionToIntersection } from '../utils'
+import { CellContext } from './cell'
+import { HeaderContext } from './headers'
 
-export type CoreColumnDefType = 'data' | 'display' | 'group'
-
-type CoreColumnDefBase<TData extends RowData, TValue> = {
-  columns?: ColumnDef<TData>[]
-  header?: ColumnDefTemplate<
-    ReturnType<CoreHeader<TData, TValue>['getContext']>
-  >
-  footer?: ColumnDefTemplate<
-    ReturnType<CoreHeader<TData, TValue>['getContext']>
-  >
-  cell?: ColumnDefTemplate<ReturnType<CoreCell<TData, TValue>['getContext']>>
+export type CoreColumnDefBase<TData extends RowData, TValue> = {
+  columns?: ColumnDef<TData, unknown>[]
+  header?: ColumnDefTemplate<HeaderContext<TData, TValue>>
+  footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
+  cell?: ColumnDefTemplate<CellContext<TData, TValue>>
   meta?: ColumnMeta
 }
 
-type CoreColumnDefDisplay<TData extends RowData, TValue> = CoreColumnDefBase<
-  TData,
+export type CoreColumnDefDisplay<
+  TData extends RowData,
   TValue
-> & {
+> = CoreColumnDefBase<TData, TValue> & {
   id: string
 }
 
-type CoreColumnDefDisplayWithStringHeader<
+export type CoreColumnDefDisplayWithStringHeader<
   TData extends RowData,
   TValue
 > = CoreColumnDefBase<TData, TValue> & {
@@ -40,40 +34,40 @@ type CoreColumnDefDisplayWithStringHeader<
   id?: string
 }
 
-type CoreColumnDefAccessorFn<
-  TData extends RowData,
-  TValue = unknown
-> = CoreColumnDefBase<TData, TValue> & {
-  accessorFn: AccessorFn<TData, TValue>
-  id: string
-  // accessorKey?: never
-}
-
-type CoreColumnDefAccessorKey<
+export type CoreColumnDefAccessorFn<
   TData extends RowData,
   TValue
 > = CoreColumnDefBase<TData, TValue> & {
-  accessorKey: keyof TData
+  accessorFn: AccessorFn<TData, TValue>
+  id: string
+}
+
+export type CoreColumnDefAccessorKey<
+  TData extends RowData,
+  TValue
+> = CoreColumnDefBase<TData, TValue> & {
+  accessorKey: IsKnown<TData, DeepKeys<TData>, string>
   id?: string
-  // accessorFn?: never
 }
 
 export type CoreColumnDef<TData extends RowData, TValue> =
   | CoreColumnDefDisplay<TData, TValue>
   | CoreColumnDefDisplayWithStringHeader<TData, TValue>
-  | CoreColumnDefAccessorFn<TData>
+  | CoreColumnDefAccessorFn<TData, TValue>
   | CoreColumnDefAccessorKey<TData, TValue>
 
 export type CoreColumnDefResolved<
   TData extends RowData,
   TValue = unknown
-> = Partial<UnionToIntersection<CoreColumnDef<TData, TValue>>>
+> = Partial<UnionToIntersection<CoreColumnDef<TData, TValue>>> & {
+  accessorKey?: string
+}
 
 export type CoreColumn<TData extends RowData, TValue> = {
   id: string
   depth: number
   accessorFn?: AccessorFn<TData, TValue>
-  columnDef: ColumnDef<TData>
+  columnDef: ColumnDef<TData, TValue>
   columns: Column<TData, TValue>[]
   parent?: Column<TData, TValue>
   getFlatColumns: () => Column<TData, TValue>[]
@@ -82,7 +76,7 @@ export type CoreColumn<TData extends RowData, TValue> = {
 
 export function createColumn<TData extends RowData, TValue>(
   table: Table<TData>,
-  columnDef: ColumnDef<TData>,
+  columnDef: ColumnDef<TData, TValue>,
   depth: number,
   parent?: Column<TData, TValue>
 ) {
@@ -93,9 +87,11 @@ export function createColumn<TData extends RowData, TValue>(
     ...columnDef,
   } as CoreColumnDefResolved<TData>
 
+  const accessorKey = resolvedColumnDef.accessorKey
+
   let id =
     resolvedColumnDef.id ??
-    resolvedColumnDef.accessorKey ??
+    (accessorKey ? accessorKey.replace('.', '_') : undefined) ??
     (typeof resolvedColumnDef.header === 'string'
       ? resolvedColumnDef.header
       : undefined)
@@ -104,9 +100,22 @@ export function createColumn<TData extends RowData, TValue>(
 
   if (resolvedColumnDef.accessorFn) {
     accessorFn = resolvedColumnDef.accessorFn
-  } else if (resolvedColumnDef.accessorKey) {
-    accessorFn = (originalRow: TData) =>
-      (originalRow as any)[resolvedColumnDef.accessorKey]
+  } else if (accessorKey) {
+    // Support deep accessor keys
+    if (accessorKey.includes('.')) {
+      accessorFn = (originalRow: TData) => {
+        let result = originalRow as Record<string, any>
+
+        for (const key of accessorKey.split('.')) {
+          result = result[key]
+        }
+
+        return result
+      }
+    } else {
+      accessorFn = (originalRow: TData) =>
+        (originalRow as any)[resolvedColumnDef.accessorKey]
+    }
   }
 
   if (!id) {
@@ -125,7 +134,7 @@ export function createColumn<TData extends RowData, TValue>(
     accessorFn,
     parent: parent as any,
     depth,
-    columnDef: resolvedColumnDef as ColumnDef<TData>,
+    columnDef: resolvedColumnDef as ColumnDef<TData, any>,
     columns: [],
     getFlatColumns: memo(
       () => [true],

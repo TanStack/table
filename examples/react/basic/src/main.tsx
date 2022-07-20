@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
+  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -46,39 +46,36 @@ const defaultData: Person[] = [
   },
 ]
 
-const columns: ColumnDef<Person>[] = [
-  {
-    accessorKey: 'firstName',
+const columnHelper = createColumnHelper<Person>()
+
+const columns = [
+  columnHelper.accessor('firstName', {
     cell: info => info.getValue(),
     footer: info => info.column.id,
-  },
-  {
-    accessorFn: row => row.lastName,
+  }),
+  columnHelper.accessor(row => row.lastName, {
     id: 'lastName',
     cell: info => <i>{info.getValue()}</i>,
     header: () => <span>Last Name</span>,
     footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'age',
+  }),
+  columnHelper.accessor('age', {
     header: () => 'Age',
+    cell: info => info.renderValue(),
     footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: () => <span>Visits</span>,
     footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
     footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
     footer: info => info.column.id,
-  },
+  }),
 ]
 
 function App() {
