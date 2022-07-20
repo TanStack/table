@@ -43,7 +43,9 @@ type AllowedIndexes<
   ? AllowedIndexes<Tail, Keys | Tail['length']>
   : Keys
 
-export type DeepKeys<T> = object extends T
+export type DeepKeys<T> = unknown extends T
+  ? keyof T
+  : object extends T
   ? string
   : T extends readonly any[] & IsTuple<T>
   ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>>
@@ -54,7 +56,7 @@ export type DeepKeys<T> = object extends T
   : never
 
 type DeepKeysPrefix<T, TPrefix> = TPrefix extends keyof T & (number | string)
-  ? `${TPrefix}.${DeepKeys<T[TPrefix]>}`
+  ? `${TPrefix}.${DeepKeys<T[TPrefix]> & string}`
   : never
 
 export type DeepValue<T, TProp> = T extends Record<string | number, any>

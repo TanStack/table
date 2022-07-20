@@ -46,7 +46,7 @@ export type CoreColumnDefAccessorKey<
   TData extends RowData,
   TValue
 > = CoreColumnDefBase<TData, TValue> & {
-  accessorKey: IsKnown<TData, DeepKeys<TData>, string>
+  accessorKey: DeepKeys<TData>
   id?: string
 }
 

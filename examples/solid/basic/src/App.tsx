@@ -51,7 +51,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   {
     accessorFn: row => row.lastName,
     id: 'lastName',
-    cell: info => <i>{info.getValue()}</i>,
+    cell: info => <i>{info.getValue<string>()}</i>,
     header: () => <span>Last Name</span>,
     footer: info => info.column.id,
   },

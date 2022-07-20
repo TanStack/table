@@ -57,26 +57,28 @@ function App() {
                   paddingLeft: `${row.depth * 2}rem`,
                 }}
               >
-                <IndeterminateCheckbox
-                  {...{
-                    checked: row.getIsSelected(),
-                    indeterminate: row.getIsSomeSelected(),
-                    onChange: row.getToggleSelectedHandler(),
-                  }}
-                />{' '}
-                {row.getCanExpand() ? (
-                  <button
+                <>
+                  <IndeterminateCheckbox
                     {...{
-                      onClick: row.getToggleExpandedHandler(),
-                      style: { cursor: 'pointer' },
+                      checked: row.getIsSelected(),
+                      indeterminate: row.getIsSomeSelected(),
+                      onChange: row.getToggleSelectedHandler(),
                     }}
-                  >
-                    {row.getIsExpanded() ? '👇' : '👉'}
-                  </button>
-                ) : (
-                  '🔵'
-                )}{' '}
-                {getValue()}
+                  />{' '}
+                  {row.getCanExpand() ? (
+                    <button
+                      {...{
+                        onClick: row.getToggleExpandedHandler(),
+                        style: { cursor: 'pointer' },
+                      }}
+                    >
+                      {row.getIsExpanded() ? '👇' : '👉'}
+                    </button>
+                  ) : (
+                    '🔵'
+                  )}{' '}
+                  {getValue()}
+                </>
               </div>
             ),
             footer: props => props.column.id,

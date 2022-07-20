@@ -1,7 +1,30 @@
 import { AccessorFn, ColumnDef, RowData } from './types'
 import { DeepKeys, DeepValue } from './utils'
 
-// const test: DeepKeys<Person> = 'nested.foo.0'
+// type Person = {
+//   firstName: string
+//   lastName: string
+//   age: number
+//   visits: number
+//   status: string
+//   progress: number
+//   nested: {
+//     foo: [
+//       {
+//         bar: 'bar'
+//       }
+//     ]
+//     bar: { subBar: boolean }[]
+//     baz: {
+//       foo: 'foo'
+//       bar: {
+//         baz: 'baz'
+//       }
+//     }
+//   }
+// }
+
+// const test: DeepKeys<Person> = 'nested.foo.0.bar'
 // const test2: DeepKeys<Person> = 'nested.bar'
 
 // const helper = createColumnHelper<Person>()
