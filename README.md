@@ -127,15 +127,15 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [ ] row-dnd
   - [ ] streaming-rows
   - [ ] sub-components
-  - [ ] virtualized-rows
+  - [x] virtualized-rows
   - [ ] absolute-layout
   - [ ] block-layout
   - [ ] animated-framer-motion
-  - [ ] bootstrap
+  - [x] bootstrap
   - [ ] bootstrap-ui-components
   - [ ] data-driven-classes-and-styles
   - [ ] full-width-resizable-table
-  - [ ] full-width-table
+  - [x] full-width-table
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
 
