@@ -255,6 +255,10 @@
         {
           "to": "examples/react/virtualized-rows",
           "label": "Virtualized Rows"
+        },
+        {
+          "to": "examples/react/full-width-resizable-table",
+          "label": "Full Width Resizable Table"
         }
       ]
     },
