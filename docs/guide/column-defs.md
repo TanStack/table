@@ -20,7 +20,7 @@ Column defs are the single most important part of building a table. They are res
 - `Display Columns`
   - Display columns do _not_ have a data model which means they cannot be sorted, filtered, etc, but they can be used to display arbitrary content in the table, eg. a row actions button, checkbox, expander, etc.
 - `Grouping Columns`
-  - Group columns do _not_ have a data model so they too cannot be sorted, filterd, etc, and are used to group other columns together. It's common to define a header or footer for a column group.
+  - Group columns do _not_ have a data model so they too cannot be sorted, filtered, etc, and are used to group other columns together. It's common to define a header or footer for a column group.
 - `Data Columns`
   - Data columns have an underlying data model which means they can be sorted, filtered, grouped, etc.
 
@@ -209,7 +209,7 @@ You can provide a custom cell formatter by passing a function to the `cell` prop
 ```tsx
 {
   accessorKey: 'firstName',
-  cell: props => <span>{props.renderValue().toUpperCase()}</span>,
+  cell: props => <span>{props.getValue().toUpperCase()}</span>,
 }
 ```
 
@@ -228,4 +228,4 @@ For more info on aggregated cells, see [grouping](./guide/grouping).
 
 ## Header & Footer Formatting
 
-Headers and footer do not have access to row data, but still use the same concepts for displaying custom content.
+Headers and footers do not have access to row data, but still use the same concepts for displaying custom content.
