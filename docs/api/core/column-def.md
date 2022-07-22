@@ -96,7 +96,7 @@ The meta data to associated with the column. This type is global to all tables a
 
 ```tsx
 declare module '@tanstack/table-core' {
-  interface ColumnMeta {
+  interface ColumnMeta<TData extends RowData, TValue> {
     foo: string
   }
 }

@@ -78,7 +78,7 @@ import { PartialKeys } from './utils'
 import { CoreCell } from './core/cell'
 
 export interface TableMeta {}
-export interface ColumnMeta {}
+export interface ColumnMeta<TData extends RowData, TValue> {}
 export interface FilterMeta {}
 
 export type Updater<T> = T | ((old: T) => T)
