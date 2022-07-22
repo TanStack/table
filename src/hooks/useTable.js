@@ -129,8 +129,15 @@ export const useTable = (props, ...plugins) => {
   )
 
   // Start the reducer
-  const [reducerState, dispatch] = React.useReducer(reducer, undefined, () =>
-    reducer(initialState, { type: actions.init })
+  const [reducerState, setReducerState] = React.useState(() =>
+    reducer(initialState, {
+      type: actions.init,
+    })
+  )
+
+  const dispatch = React.useCallback(
+    action => setReducerState(prev => reducer(prev, action)),
+    [reducer]
   )
 
   // Allow the user to control the final state with hooks
