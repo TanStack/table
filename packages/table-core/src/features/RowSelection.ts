@@ -283,7 +283,7 @@ export const RowSelection: TableFeature = {
         )
 
         if (isAllRowsSelected) {
-          if (preFilteredFlatRows.some(row => !rowSelection[row.id])) {
+          if (preFilteredFlatRows.some(row => row.getCanSelect() && !rowSelection[row.id])) {
             isAllRowsSelected = false
           }
         }
@@ -308,10 +308,8 @@ export const RowSelection: TableFeature = {
       },
 
       getIsSomeRowsSelected: () => {
-        return (
-          !table.getIsAllRowsSelected() &&
-          !!Object.keys(table.getState().rowSelection ?? {}).length
-        )
+        const totalSelected = Object.keys(table.getState().rowSelection ?? {}).length
+        return totalSelected < table.getCoreRowModel().flatRows.length
       },
 
       getIsSomePageRowsSelected: () => {
@@ -319,8 +317,8 @@ export const RowSelection: TableFeature = {
         return table.getIsAllPageRowsSelected()
           ? false
           : paginationFlatRows.some(
-              d => d.getIsSelected() || d.getIsSomeSelected()
-            )
+            d => d.getIsSelected() || d.getIsSomeSelected()
+          )
       },
 
       getToggleAllRowsSelectedHandler: () => {
