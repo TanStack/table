@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-table-example-full-width-resizable-table",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^6.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@tanstack/react-table": "8.1.4"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^4.0.0",
+    "@types/faker": "^5.5.9",
+    "vite": "^2.9.12"
+  }
+}
