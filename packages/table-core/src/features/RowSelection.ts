@@ -309,7 +309,7 @@ export const RowSelection: TableFeature = {
 
       getIsSomeRowsSelected: () => {
         const totalSelected = Object.keys(table.getState().rowSelection ?? {}).length
-        return totalSelected < table.getCoreRowModel().flatRows.length
+        return totalSelected > 0 && totalSelected < table.getCoreRowModel().flatRows.length
       },
 
       getIsSomePageRowsSelected: () => {
