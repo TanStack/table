@@ -16,7 +16,7 @@ export type CoreColumnDefBase<TData extends RowData, TValue> = {
   header?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TData, TValue>>
-  meta?: ColumnMeta
+  meta?: ColumnMeta<TData, TValue>
 }
 
 export type CoreColumnDefDisplay<
