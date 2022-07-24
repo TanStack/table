@@ -113,7 +113,7 @@ If provided, allows you to override the default behavior of determining whether 
 paginateExpandedRows?: boolean
 ```
 
-If `true` expanded rows will be paginated along with the rest of the table (which means expaned rows may span multiple pages).
+If `true` expanded rows will be paginated along with the rest of the table (which means expanded rows may span multiple pages).
 
 If `false` expanded rows will not be considered for pagination (which means expanded rows will always render on their parents page. This also means more rows will be rendered than the set page size)
 
