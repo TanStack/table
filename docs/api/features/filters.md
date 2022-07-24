@@ -128,7 +128,7 @@ export type FilterFnOption<TData extends AnyData> =
 
 #### Filter Meta
 
-Filtering data can often expose additional information about the data that can be used to aid other future operations on the same data. A good exmaple of this concept is a ranking-system like that of [`match-sorter`](https://github.com/kentcdodds/match-sorter) that simultaneously ranks, filters and sorts data. While utilities like `match-sorter` make a lot of sense for single-dimensional filter+sort tasks, the decoupled filtering/sorting architecture of building a table makes them very difficult and slow to use.
+Filtering data can often expose additional information about the data that can be used to aid other future operations on the same data. A good example of this concept is a ranking-system like that of [`match-sorter`](https://github.com/kentcdodds/match-sorter) that simultaneously ranks, filters and sorts data. While utilities like `match-sorter` make a lot of sense for single-dimensional filter+sort tasks, the decoupled filtering/sorting architecture of building a table makes them very difficult and slow to use.
 
 To make a ranking/filtering/sorting system work with tables, `filterFn`s can optionally mark results with a **filter meta** value that can be used later to sort/group/etc the data to your liking. This is done by calling the `addMeta` function supplied to your custom `filterFn`.
 
