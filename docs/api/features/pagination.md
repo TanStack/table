@@ -132,7 +132,7 @@ Updates the page count using the provided function or value.
 getPageOptions: () => number[]
 ```
 
-Returns an array of page options (zer-index-based) for the current page size.
+Returns an array of page options (zero-index-based) for the current page size.
 
 ### `getCanPreviousPage`
 

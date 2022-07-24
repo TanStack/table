@@ -281,7 +281,7 @@ getFacetedUniqueValues: () => Map<any, number>
 
 > ⚠️ Requires that you pass a valid `getFacetedUniqueValues` function to `options.getFacetedUniqueValues`. A default implementation is provided via the exported `getFacetedUniqueValues` function.
 
-A function that **computes and returns** a `Map` of unique values and their occurences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
+A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
 
 ### `getFacetedMinMaxValues`
 
