@@ -134,7 +134,7 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [x] bootstrap
   - [ ] bootstrap-ui-components
   - [ ] data-driven-classes-and-styles
-  - [ ] full-width-resizable-table
+  - [x] full-width-resizable-table
   - [x] full-width-table
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
