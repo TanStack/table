@@ -67,6 +67,7 @@ The final list of aggregation functions available for the `columnDef.aggregation
 ```tsx
 export type AggregationFnOption<TData extends AnyData> =
   | 'auto'
+  | keyof AggregationFns
   | BuiltInAggregationFn
   | AggregationFn<TData>
 ```
@@ -76,7 +77,7 @@ export type AggregationFnOption<TData extends AnyData> =
 ### `aggregationFn`
 
 ```tsx
-aggregationFn?: AggregationFn | keyof BuiltInAggregationFns
+aggregationFn?: AggregationFn | keyof AggregationFns | keyof BuiltInAggregationFns
 ```
 
 The aggregation function to use with this column.
@@ -202,6 +203,36 @@ getIsGrouped: () => boolean
 Returns whether or not the row is currently grouped.
 
 ## Table Options
+
+### `aggregationFns`
+
+```tsx
+aggregationFns?: Record<string, AggregationFn>
+```
+
+This option allows you to define custom aggregation functions that can be referenced in a column's `aggregationFn` option by their key.
+Example:
+
+```tsx
+declare module '@tanstack/table-core' {
+  interface AggregationFns {
+    myCustomAggregation: AggregationFn<unknown>
+  }
+}
+
+const column = columnHelper.data('key', {
+  aggregationFn: 'myCustomAggregation',
+})
+
+const table = useTable({
+  columns: [column],
+  aggregationFns: {
+    myCustomAggregation: (columnId, leafRows, childRows) => {
+      // return the aggregated value
+    },
+  },
+})
+```
 
 ### `manualGrouping`
 

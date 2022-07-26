@@ -59,6 +59,12 @@ export type ColumnHelper<TData extends RowData> = {
       'id'
     >
   ) => ColumnDef<TData, unknown>
+  group: (
+    column: RequiredKeys<
+      Omit<ColumnDef<TData, unknown>, 'accessorKey' | 'accessorFn'>,
+      'id' | 'columns'
+    >
+  ) => ColumnDef<TData, unknown>
 }
 
 export function createColumnHelper<
@@ -77,5 +83,6 @@ export function createColumnHelper<
           }
     },
     display: column => column as ColumnDef<TData, unknown>,
+    group: column => column as ColumnDef<TData, unknown>,
   }
 }

@@ -10,8 +10,9 @@ import {
   Updater,
   ColumnDefTemplate,
   RowData,
+  AggregationFns,
 } from '../types'
-import { isFunction, makeStateUpdater, Overwrite } from '../utils'
+import { isFunction, makeStateUpdater } from '../utils'
 
 export type GroupingState = string[]
 
@@ -29,6 +30,7 @@ export type CustomAggregationFns = Record<string, AggregationFn<any>>
 
 export type AggregationFnOption<TData extends RowData> =
   | 'auto'
+  | keyof AggregationFns
   | BuiltInAggregationFn
   | AggregationFn<TData>
 
@@ -75,7 +77,13 @@ export type GroupingOptions = {
   enableGrouping?: boolean
   getGroupedRowModel?: (table: Table<any>) => () => RowModel<any>
   groupedColumnMode?: false | 'reorder' | 'remove'
-}
+} & (keyof AggregationFns extends never
+  ? {
+      aggregationFns?: Record<string, AggregationFn<any>>
+    }
+  : {
+      aggregationFns: Record<keyof AggregationFns, AggregationFn<any>>
+    })
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
@@ -178,9 +186,12 @@ export const Grouping: TableFeature = {
           ? column.columnDef.aggregationFn
           : column.columnDef.aggregationFn === 'auto'
           ? column.getAutoAggregationFn()
-          : (aggregationFns[
+          : table.options.aggregationFns?.[
+              column.columnDef.aggregationFn as string
+            ] ??
+            aggregationFns[
               column.columnDef.aggregationFn as BuiltInAggregationFn
-            ] as AggregationFn<TData>)
+            ]
       },
     }
   },

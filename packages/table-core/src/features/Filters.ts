@@ -9,6 +9,7 @@ import {
   Updater,
   RowData,
   FilterMeta,
+  FilterFns,
 } from '../types'
 import { functionalUpdate, isFunction, makeStateUpdater } from '../utils'
 
@@ -60,6 +61,7 @@ export type CustomFilterFns<TData extends RowData> = Record<
 export type FilterFnOption<TData extends RowData> =
   | 'auto'
   | BuiltInFilterFn
+  | keyof FilterFns
   | FilterFn<TData>
 
 export type FiltersColumnDef<TData extends RowData> = {
@@ -119,7 +121,13 @@ export type FiltersOptions<TData extends RowData> = {
     table: Table<TData>,
     columnId: string
   ) => () => undefined | [number, number]
-}
+} & (keyof FilterFns extends never
+  ? {
+      filterFns?: Record<string, FilterFn<any>>
+    }
+  : {
+      filterFns: Record<keyof FilterFns, FilterFn<any>>
+    })
 
 export type FiltersInstance<TData extends RowData> = {
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
@@ -219,9 +227,8 @@ export const Filters: TableFeature = {
           ? column.columnDef.filterFn
           : column.columnDef.filterFn === 'auto'
           ? column.getAutoFilterFn()
-          : (filterFns[
-              column.columnDef.filterFn as BuiltInFilterFn
-            ] as FilterFn<TData>)
+          : table.options.filterFns?.[column.columnDef.filterFn as string] ??
+            filterFns[column.columnDef.filterFn as BuiltInFilterFn]
       },
       getCanFilter: () => {
         return (
@@ -352,7 +359,8 @@ export const Filters: TableFeature = {
           ? globalFilterFn
           : globalFilterFn === 'auto'
           ? table.getGlobalAutoFilterFn()
-          : (filterFns[globalFilterFn as BuiltInFilterFn] as FilterFn<TData>)
+          : table.options.filterFns?.[globalFilterFn as string] ??
+            filterFns[globalFilterFn as BuiltInFilterFn]
       },
 
       setColumnFilters: (updater: Updater<ColumnFiltersState>) => {

@@ -23,6 +23,7 @@ import {
 } from './features/Pinning'
 import { CoreHeader, CoreHeaderGroup, HeadersInstance } from './core/headers'
 import {
+  FilterFn,
   FiltersColumn,
   FiltersColumnDef,
   FiltersInstance,
@@ -80,6 +81,9 @@ import { CoreCell } from './core/cell'
 export interface TableMeta<TData extends RowData> {}
 export interface ColumnMeta<TData extends RowData, TValue> {}
 export interface FilterMeta {}
+export interface FilterFns {}
+export interface SortingFns {}
+export interface AggregationFns {}
 
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void

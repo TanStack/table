@@ -171,7 +171,7 @@ const fuzzySort = (rowA, rowB, columnId) => {
 ### `filterFn`
 
 ```tsx
-filterFn?: FilterFn | keyof BuiltInFilterFns
+filterFn?: FilterFn | keyof FilterFns | keyof BuiltInFilterFns
 ```
 
 The filter function to use with this column.
@@ -313,6 +313,36 @@ The column filters meta map for the row. This object tracks any filter meta for 
 
 ## Table Options
 
+### `filterFns`
+
+```tsx
+filterFns?: Record<string, FilterFn>
+```
+
+This option allows you to define custom filter functions that can be referenced in a column's `filterFn` option by their key.
+Example:
+
+```tsx
+declare module '@tanstack/table-core' {
+  interface FilterFns {
+    myCustomFilter: FilterFn<unknown>
+  }
+}
+
+const column = columnHelper.data('key', {
+  filterFn: 'myCustomFilter',
+})
+
+const table = useTable({
+  columns: [column],
+  filterFns: {
+    myCustomFilter: (rows, columnIds, filterValue) => {
+      // return the filtered rows
+    },
+  },
+})
+```
+
 ### `filterFromLeafRows`
 
 ```tsx
@@ -387,7 +417,7 @@ Returns the faceted row model for a given columnId.
 ### `globalFilterFn`
 
 ```tsx
-globalFilterFn?: FilterFn | keyof BuiltInFilterFns
+globalFilterFn?: FilterFn | keyof FilterFns | keyof BuiltInFilterFns
 ```
 
 The filter function to use for global filtering.
@@ -395,6 +425,7 @@ The filter function to use for global filtering.
 Options:
 
 - A `string` referencing a [built-in filter function](#filter-functions))
+- A `string` that references a custom filter functions provided via the `tableOptions.filterFns` option
 - A [custom filter function](#filter-functions)
 
 ### `onGlobalFilterChange`

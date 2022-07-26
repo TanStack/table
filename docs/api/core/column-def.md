@@ -16,7 +16,7 @@ The unique identifier for the column.
 
 > 🧠 A column ID is optional when:
 >
-> - A data column is created with an object key accessor
+> - An accessor column is created with an object key accessor
 > - The column header is defined as a string
 
 ### `accessorKey`

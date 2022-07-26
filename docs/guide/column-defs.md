@@ -17,14 +17,20 @@ Column defs are the single most important part of building a table. They are res
 
 ## Column Def Types
 
-- `Display Columns`
-  - Display columns do _not_ have a data model which means they cannot be sorted, filtered, etc, but they can be used to display arbitrary content in the table, eg. a row actions button, checkbox, expander, etc.
-- `Grouping Columns`
-  - Group columns do _not_ have a data model so they too cannot be sorted, filtered, etc, and are used to group other columns together. It's common to define a header or footer for a column group.
-- `Data Columns`
-  - Data columns have an underlying data model which means they can be sorted, filtered, grouped, etc.
+The following "types" of column defs aren't actually TypeScript types, but more so a way to talk about and describe overall categories of column defs:
 
-Here's an example of creating some of these different column types:
+- `Accessor Columns`
+  - Accessor columns have an underlying data model which means they can be sorted, filtered, grouped, etc.
+- `Display Columns`
+  - Display columns do **not** have a data model which means they cannot be sorted, filtered, etc, but they can be used to display arbitrary content in the table, eg. a row actions button, checkbox, expander, etc.
+- `Grouping Columns`
+  - Group columns do **not** have a data model so they too cannot be sorted, filtered, etc, and are used to group other columns together. It's common to define a header or footer for a column group.
+
+## Column Helpers
+
+While column defs are just plain objects at the end of the day, a `createColumnHelper` function is exposed from the table core which, when called with a row type, returns a utility for creating different column definition types with the highest type-safety possible.
+
+Here's an example of creating and using a column helper:
 
 ```tsx
 // Define your row shape
@@ -37,75 +43,71 @@ type Person = {
   progress: number
 }
 
+const columnHelper = createColumnHelper<Person>()
+
 // Make some columns!
 const defaultColumns: ColumnDef<Person>[] = [
   // Display Column
-  {
+  columnHelper.display({
     id: 'actions',
     cell: props => <RowActions row={props.row} />,
-  },
+  }),
   // Grouping Column
-  {
+  columnHelper.group({
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      // Data Column
-      {
-        accessorKey: 'firstName',
+      // Accessor Column
+      columnHelper.accessor('firstName', {
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      },
-      // Data Column
-      {
-        accessorFn: row => row.lastName,
+      }),
+      // Accessor Column
+      columnHelper.accessor(row => row.lastName, {
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
-      },
+      }),
     ],
-  },
+  }),
   // Grouping Column
-  {
+  columnHelper.group({
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      // Data Column
-      {
-        accessorKey: 'age',
+      // Accessor Column
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: props => props.column.id,
-      },
+      }),
       // Grouping Column
-      {
+      columnHelper.group({
         header: 'More Info',
         columns: [
-          // Data Column
-          {
-            accessorKey: 'visits',
+          // Accessor Column
+          columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: props => props.column.id,
-          },
-          // Data Column
-          {
-            accessorKey: 'status',
+          }),
+          // Accessor Column
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: props => props.column.id,
-          },
-          // Data Column
-          {
-            accessorKey: 'progress',
+          }),
+          // Accessor Column
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: props => props.column.id,
-          },
+          }),
         ],
-      },
+      }),
     ],
-  },
+  }),
 ]
 ```
 
-## Creating Data Columns
+## Creating Accessor Columns
 
 Data columns are unique in that they must be configured to extract primitive values for each item in your `data` array.
 
@@ -133,6 +135,11 @@ type Person = {
 You could extract the `firstName` value like so:
 
 ```tsx
+
+columHelper.accessor('firstName')
+
+// OR
+
 {
   accessorKey: 'firstName',
 }
@@ -149,6 +156,10 @@ type Sales = [Date, number]
 You could extract the `number` value like so:
 
 ```tsx
+columHelper.accessor(1)
+
+// OR
+
 {
   accessorKey: 1,
 }
@@ -172,6 +183,12 @@ type Person = {
 You could extract a computed full-name value like so:
 
 ```tsx
+columHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
+  id: 'fullName',
+})
+
+// OR
+
 {
   id: 'fullName',
   accessorFn: row => `${row.firstName} ${row.lastName}`,
@@ -184,8 +201,8 @@ You could extract a computed full-name value like so:
 
 Columns are uniquely identified with 3 strategies:
 
-- If defining a data column with an object key or array index, the same will be used to uniquely identify the column.
-- If defining a data column with an accessor function
+- If defining an accessor column with an object key or array index, the same will be used to uniquely identify the column.
+- If defining an accessor column with an accessor function
   - The columns `id` property will be used to uniquely identify the column OR
   - If a primitive `string` header is supplied, that header string will be used to uniquely identify the column
 
@@ -207,19 +224,19 @@ There are a couple of formatters available to you:
 You can provide a custom cell formatter by passing a function to the `cell` property and using the `props.getValue()` function to access your cell's value:
 
 ```tsx
-{
-  accessorKey: 'firstName',
+columHelper.accessor('firstName', {
   cell: props => <span>{props.getValue().toUpperCase()}</span>,
-}
+})
 ```
 
 Cell formatters are also provided the `row` and `table` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
 
 ```tsx
-{
-  accessorKey: 'firstName',
-  cell: props => <span>{`${props.row.original.id} - ${props.getValue()}`}</span>
-}
+columHelper.accessor('firstName', {
+  cell: props => (
+    <span>{`${props.row.original.id} - ${props.getValue()}`}</span>
+  ),
+})
 ```
 
 ## Aggregated Cell Formatting

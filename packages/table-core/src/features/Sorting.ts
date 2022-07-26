@@ -6,9 +6,17 @@ import {
   sortingFns,
 } from '../sortingFns'
 
-import { Column, OnChangeFn, Table, Row, Updater, RowData } from '../types'
+import {
+  Column,
+  OnChangeFn,
+  Table,
+  Row,
+  Updater,
+  RowData,
+  SortingFns,
+} from '../types'
 
-import { isFunction, makeStateUpdater, Overwrite } from '../utils'
+import { isFunction, makeStateUpdater } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -34,6 +42,7 @@ export type CustomSortingFns<TData extends RowData> = Record<
 
 export type SortingFnOption<TData extends RowData> =
   | 'auto'
+  | keyof SortingFns
   | BuiltInSortingFn
   | SortingFn<TData>
 
@@ -72,7 +81,13 @@ export type SortingOptions<TData extends RowData> = {
   getSortedRowModel?: (table: Table<any>) => () => RowModel<any>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: unknown) => boolean
-}
+} & (keyof SortingFns extends never
+  ? {
+      sortingFns?: Record<string, SortingFn<any>>
+    }
+  : {
+      sortingFns: Record<keyof SortingFns, SortingFn<any>>
+    })
 
 export type SortingInstance<TData extends RowData> = {
   setSorting: (updater: Updater<SortingState>) => void
@@ -161,9 +176,8 @@ export const Sorting: TableFeature = {
           ? column.columnDef.sortingFn
           : column.columnDef.sortingFn === 'auto'
           ? column.getAutoSortingFn()
-          : (sortingFns[
-              column.columnDef.sortingFn as BuiltInSortingFn
-            ] as SortingFn<TData>)
+          : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
+            sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
       },
       toggleSorting: (desc, multi) => {
         // if (column.columns.length) {

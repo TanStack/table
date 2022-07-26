@@ -20,6 +20,7 @@ import {
   SortingFn,
   ColumnDef,
   flexRender,
+  FilterFns,
 } from '@tanstack/react-table'
 
 import {
@@ -31,6 +32,9 @@ import {
 import { makeData, Person } from './makeData'
 
 declare module '@tanstack/table-core' {
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>
+  }
   interface FilterMeta {
     itemRank: RankingInfo
   }
@@ -72,7 +76,7 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<ColumnDef<Person, any>[]>(
     () => [
       {
         header: 'Name',
@@ -96,7 +100,7 @@ function App() {
             header: 'Full Name',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-            filterFn: fuzzyFilter,
+            filterFn: 'fuzzy',
             sortingFn: fuzzySort,
           },
         ],
@@ -136,12 +140,15 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(50000))
+  const [data, setData] = React.useState<Person[]>(() => makeData(50000))
   const refreshData = () => setData(old => makeData(50000))
 
   const table = useReactTable({
     data,
     columns,
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
     state: {
       columnFilters,
       globalFilter,

@@ -68,7 +68,8 @@ The final list of sorting functions available for the `columnDef.sortingFn` use 
 ```tsx
 export type SortingFnOption<TData extends AnyData> =
   | 'auto'
-  | BuiltInSortingFn
+  | SortingFns
+  | BuiltInSortingFns
   | SortingFn<TData>
 ```
 
@@ -77,7 +78,7 @@ export type SortingFnOption<TData extends AnyData> =
 ### `sortingFn`
 
 ```tsx
-sortingFn?: SortingFn | keyof BuiltInSortingFns
+sortingFn?: SortingFn | keyof SortingFns | keyof BuiltInSortingFns
 ```
 
 The sorting function to use with this column.
@@ -223,6 +224,35 @@ getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 Returns a function that can be used to toggle this column's sorting state. This is useful for attaching a click handler to the column header.
 
 ## Table Options
+
+### `sortingFns`
+
+```tsx
+sortingFns?: Record<string, SortingFn>
+```
+
+This option allows you to define custom sorting functions that can be referenced in a column's `sortingFn` option by their key.
+Example:
+
+```tsx
+declare module '@tanstack/table-core' {
+  interface SortingFns {
+    myCustomSorting: SortingFn<unknown>
+  }
+}
+
+const column = columnHelper.data('key', {
+  sortingFn: 'myCustomSorting',
+})
+
+const table = useTable({
+  columns: [column],
+  sortingFns: {
+    myCustomSorting: (rowA: any, rowB: any, columnId: any): number =>
+      rowA.getValue(columnId).value < rowB.getValue(columnId).value ? 1 : -1,
+  },
+})
+```
 
 ### `manualSorting`
 
