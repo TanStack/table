@@ -1,5 +1,5 @@
 import { AccessorFn, ColumnDef, RowData } from './types'
-import { DeepKeys, DeepValue } from './utils'
+import { DeepKeys, DeepValue, RequiredKeys } from './utils'
 
 // type Person = {
 //   firstName: string
@@ -53,6 +53,12 @@ export type ColumnHelper<TData extends RowData> = {
     accessor: TAccessor,
     column: Omit<ColumnDef<TData, TValue>, 'accessorKey'>
   ) => ColumnDef<TData, TValue>
+  display: (
+    column: RequiredKeys<
+      Omit<ColumnDef<TData, unknown>, 'accessorKey' | 'accessorFn'>,
+      'id'
+    >
+  ) => ColumnDef<TData, unknown>
 }
 
 export function createColumnHelper<
@@ -70,5 +76,6 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
+    display: column => column as ColumnDef<TData, unknown>,
   }
 }
