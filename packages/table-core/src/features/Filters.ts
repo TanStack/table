@@ -4,7 +4,6 @@ import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
   OnChangeFn,
-  TableGenerics,
   Table,
   Row,
   Updater,

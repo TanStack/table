@@ -9,7 +9,6 @@ import {
   Row,
   Updater,
   ColumnDefTemplate,
-  TableGenerics,
   RowData,
 } from '../types'
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'

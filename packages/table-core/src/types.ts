@@ -77,7 +77,7 @@ import { CoreRow } from './core/row'
 import { PartialKeys } from './utils'
 import { CoreCell } from './core/cell'
 
-export interface TableMeta {}
+export interface TableMeta<TData extends RowData> {}
 export interface ColumnMeta<TData extends RowData, TValue> {}
 export interface FilterMeta {}
 
@@ -85,13 +85,6 @@ export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
 export type RowData = unknown | object | any[]
-
-export type TableGenerics = {
-  Row?: any
-  Value?: any
-  ColumnMeta?: any
-  TableMeta?: any
-}
 
 export type AnyRender = (Comp: any, props: any) => any
 

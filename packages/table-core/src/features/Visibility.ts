@@ -3,7 +3,6 @@ import {
   Cell,
   Column,
   OnChangeFn,
-  TableGenerics,
   Table,
   Updater,
   Row,

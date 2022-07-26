@@ -4,7 +4,6 @@ import {
   Updater,
   Table,
   Column,
-  TableGenerics,
   Row,
   Cell,
   RowData,

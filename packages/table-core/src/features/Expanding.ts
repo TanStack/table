@@ -1,13 +1,6 @@
 import { RowModel } from '..'
 import { TableFeature } from '../core/table'
-import {
-  OnChangeFn,
-  TableGenerics,
-  Table,
-  Row,
-  Updater,
-  RowData,
-} from '../types'
+import { OnChangeFn, Table, Row, Updater, RowData } from '../types'
 import { makeStateUpdater } from '../utils'
 
 export type ExpandedStateList = Record<string, boolean>
@@ -219,10 +212,7 @@ export const Expanding: TableFeature = {
       getCanExpand: () => {
         return (
           table.options.getRowCanExpand?.(row) ??
-          (
-            (table.options.enableExpanding ?? true) &&
-            !!row.subRows?.length
-          )
+          ((table.options.enableExpanding ?? true) && !!row.subRows?.length)
         )
       },
       getToggleExpandedHandler: () => {

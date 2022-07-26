@@ -1,4 +1,4 @@
-import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
+import { Table, Row, RowModel, RowData } from '../types'
 import { SortingFn } from '../features/Sorting'
 import { memo } from '../utils'
 

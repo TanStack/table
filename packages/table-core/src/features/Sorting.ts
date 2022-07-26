@@ -6,15 +6,7 @@ import {
   sortingFns,
 } from '../sortingFns'
 
-import {
-  Column,
-  OnChangeFn,
-  TableGenerics,
-  Table,
-  Row,
-  Updater,
-  RowData,
-} from '../types'
+import { Column, OnChangeFn, Table, Row, Updater, RowData } from '../types'
 
 import { isFunction, makeStateUpdater, Overwrite } from '../utils'
 

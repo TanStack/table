@@ -1,7 +1,5 @@
 import {
   RowData,
-  PartialKeys,
-  TableGenerics,
   createTable,
   TableOptions,
   TableOptionsResolved,

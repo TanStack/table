@@ -1,13 +1,6 @@
 import { makeStateUpdater, memo } from '../utils'
 
-import {
-  Table,
-  OnChangeFn,
-  Updater,
-  Column,
-  TableGenerics,
-  RowData,
-} from '../types'
+import { Table, OnChangeFn, Updater, Column, RowData } from '../types'
 
 import { Grouping, orderColumns } from './Grouping'
 import { TableFeature } from '../core/table'

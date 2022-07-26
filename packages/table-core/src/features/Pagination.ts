@@ -1,12 +1,5 @@
 import { TableFeature } from '../core/table'
-import {
-  OnChangeFn,
-  TableGenerics,
-  Table,
-  RowModel,
-  Updater,
-  RowData,
-} from '../types'
+import { OnChangeFn, Table, RowModel, Updater, RowData } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
 export type PaginationState = {

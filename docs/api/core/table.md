@@ -83,7 +83,7 @@ You can pass any object to `options.meta` and access it anywhere the `table` is 
 
 ```tsx
 declare module '@tanstack/table-core' {
-  interface TableMeta {
+  interface TableMeta<TData extends RowData> {
     foo: string
   }
 }

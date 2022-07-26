@@ -76,7 +76,7 @@ export type CoreOptions<TData extends RowData> = {
     defaultOptions: TableOptions<TData>,
     options: Partial<TableOptions<TData>>
   ) => TableOptions<TData>
-  meta?: TableMeta
+  meta?: TableMeta<TData>
   getCoreRowModel: (table: Table<any>) => () => RowModel<any>
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string

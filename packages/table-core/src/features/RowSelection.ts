@@ -1,13 +1,5 @@
 import { TableFeature } from '../core/table'
-import {
-  OnChangeFn,
-  TableGenerics,
-  Table,
-  Row,
-  RowModel,
-  Updater,
-  RowData,
-} from '../types'
+import { OnChangeFn, Table, Row, RowModel, Updater, RowData } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
 export type RowSelectionState = Record<string, boolean>
@@ -283,7 +275,11 @@ export const RowSelection: TableFeature = {
         )
 
         if (isAllRowsSelected) {
-          if (preFilteredFlatRows.some(row => row.getCanSelect() && !rowSelection[row.id])) {
+          if (
+            preFilteredFlatRows.some(
+              row => row.getCanSelect() && !rowSelection[row.id]
+            )
+          ) {
             isAllRowsSelected = false
           }
         }
@@ -308,8 +304,13 @@ export const RowSelection: TableFeature = {
       },
 
       getIsSomeRowsSelected: () => {
-        const totalSelected = Object.keys(table.getState().rowSelection ?? {}).length
-        return totalSelected > 0 && totalSelected < table.getCoreRowModel().flatRows.length
+        const totalSelected = Object.keys(
+          table.getState().rowSelection ?? {}
+        ).length
+        return (
+          totalSelected > 0 &&
+          totalSelected < table.getCoreRowModel().flatRows.length
+        )
       },
 
       getIsSomePageRowsSelected: () => {
@@ -317,8 +318,8 @@ export const RowSelection: TableFeature = {
         return table.getIsAllPageRowsSelected()
           ? false
           : paginationFlatRows.some(
-            d => d.getIsSelected() || d.getIsSomeSelected()
-          )
+              d => d.getIsSelected() || d.getIsSomeSelected()
+            )
       },
 
       getToggleAllRowsSelectedHandler: () => {

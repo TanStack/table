@@ -14,11 +14,12 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   flexRender,
+  RowData,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
 declare module '@tanstack/react-table' {
-  interface TableMeta {
+  interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
   }
 }

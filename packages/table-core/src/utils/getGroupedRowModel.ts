@@ -1,5 +1,5 @@
 import { createRow } from '../core/row'
-import { Table, Row, RowModel, TableGenerics, RowData } from '../types'
+import { Table, Row, RowModel, RowData } from '../types'
 import { flattenBy, memo } from '../utils'
 
 export function getGroupedRowModel<TData extends RowData>(): (
