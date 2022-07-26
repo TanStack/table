@@ -1,4 +1,4 @@
-import { NoInfer, TableState, Updater } from './types'
+import { TableState, Updater } from './types'
 
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
@@ -64,6 +64,10 @@ export type DeepValue<T, TProp> = T extends Record<string | number, any>
     ? DeepValue<T[TBranch], TDeepProp>
     : T[TProp & string]
   : never
+
+export type NoInfer<T> = [T][T extends any ? 0 : never]
+
+export type Getter<TValue> = <TTValue = TValue>() => NoInfer<TTValue>
 
 ///
 

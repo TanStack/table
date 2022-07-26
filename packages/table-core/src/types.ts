@@ -193,5 +193,3 @@ export type Header<TData extends RowData, TValue> = CoreHeader<TData, TValue> &
   ColumnSizingHeader
 
 export type HeaderGroup<TData extends RowData> = CoreHeaderGroup<TData>
-
-export type NoInfer<A extends any> = [A][A extends any ? 0 : never]

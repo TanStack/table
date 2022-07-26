@@ -1,9 +1,5 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
-import { IsAny, IsKnown } from '../utils'
-
-type NoInfer<T> = [T][T extends any ? 0 : never]
-
-type Getter<TValue> = <TTValue = TValue>() => NoInfer<TTValue>
+import { Getter } from '../utils'
 
 export type CellContext<TData extends RowData, TValue> = {
   table: Table<TData>
