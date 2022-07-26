@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/table-core",
   "author": "Tanner Linsley",
-  "version": "8.3.6",
+  "version": "8.4.0",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/table#readme",
