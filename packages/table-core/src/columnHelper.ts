@@ -1,3 +1,8 @@
+import {
+  CoreColumnDefDisplay,
+  CoreColumnDefDisplayWithStringHeader,
+} from './core/column'
+import { GroupingColumnDef } from './features/Grouping'
 import { AccessorFn, ColumnDef, RowData } from './types'
 import { DeepKeys, DeepValue, RequiredKeys } from './utils'
 
@@ -60,10 +65,14 @@ export type ColumnHelper<TData extends RowData> = {
     >
   ) => ColumnDef<TData, unknown>
   group: (
-    column: RequiredKeys<
-      Omit<ColumnDef<TData, unknown>, 'accessorKey' | 'accessorFn'>,
-      'id' | 'columns'
-    >
+    column: Omit<
+      ColumnDef<TData, unknown>,
+      'id' | 'header' | 'accessorKey' | 'accessorFn' | 'columns'
+    > &
+      (
+        | CoreColumnDefDisplayWithStringHeader<TData, unknown>
+        | CoreColumnDefDisplay<TData, unknown>
+      ) & { columns: ColumnDef<TData, any>[] }
   ) => ColumnDef<TData, unknown>
 }
 
