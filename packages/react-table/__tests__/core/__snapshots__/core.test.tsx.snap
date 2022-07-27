@@ -130,7 +130,7 @@ exports[`core renders a table with markup 3`] = `
       "1",
     ],
     [
-      "More Info",
+      "",
       "3",
     ],
   ],

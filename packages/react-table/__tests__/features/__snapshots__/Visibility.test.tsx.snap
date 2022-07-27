@@ -63,7 +63,7 @@ exports[`useReactTable can toggle column visibility: 1 - after toggling all on 1
         "1",
       ],
       [
-        "More Info",
+        "",
         "3",
       ],
     ],
@@ -198,7 +198,7 @@ exports[`useReactTable can toggle column visibility: 2 - after toggling firstNam
         "1",
       ],
       [
-        "More Info",
+        "",
         "3",
       ],
     ],
