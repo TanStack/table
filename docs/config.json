@@ -225,6 +225,10 @@
           "label": "Expanding"
         },
         {
+          "to": "examples/react/sub-components",
+          "label": "Sub Components"
+        },
+        {
           "to": "examples/react/filters",
           "label": "Filters"
         },

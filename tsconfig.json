@@ -16,6 +16,7 @@
     { "path": "examples/react/column-visibility/tsconfig.dev.json" },
     { "path": "examples/react/editable-data/tsconfig.dev.json" },
     { "path": "examples/react/expanding/tsconfig.dev.json" },
+    { "path": "examples/react/sub-components/tsconfig.dev.json" },
     { "path": "examples/react/filters/tsconfig.dev.json" },
     { "path": "examples/react/fully-controlled/tsconfig.dev.json" },
     { "path": "examples/react/grouping/tsconfig.dev.json" },
