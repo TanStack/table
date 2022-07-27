@@ -17,7 +17,7 @@ import {
 } from '../types'
 
 //
-import { createColumn } from './column'
+import { CoreColumnDefResolved, createColumn } from './column'
 import { Headers } from './headers'
 //
 
@@ -232,8 +232,21 @@ export function createTable<TData extends RowData>(
         >
 
         return {
-          header: props => props.header.column.id,
-          footer: props => props.header.column.id,
+          header: props => {
+            const resolvedColumnDef = props.header.column
+              .columnDef as CoreColumnDefResolved<TData>
+
+            if (resolvedColumnDef.accessorKey) {
+              return resolvedColumnDef.accessorKey
+            }
+
+            if (resolvedColumnDef.accessorFn) {
+              return resolvedColumnDef.id
+            }
+
+            return null
+          },
+          // footer: props => props.header.column.id,
           cell: props => props.renderValue<any>()?.toString?.() ?? null,
           ...table._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
