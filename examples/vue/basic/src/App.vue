@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {
-  flexRender,
+  FlexRender,
   getCoreRowModel,
   useVueTable,
   ColumnDef,
+  createColumnHelper,
 } from '@tanstack/vue-table'
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 
 type Person = {
   firstName: string
@@ -43,56 +44,52 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
-  {
+const columnHelper = createColumnHelper<Person>()
+
+const columns = [
+  columnHelper.group({
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      {
-        accessorKey: 'firstName',
+      columnHelper.accessor('firstName', {
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
+      }),
+      columnHelper.accessor(row => row.lastName, {
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => 'Last Name',
         footer: props => props.column.id,
-      },
+      }),
     ],
-  },
-  {
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      {
-        accessorKey: 'age',
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: props => props.column.id,
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
         columns: [
-          {
-            accessorKey: 'visits',
+          columnHelper.accessor('visits', {
             header: () => 'Visits',
             footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'status',
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: props => props.column.id,
-          },
+          }),
         ],
-      },
+      }),
     ],
-  },
+  }),
 ]
 
 const data = ref(defaultData)
@@ -105,7 +102,7 @@ const table = useVueTable({
   get data() {
     return data.value
   },
-  columns: defaultColumns,
+  columns,
   getCoreRowModel: getCoreRowModel(),
 })
 </script>
@@ -123,11 +120,10 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <component
+            <FlexRender
               v-if="!header.isPlaceholder"
-              :is="
-                flexRender(header.column.columnDef.header, header.getContext)
-              "
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
             />
           </th>
         </tr>
@@ -135,8 +131,9 @@ const table = useVueTable({
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <component
-              :is="flexRender(cell.column.columnDef.cell, cell.getContext)"
+            <FlexRender
+              :render="cell.column.columnDef.cell"
+              :props="cell.getContext()"
             />
           </td>
         </tr>
@@ -151,11 +148,10 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <component
+            <FlexRender
               v-if="!header.isPlaceholder"
-              :is="
-                flexRender(header.column.columnDef.footer, header.getContext)
-              "
+              :render="header.column.columnDef.footer"
+              :props="header.getContext()"
             />
           </th>
         </tr>

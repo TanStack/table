@@ -1,71 +1,67 @@
 <script setup lang="ts">
 import {
   type ColumnOrderState,
-  flexRender,
+  FlexRender,
   getCoreRowModel,
   useVueTable,
   type Column,
-  type ColumnDef
+  type ColumnDef,
+  createColumnHelper,
 } from '@tanstack/vue-table'
 
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import faker from '@faker-js/faker'
 
-const defaultColumns: ColumnDef<Person>[] = [
-  {
+const columnHelper = createColumnHelper<Person>()
+
+const data = ref(makeData(20))
+const columns = ref([
+  columnHelper.group({
     header: 'Name',
     footer: props => props.column.id,
     columns: [
-      {
-        accessorKey: 'firstName'
+      columnHelper.accessor('firstName', {
         cell: info => info.getValue(),
         footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName
+      }),
+      columnHelper.accessor(row => row.lastName, {
         id: 'lastName',
         cell: info => info.getValue(),
-        header: 'Last Name',
+        header: () => 'Last Name',
         footer: props => props.column.id,
-      },
+      }),
     ],
-  },
-  {
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: props => props.column.id,
     columns: [
-      {
-        accessorKey: 'age'
-        header: 'Age',
+      columnHelper.accessor('age', {
+        header: () => 'Age',
         footer: props => props.column.id,
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
         columns: [
-          {
-            accessorKey: 'visits'
+          columnHelper.accessor('visits', {
             header: () => 'Visits',
             footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'status'
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'progress'
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: props => props.column.id,
-          },
+          }),
         ],
-      },
+      }),
     ],
-  },
-]
+  }),
+])
 
-const data = ref(makeData(20))
-const columns = ref(defaultColumns)
 const columnVisibility = ref({})
 const columnOrder = ref<ColumnOrderState>([])
 
@@ -165,11 +161,10 @@ function toggleAllColumnsVisibility() {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <component
+            <FlexRender
               v-if="!header.isPlaceholder"
-              :is="
-                flexRender(header.column.columnDef.header, header.getContext)
-              "
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
             />
           </th>
         </tr>
@@ -177,8 +172,9 @@ function toggleAllColumnsVisibility() {
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <component
-              :is="flexRender(cell.column.columnDef.cell, cell.getContext())"
+            <FlexRender
+              :render="cell.column.columnDef.cell"
+              :props="cell.getContext()"
             />
           </td>
         </tr>
@@ -193,11 +189,10 @@ function toggleAllColumnsVisibility() {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <component
+            <FlexRender
               v-if="!header.isPlaceholder"
-              :is="
-                flexRender(header.column.columnDef.footer, header.getContext())
-              "
+              :render="header.column.columnDef.footer"
+              :props="header.getContext()"
             />
           </th>
         </tr>
