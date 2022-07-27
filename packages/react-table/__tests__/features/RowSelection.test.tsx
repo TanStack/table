@@ -1,6 +1,6 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, TableOptions, useReactTable } from '@tanstack/react-table'
 import { fireEvent, render, screen } from '@testing-library/react'
-import React from 'react'
+import React, { FC } from 'react'
 
 type Person = {
   firstName: string
@@ -57,12 +57,12 @@ const defaultColumns: ColumnDef<Person>[] = [
   },
 ]
 
-const TableComponent = () => {
+const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({ options = {} }) => {
   const table = useReactTable({
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
-    enableRowSelection: row => row.original.age > 40
+    ...options
   })
 
   return <table>
@@ -100,7 +100,7 @@ const TableComponent = () => {
 }
 
 test(`Select all do not select rows which are not available for selection`, () => {
-  render(<TableComponent />)
+  render(<TableComponent options={{ enableRowSelection: row => row.original.age > 40 }} />)
 
   const [title, notSelected, selected] = screen.getAllByRole('checkbox')
 
@@ -119,4 +119,48 @@ test(`Select all do not select rows which are not available for selection`, () =
   expect(title).not.toBePartiallyChecked();
   expect(notSelected).not.toBeChecked();
   expect(selected).not.toBeChecked();
+})
+
+test(`Select all when all rows are available for selection`, () => {
+  render(<TableComponent />)
+
+  const [title, rowOne, rowTwo] = screen.getAllByRole('checkbox')
+
+  // Let's trigger a select all
+  fireEvent.click(screen.getByTestId('select-all'))
+
+  // Assert everything - except the not available - is selected
+  expect(title).toBeChecked();
+  expect(rowOne).toBeChecked();
+  expect(rowTwo).toBeChecked();
+
+  // Let's unselect all
+  fireEvent.click(screen.getByTestId('select-all'))
+
+  // Now everything is unchecked again
+  expect(title).not.toBeChecked();
+  expect(rowOne).not.toBeChecked();
+  expect(rowTwo).not.toBeChecked();
+})
+
+test(`Select a single row`, () => {
+  render(<TableComponent />)
+
+  const [title, rowOne, rowTwo] = screen.getAllByRole('checkbox')
+
+  // Let's trigger a select all
+  fireEvent.click(rowOne)
+
+  // Assert everything - except the not available - is selected
+  expect(title).toBePartiallyChecked();
+  expect(rowOne).toBeChecked();
+  expect(rowTwo).not.toBeChecked();
+
+  // Let's unselect all
+  fireEvent.click(rowOne)
+
+  // Now everything is unchecked again
+  expect(title).not.toBeChecked();
+  expect(rowOne).not.toBeChecked();
+  expect(rowTwo).not.toBeChecked();
 })
