@@ -129,7 +129,7 @@ test(`Select all when all rows are available for selection`, () => {
   // Let's trigger a select all
   fireEvent.click(screen.getByTestId('select-all'))
 
-  // Assert everything - except the not available - is selected
+  // Assert all the rows are selected
   expect(title).toBeChecked();
   expect(rowOne).toBeChecked();
   expect(rowTwo).toBeChecked();
@@ -148,15 +148,15 @@ test(`Select a single row`, () => {
 
   const [title, rowOne, rowTwo] = screen.getAllByRole('checkbox')
 
-  // Let's trigger a select all
+  // Let's trigger a select in row one
   fireEvent.click(rowOne)
 
-  // Assert everything - except the not available - is selected
+  // Assert only the row we've clicked before is selected
   expect(title).toBePartiallyChecked();
   expect(rowOne).toBeChecked();
   expect(rowTwo).not.toBeChecked();
 
-  // Let's unselect all
+  // Let's unselect the row one
   fireEvent.click(rowOne)
 
   // Now everything is unchecked again
