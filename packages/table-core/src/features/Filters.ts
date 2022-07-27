@@ -402,10 +402,11 @@ export const Filters: TableFeature = {
       },
 
       getPreFilteredRowModel: () => table.getCoreRowModel(),
-      _getFilteredRowModel:
-        table.options.getFilteredRowModel &&
-        table.options.getFilteredRowModel(table),
       getFilteredRowModel: () => {
+        if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
+          table._getFilteredRowModel = table.options.getFilteredRowModel(table)
+        }
+
         if (table.options.manualFiltering || !table._getFilteredRowModel) {
           return table.getPreFilteredRowModel()
         }
