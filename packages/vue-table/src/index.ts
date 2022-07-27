@@ -4,22 +4,25 @@ import {
   TableOptionsResolved,
   RowData,
 } from '@tanstack/table-core'
-import { h, watchEffect, ref, VNode } from 'vue'
+import { h, watchEffect, ref } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-export function flexRender<TProps extends {}>(
-  Comp: any,
-  props: TProps
-): VNode | string | number | boolean | null {
-  if (!Comp) return null
+export const FlexRender = {
+  props: ['render', 'props'],
+  setup: (props: { render: any; props: any }) => {
+    return () => {
+      if (
+        typeof props.render === 'function' ||
+        typeof props.render === 'object'
+      ) {
+        return h(props.render, props.props)
+      }
 
-  if (typeof Comp === 'function') {
-    return h(Comp, props)
-  }
-
-  return Comp
+      return props.render
+    }
+  },
 }
 
 export function useVueTable<TData extends RowData>(
@@ -69,10 +72,6 @@ export function useVueTable<TData extends RowData>(
       })
     })
   })
-
-  // onBeforeUpdate(() => {
-  //   table.willUpdate()
-  // })
 
   return table
 }
