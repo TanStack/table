@@ -73,6 +73,7 @@ export const App = () => {
   const [data, setData] = React.useState(makeData(1000))
   const refreshData = () => setData(makeData(1000))
 
+  const [columnVisibility, setColumnVisibility] = React.useState({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -97,11 +98,13 @@ export const App = () => {
     autoResetPageIndex,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
+    onColumnVisibilityChange: setColumnVisibility,
     // Provide our updateData function to our table meta
     meta: getTableMeta(setData, skipAutoResetPageIndex),
     state: {
       columnFilters,
       globalFilter,
+      columnVisibility,
     },
     debugTable: true,
     debugHeaders: true,
@@ -118,15 +121,46 @@ export const App = () => {
 
   return (
     <Styles>
-      <div className="p-2">
-        <DebouncedInput
-          value={globalFilter ?? ''}
-          onChange={value => setGlobalFilter(String(value))}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
+      <div className="p-2 grid grid-cols-4">
+        <div className="p-2">
+          Search:
+          <DebouncedInput
+            value={globalFilter ?? ''}
+            onChange={value => setGlobalFilter(String(value))}
+            className="mx-1 p-2 font-lg shadow border border-block"
+            placeholder="Search all columns..."
+          />
+        </div>
+        <div className="p-2 inline-block border border-black shadow rounded">
+          <div className="px-1 border-b border-black">
+            <label>
+              <input
+                {...{
+                  type: 'checkbox',
+                  checked: table.getIsAllColumnsVisible(),
+                  onChange: table.getToggleAllColumnsVisibilityHandler(),
+                }}
+              />{' '}
+              Toggle All
+            </label>
+          </div>
+          {table.getAllLeafColumns().map(column => {
+            return (
+              <div key={column.id} className="px-1">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={column.getIsVisible()}
+                    onChange={column.getToggleVisibilityHandler()}
+                    className="mr-1"
+                  />
+                  {column.id}
+                </label>
+              </div>
+            )
+          })}
+        </div>
       </div>
-      <div className="p-2" />
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
