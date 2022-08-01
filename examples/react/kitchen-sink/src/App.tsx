@@ -122,7 +122,7 @@ export const App = () => {
     },
     debugTable: true,
     debugHeaders: true,
-    debugColumns: false,
+    debugColumns: true,
   })
 
   React.useEffect(() => {
@@ -201,6 +201,7 @@ export const App = () => {
       </div>
       <div className="p-2" />
       <ActionButtons
+        getSelectedRowModel={table.getSelectedRowModel}
         hasNextPage={table.getCanNextPage()}
         hasPreviousPage={table.getCanPreviousPage()}
         nextPage={table.nextPage}
@@ -210,6 +211,7 @@ export const App = () => {
         previousPage={table.previousPage}
         refreshData={refreshData}
         rerender={rerender}
+        rowSelection={rowSelection}
         setPageIndex={table.setPageIndex}
         setPageSize={table.setPageSize}
         totalRows={table.getPrePaginationRowModel().rows.length}

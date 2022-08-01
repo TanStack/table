@@ -1,6 +1,13 @@
+import {
+  RowData,
+  RowModel,
+  RowSelectionState,
+  Updater,
+} from '@tanstack/react-table'
 import React from 'react'
 
-type Props = {
+type Props<T extends RowData> = {
+  getSelectedRowModel: () => RowModel<T>
   hasNextPage: boolean
   hasPreviousPage: boolean
   nextPage: () => void
@@ -10,12 +17,14 @@ type Props = {
   previousPage: () => void
   refreshData: () => void
   rerender: () => void
+  rowSelection: Object
   setPageIndex: (index: number) => void
   setPageSize: (size: number) => void
   totalRows: number
 }
 
-export const ActionButtons: React.FC<Props> = ({
+export function ActionButtons<T extends RowData>({
+  getSelectedRowModel,
   hasNextPage,
   hasPreviousPage,
   nextPage,
@@ -25,10 +34,11 @@ export const ActionButtons: React.FC<Props> = ({
   previousPage,
   refreshData,
   rerender,
+  rowSelection,
   setPageIndex,
   setPageSize,
   totalRows,
-}) => {
+}: Props<T>) {
   return (
     <React.Fragment>
       <div className="flex items-center gap-2">
@@ -102,6 +112,27 @@ export const ActionButtons: React.FC<Props> = ({
         <div>
           <button className="border p-1 rounded" onClick={refreshData}>
             Refresh Data
+          </button>
+        </div>
+        <div>
+          <button
+            className="border rounded p-2 mb-2"
+            onClick={() => console.info('rowSelection', rowSelection)}
+          >
+            Log `rowSelection` state
+          </button>
+        </div>
+        <div>
+          <button
+            className="border rounded p-2 mb-2"
+            onClick={() =>
+              console.info(
+                'table.getSelectedFlatRows()',
+                getSelectedRowModel().flatRows
+              )
+            }
+          >
+            Log table.getSelectedFlatRows()
           </button>
         </div>
       </div>
