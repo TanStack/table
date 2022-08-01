@@ -1,4 +1,5 @@
 {
+  "allowSyntheticDefaultImports": true,
   "composite": true,
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {

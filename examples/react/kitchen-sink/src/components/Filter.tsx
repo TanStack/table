@@ -66,6 +66,7 @@ const TextInput: React.FC<TextInputProps> = ({
   sortedUniqueValues,
 }) => {
   const dataListId = columnId + 'list'
+
   return (
     <React.Fragment>
       <datalist id={dataListId}>
@@ -115,6 +116,7 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
     />
   ) : (
     <TextInput
+      columnId={column.id}
       columnFilterValue={columnFilterValue as string}
       columnSize={uniqueValues.size}
       setFilterValue={column.setFilterValue}
