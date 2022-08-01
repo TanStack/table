@@ -78,6 +78,7 @@ export const App = () => {
 
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [grouping, setGrouping] = React.useState<GroupingState>([])
+  const [isSplit, setIsSplit] = React.useState(false)
   const [columnPinning, setColumnPinning] = React.useState({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -176,13 +177,24 @@ export const App = () => {
           })}
         </div>
         <div className="p-2">
+          <div>
+            <input
+              type="checkbox"
+              checked={isSplit}
+              onChange={e => setIsSplit(e.target.checked)}
+              className="mx-1"
+            />
+            Split Mode
+          </div>
           <button onClick={randomizeColumns} className="border rounded p-1">
             Shuffle Columns
           </button>
         </div>
       </div>
       <div className={`flex ${isSplit ? 'gap-4' : ''}`}>
+        {isSplit ? <CustomTable table={table} tableGroup="left" /> : null}
         <CustomTable table={table} />
+        {isSplit ? <CustomTable table={table} tableGroup="right" /> : null}
       </div>
       <div className="p-2" />
       <ActionButtons
