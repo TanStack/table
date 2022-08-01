@@ -26,6 +26,8 @@ import DebouncedInput from './components/DebouncedInput'
 import Filter from './components/Filter'
 import ActionButtons from './components/ActionButtons'
 import { getGroupedRowModel } from '@tanstack/react-table/build/cjs/react-table/src'
+import faker from '@faker-js/faker'
+import TablePins from './components/TablePins'
 
 const Styles = styled.div`
   padding: 1rem;
@@ -77,6 +79,7 @@ export const App = () => {
 
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [grouping, setGrouping] = React.useState<GroupingState>([])
+  const [columnPinning, setColumnPinning] = React.useState({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -104,6 +107,7 @@ export const App = () => {
     columnResizeMode: 'onChange',
     onColumnVisibilityChange: setColumnVisibility,
     onGroupingChange: setGrouping,
+    onColumnPinningChange: setColumnPinning,
     // Provide our updateData function to our table meta
     meta: getTableMeta(setData, skipAutoResetPageIndex),
     state: {
@@ -111,6 +115,7 @@ export const App = () => {
       columnFilters,
       globalFilter,
       columnVisibility,
+      columnPinning,
     },
     debugTable: true,
     debugHeaders: true,
@@ -125,9 +130,15 @@ export const App = () => {
     }
   }, [table.getState().columnFilters[0]?.id])
 
+  const randomizeColumns = () => {
+    table.setColumnOrder(
+      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+    )
+  }
+
   return (
     <Styles>
-      <div className="p-2 grid grid-cols-4">
+      <div className="p-2 grid grid-cols-4 gap-4">
         <div className="p-2">
           Search:
           <DebouncedInput
@@ -141,12 +152,11 @@ export const App = () => {
           <div className="px-1 border-b border-black">
             <label>
               <input
-                {...{
-                  type: 'checkbox',
-                  checked: table.getIsAllColumnsVisible(),
-                  onChange: table.getToggleAllColumnsVisibilityHandler(),
-                }}
-              />{' '}
+                type="checkbox"
+                checked={table.getIsAllColumnsVisible()}
+                onChange={table.getToggleAllColumnsVisibilityHandler()}
+                className="mr-1"
+              />
               Toggle All
             </label>
           </div>
@@ -166,104 +176,117 @@ export const App = () => {
             )
           })}
         </div>
+        <div className="p-2">
+          <button onClick={randomizeColumns} className="border rounded p-1">
+            Shuffle Columns
+          </button>
+        </div>
       </div>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th
-                  className="relative"
-                  key={header.id}
-                  style={{
-                    width: header.getSize(),
-                  }}
-                  colSpan={header.colSpan}
-                >
-                  {header.isPlaceholder ? null : (
-                    <>
-                      <div>
-                        {header.column.getCanGroup() ? (
-                          // If the header can be grouped, let's add a toggle
-                          <button
-                            onClick={header.column.getToggleGroupingHandler()}
-                            style={{
-                              cursor: 'pointer',
-                            }}
-                          >
-                            {header.column.getIsGrouped()
-                              ? `🛑(${header.column.getGroupedIndex()})`
-                              : `👊`}
-                          </button>
-                        ) : null}{' '}
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}{' '}
-                        <button
-                          onClick={header.column.getToggleSortingHandler()}
-                          className={
-                            header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
-                          }
-                        >
-                          {{
-                            asc: '🔼',
-                            desc: '🔽',
-                          }[header.column.getIsSorted() as string] ?? '📶'}
-                        </button>
-                      </div>
-                      {header.column.getCanFilter() ? (
+      <div className={`flex ${isSplit ? 'gap-4' : ''}`}>
+        <table>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th
+                    className="relative"
+                    key={header.id}
+                    style={{
+                      width: header.getSize(),
+                    }}
+                    colSpan={header.colSpan}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <>
                         <div>
-                          <Filter column={header.column} table={table} />
+                          {header.column.getCanGroup() ? (
+                            // If the header can be grouped, let's add a toggle
+                            <button
+                              onClick={header.column.getToggleGroupingHandler()}
+                              style={{
+                                cursor: 'pointer',
+                              }}
+                            >
+                              {header.column.getIsGrouped()
+                                ? `🛑(${header.column.getGroupedIndex()})`
+                                : `👊`}
+                            </button>
+                          ) : null}{' '}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}{' '}
+                          <button
+                            onClick={header.column.getToggleSortingHandler()}
+                            className={
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }
+                          >
+                            {{
+                              asc: '🔼',
+                              desc: '🔽',
+                            }[header.column.getIsSorted() as string] ?? '📶'}
+                          </button>
                         </div>
-                      ) : null}
-                    </>
-                  )}
-                  <div
-                    className="absolute right-0 top-0 h-full w-1 bg-blue-300 select-none touch-none hover:bg-blue-500 cursor-col-resize"
-                    onMouseDown={header.getResizeHandler()}
-                    onTouchStart={header.getResizeHandler()}
-                  />
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <td
-                  key={cell.id}
-                  style={{
-                    width: cell.column.getSize(),
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </>
+                    )}
+                    <div
+                      className="absolute right-0 top-0 h-full w-1 bg-blue-300 select-none touch-none hover:bg-blue-500 cursor-col-resize"
+                      onMouseDown={header.getResizeHandler()}
+                      onTouchStart={header.getResizeHandler()}
+                    />
+                    {!header.isPlaceholder && header.column.getCanPin() && (
+                      <TablePins
+                        isPinned={header.column.getIsPinned()}
+                        pin={header.column.pin}
+                      />
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => (
+                  <td
+                    key={cell.id}
+                    style={{
+                      width: cell.column.getSize(),
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            {table.getFooterGroups().map(footerGroup => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map(header => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        </table>
+      </div>
       <div className="p-2" />
       <ActionButtons
         hasNextPage={table.getCanNextPage()}
