@@ -146,6 +146,7 @@ function Table({
             return (
               <Fragment key={row.id}>
                 <tr>
+                  {/* first row is a normal row */}
                   {row.getVisibleCells().map(cell => {
                     return (
                       <td key={cell.id}>
@@ -159,6 +160,7 @@ function Table({
                 </tr>
                 {row.getIsExpanded() && (
                   <tr>
+                    {/* 2nd row is a custom 1 cell row */}
                     <td colSpan={row.getVisibleCells().length}>
                       {renderSubComponent({ row })}
                     </td>
