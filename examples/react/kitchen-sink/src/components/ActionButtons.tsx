@@ -1,9 +1,4 @@
-import {
-  RowData,
-  RowModel,
-  RowSelectionState,
-  Updater,
-} from '@tanstack/react-table'
+import { RowData, RowModel } from '@tanstack/react-table'
 import React from 'react'
 
 type Props<T extends RowData> = {

@@ -6,12 +6,7 @@ import {
 } from '@tanstack/react-table'
 import React from 'react'
 import { Person } from './makeData'
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-  rankings,
-} from '@tanstack/match-sorter-utils'
+import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
 import IndeterminateCheckbox from './components/InderterminateCheckbox'
 
 export const fuzzyFilter: FilterFn<Person> = (

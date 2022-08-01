@@ -1,6 +1,5 @@
 import {
   ColumnFiltersState,
-  flexRender,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
