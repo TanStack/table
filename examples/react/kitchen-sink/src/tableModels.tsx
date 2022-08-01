@@ -1,6 +1,48 @@
-import { ColumnDef } from '@tanstack/react-table'
+import {
+  ColumnDef,
+  FilterFn,
+  SortingFn,
+  sortingFns,
+} from '@tanstack/react-table'
 import React from 'react'
 import { Person } from './makeData'
+import {
+  RankingInfo,
+  rankItem,
+  compareItems,
+  rankings,
+} from '@tanstack/match-sorter-utils'
+
+export const fuzzyFilter: FilterFn<Person> = (
+  row,
+  columnId,
+  value,
+  addMeta
+) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the ranking info
+  addMeta(itemRank)
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
+
+export const fuzzySort: SortingFn<Person> = (rowA, rowB, columnId) => {
+  let dir = 0
+
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]!,
+      rowB.columnFiltersMeta[columnId]!
+    )
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 
 export type TableMeta = {
   updateData: (rowIndex: number, columnId: string, value: unknown) => void
@@ -49,6 +91,15 @@ export const columns: ColumnDef<Person>[] = [
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
+      },
+      {
+        accessorFn: row => `${row.firstName} ${row.lastName}`,
+        id: 'fullName',
+        header: 'Full Name',
+        cell: info => info.getValue(),
+        footer: props => props.column.id,
+        filterFn: fuzzyFilter,
+        sortingFn: fuzzySort,
       },
     ],
   },
