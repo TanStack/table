@@ -8,6 +8,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  GroupingState,
   useReactTable,
 } from '@tanstack/react-table'
 import React from 'react'
@@ -24,6 +25,7 @@ import {
 import DebouncedInput from './components/DebouncedInput'
 import Filter from './components/Filter'
 import ActionButtons from './components/ActionButtons'
+import { getGroupedRowModel } from '@tanstack/react-table/build/cjs/react-table/src'
 
 const Styles = styled.div`
   padding: 1rem;
@@ -74,6 +76,7 @@ export const App = () => {
   const refreshData = () => setData(makeData(1000))
 
   const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [grouping, setGrouping] = React.useState<GroupingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -89,6 +92,7 @@ export const App = () => {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -99,9 +103,11 @@ export const App = () => {
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
     onColumnVisibilityChange: setColumnVisibility,
+    onGroupingChange: setGrouping,
     // Provide our updateData function to our table meta
     meta: getTableMeta(setData, skipAutoResetPageIndex),
     state: {
+      grouping,
       columnFilters,
       globalFilter,
       columnVisibility,
@@ -176,22 +182,37 @@ export const App = () => {
                 >
                   {header.isPlaceholder ? null : (
                     <>
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : '',
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
+                      <div>
+                        {header.column.getCanGroup() ? (
+                          // If the header can be grouped, let's add a toggle
+                          <button
+                            onClick={header.column.getToggleGroupingHandler()}
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {header.column.getIsGrouped()
+                              ? `🛑(${header.column.getGroupedIndex()})`
+                              : `👊`}
+                          </button>
+                        ) : null}{' '}
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
+                        )}{' '}
+                        <button
+                          onClick={header.column.getToggleSortingHandler()}
+                          className={
+                            header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : ''
+                          }
+                        >
+                          {{
+                            asc: '🔼',
+                            desc: '🔽',
+                          }[header.column.getIsSorted() as string] ?? '📶'}
+                        </button>
                       </div>
                       {header.column.getCanFilter() ? (
                         <div>
