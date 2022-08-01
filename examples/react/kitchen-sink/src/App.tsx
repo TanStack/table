@@ -79,6 +79,7 @@ export const App = () => {
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [grouping, setGrouping] = React.useState<GroupingState>([])
   const [isSplit, setIsSplit] = React.useState(false)
+  const [rowSelection, setRowSelection] = React.useState({})
   const [columnPinning, setColumnPinning] = React.useState({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -108,6 +109,7 @@ export const App = () => {
     onColumnVisibilityChange: setColumnVisibility,
     onGroupingChange: setGrouping,
     onColumnPinningChange: setColumnPinning,
+    onRowSelectionChange: setRowSelection,
     // Provide our updateData function to our table meta
     meta: getTableMeta(setData, skipAutoResetPageIndex),
     state: {
@@ -116,6 +118,7 @@ export const App = () => {
       globalFilter,
       columnVisibility,
       columnPinning,
+      rowSelection,
     },
     debugTable: true,
     debugHeaders: true,

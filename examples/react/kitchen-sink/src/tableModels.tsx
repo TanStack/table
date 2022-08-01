@@ -12,6 +12,7 @@ import {
   compareItems,
   rankings,
 } from '@tanstack/match-sorter-utils'
+import IndeterminateCheckbox from './components/InderterminateCheckbox'
 
 export const fuzzyFilter: FilterFn<Person> = (
   row,
@@ -76,6 +77,25 @@ export const defaultColumn: Partial<ColumnDef<Person>> = {
 }
 
 export const columns: ColumnDef<Person>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <IndeterminateCheckbox
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <IndeterminateCheckbox
+          checked={row.getIsSelected()}
+          indeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      </div>
+    ),
+  },
   {
     header: 'Name',
     footer: props => props.column.id,
