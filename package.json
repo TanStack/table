@@ -41,6 +41,7 @@
     "./examples/react/pagination-controlled",
     "./examples/react/row-selection",
     "./examples/react/sorting",
+    "./examples/react/sub-components",
     "./examples/react/virtualized-rows",
     "./examples/solid/basic",
     "./examples/solid/column-groups",
