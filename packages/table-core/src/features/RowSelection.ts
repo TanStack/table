@@ -267,7 +267,7 @@ export const RowSelection: TableFeature = {
       // },
 
       getIsAllRowsSelected: () => {
-        const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
+        const preGroupedFlatRows = table.getFilteredRowModel().flatRows
         const { rowSelection } = table.getState()
 
         let isAllRowsSelected = Boolean(
@@ -309,7 +309,7 @@ export const RowSelection: TableFeature = {
         ).length
         return (
           totalSelected > 0 &&
-          totalSelected < table.getCoreRowModel().flatRows.length
+          totalSelected < table.getFilteredRowModel().flatRows.length
         )
       },
 
