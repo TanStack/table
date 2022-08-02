@@ -136,7 +136,7 @@ You could extract the `firstName` value like so:
 
 ```tsx
 
-columHelper.accessor('firstName')
+columnHelper.accessor('firstName')
 
 // OR
 
@@ -156,7 +156,7 @@ type Sales = [Date, number]
 You could extract the `number` value like so:
 
 ```tsx
-columHelper.accessor(1)
+columnHelper.accessor(1)
 
 // OR
 
@@ -183,7 +183,7 @@ type Person = {
 You could extract a computed full-name value like so:
 
 ```tsx
-columHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
+columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
   id: 'fullName',
 })
 
@@ -224,7 +224,7 @@ There are a couple of formatters available to you:
 You can provide a custom cell formatter by passing a function to the `cell` property and using the `props.getValue()` function to access your cell's value:
 
 ```tsx
-columHelper.accessor('firstName', {
+columnHelper.accessor('firstName', {
   cell: props => <span>{props.getValue().toUpperCase()}</span>,
 })
 ```
@@ -232,7 +232,7 @@ columHelper.accessor('firstName', {
 Cell formatters are also provided the `row` and `table` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
 
 ```tsx
-columHelper.accessor('firstName', {
+columnHelper.accessor('firstName', {
   cell: props => (
     <span>{`${props.row.original.id} - ${props.getValue()}`}</span>
   ),
