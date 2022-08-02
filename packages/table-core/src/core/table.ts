@@ -14,17 +14,19 @@ import {
   TableOptions,
   RowData,
   TableMeta,
+  ColumnDefResolved,
+  GroupColumnDef,
 } from '../types'
 
 //
-import { CoreColumnDefResolved, createColumn } from './column'
+import { createColumn } from './column'
 import { Headers } from './headers'
 //
 
 import { ColumnSizing } from '../features/ColumnSizing'
 import { Expanding } from '../features/Expanding'
 import { Filters } from '../features/Filters'
-import { Grouping } from '../features/Grouping'
+import { Grouping, GroupingColumnDef } from '../features/Grouping'
 import { Ordering } from '../features/Ordering'
 import { Pagination } from '../features/Pagination'
 import { Pinning } from '../features/Pinning'
@@ -234,7 +236,7 @@ export function createTable<TData extends RowData>(
         return {
           header: props => {
             const resolvedColumnDef = props.header.column
-              .columnDef as CoreColumnDefResolved<TData>
+              .columnDef as ColumnDefResolved<TData>
 
             if (resolvedColumnDef.accessorKey) {
               return resolvedColumnDef.accessorKey
@@ -273,8 +275,13 @@ export function createTable<TData extends RowData>(
           return columnDefs.map(columnDef => {
             const column = createColumn(table, columnDef, depth, parent)
 
-            column.columns = columnDef.columns
-              ? recurseColumns(columnDef.columns, column, depth + 1)
+            const groupingColumnDef = columnDef as GroupColumnDef<
+              TData,
+              unknown
+            >
+
+            column.columns = groupingColumnDef.columns
+              ? recurseColumns(groupingColumnDef.columns, column, depth + 1)
               : []
 
             return column

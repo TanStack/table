@@ -1,9 +1,11 @@
 import {
-  CoreColumnDefDisplay,
-  CoreColumnDefDisplayWithStringHeader,
-} from './core/column'
-import { GroupingColumnDef } from './features/Grouping'
-import { AccessorFn, ColumnDef, RowData } from './types'
+  AccessorFn,
+  ColumnDef,
+  DisplayColumnDef,
+  GroupColumnDef,
+  IdentifiedColumnDef,
+  RowData,
+} from './types'
 import { DeepKeys, DeepValue, RequiredKeys } from './utils'
 
 // type Person = {
@@ -56,24 +58,12 @@ export type ColumnHelper<TData extends RowData> = {
       : never
   >(
     accessor: TAccessor,
-    column: Omit<ColumnDef<TData, TValue>, 'accessorKey'>
+    column: TAccessor extends AccessorFn<TData>
+      ? DisplayColumnDef<TData, TValue>
+      : IdentifiedColumnDef<TData, TValue>
   ) => ColumnDef<TData, TValue>
-  display: (
-    column: RequiredKeys<
-      Omit<ColumnDef<TData, unknown>, 'accessorKey' | 'accessorFn'>,
-      'id'
-    >
-  ) => ColumnDef<TData, unknown>
-  group: (
-    column: Omit<
-      ColumnDef<TData, unknown>,
-      'id' | 'header' | 'accessorKey' | 'accessorFn' | 'columns'
-    > &
-      (
-        | CoreColumnDefDisplayWithStringHeader<TData, unknown>
-        | CoreColumnDefDisplay<TData, unknown>
-      ) & { columns: ColumnDef<TData, any>[] }
-  ) => ColumnDef<TData, unknown>
+  display: (column: DisplayColumnDef<TData>) => ColumnDef<TData, unknown>
+  group: (column: GroupColumnDef<TData>) => ColumnDef<TData, unknown>
 }
 
 export function createColumnHelper<

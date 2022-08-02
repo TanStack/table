@@ -1,5 +1,4 @@
 import { CoreOptions, CoreTableState, CoreInstance } from './core/table'
-import { CoreColumn, CoreColumnDef } from './core/column'
 import {
   VisibilityInstance,
   VisibilityTableState,
@@ -21,7 +20,12 @@ import {
   ColumnPinningRow,
   ColumnPinningTableState,
 } from './features/Pinning'
-import { CoreHeader, CoreHeaderGroup, HeadersInstance } from './core/headers'
+import {
+  CoreHeader,
+  CoreHeaderGroup,
+  HeaderContext,
+  HeadersInstance,
+} from './core/headers'
 import {
   FilterFn,
   FiltersColumn,
@@ -75,8 +79,9 @@ import {
   RowSelectionTableState,
 } from './features/RowSelection'
 import { CoreRow } from './core/row'
-import { PartialKeys } from './utils'
-import { CoreCell } from './core/cell'
+import { DeepKeys, PartialKeys, UnionToIntersection } from './utils'
+import { CellContext, CoreCell } from './core/cell'
+import { CoreColumn } from './core/column'
 
 export interface TableMeta<TData extends RowData> {}
 export interface ColumnMeta<TData extends RowData, TValue> {}
@@ -171,18 +176,97 @@ export type ColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
 
-export type ColumnDef<
-  TData extends RowData,
-  TValue extends any = unknown
-> = CoreColumnDef<TData, TValue> &
-  VisibilityColumnDef &
+export type StringOrTemplateHeader<TData, TValue> =
+  | string
+  | ColumnDefTemplate<HeaderContext<TData, TValue>>
+
+type StringHeaderIdentifier = {
+  header: string
+  id?: string
+}
+
+type IdIdentifier<TData extends RowData, TValue> = {
+  id: string
+  header?: StringOrTemplateHeader<TData, TValue>
+}
+
+type ColumnIdentifiers<TData extends RowData, TValue> =
+  | IdIdentifier<TData, TValue>
+  | StringHeaderIdentifier
+
+//
+
+export type ColumnDefBase<TData extends RowData, TValue = unknown> = {
+  footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
+  cell?: ColumnDefTemplate<CellContext<TData, TValue>>
+  meta?: ColumnMeta<TData, TValue>
+} & VisibilityColumnDef &
   ColumnPinningColumnDef &
   FiltersColumnDef<TData> &
   SortingColumnDef<TData> &
   GroupingColumnDef<TData, TValue> &
   ColumnSizingColumnDef
 
-export type Column<TData extends RowData, TValue> = CoreColumn<TData, TValue> &
+//
+
+export type IdentifiedColumnDef<
+  TData extends RowData,
+  TValue = unknown
+> = ColumnDefBase<TData, TValue> & {
+  id?: string
+  header?: StringOrTemplateHeader<TData, TValue>
+}
+
+export type DisplayColumnDef<
+  TData extends RowData,
+  TValue = unknown
+> = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
+
+export type GroupColumnDef<
+  TData extends RowData,
+  TValue = unknown
+> = ColumnDefBase<TData, TValue> &
+  ColumnIdentifiers<TData, TValue> & {
+    columns?: ColumnDef<TData, any>[]
+  }
+
+export type AccessorFnColumnDef<
+  TData extends RowData,
+  TValue = unknown
+> = ColumnDefBase<TData, TValue> &
+  ColumnIdentifiers<TData, TValue> & {
+    accessorFn: AccessorFn<TData, TValue>
+  }
+
+export type AccessorKeyColumnDef<TData extends RowData, TValue = unknown> = {
+  id?: string
+} & ColumnIdentifiers<TData, TValue> &
+  ColumnDefBase<TData, TValue> & {
+    accessorKey: DeepKeys<TData>
+  }
+
+export type AccessorColumnDef<TData extends RowData, TValue = unknown> =
+  | AccessorKeyColumnDef<TData, TValue>
+  | AccessorFnColumnDef<TData, TValue>
+
+//
+
+export type ColumnDef<TData extends RowData, TValue = unknown> =
+  | DisplayColumnDef<TData, TValue>
+  | GroupColumnDef<TData, TValue>
+  | AccessorColumnDef<TData, TValue>
+
+export type ColumnDefResolved<
+  TData extends RowData,
+  TValue = unknown
+> = Partial<UnionToIntersection<ColumnDef<TData, TValue>>> & {
+  accessorKey?: string
+}
+
+export type Column<TData extends RowData, TValue = unknown> = CoreColumn<
+  TData,
+  TValue
+> &
   ColumnVisibilityColumn &
   ColumnPinningColumn &
   FiltersColumn<TData> &

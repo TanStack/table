@@ -1,3 +1,4 @@
+import { TaggedTemplateExpression } from '@babel/types'
 import {
   Column,
   Table,
@@ -6,62 +7,9 @@ import {
   ColumnDefTemplate,
   RowData,
   ColumnMeta,
+  ColumnDefResolved,
 } from '../types'
-import { DeepKeys, IsKnown, memo, UnionToIntersection } from '../utils'
-import { CellContext } from './cell'
-import { HeaderContext } from './headers'
-
-export type CoreColumnDefBase<TData extends RowData, TValue> = {
-  columns?: ColumnDef<TData, unknown>[]
-  header?: ColumnDefTemplate<HeaderContext<TData, TValue>>
-  footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
-  cell?: ColumnDefTemplate<CellContext<TData, TValue>>
-  meta?: ColumnMeta<TData, TValue>
-}
-
-export type CoreColumnDefDisplay<
-  TData extends RowData,
-  TValue
-> = CoreColumnDefBase<TData, TValue> & {
-  id: string
-}
-
-export type CoreColumnDefDisplayWithStringHeader<
-  TData extends RowData,
-  TValue
-> = CoreColumnDefBase<TData, TValue> & {
-  header: string
-  id?: string
-}
-
-export type CoreColumnDefAccessorFn<
-  TData extends RowData,
-  TValue
-> = CoreColumnDefBase<TData, TValue> & {
-  accessorFn: AccessorFn<TData, TValue>
-  id: string
-}
-
-export type CoreColumnDefAccessorKey<
-  TData extends RowData,
-  TValue
-> = CoreColumnDefBase<TData, TValue> & {
-  accessorKey: DeepKeys<TData>
-  id?: string
-}
-
-export type CoreColumnDef<TData extends RowData, TValue> =
-  | CoreColumnDefDisplay<TData, TValue>
-  | CoreColumnDefDisplayWithStringHeader<TData, TValue>
-  | CoreColumnDefAccessorFn<TData, TValue>
-  | CoreColumnDefAccessorKey<TData, TValue>
-
-export type CoreColumnDefResolved<
-  TData extends RowData,
-  TValue = unknown
-> = Partial<UnionToIntersection<CoreColumnDef<TData, TValue>>> & {
-  accessorKey?: string
-}
+import { memo } from '../utils'
 
 export type CoreColumn<TData extends RowData, TValue> = {
   id: string
@@ -85,7 +33,7 @@ export function createColumn<TData extends RowData, TValue>(
   const resolvedColumnDef = {
     ...defaultColumn,
     ...columnDef,
-  } as CoreColumnDefResolved<TData>
+  } as ColumnDefResolved<TData>
 
   const accessorKey = resolvedColumnDef.accessorKey
 
