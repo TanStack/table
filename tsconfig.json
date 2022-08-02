@@ -23,6 +23,7 @@
     { "path": "examples/react/pagination/tsconfig.dev.json" },
     { "path": "examples/react/row-selection/tsconfig.dev.json" },
     { "path": "examples/react/sorting/tsconfig.dev.json" },
+    { "path": "examples/react/sub-components/tsconfig.dev.json" },
     { "path": "examples/react/virtualized-rows/tsconfig.dev.json" },
     { "path": "examples/solid/basic/tsconfig.dev.json" },
     { "path": "examples/solid/column-groups/tsconfig.dev.json" },
