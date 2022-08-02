@@ -267,16 +267,16 @@ export const RowSelection: TableFeature = {
       // },
 
       getIsAllRowsSelected: () => {
-        const preFilteredFlatRows = table.getPreFilteredRowModel().flatRows
+        const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
         const { rowSelection } = table.getState()
 
         let isAllRowsSelected = Boolean(
-          preFilteredFlatRows.length && Object.keys(rowSelection).length
+          preGroupedFlatRows.length && Object.keys(rowSelection).length
         )
 
         if (isAllRowsSelected) {
           if (
-            preFilteredFlatRows.some(
+            preGroupedFlatRows.some(
               row => row.getCanSelect() && !rowSelection[row.id]
             )
           ) {
