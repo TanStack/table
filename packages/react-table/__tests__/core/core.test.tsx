@@ -190,24 +190,6 @@ describe('core', () => {
     expect(RTL.screen.getAllByRole('columnheader').length).toEqual(24)
     expect(RTL.screen.getAllByRole('cell').length).toEqual(18)
 
-    console.log(
-      Array.from(rendered.container.querySelectorAll('thead > tr')).map(d =>
-        Array.from(d.querySelectorAll('th')).map(d => [
-          d.innerHTML,
-          d.getAttribute('colspan'),
-        ])
-      ),
-      Array.from(rendered.container.querySelectorAll('tbody > tr')).map(d =>
-        Array.from(d.querySelectorAll('td')).map(d => d.innerHTML)
-      ),
-      Array.from(rendered.container.querySelectorAll('tfoot > tr')).map(d =>
-        Array.from(d.querySelectorAll('th')).map(d => [
-          d.innerHTML,
-          d.getAttribute('colspan'),
-        ])
-      )
-    )
-
     expect(
       Array.from(rendered.container.querySelectorAll('thead > tr')).map(d =>
         Array.from(d.querySelectorAll('th')).map(d => [
