@@ -15,6 +15,7 @@ import { DeepKeys, DeepValue, RequiredKeys } from './utils'
 //   visits: number
 //   status: string
 //   progress: number
+//   createdAt: Date
 //   nested: {
 //     foo: [
 //       {
