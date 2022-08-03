@@ -17,9 +17,11 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
         let { rows, flatRows, rowsById } = rowModel
         const pageStart = pageSize * pageIndex
         const pageEnd = pageStart + pageSize
-
-        rows = rows.slice(pageStart, pageEnd)
-
+        if (!table.options.paginateExpandedRows) {
+          rows = rows.filter(row => row.depth === 0).slice(pageStart, pageEnd)
+        } else {
+          rows = rows.slice(pageStart, pageEnd)
+        }
         let paginatedRowModel: RowModel<TData>
 
         if (!table.options.paginateExpandedRows) {

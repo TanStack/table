@@ -14,8 +14,6 @@ export function getExpandedRowModel<TData extends RowData>(): (
       (expanded, rowModel, paginateExpandedRows) => {
         if (
           !rowModel.rows.length ||
-          // Do not expand if rows are not included in pagination
-          !paginateExpandedRows ||
           (expanded !== true && !Object.keys(expanded ?? {}).length)
         ) {
           return rowModel
