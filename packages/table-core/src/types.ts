@@ -167,7 +167,7 @@ export type RowModel<TData extends RowData> = {
   rowsById: Record<string, Row<TData>>
 }
 
-export type AccessorFn<TData extends RowData, TValue = unknown> = (
+export type AccessorFn<TData extends RowData, TValue = DeepKeys<TData>> = (
   originalRow: TData,
   index: number
 ) => TValue
@@ -196,7 +196,7 @@ type ColumnIdentifiers<TData extends RowData, TValue> =
 
 //
 
-export type ColumnDefBase<TData extends RowData, TValue = unknown> = {
+export type ColumnDefBase<TData extends RowData, TValue = DeepKeys<TData>> = {
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TData, TValue>>
   meta?: ColumnMeta<TData, TValue>
@@ -211,7 +211,7 @@ export type ColumnDefBase<TData extends RowData, TValue = unknown> = {
 
 export type IdentifiedColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = DeepKeys<TData>
 > = ColumnDefBase<TData, TValue> & {
   id?: string
   header?: StringOrTemplateHeader<TData, TValue>
@@ -219,12 +219,12 @@ export type IdentifiedColumnDef<
 
 export type DisplayColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = DeepKeys<TData>
 > = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 export type GroupColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = DeepKeys<TData>
 > = ColumnDefBase<TData, TValue> &
   ColumnIdentifiers<TData, TValue> & {
     columns?: ColumnDef<TData, any>[]
@@ -232,38 +232,38 @@ export type GroupColumnDef<
 
 export type AccessorFnColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = DeepKeys<TData>
 > = ColumnDefBase<TData, TValue> &
   ColumnIdentifiers<TData, TValue> & {
     accessorFn: AccessorFn<TData, TValue>
   }
 
-export type AccessorKeyColumnDef<TData extends RowData, TValue = unknown> = {
+export type AccessorKeyColumnDef<TData extends RowData, TValue = DeepKeys<TData>> = {
   id?: string
 } & Partial<ColumnIdentifiers<TData, TValue>> &
   ColumnDefBase<TData, TValue> & {
     accessorKey: DeepKeys<TData>
   }
 
-export type AccessorColumnDef<TData extends RowData, TValue = unknown> =
+export type AccessorColumnDef<TData extends RowData, TValue = DeepKeys<TData>> =
   | AccessorKeyColumnDef<TData, TValue>
   | AccessorFnColumnDef<TData, TValue>
 
 //
 
-export type ColumnDef<TData extends RowData, TValue = unknown> =
+export type ColumnDef<TData extends RowData, TValue = DeepKeys<TData>> =
   | DisplayColumnDef<TData, TValue>
   | GroupColumnDef<TData, TValue>
   | AccessorColumnDef<TData, TValue>
 
 export type ColumnDefResolved<
   TData extends RowData,
-  TValue = unknown
+  TValue = DeepKeys<TData>
 > = Partial<UnionToIntersection<ColumnDef<TData, TValue>>> & {
   accessorKey?: string
 }
 
-export type Column<TData extends RowData, TValue = unknown> = CoreColumn<
+export type Column<TData extends RowData, TValue = DeepKeys<TData>> = CoreColumn<
   TData,
   TValue
 > &
