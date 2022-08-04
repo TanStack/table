@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "vue": "^3.2.25",
-    "@tanstack/vue-table": "8.5.7"
+    "@tanstack/vue-table": "8.5.8"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
