@@ -21,7 +21,6 @@ export function getExpandedRowModel<TData extends RowData>(): (
 
         if (!paginateExpandedRows) {
           // Only expand rows at this point if they are being paginated
-          console.log(rowModel.rows)
           return rowModel
         }
 
