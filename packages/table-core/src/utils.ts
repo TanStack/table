@@ -48,48 +48,18 @@ export type DeepKeys<T> = unknown extends T
   : object extends T
   ? string
   : T extends readonly any[] & IsTuple<T>
-  ? AllowedIndexes<T> | DeepKeysPrefix<T>
+  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>>
   : T extends any[]
   ? never & 'Dynamic length array indexing is not supported'
   : T extends Date
   ? never
   : T extends object
-  ? (keyof T & string) | DeepKeysPrefix<T>
+  ? (keyof T & string) | DeepKeysPrefix<T, keyof T>
   : never
 
-type Key = string | number | symbol
-type Join<L extends Key | undefined, R extends Key | undefined> = L extends
-  | string
-  | number
-  ? R extends string | number
-    ? `${L}.${R}`
-    : L
-  : R extends string | number
-  ? R
-  : undefined
-type Union<
-  L extends unknown | undefined,
-  R extends unknown | undefined
-> = L extends undefined
-  ? R extends undefined
-    ? undefined
-    : R
-  : R extends undefined
-  ? L
-  : L | R
-type DeepKeysPrefix<
-  T extends object,
-  Prev extends Key | undefined = undefined,
-  Path extends Key | undefined = undefined,
-  PrevTypes extends object = T
-> = string &
-  {
-    [K in keyof T]: T[K] extends PrevTypes | T
-      ? Union<Union<Prev, Path>, Join<Path, K>>
-      : T[K] extends object
-      ? DeepKeysPrefix<T[K], Union<Prev, Path>, Join<Path, K>, PrevTypes | T>
-      : Union<Union<Prev, Path>, Join<Path, K>>
-  }[keyof T]
+type DeepKeysPrefix<T, TPrefix> = TPrefix extends keyof T & (number | string)
+  ? `${TPrefix}.${DeepKeys<T[TPrefix]> & string}`
+  : never
 
 export type DeepValue<T, TProp> = T extends Record<string | number, any>
   ? TProp extends `${infer TBranch}.${infer TDeepProp}`

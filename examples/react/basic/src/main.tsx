@@ -17,20 +17,17 @@ type Person = {
   visits: number
   status: string
   progress: number
-  friend?: Person
-}
-
-const friend: Person = {
-  firstName: 'tanner',
-  lastName: 'linsley',
-  age: 24,
-  visits: 100,
-  status: 'In Relationship',
-  progress: 50,
 }
 
 const defaultData: Person[] = [
-  friend,
+  {
+    firstName: 'tanner',
+    lastName: 'linsley',
+    age: 24,
+    visits: 100,
+    status: 'In Relationship',
+    progress: 50,
+  },
   {
     firstName: 'tandy',
     lastName: 'miller',
@@ -46,7 +43,6 @@ const defaultData: Person[] = [
     visits: 20,
     status: 'Complicated',
     progress: 10,
-    friend
   },
 ]
 
@@ -78,11 +74,6 @@ const columns = [
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('friend', {
-    header: 'Friend',
-    cell: info => JSON.stringify(info.getValue()),
     footer: info => info.column.id,
   }),
 ]
