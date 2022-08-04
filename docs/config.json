@@ -205,6 +205,10 @@
           "label": "Column Ordering"
         },
         {
+          "to": "examples/react/column-dnd",
+          "label": "Column Ordering (DnD)"
+        },
+        {
           "to": "examples/react/column-pinning",
           "label": "Column Pinning"
         },
