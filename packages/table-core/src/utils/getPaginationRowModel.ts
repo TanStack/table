@@ -7,7 +7,13 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
 }): (table: Table<TData>) => () => RowModel<TData> {
   return table =>
     memo(
-      () => [table.getState().pagination, table.getPrePaginationRowModel()],
+      () => [
+        table.getState().pagination,
+        table.getPrePaginationRowModel(),
+        table.options.paginateExpandedRows
+          ? undefined
+          : table.getState().expanded,
+      ],
       (pagination, rowModel) => {
         if (!rowModel.rows.length) {
           return rowModel
@@ -23,14 +29,11 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
         let paginatedRowModel: RowModel<TData>
 
         if (!table.options.paginateExpandedRows) {
-          paginatedRowModel = expandRows(
-            {
-              rows,
-              flatRows,
-              rowsById,
-            },
-            table
-          )
+          paginatedRowModel = expandRows({
+            rows,
+            flatRows,
+            rowsById,
+          })
         } else {
           paginatedRowModel = {
             rows,
@@ -38,6 +41,8 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
             rowsById,
           }
         }
+
+        console.log(paginatedRowModel.rows)
 
         paginatedRowModel.flatRows = []
 

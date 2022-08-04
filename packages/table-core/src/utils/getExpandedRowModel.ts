@@ -14,14 +14,18 @@ export function getExpandedRowModel<TData extends RowData>(): (
       (expanded, rowModel, paginateExpandedRows) => {
         if (
           !rowModel.rows.length ||
-          // Do not expand if rows are not included in pagination
-          !paginateExpandedRows ||
           (expanded !== true && !Object.keys(expanded ?? {}).length)
         ) {
           return rowModel
         }
 
-        return expandRows(rowModel, table)
+        if (!paginateExpandedRows) {
+          // Only expand rows at this point if they are being paginated
+          console.log(rowModel.rows)
+          return rowModel
+        }
+
+        return expandRows(rowModel)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getExpandedRowModel',
@@ -30,10 +34,7 @@ export function getExpandedRowModel<TData extends RowData>(): (
     )
 }
 
-export function expandRows<TData extends RowData>(
-  rowModel: RowModel<TData>,
-  table: Table<TData>
-) {
+export function expandRows<TData extends RowData>(rowModel: RowModel<TData>) {
   const expandedRows: Row<TData>[] = []
 
   const handleRow = (row: Row<TData>) => {
