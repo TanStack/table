@@ -240,7 +240,7 @@ export type AccessorFnColumnDef<
 
 export type AccessorKeyColumnDef<TData extends RowData, TValue = unknown> = {
   id?: string
-} & ColumnIdentifiers<TData, TValue> &
+} & Partial<ColumnIdentifiers<TData, TValue>> &
   ColumnDefBase<TData, TValue> & {
     accessorKey: DeepKeys<TData>
   }
