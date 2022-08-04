@@ -24,11 +24,11 @@ type ComputeRange<
 > = Result['length'] extends N
   ? Result
   : ComputeRange<N, [...Result, Result['length']]>
-type Index100 = ComputeRange<100>[number]
+type Index40 = ComputeRange<40>[number]
 
 // Is this type a tuple?
 type IsTuple<T> = T extends readonly any[] & { length: infer Length }
-  ? Length extends Index100
+  ? Length extends Index40
     ? T
     : never
   : never
