@@ -242,7 +242,7 @@ export type AccessorKeyColumnDef<TData extends RowData, TValue = unknown> = {
   id?: string
 } & Partial<ColumnIdentifiers<TData, TValue>> &
   ColumnDefBase<TData, TValue> & {
-    accessorKey: DeepKeys<TData>
+    accessorKey: string | keyof TData
   }
 
 export type AccessorColumnDef<TData extends RowData, TValue = unknown> =
