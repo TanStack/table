@@ -124,9 +124,9 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [x] grouping-and-aggregation
   - [x] editable-data
   - [ ] kitchen-sink
-  - [ ] row-dnd
+  - [x] row-dnd
   - [ ] streaming-rows
-  - [ ] sub-components
+  - [x] sub-components
   - [x] virtualized-rows
   - [ ] absolute-layout
   - [ ] block-layout

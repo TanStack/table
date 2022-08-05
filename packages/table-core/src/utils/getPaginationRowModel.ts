@@ -42,8 +42,6 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
           }
         }
 
-        console.log(paginatedRowModel.rows)
-
         paginatedRowModel.flatRows = []
 
         const handleRow = (row: Row<TData>) => {

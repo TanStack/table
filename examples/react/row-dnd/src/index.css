@@ -17,20 +17,14 @@ th {
   padding: 2px 4px;
 }
 
-th div {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
-th button {
-  padding: 1rem;
-  cursor: grab;
-}
-
 td {
   border-right: 1px solid lightgray;
   padding: 2px 4px;
+}
+
+td button {
+  padding: 1px 1rem;
+  cursor: grab;
 }
 
 td:last-child {

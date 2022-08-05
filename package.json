@@ -40,6 +40,7 @@
     "./examples/react/grouping",
     "./examples/react/pagination",
     "./examples/react/pagination-controlled",
+    "./examples/react/row-dnd",
     "./examples/react/row-selection",
     "./examples/react/sorting",
     "./examples/react/sub-components",
