@@ -22,6 +22,7 @@
     { "path": "examples/react/grouping/tsconfig.dev.json" },
     { "path": "examples/react/pagination-controlled/tsconfig.dev.json" },
     { "path": "examples/react/pagination/tsconfig.dev.json" },
+    { "path": "examples/react/row-dnd/tsconfig.dev.json" },
     { "path": "examples/react/row-selection/tsconfig.dev.json" },
     { "path": "examples/react/sorting/tsconfig.dev.json" },
     { "path": "examples/react/sub-components/tsconfig.dev.json" },

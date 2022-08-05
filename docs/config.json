@@ -253,6 +253,10 @@
           "label": "Pagination Controlled"
         },
         {
+          "to": "examples/react/row-dnd",
+          "label": "Row DnD"
+        },
+        {
           "to": "examples/react/row-selection",
           "label": "Row Selection"
         },
