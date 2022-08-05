@@ -65,11 +65,6 @@ const reorderColumn = (
   targetColumnId: string,
   columnOrder: string[]
 ): ColumnOrderState => {
-  console.log({
-    draggedColumn: draggedColumnId,
-    receivingColumn: targetColumnId,
-    columnOrder,
-  })
   columnOrder.splice(
     columnOrder.indexOf(targetColumnId),
     0,
@@ -109,7 +104,6 @@ const DraggableColumnHeader: FC<{
   return (
     <th
       ref={dropRef}
-      key={header.id}
       colSpan={header.colSpan}
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
@@ -212,9 +206,9 @@ const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <DndProvider backend={HTML5Backend}>
-      <App />
-    </DndProvider>
-  </React.StrictMode>
+  // <React.StrictMode> //disabled for react-dnd preview bug for now
+  <DndProvider backend={HTML5Backend}>
+    <App />
+  </DndProvider>
+  // </React.StrictMode>
 )
