@@ -117,7 +117,7 @@ Filter functions can be used/referenced/defined by passing the following to `col
 - A `string` that references a built-in filter function
 - A function directly provided to the `columnDefinition.filterFn` option
 
-The final list of filter functions available for the `columnDef.filterFn` and ``tableOptions.globalFilterFn` options use the following type:
+The final list of filter functions available for the `columnDef.filterFn` and `tableOptions.globalFilterFn` options use the following type:
 
 ```tsx
 export type FilterFnOption<TData extends AnyData> =
