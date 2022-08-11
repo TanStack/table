@@ -58,7 +58,8 @@
     "./examples/svelte/sorting",
     "./examples/vue/basic",
     "./examples/vue/column-ordering",
-    "./examples/vue/column-pinning"
+    "./examples/vue/column-pinning",
+    "./examples/vue/sorting"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",

@@ -40,7 +40,8 @@
     { "path": "examples/svelte/sorting/tsconfig.dev.json" },
     { "path": "examples/vue/basic/tsconfig.dev.json" },
     { "path": "examples/vue/column-ordering/tsconfig.dev.json" },
-    { "path": "examples/vue/column-pinning/tsconfig.dev.json" }
+    { "path": "examples/vue/column-pinning/tsconfig.dev.json" },
+    { "path": "examples/vue/sorting/tsconfig.dev.json" },
   ]
   // "exclude": ["node_modules"]
 }
