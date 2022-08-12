@@ -1,6 +1,6 @@
 # Pagination
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/pagination)
+- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/TanStack/table/tree/v7/examples/pagination)
 - `yarn` and `yarn start` to run and edit the example
 
 ## Guide

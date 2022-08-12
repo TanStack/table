@@ -2,5 +2,5 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 You can:
 
-- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/material-ui-components)
+- [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/TanStack/table/tree/v7/examples/material-ui-components)
 - `yarn` and `yarn start` to run and edit the example

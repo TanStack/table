@@ -26,7 +26,7 @@ Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue
 
 ## Enjoy this library?
 
-Try some other [TanStack](https://tanstack.com) like [React Query](https://github.com/tannerlinsley/react-query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/tannerlinsley/react-charts)
+Try some other [TanStack](https://tanstack.com) like [React Query](https://github.com/TanStack/query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/TanStack/react-charts)
 
 ## Visit [tanstack.com/table](https://tanstack.com/table) for docs, guides, API and more!
 
