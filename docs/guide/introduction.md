@@ -6,7 +6,7 @@ TanStack Table is a **Headless UI** library for building powerful tables & datag
 
 ## What is "headless" UI?
 
-**Headless UI** is a term for libraries and utilities that provide the logic, state, processing and API for UI elements and interactions, but **do no provide markup, styles, or pre-built implementations**. Scratching your head yet? 😉 Headless UI has a few main goals:
+**Headless UI** is a term for libraries and utilities that provide the logic, state, processing and API for UI elements and interactions, but **do not provide markup, styles, or pre-built implementations**. Scratching your head yet? 😉 Headless UI has a few main goals:
 
 The hardest parts of building complex UIs usually revolve around state, events, side-effects, data computation/management. By removing these concerns from the markup, styles and implementation details, our logic and components can be more modular and reusable.
 
