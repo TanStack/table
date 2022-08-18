@@ -14,7 +14,7 @@ These functions are used to create a table. Which one you use depends on which f
 
 ## Options
 
-These are **core** options and API properties for the table. More options and API properties are available for other [table features](../guide/features.md).
+These are **core** options and API properties for the table. More options and API properties are available for other [table features](../../guide/features.md).
 
 ### `data`
 
@@ -227,7 +227,7 @@ This optional function is used to derive a unique ID for any given row. If not p
 type columns = ColumnDef<TData>[]
 ```
 
-The column defs to use for this table. See the [Column Defs Guide](../guide/column-defs.md) for more information on creating column definitions.
+The column defs to use for this table. See the [Column Defs Guide](../../guide/column-defs.md) for more information on creating column definitions.
 
 ### `defaultColumn`
 

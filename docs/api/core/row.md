@@ -2,7 +2,7 @@
 title: Row
 ---
 
-These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../guide/features.md).
+These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../../guide/features.md).
 
 ## Row API
 

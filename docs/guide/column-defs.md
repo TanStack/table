@@ -241,7 +241,7 @@ columnHelper.accessor('firstName', {
 
 ## Aggregated Cell Formatting
 
-For more info on aggregated cells, see [grouping](./guide/grouping).
+For more info on aggregated cells, see [grouping](../guide/grouping).
 
 ## Header & Footer Formatting
 
