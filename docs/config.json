@@ -269,6 +269,10 @@
           "label": "Virtualized Rows"
         },
         {
+          "to": "examples/react/virtualized-infinite-scrolling",
+          "label": "Virtualized Infinite Scrolling"
+        },
+        {
           "to": "examples/react/full-width-resizable-table",
           "label": "Full Width Resizable Table"
         }
