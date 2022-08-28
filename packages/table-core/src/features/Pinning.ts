@@ -202,7 +202,7 @@ export const Pinning: TableFeature = {
               columnId => allCells.find(cell => cell.column.id === columnId)!
             )
             .filter(Boolean)
-            .map(d => ({ ...d, position: 'left' } as Cell<TData, unknown>))
+            .map(d => ({ ...d, position: 'right' } as Cell<TData, unknown>))
 
           return cells
         },
