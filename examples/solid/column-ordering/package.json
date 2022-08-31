@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "solid-js": "^1.3.13",
-    "@tanstack/solid-table": "8.5.12"
+    "@tanstack/solid-table": "8.5.13"
   }
 }
