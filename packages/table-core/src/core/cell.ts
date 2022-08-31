@@ -1,5 +1,5 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
-import { Getter } from '../utils'
+import { Getter, memo } from '../utils'
 
 export type CellContext<TData extends RowData, TValue> = {
   table: Table<TData>
@@ -34,14 +34,21 @@ export function createCell<TData extends RowData, TValue>(
     column,
     getValue: () => row.getValue(columnId),
     renderValue: getRenderValue,
-    getContext: () => ({
-      table,
-      column,
-      row,
-      cell: cell as Cell<TData, TValue>,
-      getValue: cell.getValue,
-      renderValue: cell.renderValue,
-    }),
+    getContext: memo(
+      () => [table, column, row, cell],
+      (table, column, row, cell) => ({
+        table,
+        column,
+        row,
+        cell: cell as Cell<TData, TValue>,
+        getValue: cell.getValue,
+        renderValue: cell.renderValue,
+      }),
+      {
+        key: process.env.NODE_ENV === 'development' && 'cell.getContext',
+        debug: () => table.options.debugAll,
+      }
+    ),
   }
 
   table._features.forEach(feature => {
