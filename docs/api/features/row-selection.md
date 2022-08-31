@@ -53,7 +53,7 @@ onRowSelectionChange?: OnChangeFn<RowSelectionState>
 
 If provided, this function will be called with an `updaterFn` when `state.rowSelection` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
-## Table API API
+## Table API
 
 ### `getToggleAllRowsSelectedHandler`
 
