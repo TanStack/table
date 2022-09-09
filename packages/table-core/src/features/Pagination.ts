@@ -130,7 +130,7 @@ export const Pagination: TableFeature = {
               ? Number.MAX_SAFE_INTEGER
               : table.options.pageCount - 1
 
-          pageIndex = Math.min(Math.max(0, pageIndex), maxPageIndex)
+          pageIndex = Math.max(0, Math.min(pageIndex, maxPageIndex))
 
           return {
             ...old,
