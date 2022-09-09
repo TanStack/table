@@ -268,14 +268,7 @@ export const Filters: TableFeature = {
             previousfilter ? previousfilter.value : undefined
           )
 
-          //
-          if (
-            shouldAutoRemoveFilter(
-              filterFn as FilterFn<TData>,
-              newFilter,
-              column
-            )
-          ) {
+          if (shouldAutoRemoveFilter(filterFn, newFilter, column)) {
             return old?.filter(d => d.id !== column.id) ?? []
           }
 
