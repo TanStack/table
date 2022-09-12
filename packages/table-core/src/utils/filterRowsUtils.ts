@@ -36,10 +36,10 @@ export function filterRowModelFromLeafs<TData extends RowData>(
         row.depth
       )
       newRow.columnFilters = row.columnFilters
-      row = newRow
-      console.log('1111')
+
       if (row.subRows?.length) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
+        row = newRow
 
         if (filterRow(row) && !newRow.subRows.length) {
           rows.push(row)
@@ -55,6 +55,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
           continue
         }
       } else {
+        row = newRow
         if (filterRow(row)) {
           rows.push(row)
           newFilteredRowsById[row.id] = row
