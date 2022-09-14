@@ -113,8 +113,7 @@ export const LayoutDocs = props => {
                         On this page
                       </h4>
                       <Toc />
-                    </div>
-                    <div className="mt-12 relative">
+                      <div className="mt-14 relative">
                       <h4 className="font-semibold uppercase text-sm mb-2 mt-2 text-gray-500">
                         Subscribe to Bytes
                       </h4>
@@ -124,6 +123,8 @@ export const LayoutDocs = props => {
                       </p>
                       <BytesForm />
                     </div>
+                    </div>
+
                   </div>
                 )}
               </div>
