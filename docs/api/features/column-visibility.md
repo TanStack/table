@@ -64,7 +64,7 @@ Returns a function that can be used to toggle the column visibility. This functi
 ### `onColumnVisibilityChange`
 
 ```tsx
-onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
+onColumnVisibilityChange?: OnChangeFn<VisibilityState>
 ```
 
 If provided, this function will be called with an `updaterFn` when `state.columnVisibility` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
