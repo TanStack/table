@@ -7,6 +7,7 @@ import {
   createColumnHelper,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
+import { renderTemplate } from './index'
 
 type Person = {
   firstName: string
@@ -52,7 +53,19 @@ const columns = [
     footer: props => props.column.id,
     columns: [
       columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
+        cell: info => {
+          const value = info.getValue()
+          const clickHandler = () => {
+            alert(value)
+          }
+          return renderTemplate(
+            /*html*/
+            `<strong style="color:blue;cursor:pointer" @click="clickHandler">
+              {{value}}
+              </strong>`,
+            { clickHandler, value }
+          )
+        },
         footer: props => props.column.id,
       }),
       columnHelper.accessor(row => row.lastName, {
