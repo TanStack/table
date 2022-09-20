@@ -84,7 +84,7 @@ cell?: ((props: {
 }) => unknown)
 ```
 
-The cell to display each row for the column. If a function is passed, it will be passed a props object for the header and should return the rendered header value (the exact type depends on the adapter being used).
+The cell to display each row for the column. If a function is passed, it will be passed a props object for the cell and should return the rendered cell value (the exact type depends on the adapter being used).
 
 ### `meta`
 
