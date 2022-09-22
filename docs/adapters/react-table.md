@@ -6,14 +6,3 @@ The `@tanstack/react-table` adapter is a wrapper around the core table logic. Mo
 
 ## `useReactTable`
 
-Takes an `options` object and returns a table.
-
-```tsx
-import { useReactTable } from '@tanstack/react-table'
-
-function App() {
-  const table = useReactTable(options)
-
-  // ...render your table
-}
-```
