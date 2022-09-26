@@ -1,0 +1,43 @@
+{
+  "name": "@tanstack/angular-table",
+  "author": "Tanner Linsley",
+  "version": "8.5.13",
+  "description": "Headless UI for building powerful tables & datagrids for Angular.",
+  "license": "MIT",
+  "homepage": "https://github.com/tanstack/table#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanstack/table.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "angular",
+    "table",
+    "angular-table",
+    "datagrid"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "module": "build/esm/index.js",
+  "main": "build/cjs/angular-table/src/index.js",
+  "browser": "build/umd/index.production.js",
+  "types": "build/types/index.d.ts",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "build/**",
+    "src"
+  ],
+  "dependencies": {
+    "@tanstack/table-core": "8.5.13"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=14.0.0"
+  }
+}
