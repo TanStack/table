@@ -50,7 +50,7 @@ import { DeepKeys, DeepValue } from './utils'
 // })
 
 type Accessor<TData extends RowData> = <
-  TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
+  TAccessor extends AccessorFn<TData> | string,
   TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
     ? TReturn
     : TAccessor extends DeepKeys<TData>
