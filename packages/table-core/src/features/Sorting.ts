@@ -20,18 +20,18 @@ import { isFunction, makeStateUpdater } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
 
-export type ColumnSort = {
+export interface ColumnSort {
   id: string
   desc: boolean
 }
 
 export type SortingState = ColumnSort[]
 
-export type SortingTableState = {
+export interface SortingTableState {
   sorting: SortingState
 }
 
-export type SortingFn<TData extends RowData> = {
+export interface SortingFn<TData extends RowData> {
   (rowA: Row<TData>, rowB: Row<TData>, columnId: string): number
 }
 
@@ -46,7 +46,7 @@ export type SortingFnOption<TData extends RowData> =
   | BuiltInSortingFn
   | SortingFn<TData>
 
-export type SortingColumnDef<TData extends RowData> = {
+export interface SortingColumnDef<TData extends RowData> {
   sortingFn?: SortingFnOption<TData>
   sortDescFirst?: boolean
   enableSorting?: boolean
@@ -55,7 +55,7 @@ export type SortingColumnDef<TData extends RowData> = {
   sortUndefined?: false | -1 | 1
 }
 
-export type SortingColumn<TData extends RowData> = {
+export interface SortingColumn<TData extends RowData> {
   getAutoSortingFn: () => SortingFn<TData>
   getAutoSortDir: () => SortDirection
   getSortingFn: () => SortingFn<TData>
@@ -70,7 +70,7 @@ export type SortingColumn<TData extends RowData> = {
   getToggleSortingHandler: () => undefined | ((event: unknown) => void)
 }
 
-export type SortingOptions<TData extends RowData> = {
+interface SortingOptionsBase {
   manualSorting?: boolean
   onSortingChange?: OnChangeFn<SortingState>
   enableSorting?: boolean
@@ -81,15 +81,21 @@ export type SortingOptions<TData extends RowData> = {
   getSortedRowModel?: (table: Table<any>) => () => RowModel<any>
   maxMultiSortColCount?: number
   isMultiSortEvent?: (e: unknown) => boolean
-} & (keyof SortingFns extends never
+}
+
+type ResolvedSortingFns = keyof SortingFns extends never
   ? {
       sortingFns?: Record<string, SortingFn<any>>
     }
   : {
       sortingFns: Record<keyof SortingFns, SortingFn<any>>
-    })
+    }
 
-export type SortingInstance<TData extends RowData> = {
+export interface SortingOptions<TData extends RowData>
+  extends SortingOptionsBase,
+    ResolvedSortingFns {}
+
+export interface SortingInstance<TData extends RowData> {
   setSorting: (updater: Updater<SortingState>) => void
   resetSorting: (defaultState?: boolean) => void
   getPreSortedRowModel: () => RowModel<TData>

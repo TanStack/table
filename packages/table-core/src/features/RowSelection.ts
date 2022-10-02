@@ -4,11 +4,11 @@ import { makeStateUpdater, memo } from '../utils'
 
 export type RowSelectionState = Record<string, boolean>
 
-export type RowSelectionTableState = {
+export interface RowSelectionTableState {
   rowSelection: RowSelectionState
 }
 
-export type RowSelectionOptions<TData extends RowData> = {
+export interface RowSelectionOptions<TData extends RowData> {
   enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
   enableMultiRowSelection?: boolean | ((row: Row<TData>) => boolean)
   enableSubRowSelection?: boolean | ((row: Row<TData>) => boolean)
@@ -26,7 +26,7 @@ export type RowSelectionOptions<TData extends RowData> = {
   // ) => RowModel<TData>
 }
 
-export type RowSelectionRow = {
+export interface RowSelectionRow {
   getIsSelected: () => boolean
   getIsSomeSelected: () => boolean
   getIsAllSubRowsSelected: () => boolean
@@ -37,7 +37,7 @@ export type RowSelectionRow = {
   getToggleSelectedHandler: () => (event: unknown) => void
 }
 
-export type RowSelectionInstance<TData extends RowData> = {
+export interface RowSelectionInstance<TData extends RowData> {
   getToggleAllRowsSelectedHandler: () => (event: unknown) => void
   getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
   setRowSelection: (updater: Updater<RowSelectionState>) => void

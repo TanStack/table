@@ -1,8 +1,7 @@
 import { TableState, Updater } from './types'
 
-export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
-  Required<Pick<T, K>>
+export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<T>
+export type RequiredKeys<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
   T,
   keyof U

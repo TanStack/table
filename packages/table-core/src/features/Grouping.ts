@@ -16,7 +16,7 @@ import { isFunction, makeStateUpdater } from '../utils'
 
 export type GroupingState = string[]
 
-export type GroupingTableState = {
+export interface GroupingTableState {
   grouping: GroupingState
 }
 
@@ -34,7 +34,7 @@ export type AggregationFnOption<TData extends RowData> =
   | BuiltInAggregationFn
   | AggregationFn<TData>
 
-export type GroupingColumnDef<TData extends RowData, TValue> = {
+export interface GroupingColumnDef<TData extends RowData, TValue> {
   aggregationFn?: AggregationFnOption<TData>
   aggregatedCell?: ColumnDefTemplate<
     ReturnType<Cell<TData, TValue>['getContext']>
@@ -42,7 +42,7 @@ export type GroupingColumnDef<TData extends RowData, TValue> = {
   enableGrouping?: boolean
 }
 
-export type GroupingColumn<TData extends RowData> = {
+export interface GroupingColumn<TData extends RowData> {
   getCanGroup: () => boolean
   getIsGrouped: () => boolean
   getGroupedIndex: () => number
@@ -52,42 +52,48 @@ export type GroupingColumn<TData extends RowData> = {
   getAggregationFn: () => AggregationFn<TData> | undefined
 }
 
-export type GroupingRow = {
+export interface GroupingRow {
   groupingColumnId?: string
   groupingValue?: unknown
   getIsGrouped: () => boolean
   _groupingValuesCache: Record<string, any>
 }
 
-export type GroupingCell = {
+export interface GroupingCell {
   getIsGrouped: () => boolean
   getIsPlaceholder: () => boolean
   getIsAggregated: () => boolean
 }
 
-export type ColumnDefaultOptions = {
+export interface ColumnDefaultOptions {
   // Column
   onGroupingChange: OnChangeFn<GroupingState>
   enableGrouping: boolean
 }
 
-export type GroupingOptions = {
+interface GroupingOptionsBase {
   manualGrouping?: boolean
   onGroupingChange?: OnChangeFn<GroupingState>
   enableGrouping?: boolean
   getGroupedRowModel?: (table: Table<any>) => () => RowModel<any>
   groupedColumnMode?: false | 'reorder' | 'remove'
-} & (keyof AggregationFns extends never
+}
+
+type ResolvedAggregationFns = keyof AggregationFns extends never
   ? {
       aggregationFns?: Record<string, AggregationFn<any>>
     }
   : {
       aggregationFns: Record<keyof AggregationFns, AggregationFn<any>>
-    })
+    }
+
+export interface GroupingOptions
+  extends GroupingOptionsBase,
+    ResolvedAggregationFns {}
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
-export type GroupingInstance<TData extends RowData> = {
+export interface GroupingInstance<TData extends RowData> {
   setGrouping: (updater: Updater<GroupingState>) => void
   resetGrouping: (defaultState?: boolean) => void
   getPreGroupedRowModel: () => RowModel<TData>
