@@ -54,10 +54,10 @@ type Accessor<TData extends RowData> = <
   TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
     ? TReturn
     : TAccessor extends DeepKeys<TData>
-    ? DeepValue<TData, TAccessor>
-    : never
->(
-  accessor: TAccessor,
+      ? DeepValue<TData, TAccessor>
+      : never
+  >(
+  accessor: TValue extends never ? never : TAccessor,
   column: TAccessor extends AccessorFn<TData>
     ? DisplayColumnDef<TData, TValue>
     : IdentifiedColumnDef<TData, TValue>
