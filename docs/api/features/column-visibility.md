@@ -5,7 +5,7 @@ id: column-visibility
 
 ## State
 
-Column ordering state is stored on the table using the following shape:
+Column visibility state is stored on the table using the following shape:
 
 ```tsx
 export type VisibilityState = Record<string, boolean>
