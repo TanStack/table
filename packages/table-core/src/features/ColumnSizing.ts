@@ -311,6 +311,16 @@ export const ColumnSizing: TableFeature = {
             : false
 
           if (isTouchStartEvent(e)) {
+            document.addEventListener(
+              'touchmove',
+              touchEvents.moveHandler,
+              passiveIfSupported
+            )
+            document.addEventListener(
+              'touchend',
+              touchEvents.upHandler,
+              passiveIfSupported
+            )
           } else {
             document.addEventListener(
               'mousemove',
