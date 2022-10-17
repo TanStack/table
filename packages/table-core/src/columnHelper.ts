@@ -6,7 +6,7 @@ import {
   IdentifiedColumnDef,
   RowData,
 } from './types'
-import { DeepKeys, DeepValue } from './utils'
+import { DeepValue } from './utils'
 
 // type Person = {
 //   firstName: string
@@ -53,9 +53,7 @@ type Accessor<TData extends RowData> = <
   TAccessor extends AccessorFn<TData> | string,
   TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
     ? TReturn
-    : TAccessor extends DeepKeys<TData>
-      ? DeepValue<TData, TAccessor>
-      : never
+    : DeepValue<TData, TAccessor>
   >(
   accessor: TValue extends never ? never : TAccessor,
   column: TAccessor extends AccessorFn<TData>
