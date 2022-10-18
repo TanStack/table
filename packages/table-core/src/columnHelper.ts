@@ -49,17 +49,24 @@ import { DeepValue } from './utils'
 //   cell: info => info.getValue(),
 // })
 
+type AccessorType<TData, TAccessor> = TAccessor extends AccessorFn<
+  TData,
+  infer TReturn
+>
+  ? TReturn
+  : DeepValue<TData, TAccessor>
+
 type Accessor<TData extends RowData> = <
   TAccessor extends AccessorFn<TData> | string,
-  TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
-    ? TReturn
-    : DeepValue<TData, TAccessor>
-  >(
+  TValue extends AccessorType<TData, TAccessor>
+>(
   accessor: TValue extends never ? never : TAccessor,
   column: TAccessor extends AccessorFn<TData>
     ? DisplayColumnDef<TData, TValue>
     : IdentifiedColumnDef<TData, TValue>
-) => AccessorColumnDef<TData, TValue>
+) => TValue extends never
+  ? never
+  : AccessorColumnDef<TData, AccessorType<TData, TAccessor>>
 
 export interface ColumnHelper<TData extends RowData> {
   accessor: Accessor<TData>
