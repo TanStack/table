@@ -17,10 +17,11 @@ export type UnionToIntersection<T> = (
 export type IsAny<T, Y, N> = 1 extends 0 & T ? Y : N
 export type IsKnown<T, Y, N> = unknown extends T ? N : Y
 
-export type DeepValue<T, TProp> = T extends Record<string | number, any>
+type IndexableData = Record<string | number, any>;
+export type DeepValue<T, TProp> = T extends IndexableData
   ? TProp extends `${infer TBranch}.${infer TDeepProp}`
     ? DeepValue<T[TBranch], TDeepProp>
-    : T[TProp & string]
+    : TProp extends keyof T ? T[TProp] : never
   : never
 
 export type NoInfer<T> = [T][T extends any ? 0 : never]
