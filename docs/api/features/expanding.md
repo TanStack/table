@@ -8,10 +8,10 @@ id: expanding
 Grouping state is stored on the table using the following shape:
 
 ```tsx
-export type GroupingState = string[]
+export type ExpandedState = true | Record<string, boolean>
 
-export type GroupingTableState = {
-  grouping: GroupingState
+export type ExpandedTableState = {
+  expanded: ExpandedState
 }
 ```
 
