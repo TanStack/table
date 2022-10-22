@@ -156,7 +156,7 @@ Returns whether the table can go to the next page.
 previousPage: () => void
 ```
 
-Increments the page index by one, if possible.
+Decrements the page index by one, if possible.
 
 ### `nextPage`
 
@@ -164,7 +164,7 @@ Increments the page index by one, if possible.
 nextPage: () => void
 ```
 
-Decrements the page index by one, if possible.
+Increments the page index by one, if possible.
 
 ### `getPageCount`
 
