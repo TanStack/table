@@ -8,6 +8,12 @@ The `@tanstack/solid-table` adapter is a wrapper around the core table logic. Mo
 
 Takes an `options` object and returns a table.
 
+### `options`
+
+An object that contains all core logic for the table configuration
+
+We will find out what inside the `options` in `api/core/table` page
+
 ```tsx
 import { createSolidTable } from '@tanstack/solid-table'
 

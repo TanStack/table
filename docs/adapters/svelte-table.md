@@ -8,6 +8,12 @@ The `@tanstack/svelte-table` adapter is a wrapper around the core table logic. M
 
 Takes an `options` object and returns a table.
 
+### `options`
+
+An object that contains all core logic for the table configuration
+
+We will find out what inside the `options` in `api/core/table` page
+
 ```tsx
 import { createSvelteTable } from '@tanstack/svelte-table'
 

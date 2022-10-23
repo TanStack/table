@@ -4,13 +4,51 @@ title: Table
 
 ## `useReactTable` / `createSolidTable` / `useVueTable` / `createSvelteTable`
 
+## Define table types
+
 ```tsx
 type useReactTable = <TData extends AnyData>(
   options: TableOptions<TData>
 ) => Table<TData>
 ```
 
-These functions are used to create a table. Which one you use depends on which framework adapter you are using.
+## Usage example
+
+```tsx
+const table = useReactTable<yourDefinedType>({
+   data: any,
+   columns: any,
+   defaultColumn: any,
+   initialState: anyialState,
+   autoResetAll: true | false,
+   meta: any,
+   state: any,
+   onStateChange: any,
+   debugTable: true | false,
+   debugHeaders: true | false,
+   debugColumns: true | false,
+   debugRows: true | false,
+   render: any,
+   mergeOptions: any,
+   getCoreRowModel: any,
+   getSubRows: any,
+   getRowId: any,
+   getRowModel: any,
+   getAllColumns: any,
+   getAllFlatColumns: any,
+   getAllLeafColumns: any,
+   getColumn: any,
+   getHeaderGroups: any,
+   getFooterGroups: any,
+   getFlatHeaders: any,
+   getLeafHeaders: any,
+})
+```
+This function example is used to create a table. Which one you use depends on which framework adapter you are using.<br>
+All props with `any` described further in options section below
+
+NOTE : You don't need to use all of this props defined it's just a brief example of what you can put inside `useReactTable()`.<br>
+But some of this props are required like `data`, & `columns`.
 
 ## Options
 
@@ -97,7 +135,7 @@ declare module '@tanstack/table-core' {
 state?: Partial<
   VisibilityTableState &
   ColumnOrderTableState &
-  ColumnPinningTableState &
+  ColumnPinningTabelState &
   FiltersTableState &
   SortingTableState &
   ExpandedTableState &
