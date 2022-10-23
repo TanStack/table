@@ -14,7 +14,7 @@ Takes an `options` object and returns a table.
 
 ### `options`
 
-An object that contains all core logic for the table configuration
+An object that contains all props for the table configuration
 
 We will find out what inside the `options` in `api/core/table` page
 

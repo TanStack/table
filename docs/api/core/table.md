@@ -15,7 +15,7 @@ type useReactTable = <TData extends AnyData>(
 ## Usage example
 
 ```tsx
-const table = useReactTable<yourDefinedType>({
+const table = useReactTable({
    data: any,
    columns: any,
    defaultColumn: any,
