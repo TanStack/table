@@ -23,6 +23,7 @@ export type DeepValue<T, TProp> = T extends IndexableData
     ? DeepValue<T[TBranch], TDeepProp>
     : TProp extends keyof T ? T[TProp] : never
   : never
+export type PropertyPath<T extends IndexableData, TProp> = DeepValue<T, TProp> extends never ? never : TProp;
 
 export type NoInfer<T> = [T][T extends any ? 0 : never]
 
