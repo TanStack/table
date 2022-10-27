@@ -302,7 +302,7 @@ export const ColumnSizing: TableFeature = {
                 e.preventDefault()
                 e.stopPropagation()
               }
-              onEnd(e.touches[0]!.clientX)
+              onEnd(e.touches[0]?.clientX)
             },
           }
 
@@ -311,6 +311,16 @@ export const ColumnSizing: TableFeature = {
             : false
 
           if (isTouchStartEvent(e)) {
+            document.addEventListener(
+              'touchmove',
+              touchEvents.moveHandler,
+              passiveIfSupported
+            )
+            document.addEventListener(
+              'touchend',
+              touchEvents.upHandler,
+              passiveIfSupported
+            )
           } else {
             document.addEventListener(
               'mousemove',
