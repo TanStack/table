@@ -17,13 +17,68 @@ export type UnionToIntersection<T> = (
 export type IsAny<T, Y, N> = 1 extends 0 & T ? Y : N
 export type IsKnown<T, Y, N> = unknown extends T ? N : Y
 
-type IndexableData = Record<string | number, any>;
+type IndexableData = Record<string | number, any>
 export type DeepValue<T, TProp> = T extends IndexableData
   ? TProp extends `${infer TBranch}.${infer TDeepProp}`
     ? DeepValue<T[TBranch], TDeepProp>
-    : TProp extends keyof T ? T[TProp] : never
+    : TProp extends keyof T
+    ? T[TProp]
+    : never
   : never
-export type HasProperty<T extends IndexableData, TProp> = DeepValue<T, TProp> extends never ? never : TProp;
+
+type Join<K, P> = K extends string | number
+  ? P extends string | number
+    ? `${K}${'' extends P ? '' : '.'}${P}`
+    : never
+  : never
+
+type Prev = [
+  never,
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  ...0[]
+]
+
+type ExplicitLeaves =
+  | Date
+  | Number
+  | BigInt
+  | String
+  | Set<unknown>
+  | Map<unknown, unknown>
+  | WeakSet<object>
+  | WeakMap<object, unknown>
+
+export type DeepKeys<T, D extends number = 10> = [D] extends [never]
+  ? never
+  : T extends ExplicitLeaves
+  ? never
+  : T extends object
+  ? {
+      [K in keyof T]-?: K extends string | number
+        ? `${K}` | Join<K, DeepKeys<T[K], Prev[D]>>
+        : never
+    }[keyof T]
+  : ''
 
 export type NoInfer<T> = [T][T extends any ? 0 : never]
 
