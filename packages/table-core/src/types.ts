@@ -197,6 +197,7 @@ type ColumnIdentifiers<TData extends RowData, TValue> =
 //
 
 export type ColumnDefBase<TData extends RowData, TValue = unknown> = {
+  getUniqueValues?: AccessorFn<TData, unknown[]>
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TData, TValue>>
   meta?: ColumnMeta<TData, TValue>

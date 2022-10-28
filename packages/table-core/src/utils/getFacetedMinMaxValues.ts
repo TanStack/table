@@ -9,7 +9,8 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
     memo(
       () => [table.getColumn(columnId).getFacetedRowModel()],
       facetedRowModel => {
-        const firstValue = facetedRowModel.flatRows[0]?.getValue(columnId)
+        const firstValue =
+          facetedRowModel.flatRows[0]?.getUniqueValues(columnId)
 
         if (typeof firstValue === 'undefined') {
           return undefined
@@ -18,12 +19,17 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
         let facetedMinMaxValues: [any, any] = [firstValue, firstValue]
 
         for (let i = 0; i < facetedRowModel.flatRows.length; i++) {
-          const value = facetedRowModel.flatRows[i]!.getValue<number>(columnId)
+          const values =
+            facetedRowModel.flatRows[i]!.getUniqueValues<number>(columnId)
 
-          if (value < facetedMinMaxValues[0]) {
-            facetedMinMaxValues[0] = value
-          } else if (value > facetedMinMaxValues[1]) {
-            facetedMinMaxValues[1] = value
+          for (let j = 0; j < values.length; j++) {
+            const value = values[j]!
+
+            if (value < facetedMinMaxValues[0]) {
+              facetedMinMaxValues[0] = value
+            } else if (value > facetedMinMaxValues[1]) {
+              facetedMinMaxValues[1] = value
+            }
           }
         }
 

@@ -12,15 +12,20 @@ export function getFacetedUniqueValues<TData extends RowData>(): (
         let facetedUniqueValues = new Map<any, number>()
 
         for (let i = 0; i < facetedRowModel.flatRows.length; i++) {
-          const value = facetedRowModel.flatRows[i]?.getValue(columnId)
+          const values =
+            facetedRowModel.flatRows[i]!.getUniqueValues<number>(columnId)
 
-          if (facetedUniqueValues.has(value)) {
-            facetedUniqueValues.set(
-              value,
-              (facetedUniqueValues.get(value) ?? 0) + 1
-            )
-          } else {
-            facetedUniqueValues.set(value, 1)
+          for (let j = 0; j < values.length; j++) {
+            const value = values[j]!
+
+            if (facetedUniqueValues.has(value)) {
+              facetedUniqueValues.set(
+                value,
+                (facetedUniqueValues.get(value) ?? 0) + 1
+              )
+            } else {
+              facetedUniqueValues.set(value, 1)
+            }
           }
         }
 

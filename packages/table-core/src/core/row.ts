@@ -8,7 +8,9 @@ export type CoreRow<TData extends RowData> = {
   original: TData
   depth: number
   _valuesCache: Record<string, unknown>
+  _uniqueValuesCache: Record<string, unknown>
   getValue: <TValue>(columnId: string) => TValue
+  getUniqueValues: <TValue>(columnId: string) => TValue[]
   renderValue: <TValue>(columnId: string) => TValue
   subRows: Row<TData>[]
   getLeafRows: () => Row<TData>[]
@@ -31,6 +33,7 @@ export const createRow = <TData extends RowData>(
     original,
     depth,
     _valuesCache: {},
+    _uniqueValuesCache: {},
     getValue: columnId => {
       if (row._valuesCache.hasOwnProperty(columnId)) {
         return row._valuesCache[columnId]
@@ -48,6 +51,29 @@ export const createRow = <TData extends RowData>(
       )
 
       return row._valuesCache[columnId] as any
+    },
+    getUniqueValues: columnId => {
+      if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
+        return row._uniqueValuesCache[columnId]
+      }
+
+      const column = table.getColumn(columnId)
+
+      if (!column.accessorFn) {
+        return undefined
+      }
+
+      if (!column.columnDef.getUniqueValues) {
+        row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
+        return row._uniqueValuesCache[columnId]
+      }
+
+      row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
+        row.original as TData,
+        rowIndex
+      )
+
+      return row._uniqueValuesCache[columnId] as any
     },
     renderValue: columnId =>
       row.getValue(columnId) ?? table.options.renderFallbackValue,
