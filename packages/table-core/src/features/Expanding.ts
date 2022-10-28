@@ -128,7 +128,7 @@ export const Expanding: TableFeature = {
         }
 
         // If any row is not expanded, return false
-        if (table.getRowModel().flatRows.some(row => row.getIsExpanded())) {
+        if (table.getRowModel().flatRows.some(row => !row.getIsExpanded())) {
           return false
         }
 

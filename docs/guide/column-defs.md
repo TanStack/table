@@ -46,7 +46,7 @@ type Person = {
 const columnHelper = createColumnHelper<Person>()
 
 // Make some columns!
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns = [
   // Display Column
   columnHelper.display({
     id: 'actions',

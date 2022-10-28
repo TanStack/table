@@ -156,7 +156,7 @@ Returns whether the table can go to the next page.
 previousPage: () => void
 ```
 
-Increments the page index by one, if possible.
+Decrements the page index by one, if possible.
 
 ### `nextPage`
 
@@ -164,7 +164,7 @@ Increments the page index by one, if possible.
 nextPage: () => void
 ```
 
-Decrements the page index by one, if possible.
+Increments the page index by one, if possible.
 
 ### `getPageCount`
 
@@ -174,10 +174,10 @@ getPageCount: () => number
 
 Returns the page count. If manually paginating or controlling the pagination state, this will come directly from the `options.pageCount` table option, otherwise it will be calculated from the table data using the total row count and current page size.
 
-### `getPrePaginatedRowModel`
+### `getPrePaginationRowModel`
 
 ```tsx
-getPrePaginatedRowModel: () => RowModel<TData>
+getPrePaginationRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table before any pagination has been applied.
