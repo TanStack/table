@@ -6,7 +6,7 @@ import {
   IdentifiedColumnDef,
   RowData,
 } from './types'
-import { DeepKeys, DeepValue } from './utils'
+import { DeepValue } from './utils'
 
 // type Person = {
 //   firstName: string
@@ -56,8 +56,8 @@ type AccessorType<TData, TAccessor> = TAccessor extends AccessorFn<
   ? TReturn
   : DeepValue<TData, TAccessor>
 
-type Accessor<TData extends RowData, TAllowedKeys> = <
-  TAccessor extends AccessorFn<TData> | TAllowedKeys,
+type Accessor<TData extends RowData> = <
+  TAccessor extends AccessorFn<TData> | string,
   TValue extends AccessorType<TData, TAccessor>
 >(
   accessor: TAccessor,
@@ -68,16 +68,15 @@ type Accessor<TData extends RowData, TAllowedKeys> = <
   ? never
   : AccessorColumnDef<TData, AccessorType<TData, TAccessor>>
 
-export interface ColumnHelper<TData extends RowData, TAllowedKeys> {
-  accessor: Accessor<TData, TAllowedKeys>
+export interface ColumnHelper<TData extends RowData> {
+  accessor: Accessor<TData>
   display: (column: DisplayColumnDef<TData>) => DisplayColumnDef<TData>
   group: (column: GroupColumnDef<TData>) => GroupColumnDef<TData>
 }
 
 export function createColumnHelper<
-  TData extends RowData,
-  TAllowedKeys = DeepKeys<TData>
->(): ColumnHelper<TData, TAllowedKeys> {
+  TData extends RowData
+>(): ColumnHelper<TData> {
   return {
     accessor: (accessor, column) => {
       return typeof accessor === 'function'
