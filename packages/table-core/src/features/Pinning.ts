@@ -12,42 +12,42 @@ import { makeStateUpdater, memo } from '../utils'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
 
-export interface ColumnPinningState {
+export type ColumnPinningState = {
   left?: string[]
   right?: string[]
 }
 
-export interface ColumnPinningTableState {
+export type ColumnPinningTableState = {
   columnPinning: ColumnPinningState
 }
 
-export interface ColumnPinningOptions {
+export type ColumnPinningOptions = {
   onColumnPinningChange?: OnChangeFn<ColumnPinningState>
   enablePinning?: boolean
 }
 
-export interface ColumnPinningDefaultOptions {
+export type ColumnPinningDefaultOptions = {
   onColumnPinningChange: OnChangeFn<ColumnPinningState>
 }
 
-export interface ColumnPinningColumnDef {
+export type ColumnPinningColumnDef = {
   enablePinning?: boolean
 }
 
-export interface ColumnPinningColumn {
+export type ColumnPinningColumn = {
   getCanPin: () => boolean
   getPinnedIndex: () => number
   getIsPinned: () => ColumnPinningPosition
   pin: (position: ColumnPinningPosition) => void
 }
 
-export interface ColumnPinningRow<TData extends RowData> {
+export type ColumnPinningRow<TData extends RowData> = {
   getLeftVisibleCells: () => Cell<TData, unknown>[]
   getCenterVisibleCells: () => Cell<TData, unknown>[]
   getRightVisibleCells: () => Cell<TData, unknown>[]
 }
 
-export interface ColumnPinningInstance<TData extends RowData> {
+export type ColumnPinningInstance<TData extends RowData> = {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean

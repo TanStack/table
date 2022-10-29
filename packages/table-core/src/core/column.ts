@@ -1,14 +1,17 @@
+import { TaggedTemplateExpression } from '@babel/types'
 import {
   Column,
   Table,
   AccessorFn,
   ColumnDef,
+  ColumnDefTemplate,
   RowData,
+  ColumnMeta,
   ColumnDefResolved,
 } from '../types'
 import { memo } from '../utils'
 
-export interface CoreColumn<TData extends RowData, TValue> {
+export type CoreColumn<TData extends RowData, TValue> = {
   id: string
   depth: number
   accessorFn?: AccessorFn<TData, TValue>
@@ -24,7 +27,7 @@ export function createColumn<TData extends RowData, TValue>(
   columnDef: ColumnDef<TData, TValue>,
   depth: number,
   parent?: Column<TData, TValue>
-): Column<TData, TValue> {
+) {
   const defaultColumn = table._getDefaultColumnDef()
 
   const resolvedColumnDef = {
