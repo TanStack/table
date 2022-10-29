@@ -1,12 +1,12 @@
 import {
-  AccessorColumnDef,
   AccessorFn,
+  ColumnDef,
   DisplayColumnDef,
   GroupColumnDef,
   IdentifiedColumnDef,
   RowData,
 } from './types'
-import { DeepValue } from './utils'
+import { DeepKeys, DeepValue, RequiredKeys } from './utils'
 
 // type Person = {
 //   firstName: string
@@ -49,29 +49,22 @@ import { DeepValue } from './utils'
 //   cell: info => info.getValue(),
 // })
 
-type AccessorType<TData, TAccessor> = TAccessor extends AccessorFn<
-  TData,
-  infer TReturn
->
-  ? TReturn
-  : DeepValue<TData, TAccessor>
-
-type Accessor<TData extends RowData> = <
-  TAccessor extends AccessorFn<TData> | string,
-  TValue extends AccessorType<TData, TAccessor>
->(
-  accessor: TAccessor,
-  column: TAccessor extends AccessorFn<TData>
-    ? DisplayColumnDef<TData, TValue>
-    : IdentifiedColumnDef<TData, TValue>
-) => TValue extends never
-  ? never
-  : AccessorColumnDef<TData, AccessorType<TData, TAccessor>>
-
-export interface ColumnHelper<TData extends RowData> {
-  accessor: Accessor<TData>
-  display: (column: DisplayColumnDef<TData>) => DisplayColumnDef<TData>
-  group: (column: GroupColumnDef<TData>) => GroupColumnDef<TData>
+export type ColumnHelper<TData extends RowData> = {
+  accessor: <
+    TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
+    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+      ? TReturn
+      : TAccessor extends DeepKeys<TData>
+      ? DeepValue<TData, TAccessor>
+      : never
+  >(
+    accessor: TAccessor,
+    column: TAccessor extends AccessorFn<TData>
+      ? DisplayColumnDef<TData, TValue>
+      : IdentifiedColumnDef<TData, TValue>
+  ) => ColumnDef<TData, TValue>
+  display: (column: DisplayColumnDef<TData>) => ColumnDef<TData, unknown>
+  group: (column: GroupColumnDef<TData>) => ColumnDef<TData, unknown>
 }
 
 export function createColumnHelper<
@@ -89,7 +82,7 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
-    display: column => column as DisplayColumnDef<TData>,
-    group: column => column as GroupColumnDef<TData>,
+    display: column => column as ColumnDef<TData, unknown>,
+    group: column => column as ColumnDef<TData, unknown>,
   }
 }

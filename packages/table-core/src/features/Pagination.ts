@@ -2,20 +2,20 @@ import { TableFeature } from '../core/table'
 import { OnChangeFn, Table, RowModel, Updater, RowData } from '../types'
 import { functionalUpdate, makeStateUpdater, memo } from '../utils'
 
-export interface PaginationState {
+export type PaginationState = {
   pageIndex: number
   pageSize: number
 }
 
-export interface PaginationTableState {
+export type PaginationTableState = {
   pagination: PaginationState
 }
 
-export interface PaginationInitialTableState {
+export type PaginationInitialTableState = {
   pagination?: Partial<PaginationState>
 }
 
-export interface PaginationOptions {
+export type PaginationOptions = {
   pageCount?: number
   manualPagination?: boolean
   onPaginationChange?: OnChangeFn<PaginationState>
@@ -23,11 +23,11 @@ export interface PaginationOptions {
   getPaginationRowModel?: (table: Table<any>) => () => RowModel<any>
 }
 
-export interface PaginationDefaultOptions {
+export type PaginationDefaultOptions = {
   onPaginationChange: OnChangeFn<PaginationState>
 }
 
-export interface PaginationInstance<TData extends RowData> {
+export type PaginationInstance<TData extends RowData> = {
   _autoResetPageIndex: () => void
   setPagination: (updater: Updater<PaginationState>) => void
   resetPagination: (defaultState?: boolean) => void

@@ -5,14 +5,14 @@ import { ColumnPinningPosition } from './Pinning'
 
 //
 
-export interface ColumnSizingTableState {
+export type ColumnSizingTableState = {
   columnSizing: ColumnSizingState
   columnSizingInfo: ColumnSizingInfoState
 }
 
 export type ColumnSizingState = Record<string, number>
 
-export interface ColumnSizingInfoState {
+export type ColumnSizingInfoState = {
   startOffset: null | number
   startSize: null | number
   deltaOffset: null | number
@@ -23,20 +23,20 @@ export interface ColumnSizingInfoState {
 
 export type ColumnResizeMode = 'onChange' | 'onEnd'
 
-export interface ColumnSizingOptions {
+export type ColumnSizingOptions = {
   enableColumnResizing?: boolean
   columnResizeMode?: ColumnResizeMode
   onColumnSizingChange?: OnChangeFn<ColumnSizingState>
   onColumnSizingInfoChange?: OnChangeFn<ColumnSizingInfoState>
 }
 
-export interface ColumnSizingDefaultOptions {
+export type ColumnSizingDefaultOptions = {
   columnResizeMode: ColumnResizeMode
   onColumnSizingChange: OnChangeFn<ColumnSizingState>
   onColumnSizingInfoChange: OnChangeFn<ColumnSizingInfoState>
 }
 
-export interface ColumnSizingInstance {
+export type ColumnSizingInstance = {
   setColumnSizing: (updater: Updater<ColumnSizingState>) => void
   setColumnSizingInfo: (updater: Updater<ColumnSizingInfoState>) => void
   resetColumnSizing: (defaultState?: boolean) => void
@@ -47,14 +47,14 @@ export interface ColumnSizingInstance {
   getRightTotalSize: () => number
 }
 
-export interface ColumnSizingColumnDef {
+export type ColumnSizingColumnDef = {
   enableResizing?: boolean
   size?: number
   minSize?: number
   maxSize?: number
 }
 
-export interface ColumnSizingColumn {
+export type ColumnSizingColumn = {
   getSize: () => number
   getStart: (position?: ColumnPinningPosition) => number
   getCanResize: () => boolean
@@ -62,7 +62,7 @@ export interface ColumnSizingColumn {
   resetSize: () => void
 }
 
-export interface ColumnSizingHeader {
+export type ColumnSizingHeader = {
   getSize: () => number
   getStart: (position?: ColumnPinningPosition) => number
   getResizeHandler: () => (event: unknown) => void
