@@ -12,20 +12,20 @@ import { makeStateUpdater, memo } from '../utils'
 
 export type VisibilityState = Record<string, boolean>
 
-export type VisibilityTableState = {
+export interface VisibilityTableState {
   columnVisibility: VisibilityState
 }
 
-export type VisibilityOptions = {
+export interface VisibilityOptions {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
   enableHiding?: boolean
 }
 
-export type VisibilityDefaultOptions = {
+export interface VisibilityDefaultOptions {
   onColumnVisibilityChange: OnChangeFn<VisibilityState>
 }
 
-export type VisibilityInstance<TData extends RowData> = {
+export interface VisibilityInstance<TData extends RowData> {
   getVisibleFlatColumns: () => Column<TData, unknown>[]
   getVisibleLeafColumns: () => Column<TData, unknown>[]
   getLeftVisibleLeafColumns: () => Column<TData, unknown>[]
@@ -39,16 +39,16 @@ export type VisibilityInstance<TData extends RowData> = {
   getToggleAllColumnsVisibilityHandler: () => (event: unknown) => void
 }
 
-export type VisibilityColumnDef = {
+export interface VisibilityColumnDef {
   enableHiding?: boolean
 }
 
-export type VisibilityRow<TData extends RowData> = {
+export interface VisibilityRow<TData extends RowData> {
   _getAllVisibleCells: () => Cell<TData, unknown>[]
   getVisibleCells: () => Cell<TData, unknown>[]
 }
 
-export type VisibilityColumn = {
+export interface VisibilityColumn {
   getCanHide: () => boolean
   getIsVisible: () => boolean
   toggleVisibility: (value?: boolean) => void

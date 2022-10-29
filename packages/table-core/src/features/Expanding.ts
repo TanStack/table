@@ -5,18 +5,18 @@ import { makeStateUpdater } from '../utils'
 
 export type ExpandedStateList = Record<string, boolean>
 export type ExpandedState = true | Record<string, boolean>
-export type ExpandedTableState = {
+export interface ExpandedTableState {
   expanded: ExpandedState
 }
 
-export type ExpandedRow = {
+export interface ExpandedRow {
   toggleExpanded: (expanded?: boolean) => void
   getIsExpanded: () => boolean
   getCanExpand: () => boolean
   getToggleExpandedHandler: () => () => void
 }
 
-export type ExpandedOptions<TData extends RowData> = {
+export interface ExpandedOptions<TData extends RowData> {
   manualExpanding?: boolean
   onExpandedChange?: OnChangeFn<ExpandedState>
   autoResetExpanded?: boolean
@@ -27,7 +27,7 @@ export type ExpandedOptions<TData extends RowData> = {
   paginateExpandedRows?: boolean
 }
 
-export type ExpandedInstance<TData extends RowData> = {
+export interface ExpandedInstance<TData extends RowData> {
   _autoResetExpanded: () => void
   setExpanded: (updater: Updater<ExpandedState>) => void
   toggleAllRowsExpanded: (expanded?: boolean) => void

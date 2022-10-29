@@ -2,7 +2,7 @@ import { RowData, Cell, Row, Table } from '../types'
 import { flattenBy, memo } from '../utils'
 import { createCell } from './cell'
 
-export type CoreRow<TData extends RowData> = {
+export interface CoreRow<TData extends RowData> {
   id: string
   index: number
   original: TData

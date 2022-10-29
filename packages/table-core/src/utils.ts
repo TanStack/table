@@ -1,8 +1,7 @@
 import { TableState, Updater } from './types'
 
-export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
-  Required<Pick<T, K>>
+export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<T>
+export type RequiredKeys<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type Overwrite<T, U extends { [TKey in keyof T]?: any }> = Omit<
   T,
   keyof U
@@ -18,54 +17,68 @@ export type UnionToIntersection<T> = (
 export type IsAny<T, Y, N> = 1 extends 0 & T ? Y : N
 export type IsKnown<T, Y, N> = unknown extends T ? N : Y
 
-type ComputeRange<
-  N extends number,
-  Result extends Array<unknown> = []
-> = Result['length'] extends N
-  ? Result
-  : ComputeRange<N, [...Result, Result['length']]>
-type Index40 = ComputeRange<40>[number]
-
-// Is this type a tuple?
-type IsTuple<T> = T extends readonly any[] & { length: infer Length }
-  ? Length extends Index40
-    ? T
+type IndexableData = Record<string | number, any>
+export type DeepValue<T, TProp> = T extends IndexableData
+  ? TProp extends `${infer TBranch}.${infer TDeepProp}`
+    ? DeepValue<T[TBranch], TDeepProp>
+    : TProp extends keyof T
+    ? T[TProp]
     : never
   : never
 
-// If this type is a tuple, what indices are allowed?
-type AllowedIndexes<
-  Tuple extends ReadonlyArray<any>,
-  Keys extends number = never
-> = Tuple extends readonly []
-  ? Keys
-  : Tuple extends readonly [infer _, ...infer Tail]
-  ? AllowedIndexes<Tail, Keys | Tail['length']>
-  : Keys
+type Join<K, P> = K extends string | number
+  ? P extends string | number
+    ? `${K}${'' extends P ? '' : '.'}${P}`
+    : never
+  : never
 
-export type DeepKeys<T> = unknown extends T
-  ? keyof T
-  : object extends T
-  ? string
-  : T extends readonly any[] & IsTuple<T>
-  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>>
-  : T extends any[]
-  ? never & 'Dynamic length array indexing is not supported'
-  : T extends Date
+type Prev = [
+  never,
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  ...0[]
+]
+
+type ExplicitLeaves =
+  | Date
+  | Number
+  | BigInt
+  | String
+  | Set<unknown>
+  | Map<unknown, unknown>
+  | WeakSet<object>
+  | WeakMap<object, unknown>
+
+export type DeepKeys<T, D extends number = 10> = [D] extends [never]
+  ? never
+  : T extends ExplicitLeaves
   ? never
   : T extends object
-  ? (keyof T & string) | DeepKeysPrefix<T, keyof T>
-  : never
-
-type DeepKeysPrefix<T, TPrefix> = TPrefix extends keyof T & (number | string)
-  ? `${TPrefix}.${DeepKeys<T[TPrefix]> & string}`
-  : never
-
-export type DeepValue<T, TProp> = T extends Record<string | number, any>
-  ? TProp extends `${infer TBranch}.${infer TDeepProp}`
-    ? DeepValue<T[TBranch], TDeepProp>
-    : T[TProp & string]
-  : never
+  ? {
+      [K in keyof T]-?: K extends string | number
+        ? `${K}` | Join<K, DeepKeys<T[K], Prev[D]>>
+        : never
+    }[keyof T]
+  : ''
 
 export type NoInfer<T> = [T][T extends any ? 0 : never]
 
