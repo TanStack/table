@@ -37,12 +37,14 @@ const defaultGetSortByToggleProps = (props, { instance, column }) => {
     props,
     {
       onClick: column.canSort
-        ? e => {
-            e.persist()
-            column.toggleSortBy(
-              undefined,
-              !instance.disableMultiSort && isMultiSortEvent(e)
-            )
+        ? function(e) {
+            if (e.nativeEvent?.currentTarget?.attributes?.title?.value === this.title) {
+              e.persist()
+              column.toggleSortBy(
+                undefined,
+                !instance.disableMultiSort && isMultiSortEvent(e)
+              )
+            }
           }
         : undefined,
       style: {
