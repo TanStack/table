@@ -38,7 +38,7 @@ const defaultGetSortByToggleProps = (props, { instance, column }) => {
     {
       onClick: column.canSort
         ? function(e) {
-            if (e.nativeEvent?.currentTarget?.attributes?.title?.value === this.title) {
+            if (e.nativeEvent?.target?.attributes?.title?.value === this.title) {
               e.persist()
               column.toggleSortBy(
                 undefined,
