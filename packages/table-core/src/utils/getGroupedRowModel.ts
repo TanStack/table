@@ -176,7 +176,7 @@ function groupBy<TData extends RowData>(rows: Row<TData>[], columnId: string) {
     if (!previous) {
       map.set(resKey, [row])
     } else {
-      map.set(resKey, [...previous, row])
+      previous.push(row)
     }
     return map
   }, groupMap)
