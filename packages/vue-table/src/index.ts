@@ -4,12 +4,12 @@ import {
   TableOptionsResolved,
   RowData,
 } from '@tanstack/table-core'
-import { h, watchEffect, ref } from 'vue'
+import { h, watchEffect, ref, defineComponent } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-export const FlexRender = {
+export const FlexRender = defineComponent({
   props: ['render', 'props'],
   setup: (props: { render: any; props: any }) => {
     return () => {
@@ -23,7 +23,7 @@ export const FlexRender = {
       return props.render
     }
   },
-}
+});
 
 export function useVueTable<TData extends RowData>(
   options: TableOptions<TData>
