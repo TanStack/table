@@ -28,26 +28,39 @@ export function filterRowModelFromLeafs<TData extends RowData>(
     for (let i = 0; i < rowsToFilter.length; i++) {
       let row = rowsToFilter[i]!
 
+      const newRow = createRow(
+        table,
+        row.id,
+        row.original,
+        row.index,
+        row.depth
+      )
+      newRow.columnFilters = row.columnFilters
+
       if (row.subRows?.length) {
-        const newRow = createRow(
-          table,
-          row.id,
-          row.original,
-          row.index,
-          row.depth
-        )
-        newRow.columnFilters = row.columnFilters
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
-        if (!newRow.subRows.length) {
+        row = newRow
+
+        if (filterRow(row) && !newRow.subRows.length) {
+          rows.push(row)
+          newFilteredRowsById[row.id] = row
+          newFilteredRowsById[i] = row
           continue
         }
-        row = newRow
-      }
 
-      if (filterRow(row)) {
-        rows.push(row)
-        newFilteredRowsById[row.id] = row
-        newFilteredRowsById[i] = row
+        if (filterRow(row) || newRow.subRows.length) {
+          rows.push(row)
+          newFilteredRowsById[row.id] = row
+          newFilteredRowsById[i] = row
+          continue
+        }
+      } else {
+        row = newRow
+        if (filterRow(row)) {
+          rows.push(row)
+          newFilteredRowsById[row.id] = row
+          newFilteredRowsById[i] = row
+        }
       }
     }
 
