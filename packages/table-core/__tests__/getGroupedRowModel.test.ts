@@ -17,7 +17,7 @@ function generateColumns(people: Person[]): PersonColumn[] {
 }
 
 describe('#getGroupedRowModel', () => {
-  it('groups 50k rows and 3 grouped columns with clustered data in less than 2 seconds', () => {
+  it('groups 50k rows and 3 grouped columns with clustered data in less than 3 seconds', () => {
     const data = makeData(50000);
     const columns = generateColumns(data);
     const grouping = ['firstName', 'lastName', 'age'];
@@ -42,6 +42,6 @@ describe('#getGroupedRowModel', () => {
     expect(groupedById['firstName:Fixed'].leafRows.length).toEqual(50000)
     expect(groupedById['firstName:Fixed>lastName:Name'].leafRows.length).toEqual(50000)
     expect(groupedById['firstName:Fixed>lastName:Name>age:123'].leafRows.length).toEqual(50000)
-    expect(end.valueOf() - start.valueOf()).toBeLessThan(2000);
+    expect(end.valueOf() - start.valueOf()).toBeLessThan(3000);
   });
 })
