@@ -37,6 +37,6 @@
     "@tanstack/table-core": "8.5.22"
   },
   "peerDependencies": {
-    "svelte": "^3.49.0"
+    "svelte": "^3.48.0"
   }
 }
