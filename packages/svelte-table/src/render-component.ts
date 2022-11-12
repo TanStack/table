@@ -12,11 +12,6 @@ import {
   create_ssr_component,
   validate_component,
 } from 'svelte/internal'
-import type {
-  ComponentProps,
-  ComponentType,
-  SvelteComponentTyped,
-} from 'svelte'
 
 function create_fragment(ctx: any, Comp: any, props: any) {
   let c: any
@@ -51,12 +46,7 @@ function create_fragment(ctx: any, Comp: any, props: any) {
   }
 }
 
-function renderClient<Component extends SvelteComponentTyped>(
-  Comp: ComponentType<Component>,
-  ...props: Record<string, unknown> extends ComponentProps<Component>
-    ? []
-    : [ComponentProps<Component>]
-): any {
+function renderClient(Comp: any, props: any): any {
   return class WrapperComp extends SvelteComponent {
     constructor(options: any) {
       super()
@@ -73,12 +63,7 @@ function renderClient<Component extends SvelteComponentTyped>(
   }
 }
 
-function renderServer<Component extends SvelteComponentTyped>(
-  Comp: ComponentType<Component>,
-  ...props: Record<string, unknown> extends ComponentProps<Component>
-    ? []
-    : [ComponentProps<Component>]
-): any {
+function renderServer(Comp: any, props: any) {
   const WrapperComp = create_ssr_component(
     ($$result: any, $$props: any, $$bindings: any, slots: any) => {
       return `${validate_component(Comp, 'TableComponent').$$render(
