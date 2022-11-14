@@ -90,10 +90,9 @@ export function getSortedRowModel<TData extends RowData>(): (
           // If there are sub-rows, sort them
           sortedData.forEach(row => {
             sortedFlatRows.push(row)
-            if (!row.subRows || row.subRows.length <= 1) {
-              return
+            if (row.subRows?.length) {
+              row.subRows = sortData(row.subRows);
             }
-            row.subRows = sortData(row.subRows)
           })
 
           return sortedData
