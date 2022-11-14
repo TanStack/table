@@ -6,7 +6,7 @@ const includesString: FilterFn<any> = (
   filterValue: string
 ) => {
   const search = filterValue.toLowerCase()
-  return row.getValue<string>(columnId)?.toLowerCase().includes(search)
+  return Boolean(row.getValue<string>(columnId)?.toLowerCase().includes(search))
 }
 
 includesString.autoRemove = (val: any) => testFalsey(val)
@@ -16,7 +16,7 @@ const includesStringSensitive: FilterFn<any> = (
   columnId: string,
   filterValue: string
 ) => {
-  return row.getValue<string>(columnId)?.includes(filterValue)
+  return Boolean(row.getValue<string>(columnId)?.includes(filterValue))
 }
 
 includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
