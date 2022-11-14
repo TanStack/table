@@ -14,7 +14,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-virtual": "^2.10.4",
-    "@tanstack/react-table": "8.5.26"
+    "@tanstack/react-table": "8.5.27"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^4.0.0",
