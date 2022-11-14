@@ -2,24 +2,24 @@ import { makeStateUpdater, memo } from '../utils'
 
 import { Table, OnChangeFn, Updater, Column, RowData } from '../types'
 
-import { Grouping, orderColumns } from './Grouping'
+import { orderColumns } from './Grouping'
 import { TableFeature } from '../core/table'
 
-export type ColumnOrderTableState = {
+export interface ColumnOrderTableState {
   columnOrder: ColumnOrderState
 }
 
 export type ColumnOrderState = string[]
 
-export type ColumnOrderOptions = {
+export interface ColumnOrderOptions {
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 }
 
-export type ColumnOrderDefaultOptions = {
+export interface ColumnOrderDefaultOptions {
   onColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
-export type ColumnOrderInstance<TData extends RowData> = {
+export interface ColumnOrderInstance<TData extends RowData> {
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
   resetColumnOrder: (defaultState?: boolean) => void
   _getOrderColumnsFn: () => (
