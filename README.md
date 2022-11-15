@@ -138,7 +138,7 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
   - [x] full-width-table
   - [ ] material-ui-components
   - [ ] material-UI-enhanced-table
-
+  - [ ] row spanning
 ## Installation
 
 ```bash
