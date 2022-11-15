@@ -3,7 +3,6 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  createTable,
   ColumnDef,
   createSolidTable,
 } from '@tanstack/solid-table'

@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@tanstack/react-table": "8.5.28",
-    "bootstrap": "^5.1.3",
+    "bootstrap": "^5.2.2",
     "react": "^18.2.0",
-    "react-bootstrap": "2.4.0",
+    "react-bootstrap": "2.6.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^4.0.0",
-    "@vitejs/plugin-react": "^1.3.2",
-    "vite": "^2.9.13"
+    "@rollup/plugin-replace": "^5.0.1",
+    "@vitejs/plugin-react": "^2.2.0",
+    "vite": "^3.2.3"
   }
 }

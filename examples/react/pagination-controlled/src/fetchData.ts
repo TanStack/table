@@ -1,5 +1,4 @@
-import faker from '@faker-js/faker'
-import { date } from 'faker'
+import { faker } from '@faker-js/faker'
 
 export type Person = {
   firstName: string

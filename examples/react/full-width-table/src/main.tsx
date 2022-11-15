@@ -8,7 +8,6 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   ColumnDef,
-  OnChangeFn,
   flexRender,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -28,7 +27,7 @@ function App() {
             footer: props => props.column.id,
           },
           {
-            accessorKey: row => row.lastName,
+            accessorFn: row => row.lastName,
             id: 'lastName',
             cell: info => info.getValue(),
             header: () => <span>Last Name</span>,

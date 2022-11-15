@@ -75,7 +75,7 @@ function App() {
   })
 
   return (
-    <div className="p-2">
+    <div class="p-2">
       <BTable striped bordered hover responsive size="sm">
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -136,8 +136,8 @@ function App() {
           </For>
         </tfoot>
       </BTable>
-      <div className="h-4">
-        <button onClick={() => rerender()} className="border p-2">
+      <div class="h-4">
+        <button onClick={() => rerender()} class="border p-2">
           Rerender
         </button>
       </div>
