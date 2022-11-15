@@ -2,19 +2,19 @@ import { RowData, Column, Header, HeaderGroup, Table } from '../types'
 import { memo } from '../utils'
 import { TableFeature } from './table'
 
-export type CoreHeaderGroup<TData extends RowData> = {
+export interface CoreHeaderGroup<TData extends RowData> {
   id: string
   depth: number
   headers: Header<TData, unknown>[]
 }
 
-export type HeaderContext<TData, TValue> = {
+export interface HeaderContext<TData, TValue> {
   table: Table<TData>
   header: Header<TData, TValue>
   column: Column<TData, TValue>
 }
 
-export type CoreHeader<TData extends RowData, TValue> = {
+export interface CoreHeader<TData extends RowData, TValue> {
   id: string
   index: number
   depth: number
@@ -29,7 +29,7 @@ export type CoreHeader<TData extends RowData, TValue> = {
   getContext: () => HeaderContext<TData, TValue>
 }
 
-export type HeadersInstance<TData extends RowData> = {
+export interface HeadersInstance<TData extends RowData> {
   getHeaderGroups: () => HeaderGroup<TData>[]
   getLeftHeaderGroups: () => HeaderGroup<TData>[]
   getCenterHeaderGroups: () => HeaderGroup<TData>[]
@@ -63,7 +63,7 @@ function createHeader<TData extends RowData, TValue>(
     index: number
     depth: number
   }
-) {
+): Header<TData, TValue> {
   const id = options.id ?? column.id
 
   let header: CoreHeader<TData, TValue> = {

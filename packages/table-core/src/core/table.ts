@@ -1,11 +1,10 @@
-import { flattenBy, functionalUpdate, memo, RequiredKeys } from '../utils'
+import { functionalUpdate, memo, RequiredKeys } from '../utils'
 
 import {
   Updater,
   TableOptionsResolved,
   TableState,
   Table,
-  ColumnDefTemplate,
   InitialTableState,
   Row,
   Column,
@@ -26,7 +25,7 @@ import { Headers } from './headers'
 import { ColumnSizing } from '../features/ColumnSizing'
 import { Expanding } from '../features/Expanding'
 import { Filters } from '../features/Filters'
-import { Grouping, GroupingColumnDef } from '../features/Grouping'
+import { Grouping } from '../features/Grouping'
 import { Ordering } from '../features/Ordering'
 import { Pagination } from '../features/Pagination'
 import { Pinning } from '../features/Pinning'
@@ -34,7 +33,7 @@ import { RowSelection } from '../features/RowSelection'
 import { Sorting } from '../features/Sorting'
 import { Visibility } from '../features/Visibility'
 
-export type TableFeature = {
+export interface TableFeature {
   getDefaultOptions?: (table: any) => any
   getInitialState?: (initialState?: InitialTableState) => any
   createTable?: (table: any) => any
@@ -61,9 +60,9 @@ const features = [
 
 //
 
-export type CoreTableState = {}
+export interface CoreTableState {}
 
-export type CoreOptions<TData extends RowData> = {
+export interface CoreOptions<TData extends RowData> {
   data: TData[]
   state: Partial<TableState>
   onStateChange: (updater: Updater<TableState>) => void
@@ -87,7 +86,7 @@ export type CoreOptions<TData extends RowData> = {
   renderFallbackValue: any
 }
 
-export type CoreInstance<TData extends RowData> = {
+export interface CoreInstance<TData extends RowData> {
   initialState: TableState
   reset: () => void
   options: RequiredKeys<TableOptionsResolved<TData>, 'state'>

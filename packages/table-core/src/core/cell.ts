@@ -1,7 +1,7 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
 import { Getter, memo } from '../utils'
 
-export type CellContext<TData extends RowData, TValue> = {
+export interface CellContext<TData extends RowData, TValue> {
   table: Table<TData>
   column: Column<TData, TValue>
   row: Row<TData>
@@ -10,7 +10,7 @@ export type CellContext<TData extends RowData, TValue> = {
   renderValue: Getter<TValue | null>
 }
 
-export type CoreCell<TData extends RowData, TValue> = {
+export interface CoreCell<TData extends RowData, TValue> {
   id: string
   getValue: CellContext<TData, TValue>['getValue']
   renderValue: CellContext<TData, TValue>['renderValue']
@@ -24,7 +24,7 @@ export function createCell<TData extends RowData, TValue>(
   row: Row<TData>,
   column: Column<TData, TValue>,
   columnId: string
-) {
+): Cell<TData, TValue> {
   const getRenderValue = () =>
     cell.getValue() ?? table.options.renderFallbackValue
 

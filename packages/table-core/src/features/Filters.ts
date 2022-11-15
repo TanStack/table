@@ -13,25 +13,25 @@ import {
 } from '../types'
 import { functionalUpdate, isFunction, makeStateUpdater } from '../utils'
 
-export type FiltersTableState = {
+export interface FiltersTableState {
   columnFilters: ColumnFiltersState
   globalFilter: any
 }
 
 export type ColumnFiltersState = ColumnFilter[]
 
-export type ColumnFilter = {
+export interface ColumnFilter {
   id: string
   value: unknown
 }
 
-export type ResolvedColumnFilter<TData extends RowData> = {
+export interface ResolvedColumnFilter<TData extends RowData> {
   id: string
   resolvedValue: unknown
   filterFn: FilterFn<TData>
 }
 
-export type FilterFn<TData extends RowData> = {
+export interface FilterFn<TData extends RowData> {
   (
     row: Row<TData>,
     columnId: string,
@@ -64,13 +64,13 @@ export type FilterFnOption<TData extends RowData> =
   | keyof FilterFns
   | FilterFn<TData>
 
-export type FiltersColumnDef<TData extends RowData> = {
+export interface FiltersColumnDef<TData extends RowData> {
   filterFn?: FilterFnOption<TData>
   enableColumnFilter?: boolean
   enableGlobalFilter?: boolean
 }
 
-export type FiltersColumn<TData extends RowData> = {
+export interface FiltersColumn<TData extends RowData> {
   getAutoFilterFn: () => FilterFn<TData> | undefined
   getFilterFn: () => FilterFn<TData> | undefined
   setFilterValue: (updater: Updater<any>) => void
@@ -87,12 +87,12 @@ export type FiltersColumn<TData extends RowData> = {
   _getFacetedMinMaxValues?: () => undefined | [number, number]
 }
 
-export type FiltersRow<TData extends RowData> = {
+export interface FiltersRow<TData extends RowData> {
   columnFilters: Record<string, boolean>
   columnFiltersMeta: Record<string, FilterMeta>
 }
 
-export type FiltersOptions<TData extends RowData> = {
+interface FiltersOptionsBase<TData extends RowData> {
   enableFilters?: boolean
   manualFiltering?: boolean
   filterFromLeafRows?: boolean
@@ -121,15 +121,21 @@ export type FiltersOptions<TData extends RowData> = {
     table: Table<TData>,
     columnId: string
   ) => () => undefined | [number, number]
-} & (keyof FilterFns extends never
+}
+
+type ResolvedFilterFns = keyof FilterFns extends never
   ? {
       filterFns?: Record<string, FilterFn<any>>
     }
   : {
       filterFns: Record<keyof FilterFns, FilterFn<any>>
-    })
+    }
 
-export type FiltersInstance<TData extends RowData> = {
+export interface FiltersOptions<TData extends RowData>
+  extends FiltersOptionsBase<TData>,
+    ResolvedFilterFns {}
+
+export interface FiltersInstance<TData extends RowData> {
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 
   resetColumnFilters: (defaultState?: boolean) => void
