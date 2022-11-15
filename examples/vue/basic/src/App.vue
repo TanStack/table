@@ -3,7 +3,6 @@ import {
   FlexRender,
   getCoreRowModel,
   useVueTable,
-  ColumnDef,
   createColumnHelper,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'

@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import { ColumnSort, SortingState } from '@tanstack/react-table'
 
 export type Person = {

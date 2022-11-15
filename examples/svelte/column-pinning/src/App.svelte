@@ -6,13 +6,11 @@
     getSortedRowModel,
     TableOptions,
     flexRender,
-ColumnDef,
+    ColumnDef,
   } from '@tanstack/svelte-table'
   import { makeData, Person } from './makeData'
-  import faker from '@faker-js/faker'
+  import { faker } from '@faker-js/faker'
   import './index.css'
-
-  
 
   const columns: ColumnDef<Person>[] = [
     {
@@ -24,7 +22,7 @@ ColumnDef,
           cell: info => info.getValue(),
           footer: props => props.column.id,
         },
-         {
+        {
           accessorFn: row => row.lastName,
           id: 'lastName',
           cell: info => info.getValue(),
@@ -119,23 +117,21 @@ ColumnDef,
     }))
   }
 
-  const options = writable<TableOptions<Person>>(
-    {
-      data,
-      columns,
-      state: {
-        columnOrder,
-        columnPinning,
-        columnVisibility,
-      },
-      onColumnOrderChange: setColumnOrder,
-      onColumnPinningChange: setColumnPinning,
-      onColumnVisibilityChange: setColumnVisibility,
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      debugTable: true,
-    }
-  )
+  const options = writable<TableOptions<Person>>({
+    data,
+    columns,
+    state: {
+      columnOrder,
+      columnPinning,
+      columnVisibility,
+    },
+    onColumnOrderChange: setColumnOrder,
+    onColumnPinningChange: setColumnPinning,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
+  })
 
   const randomizeColumns = () => {
     $table.setColumnOrder(_updater =>
@@ -210,7 +206,12 @@ ColumnDef,
                 <th colSpan={header.colSpan}>
                   <div class="whitespace-nowrap">
                     {#if !header.isPlaceholder}
-                      <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+                      <svelte:component
+                        this={flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      />
                     {/if}
                   </div>
                   {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -257,7 +258,12 @@ ColumnDef,
             <tr>
               {#each row.getLeftVisibleCells() as cell}
                 <td>
-                  <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+                  <svelte:component
+                    this={flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  />
                 </td>
               {/each}
             </tr>
@@ -273,7 +279,12 @@ ColumnDef,
               <th colSpan={header.colSpan}>
                 <div class="whitespace-nowrap">
                   {#if !header.isPlaceholder}
-                    <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+                    <svelte:component
+                      this={flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    />
                   {/if}
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -320,7 +331,12 @@ ColumnDef,
           <tr>
             {#each isSplit ? row.getCenterVisibleCells() : row.getVisibleCells() as cell}
               <td>
-                <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+                <svelte:component
+                  this={flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
+                />
               </td>
             {/each}
           </tr>
@@ -336,7 +352,12 @@ ColumnDef,
                 <th colSpan={header.colSpan}>
                   <div class="whitespace-nowrap">
                     {#if !header.isPlaceholder}
-                      <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+                      <svelte:component
+                        this={flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      />
                     {/if}
                   </div>
                   {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -383,7 +404,12 @@ ColumnDef,
             <tr>
               {#each row.getRightVisibleCells() as cell}
                 <td>
-                  <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+                  <svelte:component
+                    this={flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  />
                 </td>
               {/each}
             </tr>

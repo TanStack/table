@@ -5,13 +5,12 @@ import {
   getCoreRowModel,
   useVueTable,
   type Column,
-  type ColumnDef,
   createColumnHelper,
 } from '@tanstack/vue-table'
 
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 
 const columnHelper = createColumnHelper<Person>()
 

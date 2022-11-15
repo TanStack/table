@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 
 export type Person = {
   firstName: string
@@ -11,7 +11,7 @@ export type Person = {
 }
 
 const range = (len: number) => {
-  const arr: number[] = [];
+  const arr: number[] = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }

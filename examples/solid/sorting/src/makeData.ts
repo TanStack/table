@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker/locale/en'
+import { faker } from '@faker-js/faker'
 
 export type Person = {
   firstName: string

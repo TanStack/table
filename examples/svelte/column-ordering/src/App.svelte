@@ -9,10 +9,8 @@
     ColumnDef,
   } from '@tanstack/svelte-table'
   import { makeData, Person } from './makeData'
-  import faker from '@faker-js/faker'
+  import { faker } from '@faker-js/faker'
   import './index.css'
-
-  
 
   const columns: ColumnDef<Person>[] = [
     {
@@ -101,21 +99,19 @@
     }))
   }
 
-  const options = writable<TableOptions<Person>>(
-    {
-      data,
-      columns,
-      state: {
-        columnOrder,
-        columnVisibility,
-      },
-      onColumnOrderChange: setColumnOrder,
-      onColumnVisibilityChange: setColumnVisibility,
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      debugTable: true,
-    }
-  )
+  const options = writable<TableOptions<Person>>({
+    data,
+    columns,
+    state: {
+      columnOrder,
+      columnVisibility,
+    },
+    onColumnOrderChange: setColumnOrder,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
+  })
 
   const randomizeColumns = () => {
     $table.setColumnOrder(_updater =>
@@ -177,7 +173,12 @@
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+                <svelte:component
+                  this={flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                />
               {/if}
             </th>
           {/each}
@@ -189,7 +190,9 @@
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+              <svelte:component
+                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+              />
             </td>
           {/each}
         </tr>

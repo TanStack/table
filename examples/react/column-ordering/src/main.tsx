@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 
 import './index.css'
 
