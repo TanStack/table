@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: |
-          npm install
+          npm install --legacy-peer-deps
           npm run build
           npm run typecheck
           npm run test
