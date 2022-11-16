@@ -259,7 +259,7 @@ export type AccessorFnColumnDef<
 interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefBase<TData, TValue> {
   id?: string
-  accessorKey: string | keyof TData
+  accessorKey: (string & {}) | keyof TData
 }
 
 export type AccessorKeyColumnDef<
