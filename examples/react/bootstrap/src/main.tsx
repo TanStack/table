@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import BTable from 'react-bootstrap/Table'
+import { Table as BTable } from 'react-bootstrap'
 
 import {
   ColumnDef,
