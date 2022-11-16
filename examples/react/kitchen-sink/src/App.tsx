@@ -24,7 +24,7 @@ import {
 import DebouncedInput from './components/DebouncedInput'
 import ActionButtons from './components/ActionButtons'
 import { getGroupedRowModel } from '@tanstack/react-table/build/cjs/react-table/src'
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import CustomTable from './components/CustomTable'
 
 const Styles = styled.div`
