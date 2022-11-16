@@ -5,6 +5,7 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
+  getGroupedRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   GroupingState,
@@ -23,7 +24,6 @@ import {
 } from './tableModels'
 import DebouncedInput from './components/DebouncedInput'
 import ActionButtons from './components/ActionButtons'
-import { getGroupedRowModel } from '@tanstack/react-table/build/cjs/react-table/src'
 import { faker } from '@faker-js/faker'
 import CustomTable from './components/CustomTable'
 
@@ -195,7 +195,10 @@ export const App = () => {
       </div>
       <div className={`flex ${isSplit ? 'gap-4' : ''}`}>
         {isSplit ? <CustomTable table={table} tableGroup="left" /> : null}
-        <CustomTable table={table} />
+        <CustomTable
+          table={table}
+          tableGroup={isSplit ? 'center' : undefined}
+        />
         {isSplit ? <CustomTable table={table} tableGroup="right" /> : null}
       </div>
       <div className="p-2" />

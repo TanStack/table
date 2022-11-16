@@ -6,6 +6,6 @@
     "outDir": "./build/types"
   },
   "jsxImportSource": "@emotion/react",
-  "files": ["**/*.ts", "**/*tsx"],
+  "files": ["src/main.tsx"],
   "include": ["src"]
 }
