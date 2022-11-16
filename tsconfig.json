@@ -5,6 +5,9 @@
       "path": "examples/react/basic/tsconfig.dev.json"
     },
     {
+      "path": "examples/react/bootstrap/tsconfig.dev.json"
+    },
+    {
       "path": "examples/react/column-dnd/tsconfig.dev.json"
     },
     {
@@ -44,13 +47,16 @@
       "path": "examples/react/grouping/tsconfig.dev.json"
     },
     {
+      "path": "examples/react/kitchen-sink/tsconfig.dev.json"
+    },
+    {
       "path": "examples/react/mui-pagination/tsconfig.dev.json"
     },
     {
-      "path": "examples/react/pagination-controlled/tsconfig.dev.json"
+      "path": "examples/react/pagination/tsconfig.dev.json"
     },
     {
-      "path": "examples/react/pagination/tsconfig.dev.json"
+      "path": "examples/react/pagination-controlled/tsconfig.dev.json"
     },
     {
       "path": "examples/react/row-dnd/tsconfig.dev.json"
@@ -138,7 +144,7 @@
     },
     {
       "path": "packages/vue-table"
-    },
+    }
   ]
   // "exclude": ["node_modules"]
 }
