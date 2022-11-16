@@ -9,19 +9,20 @@
     "start": "vite"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
-    "@tanstack/match-sorter-utils": "^8.1.1",
-    "@tanstack/react-table": "8.5.2",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@tanstack/match-sorter-utils": "^8.5.14",
+    "@tanstack/react-table": "8.5.30",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@emotion/babel-plugin": "^11.10.0",
-    "@rollup/plugin-replace": "^4.0.0",
-    "@vitejs/plugin-react": "^2.0.0",
-    "vite": "^2.9.7"
+    "@emotion/babel-plugin": "^11.10.5",
+    "@emotion/babel-plugin-jsx-pragmatic": "^0.2.0",
+    "@rollup/plugin-replace": "^5.0.1",
+    "@vitejs/plugin-react": "^2.2.0",
+    "vite": "^3.2.4"
   }
 }

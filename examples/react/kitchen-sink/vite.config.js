@@ -14,9 +14,18 @@ export default defineConfig({
       },
     }),
     react({
-      jsxImportSource: '@emotion/react',
       babel: {
-        plugins: ['@emotion/babel-plugin'],
+        plugins: [
+          [
+            '@emotion/babel-plugin-jsx-pragmatic',
+            {
+              export: 'jsx',
+              import: '__cssprop',
+              module: '@emotion/react',
+            },
+          ],
+          '@emotion/babel-plugin',
+        ],
       },
     }),
   ],
