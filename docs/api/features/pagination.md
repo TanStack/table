@@ -40,10 +40,10 @@ pageCount?: number
 
 When manually controlling pagination, you should supply a total `pageCount` value to the table if you know it. If you do not know how many pages there are, you can set this to `-1`.
 
-### `autoResetPagination`
+### `autoResetPageIndex`
 
 ```tsx
-autoResetPagination?: boolean
+autoResetPageIndex?: boolean
 ```
 
 If set to `true`, pagination will be reset to the first page when page-altering state changes eg. `data` is updated, filters change, grouping changes, etc.
