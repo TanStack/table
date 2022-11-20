@@ -351,6 +351,16 @@ filterFromLeafRows?: boolean
 
 By default, filtering is done from parent rows down (so if a parent row is filtered out, all of its children will be filtered out as well). Setting this option to `true` will cause filtering to be done from leaf rows up (which means parent rows will be included so long as one of their child or grand-child rows is also included).
 
+### `maxLeafRowFilterDepth`
+
+```tsx
+maxLeafRowFilterDepth?: number
+```
+
+By default, filtering is done for all rows (max depth of 100), no matter if they are root level parent rows or the child leaf rows of a parent row. Setting this option to `0` will cause filtering to only be applied to the root level parent rows, with all sub-rows remaining unfiltered. Similarly, setting this option to `1` will cause filtering to only be applied to child leaf rows 1 level deep, and so on.
+
+This is useful for situations where you want a row's entire child hierarchy to be visible regardless of the applied filter.
+
 ### `enableFilters`
 
 ```tsx

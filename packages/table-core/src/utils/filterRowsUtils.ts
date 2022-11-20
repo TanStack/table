@@ -20,6 +20,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
 ): RowModel<TData> {
   const newFilteredFlatRows: Row<TData>[] = []
   const newFilteredRowsById: Record<string, Row<TData>> = {}
+  const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
     const rows: Row<TData>[] = []
@@ -37,7 +38,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
       )
       newRow.columnFilters = row.columnFilters
 
-      if (row.subRows?.length) {
+      if (row.subRows?.length && depth < maxDepth) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
         row = newRow
 
@@ -81,6 +82,7 @@ export function filterRowModelFromRoot<TData extends RowData>(
 ): RowModel<TData> {
   const newFilteredFlatRows: Row<TData>[] = []
   const newFilteredRowsById: Record<string, Row<TData>> = {}
+  const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   // Filters top level and nested rows
   const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
@@ -95,7 +97,7 @@ export function filterRowModelFromRoot<TData extends RowData>(
       const pass = filterRow(row)
 
       if (pass) {
-        if (row.subRows?.length) {
+        if (row.subRows?.length && depth < maxDepth) {
           const newRow = createRow(
             table,
             row.id,
