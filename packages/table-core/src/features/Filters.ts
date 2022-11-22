@@ -96,6 +96,7 @@ interface FiltersOptionsBase<TData extends RowData> {
   enableFilters?: boolean
   manualFiltering?: boolean
   filterFromLeafRows?: boolean
+  maxLeafRowFilterDepth?: number
   getFilteredRowModel?: (table: Table<any>) => () => RowModel<any>
 
   // Column
@@ -184,6 +185,7 @@ export const Filters: TableFeature = {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       filterFromLeafRows: false,
+      maxLeafRowFilterDepth: 100,
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: column => {
         const value = table
