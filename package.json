@@ -20,6 +20,7 @@
   "namespace": "@tanstack",
   "workspaces": [
     "./examples/react/basic",
+    "./examples/react/bootstrap",
     "./examples/react/column-dnd",
     "./examples/react/column-groups",
     "./examples/react/column-ordering",
@@ -33,6 +34,7 @@
     "./examples/react/full-width-table",
     "./examples/react/fully-controlled",
     "./examples/react/grouping",
+    "./examples/react/kitchen-sink",
     "./examples/react/mui-pagination",
     "./examples/react/pagination",
     "./examples/react/pagination-controlled",
