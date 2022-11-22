@@ -273,8 +273,8 @@
           "label": "Virtualized Infinite Scrolling"
         },
         {
-          "to": "examples/react/full-width-resizable-table",
-          "label": "Full Width Resizable Table"
+          "to": "examples/react/kitchen-sink",
+          "label": "Kitchen Sink"
         }
       ]
     },
@@ -350,6 +350,31 @@
         {
           "to": "examples/vue/sorting",
           "label": "Sorting"
+        }
+      ]
+    },
+    {
+      "label": "CSS/Layout Examples",
+      "children": [
+        {
+          "to": "examples/solid/bootstrap",
+          "label": "Solid Bootstrap"
+        },
+        {
+          "to": "examples/react/bootstrap",
+          "label": "React Bootstrap"
+        },
+        {
+          "to": "examples/react/mui-pagination",
+          "label": "React MUI Pagination"
+        },
+        {
+          "to": "examples/react/full-width-table",
+          "label": "React Full Width"
+        },
+        {
+          "to": "examples/react/full-width-resizable-table",
+          "label": "React Full Width Resizable"
         }
       ]
     }
