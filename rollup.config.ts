@@ -16,6 +16,7 @@ type Options = {
   banner: string
   jsName: string
   outputFile: string
+  // Globals for UMD bundle, we want to skip monorepo deps to make sure we would not need to import core as well
   globals: Record<string, string>
 }
 
@@ -38,16 +39,18 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       name: 'table-core',
       packageDir: 'packages/table-core',
       jsName: 'TableCore',
-      outputFile: 'table-core',
+      outputFile: 'index',
       entryFile: 'src/index.ts',
+      external: [],
       globals: {},
     }),
     ...buildConfigs({
       name: 'react-table',
       packageDir: 'packages/react-table',
       jsName: 'ReactTable',
-      outputFile: 'react-table',
+      outputFile: 'index',
       entryFile: 'src/index.tsx',
+      external: ['react', '@tanstack/table-core'],
       globals: {
         react: 'React',
       },
@@ -56,8 +59,9 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       name: 'solid-table',
       packageDir: 'packages/solid-table',
       jsName: 'SolidTable',
-      outputFile: 'solid-table',
+      outputFile: 'index',
       entryFile: 'src/index.tsx',
+      external: ['solid-js', 'solid-js/store', '@tanstack/table-core'],
       globals: {
         'solid-js': 'Solid',
         'solid-js/store': 'SolidStore',
@@ -67,8 +71,9 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       name: 'vue-table',
       packageDir: 'packages/vue-table',
       jsName: 'VueTable',
-      outputFile: 'vue-table',
+      outputFile: 'index',
       entryFile: 'src/index.ts',
+      external: ['vue', '@tanstack/table-core'],
       globals: {
         vue: 'Vue',
       },
@@ -77,8 +82,14 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       name: 'svelte-table',
       packageDir: 'packages/svelte-table',
       jsName: 'SvelteTable',
-      outputFile: 'svelte-table',
+      outputFile: 'index',
       entryFile: 'src/index.ts',
+      external: [
+        'svelte',
+        'svelte/internal',
+        'svelte/store',
+        '@tanstack/table-core',
+      ],
       globals: {
         svelte: 'Svelte',
         'svelte/internal': 'SvelteInternal',
@@ -89,8 +100,9 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       name: 'react-table-devtools',
       packageDir: 'packages/react-table-devtools',
       jsName: 'ReactTableDevtools',
-      outputFile: 'react-table-devtools',
+      outputFile: 'index',
       entryFile: 'src/index.tsx',
+      external: ['react', '@tanstack/react-table'],
       globals: {
         react: 'React',
         '@tanstack/react-table': 'ReactTable',
@@ -100,8 +112,9 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       name: 'match-sorter-utils',
       packageDir: 'packages/match-sorter-utils',
       jsName: 'MatchSorterUtils',
-      outputFile: 'match-sorter-utils',
+      outputFile: 'index',
       entryFile: 'src/index.ts',
+      external: [],
       globals: {},
     }),
   ]
@@ -113,12 +126,15 @@ function buildConfigs(opts: {
   jsName: string
   outputFile: string
   entryFile: string
+  // Globals for UMD bundle, we want to skip monorepo deps to make sure we would not need to import core as well
   globals: Record<string, string>
+  // Externals for cjs, esm, mjs
+  external: string[]
 }): RollupOptions[] {
   const input = path.resolve(opts.packageDir, opts.entryFile)
-  const externalDeps = Object.keys(opts.globals)
 
-  const external = moduleName => externalDeps.includes(moduleName)
+  const external = moduleName => opts.external.includes(moduleName)
+  const umdExternal = Object.keys(opts.globals)
   const banner = createBanner(opts.name)
 
   const options: Options = {
@@ -132,15 +148,22 @@ function buildConfigs(opts: {
   }
 
   return [
+    mjs(options),
     esm(options),
     cjs(options),
-    umdDev(options),
-    umdProd(options),
-    types(options),
+    umdDev({ ...options, external: umdExternal }),
+    umdProd({ ...options, external: umdExternal }),
+    // types(options),
   ]
 }
 
-function esm({ input, packageDir, external, banner }: Options): RollupOptions {
+function mjs({
+  input,
+  packageDir,
+  external,
+  banner,
+  outputFile,
+}: Options): RollupOptions {
   return {
     // ESM
     external,
@@ -148,7 +171,36 @@ function esm({ input, packageDir, external, banner }: Options): RollupOptions {
     output: {
       format: 'esm',
       sourcemap: true,
-      dir: `${packageDir}/build/esm`,
+      file: `${packageDir}/build/lib/${outputFile}.mjs`,
+      banner,
+    },
+    plugins: [
+      svelte({
+        compilerOptions: {
+          hydratable: true,
+        },
+      }),
+      babelPlugin,
+      nodeResolve({ extensions: ['.ts', '.tsx'] }),
+    ],
+  }
+}
+
+function esm({
+  input,
+  packageDir,
+  external,
+  banner,
+  outputFile,
+}: Options): RollupOptions {
+  return {
+    // ESM
+    external,
+    input,
+    output: {
+      format: 'esm',
+      sourcemap: true,
+      file: `${packageDir}/build/lib/${outputFile}.esm.js`,
       banner,
     },
     plugins: [
@@ -171,7 +223,7 @@ function cjs({ input, external, packageDir, banner }: Options): RollupOptions {
     output: {
       format: 'cjs',
       sourcemap: true,
-      dir: `${packageDir}/build/cjs`,
+      dir: `${packageDir}/build/lib`,
       preserveModules: true,
       exports: 'named',
       banner,
