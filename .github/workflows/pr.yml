@@ -7,13 +7,24 @@ jobs:
     strategy:
       matrix:
         node: [16]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - run: |
-          npm install --legacy-peer-deps
-          npm run build
-          npm run typecheck
-          npm run test
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build the Project
+        run: npm run build
+
+      - name: Running Typechecks
+        run: npm run typecheck
+
+      - name: Running Tests
+        run: npm run test
