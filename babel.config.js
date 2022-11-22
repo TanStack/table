@@ -6,10 +6,13 @@ module.exports = {
   targets: 'defaults, not ie 11, not ie_mob 11',
   presets: [
     [
-      '@babel/env',
+      '@babel/preset-env',
       {
         loose,
         modules: false,
+        include: [
+          "@babel/plugin-proposal-nullish-coalescing-operator",
+        ],
         // exclude: ['@babel/plugin-transform-regenerator'],
       },
     ],
