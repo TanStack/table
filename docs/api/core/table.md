@@ -39,7 +39,7 @@ The array of column defs to use for the table.
 ### `defaultColumn`
 
 ```tsx
-defaultColumn?: Partial<ColumnDef<TData>>[]
+defaultColumn?: Partial<ColumnDef<TData>>
 ```
 
 Default column options to use for all column defs supplied to the table. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
