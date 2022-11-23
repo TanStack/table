@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
-    "@tanstack/match-sorter-utils": "8.5.14",
-    "@tanstack/react-table": "8.6.0",
+    "@tanstack/match-sorter-utils": "8.7.0",
+    "@tanstack/react-table": "8.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
