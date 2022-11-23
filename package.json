@@ -6,7 +6,7 @@
     "test": "(is-ci && npm run test:ci) || npm run test:dev",
     "test:ci": "jest",
     "test:dev": "jest --watch",
-    "build": "rollup --config rollup.config.js",
+    "build": "rollup --config rollup.config.js && npm run typecheck",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\"",
     "linkAll": "lerna exec 'npm link' --parallel",
     "unlinkAll": "lerna exec 'npm unlink' --parallel",
@@ -70,6 +70,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",

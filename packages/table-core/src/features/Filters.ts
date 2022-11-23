@@ -195,7 +195,7 @@ export const Filters: TableFeature = {
 
         return typeof value === 'string' || typeof value === 'number'
       },
-    }
+    } as FiltersOptions<TData>
   },
 
   createColumn: <TData extends RowData>(
@@ -235,6 +235,7 @@ export const Filters: TableFeature = {
           ? column.columnDef.filterFn
           : column.columnDef.filterFn === 'auto'
           ? column.getAutoFilterFn()
+          // @ts-ignore
           : table.options.filterFns?.[column.columnDef.filterFn as string] ??
             filterFns[column.columnDef.filterFn as BuiltInFilterFn]
       },
@@ -367,6 +368,7 @@ export const Filters: TableFeature = {
           ? globalFilterFn
           : globalFilterFn === 'auto'
           ? table.getGlobalAutoFilterFn()
+          // @ts-ignore
           : table.options.filterFns?.[globalFilterFn as string] ??
             filterFns[globalFilterFn as BuiltInFilterFn]
       },

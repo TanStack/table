@@ -1,12 +1,13 @@
 {
-  "composite": true,
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./build/types"
+    "composite": true,
+    "rootDir": "./src",
+    "outDir": "./build/lib",
+    "tsBuildInfoFile": "./build/.tsbuildinfo"
   },
-  "files": ["src/index.tsx"],
-  "include": [
-    "src"
-    // "__tests__/**/*.test.*"
+  "include": ["src"],
+  "references": [
+    { "path": "../react-table" }
   ]
 }
