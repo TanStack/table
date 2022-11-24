@@ -33,4 +33,4 @@ The table core uses the following abstractions, commonly exposed by adapters:
 - Cells
   - Each cell mirrors its respective row-column intersection and provides cell-specific APIs
 
-There are even more structures that pertain to specific features like filtering, sorting, grouping, etc, which you can find in the [features](./features) section.
+There are even more structures that pertain to specific features like filtering, sorting, grouping, etc, which you can find in the [features](./guide/features) section.
