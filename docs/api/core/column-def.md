@@ -92,7 +92,7 @@ The cell to display each row for the column. If a function is passed, it will be
 meta?: ColumnMeta // This interface is extensible via declaration merging. See below!
 ```
 
-The meta data to associated with the column. This type is global to all tables and can be extended like so:
+The meta data to associated with the column. We can access it anywhere when the column is available via `column.columnDef.meta`. This type is global to all tables and can be extended like so:
 
 ```tsx
 import '@tanstack/react-table';
