@@ -142,10 +142,23 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
 ## Installation
 
 ```bash
+# Npm
 npm install @tanstack/react-table
 npm install @tanstack/solid-table
 npm install @tanstack/vue-table
 npm install @tanstack/svelte-table
+
+#pnpm
+pnpm install @tanstack/react-table
+pnpm install @tanstack/solid-table
+pnpm install @tanstack/vue-table
+pnpm install @tanstack/svelte-table
+
+#Yarn
+yarn add @tanstack/react-table
+yarn add @tanstack/solid-table
+yarn add @tanstack/vue-table
+yarn add @tanstack/svelte-table
 ```
 
 ## How to help?
