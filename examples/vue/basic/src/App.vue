@@ -5,7 +5,7 @@ import {
   useVueTable,
   createColumnHelper,
 } from '@tanstack/vue-table'
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 
 type Person = {
   firstName: string

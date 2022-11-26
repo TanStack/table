@@ -112,7 +112,11 @@ export function rankItem<TItem>(
 
     let newRank = getMatchRanking(rankValue.itemValue, value, options)
 
-    const { minRanking, maxRanking, threshold = options.threshold } = rankValue.attributes
+    const {
+      minRanking,
+      maxRanking,
+      threshold = options.threshold,
+    } = rankValue.attributes
 
     if (newRank < minRanking && newRank >= rankings.MATCHES) {
       newRank = minRanking

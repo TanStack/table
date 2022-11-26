@@ -1,4 +1,10 @@
-import { ColumnDef, flexRender, getCoreRowModel, TableOptions, useReactTable } from '@tanstack/react-table'
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  TableOptions,
+  useReactTable,
+} from '@tanstack/react-table'
 import { fireEvent, render, screen } from '@testing-library/react'
 import React, { FC } from 'react'
 
@@ -34,22 +40,26 @@ const defaultColumns: ColumnDef<Person>[] = [
   {
     id: 'select',
     header: ({ table }) => {
-      return <input
-        data-testid="select-all"
-        aria-checked={table.getIsSomeRowsSelected() ? "mixed" : undefined}
-        type="checkbox"
-        checked={table.getIsAllRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
+      return (
+        <input
+          data-testid="select-all"
+          aria-checked={table.getIsSomeRowsSelected() ? 'mixed' : undefined}
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      )
     },
     cell: ({ row }) => {
-      return <input
-        type="checkbox"
-        disabled={row.getCanSelect()}
-        checked={row.getIsSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    }
+      return (
+        <input
+          type="checkbox"
+          disabled={row.getCanSelect()}
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      )
+    },
   },
   {
     header: 'First Name',
@@ -57,50 +67,55 @@ const defaultColumns: ColumnDef<Person>[] = [
   },
 ]
 
-const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({ options = {} }) => {
+const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
+  options = {},
+}) => {
   const table = useReactTable({
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
-    ...options
+    ...options,
   })
 
-  return <table>
-    <thead>
-      {table.getHeaderGroups().map(headerGroup => (
-        <tr key={headerGroup.id}>
-          {headerGroup.headers.map(header => (
-            <th key={header.id} colSpan={header.colSpan}>
-              {header.isPlaceholder
-                ? null
-                : flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-            </th>
-          ))}
-        </tr>
-      ))}
-    </thead>
-    <tbody>
-      {table.getRowModel().rows.map(row => (
-        <tr key={row.id}>
-          {row.getVisibleCells().map(cell => (
-            <td key={cell.id}>
-              {flexRender(
-                cell.column.columnDef.cell,
-                cell.getContext()
-              )}
-            </td>
-          ))}
-        </tr>
-      ))}
-    </tbody>
-  </table>
+  return (
+    <table>
+      <thead>
+        {table.getHeaderGroups().map(headerGroup => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map(header => (
+              <th key={header.id} colSpan={header.colSpan}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map(row => (
+          <tr key={row.id}>
+            {row.getVisibleCells().map(cell => (
+              <td key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
 }
 
 test(`Select all do not select rows which are not available for selection`, () => {
-  render(<TableComponent options={{ enableRowSelection: row => row.original.age > 40 }} />)
+  render(
+    <TableComponent
+      options={{ enableRowSelection: row => row.original.age > 40 }}
+    />
+  )
 
   const [title, notSelected, selected] = screen.getAllByRole('checkbox')
 
@@ -108,17 +123,17 @@ test(`Select all do not select rows which are not available for selection`, () =
   fireEvent.click(screen.getByTestId('select-all'))
 
   // Assert everything - except the not available - is selected
-  expect(title).toBePartiallyChecked();
-  expect(notSelected).not.toBeChecked();
-  expect(selected).toBeChecked();
+  expect(title).toBePartiallyChecked()
+  expect(notSelected).not.toBeChecked()
+  expect(selected).toBeChecked()
 
   // Let's unselect all
   fireEvent.click(screen.getByTestId('select-all'))
 
   // Now everything is unchecked again
-  expect(title).not.toBePartiallyChecked();
-  expect(notSelected).not.toBeChecked();
-  expect(selected).not.toBeChecked();
+  expect(title).not.toBePartiallyChecked()
+  expect(notSelected).not.toBeChecked()
+  expect(selected).not.toBeChecked()
 })
 
 test(`Select all when all rows are available for selection`, () => {
@@ -130,17 +145,17 @@ test(`Select all when all rows are available for selection`, () => {
   fireEvent.click(screen.getByTestId('select-all'))
 
   // Assert all the rows are selected
-  expect(title).toBeChecked();
-  expect(rowOne).toBeChecked();
-  expect(rowTwo).toBeChecked();
+  expect(title).toBeChecked()
+  expect(rowOne).toBeChecked()
+  expect(rowTwo).toBeChecked()
 
   // Let's unselect all
   fireEvent.click(screen.getByTestId('select-all'))
 
   // Now everything is unchecked again
-  expect(title).not.toBeChecked();
-  expect(rowOne).not.toBeChecked();
-  expect(rowTwo).not.toBeChecked();
+  expect(title).not.toBeChecked()
+  expect(rowOne).not.toBeChecked()
+  expect(rowTwo).not.toBeChecked()
 })
 
 test(`Select a single row`, () => {
@@ -152,15 +167,15 @@ test(`Select a single row`, () => {
   fireEvent.click(rowOne)
 
   // Assert only the row we've clicked before is selected
-  expect(title).toBePartiallyChecked();
-  expect(rowOne).toBeChecked();
-  expect(rowTwo).not.toBeChecked();
+  expect(title).toBePartiallyChecked()
+  expect(rowOne).toBeChecked()
+  expect(rowTwo).not.toBeChecked()
 
   // Let's unselect the row one
   fireEvent.click(rowOne)
 
   // Now everything is unchecked again
-  expect(title).not.toBeChecked();
-  expect(rowOne).not.toBeChecked();
-  expect(rowTwo).not.toBeChecked();
+  expect(title).not.toBeChecked()
+  expect(rowOne).not.toBeChecked()
+  expect(rowTwo).not.toBeChecked()
 })

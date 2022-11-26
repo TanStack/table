@@ -121,7 +121,11 @@ const table = useVueTable({
                 :props="header.getContext()"
               />
 
-              {{ { 'asc': ' 🔼', 'desc': ' 🔽' }[header.column.getIsSorted() as string] }}
+              {{
+                { asc: ' 🔼', desc: ' 🔽' }[
+                  header.column.getIsSorted() as string
+                ]
+              }}
             </template>
           </th>
         </tr>

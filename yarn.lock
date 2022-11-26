@@ -2551,13 +2551,6 @@
     magic-string "^0.26.7"
     svelte-hmr "^0.15.0"
 
-"@tanstack/match-sorter-utils@8.5.14", "@tanstack/match-sorter-utils@^8.5.14":
-  version "8.5.14"
-  resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.5.14.tgz#12efcd536abe491d09521e0242bc4d51442f8a8a"
-  integrity sha512-lVNhzTcOJ2bZ4IU+PeCPQ36vowBHvviJb2ZfdRFX5uhy7G0jM8N34zAMbmS5ZmVH8D2B7oU82OWo0e/5ZFzQrw==
-  dependencies:
-    remove-accents "0.4.2"
-
 "@tanstack/query-core@4.15.1":
   version "4.15.1"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.15.1.tgz#a282f04fe5e612b50019e1cfaf0efabd220e00ce"
@@ -2575,18 +2568,6 @@
   version "8.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.1.tgz#47ab73a3872b3fc10468259993f1a3121aa327c8"
   integrity sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==
-
-"@tanstack/svelte-table@8.5.28":
-  version "8.5.28"
-  resolved "https://registry.yarnpkg.com/@tanstack/svelte-table/-/svelte-table-8.5.28.tgz#8607408faf8ee1db59a0719892501080ba595b9c"
-  integrity sha512-gDyED+cZLnBFxXqwvRIra249hDzPBIABTLjuffTq1ftRVJZsqoJ+8ZrVKvcu1bofCh3EcTDvx8Xyir6xR+wmOg==
-  dependencies:
-    "@tanstack/table-core" "8.5.28"
-
-"@tanstack/table-core@8.5.28":
-  version "8.5.28"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.5.28.tgz#c6f33413cce2688d7578696d8599b1067e61218b"
-  integrity sha512-DTK/OdF6b+tls5/xsa46rbav16oXq7Sb3oKWAVuAkjc0VwQxR+afT8GWmAwemfLGUDIF/4qQOTjVQk0eG2b54g==
 
 "@testing-library/dom@^8.0.0":
   version "8.19.0"

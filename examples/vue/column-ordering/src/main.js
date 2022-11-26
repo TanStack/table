@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp } from 'vue'
 // @ts-ignore
-import App from './App.vue';
-createApp(App).mount('#app');
+import App from './App.vue'
+createApp(App).mount('#app')

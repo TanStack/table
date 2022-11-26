@@ -91,7 +91,7 @@ export function getSortedRowModel<TData extends RowData>(): (
           sortedData.forEach(row => {
             sortedFlatRows.push(row)
             if (row.subRows?.length) {
-              row.subRows = sortData(row.subRows);
+              row.subRows = sortData(row.subRows)
             }
           })
 

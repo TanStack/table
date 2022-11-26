@@ -9,9 +9,7 @@
     "resolveJsonModule": true,
     "baseUrl": "."
   },
-  "files": [
-    "src/main.ts"
-  ],
+  "files": ["src/main.ts"],
   "include": [
     "src"
     // "src/**/*.d.ts",

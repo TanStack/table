@@ -23,7 +23,7 @@ export const FlexRender = defineComponent({
       return props.render
     }
   },
-});
+})
 
 export function useVueTable<TData extends RowData>(
   options: TableOptions<TData>
