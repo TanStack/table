@@ -235,8 +235,8 @@ export const Filters: TableFeature = {
           ? column.columnDef.filterFn
           : column.columnDef.filterFn === 'auto'
           ? column.getAutoFilterFn()
-          // @ts-ignore
-          : table.options.filterFns?.[column.columnDef.filterFn as string] ??
+          : // @ts-ignore
+            table.options.filterFns?.[column.columnDef.filterFn as string] ??
             filterFns[column.columnDef.filterFn as BuiltInFilterFn]
       },
       getCanFilter: () => {
@@ -368,8 +368,8 @@ export const Filters: TableFeature = {
           ? globalFilterFn
           : globalFilterFn === 'auto'
           ? table.getGlobalAutoFilterFn()
-          // @ts-ignore
-          : table.options.filterFns?.[globalFilterFn as string] ??
+          : // @ts-ignore
+            table.options.filterFns?.[globalFilterFn as string] ??
             filterFns[globalFilterFn as BuiltInFilterFn]
       },
 

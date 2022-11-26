@@ -14,7 +14,7 @@
     "@faker-js/faker": "^7.6.0",
     "@rollup/plugin-replace": "^5.0.1",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.42",
-    "@tanstack/svelte-table": "8.5.28",
+    "@tanstack/svelte-table": "8.7.0",
     "@tsconfig/svelte": "^3.0.0",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",

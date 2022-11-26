@@ -284,7 +284,7 @@ Enables/Disables sorting for the table.
 enableSortingRemoval?: boolean
 ```
 
-Enables/Disables the ability to remove sorting for the table. 
+Enables/Disables the ability to remove sorting for the table.
 If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
 If `false` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
 
