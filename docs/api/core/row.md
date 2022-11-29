@@ -19,7 +19,7 @@ The resolved unique identifier for the row resolved via the `options.getRowId` o
 ### `depth`
 
 ```tsx
-id: number
+depth: number
 ```
 
 The depth of the row (if nested or grouped) relative to the root row array.
