@@ -17,6 +17,9 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - run: |
           pnpm i --legacy-peer-deps
           git config --global user.name 'Tanner Linsley'
