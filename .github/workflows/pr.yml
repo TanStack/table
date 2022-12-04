@@ -18,13 +18,13 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: pnpm install --legacy-peer-deps
 
       - name: Build the Project
-        run: npm run build
+        run: pnpm run build
 
       - name: Running Typechecks
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: Running Tests
-        run: npm run test
+        run: pnpm run test
