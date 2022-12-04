@@ -43,7 +43,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "workspace:*8.7.0"
+    "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.2.33"

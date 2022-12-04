@@ -344,11 +344,11 @@ async function run() {
   console.info()
 
   console.info('Building packages...')
-  execSync(`npm run build`, { encoding: 'utf8', stdio: 'inherit' })
+  execSync(`pnpm run build`, { encoding: 'utf8', stdio: 'inherit' })
   console.info('')
 
   // console.info('Building types...')
-  // execSync(`npm run types`, { encoding: 'utf8', stdio: 'inherit' })
+  // execSync(`pnpm run types`, { encoding: 'utf8', stdio: 'inherit' })
   // console.info('')
 
   console.info('Validating packages...')
@@ -394,7 +394,7 @@ async function run() {
   }
 
   console.info('Testing packages...')
-  execSync(`npm run test:ci`, { encoding: 'utf8' })
+  execSync(`pnpm run test:ci`, { encoding: 'utf8' })
   console.info('')
 
   console.info(`Updating all changed packages to version ${version}...`)
@@ -542,7 +542,7 @@ async function run() {
   // Publish each package
   changedPackages.map(pkg => {
     const packageDir = path.join(rootDir, 'packages', pkg.packageDir)
-    const cmd = `cd ${packageDir} && npm publish --tag ${npmTag} --access=public --non-interactive`
+    const cmd = `cd ${packageDir} && pnpm publish --tag ${npmTag} --access=public --non-interactive`
     console.info(
       `  Publishing ${pkg.name}@${version} to npm with tag "${npmTag}"...`
     )
@@ -634,7 +634,7 @@ async function getPackageVersion(pathName: string) {
 function updateExampleLockfile(example: string) {
   // execute npm to update lockfile, ignoring any stdout or stderr
   const exampleDir = path.join(rootDir, 'examples', example)
-  execSync(`cd ${exampleDir} && npm install`, { stdio: 'ignore' })
+  execSync(`cd ${exampleDir} && pnpm install`, { stdio: 'ignore' })
 }
 
 function getPackageNameDirectory(pathName: string) {

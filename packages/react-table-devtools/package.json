@@ -47,6 +47,6 @@
     "react-dom": ">=16"
   },
   "dependencies": {
-    "@tanstack/table-core": "workspace:*8.7.0"
+    "@tanstack/table-core": "workspace:*"
   }
 }

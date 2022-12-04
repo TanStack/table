@@ -945,25 +945,25 @@ importers:
 
   packages/react-table:
     specifiers:
-      '@tanstack/table-core': workspace:*8.7.0
+      '@tanstack/table-core': workspace:*
     dependencies:
       '@tanstack/table-core': link:../table-core
 
   packages/react-table-devtools:
     specifiers:
-      '@tanstack/table-core': workspace:*8.7.0
+      '@tanstack/table-core': workspace:*
     dependencies:
       '@tanstack/table-core': link:../table-core
 
   packages/solid-table:
     specifiers:
-      '@tanstack/table-core': workspace:*8.7.0
+      '@tanstack/table-core': workspace:*
     dependencies:
       '@tanstack/table-core': link:../table-core
 
   packages/svelte-table:
     specifiers:
-      '@tanstack/table-core': workspace:*8.7.0
+      '@tanstack/table-core': workspace:*
     dependencies:
       '@tanstack/table-core': link:../table-core
 
@@ -972,7 +972,7 @@ importers:
 
   packages/vue-table:
     specifiers:
-      '@tanstack/table-core': workspace:*8.7.0
+      '@tanstack/table-core': workspace:*
     dependencies:
       '@tanstack/table-core': link:../table-core
 
