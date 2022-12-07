@@ -342,7 +342,7 @@ export function createTable<TData extends RowData>(
         if (process.env.NODE_ENV !== 'production') {
           console.warn(`[Table] Column with id ${columnId} does not exist.`)
         }
-        throw new Error()
+        throw new Error(`[Table] Column with id ${columnId} does not exist.`)
       }
 
       return column
