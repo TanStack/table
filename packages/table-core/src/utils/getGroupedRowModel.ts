@@ -1,6 +1,7 @@
-import { createRow } from '../core/row'
-import { Table, Row, RowModel, RowData } from '../types'
+import { Row, RowData, RowModel, Table } from '../types'
 import { flattenBy, memo } from '../utils'
+
+import { createRow } from '../core/row'
 
 export function getGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>
@@ -171,7 +172,16 @@ function groupBy<TData extends RowData>(rows: Row<TData>[], columnId: string) {
   const groupMap = new Map<any, Row<TData>[]>()
 
   return rows.reduce((map, row) => {
-    const resKey = `${row.getValue(columnId)}`
+
+    let resKey;
+    const rowValue = row.getValue(columnId);
+    //checking type of rowValue
+    if (typeof rowValue === "object") {
+      resKey = JSON.stringify(rowValue); //using entire value instead of '[object Object]' as key of the map
+    } else {
+      resKey = `${rowValue}`
+    }
+    //const resKey = `${row.getValue(columnId)}` //this was returning '[object Object]' for every object, even if they were different
     const previous = map.get(resKey)
     if (!previous) {
       map.set(resKey, [row])
