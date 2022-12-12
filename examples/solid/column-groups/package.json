@@ -15,7 +15,7 @@
     "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
-    "@tanstack/solid-table": "8.7.0",
+    "@tanstack/solid-table": "8.7.2",
     "solid-js": "^1.6.2"
   }
 }
