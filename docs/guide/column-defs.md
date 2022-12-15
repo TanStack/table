@@ -12,7 +12,7 @@ Column defs are the single most important part of building a table. They are res
 
 - Building the underlying data model that will be used for everything including sorting, filtering, grouping, etc.
 - Formatting the data model into what will be displayed in the table
-- Creating [header groups, headers and footers](./headers)
+- Creating [header groups, headers and footers](../guide/headers)
 - Creating columns for display-only purposes, eg. action buttons, checkboxes, expanders, sparklines, etc.
 
 ## Column Def Types
