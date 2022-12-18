@@ -500,7 +500,7 @@ async function run() {
                     'package.json'
                   )
                 )
-
+                //upgrade dependencies in react, solid, and vue
                 if (
                   config.dependencies?.[pkg.name] &&
                   config.dependencies[pkg.name] !== depVersion
@@ -509,6 +509,16 @@ async function run() {
                     `  Updating ${exampleName}'s dependency on ${pkg.name} to version ${depVersion}.`
                   )
                   config.dependencies[pkg.name] = depVersion
+                }
+                //upgrade devDependencies in svelte (svelte uses devDependencies instead of dependencies)
+                if (
+                  config.devDependencies?.[pkg.name] &&
+                  config.devDependencies[pkg.name] !== depVersion
+                ) {
+                  console.info(
+                    `  Updating ${exampleName}'s devDependencies on ${pkg.name} to version ${depVersion}.`
+                  )
+                  config.devDependencies[pkg.name] = depVersion
                 }
               })
             )
