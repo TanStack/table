@@ -218,6 +218,8 @@ export const ColumnSizing: TableFeature = {
             ? Math.round(e.touches[0]!.clientX)
             : (e as MouseEvent).clientX
 
+          const newColumnSizing: ColumnSizingState = {}
+
           const updateOffset = (
             eventType: 'move' | 'end',
             clientXPos?: number
@@ -225,8 +227,6 @@ export const ColumnSizing: TableFeature = {
             if (typeof clientXPos !== 'number') {
               return
             }
-
-            let newColumnSizing: ColumnSizingState = {}
 
             table.setColumnSizingInfo(old => {
               const deltaOffset = clientXPos - (old?.startOffset ?? 0)
