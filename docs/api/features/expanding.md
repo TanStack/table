@@ -5,7 +5,7 @@ id: expanding
 
 ## State
 
-Grouping state is stored on the table using the following shape:
+Expanding state is stored on the table using the following shape:
 
 ```tsx
 export type ExpandedState = true | Record<string, boolean>
@@ -73,7 +73,7 @@ This function is called when the `expanded` table state changes. If a function i
 autoResetExpanded?: boolean
 ```
 
-Enable this setting to automatically reset the expanded state of the table when grouping state changes.
+Enable this setting to automatically reset the expanded state of the table when expanding state changes.
 
 ### `enableExpanding`
 
