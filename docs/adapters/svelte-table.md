@@ -8,12 +8,12 @@ The `@tanstack/svelte-table` adapter is a wrapper around the core table logic. M
 
 Takes an `options` object and returns a table.
 
-```tsx
+```svelte
+<script>
+
 import { createSvelteTable } from '@tanstack/svelte-table'
 
-function App() {
-  const table = createSvelteTable(options)
+const table = createSvelteTable(options)
 
-  // ...render your table
-}
+</script>
 ```
