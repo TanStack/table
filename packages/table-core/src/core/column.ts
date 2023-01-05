@@ -52,7 +52,7 @@ export function createColumn<TData extends RowData, TValue>(
         let result = originalRow as Record<string, any>
 
         for (const key of accessorKey.split('.')) {
-          if (!(key in result)) {
+          if (result == null || !(key in result)) {
             if (process.env.NODE_ENV !== 'production') {
               console.warn(
                 `"${key}" in deeply nested key "${accessorKey}" returned undefined.`
