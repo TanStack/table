@@ -14,6 +14,10 @@ table {
 thead {
   background: lightgray;
   margin: 0;
+  height: 50px;
+}
+
+.sticky-header {
   position: sticky;
   top: 0;
 }
@@ -31,7 +35,11 @@ td {
 
 .container {
   border: 1px solid lightgray;
-  height: 500px;
   max-width: 900px !important;
   overflow: auto;
+}
+
+.example-instructions {
+  max-width: 900px;
+  height: 200px;
 }

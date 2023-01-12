@@ -3,171 +3,53 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  Row,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
-import { useVirtual } from 'react-virtual'
+import { ColumnDef } from '@tanstack/react-table'
+import { makeData, Person, tableColumns } from './makeData'
+import { FixedHeightTable } from './fixedHeightTable'
+import { WindowHeightTable } from './windowHeightTable'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
-
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        size: 60,
-      },
-      {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        size: 50,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        size: 50,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        size: 80,
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        cell: info => info.getValue<Date>().toLocaleString(),
-      },
-    ],
-    []
-  )
+  const columns = React.useMemo<ColumnDef<Person>[]>(() => tableColumns, [])
 
   const [data, setData] = React.useState(() => makeData(50_000))
   const refreshData = () => setData(() => makeData(50_000))
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
-  })
-
-  const tableContainerRef = React.useRef<HTMLDivElement>(null)
-
-  const { rows } = table.getRowModel()
-  const rowVirtualizer = useVirtual({
-    parentRef: tableContainerRef,
-    size: rows.length,
-    overscan: 10,
-  })
-  const { virtualItems: virtualRows, totalSize } = rowVirtualizer
-
-  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0
-  const paddingBottom =
-    virtualRows.length > 0
-      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
-      : 0
+  const [tableType, setTableType] = React.useState<'fixed' | 'window'>('fixed')
 
   return (
     <div className="p-2">
-      <div className="h-2" />
-      <div ref={tableContainerRef} className="container">
-        <table>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      style={{ width: header.getSize() }}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {paddingTop > 0 && (
-              <tr>
-                <td style={{ height: `${paddingTop}px` }} />
-              </tr>
-            )}
-            {virtualRows.map(virtualRow => {
-              const row = rows[virtualRow.index] as Row<Person>
-              return (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
-                    return (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-            {paddingBottom > 0 && (
-              <tr>
-                <td style={{ height: `${paddingBottom}px` }} />
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="example-instructions">
+        <p>
+          This demo shows a virtualised table with 50,000 rows. There are two
+          versions, one is a fixed height table using{' '}
+          <strong>useVirtualizer</strong>, the other is a window height table
+          using <strong>useWindowVirtualizer</strong>.
+        </p>
+        <p style={{ marginTop: 10 }}>
+          <label htmlFor="table_type">
+            <strong>Table Type:</strong>
+          </label>
+          <select
+            name="table_type"
+            onChange={event =>
+              setTableType(event.target.value == 'fixed' ? 'fixed' : 'window')
+            }
+            value={tableType}
+          >
+            <option value="fixed">Fixed Height</option>
+            <option value="window">Window Height</option>
+          </select>
+        </p>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div className="h-2" />
+      {tableType === 'fixed' ? (
+        <FixedHeightTable data={data} columns={columns} height={500} />
+      ) : (
+        <WindowHeightTable data={data} columns={columns} />
+      )}
+      <div>{data.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>

@@ -2569,6 +2569,18 @@
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.0.0-alpha.1.tgz#47ab73a3872b3fc10468259993f1a3121aa327c8"
   integrity sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==
 
+"@tanstack/react-virtual@3.0.0-beta.33":
+  version "3.0.0-beta.33"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.0.0-beta.33.tgz#6f9dc64c44c75993b9941fef6a886c46364e7d83"
+  integrity sha512-CuZtODxMSp3Ywe4PTpcR7zOFT0ZtJSRTZZiqxZPpmEJ7ollD+WUryM2qtODtDuCfZ7tqj6CJb58K8QFHVq5IBA==
+  dependencies:
+    "@tanstack/virtual-core" "3.0.0-beta.33"
+
+"@tanstack/virtual-core@3.0.0-beta.33":
+  version "3.0.0-beta.33"
+  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.0.0-beta.33.tgz#e54c1fa9819ba56f8d82deaca0dd437a1ec91908"
+  integrity sha512-LV9biN5JDNxGT5MvqICiabmEZ3E1g/FgtpgwyIbrL6F6H5BDgATiirkdPnbDEMsmhL/j0NKQglzjM2dC2g+/Yg==
+
 "@testing-library/dom@^8.0.0":
   version "8.19.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.19.0.tgz#bd3f83c217ebac16694329e413d9ad5fdcfd785f"
