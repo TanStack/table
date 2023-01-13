@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -7,20 +7,20 @@ import {
   Row,
   SortingState,
   useReactTable,
-} from "@tanstack/react-table";
-import { useVirtualizer } from "@tanstack/react-virtual";
+} from '@tanstack/react-table'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
-import { Person } from "./makeData";
+import { Person } from './makeData'
 
 type FixedHeightTableProps = {
   // The data to render
-  data: any;
+  data: any
   // The columns to render
-  columns: ColumnDef<Person>[];
+  columns: ColumnDef<Person>[]
   // The height of the table
   // @default 500px
-  height?: number;
-};
+  height?: number
+}
 
 /**
  * Renders fixed height virtualised table
@@ -30,7 +30,7 @@ export function FixedHeightTable({
   columns,
   height = 500,
 }: FixedHeightTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -42,28 +42,28 @@ export function FixedHeightTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
-  });
+  })
 
-  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+  const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const { rows } = table.getRowModel();
+  const { rows } = table.getRowModel()
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 54,
     overscan: 10,
-  });
+  })
 
-  const virtualRows = rowVirtualizer.getVirtualItems();
-  const totalSize = rowVirtualizer.getTotalSize();
+  const virtualRows = rowVirtualizer.getVirtualItems()
+  const totalSize = rowVirtualizer.getTotalSize()
 
   // This is where the magic happens, essentially create a large row with height of total rows
   // before and after the first/last displayed row so the scroll bar works correctly
-  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0
   const paddingBottom =
     virtualRows.length > 0
       ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
-      : 0;
+      : 0
 
   return (
     <div
@@ -71,13 +71,14 @@ export function FixedHeightTable({
       className="container"
       style={{
         height: height,
+        overflow: 'auto',
       }}
     >
       <table>
-        <thead className="sticky-header">
-          {table.getHeaderGroups().map((headerGroup) => (
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map(header => {
                 return (
                   <th
                     key={header.id}
@@ -88,8 +89,8 @@ export function FixedHeightTable({
                       <div
                         {...{
                           className: header.column.getCanSort()
-                            ? "cursor-pointer select-none"
-                            : "",
+                            ? 'cursor-pointer select-none'
+                            : '',
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
@@ -98,13 +99,13 @@ export function FixedHeightTable({
                           header.getContext()
                         )}
                         {{
-                          asc: " 🔼",
-                          desc: " 🔽",
+                          asc: ' 🔼',
+                          desc: ' 🔽',
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
                   </th>
-                );
+                )
               })}
             </tr>
           ))}
@@ -115,11 +116,11 @@ export function FixedHeightTable({
               <td style={{ height: `${paddingTop}px` }} />
             </tr>
           )}
-          {virtualRows.map((virtualRow) => {
-            const row = rows[virtualRow.index] as Row<Person>;
+          {virtualRows.map(virtualRow => {
+            const row = rows[virtualRow.index] as Row<Person>
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getVisibleCells().map(cell => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -127,10 +128,10 @@ export function FixedHeightTable({
                         cell.getContext()
                       )}
                     </td>
-                  );
+                  )
                 })}
               </tr>
-            );
+            )
           })}
           {paddingBottom > 0 && (
             <tr>
@@ -140,5 +141,5 @@ export function FixedHeightTable({
         </tbody>
       </table>
     </div>
-  );
+  )
 }
