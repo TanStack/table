@@ -19,6 +19,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter(sort =>
+          table._getAllFlatColumnsById()[sort.id] &&
           table.getColumn(sort.id).getCanSort()
         )
 
