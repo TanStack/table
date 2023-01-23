@@ -14,7 +14,7 @@ import { Person } from './makeData'
 
 type FixedHeightTableProps = {
   // The data to render
-  data: any
+  data: Person[]
   // The columns to render
   columns: ColumnDef<Person>[]
   // The height of the table
@@ -52,18 +52,28 @@ export function FixedHeightTable({
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 54,
     overscan: 10,
+    // Pass correct keys to virtualizer it's important when rows change position
+    getItemKey: React.useCallback(
+      (index: number) => `${rows[index]?.id}`,
+      [rows]
+    ),
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
-  const totalSize = rowVirtualizer.getTotalSize()
 
   // This is where the magic happens, essentially create a large row with height of total rows
   // before and after the first/last displayed row so the scroll bar works correctly
-  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0
-  const paddingBottom =
+  const [paddingTop, paddingBottom] =
     virtualRows.length > 0
-      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
-      : 0
+      ? [
+          Math.max(0, virtualRows[0]?.start || 0),
+          Math.max(
+            0,
+            rowVirtualizer.getTotalSize() -
+              (virtualRows[virtualRows.length - 1]?.end || 0)
+          ),
+        ]
+      : [0, 0]
 
   return (
     <div
@@ -119,7 +129,7 @@ export function FixedHeightTable({
           {virtualRows.map(virtualRow => {
             const row = rows[virtualRow.index] as Row<Person>
             return (
-              <tr key={row.id}>
+              <tr key={virtualRow.key}>
                 {row.getVisibleCells().map(cell => {
                   return (
                     <td key={cell.id}>

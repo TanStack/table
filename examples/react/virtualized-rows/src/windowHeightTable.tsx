@@ -14,7 +14,7 @@ import { Person } from './makeData'
 
 type WindowHeightTableProps = {
   // The data to render
-  data: any
+  data: Person[]
   // The columns to render
   columns: ColumnDef<Person>[]
 }
@@ -52,28 +52,34 @@ export function WindowHeightTable({ data, columns }: WindowHeightTableProps) {
     scrollMargin: tableOffsetRef.current,
     estimateSize: () => 54,
     overscan: 10,
+    // Pass correct keys to virtualizer it's important when rows change position
+    getItemKey: React.useCallback(
+      (index: number) => `${rows[index]?.id}`,
+      [rows]
+    ),
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
-  // We need to add a padding row at top that grows as we scroll down to ensure
-  // the table scrolls down with the page
-  const paddingTop =
+  // This is where the magic happens, essentially create a large row with height of total rows
+  // before and after the first/last displayed row so the scroll bar works correctly
+  const [paddingTop, paddingBottom] =
     virtualRows.length > 0
-      ? virtualRows?.[0]?.start
-        ? virtualRows?.[0]?.start - tableOffsetRef.current
-        : 0 || 0
-      : 0
+      ? [
+          Math.max(
+            0,
+            (virtualRows[0]?.start || 0) - rowVirtualizer.options.scrollMargin
+          ),
+          Math.max(
+            0,
+            rowVirtualizer.getTotalSize() -
+              (virtualRows[virtualRows.length - 1]?.end || 0)
+          ),
+        ]
+      : [0, 0]
 
   return (
-    <div
-      ref={tableContainerRef}
-      className="container"
-      style={{
-        // Need to add 52px to totalSize to account for header height + container border top and bottom
-        height: rowVirtualizer.getTotalSize() + 52,
-      }}
-    >
+    <div ref={tableContainerRef} className="container">
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
@@ -120,7 +126,7 @@ export function WindowHeightTable({ data, columns }: WindowHeightTableProps) {
             const row = rows[virtualRow.index] as Row<Person>
             return (
               <tr
-                key={row.id}
+                key={virtualRow.key}
                 ref={rowVirtualizer.measureElement}
                 data-index={row.index}
               >
@@ -140,6 +146,11 @@ export function WindowHeightTable({ data, columns }: WindowHeightTableProps) {
               </tr>
             )
           })}
+          {paddingBottom > 0 && (
+            <tr>
+              <td style={{ height: `${paddingBottom}px` }} />
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

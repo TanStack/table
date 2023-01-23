@@ -5,8 +5,8 @@ import './index.css'
 
 import { ColumnDef } from '@tanstack/react-table'
 import { makeData, Person, tableColumns } from './makeData'
-import { FixedHeightTable } from './fixedHeightTable'
-import { WindowHeightTable } from './windowHeightTable'
+import { FixedHeightTable } from './FixedHeightTable'
+import { WindowHeightTable } from './WindowHeightTable'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
