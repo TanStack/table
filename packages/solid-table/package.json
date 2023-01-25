@@ -29,7 +29,8 @@
     ".": {
       "types": "./build/lib/index.d.ts",
       "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js"
+      "default": "./build/lib/index.js",
+      "solid": "./src/index.tsx"
     },
     "./package.json": "./package.json"
   },
