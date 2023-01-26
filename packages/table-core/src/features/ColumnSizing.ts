@@ -190,10 +190,10 @@ export const ColumnSizing: TableFeature = {
       },
       getResizeHandler: () => {
         const column = table.getColumn(header.column.id)
-        const canResize = column.getCanResize()
+        const canResize = column?.getCanResize()
 
         return (e: unknown) => {
-          if (!canResize) {
+          if (!column || !canResize) {
             return
           }
 

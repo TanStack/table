@@ -41,7 +41,7 @@ export const createRow = <TData extends RowData>(
 
       const column = table.getColumn(columnId)
 
-      if (!column.accessorFn) {
+      if (!column?.accessorFn) {
         return undefined
       }
 
@@ -59,7 +59,7 @@ export const createRow = <TData extends RowData>(
 
       const column = table.getColumn(columnId)
 
-      if (!column.accessorFn) {
+      if (!column?.accessorFn) {
         return undefined
       }
 

@@ -19,7 +19,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter(sort =>
-          table.getColumn(sort.id).getCanSort()
+          table.getColumn(sort.id)?.getCanSort()
         )
 
         const columnInfoById: Record<
@@ -33,6 +33,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         availableSorting.forEach(sortEntry => {
           const column = table.getColumn(sortEntry.id)
+          if(!column) return
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.columnDef.sortUndefined,

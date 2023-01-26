@@ -7,8 +7,10 @@ export function getFacetedUniqueValues<TData extends RowData>(): (
 ) => () => Map<any, number> {
   return (table, columnId) =>
     memo(
-      () => [table.getColumn(columnId).getFacetedRowModel()],
+      () => [table.getColumn(columnId)?.getFacetedRowModel()],
       facetedRowModel => {
+        if (!facetedRowModel) return new Map()
+
         let facetedUniqueValues = new Map<any, number>()
 
         for (let i = 0; i < facetedRowModel.flatRows.length; i++) {

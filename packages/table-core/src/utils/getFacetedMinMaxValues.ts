@@ -7,8 +7,10 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
     memo(
-      () => [table.getColumn(columnId).getFacetedRowModel()],
+      () => [table.getColumn(columnId)?.getFacetedRowModel()],
       facetedRowModel => {
+        if (!facetedRowModel) return undefined
+        
         const firstValue =
           facetedRowModel.flatRows[0]?.getUniqueValues(columnId)
 
