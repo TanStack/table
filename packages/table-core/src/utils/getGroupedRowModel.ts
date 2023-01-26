@@ -48,7 +48,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
             })
           }
 
-          const columnId = existingGrouping[depth]!
+          const columnId: string = existingGrouping[depth]!
 
           // Group the rows together for this level
           const rowGroupsMap = groupBy(rows, columnId)
@@ -101,7 +101,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
 
                   // Aggregate the values
                   const column = table.getColumn(columnId)
-                  const aggregateFn = column.getAggregationFn()
+                  const aggregateFn = column?.getAggregationFn()
 
                   if (aggregateFn) {
                     row._groupingValuesCache[columnId] = aggregateFn(

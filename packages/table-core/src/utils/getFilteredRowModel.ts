@@ -32,11 +32,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           const column = table.getColumn(d.id)
 
           if (!column) {
-            if (process.env.NODE_ENV !== 'production') {
-              console.warn(
-                `Table: Could not find a column to filter with columnId: ${d.id}`
-              )
-            }
+            return
           }
 
           const filterFn = column.getFilterFn()

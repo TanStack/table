@@ -355,7 +355,7 @@ Returns all leaf-node columns in the table flattened to a single level. This doe
 ### `getColumn`
 
 ```tsx
-type getColumn = (id: string) => Column<TData>
+type getColumn = (id: string) => Column<TData> | undefined
 ```
 
 Returns a single column by its ID.

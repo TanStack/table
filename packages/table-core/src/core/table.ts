@@ -106,7 +106,7 @@ export interface CoreInstance<TData extends RowData> {
   getAllColumns: () => Column<TData, unknown>[]
   getAllFlatColumns: () => Column<TData, unknown>[]
   getAllLeafColumns: () => Column<TData, unknown>[]
-  getColumn: (columnId: string) => Column<TData, unknown>
+  getColumn: (columnId: string) => Column<TData, unknown> | undefined
 }
 
 export function createTable<TData extends RowData>(
@@ -337,11 +337,8 @@ export function createTable<TData extends RowData>(
     getColumn: columnId => {
       const column = table._getAllFlatColumnsById()[columnId]
 
-      if (!column) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn(`[Table] Column with id ${columnId} does not exist.`)
-        }
-        throw new Error()
+      if (process.env.NODE_ENV !== 'production' && !column) {
+        console.error(`[Table] Column with id '${columnId}' does not exist.`)
       }
 
       return column
