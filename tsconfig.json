@@ -62,6 +62,9 @@
       "path": "examples/react/row-dnd/tsconfig.dev.json"
     },
     {
+      "path": "examples/react/row-pinning/tsconfig.dev.json"
+    },
+    {
       "path": "examples/react/row-selection/tsconfig.dev.json"
     },
     {

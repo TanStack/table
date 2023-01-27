@@ -11,23 +11,47 @@ import {
 import { makeStateUpdater, memo } from '../utils'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
+export type RowPinningPosition = false | 'top' | 'bottom'
 
 export interface ColumnPinningState {
   left?: string[]
   right?: string[]
 }
 
+export interface RowPinningState {
+  top?: string[]
+  bottom?: string[]
+}
+
 export interface ColumnPinningTableState {
   columnPinning: ColumnPinningState
 }
 
+export interface RowPinningTableState {
+  rowPinning: RowPinningState
+}
+
 export interface ColumnPinningOptions {
   onColumnPinningChange?: OnChangeFn<ColumnPinningState>
+  /**
+   * @deprecated Use `enableColumnPinning` instead
+   */
   enablePinning?: boolean
+  enableColumnPinning?: boolean
+}
+
+export interface RowPinningOptions<TData extends RowData> {
+  onRowPinningChange?: OnChangeFn<RowPinningState>
+  enableRowPinning?: boolean
+  getCanPinRow?: (row: Row<TData>) => boolean
 }
 
 export interface ColumnPinningDefaultOptions {
   onColumnPinningChange: OnChangeFn<ColumnPinningState>
+}
+
+export interface RowPinningDefaultOptions {
+  onRowPinningChange: OnChangeFn<RowPinningState>
 }
 
 export interface ColumnPinningColumnDef {
@@ -47,6 +71,13 @@ export interface ColumnPinningRow<TData extends RowData> {
   getRightVisibleCells: () => Cell<TData, unknown>[]
 }
 
+export interface RowPinningRow {
+  getCanPin: () => boolean
+  getIsPinned: () => RowPinningPosition
+  getPinnedIndex: () => number
+  pin: (position: RowPinningPosition) => void
+}
+
 export interface ColumnPinningInstance<TData extends RowData> {
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   resetColumnPinning: (defaultState?: boolean) => void
@@ -56,26 +87,42 @@ export interface ColumnPinningInstance<TData extends RowData> {
   getCenterLeafColumns: () => Column<TData, unknown>[]
 }
 
+export interface RowPinningInstance<TData extends RowData> {
+  setRowPinning: (updater: Updater<RowPinningState>) => void
+  resetRowPinning: (defaultState?: boolean) => void
+  getIsSomeRowsPinned: (position?: RowPinningPosition) => boolean
+  getTopRows: () => Row<TData>[]
+  getBottomRows: () => Row<TData>[]
+  getCenterRows: () => Row<TData>[]
+}
+
 //
 
-const getDefaultPinningState = (): ColumnPinningState => ({
+const getDefaultColumnPinningState = (): ColumnPinningState => ({
   left: [],
   right: [],
 })
 
+const getDefaultRowPinningState = (): RowPinningState => ({
+  top: [],
+  bottom: [],
+})
+
 export const Pinning: TableFeature = {
-  getInitialState: (state): ColumnPinningTableState => {
+  getInitialState: (state): ColumnPinningTableState & RowPinningTableState => {
     return {
-      columnPinning: getDefaultPinningState(),
+      columnPinning: getDefaultColumnPinningState(),
+      rowPinning: getDefaultRowPinningState(),
       ...state,
     }
   },
 
   getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): ColumnPinningDefaultOptions => {
+  ): ColumnPinningDefaultOptions & RowPinningDefaultOptions => {
     return {
       onColumnPinningChange: makeStateUpdater('columnPinning', table),
+      onRowPinningChange: makeStateUpdater('rowPinning', table),
     }
   },
 
@@ -124,7 +171,9 @@ export const Pinning: TableFeature = {
         return leafColumns.some(
           d =>
             (d.columnDef.enablePinning ?? true) &&
-            (table.options.enablePinning ?? true)
+            (table.options.enableColumnPinning ??
+              table.options.enablePinning ??
+              true)
         )
       },
 
@@ -152,7 +201,7 @@ export const Pinning: TableFeature = {
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
-  ): ColumnPinningRow<TData> => {
+  ): ColumnPinningRow<TData> & RowPinningRow => {
     return {
       getCenterVisibleCells: memo(
         () => [
@@ -172,6 +221,7 @@ export const Pinning: TableFeature = {
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
+
       getLeftVisibleCells: memo(
         () => [
           row._getAllVisibleCells(),
@@ -194,6 +244,7 @@ export const Pinning: TableFeature = {
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
+
       getRightVisibleCells: memo(
         () => [row._getAllVisibleCells(), table.getState().columnPinning.right],
         (allCells, right) => {
@@ -212,12 +263,70 @@ export const Pinning: TableFeature = {
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
+
+      pin: position => {
+        const rowIds = Object.keys(table.getRowModel().rowsById)
+
+        table.setRowPinning(old => {
+          if (position === 'bottom') {
+            return {
+              top: (old?.top ?? []).filter(d => !rowIds?.includes(d)),
+              bottom: [
+                ...(old?.bottom ?? []).filter(d => !rowIds?.includes(d)),
+                ...rowIds,
+              ],
+            }
+          }
+
+          if (position === 'top') {
+            return {
+              top: [
+                ...(old?.top ?? []).filter(d => !rowIds?.includes(d)),
+                ...rowIds,
+              ],
+              bottom: (old?.bottom ?? []).filter(d => !rowIds?.includes(d)),
+            }
+          }
+
+          return {
+            top: (old?.top ?? []).filter(d => !rowIds?.includes(d)),
+            bottom: (old?.bottom ?? []).filter(d => !rowIds?.includes(d)),
+          }
+        })
+      },
+
+      getCanPin: () => {
+        return (
+          table.options?.getCanPinRow?.(row) ??
+          table.options.enableRowPinning ??
+          true
+        )
+      },
+
+      getIsPinned: () => {
+        const rowIds = Object.keys(table.getRowModel().rowsById)
+
+        const { top, bottom } = table.getState().rowPinning
+
+        const isTop = rowIds.some(d => top?.includes(d))
+        const isBottom = rowIds.some(d => bottom?.includes(d))
+
+        return isTop ? 'top' : isBottom ? 'bottom' : false
+      },
+
+      getPinnedIndex: () => {
+        const position = row.getIsPinned()
+
+        return position
+          ? table.getState().rowPinning?.[position]?.indexOf(row.id) ?? -1
+          : 0
+      },
     }
   },
 
   createTable: <TData extends RowData>(
     table: Table<TData>
-  ): ColumnPinningInstance<TData> => {
+  ): ColumnPinningInstance<TData> & RowPinningInstance<TData> => {
     return {
       setColumnPinning: updater =>
         table.options.onColumnPinningChange?.(updater),
@@ -225,8 +334,9 @@ export const Pinning: TableFeature = {
       resetColumnPinning: defaultState =>
         table.setColumnPinning(
           defaultState
-            ? getDefaultPinningState()
-            : table.initialState?.columnPinning ?? getDefaultPinningState()
+            ? getDefaultColumnPinningState()
+            : table.initialState?.columnPinning ??
+                getDefaultColumnPinningState()
         ),
 
       getIsSomeColumnsPinned: position => {
@@ -280,6 +390,69 @@ export const Pinning: TableFeature = {
         {
           key: process.env.NODE_ENV === 'development' && 'getCenterLeafColumns',
           debug: () => table.options.debugAll ?? table.options.debugColumns,
+        }
+      ),
+
+      setRowPinning: updater => table.options.onRowPinningChange?.(updater),
+
+      resetRowPinning: defaultState =>
+        table.setRowPinning(
+          defaultState
+            ? getDefaultRowPinningState()
+            : table.initialState?.rowPinning ?? getDefaultRowPinningState()
+        ),
+
+      getIsSomeRowsPinned: position => {
+        const pinningState = table.getState().rowPinning
+
+        if (!position) {
+          return Boolean(
+            pinningState.top?.length || pinningState.bottom?.length
+          )
+        }
+        return Boolean(pinningState[position]?.length)
+      },
+
+      getTopRows: memo(
+        () => [table.getRowModel().flatRows, table.getState().rowPinning.top],
+        (allRows, top) => {
+          return (top ?? [])
+            .map(rowId => allRows.find(row => row.id === rowId)!)
+            .filter(Boolean)
+        },
+        {
+          key: process.env.NODE_ENV === 'development' && 'getTopRows',
+          debug: () => table.options.debugAll ?? table.options.debugRows,
+        }
+      ),
+
+      getBottomRows: memo(
+        () => [table.getRowModel().flatRows, table.getState().rowPinning.bottom],
+        (allRows, bottom) => {
+          return (bottom ?? [])
+            .map(rowId => allRows.find(row => row.id === rowId)!)
+            .filter(Boolean)
+        },
+        {
+          key: process.env.NODE_ENV === 'development' && 'getBottomRows',
+          debug: () => table.options.debugAll ?? table.options.debugRows,
+        }
+      ),
+
+      getCenterRows: memo(
+        () => [
+          table.getRowModel().flatRows,
+          table.getState().rowPinning.top,
+          table.getState().rowPinning.bottom,
+        ],
+        (allRows, top, bottom) => {
+          const topAndBottom: string[] = [...(top ?? []), ...(bottom ?? [])]
+
+          return allRows.filter(d => !topAndBottom.includes(d.id))
+        },
+        {
+          key: process.env.NODE_ENV === 'development' && 'getCenterRows',
+          debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
     }
