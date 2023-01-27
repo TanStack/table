@@ -268,6 +268,7 @@ export const Pinning: TableFeature = {
         const rowIds = Object.keys(table.getRowModel().rowsById)
 
         table.setRowPinning(old => {
+          console.log({ old })
           if (position === 'bottom') {
             return {
               top: (old?.top ?? []).filter(d => !rowIds?.includes(d)),
@@ -414,34 +415,40 @@ export const Pinning: TableFeature = {
       },
 
       getTopRows: memo(
-        () => [table.getRowModel().flatRows, table.getState().rowPinning.top],
+        () => [table.getRowModel().rows, table.getState().rowPinning.top, ,],
         (allRows, top) => {
-          return (top ?? [])
+          const rows = (top ?? [])
             .map(rowId => allRows.find(row => row.id === rowId)!)
             .filter(Boolean)
+            .map(d => ({ ...d, position: 'top' }))
+
+          return rows
         },
         {
-          key: process.env.NODE_ENV === 'development' && 'getTopRows',
+          key: process.env.NODE_ENV === 'production' && 'row.getTopRows',
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
 
       getBottomRows: memo(
-        () => [table.getRowModel().flatRows, table.getState().rowPinning.bottom],
+        () => [table.getRowModel().rows, table.getState().rowPinning.bottom, ,],
         (allRows, bottom) => {
-          return (bottom ?? [])
+          const rows = (bottom ?? [])
             .map(rowId => allRows.find(row => row.id === rowId)!)
             .filter(Boolean)
+            .map(d => ({ ...d, position: 'bottom' }))
+
+          return rows
         },
         {
-          key: process.env.NODE_ENV === 'development' && 'getBottomRows',
+          key: process.env.NODE_ENV === 'production' && 'row.getBottomRows',
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
 
       getCenterRows: memo(
         () => [
-          table.getRowModel().flatRows,
+          table.getRowModel().rows,
           table.getState().rowPinning.top,
           table.getState().rowPinning.bottom,
         ],

@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, HTMLProps } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
@@ -11,7 +11,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  RowPinningState,
   Table,
   useReactTable,
 } from '@tanstack/react-table'
@@ -19,175 +19,181 @@ import {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const [rowPinning, setRowPinning] = React.useState({})
-  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [rowPinning, setRowPinning] = React.useState<RowPinningState>({
+    top: [],
+    bottom: [],
+  })
+
+  console.log(rowPinning)
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
         id: 'pin',
-        header: ({ table }) => (
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <div className="px-1">
-            <IndeterminateCheckbox
-              {...{
-                checked: row.getIsSelected(),
-                indeterminate: row.getIsSomeSelected(),
-                onChange: row.getToggleSelectedHandler(),
-              }}
-            />
-          </div>
-        ),
+        header: () => 'Pin',
+        cell: ({ row }) =>
+          row.getIsPinned() ? (
+            <button onClick={() => row.pin(false)}>❌</button>
+          ) : (
+            <div>
+              <button onClick={() => row.pin('top')}>👆</button>
+              <button onClick={() => row.pin('bottom')}>👇</button>
+            </div>
+          ),
       },
       {
-        header: 'Name',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-          },
-          {
-            accessorFn: row => row.lastName,
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
-          },
-        ],
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
       },
       {
-        header: 'Info',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: props => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-              },
-            ],
-          },
-        ],
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+      },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        size: 50,
+      },
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        size: 50,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        size: 80,
       },
     ],
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(1000))
+  const refreshData = () => setData(() => makeData(1000))
 
   const table = useReactTable({
     data,
     columns,
     state: {
-      rowSelection,
+      rowPinning,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onRowPinningChange: setRowPinning,
     debugTable: true,
   })
 
   return (
-    <div className="p-2">
-      <div>
-        <input
-          value={globalFilter ?? ''}
-          onChange={e => setGlobalFilter(e.target.value)}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
-      <div className="h-2" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
-                      </>
-                    )}
-                  </th>
-                )
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+    <div>
+      <div className="p-2 container">
+        <div className="h-2" />
+        <table>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
                   return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </>
                       )}
-                    </td>
+                    </th>
                   )
                 })}
               </tr>
-            )
-          })}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className="p-1">
-              <IndeterminateCheckbox
-                {...{
-                  checked: table.getIsAllPageRowsSelected(),
-                  indeterminate: table.getIsSomePageRowsSelected(),
-                  onChange: table.getToggleAllPageRowsSelectedHandler(),
-                }}
-              />
-            </td>
-            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
-          </tr>
-        </tfoot>
-      </table>
+            ))}
+          </thead>
+          <tbody>
+            {table.getTopRows().map(row => {
+              return (
+                <tr
+                  key={row.id}
+                  style={{
+                    backgroundColor: 'lightblue',
+                    boxShadow: '0 0 3px 1px black',
+                    position: 'sticky',
+                    top: `${row.getPinnedIndex() * 25 + 48}px`,
+                  }}
+                >
+                  {row.getVisibleCells().map(cell => {
+                    return (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+            {table.getCenterRows().map(row => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => {
+                    return (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+            {table.getBottomRows().map(row => {
+              return (
+                <tr
+                  key={row.id}
+                  style={{
+                    backgroundColor: 'lightblue',
+                    boxShadow: '0 0 3px 1px black',
+                    position: 'sticky',
+                    bottom: `${row.getPinnedIndex() * 25}px`,
+                  }}
+                >
+                  {row.getVisibleCells().map(cell => {
+                    return (
+                      <td
+                        key={cell.id}
+                        style={{ position: 'sticky', bottom: 0 }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
       <div className="h-2" />
       <br />
       <div>
-        {Object.keys(rowSelection).length} of{' '}
+        {Object.keys(rowPinning).length} of{' '}
         {table.getPreFilteredRowModel().rows.length} Total Rows Selected
       </div>
       <hr />
@@ -208,22 +214,9 @@ function App() {
       <div>
         <button
           className="border rounded p-2 mb-2"
-          onClick={() => console.info('rowSelection', rowSelection)}
+          onClick={() => console.info('rowPinning', rowPinning)}
         >
-          Log `rowSelection` state
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() =>
-            console.info(
-              'table.getSelectedFlatRows()',
-              table.getSelectedRowModel().flatRows
-            )
-          }
-        >
-          Log table.getSelectedFlatRows()
+          Log `rowPinning` state
         </button>
       </div>
     </div>
@@ -269,29 +262,6 @@ function Filter({
       onChange={e => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
-    />
-  )
-}
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = '',
-  ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
-
-  React.useEffect(() => {
-    if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = !rest.checked && indeterminate
-    }
-  }, [ref, indeterminate])
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className + ' cursor-pointer'}
-      {...rest}
     />
   )
 }

@@ -3,17 +3,34 @@ html {
   font-size: 14px;
 }
 
+.container {
+  border: 1px solid lightgray;
+  height: 600px;
+  max-width: 1000px !important;
+  overflow: auto;
+}
+
 table {
   border: 1px solid lightgray;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+thead {
+  background: lightgray;
+  margin: 0;
+  position: sticky;
+  top: 0;
 }
 
 tbody {
   border-bottom: 1px solid lightgray;
+  overflow: auto;
+  height: 500px;
 }
 
 th {
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
   padding: 2px 4px;
 }
 
