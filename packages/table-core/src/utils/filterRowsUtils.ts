@@ -88,7 +88,7 @@ export function filterRowModelFromRoot<TData extends RowData>(
   const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
     // Filter from parents downward first
 
-    const rows = []
+    const rows: Row<TData>[] = []
 
     // Apply the filter to any subRows
     for (let i = 0; i < rowsToFilter.length; i++) {
