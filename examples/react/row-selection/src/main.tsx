@@ -40,6 +40,7 @@ function App() {
             <IndeterminateCheckbox
               {...{
                 checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
                 indeterminate: row.getIsSomeSelected(),
                 onChange: row.getToggleSelectedHandler(),
               }}
@@ -109,6 +110,8 @@ function App() {
     state: {
       rowSelection,
     },
+    enableRowSelection: true, //enable row selection for all rows
+    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

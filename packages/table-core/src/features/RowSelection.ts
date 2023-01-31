@@ -13,6 +13,7 @@ export interface RowSelectionOptions<TData extends RowData> {
   enableMultiRowSelection?: boolean | ((row: Row<TData>) => boolean)
   enableSubRowSelection?: boolean | ((row: Row<TData>) => boolean)
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
+  getCanSelect?: (row: Row<TData>) => boolean
   // enableGroupingRowSelection?:
   //   | boolean
   //   | ((
@@ -295,7 +296,9 @@ export const RowSelection: TableFeature = {
 
         if (
           isAllPageRowsSelected &&
-          paginationFlatRows.some(row => !rowSelection[row.id])
+          paginationFlatRows.some(
+            row => row.getCanSelect() && !rowSelection[row.id]
+          )
         ) {
           isAllPageRowsSelected = false
         }
