@@ -23,7 +23,7 @@ The table core uses the following abstractions, commonly exposed by adapters:
 - Table Data
   - The core data array you provide the table
 - Columns
-  - Each column mirrors its respective column def and also provide column-specific APIs
+  - Each column mirrors its respective column def and also provides column-specific APIs
 - Rows
   - Each row mirrors its respective row data and provides row-specific APIs
 - Header Groups
