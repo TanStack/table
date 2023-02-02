@@ -265,7 +265,8 @@ export const Pinning: TableFeature = {
       ),
 
       pin: position => {
-        const rowIds = Object.keys(table.getRowModel().rowsById)
+        const leafRowIds = row.getLeafRows().map(({ id }) => id)
+        const rowIds = leafRowIds.length > 0 ? leafRowIds : [row.id]
 
         table.setRowPinning(old => {
           console.log({ old })
@@ -305,7 +306,8 @@ export const Pinning: TableFeature = {
       },
 
       getIsPinned: () => {
-        const rowIds = Object.keys(table.getRowModel().rowsById)
+        const leafRowIds = row.getLeafRows().map(({ id }) => id)
+        const rowIds = leafRowIds.length > 0 ? leafRowIds : [row.id]
 
         const { top, bottom } = table.getState().rowPinning
 

@@ -126,9 +126,9 @@ function App() {
                   key={row.id}
                   style={{
                     backgroundColor: 'lightblue',
-                    boxShadow: '0 0 3px 1px black',
+                    boxShadow: '0 0 6px 1px black',
                     position: 'sticky',
-                    top: `${row.getPinnedIndex() * 25 + 48}px`,
+                    top: `${row.getPinnedIndex() * 26 + 50}px`,
                   }}
                 >
                   {row.getVisibleCells().map(cell => {
@@ -168,7 +168,7 @@ function App() {
                     backgroundColor: 'lightblue',
                     boxShadow: '0 0 3px 1px black',
                     position: 'sticky',
-                    bottom: `${row.getPinnedIndex() * 25}px`,
+                    bottom: `${row.getPinnedIndex() * 26}px`,
                   }}
                 >
                   {row.getVisibleCells().map(cell => {
