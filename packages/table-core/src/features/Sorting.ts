@@ -162,13 +162,15 @@ export const Sorting: TableFeature = {
 
         return sortingFns.basic
       },
-      getAutoSortDir: () => {
-        const firstRow = table.getFilteredRowModel().flatRows[0]
+      getAutoSortDir: () => {        
+        const rows = table.getFilteredRowModel().flatRows
 
-        const value = firstRow?.getValue(column.id)
+        for (const row of rows) {
+          const value = row?.getValue(column.id)
 
-        if (typeof value === 'string') {
-          return 'asc'
+          if (typeof value === 'string') {
+            return 'asc'
+          }
         }
 
         return 'desc'
