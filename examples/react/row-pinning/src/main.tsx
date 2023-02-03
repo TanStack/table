@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { HTMLProps } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
@@ -8,9 +8,12 @@ import { makeData, Person } from './makeData'
 import {
   Column,
   ColumnDef,
+  ExpandedState,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
+  Row,
   RowPinningState,
   Table,
   useReactTable,
@@ -23,8 +26,7 @@ function App() {
     top: [],
     bottom: [],
   })
-
-  console.log(rowPinning)
+  const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
@@ -36,14 +38,54 @@ function App() {
             <button onClick={() => row.pin(false)}>❌</button>
           ) : (
             <div>
-              <button onClick={() => row.pin('top')}>👆</button>
-              <button onClick={() => row.pin('bottom')}>👇</button>
+              <button onClick={() => row.pin('top')}>⬆️</button>
+              <button onClick={() => row.pin('bottom')}>⬇️</button>
             </div>
           ),
       },
+
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        header: ({ table }) => (
+          <>
+            <button
+              {...{
+                onClick: table.getToggleAllRowsExpandedHandler(),
+              }}
+            >
+              {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+            </button>{' '}
+            First Name
+          </>
+        ),
+        cell: ({ row, getValue }) => (
+          <div
+            style={{
+              // Since rows are flattened by default,
+              // we can use the row.depth property
+              // and paddingLeft to visually indicate the depth
+              // of the row
+              paddingLeft: `${row.depth * 2}rem`,
+            }}
+          >
+            <>
+              {row.getCanExpand() ? (
+                <button
+                  {...{
+                    onClick: row.getToggleExpandedHandler(),
+                    style: { cursor: 'pointer' },
+                  }}
+                >
+                  {row.getIsExpanded() ? '👇' : '👉'}
+                </button>
+              ) : (
+                '🔵'
+              )}{' '}
+              {getValue()}
+            </>
+          </div>
+        ),
+        footer: props => props.column.id,
       },
       {
         accessorFn: row => row.lastName,
@@ -74,20 +116,26 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(1000))
-  const refreshData = () => setData(() => makeData(1000))
+  const [data, setData] = React.useState(() => makeData(1000, 2, 2))
+  const refreshData = () => setData(() => makeData(1000, 2, 2))
 
   const table = useReactTable({
     data,
     columns,
     state: {
+      expanded,
       rowPinning,
     },
+    onExpandedChange: setExpanded,
+    onRowPinningChange: setRowPinning,
+    getSubRows: row => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onRowPinningChange: setRowPinning,
+    getExpandedRowModel: getExpandedRowModel(),
     debugTable: true,
   })
+
+  console.log(rowPinning)
 
   return (
     <div>
@@ -120,30 +168,9 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {table.getTopRows().map(row => {
-              return (
-                <tr
-                  key={row.id}
-                  style={{
-                    backgroundColor: 'lightblue',
-                    boxShadow: '0 0 6px 1px black',
-                    position: 'sticky',
-                    top: `${row.getPinnedIndex() * 26 + 50}px`,
-                  }}
-                >
-                  {row.getVisibleCells().map(cell => {
-                    return (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
+            {table.getTopRows().map(row => (
+              <PinnedRow row={row} table={table} />
+            ))}
             {table.getCenterRows().map(row => {
               return (
                 <tr key={row.id}>
@@ -160,33 +187,9 @@ function App() {
                 </tr>
               )
             })}
-            {table.getBottomRows().map(row => {
-              return (
-                <tr
-                  key={row.id}
-                  style={{
-                    backgroundColor: 'lightblue',
-                    boxShadow: '0 0 3px 1px black',
-                    position: 'sticky',
-                    bottom: `${row.getPinnedIndex() * 26}px`,
-                  }}
-                >
-                  {row.getVisibleCells().map(cell => {
-                    return (
-                      <td
-                        key={cell.id}
-                        style={{ position: 'sticky', bottom: 0 }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
+            {table.getBottomRows().map(row => (
+              <PinnedRow row={row} table={table} />
+            ))}
           </tbody>
         </table>
       </div>
@@ -220,6 +223,36 @@ function App() {
         </button>
       </div>
     </div>
+  )
+}
+
+function PinnedRow({ row, table }: { row: Row<any>; table: Table<any> }) {
+  return (
+    <tr
+      key={row.id}
+      style={{
+        backgroundColor: 'lightblue',
+        position: 'sticky',
+        top:
+          row.getIsPinned() === 'top'
+            ? `${row.getPinnedIndex() * 26 + 50}px`
+            : undefined,
+        bottom:
+          row.getIsPinned() === 'bottom'
+            ? `${
+                (table.getBottomRows().length - 1 - row.getPinnedIndex()) * 26
+              }px`
+            : undefined,
+      }}
+    >
+      {row.getVisibleCells().map(cell => {
+        return (
+          <td key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </td>
+        )
+      })}
+    </tr>
   )
 }
 

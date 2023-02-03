@@ -33,9 +33,6 @@ export interface RowPinningTableState {
 
 export interface ColumnPinningOptions {
   onColumnPinningChange?: OnChangeFn<ColumnPinningState>
-  /**
-   * @deprecated Use `enableColumnPinning` instead
-   */
   enablePinning?: boolean
   enableColumnPinning?: boolean
 }
@@ -266,10 +263,10 @@ export const Pinning: TableFeature = {
 
       pin: position => {
         const leafRowIds = row.getLeafRows().map(({ id }) => id)
-        const rowIds = leafRowIds.length > 0 ? leafRowIds : [row.id]
+        const rowIds =
+          leafRowIds.length > 0 ? [row.id, ...leafRowIds] : [row.id]
 
         table.setRowPinning(old => {
-          console.log({ old })
           if (position === 'bottom') {
             return {
               top: (old?.top ?? []).filter(d => !rowIds?.includes(d)),
@@ -299,15 +296,17 @@ export const Pinning: TableFeature = {
 
       getCanPin: () => {
         return (
-          table.options?.getCanPinRow?.(row) ??
+          table.options.getCanPinRow?.(row) ??
           table.options.enableRowPinning ??
+          table.options.enablePinning ??
           true
         )
       },
 
       getIsPinned: () => {
         const leafRowIds = row.getLeafRows().map(({ id }) => id)
-        const rowIds = leafRowIds.length > 0 ? leafRowIds : [row.id]
+        const rowIds =
+          leafRowIds.length > 0 ? [row.id, ...leafRowIds] : [row.id]
 
         const { top, bottom } = table.getState().rowPinning
 
@@ -417,7 +416,7 @@ export const Pinning: TableFeature = {
       },
 
       getTopRows: memo(
-        () => [table.getRowModel().rows, table.getState().rowPinning.top, ,],
+        () => [table.getRowModel().rows, table.getState().rowPinning.top],
         (allRows, top) => {
           const rows = (top ?? [])
             .map(rowId => allRows.find(row => row.id === rowId)!)
@@ -433,7 +432,7 @@ export const Pinning: TableFeature = {
       ),
 
       getBottomRows: memo(
-        () => [table.getRowModel().rows, table.getState().rowPinning.bottom, ,],
+        () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
         (allRows, bottom) => {
           const rows = (bottom ?? [])
             .map(rowId => allRows.find(row => row.id === rowId)!)
