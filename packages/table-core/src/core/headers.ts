@@ -414,8 +414,16 @@ export function buildHeaderGroups<TData extends RowData>(
       }, 0)
   }
 
-  findMaxDepth(allColumns)
-
+  const filterHideColumns = (columns: Column<TData, unknown>[]): Column<TData, unknown>[] => {
+    return columns.filter(column => {
+      if (column.columns?.length) {
+        return filterHideColumns(column.columns).length > 0;
+      } else {
+        return column.getIsVisible();
+      }
+    });
+  };
+  findMaxDepth(filterHideColumns(allColumns));
   let headerGroups: HeaderGroup<TData>[] = []
 
   const createHeaderGroup = (
