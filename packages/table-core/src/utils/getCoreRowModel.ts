@@ -42,7 +42,8 @@ export function getCoreRowModel<TData extends RowData>(): (
               table._getRowId(originalRows[i]!, i, parent),
               originalRows[i]!,
               i,
-              depth
+              depth,
+              parent?.id
             )
 
             // Keep track of every row in a flat array

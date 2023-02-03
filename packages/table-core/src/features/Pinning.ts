@@ -315,10 +315,17 @@ export const Pinning: TableFeature = {
 
       getPinnedIndex: () => {
         const position = row.getIsPinned()
+        
+        const pinnedRowIds = position
+          ? table.getState().rowPinning?.[position]
+          : []
+        const visiblePinnedRowIds = pinnedRowIds?.filter(rowId => {
+          const parentId = table.getRow(rowId).parentId
+          if (!parentId) return true
+          return table.getRow(parentId).getIsExpanded()
+        })
 
-        return position
-          ? table.getState().rowPinning?.[position]?.indexOf(row.id) ?? -1
-          : 0
+        return visiblePinnedRowIds?.indexOf(row.id) ?? -1
       },
     }
   },

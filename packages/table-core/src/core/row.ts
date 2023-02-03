@@ -7,6 +7,7 @@ export interface CoreRow<TData extends RowData> {
   index: number
   original: TData
   depth: number
+  parentId?: string
   _valuesCache: Record<string, unknown>
   _uniqueValuesCache: Record<string, unknown>
   getValue: <TValue>(columnId: string) => TValue
@@ -25,13 +26,15 @@ export const createRow = <TData extends RowData>(
   original: TData,
   rowIndex: number,
   depth: number,
-  subRows?: Row<TData>[]
+  parentId?: string,
+  subRows?: Row<TData>[],
 ): Row<TData> => {
   let row: CoreRow<TData> = {
     id,
     index: rowIndex,
     original,
     depth,
+    parentId,
     _valuesCache: {},
     _uniqueValuesCache: {},
     getValue: columnId => {

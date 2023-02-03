@@ -6,7 +6,7 @@ html {
 .container {
   border: 1px solid lightgray;
   height: 600px;
-  max-width: 1000px !important;
+  max-width: 1200px !important;
   overflow: auto;
 }
 
@@ -35,7 +35,7 @@ th {
 }
 
 td {
-  border-right: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
   padding: 2px 4px;
 }
 

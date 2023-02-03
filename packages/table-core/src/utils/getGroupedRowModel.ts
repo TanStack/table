@@ -72,7 +72,8 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 id,
                 leafRows[0]!.original,
                 index,
-                depth
+                depth,
+                parentId
               )
 
               Object.assign(row, {

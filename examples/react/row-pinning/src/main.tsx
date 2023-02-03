@@ -37,7 +37,7 @@ function App() {
           row.getIsPinned() ? (
             <button onClick={() => row.pin(false)}>❌</button>
           ) : (
-            <div>
+            <div style={{display: 'flex', gap: '4px'}}>
               <button onClick={() => row.pin('top')}>⬆️</button>
               <button onClick={() => row.pin('bottom')}>⬇️</button>
             </div>
