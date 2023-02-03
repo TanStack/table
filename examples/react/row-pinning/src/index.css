@@ -3,6 +3,10 @@ html {
   font-size: 14px;
 }
 
+.app {
+  padding: 1rem;
+}
+
 .container {
   border: 1px solid lightgray;
   height: 600px;

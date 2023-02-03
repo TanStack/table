@@ -40,7 +40,6 @@ export interface ColumnPinningOptions {
 export interface RowPinningOptions<TData extends RowData> {
   onRowPinningChange?: OnChangeFn<RowPinningState>
   enableRowPinning?: boolean
-  getCanPinRow?: (row: Row<TData>) => boolean
 }
 
 export interface ColumnPinningDefaultOptions {
@@ -88,9 +87,9 @@ export interface RowPinningInstance<TData extends RowData> {
   setRowPinning: (updater: Updater<RowPinningState>) => void
   resetRowPinning: (defaultState?: boolean) => void
   getIsSomeRowsPinned: (position?: RowPinningPosition) => boolean
-  getTopRows: () => Row<TData>[]
-  getBottomRows: () => Row<TData>[]
-  getCenterRows: () => Row<TData>[]
+  getTopRows: (rows?: Row<TData>[]) => Row<TData>[]
+  getBottomRows: (rows?: Row<TData>[]) => Row<TData>[]
+  getCenterRows: (rows?: Row<TData>[]) => Row<TData>[]
 }
 
 //
@@ -295,10 +294,7 @@ export const Pinning: TableFeature = {
 
       getCanPin: () => {
         return (
-          table.options.getCanPinRow?.(row) ??
-          table.options.enableRowPinning ??
-          table.options.enablePinning ??
-          true
+          table.options.enableRowPinning ?? table.options.enablePinning ?? true
         )
       },
 
@@ -315,14 +311,14 @@ export const Pinning: TableFeature = {
 
       getPinnedIndex: () => {
         const position = row.getIsPinned()
-        
+
         const pinnedRowIds = position
           ? table.getState().rowPinning?.[position]
           : []
         const visiblePinnedRowIds = pinnedRowIds?.filter(rowId => {
-          const parentId = table.getRow(rowId).parentId
+          const parentId = table.getRow(rowId)?.parentId
           if (!parentId) return true
-          return table.getRow(parentId).getIsExpanded()
+          return table.getRow(parentId)?.getIsExpanded()
         })
 
         return visiblePinnedRowIds?.indexOf(row.id) ?? -1
@@ -419,54 +415,63 @@ export const Pinning: TableFeature = {
         return Boolean(pinningState[position]?.length)
       },
 
-      getTopRows: memo(
-        () => [table.getRowModel().rows, table.getState().rowPinning.top],
-        (allRows, top) => {
-          const rows = (top ?? [])
-            .map(rowId => allRows.find(row => row.id === rowId)!)
-            .filter(Boolean)
-            .map(d => ({ ...d, position: 'top' }))
+      getTopRows: (rows?: Row<TData>[]) =>
+        memo(
+          () => [
+            rows ?? table.getRowModel().rows,
+            table.getState().rowPinning.top,
+          ],
+          (allRows, top) => {
+            const rows = (top ?? [])
+              .map(rowId => allRows.find(row => row.id === rowId)!)
+              .filter(Boolean)
+              .map(d => ({ ...d, position: 'top' }))
 
-          return rows
-        },
-        {
-          key: process.env.NODE_ENV === 'production' && 'row.getTopRows',
-          debug: () => table.options.debugAll ?? table.options.debugRows,
-        }
-      ),
+            return rows
+          },
+          {
+            key: process.env.NODE_ENV === 'production' && 'row.getTopRows',
+            debug: () => table.options.debugAll ?? table.options.debugRows,
+          }
+        )(),
 
-      getBottomRows: memo(
-        () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
-        (allRows, bottom) => {
-          const rows = (bottom ?? [])
-            .map(rowId => allRows.find(row => row.id === rowId)!)
-            .filter(Boolean)
-            .map(d => ({ ...d, position: 'bottom' }))
+      getBottomRows: (rows?: Row<TData>[]) =>
+        memo(
+          () => [
+            rows ?? table.getRowModel().rows,
+            table.getState().rowPinning.bottom,
+          ],
+          (allRows, bottom) => {
+            const rows = (bottom ?? [])
+              .map(rowId => allRows.find(row => row.id === rowId)!)
+              .filter(Boolean)
+              .map(d => ({ ...d, position: 'bottom' }))
 
-          return rows
-        },
-        {
-          key: process.env.NODE_ENV === 'production' && 'row.getBottomRows',
-          debug: () => table.options.debugAll ?? table.options.debugRows,
-        }
-      ),
+            return rows
+          },
+          {
+            key: process.env.NODE_ENV === 'production' && 'row.getBottomRows',
+            debug: () => table.options.debugAll ?? table.options.debugRows,
+          }
+        )(),
 
-      getCenterRows: memo(
-        () => [
-          table.getRowModel().rows,
-          table.getState().rowPinning.top,
-          table.getState().rowPinning.bottom,
-        ],
-        (allRows, top, bottom) => {
-          const topAndBottom: string[] = [...(top ?? []), ...(bottom ?? [])]
+      getCenterRows: (rows?: Row<TData>[]) =>
+        memo(
+          () => [
+            rows ?? table.getRowModel().rows,
+            table.getState().rowPinning.top,
+            table.getState().rowPinning.bottom,
+          ],
+          (allRows, top, bottom) => {
+            const topAndBottom: string[] = [...(top ?? []), ...(bottom ?? [])]
 
-          return allRows.filter(d => !topAndBottom.includes(d.id))
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getCenterRows',
-          debug: () => table.options.debugAll ?? table.options.debugRows,
-        }
-      ),
+            return allRows.filter(d => !topAndBottom.includes(d.id))
+          },
+          {
+            key: process.env.NODE_ENV === 'development' && 'getCenterRows',
+            debug: () => table.options.debugAll ?? table.options.debugRows,
+          }
+        )(),
     }
   },
 }
