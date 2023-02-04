@@ -141,7 +141,7 @@ function App() {
       ? getPaginationRowModel()
       : undefined,
     persistPinnedRows,
-    debugTable: true,
+    debugRows: true,
   })
 
   return (
@@ -176,7 +176,7 @@ function App() {
           </thead>
           <tbody>
             {table.getTopRows().map(row => (
-              <PinnedRow row={row} table={table} />
+              <PinnedRow key={row.id} row={row} table={table} />
             ))}
             {table.getCenterRows().map(row => {
               return (
@@ -195,7 +195,7 @@ function App() {
               )
             })}
             {table.getBottomRows().map(row => (
-              <PinnedRow row={row} table={table} />
+              <PinnedRow key={row.id} row={row} table={table} />
             ))}
           </tbody>
         </table>
@@ -276,12 +276,12 @@ function App() {
       <br />
       <div className="flex gap-2 align-center">
         <div>
-          <button
-            className="border rounded p-2 mb-2"
-            onClick={() => setEnablePagination(!enablePagination)}
-          >
-            Toggle Pagination
-          </button>
+          <input
+            type="checkbox"
+            checked={enablePagination}
+            onChange={() => setEnablePagination(!enablePagination)}
+          />
+          <label className="ml-2">Enable Pagination</label>
         </div>
         <div>
           <input
@@ -320,7 +320,6 @@ function App() {
 function PinnedRow({ row, table }: { row: Row<any>; table: Table<any> }) {
   return (
     <tr
-      key={row.id}
       style={{
         backgroundColor: 'lightblue',
         position: 'sticky',
