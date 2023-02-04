@@ -475,7 +475,7 @@ export const Pinning: TableFeature = {
 
       _getPinnedRowModel: () => {
         return table.options.persistPinnedRows
-          ? table.getPreFilteredRowModel()
+          ? table.getPrePaginationRowModel()
           : table.getRowModel()
       },
     }
