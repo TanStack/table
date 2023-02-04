@@ -214,7 +214,7 @@ export const Pinning: TableFeature = {
         },
         {
           key:
-            process.env.NODE_ENV === 'production' &&
+            process.env.NODE_ENV === 'development' &&
             'row.getCenterVisibleCells',
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
@@ -238,7 +238,7 @@ export const Pinning: TableFeature = {
         },
         {
           key:
-            process.env.NODE_ENV === 'production' && 'row.getLeftVisibleCells',
+            process.env.NODE_ENV === 'development' && 'row.getLeftVisibleCells',
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
@@ -257,7 +257,8 @@ export const Pinning: TableFeature = {
         },
         {
           key:
-            process.env.NODE_ENV === 'production' && 'row.getRightVisibleCells',
+            process.env.NODE_ENV === 'development' &&
+            'row.getRightVisibleCells',
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
@@ -419,9 +420,11 @@ export const Pinning: TableFeature = {
 
       _getPinnedRows: (position: 'top' | 'bottom') =>
         memo(
-          () => [table.getRowModel().rows],
-          visibleRows => {
-            const pinnedRowIds = table.getState().rowPinning[position]
+          () => [
+            table.getRowModel().rows,
+            table.getState().rowPinning[position],
+          ],
+          (visibleRows, pinnedRowIds) => {
             const rows = table.options.persistPinnedRows
               ? (pinnedRowIds ?? []).map(rowId => {
                   const row = table.getRow(rowId, true)
@@ -440,7 +443,8 @@ export const Pinning: TableFeature = {
           },
           {
             key:
-              process.env.NODE_ENV === 'production' && `row.get${position}Rows`,
+              process.env.NODE_ENV === 'development' &&
+              `row.get${position === 'top' ? 'Top' : 'Bottom'}Rows`,
             debug: () => table.options.debugAll ?? table.options.debugRows,
           }
         )(),
@@ -461,7 +465,7 @@ export const Pinning: TableFeature = {
           return allRows.filter(d => !topAndBottom.includes(d.id))
         },
         {
-          key: process.env.NODE_ENV === 'development' && 'getCenterRows',
+          key: process.env.NODE_ENV === 'development' && 'row.getCenterRows',
           debug: () => table.options.debugAll ?? table.options.debugRows,
         }
       ),
