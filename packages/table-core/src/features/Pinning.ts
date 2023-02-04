@@ -436,7 +436,7 @@ export const Pinning: TableFeature = {
 
             return rows
               .filter(Boolean)
-              .map(d => ({ ...d, position: 'top' })) as Row<TData>[]
+              .map(d => ({ ...d, position })) as Row<TData>[]
           },
           {
             key:
