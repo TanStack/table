@@ -29,7 +29,9 @@ function App() {
   })
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
+  //demo states
   const [enablePagination, setEnablePagination] = React.useState(false)
+  const [persistPinnedRows, setPersistPinnedRows] = React.useState(false)
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
@@ -138,8 +140,7 @@ function App() {
     getPaginationRowModel: enablePagination
       ? getPaginationRowModel()
       : undefined,
-    persistPinnedRowsOnFilter: true,
-    persistPinnedRowsOnPaginate: true,
+    persistPinnedRows,
     debugTable: true,
   })
 
@@ -273,13 +274,23 @@ function App() {
       </div>
       <hr />
       <br />
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() => setEnablePagination(!enablePagination)}
-        >
-          Toggle Pagination
-        </button>
+      <div className="flex gap-2 align-center">
+        <div>
+          <button
+            className="border rounded p-2 mb-2"
+            onClick={() => setEnablePagination(!enablePagination)}
+          >
+            Toggle Pagination
+          </button>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={persistPinnedRows}
+            onChange={() => setPersistPinnedRows(!persistPinnedRows)}
+          />
+          <label className="ml-2">Persist Pinned Rows</label>
+        </div>
       </div>
       <div>
         <button className="border rounded p-2 mb-2" onClick={() => rerender()}>

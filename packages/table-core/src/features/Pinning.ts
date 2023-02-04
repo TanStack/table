@@ -7,6 +7,7 @@ import {
   Row,
   Cell,
   RowData,
+  RowModel,
 } from '../types'
 import { makeStateUpdater, memo } from '../utils'
 
@@ -40,8 +41,7 @@ export interface ColumnPinningOptions {
 export interface RowPinningOptions<TData extends RowData> {
   onRowPinningChange?: OnChangeFn<RowPinningState>
   enableRowPinning?: boolean
-  persistPinnedRowsOnFilter?: boolean
-  persistPinnedRowsOnPaginate?: boolean
+  persistPinnedRows?: boolean
 }
 
 export interface ColumnPinningDefaultOptions {
@@ -92,7 +92,7 @@ export interface RowPinningInstance<TData extends RowData> {
   getTopRows: () => Row<TData>[]
   getBottomRows: () => Row<TData>[]
   getCenterRows: () => Row<TData>[]
-  _getPersistedPinnedRows: (table: Table<TData>) => Row<TData>[]
+  _getPinnedRowModel: () => RowModel<TData>
 }
 
 //
@@ -420,7 +420,7 @@ export const Pinning: TableFeature = {
 
       getTopRows: memo(
         () => [
-          table._getPersistedPinnedRows(table),
+          table._getPinnedRowModel().rows,
           table.getState().rowPinning.top,
         ],
         (allRows, top) => {
@@ -439,7 +439,7 @@ export const Pinning: TableFeature = {
 
       getBottomRows: memo(
         () => [
-          table._getPersistedPinnedRows(table),
+          table._getPinnedRowModel().rows,
           table.getState().rowPinning.bottom,
         ],
         (allRows, bottom) => {
@@ -473,19 +473,10 @@ export const Pinning: TableFeature = {
         }
       ),
 
-      //TODO rename
-      _getPersistedPinnedRows: (table: Table<TData>) => {
-        const { persistPinnedRowsOnFilter, persistPinnedRowsOnPaginate } =
-          table.options
-        return (
-          persistPinnedRowsOnFilter && persistPinnedRowsOnPaginate
-            ? table.getCoreRowModel()
-            : persistPinnedRowsOnFilter && !persistPinnedRowsOnPaginate
-            ? table.getPreFilteredRowModel()
-            : !persistPinnedRowsOnFilter && persistPinnedRowsOnPaginate
-            ? table.getPrePaginationRowModel()
-            : table.getRowModel()
-        ).rows
+      _getPinnedRowModel: () => {
+        return table.options.persistPinnedRows
+          ? table.getPreFilteredRowModel()
+          : table.getRowModel()
       },
     }
   },
