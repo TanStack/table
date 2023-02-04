@@ -138,6 +138,8 @@ function App() {
     getPaginationRowModel: enablePagination
       ? getPaginationRowModel()
       : undefined,
+    persistPinnedRowsOnFilter: true,
+    persistPinnedRowsOnPaginate: true,
     debugTable: true,
   })
 
@@ -172,13 +174,9 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {table
-              //optionally pass in pre-paginated rows to preserve pinning across pages
-              //or use preFilteredRowModel to preserve pinning even if the rows would be filtered out
-              .getTopRows(table.getPrePaginationRowModel().rows)
-              .map(row => (
-                <PinnedRow row={row} table={table} />
-              ))}
+            {table.getTopRows().map(row => (
+              <PinnedRow row={row} table={table} />
+            ))}
             {table.getCenterRows().map(row => {
               return (
                 <tr key={row.id}>
@@ -195,12 +193,9 @@ function App() {
                 </tr>
               )
             })}
-            {table
-              //by default, pinned rows will not carry over to other pages
-              .getBottomRows()
-              .map(row => (
-                <PinnedRow row={row} table={table} />
-              ))}
+            {table.getBottomRows().map(row => (
+              <PinnedRow row={row} table={table} />
+            ))}
           </tbody>
         </table>
       </div>

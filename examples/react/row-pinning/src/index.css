@@ -9,7 +9,7 @@ html {
 
 .container {
   border: 1px solid lightgray;
-  height: 600px;
+  max-height: 500px;
   max-width: 1200px !important;
   overflow: auto;
 }
@@ -31,7 +31,7 @@ thead {
 tbody {
   border-bottom: 1px solid lightgray;
   overflow: auto;
-  height: 500px;
+  min-height: 500px;
 }
 
 th {

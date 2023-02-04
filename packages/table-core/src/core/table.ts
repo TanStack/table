@@ -99,7 +99,7 @@ export interface CoreInstance<TData extends RowData> {
   getCoreRowModel: () => RowModel<TData>
   _getCoreRowModel?: () => RowModel<TData>
   getRowModel: () => RowModel<TData>
-  getRow: (id: string) => Row<TData>
+  getRow: (id: string, searchAll?: boolean) => Row<TData>
   _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
   _getColumnDefs: () => ColumnDef<TData, unknown>[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
@@ -213,8 +213,9 @@ export function createTable<TData extends RowData>(
     getRowModel: () => {
       return table.getPaginationRowModel()
     },
-    getRow: (id: string) => {
-      const row = table.getRowModel().rowsById[id]
+    getRow: (id: string, searchAll?: boolean) => {
+      const row = (searchAll ? table.getCoreRowModel() : table.getRowModel())
+        .rowsById[id]
 
       if (!row) {
         if (process.env.NODE_ENV !== 'production') {
