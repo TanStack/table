@@ -33,6 +33,8 @@ function App() {
   //demo states
   const [enablePagination, setEnablePagination] = React.useState(false)
   const [persistPinnedRows, setPersistPinnedRows] = React.useState(false)
+  const [keepPinnedRowsInCenter, setKeepPinnedRowsInCenter] =
+    React.useState(false)
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
@@ -179,7 +181,10 @@ function App() {
             {table.getTopRows().map(row => (
               <PinnedRow key={row.id} row={row} table={table} />
             ))}
-            {table.getCenterRows().map(row => {
+            {(keepPinnedRowsInCenter
+              ? table.getRowModel().rows
+              : table.getCenterRows()
+            ).map(row => {
               return (
                 <tr key={row.id}>
                   {row.getVisibleCells().map(cell => {
@@ -291,6 +296,14 @@ function App() {
             onChange={() => setPersistPinnedRows(!persistPinnedRows)}
           />
           <label className="ml-2">Persist Pinned Rows</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={keepPinnedRowsInCenter}
+            onChange={() => setKeepPinnedRowsInCenter(!keepPinnedRowsInCenter)}
+          />
+          <label className="ml-2">Keep Pinned Rows in Center</label>
         </div>
       </div>
       <div>
