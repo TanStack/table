@@ -320,8 +320,7 @@ export const Pinning: TableFeature = {
           : []
         const visiblePinnedRowIds = pinnedRowIds?.filter(rowId => {
           const parentId = table.getRow(rowId, true)?.parentId
-          if (!parentId) return true
-          return table.getRow(parentId, true)?.getIsExpanded()
+          return !parentId || table.getRow(parentId, true)?.getIsExpanded()
         })
 
         return visiblePinnedRowIds?.indexOf(row.id) ?? -1
@@ -428,10 +427,7 @@ export const Pinning: TableFeature = {
             const rows = table.options.persistPinnedRows
               ? (pinnedRowIds ?? []).map(rowId => {
                   const row = table.getRow(rowId, true)
-                  return !row.parentId ||
-                    table.getRow(row.parentId, true)?.getIsExpanded()
-                    ? row
-                    : null
+                  return row.getIsAllParentsExpanded() ? row : null
                 })
               : (pinnedRowIds ?? []).map(
                   rowId => visibleRows.find(row => row.id === rowId)!

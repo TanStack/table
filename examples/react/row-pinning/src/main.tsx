@@ -23,6 +23,7 @@ import {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
+  //table states
   const [rowPinning, setRowPinning] = React.useState<RowPinningState>({
     top: [],
     bottom: [],
@@ -121,7 +122,7 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100, 2, 2))
+  const [data, setData] = React.useState(() => makeData(1000, 2, 2))
   const refreshData = () => setData(() => makeData(1000, 2, 2))
 
   const table = useReactTable({
