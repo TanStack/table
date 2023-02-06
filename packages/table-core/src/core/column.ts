@@ -17,6 +17,7 @@ export interface CoreColumn<TData extends RowData, TValue> {
   parent?: Column<TData, TValue>
   getFlatColumns: () => Column<TData, TValue>[]
   getLeafColumns: () => Column<TData, TValue>[]
+  rowSpanGrow?: number
 }
 
 export function createColumn<TData extends RowData, TValue>(
@@ -31,7 +32,7 @@ export function createColumn<TData extends RowData, TValue>(
     ...defaultColumn,
     ...columnDef,
   } as ColumnDefResolved<TData>
-
+  const rowSpanGrow = resolvedColumnDef.rowSpanGrow
   const accessorKey = resolvedColumnDef.accessorKey
 
   let id =
@@ -84,6 +85,7 @@ export function createColumn<TData extends RowData, TValue>(
     accessorFn,
     parent: parent as any,
     depth,
+    rowSpanGrow,
     columnDef: resolvedColumnDef as ColumnDef<TData, any>,
     columns: [],
     getFlatColumns: memo(

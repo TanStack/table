@@ -9,97 +9,113 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
 
 type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
+  a: string
+  b: string
+  c: string
+  d: string
+  e: string
+  f: string
+  g: string
+  h: string
+  i: string
+  j: string
 }
-
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
 
 const defaultColumns: ColumnDef<Person>[] = [
   {
-    header: 'Name',
-    footer: props => props.column.id,
+    header: 'a-level-1',
+    rowSpanGrow: 1,
     columns: [
       {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        accessorKey: 'a',
+        rowSpanGrow: 1
       },
     ],
   },
   {
-    header: 'Info',
-    footer: props => props.column.id,
+    header: 'b-level-1',
+    rowSpanGrow: 1,
     columns: [
       {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        header: 'More Info',
+        accessorKey: 'b-level-2',
         columns: [
           {
-            accessorKey: 'visits',
-            header: () => <span>Visits</span>,
-            footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'status',
-            header: 'Status',
-            footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
-            header: 'Profile Progress',
-            footer: props => props.column.id,
+            accessorKey: 'b-level-3',
+            columns: [
+              {
+                accessorKey: 'b',
+                rowSpanGrow: 0
+              },
+            ],
           },
         ],
       },
     ],
   },
+  {
+    header: 'c-level-1',
+    columns: [
+      {
+        accessorKey: 'c-level-2',
+        columns: [
+          {
+            accessorKey: 'c-level-3',
+            columns: [
+              {
+                accessorKey: 'c-level-4',
+                columns: [
+                  {
+                    accessorKey: 'c',
+                    rowSpanGrow: 0
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    accessorKey: 'd-level-1',
+    columns: [
+      {
+        accessorKey: 'd-level-2',
+        columns: [
+          {
+            accessorKey: 'd-level-3',
+            columns: [
+              {
+                accessorKey: 'd-level-4',
+                columns: [
+                  {
+                    accessorKey: 'd-level-5',
+                    columns: [
+                      {
+                        accessorKey: 'd',
+                        rowSpanGrow: 0
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    accessorKey: 'e',
+    rowSpanGrow: 1
+  }
 ]
 
 function App() {
-  const [data, setData] = React.useState(() => [...defaultData])
+  const [data, setData] = React.useState(() => makeData(20))
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
@@ -115,9 +131,6 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
   })
 
   return (
@@ -157,16 +170,23 @@ function App() {
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
+              {headerGroup.headers.map(header => {
+                if (header.isCover) {
+                  return null
+                }
+                return (
+                  <th
+                    key={header.id}
+                    rowSpan={header.rowSpan}
+                    colSpan={header.colSpan}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </th>
+                )
+              })}
             </tr>
           ))}
         </thead>
@@ -181,22 +201,6 @@ function App() {
             </tr>
           ))}
         </tbody>
-        <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
       </table>
       <div className="h-4" />
       <button onClick={() => rerender()} className="border p-2">

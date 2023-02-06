@@ -274,10 +274,11 @@ export type AccessorColumnDef<TData extends RowData, TValue = unknown> =
 
 //
 
-export type ColumnDef<TData extends RowData, TValue = unknown> =
+export type ColumnDef<TData extends RowData, TValue = unknown> = (
   | DisplayColumnDef<TData, TValue>
   | GroupColumnDef<TData, TValue>
   | AccessorColumnDef<TData, TValue>
+) & { rowSpanGrow?: number }
 
 export type ColumnDefResolved<
   TData extends RowData,

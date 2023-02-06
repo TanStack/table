@@ -21,8 +21,11 @@ export interface CoreHeader<TData extends RowData, TValue> {
   column: Column<TData, TValue>
   headerGroup: HeaderGroup<TData>
   subHeaders: Header<TData, TValue>[]
+  parentHeaderId?: string
+  getParentHeader: () => Header<TData, unknown> | undefined
   colSpan: number
   rowSpan: number
+  isCover?: boolean
   getLeafHeaders: () => Header<TData, unknown>[]
   isPlaceholder: boolean
   placeholderId?: string
@@ -74,6 +77,7 @@ function createHeader<TData extends RowData, TValue>(
     placeholderId: options.placeholderId,
     depth: options.depth,
     subHeaders: [],
+    getParentHeader: () => undefined,
     colSpan: 0,
     rowSpan: 0,
     headerGroup: null!,
@@ -413,17 +417,19 @@ export function buildHeaderGroups<TData extends RowData>(
         }
       }, 0)
   }
-
-  const filterHideColumns = (columns: Column<TData, unknown>[]): Column<TData, unknown>[] => {
+  const filterHideColumns = (
+    columns: Column<TData, unknown>[]
+  ): Column<TData, unknown>[] => {
     return columns.filter(column => {
       if (column.columns?.length) {
-        return filterHideColumns(column.columns).length > 0;
+        return filterHideColumns(column.columns).length > 0
       } else {
-        return column.getIsVisible();
+        return column.getIsVisible()
       }
-    });
-  };
-  findMaxDepth(filterHideColumns(allColumns));
+    })
+  }
+  const allShowColumns = filterHideColumns(allColumns)
+  findMaxDepth(allShowColumns)
   let headerGroups: HeaderGroup<TData>[] = []
 
   const createHeaderGroup = (
@@ -465,6 +471,10 @@ export function buildHeaderGroups<TData extends RowData>(
         latestPendingParentHeader?.column === column
       ) {
         // This column is repeated. Add it as a sub header to the next batch
+        if (depth > 0) {
+          headerToGroup.parentHeaderId = latestPendingParentHeader.id
+          headerToGroup.getParentHeader = () => latestPendingParentHeader
+        }
         latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
         // This is a new header. Let's create it
@@ -479,6 +489,10 @@ export function buildHeaderGroups<TData extends RowData>(
           depth,
           index: pendingParentHeaders.length,
         })
+        if (depth > 0) {
+          headerToGroup.parentHeaderId = header.id
+          headerToGroup.getParentHeader = () => header
+        }
 
         // Add the headerToGroup as a subHeader of the new header
         header.subHeaders.push(headerToGroup)
@@ -506,49 +520,91 @@ export function buildHeaderGroups<TData extends RowData>(
   )
 
   createHeaderGroup(bottomHeaders, maxDepth - 1)
-
+  const leafHeaders = headerGroups[0]?.headers ?? []
+  leafHeaders.forEach(leafHeader => {
+    const colHeaders: Header<TData, unknown>[] = []
+    const recurseHeaders = function (header: Header<TData, unknown>) {
+      colHeaders.push(header)
+      const parentHeader = header.getParentHeader()
+      if (parentHeader) {
+        recurseHeaders(parentHeader)
+      }
+    }
+    recurseHeaders(leafHeader)
+    colHeaders.reverse()
+    const rowSpanGrows = colHeaders.map(header => ({
+      headerId: header.id,
+      maxDepth,
+      columnDepth: header.column.depth,
+      sumColumnDepth: Math.max(...colHeaders.map(h => h.column.depth)) + 1,
+      rowSpanGrow: header.column.rowSpanGrow,
+      rowSpan: 1,
+      isCover: false,
+    }))
+    rowSpanGrows.forEach((rowSpanGrow) => {
+      // 可分配项目
+      const items = rowSpanGrows
+        .slice(0, rowSpanGrow.sumColumnDepth)
+        .map(i => i.rowSpanGrow || 0)
+      if(items.some(i => i>0)){
+        // 剩余可分配长度
+        const remainLength = rowSpanGrows.slice(items.length).length
+        const sizeList:number[] = [...items]
+        items.forEach((i, k) => {
+          if (i > 0) {
+            sizeList[k] =
+              Math.round((i / items.reduce((acc, i) => acc + i)) * remainLength) +
+              1
+          } else {
+            sizeList[k] = 1
+          }
+        })
+        const indexList = sizeList.reduce<number[]>((acc, i, k) => {
+          const nextItem = sizeList.slice(0, k).reduce((a,c) => a+c, 0)
+          return [...acc, nextItem]
+        }, [])
+        rowSpanGrows.forEach((item, i) => {
+          const index = indexList.indexOf(i)
+          if(sizeList[index]!==undefined){
+            item.rowSpan = sizeList[index] as number
+            item.isCover = false
+          } else {
+            item.rowSpan = 0
+            item.isCover = true
+          }
+        })
+      }
+    })
+    colHeaders.forEach((item, key)=> {
+      const currentGrow =  rowSpanGrows[key]
+      if(currentGrow){
+        item.rowSpan = currentGrow.rowSpan
+        item.isCover = currentGrow.isCover
+      }
+    })
+  })
   headerGroups.reverse()
-
-  // headerGroups = headerGroups.filter(headerGroup => {
-  //   return !headerGroup.headers.every(header => header.isPlaceholder)
-  // })
-
   const recurseHeadersForSpans = (
     headers: Header<TData, unknown>[]
-  ): { colSpan: number; rowSpan: number }[] => {
+  ): { colSpan: number }[] => {
     const filteredHeaders = headers.filter(header =>
       header.column.getIsVisible()
     )
-
     return filteredHeaders.map(header => {
       let colSpan = 0
-      let rowSpan = 0
-      let childRowSpans = [0]
-
       if (header.subHeaders && header.subHeaders.length) {
-        childRowSpans = []
-
         recurseHeadersForSpans(header.subHeaders).forEach(
-          ({ colSpan: childColSpan, rowSpan: childRowSpan }) => {
+          ({ colSpan: childColSpan }) => {
             colSpan += childColSpan
-            childRowSpans.push(childRowSpan)
           }
         )
       } else {
         colSpan = 1
       }
-
-      const minChildRowSpan = Math.min(...childRowSpans)
-      rowSpan = rowSpan + minChildRowSpan
-
       header.colSpan = colSpan
-      header.rowSpan = rowSpan
-
-      return { colSpan, rowSpan }
+      return { colSpan }
     })
   }
-
   recurseHeadersForSpans(headerGroups[0]?.headers ?? [])
-
   return headerGroups
 }
