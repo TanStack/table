@@ -72,7 +72,11 @@ export interface RowPinningRow {
   getCanPin: () => boolean
   getIsPinned: () => RowPinningPosition
   getPinnedIndex: () => number
-  pin: (position: RowPinningPosition) => void
+  pin: (
+    position: RowPinningPosition,
+    includeLeafRows?: boolean,
+    includeParentRows?: boolean
+  ) => void
 }
 
 export interface ColumnPinningInstance<TData extends RowData> {
@@ -263,9 +267,16 @@ export const Pinning: TableFeature = {
         }
       ),
 
-      pin: position => {
-        const leafRowIds = row.getLeafRows().map(({ id }) => id)
-        const rowIds = [row.id, ...leafRowIds]
+      pin: (position, includeLeafRows, includeParentRows) => {
+        const leafRowIds = includeLeafRows
+          ? row.getLeafRows().map(({ id }) => id)
+          : []
+        const parentRowIds = includeParentRows
+          ? row.getParentRows().map(({ id }) => id)
+          : []
+        const rowIds = Array.from(
+          new Set([...parentRowIds, row.id, ...leafRowIds])
+        )
 
         table.setRowPinning(old => {
           if (position === 'bottom') {

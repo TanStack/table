@@ -31,7 +31,8 @@ function App() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   //demo states
-  const [enablePagination, setEnablePagination] = React.useState(false)
+  const [pinLeafRows, setPinLeafRows] = React.useState(true)
+  const [pinParentRows, setPinParentRows] = React.useState(false)
   const [persistPinnedRows, setPersistPinnedRows] = React.useState(false)
   const [keepPinnedRowsInCenter, setKeepPinnedRowsInCenter] =
     React.useState(false)
@@ -43,15 +44,24 @@ function App() {
         header: () => 'Pin',
         cell: ({ row }) =>
           row.getIsPinned() ? (
-            <button onClick={() => row.pin(false)}>❌</button>
+            <button onClick={() => row.pin(false, pinLeafRows, pinParentRows)}>
+              ❌
+            </button>
           ) : (
             <div style={{ display: 'flex', gap: '4px' }}>
-              <button onClick={() => row.pin('top')}>⬆️</button>
-              <button onClick={() => row.pin('bottom')}>⬇️</button>
+              <button
+                onClick={() => row.pin('top', pinLeafRows, pinParentRows)}
+              >
+                ⬆️
+              </button>
+              <button
+                onClick={() => row.pin('bottom', pinLeafRows, pinParentRows)}
+              >
+                ⬇️
+              </button>
             </div>
           ),
       },
-
       {
         accessorKey: 'firstName',
         header: ({ table }) => (
@@ -121,7 +131,7 @@ function App() {
         size: 80,
       },
     ],
-    []
+    [pinLeafRows, pinParentRows]
   )
 
   const [data, setData] = React.useState(() => makeData(1000, 2, 2))
@@ -130,6 +140,7 @@ function App() {
   const table = useReactTable({
     data,
     columns,
+    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
     state: {
       expanded,
       rowPinning,
@@ -140,13 +151,11 @@ function App() {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getPaginationRowModel: enablePagination
-      ? getPaginationRowModel()
-      : undefined,
+    getPaginationRowModel: getPaginationRowModel(),
     persistPinnedRows,
-    debugRows: true,
+    // debugRows: true,
   })
-
+  console.log(rowPinning)
   return (
     <div className="app">
       <div className="p-2 container">
@@ -206,88 +215,88 @@ function App() {
           </tbody>
         </table>
       </div>
-      {enablePagination && (
-        <>
-          {' '}
-          <div className="h-2" />
-          <div className="flex items-center gap-2">
-            <button
-              className="border rounded p-1"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<<'}
-            </button>
-            <button
-              className="border rounded p-1"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<'}
-            </button>
-            <button
-              className="border rounded p-1"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>'}
-            </button>
-            <button
-              className="border rounded p-1"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>>'}
-            </button>
-            <span className="flex items-center gap-1">
-              <div>Page</div>
-              <strong>
-                {table.getState().pagination.pageIndex + 1} of{' '}
-                {table.getPageCount()}
-              </strong>
-            </span>
-            <span className="flex items-center gap-1">
-              | Go to page:
-              <input
-                type="number"
-                defaultValue={table.getState().pagination.pageIndex + 1}
-                onChange={e => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  table.setPageIndex(page)
-                }}
-                className="border p-1 rounded w-16"
-              />
-            </span>
-            <select
-              value={table.getState().pagination.pageSize}
-              onChange={e => {
-                table.setPageSize(Number(e.target.value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map(pageSize => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
-          </div>
-        </>
-      )}
+
       <div className="h-2" />
-      <div>
-        {Object.keys(rowPinning).length} of{' '}
-        {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+      <div className="flex items-center gap-2">
+        <button
+          className="border rounded p-1"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              table.setPageIndex(page)
+            }}
+            className="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={e => {
+            table.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
       </div>
+      <div className="h-2" />
       <hr />
       <br />
       <div className="flex gap-2 align-center">
         <div>
           <input
             type="checkbox"
-            checked={enablePagination}
-            onChange={() => setEnablePagination(!enablePagination)}
+            checked={pinLeafRows}
+            onChange={() => setPinLeafRows(!pinLeafRows)}
           />
-          <label className="ml-2">Enable Pagination</label>
+          <label className="ml-2">Pin Leaf Rows</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={pinParentRows}
+            onChange={() => setPinParentRows(!pinParentRows)}
+          />
+          <label className="ml-2">Pin Parent Rows</label>
         </div>
         <div>
           <input
