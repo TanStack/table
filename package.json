@@ -1,6 +1,6 @@
 {
   "private": true,
-  "repository": "https://github.com/tanstack/table.git",
+  "repository": "https://github.com/cfj1996/table.git",
   "scripts": {
     "clean": "npm exec --workspaces -c \"rm -rf build || true\"",
     "test": "(is-ci && npm run test:ci) || npm run test:dev",

@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "description": "Headless UI for building powerful tables & datagrids for React.",
   "license": "MIT",
-  "homepage": "https://github.com/tanstack/table#readme",
+  "homepage": "https://github.com/cfj1996/table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanstack/table.git"
+    "url": "git+https://github.com/cfj1996/table.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -18,10 +18,6 @@
     "react-table",
     "datagrid"
   ],
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/tannerlinsley"
-  },
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",

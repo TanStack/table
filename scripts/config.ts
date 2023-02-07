@@ -39,8 +39,4 @@ export const branchConfigs: Record<string, BranchConfig> = {
 
 export const rootDir = path.resolve(__dirname, '..')
 export const examplesDirs = [
-  'examples/react',
-  'examples/solid',
-  'examples/svelte',
-  'examples/vue',
-]
+  ]

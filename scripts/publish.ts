@@ -1,6 +1,5 @@
 import {
   branchConfigs,
-  examplesDirs,
   latestBranch,
   packages,
   rootDir,
@@ -471,55 +470,6 @@ async function run() {
   }
 
   console.info(`Updating all example dependencies...`)
-  await Promise.all(
-    examplesDirs.map(async examplesDir => {
-      examplesDir = path.resolve(rootDir, examplesDir)
-      const exampleDirs = await fsp.readdir(examplesDir)
-      for (const exampleName of exampleDirs) {
-        const exampleDir = path.resolve(examplesDir, exampleName)
-        const stat = await fsp.stat(exampleDir)
-        if (!stat.isDirectory()) continue
-
-        await updatePackageJson(
-          path.resolve(exampleDir, 'package.json'),
-          async config => {
-            await Promise.all(
-              changedPackages.map(async pkg => {
-                const depVersion = await getPackageVersion(
-                  path.resolve(
-                    rootDir,
-                    'packages',
-                    pkg.packageDir,
-                    'package.json'
-                  )
-                )
-                //upgrade dependencies in react, solid, and vue
-                if (
-                  config.dependencies?.[pkg.name] &&
-                  config.dependencies[pkg.name] !== depVersion
-                ) {
-                  console.info(
-                    `  Updating ${exampleName}'s dependency on ${pkg.name} to version ${depVersion}.`
-                  )
-                  config.dependencies[pkg.name] = depVersion
-                }
-                //upgrade devDependencies in svelte (svelte uses devDependencies instead of dependencies)
-                if (
-                  config.devDependencies?.[pkg.name] &&
-                  config.devDependencies[pkg.name] !== depVersion
-                ) {
-                  console.info(
-                    `  Updating ${exampleName}'s devDependencies on ${pkg.name} to version ${depVersion}.`
-                  )
-                  config.devDependencies[pkg.name] = depVersion
-                }
-              })
-            )
-          }
-        )
-      }
-    })
-  )
 
   if (!process.env.CI) {
     console.warn(
@@ -633,12 +583,6 @@ async function getPackageVersion(pathName: string) {
   }
 
   return json.version
-}
-
-function updateExampleLockfile(example: string) {
-  // execute npm to update lockfile, ignoring any stdout or stderr
-  const exampleDir = path.join(rootDir, 'examples', example)
-  execSync(`cd ${exampleDir} && npm install`, { stdio: 'ignore' })
 }
 
 function getPackageNameDirectory(pathName: string) {
