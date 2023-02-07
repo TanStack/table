@@ -19,9 +19,7 @@
   },
   "namespace": "@baisu",
   "workspaces": [
-    "./packages/match-sorter-utils",
     "./packages/react-table",
-    "./packages/react-table-devtools",
     "./packages/table-core"
   ],
   "devDependencies": {
