@@ -532,54 +532,61 @@ export function buildHeaderGroups<TData extends RowData>(
     }
     recurseHeaders(leafHeader)
     colHeaders.reverse()
-    const rowSpanGrows = colHeaders.map(header => ({
-      headerId: header.id,
-      maxDepth,
-      columnDepth: header.column.depth,
-      sumColumnDepth: Math.max(...colHeaders.map(h => h.column.depth)) + 1,
-      rowSpanGrow: header.column.rowSpanGrow,
+    const containerLength = maxDepth
+    const sumColumnDepth = Math.max(...colHeaders.map(h => h.column.depth)) + 1
+    const items: number[] = colHeaders.slice(0, sumColumnDepth).map(i => i.column.rowSpanGrow||0);
+    new Array(containerLength).fill(null).map(() => ({
       rowSpan: 1,
-      isCover: false,
-    }))
-    rowSpanGrows.forEach((rowSpanGrow) => {
-      // 可分配项目
-      const items = rowSpanGrows
-        .slice(0, rowSpanGrow.sumColumnDepth)
-        .map(i => i.rowSpanGrow || 0)
-      if(items.some(i => i>0)){
-        // 剩余可分配长度
-        const remainLength = rowSpanGrows.slice(items.length).length
-        const sizeList:number[] = [...items]
-        items.forEach((i, k) => {
-          if (i > 0) {
-            sizeList[k] =
-              Math.round((i / items.reduce((acc, i) => acc + i)) * remainLength) +
-              1
-          } else {
-            sizeList[k] = 1
-          }
-        })
-        const indexList = sizeList.reduce<number[]>((acc, i, k) => {
-          const nextItem = sizeList.slice(0, k).reduce((a,c) => a+c, 0)
-          return [...acc, nextItem]
-        }, [])
-        rowSpanGrows.forEach((item, i) => {
-          const index = indexList.indexOf(i)
-          if(sizeList[index]!==undefined){
-            item.rowSpan = sizeList[index] as number
-            item.isCover = false
-          } else {
-            item.rowSpan = 0
-            item.isCover = true
-          }
-        })
+      isCover: false
+    })).map((item, i) => {
+      const sizeItems = items.map((i, k, arr) => {
+        // 待分配项目
+        const assignedItems: number[] = arr.filter(i => i);
+        if (assignedItems.length === 0) {
+          return 1;
+        }
+        // 可分配空间
+        const allocatableSpace = containerLength -
+          arr.filter(i => i === 0).length;
+        // 待分配空间
+        const assignedSpace = assignedItems.reduce((acc, i) => acc + i, 0);
+        if (i !== 0) {
+          console.log("allocatableSpace", i, assignedSpace, allocatableSpace);
+
+          return Math.round((i / assignedSpace )* allocatableSpace);
+        } else {
+          return 1;
+        }
+      });
+      if (items.some(i => i > 0)) {
+        const sum = sizeItems.reduce((acc, i) => acc + i);
+        if (sum > containerLength) {
+          [...sizeItems].map((i, k) => ({
+            value: i,
+            index: k
+          })).sort((a, b) => a.value - b.value).forEach((i, k) => {
+            if (k < sum - containerLength) {
+              sizeItems[i.index] = i.value - 1;
+            }
+          });
+        } else if (sum < containerLength) {
+          sizeItems[sizeItems.length - 1] += containerLength - sum;
+        }
+        const allSizeItem = sizeItems.map(i => (new Array(i).fill(i).fill(0, 1))).flat()
+        if(allSizeItem[i]===0){
+          item.rowSpan = 0
+          item.isCover = true
+        } else {
+          item.rowSpan = allSizeItem[i]
+          item.isCover = false
+        }
       }
-    })
-    colHeaders.forEach((item, key)=> {
-      const currentGrow =  rowSpanGrows[key]
+      return item
+    }).forEach((item, k) => {
+      const currentGrow =  colHeaders[k]
       if(currentGrow){
-        item.rowSpan = currentGrow.rowSpan
-        item.isCover = currentGrow.isCover
+        currentGrow.rowSpan = item.rowSpan
+        currentGrow.isCover = item.isCover
       }
     })
   })

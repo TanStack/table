@@ -27,7 +27,7 @@ type Person = {
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'a-level-1',
-    rowSpanGrow: 1,
+    rowSpanGrow: 0,
     columns: [
       {
         accessorKey: 'a',

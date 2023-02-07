@@ -5,6 +5,7 @@ import rollupReplace from '@rollup/plugin-replace'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  host: '0.0.0.0',
   plugins: [
     rollupReplace({
       preventAssignment: true,
