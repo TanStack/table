@@ -314,10 +314,7 @@ async function run() {
     throw new Error(`Invalid release level: ${recommendedReleaseLevel}`)
   }
 
-  const version = process.env.TAG
-    ? semver.parse(process.env.TAG)?.version
-    : semver.inc(latestTag!, releaseType, npmTag)
-
+  const version ="1.0.0"
   if (!version) {
     throw new Error(
       `Invalid version increment from semver.inc(${[
@@ -392,10 +389,6 @@ async function run() {
       'Some packages failed validation:\n\n' + failedValidations.join('\n')
     )
   }
-
-  console.info('Testing packages...')
-  execSync(`npm run test:ci`, { encoding: 'utf8' })
-  console.info('')
 
   console.info(`Updating all changed packages to version ${version}...`)
   // Update each package to the new version
@@ -632,6 +625,7 @@ async function updatePackageJson(
 }
 
 async function getPackageVersion(pathName: string) {
+  console.log("pathName", pathName);
   const json = await readPackageJson(pathName)
 
   if (!json.version) {

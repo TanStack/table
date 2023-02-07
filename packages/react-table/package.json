@@ -43,7 +43,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.7.9"
+    "@baishu/table-core": "1.0.0"
   },
   "peerDependencies": {
     "react": ">=16",

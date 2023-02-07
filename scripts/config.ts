@@ -4,44 +4,15 @@ import { BranchConfig, Package } from './types'
 // TODO: List your npm packages here. The first package will be used as the versioner.
 export const packages: Package[] = [
   {
-    name: '@tanstack/table-core',
+    name: '@baishu/table-core',
     packageDir: 'table-core',
     srcDir: 'src',
   },
   {
-    name: '@tanstack/react-table',
+    name: '@baishu/react-table',
     packageDir: 'react-table',
     srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
-  },
-  {
-    name: '@tanstack/solid-table',
-    packageDir: 'solid-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
-  },
-  {
-    name: '@tanstack/vue-table',
-    packageDir: 'vue-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
-  },
-  {
-    name: '@tanstack/svelte-table',
-    packageDir: 'svelte-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
-  },
-  {
-    name: '@tanstack/react-table-devtools',
-    packageDir: 'react-table-devtools',
-    srcDir: 'src',
-    peerDependencies: ['@tanstack/react-table'],
-  },
-  {
-    name: '@tanstack/match-sorter-utils',
-    packageDir: 'match-sorter-utils',
-    srcDir: 'src',
+    dependencies: ['@baishu/table-core'],
   },
 ]
 

@@ -5,8 +5,7 @@ import size from 'rollup-plugin-size'
 import visualizer from 'rollup-plugin-visualizer'
 import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import path from 'path'
-import svelte from 'rollup-plugin-svelte'
+import * as path from 'path'
 import dts from 'rollup-plugin-dts'
 
 type Options = {
@@ -50,72 +49,10 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       jsName: 'ReactTable',
       outputFile: 'index',
       entryFile: 'src/index.tsx',
-      external: ['react', '@tanstack/table-core'],
+      external: ['react', '@baishu/table-core'],
       globals: {
         react: 'React',
       },
-    }),
-    ...buildConfigs({
-      name: 'solid-table',
-      packageDir: 'packages/solid-table',
-      jsName: 'SolidTable',
-      outputFile: 'index',
-      entryFile: 'src/index.tsx',
-      external: ['solid-js', 'solid-js/store', '@tanstack/table-core'],
-      globals: {
-        'solid-js': 'Solid',
-        'solid-js/store': 'SolidStore',
-      },
-    }),
-    ...buildConfigs({
-      name: 'vue-table',
-      packageDir: 'packages/vue-table',
-      jsName: 'VueTable',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: ['vue', '@tanstack/table-core'],
-      globals: {
-        vue: 'Vue',
-      },
-    }),
-    ...buildConfigs({
-      name: 'svelte-table',
-      packageDir: 'packages/svelte-table',
-      jsName: 'SvelteTable',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: [
-        'svelte',
-        'svelte/internal',
-        'svelte/store',
-        '@tanstack/table-core',
-      ],
-      globals: {
-        svelte: 'Svelte',
-        'svelte/internal': 'SvelteInternal',
-        'svelte/store': 'SvelteStore',
-      },
-    }),
-    ...buildConfigs({
-      name: 'react-table-devtools',
-      packageDir: 'packages/react-table-devtools',
-      jsName: 'ReactTableDevtools',
-      outputFile: 'index',
-      entryFile: 'src/index.tsx',
-      external: ['react', '@tanstack/react-table'],
-      globals: {
-        react: 'React',
-        '@tanstack/react-table': 'ReactTable',
-      },
-    }),
-    ...buildConfigs({
-      name: 'match-sorter-utils',
-      packageDir: 'packages/match-sorter-utils',
-      jsName: 'MatchSorterUtils',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: [],
-      globals: {},
     }),
   ]
 }
@@ -175,11 +112,6 @@ function mjs({
       banner,
     },
     plugins: [
-      svelte({
-        compilerOptions: {
-          hydratable: true,
-        },
-      }),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
@@ -204,11 +136,6 @@ function esm({
       banner,
     },
     plugins: [
-      svelte({
-        compilerOptions: {
-          hydratable: true,
-        },
-      }),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
@@ -229,7 +156,6 @@ function cjs({ input, external, packageDir, banner }: Options): RollupOptions {
       banner,
     },
     plugins: [
-      svelte(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
@@ -258,7 +184,6 @@ function umdDev({
       banner,
     },
     plugins: [
-      svelte(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       umdDevPlugin('development'),
@@ -288,7 +213,6 @@ function umdProd({
       banner,
     },
     plugins: [
-      svelte(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       umdDevPlugin('production'),
