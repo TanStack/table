@@ -46,15 +46,30 @@ const table = useVueTable({
     pagination: pagination.value,
   },
   manualPagination: true,
-  onPaginationChange: setPagination,
+  onPaginationChange: (updater) => {
+    if (typeof updater === "function") {
+      setPagination(
+        updater({
+          pageIndex: pagination.value.pageIndex,
+          pageSize: pagination.value.pageSize,
+        })
+      );
+    } else {
+      setPagination(updater);
+    }
+  },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,
 });
 
-function setPagination(
-  safeUpdater: (prev: PaginationState) => PaginationState
-) {
-  pagination.value = safeUpdater(pagination.value);
+function setPagination({
+  pageIndex,
+  pageSize,
+}: PaginationState): PaginationState {
+  pagination.value.pageIndex = pageIndex;
+  pagination.value.pageSize = pageSize;
+
+  return { pageIndex, pageSize };
 }
 
 function handleGoToPage(e) {
@@ -104,6 +119,7 @@ function handlePageSizeChange(e) {
         <button
           className="border rounded p-1"
           @click="() => table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
         >
           «
         </button>
@@ -114,19 +130,24 @@ function handlePageSizeChange(e) {
         >
           ‹
         </button>
-        <button className="border rounded p-1" @click="() => table.nextPage()">
+        <button
+          className="border rounded p-1"
+          @click="() => table.nextPage()"
+          :disabled="!table.getCanNextPage()"
+        >
           ›
         </button>
         <button
           className="border rounded p-1"
           @click="() => table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanNextPage()"
         >
           »
         </button>
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {{ pagination.pageIndex + 1 }} of
+            {{ table.getState().pagination.pageIndex + 1 }} of
             {{ table.getPageCount() }}
           </strong>
         </span>
@@ -134,12 +155,15 @@ function handlePageSizeChange(e) {
           | Go to page:
           <input
             type="number"
-            :value="pagination.pageIndex + 1"
+            :value="table.getState().pagination.pageIndex + 1"
             @change="handleGoToPage"
             className="border p-1 rounded w-16"
           />
         </span>
-        <select :value="pagination.pageSize" @change="handlePageSizeChange">
+        <select
+          :value="table.getState().pagination.pageSize"
+          @change="handlePageSizeChange"
+        >
           <option
             :key="pageSize"
             :value="pageSize"
