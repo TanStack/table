@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 import {
   FlexRender,
@@ -18,6 +18,9 @@ type Post = {
   body: string;
 };
 
+const INITIAL_PAGE_INDEX = 0;
+const INITIAL_PAGE_SIZE = 10;
+
 const columnHelper = createColumnHelper<Post>();
 
 const columns = [
@@ -28,9 +31,11 @@ const columns = [
 const pageSizes = [10, 20, 30, 40, 50];
 
 const pagination = ref<PaginationState>({
-  pageIndex: 0,
-  pageSize: 10,
+  pageIndex: INITIAL_PAGE_INDEX,
+  pageSize: INITIAL_PAGE_SIZE,
 });
+
+const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1);
 
 const { data, isLoading, pageCount } = useService(pagination);
 
@@ -74,6 +79,7 @@ function setPagination({
 
 function handleGoToPage(e) {
   const page = e.target.value ? Number(e.target.value) - 1 : 0;
+  goToPageNumber.value = page + 1;
   table.setPageIndex(page);
 }
 
@@ -155,7 +161,7 @@ function handlePageSizeChange(e) {
           | Go to page:
           <input
             type="number"
-            :value="table.getState().pagination.pageIndex + 1"
+            :value="goToPageNumber"
             @change="handleGoToPage"
             className="border p-1 rounded w-16"
           />
