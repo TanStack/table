@@ -229,7 +229,7 @@ export const ColumnSizing: TableFeature = {
             }
 
             table.setColumnSizingInfo(old => {
-              const deltaOffset = (clientXPos - (old?.startOffset ?? 0))
+              const deltaOffset = clientXPos - (old?.startOffset ?? 0)
               const deltaPercentage = Math.max(
                 deltaOffset / (old?.startSize ?? 0),
                 -0.999999
