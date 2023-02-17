@@ -189,6 +189,7 @@ export const ColumnSizing: TableFeature = {
         return 0
       },
       getResizeHandler: () => {
+        const isRtl = !!table.options.isRtl
         const column = table.getColumn(header.column.id)
         const canResize = column?.getCanResize()
 
@@ -229,7 +230,7 @@ export const ColumnSizing: TableFeature = {
             }
 
             table.setColumnSizingInfo(old => {
-              const deltaOffset = clientXPos - (old?.startOffset ?? 0)
+              const deltaOffset = (clientXPos - (old?.startOffset ?? 0)) * (isRtl ? -1 : 1)
               const deltaPercentage = Math.max(
                 deltaOffset / (old?.startSize ?? 0),
                 -0.999999
