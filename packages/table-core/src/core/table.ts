@@ -83,7 +83,8 @@ export interface CoreOptions<TData extends RowData> {
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
   columns: ColumnDef<TData, any>[]
   defaultColumn?: Partial<ColumnDef<TData, unknown>>
-  renderFallbackValue: any
+  renderFallbackValue: any,
+  rtl?: boolean
 }
 
 export interface CoreInstance<TData extends RowData> {
