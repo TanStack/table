@@ -23,7 +23,7 @@ The resolved unique identifier for the column resolved in this priority:
 ### `depth`
 
 ```tsx
-id: number
+depth: number
 ```
 
 The depth of the column (if grouped) relative to the root column def array.
