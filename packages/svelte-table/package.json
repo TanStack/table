@@ -22,14 +22,13 @@
     "type": "github",
     "url": "https://github.com/sponsors/tannerlinsley"
   },
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
+  "type": "module",
+  "main": "build/lib/index.esm.js",
   "types": "build/lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js"
+      "default": "./build/lib/index.esm.js"
     },
     "./package.json": "./package.json"
   },
@@ -38,7 +37,6 @@
   },
   "files": [
     "build/lib/*",
-    "build/umd/*",
     "src"
   ],
   "dependencies": {
