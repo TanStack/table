@@ -172,16 +172,15 @@ export const Grouping: TableFeature = {
       },
       getAutoAggregationFn: () => {
         const firstRow = table.getCoreRowModel().flatRows[0]
-
         const value = firstRow?.getValue(column.id)
 
         if (typeof value === 'number') {
           return aggregationFns.sum
         }
-
         if (Object.prototype.toString.call(value) === '[object Date]') {
           return aggregationFns.extent
         }
+        return undefined
       },
       getAggregationFn: () => {
         if (!column) {

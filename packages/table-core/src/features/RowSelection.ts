@@ -476,9 +476,7 @@ export function selectRowsFn<TData extends RowData>(
           }
         }
 
-        if (isSelected) {
-          return row
-        }
+        return isSelected ? row : undefined
       })
       .filter(Boolean) as Row<TData>[]
   }
