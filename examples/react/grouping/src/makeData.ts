@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 
 export type Person = {
+  id: string
   firstName: string
   lastName: string
   age: number
@@ -11,7 +12,7 @@ export type Person = {
 }
 
 const range = (len: number) => {
-  const arr = []
+  const arr = [] as number[]
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }
@@ -20,6 +21,7 @@ const range = (len: number) => {
 
 const newPerson = (): Person => {
   return {
+    id: faker.database.mongodbObjectId(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     age: faker.datatype.number(40),

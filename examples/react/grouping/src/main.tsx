@@ -25,8 +25,14 @@ function App() {
         header: 'Name',
         columns: [
           {
+            accessorKey: 'id',
+            header: 'id',
+            cell: info => info.getValue(),
+          },
+          {
             accessorKey: 'firstName',
             header: 'First Name',
+            groupingValueAccessorKey: 'id',
             cell: info => info.getValue(),
           },
           {
