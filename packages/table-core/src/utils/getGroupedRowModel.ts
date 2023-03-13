@@ -82,7 +82,22 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 leafRows,
                 getValue: (columnId: string) => {
                   // Don't aggregate columns that are in the grouping
-                  if (existingGrouping.includes(columnId)) {
+                  const groupedColumns = existingGrouping.map(columnId =>
+                    table.getColumn(columnId)
+                  )
+                  const leafColumnIds = groupedColumns.reduce<string[]>(
+                    (leafColumnIds, column) => {
+                      return [
+                        ...leafColumnIds,
+                        ...(column?.getLeafColumns().map(({ id }) => id) ?? []),
+                      ]
+                    },
+                    []
+                  )
+                  if (
+                    existingGrouping.includes(columnId) ||
+                    leafColumnIds.includes(columnId)
+                  ) {
                     if (row._valuesCache.hasOwnProperty(columnId)) {
                       return row._valuesCache[columnId]
                     }

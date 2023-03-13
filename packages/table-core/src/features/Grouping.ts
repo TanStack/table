@@ -166,8 +166,19 @@ export const Grouping: TableFeature = {
         groupingValueAccessorFn = (originalRow: TData) =>
           (originalRow as any)[column.columnDef.groupingValueAccessorKey]
       }
-    } else if (column.columns.length > 0) {
-      //TODO: create a groupingValueAccessorFn which uses a serialized version of all the child column values
+      //@ts-expect-error
+    } else if (column.columnDef.columns?.length > 0) {
+      groupingValueAccessorFn = (originalRow, rowIndex) => {
+        const leafColumnValues = column
+          .getLeafColumns()
+          .reduce<{ [columnId: string]: any }>((columnValues, leafColumn) => {
+            return {
+              ...columnValues,
+              [leafColumn.id]: leafColumn.accessorFn?.(originalRow, rowIndex),
+            }
+          }, {})
+        return JSON.stringify(leafColumnValues)
+      }
     } else {
       groupingValueAccessorFn = column.accessorFn
     }
@@ -280,7 +291,7 @@ export const Grouping: TableFeature = {
         }
 
         const column = table.getColumn(columnId)
-        if (!column?.columnDef.groupingValueAccessorFn) {
+        if (!column?.groupingValueAccessorFn) {
           if (!column?.accessorFn) {
             return undefined
           }
@@ -290,8 +301,10 @@ export const Grouping: TableFeature = {
             row.index
           )
         } else {
-          row._groupingValuesCache[columnId] =
-            column.columnDef.groupingValueAccessorFn(row.original, row.index)
+          row._groupingValuesCache[columnId] = column.groupingValueAccessorFn(
+            row.original,
+            row.index
+          )
         }
 
         return row._groupingValuesCache[columnId] as any
@@ -309,9 +322,19 @@ export const Grouping: TableFeature = {
     const getRenderValue = () =>
       cell.getValue() ?? table.options.renderFallbackValue
 
+    let visibleGroupedLeafColumns: Column<TData, unknown>[] = []
+    const groupingColumnId = row.groupingColumnId
+    if (groupingColumnId) {
+      const groupingColumn = table.getColumn(groupingColumnId)
+      visibleGroupedLeafColumns = (
+        groupingColumn?.getLeafColumns() ?? []
+      ).filter(({ getIsVisible }) => getIsVisible())
+    }
+
     return {
       getIsGrouped: () =>
-        column.getIsGrouped() && column.id === row.groupingColumnId,
+        (column.getIsGrouped() && column.id === row.groupingColumnId) ||
+        visibleGroupedLeafColumns.includes(column),
       getIsPlaceholder: () => !cell.getIsGrouped() && column.getIsGrouped(),
       getIsAggregated: () =>
         !cell.getIsGrouped() &&
