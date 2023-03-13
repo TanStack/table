@@ -11,6 +11,7 @@ import {
   ColumnDefTemplate,
   RowData,
   AggregationFns,
+  AccessorFn,
 } from '../types'
 import { isFunction, makeStateUpdater } from '../utils'
 
@@ -39,6 +40,8 @@ export interface GroupingColumnDef<TData extends RowData, TValue> {
   aggregatedCell?: ColumnDefTemplate<
     ReturnType<Cell<TData, TValue>['getContext']>
   >
+  groupingValueAccessorFn?: AccessorFn<TData, TValue>
+  groupingValueAccessorKey?: (string & {}) | keyof TData
   enableGrouping?: boolean
 }
 
@@ -50,11 +53,13 @@ export interface GroupingColumn<TData extends RowData> {
   getToggleGroupingHandler: () => () => void
   getAutoAggregationFn: () => AggregationFn<TData> | undefined
   getAggregationFn: () => AggregationFn<TData> | undefined
+  groupingValueAccessorFn?: AccessorFn<TData, unknown>
 }
 
 export interface GroupingRow {
   groupingColumnId?: string
   groupingValue?: unknown
+  getGroupingValue: <TValue>(columnId: string) => TValue
   getIsGrouped: () => boolean
   _groupingValuesCache: Record<string, any>
 }
@@ -134,6 +139,39 @@ export const Grouping: TableFeature = {
     column: Column<TData, TValue>,
     table: Table<TData>
   ): GroupingColumn<TData> => {
+    const groupingValueAccessorKey = column.columnDef
+      .groupingValueAccessorKey as string
+    let groupingValueAccessorFn: AccessorFn<TData> | undefined
+
+    if (column.columnDef.groupingValueAccessorFn) {
+      groupingValueAccessorFn = column.columnDef.groupingValueAccessorFn
+    } else if (groupingValueAccessorKey) {
+      // Support deep accessor keys
+      if (groupingValueAccessorKey.includes('.')) {
+        groupingValueAccessorFn = (originalRow: TData) => {
+          let result = originalRow as Record<string, any>
+
+          for (const key of groupingValueAccessorKey.split('.')) {
+            result = result?.[key]
+            if (process.env.NODE_ENV !== 'production' && result === undefined) {
+              console.warn(
+                `"${key}" in deeply nested key "${groupingValueAccessorKey}" returned undefined.`
+              )
+            }
+          }
+
+          return result
+        }
+      } else {
+        groupingValueAccessorFn = (originalRow: TData) =>
+          (originalRow as any)[column.columnDef.groupingValueAccessorKey]
+      }
+    } else if (column.columns.length > 0) {
+      //TODO: create a groupingValueAccessorFn which uses a serialized version of all the child column values
+    } else {
+      groupingValueAccessorFn = column.accessorFn
+    }
+
     return {
       toggleGrouping: () => {
         table.setGrouping(old => {
@@ -199,6 +237,7 @@ export const Grouping: TableFeature = {
               column.columnDef.aggregationFn as BuiltInAggregationFn
             ]
       },
+      groupingValueAccessorFn,
     }
   },
 
@@ -229,9 +268,34 @@ export const Grouping: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(row: Row<TData>): GroupingRow => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    table: Table<TData>
+  ): GroupingRow => {
     return {
       getIsGrouped: () => !!row.groupingColumnId,
+      getGroupingValue: (columnId: string) => {
+        if (row._groupingValuesCache.hasOwnProperty(columnId)) {
+          return row._groupingValuesCache[columnId]
+        }
+
+        const column = table.getColumn(columnId)
+        if (!column?.columnDef.groupingValueAccessorFn) {
+          if (!column?.accessorFn) {
+            return undefined
+          }
+
+          row._groupingValuesCache[columnId] = column.accessorFn(
+            row.original as TData,
+            row.index
+          )
+        } else {
+          row._groupingValuesCache[columnId] =
+            column.columnDef.groupingValueAccessorFn(row.original, row.index)
+        }
+
+        return row._groupingValuesCache[columnId] as any
+      },
       _groupingValuesCache: {},
     }
   },
