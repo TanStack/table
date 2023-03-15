@@ -125,6 +125,9 @@
       "path": "examples/vue/sorting/tsconfig.dev.json"
     },
     {
+      "path": "examples/vue/pagination/tsconfig.dev.json"
+    },
+    {
       "path": "packages/match-sorter-utils"
     },
     {
