@@ -295,8 +295,8 @@ export const RowSelection: TableFeature = {
 
         if (
           isAllPageRowsSelected &&
-          paginationFlatRows.some(
-            row => row.getCanSelect() && !rowSelection[row.id]
+          !paginationFlatRows.every(
+            row => row.getCanSelect() && rowSelection[row.id]
           )
         ) {
           isAllPageRowsSelected = false
