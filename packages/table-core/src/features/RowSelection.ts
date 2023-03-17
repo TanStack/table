@@ -353,7 +353,8 @@ export const RowSelection: TableFeature = {
         table.setRowSelection(old => {
           value = typeof value !== 'undefined' ? value : !isSelected
 
-          if (isSelected === value) {
+          const willUpdateSubRows = row.subRows?.length && row.getCanSelectSubRows()
+          if (!willUpdateSubRows && isSelected === value) {
             return old
           }
 
