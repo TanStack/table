@@ -4,8 +4,8 @@
   "scripts": {
     "clean": "npm exec --workspaces -c \"rm -rf build || true\"",
     "test": "(is-ci && npm run test:ci) || npm run test:dev",
-    "test:ci": "jest",
-    "test:dev": "jest --watch",
+    "test:ci": "vitest",
+    "test:dev": "vitest",
     "build": "rollup --config rollup.config.js && npm run typecheck",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\"",
     "linkAll": "lerna exec 'npm link' --parallel",
@@ -110,6 +110,7 @@
     "svelte": "^3.49.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.7.4",
+    "vitest": "^0.29.3",
     "vue": "^3.2.33"
   }
 }
