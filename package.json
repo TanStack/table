@@ -93,6 +93,7 @@
     "concurrently": "^7.1.0",
     "current-git-branch": "^1.1.0",
     "git-log-parser": "^1.2.0",
+    "jsdom": "^21.1.1",
     "lerna": "^4.0.0",
     "luxon": "^2.3.2",
     "prettier": "^2.6.2",
