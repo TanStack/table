@@ -24,7 +24,7 @@
     },
     "test:ci": {
       "command": "vitest",
-      "inputs": ["{workspaceRoot}/packages"]
+      "inputs": ["packageSources", "{workspaceRoot}/packages/*/__tests__/**/*"]
     }
   }
 }
