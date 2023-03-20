@@ -8,7 +8,10 @@
         "{workspaceRoot}/rollup.config.js",
         "{workspaceRoot}/rollup.config.ts"
       ],
-      "outputs": ["{workspaceRoot}/packages/*/build/**/*.{cjs,mjs,js}*"]
+      "outputs": [
+        "{workspaceRoot}/packages/*/build/stats*",
+        "{workspaceRoot}/packages/*/build/**/*.(cjs|mjs|js)*"
+      ]
     },
     "typecheck": {
       "command": "tsc -b",

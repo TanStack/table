@@ -20,6 +20,7 @@
   "nx": {
     "includedScripts": [
       "test:ci",
+      "build",
       "typecheck"
     ]
   },
