@@ -3,11 +3,7 @@
   "targets": {
     "build-js": {
       "command": "rollup --config rollup.config.js",
-      "inputs": [
-        "packageSources",
-        "{workspaceRoot}/rollup.config.js",
-        "{workspaceRoot}/rollup.config.ts"
-      ],
+      "inputs": ["packageSources"],
       "outputs": [
         "{workspaceRoot}/packages/*/build/stats*",
         "{workspaceRoot}/packages/*/build/**/*.(cjs|mjs|js)*"
@@ -15,11 +11,7 @@
     },
     "typecheck": {
       "command": "tsc -b",
-      "inputs": [
-        "packageSources",
-        "{workspaceRoot}/rollup.config.js",
-        "{workspaceRoot}/rollup.config.ts"
-      ],
+      "inputs": ["packageSources"],
       "outputs": [
         "{workspaceRoot}/packages/*/build/**/*d.ts",
         "{workspaceRoot}/packages/*/build/.tsbuildinfo"

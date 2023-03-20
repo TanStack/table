@@ -19,9 +19,7 @@
   },
   "nx": {
     "includedScripts": [
-      "test:ci",
-      "build",
-      "typecheck"
+      "test:ci"
     ]
   },
   "namespace": "@tanstack",
