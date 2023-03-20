@@ -21,4 +21,4 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Run Checks
-        run: nx run-many --targets=test:ci,build-js,typecheck --projects=root
+        run: nx run pr

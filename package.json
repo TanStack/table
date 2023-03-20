@@ -15,7 +15,8 @@
     "visualize": "lerna exec 'open build/stats-html.html'",
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "CI=true npm run cipublish",
-    "typecheck": "nx typecheck root"
+    "typecheck": "nx typecheck root",
+    "pr": "nx run-many --targets=test:ci,build-js,typecheck --projects=root"
   },
   "nx": {
     "includedScripts": [
