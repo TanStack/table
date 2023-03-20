@@ -16,12 +16,7 @@
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "CI=true npm run cipublish",
     "typecheck": "nx typecheck root",
-    "pr": "nx run-many --targets=test:ci,build-js,typecheck --projects=root"
-  },
-  "nx": {
-    "includedScripts": [
-      "test:ci"
-    ]
+    "pr": "nx run-many --targets=test:ci,build,typecheck --projects=root"
   },
   "namespace": "@tanstack",
   "workspaces": [
