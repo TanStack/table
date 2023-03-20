@@ -21,4 +21,4 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Run Checks
-        run: nx run pr
+        run: npm run pr
