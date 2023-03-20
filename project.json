@@ -16,6 +16,11 @@
         "{workspaceRoot}/packages/*/build/**/*d.ts",
         "{workspaceRoot}/packages/*/build/.tsbuildinfo"
       ]
+    },
+    "build": {
+      "command": "echo \"  @tanstack/table > All packages built! 📦\"",
+      "dependsOn": ["build-js", "typecheck"],
+      "inputs": ["packageSources"]
     }
   }
 }
