@@ -288,15 +288,15 @@ export const RowSelection: TableFeature = {
       },
 
       getIsAllPageRowsSelected: () => {
-        const paginationFlatRows = table.getPaginationRowModel().flatRows
+        const paginationFlatRows = table.getPaginationRowModel().flatRows.filter(row => row.getCanSelect())
         const { rowSelection } = table.getState()
 
         let isAllPageRowsSelected = !!paginationFlatRows.length
 
         if (
           isAllPageRowsSelected &&
-          !paginationFlatRows.every(
-            row => row.getCanSelect() && rowSelection[row.id]
+          paginationFlatRows.some(
+             row => !rowSelection[row.id]
           )
         ) {
           isAllPageRowsSelected = false
@@ -319,7 +319,7 @@ export const RowSelection: TableFeature = {
         const paginationFlatRows = table.getPaginationRowModel().flatRows
         return table.getIsAllPageRowsSelected()
           ? false
-          : paginationFlatRows.some(
+          : paginationFlatRows.filter(row => row.getCanSelect()).some(
               d => d.getIsSelected() || d.getIsSomeSelected()
             )
       },

@@ -173,7 +173,7 @@ test(`Select all do not select rows which are not available for selection`, () =
 test(`Select all is unchecked for current page if all rows are not available for selection`, () => {
   let condition = row => row.original.age > 50;
 
-  render(
+  const {rerender} = render(
     <TableComponent
       options={{
         columns: defaultPaginatedColumns,
@@ -184,8 +184,27 @@ test(`Select all is unchecked for current page if all rows are not available for
   )
 
   expect(screen.queryByTestId('select-single')).not.toBeInTheDocument()
-  const selectedOnPage = screen.getByTestId('select-all-page')
+  let selectedOnPage = screen.getByTestId('select-all-page')
   expect(selectedOnPage).not.toBeChecked()
+  expect(selectedOnPage).not.toHaveAttribute('aria-checked', 'mixed')
+
+  condition = row => row.original.age > 40;
+  rerender(<TableComponent
+      options={{
+        columns: defaultPaginatedColumns,
+        data: defaultData,
+        enableRowSelection: condition
+      }}
+    />
+  )
+
+  expect(screen.queryByTestId('select-single')).toBeInTheDocument()
+  selectedOnPage = screen.getByTestId('select-all-page')
+  expect(selectedOnPage).not.toBeChecked()
+  expect(selectedOnPage).not.toHaveAttribute('aria-checked', 'mixed')
+
+  fireEvent.click(screen.queryByTestId('select-single'))
+  expect(selectedOnPage).toBeChecked()
 
 })
 
