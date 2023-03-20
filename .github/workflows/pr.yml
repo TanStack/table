@@ -16,10 +16,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: yarn --frozen-lockfile
 
       - name: Build the Project
         run: npm run build
