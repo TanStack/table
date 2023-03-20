@@ -21,6 +21,10 @@
       "command": "echo \"  @tanstack/table > All packages built! 📦\"",
       "dependsOn": ["build-js", "typecheck"],
       "inputs": ["packageSources"]
+    },
+    "test:ci": {
+      "command": "vitest",
+      "inputs": ["{workspaceRoot}/packages"]
     }
   }
 }

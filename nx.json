@@ -16,7 +16,8 @@
   "namedInputs": {
     "packageSources": [
       "{workspaceRoot}/packages/**/src/**/*.ts",
-      "{workspaceRoot}/packages/**/tsconfig.json"
+      "{workspaceRoot}/packages/**/tsconfig.json",
+      "!{workspaceRoot}/packages/*/jest.setup.js"
     ]
   }
 }
