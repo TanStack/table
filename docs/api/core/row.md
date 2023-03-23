@@ -42,6 +42,14 @@ The original row object provided to the table.
 
 > 🧠 If the row is a grouped row, the original row object will be the first original in the group.
 
+### `parentRow`
+
+```tsx
+parentRow?: Row<TData>
+```
+
+If nested, this row's parent row.
+
 ### `getValue`
 
 ```tsx

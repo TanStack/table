@@ -29,6 +29,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
         const groupUpRecursively = (
           rows: Row<TData>[],
           depth = 0,
+          parentRow?: Row<TData>,
           parentId?: string
         ) => {
           // Grouping depth has been been met
@@ -41,7 +42,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
               groupedRowsById[row.id] = row
 
               if (row.subRows) {
-                row.subRows = groupUpRecursively(row.subRows, depth + 1)
+                row.subRows = groupUpRecursively(row.subRows, depth + 1, row)
               }
 
               return row
@@ -60,7 +61,12 @@ export function getGroupedRowModel<TData extends RowData>(): (
               id = parentId ? `${parentId}>${id}` : id
 
               // First, Recurse to group sub rows before aggregation
-              const subRows = groupUpRecursively(groupedRows, depth + 1, id)
+              const subRows = groupUpRecursively(
+                groupedRows,
+                depth + 1,
+                parentRow,
+                id
+              )
 
               // Flatten the leaf rows of the rows in this group
               const leafRows = depth
@@ -72,7 +78,9 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 id,
                 leafRows[0]!.original,
                 index,
-                depth
+                depth,
+                undefined,
+                parentRow
               )
 
               Object.assign(row, {
@@ -134,7 +142,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
           return aggregatedGroupedRows
         }
 
-        const groupedRows = groupUpRecursively(rowModel.rows, 0, '')
+        const groupedRows = groupUpRecursively(rowModel.rows, 0, undefined, '')
 
         groupedRows.forEach(subRow => {
           groupedFlatRows.push(subRow)
