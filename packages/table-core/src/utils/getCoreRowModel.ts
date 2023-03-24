@@ -24,7 +24,7 @@ export function getCoreRowModel<TData extends RowData>(): (
         const accessRows = (
           originalRows: TData[],
           depth = 0,
-          parentRow?: Row<TData>
+          parent?: Row<TData>
         ): Row<TData>[] => {
           const rows = [] as Row<TData>[]
 
@@ -39,12 +39,11 @@ export function getCoreRowModel<TData extends RowData>(): (
             // Make the row
             const row = createRow(
               table,
-              table._getRowId(originalRows[i]!, i, parentRow),
+              table._getRowId(originalRows[i]!, i, parent),
               originalRows[i]!,
               i,
               depth,
-              undefined,
-              parentRow
+              parent?.id
             )
 
             // Keep track of every row in a flat array
