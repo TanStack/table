@@ -7,6 +7,7 @@ export interface CoreRow<TData extends RowData> {
   index: number
   original: TData
   depth: number
+  parentId?: string
   _valuesCache: Record<string, unknown>
   _uniqueValuesCache: Record<string, unknown>
   getValue: <TValue>(columnId: string) => TValue
@@ -17,7 +18,8 @@ export interface CoreRow<TData extends RowData> {
   originalSubRows?: TData[]
   getAllCells: () => Cell<TData, unknown>[]
   _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
-  parentRow?: Row<TData>
+  getParentRow: () => Row<TData> | undefined
+  getParentRows: () => Row<TData>[]
 }
 
 export const createRow = <TData extends RowData>(
@@ -27,14 +29,14 @@ export const createRow = <TData extends RowData>(
   rowIndex: number,
   depth: number,
   subRows?: Row<TData>[],
-  parentRow?: Row<TData>
+  parentId?: string
 ): Row<TData> => {
   let row: CoreRow<TData> = {
     id,
     index: rowIndex,
     original,
     depth,
-    parentRow,
+    parentId,
     _valuesCache: {},
     _uniqueValuesCache: {},
     getValue: columnId => {
@@ -82,6 +84,18 @@ export const createRow = <TData extends RowData>(
       row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
     getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
+    getParentRow: () => (row.parentId ? table.getRow(row.parentId) : undefined),
+    getParentRows: () => {
+      let parentRows: Row<TData>[] = []
+      let currentRow = row
+      while (true) {
+        const parentRow = currentRow.getParentRow()
+        if (!parentRow) break
+        parentRows.push(parentRow)
+        currentRow = parentRow
+      }
+      return parentRows.reverse()
+    },
     getAllCells: memo(
       () => [table.getAllLeafColumns()],
       leafColumns => {

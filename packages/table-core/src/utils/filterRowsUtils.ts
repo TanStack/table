@@ -22,11 +22,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
   const newFilteredRowsById: Record<string, Row<TData>> = {}
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
-  const recurseFilterRows = (
-    rowsToFilter: Row<TData>[],
-    depth = 0,
-    parentRow?: Row<TData>
-  ) => {
+  const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
     const rows: Row<TData>[] = []
 
     // Filter from children up first
@@ -40,12 +36,12 @@ export function filterRowModelFromLeafs<TData extends RowData>(
         row.index,
         row.depth,
         undefined,
-        parentRow
+        row.parentId
       )
       newRow.columnFilters = row.columnFilters
 
       if (row.subRows?.length && depth < maxDepth) {
-        newRow.subRows = recurseFilterRows(row.subRows, depth + 1, newRow)
+        newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
         row = newRow
 
         if (filterRow(row) && !newRow.subRows.length) {
@@ -91,11 +87,7 @@ export function filterRowModelFromRoot<TData extends RowData>(
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   // Filters top level and nested rows
-  const recurseFilterRows = (
-    rowsToFilter: Row<TData>[],
-    depth = 0,
-    parentRow?: Row<TData>
-  ) => {
+  const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
     // Filter from parents downward first
 
     const rows: Row<TData>[] = []
@@ -115,9 +107,9 @@ export function filterRowModelFromRoot<TData extends RowData>(
             row.index,
             row.depth,
             undefined,
-            parentRow
+            row.parentId
           )
-          newRow.subRows = recurseFilterRows(row.subRows, depth + 1, newRow)
+          newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
           row = newRow
         }
 

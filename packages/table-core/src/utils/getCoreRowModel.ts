@@ -44,7 +44,7 @@ export function getCoreRowModel<TData extends RowData>(): (
               i,
               depth,
               undefined,
-              parentRow
+              parentRow?.id
             )
 
             // Keep track of every row in a flat array
