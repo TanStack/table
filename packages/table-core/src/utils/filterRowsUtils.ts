@@ -35,6 +35,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
         row.original,
         row.index,
         row.depth,
+        undefined,
         row.parentId
       )
       newRow.columnFilters = row.columnFilters
@@ -105,6 +106,7 @@ export function filterRowModelFromRoot<TData extends RowData>(
             row.original,
             row.index,
             row.depth,
+            undefined,
             row.parentId
           )
           newRow.subRows = recurseFilterRows(row.subRows, depth + 1)

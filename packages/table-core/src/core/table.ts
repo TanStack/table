@@ -213,9 +213,8 @@ export function createTable<TData extends RowData>(
     getRowModel: () => {
       return table.getPaginationRowModel()
     },
-    getRow: (id: string, searchAll?: boolean) => {
-      const row = (searchAll ? table.getCoreRowModel() : table.getRowModel())
-        .rowsById[id]
+    getRow: (id: string) => {
+      const row = table.getRowModel().rowsById[id]
 
       if (!row) {
         if (process.env.NODE_ENV !== 'production') {

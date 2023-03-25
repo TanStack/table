@@ -43,6 +43,7 @@ export function getCoreRowModel<TData extends RowData>(): (
               originalRows[i]!,
               i,
               depth,
+              undefined,
               parent?.id
             )
 

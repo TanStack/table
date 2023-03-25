@@ -178,6 +178,7 @@ function App() {
         </thead>
         <tbody>
           {table.getRowModel().rows.map(row => {
+            console.log(row.getParentRow())
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {

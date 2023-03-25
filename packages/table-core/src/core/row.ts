@@ -28,8 +28,8 @@ export const createRow = <TData extends RowData>(
   original: TData,
   rowIndex: number,
   depth: number,
-  parentId?: string,
-  subRows?: Row<TData>[]
+  subRows?: Row<TData>[],
+  parentId?: string
 ): Row<TData> => {
   let row: CoreRow<TData> = {
     id,
@@ -92,10 +92,10 @@ export const createRow = <TData extends RowData>(
       while (true) {
         const parentRow = currentRow.getParentRow()
         if (!parentRow) break
-        parentRows.unshift(parentRow)
+        parentRows.push(parentRow)
         currentRow = parentRow
       }
-      return parentRows
+      return parentRows.reverse()
     },
     getAllCells: memo(
       () => [table.getAllLeafColumns()],
