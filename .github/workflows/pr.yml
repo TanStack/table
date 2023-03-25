@@ -20,11 +20,5 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build the Project
-        run: npm run build
-
-      - name: Running Typechecks
-        run: npm run typecheck
-
-      - name: Running Tests
-        run: npm run test
+      - name: Run Checks
+        run: npm run pr

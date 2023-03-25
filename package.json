@@ -4,9 +4,9 @@
   "scripts": {
     "clean": "npm exec --workspaces -c \"rm -rf build || true\"",
     "test": "(is-ci && npm run test:ci) || npm run test:dev",
-    "test:ci": "vitest",
+    "test:ci": "nx test:ci root",
     "test:dev": "vitest --watch",
-    "build": "rollup --config rollup.config.js && npm run typecheck",
+    "build": "nx build root",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\"",
     "linkAll": "lerna exec 'npm link' --parallel",
     "unlinkAll": "lerna exec 'npm unlink' --parallel",
@@ -15,7 +15,8 @@
     "visualize": "lerna exec 'open build/stats-html.html'",
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "CI=true npm run cipublish",
-    "typecheck": "tsc -b"
+    "typecheck": "nx typecheck root",
+    "pr": "nx run-many --targets=test:ci,build,typecheck --projects=root"
   },
   "namespace": "@tanstack",
   "workspaces": [
@@ -111,6 +112,7 @@
     "ts-node": "^10.7.0",
     "typescript": "^4.7.4",
     "vitest": "^0.29.3",
-    "vue": "^3.2.33"
+    "vue": "^3.2.33",
+    "nx": "15.8.7"
   }
 }

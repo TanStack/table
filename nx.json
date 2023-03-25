@@ -1,0 +1,24 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "build-js", "test:ci", "typecheck"]
+      }
+    }
+  },
+  "defaultBase": "main",
+  "namedInputs": {
+    "packageSources": [
+      "{workspaceRoot}/packages/**/src/**/*.ts",
+      "{workspaceRoot}/packages/**/tsconfig.json"
+    ],
+    "buildDeps": ["{projectRoot}/**/*", "!{projectRoot}/__tests__/**/*"]
+  },
+  "targetDefaults": {
+    "build": {
+      "outputs": ["{projectRoot}/build"],
+      "inputs": ["buildDeps", "^buildDeps"]
+    }
+  }
+}
