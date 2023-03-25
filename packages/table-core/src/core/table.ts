@@ -99,7 +99,7 @@ export interface CoreInstance<TData extends RowData> {
   getCoreRowModel: () => RowModel<TData>
   _getCoreRowModel?: () => RowModel<TData>
   getRowModel: () => RowModel<TData>
-  getRow: (id: string, searchAll?: boolean) => Row<TData>
+  getRow: (id: string) => Row<TData>
   _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
   _getColumnDefs: () => ColumnDef<TData, unknown>[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
