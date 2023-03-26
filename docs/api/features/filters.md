@@ -15,7 +15,7 @@ The ability for a column to be **column** filtered is determined by the followin
 The ability for a column to be **globally** filtered is determined by the following:
 
 - The column was defined a valid `accessorKey`/`accessorFn`.
-- If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable.
+- If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable if the value in the first row is a `string` or `number` type.
 - `column.enableColumnFilter` is not set to `false`
 - `options.enableColumnFilters` is not set to `false`
 - `options.enableFilters` is not set to `false`
@@ -461,6 +461,7 @@ getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
 ```
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
+This is useful if the column can contain data that is not `string` or `number` (i.e. `undefined`).
 
 ## Table API API
 
