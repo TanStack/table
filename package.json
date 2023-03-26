@@ -61,6 +61,7 @@
     "./examples/vue/column-ordering",
     "./examples/vue/column-pinning",
     "./examples/vue/sorting",
+    "./examples/vue/pagination",
     "./packages/match-sorter-utils",
     "./packages/react-table",
     "./packages/react-table-devtools",
