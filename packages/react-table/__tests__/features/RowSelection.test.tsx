@@ -66,6 +66,38 @@ const defaultColumns: ColumnDef<Person>[] = [
     accessorKey: 'firstName',
   },
 ]
+const defaultPaginatedColumns: ColumnDef<Person>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => {
+      return (
+        <input
+          data-testid="select-all-page"
+          aria-checked={table.getIsSomePageRowsSelected() ? 'mixed' : undefined}
+          type="checkbox"
+          disabled
+          checked={table.getIsAllPageRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      )
+    },
+    cell: ({ row }) => {
+      return ( row.getCanSelect() ? (
+        <input
+          data-testid="select-single"
+          type="checkbox"
+          disabled={row.getCanSelect()}
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ):null)
+    },
+  },
+  {
+    header: 'First Name',
+    accessorKey: 'firstName',
+  },
+]
 
 const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
   options = {},
@@ -134,6 +166,46 @@ test(`Select all do not select rows which are not available for selection`, () =
   expect(title).not.toBePartiallyChecked()
   expect(notSelected).not.toBeChecked()
   expect(selected).not.toBeChecked()
+
+})
+
+// issue #4757
+test(`Select all is unchecked for current page if all rows are not available for selection`, () => {
+  let condition = row => row.original.age > 50;
+
+  const {rerender} = render(
+    <TableComponent
+      options={{
+        columns: defaultPaginatedColumns,
+        data: defaultData,
+        enableRowSelection: condition
+    }}
+    />
+  )
+
+  expect(screen.queryByTestId('select-single')).not.toBeInTheDocument()
+  let selectedOnPage = screen.getByTestId('select-all-page')
+  expect(selectedOnPage).not.toBeChecked()
+  expect(selectedOnPage).not.toHaveAttribute('aria-checked', 'mixed')
+
+  condition = row => row.original.age > 40;
+  rerender(<TableComponent
+      options={{
+        columns: defaultPaginatedColumns,
+        data: defaultData,
+        enableRowSelection: condition
+      }}
+    />
+  )
+
+  expect(screen.queryByTestId('select-single')).toBeInTheDocument()
+  selectedOnPage = screen.getByTestId('select-all-page')
+  expect(selectedOnPage).not.toBeChecked()
+  expect(selectedOnPage).not.toHaveAttribute('aria-checked', 'mixed')
+
+  fireEvent.click(screen.queryByTestId('select-single'))
+  expect(selectedOnPage).toBeChecked()
+
 })
 
 test(`Select all when all rows are available for selection`, () => {
