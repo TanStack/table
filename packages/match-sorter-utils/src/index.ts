@@ -65,7 +65,7 @@ export const rankings = {
   NO_MATCH: 0,
 } as const
 
-export type Ranking = typeof rankings[keyof typeof rankings]
+export type Ranking = (typeof rankings)[keyof typeof rankings]
 
 /**
  * Gets the highest ranking for value for the given item based on its values for the given keys
