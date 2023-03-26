@@ -55,7 +55,7 @@ export function flexRender(component: any, props: any) {
     const result = component(props)
 
     if (isSvelteComponent(result)) {
-      return result
+      return renderComponent(result, props)
     }
 
     return wrapInPlaceholder(result)
