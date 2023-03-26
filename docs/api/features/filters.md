@@ -463,7 +463,7 @@ getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
 This is useful if the column can contain data that is not `string` or `number` (i.e. `undefined`).
 
-## Table API API
+## Table API
 
 ### `setColumnFilters`
 

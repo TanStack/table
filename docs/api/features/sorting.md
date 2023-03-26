@@ -336,7 +336,7 @@ isMultiSortEvent?: (e: unknown) => boolean
 
 Pass a custom function that will be used to determine if a multi-sort event should be triggered. It is passed the event from the sort toggle handler and should return `true` if the event should trigger a multi-sort.
 
-## Table API API
+## Table API
 
 ### `setSorting`
 
