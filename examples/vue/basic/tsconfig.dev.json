@@ -1,15 +1,19 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./build/types"
+    "outDir": "./build/types",
+    "types": [
+      "vite/client"
+    ]
   },
-  "files": ["src/main.ts"],
+  "files": [
+    "src/main.ts"
+  ],
   "include": [
     "src"
     // "__tests__/**/*.test.*"
   ]
 }
-
 // {
 //   "composite": true,
 //   "compilerOptions": {

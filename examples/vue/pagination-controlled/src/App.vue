@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 
 import {
   FlexRender,
@@ -7,84 +7,84 @@ import {
   useVueTable,
   createColumnHelper,
   PaginationState,
-} from "@tanstack/vue-table";
+} from '@tanstack/vue-table'
 
-import useService from "./useService";
+import useService from './useService'
 
 type Post = {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-};
+  userId: number
+  id: number
+  title: string
+  body: string
+}
 
-const INITIAL_PAGE_INDEX = 0;
-const INITIAL_PAGE_SIZE = 10;
+const INITIAL_PAGE_INDEX = 0
+const INITIAL_PAGE_SIZE = 10
 
-const columnHelper = createColumnHelper<Post>();
+const columnHelper = createColumnHelper<Post>()
 
 const columns = [
-  columnHelper.accessor("id", { header: "Post ID" }),
-  columnHelper.accessor("title", { header: "Title" }),
-];
+  columnHelper.accessor('id', { header: 'Post ID' }),
+  columnHelper.accessor('title', { header: 'Title' }),
+]
 
-const pageSizes = [10, 20, 30, 40, 50];
+const pageSizes = [10, 20, 30, 40, 50]
 
 const pagination = ref<PaginationState>({
   pageIndex: INITIAL_PAGE_INDEX,
   pageSize: INITIAL_PAGE_SIZE,
-});
+})
 
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1);
+const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 
-const { data, isLoading, pageCount } = useService(pagination);
+const { data, isLoading, pageCount } = useService(pagination)
 
 const table = useVueTable({
   get data() {
-    return data.value ?? [];
+    return data.value ?? []
   },
   get pageCount() {
-    return pageCount.value ?? -1;
+    return pageCount.value ?? -1
   },
   columns,
   state: {
     pagination: pagination.value,
   },
   manualPagination: true,
-  onPaginationChange: (updater) => {
-    if (typeof updater === "function") {
+  onPaginationChange: updater => {
+    if (typeof updater === 'function') {
       setPagination(
         updater({
           pageIndex: pagination.value.pageIndex,
           pageSize: pagination.value.pageSize,
         })
-      );
+      )
     } else {
-      setPagination(updater);
+      setPagination(updater)
     }
   },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,
-});
+})
 
 function setPagination({
   pageIndex,
   pageSize,
 }: PaginationState): PaginationState {
-  pagination.value.pageIndex = pageIndex;
-  pagination.value.pageSize = pageSize;
+  pagination.value.pageIndex = pageIndex
+  pagination.value.pageSize = pageSize
 
-  return { pageIndex, pageSize };
+  return { pageIndex, pageSize }
 }
 
 function handleGoToPage(e) {
-  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-  goToPageNumber.value = page + 1;
-  table.setPageIndex(page);
+  const page = e.target.value ? Number(e.target.value) - 1 : 0
+  goToPageNumber.value = page + 1
+  table.setPageIndex(page)
 }
 
 function handlePageSizeChange(e) {
-  table.setPageSize(Number(e.target.value));
+  table.setPageSize(Number(e.target.value))
 }
 </script>
 
@@ -178,7 +178,7 @@ function handlePageSizeChange(e) {
             Show {{ pageSize }}
           </option>
         </select>
-        {{ isLoading ? "Loading..." : null }}
+        {{ isLoading ? 'Loading...' : null }}
       </div>
       <pre>{{ JSON.stringify(pagination, null, 2) }}</pre>
     </div>

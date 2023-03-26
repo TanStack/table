@@ -1,5 +1,5 @@
 {
-    "name": "tanstack-table-example-vue-basic",
+    "name": "tanstack-table-example-vue-pagination",
     "private": true,
     "version": "0.0.0",
     "scripts": {
@@ -8,11 +8,12 @@
       "preview": "vite preview"
     },
     "dependencies": {
-      "vue": "^3.2.25",
+      "vue": "^3.2.33",
       "@faker-js/faker": "^7.6.0",
-      "@tanstack/vue-table": "8.7.9"
+      "@tanstack/vue-table": "8.8.2"
     },
     "devDependencies": {
+      "@types/node": "^16.11.27",
       "@vitejs/plugin-vue": "^2.3.3",
       "typescript": "^4.5.4",
       "vite": "^2.9.9",
