@@ -128,6 +128,9 @@
       "path": "examples/vue/pagination-controlled/tsconfig.dev.json"
     },
     {
+      "path": "examples/vue/pagination/tsconfig.dev.json"
+    },
+    {
       "path": "packages/match-sorter-utils"
     },
     {

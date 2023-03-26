@@ -42,6 +42,14 @@ The original row object provided to the table.
 
 > 🧠 If the row is a grouped row, the original row object will be the first original in the group.
 
+### `parentId`
+
+```tsx
+parentId?: string
+```
+
+If nested, this row's parent row id.
+
 ### `getValue`
 
 ```tsx
@@ -57,6 +65,22 @@ type subRows = Row<TData>[]
 ```
 
 An array of subRows for the row as returned and created by the `options.getSubRows` option.
+
+### `getParentRow`
+
+```tsx
+type getParentRow = () => Row<TData> | undefined
+```
+
+Returns the parent row for the row, if it exists.
+
+### `getParentRows`
+
+```tsx
+type getParentRows = () => Row<TData>[]
+```
+
+Returns the parent rows for the row, all the way up to a root row.
 
 ### `getLeafRows`
 

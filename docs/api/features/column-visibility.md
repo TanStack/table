@@ -77,7 +77,7 @@ enableHiding?: boolean
 
 Enables/disables hiding of columns.
 
-## Table API API
+## Table API
 
 ### `getVisibleFlatColumns`
 

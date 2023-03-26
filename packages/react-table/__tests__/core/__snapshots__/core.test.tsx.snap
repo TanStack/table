@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`core renders a table with markup 1`] = `
+exports[`core > renders a table with markup 1`] = `
 [
   [
     [
@@ -59,7 +59,7 @@ exports[`core renders a table with markup 1`] = `
 ]
 `;
 
-exports[`core renders a table with markup 2`] = `
+exports[`core > renders a table with markup 2`] = `
 [
   [
     "tanner",
@@ -88,7 +88,7 @@ exports[`core renders a table with markup 2`] = `
 ]
 `;
 
-exports[`core renders a table with markup 3`] = `
+exports[`core > renders a table with markup 3`] = `
 [
   [
     [
