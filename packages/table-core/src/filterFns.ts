@@ -11,7 +11,7 @@ const includesString: FilterFn<any> = (
       .getValue<string | null>(columnId)
       ?.toString()
       ?.toLowerCase()
-      .includes(search)
+      ?.includes(search)
   )
 }
 
