@@ -111,7 +111,7 @@ const defaultColumns = [
 
 Data columns are unique in that they must be configured to extract primitive values for each item in your `data` array.
 
-There are 2 ways to do this:
+There are 3 ways to do this:
 
 - If your items are `objects`, use an object-key that corresponds to the value you want to extract.
 - If your items are nested `arrays`, use an array index that corresponds to the value you want to extract.
