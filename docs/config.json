@@ -348,6 +348,10 @@
           "label": "Column Pinning"
         },
         {
+          "to": "examples/vue/pagination",
+          "label": "Pagination"
+        },
+        {
           "to": "examples/vue/sorting",
           "label": "Sorting"
         }

@@ -33,7 +33,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         availableSorting.forEach(sortEntry => {
           const column = table.getColumn(sortEntry.id)
-          if(!column) return
+          if (!column) return
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.columnDef.sortUndefined,

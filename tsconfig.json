@@ -124,6 +124,9 @@
     {
       "path": "examples/vue/sorting/tsconfig.dev.json"
     },
+    // {
+    //   "path": "examples/vue/pagination-controlled/tsconfig.dev.json" //causing node types error for some reason
+    // },
     {
       "path": "examples/vue/pagination/tsconfig.dev.json"
     },

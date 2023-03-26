@@ -61,6 +61,7 @@
     "./examples/vue/column-ordering",
     "./examples/vue/column-pinning",
     "./examples/vue/sorting",
+    "./examples/vue/pagination-controlled",
     "./examples/vue/pagination",
     "./packages/match-sorter-utils",
     "./packages/react-table",
@@ -86,7 +87,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@tsconfig/svelte": "^3.0.0",
     "@types/luxon": "^2.3.1",
-    "@types/node": "^17.0.25",
+    "@types/node": "^18.15.10",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
     "@types/semver": "^7.3.10",
@@ -98,6 +99,7 @@
     "jsdom": "^21.1.1",
     "lerna": "^4.0.0",
     "luxon": "^2.3.2",
+    "nx": "15.8.7",
     "prettier": "^2.6.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -113,7 +115,6 @@
     "ts-node": "^10.7.0",
     "typescript": "^4.7.4",
     "vitest": "^0.29.3",
-    "vue": "^3.2.33",
-    "nx": "15.8.7"
+    "vue": "^3.2.33"
   }
 }
