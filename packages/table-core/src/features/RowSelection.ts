@@ -327,7 +327,7 @@ export const RowSelection: TableFeature = {
       getToggleAllRowsSelectedHandler: () => {
         return (e: unknown) => {
           table.toggleAllRowsSelected(
-            ((e as MouseEvent).target as HTMLInputElement).checked
+            ((e as MouseEvent).target as HTMLInputElement)?.checked
           )
         }
       },
@@ -335,7 +335,7 @@ export const RowSelection: TableFeature = {
       getToggleAllPageRowsSelectedHandler: () => {
         return (e: unknown) => {
           table.toggleAllPageRowsSelected(
-            ((e as MouseEvent).target as HTMLInputElement).checked
+            ((e as MouseEvent).target as HTMLInputElement)?.checked
           )
         }
       },
