@@ -139,7 +139,7 @@ function App() {
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        // Skip age index reset until after next rerender
+        // Skip page index reset until after next rerender
         skipAutoResetPageIndex()
         setData(old =>
           old.map((row, index) => {
