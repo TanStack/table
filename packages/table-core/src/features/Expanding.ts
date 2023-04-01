@@ -103,7 +103,9 @@ export const Expanding: TableFeature = {
         )
       },
       getCanSomeRowsExpand: () => {
-        return table.getRowModel().flatRows.some(row => row.getCanExpand())
+        return table
+          .getPrePaginationRowModel()
+          .flatRows.some(row => row.getCanExpand())
       },
       getToggleAllRowsExpandedHandler: () => {
         return (e: unknown) => {
