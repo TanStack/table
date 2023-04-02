@@ -50,6 +50,9 @@
       "path": "examples/react/kitchen-sink/tsconfig.dev.json"
     },
     {
+      "path": "examples/react/material-ui-components/tsconfig.dev.json"
+    },
+    {
       "path": "examples/react/mui-pagination/tsconfig.dev.json"
     },
     {

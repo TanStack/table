@@ -233,6 +233,10 @@
           "label": "Sub Components"
         },
         {
+          "to": "examples/react/material-ui-components",
+          "label": "Material UI Components"
+        },
+        {
           "to": "examples/react/filters",
           "label": "Filters"
         },
