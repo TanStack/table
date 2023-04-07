@@ -2,7 +2,7 @@
 title: Header
 ---
 
-These are **core** options and API properties for all headers. More options and API properties may be available for other [table features](../../guide/features.md).
+These are **core** options and API properties for all headers. More options and API properties may be available for other [table features](../../guide/features).
 
 ## Header API
 
