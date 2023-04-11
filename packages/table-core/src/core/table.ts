@@ -64,8 +64,8 @@ export interface CoreTableState {}
 
 export interface CoreOptions<TData extends RowData> {
   data: TData[]
-  state: Partial<TableState>
-  onStateChange: (updater: Updater<TableState>) => void
+  state?: Partial<TableState>
+  onStateChange?: (updater: Updater<TableState>) => void
   debugAll?: boolean
   debugTable?: boolean
   debugHeaders?: boolean
@@ -83,7 +83,7 @@ export interface CoreOptions<TData extends RowData> {
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
   columns: ColumnDef<TData, any>[]
   defaultColumn?: Partial<ColumnDef<TData, unknown>>
-  renderFallbackValue: any
+  renderFallbackValue?: any
 }
 
 export interface CoreInstance<TData extends RowData> {
