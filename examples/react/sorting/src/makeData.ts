@@ -12,9 +12,7 @@ export type Person = {
 }
 
 const range = (len: number) => {
-  const arr = [] as number[]
-  Array.from({ length: len }).forEach((_, i) => arr.push(i))
-  return arr
+  return Array.from({ length: len });
 }
 
 
