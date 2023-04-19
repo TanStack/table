@@ -12,12 +12,11 @@ export type Person = {
 }
 
 const range = (len: number) => {
-  const arr = []
-  for (let i = 0; i < len; i++) {
-    arr.push(i)
-  }
+  const arr = [] as number[]
+  Array.from({ length: len }).forEach((_, i) => arr.push(i))
   return arr
 }
+
 
 const newPerson = (): Person => {
   return {
