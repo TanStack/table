@@ -12,7 +12,7 @@ export type Person = {
 }
 
 const range = (len: number) => {
-  return Array.from({ length: len });
+  return Array.from({ length: len }).map((_, i) => i);
 }
 
 
