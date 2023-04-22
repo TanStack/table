@@ -53,6 +53,7 @@ export function flexRender(component: any, props: any) {
 
   if (typeof component === 'function') {
     const result = component(props)
+    if (result === null || result === undefined) return null
 
     if (isSvelteComponent(result)) {
       return renderComponent(result, props)
