@@ -43,10 +43,16 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.8.5"
+    "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"
+  },
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "visualize": "open ./build/stats-html.html",
+    "clean": "rm -rf build || true",
+    "test": "vitest"
   }
 }

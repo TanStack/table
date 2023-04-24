@@ -2,21 +2,21 @@
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
   "scripts": {
-    "clean": "npm exec --workspaces -c \"rm -rf build || true\"",
-    "test": "(is-ci && npm run test:ci) || npm run test:dev",
-    "test:ci": "nx test:ci root",
+    "clean": "nx run-many --target=clean",
+    "test": "(is-ci && pnpm test:ci) || pnpm test:dev",
+    "test:ci": "nx run-many --target=test --projects=@tanstack/*",
     "test:dev": "vitest --watch",
-    "build": "nx build root",
+    "build": "nx run-many --target=build --projects=@tanstack/*",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\"",
-    "linkAll": "lerna exec 'npm link' --parallel",
-    "unlinkAll": "lerna exec 'npm unlink' --parallel",
-    "dev": "npm run watch",
+    "dev": "pnpm watch",
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
-    "visualize": "lerna exec 'open build/stats-html.html'",
+    "visualize": "nx run-many --target=visualize",
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "CI=true npm run cipublish",
-    "typecheck": "nx typecheck root",
-    "pr": "nx run-many --targets=test:ci,build,typecheck --projects=root"
+    "pr": "nx run-many --targets=test,build --projects=@tanstack/*"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "namespace": "@tanstack",
   "workspaces": [
@@ -101,6 +101,7 @@
     "lerna": "^4.0.0",
     "luxon": "^2.3.2",
     "nx": "15.8.7",
+    "nx-cloud": "^16.0.1",
     "prettier": "^2.6.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -114,7 +115,7 @@
     "stream-to-array": "^2.3.0",
     "svelte": "^3.49.0",
     "ts-node": "^10.7.0",
-    "typescript": "^4.7.4",
+    "typescript": "^4.9.4",
     "vitest": "^0.29.3",
     "vue": "^3.2.33"
   }

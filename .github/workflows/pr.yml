@@ -23,7 +23,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: pnpm --filter query --prefer-offline install
 
       - name: Run Checks
-        run: npm run pr
+        run: pnpm pr

@@ -23,5 +23,11 @@
       "@tanstack/react-table-devtools": ["packages/react-table-devtools/src"],
       "@tanstack/match-sorter-utils": ["packages/match-sorter-utils/src"]
     }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true
+    }
   }
 }

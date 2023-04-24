@@ -1,6 +1,7 @@
 import { RollupOptions } from 'rollup'
 import babel from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
+// @ts-ignore
 import size from 'rollup-plugin-size'
 import visualizer from 'rollup-plugin-visualizer'
 import replace from '@rollup/plugin-replace'
@@ -20,6 +21,18 @@ type Options = {
   globals: Record<string, string>
 }
 
+interface BuildConfigOptions {
+  packageDir: string
+  name: string
+  jsName: string
+  outputFile: string
+  entryFile: string
+  // Globals for UMD bundle, we want to skip monorepo deps to make sure we would not need to import core as well
+  globals: Record<string, string>
+  // Externals for cjs, esm, mjs
+  external: string[]
+}
+
 const umdDevPlugin = (type: 'development' | 'production') =>
   replace({
     'process.env.NODE_ENV': `"${type}"`,
@@ -33,107 +46,105 @@ const babelPlugin = babel({
   extensions: ['.ts', '.tsx'],
 })
 
-export default function rollup(options: RollupOptions): RollupOptions[] {
-  return [
-    ...buildConfigs({
-      name: 'table-core',
-      packageDir: 'packages/table-core',
-      jsName: 'TableCore',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: [],
-      globals: {},
-    }),
-    ...buildConfigs({
-      name: 'react-table',
-      packageDir: 'packages/react-table',
-      jsName: 'ReactTable',
-      outputFile: 'index',
-      entryFile: 'src/index.tsx',
-      external: ['react', '@tanstack/table-core'],
-      globals: {
-        react: 'React',
-      },
-    }),
-    ...buildConfigs({
-      name: 'solid-table',
-      packageDir: 'packages/solid-table',
-      jsName: 'SolidTable',
-      outputFile: 'index',
-      entryFile: 'src/index.tsx',
-      external: ['solid-js', 'solid-js/store', '@tanstack/table-core'],
-      globals: {
-        'solid-js': 'Solid',
-        'solid-js/store': 'SolidStore',
-      },
-    }),
-    ...buildConfigs({
-      name: 'vue-table',
-      packageDir: 'packages/vue-table',
-      jsName: 'VueTable',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: ['vue', '@tanstack/table-core'],
-      globals: {
-        vue: 'Vue',
-      },
-    }),
-    ...buildConfigs({
-      name: 'svelte-table',
-      packageDir: 'packages/svelte-table',
-      jsName: 'SvelteTable',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: [
-        'svelte',
-        'svelte/internal',
-        'svelte/store',
-        '@tanstack/table-core',
-      ],
-      globals: {
-        svelte: 'Svelte',
-        'svelte/internal': 'SvelteInternal',
-        'svelte/store': 'SvelteStore',
-      },
-    }),
-    ...buildConfigs({
-      name: 'react-table-devtools',
-      packageDir: 'packages/react-table-devtools',
-      jsName: 'ReactTableDevtools',
-      outputFile: 'index',
-      entryFile: 'src/index.tsx',
-      external: ['react', '@tanstack/react-table'],
-      globals: {
-        react: 'React',
-        '@tanstack/react-table': 'ReactTable',
-      },
-    }),
-    ...buildConfigs({
-      name: 'match-sorter-utils',
-      packageDir: 'packages/match-sorter-utils',
-      jsName: 'MatchSorterUtils',
-      outputFile: 'index',
-      entryFile: 'src/index.ts',
-      external: [],
-      globals: {},
-    }),
-  ]
+const buildConfigOptions: Record<string, BuildConfigOptions> = {
+  'table-core': {
+    name: 'table-core',
+    packageDir: 'packages/table-core',
+    jsName: 'TableCore',
+    outputFile: 'index',
+    entryFile: 'src/index.ts',
+    external: [],
+    globals: {},
+  },
+  'react-table': {
+    name: 'react-table',
+    packageDir: 'packages/react-table',
+    jsName: 'ReactTable',
+    outputFile: 'index',
+    entryFile: 'src/index.tsx',
+    external: ['react', '@tanstack/table-core'],
+    globals: {
+      react: 'React',
+    },
+  },
+  'solid-table': {
+    name: 'solid-table',
+    packageDir: 'packages/solid-table',
+    jsName: 'SolidTable',
+    outputFile: 'index',
+    entryFile: 'src/index.tsx',
+    external: ['solid-js', 'solid-js/store', '@tanstack/table-core'],
+    globals: {
+      'solid-js': 'Solid',
+      'solid-js/store': 'SolidStore',
+    },
+  },
+  'vue-table': {
+    name: 'vue-table',
+    packageDir: 'packages/vue-table',
+    jsName: 'VueTable',
+    outputFile: 'index',
+    entryFile: 'src/index.ts',
+    external: ['vue', '@tanstack/table-core'],
+    globals: {
+      vue: 'Vue',
+    },
+  },
+  'svelte-table': {
+    name: 'svelte-table',
+    packageDir: 'packages/svelte-table',
+    jsName: 'SvelteTable',
+    outputFile: 'index',
+    entryFile: 'src/index.ts',
+    external: [
+      'svelte',
+      'svelte/internal',
+      'svelte/store',
+      '@tanstack/table-core',
+    ],
+    globals: {
+      svelte: 'Svelte',
+      'svelte/internal': 'SvelteInternal',
+      'svelte/store': 'SvelteStore',
+    },
+  },
+  'react-table-devtools': {
+    name: 'react-table-devtools',
+    packageDir: 'packages/react-table-devtools',
+    jsName: 'ReactTableDevtools',
+    outputFile: 'index',
+    entryFile: 'src/index.tsx',
+    external: ['react', '@tanstack/react-table'],
+    globals: {
+      react: 'React',
+      '@tanstack/react-table': 'ReactTable',
+    },
+  },
+  'match-sorter-utils': {
+    name: 'match-sorter-utils',
+    packageDir: 'packages/match-sorter-utils',
+    jsName: 'MatchSorterUtils',
+    outputFile: 'index',
+    entryFile: 'src/index.ts',
+    external: [],
+    globals: {},
+  },
 }
 
-function buildConfigs(opts: {
-  packageDir: string
-  name: string
-  jsName: string
-  outputFile: string
-  entryFile: string
-  // Globals for UMD bundle, we want to skip monorepo deps to make sure we would not need to import core as well
-  globals: Record<string, string>
-  // Externals for cjs, esm, mjs
-  external: string[]
-}): RollupOptions[] {
+export function createRollupConfig(packageName: string): () => RollupOptions[] {
+  const options = buildConfigOptions[packageName]
+  if (!options) {
+    throw new Error(
+      `Package "${packageName}" not found - check the package name given in your package's rollup.config.js file.`
+    )
+  }
+  return () => buildConfigs(options)
+}
+
+function buildConfigs(opts: BuildConfigOptions): RollupOptions[] {
   const input = path.resolve(opts.packageDir, opts.entryFile)
 
-  const external = moduleName => opts.external.includes(moduleName)
+  const external = (moduleName: any) => opts.external.includes(moduleName)
   const umdExternal = Object.keys(opts.globals)
   const banner = createBanner(opts.name)
 
@@ -153,7 +164,7 @@ function buildConfigs(opts: {
     cjs(options),
     umdDev({ ...options, external: umdExternal }),
     umdProd({ ...options, external: umdExternal }),
-    // types(options),
+    types(options),
   ]
 }
 
@@ -322,7 +333,7 @@ function types({
     input,
     output: {
       format: 'es',
-      file: `${packageDir}/build/types/index.d.ts`,
+      file: `${packageDir}/build/lib/index.d.ts`,
       banner,
     },
     plugins: [dts()],

@@ -43,5 +43,11 @@
     "build/lib/*",
     "build/umd/*",
     "src"
-  ]
+  ],
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "visualize": "open ./build/stats-html.html",
+    "clean": "rm -rf build || true",
+    "test": "vitest"
+  }
 }

@@ -16,12 +16,12 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-          cache: 'npm'
+          cache: 'pnpm'
       - run: |
-          npm i --legacy-peer-deps
+          pnpm --prefer-offline install
           git config --global user.name 'Tanner Linsley'
           git config --global user.email 'tannerlinsley@users.noreply.github.com'
-          npm run cipublish
+          pnpm cipublish
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

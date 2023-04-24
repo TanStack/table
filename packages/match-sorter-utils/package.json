@@ -50,5 +50,11 @@
   ],
   "dependencies": {
     "remove-accents": "0.4.2"
+  },
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "visualize": "open ./build/stats-html.html",
+    "clean": "rm -rf build || true",
+    "test": "vitest"
   }
 }

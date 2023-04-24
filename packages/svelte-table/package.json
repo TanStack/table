@@ -42,9 +42,14 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.8.5"
+    "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
     "svelte": "^3.49.0"
+  },
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "visualize": "open ./build/stats-html.html",
+    "clean": "rm -rf build || true"
   }
 }

@@ -10,16 +10,24 @@
   },
   "defaultBase": "main",
   "namedInputs": {
-    "packageSources": [
-      "{workspaceRoot}/packages/**/src/**/*.ts",
-      "{workspaceRoot}/packages/**/tsconfig.json"
-    ],
-    "buildDeps": ["{projectRoot}/**/*", "!{projectRoot}/__tests__/**/*"]
+    "default": ["{projectRoot}/**/*", "{workspaceRoot}/rollup.config.ts"],
+    "public": [
+      "default",
+      "!{projectRoot}/__tests__/**/*",
+      "!{projectRoot}/vitest.config.ts"
+    ]
   },
   "targetDefaults": {
     "build": {
       "outputs": ["{projectRoot}/build"],
-      "inputs": ["buildDeps", "^buildDeps"]
+      "inputs": ["public", "^public"],
+      "dependsOn": ["^build"]
+    },
+    "visualize": {
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "inputs": ["default", "^public"]
     }
   }
 }

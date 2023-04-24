@@ -47,6 +47,11 @@
     "react-dom": ">=16"
   },
   "dependencies": {
-    "@tanstack/react-table": "8.0.0-alpha.1"
+    "@tanstack/react-table": "workspace:*"
+  },
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "visualize": "open ./build/stats-html.html",
+    "clean": "rm -rf build || true"
   }
 }
