@@ -336,7 +336,7 @@ function types({
       file: `${packageDir}/build/lib/index.d.ts`,
       banner,
     },
-    plugins: [dts()],
+    plugins: [dts({ compilerOptions: { preserveSymlinks: false } })],
   }
 }
 
