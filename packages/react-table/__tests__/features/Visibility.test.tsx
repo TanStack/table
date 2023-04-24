@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   ColumnDef,
   flexRender,
-} from '@tanstack/react-table'
+} from '../../src'
 
 type Person = {
   firstName: string
