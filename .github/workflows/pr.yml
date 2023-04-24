@@ -28,7 +28,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install Dependencies
-        run: pnpm --prefer-offline install
+        run: pnpm --prefer-offline install --no-frozen-lockfile
 
       - name: Run Checks
         run: pnpm pr

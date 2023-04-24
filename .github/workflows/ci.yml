@@ -22,7 +22,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: 'pnpm'
       - run: |
-          pnpm --prefer-offline install
+          pnpm --prefer-offline install --no-frozen-lockfile
           git config --global user.name 'Tanner Linsley'
           git config --global user.email 'tannerlinsley@users.noreply.github.com'
           pnpm cipublish
