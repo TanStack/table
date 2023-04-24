@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install Dependencies
         run: pnpm --filter query --prefer-offline install
