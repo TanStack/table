@@ -28,7 +28,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install Dependencies
-        run: pnpm --filter query --prefer-offline install
+        run: pnpm --prefer-offline install
 
       - name: Run Checks
         run: pnpm pr
