@@ -63,7 +63,7 @@ const features = [
 export interface CoreTableState {}
 
 export interface CoreOptions<TData extends RowData> {
-  data: TData[]
+  data: readonly TData[]
   state: Partial<TableState>
   onStateChange: (updater: Updater<TableState>) => void
   debugAll?: boolean
