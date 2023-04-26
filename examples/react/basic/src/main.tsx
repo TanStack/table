@@ -19,7 +19,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: readonly Person[] = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
