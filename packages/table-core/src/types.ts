@@ -114,7 +114,7 @@ export interface Table<TData extends RowData>
     PaginationInstance<TData>,
     RowSelectionInstance<TData> {}
 
-interface FeatureOptions<TData extends RowData>
+export interface FeatureOptions<TData extends RowData>
   extends VisibilityOptions,
     ColumnOrderOptions,
     ColumnPinningOptions,
