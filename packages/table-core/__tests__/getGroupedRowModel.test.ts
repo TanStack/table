@@ -2,7 +2,8 @@ import { ColumnDef, getCoreRowModel } from '../src'
 import { createColumnHelper } from '../src/columnHelper'
 import { createTable } from '../src/core/table'
 import { getGroupedRowModel } from '../src/utils/getGroupedRowModel'
-import { makeData, Person } from './makeTestData'
+import { CustomFeature } from './customFeature'
+import { Person, makeData } from './makeTestData'
 
 type personKeys = keyof Person
 type PersonColumn = ColumnDef<Person, string | number | Person[] | undefined>
@@ -35,9 +36,14 @@ describe('#getGroupedRowModel', () => {
       columns,
       getCoreRowModel: getCoreRowModel(),
       getGroupedRowModel: getGroupedRowModel(),
+      features: [
+        CustomFeature,
+      ],
     })
     const groupedById = table.getGroupedRowModel().rowsById
     const end = new Date()
+
+    expect(table._features.length).toEqual(12)
 
     expect(groupedById['firstName:Fixed'].leafRows.length).toEqual(50000)
     expect(
