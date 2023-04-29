@@ -40,6 +40,7 @@ export interface GroupingColumnDef<TData extends RowData, TValue> {
     ReturnType<Cell<TData, TValue>['getContext']>
   >
   enableGrouping?: boolean
+  getGroupingValue?: (row: TData) => any
 }
 
 export interface GroupingColumn<TData extends RowData> {
@@ -56,6 +57,7 @@ export interface GroupingRow {
   groupingColumnId?: string
   groupingValue?: unknown
   getIsGrouped: () => boolean
+  getGroupingValue: (columnId: string) => unknown
   _groupingValuesCache: Record<string, any>
 }
 
@@ -229,9 +231,29 @@ export const Grouping: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(row: Row<TData>): GroupingRow => {
+  createRow: <TData extends RowData>(
+    row: Row<TData>,
+    table: Table<TData>
+  ): GroupingRow => {
     return {
       getIsGrouped: () => !!row.groupingColumnId,
+      getGroupingValue: columnId => {
+        if (row._groupingValuesCache.hasOwnProperty(columnId)) {
+          return row._groupingValuesCache[columnId]
+        }
+
+        const column = table.getColumn(columnId)
+
+        if (!column?.columnDef.getGroupingValue) {
+          return row.getValue(columnId)
+        }
+
+        row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
+          row.original
+        )
+
+        return row._groupingValuesCache[columnId]
+      },
       _groupingValuesCache: {},
     }
   },
