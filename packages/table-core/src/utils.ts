@@ -103,6 +103,10 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
 }
 
+export function isNumberArray(d: any): d is number[] {
+  return Array.isArray(d) && d.every(val => typeof val === 'number')
+}
+
 export function flattenBy<TNode>(
   arr: TNode[],
   getChildren: (item: TNode) => TNode[]
