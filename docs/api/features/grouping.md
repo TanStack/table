@@ -112,6 +112,14 @@ enableGrouping?: boolean
 
 Enables/disables grouping for this column.
 
+### `getGroupingValue`
+
+```tsx
+getGroupingValue?: (row: TData) => any
+```
+
+Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
+
 ## Column API
 
 ### `aggregationFn`
@@ -201,6 +209,14 @@ getIsGrouped: () => boolean
 ```
 
 Returns whether or not the row is currently grouped.
+
+### `getGroupingValue`
+
+```tsx
+getGroupingValue: (columnId: string) => unknown
+```
+
+Returns the grouping value for any row and column (including leaf rows).
 
 ## Table Options
 
