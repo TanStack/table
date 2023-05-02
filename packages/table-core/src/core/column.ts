@@ -32,7 +32,7 @@ export function createColumn<TData extends RowData, TValue>(
     ...columnDef,
   } as ColumnDefResolved<TData>
 
-  const accessorKey = resolvedColumnDef.accessorKey
+  const accessorKey = typeof resolvedColumnDef.accessorKey !== 'undefined' ? String(resolvedColumnDef.accessorKey) : undefined
 
   let id =
     resolvedColumnDef.id ??
