@@ -1,4 +1,5 @@
 import { AggregationFn } from './features/Grouping'
+import { isNumberArray } from './utils'
 
 const sum: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   // It's faster to just add the aggregations together instead of
@@ -82,18 +83,17 @@ const median: AggregationFn<any> = (columnId, leafRows) => {
     return
   }
 
-  let min = 0
-  let max = 0
+  const values = leafRows.map(row => row.getValue(columnId))
+  if (!isNumberArray(values)) {
+    return
+  }
+  if (values.length === 1) {
+    return values[0]
+  }
 
-  leafRows.forEach(row => {
-    let value = row.getValue(columnId)
-    if (typeof value === 'number') {
-      min = Math.min(min, value)
-      max = Math.max(max, value)
-    }
-  })
-
-  return (min + max) / 2
+  const mid = Math.floor(values.length / 2)
+  const nums = values.sort((a, b) => a - b)
+  return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1]! + nums[mid]!) / 2
 }
 
 const unique: AggregationFn<any> = (columnId, leafRows) => {
