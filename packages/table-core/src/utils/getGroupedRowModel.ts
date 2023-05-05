@@ -173,7 +173,7 @@ function groupBy<TData extends RowData>(rows: Row<TData>[], columnId: string) {
   const groupMap = new Map<any, Row<TData>[]>()
 
   return rows.reduce((map, row) => {
-    const resKey = `${row.getValue(columnId)}`
+    const resKey = `${row.getGroupingValue(columnId)}`
     const previous = map.get(resKey)
     if (!previous) {
       map.set(resKey, [row])
