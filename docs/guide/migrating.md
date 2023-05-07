@@ -4,8 +4,6 @@ title: Migrating to V8
 
 ## Migrating to V8
 
-### Overview
-
 TanStack Table V8 was a major rewrite of React Table v7 from the ground up in TypeScript. The overall structure/organization of your markup and CSS will largely remain the same, but many of the APIs have been renamed or replaced.
 
 ### Notable Changes
@@ -51,21 +49,22 @@ Types are now included in the base package, so you can remove the `@types/react-
 +   getSortedRowModel
 + } from '@tanstack/react-table';
 
+// ...
 
-- const tableInstance = useTable(
--   { columns,  data },
--   useSortBy,
--   usePagination, //order of hooks used to matter
--   // etc.
-- );
-+ const tableInstance = useReactTable({
-+   columns,
-+   data,
-+   getCoreRowModel: getCoreRowModel(),
-+   getPaginationRowModel: getPaginationRowModel(),
-+   getSortedRowModel: getSortedRowModel(), //order doesn't matter anymore!
-+   // etc.
-+ });
+-   const tableInstance = useTable(
+-     { columns,  data },
+-     useSortBy,
+-     usePagination, //order of hooks used to matter
+-     // etc.
+-   );
++   const tableInstance = useReactTable({
++     columns,
++     data,
++     getCoreRowModel: getCoreRowModel(),
++     getPaginationRowModel: getPaginationRowModel(),
++     getSortedRowModel: getSortedRowModel(), //order doesn't matter anymore!
++     // etc.
++   });
 ```
 
 - All `disable*` table options were renamed to `enable*` table options. (e.g. `disableSortBy` is now `enableSorting`, `disableGroupBy` is now `enableGrouping`, etc.)
@@ -90,7 +89,6 @@ const columns = [
 -  },
 
 // Best TypeScript experience, especially when using `cell.getValue()` later on
-
 +  columnHelper.accessor('firstName', { //accessorKey
 +    header: 'First Name',
 +  }),
@@ -99,7 +97,6 @@ const columns = [
 +  }),
 
 // OR (if you prefer)
-
 + {
 +   accessorKey: 'firstName',
 +   header: 'First Name',
@@ -125,7 +122,7 @@ const columns = [
 - Changes to custom cell renderers
 
   - `value` was renamed `getValue` (Throughout the upgrade, instead of providing the value directly, a function `getValue` is exposed for evaluating the value. This change aims to improve performance by evaluating the value only when `getValue()` is called and then caching it.)
-  - `cell: { isGrouped, isPlaceholder, isAggregated }` => `cell: { getIsGrouped, getIsPlaceholder, getIsAggregated }`
+  - `cell: { isGrouped, isPlaceholder, isAggregated }` is now `cell: { getIsGrouped, getIsPlaceholder, getIsAggregated }`
   - `column`: The base level props are now RT-specific. Values that you added to the object when defining it are now one level deeper in `columnDef`.
   - `table`: Props passed into the `useTable` hook now appear under `options`.
 
