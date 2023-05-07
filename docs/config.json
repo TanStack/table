@@ -46,6 +46,10 @@
           "to": "guide/installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "Column Defs",
           "to": "guide/column-defs"
         },
