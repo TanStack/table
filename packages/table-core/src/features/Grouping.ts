@@ -151,9 +151,7 @@ export const Grouping: TableFeature = {
       getCanGroup: () => {
         return (
           column.columnDef.enableGrouping ??
-          true ??
           table.options.enableGrouping ??
-          true ??
           !!column.accessorFn
         )
       },
