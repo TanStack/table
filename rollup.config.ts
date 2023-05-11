@@ -79,6 +79,17 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       },
     }),
     ...buildConfigs({
+      name: 'vue2-table',
+      packageDir: 'packages/vue2-table',
+      jsName: 'Vue2Table',
+      outputFile: 'index',
+      entryFile: 'src/index.ts',
+      external: ['vue', '@tanstack/table-core'],
+      globals: {
+        vue: 'Vue',
+      },
+    }),
+    ...buildConfigs({
       name: 'svelte-table',
       packageDir: 'packages/svelte-table',
       jsName: 'SvelteTable',

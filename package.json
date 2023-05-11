@@ -69,7 +69,8 @@
     "./packages/solid-table",
     "./packages/svelte-table",
     "./packages/table-core",
-    "./packages/vue-table"
+    "./packages/vue-table",
+    "./packages/vue2-table"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.9",

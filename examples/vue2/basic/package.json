@@ -1,0 +1,20 @@
+{
+  "name": "tanstack-table-example-vue2-basic",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/vue2-table": "8.9.1",
+    "@vue/composition-api": "^1.2.4",
+    "vue": "^2.6.14",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "devDependencies": {
+    "vite": "^4.3.5",
+    "vite-plugin-vue2": "^2.0.3"
+  }
+}

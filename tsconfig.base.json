@@ -19,6 +19,7 @@
       "@tanstack/react-table": ["packages/react-table/src"],
       "@tanstack/solid-table": ["packages/solid-table/src"],
       "@tanstack/vue-table": ["packages/vue-table/src"],
+      "@tanstack/vue2-table": ["packages/vue2-table/src"],
       "@tanstack/svelte-table": ["packages/svelte-table/src"],
       "@tanstack/react-table-devtools": ["packages/react-table-devtools/src"],
       "@tanstack/match-sorter-utils": ["packages/match-sorter-utils/src"]
