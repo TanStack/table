@@ -6,6 +6,8 @@ While we clearly love TanStack Table, we acknowledge that it is not a "batteries
 
 ## Why Choose AG Grid?
 
+Here are some good reasons to consider AG Grid for your next project:
+
 ### Comprehensive Feature Set
 
 AG Grid offers an extensive set of features, making it a versatile and powerful data grid solution. With AG Grid, you get access to a wide range of functionalities that cater to the needs of complex enterprise applications. From advanced sorting, filtering, and grouping capabilities to column pinning, multi-level headers, and tree data structure support, AG Grid provides you with the tools to create dynamic and interactive data grids that meet your application's unique demands.
