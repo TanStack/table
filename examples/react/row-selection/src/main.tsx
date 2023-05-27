@@ -284,12 +284,12 @@ function App() {
           className="border rounded p-2 mb-2"
           onClick={() =>
             console.info(
-              'table.getSelectedFlatRows()',
+              'table.getSelectedRowModel().flatRows',
               table.getSelectedRowModel().flatRows
             )
           }
         >
-          Log table.getSelectedFlatRows()
+          Log table.getSelectedRowModel().flatRows
         </button>
       </div>
     </div>
