@@ -73,6 +73,7 @@ Types are now included in the base package, so you can remove the `@types/react-
 ### Update column definitions
 
 - accessor was renamed to either `accessorKey` or `accessorFn` (depending on whether you are using a string or function)
+- width, minWidth, maxWidth where renamed to size, minSize, maxSize
 - Optionally, you can use the new `createColumnHelper` function around each column definition for better TypeScript hints. (You can still just use an array of column definitions if you prefer.)
   - The first parameter is the accessor function or accessor string.
   - The second parameter is an object of column options.
