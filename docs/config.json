@@ -46,6 +46,10 @@
           "to": "guide/installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "Column Defs",
           "to": "guide/column-defs"
         },
@@ -186,6 +190,15 @@
         {
           "label": "Row Selection",
           "to": "api/features/row-selection"
+        }
+      ]
+    },
+    {
+      "label": "Enterprise",
+      "children": [
+        {
+          "label": "AG Grid",
+          "to": "enterprise/ag-grid"
         }
       ]
     },
