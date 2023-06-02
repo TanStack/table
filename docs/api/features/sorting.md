@@ -110,7 +110,8 @@ Enables/Disables sorting for this column.
 enableMultiSort?: boolean
 ```
 
-Enables/Disables multi-sorting for this column.
+Enables/Disables multi-sorting for this column. By default is true, and multi-sort happens when the user holds `Shift` key and clicks a
+new column.
 
 ### `invertSorting`
 

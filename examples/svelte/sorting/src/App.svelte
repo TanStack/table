@@ -82,6 +82,27 @@
     }))
   }
 
+  let enableMultiSort = true
+  const setEnableMultiSort = updater => {
+    enableMultiSort = updater
+    console.log(enableMultiSort)
+
+    options.update(old => ({
+      ...old,
+      enableMultiSort
+    }))
+  }
+
+  let isClickToSort = false
+  const setIsClickToSort = updater => {
+    isClickToSort = updater
+
+    options.update(old => ({
+      ...old,
+      ...(isClickToSort ? {isMultiSortEvent: () => true} : undefined),
+    }))
+  }
+
   const options = writable<TableOptions<Person>>(
     {
       data,
@@ -116,6 +137,27 @@
 
 <div class="p-2">
   <div class="h-2" />
+  <div className="flex items-center">
+    <label className="mr-2">enableMultiSort: </label>
+    <input type="checkbox" checked={enableMultiSort} on:change={e => {
+      setEnableMultiSort(e.target.checked)
+      if (!e.target.checked) {
+        setIsClickToSort(false)
+      }
+    }}/>
+    {#if enableMultiSort}
+      <span className="ml-2 text-red-500">Press `Shift` key and clicks a
+new column.</span>
+    {/if}
+  </div>
+  {#if enableMultiSort}
+    <div className="flex items-center">
+      <label className="mr-2">Click to multi-sort: </label>
+      <input type="checkbox" checked={isClickToSort} on:change={e => {
+        setIsClickToSort(e.target.checked)
+      }}/>
+    </div>
+  {/if}
   <table>
     <thead>
       {#each $table.getHeaderGroups() as headerGroup}
