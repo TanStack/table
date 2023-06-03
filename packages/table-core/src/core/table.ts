@@ -30,8 +30,10 @@ import { Ordering } from '../features/Ordering'
 import { Pagination } from '../features/Pagination'
 import { Pinning } from '../features/Pinning'
 import { RowSelection } from '../features/RowSelection'
+import { RowPicking } from '../features/RowPicking'
 import { Sorting } from '../features/Sorting'
 import { Visibility } from '../features/Visibility'
+
 
 export interface TableFeature {
   getDefaultOptions?: (table: any) => any
@@ -55,6 +57,7 @@ const features = [
   Expanding,
   Pagination,
   RowSelection,
+  RowPicking,
   ColumnSizing,
 ] as const
 

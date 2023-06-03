@@ -76,6 +76,12 @@ import {
   RowSelectionRow,
   RowSelectionTableState,
 } from './features/RowSelection'
+import {
+  RowPickingInstance,
+  RowPickingOptions,
+  RowPickingRow,
+  RowPickingTableState,
+} from './features/RowPicking'
 import { CoreRow } from './core/row'
 import { PartialKeys, UnionToIntersection } from './utils'
 import { CellContext, CoreCell } from './core/cell'
@@ -112,7 +118,8 @@ export interface Table<TData extends RowData>
     ColumnSizingInstance,
     ExpandedInstance<TData>,
     PaginationInstance<TData>,
-    RowSelectionInstance<TData> {}
+    RowSelectionInstance<TData>,
+    RowPickingInstance<TData> {}
 
 interface FeatureOptions<TData extends RowData>
   extends VisibilityOptions,
@@ -124,7 +131,8 @@ interface FeatureOptions<TData extends RowData>
     ExpandedOptions<TData>,
     ColumnSizingOptions,
     PaginationOptions,
-    RowSelectionOptions<TData> {}
+    RowSelectionOptions<TData>,
+    RowPickingOptions<TData> {}
 
 export type TableOptionsResolved<TData extends RowData> = CoreOptions<TData> &
   FeatureOptions<TData>
@@ -146,7 +154,8 @@ export interface TableState
     GroupingTableState,
     ColumnSizingTableState,
     PaginationTableState,
-    RowSelectionTableState {}
+    RowSelectionTableState,
+    RowPickingTableState {}
 
 interface CompleteInitialTableState
   extends CoreTableState,
@@ -170,6 +179,7 @@ export interface Row<TData extends RowData>
     FiltersRow<TData>,
     GroupingRow,
     RowSelectionRow,
+    RowPickingRow,
     ExpandedRow {}
 
 export interface RowModel<TData extends RowData> {
