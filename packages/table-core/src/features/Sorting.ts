@@ -116,6 +116,7 @@ export const Sorting: TableFeature = {
   getDefaultColumnDef: <TData extends RowData>(): SortingColumnDef<TData> => {
     return {
       sortingFn: 'auto',
+      sortUndefined: 1,
     }
   },
 

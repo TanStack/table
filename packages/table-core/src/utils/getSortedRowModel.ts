@@ -53,32 +53,31 @@ export function getSortedRowModel<TData extends RowData>(): (
               const columnInfo = columnInfoById[sortEntry.id]!
               const isDesc = sortEntry?.desc ?? false
 
+              let sortInt = 0
+
+              // All sorting ints should always return in ascending order
               if (columnInfo.sortUndefined) {
                 const aValue = rowA.getValue(sortEntry.id)
                 const bValue = rowB.getValue(sortEntry.id)
 
-                const aUndefined = typeof aValue === 'undefined'
-                const bUndefined = typeof bValue === 'undefined'
+                const aUndefined = aValue === undefined
+                const bUndefined = bValue === undefined
 
                 if (aUndefined || bUndefined) {
-                  let undefinedSort =
+                  sortInt =
                     aUndefined && bUndefined
                       ? 0
                       : aUndefined
                       ? columnInfo.sortUndefined
                       : -columnInfo.sortUndefined
-
-                  if (isDesc && undefinedSort !== 0) {
-                    undefinedSort *= -1
-                  }
-
-                  return undefinedSort
                 }
               }
 
-              // This function should always return in ascending order
-              let sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id)
+              if (sortInt === 0) {
+                sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id)
+              }
 
+              // If sorting is non-zero, take care of desc and inversion
               if (sortInt !== 0) {
                 if (isDesc) {
                   sortInt *= -1
