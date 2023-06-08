@@ -61,11 +61,18 @@ export function getSortedRowModel<TData extends RowData>(): (
                 const bUndefined = typeof bValue === 'undefined'
 
                 if (aUndefined || bUndefined) {
-                  return aUndefined && bUndefined
-                    ? 0
-                    : aUndefined
-                    ? columnInfo.sortUndefined
-                    : -columnInfo.sortUndefined
+                  let undefinedSort =
+                    aUndefined && bUndefined
+                      ? 0
+                      : aUndefined
+                      ? columnInfo.sortUndefined
+                      : -columnInfo.sortUndefined
+
+                  if (isDesc && undefinedSort !== 0) {
+                    undefinedSort *= -1
+                  }
+
+                  return undefinedSort
                 }
               }
 
