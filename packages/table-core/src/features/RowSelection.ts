@@ -586,7 +586,7 @@ export function selectRowsFn<TData extends RowData>(
   const newSelectedRowsById: Record<string, Row<TData>> = {}
 
   // Filters top level and nested rows
-  const recurseRows = (rows: Row<TData>[], depth = 0): Row<TData>[] => {
+  const recurseRows = (rows: readonly Row<TData>[], depth = 0): Row<TData>[] => {
     return rows
       .map(row => {
         const isSelected = isRowSelected(row, rowSelection)

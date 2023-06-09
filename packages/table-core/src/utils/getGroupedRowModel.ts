@@ -27,7 +27,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
 
         // Recursively group the data
         const groupUpRecursively = (
-          rows: Row<TData>[],
+          rows: readonly Row<TData>[],
           depth = 0,
           parentId?: string
         ) => {
@@ -169,7 +169,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
     )
 }
 
-function groupBy<TData extends RowData>(rows: Row<TData>[], columnId: string) {
+function groupBy<TData extends RowData>(rows: readonly Row<TData>[], columnId: string) {
   const groupMap = new Map<any, Row<TData>[]>()
 
   return rows.reduce((map, row) => {

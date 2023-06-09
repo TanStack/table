@@ -26,7 +26,7 @@ export interface CoreColumn<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#columns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  columns: Column<TData, TValue>[]
+  columns: readonly Column<TData, TValue>[]
   /**
    * The depth of the column (if grouped) relative to the root column def array.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#depth)
@@ -38,13 +38,13 @@ export interface CoreColumn<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#getflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  getFlatColumns: () => Column<TData, TValue>[]
+  getFlatColumns: () => readonly Column<TData, TValue>[]
   /**
    * Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#getleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  getLeafColumns: () => Column<TData, TValue>[]
+  getLeafColumns: () => readonly Column<TData, TValue>[]
   /**
    * The resolved unique identifier for the column resolved in this priority:
       - A manual `id` property from the column def

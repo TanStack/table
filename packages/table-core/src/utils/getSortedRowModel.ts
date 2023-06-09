@@ -42,7 +42,7 @@ export function getSortedRowModel<TData extends RowData>(): (
           }
         })
 
-        const sortData = (rows: Row<TData>[]) => {
+        const sortData = (rows: readonly Row<TData>[]) => {
           // This will also perform a stable sorting using the row index
           // if needed.
           const sortedData = [...rows]
