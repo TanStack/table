@@ -264,7 +264,7 @@ interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
 
 export interface ColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefExtensions<TData, TValue> {
-  getUniqueValues?: AccessorFn<TData, unknown[]>
+  getUniqueValues?: AccessorFn<TData, readonly unknown[]>
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TData, TValue>>
   meta?: ColumnMeta<TData, TValue>
@@ -285,7 +285,7 @@ export type DisplayColumnDef<
 
 interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefBase<TData, TValue> {
-  columns?: ColumnDef<TData, any>[]
+  columns?: readonly ColumnDef<TData, any>[]
 }
 
 export type GroupColumnDef<

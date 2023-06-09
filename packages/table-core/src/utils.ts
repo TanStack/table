@@ -112,12 +112,12 @@ export function isNumberArray(d: any): d is number[] {
 }
 
 export function flattenBy<TNode>(
-  arr: TNode[],
-  getChildren: (item: TNode) => TNode[]
+  arr: readonly TNode[],
+  getChildren: (item: TNode) => readonly TNode[]
 ) {
   const flat: TNode[] = []
 
-  const recurse = (subArr: TNode[]) => {
+  const recurse = (subArr: readonly TNode[]) => {
     subArr.forEach(item => {
       flat.push(item)
       const children = getChildren(item)

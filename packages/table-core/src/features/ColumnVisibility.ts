@@ -43,7 +43,7 @@ export interface VisibilityInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcentervisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getCenterVisibleLeafColumns: () => Column<TData, unknown>[]
+  getCenterVisibleLeafColumns: () => readonly Column<TData, unknown>[]
   /**
    * Returns whether all columns are visible
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisallcolumnsvisible)
@@ -61,13 +61,13 @@ export interface VisibilityInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getleftvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getLeftVisibleLeafColumns: () => Column<TData, unknown>[]
+  getLeftVisibleLeafColumns: () => readonly Column<TData, unknown>[]
   /**
    * If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getrightvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getRightVisibleLeafColumns: () => Column<TData, unknown>[]
+  getRightVisibleLeafColumns: () => readonly Column<TData, unknown>[]
   /**
    * Returns a handler for toggling the visibility of all columns, meant to be bound to a `input[type=checkbox]` element.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettoggleallcolumnsvisibilityhandler)
@@ -79,13 +79,13 @@ export interface VisibilityInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleFlatColumns: () => Column<TData, unknown>[]
+  getVisibleFlatColumns: () => readonly Column<TData, unknown>[]
   /**
    * Returns a flat array of leaf-node columns that are visible.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleLeafColumns: () => Column<TData, unknown>[]
+  getVisibleLeafColumns: () => readonly Column<TData, unknown>[]
   /**
    * Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#resetcolumnvisibility)
@@ -111,13 +111,13 @@ export interface VisibilityColumnDef {
 }
 
 export interface VisibilityRow<TData extends RowData> {
-  _getAllVisibleCells: () => Cell<TData, unknown>[]
+  _getAllVisibleCells: () => readonly Cell<TData, unknown>[]
   /**
    * Returns an array of cells that account for column visibility for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisiblecells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleCells: () => Cell<TData, unknown>[]
+  getVisibleCells: () => readonly Cell<TData, unknown>[]
 }
 
 export interface VisibilityColumn {
@@ -226,8 +226,8 @@ export const ColumnVisibility: TableFeature = {
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     const makeVisibleColumnsMethod = (
       key: string,
-      getColumns: () => Column<TData, unknown>[]
-    ): (() => Column<TData, unknown>[]) => {
+      getColumns: () => readonly Column<TData, unknown>[]
+    ): (() => readonly Column<TData, unknown>[]) => {
       return memo(
         () => [
           getColumns(),

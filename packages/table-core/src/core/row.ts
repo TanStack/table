@@ -35,7 +35,7 @@ export interface CoreRow<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getparentrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getParentRows: () => Row<TData>[]
+  getParentRows: () => readonly Row<TData>[]
   /**
    * Returns a unique array of values from the row for a given columnId.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getuniquevalues)
@@ -89,7 +89,7 @@ export interface CoreRow<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#subrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  subRows: Row<TData>[]
+  readonly subRows: readonly Row<TData>[]
 }
 
 export const createRow = <TData extends RowData>(
@@ -98,7 +98,7 @@ export const createRow = <TData extends RowData>(
   original: TData,
   rowIndex: number,
   depth: number,
-  subRows?: Row<TData>[],
+  subRows?: readonly Row<TData>[],
   parentId?: string
 ): Row<TData> => {
   let row: CoreRow<TData> = {

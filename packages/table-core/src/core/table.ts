@@ -78,13 +78,13 @@ export interface CoreOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#columns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  columns: ColumnDef<TData, any>[]
+  columns: readonly ColumnDef<TData, any>[]
   /**
    * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. Columns can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  data: TData[]
+  data: readonly TData[]
   /**
    * Set this option to `true` to output all debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugall)
@@ -146,7 +146,7 @@ export interface CoreOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getsubrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
+  getSubRows?: (originalRow: TData, index: number) => undefined | readonly TData[]
   /**
    * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
    *
@@ -195,7 +195,7 @@ export interface CoreOptions<TData extends RowData> {
 export interface CoreInstance<TData extends RowData> {
   _features: readonly TableFeature[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
-  _getColumnDefs: () => ColumnDef<TData, unknown>[]
+  _getColumnDefs: () => readonly ColumnDef<TData, unknown>[]
   _getCoreRowModel?: () => RowModel<TData>
   _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
   _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
@@ -205,19 +205,19 @@ export interface CoreInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getAllColumns: () => Column<TData, unknown>[]
+  getAllColumns: () => readonly Column<TData, unknown>[]
   /**
    * Returns all columns in the table flattened to a single level.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getAllFlatColumns: () => Column<TData, unknown>[]
+  getAllFlatColumns: () => readonly Column<TData, unknown>[]
   /**
    * Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getAllLeafColumns: () => Column<TData, unknown>[]
+  getAllLeafColumns: () => readonly Column<TData, unknown>[]
   /**
    * Returns a single column by its ID.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcolumn)
@@ -447,10 +447,10 @@ export function createTable<TData extends RowData>(
       () => [table._getColumnDefs()],
       columnDefs => {
         const recurseColumns = (
-          columnDefs: ColumnDef<TData, unknown>[],
+          columnDefs: readonly ColumnDef<TData, unknown>[],
           parent?: Column<TData, unknown>,
           depth = 0
-        ): Column<TData, unknown>[] => {
+        ): readonly Column<TData, unknown>[] => {
           return columnDefs.map(columnDef => {
             const column = createColumn(table, columnDef, depth, parent)
 

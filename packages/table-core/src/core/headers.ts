@@ -61,7 +61,7 @@ export interface CoreHeader<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeafHeaders: () => Header<TData, unknown>[]
+  getLeafHeaders: () => readonly Header<TData, unknown>[]
   /**
    * The header's associated header group object.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#headergroup)
@@ -103,7 +103,7 @@ export interface CoreHeader<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#subheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  subHeaders: Header<TData, TValue>[]
+  subHeaders: readonly Header<TData, TValue>[]
 }
 
 export interface HeadersInstance<TData extends RowData> {
@@ -112,100 +112,100 @@ export interface HeadersInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getHeaderGroups: () => HeaderGroup<TData>[]
+  getHeaderGroups: () => readonly HeaderGroup<TData>[]
   /**
    * If pinning, returns the header groups for the left pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftHeaderGroups: () => HeaderGroup<TData>[]
+  getLeftHeaderGroups: () => readonly HeaderGroup<TData>[]
   /**
    * If pinning, returns the header groups for columns that are not pinned.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterHeaderGroups: () => HeaderGroup<TData>[]
+  getCenterHeaderGroups: () => readonly HeaderGroup<TData>[]
   /**
    * If pinning, returns the header groups for the right pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightHeaderGroups: () => HeaderGroup<TData>[]
+  getRightHeaderGroups: () => readonly HeaderGroup<TData>[]
 
   /**
    * Returns the footer groups for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getFooterGroups: () => HeaderGroup<TData>[]
+  getFooterGroups: () => readonly HeaderGroup<TData>[]
   /**
    * If pinning, returns the footer groups for the left pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftFooterGroups: () => HeaderGroup<TData>[]
+  getLeftFooterGroups: () => readonly HeaderGroup<TData>[]
   /**
    * If pinning, returns the footer groups for columns that are not pinned.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterFooterGroups: () => HeaderGroup<TData>[]
+  getCenterFooterGroups: () => readonly HeaderGroup<TData>[]
   /**
    * If pinning, returns the footer groups for the right pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightFooterGroups: () => HeaderGroup<TData>[]
+  getRightFooterGroups: () => readonly HeaderGroup<TData>[]
 
   /**
    * Returns headers for all columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getFlatHeaders: () => Header<TData, unknown>[]
+  getFlatHeaders: () => readonly Header<TData, unknown>[]
   /**
    * If pinning, returns headers for all left pinned columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftFlatHeaders: () => Header<TData, unknown>[]
+  getLeftFlatHeaders: () => readonly Header<TData, unknown>[]
   /**
    * If pinning, returns headers for all columns that are not pinned, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterFlatHeaders: () => Header<TData, unknown>[]
+  getCenterFlatHeaders: () => readonly Header<TData, unknown>[]
   /**
    * If pinning, returns headers for all right pinned columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightFlatHeaders: () => Header<TData, unknown>[]
+  getRightFlatHeaders: () => readonly Header<TData, unknown>[]
 
   /**
    * Returns headers for all leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeafHeaders: () => Header<TData, unknown>[]
+  getLeafHeaders: () => readonly Header<TData, unknown>[]
   /**
    * If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftLeafHeaders: () => Header<TData, unknown>[]
+  getLeftLeafHeaders: () => readonly Header<TData, unknown>[]
   /**
    * If pinning, returns headers for all columns that are not pinned, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterLeafHeaders: () => Header<TData, unknown>[]
+  getCenterLeafHeaders: () => readonly Header<TData, unknown>[]
   /**
    * If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightLeafHeaders: () => Header<TData, unknown>[]
+  getRightLeafHeaders: () => readonly Header<TData, unknown>[]
 }
 
 //
@@ -234,7 +234,7 @@ function createHeader<TData extends RowData, TValue>(
     colSpan: 0,
     rowSpan: 0,
     headerGroup: null!,
-    getLeafHeaders: (): Header<TData, unknown>[] => {
+    getLeafHeaders: (): readonly Header<TData, unknown>[] => {
       const leafHeaders: Header<TData, unknown>[] = []
 
       const recurseHeader = (h: CoreHeader<TData, any>) => {
@@ -482,8 +482,8 @@ export const Headers: TableFeature = {
 }
 
 export function buildHeaderGroups<TData extends RowData>(
-  allColumns: Column<TData, unknown>[],
-  columnsToGroup: Column<TData, unknown>[],
+  allColumns: readonly Column<TData, unknown>[],
+  columnsToGroup: readonly Column<TData, unknown>[],
   table: Table<TData>,
   headerFamily?: 'center' | 'left' | 'right'
 ) {
@@ -495,7 +495,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
   let maxDepth = 0
 
-  const findMaxDepth = (columns: Column<TData, unknown>[], depth = 1) => {
+  const findMaxDepth = (columns: readonly Column<TData, unknown>[], depth = 1) => {
     maxDepth = Math.max(maxDepth, depth)
 
     columns
@@ -599,7 +599,7 @@ export function buildHeaderGroups<TData extends RowData>(
   // })
 
   const recurseHeadersForSpans = (
-    headers: Header<TData, unknown>[]
+    headers: readonly Header<TData, unknown>[]
   ): { colSpan: number; rowSpan: number }[] => {
     const filteredHeaders = headers.filter(header =>
       header.column.getIsVisible()
