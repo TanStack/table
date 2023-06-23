@@ -2,9 +2,11 @@
 title: AG Grid - An alternative enterprise data-grid solution
 ---
 
+[![](https://blog.ag-grid.com/content/images/2021/02/new-logo-1.png)](https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable)
+
 While we clearly love TanStack Table, we acknowledge that it is not a "batteries" included product packed with customer support and enterprise polish. We realize that some of our users my need this though! To help out here, we want to introduce you to AG Grid, an enterprise-grade data grid solution that can supercharge your applications with its extensive feature set and robust performance. While TanStack Table is also a powerful option for implementing data grids, we believe in providing our users with a diverse range of choices that best fit their specific requirements. AG Grid is one such choice, and we're excited to highlight its capabilities for you.
 
-## Why Choose AG Grid?
+## Why Choose [AG Grid](https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable)?
 
 Here are some good reasons to consider AG Grid for your next project:
 
