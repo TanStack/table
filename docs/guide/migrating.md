@@ -38,7 +38,7 @@ Types are now included in the base package, so you can remove the `@types/react-
 ### Update Table Options
 
 - Rename `useTable` to `useReactTable`
-- The old hook and plugin systems have been removed, but they have replaced with tree-shakable row model imports for each feature.
+- The old hook and plugin systems have been removed, but they have been replaced with tree-shakable row model imports for each feature.
 
 ```diff
 - import { useTable, usePagination, useSortBy } from 'react-table';
@@ -52,7 +52,14 @@ Types are now included in the base package, so you can remove the `@types/react-
 // ...
 
 -   const tableInstance = useTable(
--     { columns,  data },
+-     { 
+-       columns,  
+-       data,
+-       initialState: {
+-         pageIndex: 0,
+-         pageSize: 25,
+-       },
+-     },
 -     useSortBy,
 -     usePagination, //order of hooks used to matter
 -     // etc.
@@ -63,8 +70,59 @@ Types are now included in the base package, so you can remove the `@types/react-
 +     getCoreRowModel: getCoreRowModel(),
 +     getPaginationRowModel: getPaginationRowModel(),
 +     getSortedRowModel: getSortedRowModel(), //order doesn't matter anymore!
++     initialState: {
++       pagination: {
++         pageIndex: 0,
++         pageSize: 25,
++       },
++     },
 +     // etc.
 +   });
+
+// ...
+
+-  const {
+-    canPreviousPage,
+-    canNextPage,
+-    pageCount,
+-    gotoPage,
+-    nextPage,
+-    previousPage,
+-    setPageSize,
+-    state: { pageIndex, pageSize },
+-  } = tableInstance;
+- const paginationComponentProps = {
+-    canPreviousPage,
+-    canNextPage,
+-    pageCount,
+-    gotoPage,
+-    nextPage,
+-    previousPage,
+-    setPageSize,
+-    pageIndex, 
+-    pageSize,
+-  };
++  const {
++    getCanPreviousPage,
++    getCanNextPage,
++    getPageCount,
++    setPageIndex,
++    nextPage,
++    previousPage,
++    setPageSize,
++    getState,
++  } = tableInstance;
++ const paginationComponentProps = {
++    canPreviousPage: getCanPreviousPage(),
++    canNextPage: getCanNextPage(),
++    pageCount: getPageCount(),
++    gotoPage: setPageIndex,
++    nextPage,
++    previousPage,
++    setPageSize,
++    pageIndex: getState().pagination.pageIndex, 
++    pageSize: getState().pagination.pageSize,
++  };
 ```
 
 - All `disable*` table options were renamed to `enable*` table options. (e.g. `disableSortBy` is now `enableSorting`, `disableGroupBy` is now `enableGrouping`, etc.)
