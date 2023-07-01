@@ -361,6 +361,10 @@
           "label": "Column Pinning"
         },
         {
+          "to": "examples/vue/server-side",
+          "label": "Server Side"
+        },
+        {
           "to": "examples/vue/pagination",
           "label": "Pagination"
         },

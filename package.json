@@ -60,6 +60,7 @@
     "./examples/vue/basic",
     "./examples/vue/column-ordering",
     "./examples/vue/column-pinning",
+    "./examples/vue/server-side",
     "./examples/vue/sorting",
     "./examples/vue/pagination-controlled",
     "./examples/vue/pagination",
