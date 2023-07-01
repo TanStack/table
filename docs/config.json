@@ -361,6 +361,10 @@
           "label": "Column Pinning"
         },
         {
+          "to": "examples/vue/grouping",
+          "label": "Row Selection"
+        },
+        {
           "to": "examples/vue/pagination",
           "label": "Pagination"
         },
