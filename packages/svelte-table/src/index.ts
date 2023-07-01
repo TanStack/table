@@ -1,3 +1,4 @@
+import type { ComponentType } from 'svelte'
 import {
   RowData,
   createTable,
@@ -44,7 +45,7 @@ function wrapInPlaceholder(content: any) {
   return renderComponent(Placeholder, { content })
 }
 
-export function flexRender(component: any, props: any) {
+export function flexRender(component: any, props: any): ComponentType | null {
   if (!component) return null
 
   if (isSvelteComponent(component)) {
