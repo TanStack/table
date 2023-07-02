@@ -23,20 +23,27 @@ import { makeData, VehicleOwner } from './makeData'
 type HighlightRange = [number, number]
 const HIGHLIGHT_RANGE_START = 0
 const HIGHLIGHT_RANGE_END = 1
-// highlight all or first only
-const HIGHLIGHT_ALL = true
-// column that stores global filter meta
-const GLOBAL_FILTER_COLUMN_ID = 'vehicle'
-// row must include all space-separated search terms or must include whole search term with spaces
-const GLOBAL_FILTER_MULTITERM = true
-// ignore newlines
-const FILTER_IGNORE_NEWLINES = false
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
     globalFilterRanges?: { [colId: string]: HighlightRange[] }
     columnFilterRanges?: HighlightRange[]
   }
+}
+
+interface FilterWithHighlightingFn<T> extends FilterFn<T> {
+  /** Highlight all or first only */
+  highlightAll?: boolean
+  /** Ignore newlines so newline character in cell value will not be treated as space */
+  ignoreNewlines?: boolean
+}
+
+interface GlobalFilterWithHighlightingFn<T>
+  extends FilterWithHighlightingFn<T> {
+  /** Column that stores global filter meta */
+  columnId?: string
+  /** Row must include all space-separated search terms or must include whole search term with spaces */
+  multiterm?: boolean
 }
 
 function find(value: string, term: string, all: boolean = false) {
@@ -58,49 +65,49 @@ function find(value: string, term: string, all: boolean = false) {
   return ranges
 }
 
-const globalFilterWithHighlighting: FilterFn<any> = (
-  row,
-  columnId,
-  filterValue,
-  addMeta
-) => {
-  // Perform global filtering only when columnId=GLOBAL_FILTER_COLUMN_ID
-  if (columnId !== GLOBAL_FILTER_COLUMN_ID) return false
-  const allCols = row.getVisibleCells().map(cell => cell.column.id)
-  const filterTerms = filterValue as string[]
-  const filterTermsFound = new Array(filterTerms.length).fill(false)
-  const globalFilterRanges: FilterMeta['globalFilterRanges'] = {}
-  for (const colId of allCols) {
-    const value = row.getValue(colId)
-    let valueStr: string
-    if (typeof value === 'string') {
-      valueStr = value.toLowerCase()
-      if (!FILTER_IGNORE_NEWLINES)
-        // Replace all newlines with spaces
-        // IMPORTANT number of characters must not be changed by replace here
-        valueStr = valueStr.replace(/\s/g, ' ')
-    } else {
-      continue
+const globalFilterWithHighlighting: GlobalFilterWithHighlightingFn<any> =
+  function (row, columnId, filterValue, addMeta) {
+    // Perform global filtering only when columnId=GlobalFilterWithHighlighting.columnId
+    if (columnId !== globalFilterWithHighlighting.columnId) return false
+    const allCols = row.getVisibleCells().map(cell => cell.column.id)
+    const filterTerms = filterValue as string[]
+    const filterTermsFound = new Array(filterTerms.length).fill(false)
+    const globalFilterRanges: FilterMeta['globalFilterRanges'] = {}
+    for (const colId of allCols) {
+      const value = row.getValue(colId)
+      let valueStr: string
+      if (typeof value === 'string') {
+        valueStr = value.toLowerCase()
+        if (!globalFilterWithHighlighting.ignoreNewlines)
+          // Replace all newlines with spaces
+          // IMPORTANT number of characters must not be changed by replace here
+          valueStr = valueStr.replace(/\s/g, ' ')
+      } else {
+        continue
+      }
+      globalFilterRanges[colId] = filterTerms
+        .map((term, index) => {
+          const ranges = find(
+            valueStr,
+            term,
+            globalFilterWithHighlighting.highlightAll
+          )
+          if (ranges.length) filterTermsFound[index] = true
+          return ranges
+        })
+        .flat()
     }
-    globalFilterRanges[colId] = filterTerms
-      .map((term, index) => {
-        const ranges = find(valueStr, term, HIGHLIGHT_ALL)
-        if (ranges.length) filterTermsFound[index] = true
-        return ranges
-      })
-      .flat()
+    // Row is passing filter only when all filter terms found in this row
+    if (filterTermsFound.every(found => found)) {
+      // Store globalFilterRanges in filter meta for GlobalFilterWithHighlighting.columnId column
+      addMeta({ ...row.columnFiltersMeta[columnId], globalFilterRanges })
+      return true
+    }
+    return false
   }
-  // Row is passing filter only when all filter terms found in this row
-  if (filterTermsFound.every(found => found)) {
-    // Store globalFilterRanges in filter meta for GLOBAL_FILTER_COLUMN_ID column
-    addMeta({ ...row.columnFiltersMeta[columnId], globalFilterRanges })
-    return true
-  }
-  return false
-}
 
-globalFilterWithHighlighting.resolveFilterValue = (value: string) => {
-  if (GLOBAL_FILTER_MULTITERM) {
+globalFilterWithHighlighting.resolveFilterValue = function (value: string) {
+  if (globalFilterWithHighlighting.multiterm) {
     const filter = value
       .split(/\s+/)
       .filter(term => !!term)
@@ -111,46 +118,53 @@ globalFilterWithHighlighting.resolveFilterValue = (value: string) => {
   return [value.toLowerCase()]
 }
 
-const columnFilterWithHighlighting: FilterFn<any> = (
+const columnFilterWithHighlighting: FilterWithHighlightingFn<any> = function (
   row,
   columnId,
   filterValue,
   addMeta
-) => {
+) {
   const term = filterValue as string
   const value = row.getValue(columnId)
   let valueStr: string
   if (typeof value === 'string') {
     valueStr = value.toLowerCase()
-    if (!FILTER_IGNORE_NEWLINES)
+    if (!columnFilterWithHighlighting.ignoreNewlines)
       // Replace all newlines with spaces
       // IMPORTANT number of characters must not be changed by replace here
       valueStr = valueStr.replace(/\s/g, ' ')
   } else {
     return false
   }
-  const ranges = find(valueStr, term, HIGHLIGHT_ALL)
+  const ranges = find(valueStr, term, columnFilterWithHighlighting.highlightAll)
   if (ranges.length) {
     // Store ranges in filter meta for current column
-    addMeta({ ...row.columnFiltersMeta[columnId], columnFilterRanges: ranges })
+    addMeta({
+      ...row.columnFiltersMeta[columnId],
+      columnFilterRanges: ranges,
+    })
     return true
   }
   return false
 }
 
-columnFilterWithHighlighting.resolveFilterValue = (value: string) => {
+columnFilterWithHighlighting.resolveFilterValue = function (value: string) {
   return value.toLowerCase()
 }
 
-function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
+function getHighlightRanges(cellContext: CellContext<any, string>) {
   // Highlight ranges stored in columnFiltersMeta
-  // Column with id=GLOBAL_FILTER_COLUMN_ID stores globalFilterRanges from global filter
+  // Column with id=GlobalFilterWithHighlighting.columnId stores globalFilterRanges from global filter
   // Other columns store ranges from individual column filter
   // Meta may remain even if filter is empty so we have to check if filter is empty
-  const globalFilterRanges = cellContext.table.getState().globalFilter
-    ? cellContext.row.columnFiltersMeta[GLOBAL_FILTER_COLUMN_ID]
-        ?.globalFilterRanges?.[cellContext.column.id]
-    : undefined
+  const globalFilterColumnId = (
+    cellContext.table.getGlobalFilterFn() as GlobalFilterWithHighlightingFn<any>
+  ).columnId
+  const globalFilterRanges =
+    cellContext.table.getState().globalFilter && globalFilterColumnId
+      ? cellContext.row.columnFiltersMeta[globalFilterColumnId]
+          ?.globalFilterRanges?.[cellContext.column.id]
+      : undefined
   const columnFilterRanges = cellContext.column.getFilterValue()
     ? cellContext.row.columnFiltersMeta[cellContext.column.id]
         ?.columnFilterRanges
@@ -232,6 +246,8 @@ function splitHighlights(
 const cellRenderer = (props: CellContext<VehicleOwner, string>) =>
   splitHighlights(props.cell.getValue(), getHighlightRanges(props))
 
+globalFilterWithHighlighting.columnId = 'vehicle'
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -239,6 +255,23 @@ function App() {
     []
   )
   const [globalFilter, setGlobalFilter] = React.useState('')
+
+  const [hightlightAll, setHighlightAll] = React.useState<boolean>(true)
+  const [ignoreNewlines, setIgnoreNewlines] = React.useState<boolean>(false)
+  const [globalFilterMultiterm, setGlobalFilterMultiterm] =
+    React.useState<boolean>(true)
+
+  React.useEffect(() => {
+    globalFilterWithHighlighting.highlightAll = hightlightAll
+    globalFilterWithHighlighting.ignoreNewlines = ignoreNewlines
+    globalFilterWithHighlighting.multiterm = globalFilterMultiterm
+
+    columnFilterWithHighlighting.highlightAll = hightlightAll
+    columnFilterWithHighlighting.ignoreNewlines = ignoreNewlines
+
+    setColumnFilters([])
+    setGlobalFilter('')
+  }, [hightlightAll, ignoreNewlines, globalFilterMultiterm])
 
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
     () => [
@@ -305,11 +338,48 @@ function App() {
   return (
     <div className="p-2">
       <div>
+        <div>
+          <input
+            type="checkbox"
+            id="highlightAllCheckbox"
+            checked={hightlightAll}
+            onChange={() => {
+              setHighlightAll(prev => !prev)
+            }}
+          />{' '}
+          <label htmlFor="highlightAllCheckbox">Highlight All</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            id="ignoreNewlinesCheckbox"
+            checked={ignoreNewlines}
+            onChange={() => {
+              setIgnoreNewlines(prev => !prev)
+            }}
+          />{' '}
+          <label htmlFor="ignoreNewlinesCheckbox">Ignore Newlines</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            id="globalFilterMultitermCheckbox"
+            checked={globalFilterMultiterm}
+            onChange={() => {
+              setGlobalFilterMultiterm(prev => !prev)
+            }}
+          />{' '}
+          <label htmlFor="globalFilterMultitermCheckbox">
+            Global Filter Multiterm
+          </label>
+        </div>
+      </div>
+      <div>
         <DebouncedInput
           value={globalFilter}
           onChange={value => {
             const valueStr = String(value)
-            if (GLOBAL_FILTER_MULTITERM) {
+            if (globalFilterMultiterm) {
               setGlobalFilter(/^\s+$/.test(valueStr) ? '' : valueStr)
             } else {
               setGlobalFilter(valueStr)
@@ -317,12 +387,7 @@ function App() {
           }}
           className="p-2 font-lg shadow border border-block"
           placeholder="Search all columns..."
-        />{' '}
-        <span className="text-gray-500">
-          {GLOBAL_FILTER_MULTITERM
-            ? 'Row must include all search terms'
-            : 'Row must include whole search term'}
-        </span>
+        />
       </div>
       <div className="h-2" />
       <table>
@@ -474,11 +539,6 @@ function Filter({
           placeholder="Search..."
           className="w-36 border shadow rounded"
         />
-        <br />
-        <span className="font-normal text-gray-500">
-          Cell must include whole search term. Newline in cell value will be
-          treated as space
-        </span>
       </div>
       <div className="h-1" />
     </>
