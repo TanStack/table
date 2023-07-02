@@ -27,8 +27,10 @@ const HIGHLIGHT_RANGE_END = 1
 const HIGHLIGHT_ALL = true
 // column that stores global filter meta
 const GLOBAL_FILTER_COLUMN_ID = 'vehicle'
-// row must include all search terms or must include whole search term
+// row must include all space-separated search terms or must include whole search term with spaces
 const GLOBAL_FILTER_MULTITERM = true
+// ignore newlines
+const FILTER_IGNORE_NEWLINES = false
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -73,6 +75,10 @@ const globalFilterWithHighlighting: FilterFn<any> = (
     let valueStr: string
     if (typeof value === 'string') {
       valueStr = value.toLowerCase()
+      if (!FILTER_IGNORE_NEWLINES)
+        // Replace all newlines with spaces
+        // IMPORTANT number of characters must not be changed by replace here
+        valueStr = valueStr.replace(/\s/g, ' ')
     } else {
       continue
     }
@@ -104,6 +110,10 @@ const columnFilterWithHighlighting: FilterFn<any> = (
   let valueStr: string
   if (typeof value === 'string') {
     valueStr = value.toLowerCase()
+    if (!FILTER_IGNORE_NEWLINES)
+      // Replace all newlines with spaces
+      // IMPORTANT number of characters must not be changed by replace here
+      valueStr = valueStr.replace(/\s/g, ' ')
   } else {
     return false
   }
@@ -203,16 +213,8 @@ function splitHighlights(
   ]
 }
 
-const createAccessorFn =
-  (key: keyof VehicleOwner) => (originalRow: VehicleOwner) =>
-    // Replace all newlines with spaces
-    // IMPORTANT number of characters must not be changed by replace here
-    originalRow[key].replace(/\s/g, ' ')
-
-const createCellRenderer =
-  (key: keyof VehicleOwner) => (props: CellContext<VehicleOwner, string>) =>
-    // Use original string with newlines instead of cell.getValue() with replaced newlines
-    splitHighlights(props.row.original[key], getHighlightRanges(props))
+const cellRenderer = (props: CellContext<VehicleOwner, string>) =>
+  splitHighlights(props.cell.getValue(), getHighlightRanges(props))
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -235,46 +237,39 @@ function App() {
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
     () => [
       {
-        id: 'vehicle',
-        accessorFn: createAccessorFn('vehicle'),
-        cell: createCellRenderer('vehicle'),
+        accessorKey: 'vehicle',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
       {
-        id: 'vehicleId',
-        accessorFn: createAccessorFn('vehicleId'),
-        cell: createCellRenderer('vehicleId'),
+        accessorKey: 'vehicleId',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
       {
-        id: 'vehicleRegMark',
-        accessorFn: createAccessorFn('vehicleRegMark'),
-        cell: createCellRenderer('vehicleRegMark'),
+        accessorKey: 'vehicleRegMark',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
       {
-        id: 'buyLocation',
-        accessorFn: createAccessorFn('buyLocation'),
-        cell: createCellRenderer('buyLocation'),
+        accessorKey: 'buyLocation',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
       {
-        id: 'ownerName',
-        accessorFn: createAccessorFn('ownerName'),
-        cell: createCellRenderer('ownerName'),
+        accessorKey: 'ownerName',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
       {
-        id: 'ownerContacts',
-        accessorFn: createAccessorFn('ownerContacts'),
-        cell: createCellRenderer('ownerContacts'),
+        accessorKey: 'ownerContacts',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
 
       {
-        id: 'comment',
-        accessorFn: createAccessorFn('comment'),
-        cell: createCellRenderer('comment'),
+        accessorKey: 'comment',
+        cell: cellRenderer,
         filterFn: columnFilterWithHighlighting,
       },
     ],
