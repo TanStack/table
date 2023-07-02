@@ -169,6 +169,8 @@ function splitHighlights(
 
 const createAccessorFn =
   (key: keyof VehicleOwner) => (originalRow: VehicleOwner) =>
+    // Replace all newlines with spaces
+    // IMPORTANT number of characters must not be changed by replace here
     originalRow[key].replace(/\s/g, ' ')
 
 const createCellRenderer =
