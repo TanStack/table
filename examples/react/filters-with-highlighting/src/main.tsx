@@ -24,8 +24,8 @@ type HighlightRange = [number, number]
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
-    globalRanges?: { [colId: string]: HighlightRange[] }
-    range?: HighlightRange
+    globalFilterRanges?: { [colId: string]: HighlightRange[] }
+    columnFilterRange?: HighlightRange
   }
 }
 
@@ -42,7 +42,7 @@ const globalFilterWithHighlighting: FilterFn<any> = (
   const allCols = row.getVisibleCells().map(cell => cell.column.id)
   const filterTerms = filterValue as string[]
   const filterTermsFound = new Array(filterTerms.length).fill(false)
-  const globalRanges: FilterMeta['globalRanges'] = {}
+  const globalFilterRanges: FilterMeta['globalFilterRanges'] = {}
   for (const colId of allCols) {
     const value = row.getValue(colId)
     let valueStr: string
@@ -51,7 +51,7 @@ const globalFilterWithHighlighting: FilterFn<any> = (
     } else {
       continue
     }
-    globalRanges[colId] = filterTerms
+    globalFilterRanges[colId] = filterTerms
       .map((term, index) => {
         const startIndex = valueStr.indexOf(term)
         if (startIndex >= 0) {
@@ -63,8 +63,8 @@ const globalFilterWithHighlighting: FilterFn<any> = (
   }
   // Row is passing filter only when all filter terms found in this row
   if (filterTermsFound.every(found => found)) {
-    // Store globalRanges in filter meta for globalFilterColumnId column
-    addMeta({ globalRanges })
+    // Store globalFilterRanges in filter meta for globalFilterColumnId column
+    addMeta({ globalFilterRanges })
     return true
   }
   return false
@@ -87,7 +87,7 @@ const columnFilterWithHighlighting: FilterFn<any> = (
   const startIndex = valueStr.indexOf(term)
   if (startIndex >= 0) {
     // Store range in filter meta for current column
-    addMeta({ range: [startIndex, startIndex + term.length] })
+    addMeta({ columnFilterRange: [startIndex, startIndex + term.length] })
     return true
   }
   return false
@@ -95,23 +95,23 @@ const columnFilterWithHighlighting: FilterFn<any> = (
 
 function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
   // Highlight ranges stored in columnFiltersMeta
-  // Column with id=globalFilterColumnId stores globalRanges from global filter
+  // Column with id=globalFilterColumnId stores globalFilterRanges from global filter
   // Other columns store a single range from individual column filter
   // Meta may remain even if filter is empty so we have to check if filter is empty
-  const globalRanges = cellContext.table.getState().globalFilter
-    ? cellContext.row.columnFiltersMeta[globalFilterColumnId]?.globalRanges?.[
-        cellContext.column.id
-      ]
+  const globalFilterRanges = cellContext.table.getState().globalFilter
+    ? cellContext.row.columnFiltersMeta[globalFilterColumnId]
+        ?.globalFilterRanges?.[cellContext.column.id]
     : undefined
-  const range = cellContext.column.getFilterValue()
-    ? cellContext.row.columnFiltersMeta[cellContext.column.id]?.range
+  const columnFilterRange = cellContext.column.getFilterValue()
+    ? cellContext.row.columnFiltersMeta[cellContext.column.id]
+        ?.columnFilterRange
     : undefined
 
   // Concat all ranges in one array
   // Filter out all undefined ranges
   // Sort ranges by start index
   let ranges = (
-    [...(globalRanges ?? []), range].filter(
+    [...(globalFilterRanges ?? []), columnFilterRange].filter(
       range => !!range
     ) as HighlightRange[]
   ).sort((rangeA, rangeB) => rangeA[0] - rangeB[0])
@@ -196,6 +196,7 @@ function App() {
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
     () => [
       {
+        // Special hidden column for multiterm global filter
         id: globalFilterColumnId,
         accessorFn: (originalRow, index) => index,
       },
