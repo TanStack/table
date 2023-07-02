@@ -10,19 +10,15 @@ import {
   ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
   getPaginationRowModel,
-  getSortedRowModel,
   FilterFn,
   ColumnDef,
   flexRender,
   CellContext,
+  FilterMeta,
 } from '@tanstack/react-table'
 
 import { makeData, VehicleOwner } from './makeData'
-import { FilterMeta } from '@tanstack/react-table'
 
 type HighlightRange = [number, number]
 
@@ -262,11 +258,7 @@ function App() {
     globalFilterFn: globalFilterWithHighlighting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
