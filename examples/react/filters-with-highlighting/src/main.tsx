@@ -92,7 +92,10 @@ const globalFilterWithHighlighting: FilterFn<any> = function (
   const filterConfig = filterValue as ResolvedGlobalFilterWithHighlightingConfig
   // Perform global filtering only when columnId=ResolvedGlobalFilterWithHighlightingConfig.columnId
   if (columnId !== filterConfig.columnId) return false
-  const allCols = row.getVisibleCells().map(cell => cell.column.id)
+  const allCols = row
+    .getAllCells()
+    .filter(cell => cell.column.getCanGlobalFilter())
+    .map(cell => cell.column.id)
   const filterTerms = filterConfig.resolvedTerms
   const filterTermsFound = new Array(filterTerms.length).fill(false)
   const globalFilterRanges: FilterMeta['globalFilterRanges'] = {}
