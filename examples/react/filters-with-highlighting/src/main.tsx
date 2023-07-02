@@ -99,13 +99,25 @@ const globalFilterWithHighlighting: FilterFn<any> = (
   return false
 }
 
+globalFilterWithHighlighting.resolveFilterValue = (value: string) => {
+  if (GLOBAL_FILTER_MULTITERM) {
+    const filter = value
+      .split(/\s+/)
+      .filter(term => !!term)
+      .map(term => term.toLowerCase())
+    if (filter.length === 0) throw new Error('Filter cannot be empty')
+    return filter
+  }
+  return [value.toLowerCase()]
+}
+
 const columnFilterWithHighlighting: FilterFn<any> = (
   row,
   columnId,
   filterValue,
   addMeta
 ) => {
-  const term = filterValue.toLowerCase()
+  const term = filterValue as string
   const value = row.getValue(columnId)
   let valueStr: string
   if (typeof value === 'string') {
@@ -124,6 +136,10 @@ const columnFilterWithHighlighting: FilterFn<any> = (
     return true
   }
   return false
+}
+
+columnFilterWithHighlighting.resolveFilterValue = (value: string) => {
+  return value.toLowerCase()
 }
 
 function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
@@ -222,17 +238,7 @@ function App() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
-  const [globalFilterString, setGlobalFilterString] = React.useState('')
-  const globalFilter = React.useMemo(() => {
-    if (GLOBAL_FILTER_MULTITERM) {
-      const filter = globalFilterString
-        .split(/\s+/)
-        .filter(term => !!term)
-        .map(term => term.toLowerCase())
-      return filter.length ? filter : undefined
-    }
-    return globalFilterString ? [globalFilterString] : undefined
-  }, [globalFilterString])
+  const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
     () => [
@@ -300,8 +306,15 @@ function App() {
     <div className="p-2">
       <div>
         <DebouncedInput
-          value={globalFilterString ?? ''}
-          onChange={value => setGlobalFilterString(String(value))}
+          value={globalFilter}
+          onChange={value => {
+            const valueStr = String(value)
+            if (GLOBAL_FILTER_MULTITERM) {
+              setGlobalFilter(/^\s+$/.test(valueStr) ? '' : valueStr)
+            } else {
+              setGlobalFilter(valueStr)
+            }
+          }}
           className="p-2 font-lg shadow border border-block"
           placeholder="Search all columns..."
         />{' '}
