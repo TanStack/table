@@ -175,6 +175,7 @@ const createAccessorFn =
 
 const createCellRenderer =
   (key: keyof VehicleOwner) => (props: CellContext<VehicleOwner, string>) =>
+    // Use original string with newlines instead of cell.getValue() with replaced newlines
     splitHighlights(props.row.original[key], getHighlightRanges(props))
 
 function App() {
