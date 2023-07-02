@@ -169,7 +169,7 @@ function splitHighlights(
 
 const createAccessorFn =
   (key: keyof VehicleOwner) => (originalRow: VehicleOwner) =>
-    originalRow[key].replace(/\s+/g, ' ')
+    originalRow[key].replace(/\s/g, ' ')
 
 const createCellRenderer =
   (key: keyof VehicleOwner) => (props: CellContext<VehicleOwner, string>) =>
