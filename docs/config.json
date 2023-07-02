@@ -250,6 +250,10 @@
           "label": "Filters"
         },
         {
+          "to": "examples/react/filters-with-highlighting",
+          "label": "Filters With Highlighting"
+        },
+        {
           "to": "examples/react/fully-controlled",
           "label": "Fully Controlled"
         },

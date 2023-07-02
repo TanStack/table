@@ -31,6 +31,7 @@
     "./examples/react/editable-data",
     "./examples/react/expanding",
     "./examples/react/filters",
+    "./examples/react/filters-with-highlighting",
     "./examples/react/full-width-resizable-table",
     "./examples/react/full-width-table",
     "./examples/react/fully-controlled",
