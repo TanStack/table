@@ -23,8 +23,12 @@ import { makeData, VehicleOwner } from './makeData'
 type HighlightRange = [number, number]
 const HIGHLIGHT_RANGE_START = 0
 const HIGHLIGHT_RANGE_END = 1
-const HIGHLIGHT_ALL = true // highlight all or first only
+// highlight all or first only
+const HIGHLIGHT_ALL = true
+// column that stores global filter meta
 const GLOBAL_FILTER_COLUMN_ID = 'vehicle'
+// row must include all search terms or must include whole search term
+const GLOBAL_FILTER_MULTITERM = true
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -58,7 +62,7 @@ const globalFilterWithHighlighting: FilterFn<any> = (
   filterValue,
   addMeta
 ) => {
-  // Perform global filtering only when columnId=globalFilterColumnId
+  // Perform global filtering only when columnId=GLOBAL_FILTER_COLUMN_ID
   if (columnId !== GLOBAL_FILTER_COLUMN_ID) return false
   const allCols = row.getVisibleCells().map(cell => cell.column.id)
   const filterTerms = filterValue as string[]
@@ -82,8 +86,8 @@ const globalFilterWithHighlighting: FilterFn<any> = (
   }
   // Row is passing filter only when all filter terms found in this row
   if (filterTermsFound.every(found => found)) {
-    // Store globalFilterRanges in filter meta for globalFilterColumnId column
-    addMeta({ globalFilterRanges })
+    // Store globalFilterRanges in filter meta for GLOBAL_FILTER_COLUMN_ID column
+    addMeta({ ...row.columnFiltersMeta[columnId], globalFilterRanges })
     return true
   }
   return false
@@ -106,7 +110,7 @@ const columnFilterWithHighlighting: FilterFn<any> = (
   const ranges = find(valueStr, term, HIGHLIGHT_ALL)
   if (ranges.length) {
     // Store ranges in filter meta for current column
-    addMeta({ columnFilterRanges: ranges })
+    addMeta({ ...row.columnFiltersMeta[columnId], columnFilterRanges: ranges })
     return true
   }
   return false
@@ -114,7 +118,7 @@ const columnFilterWithHighlighting: FilterFn<any> = (
 
 function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
   // Highlight ranges stored in columnFiltersMeta
-  // Column with id=globalFilterColumnId stores globalFilterRanges from global filter
+  // Column with id=GLOBAL_FILTER_COLUMN_ID stores globalFilterRanges from global filter
   // Other columns store ranges from individual column filter
   // Meta may remain even if filter is empty so we have to check if filter is empty
   const globalFilterRanges = cellContext.table.getState().globalFilter
@@ -218,11 +222,14 @@ function App() {
   )
   const [globalFilterString, setGlobalFilterString] = React.useState('')
   const globalFilter = React.useMemo(() => {
-    const filter = globalFilterString
-      .split(/\s+/)
-      .filter(term => !!term)
-      .map(term => term.toLowerCase())
-    return filter.length ? filter : undefined
+    if (GLOBAL_FILTER_MULTITERM) {
+      const filter = globalFilterString
+        .split(/\s+/)
+        .filter(term => !!term)
+        .map(term => term.toLowerCase())
+      return filter.length ? filter : undefined
+    }
+    return globalFilterString ? [globalFilterString] : undefined
   }, [globalFilterString])
 
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
@@ -303,7 +310,11 @@ function App() {
           className="p-2 font-lg shadow border border-block"
           placeholder="Search all columns..."
         />{' '}
-        <span className="text-gray-500">Row must include all search terms</span>
+        <span className="text-gray-500">
+          {GLOBAL_FILTER_MULTITERM
+            ? 'Row must include all search terms'
+            : 'Row must include whole search term'}
+        </span>
       </div>
       <div className="h-2" />
       <table>
