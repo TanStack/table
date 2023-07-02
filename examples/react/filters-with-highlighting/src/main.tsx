@@ -23,15 +23,35 @@ import { makeData, VehicleOwner } from './makeData'
 type HighlightRange = [number, number]
 const HIGHLIGHT_RANGE_START = 0
 const HIGHLIGHT_RANGE_END = 1
+const HIGHLIGHT_ALL = true // highlight all or first only
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
     globalFilterRanges?: { [colId: string]: HighlightRange[] }
-    columnFilterRange?: HighlightRange
+    columnFilterRanges?: HighlightRange[]
   }
 }
 
 const globalFilterColumnId = 'globalFilter'
+
+function find(value: string, term: string, all: boolean = false) {
+  const ranges: HighlightRange[] = []
+  let position = 0
+  while (true) {
+    const startIndex = value.indexOf(term, position)
+    if (startIndex >= 0) {
+      ranges.push([startIndex, startIndex + term.length])
+      if (all) {
+        position = startIndex + term.length
+      } else {
+        break
+      }
+    } else {
+      break
+    }
+  }
+  return ranges
+}
 
 const globalFilterWithHighlighting: FilterFn<any> = (
   row,
@@ -55,13 +75,11 @@ const globalFilterWithHighlighting: FilterFn<any> = (
     }
     globalFilterRanges[colId] = filterTerms
       .map((term, index) => {
-        const startIndex = valueStr.indexOf(term)
-        if (startIndex >= 0) {
-          filterTermsFound[index] = true
-          return [startIndex, startIndex + term.length]
-        }
+        const ranges = find(valueStr, term, HIGHLIGHT_ALL)
+        if (ranges.length) filterTermsFound[index] = true
+        return ranges
       })
-      .filter(range => !!range) as HighlightRange[]
+      .flat()
   }
   // Row is passing filter only when all filter terms found in this row
   if (filterTermsFound.every(found => found)) {
@@ -86,10 +104,10 @@ const columnFilterWithHighlighting: FilterFn<any> = (
   } else {
     return false
   }
-  const startIndex = valueStr.indexOf(term)
-  if (startIndex >= 0) {
-    // Store range in filter meta for current column
-    addMeta({ columnFilterRange: [startIndex, startIndex + term.length] })
+  const ranges = find(valueStr, term, HIGHLIGHT_ALL)
+  if (ranges.length) {
+    // Store ranges in filter meta for current column
+    addMeta({ columnFilterRanges: ranges })
     return true
   }
   return false
@@ -98,22 +116,22 @@ const columnFilterWithHighlighting: FilterFn<any> = (
 function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
   // Highlight ranges stored in columnFiltersMeta
   // Column with id=globalFilterColumnId stores globalFilterRanges from global filter
-  // Other columns store a single range from individual column filter
+  // Other columns store ranges from individual column filter
   // Meta may remain even if filter is empty so we have to check if filter is empty
   const globalFilterRanges = cellContext.table.getState().globalFilter
     ? cellContext.row.columnFiltersMeta[globalFilterColumnId]
         ?.globalFilterRanges?.[cellContext.column.id]
     : undefined
-  const columnFilterRange = cellContext.column.getFilterValue()
+  const columnFilterRanges = cellContext.column.getFilterValue()
     ? cellContext.row.columnFiltersMeta[cellContext.column.id]
-        ?.columnFilterRange
+        ?.columnFilterRanges
     : undefined
 
   // Concat all ranges in one array
   // Filter out all undefined ranges
   // Sort ranges by start index
   let ranges = (
-    [...(globalFilterRanges ?? []), columnFilterRange].filter(
+    [...(globalFilterRanges ?? []), ...(columnFilterRanges ?? [])].filter(
       range => !!range
     ) as HighlightRange[]
   ).sort(
