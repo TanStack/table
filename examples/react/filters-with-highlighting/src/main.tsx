@@ -24,6 +24,7 @@ type HighlightRange = [number, number]
 const HIGHLIGHT_RANGE_START = 0
 const HIGHLIGHT_RANGE_END = 1
 const HIGHLIGHT_ALL = true // highlight all or first only
+const GLOBAL_FILTER_COLUMN_ID = 'vehicle'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -31,8 +32,6 @@ declare module '@tanstack/table-core' {
     columnFilterRanges?: HighlightRange[]
   }
 }
-
-const globalFilterColumnId = 'globalFilter'
 
 function find(value: string, term: string, all: boolean = false) {
   const ranges: HighlightRange[] = []
@@ -60,7 +59,7 @@ const globalFilterWithHighlighting: FilterFn<any> = (
   addMeta
 ) => {
   // Perform global filtering only when columnId=globalFilterColumnId
-  if (columnId !== globalFilterColumnId) return false
+  if (columnId !== GLOBAL_FILTER_COLUMN_ID) return false
   const allCols = row.getVisibleCells().map(cell => cell.column.id)
   const filterTerms = filterValue as string[]
   const filterTermsFound = new Array(filterTerms.length).fill(false)
@@ -119,7 +118,7 @@ function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
   // Other columns store ranges from individual column filter
   // Meta may remain even if filter is empty so we have to check if filter is empty
   const globalFilterRanges = cellContext.table.getState().globalFilter
-    ? cellContext.row.columnFiltersMeta[globalFilterColumnId]
+    ? cellContext.row.columnFiltersMeta[GLOBAL_FILTER_COLUMN_ID]
         ?.globalFilterRanges?.[cellContext.column.id]
     : undefined
   const columnFilterRanges = cellContext.column.getFilterValue()
@@ -229,11 +228,6 @@ function App() {
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
     () => [
       {
-        // Special hidden column for multiterm global filter
-        id: globalFilterColumnId,
-        accessorFn: (originalRow, index) => index,
-      },
-      {
         id: 'vehicle',
         accessorFn: createAccessorFn('vehicle'),
         cell: createCellRenderer('vehicle'),
@@ -287,7 +281,6 @@ function App() {
     data,
     columns,
     state: {
-      columnVisibility: { [globalFilterColumnId]: false },
       columnFilters,
       globalFilter,
     },
