@@ -21,6 +21,8 @@ import {
 import { makeData, VehicleOwner } from './makeData'
 
 type HighlightRange = [number, number]
+const HIGHLIGHT_RANGE_START = 0
+const HIGHLIGHT_RANGE_END = 1
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -114,15 +116,21 @@ function getHighlightRanges(cellContext: CellContext<VehicleOwner, string>) {
     [...(globalFilterRanges ?? []), columnFilterRange].filter(
       range => !!range
     ) as HighlightRange[]
-  ).sort((rangeA, rangeB) => rangeA[0] - rangeB[0])
+  ).sort(
+    (rangeA, rangeB) =>
+      rangeA[HIGHLIGHT_RANGE_START] - rangeB[HIGHLIGHT_RANGE_START]
+  )
 
   // Merge ranges if they overlap
   let i = 0
   let j = 1
   while (j < ranges.length) {
-    if (ranges[i]![1] >= ranges[j]![0]) {
-      ranges[j]![0] = ranges[i]![0]
-      ranges[j]![1] = Math.max(ranges[i]![1], ranges[j]![1])
+    if (ranges[i]![HIGHLIGHT_RANGE_END] >= ranges[j]![HIGHLIGHT_RANGE_START]) {
+      ranges[j]![HIGHLIGHT_RANGE_START] = ranges[i]![HIGHLIGHT_RANGE_START]
+      ranges[j]![HIGHLIGHT_RANGE_END] = Math.max(
+        ranges[i]![HIGHLIGHT_RANGE_END],
+        ranges[j]![HIGHLIGHT_RANGE_END]
+      )
       ranges.splice(i, 1)
     } else {
       i++
@@ -145,20 +153,27 @@ function splitHighlights(
 ) {
   const handleRange = ignoreNewlines ? (range: string) => range : splitNewlines
   const lastRange = value.slice(
-    ranges.length > 0 ? ranges[ranges.length - 1]![1] : 0
+    ranges.length > 0 ? ranges[ranges.length - 1]![HIGHLIGHT_RANGE_END] : 0
   )
   return [
     ...ranges.map((range, index, array) => {
       const spanRange = value.slice(
-        index > 0 ? array[index - 1]![1] : 0,
-        range[0]
+        index > 0 ? array[index - 1]![HIGHLIGHT_RANGE_END] : 0,
+        range[HIGHLIGHT_RANGE_START]
       )
-      const markRange = value.slice(range[0], range[1])
+      const markRange = value.slice(
+        range[HIGHLIGHT_RANGE_START],
+        range[HIGHLIGHT_RANGE_END]
+      )
       return [
-        <span key={`span-${range[0]}-${range[1]}`}>
+        <span
+          key={`span-${range[HIGHLIGHT_RANGE_START]}-${range[HIGHLIGHT_RANGE_END]}`}
+        >
           {handleRange(spanRange)}
         </span>,
-        <mark key={`mark-${range[0]}-${range[1]}`}>
+        <mark
+          key={`mark-${range[HIGHLIGHT_RANGE_START]}-${range[HIGHLIGHT_RANGE_END]}`}
+        >
           {handleRange(markRange)}
         </mark>,
       ]
