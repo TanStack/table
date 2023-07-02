@@ -26,7 +26,7 @@ const HIGHLIGHT_RANGE_END = 1
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
-    globalFilterRanges?: { [colId: string]: HighlightRange[] }
+    globalFilterRanges?: HighlightRange[]
     columnFilterRanges?: HighlightRange[]
   }
 }
@@ -51,13 +51,12 @@ interface GlobalFilterWithHighlightingConfig {
   highlightAll: boolean
   /** Ignore newlines so newline character in cell value will not be treated as space */
   ignoreNewlines: boolean
-  /** Column that stores global filter meta */
-  columnId: string
   /** Row must include all space-separated search terms or must include whole search term with spaces */
   multiterm: boolean
   /** Search term */
   term: string
 }
+
 interface ResolvedGlobalFilterWithHighlightingConfig
   extends GlobalFilterWithHighlightingConfig {
   /** Resoled search terms */
@@ -89,16 +88,17 @@ const globalFilterWithHighlighting: FilterFn<any> = function (
   filterValue,
   addMeta
 ) {
+  const allCells = row.getAllCells()
+  const firstColumnId = allCells.find(cell => cell.column.getCanGlobalFilter())
+    ?.column.id
+  // Perform global filtering only when columnId=firstColumnId
+  if (columnId !== firstColumnId) return false
   const filterConfig = filterValue as ResolvedGlobalFilterWithHighlightingConfig
-  // Perform global filtering only when columnId=ResolvedGlobalFilterWithHighlightingConfig.columnId
-  if (columnId !== filterConfig.columnId) return false
-  const allCols = row
-    .getAllCells()
+  const allCols = allCells
     .filter(cell => cell.column.getCanGlobalFilter())
     .map(cell => cell.column.id)
   const filterTerms = filterConfig.resolvedTerms
   const filterTermsFound = new Array(filterTerms.length).fill(false)
-  const globalFilterRanges: FilterMeta['globalFilterRanges'] = {}
   for (const colId of allCols) {
     const value = row.getValue(colId)
     let valueStr: string
@@ -111,21 +111,20 @@ const globalFilterWithHighlighting: FilterFn<any> = function (
     } else {
       continue
     }
-    globalFilterRanges[colId] = filterTerms
-      .map((term, index) => {
-        const ranges = find(valueStr, term, filterConfig.highlightAll)
-        if (ranges.length) filterTermsFound[index] = true
-        return ranges
-      })
-      .flat()
+    // Hacky way to change filter meta for different columns
+    row.columnFiltersMeta[colId] = {
+      ...row.columnFiltersMeta[colId],
+      globalFilterRanges: filterTerms
+        .map((term, index) => {
+          const ranges = find(valueStr, term, filterConfig.highlightAll)
+          if (ranges.length) filterTermsFound[index] = true
+          return ranges
+        })
+        .flat(),
+    }
   }
   // Row is passing filter only when all filter terms found in this row
-  if (filterTermsFound.every(found => found)) {
-    // Store globalFilterRanges in filter meta for GlobalFilterWithHighlighting.columnId column
-    addMeta({ ...row.columnFiltersMeta[columnId], globalFilterRanges })
-    return true
-  }
-  return false
+  return filterTermsFound.every(found => found)
 }
 
 globalFilterWithHighlighting.resolveFilterValue = function (
@@ -188,8 +187,8 @@ function getHighlightRanges(cellContext: CellContext<any, string>) {
     | GlobalFilterWithHighlightingConfig
     | undefined
   const globalFilterRanges = globalFilter?.term
-    ? cellContext.row.columnFiltersMeta[globalFilter.columnId]
-        ?.globalFilterRanges?.[cellContext.column.id]
+    ? cellContext.row.columnFiltersMeta[cellContext.column.id]
+        ?.globalFilterRanges
     : undefined
   const columnFilter = cellContext.column.getFilterValue() as
     | ColumnFilterWithHighlightingConfig
@@ -200,13 +199,11 @@ function getHighlightRanges(cellContext: CellContext<any, string>) {
     : undefined
 
   // Concat all ranges in one array
-  // Filter out all undefined ranges
   // Sort ranges by start index
-  let ranges = (
-    [...(globalFilterRanges ?? []), ...(columnFilterRanges ?? [])].filter(
-      range => !!range
-    ) as HighlightRange[]
-  ).sort(
+  let ranges = [
+    ...(globalFilterRanges ?? []),
+    ...(columnFilterRanges ?? []),
+  ].sort(
     (rangeA, rangeB) =>
       rangeA[HIGHLIGHT_RANGE_START] - rangeB[HIGHLIGHT_RANGE_START]
   )
@@ -415,7 +412,6 @@ function App() {
             setGlobalFilter(
               good
                 ? {
-                    columnId: 'vehicle',
                     highlightAll,
                     ignoreNewlines,
                     multiterm,
