@@ -160,8 +160,8 @@ columnFilterWithHighlighting.resolveFilterValue = function (
 
 export function getHighlightRanges(cellContext: CellContext<any, string>) {
   // Highlight ranges stored in columnFiltersMeta
-  // Column with id=GlobalFilterWithHighlightingConfig.columnId stores globalFilterRanges from global filter
-  // Other columns store ranges from individual column filter
+  // globalFilterRanges from global filter
+  // columnFilterRanges from individual column filter
   // Meta may remain even if filter is empty so we have to check if filter is empty
   const globalFilter = cellContext.table.getState().globalFilter as
     | GlobalFilterWithHighlightingConfig
