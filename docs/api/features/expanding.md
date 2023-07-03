@@ -47,7 +47,9 @@ Returns whether the row can be expanded.
 getToggleExpandedHandler: () => () => void
 ```
 
-Returns a function that can be used to toggle the expanded state of the row. This function can be used to bind to an event handler to a button.
+Returns a function that can be used to toggle the expanded state of the row. This function can be used to bind to an event handler to a button. 
+
+If the row does not have subrows, it cannot be expanded. In that case, the returned function will do nothing, and the expanded state of the row will remain unchanged.
 
 ## Table Options
 
