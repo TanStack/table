@@ -22,7 +22,7 @@ export interface ColumnFilterWithHighlightingConfig {
 
 interface ResolvedColumnFilterWithHighlightingConfig
   extends ColumnFilterWithHighlightingConfig {
-  /** Resoled search term */
+  /** Resolved search term */
   resolvedTerm: string
 }
 
@@ -39,7 +39,7 @@ export interface GlobalFilterWithHighlightingConfig {
 
 interface ResolvedGlobalFilterWithHighlightingConfig
   extends GlobalFilterWithHighlightingConfig {
-  /** Resoled search terms */
+  /** Resolved search terms */
   resolvedTerms: string[]
 }
 
