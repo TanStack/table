@@ -87,7 +87,7 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
       if (!filterConfig.ignoreNewlines)
         // Replace all newlines with spaces
         // IMPORTANT number of characters must not be changed by replace here
-        valueStr = valueStr.replace(/\s/g, ' ')
+        valueStr = valueStr.replace(/\n/g, ' ')
     } else {
       continue
     }
@@ -136,7 +136,7 @@ export const columnFilterWithHighlighting: FilterFn<any> = function (
     if (!filterConfig.ignoreNewlines)
       // Replace all newlines with spaces
       // IMPORTANT number of characters must not be changed by replace here
-      valueStr = valueStr.replace(/\s/g, ' ')
+      valueStr = valueStr.replace(/\n/g, ' ')
   } else {
     return false
   }
