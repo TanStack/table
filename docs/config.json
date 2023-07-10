@@ -365,6 +365,10 @@
           "label": "Pagination"
         },
         {
+          "to": "examples/vue/pagination-controlled",
+          "label": "Pagination Controlled"
+        },
+        {
           "to": "examples/vue/sorting",
           "label": "Sorting"
         }
