@@ -10,6 +10,7 @@ import { mergeProxy } from './merge-proxy'
 export * from '@tanstack/table-core'
 
 export const FlexRender = defineComponent({
+  name: "FlexRender",
   props: ['render', 'props'],
   setup: (props: { render: any; props: any }) => {
     return () => {
