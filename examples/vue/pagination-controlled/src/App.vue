@@ -92,62 +92,36 @@ function handlePageSizeChange(e) {
   <div class="p-2">
     <table>
       <thead>
-        <tr
-          v-for="headerGroup in table.getHeaderGroups()"
-          :key="headerGroup.id"
-        >
-          <th
-            v-for="header in headerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
-          >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
-            />
+        <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <th v-for="header in headerGroup.headers" :key="header.id" :colSpan="header.colSpan">
+            <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header"
+              :props="header.getContext()" />
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+            <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
           </td>
         </tr>
       </tbody>
     </table>
     <div className="h-2">
       <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          @click="() => table.setPageIndex(0)"
-          :disabled="!table.getCanPreviousPage()"
-        >
+        <button className="border rounded p-1" @click="() => table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()">
           «
         </button>
-        <button
-          className="border rounded p-1"
-          @click="() => table.previousPage()"
-          :disabled="!table.getCanPreviousPage()"
-        >
+        <button className="border rounded p-1" @click="() => table.previousPage()"
+          :disabled="!table.getCanPreviousPage()">
           ‹
         </button>
-        <button
-          className="border rounded p-1"
-          @click="() => table.nextPage()"
-          :disabled="!table.getCanNextPage()"
-        >
+        <button className="border rounded p-1" @click="() => table.nextPage()" :disabled="!table.getCanNextPage()">
           ›
         </button>
-        <button
-          className="border rounded p-1"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
+        <button className="border rounded p-1" @click="() => table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanNextPage()">
           »
         </button>
         <span className="flex items-center gap-1">
@@ -159,22 +133,10 @@ function handlePageSizeChange(e) {
         </span>
         <span className="flex items-center gap-1">
           | Go to page:
-          <input
-            type="number"
-            :value="goToPageNumber"
-            @change="handleGoToPage"
-            className="border p-1 rounded w-16"
-          />
+          <input type="number" :value="goToPageNumber" @change="handleGoToPage" className="border p-1 rounded w-16" />
         </span>
-        <select
-          :value="table.getState().pagination.pageSize"
-          @change="handlePageSizeChange"
-        >
-          <option
-            :key="pageSize"
-            :value="pageSize"
-            v-for="pageSize in pageSizes"
-          >
+        <select :value="table.getState().pagination.pageSize" @change="handlePageSizeChange">
+          <option :key="pageSize" :value="pageSize" v-for="pageSize in pageSizes">
             Show {{ pageSize }}
           </option>
         </select>
