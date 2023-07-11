@@ -1,0 +1,474 @@
+// Styles
+import AddUserStyle from "../src/styles/AddUser.module.css";
+import AdminStyle from "../src/styles/admin.module.css";
+
+// Router
+import Router, { useRouter } from "next/router";
+
+// Toast
+import { toast } from "react-toastify";
+import ToastMsg from "./UI/ToastMsg";
+
+// Modal
+import RoleModal from "./RoleModal";
+
+// Hooks and more
+import React, { useEffect, useState, useMemo } from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  getPaginationRowModel,
+} from "@tanstack/react-table";
+import Image from "next/image";
+
+// Table component
+const BasicTable = () => {
+  // Router
+  const router = useRouter();
+
+  // STATES
+  const [showModal, setShowModal] = useState(false);
+  // Deleted row email
+
+  const [deleteRowEmail, setDeleteRowEmail] = useState("");
+  const [refetchTriggered, setRefetchTriggered] = useState(false);
+  const [usersIsLoading, setUsersIsLoading] = useState(false);
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
+
+  // state forkeeping track of which rows where clicked for delete button
+  const [deletingRows, setDeletingRows] = useState([]);
+
+  const [users, setUsers] = useState([]);
+
+  //Function called by modal to delete the user (stored in state- deleteRowEmail)
+  const handleConfirmDelete = async () => {
+    // Add the email of the row being deleted to deletingRows
+    setDeletingRows([...deletingRows, deleteRowEmail]);
+    setIsDeletingUser(true);
+
+    setShowModal(false);
+
+    // Update users on frontend perspective (when user clicked on confirm delete in modal) to avoid refetching on succesfully deleting , and only refetch from server if the user deletion fails
+    setUsers(users.filter((user) => user.email !== deleteRowEmail));
+    // Implement your delete logic here using the deleteRowEmail
+    const formattedEmailToBeDeleted = JSON.stringify({
+      email: deleteRowEmail,
+    });
+    try {
+      const delResponse = await fetch("http://localhost:9002/user", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: formattedEmailToBeDeleted,
+      });
+
+      if (delResponse.status === 200) {
+        console.log(delResponse.status);
+        // Handle success
+        // setSuccessMessage("User created");
+
+        const successToast = () => {
+          toast.success(
+            <ToastMsg
+              user_email={deleteRowEmail}
+              message={" User was Successfully Deleted"}
+            />
+          );
+        };
+        successToast();
+
+        // Remove deletedemail from deletingrows
+        setDeletingRows(
+          deletingRows.filter((email) => email !== deleteRowEmail)
+        );
+        setDeleteRowEmail("");
+      } else {
+        // Handle error
+        const errorResponse = await delResponse.json(); // Parse the error response from the API
+        throw new Error(errorResponse.message || "Request failed");
+      }
+    } catch (err) {
+      // Handle error
+      // setError(err.message || "An error occurred. Please try again later.");
+      setRefetchTriggered(!refetchTriggered);
+      const errorToast = () => {
+        toast.error(
+          <ToastMsg user_email={deleteRowEmail} message={err.message} />
+        );
+      };
+      errorToast();
+    } finally {
+      // if(deletingRows.length === 0 ){
+      // console.log("refetching initiated");
+      // }
+      setIsDeletingUser(false);
+      setShowModal(false);
+      // setIsLoading(false);
+    }
+
+    // console.log(`Deleting row with email ${deleteRowEmail}`);
+    // console.log(`is deleting: ${isDeletingUser}`);
+    // console.log(`is refeteched Trigger : ${refetchTriggered}`);
+
+    setIsDeletingUser(false);
+    setShowModal(false); // Close the modal
+  };
+
+  // Cancel DELETE USER-On modal
+  const handleCancelDelete = () => {
+    setDeleteRowEmail(""); //set back the value to empty
+    setShowModal(false); // Close the modal
+  };
+
+  // Fetch Users when the page loads and when refetchTriggered states value gets changed
+  const fetchUsers = async () => {
+    setUsersIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:9002/user");
+      if (response.status === 200) {
+        const usersData = await response.json();
+        const transformedUsers = usersData.flatMap((us) => {
+          //Transforming because the roles property in incoming data is an array, therefore creating multiple rows in table for multiple value inside the array
+          return us.roles.map((role) => {
+            return { ...us, roles: role };
+          });
+        });
+        // console.log(usersData);
+        // console.log(transformedUsers);
+        setUsers(transformedUsers);
+        setUsersIsLoading(false);
+      } else if (response.status === 401) {
+        //user is unauthorized
+        const errorToastFetch = () => {
+          toast.error(<ToastMsg message={"Unauthorized access"} />);
+        };
+        errorToastFetch();
+        router.push("/login");
+      } else {
+        // Handle error
+        const errorResponseForFetchingUsers = await response.json(); // Parse the error response from the API
+        throw new Error(
+          errorResponseForFetchingUsers.message || "Request failed Try again"
+        );
+      }
+    } catch (err) {
+      const errorToastFetchUnauthorized = () => {
+        toast.error(
+          <ToastMsg user_email={deleteRowEmail} message={err.message} />
+        );
+      };
+      errorToastFetchUnauthorized();
+    } finally {
+      setUsersIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [refetchTriggered]);
+
+  //  =========================Returning dynamic style-depends on value of the cell ==========================
+  const getRolesCellClassName = (value, text) => {
+    // console.log(value);
+    // console.log('=======================');
+    // console.log(text);
+    if (value === "admin") {
+      return `${AdminStyle.adminRoleBadge}`;
+    } else if (value === "user") {
+      return `${AdminStyle.userRoleBadge}`;
+    }
+    // Add more conditions for other roles if needed
+
+    return ""; // Default CSS class if no specific condition is met
+  };
+
+  // Checking is this row being deleted
+  const isRowDeleting = (email) => deletingRows.includes(email);
+
+  // Data definition
+  const data = useMemo(() => users, [users]);
+
+  // Column definition
+  const columns = useMemo(
+    () => [
+      {
+        header: "Name",
+        accessorFn: (row) => `${row.first_name} ${row.last_name}`,
+        // Adds classes to this particular column but not to header of that column
+        columnClassName: "font-medium text-sm text-gray-900  ",
+      },
+      {
+        header: "Email",
+        accessorKey: "email",
+        // Adds classes to this particular column but not headers
+        columnClassName: AdminStyle.emailColumn,
+      },
+      {
+        header: "Roles",
+        accessorKey: "roles",
+        cellClassName: (cell) => getRolesCellClassName(cell.value), //WORKING ONE Apply the cell class dynamically all cells gets checked
+      },
+
+      {
+        header: "Actions",
+        id: "Actions",
+        cell: ({ row }) => (
+          <button
+            //  Disabled is applied if somehow ui (user doesnt get deleted on frontend view) doesnt change when user clicked confirm delete(modal) so delete function will be disabled and if there are multiple delete requests all of them will be disabled
+
+            // This function checks is current email in deletingRows(state variable) array , if it is in the deletingRows array then it keeps them disabled --only if when that row is still showing to the user(i.e state updation for users has failed somehow)
+            disabled={isRowDeleting(row.original.email)}
+            className={
+              isRowDeleting(row.original.email) ? "cursor-not-allowed" : ""
+            }
+            // disabled={isDeletingUser && row.original.email === deleteRowEmail}
+            // className={isDeletingUser && row.original.email === deleteRowEmail ? 'cursor-not-allowed' :''}
+            onClick={() => {
+              // alert("message: " + row.original.email);
+              console.log("When user clicked delete icon" + row.original.email);
+              setDeleteRowEmail(row.original.email);
+              setShowModal(true);
+            }} //row.original.email is used to display the email property of the current row's data object
+          >
+            <Image
+              src="./assets/images/delete-icon.svg"
+              alt="My Image"
+              width={15}
+              height={15}
+            />
+            {/* {console.log(row.original.email)} */}
+          </button>
+        ),
+      },
+    ],
+    [isRowDeleting]
+  );
+
+  // Table definition
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  return (
+    <div className="container mx-auto">
+      {/* {console.log(users)}
+    {console.log(users.filter((user) => user.email !== "o.ashiq@tachyonsecurity.eu"))} */}
+      <table className="w-full ">
+        <thead className={AdminStyle.borderBtm}>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className={`  border-btm font-medium text-xs leading-[18px] text-gray-600 text-left gap-3 px-6 py-2 `}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+
+        <tbody>
+          {usersIsLoading ? (
+            <>
+              {Array(10)
+                .fill()
+                .map((_, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    role="status"
+                    className="max-w-md h-[72px] p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6  dark:border-gray-700"
+                  >
+                    {Array(4)
+                      .fill()
+                      .map((_, colIndex) => (
+                        <td key={colIndex} className="px-6">
+                          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                        </td>
+                      ))}
+                  </tr>
+                ))}
+              {/* Skelton structure copy it no. of time u need it
+              <tr key={rowIndex}
+                role="status"
+                className="max-w-md h-[72px] p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6  dark:border-gray-700"
+              >
+                <td className="px-6">
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                </td>
+                <td className="px-6">
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-40 mb-2.5"></div>
+                </td>
+                <td className="px-6">
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                </td>
+                <td className="px-6">
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                </td>
+                
+              </tr> */}
+            </>
+          ) : (
+            table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className={` ${AdminStyle.borderBtm} w-full table-hea border-btm  box-border items-center`}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className={`${AdminStyle} pl-6  gap-3 py-6 ${cell.column.columnDef.columnClassName} `}
+                  >
+                    {/* To get the actual value 
+                {console.log(cell.getValue())} */}
+
+                    {/* ================================Conditionally add styles=============================== */}
+                    <span
+                      className={`${getRolesCellClassName(cell.getValue())}`}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </span>
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+          {}
+        </tbody>
+      </table>
+      <div className={`${AdminStyle.borderBtm} border-btm w-full h-full py-2`}>
+        <div className="  flex flex-row justify-between py-5 px-6">
+          <button
+            className={`${AdminStyle.paginationBtn} ${
+              table.getCanPreviousPage()
+                ? " text-gray-700 bg-[#FFFFFF]"
+                : "cursor-not-allowed  bg-gray-200"
+            } px-3 py-2 gap-2  download-btn flex flex-row  items-center justify-center box-border   text-sm font-semibold `}
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <Image
+              src="./assets/images/left-arrow.svg"
+              alt="My Image"
+              width={11}
+              height={11}
+            />
+            <p> Previous</p>
+          </button>
+
+          {/* Individual page nos */}
+          <div className="flex flex-row not-italic font-medium text-sm text-center text-gray-800">
+            {/* {console.log(table.getPageCount())} 
+          {console.log(
+            Array.from(
+              { length: table.getPageCount() },
+              (_, index) => index + 1
+            )
+          )} */}
+            {/* NOTE: 
+            1: pageIndex-is 1 less than the value for that page eg. if you
+            are on page 1 the pageIndex for that would be 0 
+
+            2: table.getPageCount() total no of pages lets say there are 5 pages
+            that would be in pagination, which means table.getPageCount() will
+            return number 5 
+            
+            3: when u use array.from() with length its value will start
+            from 0 but we want it to start from 1 as our 1st pageno will be 1
+            not 0 therefore we use map function inside of it not the outer
+            map,talking about the one that is  passed as a 2nd arg to from() method,so as to update the elements inside(from say [0,1,2,....] to [1,2,3,...]) and then put them in array
+
+            4:The code is optimized by using the `filter()` method to only include pages that are adjacent to the current page or the last page. This will reduce the number of buttons that are rendered, which can improve performance.
+
+            5: For button click event we are setting the pageIndex from the page eg if page no 5 is clicked we are setting up pageIndex state via setPageIndex(page - 1) to 4 and thus re rending our data in table */}
+            {Array.from(
+              { length: table.getPageCount() },
+              (_, index) => index + 1
+            )
+              .filter(
+                (page) =>
+                  Math.abs(table.getState().pagination.pageIndex + 1 - page) <=2 //Number- here Represents the how many page nos t be displayed to both sides of the current no if the exist eg if you are on page 5 , your pagination buttons would be 3 4 5 6 7 when its 2 , if its 1 it would be 4 5 6
+              )
+              .map((page) => (
+                <div className="px-3 py-2">
+                  <button
+                    key={page}
+                    onClick={() => table.setPageIndex(page - 1)}
+                    className={
+                      table.getState().pagination.pageIndex + 1 === page
+                        ? " text-purple-700"
+                        : " text-black"
+                    }
+                  >
+                    <span className="">{page}</span>
+                  </button>
+                </div>
+              ))}
+          </div>
+
+          {/* NEXT BUTTON  */}
+          <button
+            className={`${AdminStyle.paginationBtn} ${
+              table.getCanNextPage()
+                ? " text-gray-700 bg-[#FFFFFF]"
+                : "cursor-not-allowed  bg-gray-200"
+            } px-3 py-2 gap-2  download-btn flex flex-row  items-center justify-center box-border   text-sm font-semibold  `}
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <p> Next</p>
+            <Image
+              src="./assets/images/right-arrow.svg"
+              alt="My Image"
+              width={11}
+              height={11}
+            />
+          </button>
+        </div>
+      </div>
+      <RoleModal
+        customStyle={"top-50vh"}
+        show={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <div className=" w-full flex flex-col gap-8 px-5 pt-2 ">
+          <section className={` px-4 py-5   w-full`}>
+            <div className="text-lg mb-4 text-center">
+              Are you sure you want to delete this item?
+            </div>
+            <div className="flex justify-center gap-2">
+              <button
+                className={
+                  " px-4 py-1.5 bg-[#7F56D9] rounded-lg font-semibold shadow-md  text-base text-[#FFFFFF]"
+                }
+                onClick={handleConfirmDelete}
+              >
+                Yes, Delete
+              </button>
+              <button
+                className={`px-4  py-1.5 bg-[#FFFFFF] rounded-lg font-semibold shadow-md  text-base text-gray-700`}
+                onClick={handleCancelDelete}
+              >
+                Cancel
+              </button>
+            </div>
+          </section>
+        </div>
+      </RoleModal>
+    </div>
+  );
+};
+
+export default BasicTable;
