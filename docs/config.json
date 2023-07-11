@@ -361,6 +361,10 @@
           "label": "Column Pinning"
         },
         {
+          "to": "examples/vue/filters",
+          "label": "Filters"
+        },
+        {
           "to": "examples/vue/pagination",
           "label": "Pagination"
         },
