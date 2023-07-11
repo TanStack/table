@@ -1,0 +1,23 @@
+{
+  "name": "tanstack-table-example-vue-sorting-controlled",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@tanstack/vue-table": "8.9.3",
+    "vue": "^3.2.33"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.27",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "prettier": "^3.0.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.9",
+    "vue-tsc": "^0.34.7"
+  }
+}

@@ -367,6 +367,10 @@
         {
           "to": "examples/vue/sorting",
           "label": "Sorting"
+        },
+        {
+          "to": "examples/vue/sorting-controlled",
+          "label": "Sorting Controlled"
         }
       ]
     },
