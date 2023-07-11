@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./build/types",
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ]
   },
   "files": [
