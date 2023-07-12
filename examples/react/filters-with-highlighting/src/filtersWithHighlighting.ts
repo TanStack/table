@@ -96,6 +96,7 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
       ...row.columnFiltersMeta[colId],
       globalFilterRanges: filterTerms
         .map((term, index) => {
+          if (!filterConfig.highlightAll && filterTermsFound[index]) return []
           const ranges = find(valueStr, term, filterConfig.highlightAll)
           if (ranges.length) filterTermsFound[index] = true
           return ranges
