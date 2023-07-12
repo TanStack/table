@@ -96,17 +96,19 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
     } else {
       continue
     }
+    const globalFilterRanges = []
+    for (let i = 0; i < filterTerms.length; ++i) {
+      if (!filterConfig.highlightAll && filterTermsFound[i]) continue
+      const ranges = find(valueStr, filterTerms[i]!, filterConfig.highlightAll)
+      if (ranges.length) {
+        filterTermsFound[i] = true
+        globalFilterRanges.push(...ranges)
+      }
+    }
     // Hacky way to change filter meta for different columns
     row.columnFiltersMeta[colId] = {
       ...row.columnFiltersMeta[colId],
-      globalFilterRanges: filterTerms
-        .map((term, index) => {
-          if (!filterConfig.highlightAll && filterTermsFound[index]) return []
-          const ranges = find(valueStr, term, filterConfig.highlightAll)
-          if (ranges.length) filterTermsFound[index] = true
-          return ranges
-        })
-        .flat(),
+      globalFilterRanges,
     }
   }
   // Row is passing filter only when all filter terms found in this row
