@@ -106,12 +106,10 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
         globalFilterRanges.push(...ranges)
       }
     }
-    if (globalFilterRanges) {
-      // Hacky way to change filter meta for different columns
-      row.columnFiltersMeta[colId] = {
-        ...row.columnFiltersMeta[colId],
-        globalFilterRanges,
-      }
+    // Hacky way to change filter meta for different columns
+    row.columnFiltersMeta[colId] = {
+      ...row.columnFiltersMeta[colId],
+      globalFilterRanges,
     }
   }
   // Row is passing filter only when all filter terms found in this row
