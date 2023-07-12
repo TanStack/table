@@ -45,23 +45,22 @@ interface ResolvedGlobalFilterWithHighlightingConfig
   extends GlobalFilterWithHighlightingConfig {
   /** Resolved search terms */
   resolvedTerms: string[]
+  /** Helper array that indicates if each term from resolvedTerms is found in row */
+  termsFound: boolean[]
+  /** Caches column list for better performance */
+  columns?: string[]
 }
 
 function find(value: string, term: string, all: boolean = false) {
-  const ranges: HighlightRange[] = []
+  let ranges: HighlightRange[] | undefined = undefined
   let position = 0
   while (true) {
     const startIndex = value.indexOf(term, position)
-    if (startIndex >= 0) {
-      ranges.push([startIndex, startIndex + term.length])
-      if (all) {
-        position = startIndex + term.length
-      } else {
-        break
-      }
-    } else {
-      break
-    }
+    if (startIndex < 0) break
+    if (!ranges) ranges = []
+    ranges.push([startIndex, startIndex + term.length])
+    if (!all) break
+    position = startIndex + term.length
   }
   return ranges
 }
@@ -72,17 +71,18 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
   filterValue,
   addMeta
 ) {
-  const allCells = row.getAllCells()
-  const firstColumnId = allCells.find(cell => cell.column.getCanGlobalFilter())
-    ?.column.id
-  // Perform global filtering only when columnId=firstColumnId
-  if (columnId !== firstColumnId) return false
   const filterConfig = filterValue as ResolvedGlobalFilterWithHighlightingConfig
-  const allCols = allCells
-    .filter(cell => cell.column.getCanGlobalFilter())
-    .map(cell => cell.column.id)
+  if (!filterConfig.columns) {
+    filterConfig.columns = row
+      .getAllCells()
+      .filter(cell => cell.column.getCanGlobalFilter())
+      .map(cell => cell.column.id)
+  }
+  const allCols = filterConfig.columns
+  // Perform global filtering only when columnId=firstColumnId
+  if (columnId !== allCols[0]) return false
   const filterTerms = filterConfig.resolvedTerms
-  const filterTermsFound = new Array(filterTerms.length).fill(false)
+  const filterTermsFound = filterConfig.termsFound.fill(false)
   for (const colId of allCols) {
     const value = row.getValue(colId)
     let valueStr: string
@@ -96,12 +96,13 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
     } else {
       continue
     }
-    const globalFilterRanges = []
+    let globalFilterRanges: HighlightRange[] | undefined = undefined
     for (let i = 0; i < filterTerms.length; ++i) {
       if (!filterConfig.highlightAll && filterTermsFound[i]) continue
       const ranges = find(valueStr, filterTerms[i]!, filterConfig.highlightAll)
-      if (ranges.length) {
+      if (ranges) {
         filterTermsFound[i] = true
+        if (!globalFilterRanges) globalFilterRanges = []
         globalFilterRanges.push(...ranges)
       }
     }
@@ -126,6 +127,7 @@ globalFilterWithHighlighting.resolveFilterValue = function (
       resolvedTerms: filterValue.caseSensitive
         ? filter
         : filter.map(term => term.toLowerCase()),
+      termsFound: new Array(filter.length).fill(false),
     }
   }
   return {
@@ -135,6 +137,7 @@ globalFilterWithHighlighting.resolveFilterValue = function (
         ? filterValue.term
         : filterValue.term.toLowerCase(),
     ],
+    termsFound: [false],
   }
 }
 
@@ -159,7 +162,7 @@ export const columnFilterWithHighlighting: FilterFn<any> = function (
     return false
   }
   const ranges = find(valueStr, term, filterConfig.highlightAll)
-  if (ranges.length) {
+  if (ranges) {
     // Store ranges in filter meta for current column
     addMeta({
       ...row.columnFiltersMeta[columnId],
