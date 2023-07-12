@@ -34,6 +34,7 @@ function App() {
     GlobalFilterWithHighlightingConfig | undefined
   >(undefined)
 
+  const [caseSensitive, setCaseSensitive] = React.useState<boolean>(false)
   const [highlightAll, setHighlightAll] = React.useState<boolean>(true)
   const [ignoreNewlines, setIgnoreNewlines] = React.useState<boolean>(false)
   const [multiterm, setGlobalFilterMultiterm] = React.useState<boolean>(true)
@@ -43,14 +44,16 @@ function App() {
       prev.map(filter => ({
         ...filter,
         value: filter.value
-          ? { ...filter.value, highlightAll, ignoreNewlines }
+          ? { ...filter.value, caseSensitive, highlightAll, ignoreNewlines }
           : undefined,
       }))
     )
     setGlobalFilter(prev =>
-      prev ? { ...prev, highlightAll, ignoreNewlines, multiterm } : undefined
+      prev
+        ? { ...prev, caseSensitive, highlightAll, ignoreNewlines, multiterm }
+        : undefined
     )
-  }, [highlightAll, ignoreNewlines, multiterm])
+  }, [caseSensitive, highlightAll, ignoreNewlines, multiterm])
 
   const columns = React.useMemo<ColumnDef<VehicleOwner, any>[]>(
     () => [
@@ -120,6 +123,17 @@ function App() {
         <div>
           <input
             type="checkbox"
+            id="caseSensitiveCheckbox"
+            checked={caseSensitive}
+            onChange={() => {
+              setCaseSensitive(prev => !prev)
+            }}
+          />{' '}
+          <label htmlFor="caseSensitiveCheckbox">Case Sensitive</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
             id="highlightAllCheckbox"
             checked={highlightAll}
             onChange={() => {
@@ -149,7 +163,7 @@ function App() {
             }}
           />{' '}
           <label htmlFor="globalFilterMultitermCheckbox">
-            Global Filter Multiterm
+            Multiterm (Global Filter)
           </label>
         </div>
       </div>
@@ -164,6 +178,7 @@ function App() {
             setGlobalFilter(
               good
                 ? {
+                    caseSensitive,
                     highlightAll,
                     ignoreNewlines,
                     multiterm,
@@ -197,6 +212,7 @@ function App() {
                             <Filter
                               column={header.column}
                               table={table}
+                              caseSensitive={caseSensitive}
                               highlightAll={highlightAll}
                               ignoreNewlines={ignoreNewlines}
                             />
@@ -306,11 +322,13 @@ function App() {
 function Filter({
   column,
   table,
+  caseSensitive,
   highlightAll,
   ignoreNewlines,
 }: {
   column: Column<any, unknown>
   table: Table<any>
+  caseSensitive: boolean
   highlightAll: boolean
   ignoreNewlines: boolean
 }) {
@@ -327,6 +345,7 @@ function Filter({
             column.setFilterValue(
               value
                 ? ({
+                    caseSensitive,
                     highlightAll,
                     ignoreNewlines,
                     term: value,

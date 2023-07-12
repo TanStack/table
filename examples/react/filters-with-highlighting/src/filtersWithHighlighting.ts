@@ -12,6 +12,8 @@ declare module '@tanstack/table-core' {
 }
 
 export interface ColumnFilterWithHighlightingConfig {
+  /** Case sensitive search */
+  caseSensitive: boolean
   /** Highlight all or first only */
   highlightAll: boolean
   /** Ignore newlines so newline character in cell value will not be treated as space */
@@ -27,6 +29,8 @@ interface ResolvedColumnFilterWithHighlightingConfig
 }
 
 export interface GlobalFilterWithHighlightingConfig {
+  /** Case sensitive search */
+  caseSensitive: boolean
   /** Highlight all or first only */
   highlightAll: boolean
   /** Ignore newlines so newline character in cell value will not be treated as space */
@@ -83,7 +87,8 @@ export const globalFilterWithHighlighting: FilterFn<any> = function (
     const value = row.getValue(colId)
     let valueStr: string
     if (typeof value === 'string') {
-      valueStr = value.toLowerCase()
+      valueStr = value
+      if (!filterConfig.caseSensitive) valueStr = valueStr.toLowerCase()
       if (!filterConfig.ignoreNewlines)
         // Replace all newlines with spaces
         // IMPORTANT number of characters must not be changed by replace here
@@ -112,14 +117,23 @@ globalFilterWithHighlighting.resolveFilterValue = function (
   filterValue: GlobalFilterWithHighlightingConfig
 ): ResolvedGlobalFilterWithHighlightingConfig {
   if (filterValue.multiterm) {
-    const filter = filterValue.term
-      .split(/\s+/)
-      .filter(term => !!term)
-      .map(term => term.toLowerCase())
+    const filter = filterValue.term.split(/\s+/).filter(term => !!term)
     if (filter.length === 0) throw new Error('Filter cannot be empty')
-    return { ...filterValue, resolvedTerms: filter }
+    return {
+      ...filterValue,
+      resolvedTerms: filterValue.caseSensitive
+        ? filter
+        : filter.map(term => term.toLowerCase()),
+    }
   }
-  return { ...filterValue, resolvedTerms: [filterValue.term.toLowerCase()] }
+  return {
+    ...filterValue,
+    resolvedTerms: [
+      filterValue.caseSensitive
+        ? filterValue.term
+        : filterValue.term.toLowerCase(),
+    ],
+  }
 }
 
 export const columnFilterWithHighlighting: FilterFn<any> = function (
@@ -133,7 +147,8 @@ export const columnFilterWithHighlighting: FilterFn<any> = function (
   const value = row.getValue(columnId)
   let valueStr: string
   if (typeof value === 'string') {
-    valueStr = value.toLowerCase()
+    valueStr = value
+    if (!filterConfig.caseSensitive) valueStr = valueStr.toLowerCase()
     if (!filterConfig.ignoreNewlines)
       // Replace all newlines with spaces
       // IMPORTANT number of characters must not be changed by replace here
@@ -156,7 +171,12 @@ export const columnFilterWithHighlighting: FilterFn<any> = function (
 columnFilterWithHighlighting.resolveFilterValue = function (
   filterValue: ColumnFilterWithHighlightingConfig
 ): ResolvedColumnFilterWithHighlightingConfig {
-  return { ...filterValue, resolvedTerm: filterValue.term.toLowerCase() }
+  return {
+    ...filterValue,
+    resolvedTerm: filterValue.caseSensitive
+      ? filterValue.term
+      : filterValue.term.toLowerCase(),
+  }
 }
 
 export function getHighlightRanges(cellContext: CellContext<any, string>) {
