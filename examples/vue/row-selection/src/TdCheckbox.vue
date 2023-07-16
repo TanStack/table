@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import {
   type Row
-} from '@tanstack/table-core/src/types';
+} from '@tanstack/table-core';
 
 const props = defineProps<{
   row: Row<unknown>;

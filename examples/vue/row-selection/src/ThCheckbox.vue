@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import {
   type Table,
-} from '@tanstack/table-core/src/types';
+} from '@tanstack/table-core';
 
 const props = defineProps<{
   table: Table<unknown>
