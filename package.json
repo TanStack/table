@@ -63,6 +63,7 @@
     "./examples/vue/sorting",
     "./examples/vue/pagination-controlled",
     "./examples/vue/pagination",
+    "./examples/vue/row-selection",
     "./packages/match-sorter-utils",
     "./packages/react-table",
     "./packages/react-table-devtools",
