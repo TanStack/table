@@ -166,7 +166,7 @@ export const Pagination: TableFeature = {
         })
       },
       setPageCount: updater =>
-        table.setPagination(old => {
+        table.setOptions(old => {
           let newPageCount = functionalUpdate(
             updater,
             table.options.pageCount ?? -1
