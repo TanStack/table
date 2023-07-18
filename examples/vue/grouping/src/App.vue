@@ -92,7 +92,12 @@ const table = useVueTable({
   },
   getExpandedRowModel: getExpandedRowModel(),
   getGroupedRowModel: getGroupedRowModel(),
-  onGroupingChange: (attr) => grouping.value = attr(grouping.value),
+  onGroupingChange: updaterOrValue => {
+    grouping.value =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(grouping.value)
+        : updaterOrValue
+  },
   getPaginationRowModel: getPaginationRowModel(),
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,
