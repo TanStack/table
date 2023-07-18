@@ -82,7 +82,12 @@ const table = useVueTable({
   },
   enableRowSelection: true, //enable row selection for all rows
   // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-  onRowSelectionChange: attrs => rowSelection.value = attrs(rowSelection.value),
+  onRowSelectionChange: updaterOrValue => {
+    rowSelection.value =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(rowSelection.value)
+        : updaterOrValue
+  },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,
   debugHeaders: true,
