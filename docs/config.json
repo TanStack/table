@@ -361,6 +361,10 @@
           "label": "Column Pinning"
         },
         {
+          "to": "examples/vue/sub-components",
+          "label": "Sub Components"
+        },
+        {
           "to": "examples/vue/pagination",
           "label": "Pagination"
         },
