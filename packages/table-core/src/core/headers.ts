@@ -82,9 +82,10 @@ function createHeader<TData extends RowData, TValue>(
 
       const recurseHeader = (h: CoreHeader<TData, any>) => {
         if (h.subHeaders && h.subHeaders.length) {
-          h.subHeaders.map(recurseHeader)
+          h.subHeaders.forEach(recurseHeader)
+        } else {
+          leafHeaders.push(h as Header<TData, unknown>)
         }
-        leafHeaders.push(h as Header<TData, unknown>)
       }
 
       recurseHeader(header)
