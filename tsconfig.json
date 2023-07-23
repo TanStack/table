@@ -35,6 +35,9 @@
       "path": "examples/react/filters/tsconfig.dev.json"
     },
     {
+      "path": "examples/react/filters-with-highlighting/tsconfig.dev.json"
+    },
+    {
       "path": "examples/react/full-width-resizable-table/tsconfig.dev.json"
     },
     {

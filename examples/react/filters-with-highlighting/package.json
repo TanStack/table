@@ -1,15 +1,16 @@
 {
-  "name": "tanstack-table-example-column-pinning",
+  "name": "tanstack-table-example-filters-with-highlighting",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview --port 3000",
+    "serve": "vite preview --port 3001",
     "start": "vite"
   },
   "dependencies": {
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.0.0",
+    "@tanstack/match-sorter-utils": "8.7.6",
     "@tanstack/react-table": "8.9.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
