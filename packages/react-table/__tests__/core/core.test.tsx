@@ -131,9 +131,9 @@ describe('core', () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </th>
                   ))}
                 </tr>
@@ -160,10 +160,7 @@ describe('core', () => {
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.footer, header.getContext())}
                     </th>
                   ))}
                 </tr>
@@ -263,5 +260,64 @@ describe('core', () => {
     expect(rowModel.rows.length).toEqual(3)
     expect(rowModel.flatRows.length).toEqual(3)
     expect(rowModel.rowsById['2']?.original).toEqual(defaultData[2])
+  })
+
+  it('renders the table if accessorKey is an array index', () => {
+    const Table = () => {
+      const table = useReactTable({
+        data: [
+          ['Hello', 'World', 'Just', 'Testing'],
+        ],
+        columns: [
+          { header: 'Name', accessorKey: 0 },
+          { header: 'Col1', accessorKey: 1 },
+          { header: 'Col2', accessorKey: 2 },
+          { header: 'Col3', accessorKey: 3 },
+        ],
+        getCoreRowModel: getCoreRowModel(),
+      });
+
+      return (
+        <table>
+          <thead data-testid="thead">
+            <tr>
+              {table.getFlatHeaders().map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody data-testid="tbody">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )
+    }
+
+    RTL.render(<Table />)
+
+    const thead = RTL.screen.getByTestId("thead")
+    expect(RTL.within(thead).getByText(/name/i)).toBeInTheDocument()
+    expect(RTL.within(thead).getByText(/col1/i)).toBeInTheDocument()
+    expect(RTL.within(thead).getByText(/col2/i)).toBeInTheDocument()
+    expect(RTL.within(thead).getByText(/col3/i)).toBeInTheDocument()
+
+    const tbody = RTL.screen.getByTestId("tbody")
+    expect(RTL.within(tbody).getByText(/hello/i)).toBeInTheDocument()
+    expect(RTL.within(tbody).getByText(/world/i)).toBeInTheDocument()
+    expect(RTL.within(tbody).getByText(/just/i)).toBeInTheDocument()
+    expect(RTL.within(tbody).getByText(/testing/i)).toBeInTheDocument()
   })
 })
