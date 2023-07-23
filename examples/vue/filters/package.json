@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-vue-pagination-controlled",
+  "name": "tanstack-table-example-vue-filters",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,7 +8,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@faker-js/faker": "^7.6.0",
     "vue": "^3.2.33",
     "@tanstack/vue-table": "8.9.3"
   },
