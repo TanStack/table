@@ -4,7 +4,7 @@ title: AG Grid - An alternative enterprise data-grid solution
 
 <p>
   <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable">
-    <img src="https://blog.ag-grid.com/content/images/2021/02/new-logo-1.png" style={{width:400}} />
+    <img src="https://blog.ag-grid.com/content/images/2021/02/new-logo-1.png" style={{ width:400 }} />
   </a>
 </p>
 
