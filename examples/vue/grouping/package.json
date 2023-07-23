@@ -1,11 +1,12 @@
 {
-  "name": "tanstack-table-example-vue-pagination-controlled",
+  "name": "tanstack-table-example-vue-grouping",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5050",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
