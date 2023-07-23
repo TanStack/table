@@ -122,6 +122,9 @@
       "path": "examples/vue/column-pinning/tsconfig.dev.json"
     },
     {
+      "path": "examples/vue/filters-controlled/tsconfig.dev.json"
+    },
+    {
       "path": "examples/vue/sorting/tsconfig.dev.json"
     },
     // {
