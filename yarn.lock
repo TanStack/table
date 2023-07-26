@@ -78,6 +78,32 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@types/prop-types@*":
+  version "15.7.5"
+  resolved "https://artifactory.secureserver.net/artifactory/api/npm/node-virt/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
+  integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+
+"@types/react-table@^6.8.5":
+  version "6.8.10"
+  resolved "https://artifactory.secureserver.net/artifactory/api/npm/node-virt/@types/react-table/-/react-table-6.8.10.tgz#77548689d217c35c39d81fe36492b649d31b7174"
+  integrity sha512-tM+yAmJtMn9dMMeo8kxgwpqnxTaoGQgZmJf3KIHFDV1tUK01YVC8Pq2xC9kvHENrQ89KXSomv8gvIkcUKQPJnw==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*":
+  version "18.2.17"
+  resolved "https://artifactory.secureserver.net/artifactory/api/npm/node-virt/@types/react/-/react-18.2.17.tgz#baa565b17ddb649c2dac85b5eaf9e9a1fe0f3b4e"
+  integrity sha512-u+e7OlgPPh+aryjOm5UJMX32OvB2E3QASOAqVMY6Ahs90djagxwv2ya0IctglNbNTexC12qCSMZG47KPfy1hAA==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/scheduler@*":
+  version "0.16.3"
+  resolved "https://artifactory.secureserver.net/artifactory/api/npm/node-virt/@types/scheduler/-/scheduler-0.16.3.tgz#cef09e3ec9af1d63d2a6cc5b383a737e24e6dcf5"
+  integrity sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -1280,6 +1306,11 @@ cryptiles@2.x.x:
 css-parse@1.7.x:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/css-parse/-/css-parse-1.7.0.tgz#321f6cf73782a6ff751111390fc05e2c657d8c9b"
+
+csstype@^3.0.2:
+  version "3.1.2"
+  resolved "https://artifactory.secureserver.net/artifactory/api/npm/node-virt/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
+  integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
