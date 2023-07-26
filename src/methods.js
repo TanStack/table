@@ -229,7 +229,6 @@ export default Base =>
           [nestingLevelKey]: level,
         }
         allDecoratedColumns.forEach(column => {
-          if (column.expander) return
           row[column.id] = column.accessor(d)
         })
         if (row[subRowsKey]) {
