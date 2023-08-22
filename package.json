@@ -36,7 +36,7 @@
     "./examples/react/fully-controlled",
     "./examples/react/grouping",
     "./examples/react/kitchen-sink",
-    "./examples/react/mui-pagination",
+    "./examples/react/material-ui-pagination",
     "./examples/react/pagination",
     "./examples/react/pagination-controlled",
     "./examples/react/row-dnd",
