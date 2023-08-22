@@ -1,20 +1,20 @@
 import { functionalUpdate, memo, RequiredKeys } from '../utils'
 
 import {
-  Updater,
-  TableOptionsResolved,
-  TableState,
-  Table,
-  InitialTableState,
-  Row,
   Column,
-  RowModel,
   ColumnDef,
-  TableOptions,
-  RowData,
-  TableMeta,
   ColumnDefResolved,
   GroupColumnDef,
+  InitialTableState,
+  Row,
+  RowData,
+  RowModel,
+  Table,
+  TableMeta,
+  TableOptions,
+  TableOptionsResolved,
+  TableState,
+  Updater,
 } from '../types'
 
 //
@@ -65,7 +65,7 @@ export interface CoreTableState {}
 export interface CoreOptions<TData extends RowData> {
   data: TData[]
   state: Partial<TableState>
-  onStateChange: (updater: Updater<TableState>) => void
+  onStateChange: (updater: Updater<Partial<TableState>>) => void
   debugAll?: boolean
   debugTable?: boolean
   debugHeaders?: boolean
@@ -87,12 +87,12 @@ export interface CoreOptions<TData extends RowData> {
 }
 
 export interface CoreInstance<TData extends RowData> {
-  initialState: TableState
+  initialState: Partial<TableState>
   reset: () => void
   options: RequiredKeys<TableOptionsResolved<TData>, 'state'>
   setOptions: (newOptions: Updater<TableOptionsResolved<TData>>) => void
-  getState: () => TableState
-  setState: (updater: Updater<TableState>) => void
+  getState: () => Partial<TableState>
+  setState: (updater: Updater<Partial<TableState>>) => void
   _features: readonly TableFeature[]
   _queue: (cb: () => void) => void
   _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
@@ -188,10 +188,10 @@ export function createTable<TData extends RowData>(
     },
 
     getState: () => {
-      return table.options.state as TableState
+      return table.options.state
     },
 
-    setState: (updater: Updater<TableState>) => {
+    setState: (updater) => {
       table.options.onStateChange?.(updater)
     },
 
