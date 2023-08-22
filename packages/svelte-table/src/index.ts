@@ -5,6 +5,7 @@ import {
   TableOptionsResolved,
 } from '@tanstack/table-core'
 import Placeholder from './placeholder'
+import type { ComponentType } from 'svelte'
 import { SvelteComponent } from 'svelte/internal'
 import { readable, writable, derived, Readable, get } from 'svelte/store'
 import { renderComponent } from './render-component'
@@ -44,7 +45,7 @@ function wrapInPlaceholder(content: any) {
   return renderComponent(Placeholder, { content })
 }
 
-export function flexRender(component: any, props: any) {
+export function flexRender(component: any, props: any): ComponentType | null  {
   if (!component) return null
 
   if (isSvelteComponent(component)) {
@@ -63,7 +64,7 @@ export function flexRender(component: any, props: any) {
   }
 
   return wrapInPlaceholder(component)
-}
+} 
 
 type ReadableOrVal<T> = T | Readable<T>
 
