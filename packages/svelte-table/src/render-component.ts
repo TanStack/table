@@ -64,7 +64,7 @@ function renderClient<T>(
         undefined
       )
     }
-  }
+  } as ComponentType
 }
 
 function renderServer<T>(
@@ -82,7 +82,7 @@ function renderServer<T>(
     }
   )
 
-  return WrapperComp
+  return WrapperComp as unknown as ComponentType
 }
 
 export const renderComponent =
