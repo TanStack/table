@@ -45,7 +45,7 @@ function wrapInPlaceholder(content: any) {
   return renderComponent(Placeholder, { content })
 }
 
-export function flexRender(component: any, props: any): ComponentType | null  {
+export function flexRender(component: any, props: any): ComponentType | null {
   if (!component) return null
 
   if (isSvelteComponent(component)) {
@@ -64,7 +64,7 @@ export function flexRender(component: any, props: any): ComponentType | null  {
   }
 
   return wrapInPlaceholder(component)
-} 
+}
 
 type ReadableOrVal<T> = T | Readable<T>
 
