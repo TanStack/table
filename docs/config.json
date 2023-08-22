@@ -382,8 +382,8 @@
           "label": "React Bootstrap"
         },
         {
-          "to": "examples/react/mui-pagination",
-          "label": "React MUI Pagination"
+          "to": "examples/react/material-ui-pagination",
+          "label": "Material UI Pagination"
         },
         {
           "to": "examples/react/full-width-table",
