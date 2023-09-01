@@ -347,9 +347,10 @@ export function createTable<TData extends RowData>(
 
   Object.assign(table, coreInstance)
 
-  table._features.forEach(feature => {
-    return Object.assign(table, feature.createTable?.(table))
-  })
+  for (let index = 0; index < table._features.length; index++) {
+    const feature = table._features[index]
+    feature?.createTable?.(table)
+  }
 
   return table
 }

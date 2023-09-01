@@ -78,340 +78,334 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(
-    table: Table<TData>
-  ): RowSelectionInstance<TData> => {
-    return {
-      setRowSelection: updater => table.options.onRowSelectionChange?.(updater),
-      resetRowSelection: defaultState =>
-        table.setRowSelection(
-          defaultState ? {} : table.initialState.rowSelection ?? {}
-        ),
-      toggleAllRowsSelected: value => {
-        table.setRowSelection(old => {
-          value =
-            typeof value !== 'undefined' ? value : !table.getIsAllRowsSelected()
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
+    table.setRowSelection = updater =>
+      table.options.onRowSelectionChange?.(updater)
+    table.resetRowSelection = defaultState =>
+      table.setRowSelection(
+        defaultState ? {} : table.initialState.rowSelection ?? {}
+      )
+    table.toggleAllRowsSelected = value => {
+      table.setRowSelection(old => {
+        value =
+          typeof value !== 'undefined' ? value : !table.getIsAllRowsSelected()
 
-          const rowSelection = { ...old }
+        const rowSelection = { ...old }
 
-          const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
+        const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
 
-          // We don't use `mutateRowIsSelected` here for performance reasons.
-          // All of the rows are flat already, so it wouldn't be worth it
-          if (value) {
-            preGroupedFlatRows.forEach(row => {
-              if (!row.getCanSelect()) {
-                return
-              }
-              rowSelection[row.id] = true
-            })
-          } else {
-            preGroupedFlatRows.forEach(row => {
-              delete rowSelection[row.id]
-            })
-          }
-
-          return rowSelection
-        })
-      },
-      toggleAllPageRowsSelected: value =>
-        table.setRowSelection(old => {
-          const resolvedValue =
-            typeof value !== 'undefined'
-              ? value
-              : !table.getIsAllPageRowsSelected()
-
-          const rowSelection: RowSelectionState = { ...old }
-
-          table.getRowModel().rows.forEach(row => {
-            mutateRowIsSelected(rowSelection, row.id, resolvedValue, table)
+        // We don't use `mutateRowIsSelected` here for performance reasons.
+        // All of the rows are flat already, so it wouldn't be worth it
+        if (value) {
+          preGroupedFlatRows.forEach(row => {
+            if (!row.getCanSelect()) {
+              return
+            }
+            rowSelection[row.id] = true
           })
-
-          return rowSelection
-        }),
-
-      // addRowSelectionRange: rowId => {
-      //   const {
-      //     rows,
-      //     rowsById,
-      //     options: { selectGroupingRows, selectSubRows },
-      //   } = table
-
-      //   const findSelectedRow = (rows: Row[]) => {
-      //     let found
-      //     rows.find(d => {
-      //       if (d.getIsSelected()) {
-      //         found = d
-      //         return true
-      //       }
-      //       const subFound = findSelectedRow(d.subRows || [])
-      //       if (subFound) {
-      //         found = subFound
-      //         return true
-      //       }
-      //       return false
-      //     })
-      //     return found
-      //   }
-
-      //   const firstRow = findSelectedRow(rows) || rows[0]
-      //   const lastRow = rowsById[rowId]
-
-      //   let include = false
-      //   const selectedRowIds = {}
-
-      //   const addRow = (row: Row) => {
-      //     mutateRowIsSelected(selectedRowIds, row.id, true, {
-      //       rowsById,
-      //       selectGroupingRows: selectGroupingRows!,
-      //       selectSubRows: selectSubRows!,
-      //     })
-      //   }
-
-      //   table.rows.forEach(row => {
-      //     const isFirstRow = row.id === firstRow.id
-      //     const isLastRow = row.id === lastRow.id
-
-      //     if (isFirstRow || isLastRow) {
-      //       if (!include) {
-      //         include = true
-      //       } else if (include) {
-      //         addRow(row)
-      //         include = false
-      //       }
-      //     }
-
-      //     if (include) {
-      //       addRow(row)
-      //     }
-      //   })
-
-      //   table.setRowSelection(selectedRowIds)
-      // },
-      getPreSelectedRowModel: () => table.getCoreRowModel(),
-      getSelectedRowModel: memo(
-        () => [table.getState().rowSelection, table.getCoreRowModel()],
-        (rowSelection, rowModel) => {
-          if (!Object.keys(rowSelection).length) {
-            return {
-              rows: [],
-              flatRows: [],
-              rowsById: {},
-            }
-          }
-
-          return selectRowsFn(table, rowModel)
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getSelectedRowModel',
-          debug: () => table.options.debugAll ?? table.options.debugTable,
+        } else {
+          preGroupedFlatRows.forEach(row => {
+            delete rowSelection[row.id]
+          })
         }
-      ),
 
-      getFilteredSelectedRowModel: memo(
-        () => [table.getState().rowSelection, table.getFilteredRowModel()],
-        (rowSelection, rowModel) => {
-          if (!Object.keys(rowSelection).length) {
-            return {
-              rows: [],
-              flatRows: [],
-              rowsById: {},
-            }
-          }
+        return rowSelection
+      })
+    }
+    table.toggleAllPageRowsSelected = value =>
+      table.setRowSelection(old => {
+        const resolvedValue =
+          typeof value !== 'undefined'
+            ? value
+            : !table.getIsAllPageRowsSelected()
 
-          return selectRowsFn(table, rowModel)
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'production' &&
-            'getFilteredSelectedRowModel',
-          debug: () => table.options.debugAll ?? table.options.debugTable,
-        }
-      ),
+        const rowSelection: RowSelectionState = { ...old }
 
-      getGroupedSelectedRowModel: memo(
-        () => [table.getState().rowSelection, table.getSortedRowModel()],
-        (rowSelection, rowModel) => {
-          if (!Object.keys(rowSelection).length) {
-            return {
-              rows: [],
-              flatRows: [],
-              rowsById: {},
-            }
-          }
+        table.getRowModel().rows.forEach(row => {
+          mutateRowIsSelected(rowSelection, row.id, resolvedValue, table)
+        })
 
-          return selectRowsFn(table, rowModel)
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'production' &&
-            'getGroupedSelectedRowModel',
-          debug: () => table.options.debugAll ?? table.options.debugTable,
-        }
-      ),
+        return rowSelection
+      })
 
-      ///
+    // addRowSelectionRange: rowId => {
+    //   const {
+    //     rows,
+    //     rowsById,
+    //     options: { selectGroupingRows, selectSubRows },
+    //   } = table
 
-      // getGroupingRowCanSelect: rowId => {
-      //   const row = table.getRow(rowId)
+    //   const findSelectedRow = (rows: Row[]) => {
+    //     let found
+    //     rows.find(d => {
+    //       if (d.getIsSelected()) {
+    //         found = d
+    //         return true
+    //       }
+    //       const subFound = findSelectedRow(d.subRows || [])
+    //       if (subFound) {
+    //         found = subFound
+    //         return true
+    //       }
+    //       return false
+    //     })
+    //     return found
+    //   }
 
-      //   if (!row) {
-      //     throw new Error()
-      //   }
+    //   const firstRow = findSelectedRow(rows) || rows[0]
+    //   const lastRow = rowsById[rowId]
 
-      //   if (typeof table.options.enableGroupingRowSelection === 'function') {
-      //     return table.options.enableGroupingRowSelection(row)
-      //   }
+    //   let include = false
+    //   const selectedRowIds = {}
 
-      //   return table.options.enableGroupingRowSelection ?? false
-      // },
+    //   const addRow = (row: Row) => {
+    //     mutateRowIsSelected(selectedRowIds, row.id, true, {
+    //       rowsById,
+    //       selectGroupingRows: selectGroupingRows!,
+    //       selectSubRows: selectSubRows!,
+    //     })
+    //   }
 
-      getIsAllRowsSelected: () => {
-        const preGroupedFlatRows = table.getFilteredRowModel().flatRows
-        const { rowSelection } = table.getState()
+    //   table.rows.forEach(row => {
+    //     const isFirstRow = row.id === firstRow.id
+    //     const isLastRow = row.id === lastRow.id
 
-        let isAllRowsSelected = Boolean(
-          preGroupedFlatRows.length && Object.keys(rowSelection).length
-        )
+    //     if (isFirstRow || isLastRow) {
+    //       if (!include) {
+    //         include = true
+    //       } else if (include) {
+    //         addRow(row)
+    //         include = false
+    //       }
+    //     }
 
-        if (isAllRowsSelected) {
-          if (
-            preGroupedFlatRows.some(
-              row => row.getCanSelect() && !rowSelection[row.id]
-            )
-          ) {
-            isAllRowsSelected = false
+    //     if (include) {
+    //       addRow(row)
+    //     }
+    //   })
+
+    //   table.setRowSelection(selectedRowIds)
+    // },
+    table.getPreSelectedRowModel = () => table.getCoreRowModel()
+    table.getSelectedRowModel = memo(
+      () => [table.getState().rowSelection, table.getCoreRowModel()],
+      (rowSelection, rowModel) => {
+        if (!Object.keys(rowSelection).length) {
+          return {
+            rows: [],
+            flatRows: [],
+            rowsById: {},
           }
         }
 
-        return isAllRowsSelected
+        return selectRowsFn(table, rowModel)
       },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getSelectedRowModel',
+        debug: () => table.options.debugAll ?? table.options.debugTable,
+      }
+    )
 
-      getIsAllPageRowsSelected: () => {
-        const paginationFlatRows = table
-          .getPaginationRowModel()
-          .flatRows.filter(row => row.getCanSelect())
-        const { rowSelection } = table.getState()
+    table.getFilteredSelectedRowModel = memo(
+      () => [table.getState().rowSelection, table.getFilteredRowModel()],
+      (rowSelection, rowModel) => {
+        if (!Object.keys(rowSelection).length) {
+          return {
+            rows: [],
+            flatRows: [],
+            rowsById: {},
+          }
+        }
 
-        let isAllPageRowsSelected = !!paginationFlatRows.length
+        return selectRowsFn(table, rowModel)
+      },
+      {
+        key:
+          process.env.NODE_ENV === 'production' &&
+          'getFilteredSelectedRowModel',
+        debug: () => table.options.debugAll ?? table.options.debugTable,
+      }
+    )
 
+    table.getGroupedSelectedRowModel = memo(
+      () => [table.getState().rowSelection, table.getSortedRowModel()],
+      (rowSelection, rowModel) => {
+        if (!Object.keys(rowSelection).length) {
+          return {
+            rows: [],
+            flatRows: [],
+            rowsById: {},
+          }
+        }
+
+        return selectRowsFn(table, rowModel)
+      },
+      {
+        key:
+          process.env.NODE_ENV === 'production' && 'getGroupedSelectedRowModel',
+        debug: () => table.options.debugAll ?? table.options.debugTable,
+      }
+    )
+
+    ///
+
+    // getGroupingRowCanSelect: rowId => {
+    //   const row = table.getRow(rowId)
+
+    //   if (!row) {
+    //     throw new Error()
+    //   }
+
+    //   if (typeof table.options.enableGroupingRowSelection === 'function') {
+    //     return table.options.enableGroupingRowSelection(row)
+    //   }
+
+    //   return table.options.enableGroupingRowSelection ?? false
+    // },
+
+    table.getIsAllRowsSelected = () => {
+      const preGroupedFlatRows = table.getFilteredRowModel().flatRows
+      const { rowSelection } = table.getState()
+
+      let isAllRowsSelected = Boolean(
+        preGroupedFlatRows.length && Object.keys(rowSelection).length
+      )
+
+      if (isAllRowsSelected) {
         if (
-          isAllPageRowsSelected &&
-          paginationFlatRows.some(row => !rowSelection[row.id])
+          preGroupedFlatRows.some(
+            row => row.getCanSelect() && !rowSelection[row.id]
+          )
         ) {
-          isAllPageRowsSelected = false
+          isAllRowsSelected = false
         }
+      }
 
-        return isAllPageRowsSelected
-      },
+      return isAllRowsSelected
+    }
 
-      getIsSomeRowsSelected: () => {
-        const totalSelected = Object.keys(
-          table.getState().rowSelection ?? {}
-        ).length
-        return (
-          totalSelected > 0 &&
-          totalSelected < table.getFilteredRowModel().flatRows.length
+    table.getIsAllPageRowsSelected = () => {
+      const paginationFlatRows = table
+        .getPaginationRowModel()
+        .flatRows.filter(row => row.getCanSelect())
+      const { rowSelection } = table.getState()
+
+      let isAllPageRowsSelected = !!paginationFlatRows.length
+
+      if (
+        isAllPageRowsSelected &&
+        paginationFlatRows.some(row => !rowSelection[row.id])
+      ) {
+        isAllPageRowsSelected = false
+      }
+
+      return isAllPageRowsSelected
+    }
+
+    table.getIsSomeRowsSelected = () => {
+      const totalSelected = Object.keys(
+        table.getState().rowSelection ?? {}
+      ).length
+      return (
+        totalSelected > 0 &&
+        totalSelected < table.getFilteredRowModel().flatRows.length
+      )
+    }
+
+    table.getIsSomePageRowsSelected = () => {
+      const paginationFlatRows = table.getPaginationRowModel().flatRows
+      return table.getIsAllPageRowsSelected()
+        ? false
+        : paginationFlatRows
+            .filter(row => row.getCanSelect())
+            .some(d => d.getIsSelected() || d.getIsSomeSelected())
+    }
+
+    table.getToggleAllRowsSelectedHandler = () => {
+      return (e: unknown) => {
+        table.toggleAllRowsSelected(
+          ((e as MouseEvent).target as HTMLInputElement).checked
         )
-      },
+      }
+    }
 
-      getIsSomePageRowsSelected: () => {
-        const paginationFlatRows = table.getPaginationRowModel().flatRows
-        return table.getIsAllPageRowsSelected()
-          ? false
-          : paginationFlatRows
-              .filter(row => row.getCanSelect())
-              .some(d => d.getIsSelected() || d.getIsSomeSelected())
-      },
-
-      getToggleAllRowsSelectedHandler: () => {
-        return (e: unknown) => {
-          table.toggleAllRowsSelected(
-            ((e as MouseEvent).target as HTMLInputElement).checked
-          )
-        }
-      },
-
-      getToggleAllPageRowsSelectedHandler: () => {
-        return (e: unknown) => {
-          table.toggleAllPageRowsSelected(
-            ((e as MouseEvent).target as HTMLInputElement).checked
-          )
-        }
-      },
+    table.getToggleAllPageRowsSelectedHandler = () => {
+      return (e: unknown) => {
+        table.toggleAllPageRowsSelected(
+          ((e as MouseEvent).target as HTMLInputElement).checked
+        )
+      }
     }
   },
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
-  ): RowSelectionRow => {
-    return {
-      toggleSelected: value => {
-        const isSelected = row.getIsSelected()
+  ): void => {
+    row.toggleSelected = value => {
+      const isSelected = row.getIsSelected()
 
-        table.setRowSelection(old => {
-          value = typeof value !== 'undefined' ? value : !isSelected
+      table.setRowSelection(old => {
+        value = typeof value !== 'undefined' ? value : !isSelected
 
-          if (isSelected === value) {
-            return old
-          }
-
-          const selectedRowIds = { ...old }
-
-          mutateRowIsSelected(selectedRowIds, row.id, value, table)
-
-          return selectedRowIds
-        })
-      },
-      getIsSelected: () => {
-        const { rowSelection } = table.getState()
-        return isRowSelected(row, rowSelection)
-      },
-
-      getIsSomeSelected: () => {
-        const { rowSelection } = table.getState()
-        return isSubRowSelected(row, rowSelection, table) === 'some'
-      },
-
-      getIsAllSubRowsSelected: () => {
-        const { rowSelection } = table.getState()
-        return isSubRowSelected(row, rowSelection, table) === 'all'
-      },
-
-      getCanSelect: () => {
-        if (typeof table.options.enableRowSelection === 'function') {
-          return table.options.enableRowSelection(row)
+        if (isSelected === value) {
+          return old
         }
 
-        return table.options.enableRowSelection ?? true
-      },
+        const selectedRowIds = { ...old }
 
-      getCanSelectSubRows: () => {
-        if (typeof table.options.enableSubRowSelection === 'function') {
-          return table.options.enableSubRowSelection(row)
-        }
+        mutateRowIsSelected(selectedRowIds, row.id, value, table)
 
-        return table.options.enableSubRowSelection ?? true
-      },
+        return selectedRowIds
+      })
+    }
+    row.getIsSelected = () => {
+      const { rowSelection } = table.getState()
+      return isRowSelected(row, rowSelection)
+    }
 
-      getCanMultiSelect: () => {
-        if (typeof table.options.enableMultiRowSelection === 'function') {
-          return table.options.enableMultiRowSelection(row)
-        }
+    row.getIsSomeSelected = () => {
+      const { rowSelection } = table.getState()
+      return isSubRowSelected(row, rowSelection, table) === 'some'
+    }
 
-        return table.options.enableMultiRowSelection ?? true
-      },
-      getToggleSelectedHandler: () => {
-        const canSelect = row.getCanSelect()
+    row.getIsAllSubRowsSelected = () => {
+      const { rowSelection } = table.getState()
+      return isSubRowSelected(row, rowSelection, table) === 'all'
+    }
 
-        return (e: unknown) => {
-          if (!canSelect) return
-          row.toggleSelected(
-            ((e as MouseEvent).target as HTMLInputElement)?.checked
-          )
-        }
-      },
+    row.getCanSelect = () => {
+      if (typeof table.options.enableRowSelection === 'function') {
+        return table.options.enableRowSelection(row)
+      }
+
+      return table.options.enableRowSelection ?? true
+    }
+
+    row.getCanSelectSubRows = () => {
+      if (typeof table.options.enableSubRowSelection === 'function') {
+        return table.options.enableSubRowSelection(row)
+      }
+
+      return table.options.enableSubRowSelection ?? true
+    }
+
+    row.getCanMultiSelect = () => {
+      if (typeof table.options.enableMultiRowSelection === 'function') {
+        return table.options.enableMultiRowSelection(row)
+      }
+
+      return table.options.enableMultiRowSelection ?? true
+    }
+    row.getToggleSelectedHandler = () => {
+      const canSelect = row.getCanSelect()
+
+      return (e: unknown) => {
+        if (!canSelect) return
+        row.toggleSelected(
+          ((e as MouseEvent).target as HTMLInputElement)?.checked
+        )
+      }
     }
   },
 }

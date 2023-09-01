@@ -99,292 +99,276 @@ function createHeader<TData extends RowData, TValue>(
   }
 
   table._features.forEach(feature => {
-    Object.assign(header, feature.createHeader?.(header, table))
+    feature.createHeader?.(header, table)
   })
 
   return header as Header<TData, TValue>
 }
 
 export const Headers: TableFeature = {
-  createTable: <TData extends RowData>(
-    table: Table<TData>
-  ): HeadersInstance<TData> => {
-    return {
-      // Header Groups
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
+    // Header Groups
 
-      getHeaderGroups: memo(
-        () => [
-          table.getAllColumns(),
-          table.getVisibleLeafColumns(),
-          table.getState().columnPinning.left,
-          table.getState().columnPinning.right,
-        ],
-        (allColumns, leafColumns, left, right) => {
-          const leftColumns =
-            left
-              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
-              .filter(Boolean) ?? []
+    table.getHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.left,
+        table.getState().columnPinning.right,
+      ],
+      (allColumns, leafColumns, left, right) => {
+        const leftColumns =
+          left
+            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            .filter(Boolean) ?? []
 
-          const rightColumns =
-            right
-              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
-              .filter(Boolean) ?? []
+        const rightColumns =
+          right
+            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            .filter(Boolean) ?? []
 
-          const centerColumns = leafColumns.filter(
-            column => !left?.includes(column.id) && !right?.includes(column.id)
-          )
+        const centerColumns = leafColumns.filter(
+          column => !left?.includes(column.id) && !right?.includes(column.id)
+        )
 
-          const headerGroups = buildHeaderGroups(
-            allColumns,
-            [...leftColumns, ...centerColumns, ...rightColumns],
-            table
-          )
+        const headerGroups = buildHeaderGroups(
+          allColumns,
+          [...leftColumns, ...centerColumns, ...rightColumns],
+          table
+        )
 
-          return headerGroups
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getHeaderGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+        return headerGroups
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getHeaderGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getCenterHeaderGroups: memo(
-        () => [
-          table.getAllColumns(),
-          table.getVisibleLeafColumns(),
-          table.getState().columnPinning.left,
-          table.getState().columnPinning.right,
-        ],
-        (allColumns, leafColumns, left, right) => {
-          leafColumns = leafColumns.filter(
-            column => !left?.includes(column.id) && !right?.includes(column.id)
-          )
-          return buildHeaderGroups(allColumns, leafColumns, table, 'center')
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'development' && 'getCenterHeaderGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getCenterHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.left,
+        table.getState().columnPinning.right,
+      ],
+      (allColumns, leafColumns, left, right) => {
+        leafColumns = leafColumns.filter(
+          column => !left?.includes(column.id) && !right?.includes(column.id)
+        )
+        return buildHeaderGroups(allColumns, leafColumns, table, 'center')
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getCenterHeaderGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getLeftHeaderGroups: memo(
-        () => [
-          table.getAllColumns(),
-          table.getVisibleLeafColumns(),
-          table.getState().columnPinning.left,
-        ],
-        (allColumns, leafColumns, left) => {
-          const orderedLeafColumns =
-            left
-              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
-              .filter(Boolean) ?? []
+    table.getLeftHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.left,
+      ],
+      (allColumns, leafColumns, left) => {
+        const orderedLeafColumns =
+          left
+            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            .filter(Boolean) ?? []
 
-          return buildHeaderGroups(
-            allColumns,
-            orderedLeafColumns,
-            table,
-            'left'
-          )
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getRightHeaderGroups: memo(
-        () => [
-          table.getAllColumns(),
-          table.getVisibleLeafColumns(),
-          table.getState().columnPinning.right,
-        ],
-        (allColumns, leafColumns, right) => {
-          const orderedLeafColumns =
-            right
-              ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
-              .filter(Boolean) ?? []
+    table.getRightHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.right,
+      ],
+      (allColumns, leafColumns, right) => {
+        const orderedLeafColumns =
+          right
+            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            .filter(Boolean) ?? []
 
-          return buildHeaderGroups(
-            allColumns,
-            orderedLeafColumns,
-            table,
-            'right'
-          )
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      // Footer Groups
+    // Footer Groups
 
-      getFooterGroups: memo(
-        () => [table.getHeaderGroups()],
-        headerGroups => {
-          return [...headerGroups].reverse()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getFooterGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getFooterGroups = memo(
+      () => [table.getHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getFooterGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getLeftFooterGroups: memo(
-        () => [table.getLeftHeaderGroups()],
-        headerGroups => {
-          return [...headerGroups].reverse()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getLeftFooterGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getLeftFooterGroups = memo(
+      () => [table.getLeftHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getLeftFooterGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getCenterFooterGroups: memo(
-        () => [table.getCenterHeaderGroups()],
-        headerGroups => {
-          return [...headerGroups].reverse()
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'development' && 'getCenterFooterGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getCenterFooterGroups = memo(
+      () => [table.getCenterHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getCenterFooterGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getRightFooterGroups: memo(
-        () => [table.getRightHeaderGroups()],
-        headerGroups => {
-          return [...headerGroups].reverse()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getRightFooterGroups',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getRightFooterGroups = memo(
+      () => [table.getRightHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getRightFooterGroups',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      // Flat Headers
+    // Flat Headers
 
-      getFlatHeaders: memo(
-        () => [table.getHeaderGroups()],
-        headerGroups => {
-          return headerGroups
-            .map(headerGroup => {
-              return headerGroup.headers
-            })
-            .flat()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getFlatHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getFlatHeaders = memo(
+      () => [table.getHeaderGroups()],
+      headerGroups => {
+        return headerGroups
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getFlatHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getLeftFlatHeaders: memo(
-        () => [table.getLeftHeaderGroups()],
-        left => {
-          return left
-            .map(headerGroup => {
-              return headerGroup.headers
-            })
-            .flat()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getLeftFlatHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getLeftFlatHeaders = memo(
+      () => [table.getLeftHeaderGroups()],
+      left => {
+        return left
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getLeftFlatHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getCenterFlatHeaders: memo(
-        () => [table.getCenterHeaderGroups()],
-        left => {
-          return left
-            .map(headerGroup => {
-              return headerGroup.headers
-            })
-            .flat()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getCenterFlatHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getCenterFlatHeaders = memo(
+      () => [table.getCenterHeaderGroups()],
+      left => {
+        return left
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getCenterFlatHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getRightFlatHeaders: memo(
-        () => [table.getRightHeaderGroups()],
-        left => {
-          return left
-            .map(headerGroup => {
-              return headerGroup.headers
-            })
-            .flat()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getRightFlatHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getRightFlatHeaders = memo(
+      () => [table.getRightHeaderGroups()],
+      left => {
+        return left
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getRightFlatHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      // Leaf Headers
+    // Leaf Headers
 
-      getCenterLeafHeaders: memo(
-        () => [table.getCenterFlatHeaders()],
-        flatHeaders => {
-          return flatHeaders.filter(header => !header.subHeaders?.length)
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getCenterLeafHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getCenterLeafHeaders = memo(
+      () => [table.getCenterFlatHeaders()],
+      flatHeaders => {
+        return flatHeaders.filter(header => !header.subHeaders?.length)
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getCenterLeafHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getLeftLeafHeaders: memo(
-        () => [table.getLeftFlatHeaders()],
-        flatHeaders => {
-          return flatHeaders.filter(header => !header.subHeaders?.length)
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getLeftLeafHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getLeftLeafHeaders = memo(
+      () => [table.getLeftFlatHeaders()],
+      flatHeaders => {
+        return flatHeaders.filter(header => !header.subHeaders?.length)
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getLeftLeafHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getRightLeafHeaders: memo(
-        () => [table.getRightFlatHeaders()],
-        flatHeaders => {
-          return flatHeaders.filter(header => !header.subHeaders?.length)
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getRightLeafHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
+    table.getRightLeafHeaders = memo(
+      () => [table.getRightFlatHeaders()],
+      flatHeaders => {
+        return flatHeaders.filter(header => !header.subHeaders?.length)
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getRightLeafHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
 
-      getLeafHeaders: memo(
-        () => [
-          table.getLeftHeaderGroups(),
-          table.getCenterHeaderGroups(),
-          table.getRightHeaderGroups(),
-        ],
-        (left, center, right) => {
-          return [
-            ...(left[0]?.headers ?? []),
-            ...(center[0]?.headers ?? []),
-            ...(right[0]?.headers ?? []),
-          ]
-            .map(header => {
-              return header.getLeafHeaders()
-            })
-            .flat()
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getLeafHeaders',
-          debug: () => table.options.debugAll ?? table.options.debugHeaders,
-        }
-      ),
-    }
+    table.getLeafHeaders = memo(
+      () => [
+        table.getLeftHeaderGroups(),
+        table.getCenterHeaderGroups(),
+        table.getRightHeaderGroups(),
+      ],
+      (left, center, right) => {
+        return [
+          ...(left[0]?.headers ?? []),
+          ...(center[0]?.headers ?? []),
+          ...(right[0]?.headers ?? []),
+        ]
+          .map(header => {
+            return header.getLeafHeaders()
+          })
+          .flat()
+      },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getLeafHeaders',
+        debug: () => table.options.debugAll ?? table.options.debugHeaders,
+      }
+    )
   },
 }
 

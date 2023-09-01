@@ -201,262 +201,249 @@ export const Filters: TableFeature = {
   createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
     table: Table<TData>
-  ): FiltersColumn<TData> => {
-    return {
-      getAutoFilterFn: () => {
-        const firstRow = table.getCoreRowModel().flatRows[0]
+  ): void => {
+    column.getAutoFilterFn = () => {
+      const firstRow = table.getCoreRowModel().flatRows[0]
 
-        const value = firstRow?.getValue(column.id)
+      const value = firstRow?.getValue(column.id)
 
-        if (typeof value === 'string') {
-          return filterFns.includesString
-        }
+      if (typeof value === 'string') {
+        return filterFns.includesString
+      }
 
-        if (typeof value === 'number') {
-          return filterFns.inNumberRange
-        }
+      if (typeof value === 'number') {
+        return filterFns.inNumberRange
+      }
 
-        if (typeof value === 'boolean') {
-          return filterFns.equals
-        }
+      if (typeof value === 'boolean') {
+        return filterFns.equals
+      }
 
-        if (value !== null && typeof value === 'object') {
-          return filterFns.equals
-        }
+      if (value !== null && typeof value === 'object') {
+        return filterFns.equals
+      }
 
-        if (Array.isArray(value)) {
-          return filterFns.arrIncludes
-        }
+      if (Array.isArray(value)) {
+        return filterFns.arrIncludes
+      }
 
-        return filterFns.weakEquals
-      },
-      getFilterFn: () => {
-        return isFunction(column.columnDef.filterFn)
-          ? column.columnDef.filterFn
-          : column.columnDef.filterFn === 'auto'
-          ? column.getAutoFilterFn()
-          // @ts-ignore 
-          : table.options.filterFns?.[column.columnDef.filterFn as string] ??
-            filterFns[column.columnDef.filterFn as BuiltInFilterFn]
-      },
-      getCanFilter: () => {
-        return (
-          (column.columnDef.enableColumnFilter ?? true) &&
-          (table.options.enableColumnFilters ?? true) &&
-          (table.options.enableFilters ?? true) &&
-          !!column.accessorFn
-        )
-      },
-
-      getCanGlobalFilter: () => {
-        return (
-          (column.columnDef.enableGlobalFilter ?? true) &&
-          (table.options.enableGlobalFilter ?? true) &&
-          (table.options.enableFilters ?? true) &&
-          (table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
-          !!column.accessorFn
-        )
-      },
-
-      getIsFiltered: () => column.getFilterIndex() > -1,
-
-      getFilterValue: () =>
-        table.getState().columnFilters?.find(d => d.id === column.id)?.value,
-
-      getFilterIndex: () =>
-        table.getState().columnFilters?.findIndex(d => d.id === column.id) ??
-        -1,
-
-      setFilterValue: value => {
-        table.setColumnFilters(old => {
-          const filterFn = column.getFilterFn()
-          const previousfilter = old?.find(d => d.id === column.id)
-
-          const newFilter = functionalUpdate(
-            value,
-            previousfilter ? previousfilter.value : undefined
-          )
-
-          //
-          if (
-            shouldAutoRemoveFilter(
-              filterFn as FilterFn<TData>,
-              newFilter,
-              column
-            )
-          ) {
-            return old?.filter(d => d.id !== column.id) ?? []
-          }
-
-          const newFilterObj = { id: column.id, value: newFilter }
-
-          if (previousfilter) {
-            return (
-              old?.map(d => {
-                if (d.id === column.id) {
-                  return newFilterObj
-                }
-                return d
-              }) ?? []
-            )
-          }
-
-          if (old?.length) {
-            return [...old, newFilterObj]
-          }
-
-          return [newFilterObj]
-        })
-      },
-      _getFacetedRowModel:
-        table.options.getFacetedRowModel &&
-        table.options.getFacetedRowModel(table, column.id),
-      getFacetedRowModel: () => {
-        if (!column._getFacetedRowModel) {
-          return table.getPreFilteredRowModel()
-        }
-
-        return column._getFacetedRowModel()
-      },
-      _getFacetedUniqueValues:
-        table.options.getFacetedUniqueValues &&
-        table.options.getFacetedUniqueValues(table, column.id),
-      getFacetedUniqueValues: () => {
-        if (!column._getFacetedUniqueValues) {
-          return new Map()
-        }
-
-        return column._getFacetedUniqueValues()
-      },
-      _getFacetedMinMaxValues:
-        table.options.getFacetedMinMaxValues &&
-        table.options.getFacetedMinMaxValues(table, column.id),
-      getFacetedMinMaxValues: () => {
-        if (!column._getFacetedMinMaxValues) {
-          return undefined
-        }
-
-        return column._getFacetedMinMaxValues()
-      },
-      // () => [column.getFacetedRowModel()],
-      // facetedRowModel => getRowModelMinMaxValues(facetedRowModel, column.id),
+      return filterFns.weakEquals
     }
+    column.getFilterFn = () => {
+      return isFunction(column.columnDef.filterFn)
+        ? column.columnDef.filterFn
+        : column.columnDef.filterFn === 'auto'
+        ? column.getAutoFilterFn()
+        : // @ts-ignore
+          table.options.filterFns?.[column.columnDef.filterFn as string] ??
+          filterFns[column.columnDef.filterFn as BuiltInFilterFn]
+    }
+    column.getCanFilter = () => {
+      return (
+        (column.columnDef.enableColumnFilter ?? true) &&
+        (table.options.enableColumnFilters ?? true) &&
+        (table.options.enableFilters ?? true) &&
+        !!column.accessorFn
+      )
+    }
+
+    column.getCanGlobalFilter = () => {
+      return (
+        (column.columnDef.enableGlobalFilter ?? true) &&
+        (table.options.enableGlobalFilter ?? true) &&
+        (table.options.enableFilters ?? true) &&
+        (table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+        !!column.accessorFn
+      )
+    }
+
+    column.getIsFiltered = () => column.getFilterIndex() > -1
+
+    column.getFilterValue = () =>
+      table.getState().columnFilters?.find(d => d.id === column.id)?.value
+
+    column.getFilterIndex = () =>
+      table.getState().columnFilters?.findIndex(d => d.id === column.id) ?? -1
+
+    column.setFilterValue = value => {
+      table.setColumnFilters(old => {
+        const filterFn = column.getFilterFn()
+        const previousfilter = old?.find(d => d.id === column.id)
+
+        const newFilter = functionalUpdate(
+          value,
+          previousfilter ? previousfilter.value : undefined
+        )
+
+        //
+        if (
+          shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column)
+        ) {
+          return old?.filter(d => d.id !== column.id) ?? []
+        }
+
+        const newFilterObj = { id: column.id, value: newFilter }
+
+        if (previousfilter) {
+          return (
+            old?.map(d => {
+              if (d.id === column.id) {
+                return newFilterObj
+              }
+              return d
+            }) ?? []
+          )
+        }
+
+        if (old?.length) {
+          return [...old, newFilterObj]
+        }
+
+        return [newFilterObj]
+      })
+    }
+    column._getFacetedRowModel =
+      table.options.getFacetedRowModel &&
+      table.options.getFacetedRowModel(table, column.id)
+    column.getFacetedRowModel = () => {
+      if (!column._getFacetedRowModel) {
+        return table.getPreFilteredRowModel()
+      }
+
+      return column._getFacetedRowModel()
+    }
+    column._getFacetedUniqueValues =
+      table.options.getFacetedUniqueValues &&
+      table.options.getFacetedUniqueValues(table, column.id)
+    column.getFacetedUniqueValues = () => {
+      if (!column._getFacetedUniqueValues) {
+        return new Map()
+      }
+
+      return column._getFacetedUniqueValues()
+    }
+    column._getFacetedMinMaxValues =
+      table.options.getFacetedMinMaxValues &&
+      table.options.getFacetedMinMaxValues(table, column.id)
+    column.getFacetedMinMaxValues = () => {
+      if (!column._getFacetedMinMaxValues) {
+        return undefined
+      }
+
+      return column._getFacetedMinMaxValues()
+    }
+    // () => [column.getFacetedRowModel()],
+    // facetedRowModel => getRowModelMinMaxValues(facetedRowModel, column.id),
   },
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
-  ): FiltersRow<TData> => {
-    return {
-      columnFilters: {},
-      columnFiltersMeta: {},
-    }
+  ): void => {
+    row.columnFilters = {}
+    row.columnFiltersMeta = {}
   },
 
-  createTable: <TData extends RowData>(
-    table: Table<TData>
-  ): FiltersInstance<TData> => {
-    return {
-      getGlobalAutoFilterFn: () => {
-        return filterFns.includesString
-      },
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
+    table.getGlobalAutoFilterFn = () => {
+      return filterFns.includesString
+    }
 
-      getGlobalFilterFn: () => {
-        const { globalFilterFn: globalFilterFn } = table.options
+    table.getGlobalFilterFn = () => {
+      const { globalFilterFn: globalFilterFn } = table.options
 
-        return isFunction(globalFilterFn)
-          ? globalFilterFn
-          : globalFilterFn === 'auto'
-          ? table.getGlobalAutoFilterFn()
-          // @ts-ignore
-          : table.options.filterFns?.[globalFilterFn as string] ??
-            filterFns[globalFilterFn as BuiltInFilterFn]
-      },
+      return isFunction(globalFilterFn)
+        ? globalFilterFn
+        : globalFilterFn === 'auto'
+        ? table.getGlobalAutoFilterFn()
+        : // @ts-ignore
+          table.options.filterFns?.[globalFilterFn as string] ??
+          filterFns[globalFilterFn as BuiltInFilterFn]
+    }
 
-      setColumnFilters: (updater: Updater<ColumnFiltersState>) => {
-        const leafColumns = table.getAllLeafColumns()
+    table.setColumnFilters = (updater: Updater<ColumnFiltersState>) => {
+      const leafColumns = table.getAllLeafColumns()
 
-        const updateFn = (old: ColumnFiltersState) => {
-          return functionalUpdate(updater, old)?.filter(filter => {
-            const column = leafColumns.find(d => d.id === filter.id)
+      const updateFn = (old: ColumnFiltersState) => {
+        return functionalUpdate(updater, old)?.filter(filter => {
+          const column = leafColumns.find(d => d.id === filter.id)
 
-            if (column) {
-              const filterFn = column.getFilterFn()
+          if (column) {
+            const filterFn = column.getFilterFn()
 
-              if (shouldAutoRemoveFilter(filterFn, filter.value, column)) {
-                return false
-              }
+            if (shouldAutoRemoveFilter(filterFn, filter.value, column)) {
+              return false
             }
+          }
 
-            return true
-          })
-        }
+          return true
+        })
+      }
 
-        table.options.onColumnFiltersChange?.(updateFn)
-      },
+      table.options.onColumnFiltersChange?.(updateFn)
+    }
 
-      setGlobalFilter: updater => {
-        table.options.onGlobalFilterChange?.(updater)
-      },
+    table.setGlobalFilter = updater => {
+      table.options.onGlobalFilterChange?.(updater)
+    }
 
-      resetGlobalFilter: defaultState => {
-        table.setGlobalFilter(
-          defaultState ? undefined : table.initialState.globalFilter
-        )
-      },
+    table.resetGlobalFilter = defaultState => {
+      table.setGlobalFilter(
+        defaultState ? undefined : table.initialState.globalFilter
+      )
+    }
 
-      resetColumnFilters: defaultState => {
-        table.setColumnFilters(
-          defaultState ? [] : table.initialState?.columnFilters ?? []
-        )
-      },
+    table.resetColumnFilters = defaultState => {
+      table.setColumnFilters(
+        defaultState ? [] : table.initialState?.columnFilters ?? []
+      )
+    }
 
-      getPreFilteredRowModel: () => table.getCoreRowModel(),
-      getFilteredRowModel: () => {
-        if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
-          table._getFilteredRowModel = table.options.getFilteredRowModel(table)
-        }
+    table.getPreFilteredRowModel = () => table.getCoreRowModel()
+    table.getFilteredRowModel = () => {
+      if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
+        table._getFilteredRowModel = table.options.getFilteredRowModel(table)
+      }
 
-        if (table.options.manualFiltering || !table._getFilteredRowModel) {
-          return table.getPreFilteredRowModel()
-        }
+      if (table.options.manualFiltering || !table._getFilteredRowModel) {
+        return table.getPreFilteredRowModel()
+      }
 
-        return table._getFilteredRowModel()
-      },
+      return table._getFilteredRowModel()
+    }
 
-      _getGlobalFacetedRowModel:
-        table.options.getFacetedRowModel &&
-        table.options.getFacetedRowModel(table, '__global__'),
+    table._getGlobalFacetedRowModel =
+      table.options.getFacetedRowModel &&
+      table.options.getFacetedRowModel(table, '__global__')
 
-      getGlobalFacetedRowModel: () => {
-        if (table.options.manualFiltering || !table._getGlobalFacetedRowModel) {
-          return table.getPreFilteredRowModel()
-        }
+    table.getGlobalFacetedRowModel = () => {
+      if (table.options.manualFiltering || !table._getGlobalFacetedRowModel) {
+        return table.getPreFilteredRowModel()
+      }
 
-        return table._getGlobalFacetedRowModel()
-      },
+      return table._getGlobalFacetedRowModel()
+    }
 
-      _getGlobalFacetedUniqueValues:
-        table.options.getFacetedUniqueValues &&
-        table.options.getFacetedUniqueValues(table, '__global__'),
-      getGlobalFacetedUniqueValues: () => {
-        if (!table._getGlobalFacetedUniqueValues) {
-          return new Map()
-        }
+    table._getGlobalFacetedUniqueValues =
+      table.options.getFacetedUniqueValues &&
+      table.options.getFacetedUniqueValues(table, '__global__')
+    table.getGlobalFacetedUniqueValues = () => {
+      if (!table._getGlobalFacetedUniqueValues) {
+        return new Map()
+      }
 
-        return table._getGlobalFacetedUniqueValues()
-      },
+      return table._getGlobalFacetedUniqueValues()
+    }
 
-      _getGlobalFacetedMinMaxValues:
-        table.options.getFacetedMinMaxValues &&
-        table.options.getFacetedMinMaxValues(table, '__global__'),
-      getGlobalFacetedMinMaxValues: () => {
-        if (!table._getGlobalFacetedMinMaxValues) {
-          return
-        }
+    table._getGlobalFacetedMinMaxValues =
+      table.options.getFacetedMinMaxValues &&
+      table.options.getFacetedMinMaxValues(table, '__global__')
+    table.getGlobalFacetedMinMaxValues = () => {
+      if (!table._getGlobalFacetedMinMaxValues) {
+        return
+      }
 
-        return table._getGlobalFacetedMinMaxValues()
-      },
+      return table._getGlobalFacetedMinMaxValues()
     }
   },
 }
