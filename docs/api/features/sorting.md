@@ -123,15 +123,15 @@ Inverts the order of the sorting for this column. This is useful for values that
 ### `sortUndefined`
 
 ```tsx
-sortUndefined?: false | -1 | 1 // defaults to false
+sortUndefined?: false | -1 | 1 // defaults to 1
 ```
 
 - `false`
-  - Undefined values will be considered tied and need to be sorted by the next colum filter or original index (which ever applies)
+  - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
 - `-1`
-  - Undefined values will be sorted with higher priority (ascending)
+  - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1`
-  - Undefined values will be sorted with lower priority (descending)
+  - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
 
 ## Column API
 
