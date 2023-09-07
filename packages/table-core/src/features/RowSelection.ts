@@ -311,7 +311,7 @@ export const RowSelection: TableFeature = {
         ).length
         return (
           totalSelected > 0 &&
-          totalSelected < table.getFilteredRowModel().flatRows.length
+          totalSelected < table.getFilteredRowModel().flatRows.filter(row => row.getCanSelect()).length
         )
       },
 
@@ -353,7 +353,7 @@ export const RowSelection: TableFeature = {
         table.setRowSelection(old => {
           value = typeof value !== 'undefined' ? value : !isSelected
 
-          if (isSelected === value) {
+          if (row.getCanSelect() && isSelected === value) {
             return old
           }
 
@@ -512,10 +512,12 @@ export function isSubRowSelected<TData extends RowData>(
         return
       }
 
-      if (isRowSelected(subRow, selection)) {
-        someSelected = true
-      } else {
-        allChildrenSelected = false
+      if (subRow.getCanSelect()) {
+        if (isRowSelected(subRow, selection)) {
+          someSelected = true
+        } else {
+          allChildrenSelected = false
+        }
       }
     })
 
