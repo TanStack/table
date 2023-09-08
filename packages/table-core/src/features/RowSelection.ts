@@ -519,6 +519,19 @@ export function isSubRowSelected<TData extends RowData>(
           allChildrenSelected = false
         }
       }
+
+      // Check row selection of nested subrows
+      if (subRow.subRows && subRow.subRows.length) {
+        const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
+        if(subRowChildrenSelected === 'all') {
+          someSelected = true
+        } else if (subRowChildrenSelected === 'some') {
+          someSelected = true
+          allChildrenSelected = false
+        } else {
+          allChildrenSelected = false
+        }
+      }
     })
 
     return allChildrenSelected ? 'all' : someSelected ? 'some' : false
