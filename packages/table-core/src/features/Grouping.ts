@@ -135,127 +135,115 @@ export const Grouping: TableFeature = {
   createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
     table: Table<TData>
-  ): GroupingColumn<TData> => {
-    return {
-      toggleGrouping: () => {
-        table.setGrouping(old => {
-          // Find any existing grouping for this column
-          if (old?.includes(column.id)) {
-            return old.filter(d => d !== column.id)
-          }
-
-          return [...(old ?? []), column.id]
-        })
-      },
-
-      getCanGroup: () => {
-        return (
-          column.columnDef.enableGrouping ??
-          true ??
-          table.options.enableGrouping ??
-          true ??
-          !!column.accessorFn
-        )
-      },
-
-      getIsGrouped: () => {
-        return table.getState().grouping?.includes(column.id)
-      },
-
-      getGroupedIndex: () => table.getState().grouping?.indexOf(column.id),
-
-      getToggleGroupingHandler: () => {
-        const canGroup = column.getCanGroup()
-
-        return () => {
-          if (!canGroup) return
-          column.toggleGrouping()
-        }
-      },
-      getAutoAggregationFn: () => {
-        const firstRow = table.getCoreRowModel().flatRows[0]
-
-        const value = firstRow?.getValue(column.id)
-
-        if (typeof value === 'number') {
-          return aggregationFns.sum
+  ): void => {
+    column.toggleGrouping = () => {
+      table.setGrouping(old => {
+        // Find any existing grouping for this column
+        if (old?.includes(column.id)) {
+          return old.filter(d => d !== column.id)
         }
 
-        if (Object.prototype.toString.call(value) === '[object Date]') {
-          return aggregationFns.extent
-        }
-      },
-      getAggregationFn: () => {
-        if (!column) {
-          throw new Error()
-        }
+        return [...(old ?? []), column.id]
+      })
+    }
 
-        return isFunction(column.columnDef.aggregationFn)
-          ? column.columnDef.aggregationFn
-          : column.columnDef.aggregationFn === 'auto'
-          ? column.getAutoAggregationFn()
-          : table.options.aggregationFns?.[
-              column.columnDef.aggregationFn as string
-            ] ??
-            aggregationFns[
-              column.columnDef.aggregationFn as BuiltInAggregationFn
-            ]
-      },
+    column.getCanGroup = () => {
+      return (
+        column.columnDef.enableGrouping ??
+        true ??
+        table.options.enableGrouping ??
+        true ??
+        !!column.accessorFn
+      )
+    }
+
+    column.getIsGrouped = () => {
+      return table.getState().grouping?.includes(column.id)
+    }
+
+    column.getGroupedIndex = () => table.getState().grouping?.indexOf(column.id)
+
+    column.getToggleGroupingHandler = () => {
+      const canGroup = column.getCanGroup()
+
+      return () => {
+        if (!canGroup) return
+        column.toggleGrouping()
+      }
+    }
+    column.getAutoAggregationFn = () => {
+      const firstRow = table.getCoreRowModel().flatRows[0]
+
+      const value = firstRow?.getValue(column.id)
+
+      if (typeof value === 'number') {
+        return aggregationFns.sum
+      }
+
+      if (Object.prototype.toString.call(value) === '[object Date]') {
+        return aggregationFns.extent
+      }
+    }
+    column.getAggregationFn = () => {
+      if (!column) {
+        throw new Error()
+      }
+
+      return isFunction(column.columnDef.aggregationFn)
+        ? column.columnDef.aggregationFn
+        : column.columnDef.aggregationFn === 'auto'
+        ? column.getAutoAggregationFn()
+        : table.options.aggregationFns?.[
+            column.columnDef.aggregationFn as string
+          ] ??
+          aggregationFns[column.columnDef.aggregationFn as BuiltInAggregationFn]
     }
   },
 
-  createTable: <TData extends RowData>(
-    table: Table<TData>
-  ): GroupingInstance<TData> => {
-    return {
-      setGrouping: updater => table.options.onGroupingChange?.(updater),
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
+    table.setGrouping = updater => table.options.onGroupingChange?.(updater)
 
-      resetGrouping: defaultState => {
-        table.setGrouping(
-          defaultState ? [] : table.initialState?.grouping ?? []
-        )
-      },
+    table.resetGrouping = defaultState => {
+      table.setGrouping(defaultState ? [] : table.initialState?.grouping ?? [])
+    }
 
-      getPreGroupedRowModel: () => table.getFilteredRowModel(),
-      getGroupedRowModel: () => {
-        if (!table._getGroupedRowModel && table.options.getGroupedRowModel) {
-          table._getGroupedRowModel = table.options.getGroupedRowModel(table)
-        }
+    table.getPreGroupedRowModel = () => table.getFilteredRowModel()
+    table.getGroupedRowModel = () => {
+      if (!table._getGroupedRowModel && table.options.getGroupedRowModel) {
+        table._getGroupedRowModel = table.options.getGroupedRowModel(table)
+      }
 
-        if (table.options.manualGrouping || !table._getGroupedRowModel) {
-          return table.getPreGroupedRowModel()
-        }
+      if (table.options.manualGrouping || !table._getGroupedRowModel) {
+        return table.getPreGroupedRowModel()
+      }
 
-        return table._getGroupedRowModel()
-      },
+      return table._getGroupedRowModel()
     }
   },
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
-  ): GroupingRow => {
-    return {
-      getIsGrouped: () => !!row.groupingColumnId,
-      getGroupingValue: columnId => {
-        if (row._groupingValuesCache.hasOwnProperty(columnId)) {
-          return row._groupingValuesCache[columnId]
-        }
-
-        const column = table.getColumn(columnId)
-
-        if (!column?.columnDef.getGroupingValue) {
-          return row.getValue(columnId)
-        }
-
-        row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
-          row.original
-        )
-
+  ): void => {
+    row.getIsGrouped = () => !!row.groupingColumnId
+    row.getGroupingValue = columnId => {
+      if (row._groupingValuesCache.hasOwnProperty(columnId)) {
         return row._groupingValuesCache[columnId]
-      },
-      _groupingValuesCache: {},
+      }
+
+      const column = table.getColumn(columnId)
+
+      if (!column?.columnDef.getGroupingValue) {
+        return row.getValue(columnId)
+      }
+
+      row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
+        row.original
+      )
+
+      return row._groupingValuesCache[columnId]
     }
+    row._groupingValuesCache = {}
   },
 
   createCell: <TData extends RowData, TValue>(
@@ -263,19 +251,15 @@ export const Grouping: TableFeature = {
     column: Column<TData, TValue>,
     row: Row<TData>,
     table: Table<TData>
-  ): GroupingCell => {
+  ): void => {
     const getRenderValue = () =>
       cell.getValue() ?? table.options.renderFallbackValue
 
-    return {
-      getIsGrouped: () =>
-        column.getIsGrouped() && column.id === row.groupingColumnId,
-      getIsPlaceholder: () => !cell.getIsGrouped() && column.getIsGrouped(),
-      getIsAggregated: () =>
-        !cell.getIsGrouped() &&
-        !cell.getIsPlaceholder() &&
-        !!row.subRows?.length,
-    }
+    cell.getIsGrouped = () =>
+      column.getIsGrouped() && column.id === row.groupingColumnId
+    cell.getIsPlaceholder = () => !cell.getIsGrouped() && column.getIsGrouped()
+    cell.getIsAggregated = () =>
+      !cell.getIsGrouped() && !cell.getIsPlaceholder() && !!row.subRows?.length
   },
 }
 

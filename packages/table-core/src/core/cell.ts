@@ -52,14 +52,11 @@ export function createCell<TData extends RowData, TValue>(
   }
 
   table._features.forEach(feature => {
-    Object.assign(
-      cell,
-      feature.createCell?.(
-        cell as Cell<TData, TValue>,
-        column,
-        row as Row<TData>,
-        table
-      )
+    feature.createCell?.(
+      cell as Cell<TData, TValue>,
+      column,
+      row as Row<TData>,
+      table
     )
   }, {})
 
