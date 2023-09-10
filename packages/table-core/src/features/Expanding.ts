@@ -61,170 +61,162 @@ export const Expanding: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(
-    table: Table<TData>
-  ): ExpandedInstance<TData> => {
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
     let registered = false
     let queued = false
 
-    return {
-      _autoResetExpanded: () => {
-        if (!registered) {
-          table._queue(() => {
-            registered = true
-          })
-          return
-        }
-
-        if (
-          table.options.autoResetAll ??
-          table.options.autoResetExpanded ??
-          !table.options.manualExpanding
-        ) {
-          if (queued) return
-          queued = true
-          table._queue(() => {
-            table.resetExpanded()
-            queued = false
-          })
-        }
-      },
-      setExpanded: updater => table.options.onExpandedChange?.(updater),
-      toggleAllRowsExpanded: expanded => {
-        if (expanded ?? !table.getIsAllRowsExpanded()) {
-          table.setExpanded(true)
-        } else {
-          table.setExpanded({})
-        }
-      },
-      resetExpanded: defaultState => {
-        table.setExpanded(
-          defaultState ? {} : table.initialState?.expanded ?? {}
-        )
-      },
-      getCanSomeRowsExpand: () => {
-        return table
-          .getPrePaginationRowModel()
-          .flatRows.some(row => row.getCanExpand())
-      },
-      getToggleAllRowsExpandedHandler: () => {
-        return (e: unknown) => {
-          ;(e as any).persist?.()
-          table.toggleAllRowsExpanded()
-        }
-      },
-      getIsSomeRowsExpanded: () => {
-        const expanded = table.getState().expanded
-        return expanded === true || Object.values(expanded).some(Boolean)
-      },
-      getIsAllRowsExpanded: () => {
-        const expanded = table.getState().expanded
-
-        // If expanded is true, save some cycles and return true
-        if (typeof expanded === 'boolean') {
-          return expanded === true
-        }
-
-        if (!Object.keys(expanded).length) {
-          return false
-        }
-
-        // If any row is not expanded, return false
-        if (table.getRowModel().flatRows.some(row => !row.getIsExpanded())) {
-          return false
-        }
-
-        // They must all be expanded :shrug:
-        return true
-      },
-      getExpandedDepth: () => {
-        let maxDepth = 0
-
-        const rowIds =
-          table.getState().expanded === true
-            ? Object.keys(table.getRowModel().rowsById)
-            : Object.keys(table.getState().expanded)
-
-        rowIds.forEach(id => {
-          const splitId = id.split('.')
-          maxDepth = Math.max(maxDepth, splitId.length)
+    table._autoResetExpanded = () => {
+      if (!registered) {
+        table._queue(() => {
+          registered = true
         })
+        return
+      }
 
-        return maxDepth
-      },
-      getPreExpandedRowModel: () => table.getSortedRowModel(),
-      getExpandedRowModel: () => {
-        if (!table._getExpandedRowModel && table.options.getExpandedRowModel) {
-          table._getExpandedRowModel = table.options.getExpandedRowModel(table)
-        }
+      if (
+        table.options.autoResetAll ??
+        table.options.autoResetExpanded ??
+        !table.options.manualExpanding
+      ) {
+        if (queued) return
+        queued = true
+        table._queue(() => {
+          table.resetExpanded()
+          queued = false
+        })
+      }
+    }
+    table.setExpanded = updater => table.options.onExpandedChange?.(updater)
+    table.toggleAllRowsExpanded = expanded => {
+      if (expanded ?? !table.getIsAllRowsExpanded()) {
+        table.setExpanded(true)
+      } else {
+        table.setExpanded({})
+      }
+    }
+    table.resetExpanded = defaultState => {
+      table.setExpanded(defaultState ? {} : table.initialState?.expanded ?? {})
+    }
+    table.getCanSomeRowsExpand = () => {
+      return table
+        .getPrePaginationRowModel()
+        .flatRows.some(row => row.getCanExpand())
+    }
+    table.getToggleAllRowsExpandedHandler = () => {
+      return (e: unknown) => {
+        ;(e as any).persist?.()
+        table.toggleAllRowsExpanded()
+      }
+    }
+    table.getIsSomeRowsExpanded = () => {
+      const expanded = table.getState().expanded
+      return expanded === true || Object.values(expanded).some(Boolean)
+    }
+    table.getIsAllRowsExpanded = () => {
+      const expanded = table.getState().expanded
 
-        if (table.options.manualExpanding || !table._getExpandedRowModel) {
-          return table.getPreExpandedRowModel()
-        }
+      // If expanded is true, save some cycles and return true
+      if (typeof expanded === 'boolean') {
+        return expanded === true
+      }
 
-        return table._getExpandedRowModel()
-      },
+      if (!Object.keys(expanded).length) {
+        return false
+      }
+
+      // If any row is not expanded, return false
+      if (table.getRowModel().flatRows.some(row => !row.getIsExpanded())) {
+        return false
+      }
+
+      // They must all be expanded :shrug:
+      return true
+    }
+    table.getExpandedDepth = () => {
+      let maxDepth = 0
+
+      const rowIds =
+        table.getState().expanded === true
+          ? Object.keys(table.getRowModel().rowsById)
+          : Object.keys(table.getState().expanded)
+
+      rowIds.forEach(id => {
+        const splitId = id.split('.')
+        maxDepth = Math.max(maxDepth, splitId.length)
+      })
+
+      return maxDepth
+    }
+    table.getPreExpandedRowModel = () => table.getSortedRowModel()
+    table.getExpandedRowModel = () => {
+      if (!table._getExpandedRowModel && table.options.getExpandedRowModel) {
+        table._getExpandedRowModel = table.options.getExpandedRowModel(table)
+      }
+
+      if (table.options.manualExpanding || !table._getExpandedRowModel) {
+        return table.getPreExpandedRowModel()
+      }
+
+      return table._getExpandedRowModel()
     }
   },
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
-  ): ExpandedRow => {
-    return {
-      toggleExpanded: expanded => {
-        table.setExpanded(old => {
-          const exists = old === true ? true : !!old?.[row.id]
+  ): void => {
+    row.toggleExpanded = expanded => {
+      table.setExpanded(old => {
+        const exists = old === true ? true : !!old?.[row.id]
 
-          let oldExpanded: ExpandedStateList = {}
+        let oldExpanded: ExpandedStateList = {}
 
-          if (old === true) {
-            Object.keys(table.getRowModel().rowsById).forEach(rowId => {
-              oldExpanded[rowId] = true
-            })
-          } else {
-            oldExpanded = old
-          }
-
-          expanded = expanded ?? !exists
-
-          if (!exists && expanded) {
-            return {
-              ...oldExpanded,
-              [row.id]: true,
-            }
-          }
-
-          if (exists && !expanded) {
-            const { [row.id]: _, ...rest } = oldExpanded
-            return rest
-          }
-
-          return old
-        })
-      },
-      getIsExpanded: () => {
-        const expanded = table.getState().expanded
-
-        return !!(
-          table.options.getIsRowExpanded?.(row) ??
-          (expanded === true || expanded?.[row.id])
-        )
-      },
-      getCanExpand: () => {
-        return (
-          table.options.getRowCanExpand?.(row) ??
-          ((table.options.enableExpanding ?? true) && !!row.subRows?.length)
-        )
-      },
-      getToggleExpandedHandler: () => {
-        const canExpand = row.getCanExpand()
-
-        return () => {
-          if (!canExpand) return
-          row.toggleExpanded()
+        if (old === true) {
+          Object.keys(table.getRowModel().rowsById).forEach(rowId => {
+            oldExpanded[rowId] = true
+          })
+        } else {
+          oldExpanded = old
         }
-      },
+
+        expanded = expanded ?? !exists
+
+        if (!exists && expanded) {
+          return {
+            ...oldExpanded,
+            [row.id]: true,
+          }
+        }
+
+        if (exists && !expanded) {
+          const { [row.id]: _, ...rest } = oldExpanded
+          return rest
+        }
+
+        return old
+      })
+    }
+    row.getIsExpanded = () => {
+      const expanded = table.getState().expanded
+
+      return !!(
+        table.options.getIsRowExpanded?.(row) ??
+        (expanded === true || expanded?.[row.id])
+      )
+    }
+    row.getCanExpand = () => {
+      return (
+        table.options.getRowCanExpand?.(row) ??
+        ((table.options.enableExpanding ?? true) && !!row.subRows?.length)
+      )
+    }
+    row.getToggleExpandedHandler = () => {
+      const canExpand = row.getCanExpand()
+
+      return () => {
+        if (!canExpand) return
+        row.toggleExpanded()
+      }
     }
   },
 }
