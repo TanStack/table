@@ -103,3 +103,5 @@ declare module '@tanstack/table-core' {
   }
 }
 ```
+
+For more information, see [editable-data](https://github.com/TanStack/table/blob/main/examples/react/editable-data/src/main.tsx) example.
