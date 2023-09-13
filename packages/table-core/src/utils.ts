@@ -43,22 +43,28 @@ type AllowedIndexes<
   ? AllowedIndexes<Tail, Keys | Tail['length']>
   : Keys
 
-export type DeepKeys<T> = unknown extends T
+export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 10
+  ? never
+  : unknown extends T
   ? keyof T
   : object extends T
   ? string
   : T extends readonly any[] & IsTuple<T>
-  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>>
+  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
   : T extends any[]
   ? never & 'Dynamic length array indexing is not supported'
   : T extends Date
   ? never
   : T extends object
-  ? (keyof T & string) | DeepKeysPrefix<T, keyof T>
+  ? (keyof T & string) | DeepKeysPrefix<T, keyof T, TDepth>
   : never
 
-type DeepKeysPrefix<T, TPrefix> = TPrefix extends keyof T & (number | string)
-  ? `${TPrefix}.${DeepKeys<T[TPrefix]> & string}`
+type DeepKeysPrefix<
+  T,
+  TPrefix,
+  TDepth extends any[]
+> = TPrefix extends keyof T & (number | string)
+  ? `${TPrefix}.${DeepKeys<T[TPrefix], [...TDepth, any]> & string}`
   : never
 
 export type DeepValue<T, TProp> = T extends Record<string | number, any>
