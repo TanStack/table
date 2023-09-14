@@ -20,11 +20,11 @@ const range = (len: number) => {
 
 const newPerson = (): Person => {
   return {
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    age: faker.datatype.number(40),
-    visits: faker.datatype.number(1000),
-    progress: faker.datatype.number(100),
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    age: faker.number.int(40),
+    visits: faker.number.int(1000),
+    progress: faker.number.int(100),
     status: faker.helpers.shuffle<Person["status"]>([
       "relationship",
       "complicated",
