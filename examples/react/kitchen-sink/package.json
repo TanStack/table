@@ -12,7 +12,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@tanstack/match-sorter-utils": "8.7.6",
-    "@tanstack/react-table": "8.9.9",
+    "@tanstack/react-table": "8.9.10",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "react": "^18.2.0",
