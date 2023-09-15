@@ -10,12 +10,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.6.3",
+    "typescript": "^4.9.5",
     "vite": "^3.2.3",
     "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
-    "@tanstack/solid-table": "8.9.8",
+    "@tanstack/solid-table": "8.9.10",
     "solid-js": "^1.6.2"
   }
 }

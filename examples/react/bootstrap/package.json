@@ -9,14 +9,14 @@
     "start": "vite"
   },
   "dependencies": {
-    "@tanstack/react-table": "8.9.8",
+    "@tanstack/react-table": "8.9.10",
     "bootstrap": "^5.2.3",
     "react": "^18.2.0",
     "react-bootstrap": "2.6.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.0.2",
     "@rollup/plugin-replace": "^5.0.1",
     "@types/bootstrap": "^5.2.6",
     "@types/react-bootstrap": "^0.32.32",

@@ -348,7 +348,7 @@ export const RowSelection: TableFeature = {
       table.setRowSelection(old => {
         value = typeof value !== 'undefined' ? value : !isSelected
 
-        if (isSelected === value) {
+        if (row.getCanSelect() && isSelected === value) {
           return old
         }
 
@@ -496,25 +496,38 @@ export function isSubRowSelected<TData extends RowData>(
   selection: Record<string, boolean>,
   table: Table<TData>
 ): boolean | 'some' | 'all' {
-  if (row.subRows && row.subRows.length) {
-    let allChildrenSelected = true
-    let someSelected = false
+  if (!row.subRows?.length) return false
+  
+  let allChildrenSelected = true
+  let someSelected = false
 
-    row.subRows.forEach(subRow => {
-      // Bail out early if we know both of these
-      if (someSelected && !allChildrenSelected) {
-        return
-      }
+  row.subRows.forEach(subRow => {
+    // Bail out early if we know both of these
+    if (someSelected && !allChildrenSelected) {
+      return
+    }
 
+    if (subRow.getCanSelect()) {
       if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
         allChildrenSelected = false
       }
-    })
+    }
 
-    return allChildrenSelected ? 'all' : someSelected ? 'some' : false
-  }
+    // Check row selection of nested subrows
+    if (subRow.subRows && subRow.subRows.length) {
+      const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
+      if (subRowChildrenSelected === 'all') {
+        someSelected = true
+      } else if (subRowChildrenSelected === 'some') {
+        someSelected = true
+        allChildrenSelected = false
+      } else {
+        allChildrenSelected = false
+      }
+    }
+  })
 
-  return false
+  return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }
