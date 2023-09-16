@@ -158,7 +158,7 @@ function App() {
     getExpandedRowModel: getExpandedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     keepPinnedRows,
-    // debugRows: true,
+    debugRows: true,
   })
 
   return (
