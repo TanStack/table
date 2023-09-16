@@ -13,6 +13,7 @@ export interface ExpandedRow {
   toggleExpanded: (expanded?: boolean) => void
   getIsExpanded: () => boolean
   getCanExpand: () => boolean
+  getIsAllParentsExpanded: () => boolean
   getToggleExpandedHandler: () => () => void
 }
 
@@ -209,6 +210,17 @@ export const Expanding: TableFeature = {
         table.options.getRowCanExpand?.(row) ??
         ((table.options.enableExpanding ?? true) && !!row.subRows?.length)
       )
+    }
+    row.getIsAllParentsExpanded = () => {
+      let isFullyExpanded = true
+      let currentRow = row
+
+      while (isFullyExpanded && currentRow.parentId) {
+        currentRow = table.getRow(currentRow.parentId, true)
+        isFullyExpanded = currentRow.getIsExpanded()
+      }
+
+      return isFullyExpanded
     }
     row.getToggleExpandedHandler = () => {
       const canExpand = row.getCanExpand()
