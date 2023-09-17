@@ -7,6 +7,13 @@ table {
   border: 1px solid lightgray;
 }
 
+thead {
+  background: lightgray;
+  margin: 0;
+  position: sticky;
+  top: 0;
+}
+
 tbody {
   border-bottom: 1px solid lightgray;
 }
@@ -32,4 +39,11 @@ tfoot {
 
 tfoot th {
   font-weight: normal;
+}
+
+.container {
+  border: 1px solid lightgray;
+  height: 500px;
+  max-width: 900px !important;
+  overflow: auto;
 }
