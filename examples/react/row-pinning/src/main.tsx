@@ -350,7 +350,7 @@ function PinnedRow({ row, table }: { row: Row<any>; table: Table<any> }) {
         position: 'sticky',
         top:
           row.getIsPinned() === 'top'
-            ? `${row.getPinnedIndex() * 26 + 50}px`
+            ? `${row.getPinnedIndex() * 26 + 48}px`
             : undefined,
         bottom:
           row.getIsPinned() === 'bottom'
