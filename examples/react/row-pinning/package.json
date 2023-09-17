@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-table-example-row-pinning",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview --port 3000",
+    "start": "vite"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@tanstack/react-table": "8.9.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.1",
+    "@vitejs/plugin-react": "^2.2.0",
+    "vite": "^3.2.3"
+  }
+}

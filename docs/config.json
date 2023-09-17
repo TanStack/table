@@ -78,10 +78,6 @@
           "to": "guide/column-ordering"
         },
         {
-          "label": "Column Pinning",
-          "to": "guide/column-pinning"
-        },
-        {
           "label": "Column Sizing",
           "to": "guide/column-sizing"
         },
@@ -108,6 +104,10 @@
         {
           "label": "Pagination",
           "to": "guide/pagination"
+        },
+        {
+          "label": "Pinning",
+          "to": "guide/pinning"
         },
         {
           "label": "Row Selection",
@@ -156,10 +156,6 @@
           "to": "api/features/column-ordering"
         },
         {
-          "label": "Column Pinning",
-          "to": "api/features/column-pinning"
-        },
-        {
           "label": "Column Sizing",
           "to": "api/features/column-sizing"
         },
@@ -186,6 +182,10 @@
         {
           "label": "Pagination",
           "to": "api/features/pagination"
+        },
+        {
+          "label": "Pinning",
+          "to": "api/features/pinning"
         },
         {
           "label": "Row Selection",
@@ -268,6 +268,10 @@
         {
           "to": "examples/react/row-dnd",
           "label": "Row DnD"
+        },
+        {
+          "to": "examples/react/row-pinning",
+          "label": "Row Pinning"
         },
         {
           "to": "examples/react/row-selection",
