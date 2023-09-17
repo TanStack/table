@@ -270,6 +270,10 @@
           "label": "Row DnD"
         },
         {
+          "to": "examples/react/row-pinning",
+          "label": "Row Pinning"
+        },
+        {
           "to": "examples/react/row-selection",
           "label": "Row Selection"
         },
