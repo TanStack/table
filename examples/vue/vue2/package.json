@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-vue2-basic",
+  "name": "tanstack-table-example-vue-vue2-composition-api",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/vue2-table": "8.9.1",
+    "@tanstack/vue-table": "8.10.0",
     "@vue/composition-api": "^1.2.4",
     "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14"

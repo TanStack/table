@@ -59,6 +59,7 @@
     "./examples/svelte/column-visibility",
     "./examples/svelte/sorting",
     "./examples/vue/basic",
+    "./examples/vue/vue2-composition-api",
     "./examples/vue/column-ordering",
     "./examples/vue/column-pinning",
     "./examples/vue/sorting",

@@ -119,6 +119,9 @@
       "path": "examples/vue/basic/tsconfig.dev.json"
     },
     {
+      "path": "examples/vue/vue2-composition-api/tsconfig.dev.json"
+    },
+    {
       "path": "examples/vue/column-ordering/tsconfig.dev.json"
     },
     {

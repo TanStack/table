@@ -43,7 +43,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/table-core": "8.9.1"
+    "@tanstack/table-core": "8.10.0"
   },
   "peerDependencies": {
     "vue": "^2.6.14",
