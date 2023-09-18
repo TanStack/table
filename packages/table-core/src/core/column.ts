@@ -119,9 +119,9 @@ export function createColumn<TData extends RowData, TValue>(
     ),
   }
 
-  column = table._features.reduce((obj, feature) => {
-    return Object.assign(obj, feature.createColumn?.(column, table))
-  }, column)
+  for (const feature of table._features) {
+    feature.createColumn?.(column, table)
+  }
 
   // Yes, we have to convert table to uknown, because we know more than the compiler here.
   return column as Column<TData, TValue>

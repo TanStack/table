@@ -30,4 +30,4 @@ The depth of the header group, zero-indexed based.
 type headers = Header<TData>[]
 ```
 
-An array of [Header](./Header) objects that belong to this header group
+An array of [Header](./header) objects that belong to this header group
