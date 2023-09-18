@@ -68,7 +68,7 @@ export function createColumn<TData extends RowData, TValue>(
     }
   }
 
-  if (!id) {
+  if (!id && id !== '') {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(
         resolvedColumnDef.accessorFn
