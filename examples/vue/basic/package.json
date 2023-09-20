@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "vue": "^3.2.33",
-    "@tanstack/vue-table": "8.10.0"
+    "@tanstack/vue-table": "8.10.1"
   },
   "devDependencies": {
     "@types/node": "^16.11.27",
