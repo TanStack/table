@@ -73,7 +73,7 @@ export function mergeProxy(...sources: any): any {
         const keys = []
         for (let i = 0; i < sources.length; i++)
           keys.push(...Object.keys(resolveSource(sources[i])))
-        return [...new Set(keys)]
+        return [...Array.from(new Set(keys))]
       },
     },
     propTraps
