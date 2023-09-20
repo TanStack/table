@@ -224,7 +224,10 @@ export const Pinning: TableFeature = {
 
         if (position === 'top') {
           return {
-            top: [...(old?.top ?? []).filter(d => !rowIds?.has(d)), ...Array.from(rowIds)],
+            top: [
+              ...(old?.top ?? []).filter(d => !rowIds?.has(d)),
+              ...Array.from(rowIds),
+            ],
             bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
           }
         }
