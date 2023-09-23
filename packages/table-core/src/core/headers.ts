@@ -3,30 +3,90 @@ import { memo } from '../utils'
 import { TableFeature } from './table'
 
 export interface CoreHeaderGroup<TData extends RowData> {
-  id: string
   depth: number
   headers: Header<TData, unknown>[]
+  id: string
 }
 
 export interface HeaderContext<TData, TValue> {
-  table: Table<TData>
-  header: Header<TData, TValue>
   column: Column<TData, TValue>
+  header: Header<TData, TValue>
+  table: Table<TData>
 }
 
 export interface CoreHeader<TData extends RowData, TValue> {
-  id: string
-  index: number
-  depth: number
-  column: Column<TData, TValue>
-  headerGroup: HeaderGroup<TData>
-  subHeaders: Header<TData, TValue>[]
+  /**
+   * The col-span for the header.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#colspan)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   colSpan: number
-  rowSpan: number
-  getLeafHeaders: () => Header<TData, unknown>[]
-  isPlaceholder: boolean
-  placeholderId?: string
+  /**
+   * The header's associated column object.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#column)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  column: Column<TData, TValue>
+  /**
+   * The depth of the header, zero-indexed based.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#depth)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  depth: number
+  /**
+   * Returns the rendering context (or props) for column-based components like headers, footers and filters.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getcontext)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getContext: () => HeaderContext<TData, TValue>
+  /**
+   * Returns the leaf headers hierarchically nested under this header.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getLeafHeaders: () => Header<TData, unknown>[]
+  /**
+   * The header's associated header group object.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#headergroup)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  headerGroup: HeaderGroup<TData>
+  /**
+   * The unique identifier for the header.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#id)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  id: string
+  /**
+   * The index for the header within the header group.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#index)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  index: number
+  /**
+   * A boolean denoting if the header is a placeholder header.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#isplaceholder)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  isPlaceholder: boolean
+  /**
+   * If the header is a placeholder header, this will be a unique header ID that does not conflict with any other headers across the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#placeholderid)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  placeholderId?: string
+  /**
+   * The row-span for the header.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#rowspan)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  rowSpan: number
+  /**
+   * The header's hierarchical sub/child headers. Will be empty if the header's associated column is a leaf-column.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#subheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  subHeaders: Header<TData, TValue>[]
 }
 
 export interface HeadersInstance<TData extends RowData> {

@@ -24,6 +24,14 @@ getValue: () => any
 
 Returns the value for the cell, accessed via the associated column's accessor key or accessor function.
 
+### `renderValue`
+
+```tsx
+renderValue: () => any
+```
+
+Renders the value for a cell the same as `getValue`, but will return the `renderFallbackValue` if no value is found.
+
 ### `row`
 
 ```tsx
@@ -48,8 +56,8 @@ getContext: () => {
   column: Column<TData, TValue>
   row: Row<TData>
   cell: Cell<TData, TValue>
-  getValue: <TTValue = TValue>() => TTValue
-  renderValue: <TTValue = TValue>() => TTValue | null
+  getValue: <TTValue = TValue,>() => TTValue
+  renderValue: <TTValue = TValue,>() => TTValue | null
 }
 ```
 
