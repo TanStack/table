@@ -184,6 +184,8 @@ Returns the automatically inferred aggregation function for the column.
 getAggregationFn: () => AggregationFn<TData> | undefined
 ```
 
+Returns the aggregation function for the column.
+
 ## Row API
 
 ### `groupingColumnId`
@@ -323,3 +325,29 @@ getGroupedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table after grouping has been applied.
+
+## Cell API
+
+### `getIsAggregated`
+
+```tsx
+getIsAggregated: () => boolean
+```
+
+Returns whether or not the cell is currently aggregated.
+
+### `getIsGrouped`
+
+```tsx
+getIsGrouped: () => boolean
+```
+
+Returns whether or not the cell is currently grouped.
+
+### `getIsPlaceholder`
+
+```tsx
+getIsPlaceholder: () => boolean
+```
+
+Returns whether or not the cell is currently a placeholder.

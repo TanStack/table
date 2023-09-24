@@ -20,7 +20,7 @@ export type IsKnown<T, Y, N> = unknown extends T ? N : Y
 
 type ComputeRange<
   N extends number,
-  Result extends Array<unknown> = []
+  Result extends Array<unknown> = [],
 > = Result['length'] extends N
   ? Result
   : ComputeRange<N, [...Result, Result['length']]>
@@ -36,7 +36,7 @@ type IsTuple<T> = T extends readonly any[] & { length: infer Length }
 // If this type is a tuple, what indices are allowed?
 type AllowedIndexes<
   Tuple extends ReadonlyArray<any>,
-  Keys extends number = never
+  Keys extends number = never,
 > = Tuple extends readonly []
   ? Keys
   : Tuple extends readonly [infer _, ...infer Tail]
@@ -62,7 +62,7 @@ export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
 type DeepKeysPrefix<
   T,
   TPrefix,
-  TDepth extends any[]
+  TDepth extends any[],
 > = TPrefix extends keyof T & (number | string)
   ? `${TPrefix}.${DeepKeys<T[TPrefix], [...TDepth, any]> & string}`
   : never

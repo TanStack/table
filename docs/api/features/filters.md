@@ -213,7 +213,7 @@ Returns whether or not the column can be **column** filtered.
 getCanGlobalFilter: () => boolean
 ```
 
-Returns whether or not the column can be **globally** filtered.
+Returns whether or not the column can be **globally** filtered.  Set to `false` to disable a column from being scanned during global filtering.
 
 ### `getFilterIndex`
 

@@ -69,8 +69,8 @@ const arrIncludesSome: FilterFn<any> = (
   columnId: string,
   filterValue: unknown[]
 ) => {
-  return filterValue.some(val =>
-    row.getValue<unknown[]>(columnId)?.includes(val)
+  return filterValue.some(
+    val => row.getValue<unknown[]>(columnId)?.includes(val)
   )
 }
 

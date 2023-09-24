@@ -199,6 +199,14 @@ getIsSorted: () => false | SortDirection
 
 Returns whether this column is sorted.
 
+### `getFirstSortDir`
+
+```tsx 
+getFirstSortDir: () => SortDirection
+```
+
+Returns the first direction that should be used when sorting this column.
+
 ### `clearSorting`
 
 ```tsx
@@ -285,8 +293,8 @@ enableSortingRemoval?: boolean
 ```
 
 Enables/Disables the ability to remove sorting for the table.
-If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
-If `false` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
+- If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
+- If `false` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
 
 ### `enableMultiRemove`
 

@@ -49,7 +49,7 @@ export type RowPinningRowState = {
 enablePinning?: boolean
 ```
 
-Enables/disables all pinning for the table.
+Enables/disables all pinning for the table. Defaults to `true`.
 
 ### `enableColumnPinning`
 
@@ -81,7 +81,7 @@ When `false`, pinned rows will not be visible if they are filtered or paginated 
 onColumnPinningChange?: OnChangeFn<ColumnPinningState>
 ```
 
-If provided, this function will be called with an `updaterFn` when `state.columnPinning` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+If provided, this function will be called with an `updaterFn` when `state.columnPinning` changes. This overrides the default internal state management, so you will also need to supply `state.columnPinning` from your own managed state.
 
 ### `onRowPinningChange`
 
@@ -89,7 +89,7 @@ If provided, this function will be called with an `updaterFn` when `state.column
 onRowPinningChange?: OnChangeFn<RowPinningState>
 ```
 
-If provided, this function will be called with an `updaterFn` when `state.rowPinning` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+If provided, this function will be called with an `updaterFn` when `state.rowPinning` changes. This overrides the default internal state management, so you will also need to supply `state.rowPinning` from your own managed state.
 
 ## Column Def Options
 
@@ -156,7 +156,7 @@ Returns whether or not any rows are pinned. Optionally specify to only check for
 ### `getLeftHeaderGroups`
 
 ```tsx
-getLeftHeaderGroups: () => HeaderGroup < TData > []
+getLeftHeaderGroups: () => HeaderGroup<TData>[]
 ```
 
 Returns the left pinned header groups for the table.
@@ -164,7 +164,7 @@ Returns the left pinned header groups for the table.
 ### `getCenterHeaderGroups`
 
 ```tsx
-getCenterHeaderGroups: () => HeaderGroup < TData > []
+getCenterHeaderGroups: () => HeaderGroup<TData>[]
 ```
 
 Returns the unpinned/center header groups for the table.
@@ -172,7 +172,7 @@ Returns the unpinned/center header groups for the table.
 ### `getRightHeaderGroups`
 
 ```tsx
-getRightHeaderGroups: () => HeaderGroup < TData > []
+getRightHeaderGroups: () => HeaderGroup<TData>[]
 ```
 
 Returns the right pinned header groups for the table.
@@ -180,7 +180,7 @@ Returns the right pinned header groups for the table.
 ### `getLeftFooterGroups`
 
 ```tsx
-getLeftFooterGroups: () => HeaderGroup < TData > []
+getLeftFooterGroups: () => HeaderGroup<TData>[]
 ```
 
 Returns the left pinned footer groups for the table.
@@ -188,7 +188,7 @@ Returns the left pinned footer groups for the table.
 ### `getCenterFooterGroups`
 
 ```tsx
-getCenterFooterGroups: () => HeaderGroup < TData > []
+getCenterFooterGroups: () => HeaderGroup<TData>[]
 ```
 
 Returns the unpinned/center footer groups for the table.
@@ -196,7 +196,7 @@ Returns the unpinned/center footer groups for the table.
 ### `getRightFooterGroups`
 
 ```tsx
-getRightFooterGroups: () => HeaderGroup < TData > []
+getRightFooterGroups: () => HeaderGroup<TData>[]
 ```
 
 Returns the right pinned footer groups for the table.
@@ -204,7 +204,7 @@ Returns the right pinned footer groups for the table.
 ### `getLeftFlatHeaders`
 
 ```tsx
-getLeftFlatHeaders: () => Header < TData > []
+getLeftFlatHeaders: () => Header<TData>[]
 ```
 
 Returns a flat array of left pinned headers for the table, including parent headers.
@@ -212,7 +212,7 @@ Returns a flat array of left pinned headers for the table, including parent head
 ### `getCenterFlatHeaders`
 
 ```tsx
-getCenterFlatHeaders: () => Header < TData > []
+getCenterFlatHeaders: () => Header<TData>[]
 ```
 
 Returns a flat array of unpinned/center headers for the table, including parent headers.
@@ -220,7 +220,7 @@ Returns a flat array of unpinned/center headers for the table, including parent 
 ### `getRightFlatHeaders`
 
 ```tsx
-getRightFlatHeaders: () => Header < TData > []
+getRightFlatHeaders: () => Header<TData>[]
 ```
 
 Returns a flat array of right pinned headers for the table, including parent headers.
@@ -228,7 +228,7 @@ Returns a flat array of right pinned headers for the table, including parent hea
 ### `getLeftLeafHeaders`
 
 ```tsx
-getLeftLeafHeaders: () => Header < TData > []
+getLeftLeafHeaders: () => Header<TData>[]
 ```
 
 Returns a flat array of leaf-node left pinned headers for the table.
@@ -236,7 +236,7 @@ Returns a flat array of leaf-node left pinned headers for the table.
 ### `getCenterLeafHeaders`
 
 ```tsx
-getCenterLeafHeaders: () => Header < TData > []
+getCenterLeafHeaders: () => Header<TData>[]
 ```
 
 Returns a flat array of leaf-node unpinned/center headers for the table.
@@ -244,7 +244,7 @@ Returns a flat array of leaf-node unpinned/center headers for the table.
 ### `getRightLeafHeaders`
 
 ```tsx
-getRightLeafHeaders: () => Header < TData > []
+getRightLeafHeaders: () => Header<TData>[]
 ```
 
 Returns a flat array of leaf-node right pinned headers for the table.
@@ -252,7 +252,7 @@ Returns a flat array of leaf-node right pinned headers for the table.
 ### `getLeftLeafColumns`
 
 ```tsx
-getLeftLeafColumns: () => Column < TData > []
+getLeftLeafColumns: () => Column<TData>[]
 ```
 
 Returns all left pinned leaf columns.
@@ -260,7 +260,7 @@ Returns all left pinned leaf columns.
 ### `getRightLeafColumns`
 
 ```tsx
-getRightLeafColumns: () => Column < TData > []
+getRightLeafColumns: () => Column<TData>[]
 ```
 
 Returns all right pinned leaf columns.
@@ -268,7 +268,7 @@ Returns all right pinned leaf columns.
 ### `getCenterLeafColumns`
 
 ```tsx
-getCenterLeafColumns: () => Column < TData > []
+getCenterLeafColumns: () => Column<TData>[]
 ```
 
 Returns all center pinned (unpinned) leaf columns.
@@ -276,7 +276,7 @@ Returns all center pinned (unpinned) leaf columns.
 ### `getTopRows`
 
 ```tsx
-getTopRows: () => Row < TData > []
+getTopRows: () => Row<TData>[]
 ```
 
 Returns all top pinned rows.
@@ -284,7 +284,7 @@ Returns all top pinned rows.
 ### `getBottomRows`
 
 ```tsx
-getBottomRows: () => Row < TData > []
+getBottomRows: () => Row<TData>[]
 ```
 
 Returns all bottom pinned rows.
@@ -292,7 +292,7 @@ Returns all bottom pinned rows.
 ### `getCenterRows`
 
 ```tsx
-getCenterRows: () => Row < TData > []
+getCenterRows: () => Row<TData>[]
 ```
 
 Returns all rows that are not pinned to the top or bottom.
@@ -368,7 +368,7 @@ Returns the numeric pinned index of the row within a pinned row group.
 ### `getLeftVisibleCells`
 
 ```tsx
-getLeftVisibleCells: () => Cell < TData > []
+getLeftVisibleCells: () => Cell<TData>[]
 ```
 
 Returns all left pinned leaf cells in the row.
@@ -376,7 +376,7 @@ Returns all left pinned leaf cells in the row.
 ### `getRightVisibleCells`
 
 ```tsx
-getRightVisibleCells: () => Cell < TData > []
+getRightVisibleCells: () => Cell<TData>[]
 ```
 
 Returns all right pinned leaf cells in the row.
@@ -384,7 +384,7 @@ Returns all right pinned leaf cells in the row.
 ### `getCenterVisibleCells`
 
 ```tsx
-getCenterVisibleCells: () => Cell < TData > []
+getCenterVisibleCells: () => Cell<TData>[]
 ```
 
 Returns all center pinned (unpinned) leaf cells in the row.
