@@ -111,3 +111,133 @@ Returns the rendering context (or props) for column-based components like header
 ```tsx
 flexRender(header.column.columnDef.header, header.getContext())
 ```
+
+## Table API
+
+### `getHeaderGroups`
+
+```tsx
+type getHeaderGroups = () => HeaderGroup<TData>[]
+```
+
+Returns all header groups for the table.
+
+### `getLeftHeaderGroups`
+
+```tsx
+type getLeftHeaderGroups = () => HeaderGroup<TData>[]
+```
+
+If pinning, returns the header groups for the left pinned columns.
+
+### `getCenterHeaderGroups`
+
+```tsx
+type getCenterHeaderGroups = () => HeaderGroup<TData>[]
+```
+
+If pinning, returns the header groups for columns that are not pinned.
+
+### `getRightHeaderGroups`
+
+```tsx
+type getRightHeaderGroups = () => HeaderGroup<TData>[]
+```
+
+If pinning, returns the header groups for the right pinned columns.
+
+### `getFooterGroups`
+
+```tsx
+type getFooterGroups = () => HeaderGroup<TData>[]
+```
+
+Returns all footer groups for the table.
+
+### `getLeftFooterGroups`
+
+```tsx
+type getLeftFooterGroups = () => HeaderGroup<TData>[]
+```
+
+If pinning, returns the footer groups for the left pinned columns.
+
+### `getCenterFooterGroups`
+
+```tsx
+type getCenterFooterGroups = () => HeaderGroup<TData>[]
+```
+
+If pinning, returns the footer groups for columns that are not pinned.
+
+### `getRightFooterGroups`
+
+```tsx
+type getRightFooterGroups = () => HeaderGroup<TData>[]
+```
+
+If pinning, returns the footer groups for the right pinned columns.
+
+### `getFlatHeaders`
+
+```tsx
+type getFlatHeaders = () => Header<TData, unknown>[]
+```
+
+Returns headers for all columns in the table, including parent headers.
+
+### `getLeftFlatHeaders`
+
+```tsx
+type getLeftFlatHeaders = () => Header<TData, unknown>[]
+```
+
+If pinning, returns headers for all left pinned columns in the table, including parent headers.
+
+### `getCenterFlatHeaders`
+
+```tsx
+type getCenterFlatHeaders = () => Header<TData, unknown>[]
+```
+
+If pinning, returns headers for all columns that are not pinned, including parent headers.
+
+### `getRightFlatHeaders`
+
+```tsx
+type getRightFlatHeaders = () => Header<TData, unknown>[]
+```
+
+If pinning, returns headers for all right pinned columns in the table, including parent headers.
+
+### `getLeafHeaders`
+
+```tsx
+type getLeafHeaders = () => Header<TData, unknown>[]
+```
+
+Returns headers for all leaf columns in the table, (not including parent headers).
+
+### `getLeftLeafHeaders`
+
+```tsx
+type getLeftLeafHeaders = () => Header<TData, unknown>[]
+```
+
+If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
+
+### `getCenterLeafHeaders`
+
+```tsx
+type getCenterLeafHeaders = () => Header<TData, unknown>[]
+```
+
+If pinning, returns headers for all columns that are not pinned, (not including parent headers).
+
+### `getRightLeafHeaders`
+
+```tsx
+type getRightLeafHeaders = () => Header<TData, unknown>[]
+```
+
+If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).

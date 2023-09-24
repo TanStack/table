@@ -9,8 +9,17 @@ export interface CoreHeaderGroup<TData extends RowData> {
 }
 
 export interface HeaderContext<TData, TValue> {
+  /**
+   * An instance of a column.
+   */
   column: Column<TData, TValue>
+  /**
+   * An instance of a header.
+   */
   header: Header<TData, TValue>
+  /**
+   * The table instance.
+   */
   table: Table<TData>
 }
 
@@ -90,24 +99,104 @@ export interface CoreHeader<TData extends RowData, TValue> {
 }
 
 export interface HeadersInstance<TData extends RowData> {
+  /**
+   * Returns all header groups for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the header groups for the left pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getLeftHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the header groups for columns that are not pinned.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getCenterHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the header groups for the right pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getRightHeaderGroups: () => HeaderGroup<TData>[]
 
+  /**
+   * Returns the footer groups for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the footer groups for the left pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getLeftFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the footer groups for columns that are not pinned.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getCenterFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the footer groups for the right pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getRightFooterGroups: () => HeaderGroup<TData>[]
 
+  /**
+   * Returns headers for all columns in the table, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all left pinned columns in the table, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getLeftFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all columns that are not pinned, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getCenterFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all right pinned columns in the table, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getRightFlatHeaders: () => Header<TData, unknown>[]
 
+  /**
+   * Returns headers for all leaf columns in the table, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getLeafHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getLeftLeafHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all columns that are not pinned, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getCenterLeafHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
   getRightLeafHeaders: () => Header<TData, unknown>[]
 }
 

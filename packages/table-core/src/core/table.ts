@@ -138,10 +138,10 @@ export interface CoreOptions<TData extends RowData> {
    */
   getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   /**
-   * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state. 
-   * 
+   * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
+   *
    * Table state will not be reset when this object changes, which also means that the initial state object does not need to be stable.
-   * 
+   *
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
@@ -175,6 +175,7 @@ export interface CoreOptions<TData extends RowData> {
   renderFallbackValue: any
   /**
    * The `state` option can be used to optionally _control_ part or all of the table state. The state you pass here will merge with and overwrite the internal automatically-managed state to produce the final state for the table. You can also listen to state changes via the `onStateChange` option.
+   * > Note: Any state passed in here will override both the internal state and any other `initialState` you provide.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#state)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
@@ -226,7 +227,7 @@ export interface CoreInstance<TData extends RowData> {
    */
   getRow: (id: string, searchAll?: boolean) => Row<TData>
   /**
-   * Returns the final model after all processing from other used features has been applied.
+   * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
