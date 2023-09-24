@@ -178,6 +178,8 @@ export interface ColumnPinningInstance<TData extends RowData> {
   getCenterLeafColumns: () => Column<TData, unknown>[]
   /**
    * Returns whether or not any columns are pinned. Optionally specify to only check for pinned columns in either the `left` or `right` position.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pinning#getissomecolumnspinned)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pinning)
    */
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
   /**

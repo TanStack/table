@@ -61,7 +61,7 @@ export interface SortingColumnDef<TData extends RowData> {
   enableSorting?: boolean
   /**
    * Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortdescfirst)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#invertsorting)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
   invertSorting?: boolean

@@ -124,13 +124,13 @@ export interface GroupingRow {
   getIsGrouped: () => boolean
   /**
    * If this row is grouped, this is the id of the column that this row is grouped by.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupingcolumnid)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#groupingcolumnid)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
   groupingColumnId?: string
   /**
    * If this row is grouped, this is the unique/shared value for the `groupingColumnId` for all of the rows in this group.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupingvalue)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#groupingvalue)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
   groupingValue?: unknown

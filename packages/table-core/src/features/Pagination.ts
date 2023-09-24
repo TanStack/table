@@ -125,7 +125,7 @@ export interface PaginationInstance<TData extends RowData> {
   resetPagination: (defaultState?: boolean) => void
   /**
    * Updates the page count using the provided function or value.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#setpagination)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#setpagecount)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
   setPageCount: (updater: Updater<number>) => void

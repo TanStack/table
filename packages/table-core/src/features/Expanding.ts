@@ -81,7 +81,7 @@ export interface ExpandedOptions<TData extends RowData> {
   manualExpanding?: boolean
   /**
    * This function is called when the `expanded` table state changes. If a function is provided, you will be responsible for managing this state on your own. To pass the managed state back to the table, use the `tableOptions.state.expanded` option.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#manualexpanding)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#onexpandedchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
    */
   onExpandedChange?: OnChangeFn<ExpandedState>

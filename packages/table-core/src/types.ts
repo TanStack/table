@@ -242,7 +242,7 @@ export interface IdentifiedColumnDef<TData extends RowData, TValue = unknown>
 
 export type DisplayColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
@@ -252,7 +252,7 @@ interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
 
 export type GroupColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = GroupColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 interface AccessorFnColumnDefBase<TData extends RowData, TValue = unknown>
@@ -262,7 +262,7 @@ interface AccessorFnColumnDefBase<TData extends RowData, TValue = unknown>
 
 export type AccessorFnColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = AccessorFnColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
@@ -273,7 +273,7 @@ interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
 
 export type AccessorKeyColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = AccessorKeyColumnDefBase<TData, TValue> &
   Partial<ColumnIdentifiers<TData, TValue>>
 
@@ -290,7 +290,7 @@ export type ColumnDef<TData extends RowData, TValue = unknown> =
 
 export type ColumnDefResolved<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = Partial<UnionToIntersection<ColumnDef<TData, TValue>>> & {
   accessorKey?: string
 }

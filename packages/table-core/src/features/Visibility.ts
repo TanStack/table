@@ -26,9 +26,10 @@ export interface VisibilityOptions {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
 }
 
-export interface VisibilityDefaultOptions {
-  onColumnVisibilityChange: OnChangeFn<VisibilityState>
-}
+export type VisibilityDefaultOptions = Pick<
+  VisibilityOptions,
+  'onColumnVisibilityChange'
+>
 
 export interface VisibilityInstance<TData extends RowData> {
   /**
@@ -81,6 +82,8 @@ export interface VisibilityInstance<TData extends RowData> {
   getVisibleLeafColumns: () => Column<TData, unknown>[]
   /**
    * Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#resetcolumnvisibility)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   resetColumnVisibility: (defaultState?: boolean) => void
   /**

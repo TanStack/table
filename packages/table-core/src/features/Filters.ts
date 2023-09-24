@@ -176,20 +176,84 @@ export interface FiltersRow<TData extends RowData> {
 }
 
 interface FiltersOptionsBase<TData extends RowData> {
+  /**
+   * Enables/disables all filtering for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#enablefilters)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   enableFilters?: boolean
+  /**
+   * By default, filtering is done from parent rows down (so if a parent row is filtered out, all of its children will be filtered out as well). Setting this option to `true` will cause filtering to be done from leaf rows up (which means parent rows will be included so long as one of their child or grand-child rows is also included).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#filterfromleafrows)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   filterFromLeafRows?: boolean
+  /**
+   * If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
+   * - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
+   * - For client-side filtering, this function is required. A default implementation is provided via any table adapter's `{ getFilteredRowModel }` export.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getfilteredrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   getFilteredRowModel?: (table: Table<any>) => () => RowModel<any>
+  /**
+   * Disables the `getFilteredRowModel` from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#manualfiltering)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   manualFiltering?: boolean
+  /**
+   * By default, filtering is done for all rows (max depth of 100), no matter if they are root level parent rows or the child leaf rows of a parent row. Setting this option to `0` will cause filtering to only be applied to the root level parent rows, with all sub-rows remaining unfiltered. Similarly, setting this option to `1` will cause filtering to only be applied to child leaf rows 1 level deep, and so on.
+
+   * This is useful for situations where you want a row's entire child hierarchy to be visible regardless of the applied filter.
+    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#maxleafrowfilterdepth)
+    * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   maxLeafRowFilterDepth?: number
 
   // Column
+  /**
+   * Enables/disables **column** filtering for all columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#enablecolumnfilters)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   enableColumnFilters?: boolean
+  /**
+   * If provided, this function will be called with an `updaterFn` when `state.columnFilters` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#oncolumnfilterschange)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 
   // Global
+  /**
+   * Enables/disables **global** filtering for all columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#enableglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   enableGlobalFilter?: boolean
+  /**
+   * If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
+   * 
+   * This is useful if the column can contain data that is not `string` or `number` (i.e. `undefined`).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getcolumncanglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   getColumnCanGlobalFilter?: (column: Column<TData, unknown>) => boolean
+  /**
+   * The filter function to use for global filtering.
+   * - A `string` referencing a built-in filter function
+   * - A `string` that references a custom filter functions provided via the `tableOptions.filterFns` option
+   * - A custom filter function
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#globalfilterfn)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   globalFilterFn?: FilterFnOption<TData>
+  /**
+   * If provided, this function will be called with an `updaterFn` when `state.globalFilter` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#onglobalfilterchange)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   */
   onGlobalFilterChange?: OnChangeFn<any>
 
   // Faceting

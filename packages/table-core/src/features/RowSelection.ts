@@ -69,8 +69,8 @@ export interface RowSelectionRow {
    */
   getCanSelectSubRows: () => boolean
   /**
-   * Returns whether or not the row is selected.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisselected)
+   * Returns whether or not all of the row's sub rows are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallsubrowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
   getIsAllSubRowsSelected: () => boolean

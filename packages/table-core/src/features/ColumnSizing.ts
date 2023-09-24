@@ -50,11 +50,10 @@ export interface ColumnSizingOptions {
   onColumnSizingInfoChange?: OnChangeFn<ColumnSizingInfoState>
 }
 
-export interface ColumnSizingDefaultOptions {
-  columnResizeMode: ColumnResizeMode
-  onColumnSizingChange: OnChangeFn<ColumnSizingState>
-  onColumnSizingInfoChange: OnChangeFn<ColumnSizingInfoState>
-}
+export type ColumnSizingDefaultOptions = Pick<
+  ColumnSizingOptions,
+  'columnResizeMode' | 'onColumnSizingChange' | 'onColumnSizingInfoChange'
+>
 
 export interface ColumnSizingInstance {
   /**
@@ -172,7 +171,7 @@ export interface ColumnSizingHeader {
    * Returns an event handler function that can be used to resize the header. It can be used as an:
    * - `onMouseDown` handler
    * - `onTouchStart` handler
-   * 
+   *
    * The dragging and release events are automatically handled for you.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getresizehandler)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)

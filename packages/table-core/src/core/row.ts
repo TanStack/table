@@ -80,6 +80,8 @@ export interface CoreRow<TData extends RowData> {
   parentId?: string
   /**
    * Renders the value for the row in a given columnId the same as `getValue`, but will return the `renderFallbackValue` if no value is found.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#rendervalue)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
   renderValue: <TValue>(columnId: string) => TValue
   /**
