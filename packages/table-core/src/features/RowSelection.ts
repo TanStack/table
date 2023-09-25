@@ -255,7 +255,7 @@ export const RowSelection: TableFeature = {
         const rowSelection: RowSelectionState = { ...old }
 
         table.getRowModel().rows.forEach(row => {
-          mutateRowIsSelected(rowSelection, row.id, resolvedValue, table)
+          mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
         })
 
         return rowSelection
@@ -487,9 +487,13 @@ export const RowSelection: TableFeature = {
 
         const selectedRowIds = { ...old }
 
-        if (opts?.selectChildren ?? true) {
-          mutateRowIsSelected(selectedRowIds, row.id, value, table)
-        }
+        mutateRowIsSelected(
+          selectedRowIds,
+          row.id,
+          value,
+          opts?.selectChildren ?? true,
+          table
+        )
 
         return selectedRowIds
       })
@@ -549,6 +553,7 @@ const mutateRowIsSelected = <TData extends RowData>(
   selectedRowIds: Record<string, boolean>,
   id: string,
   value: boolean,
+  includeChildren: boolean,
   table: Table<TData>
 ) => {
   const row = table.getRow(id)
@@ -571,9 +576,9 @@ const mutateRowIsSelected = <TData extends RowData>(
   }
   // }
 
-  if (row.subRows?.length && row.getCanSelectSubRows()) {
+  if (includeChildren && row.subRows?.length && row.getCanSelectSubRows()) {
     row.subRows.forEach(row =>
-      mutateRowIsSelected(selectedRowIds, row.id, value, table)
+      mutateRowIsSelected(selectedRowIds, row.id, value, includeChildren, table)
     )
   }
 }
