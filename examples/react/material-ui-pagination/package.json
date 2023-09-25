@@ -13,7 +13,7 @@
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.6",
-    "@tanstack/react-table": "8.10.1",
+    "@tanstack/react-table": "8.10.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
