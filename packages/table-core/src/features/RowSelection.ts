@@ -97,7 +97,7 @@ export interface RowSelectionRow {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#toggleselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  toggleSelected: (value?: boolean) => void
+  toggleSelected: (value?: boolean, opts?: { selectChildren?: boolean }) => void
 }
 
 export interface RowSelectionInstance<TData extends RowData> {
@@ -475,7 +475,7 @@ export const RowSelection: TableFeature = {
     row: Row<TData>,
     table: Table<TData>
   ): void => {
-    row.toggleSelected = value => {
+    row.toggleSelected = (value, opts) => {
       const isSelected = row.getIsSelected()
 
       table.setRowSelection(old => {
@@ -487,7 +487,9 @@ export const RowSelection: TableFeature = {
 
         const selectedRowIds = { ...old }
 
-        mutateRowIsSelected(selectedRowIds, row.id, value, table)
+        if (opts?.selectChildren ?? true) {
+          mutateRowIsSelected(selectedRowIds, row.id, value, table)
+        }
 
         return selectedRowIds
       })
