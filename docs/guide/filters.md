@@ -27,3 +27,4 @@ Filters come in two flavors:
 - Global filters
   - A single filter value that is applied to all or some of columns' accessor values.
   - Stored in the `state.globalFilter` array as any value, usually a string.
+  - In `useReactTable` options, the `getFilteredRowModel` function must be called with the `getFilteredRowModel()` function.
