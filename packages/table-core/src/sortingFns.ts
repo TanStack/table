@@ -55,6 +55,9 @@ function compareBasic(a: any, b: any) {
 }
 
 function toString(a: any) {
+  if (typeof a === 'boolean') {
+    return String(a)
+  }
   if (typeof a === 'number') {
     if (isNaN(a) || a === Infinity || a === -Infinity) {
       return ''
