@@ -45,7 +45,7 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortData = (rows: Row<TData>[]) => {
           // This will also perform a stable sorting using the row index
           // if needed.
-          const sortedData = [...rows]
+          const sortedData = rows.map(row => ({...row}))
 
           sortedData.sort((rowA, rowB) => {
             for (let i = 0; i < availableSorting.length; i += 1) {
