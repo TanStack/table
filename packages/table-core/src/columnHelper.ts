@@ -6,7 +6,7 @@ import {
   IdentifiedColumnDef,
   RowData,
 } from './types'
-import { DeepKeys, DeepValue, RequiredKeys } from './utils'
+import { DeepKeys, DeepValue } from './utils'
 
 // type Person = {
 //   firstName: string
