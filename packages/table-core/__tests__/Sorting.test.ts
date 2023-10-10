@@ -6,41 +6,43 @@ import {
 } from '../src'
 
 describe('Sorting', () => {
-    describe('alphanumeric sort booleans ascending', () => {
-      it('should return rows in correct ascending order', () => {
-        const data = [
-          { value: false },
-          { value: true },
-          { value: false },
-          { value: true },
-        ]
-        const columns: ColumnDef<{value: boolean}>[] = [{
-          accessorKey: "value",
-          header: "Value",
-          sortingFn: "alphanumeric"
-        }]
+  describe('alphanumeric sort booleans ascending', () => {
+    it('should return rows in correct ascending order', () => {
+      const data = [
+        { value: false },
+        { value: true },
+        { value: false },
+        { value: true },
+      ]
+      const columns: ColumnDef<{ value: boolean }>[] = [{
+        accessorKey: "value",
+        header: "Value",
+        sortingFn: "alphanumeric"
+      }]
 
-        const table = createTable({
-          onStateChange() {},
-          renderFallbackValue: '',
-          data,
-          state: { sorting: [{
+      const table = createTable({
+        onStateChange() { },
+        renderFallbackValue: '',
+        data,
+        state: {
+          sorting: [{
             id: "value",
             desc: false,
-          }]},
-          columns,
-          getCoreRowModel: getCoreRowModel(),
-          getSortedRowModel: getSortedRowModel(),
-        })
-
-        const rowModel = table.getSortedRowModel()
-
-        expect(rowModel.rows[0].getValue("value")).toBe(false)
-        expect(rowModel.rows[1].getValue("value")).toBe(false)
-        expect(rowModel.rows[2].getValue("value")).toBe(true)
-        expect(rowModel.rows[3].getValue("value")).toBe(true)
+          }]
+        },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
       })
+
+      const rowModel = table.getSortedRowModel()
+
+      expect(rowModel.rows[0].getValue("value")).toBe(false)
+      expect(rowModel.rows[1].getValue("value")).toBe(false)
+      expect(rowModel.rows[2].getValue("value")).toBe(true)
+      expect(rowModel.rows[3].getValue("value")).toBe(true)
     })
+  })
 
   describe('alphanumeric sort floats ascending', () => {
     it('should return rows in correct ascending order', () => {
@@ -50,20 +52,22 @@ describe('Sorting', () => {
         { value: 0.2000016 },
         { value: 0.002002 },
       ]
-      const columns: ColumnDef<{value: number}>[] = [{
+      const columns: ColumnDef<{ value: number }>[] = [{
         accessorKey: "value",
         header: "Value",
         sortingFn: "alphanumeric"
       }]
 
       const table = createTable({
-        onStateChange() {},
+        onStateChange() { },
         renderFallbackValue: '',
         data,
-        state: { sorting: [{
-          id: "value",
-          desc: false,
-        }]},
+        state: {
+          sorting: [{
+            id: "value",
+            desc: false,
+          }]
+        },
         columns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -75,6 +79,44 @@ describe('Sorting', () => {
       expect(rowModel.rows[1].getValue("value")).toBe(0.002002)
       expect(rowModel.rows[2].getValue("value")).toBe(0.2000016)
       expect(rowModel.rows[3].getValue("value")).toBe(0.85)
+    })
+  })
+
+  describe('date sort ascending order', () => {
+    it('should return rows in correct ascending order', () => {
+      const data = [
+        { value: "2023-10-10T09:12:00Z" },
+        { value: "2023-10-10T09:13:00Z" },
+        { value: "2023-10-10T09:10:00Z" },
+        { value: "2023-10-10T09:11:00Z" },
+      ]
+      const columns: ColumnDef<{ value: string }>[] = [{
+        accessorKey: "value",
+        header: "Value",
+        sortingFn: "alphanumeric"
+      }]
+
+      const table = createTable({
+        onStateChange() { },
+        renderFallbackValue: '',
+        data,
+        state: {
+          sorting: [{
+            id: "value",
+            desc: false,
+          }]
+        },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+      })
+
+      const rowModel = table.getSortedRowModel()
+
+      expect(rowModel.rows[0].getValue("value")).toBe("2023-10-10T09:10:00Z")
+      expect(rowModel.rows[1].getValue("value")).toBe("2023-10-10T09:11:00Z")
+      expect(rowModel.rows[2].getValue("value")).toBe("2023-10-10T09:12:00Z")
+      expect(rowModel.rows[3].getValue("value")).toBe("2023-10-10T09:13:00Z")
     })
   })
 })
