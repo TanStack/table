@@ -55,9 +55,6 @@ function compareBasic(a: any, b: any) {
 }
 
 function toString(a: any) {
-  if (typeof a === 'boolean') {
-    return String(a)
-  }
   if (typeof a === 'number') {
     if (isNaN(a) || a === Infinity || a === -Infinity) {
       return ''
@@ -74,13 +71,6 @@ function toString(a: any) {
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
 function compareAlphanumeric(aStr: string, bStr: string) {
-  // Check if the string contains only a number
-  const aFloat = parseFloat(aStr);
-  const bFloat = parseFloat(bStr);
-  if(!isNaN(aFloat) && !isNaN(bFloat)) {
-    return compareBasic(aFloat, bFloat)
-  }
-
   // Split on number groups, but keep the delimiter
   // Then remove falsey split values
   const a = aStr.split(reSplitAlphaNumeric).filter(Boolean)
