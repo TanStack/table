@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
-    "@tanstack/react-table": "8.10.6",
+    "@tanstack/react-table": "8.10.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
