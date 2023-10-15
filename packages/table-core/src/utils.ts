@@ -20,7 +20,7 @@ export type IsKnown<T, Y, N> = unknown extends T ? N : Y
 
 type ComputeRange<
   N extends number,
-  Result extends Array<unknown> = []
+  Result extends Array<unknown> = [],
 > = Result['length'] extends N
   ? Result
   : ComputeRange<N, [...Result, Result['length']]>
@@ -36,29 +36,35 @@ type IsTuple<T> = T extends readonly any[] & { length: infer Length }
 // If this type is a tuple, what indices are allowed?
 type AllowedIndexes<
   Tuple extends ReadonlyArray<any>,
-  Keys extends number = never
+  Keys extends number = never,
 > = Tuple extends readonly []
   ? Keys
   : Tuple extends readonly [infer _, ...infer Tail]
   ? AllowedIndexes<Tail, Keys | Tail['length']>
   : Keys
 
-export type DeepKeys<T> = unknown extends T
-  ? keyof T
+export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
+  ? never
+  : unknown extends T
+  ? string
   : object extends T
   ? string
   : T extends readonly any[] & IsTuple<T>
-  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>>
+  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
   : T extends any[]
-  ? never & 'Dynamic length array indexing is not supported'
+  ? DeepKeys<T[number], [...TDepth, any]>
   : T extends Date
   ? never
   : T extends object
-  ? (keyof T & string) | DeepKeysPrefix<T, keyof T>
+  ? (keyof T & string) | DeepKeysPrefix<T, keyof T, TDepth>
   : never
 
-type DeepKeysPrefix<T, TPrefix> = TPrefix extends keyof T & (number | string)
-  ? `${TPrefix}.${DeepKeys<T[TPrefix]> & string}`
+type DeepKeysPrefix<
+  T,
+  TPrefix,
+  TDepth extends any[],
+> = TPrefix extends keyof T & (number | string)
+  ? `${TPrefix}.${DeepKeys<T[TPrefix], [...TDepth, any]> & string}`
   : never
 
 export type DeepValue<T, TProp> = T extends Record<string | number, any>
@@ -101,6 +107,10 @@ type AnyFunction = (...args: any) => any
 
 export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
+}
+
+export function isNumberArray(d: any): d is number[] {
+  return Array.isArray(d) && d.every(val => typeof val === 'number')
 }
 
 export function flattenBy<TNode>(

@@ -75,14 +75,14 @@ JS/TS ecosystem and every use-case.
 
 ## Notable Changes
 
-- Full rewrite to TypeScript
+- Full rewrite to TypeScript with types included in the base package
 - Removal of plugin system to favor more inversion of control
-- Vastly larger and improved API
+- Vastly larger and improved API (and new features like pinning)
 - Better controlled state management
 - Better support for server-side operations
 - Complete (but optional) data pipeline control
-- Agnostic Core
-- Framework Adapters
+- Agnostic core with framework adapters for React, Solid, Svelte, Vue, and potentially more in the future
+- New Dev Tools
 
 ## Migration
 

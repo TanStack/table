@@ -213,7 +213,7 @@ Returns whether or not the column can be **column** filtered.
 getCanGlobalFilter: () => boolean
 ```
 
-Returns whether or not the column can be **globally** filtered.
+Returns whether or not the column can be **globally** filtered.  Set to `false` to disable a column from being scanned during global filtering.
 
 ### `getFilterIndex`
 
@@ -333,7 +333,7 @@ const column = columnHelper.data('key', {
   filterFn: 'myCustomFilter',
 })
 
-const table = useTable({
+const table = useReactTable({
   columns: [column],
   filterFns: {
     myCustomFilter: (rows, columnIds, filterValue) => {

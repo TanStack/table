@@ -14,7 +14,7 @@ These functions are used to create a table. Which one you use depends on which f
 
 ## Options
 
-These are **core** options and API properties for the table. More options and API properties are available for other [table features](../../guide/features.md).
+These are **core** options and API properties for the table. More options and API properties are available for other [table features](../../guide/features).
 
 ### `data`
 
@@ -34,7 +34,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 type columns = ColumnDef<TData>[]
 ```
 
-The array of column defs to use for the table.
+The array of column defs to use for the table. See the [Column Defs Guide](../../guide/column-defs) for more information on creating column definitions.
 
 ### `defaultColumn`
 
@@ -42,7 +42,7 @@ The array of column defs to use for the table.
 defaultColumn?: Partial<ColumnDef<TData>>
 ```
 
-Default column options to use for all column defs supplied to the table. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.
+Default column options to use for all column defs supplied to the table. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
 
 ### `initialState`
 
@@ -220,22 +220,6 @@ getRowId?: (
 ```
 
 This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
-
-### `columns`
-
-```tsx
-type columns = ColumnDef<TData>[]
-```
-
-The column defs to use for this table. See the [Column Defs Guide](../../guide/column-defs.md) for more information on creating column definitions.
-
-### `defaultColumn`
-
-```tsx
-defaultColumn?: Partial<ColumnDef<TData>>
-```
-
-An optional, partial column default column definition. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
 
 ## Table API
 

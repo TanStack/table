@@ -46,6 +46,10 @@
           "to": "guide/installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "Column Defs",
           "to": "guide/column-defs"
         },
@@ -74,10 +78,6 @@
           "to": "guide/column-ordering"
         },
         {
-          "label": "Column Pinning",
-          "to": "guide/column-pinning"
-        },
-        {
           "label": "Column Sizing",
           "to": "guide/column-sizing"
         },
@@ -104,6 +104,10 @@
         {
           "label": "Pagination",
           "to": "guide/pagination"
+        },
+        {
+          "label": "Pinning",
+          "to": "guide/pinning"
         },
         {
           "label": "Row Selection",
@@ -152,10 +156,6 @@
           "to": "api/features/column-ordering"
         },
         {
-          "label": "Column Pinning",
-          "to": "api/features/column-pinning"
-        },
-        {
           "label": "Column Sizing",
           "to": "api/features/column-sizing"
         },
@@ -184,8 +184,21 @@
           "to": "api/features/pagination"
         },
         {
+          "label": "Pinning",
+          "to": "api/features/pinning"
+        },
+        {
           "label": "Row Selection",
           "to": "api/features/row-selection"
+        }
+      ]
+    },
+    {
+      "label": "Enterprise",
+      "children": [
+        {
+          "label": "AG Grid",
+          "to": "enterprise/ag-grid"
         }
       ]
     },
@@ -259,6 +272,10 @@
         {
           "to": "examples/react/row-dnd",
           "label": "Row DnD"
+        },
+        {
+          "to": "examples/react/row-pinning",
+          "label": "Row Pinning"
         },
         {
           "to": "examples/react/row-selection",
@@ -373,8 +390,8 @@
           "label": "React Bootstrap"
         },
         {
-          "to": "examples/react/mui-pagination",
-          "label": "React MUI Pagination"
+          "to": "examples/react/material-ui-pagination",
+          "label": "Material UI Pagination"
         },
         {
           "to": "examples/react/full-width-table",

@@ -33,6 +33,14 @@ getIsExpanded: () => boolean
 
 Returns whether the row is expanded.
 
+### `getIsAllParentsExpanded`
+
+```tsx
+getIsAllParentsExpanded: () => boolean
+```
+
+Returns whether all parent rows of the row are expanded.
+
 ### `getCanExpand`
 
 ```tsx

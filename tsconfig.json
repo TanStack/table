@@ -53,7 +53,7 @@
       "path": "examples/react/material-ui-components/tsconfig.dev.json"
     },
     {
-      "path": "examples/react/mui-pagination/tsconfig.dev.json"
+      "path": "examples/react/material-ui-pagination/tsconfig.dev.json"
     },
     {
       "path": "examples/react/pagination/tsconfig.dev.json"
@@ -63,6 +63,9 @@
     },
     {
       "path": "examples/react/row-dnd/tsconfig.dev.json"
+    },
+    {
+      "path": "examples/react/row-pinning/tsconfig.dev.json"
     },
     {
       "path": "examples/react/row-selection/tsconfig.dev.json"

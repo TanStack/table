@@ -123,15 +123,15 @@ Inverts the order of the sorting for this column. This is useful for values that
 ### `sortUndefined`
 
 ```tsx
-sortUndefined?: false | -1 | 1 // defaults to false
+sortUndefined?: false | -1 | 1 // defaults to 1
 ```
 
 - `false`
-  - Undefined values will be considered tied and need to be sorted by the next colum filter or original index (which ever applies)
+  - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
 - `-1`
-  - Undefined values will be sorted with higher priority (ascending)
+  - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1`
-  - Undefined values will be sorted with lower priority (descending)
+  - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
 
 ## Column API
 
@@ -199,6 +199,14 @@ getIsSorted: () => false | SortDirection
 
 Returns whether this column is sorted.
 
+### `getFirstSortDir`
+
+```tsx 
+getFirstSortDir: () => SortDirection
+```
+
+Returns the first direction that should be used when sorting this column.
+
 ### `clearSorting`
 
 ```tsx
@@ -245,7 +253,7 @@ const column = columnHelper.data('key', {
   sortingFn: 'myCustomSorting',
 })
 
-const table = useTable({
+const table = useReactTable({
   columns: [column],
   sortingFns: {
     myCustomSorting: (rowA: any, rowB: any, columnId: any): number =>
@@ -285,8 +293,8 @@ enableSortingRemoval?: boolean
 ```
 
 Enables/Disables the ability to remove sorting for the table.
-If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
-If `false` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
+- If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
+- If `false` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
 
 ### `enableMultiRemove`
 
