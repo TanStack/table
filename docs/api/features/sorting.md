@@ -37,7 +37,7 @@ The following sorting functions are built-in to the table core:
 - `datetime`
   - Sorts by time, use this if your values are `Date` objects.
 - `basic`
-  - Sorts using a basic/standard `a > b ? -1 : b < a ? 1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
+  - Sorts using a basic/standard `a > b ? 1 : a < b ? -1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
 
 Every sorting function receives 2 rows and a column ID and are expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
