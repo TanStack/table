@@ -97,6 +97,8 @@ The meta data to associated with the column. We can access it anywhere when the 
 ```tsx
 import '@tanstack/react-table'
 
+// declare module '@tanstack/react-table'
+
 declare module '@tanstack/table-core' {
   interface ColumnMeta<TData extends RowData, TValue> {
     foo: string
