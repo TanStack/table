@@ -12,7 +12,7 @@ The hardest parts of building complex UIs usually revolve around state, events, 
 
 Building UI is a very branded and custom experience, even if that means choosing a design system or adhering to a design spec. To support this custom experience, component-based UI libraries need to support a massive (and seemingly endless) API surface around markup and style customization. Headless UI libraries decouple your logic from your UI
 
-When you use a headless UI library, the complex task of **data-processing, state-management, and business logic** are handled for you, leaving you worry about higher-cardinality decisions that differ across implementations and use cases.
+When you use a headless UI library, the complex task of **data-processing, state-management, and business logic** are handled for you, leaving you to worry about higher-cardinality decisions that differ across implementations and use cases.
 
 > Want to dive deeper? [Read more about Headless UI](https://www.merrickchristensen.com/articles/headless-user-interface-components/).
 
