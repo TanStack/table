@@ -202,6 +202,7 @@ columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
 Columns are uniquely identified with 3 strategies:
 
 - If defining an accessor column with an object key or array index, the same will be used to uniquely identify the column.
+  - Any periods (`.`) in an object key will be replaced by underscores (`_`).
 - If defining an accessor column with an accessor function
   - The columns `id` property will be used to uniquely identify the column OR
   - If a primitive `string` header is supplied, that header string will be used to uniquely identify the column
