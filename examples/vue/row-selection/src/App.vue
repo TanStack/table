@@ -1,11 +1,14 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import {
   FlexRender,
   getCoreRowModel,
   useVueTable,
   createColumnHelper,
+  RowSelectionState,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
+
+import IndeterminateCheckbox from './IndeterminateCheckbox.vue';
 
 type Person = {
   firstName: string
@@ -46,6 +49,25 @@ const defaultData: Person[] = [
 const columnHelper = createColumnHelper<Person>()
 
 const columns = [
+  {
+    id: 'select',
+    header: ({ table }: { table: any }) => {
+      return <IndeterminateCheckbox
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      ></IndeterminateCheckbox>
+    },
+    cell: ({ row }: { row: any }) => {
+      return <div className="px-1">
+        <IndeterminateCheckbox
+          checked={row.getIsSelected()}
+          disabled={!row.getCanSelect()}
+          onChange={row.getToggleSelectedHandler()}
+        ></IndeterminateCheckbox>
+      </div> 
+    }
+  },
   columnHelper.group({
     header: 'Name',
     footer: props => props.column.id,
@@ -92,6 +114,7 @@ const columns = [
 ]
 
 const data = ref(defaultData)
+const rowSelection = ref<RowSelectionState>({})
 
 const rerender = () => {
   data.value = defaultData
@@ -102,6 +125,19 @@ const table = useVueTable({
     return data.value
   },
   columns,
+  state: {
+    get rowSelection() {
+      return rowSelection.value
+    },
+  },
+  enableRowSelection: true, //enable row selection for all rows
+  // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+  onRowSelectionChange: updateOrValue => {
+    rowSelection.value =
+      typeof updateOrValue === 'function'
+        ? updateOrValue(rowSelection.value)
+        : updateOrValue;
+  },
   getCoreRowModel: getCoreRowModel(),
 })
 </script>
@@ -138,21 +174,15 @@ const table = useVueTable({
         </tr>
       </tbody>
       <tfoot>
-        <tr
-          v-for="footerGroup in table.getFooterGroups()"
-          :key="footerGroup.id"
-        >
-          <th
-            v-for="header in footerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
-          >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
+        <tr>
+          <td className="p-1">
+            <IndeterminateCheckbox
+              :checked="table.getIsAllPageRowsSelected()"
+              :indeterminate="table.getIsSomePageRowsSelected()"
+              :onChange="table.getToggleAllPageRowsSelectedHandler()"
             />
-          </th>
+          </td>
+          <td :colSpan="20">Page Rows {{ table.getRowModel().rows.length }}</td>
         </tr>
       </tfoot>
     </table>
