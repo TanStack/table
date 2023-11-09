@@ -2,6 +2,7 @@
 import {
   FlexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useVueTable,
   createColumnHelper,
   RowSelectionState,
@@ -9,42 +10,8 @@ import {
 import { ref } from 'vue'
 
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue';
+import { makeData, Person } from './makeData'
 
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
 
 const columnHelper = createColumnHelper<Person>()
 
@@ -113,11 +80,11 @@ const columns = [
   }),
 ]
 
-const data = ref(defaultData)
+const data = ref(makeData(10))
 const rowSelection = ref<RowSelectionState>({})
 
 const rerender = () => {
-  data.value = defaultData
+  data.value = makeData(10)
 }
 
 const table = useVueTable({
