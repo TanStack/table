@@ -126,13 +126,13 @@ export interface RowSelectionInstance<TData extends RowData> {
    */
   getIsAllRowsSelected: () => boolean
   /**
-   * Returns whether or not all rows on the current page are selected.
+   * Returns whether or not any rows on the current page are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomepagerowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
   getIsSomePageRowsSelected: () => boolean
   /**
-   * Returns whether or not all rows in the table are selected.
+   * Returns whether or not any rows in the table are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomerowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
