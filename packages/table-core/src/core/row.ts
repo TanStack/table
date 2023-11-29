@@ -1,7 +1,8 @@
-import { RowData, Cell, Row, Table } from '../types'
+import { RowData, Cell, Row, Table, Column } from '../types'
 import { flattenBy, memo } from '../utils'
 import { createCell } from './cell'
 
+// row instance types
 export interface CoreRow<TData extends RowData> {
   _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
   _uniqueValuesCache: Record<string, unknown>
@@ -92,6 +93,7 @@ export interface CoreRow<TData extends RowData> {
   subRows: Row<TData>[]
 }
 
+// row instance creation
 export const createRow = <TData extends RowData>(
   table: Table<TData>,
   id: string,
@@ -101,94 +103,37 @@ export const createRow = <TData extends RowData>(
   subRows?: Row<TData>[],
   parentId?: string
 ): Row<TData> => {
-  let row: CoreRow<TData> = {
+  const row: CoreRow<TData> = {
     id,
     index: rowIndex,
     original,
     depth,
     parentId,
+    subRows: subRows ?? [],
     _valuesCache: {},
     _uniqueValuesCache: {},
-    getValue: columnId => {
-      if (row._valuesCache.hasOwnProperty(columnId)) {
-        return row._valuesCache[columnId]
-      }
-
-      const column = table.getColumn(columnId)
-
-      if (!column?.accessorFn) {
-        return undefined
-      }
-
-      row._valuesCache[columnId] = column.accessorFn(
-        row.original as TData,
-        rowIndex
-      )
-
-      return row._valuesCache[columnId] as any
-    },
-    getUniqueValues: columnId => {
-      if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
-        return row._uniqueValuesCache[columnId]
-      }
-
-      const column = table.getColumn(columnId)
-
-      if (!column?.accessorFn) {
-        return undefined
-      }
-
-      if (!column.columnDef.getUniqueValues) {
-        row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
-        return row._uniqueValuesCache[columnId]
-      }
-
-      row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
-        row.original as TData,
-        rowIndex
-      )
-
-      return row._uniqueValuesCache[columnId] as any
-    },
+    getValue: columnId =>
+      getRowValue({ columnId, row: row as Row<TData>, rowIndex, table }),
+    getUniqueValues: columnId =>
+      getUniqueRowValues({ columnId, row: row as Row<TData>, rowIndex, table }),
     renderValue: columnId =>
-      row.getValue(columnId) ?? table.options.renderFallbackValue,
-    subRows: subRows ?? [],
-    getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
-    getParentRow: () => (row.parentId ? table.getRow(row.parentId, true) : undefined),
-    getParentRows: () => {
-      let parentRows: Row<TData>[] = []
-      let currentRow = row
-      while (true) {
-        const parentRow = currentRow.getParentRow()
-        if (!parentRow) break
-        parentRows.push(parentRow)
-        currentRow = parentRow
-      }
-      return parentRows.reverse()
-    },
+      renderRowValue({ row: row as Row<TData>, columnId, table }),
+    getLeafRows: () => getRowLeafRows({ row: row as Row<TData> }),
+    getParentRow: () => getRowParentRow({ row: row as Row<TData>, table }),
+    getParentRows: () => getRowParentRows({ row: row as Row<TData> }),
     getAllCells: memo(
       () => [table.getAllLeafColumns()],
-      leafColumns => {
-        return leafColumns.map(column => {
-          return createCell(table, row as Row<TData>, column, column.id)
-        })
-      },
+      leafColumns =>
+        getAllRowsCells({ leafColumns, row: row as Row<TData>, table }),
       {
         key: process.env.NODE_ENV === 'development' && 'row.getAllCells',
         debug: () => table.options.debugAll ?? table.options.debugRows,
       }
     ),
-
     _getAllCellsByColumnId: memo(
       () => [row.getAllCells()],
       allCells => {
-        return allCells.reduce(
-          (acc, cell) => {
-            acc[cell.column.id] = cell
-            return acc
-          },
-          {} as Record<string, Cell<TData, unknown>>
-        )
+        return _getAllRowCellsByColumnId({ allCells })
       },
       {
         key:
@@ -204,4 +149,142 @@ export const createRow = <TData extends RowData>(
   }
 
   return row as Row<TData>
+}
+
+// row functions
+export function getRowValue<TData extends RowData>({
+  columnId,
+  row,
+  rowIndex,
+  table,
+}: {
+  columnId: string
+  row: Row<TData>
+  rowIndex: number
+  table: Table<TData>
+}) {
+  if (row._valuesCache.hasOwnProperty(columnId)) {
+    return row._valuesCache[columnId]
+  }
+
+  const column = table.getColumn(columnId)
+
+  if (!column?.accessorFn) {
+    return undefined
+  }
+
+  row._valuesCache[columnId] = column.accessorFn(
+    row.original as TData,
+    rowIndex
+  )
+
+  return row._valuesCache[columnId] as any
+}
+
+export function getUniqueRowValues<TData extends RowData>({
+  columnId,
+  row,
+  rowIndex,
+  table,
+}: {
+  columnId: string
+  row: Row<TData>
+  rowIndex: number
+  table: Table<TData>
+}) {
+  if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
+    return row._uniqueValuesCache[columnId]
+  }
+
+  const column = table.getColumn(columnId)
+
+  if (!column?.accessorFn) {
+    return undefined
+  }
+
+  if (!column.columnDef.getUniqueValues) {
+    row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
+    return row._uniqueValuesCache[columnId]
+  }
+
+  row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
+    row.original as TData,
+    rowIndex
+  )
+
+  return row._uniqueValuesCache[columnId] as any
+}
+
+export function renderRowValue<TData extends RowData>({
+  columnId,
+  row,
+  table,
+}: {
+  row: Row<TData>
+  columnId: string
+  table: Table<TData>
+}) {
+  return row.getValue(columnId) ?? table.options.renderFallbackValue
+}
+
+export function getRowLeafRows<TData extends RowData>({
+  row,
+}: {
+  row: Row<TData>
+}): Row<TData>[] {
+  return flattenBy(row.subRows, d => d.subRows)
+}
+
+export function getRowParentRow<TData extends RowData>({
+  row,
+  table,
+}: {
+  row: Row<TData>
+  table: Table<TData>
+}): Row<TData> | undefined {
+  return row.parentId ? table.getRow(row.parentId, true) : undefined
+}
+
+export function getRowParentRows<TData extends RowData>({
+  row,
+}: {
+  row: Row<TData>
+}): Row<TData>[] {
+  let parentRows: Row<TData>[] = []
+  let currentRow = row
+  while (true) {
+    const parentRow = currentRow.getParentRow()
+    if (!parentRow) break
+    parentRows.push(parentRow)
+    currentRow = parentRow
+  }
+  return parentRows.reverse()
+}
+
+export function getAllRowsCells<TData extends RowData>({
+  leafColumns,
+  row,
+  table,
+}: {
+  leafColumns: Column<TData, unknown>[]
+  row: Row<TData>
+  table: Table<TData>
+}): Cell<TData, unknown>[] {
+  return leafColumns.map(column => {
+    return createCell(table, row as Row<TData>, column, column.id)
+  })
+}
+
+function _getAllRowCellsByColumnId<TData extends RowData>({
+  allCells,
+}: {
+  allCells: Cell<TData, unknown>[]
+}): Record<string, Cell<TData, unknown>> {
+  return allCells.reduce(
+    (acc, cell) => {
+      acc[cell.column.id] = cell
+      return acc
+    },
+    {} as Record<string, Cell<TData, unknown>>
+  )
 }
