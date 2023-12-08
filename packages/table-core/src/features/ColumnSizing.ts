@@ -23,6 +23,8 @@ export interface ColumnSizingInfoState {
 
 export type ColumnResizeMode = 'onChange' | 'onEnd'
 
+export type ColumnResizeDirection = 'ltr' | 'rtl'
+
 export interface ColumnSizingOptions {
   /**
    * Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
@@ -36,6 +38,12 @@ export interface ColumnSizingOptions {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
   enableColumnResizing?: boolean
+  /**
+   * Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#rtl)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
+   */
+  columnResizeDirection?: ColumnResizeDirection
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnSizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnSizing` from your own managed state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnsizingchange)
@@ -52,7 +60,7 @@ export interface ColumnSizingOptions {
 
 export type ColumnSizingDefaultOptions = Pick<
   ColumnSizingOptions,
-  'columnResizeMode' | 'onColumnSizingChange' | 'onColumnSizingInfoChange'
+  'columnResizeMode' | 'onColumnSizingChange' | 'onColumnSizingInfoChange' | 'columnResizeDirection'
 >
 
 export interface ColumnSizingInstance {
@@ -225,6 +233,7 @@ export const ColumnSizing: TableFeature = {
   ): ColumnSizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
+      columnResizeDirection: 'ltr',
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
       onColumnSizingInfoChange: makeStateUpdater('columnSizingInfo', table),
     }
@@ -346,7 +355,8 @@ export const ColumnSizing: TableFeature = {
           }
 
           table.setColumnSizingInfo(old => {
-            const deltaOffset = clientXPos - (old?.startOffset ?? 0)
+            const deltaDirection = table.options.columnResizeDirection === 'rtl' ? -1 : 1
+            const deltaOffset = (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
             const deltaPercentage = Math.max(
               deltaOffset / (old?.startSize ?? 0),
               -0.999999
