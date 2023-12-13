@@ -56,7 +56,7 @@ export type ColumnHelper<TData extends RowData> = {
       ? TReturn
       : TAccessor extends DeepKeys<TData>
       ? DeepValue<TData, TAccessor>
-      : never
+      : never,
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
@@ -68,7 +68,7 @@ export type ColumnHelper<TData extends RowData> = {
 }
 
 export function createColumnHelper<
-  TData extends RowData
+  TData extends RowData,
 >(): ColumnHelper<TData> {
   return {
     accessor: (accessor, column) => {

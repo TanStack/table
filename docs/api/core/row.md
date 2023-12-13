@@ -53,10 +53,26 @@ If nested, this row's parent row id.
 ### `getValue`
 
 ```tsx
-getValue: (columnId: string) => any
+getValue: (columnId: string) => TValue
 ```
 
 Returns the value from the row for a given columnId
+
+### `renderValue`
+
+```tsx
+renderValue: (columnId: string) => TValue
+```
+
+Renders the value from the row for a given columnId, but will return the `renderFallbackValue` if no value is found.
+
+### `getUniqueValues`
+
+```tsx
+getUniqueValues: (columnId: string) => TValue[]
+```
+
+Returns a unique array of values from the row for a given columnId.
 
 ### `subRows`
 

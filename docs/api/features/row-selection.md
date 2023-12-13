@@ -177,6 +177,14 @@ getIsSomeSelected: () => boolean
 
 Returns whether or not some of the row's sub rows are selected.
 
+### `getIsAllSubRowsSelected`
+
+```tsx
+getIsAllSubRowsSelected: () => boolean
+```
+
+Returns whether or not all of the row's sub rows are selected.
+
 ### `getCanSelect`
 
 ```tsx
