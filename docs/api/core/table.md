@@ -34,7 +34,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 type columns = ColumnDef<TData>[]
 ```
 
-The array of column defs to use for the table. See the [Column Defs Guide](../../guide/column-defs) for more information on creating column definitions.
+The array of column defs to use for the table. See the [Column Defs Guide](../../docs/guide/column-defs) for more information on creating column definitions.
 
 ### `defaultColumn`
 
