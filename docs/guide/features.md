@@ -2,7 +2,7 @@
 title: Features
 ---
 
-React Table comes with many features, each with their own associated options and API:
+TanStack Table comes with many features, each with their own associated options and API:
 
 - [Column Visibility](./guide/column-visibility)
 - [Column Ordering](./guide/column-ordering)
