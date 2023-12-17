@@ -15,7 +15,7 @@ export type RowSelectionTableState = {
 }
 ```
 
-By default, row selection uses the index of the row. Row selection state can be tracked with a unique row id by passing in a custom [getRowId](../../api/core/table.md#getrowid) function to the the table. This may be necesssary when deleting rows while using manual pagination.
+By default, the row selection state uses the index of each row as the row identifiers. Row selection state can instead be tracked with a custom unique row id by passing in a custom [getRowId](../../api/core/table.md#getrowid) function to the the table.
 
 ## Table Options
 
