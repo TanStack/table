@@ -556,7 +556,7 @@ const mutateRowIsSelected = <TData extends RowData>(
   includeChildren: boolean,
   table: Table<TData>
 ) => {
-  const row = table.getRow(id)
+  const row = table.getRow(id, true)
 
   // const isGrouped = row.getIsGrouped()
 
