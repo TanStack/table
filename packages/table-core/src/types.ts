@@ -200,12 +200,12 @@ export type StringOrTemplateHeader<TData, TValue> =
   | string
   | ColumnDefTemplate<HeaderContext<TData, TValue>>
 
-interface StringHeaderIdentifier {
+export interface StringHeaderIdentifier {
   header: string
   id?: string
 }
 
-interface IdIdentifier<TData extends RowData, TValue> {
+export interface IdIdentifier<TData extends RowData, TValue> {
   id: string
   header?: StringOrTemplateHeader<TData, TValue>
 }
@@ -265,7 +265,7 @@ export type AccessorFnColumnDef<
   TValue = unknown,
 > = AccessorFnColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
-interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
+export interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefBase<TData, TValue> {
   id?: string
   accessorKey: (string & {}) | keyof TData
