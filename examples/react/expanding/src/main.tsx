@@ -264,7 +264,10 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
+      <label>Expanded State:</label>
       <pre>{JSON.stringify(expanded, null, 2)}</pre>
+      <label>Row Selection State:</label>
+      <pre>{JSON.stringify(table.getState().rowSelection, null, 2)}</pre>
     </div>
   )
 }

@@ -274,14 +274,6 @@ function App() {
       <div>
         <button
           className="border rounded p-2 mb-2"
-          onClick={() => console.info('rowSelection', rowSelection)}
-        >
-          Log `rowSelection` state
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
           onClick={() =>
             console.info(
               'table.getSelectedRowModel().flatRows',
@@ -291,6 +283,10 @@ function App() {
         >
           Log table.getSelectedRowModel().flatRows
         </button>
+      </div>
+      <div>
+        <label>Row Selection State:</label>
+        <pre>{JSON.stringify(table.getState().rowSelection, null, 2)}</pre>
       </div>
     </div>
   )
