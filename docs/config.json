@@ -369,6 +369,10 @@
           "label": "Pagination"
         },
         {
+          "to": "examples/vue/row-selection",
+          "label": "Row Selection"
+        },
+        {
           "to": "examples/vue/sorting",
           "label": "Sorting"
         }
