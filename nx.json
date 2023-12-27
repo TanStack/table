@@ -27,7 +27,7 @@
       "cache": true
     },
     "test:types": {
-      "dependsOn": ["root:build"],
+      "dependsOn": ["^test:types"],
       "cache": true
     }
   }
