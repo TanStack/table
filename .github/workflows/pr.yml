@@ -2,12 +2,8 @@ name: pr
 on: [pull_request]
 jobs:
   test:
-    name: 'Test (node ${{ matrix.node }})'
+    name: 'Test'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [16]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -15,10 +11,10 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
-      - name: Install Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: .nvmrc
           cache: pnpm
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
