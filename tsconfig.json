@@ -20,6 +20,9 @@
       "path": "examples/react/column-pinning/tsconfig.dev.json"
     },
     {
+      "path": "examples/react/column-resizing-performant/tsconfig.dev.json"
+    },
+    {
       "path": "examples/react/column-sizing/tsconfig.dev.json"
     },
     {

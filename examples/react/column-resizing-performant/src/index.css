@@ -49,19 +49,12 @@ td,
   position: absolute;
   top: 0;
   height: 100%;
+  right: 0;
   width: 5px;
   background: rgba(0, 0, 0, 0.5);
   cursor: col-resize;
   user-select: none;
   touch-action: none;
-}
-
-.resizer.ltr {
-  right: 0;
-}
-
-.resizer.rtl {
-  left: 0;
 }
 
 .resizer.isResizing {

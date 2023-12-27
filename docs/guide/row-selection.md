@@ -161,7 +161,7 @@ const columns = [
 ]
 ```
 
-#### Connect Row Selection to Row Click Events
+#### Connect Row Selection APIs to UI
 
 If you want a simpler row selection UI, you can just hook up click events to the row itself. The `row.getToggleSelectedHandler()` API is also useful for this use case.
 

@@ -9,6 +9,7 @@ import {
   getCoreRowModel,
   ColumnDef,
   flexRender,
+  ColumnResizeDirection,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -108,12 +109,16 @@ function App() {
   const [columnResizeMode, setColumnResizeMode] =
     React.useState<ColumnResizeMode>('onChange')
 
+  const [columnResizeDirection, setColumnResizeDirection] =
+    React.useState<ColumnResizeDirection>('ltr')
+
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useReactTable({
     data,
     columns,
     columnResizeMode,
+    columnResizeDirection,
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
@@ -130,261 +135,306 @@ function App() {
         <option value="onEnd">Resize: "onEnd"</option>
         <option value="onChange">Resize: "onChange"</option>
       </select>
-      <div className="h-4" />
-      <div className="text-xl">{'<table/>'}</div>
-      <div className="overflow-x-auto">
-        <table
-          {...{
-            style: {
-              width: table.getCenterTotalSize(),
-            },
-          }}
-        >
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    {...{
-                      key: header.id,
-                      colSpan: header.colSpan,
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    <div
-                      {...{
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? 'isResizing' : ''
-                        }`,
-                        style: {
-                          transform:
-                            columnResizeMode === 'onEnd' &&
-                            header.column.getIsResizing()
-                              ? `translateX(${
-                                  table.getState().columnSizingInfo.deltaOffset
-                                }px)`
-                              : '',
-                        },
-                      }}
-                    />
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td
-                    {...{
-                      key: cell.id,
-                      style: {
-                        width: cell.column.getSize(),
-                      },
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="h-4" />
-      <div className="text-xl">{'<div/> (relative)'}</div>
-      <div className="overflow-x-auto">
-        <div
-          {...{
-            className: 'divTable',
-            style: {
-              width: table.getTotalSize(),
-            },
-          }}
-        >
-          <div className="thead">
-            {table.getHeaderGroups().map(headerGroup => (
-              <div
-                {...{
-                  key: headerGroup.id,
-                  className: 'tr',
-                }}
-              >
-                {headerGroup.headers.map(header => (
-                  <div
-                    {...{
-                      key: header.id,
-                      className: 'th',
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    <div
-                      {...{
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? 'isResizing' : ''
-                        }`,
-                        style: {
-                          transform:
-                            columnResizeMode === 'onEnd' &&
-                            header.column.getIsResizing()
-                              ? `translateX(${
-                                  table.getState().columnSizingInfo.deltaOffset
-                                }px)`
-                              : '',
-                        },
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-          <div
+      <select
+        value={columnResizeDirection}
+        onChange={e =>
+          setColumnResizeDirection(e.target.value as ColumnResizeDirection)
+        }
+        className="border p-2 border-black rounded"
+      >
+        <option value="ltr">Resize Direction: "ltr"</option>
+        <option value="rtl">Resize Direction: "rtl"</option>
+      </select>
+      <div style={{ direction: table.options.columnResizeDirection }}>
+        <div className="h-4" />
+        <div className="text-xl">{'<table/>'}</div>
+        <div className="overflow-x-auto">
+          <table
             {...{
-              className: 'tbody',
+              style: {
+                width: table.getCenterTotalSize(),
+              },
             }}
           >
-            {table.getRowModel().rows.map(row => (
-              <div
-                {...{
-                  key: row.id,
-                  className: 'tr',
-                }}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <div
-                    {...{
-                      key: cell.id,
-                      className: 'td',
-                      style: {
-                        width: cell.column.getSize(),
-                      },
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </div>
-                ))}
-              </div>
-            ))}
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <th
+                      {...{
+                        key: header.id,
+                        colSpan: header.colSpan,
+                        style: {
+                          width: header.getSize(),
+                        },
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      <div
+                        {...{
+                          onDoubleClick: () => header.column.resetSize(),
+                          onMouseDown: header.getResizeHandler(),
+                          onTouchStart: header.getResizeHandler(),
+                          className: `resizer ${
+                            table.options.columnResizeDirection
+                          } ${
+                            header.column.getIsResizing() ? 'isResizing' : ''
+                          }`,
+                          style: {
+                            transform:
+                              columnResizeMode === 'onEnd' &&
+                              header.column.getIsResizing()
+                                ? `translateX(${
+                                    (table.options.columnResizeDirection ===
+                                    'rtl'
+                                      ? -1
+                                      : 1) *
+                                    (table.getState().columnSizingInfo
+                                      .deltaOffset ?? 0)
+                                  }px)`
+                                : '',
+                          },
+                        }}
+                      />
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <td
+                      {...{
+                        key: cell.id,
+                        style: {
+                          width: cell.column.getSize(),
+                        },
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="h-4" />
+        <div className="text-xl">{'<div/> (relative)'}</div>
+        <div className="overflow-x-auto">
+          <div
+            {...{
+              className: 'divTable',
+              style: {
+                width: table.getTotalSize(),
+              },
+            }}
+          >
+            <div className="thead">
+              {table.getHeaderGroups().map(headerGroup => (
+                <div
+                  {...{
+                    key: headerGroup.id,
+                    className: 'tr',
+                  }}
+                >
+                  {headerGroup.headers.map(header => (
+                    <div
+                      {...{
+                        key: header.id,
+                        className: 'th',
+                        style: {
+                          width: header.getSize(),
+                        },
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      <div
+                        {...{
+                          onDoubleClick: () => header.column.resetSize(),
+                          onMouseDown: header.getResizeHandler(),
+                          onTouchStart: header.getResizeHandler(),
+                          className: `resizer ${
+                            table.options.columnResizeDirection
+                          } ${
+                            header.column.getIsResizing() ? 'isResizing' : ''
+                          }`,
+                          style: {
+                            transform:
+                              columnResizeMode === 'onEnd' &&
+                              header.column.getIsResizing()
+                                ? `translateX(${
+                                    (table.options.columnResizeDirection ===
+                                    'rtl'
+                                      ? -1
+                                      : 1) *
+                                    (table.getState().columnSizingInfo
+                                      .deltaOffset ?? 0)
+                                  }px)`
+                                : '',
+                          },
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div
+              {...{
+                className: 'tbody',
+              }}
+            >
+              {table.getRowModel().rows.map(row => (
+                <div
+                  {...{
+                    key: row.id,
+                    className: 'tr',
+                  }}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <div
+                      {...{
+                        key: cell.id,
+                        className: 'td',
+                        style: {
+                          width: cell.column.getSize(),
+                        },
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="h-4" />
-      <div className="text-xl">{'<div/> (absolute positioning)'}</div>
-      <div className="overflow-x-auto">
-        <div
-          {...{
-            className: 'divTable',
-            style: {
-              width: table.getTotalSize(),
-            },
-          }}
-        >
-          <div className="thead">
-            {table.getHeaderGroups().map(headerGroup => (
-              <div
-                {...{
-                  key: headerGroup.id,
-                  className: 'tr',
-                  style: {
-                    position: 'relative',
-                  },
-                }}
-              >
-                {headerGroup.headers.map(header => (
-                  <div
-                    {...{
-                      key: header.id,
-                      className: 'th',
-                      style: {
-                        position: 'absolute',
-                        left: header.getStart(),
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    <div
-                      {...{
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? 'isResizing' : ''
-                        }`,
-                        style: {
-                          transform:
-                            columnResizeMode === 'onEnd' &&
-                            header.column.getIsResizing()
-                              ? `translateX(${
-                                  table.getState().columnSizingInfo.deltaOffset
-                                }px)`
-                              : '',
-                        },
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+        <div className="h-4" />
+        <div className="text-xl">{'<div/> (absolute positioning)'}</div>
+        <div className="overflow-x-auto">
           <div
             {...{
-              className: 'tbody',
+              className: 'divTable',
+              style: {
+                width: table.getTotalSize(),
+              },
             }}
           >
-            {table.getRowModel().rows.map(row => (
-              <div
-                {...{
-                  key: row.id,
-                  className: 'tr',
-                  style: {
-                    position: 'relative',
-                  },
-                }}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <div
-                    {...{
-                      key: cell.id,
-                      className: 'td',
-                      style: {
-                        position: 'absolute',
-                        left: cell.column.getStart(),
-                        width: cell.column.getSize(),
-                      },
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </div>
-                ))}
-              </div>
-            ))}
+            <div className="thead">
+              {table.getHeaderGroups().map(headerGroup => (
+                <div
+                  {...{
+                    key: headerGroup.id,
+                    className: 'tr',
+                    style: {
+                      position: 'relative',
+                    },
+                  }}
+                >
+                  {headerGroup.headers.map(header => (
+                    <div
+                      {...{
+                        key: header.id,
+                        className: 'th',
+                        style: {
+                          position: 'absolute',
+                          left: header.getStart(),
+                          width: header.getSize(),
+                        },
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      <div
+                        {...{
+                          onDoubleClick: () => header.column.resetSize(),
+                          onMouseDown: header.getResizeHandler(),
+                          onTouchStart: header.getResizeHandler(),
+                          className: `resizer ${
+                            table.options.columnResizeDirection
+                          } ${
+                            header.column.getIsResizing() ? 'isResizing' : ''
+                          }`,
+                          style: {
+                            transform:
+                              columnResizeMode === 'onEnd' &&
+                              header.column.getIsResizing()
+                                ? `translateX(${
+                                    (table.options.columnResizeDirection ===
+                                    'rtl'
+                                      ? -1
+                                      : 1) *
+                                    (table.getState().columnSizingInfo
+                                      .deltaOffset ?? 0)
+                                  }px)`
+                                : '',
+                          },
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div
+              {...{
+                className: 'tbody',
+              }}
+            >
+              {table.getRowModel().rows.map(row => (
+                <div
+                  {...{
+                    key: row.id,
+                    className: 'tr',
+                    style: {
+                      position: 'relative',
+                    },
+                  }}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <div
+                      {...{
+                        key: cell.id,
+                        className: 'td',
+                        style: {
+                          position: 'absolute',
+                          left: cell.column.getStart(),
+                          width: cell.column.getSize(),
+                        },
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

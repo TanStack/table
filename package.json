@@ -26,6 +26,7 @@
     "./examples/react/column-groups",
     "./examples/react/column-ordering",
     "./examples/react/column-pinning",
+    "./examples/react/column-resizing-performant",
     "./examples/react/column-sizing",
     "./examples/react/column-visibility",
     "./examples/react/editable-data",
