@@ -115,7 +115,7 @@
     "stream-to-array": "^2.3.0",
     "svelte": "^3.49.0",
     "ts-node": "^10.9.2",
-    "typescript": "5.2.2",
+    "typescript": "5.3.3",
     "vitest": "^0.29.3",
     "vue": "^3.2.33"
   }
