@@ -49,7 +49,9 @@
     "src"
   ],
   "scripts": {
-    "test:types": "tsc"
+    "test:types": "tsc",
+    "test:lib": "vitest",
+    "test:lib:dev": "pnpm test:lib --watch"
   },
   "dependencies": {
     "remove-accents": "0.4.2"

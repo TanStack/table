@@ -43,7 +43,9 @@
     "src"
   ],
   "scripts": {
-    "test:types": "tsc"
+    "test:types": "tsc",
+    "test:lib": "vitest",
+    "test:lib:dev": "pnpm test:lib --watch"
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
