@@ -43,6 +43,7 @@
     "src"
   ],
   "scripts": {
+    "clean": "rimraf ./build",
     "test:types": "tsc"
   },
   "peerDependencies": {

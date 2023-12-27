@@ -4,7 +4,7 @@
   "repository": "https://github.com/tanstack/table.git",
   "packageManager": "pnpm@8.12.1",
   "scripts": {
-    "clean": "pnpm exec --workspaces -c \"rm -rf build || true\"",
+    "clean": "pnpm --filter \"./packages/**\" run clean",
     "preinstall": "node -e \"if(process.env.CI == 'true') {console.log('Skipping preinstall...'); process.exit(1)}\" || npx -y only-allow pnpm",
     "test": "(is-ci && pnpm run test:lib) || pnpm run test:lib:dev",
     "test:lib": "nx run-many -t test:lib",
@@ -55,6 +55,7 @@
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
     "rollup": "^2.70.2",
     "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-size": "^0.2.2",

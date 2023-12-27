@@ -49,6 +49,7 @@
     "src"
   ],
   "scripts": {
+    "clean": "rimraf ./build",
     "test:types": "tsc",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch"
