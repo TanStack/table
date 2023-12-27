@@ -40,7 +40,7 @@ export interface ColumnSizingOptions {
   enableColumnResizing?: boolean
   /**
    * Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#rtl)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#columnResizeDirection)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
   columnResizeDirection?: ColumnResizeDirection
