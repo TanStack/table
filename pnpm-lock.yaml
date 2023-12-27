@@ -1411,7 +1411,7 @@ importers:
   packages/react-table:
     dependencies:
       '@tanstack/table-core':
-        specifier: 8.11.2
+        specifier: workspace:*
         version: link:../table-core
       react:
         specifier: '>=16'
@@ -1423,8 +1423,8 @@ importers:
   packages/react-table-devtools:
     dependencies:
       '@tanstack/react-table':
-        specifier: 8.0.0-alpha.1
-        version: 8.0.0-alpha.1(react-dom@18.2.0)(react@18.2.0)
+        specifier: workspace:*
+        version: link:../react-table
       react:
         specifier: '>=16'
         version: 18.2.0
@@ -1435,7 +1435,7 @@ importers:
   packages/solid-table:
     dependencies:
       '@tanstack/table-core':
-        specifier: 8.11.2
+        specifier: workspace:*
         version: link:../table-core
       solid-js:
         specifier: ^1.3.13
@@ -1444,7 +1444,7 @@ importers:
   packages/svelte-table:
     dependencies:
       '@tanstack/table-core':
-        specifier: 8.11.2
+        specifier: workspace:*
         version: link:../table-core
       svelte:
         specifier: ^4.0.0 || ^3.49.0
@@ -1455,7 +1455,7 @@ importers:
   packages/vue-table:
     dependencies:
       '@tanstack/table-core':
-        specifier: 8.11.2
+        specifier: workspace:*
         version: link:../table-core
       vue:
         specifier: ^3.2.33
@@ -4204,17 +4204,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
-
-  /@tanstack/react-table@8.0.0-alpha.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-0fwp0ihCrvAhA3KWXdWMA3RL9uw3M/UjUvEVkj9APaBt1Q0fJmBTQfzAg3590MraLjRpiiX9/YsRLKj8Dv5b1w==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@testing-library/dom@8.20.0:
