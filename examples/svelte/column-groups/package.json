@@ -19,7 +19,7 @@
     "svelte-check": "^2.2.7",
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
-    "typescript": "^4.9.5",
+    "typescript": "5.3.3",
     "vite": "^3.2.3"
   }
 }
