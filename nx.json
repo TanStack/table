@@ -23,9 +23,6 @@
       "inputs": ["buildDeps", "^buildDeps"],
       "cache": true
     },
-    "build-js": {
-      "cache": true
-    },
     "test:lib": {
       "cache": true
     },

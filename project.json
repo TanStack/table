@@ -2,18 +2,13 @@
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "name": "root",
   "targets": {
-    "build-js": {
+    "build": {
       "command": "rollup --config rollup.config.js",
       "inputs": ["packageSources"],
       "outputs": [
         "{workspaceRoot}/packages/*/build/stats*",
         "{workspaceRoot}/packages/*/build/**/*.(cjs|mjs|js)*"
       ]
-    },
-    "build": {
-      "command": "echo \"  @tanstack/table > All packages built! 📦\"",
-      "dependsOn": ["build-js", "test:types"],
-      "inputs": ["packageSources"]
     }
   }
 }
