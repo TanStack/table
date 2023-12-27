@@ -1,13 +1,15 @@
 {
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "build-js", "test:ci", "typecheck"]
-      }
-    }
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "affected": {
+    "defaultBase": "main"
   },
   "defaultBase": "main",
+  "pluginsConfig": {
+    "@nrwl/js": {
+      "analyzeSourceFiles": false
+    }
+  },
+  "parallel": 5,
   "namedInputs": {
     "packageSources": [
       "{workspaceRoot}/packages/**/src/**/*.ts",
@@ -18,7 +20,17 @@
   "targetDefaults": {
     "build": {
       "outputs": ["{projectRoot}/build"],
-      "inputs": ["buildDeps", "^buildDeps"]
+      "inputs": ["buildDeps", "^buildDeps"],
+      "cache": true
+    },
+    "build-js": {
+      "cache": true
+    },
+    "test:ci": {
+      "cache": true
+    },
+    "typecheck": {
+      "cache": true
     }
   }
 }
