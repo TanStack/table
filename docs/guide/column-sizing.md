@@ -89,7 +89,7 @@ By default, the column resize mode is set to `"onEnd"`. This means that the `col
 
 In React TanStack Table adapter, where achieving 60 fps column resizing renders can be difficult, depending on the complexity of your table or web page, the `"onEnd"` column resize mode can be a good default option to avoid stuttering or lagging while the user resizes columns. That is not to say that you cannot achieve 60 fps column resizing renders while using TanStack React Table, but you may have to do some extra memoization or other performance optimizations in order to achieve this.
 
-> Advanced column resizing performance tips will be discussed [down below](#advancedcolumnresizingperformance).
+> Advanced column resizing performance tips will be discussed [down below](#advanced-column-resizing-performance).
 
 If you want to change the column resize mode to `"onChange"` for immediate column resizing renders, you can do so with the `columnResizeMode` table option.
 
@@ -135,7 +135,7 @@ How you apply these size styles to your markup is up to you, but it is pretty co
 >
 ```
 
-Though, as discussed in the [advanced column resizing performance section](#advancedcolumnresizingperformance), you may want to consider using CSS variables to apply column sizes to your markup.
+Though, as discussed in the [advanced column resizing performance section](#advanced-column-resizing-performance), you may want to consider using CSS variables to apply column sizes to your markup.
 
 ##### Column Resize APIs
 
