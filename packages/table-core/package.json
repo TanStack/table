@@ -43,5 +43,8 @@
     "build/lib/*",
     "build/umd/*",
     "src"
-  ]
+  ],
+  "scripts": {
+    "test:types": "tsc"
+  }
 }

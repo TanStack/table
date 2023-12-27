@@ -48,6 +48,9 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "test:types": "tsc"
+  },
   "dependencies": {
     "remove-accents": "0.4.2"
   }

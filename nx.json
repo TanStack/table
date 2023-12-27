@@ -29,7 +29,7 @@
     "test:ci": {
       "cache": true
     },
-    "typecheck": {
+    "test:types": {
       "cache": true
     }
   }

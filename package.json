@@ -1,4 +1,5 @@
 {
+  "name": "table",
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
   "packageManager": "pnpm@8.12.1",
@@ -7,6 +8,7 @@
     "test": "(is-ci && npm run test:ci) || npm run test:dev",
     "test:ci": "nx test:ci root",
     "test:dev": "vitest --watch",
+    "test:types": "nx run-many -t test:types",
     "build": "nx build root",
     "watch": "concurrently --kill-others \"rollup --config rollup.config.js -w\" \"tsc -b --watch\"",
     "dev": "npm run watch",
@@ -14,7 +16,13 @@
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "CI=true npm run cipublish",
     "typecheck": "nx typecheck root",
-    "pr": "nx run-many --targets=test:ci,build,typecheck --projects=root"
+    "pr": "nx run-many --targets=test:ci,build,test:types --projects=root"
+  },
+  "nx": {
+    "includedScripts": [
+      "test:ci",
+      "build"
+    ]
   },
   "namespace": "@tanstack",
   "devDependencies": {

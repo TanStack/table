@@ -42,6 +42,9 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "test:types": "tsc"
+  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"

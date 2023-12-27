@@ -42,6 +42,9 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "test:types": "tsc"
+  },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
   },
