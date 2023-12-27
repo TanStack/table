@@ -43,3 +43,5 @@ dist
 package-lock.json
 *.tsbuildinfo
 *.tsbuildinfo
+
+.nx/cache
