@@ -4,7 +4,7 @@ import {
   getCoreRowModel,
   TableOptions,
   useReactTable,
-} from '@tanstack/react-table'
+} from '../../src'
 import { fireEvent, render, screen } from '@testing-library/react'
 import React, { FC } from 'react'
 
@@ -82,7 +82,7 @@ const defaultPaginatedColumns: ColumnDef<Person>[] = [
       )
     },
     cell: ({ row }) => {
-      return ( row.getCanSelect() ? (
+      return row.getCanSelect() ? (
         <input
           data-testid="select-single"
           type="checkbox"
@@ -90,7 +90,7 @@ const defaultPaginatedColumns: ColumnDef<Person>[] = [
           checked={row.getIsSelected()}
           onChange={row.getToggleSelectedHandler()}
         />
-      ):null)
+      ) : null
     },
   },
   {
@@ -166,20 +166,19 @@ test(`Select all do not select rows which are not available for selection`, () =
   expect(title).not.toBePartiallyChecked()
   expect(notSelected).not.toBeChecked()
   expect(selected).not.toBeChecked()
-
 })
 
 // issue #4757
 test(`Select all is unchecked for current page if all rows are not available for selection`, () => {
-  let condition = row => row.original.age > 50;
+  let condition = row => row.original.age > 50
 
-  const {rerender} = render(
+  const { rerender } = render(
     <TableComponent
       options={{
         columns: defaultPaginatedColumns,
         data: defaultData,
-        enableRowSelection: condition
-    }}
+        enableRowSelection: condition,
+      }}
     />
   )
 
@@ -188,12 +187,13 @@ test(`Select all is unchecked for current page if all rows are not available for
   expect(selectedOnPage).not.toBeChecked()
   expect(selectedOnPage).not.toHaveAttribute('aria-checked', 'mixed')
 
-  condition = row => row.original.age > 40;
-  rerender(<TableComponent
+  condition = row => row.original.age > 40
+  rerender(
+    <TableComponent
       options={{
         columns: defaultPaginatedColumns,
         data: defaultData,
-        enableRowSelection: condition
+        enableRowSelection: condition,
       }}
     />
   )
@@ -205,7 +205,6 @@ test(`Select all is unchecked for current page if all rows are not available for
 
   fireEvent.click(screen.queryByTestId('select-single'))
   expect(selectedOnPage).toBeChecked()
-
 })
 
 test(`Select all when all rows are available for selection`, () => {

@@ -42,11 +42,15 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc"
+  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"
   },
   "dependencies": {
-    "@tanstack/react-table": "8.0.0-alpha.1"
+    "@tanstack/react-table": "workspace:*"
   }
 }

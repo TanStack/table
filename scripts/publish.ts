@@ -344,12 +344,12 @@ async function run() {
   console.info()
 
   console.info('Building packages...')
-  execSync(`npm run build`, { encoding: 'utf8', stdio: 'inherit' })
+  execSync(`pnpm build`, { encoding: 'utf8', stdio: 'inherit' })
   console.info('')
 
-  // console.info('Building types...')
-  // execSync(`npm run types`, { encoding: 'utf8', stdio: 'inherit' })
-  // console.info('')
+  console.info('Building types...')
+  execSync(`pnpm test:types`, { encoding: 'utf8', stdio: 'inherit' })
+  console.info('')
 
   console.info('Validating packages...')
   const failedValidations: string[] = []
@@ -394,7 +394,7 @@ async function run() {
   }
 
   console.info('Testing packages...')
-  execSync(`npm run test:ci`, { encoding: 'utf8' })
+  execSync(`npm run test:lib`, { encoding: 'utf8' })
   console.info('')
 
   console.info(`Updating all changed packages to version ${version}...`)

@@ -42,8 +42,12 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc"
+  },
   "dependencies": {
-    "@tanstack/table-core": "8.11.2"
+    "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.2.33"

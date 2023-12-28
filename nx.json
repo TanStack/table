@@ -23,13 +23,11 @@
       "inputs": ["buildDeps", "^buildDeps"],
       "cache": true
     },
-    "build-js": {
+    "test:lib": {
       "cache": true
     },
-    "test:ci": {
-      "cache": true
-    },
-    "typecheck": {
+    "test:types": {
+      "dependsOn": ["^test:types"],
       "cache": true
     }
   }

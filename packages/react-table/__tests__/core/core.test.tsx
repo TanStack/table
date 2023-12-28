@@ -2,13 +2,12 @@ import * as React from 'react'
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
-import '@testing-library/jest-dom'
 import {
   useReactTable,
   getCoreRowModel,
   ColumnDef,
   flexRender,
-} from '@tanstack/react-table'
+} from '../../src'
 
 type Person = {
   firstName: string
