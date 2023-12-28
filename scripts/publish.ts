@@ -4,7 +4,7 @@ import {
   latestBranch,
   packages,
   rootDir,
-} from './config'
+} from './config.mjs'
 import { BranchConfig, Commit, Package } from './types'
 
 // Originally ported to TS from https://github.com/remix-run/react-router/tree/main/scripts/{version,publish}.js
@@ -230,14 +230,17 @@ async function run() {
     ? `Manual Release: ${process.env.TAG}`
     : await Promise.all(
         Object.entries(
-          commitsSinceLatestTag.reduce((acc, next) => {
-            const type = next.parsed.type?.toLowerCase() ?? 'other'
+          commitsSinceLatestTag.reduce(
+            (acc, next) => {
+              const type = next.parsed.type?.toLowerCase() ?? 'other'
 
-            return {
-              ...acc,
-              [type]: [...(acc[type] || []), next],
-            }
-          }, {} as Record<string, Commit[]>)
+              return {
+                ...acc,
+                [type]: [...(acc[type] || []), next],
+              }
+            },
+            {} as Record<string, Commit[]>
+          )
         )
           .sort(
             getSorterFn([
