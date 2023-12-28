@@ -31,7 +31,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@commitlint/parse": "^16.2.1",
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^8.3.1",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-node-resolve": "^13.2.1",
     "@rollup/plugin-replace": "^4.0.0",
