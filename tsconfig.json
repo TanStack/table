@@ -13,5 +13,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": "."
-  }
+  },
+  "include": ["prettier.config.js"]
 }
