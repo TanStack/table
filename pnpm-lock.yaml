@@ -1022,9 +1022,6 @@ importers:
       svelte-check:
         specifier: ^2.2.7
         version: 2.10.3(@babel/core@7.23.6)(svelte@3.57.0)
-      svelte-preprocess:
-        specifier: ^4.9.8
-        version: 4.10.7(@babel/core@7.23.6)(svelte@3.57.0)(typescript@5.3.3)
       tslib:
         specifier: ^2.3.1
         version: 2.5.0
@@ -1055,9 +1052,6 @@ importers:
       svelte-check:
         specifier: ^2.2.7
         version: 2.10.3(@babel/core@7.23.6)(svelte@3.57.0)
-      svelte-preprocess:
-        specifier: ^4.9.8
-        version: 4.10.7(@babel/core@7.23.6)(svelte@3.57.0)(typescript@5.3.3)
       tslib:
         specifier: ^2.3.1
         version: 2.5.0
@@ -1091,9 +1085,6 @@ importers:
       svelte-check:
         specifier: ^2.2.7
         version: 2.10.3(@babel/core@7.23.6)(svelte@3.57.0)
-      svelte-preprocess:
-        specifier: ^4.9.8
-        version: 4.10.7(@babel/core@7.23.6)(svelte@3.57.0)(typescript@5.3.3)
       tslib:
         specifier: ^2.3.1
         version: 2.5.0
@@ -1127,9 +1118,6 @@ importers:
       svelte-check:
         specifier: ^2.2.7
         version: 2.10.3(@babel/core@7.23.6)(svelte@3.57.0)
-      svelte-preprocess:
-        specifier: ^4.9.8
-        version: 4.10.7(@babel/core@7.23.6)(svelte@3.57.0)(typescript@5.3.3)
       tslib:
         specifier: ^2.3.1
         version: 2.5.0
@@ -1160,9 +1148,6 @@ importers:
       svelte-check:
         specifier: ^2.2.7
         version: 2.10.3(@babel/core@7.23.6)(svelte@3.57.0)
-      svelte-preprocess:
-        specifier: ^4.9.8
-        version: 4.10.7(@babel/core@7.23.6)(svelte@3.57.0)(typescript@5.3.3)
       tslib:
         specifier: ^2.3.1
         version: 2.5.0
@@ -1196,9 +1181,6 @@ importers:
       svelte-check:
         specifier: ^2.2.7
         version: 2.10.3(@babel/core@7.23.6)(svelte@3.57.0)
-      svelte-preprocess:
-        specifier: ^4.9.8
-        version: 4.10.7(@babel/core@7.23.6)(svelte@3.57.0)(typescript@5.3.3)
       tslib:
         specifier: ^2.3.1
         version: 2.5.0
