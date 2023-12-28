@@ -19,7 +19,7 @@ The unique identifier for the header group.
 ### `depth`
 
 ```tsx
-id: number
+depth: number
 ```
 
 The depth of the header group, zero-indexed based.
