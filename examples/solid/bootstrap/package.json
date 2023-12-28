@@ -11,7 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
-    "typescript": "5.3.3",
+    "typescript": "5.2.2",
     "vite": "^3.2.3",
     "vite-plugin-solid": "^2.4.0"
   },

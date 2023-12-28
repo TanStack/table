@@ -10,7 +10,6 @@
     "strictNullChecks": true,
     "jsx": "react",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": "."
