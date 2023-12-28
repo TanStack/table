@@ -112,6 +112,10 @@
         {
           "label": "Row Selection",
           "to": "guide/row-selection"
+        },
+        {
+          "label": "Virtualization",
+          "to": "guide/virtualization"
         }
       ]
     },
