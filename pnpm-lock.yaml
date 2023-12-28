@@ -27,8 +27,8 @@ importers:
         specifier: ^16.2.1
         version: 16.2.1
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-babel':
         specifier: ^5.3.1
         version: 5.3.1(@babel/core@7.21.3)(rollup@2.79.1)
@@ -182,8 +182,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-replace':
         specifier: ^5.0.1
         version: 5.0.2(rollup@2.79.1)
@@ -203,8 +203,8 @@ importers:
   examples/react/column-dnd:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -256,8 +256,8 @@ importers:
   examples/react/column-ordering:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -281,8 +281,8 @@ importers:
   examples/react/column-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -306,8 +306,8 @@ importers:
   examples/react/column-resizing-performant:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -375,8 +375,8 @@ importers:
   examples/react/editable-data:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -400,8 +400,8 @@ importers:
   examples/react/expanding:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -425,8 +425,8 @@ importers:
   examples/react/filters:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/match-sorter-utils':
         specifier: 8.7.6
         version: link:../../../packages/match-sorter-utils
@@ -453,8 +453,8 @@ importers:
   examples/react/full-width-resizable-table:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -478,8 +478,8 @@ importers:
   examples/react/full-width-table:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -503,8 +503,8 @@ importers:
   examples/react/fully-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -528,8 +528,8 @@ importers:
   examples/react/grouping:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -584,8 +584,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.23.6)
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-replace':
         specifier: ^5.0.1
         version: 5.0.2(rollup@2.79.1)
@@ -621,8 +621,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-replace':
         specifier: ^5.0.1
         version: 5.0.2(rollup@2.79.1)
@@ -636,8 +636,8 @@ importers:
   examples/react/pagination:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -661,8 +661,8 @@ importers:
   examples/react/pagination-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -689,8 +689,8 @@ importers:
   examples/react/row-dnd:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -720,8 +720,8 @@ importers:
   examples/react/row-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -745,8 +745,8 @@ importers:
   examples/react/row-selection:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -770,8 +770,8 @@ importers:
   examples/react/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -795,8 +795,8 @@ importers:
   examples/react/sub-components:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
@@ -820,8 +820,8 @@ importers:
   examples/react/virtualized-infinite-scrolling:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-query':
         specifier: 4.16.1
         version: 4.16.1(react-dom@18.2.0)(react@18.2.0)
@@ -851,30 +851,30 @@ importers:
   examples/react/virtualized-rows:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/react-table':
         specifier: 8.11.2
         version: link:../../../packages/react-table
+      '@tanstack/react-virtual':
+        specifier: ^3.0.1
+        version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      react-virtual:
-        specifier: ^2.10.4
-        version: 2.10.4(react@18.2.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.1
-        version: 5.0.2(rollup@2.79.1)
+        specifier: ^5.0.5
+        version: 5.0.5(rollup@2.79.1)
       '@vitejs/plugin-react':
-        specifier: ^2.2.0
-        version: 2.2.0(vite@3.2.5)
+        specifier: ^4.2.1
+        version: 4.2.1(vite@5.0.10)
       vite:
-        specifier: ^3.2.3
-        version: 3.2.5(@types/node@18.15.10)
+        specifier: ^5.0.10
+        version: 5.0.10(@types/node@18.15.10)
 
   examples/solid/basic:
     dependencies:
@@ -911,8 +911,8 @@ importers:
         version: 1.6.15
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -952,8 +952,8 @@ importers:
         version: 1.6.15
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -993,8 +993,8 @@ importers:
         version: 1.6.15
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -1074,8 +1074,8 @@ importers:
   examples/svelte/column-ordering:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-replace':
         specifier: ^5.0.1
         version: 5.0.2(rollup@2.79.1)
@@ -1110,8 +1110,8 @@ importers:
   examples/svelte/column-pinning:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-replace':
         specifier: ^5.0.1
         version: 5.0.2(rollup@2.79.1)
@@ -1179,8 +1179,8 @@ importers:
   examples/svelte/sorting:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@rollup/plugin-replace':
         specifier: ^5.0.1
         version: 5.0.2(rollup@2.79.1)
@@ -1240,8 +1240,8 @@ importers:
   examples/vue/column-ordering:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/vue-table':
         specifier: 8.11.2
         version: link:../../../packages/vue-table
@@ -1268,8 +1268,8 @@ importers:
   examples/vue/column-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/vue-table':
         specifier: 8.11.2
         version: link:../../../packages/vue-table
@@ -1296,8 +1296,8 @@ importers:
   examples/vue/pagination:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/vue-table':
         specifier: 8.11.2
         version: link:../../../packages/vue-table
@@ -1324,8 +1324,8 @@ importers:
   examples/vue/pagination-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/vue-table':
         specifier: 8.11.2
         version: link:../../../packages/vue-table
@@ -1380,8 +1380,8 @@ importers:
   examples/vue/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.3.1
+        version: 8.3.1
       '@tanstack/vue-table':
         specifier: 8.11.2
         version: link:../../../packages/vue-table
@@ -2699,6 +2699,16 @@ packages:
       '@babel/helper-plugin-utils': 7.20.2
     dev: true
 
+  /@babel/plugin-transform-react-jsx-self@7.23.3(@babel/core@7.23.6):
+    resolution: {integrity: sha512-qXRvbeKDSfwnlJnanVRp0SfuWE5DQhwQr5xtLBzp56Wabyo+4CMosF6Kfp+eOD/4FYpql64XVJ2W0pVLlJZxOQ==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.23.6
+      '@babel/helper-plugin-utils': 7.22.5
+    dev: true
+
   /@babel/plugin-transform-react-jsx-source@7.19.6(@babel/core@7.21.3):
     resolution: {integrity: sha512-RpAi004QyMNisst/pvSanoRdJ4q+jMCWyk9zdw/CyLB9j8RXEahodR6l2GyttDRyEVWZtbN+TpLiHJ3t34LbsQ==}
     engines: {node: '>=6.9.0'}
@@ -2707,6 +2717,16 @@ packages:
     dependencies:
       '@babel/core': 7.21.3
       '@babel/helper-plugin-utils': 7.20.2
+    dev: true
+
+  /@babel/plugin-transform-react-jsx-source@7.23.3(@babel/core@7.23.6):
+    resolution: {integrity: sha512-91RS0MDnAWDNvGC6Wio5XYkyWI39FMFO+JK9+4AlgaTH+yWwVTsw7/sn6LK0lH7c5F+TFkpv/3LfCJ1Ydwof/g==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.23.6
+      '@babel/helper-plugin-utils': 7.22.5
     dev: true
 
   /@babel/plugin-transform-react-jsx@7.21.0(@babel/core@7.21.3):
@@ -3206,8 +3226,17 @@ packages:
     resolution: {integrity: sha512-AHPmaAx+RYfZz0eYu6Gviiagpmiyw98ySSlQvCUhVGDRtDFe4DBS0x1bSjdF3gqUDYOczB+yYvBTtEylYSdRhg==}
     dev: false
 
-  /@esbuild/android-arm64@0.17.14:
-    resolution: {integrity: sha512-eLOpPO1RvtsP71afiFTvS7tVFShJBCT0txiv/xjFBo5a7R7Gjw7X0IgIaFoLKhqXYAXhahoXm7qAmRXhY4guJg==}
+  /@esbuild/aix-ppc64@0.19.10:
+    resolution: {integrity: sha512-Q+mk96KJ+FZ30h9fsJl+67IjNJm3x2eX+GBWGmocAKgzp27cowCOOqSdscX80s0SpdFXZnIv/+1xD1EctFx96Q==}
+    engines: {node: '>=12'}
+    cpu: [ppc64]
+    os: [aix]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@esbuild/android-arm64@0.18.20:
+    resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [android]
@@ -3215,8 +3244,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/android-arm64@0.18.20:
-    resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
+  /@esbuild/android-arm64@0.19.10:
+    resolution: {integrity: sha512-1X4CClKhDgC3by7k8aOWZeBXQX8dHT5QAMCAQDArCLaYfkppoARvh0fit3X2Qs+MXDngKcHv6XXyQCpY0hkK1Q==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [android]
@@ -3233,15 +3262,6 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/android-arm@0.17.14:
-    resolution: {integrity: sha512-0CnlwnjDU8cks0yJLXfkaU/uoLyRf9VZJs4p1PskBr2AlAHeEsFEwJEo0of/Z3g+ilw5mpyDwThlxzNEIxOE4g==}
-    engines: {node: '>=12'}
-    cpu: [arm]
-    os: [android]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@esbuild/android-arm@0.18.20:
     resolution: {integrity: sha512-fyi7TDI/ijKKNZTUJAQqiG5T7YjJXgnzkURqmGj13C6dCqckZBLdl4h7bkhHt/t0WP+zO9/zwroDvANaOqO5Sw==}
     engines: {node: '>=12'}
@@ -3251,10 +3271,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/android-x64@0.17.14:
-    resolution: {integrity: sha512-nrfQYWBfLGfSGLvRVlt6xi63B5IbfHm3tZCdu/82zuFPQ7zez4XjmRtF/wIRYbJQ/DsZrxJdEvYFE67avYXyng==}
+  /@esbuild/android-arm@0.19.10:
+    resolution: {integrity: sha512-7W0bK7qfkw1fc2viBfrtAEkDKHatYfHzr/jKAHNr9BvkYDXPcC6bodtm8AyLJNNuqClLNaeTLuwURt4PRT9d7w==}
     engines: {node: '>=12'}
-    cpu: [x64]
+    cpu: [arm]
     os: [android]
     requiresBuild: true
     dev: true
@@ -3269,11 +3289,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/darwin-arm64@0.17.14:
-    resolution: {integrity: sha512-eoSjEuDsU1ROwgBH/c+fZzuSyJUVXQTOIN9xuLs9dE/9HbV/A5IqdXHU1p2OfIMwBwOYJ9SFVGGldxeRCUJFyw==}
+  /@esbuild/android-x64@0.19.10:
+    resolution: {integrity: sha512-O/nO/g+/7NlitUxETkUv/IvADKuZXyH4BHf/g/7laqKC4i/7whLpB0gvpPc2zpF0q9Q6FXS3TS75QHac9MvVWw==}
     engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [darwin]
+    cpu: [x64]
+    os: [android]
     requiresBuild: true
     dev: true
     optional: true
@@ -3287,10 +3307,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/darwin-x64@0.17.14:
-    resolution: {integrity: sha512-zN0U8RWfrDttdFNkHqFYZtOH8hdi22z0pFm0aIJPsNC4QQZv7je8DWCX5iA4Zx6tRhS0CCc0XC2m7wKsbWEo5g==}
+  /@esbuild/darwin-arm64@0.19.10:
+    resolution: {integrity: sha512-YSRRs2zOpwypck+6GL3wGXx2gNP7DXzetmo5pHXLrY/VIMsS59yKfjPizQ4lLt5vEI80M41gjm2BxrGZ5U+VMA==}
     engines: {node: '>=12'}
-    cpu: [x64]
+    cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
@@ -3305,11 +3325,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/freebsd-arm64@0.17.14:
-    resolution: {integrity: sha512-z0VcD4ibeZWVQCW1O7szaLxGsx54gcCnajEJMdYoYjLiq4g1jrP2lMq6pk71dbS5+7op/L2Aod+erw+EUr28/A==}
+  /@esbuild/darwin-x64@0.19.10:
+    resolution: {integrity: sha512-alfGtT+IEICKtNE54hbvPg13xGBe4GkVxyGWtzr+yHO7HIiRJppPDhOKq3zstTcVf8msXb/t4eavW3jCDpMSmA==}
     engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [freebsd]
+    cpu: [x64]
+    os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
@@ -3323,10 +3343,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/freebsd-x64@0.17.14:
-    resolution: {integrity: sha512-hd9mPcxfTgJlolrPlcXkQk9BMwNBvNBsVaUe5eNUqXut6weDQH8whcNaKNF2RO8NbpT6GY8rHOK2A9y++s+ehw==}
+  /@esbuild/freebsd-arm64@0.19.10:
+    resolution: {integrity: sha512-dMtk1wc7FSH8CCkE854GyGuNKCewlh+7heYP/sclpOG6Cectzk14qdUIY5CrKDbkA/OczXq9WesqnPl09mj5dg==}
     engines: {node: '>=12'}
-    cpu: [x64]
+    cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
     dev: true
@@ -3341,11 +3361,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-arm64@0.17.14:
-    resolution: {integrity: sha512-FhAMNYOq3Iblcj9i+K0l1Fp/MHt+zBeRu/Qkf0LtrcFu3T45jcwB6A1iMsemQ42vR3GBhjNZJZTaCe3VFPbn9g==}
+  /@esbuild/freebsd-x64@0.19.10:
+    resolution: {integrity: sha512-G5UPPspryHu1T3uX8WiOEUa6q6OlQh6gNl4CO4Iw5PS+Kg5bVggVFehzXBJY6X6RSOMS8iXDv2330VzaObm4Ag==}
     engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [linux]
+    cpu: [x64]
+    os: [freebsd]
     requiresBuild: true
     dev: true
     optional: true
@@ -3359,10 +3379,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-arm@0.17.14:
-    resolution: {integrity: sha512-BNTl+wSJ1omsH8s3TkQmIIIQHwvwJrU9u1ggb9XU2KTVM4TmthRIVyxSp2qxROJHhZuW/r8fht46/QE8hU8Qvg==}
+  /@esbuild/linux-arm64@0.19.10:
+    resolution: {integrity: sha512-QxaouHWZ+2KWEj7cGJmvTIHVALfhpGxo3WLmlYfJ+dA5fJB6lDEIg+oe/0//FuyVHuS3l79/wyBxbHr0NgtxJQ==}
     engines: {node: '>=12'}
-    cpu: [arm]
+    cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3377,10 +3397,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-ia32@0.17.14:
-    resolution: {integrity: sha512-91OK/lQ5y2v7AsmnFT+0EyxdPTNhov3y2CWMdizyMfxSxRqHazXdzgBKtlmkU2KYIc+9ZK3Vwp2KyXogEATYxQ==}
+  /@esbuild/linux-arm@0.19.10:
+    resolution: {integrity: sha512-j6gUW5aAaPgD416Hk9FHxn27On28H4eVI9rJ4az7oCGTFW48+LcgNDBN+9f8rKZz7EEowo889CPKyeaD0iw9Kg==}
     engines: {node: '>=12'}
-    cpu: [ia32]
+    cpu: [arm]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3388,6 +3408,15 @@ packages:
 
   /@esbuild/linux-ia32@0.18.20:
     resolution: {integrity: sha512-P4etWwq6IsReT0E1KHU40bOnzMHoH73aXp96Fs8TIT6z9Hu8G6+0SHSw9i2isWrD2nbx2qo5yUqACgdfVGx7TA==}
+    engines: {node: '>=12'}
+    cpu: [ia32]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@esbuild/linux-ia32@0.19.10:
+    resolution: {integrity: sha512-4ub1YwXxYjj9h1UIZs2hYbnTZBtenPw5NfXCRgEkGb0b6OJ2gpkMvDqRDYIDRjRdWSe/TBiZltm3Y3Q8SN1xNg==}
     engines: {node: '>=12'}
     cpu: [ia32]
     os: [linux]
@@ -3413,15 +3442,6 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-loong64@0.17.14:
-    resolution: {integrity: sha512-vp15H+5NR6hubNgMluqqKza85HcGJgq7t6rMH7O3Y6ApiOWPkvW2AJfNojUQimfTp6OUrACUXfR4hmpcENXoMQ==}
-    engines: {node: '>=12'}
-    cpu: [loong64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@esbuild/linux-loong64@0.18.20:
     resolution: {integrity: sha512-nXW8nqBTrOpDLPgPY9uV+/1DjxoQ7DoB2N8eocyq8I9XuqJ7BiAMDMf9n1xZM9TgW0J8zrquIb/A7s3BJv7rjg==}
     engines: {node: '>=12'}
@@ -3431,10 +3451,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-mips64el@0.17.14:
-    resolution: {integrity: sha512-90TOdFV7N+fgi6c2+GO9ochEkmm9kBAKnuD5e08GQMgMINOdOFHuYLPQ91RYVrnWwQ5683sJKuLi9l4SsbJ7Hg==}
+  /@esbuild/linux-loong64@0.19.10:
+    resolution: {integrity: sha512-lo3I9k+mbEKoxtoIbM0yC/MZ1i2wM0cIeOejlVdZ3D86LAcFXFRdeuZmh91QJvUTW51bOK5W2BznGNIl4+mDaA==}
     engines: {node: '>=12'}
-    cpu: [mips64el]
+    cpu: [loong64]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3449,10 +3469,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-ppc64@0.17.14:
-    resolution: {integrity: sha512-NnBGeoqKkTugpBOBZZoktQQ1Yqb7aHKmHxsw43NddPB2YWLAlpb7THZIzsRsTr0Xw3nqiPxbA1H31ZMOG+VVPQ==}
+  /@esbuild/linux-mips64el@0.19.10:
+    resolution: {integrity: sha512-J4gH3zhHNbdZN0Bcr1QUGVNkHTdpijgx5VMxeetSk6ntdt+vR1DqGmHxQYHRmNb77tP6GVvD+K0NyO4xjd7y4A==}
     engines: {node: '>=12'}
-    cpu: [ppc64]
+    cpu: [mips64el]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3467,10 +3487,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-riscv64@0.17.14:
-    resolution: {integrity: sha512-0qdlKScLXA8MGVy21JUKvMzCYWovctuP8KKqhtE5A6IVPq4onxXhSuhwDd2g5sRCzNDlDjitc5sX31BzDoL5Fw==}
+  /@esbuild/linux-ppc64@0.19.10:
+    resolution: {integrity: sha512-tgT/7u+QhV6ge8wFMzaklOY7KqiyitgT1AUHMApau32ZlvTB/+efeCtMk4eXS+uEymYK249JsoiklZN64xt6oQ==}
     engines: {node: '>=12'}
-    cpu: [riscv64]
+    cpu: [ppc64]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3485,10 +3505,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-s390x@0.17.14:
-    resolution: {integrity: sha512-Hdm2Jo1yaaOro4v3+6/zJk6ygCqIZuSDJHdHaf8nVH/tfOuoEX5Riv03Ka15LmQBYJObUTNS1UdyoMk0WUn9Ww==}
+  /@esbuild/linux-riscv64@0.19.10:
+    resolution: {integrity: sha512-0f/spw0PfBMZBNqtKe5FLzBDGo0SKZKvMl5PHYQr3+eiSscfJ96XEknCe+JoOayybWUFQbcJTrk946i3j9uYZA==}
     engines: {node: '>=12'}
-    cpu: [s390x]
+    cpu: [riscv64]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3503,10 +3523,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-x64@0.17.14:
-    resolution: {integrity: sha512-8KHF17OstlK4DuzeF/KmSgzrTWQrkWj5boluiiq7kvJCiQVzUrmSkaBvcLB2UgHpKENO2i6BthPkmUhNDaJsVw==}
+  /@esbuild/linux-s390x@0.19.10:
+    resolution: {integrity: sha512-pZFe0OeskMHzHa9U38g+z8Yx5FNCLFtUnJtQMpwhS+r4S566aK2ci3t4NCP4tjt6d5j5uo4h7tExZMjeKoehAA==}
     engines: {node: '>=12'}
-    cpu: [x64]
+    cpu: [s390x]
     os: [linux]
     requiresBuild: true
     dev: true
@@ -3521,11 +3541,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/netbsd-x64@0.17.14:
-    resolution: {integrity: sha512-nVwpqvb3yyXztxIT2+VsxJhB5GCgzPdk1n0HHSnchRAcxqKO6ghXwHhJnr0j/B+5FSyEqSxF4q03rbA2fKXtUQ==}
+  /@esbuild/linux-x64@0.19.10:
+    resolution: {integrity: sha512-SpYNEqg/6pZYoc+1zLCjVOYvxfZVZj6w0KROZ3Fje/QrM3nfvT2llI+wmKSrWuX6wmZeTapbarvuNNK/qepSgA==}
     engines: {node: '>=12'}
     cpu: [x64]
-    os: [netbsd]
+    os: [linux]
     requiresBuild: true
     dev: true
     optional: true
@@ -3539,11 +3559,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/openbsd-x64@0.17.14:
-    resolution: {integrity: sha512-1RZ7uQQ9zcy/GSAJL1xPdN7NDdOOtNEGiJalg/MOzeakZeTrgH/DoCkbq7TaPDiPhWqnDF+4bnydxRqQD7il6g==}
+  /@esbuild/netbsd-x64@0.19.10:
+    resolution: {integrity: sha512-ACbZ0vXy9zksNArWlk2c38NdKg25+L9pr/mVaj9SUq6lHZu/35nx2xnQVRGLrC1KKQqJKRIB0q8GspiHI3J80Q==}
     engines: {node: '>=12'}
     cpu: [x64]
-    os: [openbsd]
+    os: [netbsd]
     requiresBuild: true
     dev: true
     optional: true
@@ -3557,11 +3577,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/sunos-x64@0.17.14:
-    resolution: {integrity: sha512-nqMjDsFwv7vp7msrwWRysnM38Sd44PKmW8EzV01YzDBTcTWUpczQg6mGao9VLicXSgW/iookNK6AxeogNVNDZA==}
+  /@esbuild/openbsd-x64@0.19.10:
+    resolution: {integrity: sha512-PxcgvjdSjtgPMiPQrM3pwSaG4kGphP+bLSb+cihuP0LYdZv1epbAIecHVl5sD3npkfYBZ0ZnOjR878I7MdJDFg==}
     engines: {node: '>=12'}
     cpu: [x64]
-    os: [sunos]
+    os: [openbsd]
     requiresBuild: true
     dev: true
     optional: true
@@ -3575,11 +3595,11 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/win32-arm64@0.17.14:
-    resolution: {integrity: sha512-xrD0mccTKRBBIotrITV7WVQAwNJ5+1va6L0H9zN92v2yEdjfAN7864cUaZwJS7JPEs53bDTzKFbfqVlG2HhyKQ==}
+  /@esbuild/sunos-x64@0.19.10:
+    resolution: {integrity: sha512-ZkIOtrRL8SEJjr+VHjmW0znkPs+oJXhlJbNwfI37rvgeMtk3sxOQevXPXjmAPZPigVTncvFqLMd+uV0IBSEzqA==}
     engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [win32]
+    cpu: [x64]
+    os: [sunos]
     requiresBuild: true
     dev: true
     optional: true
@@ -3593,10 +3613,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/win32-ia32@0.17.14:
-    resolution: {integrity: sha512-nXpkz9bbJrLLyUTYtRotSS3t5b+FOuljg8LgLdINWFs3FfqZMtbnBCZFUmBzQPyxqU87F8Av+3Nco/M3hEcu1w==}
+  /@esbuild/win32-arm64@0.19.10:
+    resolution: {integrity: sha512-+Sa4oTDbpBfGpl3Hn3XiUe4f8TU2JF7aX8cOfqFYMMjXp6ma6NJDztl5FDG8Ezx0OjwGikIHw+iA54YLDNNVfw==}
     engines: {node: '>=12'}
-    cpu: [ia32]
+    cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
@@ -3611,10 +3631,10 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/win32-x64@0.17.14:
-    resolution: {integrity: sha512-gPQmsi2DKTaEgG14hc3CHXHp62k8g6qr0Pas+I4lUxRMugGSATh/Bi8Dgusoz9IQ0IfdrvLpco6kujEIBoaogA==}
+  /@esbuild/win32-ia32@0.19.10:
+    resolution: {integrity: sha512-EOGVLK1oWMBXgfttJdPHDTiivYSjX6jDNaATeNOaCOFEVcfMjtbx7WVQwPSE1eIfCp/CaSF2nSrDtzc4I9f8TQ==}
     engines: {node: '>=12'}
-    cpu: [x64]
+    cpu: [ia32]
     os: [win32]
     requiresBuild: true
     dev: true
@@ -3629,8 +3649,17 @@ packages:
     dev: true
     optional: true
 
-  /@faker-js/faker@8.0.2:
-    resolution: {integrity: sha512-Uo3pGspElQW91PCvKSIAXoEgAUlRnH29sX2/p89kg7sP1m2PzCufHINd0FhTXQf6DYGiUlVncdSPa2F9wxed2A==}
+  /@esbuild/win32-x64@0.19.10:
+    resolution: {integrity: sha512-whqLG6Sc70AbU73fFYvuYzaE4MNMBIlR1Y/IrUeOXFrWHxBEjjbZaQ3IXIQS8wJdAzue2GwYZCjOrgrU1oUHoA==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@faker-js/faker@8.3.1:
+    resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
 
   /@isaacs/cliui@8.0.2:
@@ -3707,6 +3736,10 @@ packages:
 
   /@jridgewell/sourcemap-codec@1.4.14:
     resolution: {integrity: sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==}
+    dev: true
+
+  /@jridgewell/sourcemap-codec@1.4.15:
+    resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
 
   /@jridgewell/trace-mapping@0.3.17:
@@ -4140,6 +4173,20 @@ packages:
       rollup: 2.79.1
     dev: true
 
+  /@rollup/plugin-replace@5.0.5(rollup@2.79.1):
+    resolution: {integrity: sha512-rYO4fOi8lMaTg/z5Jb+hKnrHHVn8j2lwkqwyS4kTRhKyWOLf2wST2sWXr4WzWiTcoHTp2sTjqUbqIj2E39slKQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.2(rollup@2.79.1)
+      magic-string: 0.30.5
+      rollup: 2.79.1
+    dev: true
+
   /@rollup/pluginutils@3.1.0(rollup@2.79.1):
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
     engines: {node: '>= 8.0.0'}
@@ -4174,6 +4221,110 @@ packages:
       picomatch: 2.3.1
       rollup: 2.79.1
     dev: true
+
+  /@rollup/rollup-android-arm-eabi@4.9.1:
+    resolution: {integrity: sha512-6vMdBZqtq1dVQ4CWdhFwhKZL6E4L1dV6jUjuBvsavvNJSppzi6dLBbuV+3+IyUREaj9ZFvQefnQm28v4OCXlig==}
+    cpu: [arm]
+    os: [android]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-android-arm64@4.9.1:
+    resolution: {integrity: sha512-Jto9Fl3YQ9OLsTDWtLFPtaIMSL2kwGyGoVCmPC8Gxvym9TCZm4Sie+cVeblPO66YZsYH8MhBKDMGZ2NDxuk/XQ==}
+    cpu: [arm64]
+    os: [android]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-darwin-arm64@4.9.1:
+    resolution: {integrity: sha512-LtYcLNM+bhsaKAIGwVkh5IOWhaZhjTfNOkGzGqdHvhiCUVuJDalvDxEdSnhFzAn+g23wgsycmZk1vbnaibZwwA==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-darwin-x64@4.9.1:
+    resolution: {integrity: sha512-KyP/byeXu9V+etKO6Lw3E4tW4QdcnzDG/ake031mg42lob5tN+5qfr+lkcT/SGZaH2PdW4Z1NX9GHEkZ8xV7og==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-arm-gnueabihf@4.9.1:
+    resolution: {integrity: sha512-Yqz/Doumf3QTKplwGNrCHe/B2p9xqDghBZSlAY0/hU6ikuDVQuOUIpDP/YcmoT+447tsZTmirmjgG3znvSCR0Q==}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-arm64-gnu@4.9.1:
+    resolution: {integrity: sha512-u3XkZVvxcvlAOlQJ3UsD1rFvLWqu4Ef/Ggl40WAVCuogf4S1nJPHh5RTgqYFpCOvuGJ7H5yGHabjFKEZGExk5Q==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-arm64-musl@4.9.1:
+    resolution: {integrity: sha512-0XSYN/rfWShW+i+qjZ0phc6vZ7UWI8XWNz4E/l+6edFt+FxoEghrJHjX1EY/kcUGCnZzYYRCl31SNdfOi450Aw==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-riscv64-gnu@4.9.1:
+    resolution: {integrity: sha512-LmYIO65oZVfFt9t6cpYkbC4d5lKHLYv5B4CSHRpnANq0VZUQXGcCPXHzbCXCz4RQnx7jvlYB1ISVNCE/omz5cw==}
+    cpu: [riscv64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-x64-gnu@4.9.1:
+    resolution: {integrity: sha512-kr8rEPQ6ns/Lmr/hiw8sEVj9aa07gh1/tQF2Y5HrNCCEPiCBGnBUt9tVusrcBBiJfIt1yNaXN6r1CCmpbFEDpg==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-x64-musl@4.9.1:
+    resolution: {integrity: sha512-t4QSR7gN+OEZLG0MiCgPqMWZGwmeHhsM4AkegJ0Kiy6TnJ9vZ8dEIwHw1LcZKhbHxTY32hp9eVCMdR3/I8MGRw==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-win32-arm64-msvc@4.9.1:
+    resolution: {integrity: sha512-7XI4ZCBN34cb+BH557FJPmh0kmNz2c25SCQeT9OiFWEgf8+dL6ZwJ8f9RnUIit+j01u07Yvrsuu1rZGxJCc51g==}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-win32-ia32-msvc@4.9.1:
+    resolution: {integrity: sha512-yE5c2j1lSWOH5jp+Q0qNL3Mdhr8WuqCNVjc6BxbVfS5cAS6zRmdiw7ktb8GNpDCEUJphILY6KACoFoRtKoqNQg==}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-win32-x64-msvc@4.9.1:
+    resolution: {integrity: sha512-PyJsSsafjmIhVgaI1Zdj7m8BB8mMckFah/xbpplObyHfiXzKcI5UOUXRyOdHW7nz4DpMCuzLnF7v5IWHenCwYA==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@sinclair/typebox@0.25.24:
     resolution: {integrity: sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==}
@@ -4224,6 +4375,21 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/react-virtual@3.0.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-IFOFuRUTaiM/yibty9qQ9BfycQnYXIDHGP2+cU+0LrFFGNhVxCXSQnaY6wkX8uJVteFEBjUondX0Hmpp7TNcag==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/virtual-core@3.0.0:
+    resolution: {integrity: sha512-SYXOBTjJb05rXa2vl55TTwO40A6wKu0R5i1qQwhJYNDIqaIGF7D0HsLw+pJAyi2OvntlEIVusx3xtbbgSUi6zg==}
     dev: false
 
   /@testing-library/dom@8.20.0:
@@ -4325,6 +4491,16 @@ packages:
     dependencies:
       '@babel/parser': 7.21.3
       '@babel/types': 7.21.3
+      '@types/babel__generator': 7.6.4
+      '@types/babel__template': 7.4.1
+      '@types/babel__traverse': 7.18.3
+    dev: true
+
+  /@types/babel__core@7.20.5:
+    resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
+    dependencies:
+      '@babel/parser': 7.23.6
+      '@babel/types': 7.23.6
       '@types/babel__generator': 7.6.4
       '@types/babel__template': 7.4.1
       '@types/babel__traverse': 7.18.3
@@ -4541,6 +4717,22 @@ packages:
       magic-string: 0.26.7
       react-refresh: 0.14.0
       vite: 3.2.5(@types/node@18.15.10)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@vitejs/plugin-react@4.2.1(vite@5.0.10):
+    resolution: {integrity: sha512-oojO9IDc4nCUUi8qIR11KoQm0XFFLIwsRBwHRR4d/88IWghn1y6ckz/bJ8GHDCsYEJee8mDzqtJxh15/cisJNQ==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.2.0 || ^5.0.0
+    dependencies:
+      '@babel/core': 7.23.6
+      '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.23.6)
+      '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.6)
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.14.0
+      vite: 5.0.10(@types/node@18.15.10)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6232,36 +6424,6 @@ packages:
       esbuild-windows-arm64: 0.15.18
     dev: true
 
-  /esbuild@0.17.14:
-    resolution: {integrity: sha512-vOO5XhmVj/1XQR9NQ1UPq6qvMYL7QFJU57J5fKBKBKxp17uDt5PgxFDb4A2nEiXhr1qQs4x0F5+66hVVw4ruNw==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
-    optionalDependencies:
-      '@esbuild/android-arm': 0.17.14
-      '@esbuild/android-arm64': 0.17.14
-      '@esbuild/android-x64': 0.17.14
-      '@esbuild/darwin-arm64': 0.17.14
-      '@esbuild/darwin-x64': 0.17.14
-      '@esbuild/freebsd-arm64': 0.17.14
-      '@esbuild/freebsd-x64': 0.17.14
-      '@esbuild/linux-arm': 0.17.14
-      '@esbuild/linux-arm64': 0.17.14
-      '@esbuild/linux-ia32': 0.17.14
-      '@esbuild/linux-loong64': 0.17.14
-      '@esbuild/linux-mips64el': 0.17.14
-      '@esbuild/linux-ppc64': 0.17.14
-      '@esbuild/linux-riscv64': 0.17.14
-      '@esbuild/linux-s390x': 0.17.14
-      '@esbuild/linux-x64': 0.17.14
-      '@esbuild/netbsd-x64': 0.17.14
-      '@esbuild/openbsd-x64': 0.17.14
-      '@esbuild/sunos-x64': 0.17.14
-      '@esbuild/win32-arm64': 0.17.14
-      '@esbuild/win32-ia32': 0.17.14
-      '@esbuild/win32-x64': 0.17.14
-    dev: true
-
   /esbuild@0.18.20:
     resolution: {integrity: sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA==}
     engines: {node: '>=12'}
@@ -6290,6 +6452,37 @@ packages:
       '@esbuild/win32-arm64': 0.18.20
       '@esbuild/win32-ia32': 0.18.20
       '@esbuild/win32-x64': 0.18.20
+    dev: true
+
+  /esbuild@0.19.10:
+    resolution: {integrity: sha512-S1Y27QGt/snkNYrRcswgRFqZjaTG5a5xM3EQo97uNBnH505pdzSNe/HLBq1v0RO7iK/ngdbhJB6mDAp0OK+iUA==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      '@esbuild/aix-ppc64': 0.19.10
+      '@esbuild/android-arm': 0.19.10
+      '@esbuild/android-arm64': 0.19.10
+      '@esbuild/android-x64': 0.19.10
+      '@esbuild/darwin-arm64': 0.19.10
+      '@esbuild/darwin-x64': 0.19.10
+      '@esbuild/freebsd-arm64': 0.19.10
+      '@esbuild/freebsd-x64': 0.19.10
+      '@esbuild/linux-arm': 0.19.10
+      '@esbuild/linux-arm64': 0.19.10
+      '@esbuild/linux-ia32': 0.19.10
+      '@esbuild/linux-loong64': 0.19.10
+      '@esbuild/linux-mips64el': 0.19.10
+      '@esbuild/linux-ppc64': 0.19.10
+      '@esbuild/linux-riscv64': 0.19.10
+      '@esbuild/linux-s390x': 0.19.10
+      '@esbuild/linux-x64': 0.19.10
+      '@esbuild/netbsd-x64': 0.19.10
+      '@esbuild/openbsd-x64': 0.19.10
+      '@esbuild/sunos-x64': 0.19.10
+      '@esbuild/win32-arm64': 0.19.10
+      '@esbuild/win32-ia32': 0.19.10
+      '@esbuild/win32-x64': 0.19.10
     dev: true
 
   /escalade@3.1.1:
@@ -6494,6 +6687,14 @@ packages:
 
   /fsevents@2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -7316,6 +7517,13 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /magic-string@0.30.5:
+    resolution: {integrity: sha512-7xlpfBaQaP/T6Vh8MO/EqXSW5En6INHEvEXQiuff7Gku0PWjU3uf6w/j9o7O+SpB5fOAkrI5HeoNgwjEO0pFsA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
   /make-error@1.3.6:
@@ -8320,20 +8528,33 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rollup@3.20.2:
-    resolution: {integrity: sha512-3zwkBQl7Ai7MFYQE0y1MeQ15+9jsi7XxfrqwTb/9EK8D9C9+//EBR4M+CuA1KODRaNbFez/lWxA5vhEGZp4MUg==}
-    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
-    hasBin: true
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
-
   /rollup@3.29.4:
     resolution: {integrity: sha512-oWzmBZwvYrU0iJHtDmhsm662rC15FRXmcjCk1xD771dFDx5jJ02ufAQQTn0etB2emNk4J9EZg/yWKpsn9BWGRw==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /rollup@4.9.1:
+    resolution: {integrity: sha512-pgPO9DWzLoW/vIhlSoDByCzcpX92bKEorbgXuZrqxByte3JFk2xSW2JEeAcyLc9Ru9pqcNNW+Ob7ntsk2oT/Xw==}
+    engines: {node: '>=18.0.0', npm: '>=8.0.0'}
+    hasBin: true
+    optionalDependencies:
+      '@rollup/rollup-android-arm-eabi': 4.9.1
+      '@rollup/rollup-android-arm64': 4.9.1
+      '@rollup/rollup-darwin-arm64': 4.9.1
+      '@rollup/rollup-darwin-x64': 4.9.1
+      '@rollup/rollup-linux-arm-gnueabihf': 4.9.1
+      '@rollup/rollup-linux-arm64-gnu': 4.9.1
+      '@rollup/rollup-linux-arm64-musl': 4.9.1
+      '@rollup/rollup-linux-riscv64-gnu': 4.9.1
+      '@rollup/rollup-linux-x64-gnu': 4.9.1
+      '@rollup/rollup-linux-x64-musl': 4.9.1
+      '@rollup/rollup-win32-arm64-msvc': 4.9.1
+      '@rollup/rollup-win32-ia32-msvc': 4.9.1
+      '@rollup/rollup-win32-x64-msvc': 4.9.1
+      fsevents: 2.3.3
     dev: true
 
   /rrweb-cssom@0.6.0:
@@ -9289,7 +9510,7 @@ packages:
       mlly: 1.2.0
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.2.1(@types/node@18.15.10)
+      vite: 3.2.5(@types/node@18.15.10)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -9377,40 +9598,6 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vite@4.2.1(@types/node@18.15.10):
-    resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 18.15.10
-      esbuild: 0.17.14
-      postcss: 8.4.21
-      resolve: 1.22.1
-      rollup: 3.20.2
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
-
   /vite@4.5.1(@types/node@16.18.21):
     resolution: {integrity: sha512-AXXFaAJ8yebyqzoNB9fu2pHoo/nWX+xZlaRwoeYUxEqBO+Zj4msE5G+BhGBll9lYEKv9Hfks52PAF2X7qDYXQA==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -9445,6 +9632,42 @@ packages:
       rollup: 3.29.4
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vite@5.0.10(@types/node@18.15.10):
+    resolution: {integrity: sha512-2P8J7WWgmc355HUMlFrwofacvr98DAjoE52BfdbwQtyLH06XKwaL/FMnmKM2crF0iX4MpmMKoDlNCB1ok7zHCw==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.15.10
+      esbuild: 0.19.10
+      postcss: 8.4.32
+      rollup: 4.9.1
+    optionalDependencies:
+      fsevents: 2.3.3
     dev: true
 
   /vitefu@0.2.4(vite@3.2.5):
@@ -9508,7 +9731,7 @@ packages:
       tinybench: 2.4.0
       tinypool: 0.4.0
       tinyspy: 1.1.1
-      vite: 4.2.1(@types/node@18.15.10)
+      vite: 3.2.5(@types/node@18.15.10)
       vite-node: 0.29.7(@types/node@18.15.10)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
