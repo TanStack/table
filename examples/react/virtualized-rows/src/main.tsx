@@ -164,6 +164,7 @@ function App() {
             style={{
               display: 'grid',
               height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
+              position: 'relative', //needed for absolute positioning of rows
             }}
           >
             {rowVirtualizer.getVirtualItems().map(virtualRow => {
