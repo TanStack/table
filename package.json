@@ -16,7 +16,8 @@
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
     "cipublish": "ts-node scripts/publish.ts",
     "cipublishforce": "CI=true pnpm run cipublish",
-    "pr": "nx run-many --exclude=examples/** --targets=test:lib,build,test:types"
+    "test:pr": "nx affected --targets=test:lib,test:types,build --exclude=examples/**",
+    "test:ci": "nx run-many --targets=test:lib,test:types,build --exclude=examples/**"
   },
   "nx": {
     "includedScripts": [
