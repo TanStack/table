@@ -45,7 +45,8 @@
   ],
   "scripts": {
     "clean": "rimraf ./build",
-    "test:types": "tsc"
+    "test:types": "tsc",
+    "build": "rollup --config rollup.config.mjs"
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"

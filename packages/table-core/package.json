@@ -48,6 +48,7 @@
     "clean": "rimraf ./build",
     "test:types": "tsc",
     "test:lib": "vitest",
-    "test:lib:dev": "pnpm test:lib --watch"
+    "test:lib:dev": "pnpm test:lib --watch",
+    "build": "rollup --config rollup.config.mjs"
   }
 }
