@@ -1,7 +1,7 @@
 {
-  "composite": true,
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "target": "esnext",
     "useDefineForClassFields": true,
     "module": "esnext",

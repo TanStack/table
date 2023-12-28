@@ -1,6 +1,7 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "./build/types",
     "jsxImportSource": "solid-js",
     "jsx": "preserve"
