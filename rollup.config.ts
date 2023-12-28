@@ -1,6 +1,7 @@
 import { RollupOptions } from 'rollup'
 import babel from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
+// @ts-ignore
 import size from 'rollup-plugin-size'
 import visualizer from 'rollup-plugin-visualizer'
 import replace from '@rollup/plugin-replace'
@@ -133,7 +134,7 @@ function buildConfigs(opts: {
 }): RollupOptions[] {
   const input = path.resolve(opts.packageDir, opts.entryFile)
 
-  const external = moduleName => opts.external.includes(moduleName)
+  const external = (moduleName: string) => opts.external.includes(moduleName)
   const umdExternal = Object.keys(opts.globals)
   const banner = createBanner(opts.name)
 
@@ -153,7 +154,6 @@ function buildConfigs(opts: {
     cjs(options),
     umdDev({ ...options, external: umdExternal }),
     umdProd({ ...options, external: umdExternal }),
-    // types(options),
   ]
 }
 
@@ -307,25 +307,6 @@ function umdProd({
         gzipSize: true,
       }),
     ],
-  }
-}
-
-function types({
-  input,
-  packageDir,
-  external,
-  banner,
-}: Options): RollupOptions {
-  return {
-    // TYPES
-    external,
-    input,
-    output: {
-      format: 'es',
-      file: `${packageDir}/build/types/index.d.ts`,
-      banner,
-    },
-    plugins: [dts()],
   }
 }
 

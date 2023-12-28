@@ -48,6 +48,12 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc",
+    "test:lib": "vitest",
+    "test:lib:dev": "pnpm test:lib --watch"
+  },
   "dependencies": {
     "remove-accents": "0.4.2"
   }

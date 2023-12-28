@@ -2,31 +2,13 @@
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "name": "root",
   "targets": {
-    "build-js": {
+    "build": {
       "command": "rollup --config rollup.config.js",
       "inputs": ["packageSources"],
       "outputs": [
         "{workspaceRoot}/packages/*/build/stats*",
         "{workspaceRoot}/packages/*/build/**/*.(cjs|mjs|js)*"
       ]
-    },
-    "typecheck": {
-      "command": "tsc -b",
-      "inputs": ["packageSources"],
-      "outputs": [
-        "{workspaceRoot}/packages/*/build/**/*d.ts",
-        "{workspaceRoot}/packages/*/build/.tsbuildinfo"
-      ]
-    },
-    "build": {
-      "command": "echo \"  @tanstack/table > All packages built! 📦\"",
-      "dependsOn": ["build-js", "typecheck"],
-      "inputs": ["packageSources"]
-    },
-    "test:ci": {
-      "command": "vitest",
-      "inputs": ["packageSources", "{workspaceRoot}/packages/*/__tests__/**/*"],
-      "dependsOn": ["build-js"]
     }
   }
 }
