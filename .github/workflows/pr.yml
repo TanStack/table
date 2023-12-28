@@ -31,5 +31,9 @@ jobs:
           cache: pnpm
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+      - name: Get appropriate base and head commits for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: 'main'
       - name: Run Checks
         run: pnpm run test:pr
