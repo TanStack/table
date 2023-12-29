@@ -1,14 +1,5 @@
 {
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "name": "root",
-  "targets": {
-    "build": {
-      "command": "rollup --config rollup.config.js",
-      "inputs": ["packageSources"],
-      "outputs": [
-        "{workspaceRoot}/packages/*/build/stats*",
-        "{workspaceRoot}/packages/*/build/**/*.(cjs|mjs|js)*"
-      ]
-    }
-  }
+  "targets": {}
 }

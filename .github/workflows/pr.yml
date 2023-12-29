@@ -1,12 +1,25 @@
 name: pr
-on: [pull_request]
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'media/**'
+      - '**/*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: 'Test'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -18,5 +31,9 @@ jobs:
           cache: pnpm
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+      - name: Get appropriate base and head commits for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: 'main'
       - name: Run Checks
-        run: pnpm run pr
+        run: pnpm run test:pr

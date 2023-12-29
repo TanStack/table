@@ -18,16 +18,17 @@
     "buildDeps": ["{projectRoot}/**/*", "!{projectRoot}/__tests__/**/*"]
   },
   "targetDefaults": {
-    "build": {
-      "outputs": ["{projectRoot}/build"],
-      "inputs": ["buildDeps", "^buildDeps"],
-      "cache": true
-    },
     "test:lib": {
+      "dependsOn": ["^build"],
       "cache": true
     },
     "test:types": {
-      "dependsOn": ["^test:types"],
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     }
   }

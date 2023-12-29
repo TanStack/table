@@ -44,7 +44,10 @@
   ],
   "scripts": {
     "clean": "rimraf ./build",
-    "test:types": "tsc"
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
   },
   "peerDependencies": {
     "react": ">=16",

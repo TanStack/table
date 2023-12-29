@@ -1,14 +1,11 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "./build/types",
-    "types": [
-      "vite/client"
-    ]
+    "types": ["vite/client"]
   },
-  "files": [
-    "src/main.ts"
-  ],
+  "files": ["src/main.ts"],
   "include": [
     "src"
     // "__tests__/**/*.test.*"
@@ -32,4 +29,6 @@
 //   },
 //   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 //   "references": [{ "path": "./tsconfig.node.json" }]
+
+
 // }

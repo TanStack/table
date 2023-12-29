@@ -46,8 +46,11 @@
   ],
   "scripts": {
     "clean": "rimraf ./build",
-    "test:types": "tsc",
     "test:lib": "vitest",
-    "test:lib:dev": "pnpm test:lib --watch"
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
   }
 }

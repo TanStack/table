@@ -1,8 +1,13 @@
-import path from 'path'
-import { BranchConfig, Package } from './types'
+// @ts-check
 
-// TODO: List your npm packages here. The first package will be used as the versioner.
-export const packages: Package[] = [
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+/**
+ * List your npm packages here. The first package will be used as the versioner.
+ * @type {import('./types').Package[]}
+ */
+export const packages = [
   {
     name: '@tanstack/table-core',
     packageDir: 'table-core',
@@ -47,7 +52,11 @@ export const packages: Package[] = [
 
 export const latestBranch = 'main'
 
-export const branchConfigs: Record<string, BranchConfig> = {
+/**
+ * Contains config for publishable branches.
+ * @type {Record<string, import('./types').BranchConfig>}
+ */
+export const branchConfigs = {
   main: {
     prerelease: false,
     ghRelease: true,
@@ -66,7 +75,9 @@ export const branchConfigs: Record<string, BranchConfig> = {
   },
 }
 
-export const rootDir = path.resolve(__dirname, '..')
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+export const rootDir = resolve(__dirname, '..')
+
 export const examplesDirs = [
   'examples/react',
   'examples/solid',

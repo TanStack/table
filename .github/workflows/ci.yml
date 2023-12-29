@@ -1,15 +1,19 @@
 name: ci
+
+on:
+  push:
+    branches: ['main', 'alpha', 'beta', 'rc']
+
 concurrency:
-  group: publish-${{ github.github.base_ref }}
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
-on: [push]
+
 jobs:
   test-and-publish:
-    if: github.event_name != 'pull_request'
-    name: 'Test & Publish'
+    name: Test & Publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: Setup pnpm
@@ -21,8 +25,9 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - run: |
-          pnpm install --frozen-lockfile
           git config --global user.name 'Tanner Linsley'
           git config --global user.email 'tannerlinsley@users.noreply.github.com'
           pnpm run cipublish
