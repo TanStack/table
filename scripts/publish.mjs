@@ -73,50 +73,54 @@ async function run() {
     if (process.env.TAG) {
       if (!process.env.TAG.startsWith('v')) {
         throw new Error(
-          `process.env.TAG must start with "v", eg. v0.0.0. You supplied ${process.env.TAG}`
+          `process.env.TAG must start with "v", eg. v0.0.0. You supplied ${process.env.TAG}`,
         )
       }
       console.info(
         chalk.yellow(
-          `Tag is set to ${process.env.TAG}. This will force release all packages. Publishing...`
-        )
+          `Tag is set to ${process.env.TAG}. This will force release all packages. Publishing...`,
+        ),
       )
       RELEASE_ALL = true
 
       // Is it a major version?
       if (!semver.patch(process.env.TAG) && !semver.minor(process.env.TAG)) {
-        range = `beta..HEAD`
+        range = `origin/main..HEAD`
         latestTag = process.env.TAG
       }
     } else {
       throw new Error(
-        'Could not find latest tag! To make a release tag of v0.0.1, run with TAG=v0.0.1'
+        'Could not find latest tag! To make a release tag of v0.0.1, run with TAG=v0.0.1',
       )
     }
   }
 
   console.info(`Git Range: ${range}`)
 
-  // Get the commits since the latest tag
+  /**
+   * Get the commits since the latest tag
+   * @type {import('./types.js').Commit[]}
+   */
   const commitsSinceLatestTag = (
-    await new Promise<Commit[]>((resolve, reject) => {
+    await new Promise((resolve, reject) => {
+      /** @type {NodeJS.ReadableStream} */
       const strm = log.parse({
         _: range,
       })
 
-      streamToArray(strm, function (err: any, arr: any[]) {
+      streamToArray(strm, function (err, arr) {
         if (err) return reject(err)
 
         Promise.all(
-          arr.map(async d => {
+          arr.map(async (d) => {
             const parsed = await parseCommit(d.subject)
 
             return { ...d, parsed }
-          })
-        ).then(res => resolve(res.filter(Boolean)))
+          }),
+        ).then((res) => resolve(res.filter(Boolean)))
       })
     })
-  ).filter((commit: Commit) => {
+  ).filter((/** @type {import('./types.js').Commit} */ commit) => {
     const exclude = [
       commit.subject.startsWith('Merge branch '), // No merge commits
       commit.subject.startsWith(releaseCommitMsg('')), // No example update commits
@@ -126,100 +130,111 @@ async function run() {
   })
 
   console.info(
-    `Parsing ${commitsSinceLatestTag.length} commits since ${latestTag}...`
+    `Parsing ${commitsSinceLatestTag.length} commits since ${latestTag}...`,
   )
 
-  // Pares the commit messsages, log them, and determine the type of release needed
-  let recommendedReleaseLevel: number = commitsSinceLatestTag.reduce(
+  /**
+   * Parses the commit messsages, log them, and determine the type of release needed
+   * -1 means no release is necessary
+   * 0 means patch release is necessary
+   * 1 means minor release is necessary
+   * 2 means major release is necessary
+   * @type {number}
+   */
+  let recommendedReleaseLevel = commitsSinceLatestTag.reduce(
     (releaseLevel, commit) => {
-      if (['fix', 'refactor', 'perf'].includes(commit.parsed.type!)) {
-        releaseLevel = Math.max(releaseLevel, 0)
-      }
-      if (['feat'].includes(commit.parsed.type!)) {
-        releaseLevel = Math.max(releaseLevel, 1)
-      }
-      if (commit.body.includes('BREAKING CHANGE')) {
-        releaseLevel = Math.max(releaseLevel, 2)
-      }
-      if (
-        commit.subject.includes('RELEASE_ALL') ||
-        commit.body.includes('RELEASE_ALL')
-      ) {
-        RELEASE_ALL = true
+      if (commit.parsed.type) {
+        if (['fix', 'refactor', 'perf'].includes(commit.parsed.type)) {
+          releaseLevel = Math.max(releaseLevel, 0)
+        }
+        if (['feat'].includes(commit.parsed.type)) {
+          releaseLevel = Math.max(releaseLevel, 1)
+        }
+        if (commit.body.includes('BREAKING CHANGE')) {
+          releaseLevel = Math.max(releaseLevel, 2)
+        }
+        if (
+          commit.subject.includes('RELEASE_ALL') ||
+          commit.body.includes('RELEASE_ALL')
+        ) {
+          RELEASE_ALL = true
+        }
       }
 
       return releaseLevel
     },
-    -1
+    -1,
   )
 
-  const changedFiles: string[] = process.env.TAG
+  /**
+   * Uses git diff to determine which files have changed since the latest tag
+   * @type {string[]}
+   */
+  const changedFiles = process.env.TAG
     ? []
     : execSync(`git diff ${latestTag} --name-only`)
         .toString()
         .split('\n')
         .filter(Boolean)
 
+  /** Uses packages and changedFiles to determine which packages have changed */
   const changedPackages = RELEASE_ALL
     ? packages
-    : changedFiles.reduce((changedPackages, file) => {
-        const pkg = packages.find(p =>
-          file.startsWith(path.join('packages', p.packageDir, p.srcDir))
+    : packages.filter((pkg) => {
+        const changed = changedFiles.some(
+          (file) =>
+            file.startsWith(path.join(pkg.packageDir, 'src')) ||
+            file.startsWith(path.join(pkg.packageDir, 'package.json')),
         )
-        if (pkg && !changedPackages.find(d => d.name === pkg.name)) {
-          changedPackages.push(pkg)
-        }
-        return changedPackages
-      }, [] as Package[])
+        return changed
+      })
 
   // If a package has a dependency that has been updated, we need to update the
   // package that depends on it as well.
-  packages.forEach(pkg => {
-    if (
-      pkg.dependencies?.find(dep =>
-        changedPackages.find(d => d.name === dep)
-      ) &&
-      !changedPackages.find(d => d.name === pkg.name)
-    ) {
-      changedPackages.push(pkg)
+  // run this multiple times so that dependencies of dependencies are also included
+  // changes to query-core affect query-persist-client-core, which affects react-query-persist-client and then indirectly the sync/async persisters
+  for (let runs = 0; runs < 3; runs++) {
+    for (const pkg of packages) {
+      const packageJson = await readPackageJson(
+        path.resolve(rootDir, pkg.packageDir, 'package.json'),
+      )
+      const allDependencies = Object.keys(
+        Object.assign(
+          {},
+          packageJson.dependencies ?? {},
+          packageJson.peerDependencies ?? {},
+        ),
+      )
+
+      if (
+        allDependencies.find((dep) =>
+          changedPackages.find((d) => d.name === dep),
+        ) &&
+        !changedPackages.find((d) => d.name === pkg.name)
+      ) {
+        console.info(
+          'adding package dependency',
+          pkg.name,
+          'to changed packages',
+        )
+        changedPackages.push(pkg)
+      }
     }
-  })
+  }
 
   if (!process.env.TAG) {
     if (recommendedReleaseLevel === 2) {
       console.info(
-        `Major versions releases must be tagged and released manually.`
+        `Major versions releases must be tagged and released manually.`,
       )
       return
     }
 
     if (recommendedReleaseLevel === -1) {
       console.info(
-        `There have been no changes since the release of ${latestTag} that require a new version. You're good!`
+        `There have been no changes since the release of ${latestTag} that require a new version. You're good!`,
       )
       return
-    }
-  }
-
-  function getSorterFn<TItem>(sorters: ((d: TItem) => any)[]) {
-    return (a: TItem, b: TItem) => {
-      let i = 0
-
-      sorters.some(sorter => {
-        const sortedA = sorter(a)
-        const sortedB = sorter(b)
-        if (sortedA > sortedB) {
-          i = 1
-          return true
-        }
-        if (sortedA < sortedB) {
-          i = -1
-          return true
-        }
-        return false
-      })
-
-      return i
     }
   }
 
@@ -227,17 +242,14 @@ async function run() {
     ? `Manual Release: ${process.env.TAG}`
     : await Promise.all(
         Object.entries(
-          commitsSinceLatestTag.reduce(
-            (acc, next) => {
-              const type = next.parsed.type?.toLowerCase() ?? 'other'
+          commitsSinceLatestTag.reduce((acc, next) => {
+            const type = next.parsed.type?.toLowerCase() ?? 'other'
 
-              return {
-                ...acc,
-                [type]: [...(acc[type] || []), next],
-              }
-            },
-            {} as Record<string, Commit[]>
-          )
+            return {
+              ...acc,
+              [type]: [...(acc[type] || []), next],
+            }
+          }, /** @type {Record<string, import('./types.js').Commit[]>} */ ({})),
         )
           .sort(
             getSorterFn([
@@ -252,17 +264,17 @@ async function run() {
                   'fix',
                   'feat',
                 ].indexOf(d),
-            ])
+            ]),
           )
           .reverse()
           .map(async ([type, commits]) => {
             return Promise.all(
-              commits.map(async commit => {
+              commits.map(async (commit) => {
                 let username = ''
 
                 if (process.env.GH_TOKEN) {
                   const query = `${
-                    commit.author.email ?? commit.committer.email
+                    commit.author.email || commit.committer.email
                   }`
 
                   const res = await axios.get(
@@ -274,7 +286,7 @@ async function run() {
                       headers: {
                         Authorization: `token ${process.env.GH_TOKEN}`,
                       },
-                    }
+                    },
                   )
 
                   username = res.data.items[0]?.login
@@ -283,18 +295,17 @@ async function run() {
                 const scope = commit.parsed.scope
                   ? `${commit.parsed.scope}: `
                   : ''
-                const subject = commit.parsed.subject ?? commit.subject
-                // const commitUrl = `${remoteURL}/commit/${commit.commit.long}`;
+                const subject = commit.parsed.subject || commit.subject
 
                 return `- ${scope}${subject} (${commit.commit.short}) ${
                   username
                     ? `by @${username}`
-                    : `by ${commit.author.name ?? commit.author.email}`
+                    : `by ${commit.author.name || commit.author.email}`
                 }`
-              })
-            ).then(commits => [type, commits] as const)
-          })
-      ).then(groups => {
+              }),
+            ).then((c) => /** @type {const} */ ([type, c]))
+          }),
+      ).then((groups) => {
         return groups
           .map(([type, commits]) => {
             return [`### ${capitalize(type)}`, commits.join('\n')].join('\n\n')
@@ -311,10 +322,12 @@ async function run() {
     console.log('Exiting...')
     process.exit(0)
   }
-  
+
   const releaseType = branchConfig.prerelease
     ? 'prerelease'
-    : ({ 0: 'patch', 1: 'minor', 2: 'major' } as const)[recommendedReleaseLevel]
+    : /** @type {const} */ ({ 0: 'patch', 1: 'minor', 2: 'major' })[
+        recommendedReleaseLevel
+      ]
 
   if (!releaseType) {
     throw new Error(`Invalid release level: ${recommendedReleaseLevel}`)
@@ -322,7 +335,7 @@ async function run() {
 
   const version = process.env.TAG
     ? semver.parse(process.env.TAG)?.version
-    : semver.inc(latestTag!, releaseType, npmTag)
+    : semver.inc(latestTag, releaseType, npmTag)
 
   if (!version) {
     throw new Error(
@@ -330,18 +343,18 @@ async function run() {
         latestTag,
         recommendedReleaseLevel,
         branchConfig.prerelease,
-      ].join(', ')}`
+      ].join(', ')}`,
     )
   }
 
   const changelogMd = [
     `Version ${version} - ${DateTime.now().toLocaleString(
-      DateTime.DATETIME_SHORT
+      DateTime.DATETIME_SHORT,
     )}`,
     `## Changes`,
     changelogCommitsMd,
     `## Packages`,
-    changedPackages.map(d => `- ${d.name}@${version}`).join('\n'),
+    changedPackages.map((d) => `- ${d.name}@${version}`).join('\n'),
   ].join('\n\n')
 
   console.info('Generating changelog...')
@@ -349,59 +362,10 @@ async function run() {
   console.info(changelogMd)
   console.info()
 
-  console.info('Building packages...')
-  execSync(`pnpm build`, { encoding: 'utf8', stdio: 'inherit' })
-  console.info('')
-
-  console.info('Building types...')
-  execSync(`pnpm test:types`, { encoding: 'utf8', stdio: 'inherit' })
-  console.info('')
-
-  console.info('Validating packages...')
-  const failedValidations: string[] = []
-
-  await Promise.all(
-    packages.map(async pkg => {
-      const pkgJson = await readPackageJson(
-        path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json')
-      )
-
-      await Promise.all(
-        (['module', 'main', 'types'] as const).map(async entryKey => {
-          const entry = pkgJson[entryKey] as string
-
-          if (!entry) {
-            throw new Error(
-              `Missing entry for "${entryKey}" in ${pkg.packageDir}/package.json!`
-            )
-          }
-
-          const filePath = path.resolve(
-            rootDir,
-            'packages',
-            pkg.packageDir,
-            entry
-          )
-
-          try {
-            await fsp.access(filePath)
-          } catch (err) {
-            failedValidations.push(`Missing build file: ${filePath}`)
-          }
-        })
-      )
-    })
-  )
-  console.info('')
-  if (failedValidations.length > 0) {
-    throw new Error(
-      'Some packages failed validation:\n\n' + failedValidations.join('\n')
-    )
+  if (changedPackages.length === 0) {
+    console.info('No packages have been affected.')
+    return
   }
-
-  console.info('Testing packages...')
-  execSync(`npm run test:lib`, { encoding: 'utf8' })
-  console.info('')
 
   console.info(`Updating all changed packages to version ${version}...`)
   // Update each package to the new version
@@ -409,137 +373,22 @@ async function run() {
     console.info(`  Updating ${pkg.name} version to ${version}...`)
 
     await updatePackageJson(
-      path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json'),
-      config => {
+      path.resolve(rootDir, pkg.packageDir, 'package.json'),
+      (config) => {
         config.version = version
-      }
+      },
     )
   }
-
-  console.info(`Updating all package dependencies to latest versions...`)
-  // Update all changed package dependencies to their correct versions
-  for (const pkg of packages) {
-    await updatePackageJson(
-      path.resolve(rootDir, 'packages', pkg.packageDir, 'package.json'),
-      async config => {
-        await Promise.all(
-          (pkg.dependencies ?? []).map(async dep => {
-            const depPackage = packages.find(d => d.name === dep)
-
-            if (!depPackage) {
-              throw new Error(`Could not find package ${dep}`)
-            }
-
-            const depVersion = await getPackageVersion(
-              path.resolve(
-                rootDir,
-                'packages',
-                depPackage.packageDir,
-                'package.json'
-              )
-            )
-
-            if (
-              config.dependencies?.[dep] &&
-              config.dependencies[dep] !== depVersion
-            ) {
-              console.info(
-                `  Updating ${pkg.name}'s dependency on ${dep} to version ${depVersion}.`
-              )
-              config.dependencies[dep] = depVersion
-            }
-          })
-        )
-
-        await Promise.all(
-          (pkg.peerDependencies ?? []).map(async peerDep => {
-            const peerDepPackage = packages.find(d => d.name === peerDep)
-
-            if (!peerDepPackage) {
-              throw new Error(`Could not find package ${peerDep}`)
-            }
-
-            const depVersion = await getPackageVersion(
-              path.resolve(
-                rootDir,
-                'packages',
-                peerDepPackage.packageDir,
-                'package.json'
-              )
-            )
-
-            if (
-              config.peerDependencies?.[peerDep] &&
-              config.peerDependencies[peerDep] !== depVersion
-            ) {
-              console.info(
-                `  Updating ${pkg.name}'s peerDependency on ${peerDep} to version ${depVersion}.`
-              )
-              config.peerDependencies[peerDep] = depVersion
-            }
-          })
-        )
-      }
-    )
-  }
-
-  console.info(`Updating all example dependencies...`)
-  await Promise.all(
-    examplesDirs.map(async examplesDir => {
-      examplesDir = path.resolve(rootDir, examplesDir)
-      const exampleDirs = await fsp.readdir(examplesDir)
-      for (const exampleName of exampleDirs) {
-        const exampleDir = path.resolve(examplesDir, exampleName)
-        const stat = await fsp.stat(exampleDir)
-        if (!stat.isDirectory()) continue
-
-        await updatePackageJson(
-          path.resolve(exampleDir, 'package.json'),
-          async config => {
-            await Promise.all(
-              changedPackages.map(async pkg => {
-                const depVersion = await getPackageVersion(
-                  path.resolve(
-                    rootDir,
-                    'packages',
-                    pkg.packageDir,
-                    'package.json'
-                  )
-                )
-                //upgrade dependencies in react, solid, and vue
-                if (
-                  config.dependencies?.[pkg.name] &&
-                  config.dependencies[pkg.name] !== depVersion
-                ) {
-                  console.info(
-                    `  Updating ${exampleName}'s dependency on ${pkg.name} to version ${depVersion}.`
-                  )
-                  config.dependencies[pkg.name] = depVersion
-                }
-                //upgrade devDependencies in svelte (svelte uses devDependencies instead of dependencies)
-                if (
-                  config.devDependencies?.[pkg.name] &&
-                  config.devDependencies[pkg.name] !== depVersion
-                ) {
-                  console.info(
-                    `  Updating ${exampleName}'s devDependencies on ${pkg.name} to version ${depVersion}.`
-                  )
-                  config.devDependencies[pkg.name] = depVersion
-                }
-              })
-            )
-          }
-        )
-      }
-    })
-  )
 
   if (!process.env.CI) {
     console.warn(
-      `This is a dry run for version ${version}. Push to CI to publish for real or set CI=true to override!`
+      `This is a dry run for version ${version}. Push to CI to publish for real or set CI=true to override!`,
     )
     return
   }
+
+  console.info()
+  console.info(`Publishing all packages to npm`)
 
   // Tag and commit
   console.info(`Creating new git tag v${version}`)
@@ -663,4 +512,31 @@ function getPackageNameDirectory(pathName: string) {
 function getTaggedVersion() {
   const output = execSync('git tag --list --points-at HEAD').toString()
   return output.replace(/^v|\n+$/g, '')
+}
+
+/**
+ * @template TItem
+ * @param {((d: TItem) => any)[]} sorters
+ * @returns {(a: TItem, b: TItem) => number}
+ */
+function getSorterFn(sorters) {
+  return (a, b) => {
+    let i = 0
+
+    sorters.some((sorter) => {
+      const sortedA = sorter(a)
+      const sortedB = sorter(b)
+      if (sortedA > sortedB) {
+        i = 1
+        return true
+      }
+      if (sortedA < sortedB) {
+        i = -1
+        return true
+      }
+      return false
+    })
+
+    return i
+  }
 }

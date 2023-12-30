@@ -27,7 +27,10 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - run: |
+      - name: Run Tests
+        run: pnpm run test:ci
+      - name: Publish
+        run: |
           git config --global user.name 'Tanner Linsley'
           git config --global user.email 'tannerlinsley@users.noreply.github.com'
           pnpm run cipublish
