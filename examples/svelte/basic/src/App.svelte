@@ -5,7 +5,7 @@
     flexRender,
     getCoreRowModel,
   } from '@tanstack/svelte-table'
-  import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
+  import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types'
   import './index.css'
 
   type Person = {

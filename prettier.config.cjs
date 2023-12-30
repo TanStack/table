@@ -8,4 +8,6 @@ module.exports = {
   bracketSpacing: true,
   arrowParens: 'avoid',
   endOfLine: 'auto',
+  plugins: ['prettier-plugin-svelte'],
+  overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }],
 }

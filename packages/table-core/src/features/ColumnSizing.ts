@@ -60,7 +60,10 @@ export interface ColumnSizingOptions {
 
 export type ColumnSizingDefaultOptions = Pick<
   ColumnSizingOptions,
-  'columnResizeMode' | 'onColumnSizingChange' | 'onColumnSizingInfoChange' | 'columnResizeDirection'
+  | 'columnResizeMode'
+  | 'onColumnSizingChange'
+  | 'onColumnSizingInfoChange'
+  | 'columnResizeDirection'
 >
 
 export interface ColumnSizingInstance {
@@ -258,8 +261,8 @@ export const ColumnSizing: TableFeature = {
       const columns = !position
         ? table.getVisibleLeafColumns()
         : position === 'left'
-        ? table.getLeftVisibleLeafColumns()
-        : table.getRightVisibleLeafColumns()
+          ? table.getLeftVisibleLeafColumns()
+          : table.getRightVisibleLeafColumns()
 
       const index = columns.findIndex(d => d.id === column.id)
 
@@ -355,8 +358,10 @@ export const ColumnSizing: TableFeature = {
           }
 
           table.setColumnSizingInfo(old => {
-            const deltaDirection = table.options.columnResizeDirection === 'rtl' ? -1 : 1
-            const deltaOffset = (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
+            const deltaDirection =
+              table.options.columnResizeDirection === 'rtl' ? -1 : 1
+            const deltaOffset =
+              (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
             const deltaPercentage = Math.max(
               deltaOffset / (old?.startSize ?? 0),
               -0.999999

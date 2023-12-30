@@ -234,7 +234,7 @@ interface FiltersOptionsBase<TData extends RowData> {
   enableGlobalFilter?: boolean
   /**
    * If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
-   * 
+   *
    * This is useful if the column can contain data that is not `string` or `number` (i.e. `undefined`).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getcolumncanglobalfilter)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
@@ -434,10 +434,10 @@ export const Filters: TableFeature = {
       return isFunction(column.columnDef.filterFn)
         ? column.columnDef.filterFn
         : column.columnDef.filterFn === 'auto'
-        ? column.getAutoFilterFn()
-        : // @ts-ignore
-          table.options.filterFns?.[column.columnDef.filterFn as string] ??
-          filterFns[column.columnDef.filterFn as BuiltInFilterFn]
+          ? column.getAutoFilterFn()
+          : // @ts-ignore
+            table.options.filterFns?.[column.columnDef.filterFn as string] ??
+            filterFns[column.columnDef.filterFn as BuiltInFilterFn]
     }
     column.getCanFilter = () => {
       return (
@@ -556,10 +556,10 @@ export const Filters: TableFeature = {
       return isFunction(globalFilterFn)
         ? globalFilterFn
         : globalFilterFn === 'auto'
-        ? table.getGlobalAutoFilterFn()
-        : // @ts-ignore
-          table.options.filterFns?.[globalFilterFn as string] ??
-          filterFns[globalFilterFn as BuiltInFilterFn]
+          ? table.getGlobalAutoFilterFn()
+          : // @ts-ignore
+            table.options.filterFns?.[globalFilterFn as string] ??
+            filterFns[globalFilterFn as BuiltInFilterFn]
     }
 
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) => {

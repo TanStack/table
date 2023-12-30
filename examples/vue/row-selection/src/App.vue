@@ -9,9 +9,8 @@ import {
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
-import IndeterminateCheckbox from './IndeterminateCheckbox.vue';
+import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
-
 
 const columnHelper = createColumnHelper<Person>()
 
@@ -19,21 +18,25 @@ const columns = [
   {
     id: 'select',
     header: ({ table }: { table: any }) => {
-      return <IndeterminateCheckbox
-        checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomeRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      ></IndeterminateCheckbox>
+      return (
+        <IndeterminateCheckbox
+          checked={table.getIsAllRowsSelected()}
+          indeterminate={table.getIsSomeRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        ></IndeterminateCheckbox>
+      )
     },
     cell: ({ row }: { row: any }) => {
-      return <div className="px-1">
-        <IndeterminateCheckbox
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        ></IndeterminateCheckbox>
-      </div> 
-    }
+      return (
+        <div className="px-1">
+          <IndeterminateCheckbox
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+          ></IndeterminateCheckbox>
+        </div>
+      )
+    },
   },
   columnHelper.group({
     header: 'Name',
@@ -103,7 +106,7 @@ const table = useVueTable({
     rowSelection.value =
       typeof updateOrValue === 'function'
         ? updateOrValue(rowSelection.value)
-        : updateOrValue;
+        : updateOrValue
   },
   getCoreRowModel: getCoreRowModel(),
 })

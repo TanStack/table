@@ -5,85 +5,85 @@ import {
   getPaginationRowModel,
   useVueTable,
   createColumnHelper,
-} from "@tanstack/vue-table";
-import { ref } from "vue";
-import { makeData, Person } from "./makeData";
+} from '@tanstack/vue-table'
+import { ref } from 'vue'
+import { makeData, Person } from './makeData'
 
-const INITIAL_PAGE_INDEX = 0;
+const INITIAL_PAGE_INDEX = 0
 
-const defaultData = makeData(100);
-const columnHelper = createColumnHelper<Person>();
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1);
-const pageSizes = [10, 20, 30, 40, 50];
-const data = ref(defaultData);
+const defaultData = makeData(100)
+const columnHelper = createColumnHelper<Person>()
+const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
+const pageSizes = [10, 20, 30, 40, 50]
+const data = ref(defaultData)
 
 const columns = [
   columnHelper.group({
-    header: "Name",
-    footer: (props) => props.column.id,
+    header: 'Name',
+    footer: props => props.column.id,
     columns: [
-      columnHelper.accessor("firstName", {
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
+      columnHelper.accessor('firstName', {
+        cell: info => info.getValue(),
+        footer: props => props.column.id,
       }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: "lastName",
-        cell: (info) => info.getValue(),
-        header: () => "Last Name",
-        footer: (props) => props.column.id,
+      columnHelper.accessor(row => row.lastName, {
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => 'Last Name',
+        footer: props => props.column.id,
       }),
     ],
   }),
   columnHelper.group({
-    header: "Info",
-    footer: (props) => props.column.id,
+    header: 'Info',
+    footer: props => props.column.id,
     columns: [
-      columnHelper.accessor("age", {
-        header: () => "Age",
-        footer: (props) => props.column.id,
+      columnHelper.accessor('age', {
+        header: () => 'Age',
+        footer: props => props.column.id,
       }),
       columnHelper.group({
-        header: "More Info",
+        header: 'More Info',
         columns: [
-          columnHelper.accessor("visits", {
-            header: () => "Visits",
-            footer: (props) => props.column.id,
+          columnHelper.accessor('visits', {
+            header: () => 'Visits',
+            footer: props => props.column.id,
           }),
-          columnHelper.accessor("status", {
-            header: "Status",
-            footer: (props) => props.column.id,
+          columnHelper.accessor('status', {
+            header: 'Status',
+            footer: props => props.column.id,
           }),
-          columnHelper.accessor("progress", {
-            header: "Profile Progress",
-            footer: (props) => props.column.id,
+          columnHelper.accessor('progress', {
+            header: 'Profile Progress',
+            footer: props => props.column.id,
           }),
         ],
       }),
     ],
   }),
-];
+]
 
 const table = useVueTable({
   get data() {
-    return data.value;
+    return data.value
   },
   columns,
   getCoreRowModel: getCoreRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
-});
+})
 
 function rerender() {
-  data.value = defaultData;
+  data.value = defaultData
 }
 
 function handleGoToPage(e) {
-  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-  goToPageNumber.value = page + 1;
-  table.setPageIndex(page);
+  const page = e.target.value ? Number(e.target.value) - 1 : 0
+  goToPageNumber.value = page + 1
+  table.setPageIndex(page)
 }
 
 function handlePageSizeChange(e) {
-  table.setPageSize(Number(e.target.value));
+  table.setPageSize(Number(e.target.value))
 }
 </script>
 

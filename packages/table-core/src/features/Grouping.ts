@@ -326,11 +326,13 @@ export const Grouping: TableFeature = {
       return isFunction(column.columnDef.aggregationFn)
         ? column.columnDef.aggregationFn
         : column.columnDef.aggregationFn === 'auto'
-        ? column.getAutoAggregationFn()
-        : table.options.aggregationFns?.[
-            column.columnDef.aggregationFn as string
-          ] ??
-          aggregationFns[column.columnDef.aggregationFn as BuiltInAggregationFn]
+          ? column.getAutoAggregationFn()
+          : table.options.aggregationFns?.[
+              column.columnDef.aggregationFn as string
+            ] ??
+            aggregationFns[
+              column.columnDef.aggregationFn as BuiltInAggregationFn
+            ]
     }
   },
 
