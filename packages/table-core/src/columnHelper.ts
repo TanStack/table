@@ -55,8 +55,8 @@ export type ColumnHelper<TData extends RowData> = {
     TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
-      ? DeepValue<TData, TAccessor>
-      : never,
+        ? DeepValue<TData, TAccessor>
+        : never,
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>

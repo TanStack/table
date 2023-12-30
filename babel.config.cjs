@@ -12,7 +12,7 @@ module.exports = {
         modules: false,
         include: [
           '@babel/plugin-proposal-nullish-coalescing-operator',
-          '@babel/plugin-proposal-optional-chaining'
+          '@babel/plugin-proposal-optional-chaining',
         ],
         // exclude: ['@babel/plugin-transform-regenerator'],
       },

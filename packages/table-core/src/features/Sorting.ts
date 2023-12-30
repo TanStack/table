@@ -348,9 +348,9 @@ export const Sorting: TableFeature = {
       return isFunction(column.columnDef.sortingFn)
         ? column.columnDef.sortingFn
         : column.columnDef.sortingFn === 'auto'
-        ? column.getAutoSortingFn()
-        : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
-          sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
+          ? column.getAutoSortingFn()
+          : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
+            sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
     }
     column.toggleSorting = (desc, multi) => {
       // if (column.columns.length) {

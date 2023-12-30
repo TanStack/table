@@ -95,7 +95,7 @@ function App() {
 
   //All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
-    <div className='app'>
+    <div className="app">
       {process.env.NODE_ENV === 'development' ? (
         <p>
           <strong>Notice:</strong> You are currently running React in

@@ -265,8 +265,10 @@ export type AccessorFnColumnDef<
   TValue = unknown,
 > = AccessorFnColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
-export interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
-  extends ColumnDefBase<TData, TValue> {
+export interface AccessorKeyColumnDefBase<
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDefBase<TData, TValue> {
   id?: string
   accessorKey: (string & {}) | keyof TData
 }

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, useAttrs, toRefs } from 'vue';
+import { ref, onMounted, useAttrs, toRefs } from 'vue'
 
 const props = defineProps<{
-  indeterminate: boolean,
-  className?: string,
-}>();
+  indeterminate: boolean
+  className?: string
+}>()
 
-const { indeterminate, className } = toRefs(props);
+const { indeterminate, className } = toRefs(props)
 
-const inputRef = ref<any>(null);
+const inputRef = ref<any>(null)
 </script>
 
 <template>

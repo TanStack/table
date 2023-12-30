@@ -154,7 +154,8 @@ export const createRow = <TData extends RowData>(
       row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
     getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
-    getParentRow: () => (row.parentId ? table.getRow(row.parentId, true) : undefined),
+    getParentRow: () =>
+      row.parentId ? table.getRow(row.parentId, true) : undefined,
     getParentRows: () => {
       let parentRows: Row<TData>[] = []
       let currentRow = row
