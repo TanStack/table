@@ -7,7 +7,7 @@ import {
   createColumnHelper,
   getSortedRowModel,
 } from '@tanstack/vue-table'
-import { h, ref } from 'vue'
+import { h, ref, watch } from 'vue'
 import { makeData, Person } from './makeData'
 
 const columnHelper = createColumnHelper<Person>()
@@ -76,30 +76,66 @@ const rerender = () => {
 
 const sorting = ref<SortingState>([])
 
-const table = useVueTable({
-  get data() {
-    return data.value
-  },
-  columns,
-  state: {
-    get sorting() {
-      return sorting.value
+const enableMultiSort = ref<boolean>(true)
+const isClickToSort = ref<boolean>(false)
+const handleEnableMultiSort = (e) => {
+  enableMultiSort.value = e.target.checked
+
+  if (!e.target.checked) {
+    isClickToSort.value = false
+  }
+}
+const handleClickToSort = (e) => {
+  isClickToSort.value = e.target.checked
+}
+
+const table = ref(createTable())
+function createTable() {
+  return useVueTable({
+    get data() {
+      return data.value
     },
-  },
-  onSortingChange: updaterOrValue => {
-    sorting.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(sorting.value)
-        : updaterOrValue
-  },
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
-  debugTable: true,
+    columns,
+    state: {
+      get sorting() {
+        return sorting.value
+      },
+    },
+    enableMultiSort: enableMultiSort.value,
+    ...(isClickToSort.value ? {isMultiSortEvent: () => true} : undefined),
+    onSortingChange: updaterOrValue => {
+      sorting.value =
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(sorting.value)
+          : updaterOrValue
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
+  })
+}
+watch([enableMultiSort, isClickToSort], () => {
+  console.log(enableMultiSort.value)
+  table.value = createTable()
 })
 </script>
 
 <template>
   <div class="p-2">
+    <div className="flex items-center">
+      <label className="mr-2">enableMultiSort: </label>
+      <input type="checkbox" :checked="enableMultiSort" @change="handleEnableMultiSort"/>
+      <template v-if="enableMultiSort">
+        <span className="ml-2 text-red-500">Press `Shift` key and clicks a
+new column.</span>
+      </template>
+    </div>
+    <template v-if="enableMultiSort">
+      <div className="flex items-center">
+        <label className="mr-2">Click to multi-sort: </label>
+        <input type="checkbox" :checked="isClickToSort" @change="handleClickToSort"/>
+      </div>
+    </template>
     <table>
       <thead>
         <tr

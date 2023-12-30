@@ -7,11 +7,13 @@ import {
   createSolidTable,
 } from '@tanstack/solid-table'
 import { makeData, Person } from './makeData'
-import { createSignal, For, Show } from 'solid-js'
+import { createSignal, For, Show, createEffect } from 'solid-js'
 
 function App() {
   const [data, setData] = createSignal(makeData(100_000))
   const [sorting, setSorting] = createSignal<SortingState>([])
+  const [enableMultiSort, setEnableMultiSort] = createSignal<boolean>(true)
+  const [isClickToSort, setIsClickToSort] = createSignal<boolean>(false)
   const refreshData = () => setData(makeData(100_000))
 
   const columns: ColumnDef<Person>[] = [
@@ -66,27 +68,61 @@ function App() {
     },
   ]
 
-  const table = createSolidTable({
-    get data() {
-      return data()
-    },
-    columns,
-    state: {
-      get sorting() {
-        return sorting()
+  const [table, setTable] = createSignal(createTable())
+
+  function createTable(){
+    return createSolidTable({
+      get data() {
+        return data()
       },
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
+      columns,
+      state: {
+        get sorting() {
+          return sorting()
+        },
+      },
+      get enableMultiSort() {
+        return enableMultiSort()
+      },
+      ...(isClickToSort() ? {isMultiSortEvent() { return true}} : undefined),
+      onSortingChange: setSorting,
+      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      debugTable: true,
+    })
+  }
+
+  createEffect(() => {
+    // setIsClickToSort(isClickToSort())
+    setTable(createTable())
   })
 
   return (
     <div class="p-2">
+      <div className="flex items-center">
+        <label className="mr-2">enableMultiSort: </label>
+        <input type="checkbox" checked={enableMultiSort()} onChange={e => {
+          setEnableMultiSort(e.target.checked)
+          if (!e.target.checked) {
+            setIsClickToSort(false)
+          }
+        }}/>
+        {enableMultiSort() && <span className="ml-2 text-red-500">Press `Shift` key and clicks a
+new column.</span>}
+      </div>
+      {
+        enableMultiSort() && (
+          <div className="flex items-center">
+            <label className="mr-2">Click to multi-sort: </label>
+            <input type="checkbox" checked={isClickToSort()} onChange={e => {
+              setIsClickToSort(e.target.checked)
+            }}/>
+          </div>
+        )
+      }
       <table>
         <thead>
-          <For each={table.getHeaderGroups()}>
+          <For each={table().getHeaderGroups()}>
             {headerGroup => (
               <tr>
                 <For each={headerGroup.headers}>
@@ -119,7 +155,7 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={table.getRowModel().rows.slice(0, 10)}>
+          <For each={table().getRowModel().rows.slice(0, 10)}>
             {row => (
               <tr>
                 <For each={row.getVisibleCells()}>
@@ -137,7 +173,7 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div>{table().getRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
@@ -147,3 +183,4 @@ function App() {
 }
 
 export default App
+

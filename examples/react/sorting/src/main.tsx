@@ -17,6 +17,8 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [enableMultiSort, setEnableMultiSort] = React.useState<boolean>(true)
+  const [isClickToSort, setIsClickToSort] = React.useState<boolean>(false)
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
@@ -86,6 +88,8 @@ function App() {
     state: {
       sorting,
     },
+    enableMultiSort,
+    ...(isClickToSort ? {isMultiSortEvent: () => true} : undefined),
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -95,6 +99,25 @@ function App() {
   return (
     <div className="p-2">
       <div className="h-2" />
+      <div className="flex items-center">
+        <label className="mr-2">enableMultiSort: </label>
+        <input type="checkbox" checked={enableMultiSort} onChange={e => {
+          setEnableMultiSort(e.target.checked)
+          if (!e.target.checked) {
+            setIsClickToSort(false)
+          }
+        }}/>
+        {enableMultiSort && <span className="ml-2 text-red-500">Press `Shift` key and clicks a
+new column.</span>}
+      </div>
+      {
+        enableMultiSort && (
+          <div className="flex items-center">
+            <label className="mr-2">Click to multi-sort: </label>
+            <input type="checkbox" checked={isClickToSort} onChange={e => setIsClickToSort(e.target.checked)}/>
+          </div>
+        )
+      }
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
