@@ -23,47 +23,44 @@ import { DateTime } from 'luxon'
 
 import { PackageJson } from 'type-fest'
 
-const releaseCommitMsg = (version: string) => `release: v${version}`
+/** @param {string} version */
+const releaseCommitMsg = (version) => `release: v${version}`
 
 async function run() {
-  const branchName: string =
-    process.env.BRANCH ??
-    // (process.env.PR_NUMBER ? `pr-${process.env.PR_NUMBER}` : currentGitBranch())
-    currentGitBranch()
+  const branchName = /** @type {string} */ (
+    process.env.BRANCH ?? currentGitBranch()
+  )
 
-  const branchConfig: BranchConfig = branchConfigs[branchName]
+  /** @type {import('./types.js').BranchConfig | undefined} */
+  const branchConfig = branchConfigs[branchName]
 
-  if (!branchConfig) {
-    console.log(`No publish config found for branch: ${branchName}`)
-    console.log('Exiting...')
-    process.exit(0)
-  }
-
-  const isLatestBranch = branchName === latestBranch
-  const npmTag = isLatestBranch ? 'latest' : branchName
-
-  let remoteURL = execSync('git config --get remote.origin.url').toString()
-
-  remoteURL = remoteURL.substring(0, remoteURL.indexOf('.git'))
-
+  const isMainBranch = branchName === 'main'
+  const isPreviousRelease = branchConfig?.previousVersion
+  const npmTag = isMainBranch ? 'latest' : branchName
+  
   // Get tags
-  let tags: string[] = execSync('git tag').toString().split('\n')
+  /** @type {string[]} */
+  let tags = execSync('git tag').toString().split('\n')
 
   // Filter tags to our branch/pre-release combo
   tags = tags
-    .filter(tag => semver.valid(tag))
-    .filter(tag => {
-      if (isLatestBranch) {
-        return semver.prerelease(tag) == null
+    .filter((tag) => semver.valid(tag))
+    .filter((tag) => {
+      // If this is an older release, filter to only include that version
+      if (isPreviousRelease) {
+        return tag.startsWith(branchName)
       }
-
-      return tag.includes(`-${branchName}`)
+      if (semver.prerelease(tag) === null) {
+        return isMainBranch
+      } else {
+        return !isMainBranch
+      }
     })
     // sort by latest
     .sort(semver.compare)
 
   // Get the latest tag
-  let latestTag = [...tags].pop()
+  let latestTag = /** @type {string} */ ([...tags].pop())
 
   let range = `${latestTag}..HEAD`
   // let range = ``;
@@ -309,6 +306,12 @@ async function run() {
     recommendedReleaseLevel = 0
   }
 
+  if (!branchConfig) {
+    console.log(`No publish config found for branch: ${branchName}`)
+    console.log('Exiting...')
+    process.exit(0)
+  }
+  
   const releaseType = branchConfig.prerelease
     ? 'prerelease'
     : ({ 0: 'patch', 1: 'minor', 2: 'major' } as const)[recommendedReleaseLevel]
