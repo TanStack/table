@@ -16,8 +16,7 @@
     "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all",
     "dev": "pnpm run watch",
     "prettier": "prettier \"packages/*/{src/**,examples/**/src/**}.{md,js,jsx,ts,tsx,json}\" --write",
-    "cipublish": "ts-node scripts/publish.mjs",
-    "cipublishforce": "CI=true pnpm run cipublish",
+    "cipublish": "node scripts/publish.js",
     "test:pr": "nx affected --targets=test:lib,test:types,build --exclude=examples/**",
     "test:ci": "nx run-many --targets=test:lib,test:types,build --exclude=examples/**"
   },
@@ -72,7 +71,6 @@
     "solid-js": "^1.6.2",
     "stream-to-array": "^2.3.0",
     "svelte": "^3.49.0",
-    "ts-node": "^10.9.2",
     "type-fest": "^4.8.3",
     "typescript": "5.2.2",
     "vitest": "^0.29.3",
