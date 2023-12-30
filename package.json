@@ -60,7 +60,7 @@
     "jsonfile": "^6.1.0",
     "luxon": "^2.3.2",
     "nx": "^17.2.7",
-    "prettier": "^3.1.1",
+    "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
