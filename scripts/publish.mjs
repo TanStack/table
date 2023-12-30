@@ -1,18 +1,18 @@
 // @ts-check
 // Originally ported to TS from https://github.com/remix-run/react-router/tree/main/scripts/{version,publish}.js
 
-import { branchConfigs, packages, rootDir } from './config.mjs'
-import path from 'path'
-import { execSync } from 'child_process'
+import path from 'node:path'
+import { execSync } from 'node:child_process'
 import chalk from 'chalk'
 import jsonfile from 'jsonfile'
-import semver from 'semver'
+import * as semver from 'semver'
 import currentGitBranch from 'current-git-branch'
-import parseCommit from '@commitlint/parse'
+import { parse as parseCommit } from '@commitlint/parse'
 import log from 'git-log-parser'
 import streamToArray from 'stream-to-array'
 import axios from 'axios'
 import { DateTime } from 'luxon'
+import { branchConfigs, packages, rootDir } from './config.mjs'
 
 /** @param {string} version */
 const releaseCommitMsg = version => `release: v${version}`
@@ -21,7 +21,6 @@ async function run() {
   const branchName = /** @type {string} */ (
     process.env.BRANCH ?? currentGitBranch()
   )
-
   /** @type {import('./types.js').BranchConfig | undefined} */
   const branchConfig = branchConfigs[branchName]
 
