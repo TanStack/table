@@ -23,7 +23,9 @@
     "cipublish": "node scripts/publish.js"
   },
   "nx": {
-    "includedScripts": []
+    "includedScripts": [
+      "test:format"
+    ]
   },
   "namespace": "@tanstack",
   "devDependencies": {
