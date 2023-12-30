@@ -10,38 +10,31 @@ import { fileURLToPath } from 'node:url'
 export const packages = [
   {
     name: '@tanstack/table-core',
-    packageDir: 'table-core',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/table-core',
   },
   {
     name: '@tanstack/react-table',
-    packageDir: 'react-table',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/react-table',
   },
   {
     name: '@tanstack/solid-table',
-    packageDir: 'solid-table',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/solid-table',
   },
   {
     name: '@tanstack/vue-table',
-    packageDir: 'vue-table',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/vue-table',
   },
   {
     name: '@tanstack/svelte-table',
-    packageDir: 'svelte-table',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/svelte-table',
   },
   {
     name: '@tanstack/react-table-devtools',
-    packageDir: 'react-table-devtools',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/react-table-devtools',
   },
   {
     name: '@tanstack/match-sorter-utils',
-    packageDir: 'match-sorter-utils',
-    entries: ['main', 'module', 'types'],
+    packageDir: 'packages/match-sorter-utils',
   },
 ]
 
