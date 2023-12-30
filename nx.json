@@ -11,23 +11,40 @@
   },
   "parallel": 5,
   "namedInputs": {
-    "packageSources": [
-      "{workspaceRoot}/packages/**/src/**/*.ts",
-      "{workspaceRoot}/packages/**/tsconfig.json"
+    "sharedGlobals": [
+      "{workspaceRoot}/.nvmrc",
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/scripts/getRollupConfig.js",
+      "{workspaceRoot}/tsconfig.json"
     ],
-    "buildDeps": ["{projectRoot}/**/*", "!{projectRoot}/__tests__/**/*"]
+    "default": [
+      "sharedGlobals",
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/*.md"
+    ],
+    "public": [
+      "default",
+      "{projectRoot}/build",
+      "{projectRoot}/dist",
+      "!{projectRoot}/.eslintrc.cjs",
+      "!{projectRoot}/tsconfig.eslint.json"
+    ]
   },
   "targetDefaults": {
     "test:lib": {
       "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
+      "outputs": ["{projectRoot}/coverage"],
       "cache": true
     },
     "test:types": {
       "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
       "cache": true
     },
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     }
