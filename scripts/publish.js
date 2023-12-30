@@ -12,7 +12,7 @@ import log from 'git-log-parser'
 import streamToArray from 'stream-to-array'
 import axios from 'axios'
 import { DateTime } from 'luxon'
-import { branchConfigs, packages, rootDir } from './config.mjs'
+import { branchConfigs, packages, rootDir } from './config.js'
 
 /** @param {string} version */
 const releaseCommitMsg = version => `release: v${version}`

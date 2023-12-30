@@ -16,5 +16,5 @@
     "allowJs": true,
     "checkJs": true
   },
-  "include": ["prettier.config.js", "scripts"]
+  "include": ["prettier.config.cjs", "scripts"]
 }

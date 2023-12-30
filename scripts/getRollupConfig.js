@@ -9,7 +9,7 @@ import size from 'rollup-plugin-size'
 import replace from '@rollup/plugin-replace'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import svelte from 'rollup-plugin-svelte'
-import { rootDir } from './config.mjs'
+import { rootDir } from './config.js'
 
 /** @param {'development' | 'production'} type */
 const forceEnvPlugin = type =>
@@ -20,7 +20,7 @@ const forceEnvPlugin = type =>
   })
 
 const babelPlugin = babel({
-  configFile: resolve(rootDir, 'babel.config.js'),
+  configFile: resolve(rootDir, 'babel.config.cjs'),
   babelHelpers: 'bundled',
   exclude: /node_modules/,
   extensions: ['.ts', '.tsx'],

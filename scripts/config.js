@@ -59,10 +59,3 @@ export const branchConfigs = {
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 export const rootDir = resolve(__dirname, '..')
-
-export const examplesDirs = [
-  'examples/react',
-  'examples/solid',
-  'examples/svelte',
-  'examples/vue',
-]
