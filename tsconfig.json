@@ -12,7 +12,9 @@
     "declaration": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "allowJs": true,
+    "checkJs": true
   },
-  "include": ["prettier.config.js"]
+  "include": ["prettier.config.cjs", "scripts"]
 }

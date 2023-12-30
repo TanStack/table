@@ -20,16 +20,16 @@ export type AuthorOrCommitter = {
 }
 
 export type Parsed = {
-  type: string
+  type: string | null
   scope?: string | null
   subject: string
   merge?: null
   header: string
   body?: null
   footer?: null
-  notes?: null[] | null
-  references?: null[] | null
-  mentions?: null[] | null
+  notes?: Array<null> | null
+  references?: Array<null> | null
+  mentions?: Array<null> | null
   revert?: null
   raw: string
 }
@@ -37,12 +37,9 @@ export type Parsed = {
 export type Package = {
   name: string
   packageDir: string
-  srcDir: string
-  dependencies?: string[]
-  peerDependencies?: string[]
 }
 
 export type BranchConfig = {
   prerelease: boolean
-  ghRelease: boolean
+  previousVersion?: boolean
 }

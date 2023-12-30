@@ -10,47 +10,33 @@ import { fileURLToPath } from 'node:url'
 export const packages = [
   {
     name: '@tanstack/table-core',
-    packageDir: 'table-core',
-    srcDir: 'src',
+    packageDir: 'packages/table-core',
   },
   {
     name: '@tanstack/react-table',
-    packageDir: 'react-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
+    packageDir: 'packages/react-table',
   },
   {
     name: '@tanstack/solid-table',
-    packageDir: 'solid-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
+    packageDir: 'packages/solid-table',
   },
   {
     name: '@tanstack/vue-table',
-    packageDir: 'vue-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
+    packageDir: 'packages/vue-table',
   },
   {
     name: '@tanstack/svelte-table',
-    packageDir: 'svelte-table',
-    srcDir: 'src',
-    dependencies: ['@tanstack/table-core'],
+    packageDir: 'packages/svelte-table',
   },
   {
     name: '@tanstack/react-table-devtools',
-    packageDir: 'react-table-devtools',
-    srcDir: 'src',
-    peerDependencies: ['@tanstack/react-table'],
+    packageDir: 'packages/react-table-devtools',
   },
   {
     name: '@tanstack/match-sorter-utils',
-    packageDir: 'match-sorter-utils',
-    srcDir: 'src',
+    packageDir: 'packages/match-sorter-utils',
   },
 ]
-
-export const latestBranch = 'main'
 
 /**
  * Contains config for publishable branches.
@@ -59,28 +45,17 @@ export const latestBranch = 'main'
 export const branchConfigs = {
   main: {
     prerelease: false,
-    ghRelease: true,
   },
   next: {
     prerelease: true,
-    ghRelease: true,
   },
   beta: {
     prerelease: true,
-    ghRelease: true,
   },
   alpha: {
     prerelease: true,
-    ghRelease: true,
   },
 }
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 export const rootDir = resolve(__dirname, '..')
-
-export const examplesDirs = [
-  'examples/react',
-  'examples/solid',
-  'examples/svelte',
-  'examples/vue',
-]

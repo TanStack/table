@@ -28,6 +28,7 @@
     "type": "github",
     "url": "https://github.com/sponsors/kentcdodds"
   },
+  "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
