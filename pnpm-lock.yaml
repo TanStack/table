@@ -838,6 +838,34 @@ importers:
         specifier: ^3.2.3
         version: 3.2.5(@types/node@18.15.10)
 
+  examples/react/virtualized-columns:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.3.1
+        version: 8.3.1
+      '@tanstack/react-table':
+        specifier: 8.11.2
+        version: link:../../../packages/react-table
+      '@tanstack/react-virtual':
+        specifier: ^3.0.1
+        version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.5
+        version: 5.0.5(rollup@3.29.4)
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.2.1(vite@5.0.10)
+      vite:
+        specifier: ^5.0.10
+        version: 5.0.10(@types/node@18.15.10)
+
   examples/react/virtualized-infinite-scrolling:
     dependencies:
       '@faker-js/faker':

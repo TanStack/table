@@ -290,6 +290,10 @@
           "label": "Sorting"
         },
         {
+          "to": "examples/react/virtualized-columns",
+          "label": "Virtualized Columns"
+        },
+        {
           "to": "examples/react/virtualized-rows",
           "label": "Virtualized Rows"
         },
