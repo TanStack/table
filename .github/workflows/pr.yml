@@ -17,7 +17,7 @@ env:
 
 jobs:
   test:
-    name: 'Test'
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,9 +33,9 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Get appropriate base and head commits for `nx affected` commands
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Get base and head commits for `nx affected`
         uses: nrwl/nx-set-shas@v3
         with:
           main-branch-name: 'main'
