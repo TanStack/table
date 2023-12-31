@@ -12,7 +12,7 @@ import svelte from 'rollup-plugin-svelte'
 import { rootDir } from './config.js'
 
 /** @param {'development' | 'production'} type */
-const forceEnvPlugin = type =>
+const forceEnvPlugin = (type) =>
   replace({
     'process.env.NODE_ENV': `"${type}"`,
     delimiters: ['', ''],
@@ -40,7 +40,7 @@ export function buildConfigs(opts) {
   const input = resolve(opts.entryFile)
 
   /** @param {string} moduleName */
-  const external = moduleName => opts.external.includes(moduleName)
+  const external = (moduleName) => opts.external.includes(moduleName)
   const umdExternal = Object.keys(opts.globals)
   const banner = createBanner(opts.name)
 

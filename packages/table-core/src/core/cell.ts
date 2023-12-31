@@ -53,7 +53,7 @@ export function createCell<TData extends RowData, TValue>(
   table: Table<TData>,
   row: Row<TData>,
   column: Column<TData, TValue>,
-  columnId: string
+  columnId: string,
 ): Cell<TData, TValue> {
   const getRenderValue = () =>
     cell.getValue() ?? table.options.renderFallbackValue
@@ -77,16 +77,16 @@ export function createCell<TData extends RowData, TValue>(
       {
         key: process.env.NODE_ENV === 'development' && 'cell.getContext',
         debug: () => table.options.debugAll,
-      }
+      },
     ),
   }
 
-  table._features.forEach(feature => {
+  table._features.forEach((feature) => {
     feature.createCell?.(
       cell as Cell<TData, TValue>,
       column,
       row as Row<TData>,
-      table
+      table,
     )
   }, {})
 

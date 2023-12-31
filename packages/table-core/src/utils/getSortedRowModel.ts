@@ -3,9 +3,9 @@ import { SortingFn } from '../features/Sorting'
 import { memo } from '../utils'
 
 export function getSortedRowModel<TData extends RowData>(): (
-  table: Table<TData>
+  table: Table<TData>,
 ) => () => RowModel<TData> {
-  return table =>
+  return (table) =>
     memo(
       () => [table.getState().sorting, table.getPreSortedRowModel()],
       (sorting, rowModel) => {
@@ -19,7 +19,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter(
-          sort => table.getColumn(sort.id)?.getCanSort()
+          (sort) => table.getColumn(sort.id)?.getCanSort(),
         )
 
         const columnInfoById: Record<
@@ -31,7 +31,7 @@ export function getSortedRowModel<TData extends RowData>(): (
           }
         > = {}
 
-        availableSorting.forEach(sortEntry => {
+        availableSorting.forEach((sortEntry) => {
           const column = table.getColumn(sortEntry.id)
           if (!column) return
 
@@ -45,7 +45,7 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortData = (rows: Row<TData>[]) => {
           // This will also perform a stable sorting using the row index
           // if needed.
-          const sortedData = rows.map(row => ({ ...row }))
+          const sortedData = rows.map((row) => ({ ...row }))
 
           sortedData.sort((rowA, rowB) => {
             for (let i = 0; i < availableSorting.length; i += 1) {
@@ -95,7 +95,7 @@ export function getSortedRowModel<TData extends RowData>(): (
           })
 
           // If there are sub-rows, sort them
-          sortedData.forEach(row => {
+          sortedData.forEach((row) => {
             sortedFlatRows.push(row)
             if (row.subRows?.length) {
               row.subRows = sortData(row.subRows)
@@ -117,6 +117,6 @@ export function getSortedRowModel<TData extends RowData>(): (
         onChange: () => {
           table._autoResetPageIndex()
         },
-      }
+      },
     )
 }

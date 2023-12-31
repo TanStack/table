@@ -73,16 +73,16 @@ function Table({ columns, data }) {
       data,
       initialState: { pageIndex: 2 },
     },
-    usePagination
+    usePagination,
   )
 
   return (
     <>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
@@ -93,13 +93,13 @@ function Table({ columns, data }) {
             (row, i) =>
               prepareRow(row) || (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {row.cells.map((cell) => {
                     return (
                       <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     )
                   })}
                 </tr>
-              )
+              ),
           )}
         </tbody>
       </table>
@@ -127,7 +127,7 @@ function Table({ columns, data }) {
           <input
             type="number"
             defaultValue={pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               gotoPage(page)
             }}
@@ -136,12 +136,12 @@ function Table({ columns, data }) {
         </span>{' '}
         <select
           value={pageSize}
-          onChange={e => {
+          onChange={(e) => {
             setPageSize(Number(e.target.value))
           }}
           data-testid="page-size-select"
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -178,7 +178,8 @@ test('renders a paginated table', () => {
   })
 
   expect(
-    rendered.queryAllByRole('row').slice(2).reverse()[0].children[0].textContent
+    rendered.queryAllByRole('row').slice(2).reverse()[0].children[0]
+      .textContent,
   ).toEqual('tanner 30')
 })
 
@@ -206,7 +207,7 @@ describe('usePagination', () => {
 
     expect(
       rendered.queryAllByRole('row').slice(2).reverse()[0].children[0]
-        .textContent
+        .textContent,
     ).toEqual('tanner 30')
   })
 
@@ -218,8 +219,8 @@ describe('usePagination', () => {
           data,
         },
         useFilters,
-        usePagination
-      )
+        usePagination,
+      ),
     )
 
     act(() => result.current.nextPage())

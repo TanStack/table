@@ -17,7 +17,7 @@ export const fuzzyFilter: FilterFn<Person> = (
   row,
   columnId,
   value,
-  addMeta
+  addMeta,
 ) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -36,7 +36,7 @@ export const fuzzySort: SortingFn<Person> = (rowA, rowB, columnId) => {
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
       rowA.columnFiltersMeta[columnId]! as RankingInfo,
-      rowB.columnFiltersMeta[columnId]! as RankingInfo
+      rowB.columnFiltersMeta[columnId]! as RankingInfo,
     )
   }
 
@@ -68,7 +68,7 @@ export const defaultColumn: Partial<ColumnDef<Person>> = {
     return (
       <input
         value={value as string}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
       />
     )
@@ -97,26 +97,26 @@ export const columns: ColumnDef<Person>[] = [
   },
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => `${row.firstName} ${row.lastName}`,
+        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
         id: 'fullName',
         header: 'Full Name',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
         filterFn: fuzzyFilter,
         sortingFn: fuzzySort,
       },
@@ -124,12 +124,12 @@ export const columns: ColumnDef<Person>[] = [
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -137,17 +137,17 @@ export const columns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -157,13 +157,13 @@ export const columns: ColumnDef<Person>[] = [
 
 export const getTableMeta = (
   setData: React.Dispatch<React.SetStateAction<Person[]>>,
-  skipAutoResetPageIndex: () => void
+  skipAutoResetPageIndex: () => void,
 ) =>
   ({
     updateData: (rowIndex, columnId, value) => {
       // Skip age index reset until after next rerender
       skipAutoResetPageIndex()
-      setData(old =>
+      setData((old) =>
         old.map((row, index) => {
           if (index !== rowIndex) return row
 
@@ -171,7 +171,7 @@ export const getTableMeta = (
             ...old[rowIndex]!,
             [columnId]: value,
           }
-        })
+        }),
       )
     },
   }) as TableMeta

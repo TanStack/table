@@ -21,7 +21,7 @@ export function flexRender<TProps extends {}>(Comp: any, props: TProps) {
 }
 
 export function createSolidTable<TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeProps(
     {
@@ -30,19 +30,19 @@ export function createSolidTable<TData extends RowData>(
       renderFallbackValue: null,
       mergeOptions: (
         defaultOptions: TableOptions<TData>,
-        options: Partial<TableOptions<TData>>
+        options: Partial<TableOptions<TData>>,
       ) => {
         return mergeProps(defaultOptions, options) as TableOptions<TData>
       },
     },
-    options
+    options,
   )
 
   const table = createTable<TData>(resolvedOptions)
   const [state, setState] = createStore(table.initialState)
 
   createComputed(() => {
-    table.setOptions(prev => {
+    table.setOptions((prev) => {
       return mergeProps(prev, options, {
         state: mergeProps(state, options.state || {}),
         // Similarly, we'll maintain both our internal state and any user-provided

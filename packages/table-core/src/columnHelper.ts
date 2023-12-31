@@ -61,7 +61,7 @@ export type ColumnHelper<TData extends RowData> = {
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
       ? DisplayColumnDef<TData, TValue>
-      : IdentifiedColumnDef<TData, TValue>
+      : IdentifiedColumnDef<TData, TValue>,
   ) => ColumnDef<TData, TValue>
   display: (column: DisplayColumnDef<TData>) => ColumnDef<TData, unknown>
   group: (column: GroupColumnDef<TData>) => ColumnDef<TData, unknown>
@@ -82,7 +82,7 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
-    display: column => column as ColumnDef<TData, unknown>,
-    group: column => column as ColumnDef<TData, unknown>,
+    display: (column) => column as ColumnDef<TData, unknown>,
+    group: (column) => column as ColumnDef<TData, unknown>,
   }
 }

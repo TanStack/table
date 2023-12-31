@@ -14,5 +14,5 @@ export default defineConfig(
       'solid-js': 'Solid',
       'solid-js/store': 'SolidStore',
     },
-  })
+  }),
 )

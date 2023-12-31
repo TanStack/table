@@ -69,7 +69,7 @@ export function flexRender(component: any, props: any): ComponentType | null {
 type ReadableOrVal<T> = T | Readable<T>
 
 export function createSvelteTable<TData extends RowData>(
-  options: ReadableOrVal<TableOptions<TData>>
+  options: ReadableOrVal<TableOptions<TData>>,
 ) {
   let optionsStore: Readable<TableOptions<TData>>
 
@@ -90,17 +90,17 @@ export function createSvelteTable<TData extends RowData>(
 
   let stateStore = writable(/** @type {number} */ table.initialState)
   // combine stores
-  let stateOptionsStore = derived([stateStore, optionsStore], s => s)
+  let stateOptionsStore = derived([stateStore, optionsStore], (s) => s)
   const tableReadable = readable(table, function start(set) {
     const unsubscribe = stateOptionsStore.subscribe(([state, options]) => {
-      table.setOptions(prev => {
+      table.setOptions((prev) => {
         return {
           ...prev,
           ...options,
           state: { ...state, ...options.state },
           // Similarly, we'll maintain both our internal state and any user-provided
           // state.
-          onStateChange: updater => {
+          onStateChange: (updater) => {
             if (updater instanceof Function) {
               stateStore.update(updater)
             } else {

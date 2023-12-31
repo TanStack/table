@@ -40,7 +40,7 @@ type BoxedTupleTypes<T extends any[]> = {
   [P in keyof T]: [UnboxLazy<T[P]>]
 }[Exclude<keyof T, keyof any[]>]
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
+  k: infer I,
 ) => void
   ? I
   : never
@@ -76,6 +76,6 @@ export function mergeProxy(...sources: any): any {
         return [...Array.from(new Set(keys))]
       },
     },
-    propTraps
+    propTraps,
   )
 }

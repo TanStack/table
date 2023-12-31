@@ -14,5 +14,5 @@ export default defineConfig(
       react: 'React',
       '@tanstack/react-table': 'ReactTable',
     },
-  })
+  }),
 )

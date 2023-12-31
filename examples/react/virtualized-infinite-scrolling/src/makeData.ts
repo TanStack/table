@@ -63,7 +63,7 @@ const data = makeData(1000)
 export const fetchData = (
   start: number,
   size: number,
-  sorting: SortingState
+  sorting: SortingState,
 ) => {
   const dbData = [...data]
   if (sorting.length) {

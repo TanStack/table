@@ -51,13 +51,13 @@ const table = useVueTable({
     pagination: pagination.value,
   },
   manualPagination: true,
-  onPaginationChange: updater => {
+  onPaginationChange: (updater) => {
     if (typeof updater === 'function') {
       setPagination(
         updater({
           pageIndex: pagination.value.pageIndex,
           pageSize: pagination.value.pageSize,
-        })
+        }),
       )
     } else {
       setPagination(updater)

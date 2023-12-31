@@ -28,12 +28,12 @@ function App() {
       },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
       },
       {
@@ -58,11 +58,11 @@ function App() {
       {
         accessorKey: 'createdAt',
         header: 'Created At',
-        cell: info => info.getValue<Date>().toLocaleString(),
+        cell: (info) => info.getValue<Date>().toLocaleString(),
         size: 250,
       },
     ],
-    []
+    [],
   )
 
   const [data, _setData] = React.useState(() => makeData(50_000))
@@ -88,7 +88,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -123,12 +123,12 @@ function App() {
               zIndex: 1,
             }}
           >
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
                 style={{ display: 'flex', width: '100%' }}
               >
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <th
                       key={header.id}
@@ -147,7 +147,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -167,12 +167,12 @@ function App() {
               position: 'relative', //needed for absolute positioning of rows
             }}
           >
-            {rowVirtualizer.getVirtualItems().map(virtualRow => {
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const row = rows[virtualRow.index] as Row<Person>
               return (
                 <tr
                   data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
@@ -181,7 +181,7 @@ function App() {
                     width: '100%',
                   }}
                 >
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <td
                         key={cell.id}
@@ -192,7 +192,7 @@ function App() {
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -214,5 +214,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

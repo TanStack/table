@@ -152,7 +152,7 @@ export const Visibility: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
@@ -161,11 +161,11 @@ export const Visibility: TableFeature = {
 
   createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
-    column.toggleVisibility = value => {
+    column.toggleVisibility = (value) => {
       if (column.getCanHide()) {
-        table.setColumnVisibility(old => ({
+        table.setColumnVisibility((old) => ({
           ...old,
           [column.id]: value ?? !column.getIsVisible(),
         }))
@@ -184,7 +184,7 @@ export const Visibility: TableFeature = {
     column.getToggleVisibilityHandler = () => {
       return (e: unknown) => {
         column.toggleVisibility?.(
-          ((e as MouseEvent).target as HTMLInputElement).checked
+          ((e as MouseEvent).target as HTMLInputElement).checked,
         )
       }
     }
@@ -192,17 +192,17 @@ export const Visibility: TableFeature = {
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row._getAllVisibleCells = memo(
       () => [row.getAllCells(), table.getState().columnVisibility],
-      cells => {
-        return cells.filter(cell => cell.column.getIsVisible())
+      (cells) => {
+        return cells.filter((cell) => cell.column.getIsVisible())
       },
       {
         key: process.env.NODE_ENV === 'production' && 'row._getAllVisibleCells',
         debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      },
     )
     row.getVisibleCells = memo(
       () => [
@@ -214,64 +214,64 @@ export const Visibility: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'row.getVisibleCells',
         debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      },
     )
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     const makeVisibleColumnsMethod = (
       key: string,
-      getColumns: () => Column<TData, unknown>[]
+      getColumns: () => Column<TData, unknown>[],
     ): (() => Column<TData, unknown>[]) => {
       return memo(
         () => [
           getColumns(),
           getColumns()
-            .filter(d => d.getIsVisible())
-            .map(d => d.id)
+            .filter((d) => d.getIsVisible())
+            .map((d) => d.id)
             .join('_'),
         ],
-        columns => {
-          return columns.filter(d => d.getIsVisible?.())
+        (columns) => {
+          return columns.filter((d) => d.getIsVisible?.())
         },
         {
           key,
           debug: () => table.options.debugAll ?? table.options.debugColumns,
-        }
+        },
       )
     }
 
     table.getVisibleFlatColumns = makeVisibleColumnsMethod(
       'getVisibleFlatColumns',
-      () => table.getAllFlatColumns()
+      () => table.getAllFlatColumns(),
     )
     table.getVisibleLeafColumns = makeVisibleColumnsMethod(
       'getVisibleLeafColumns',
-      () => table.getAllLeafColumns()
+      () => table.getAllLeafColumns(),
     )
     table.getLeftVisibleLeafColumns = makeVisibleColumnsMethod(
       'getLeftVisibleLeafColumns',
-      () => table.getLeftLeafColumns()
+      () => table.getLeftLeafColumns(),
     )
     table.getRightVisibleLeafColumns = makeVisibleColumnsMethod(
       'getRightVisibleLeafColumns',
-      () => table.getRightLeafColumns()
+      () => table.getRightLeafColumns(),
     )
     table.getCenterVisibleLeafColumns = makeVisibleColumnsMethod(
       'getCenterVisibleLeafColumns',
-      () => table.getCenterLeafColumns()
+      () => table.getCenterLeafColumns(),
     )
 
-    table.setColumnVisibility = updater =>
+    table.setColumnVisibility = (updater) =>
       table.options.onColumnVisibilityChange?.(updater)
 
-    table.resetColumnVisibility = defaultState => {
+    table.resetColumnVisibility = (defaultState) => {
       table.setColumnVisibility(
-        defaultState ? {} : table.initialState.columnVisibility ?? {}
+        defaultState ? {} : table.initialState.columnVisibility ?? {},
       )
     }
 
-    table.toggleAllColumnsVisible = value => {
+    table.toggleAllColumnsVisible = (value) => {
       value = value ?? !table.getIsAllColumnsVisible()
 
       table.setColumnVisibility(
@@ -280,21 +280,21 @@ export const Visibility: TableFeature = {
             ...obj,
             [column.id]: !value ? !column.getCanHide?.() : value,
           }),
-          {}
-        )
+          {},
+        ),
       )
     }
 
     table.getIsAllColumnsVisible = () =>
-      !table.getAllLeafColumns().some(column => !column.getIsVisible?.())
+      !table.getAllLeafColumns().some((column) => !column.getIsVisible?.())
 
     table.getIsSomeColumnsVisible = () =>
-      table.getAllLeafColumns().some(column => column.getIsVisible?.())
+      table.getAllLeafColumns().some((column) => column.getIsVisible?.())
 
     table.getToggleAllColumnsVisibilityHandler = () => {
       return (e: unknown) => {
         table.toggleAllColumnsVisible(
-          ((e as MouseEvent).target as HTMLInputElement)?.checked
+          ((e as MouseEvent).target as HTMLInputElement)?.checked,
         )
       }
     }

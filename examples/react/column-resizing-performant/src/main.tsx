@@ -24,45 +24,45 @@ type Person = {
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
@@ -132,7 +132,7 @@ function App() {
             columnSizingInfo: table.getState().columnSizingInfo,
           },
           null,
-          2
+          2,
         )}
       </pre>
       <div className="h-4" />({data.length} rows)
@@ -148,14 +148,14 @@ function App() {
           }}
         >
           <div className="thead">
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <div
                 {...{
                   key: headerGroup.id,
                   className: 'tr',
                 }}
               >
-                {headerGroup.headers.map(header => (
+                {headerGroup.headers.map((header) => (
                   <div
                     {...{
                       key: header.id,
@@ -169,7 +169,7 @@ function App() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                     <div
                       {...{
@@ -206,14 +206,14 @@ function TableBody({ table }: { table: Table<Person> }) {
         className: 'tbody',
       }}
     >
-      {table.getRowModel().rows.map(row => (
+      {table.getRowModel().rows.map((row) => (
         <div
           {...{
             key: row.id,
             className: 'tr',
           }}
         >
-          {row.getVisibleCells().map(cell => {
+          {row.getVisibleCells().map((cell) => {
             //simulate expensive render
             for (let i = 0; i < 10000; i++) {
               Math.random()
@@ -242,7 +242,7 @@ function TableBody({ table }: { table: Table<Person> }) {
 //special memoized wrapper for our table body that we will use during column resizing
 export const MemoizedTableBody = React.memo(
   TableBody,
-  (prev, next) => prev.table.options.data === next.table.options.data
+  (prev, next) => prev.table.options.data === next.table.options.data,
 ) as typeof TableBody
 
 const rootElement = document.getElementById('root')
@@ -251,5 +251,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

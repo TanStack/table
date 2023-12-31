@@ -112,15 +112,15 @@ const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
   return (
     <table>
       <thead>
-        {table.getHeaderGroups().map(headerGroup => (
+        {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
+            {headerGroup.headers.map((header) => (
               <th key={header.id} colSpan={header.colSpan}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(
                       header.column.columnDef.header,
-                      header.getContext()
+                      header.getContext(),
                     )}
               </th>
             ))}
@@ -128,9 +128,9 @@ const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
         ))}
       </thead>
       <tbody>
-        {table.getRowModel().rows.map(row => (
+        {table.getRowModel().rows.map((row) => (
           <tr key={row.id}>
-            {row.getVisibleCells().map(cell => (
+            {row.getVisibleCells().map((cell) => (
               <td key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
@@ -145,8 +145,8 @@ const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
 test(`Select all do not select rows which are not available for selection`, () => {
   render(
     <TableComponent
-      options={{ enableRowSelection: row => row.original.age > 40 }}
-    />
+      options={{ enableRowSelection: (row) => row.original.age > 40 }}
+    />,
   )
 
   const [title, notSelected, selected] = screen.getAllByRole('checkbox')
@@ -170,7 +170,7 @@ test(`Select all do not select rows which are not available for selection`, () =
 
 // issue #4757
 test(`Select all is unchecked for current page if all rows are not available for selection`, () => {
-  let condition = row => row.original.age > 50
+  let condition = (row) => row.original.age > 50
 
   const { rerender } = render(
     <TableComponent
@@ -179,7 +179,7 @@ test(`Select all is unchecked for current page if all rows are not available for
         data: defaultData,
         enableRowSelection: condition,
       }}
-    />
+    />,
   )
 
   expect(screen.queryByTestId('select-single')).not.toBeInTheDocument()
@@ -187,7 +187,7 @@ test(`Select all is unchecked for current page if all rows are not available for
   expect(selectedOnPage).not.toBeChecked()
   expect(selectedOnPage).not.toHaveAttribute('aria-checked', 'mixed')
 
-  condition = row => row.original.age > 40
+  condition = (row) => row.original.age > 40
   rerender(
     <TableComponent
       options={{
@@ -195,7 +195,7 @@ test(`Select all is unchecked for current page if all rows are not available for
         data: defaultData,
         enableRowSelection: condition,
       }}
-    />
+    />,
   )
 
   expect(screen.queryByTestId('select-single')).toBeInTheDocument()

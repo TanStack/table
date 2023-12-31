@@ -49,30 +49,30 @@ const defaultData: Person[] = [
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: props => props.renderValue(),
-        footer: props => props.column.id,
+        cell: (props) => props.renderValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: props => props.renderValue(),
+        cell: (props) => props.renderValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -80,17 +80,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -135,7 +135,7 @@ describe('useReactTable', () => {
                 Toggle All
               </label>
             </div>
-            {table.getAllLeafColumns().map(column => {
+            {table.getAllLeafColumns().map((column) => {
               return (
                 <div key={column.id} className="px-1">
                   <label>
@@ -155,15 +155,15 @@ describe('useReactTable', () => {
           <div className="h-4" />
           <table>
             <thead>
-              {table.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </th>
                   ))}
@@ -171,13 +171,13 @@ describe('useReactTable', () => {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   ))}
@@ -185,15 +185,15 @@ describe('useReactTable', () => {
               ))}
             </tbody>
             <tfoot>
-              {table.getFooterGroups().map(footerGroup => (
+              {table.getFooterGroups().map((footerGroup) => (
                 <tr key={footerGroup.id}>
-                  {footerGroup.headers.map(header => (
+                  {footerGroup.headers.map((header) => (
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.footer,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </th>
                   ))}
@@ -220,23 +220,23 @@ describe('useReactTable', () => {
     const snap = (name: string) => {
       expect({
         headers: Array.from(
-          rendered.container.querySelectorAll('thead > tr')
-        ).map(d =>
-          Array.from(d.querySelectorAll('th')).map(d => [
+          rendered.container.querySelectorAll('thead > tr'),
+        ).map((d) =>
+          Array.from(d.querySelectorAll('th')).map((d) => [
             d.innerHTML,
             d.getAttribute('colspan'),
-          ])
+          ]),
         ),
         rows: Array.from(rendered.container.querySelectorAll('tbody > tr')).map(
-          d => Array.from(d.querySelectorAll('td')).map(d => d.innerHTML)
+          (d) => Array.from(d.querySelectorAll('td')).map((d) => d.innerHTML),
         ),
         footers: Array.from(
-          rendered.container.querySelectorAll('tfoot > tr')
-        ).map(d =>
-          Array.from(d.querySelectorAll('th')).map(d => [
+          rendered.container.querySelectorAll('tfoot > tr'),
+        ).map((d) =>
+          Array.from(d.querySelectorAll('th')).map((d) => [
             d.innerHTML,
             d.getAttribute('colspan'),
-          ])
+          ]),
         ),
       }).toMatchSnapshot(`${snapIndex++} - ${name}`)
     }

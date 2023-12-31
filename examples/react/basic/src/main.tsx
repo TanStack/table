@@ -50,31 +50,31 @@ const columnHelper = createColumnHelper<Person>()
 
 const columns = [
   columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => <i>{info.getValue()}</i>,
+    cell: (info) => <i>{info.getValue()}</i>,
     header: () => <span>Last Name</span>,
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    cell: info => info.renderValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.renderValue(),
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('visits', {
     header: () => <span>Visits</span>,
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
 ]
 
@@ -92,15 +92,15 @@ function App() {
     <div className="p-2">
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
+              {headerGroup.headers.map((header) => (
                 <th key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </th>
               ))}
@@ -108,9 +108,9 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
+              {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
@@ -119,15 +119,15 @@ function App() {
           ))}
         </tbody>
         <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
+          {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
+              {footerGroup.headers.map((header) => (
                 <th key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.footer,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </th>
               ))}
@@ -149,5 +149,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

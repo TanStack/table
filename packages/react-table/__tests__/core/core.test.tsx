@@ -48,30 +48,30 @@ const defaultData: Person[] = [
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.renderValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.renderValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.renderValue(),
+        cell: (info) => info.renderValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -79,17 +79,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -123,15 +123,15 @@ describe('core', () => {
         <div className="p-2">
           <table>
             <thead>
-              {table.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </th>
                   ))}
@@ -139,13 +139,13 @@ describe('core', () => {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   ))}
@@ -153,15 +153,15 @@ describe('core', () => {
               ))}
             </tbody>
             <tfoot>
-              {table.getFooterGroups().map(footerGroup => (
+              {table.getFooterGroups().map((footerGroup) => (
                 <tr key={footerGroup.id}>
-                  {footerGroup.headers.map(header => (
+                  {footerGroup.headers.map((header) => (
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.footer,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </th>
                   ))}
@@ -190,27 +190,27 @@ describe('core', () => {
     expect(RTL.screen.getAllByRole('cell').length).toEqual(18)
 
     expect(
-      Array.from(rendered.container.querySelectorAll('thead > tr')).map(d =>
-        Array.from(d.querySelectorAll('th')).map(d => [
+      Array.from(rendered.container.querySelectorAll('thead > tr')).map((d) =>
+        Array.from(d.querySelectorAll('th')).map((d) => [
           d.innerHTML,
           d.getAttribute('colspan'),
-        ])
-      )
+        ]),
+      ),
     ).toMatchSnapshot()
 
     expect(
-      Array.from(rendered.container.querySelectorAll('tbody > tr')).map(d =>
-        Array.from(d.querySelectorAll('td')).map(d => d.innerHTML)
-      )
+      Array.from(rendered.container.querySelectorAll('tbody > tr')).map((d) =>
+        Array.from(d.querySelectorAll('td')).map((d) => d.innerHTML),
+      ),
     ).toMatchSnapshot()
 
     expect(
-      Array.from(rendered.container.querySelectorAll('tfoot > tr')).map(d =>
-        Array.from(d.querySelectorAll('th')).map(d => [
+      Array.from(rendered.container.querySelectorAll('tfoot > tr')).map((d) =>
+        Array.from(d.querySelectorAll('th')).map((d) => [
           d.innerHTML,
           d.getAttribute('colspan'),
-        ])
-      )
+        ]),
+      ),
     ).toMatchSnapshot()
   })
 

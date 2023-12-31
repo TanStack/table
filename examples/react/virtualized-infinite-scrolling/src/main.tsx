@@ -41,12 +41,12 @@ function App() {
       },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
       },
       {
@@ -71,10 +71,10 @@ function App() {
       {
         accessorKey: 'createdAt',
         header: 'Created At',
-        cell: info => info.getValue<Date>().toLocaleString(),
+        cell: (info) => info.getValue<Date>().toLocaleString(),
       },
     ],
-    []
+    [],
   )
 
   //react-query has an useInfiniteQuery hook just for this situation!
@@ -90,13 +90,13 @@ function App() {
         getNextPageParam: (_lastGroup, groups) => groups.length,
         keepPreviousData: true,
         refetchOnWindowFocus: false,
-      }
+      },
     )
 
   //we must flatten the array of arrays from the useInfiniteQuery hook
   const flatData = React.useMemo(
-    () => data?.pages?.flatMap(page => page.data) ?? [],
-    [data]
+    () => data?.pages?.flatMap((page) => page.data) ?? [],
+    [data],
   )
   const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0
   const totalFetched = flatData.length
@@ -116,7 +116,7 @@ function App() {
         }
       }
     },
-    [fetchNextPage, isFetching, totalFetched, totalDBRowCount]
+    [fetchNextPage, isFetching, totalFetched, totalDBRowCount],
   )
 
   //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
@@ -160,14 +160,14 @@ function App() {
       <div className="h-2" />
       <div
         className="container"
-        onScroll={e => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+        onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
         ref={tableContainerRef}
       >
         <table>
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <th
                       key={header.id}
@@ -185,7 +185,7 @@ function App() {
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {{
                             asc: ' 🔼',
@@ -205,16 +205,16 @@ function App() {
                 <td style={{ height: `${paddingTop}px` }} />
               </tr>
             )}
-            {virtualRows.map(virtualRow => {
+            {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index] as Row<Person>
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -251,5 +251,5 @@ ReactDOM.createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 )

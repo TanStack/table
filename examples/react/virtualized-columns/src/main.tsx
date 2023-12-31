@@ -21,7 +21,7 @@ import { makeColumns, makeData, Person } from './makeData'
 function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => makeColumns(1_000),
-    []
+    [],
   )
 
   const [data, _setData] = React.useState(() => makeData(1_000, columns))
@@ -46,7 +46,7 @@ function App() {
         .getRowModel()
         .rows[0]?.getCenterVisibleCells()
         ?.slice(0, 16)
-        ?.map(cell => cell.column.getSize()) ?? []
+        ?.map((cell) => cell.column.getSize()) ?? []
     return columnsWidths.reduce((a, b) => a + b, 0) / columnsWidths.length
   }, [table.getRowModel().rows])
 
@@ -68,7 +68,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -119,7 +119,7 @@ function App() {
               zIndex: 1,
             }}
           >
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
                 style={{ display: 'flex', width: '100%' }}
@@ -128,7 +128,7 @@ function App() {
                   //fake empty column to the left for virtualization scroll padding
                   <th style={{ display: 'flex', width: virtualPaddingLeft }} />
                 ) : null}
-                {virtualColumns.map(vc => {
+                {virtualColumns.map((vc) => {
                   const header = headerGroup.headers[vc.index]
                   return (
                     <th
@@ -148,7 +148,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -172,14 +172,14 @@ function App() {
               position: 'relative', //needed for absolute positioning of rows
             }}
           >
-            {virtualRows.map(virtualRow => {
+            {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index] as Row<Person>
               const visibleCells = row.getVisibleCells()
 
               return (
                 <tr
                   data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
@@ -194,7 +194,7 @@ function App() {
                       style={{ display: 'flex', width: virtualPaddingLeft }}
                     />
                   ) : null}
-                  {virtualColumns.map(vc => {
+                  {virtualColumns.map((vc) => {
                     const cell = visibleCells[vc.index]
                     return (
                       <td
@@ -206,7 +206,7 @@ function App() {
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -234,5 +234,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

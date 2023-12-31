@@ -18,30 +18,30 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -49,17 +49,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -77,7 +77,7 @@ const DraggableRow: FC<{
   })
 
   const [{ isDragging }, dragRef, previewRef] = useDrag({
-    collect: monitor => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
     item: () => row,
@@ -92,7 +92,7 @@ const DraggableRow: FC<{
       <td ref={dropRef}>
         <button ref={dragRef}>🟰</button>
       </td>
-      {row.getVisibleCells().map(cell => (
+      {row.getVisibleCells().map((cell) => (
         <td key={cell.id}>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </td>
@@ -116,7 +116,7 @@ function App() {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getRowId: row => row.userId, //good to have guaranteed unique row ids/keys for rendering
+    getRowId: (row) => row.userId, //good to have guaranteed unique row ids/keys for rendering
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
@@ -133,16 +133,16 @@ function App() {
       <div className="h-4" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               <th />
-              {headerGroup.headers.map(header => (
+              {headerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </th>
               ))}
@@ -150,20 +150,20 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map((row) => (
             <DraggableRow key={row.id} row={row} reorderRow={reorderRow} />
           ))}
         </tbody>
         <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
+          {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
+              {footerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.footer,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </th>
               ))}
@@ -183,6 +183,6 @@ ReactDOM.createRoot(rootElement).render(
   // <React.StrictMode> //disabled for react-dnd preview bug for now
   <DndProvider backend={HTML5Backend}>
     <App />
-  </DndProvider>
+  </DndProvider>,
   // </React.StrictMode>
 )

@@ -13,7 +13,7 @@ type PersonColumn = ColumnDef<Person, string | number | Person[] | undefined>
 function generateColumns(people: Person[]): PersonColumn[] {
   const columnHelper = createColumnHelper<Person>()
   const person = people[0]
-  return Object.keys(person).map(key => {
+  return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
     return columnHelper.accessor(typedKey, { id: typedKey })
   })
@@ -30,7 +30,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {
             '0': true,
@@ -59,7 +59,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {
             '0': true,
@@ -88,7 +88,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {},
         },
@@ -166,7 +166,7 @@ describe('RowSelection', () => {
       const result = RowSelection.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
-        table
+        table,
       )
 
       expect(result).toEqual(false)
@@ -181,7 +181,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {},
         },
@@ -194,7 +194,7 @@ describe('RowSelection', () => {
       const result = RowSelection.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
-        table
+        table,
       )
 
       expect(result).toEqual(false)
@@ -209,7 +209,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {
             '0.0': true,
@@ -224,7 +224,7 @@ describe('RowSelection', () => {
       const result = RowSelection.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
-        table
+        table,
       )
 
       expect(result).toEqual('some')
@@ -239,7 +239,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {
             '0.0': true,
@@ -255,7 +255,7 @@ describe('RowSelection', () => {
       const result = RowSelection.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
-        table
+        table,
       )
 
       expect(result).toEqual('all')
@@ -265,11 +265,11 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = createTable<Person>({
-        enableRowSelection: row => row.index === 0, // only first row is selectable (of 2 sub-rows)
+        enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {
             '0.0': true, // first sub-row
@@ -284,7 +284,7 @@ describe('RowSelection', () => {
       const result = RowSelection.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
-        table
+        table,
       )
 
       expect(result).toEqual('all')
@@ -298,7 +298,7 @@ describe('RowSelection', () => {
         onStateChange() {},
         renderFallbackValue: '',
         data,
-        getSubRows: row => row.subRows,
+        getSubRows: (row) => row.subRows,
         state: {
           rowSelection: {
             '0.0.0': true, // first nested sub-row
@@ -313,7 +313,7 @@ describe('RowSelection', () => {
       const result = RowSelection.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
-        table
+        table,
       )
 
       expect(result).toEqual('some')

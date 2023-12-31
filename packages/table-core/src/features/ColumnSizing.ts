@@ -232,7 +232,7 @@ export const ColumnSizing: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): ColumnSizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
@@ -244,7 +244,7 @@ export const ColumnSizing: TableFeature = {
 
   createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getSize = () => {
       const columnSize = table.getState().columnSizing[column.id]
@@ -252,19 +252,19 @@ export const ColumnSizing: TableFeature = {
       return Math.min(
         Math.max(
           column.columnDef.minSize ?? defaultColumnSizing.minSize,
-          columnSize ?? column.columnDef.size ?? defaultColumnSizing.size
+          columnSize ?? column.columnDef.size ?? defaultColumnSizing.size,
         ),
-        column.columnDef.maxSize ?? defaultColumnSizing.maxSize
+        column.columnDef.maxSize ?? defaultColumnSizing.maxSize,
       )
     }
-    column.getStart = position => {
+    column.getStart = (position) => {
       const columns = !position
         ? table.getVisibleLeafColumns()
         : position === 'left'
           ? table.getLeftVisibleLeafColumns()
           : table.getRightVisibleLeafColumns()
 
-      const index = columns.findIndex(d => d.id === column.id)
+      const index = columns.findIndex((d) => d.id === column.id)
 
       if (index > 0) {
         const prevSiblingColumn = columns[index - 1]!
@@ -294,7 +294,7 @@ export const ColumnSizing: TableFeature = {
 
   createHeader: <TData extends RowData, TValue>(
     header: Header<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     header.getSize = () => {
       let sum = 0
@@ -340,7 +340,9 @@ export const ColumnSizing: TableFeature = {
         const startSize = header.getSize()
 
         const columnSizingStart: [string, number][] = header
-          ? header.getLeafHeaders().map(d => [d.column.id, d.column.getSize()])
+          ? header
+              .getLeafHeaders()
+              .map((d) => [d.column.id, d.column.getSize()])
           : [[column.id, column.getSize()]]
 
         const clientX = isTouchStartEvent(e)
@@ -351,26 +353,26 @@ export const ColumnSizing: TableFeature = {
 
         const updateOffset = (
           eventType: 'move' | 'end',
-          clientXPos?: number
+          clientXPos?: number,
         ) => {
           if (typeof clientXPos !== 'number') {
             return
           }
 
-          table.setColumnSizingInfo(old => {
+          table.setColumnSizingInfo((old) => {
             const deltaDirection =
               table.options.columnResizeDirection === 'rtl' ? -1 : 1
             const deltaOffset =
               (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
             const deltaPercentage = Math.max(
               deltaOffset / (old?.startSize ?? 0),
-              -0.999999
+              -0.999999,
             )
 
             old.columnSizingStart.forEach(([columnId, headerSize]) => {
               newColumnSizing[columnId] =
                 Math.round(
-                  Math.max(headerSize + headerSize * deltaPercentage, 0) * 100
+                  Math.max(headerSize + headerSize * deltaPercentage, 0) * 100,
                 ) / 100
             })
 
@@ -385,7 +387,7 @@ export const ColumnSizing: TableFeature = {
             table.options.columnResizeMode === 'onChange' ||
             eventType === 'end'
           ) {
-            table.setColumnSizing(old => ({
+            table.setColumnSizing((old) => ({
               ...old,
               ...newColumnSizing,
             }))
@@ -397,7 +399,7 @@ export const ColumnSizing: TableFeature = {
         const onEnd = (clientXPos?: number) => {
           updateOffset('end', clientXPos)
 
-          table.setColumnSizingInfo(old => ({
+          table.setColumnSizingInfo((old) => ({
             ...old,
             isResizingColumn: false,
             startOffset: null,
@@ -445,27 +447,27 @@ export const ColumnSizing: TableFeature = {
           document.addEventListener(
             'touchmove',
             touchEvents.moveHandler,
-            passiveIfSupported
+            passiveIfSupported,
           )
           document.addEventListener(
             'touchend',
             touchEvents.upHandler,
-            passiveIfSupported
+            passiveIfSupported,
           )
         } else {
           document.addEventListener(
             'mousemove',
             mouseEvents.moveHandler,
-            passiveIfSupported
+            passiveIfSupported,
           )
           document.addEventListener(
             'mouseup',
             mouseEvents.upHandler,
-            passiveIfSupported
+            passiveIfSupported,
           )
         }
 
-        table.setColumnSizingInfo(old => ({
+        table.setColumnSizingInfo((old) => ({
           ...old,
           startOffset: clientX,
           startSize,
@@ -479,21 +481,21 @@ export const ColumnSizing: TableFeature = {
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnSizing = updater =>
+    table.setColumnSizing = (updater) =>
       table.options.onColumnSizingChange?.(updater)
-    table.setColumnSizingInfo = updater =>
+    table.setColumnSizingInfo = (updater) =>
       table.options.onColumnSizingInfoChange?.(updater)
-    table.resetColumnSizing = defaultState => {
+    table.resetColumnSizing = (defaultState) => {
       table.setColumnSizing(
-        defaultState ? {} : table.initialState.columnSizing ?? {}
+        defaultState ? {} : table.initialState.columnSizing ?? {},
       )
     }
-    table.resetHeaderSizeInfo = defaultState => {
+    table.resetHeaderSizeInfo = (defaultState) => {
       table.setColumnSizingInfo(
         defaultState
           ? getDefaultColumnSizingInfoState()
           : table.initialState.columnSizingInfo ??
-              getDefaultColumnSizingInfoState()
+              getDefaultColumnSizingInfoState(),
       )
     }
     table.getTotalSize = () =>

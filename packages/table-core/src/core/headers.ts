@@ -211,7 +211,7 @@ function createHeader<TData extends RowData, TValue>(
     placeholderId?: string
     index: number
     depth: number
-  }
+  },
 ): Header<TData, TValue> {
   const id = options.id ?? column.id
 
@@ -247,7 +247,7 @@ function createHeader<TData extends RowData, TValue>(
     }),
   }
 
-  table._features.forEach(feature => {
+  table._features.forEach((feature) => {
     feature.createHeader?.(header, table)
   })
 
@@ -268,22 +268,22 @@ export const Headers: TableFeature = {
       (allColumns, leafColumns, left, right) => {
         const leftColumns =
           left
-            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
             .filter(Boolean) ?? []
 
         const rightColumns =
           right
-            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
             .filter(Boolean) ?? []
 
         const centerColumns = leafColumns.filter(
-          column => !left?.includes(column.id) && !right?.includes(column.id)
+          (column) => !left?.includes(column.id) && !right?.includes(column.id),
         )
 
         const headerGroups = buildHeaderGroups(
           allColumns,
           [...leftColumns, ...centerColumns, ...rightColumns],
-          table
+          table,
         )
 
         return headerGroups
@@ -291,7 +291,7 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getHeaderGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getCenterHeaderGroups = memo(
@@ -303,14 +303,14 @@ export const Headers: TableFeature = {
       ],
       (allColumns, leafColumns, left, right) => {
         leafColumns = leafColumns.filter(
-          column => !left?.includes(column.id) && !right?.includes(column.id)
+          (column) => !left?.includes(column.id) && !right?.includes(column.id),
         )
         return buildHeaderGroups(allColumns, leafColumns, table, 'center')
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getCenterHeaderGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getLeftHeaderGroups = memo(
@@ -322,7 +322,7 @@ export const Headers: TableFeature = {
       (allColumns, leafColumns, left) => {
         const orderedLeafColumns =
           left
-            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
             .filter(Boolean) ?? []
 
         return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
@@ -330,7 +330,7 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getRightHeaderGroups = memo(
@@ -342,7 +342,7 @@ export const Headers: TableFeature = {
       (allColumns, leafColumns, right) => {
         const orderedLeafColumns =
           right
-            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
             .filter(Boolean) ?? []
 
         return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
@@ -350,62 +350,62 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     // Footer Groups
 
     table.getFooterGroups = memo(
       () => [table.getHeaderGroups()],
-      headerGroups => {
+      (headerGroups) => {
         return [...headerGroups].reverse()
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getFooterGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getLeftFooterGroups = memo(
       () => [table.getLeftHeaderGroups()],
-      headerGroups => {
+      (headerGroups) => {
         return [...headerGroups].reverse()
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getLeftFooterGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getCenterFooterGroups = memo(
       () => [table.getCenterHeaderGroups()],
-      headerGroups => {
+      (headerGroups) => {
         return [...headerGroups].reverse()
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getCenterFooterGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getRightFooterGroups = memo(
       () => [table.getRightHeaderGroups()],
-      headerGroups => {
+      (headerGroups) => {
         return [...headerGroups].reverse()
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getRightFooterGroups',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     // Flat Headers
 
     table.getFlatHeaders = memo(
       () => [table.getHeaderGroups()],
-      headerGroups => {
+      (headerGroups) => {
         return headerGroups
-          .map(headerGroup => {
+          .map((headerGroup) => {
             return headerGroup.headers
           })
           .flat()
@@ -413,14 +413,14 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getFlatHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getLeftFlatHeaders = memo(
       () => [table.getLeftHeaderGroups()],
-      left => {
+      (left) => {
         return left
-          .map(headerGroup => {
+          .map((headerGroup) => {
             return headerGroup.headers
           })
           .flat()
@@ -428,14 +428,14 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getLeftFlatHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getCenterFlatHeaders = memo(
       () => [table.getCenterHeaderGroups()],
-      left => {
+      (left) => {
         return left
-          .map(headerGroup => {
+          .map((headerGroup) => {
             return headerGroup.headers
           })
           .flat()
@@ -443,14 +443,14 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getCenterFlatHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getRightFlatHeaders = memo(
       () => [table.getRightHeaderGroups()],
-      left => {
+      (left) => {
         return left
-          .map(headerGroup => {
+          .map((headerGroup) => {
             return headerGroup.headers
           })
           .flat()
@@ -458,42 +458,42 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getRightFlatHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     // Leaf Headers
 
     table.getCenterLeafHeaders = memo(
       () => [table.getCenterFlatHeaders()],
-      flatHeaders => {
-        return flatHeaders.filter(header => !header.subHeaders?.length)
+      (flatHeaders) => {
+        return flatHeaders.filter((header) => !header.subHeaders?.length)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getCenterLeafHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getLeftLeafHeaders = memo(
       () => [table.getLeftFlatHeaders()],
-      flatHeaders => {
-        return flatHeaders.filter(header => !header.subHeaders?.length)
+      (flatHeaders) => {
+        return flatHeaders.filter((header) => !header.subHeaders?.length)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getLeftLeafHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getRightLeafHeaders = memo(
       () => [table.getRightFlatHeaders()],
-      flatHeaders => {
-        return flatHeaders.filter(header => !header.subHeaders?.length)
+      (flatHeaders) => {
+        return flatHeaders.filter((header) => !header.subHeaders?.length)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getRightLeafHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
 
     table.getLeafHeaders = memo(
@@ -508,7 +508,7 @@ export const Headers: TableFeature = {
           ...(center[0]?.headers ?? []),
           ...(right[0]?.headers ?? []),
         ]
-          .map(header => {
+          .map((header) => {
             return header.getLeafHeaders()
           })
           .flat()
@@ -516,7 +516,7 @@ export const Headers: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getLeafHeaders',
         debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      },
     )
   },
 }
@@ -525,7 +525,7 @@ export function buildHeaderGroups<TData extends RowData>(
   allColumns: Column<TData, unknown>[],
   columnsToGroup: Column<TData, unknown>[],
   table: Table<TData>,
-  headerFamily?: 'center' | 'left' | 'right'
+  headerFamily?: 'center' | 'left' | 'right',
 ) {
   // Find the max depth of the columns:
   // build the leaf column row
@@ -539,8 +539,8 @@ export function buildHeaderGroups<TData extends RowData>(
     maxDepth = Math.max(maxDepth, depth)
 
     columns
-      .filter(column => column.getIsVisible())
-      .forEach(column => {
+      .filter((column) => column.getIsVisible())
+      .forEach((column) => {
         if (column.columns?.length) {
           findMaxDepth(column.columns, depth + 1)
         }
@@ -553,7 +553,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
   const createHeaderGroup = (
     headersToGroup: Header<TData, unknown>[],
-    depth: number
+    depth: number,
   ) => {
     // The header group we are creating
     const headerGroup: HeaderGroup<TData> = {
@@ -566,7 +566,7 @@ export function buildHeaderGroups<TData extends RowData>(
     const pendingParentHeaders: Header<TData, unknown>[] = []
 
     // Scan each column for parents
-    headersToGroup.forEach(headerToGroup => {
+    headersToGroup.forEach((headerToGroup) => {
       // What is the latest (last) parent column?
 
       const latestPendingParentHeader = [...pendingParentHeaders].reverse()[0]
@@ -599,7 +599,7 @@ export function buildHeaderGroups<TData extends RowData>(
             .join('_'),
           isPlaceholder,
           placeholderId: isPlaceholder
-            ? `${pendingParentHeaders.filter(d => d.column === column).length}`
+            ? `${pendingParentHeaders.filter((d) => d.column === column).length}`
             : undefined,
           depth,
           index: pendingParentHeaders.length,
@@ -627,7 +627,7 @@ export function buildHeaderGroups<TData extends RowData>(
     createHeader(table, column, {
       depth: maxDepth,
       index,
-    })
+    }),
   )
 
   createHeaderGroup(bottomHeaders, maxDepth - 1)
@@ -639,13 +639,13 @@ export function buildHeaderGroups<TData extends RowData>(
   // })
 
   const recurseHeadersForSpans = (
-    headers: Header<TData, unknown>[]
+    headers: Header<TData, unknown>[],
   ): { colSpan: number; rowSpan: number }[] => {
-    const filteredHeaders = headers.filter(header =>
-      header.column.getIsVisible()
+    const filteredHeaders = headers.filter((header) =>
+      header.column.getIsVisible(),
     )
 
-    return filteredHeaders.map(header => {
+    return filteredHeaders.map((header) => {
       let colSpan = 0
       let rowSpan = 0
       let childRowSpans = [0]
@@ -657,7 +657,7 @@ export function buildHeaderGroups<TData extends RowData>(
           ({ colSpan: childColSpan, rowSpan: childRowSpan }) => {
             colSpan += childColSpan
             childRowSpans.push(childRowSpan)
-          }
+          },
         )
       } else {
         colSpan = 1

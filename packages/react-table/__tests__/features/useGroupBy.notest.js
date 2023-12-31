@@ -52,7 +52,7 @@ const defaultColumn = {
   Filter: ({ filterValue, setFilter }) => (
     <input
       value={filterValue || ''}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
       placeholder="Search..."
@@ -72,15 +72,15 @@ function Table({ columns, data }) {
         },
       },
       useGrouping,
-      useExpanded
+      useExpanded,
     )
 
   return (
     <table {...getTableProps()}>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps()}>
                 {column.canGroup ? (
                   // If the column can be grouped, let's add a toggle
@@ -99,7 +99,7 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {row.cells.map((cell) => {
                   return (
                     <td {...cell.getCellProps()}>
                       {cell.getIsGrouped() ? (
@@ -123,7 +123,7 @@ function Table({ columns, data }) {
                   )
                 })}
               </tr>
-            )
+            ),
         )}
       </tbody>
     </table>
@@ -137,7 +137,7 @@ function roundedMedian(leafValues) {
   let min = leafValues[0] || 0
   let max = leafValues[0] || 0
 
-  leafValues.forEach(value => {
+  leafValues.forEach((value) => {
     min = Math.min(min, value)
     max = Math.max(max, value)
   })
@@ -227,7 +227,7 @@ function App() {
         ],
       },
     ],
-    []
+    [],
   )
 
   return <Table columns={columns} data={data} />

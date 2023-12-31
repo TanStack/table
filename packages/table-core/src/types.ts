@@ -189,7 +189,7 @@ export interface RowModel<TData extends RowData> {
 
 export type AccessorFn<TData extends RowData, TValue = unknown> = (
   originalRow: TData,
-  index: number
+  index: number,
 ) => TValue
 
 export type ColumnDefTemplate<TProps extends object> =

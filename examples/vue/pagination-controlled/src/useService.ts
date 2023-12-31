@@ -38,7 +38,7 @@ export default function useService(pagination: Ref<PaginationState>) {
     isLoading.value = true
 
     request.value = fetch(url.value)
-      .then(async response => {
+      .then(async (response) => {
         const responseData = await response.json()
 
         if (response.ok) {
@@ -50,7 +50,7 @@ export default function useService(pagination: Ref<PaginationState>) {
           throw new Error('Network response was not OK')
         }
       })
-      .catch(error => {
+      .catch((error) => {
         error.value = error
         data.value = null
         totalResultCount.value = DEFAULT_PAGE_COUNT

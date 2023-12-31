@@ -288,7 +288,7 @@ export const Sorting: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): SortingOptions<TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
@@ -300,7 +300,7 @@ export const Sorting: TableFeature = {
 
   createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getAutoSortingFn = () => {
       const firstRows = table.getFilteredRowModel().flatRows.slice(10)
@@ -366,10 +366,10 @@ export const Sorting: TableFeature = {
       const nextSortingOrder = column.getNextSortingOrder()
       const hasManualValue = typeof desc !== 'undefined' && desc !== null
 
-      table.setSorting(old => {
+      table.setSorting((old) => {
         // Find any existing sorting for this column
-        const existingSorting = old?.find(d => d.id === column.id)
-        const existingIndex = old?.findIndex(d => d.id === column.id)
+        const existingSorting = old?.find((d) => d.id === column.id)
+        const existingIndex = old?.findIndex((d) => d.id === column.id)
 
         let newSorting: SortingState = []
 
@@ -418,11 +418,11 @@ export const Sorting: TableFeature = {
           newSorting.splice(
             0,
             newSorting.length -
-              (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER)
+              (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER),
           )
         } else if (sortAction === 'toggle') {
           // This flips (or sets) the
-          newSorting = old.map(d => {
+          newSorting = old.map((d) => {
             if (d.id === column.id) {
               return {
                 ...d,
@@ -432,7 +432,7 @@ export const Sorting: TableFeature = {
             return d
           })
         } else if (sortAction === 'remove') {
-          newSorting = old.filter(d => d.id !== column.id)
+          newSorting = old.filter((d) => d.id !== column.id)
         } else {
           newSorting = [
             {
@@ -489,18 +489,20 @@ export const Sorting: TableFeature = {
     }
 
     column.getIsSorted = () => {
-      const columnSort = table.getState().sorting?.find(d => d.id === column.id)
+      const columnSort = table
+        .getState()
+        .sorting?.find((d) => d.id === column.id)
 
       return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
     }
 
     column.getSortIndex = () =>
-      table.getState().sorting?.findIndex(d => d.id === column.id) ?? -1
+      table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
 
     column.clearSorting = () => {
       //clear sorting for just 1 column
-      table.setSorting(old =>
-        old?.length ? old.filter(d => d.id !== column.id) : []
+      table.setSorting((old) =>
+        old?.length ? old.filter((d) => d.id !== column.id) : [],
       )
     }
 
@@ -512,15 +514,17 @@ export const Sorting: TableFeature = {
         ;(e as any).persist?.()
         column.toggleSorting?.(
           undefined,
-          column.getCanMultiSort() ? table.options.isMultiSortEvent?.(e) : false
+          column.getCanMultiSort()
+            ? table.options.isMultiSortEvent?.(e)
+            : false,
         )
       }
     }
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setSorting = updater => table.options.onSortingChange?.(updater)
-    table.resetSorting = defaultState => {
+    table.setSorting = (updater) => table.options.onSortingChange?.(updater)
+    table.resetSorting = (defaultState) => {
       table.setSorting(defaultState ? [] : table.initialState?.sorting ?? [])
     }
     table.getPreSortedRowModel = () => table.getGroupedRowModel()

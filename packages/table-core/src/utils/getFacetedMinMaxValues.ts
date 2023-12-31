@@ -3,12 +3,12 @@ import { memo } from '../utils'
 
 export function getFacetedMinMaxValues<TData extends RowData>(): (
   table: Table<TData>,
-  columnId: string
+  columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
     memo(
       () => [table.getColumn(columnId)?.getFacetedRowModel()],
-      facetedRowModel => {
+      (facetedRowModel) => {
         if (!facetedRowModel) return undefined
 
         const firstValue =
@@ -43,6 +43,6 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
           'getFacetedMinMaxValues_' + columnId,
         debug: () => table.options.debugAll ?? table.options.debugTable,
         onChange: () => {},
-      }
+      },
     )
 }

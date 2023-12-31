@@ -26,7 +26,7 @@ export interface ColumnOrderDefaultOptions {
 
 export interface ColumnOrderInstance<TData extends RowData> {
   _getOrderColumnsFn: () => (
-    columns: Column<TData, unknown>[]
+    columns: Column<TData, unknown>[],
   ) => Column<TData, unknown>[]
   /**
    * Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
@@ -53,7 +53,7 @@ export const Ordering: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
@@ -61,11 +61,11 @@ export const Ordering: TableFeature = {
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnOrder = updater =>
+    table.setColumnOrder = (updater) =>
       table.options.onColumnOrderChange?.(updater)
-    table.resetColumnOrder = defaultState => {
+    table.resetColumnOrder = (defaultState) => {
       table.setColumnOrder(
-        defaultState ? [] : table.initialState.columnOrder ?? []
+        defaultState ? [] : table.initialState.columnOrder ?? [],
       )
     }
     table._getOrderColumnsFn = memo(
@@ -74,7 +74,7 @@ export const Ordering: TableFeature = {
         table.getState().grouping,
         table.options.groupedColumnMode,
       ],
-      (columnOrder, grouping, groupedColumnMode) => columns => {
+      (columnOrder, grouping, groupedColumnMode) => (columns) => {
         // Sort grouped columns to the start of the column list
         // before the headers are built
         let orderedColumns: Column<TData, unknown>[] = []
@@ -94,7 +94,7 @@ export const Ordering: TableFeature = {
           while (columnsCopy.length && columnOrderCopy.length) {
             const targetColumnId = columnOrderCopy.shift()
             const foundIndex = columnsCopy.findIndex(
-              d => d.id === targetColumnId
+              (d) => d.id === targetColumnId,
             )
             if (foundIndex > -1) {
               orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
@@ -110,7 +110,7 @@ export const Ordering: TableFeature = {
       {
         key: process.env.NODE_ENV === 'development' && 'getOrderColumnsFn',
         // debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+      },
     )
   },
 }

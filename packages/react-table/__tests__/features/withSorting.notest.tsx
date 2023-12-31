@@ -73,7 +73,7 @@ const columns: Column[] = [
 describe('withSorting', () => {
   it('renders a sortable table', () => {
     const { result } = renderHook(
-      options => {
+      (options) => {
         const table = useTable(options, [withCore, withSorting])
 
         return table
@@ -83,7 +83,7 @@ describe('withSorting', () => {
           data,
           columns,
         },
-      }
+      },
     )
 
     expect(getHeaderIds(result.current)).toEqual([
@@ -99,7 +99,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'firstName')
+        .find((d) => d.id === 'firstName')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -114,7 +114,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'firstName')
+        .find((d) => d.id === 'firstName')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -129,7 +129,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'progress')
+        .find((d) => d.id === 'progress')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -144,7 +144,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'firstName')
+        .find((d) => d.id === 'firstName')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -161,7 +161,7 @@ describe('withSorting', () => {
 
   it('renders a controlled sorted table', () => {
     const { result, rerender } = renderHook(
-      options => {
+      (options) => {
         const table = useTable(options, [withSorting])
 
         return table
@@ -172,7 +172,7 @@ describe('withSorting', () => {
           columns,
           state: {},
         },
-      }
+      },
     )
 
     expect(getHeaderIds(result.current)).toEqual([
@@ -242,7 +242,7 @@ describe('withSorting', () => {
 
   it('renders a hoisted state sorted table', () => {
     const { result } = renderHook(
-      options => {
+      (options) => {
         const [sorting, setSorting] = React.useState<TableState['sorting']>([])
 
         const table = useTable(
@@ -253,7 +253,7 @@ describe('withSorting', () => {
             },
             onSortingChange: setSorting,
           },
-          [withSorting]
+          [withSorting],
         )
 
         return table
@@ -263,7 +263,7 @@ describe('withSorting', () => {
           data,
           columns,
         },
-      }
+      },
     )
 
     expect(getHeaderIds(result.current)).toEqual([
@@ -279,7 +279,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'firstName')
+        .find((d) => d.id === 'firstName')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -294,7 +294,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'firstName')
+        .find((d) => d.id === 'firstName')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -309,7 +309,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'progress')
+        .find((d) => d.id === 'progress')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,
@@ -324,7 +324,7 @@ describe('withSorting', () => {
 
     act(() => {
       result.current.flatHeaders
-        .find(d => d.id === 'firstName')
+        .find((d) => d.id === 'firstName')
         ?.getToggleSortingProps?.()
         .onClick({
           persist: noop,

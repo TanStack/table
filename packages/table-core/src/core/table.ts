@@ -153,7 +153,7 @@ export interface CoreOptions<TData extends RowData> {
    */
   mergeOptions?: (
     defaultOptions: TableOptions<TData>,
-    options: Partial<TableOptions<TData>>
+    options: Partial<TableOptions<TData>>,
   ) => TableOptions<TData>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
@@ -271,7 +271,7 @@ export interface CoreInstance<TData extends RowData> {
 }
 
 export function createTable<TData extends RowData>(
-  options: TableOptionsResolved<TData>
+  options: TableOptionsResolved<TData>,
 ): Table<TData> {
   if (options.debugAll || options.debugTable) {
     console.info('Creating Table Instance...')
@@ -301,7 +301,7 @@ export function createTable<TData extends RowData>(
     ...(options.initialState ?? {}),
   } as TableState
 
-  table._features.forEach(feature => {
+  table._features.forEach((feature) => {
     initialState = feature.getInitialState?.(initialState) ?? initialState
   })
 
@@ -315,7 +315,7 @@ export function createTable<TData extends RowData>(
       ...options,
     },
     initialState,
-    _queue: cb => {
+    _queue: (cb) => {
       queued.push(cb)
 
       if (!queuedTimeout) {
@@ -330,17 +330,17 @@ export function createTable<TData extends RowData>(
             }
             queuedTimeout = false
           })
-          .catch(error =>
+          .catch((error) =>
             setTimeout(() => {
               throw error
-            })
+            }),
           )
       }
     },
     reset: () => {
       table.setState(table.initialState)
     },
-    setOptions: updater => {
+    setOptions: (updater) => {
       const newOptions = functionalUpdate(updater, table.options)
       table.options = mergeOptions(newOptions) as RequiredKeys<
         TableOptionsResolved<TData>,
@@ -389,13 +389,13 @@ export function createTable<TData extends RowData>(
     },
     _getDefaultColumnDef: memo(
       () => [table.options.defaultColumn],
-      defaultColumn => {
+      (defaultColumn) => {
         defaultColumn = (defaultColumn ?? {}) as Partial<
           ColumnDef<TData, unknown>
         >
 
         return {
-          header: props => {
+          header: (props) => {
             const resolvedColumnDef = props.header.column
               .columnDef as ColumnDefResolved<TData>
 
@@ -410,7 +410,7 @@ export function createTable<TData extends RowData>(
             return null
           },
           // footer: props => props.header.column.id,
-          cell: props => props.renderValue<any>()?.toString?.() ?? null,
+          cell: (props) => props.renderValue<any>()?.toString?.() ?? null,
           ...table._features.reduce((obj, feature) => {
             return Object.assign(obj, feature.getDefaultColumnDef?.())
           }, {}),
@@ -420,20 +420,20 @@ export function createTable<TData extends RowData>(
       {
         debug: () => table.options.debugAll ?? table.options.debugColumns,
         key: process.env.NODE_ENV === 'development' && 'getDefaultColumnDef',
-      }
+      },
     ),
 
     _getColumnDefs: () => table.options.columns,
 
     getAllColumns: memo(
       () => [table._getColumnDefs()],
-      columnDefs => {
+      (columnDefs) => {
         const recurseColumns = (
           columnDefs: ColumnDef<TData, unknown>[],
           parent?: Column<TData, unknown>,
-          depth = 0
+          depth = 0,
         ): Column<TData, unknown>[] => {
-          return columnDefs.map(columnDef => {
+          return columnDefs.map((columnDef) => {
             const column = createColumn(table, columnDef, depth, parent)
 
             const groupingColumnDef = columnDef as GroupColumnDef<
@@ -454,52 +454,54 @@ export function createTable<TData extends RowData>(
       {
         key: process.env.NODE_ENV === 'development' && 'getAllColumns',
         debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      },
     ),
 
     getAllFlatColumns: memo(
       () => [table.getAllColumns()],
-      allColumns => {
-        return allColumns.flatMap(column => {
+      (allColumns) => {
+        return allColumns.flatMap((column) => {
           return column.getFlatColumns()
         })
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumns',
         debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      },
     ),
 
     _getAllFlatColumnsById: memo(
       () => [table.getAllFlatColumns()],
-      flatColumns => {
+      (flatColumns) => {
         return flatColumns.reduce(
           (acc, column) => {
             acc[column.id] = column
             return acc
           },
-          {} as Record<string, Column<TData, unknown>>
+          {} as Record<string, Column<TData, unknown>>,
         )
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',
         debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      },
     ),
 
     getAllLeafColumns: memo(
       () => [table.getAllColumns(), table._getOrderColumnsFn()],
       (allColumns, orderColumns) => {
-        let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
+        let leafColumns = allColumns.flatMap((column) =>
+          column.getLeafColumns(),
+        )
         return orderColumns(leafColumns)
       },
       {
         key: process.env.NODE_ENV === 'development' && 'getAllLeafColumns',
         debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      },
     ),
 
-    getColumn: columnId => {
+    getColumn: (columnId) => {
       const column = table._getAllFlatColumnsById()[columnId]
 
       if (process.env.NODE_ENV !== 'production' && !column) {

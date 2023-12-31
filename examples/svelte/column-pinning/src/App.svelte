@@ -15,30 +15,30 @@
   const columns: ColumnDef<Person>[] = [
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => 'Age',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -46,17 +46,17 @@
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -72,13 +72,13 @@
   let columnPinning = {}
   let columnVisibility = {}
 
-  const setColumnOrder = updater => {
+  const setColumnOrder = (updater) => {
     if (updater instanceof Function) {
       columnOrder = updater(columnOrder)
     } else {
       columnOrder = updater
     }
-    options.update(old => ({
+    options.update((old) => ({
       ...old,
       state: {
         ...old.state,
@@ -87,13 +87,13 @@
     }))
   }
 
-  const setColumnPinning = updater => {
+  const setColumnPinning = (updater) => {
     if (updater instanceof Function) {
       columnPinning = updater(columnPinning)
     } else {
       columnPinning = updater
     }
-    options.update(old => ({
+    options.update((old) => ({
       ...old,
       state: {
         ...old.state,
@@ -102,13 +102,13 @@
     }))
   }
 
-  const setColumnVisibility = updater => {
+  const setColumnVisibility = (updater) => {
     if (updater instanceof Function) {
       columnVisibility = updater(columnVisibility)
     } else {
       columnVisibility = updater
     }
-    options.update(old => ({
+    options.update((old) => ({
       ...old,
       state: {
         ...old.state,
@@ -134,13 +134,13 @@
   })
 
   const randomizeColumns = () => {
-    $table.setColumnOrder(_updater =>
-      faker.helpers.shuffle($table.getAllLeafColumns().map(d => d.id))
+    $table.setColumnOrder((_updater) =>
+      faker.helpers.shuffle($table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
   const regenerate = () => {
-    options.update(options => ({
+    options.update((options) => ({
       ...options,
       data: makeData(5000),
     }))
@@ -155,7 +155,7 @@
       <label>
         <input
           checked={$table.getIsAllColumnsVisible()}
-          on:change={e => {
+          on:change={(e) => {
             console.info($table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
@@ -191,7 +191,7 @@
       <input
         type="checkbox"
         checked={isSplit}
-        on:change={e => (isSplit = e.currentTarget.checked)}
+        on:change={(e) => (isSplit = e.currentTarget.checked)}
       />{' '}
       Split Mode
     </label>
@@ -209,7 +209,7 @@
                       <svelte:component
                         this={flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                       />
                     {/if}
@@ -261,7 +261,7 @@
                   <svelte:component
                     this={flexRender(
                       cell.column.columnDef.cell,
-                      cell.getContext()
+                      cell.getContext(),
                     )}
                   />
                 </td>
@@ -282,7 +282,7 @@
                     <svelte:component
                       this={flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                     />
                   {/if}
@@ -334,7 +334,7 @@
                 <svelte:component
                   this={flexRender(
                     cell.column.columnDef.cell,
-                    cell.getContext()
+                    cell.getContext(),
                   )}
                 />
               </td>
@@ -355,7 +355,7 @@
                       <svelte:component
                         this={flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                       />
                     {/if}
@@ -407,7 +407,7 @@
                   <svelte:component
                     this={flexRender(
                       cell.column.columnDef.cell,
-                      cell.getContext()
+                      cell.getContext(),
                     )}
                   />
                 </td>

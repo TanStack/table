@@ -45,15 +45,15 @@ function Table({ columns, data }) {
         data,
         defaultColumn,
       },
-      useFlexLayout
+      useFlexLayout,
     )
 
   return (
     <div {...getTableProps()} className="table">
       <div>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <div {...headerGroup.getHeaderGroupProps()} className="row">
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <div {...column.getHeaderProps()} className="cell header">
                 {column.render('Header')}
               </div>
@@ -67,7 +67,7 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <div {...row.getRowProps()} className="row">
-                {row.cells.map(cell => {
+                {row.cells.map((cell) => {
                   return (
                     <div {...cell.getCellProps()} className="cell">
                       {cell.render('Cell')}
@@ -75,7 +75,7 @@ function Table({ columns, data }) {
                   )
                 })}
               </div>
-            )
+            ),
         )}
       </div>
     </div>
@@ -124,7 +124,7 @@ function App() {
         ],
       },
     ],
-    []
+    [],
   )
 
   return <Table columns={columns} data={data} />
@@ -136,11 +136,11 @@ test('renders a table', () => {
   const [headerRow, , firstRow] = rendered.queryAllByRole('row')
 
   expect(headerRow.getAttribute('style')).toEqual(
-    'display: flex; flex: 1 0 auto; min-width: 800px;'
+    'display: flex; flex: 1 0 auto; min-width: 800px;',
   )
 
   expect(
-    Array.from(firstRow.children).map(d => d.getAttribute('style'))
+    Array.from(firstRow.children).map((d) => d.getAttribute('style')),
   ).toEqual([
     'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 250px;',
     'box-sizing: border-box; flex: 0 0 auto; min-width: 100px; width: 300px;',

@@ -91,7 +91,7 @@ export function noop() {
 
 export function makeStateUpdater<K extends keyof TableState>(
   key: K,
-  instance: unknown
+  instance: unknown,
 ) {
   return (updater: Updater<TableState[K]>) => {
     ;(instance as any).setState(<TTableState>(old: TTableState) => {
@@ -110,17 +110,17 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
 }
 
 export function isNumberArray(d: any): d is number[] {
-  return Array.isArray(d) && d.every(val => typeof val === 'number')
+  return Array.isArray(d) && d.every((val) => typeof val === 'number')
 }
 
 export function flattenBy<TNode>(
   arr: TNode[],
-  getChildren: (item: TNode) => TNode[]
+  getChildren: (item: TNode) => TNode[],
 ) {
   const flat: TNode[] = []
 
   const recurse = (subArr: TNode[]) => {
-    subArr.forEach(item => {
+    subArr.forEach((item) => {
       flat.push(item)
       const children = getChildren(item)
       if (children?.length) {
@@ -141,7 +141,7 @@ export function memo<TDeps extends readonly any[], TResult>(
     key: any
     debug?: () => any
     onChange?: (result: TResult) => void
-  }
+  },
 ): () => TResult {
   let deps: any[] = []
   let result: TResult | undefined
@@ -189,9 +189,9 @@ export function memo<TDeps extends readonly any[], TResult>(
             font-weight: bold;
             color: hsl(${Math.max(
               0,
-              Math.min(120 - 120 * resultFpsPercentage, 120)
+              Math.min(120 - 120 * resultFpsPercentage, 120),
             )}deg 100% 31%);`,
-          opts?.key
+          opts?.key,
         )
       }
     }

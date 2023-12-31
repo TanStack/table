@@ -66,7 +66,7 @@ export function createColumn<TData extends RowData, TValue>(
   table: Table<TData>,
   columnDef: ColumnDef<TData, TValue>,
   depth: number,
-  parent?: Column<TData, TValue>
+  parent?: Column<TData, TValue>,
 ): Column<TData, TValue> {
   const defaultColumn = table._getDefaultColumnDef()
 
@@ -98,7 +98,7 @@ export function createColumn<TData extends RowData, TValue>(
           result = result?.[key]
           if (process.env.NODE_ENV !== 'production' && result === undefined) {
             console.warn(
-              `"${key}" in deeply nested key "${accessorKey}" returned undefined.`
+              `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
             )
           }
         }
@@ -116,7 +116,7 @@ export function createColumn<TData extends RowData, TValue>(
       throw new Error(
         resolvedColumnDef.accessorFn
           ? `Columns require an id when using an accessorFn`
-          : `Columns require an id when using a non-string header`
+          : `Columns require an id when using a non-string header`,
       )
     }
     throw new Error()
@@ -134,20 +134,20 @@ export function createColumn<TData extends RowData, TValue>(
       () => {
         return [
           column as Column<TData, TValue>,
-          ...column.columns?.flatMap(d => d.getFlatColumns()),
+          ...column.columns?.flatMap((d) => d.getFlatColumns()),
         ]
       },
       {
         key: process.env.NODE_ENV === 'production' && 'column.getFlatColumns',
         debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      },
     ),
     getLeafColumns: memo(
       () => [table._getOrderColumnsFn()],
-      orderColumns => {
+      (orderColumns) => {
         if (column.columns?.length) {
-          let leafColumns = column.columns.flatMap(column =>
-            column.getLeafColumns()
+          let leafColumns = column.columns.flatMap((column) =>
+            column.getLeafColumns(),
           )
 
           return orderColumns(leafColumns)
@@ -158,7 +158,7 @@ export function createColumn<TData extends RowData, TValue>(
       {
         key: process.env.NODE_ENV === 'production' && 'column.getLeafColumns',
         debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      },
     ),
   }
 

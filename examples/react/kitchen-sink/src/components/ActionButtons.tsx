@@ -76,7 +76,7 @@ export function ActionButtons<T extends RowData>({
           <input
             type="number"
             defaultValue={pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               setPageIndex(page)
             }}
@@ -86,11 +86,11 @@ export function ActionButtons<T extends RowData>({
         <select
           className="border p-1 rounded"
           value={pageSize}
-          onChange={e => {
+          onChange={(e) => {
             setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -123,7 +123,7 @@ export function ActionButtons<T extends RowData>({
             onClick={() =>
               console.info(
                 'table.getSelectedFlatRows()',
-                getSelectedRowModel().flatRows
+                getSelectedRowModel().flatRows,
               )
             }
           >

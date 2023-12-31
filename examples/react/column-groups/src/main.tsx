@@ -56,39 +56,39 @@ const columns = [
     // footer: props => props.column.id,
     columns: [
       columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       }),
-      columnHelper.accessor(row => row.lastName, {
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
     ],
   }),
   columnHelper.group({
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.accessor('age', {
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
         columns: [
           columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('status', {
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('progress', {
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
         ],
       }),
@@ -110,15 +110,15 @@ function App() {
     <div className="p-2">
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
+              {headerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </th>
               ))}
@@ -126,9 +126,9 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
+              {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
@@ -137,15 +137,15 @@ function App() {
           ))}
         </tbody>
         <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
+          {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
+              {footerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.footer,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </th>
               ))}
@@ -167,5 +167,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

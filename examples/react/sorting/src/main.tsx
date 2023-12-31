@@ -22,30 +22,30 @@ function App() {
     () => [
       {
         header: 'Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
         columns: [
           {
             accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
+            cell: (info) => info.getValue(),
+            footer: (props) => props.column.id,
           },
           {
-            accessorFn: row => row.lastName,
+            accessorFn: (row) => row.lastName,
             id: 'lastName',
-            cell: info => info.getValue(),
+            cell: (info) => info.getValue(),
             header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
       {
         header: 'Info',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
         columns: [
           {
             accessorKey: 'age',
             header: () => 'Age',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             header: 'More Info',
@@ -53,17 +53,17 @@ function App() {
               {
                 accessorKey: 'visits',
                 header: () => <span>Visits</span>,
-                footer: props => props.column.id,
+                footer: (props) => props.column.id,
               },
               {
                 accessorKey: 'status',
                 header: 'Status',
-                footer: props => props.column.id,
+                footer: (props) => props.column.id,
               },
               {
                 accessorKey: 'progress',
                 header: 'Profile Progress',
-                footer: props => props.column.id,
+                footer: (props) => props.column.id,
               },
             ],
           },
@@ -74,7 +74,7 @@ function App() {
         ],
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(100000))
@@ -97,9 +97,9 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
@@ -113,7 +113,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -131,15 +131,15 @@ function App() {
           {table
             .getRowModel()
             .rows.slice(0, 10)
-            .map(row => {
+            .map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -168,5 +168,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )
