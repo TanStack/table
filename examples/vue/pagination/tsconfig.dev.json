@@ -1,7 +1,6 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
     "outDir": "./build/types",
     "types": ["vite/client"]
   },
