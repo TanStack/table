@@ -327,6 +327,10 @@
           "label": "Column Visibility"
         },
         {
+          "to": "examples/solid/filters",
+          "label": "Filters"
+        },
+        {
           "to": "examples/solid/sorting",
           "label": "Sorting"
         }
