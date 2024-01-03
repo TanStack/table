@@ -6,19 +6,26 @@ Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue
 
 <a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
   <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack" />
-</a><a href="https://github.com/tanstack/table/actions?table=workflow%3A%22react-table+tests%22">
-<img src="https://github.com/tanstack/table/workflows/react-table%20tests/badge.svg" />
-</a><a href="https://npmjs.com/package/@tanstack/react-table" target="\_parent">
+</a>
+<a href="https://github.com/tanstack/table/actions?table=workflow%3A%22react-table+tests%22">
+  <img src="https://github.com/tanstack/table/workflows/react-table%20tests/badge.svg" />
+</a>
+<a href="https://npmjs.com/package/@tanstack/react-table" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/@tanstack/react-table.svg" />
-</a><a href="https://bundlephobia.com/result?p=@tanstack/react-table@latest" target="\_parent">
+</a>
+<a href="https://bundlephobia.com/result?p=@tanstack/react-table@latest" target="\_parent">
   <img alt="" src="https://badgen.net/bundlephobia/minzip/@tanstack/react-table@latest" />
-</a><a href="#badge">
-    <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
-  </a><a href="https://github.com/tanstack/table/discussions">
+</a>
+<a href="#badge">
+  <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+</a>
+<a href="https://github.com/tanstack/table/discussions">
   <img alt="Join the discussion on Github" src="https://img.shields.io/badge/Github%20Discussions%20%26%20Support-Chat%20now!-blue" />
-</a><a href="https://github.com/tanstack/table" target="\_parent">
+</a>
+<a href="https://github.com/tanstack/table" target="\_parent">
   <img alt="" src="https://img.shields.io/github/stars/tanstack/react-table.svg?style=social&label=Star" />
-</a><a href="https://twitter.com/tannerlinsley" target="\_parent">
+</a>
+<a href="https://twitter.com/tannerlinsley" target="\_parent">
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
 
@@ -26,7 +33,14 @@ Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue
 
 ## Enjoy this library?
 
-Try some other [TanStack](https://tanstack.com) like [React Query](https://github.com/TanStack/query), [React Form](https://github.com/tannerlinsley/react-form), [React Charts](https://github.com/TanStack/react-charts)
+Try other [TanStack](https://tanstack.com) libraries:
+
+- [TanStack Query](https://github.com/TanStack/query) <img alt="" src="https://img.shields.io/github/stars/tanstack/query.svg" />
+- [TanStack Table](https://github.com/TanStack/table) <img alt="" src="https://img.shields.io/github/stars/tanstack/table.svg" />
+- [TanStack Router](https://github.com/TanStack/router) <img alt="" src="https://img.shields.io/github/stars/tanstack/router.svg" />
+- [TanStack Virtual](https://github.com/TanStack/virtual) <img alt="" src="https://img.shields.io/github/stars/tanstack/virtual.svg" />
+- [TanStack Form](https://github.com/TanStack/form) <img alt="" src="https://img.shields.io/github/stars/tanstack/form.svg" />
+- [TanStack Ranger](https://github.com/TanStack/ranger) <img alt="" src="https://img.shields.io/github/stars/tanstack/ranger.svg" />
 
 ## Visit [tanstack.com/table](https://tanstack.com/table) for docs, guides, API and more!
 
@@ -55,7 +69,7 @@ JS/TS ecosystem and every use-case.
 
 - Agnostic core (JS/TS)
 - 1st-class framework bindings for React, Vue, Solid
-- ~14kb or less (with tree-shaking)
+- ~15kb or less (with tree-shaking)
 - 100% TypeScript (but not required)
 - Headless (100% customizable, Bring-your-own-UI)
 - Auto out of the box, opt-in controllable state
@@ -92,54 +106,11 @@ There are a fair amount of breaking changes (they're worth it, trust us!):
 - Plugin system has been removed so plugins must be rewritten to wrap/compose the new functional API. Contact us if you need help!
 - Column configuration options have changed, but only slightly.
 - Table options are mostly the same, with some larger changes around optional state management/control and data pipeline control
-- The `tableInstance` while similar in spirit to v7 has been reconfigured to be much faster.
-
-## Todo (in order of priority)
-
-- [x] Rewrite Core
-  - [x] Core
-  - [x] Columns
-  - [x] Headers
-  - [x] Visibility
-  - [x] Pinning
-  - [x] Filters
-  - [x] Sorting
-  - [x] Grouping
-  - [x] Expanding
-  - [x] Column Sizing
-  - [x] Pagination
-  - [x] Row Selection
-- [ ] Migrate [Examples](https://github.com/tanstack/table/tree/main/examples)
-  - [x] column-visibility
-  - [x] column-ordering
-  - [x] column-pinning
-  - [x] basic
-  - [x] filters
-  - [x] sorting
-  - [x] pagination
-  - [x] pagination-controlled
-  - [x] column-sizing
-  - [x] row-selection
-  - [x] expanding
-  - [x] grouping-and-aggregation
-  - [x] editable-data
-  - [ ] kitchen-sink
-  - [x] row-dnd
-  - [ ] streaming-rows
-  - [x] sub-components
-  - [x] virtualized-rows
-  - [ ] absolute-layout
-  - [ ] block-layout
-  - [ ] animated-framer-motion
-  - [x] bootstrap
-  - [ ] bootstrap-ui-components
-  - [ ] data-driven-classes-and-styles
-  - [x] full-width-resizable-table
-  - [x] full-width-table
-  - [ ] material-ui-components
-  - [ ] material-UI-enhanced-table
+- The `table` instance while similar in spirit to v7 has been reconfigured to be much faster.
 
 ## Installation
+
+Install one of the following packages based on your framework of choice:
 
 ```bash
 # Npm
@@ -147,18 +118,6 @@ npm install @tanstack/react-table
 npm install @tanstack/solid-table
 npm install @tanstack/vue-table
 npm install @tanstack/svelte-table
-
-#pnpm
-pnpm install @tanstack/react-table
-pnpm install @tanstack/solid-table
-pnpm install @tanstack/vue-table
-pnpm install @tanstack/svelte-table
-
-#Yarn
-yarn add @tanstack/react-table
-yarn add @tanstack/solid-table
-yarn add @tanstack/vue-table
-yarn add @tanstack/svelte-table
 ```
 
 ## How to help?
@@ -168,7 +127,6 @@ yarn add @tanstack/svelte-table
 - Introspect the types! Even without the docs finished, the library ships with 100% typescript to help you explore its capabilities.
 - [Read the contribution guidelines](https://github.com/tanstack/table/tree/main/CONTRIBUTING.md)
 - Write some docs! Start with the [API docs](https://github.com/TanStack/react-table/tree/main/docs/api) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
-- Try your hand at migrating an example to v8! The todo list for the examples is above!
 - **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a functional wrapper that uses TanStack Table internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
 
 ### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
