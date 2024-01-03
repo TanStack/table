@@ -374,15 +374,20 @@ export function createTable<TData extends RowData>(
     getRowModel: () => {
       return table.getPaginationRowModel()
     },
+    //in next version, we should just pass in the row model as the optional 2nd arg
     getRow: (id: string, searchAll?: boolean) => {
-      const row = (searchAll ? table.getCoreRowModel() : table.getRowModel())
-        .rowsById[id]
+      let row = (
+        searchAll ? table.getPrePaginationRowModel() : table.getRowModel()
+      ).rowsById[id]
 
       if (!row) {
-        if (process.env.NODE_ENV !== 'production') {
-          throw new Error(`getRow expected an ID, but got ${id}`)
+        row = table.getCoreRowModel().rowsById[id]
+        if (!row) {
+          if (process.env.NODE_ENV !== 'production') {
+            throw new Error(`getRow could not find row with ID: ${id}`)
+          }
+          throw new Error()
         }
-        throw new Error()
       }
 
       return row
