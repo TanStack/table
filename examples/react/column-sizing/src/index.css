@@ -47,7 +47,6 @@ td,
 
 .resizer {
   position: absolute;
-  right: 0;
   top: 0;
   height: 100%;
   width: 5px;
@@ -55,6 +54,14 @@ td,
   cursor: col-resize;
   user-select: none;
   touch-action: none;
+}
+
+.resizer.ltr {
+  right: 0;
+}
+
+.resizer.rtl {
+  left: 0;
 }
 
 .resizer.isResizing {

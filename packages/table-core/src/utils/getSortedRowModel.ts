@@ -18,8 +18,8 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortedFlatRows: Row<TData>[] = []
 
         // Filter out sortings that correspond to non existing columns
-        const availableSorting = sortingState.filter(sort =>
-          table.getColumn(sort.id)?.getCanSort()
+        const availableSorting = sortingState.filter(
+          sort => table.getColumn(sort.id)?.getCanSort()
         )
 
         const columnInfoById: Record<
@@ -33,7 +33,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         availableSorting.forEach(sortEntry => {
           const column = table.getColumn(sortEntry.id)
-          if(!column) return
+          if (!column) return
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.columnDef.sortUndefined,
@@ -45,7 +45,7 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortData = (rows: Row<TData>[]) => {
           // This will also perform a stable sorting using the row index
           // if needed.
-          const sortedData = [...rows]
+          const sortedData = rows.map(row => ({ ...row }))
 
           sortedData.sort((rowA, rowB) => {
             for (let i = 0; i < availableSorting.length; i += 1) {
@@ -53,25 +53,31 @@ export function getSortedRowModel<TData extends RowData>(): (
               const columnInfo = columnInfoById[sortEntry.id]!
               const isDesc = sortEntry?.desc ?? false
 
+              let sortInt = 0
+
+              // All sorting ints should always return in ascending order
               if (columnInfo.sortUndefined) {
                 const aValue = rowA.getValue(sortEntry.id)
                 const bValue = rowB.getValue(sortEntry.id)
 
-                const aUndefined = typeof aValue === 'undefined'
-                const bUndefined = typeof bValue === 'undefined'
+                const aUndefined = aValue === undefined
+                const bUndefined = bValue === undefined
 
                 if (aUndefined || bUndefined) {
-                  return aUndefined && bUndefined
-                    ? 0
-                    : aUndefined
-                    ? columnInfo.sortUndefined
-                    : -columnInfo.sortUndefined
+                  sortInt =
+                    aUndefined && bUndefined
+                      ? 0
+                      : aUndefined
+                        ? columnInfo.sortUndefined
+                        : -columnInfo.sortUndefined
                 }
               }
 
-              // This function should always return in ascending order
-              let sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id)
+              if (sortInt === 0) {
+                sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id)
+              }
 
+              // If sorting is non-zero, take care of desc and inversion
               if (sortInt !== 0) {
                 if (isDesc) {
                   sortInt *= -1

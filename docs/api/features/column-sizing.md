@@ -152,6 +152,14 @@ columnResizeMode?: 'onChange' | 'onEnd'
 
 Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
 
+### `columnResizeDirection`
+
+```tsx
+columnResizeDirection?: 'ltr' | 'rtl'
+```
+
+Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
+
 ### `onColumnSizingChange`
 
 ```tsx
@@ -168,7 +176,7 @@ onColumnSizingInfoChange?: OnChangeFn<ColumnSizingInfoState>
 
 This optional function will be called when the columnSizingInfo state changes. If you provide this function, you will be responsible for maintaining its state yourself. You can pass this state back to the table via the `state.columnSizingInfo` table option.
 
-## Table API API
+## Table API
 
 ### `setColumnSizing`
 

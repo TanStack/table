@@ -9,9 +9,32 @@ export interface RowSelectionTableState {
 }
 
 export interface RowSelectionOptions<TData extends RowData> {
-  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  /**
+   * - Enables/disables multiple row selection for all rows in the table OR
+   * - A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#enablemultirowselection)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   enableMultiRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  /**
+   * - Enables/disables row selection for all rows in the table OR
+   * - A function that given a row, returns whether to enable/disable row selection for that row
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#enablerowselection)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  /**
+   * Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
+   * (Use in combination with expanding or grouping features)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#enablesubrowselection)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   enableSubRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  /**
+   * If provided, this function will be called with an `updaterFn` when `state.rowSelection` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#onrowselectionchange)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
   // enableGroupingRowSelection?:
   //   | boolean
@@ -27,31 +50,141 @@ export interface RowSelectionOptions<TData extends RowData> {
 }
 
 export interface RowSelectionRow {
-  getIsSelected: () => boolean
-  getIsSomeSelected: () => boolean
-  getIsAllSubRowsSelected: () => boolean
-  getCanSelect: () => boolean
+  /**
+   * Returns whether or not the row can multi-select.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getcanmultiselect)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   getCanMultiSelect: () => boolean
+  /**
+   * Returns whether or not the row can be selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getcanselect)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getCanSelect: () => boolean
+  /**
+   * Returns whether or not the row can select sub rows automatically when the parent row is selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getcanselectsubrows)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   getCanSelectSubRows: () => boolean
-  toggleSelected: (value?: boolean) => void
+  /**
+   * Returns whether or not all of the row's sub rows are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallsubrowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsAllSubRowsSelected: () => boolean
+  /**
+   * Returns whether or not the row is selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsSelected: () => boolean
+  /**
+   * Returns whether or not some of the row's sub rows are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomeselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsSomeSelected: () => boolean
+  /**
+   * Returns a handler that can be used to toggle the row.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#gettoggleselectedhandler)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   getToggleSelectedHandler: () => (event: unknown) => void
+  /**
+   * Selects/deselects the row.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#toggleselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  toggleSelected: (value?: boolean, opts?: { selectChildren?: boolean }) => void
 }
 
 export interface RowSelectionInstance<TData extends RowData> {
-  getToggleAllRowsSelectedHandler: () => (event: unknown) => void
-  getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
-  setRowSelection: (updater: Updater<RowSelectionState>) => void
-  resetRowSelection: (defaultState?: boolean) => void
-  getIsAllRowsSelected: () => boolean
-  getIsAllPageRowsSelected: () => boolean
-  getIsSomeRowsSelected: () => boolean
-  getIsSomePageRowsSelected: () => boolean
-  toggleAllRowsSelected: (value?: boolean) => void
-  toggleAllPageRowsSelected: (value?: boolean) => void
-  getPreSelectedRowModel: () => RowModel<TData>
-  getSelectedRowModel: () => RowModel<TData>
+  /**
+   * Returns the row model of all rows that are selected after filtering has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getfilteredselectedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   getFilteredSelectedRowModel: () => RowModel<TData>
+  /**
+   * Returns the row model of all rows that are selected after grouping has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getgroupedselectedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
   getGroupedSelectedRowModel: () => RowModel<TData>
+  /**
+   * Returns whether or not all rows on the current page are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallpagerowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsAllPageRowsSelected: () => boolean
+  /**
+   * Returns whether or not all rows in the table are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallrowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsAllRowsSelected: () => boolean
+  /**
+   * Returns whether or not any rows on the current page are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomepagerowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsSomePageRowsSelected: () => boolean
+  /**
+   * Returns whether or not any rows in the table are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomerowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getIsSomeRowsSelected: () => boolean
+  /**
+   * Returns the core row model of all rows before row selection has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getpreselectedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getPreSelectedRowModel: () => RowModel<TData>
+  /**
+   * Returns the row model of all rows that are selected.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getselectedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getSelectedRowModel: () => RowModel<TData>
+  /**
+   * Returns a handler that can be used to toggle all rows on the current page.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#gettoggleallpagerowsselectedhandler)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
+  /**
+   * Returns a handler that can be used to toggle all rows in the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#gettoggleallrowsselectedhandler)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  getToggleAllRowsSelectedHandler: () => (event: unknown) => void
+  /**
+   * Resets the **rowSelection** state to the `initialState.rowSelection`, or `true` can be passed to force a default blank state reset to `{}`.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#resetrowselection)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  resetRowSelection: (defaultState?: boolean) => void
+  /**
+   * Sets or updates the `state.rowSelection` state.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#setrowselection)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  setRowSelection: (updater: Updater<RowSelectionState>) => void
+  /**
+   * Selects/deselects all rows on the current page.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#toggleallpagerowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  toggleAllPageRowsSelected: (value?: boolean) => void
+  /**
+   * Selects/deselects all rows in the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#toggleallrowsselected)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+   */
+  toggleAllRowsSelected: (value?: boolean) => void
 }
 
 //
@@ -78,340 +211,340 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(
-    table: Table<TData>
-  ): RowSelectionInstance<TData> => {
-    return {
-      setRowSelection: updater => table.options.onRowSelectionChange?.(updater),
-      resetRowSelection: defaultState =>
-        table.setRowSelection(
-          defaultState ? {} : table.initialState.rowSelection ?? {}
-        ),
-      toggleAllRowsSelected: value => {
-        table.setRowSelection(old => {
-          value =
-            typeof value !== 'undefined' ? value : !table.getIsAllRowsSelected()
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
+    table.setRowSelection = updater =>
+      table.options.onRowSelectionChange?.(updater)
+    table.resetRowSelection = defaultState =>
+      table.setRowSelection(
+        defaultState ? {} : table.initialState.rowSelection ?? {}
+      )
+    table.toggleAllRowsSelected = value => {
+      table.setRowSelection(old => {
+        value =
+          typeof value !== 'undefined' ? value : !table.getIsAllRowsSelected()
 
-          const rowSelection = { ...old }
+        const rowSelection = { ...old }
 
-          const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
+        const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
 
-          // We don't use `mutateRowIsSelected` here for performance reasons.
-          // All of the rows are flat already, so it wouldn't be worth it
-          if (value) {
-            preGroupedFlatRows.forEach(row => {
-              if (!row.getCanSelect()) {
-                return
-              }
-              rowSelection[row.id] = true
-            })
-          } else {
-            preGroupedFlatRows.forEach(row => {
-              delete rowSelection[row.id]
-            })
-          }
-
-          return rowSelection
-        })
-      },
-      toggleAllPageRowsSelected: value =>
-        table.setRowSelection(old => {
-          const resolvedValue =
-            typeof value !== 'undefined'
-              ? value
-              : !table.getIsAllPageRowsSelected()
-
-          const rowSelection: RowSelectionState = { ...old }
-
-          table.getRowModel().rows.forEach(row => {
-            mutateRowIsSelected(rowSelection, row.id, resolvedValue, table)
+        // We don't use `mutateRowIsSelected` here for performance reasons.
+        // All of the rows are flat already, so it wouldn't be worth it
+        if (value) {
+          preGroupedFlatRows.forEach(row => {
+            if (!row.getCanSelect()) {
+              return
+            }
+            rowSelection[row.id] = true
           })
-
-          return rowSelection
-        }),
-
-      // addRowSelectionRange: rowId => {
-      //   const {
-      //     rows,
-      //     rowsById,
-      //     options: { selectGroupingRows, selectSubRows },
-      //   } = table
-
-      //   const findSelectedRow = (rows: Row[]) => {
-      //     let found
-      //     rows.find(d => {
-      //       if (d.getIsSelected()) {
-      //         found = d
-      //         return true
-      //       }
-      //       const subFound = findSelectedRow(d.subRows || [])
-      //       if (subFound) {
-      //         found = subFound
-      //         return true
-      //       }
-      //       return false
-      //     })
-      //     return found
-      //   }
-
-      //   const firstRow = findSelectedRow(rows) || rows[0]
-      //   const lastRow = rowsById[rowId]
-
-      //   let include = false
-      //   const selectedRowIds = {}
-
-      //   const addRow = (row: Row) => {
-      //     mutateRowIsSelected(selectedRowIds, row.id, true, {
-      //       rowsById,
-      //       selectGroupingRows: selectGroupingRows!,
-      //       selectSubRows: selectSubRows!,
-      //     })
-      //   }
-
-      //   table.rows.forEach(row => {
-      //     const isFirstRow = row.id === firstRow.id
-      //     const isLastRow = row.id === lastRow.id
-
-      //     if (isFirstRow || isLastRow) {
-      //       if (!include) {
-      //         include = true
-      //       } else if (include) {
-      //         addRow(row)
-      //         include = false
-      //       }
-      //     }
-
-      //     if (include) {
-      //       addRow(row)
-      //     }
-      //   })
-
-      //   table.setRowSelection(selectedRowIds)
-      // },
-      getPreSelectedRowModel: () => table.getCoreRowModel(),
-      getSelectedRowModel: memo(
-        () => [table.getState().rowSelection, table.getCoreRowModel()],
-        (rowSelection, rowModel) => {
-          if (!Object.keys(rowSelection).length) {
-            return {
-              rows: [],
-              flatRows: [],
-              rowsById: {},
-            }
-          }
-
-          return selectRowsFn(table, rowModel)
-        },
-        {
-          key: process.env.NODE_ENV === 'development' && 'getSelectedRowModel',
-          debug: () => table.options.debugAll ?? table.options.debugTable,
+        } else {
+          preGroupedFlatRows.forEach(row => {
+            delete rowSelection[row.id]
+          })
         }
-      ),
 
-      getFilteredSelectedRowModel: memo(
-        () => [table.getState().rowSelection, table.getFilteredRowModel()],
-        (rowSelection, rowModel) => {
-          if (!Object.keys(rowSelection).length) {
-            return {
-              rows: [],
-              flatRows: [],
-              rowsById: {},
-            }
-          }
+        return rowSelection
+      })
+    }
+    table.toggleAllPageRowsSelected = value =>
+      table.setRowSelection(old => {
+        const resolvedValue =
+          typeof value !== 'undefined'
+            ? value
+            : !table.getIsAllPageRowsSelected()
 
-          return selectRowsFn(table, rowModel)
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'production' &&
-            'getFilteredSelectedRowModel',
-          debug: () => table.options.debugAll ?? table.options.debugTable,
-        }
-      ),
+        const rowSelection: RowSelectionState = { ...old }
 
-      getGroupedSelectedRowModel: memo(
-        () => [table.getState().rowSelection, table.getSortedRowModel()],
-        (rowSelection, rowModel) => {
-          if (!Object.keys(rowSelection).length) {
-            return {
-              rows: [],
-              flatRows: [],
-              rowsById: {},
-            }
-          }
+        table.getRowModel().rows.forEach(row => {
+          mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
+        })
 
-          return selectRowsFn(table, rowModel)
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'production' &&
-            'getGroupedSelectedRowModel',
-          debug: () => table.options.debugAll ?? table.options.debugTable,
-        }
-      ),
+        return rowSelection
+      })
 
-      ///
+    // addRowSelectionRange: rowId => {
+    //   const {
+    //     rows,
+    //     rowsById,
+    //     options: { selectGroupingRows, selectSubRows },
+    //   } = table
 
-      // getGroupingRowCanSelect: rowId => {
-      //   const row = table.getRow(rowId)
+    //   const findSelectedRow = (rows: Row[]) => {
+    //     let found
+    //     rows.find(d => {
+    //       if (d.getIsSelected()) {
+    //         found = d
+    //         return true
+    //       }
+    //       const subFound = findSelectedRow(d.subRows || [])
+    //       if (subFound) {
+    //         found = subFound
+    //         return true
+    //       }
+    //       return false
+    //     })
+    //     return found
+    //   }
 
-      //   if (!row) {
-      //     throw new Error()
-      //   }
+    //   const firstRow = findSelectedRow(rows) || rows[0]
+    //   const lastRow = rowsById[rowId]
 
-      //   if (typeof table.options.enableGroupingRowSelection === 'function') {
-      //     return table.options.enableGroupingRowSelection(row)
-      //   }
+    //   let include = false
+    //   const selectedRowIds = {}
 
-      //   return table.options.enableGroupingRowSelection ?? false
-      // },
+    //   const addRow = (row: Row) => {
+    //     mutateRowIsSelected(selectedRowIds, row.id, true, {
+    //       rowsById,
+    //       selectGroupingRows: selectGroupingRows!,
+    //       selectSubRows: selectSubRows!,
+    //     })
+    //   }
 
-      getIsAllRowsSelected: () => {
-        const preGroupedFlatRows = table.getFilteredRowModel().flatRows
-        const { rowSelection } = table.getState()
+    //   table.rows.forEach(row => {
+    //     const isFirstRow = row.id === firstRow.id
+    //     const isLastRow = row.id === lastRow.id
 
-        let isAllRowsSelected = Boolean(
-          preGroupedFlatRows.length && Object.keys(rowSelection).length
-        )
+    //     if (isFirstRow || isLastRow) {
+    //       if (!include) {
+    //         include = true
+    //       } else if (include) {
+    //         addRow(row)
+    //         include = false
+    //       }
+    //     }
 
-        if (isAllRowsSelected) {
-          if (
-            preGroupedFlatRows.some(
-              row => row.getCanSelect() && !rowSelection[row.id]
-            )
-          ) {
-            isAllRowsSelected = false
+    //     if (include) {
+    //       addRow(row)
+    //     }
+    //   })
+
+    //   table.setRowSelection(selectedRowIds)
+    // },
+    table.getPreSelectedRowModel = () => table.getCoreRowModel()
+    table.getSelectedRowModel = memo(
+      () => [table.getState().rowSelection, table.getCoreRowModel()],
+      (rowSelection, rowModel) => {
+        if (!Object.keys(rowSelection).length) {
+          return {
+            rows: [],
+            flatRows: [],
+            rowsById: {},
           }
         }
 
-        return isAllRowsSelected
+        return selectRowsFn(table, rowModel)
       },
+      {
+        key: process.env.NODE_ENV === 'development' && 'getSelectedRowModel',
+        debug: () => table.options.debugAll ?? table.options.debugTable,
+      }
+    )
 
-      getIsAllPageRowsSelected: () => {
-        const paginationFlatRows = table.getPaginationRowModel().flatRows
-        const { rowSelection } = table.getState()
+    table.getFilteredSelectedRowModel = memo(
+      () => [table.getState().rowSelection, table.getFilteredRowModel()],
+      (rowSelection, rowModel) => {
+        if (!Object.keys(rowSelection).length) {
+          return {
+            rows: [],
+            flatRows: [],
+            rowsById: {},
+          }
+        }
 
-        let isAllPageRowsSelected = !!paginationFlatRows.length
+        return selectRowsFn(table, rowModel)
+      },
+      {
+        key:
+          process.env.NODE_ENV === 'production' &&
+          'getFilteredSelectedRowModel',
+        debug: () => table.options.debugAll ?? table.options.debugTable,
+      }
+    )
 
+    table.getGroupedSelectedRowModel = memo(
+      () => [table.getState().rowSelection, table.getSortedRowModel()],
+      (rowSelection, rowModel) => {
+        if (!Object.keys(rowSelection).length) {
+          return {
+            rows: [],
+            flatRows: [],
+            rowsById: {},
+          }
+        }
+
+        return selectRowsFn(table, rowModel)
+      },
+      {
+        key:
+          process.env.NODE_ENV === 'production' && 'getGroupedSelectedRowModel',
+        debug: () => table.options.debugAll ?? table.options.debugTable,
+      }
+    )
+
+    ///
+
+    // getGroupingRowCanSelect: rowId => {
+    //   const row = table.getRow(rowId)
+
+    //   if (!row) {
+    //     throw new Error()
+    //   }
+
+    //   if (typeof table.options.enableGroupingRowSelection === 'function') {
+    //     return table.options.enableGroupingRowSelection(row)
+    //   }
+
+    //   return table.options.enableGroupingRowSelection ?? false
+    // },
+
+    table.getIsAllRowsSelected = () => {
+      const preGroupedFlatRows = table.getFilteredRowModel().flatRows
+      const { rowSelection } = table.getState()
+
+      let isAllRowsSelected = Boolean(
+        preGroupedFlatRows.length && Object.keys(rowSelection).length
+      )
+
+      if (isAllRowsSelected) {
         if (
-          isAllPageRowsSelected &&
-          paginationFlatRows.some(
+          preGroupedFlatRows.some(
             row => row.getCanSelect() && !rowSelection[row.id]
           )
         ) {
-          isAllPageRowsSelected = false
+          isAllRowsSelected = false
         }
+      }
 
-        return isAllPageRowsSelected
-      },
+      return isAllRowsSelected
+    }
 
-      getIsSomeRowsSelected: () => {
-        const totalSelected = Object.keys(
-          table.getState().rowSelection ?? {}
-        ).length
-        return (
-          totalSelected > 0 &&
-          totalSelected < table.getFilteredRowModel().flatRows.length
+    table.getIsAllPageRowsSelected = () => {
+      const paginationFlatRows = table
+        .getPaginationRowModel()
+        .flatRows.filter(row => row.getCanSelect())
+      const { rowSelection } = table.getState()
+
+      let isAllPageRowsSelected = !!paginationFlatRows.length
+
+      if (
+        isAllPageRowsSelected &&
+        paginationFlatRows.some(row => !rowSelection[row.id])
+      ) {
+        isAllPageRowsSelected = false
+      }
+
+      return isAllPageRowsSelected
+    }
+
+    table.getIsSomeRowsSelected = () => {
+      const totalSelected = Object.keys(
+        table.getState().rowSelection ?? {}
+      ).length
+      return (
+        totalSelected > 0 &&
+        totalSelected < table.getFilteredRowModel().flatRows.length
+      )
+    }
+
+    table.getIsSomePageRowsSelected = () => {
+      const paginationFlatRows = table.getPaginationRowModel().flatRows
+      return table.getIsAllPageRowsSelected()
+        ? false
+        : paginationFlatRows
+            .filter(row => row.getCanSelect())
+            .some(d => d.getIsSelected() || d.getIsSomeSelected())
+    }
+
+    table.getToggleAllRowsSelectedHandler = () => {
+      return (e: unknown) => {
+        table.toggleAllRowsSelected(
+          ((e as MouseEvent).target as HTMLInputElement).checked
         )
-      },
+      }
+    }
 
-      getIsSomePageRowsSelected: () => {
-        const paginationFlatRows = table.getPaginationRowModel().flatRows
-        return table.getIsAllPageRowsSelected()
-          ? false
-          : paginationFlatRows.some(
-              d => d.getIsSelected() || d.getIsSomeSelected()
-            )
-      },
-
-      getToggleAllRowsSelectedHandler: () => {
-        return (e: unknown) => {
-          table.toggleAllRowsSelected(
-            ((e as MouseEvent).target as HTMLInputElement).checked
-          )
-        }
-      },
-
-      getToggleAllPageRowsSelectedHandler: () => {
-        return (e: unknown) => {
-          table.toggleAllPageRowsSelected(
-            ((e as MouseEvent).target as HTMLInputElement).checked
-          )
-        }
-      },
+    table.getToggleAllPageRowsSelectedHandler = () => {
+      return (e: unknown) => {
+        table.toggleAllPageRowsSelected(
+          ((e as MouseEvent).target as HTMLInputElement).checked
+        )
+      }
     }
   },
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
-  ): RowSelectionRow => {
-    return {
-      toggleSelected: value => {
-        const isSelected = row.getIsSelected()
+  ): void => {
+    row.toggleSelected = (value, opts) => {
+      const isSelected = row.getIsSelected()
 
-        table.setRowSelection(old => {
-          value = typeof value !== 'undefined' ? value : !isSelected
+      table.setRowSelection(old => {
+        value = typeof value !== 'undefined' ? value : !isSelected
 
-          if (isSelected === value) {
-            return old
-          }
-
-          const selectedRowIds = { ...old }
-
-          mutateRowIsSelected(selectedRowIds, row.id, value, table)
-
-          return selectedRowIds
-        })
-      },
-      getIsSelected: () => {
-        const { rowSelection } = table.getState()
-        return isRowSelected(row, rowSelection)
-      },
-
-      getIsSomeSelected: () => {
-        const { rowSelection } = table.getState()
-        return isSubRowSelected(row, rowSelection, table) === 'some'
-      },
-
-      getIsAllSubRowsSelected: () => {
-        const { rowSelection } = table.getState()
-        return isSubRowSelected(row, rowSelection, table) === 'all'
-      },
-
-      getCanSelect: () => {
-        if (typeof table.options.enableRowSelection === 'function') {
-          return table.options.enableRowSelection(row)
+        if (row.getCanSelect() && isSelected === value) {
+          return old
         }
 
-        return table.options.enableRowSelection ?? true
-      },
+        const selectedRowIds = { ...old }
 
-      getCanSelectSubRows: () => {
-        if (typeof table.options.enableSubRowSelection === 'function') {
-          return table.options.enableSubRowSelection(row)
-        }
+        mutateRowIsSelected(
+          selectedRowIds,
+          row.id,
+          value,
+          opts?.selectChildren ?? true,
+          table
+        )
 
-        return table.options.enableSubRowSelection ?? true
-      },
+        return selectedRowIds
+      })
+    }
+    row.getIsSelected = () => {
+      const { rowSelection } = table.getState()
+      return isRowSelected(row, rowSelection)
+    }
 
-      getCanMultiSelect: () => {
-        if (typeof table.options.enableMultiRowSelection === 'function') {
-          return table.options.enableMultiRowSelection(row)
-        }
+    row.getIsSomeSelected = () => {
+      const { rowSelection } = table.getState()
+      return isSubRowSelected(row, rowSelection, table) === 'some'
+    }
 
-        return table.options.enableMultiRowSelection ?? true
-      },
-      getToggleSelectedHandler: () => {
-        const canSelect = row.getCanSelect()
+    row.getIsAllSubRowsSelected = () => {
+      const { rowSelection } = table.getState()
+      return isSubRowSelected(row, rowSelection, table) === 'all'
+    }
 
-        return (e: unknown) => {
-          if (!canSelect) return
-          row.toggleSelected(
-            ((e as MouseEvent).target as HTMLInputElement)?.checked
-          )
-        }
-      },
+    row.getCanSelect = () => {
+      if (typeof table.options.enableRowSelection === 'function') {
+        return table.options.enableRowSelection(row)
+      }
+
+      return table.options.enableRowSelection ?? true
+    }
+
+    row.getCanSelectSubRows = () => {
+      if (typeof table.options.enableSubRowSelection === 'function') {
+        return table.options.enableSubRowSelection(row)
+      }
+
+      return table.options.enableSubRowSelection ?? true
+    }
+
+    row.getCanMultiSelect = () => {
+      if (typeof table.options.enableMultiRowSelection === 'function') {
+        return table.options.enableMultiRowSelection(row)
+      }
+
+      return table.options.enableMultiRowSelection ?? true
+    }
+    row.getToggleSelectedHandler = () => {
+      const canSelect = row.getCanSelect()
+
+      return (e: unknown) => {
+        if (!canSelect) return
+        row.toggleSelected(
+          ((e as MouseEvent).target as HTMLInputElement)?.checked
+        )
+      }
     }
   },
 }
@@ -420,9 +553,10 @@ const mutateRowIsSelected = <TData extends RowData>(
   selectedRowIds: Record<string, boolean>,
   id: string,
   value: boolean,
+  includeChildren: boolean,
   table: Table<TData>
 ) => {
-  const row = table.getRow(id)
+  const row = table.getRow(id, true)
 
   // const isGrouped = row.getIsGrouped()
 
@@ -442,9 +576,9 @@ const mutateRowIsSelected = <TData extends RowData>(
   }
   // }
 
-  if (row.subRows?.length && row.getCanSelectSubRows()) {
+  if (includeChildren && row.subRows?.length && row.getCanSelectSubRows()) {
     row.subRows.forEach(row =>
-      mutateRowIsSelected(selectedRowIds, row.id, value, table)
+      mutateRowIsSelected(selectedRowIds, row.id, value, includeChildren, table)
     )
   }
 }
@@ -502,25 +636,38 @@ export function isSubRowSelected<TData extends RowData>(
   selection: Record<string, boolean>,
   table: Table<TData>
 ): boolean | 'some' | 'all' {
-  if (row.subRows && row.subRows.length) {
-    let allChildrenSelected = true
-    let someSelected = false
+  if (!row.subRows?.length) return false
 
-    row.subRows.forEach(subRow => {
-      // Bail out early if we know both of these
-      if (someSelected && !allChildrenSelected) {
-        return
-      }
+  let allChildrenSelected = true
+  let someSelected = false
 
+  row.subRows.forEach(subRow => {
+    // Bail out early if we know both of these
+    if (someSelected && !allChildrenSelected) {
+      return
+    }
+
+    if (subRow.getCanSelect()) {
       if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
         allChildrenSelected = false
       }
-    })
+    }
 
-    return allChildrenSelected ? 'all' : someSelected ? 'some' : false
-  }
+    // Check row selection of nested subrows
+    if (subRow.subRows && subRow.subRows.length) {
+      const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
+      if (subRowChildrenSelected === 'all') {
+        someSelected = true
+      } else if (subRowChildrenSelected === 'some') {
+        someSelected = true
+        allChildrenSelected = false
+      } else {
+        allChildrenSelected = false
+      }
+    }
+  })
 
-  return false
+  return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }

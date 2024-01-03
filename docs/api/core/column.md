@@ -2,7 +2,7 @@
 title: Column
 ---
 
-These are **core** options and API properties for all columns. More options and API properties are available for other [table features](../../guide/features.md).
+These are **core** options and API properties for all columns. More options and API properties are available for other [table features](../../guide/features).
 
 ## Column API
 
@@ -23,7 +23,7 @@ The resolved unique identifier for the column resolved in this priority:
 ### `depth`
 
 ```tsx
-id: number
+depth: number
 ```
 
 The depth of the column (if grouped) relative to the root column def array.

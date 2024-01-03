@@ -11,18 +11,18 @@ type StyledComponent<T> = T extends 'button'
       HTMLButtonElement
     >
   : T extends 'input'
-  ? React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      HTMLInputElement
-    >
-  : T extends 'select'
-  ? React.DetailedHTMLProps<
-      React.SelectHTMLAttributes<HTMLSelectElement>,
-      HTMLSelectElement
-    >
-  : T extends keyof HTMLElementTagNameMap
-  ? React.HTMLAttributes<HTMLElementTagNameMap[T]>
-  : never
+    ? React.DetailedHTMLProps<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+      >
+    : T extends 'select'
+      ? React.DetailedHTMLProps<
+          React.SelectHTMLAttributes<HTMLSelectElement>,
+          HTMLSelectElement
+        >
+      : T extends keyof HTMLElementTagNameMap
+        ? React.HTMLAttributes<HTMLElementTagNameMap[T]>
+        : never
 
 // export function getStatusColor(match: RouteMatch, theme: Theme) {
 //   return match.isLoading

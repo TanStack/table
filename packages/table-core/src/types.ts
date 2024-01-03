@@ -19,6 +19,10 @@ import {
   ColumnPinningOptions,
   ColumnPinningRow,
   ColumnPinningTableState,
+  RowPinningInstance,
+  RowPinningOptions,
+  RowPinningRow,
+  RowPinningTableState,
 } from './features/Pinning'
 import {
   CoreHeader,
@@ -106,6 +110,7 @@ export interface Table<TData extends RowData>
     VisibilityInstance<TData>,
     ColumnOrderInstance<TData>,
     ColumnPinningInstance<TData>,
+    RowPinningInstance<TData>,
     FiltersInstance<TData>,
     SortingInstance<TData>,
     GroupingInstance<TData>,
@@ -118,6 +123,7 @@ interface FeatureOptions<TData extends RowData>
   extends VisibilityOptions,
     ColumnOrderOptions,
     ColumnPinningOptions,
+    RowPinningOptions<TData>,
     FiltersOptions<TData>,
     SortingOptions<TData>,
     GroupingOptions,
@@ -140,6 +146,7 @@ export interface TableState
     VisibilityTableState,
     ColumnOrderTableState,
     ColumnPinningTableState,
+    RowPinningTableState,
     FiltersTableState,
     SortingTableState,
     ExpandedTableState,
@@ -153,6 +160,7 @@ interface CompleteInitialTableState
     VisibilityTableState,
     ColumnOrderTableState,
     ColumnPinningTableState,
+    RowPinningTableState,
     FiltersTableState,
     SortingTableState,
     ExpandedTableState,
@@ -167,6 +175,7 @@ export interface Row<TData extends RowData>
   extends CoreRow<TData>,
     VisibilityRow<TData>,
     ColumnPinningRow<TData>,
+    RowPinningRow,
     FiltersRow<TData>,
     GroupingRow,
     RowSelectionRow,
@@ -191,12 +200,12 @@ export type StringOrTemplateHeader<TData, TValue> =
   | string
   | ColumnDefTemplate<HeaderContext<TData, TValue>>
 
-interface StringHeaderIdentifier {
+export interface StringHeaderIdentifier {
   header: string
   id?: string
 }
 
-interface IdIdentifier<TData extends RowData, TValue> {
+export interface IdIdentifier<TData extends RowData, TValue> {
   id: string
   header?: StringOrTemplateHeader<TData, TValue>
 }
@@ -233,7 +242,7 @@ export interface IdentifiedColumnDef<TData extends RowData, TValue = unknown>
 
 export type DisplayColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
@@ -243,7 +252,7 @@ interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
 
 export type GroupColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = GroupColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 interface AccessorFnColumnDefBase<TData extends RowData, TValue = unknown>
@@ -253,18 +262,20 @@ interface AccessorFnColumnDefBase<TData extends RowData, TValue = unknown>
 
 export type AccessorFnColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = AccessorFnColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
-interface AccessorKeyColumnDefBase<TData extends RowData, TValue = unknown>
-  extends ColumnDefBase<TData, TValue> {
+export interface AccessorKeyColumnDefBase<
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDefBase<TData, TValue> {
   id?: string
   accessorKey: (string & {}) | keyof TData
 }
 
 export type AccessorKeyColumnDef<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = AccessorKeyColumnDefBase<TData, TValue> &
   Partial<ColumnIdentifiers<TData, TValue>>
 
@@ -281,7 +292,7 @@ export type ColumnDef<TData extends RowData, TValue = unknown> =
 
 export type ColumnDefResolved<
   TData extends RowData,
-  TValue = unknown
+  TValue = unknown,
 > = Partial<UnionToIntersection<ColumnDef<TData, TValue>>> & {
   accessorKey?: string
 }

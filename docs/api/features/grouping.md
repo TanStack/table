@@ -112,6 +112,14 @@ enableGrouping?: boolean
 
 Enables/disables grouping for this column.
 
+### `getGroupingValue`
+
+```tsx
+getGroupingValue?: (row: TData) => any
+```
+
+Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
+
 ## Column API
 
 ### `aggregationFn`
@@ -176,6 +184,8 @@ Returns the automatically inferred aggregation function for the column.
 getAggregationFn: () => AggregationFn<TData> | undefined
 ```
 
+Returns the aggregation function for the column.
+
 ## Row API
 
 ### `groupingColumnId`
@@ -202,6 +212,14 @@ getIsGrouped: () => boolean
 
 Returns whether or not the row is currently grouped.
 
+### `getGroupingValue`
+
+```tsx
+getGroupingValue: (columnId: string) => unknown
+```
+
+Returns the grouping value for any row and column (including leaf rows).
+
 ## Table Options
 
 ### `aggregationFns`
@@ -224,7 +242,7 @@ const column = columnHelper.data('key', {
   aggregationFn: 'myCustomAggregation',
 })
 
-const table = useTable({
+const table = useReactTable({
   columns: [column],
   aggregationFns: {
     myCustomAggregation: (columnId, leafRows, childRows) => {
@@ -274,7 +292,7 @@ groupedColumnMode?: false | 'reorder' | 'remove' // default: `reorder`
 
 Grouping columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
 
-## Table API API
+## Table API
 
 ### `setGrouping`
 
@@ -307,3 +325,29 @@ getGroupedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table after grouping has been applied.
+
+## Cell API
+
+### `getIsAggregated`
+
+```tsx
+getIsAggregated: () => boolean
+```
+
+Returns whether or not the cell is currently aggregated.
+
+### `getIsGrouped`
+
+```tsx
+getIsGrouped: () => boolean
+```
+
+Returns whether or not the cell is currently grouped.
+
+### `getIsPlaceholder`
+
+```tsx
+getIsPlaceholder: () => boolean
+```
+
+Returns whether or not the cell is currently a placeholder.

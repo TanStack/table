@@ -46,6 +46,10 @@
           "to": "guide/installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "Column Defs",
           "to": "guide/column-defs"
         },
@@ -72,10 +76,6 @@
         {
           "label": "Column Ordering",
           "to": "guide/column-ordering"
-        },
-        {
-          "label": "Column Pinning",
-          "to": "guide/column-pinning"
         },
         {
           "label": "Column Sizing",
@@ -106,8 +106,16 @@
           "to": "guide/pagination"
         },
         {
+          "label": "Pinning",
+          "to": "guide/pinning"
+        },
+        {
           "label": "Row Selection",
           "to": "guide/row-selection"
+        },
+        {
+          "label": "Virtualization",
+          "to": "guide/virtualization"
         }
       ]
     },
@@ -152,10 +160,6 @@
           "to": "api/features/column-ordering"
         },
         {
-          "label": "Column Pinning",
-          "to": "api/features/column-pinning"
-        },
-        {
           "label": "Column Sizing",
           "to": "api/features/column-sizing"
         },
@@ -184,8 +188,21 @@
           "to": "api/features/pagination"
         },
         {
+          "label": "Pinning",
+          "to": "api/features/pinning"
+        },
+        {
           "label": "Row Selection",
           "to": "api/features/row-selection"
+        }
+      ]
+    },
+    {
+      "label": "Enterprise",
+      "children": [
+        {
+          "label": "AG Grid",
+          "to": "enterprise/ag-grid"
         }
       ]
     },
@@ -215,6 +232,10 @@
         {
           "to": "examples/react/column-sizing",
           "label": "Column Sizing"
+        },
+        {
+          "to": "examples/react/column-resizing-performant",
+          "label": "Performant Column Resizing"
         },
         {
           "to": "examples/react/column-visibility",
@@ -257,12 +278,20 @@
           "label": "Row DnD"
         },
         {
+          "to": "examples/react/row-pinning",
+          "label": "Row Pinning"
+        },
+        {
           "to": "examples/react/row-selection",
           "label": "Row Selection"
         },
         {
           "to": "examples/react/sorting",
           "label": "Sorting"
+        },
+        {
+          "to": "examples/react/virtualized-columns",
+          "label": "Virtualized Columns"
         },
         {
           "to": "examples/react/virtualized-rows",
@@ -348,6 +377,14 @@
           "label": "Column Pinning"
         },
         {
+          "to": "examples/vue/pagination",
+          "label": "Pagination"
+        },
+        {
+          "to": "examples/vue/row-selection",
+          "label": "Row Selection"
+        },
+        {
           "to": "examples/vue/sorting",
           "label": "Sorting"
         }
@@ -365,8 +402,8 @@
           "label": "React Bootstrap"
         },
         {
-          "to": "examples/react/mui-pagination",
-          "label": "React MUI Pagination"
+          "to": "examples/react/material-ui-pagination",
+          "label": "Material UI Pagination"
         },
         {
           "to": "examples/react/full-width-table",

@@ -2,7 +2,7 @@
 title: Row
 ---
 
-These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../../guide/features.md).
+These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../../guide/features).
 
 ## Row API
 
@@ -42,13 +42,37 @@ The original row object provided to the table.
 
 > 🧠 If the row is a grouped row, the original row object will be the first original in the group.
 
+### `parentId`
+
+```tsx
+parentId?: string
+```
+
+If nested, this row's parent row id.
+
 ### `getValue`
 
 ```tsx
-getValue: (columnId: string) => any
+getValue: (columnId: string) => TValue
 ```
 
 Returns the value from the row for a given columnId
+
+### `renderValue`
+
+```tsx
+renderValue: (columnId: string) => TValue
+```
+
+Renders the value from the row for a given columnId, but will return the `renderFallbackValue` if no value is found.
+
+### `getUniqueValues`
+
+```tsx
+getUniqueValues: (columnId: string) => TValue[]
+```
+
+Returns a unique array of values from the row for a given columnId.
 
 ### `subRows`
 
@@ -57,6 +81,22 @@ type subRows = Row<TData>[]
 ```
 
 An array of subRows for the row as returned and created by the `options.getSubRows` option.
+
+### `getParentRow`
+
+```tsx
+type getParentRow = () => Row<TData> | undefined
+```
+
+Returns the parent row for the row, if it exists.
+
+### `getParentRows`
+
+```tsx
+type getParentRows = () => Row<TData>[]
+```
+
+Returns the parent rows for the row, all the way up to a root row.
 
 ### `getLeafRows`
 

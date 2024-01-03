@@ -1,6 +1,5 @@
 {
-  "composite": true,
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./build/types"
   },

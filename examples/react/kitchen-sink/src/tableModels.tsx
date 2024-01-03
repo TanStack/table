@@ -174,4 +174,4 @@ export const getTableMeta = (
         })
       )
     },
-  } as TableMeta)
+  }) as TableMeta

@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/vue-table",
   "author": "Tanner Linsley",
-  "version": "8.7.9",
+  "version": "8.11.2",
   "description": "Headless UI for building powerful tables & datagrids for Vue.",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/table#readme",
@@ -22,6 +22,7 @@
     "type": "github",
     "url": "https://github.com/sponsors/tannerlinsley"
   },
+  "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
@@ -42,8 +43,15 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
   "dependencies": {
-    "@tanstack/table-core": "8.7.9"
+    "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.2.33"

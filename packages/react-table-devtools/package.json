@@ -22,6 +22,7 @@
     "type": "github",
     "url": "https://github.com/sponsors/tannerlinsley"
   },
+  "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
@@ -42,11 +43,18 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"
   },
   "dependencies": {
-    "@tanstack/react-table": "8.0.0-alpha.1"
+    "@tanstack/react-table": "workspace:*"
   }
 }

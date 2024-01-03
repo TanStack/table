@@ -34,7 +34,9 @@ export function filterRowModelFromLeafs<TData extends RowData>(
         row.id,
         row.original,
         row.index,
-        row.depth
+        row.depth,
+        undefined,
+        row.parentId
       )
       newRow.columnFilters = row.columnFilters
 
@@ -45,14 +47,14 @@ export function filterRowModelFromLeafs<TData extends RowData>(
         if (filterRow(row) && !newRow.subRows.length) {
           rows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredRowsById[i] = row
+          newFilteredFlatRows.push(row)
           continue
         }
 
         if (filterRow(row) || newRow.subRows.length) {
           rows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredRowsById[i] = row
+          newFilteredFlatRows.push(row)
           continue
         }
       } else {
@@ -60,7 +62,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
         if (filterRow(row)) {
           rows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredRowsById[i] = row
+          newFilteredFlatRows.push(row)
         }
       }
     }
@@ -103,7 +105,9 @@ export function filterRowModelFromRoot<TData extends RowData>(
             row.id,
             row.original,
             row.index,
-            row.depth
+            row.depth,
+            undefined,
+            row.parentId
           )
           newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
           row = newRow

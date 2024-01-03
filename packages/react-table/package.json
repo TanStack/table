@@ -1,7 +1,7 @@
 {
   "name": "@tanstack/react-table",
   "author": "Tanner Linsley",
-  "version": "8.7.9",
+  "version": "8.11.2",
   "description": "Headless UI for building powerful tables & datagrids for React.",
   "license": "MIT",
   "homepage": "https://github.com/tanstack/table#readme",
@@ -22,6 +22,7 @@
     "type": "github",
     "url": "https://github.com/sponsors/tannerlinsley"
   },
+  "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
@@ -42,8 +43,23 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:lib": "vitest",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
   "dependencies": {
-    "@tanstack/table-core": "8.7.9"
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
     "react": ">=16",

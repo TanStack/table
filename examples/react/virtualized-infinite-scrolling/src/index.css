@@ -11,13 +11,6 @@ table {
   width: 100%;
 }
 
-thead {
-  background: lightgray;
-  margin: 0;
-  position: sticky;
-  top: 0;
-}
-
 th {
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;

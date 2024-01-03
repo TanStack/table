@@ -28,6 +28,7 @@
     "type": "github",
     "url": "https://github.com/sponsors/kentcdodds"
   },
+  "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
@@ -48,6 +49,15 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:lib": "vitest",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
   "dependencies": {
     "remove-accents": "0.4.2"
   }

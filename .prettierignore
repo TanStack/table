@@ -1,0 +1,8 @@
+**/.nx/cache
+**/.svelte-kit
+**/build
+**/coverage
+**/dist
+**/docs
+**/old-examples
+pnpm-lock.yaml

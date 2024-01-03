@@ -15,7 +15,7 @@ The ability for a column to be **column** filtered is determined by the followin
 The ability for a column to be **globally** filtered is determined by the following:
 
 - The column was defined a valid `accessorKey`/`accessorFn`.
-- If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable.
+- If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable if the value in the first row is a `string` or `number` type.
 - `column.enableColumnFilter` is not set to `false`
 - `options.enableColumnFilters` is not set to `false`
 - `options.enableFilters` is not set to `false`
@@ -213,7 +213,7 @@ Returns whether or not the column can be **column** filtered.
 getCanGlobalFilter: () => boolean
 ```
 
-Returns whether or not the column can be **globally** filtered.
+Returns whether or not the column can be **globally** filtered.  Set to `false` to disable a column from being scanned during global filtering.
 
 ### `getFilterIndex`
 
@@ -333,7 +333,7 @@ const column = columnHelper.data('key', {
   filterFn: 'myCustomFilter',
 })
 
-const table = useTable({
+const table = useReactTable({
   columns: [column],
   filterFns: {
     myCustomFilter: (rows, columnIds, filterValue) => {
@@ -461,8 +461,9 @@ getColumnCanGlobalFilter?: (column: Column<TData>) => boolean
 ```
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
+This is useful if the column can contain data that is not `string` or `number` (i.e. `undefined`).
 
-## Table API API
+## Table API
 
 ### `setColumnFilters`
 

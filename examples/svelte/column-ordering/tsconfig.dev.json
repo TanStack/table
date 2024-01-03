@@ -1,6 +1,5 @@
 {
-  "composite": true,
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   // "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",

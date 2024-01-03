@@ -28,16 +28,15 @@ Before proceeding with development, ensure you match one of the following criter
 ## Development Workflow
 
 - Fork this repository, we prefer the `feat-*` branch name style
-- Ensure you have `yarn` installed
-- Install projects dependencies and linkages by running `yarn`
-- Auto-build and auto-test files as you edit by running `yarn dev`
+- Ensure you have `pnpm` installed
+- Install projects dependencies and linkages by running `pnpm install`
+- Auto-build and auto-test files as you edit by running `pnpm dev`
 - Implement your changes and tests
 - To run examples, follow their individual directions. Usually this includes:
-  - Installing dependencies with `yarn`
-  - Starting the dev server with `yarn start`
+  - Installing dependencies with `pnpm install` (from the root directory of the workspace)
+  - Starting the dev server with `pnpm start` (from the example directory)
 - To test in your own projects:
-  - Build/watch for changes with `yarn build`/`yarn dev`
-  - Link the appropriate package eg. `yarn link @tanstack/react-table`
+  - Build/watch for changes with `pnpm build`/`pnpm dev`
 - Document your changes in the appropriate documentation website markdown pages
 - Commit your work and open a pull request
 - Submit PR for review
@@ -49,6 +48,5 @@ Before proceeding with development, ensure you match one of the following criter
 - Update the new example's package.json to match the new example name and any other details
 - Check dependencies for unused packages
 - Install any additional packages to the example that you may need
-- Add the example to the workspace packages array in `package.json`
-- Add the example to the `tsconfig.json` file for type checking
-- Commit the example eg. `examples: Add example-name`
+- Update the docs/config.json file to include the new example in the navigation sidebar
+- Commit the example eg. `docs: Add example-name`
