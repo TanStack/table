@@ -38,7 +38,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-replace": "^5.0.2",
-    "@tanstack/config": "^0.1.5",
+    "@tanstack/config": "^0.1.6",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
