@@ -3,7 +3,7 @@
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "target": "ES2020",
     "module": "ES2020",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
