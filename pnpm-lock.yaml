@@ -1046,8 +1046,8 @@ importers:
         specifier: ^1.0.0-next.42
         version: 1.4.0(svelte@3.57.0)(vite@3.2.5)
       '@tanstack/svelte-table':
-        specifier: 8.11.2
-        version: 8.11.2(svelte@3.57.0)
+        specifier: ^8.11.3
+        version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1076,8 +1076,8 @@ importers:
         specifier: ^1.0.0-next.42
         version: 1.4.0(svelte@3.57.0)(vite@3.2.5)
       '@tanstack/svelte-table':
-        specifier: 8.11.2
-        version: 8.11.2(svelte@3.57.0)
+        specifier: ^8.11.3
+        version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1109,8 +1109,8 @@ importers:
         specifier: ^1.0.0-next.42
         version: 1.4.0(svelte@3.57.0)(vite@3.2.5)
       '@tanstack/svelte-table':
-        specifier: 8.11.2
-        version: 8.11.2(svelte@3.57.0)
+        specifier: ^8.11.3
+        version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1142,8 +1142,8 @@ importers:
         specifier: ^1.0.0-next.42
         version: 1.4.0(svelte@3.57.0)(vite@3.2.5)
       '@tanstack/svelte-table':
-        specifier: 8.11.2
-        version: 8.11.2(svelte@3.57.0)
+        specifier: ^8.11.3
+        version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1172,8 +1172,8 @@ importers:
         specifier: ^1.0.0-next.42
         version: 1.4.0(svelte@3.57.0)(vite@3.2.5)
       '@tanstack/svelte-table':
-        specifier: 8.11.2
-        version: 8.11.2(svelte@3.57.0)
+        specifier: ^8.11.3
+        version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1205,8 +1205,8 @@ importers:
         specifier: ^1.0.0-next.42
         version: 1.4.0(svelte@3.57.0)(vite@3.2.5)
       '@tanstack/svelte-table':
-        specifier: 8.11.2
-        version: 8.11.2(svelte@3.57.0)
+        specifier: ^8.11.3
+        version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^3.0.0
         version: 3.0.0
@@ -4610,21 +4610,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
-
-  /@tanstack/svelte-table@8.11.2(svelte@3.57.0):
-    resolution: {integrity: sha512-VCuoEsoMDIHv2cKkHpcDNT706hlBJWuU1zYUezzPr+1izU16CbzgywfbG6gYV3JXtCkOdaVzVlW+tH3orjD1nw==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      svelte: ^4.0.0 || ^3.49.0
-    dependencies:
-      '@tanstack/table-core': 8.11.2
-      svelte: 3.57.0
-    dev: true
-
-  /@tanstack/table-core@8.11.2:
-    resolution: {integrity: sha512-rR0VEQOtr0ARLvaNLaSQnt2BVwOp0OavOUA0LcZ3N45tLYXc4sXruNv8kJ7R7+5W1CrzGha217tzjBG83CpoMQ==}
-    engines: {node: '>=12'}
-    dev: true
 
   /@tanstack/virtual-core@3.0.0:
     resolution: {integrity: sha512-SYXOBTjJb05rXa2vl55TTwO40A6wKu0R5i1qQwhJYNDIqaIGF7D0HsLw+pJAyi2OvntlEIVusx3xtbbgSUi6zg==}
