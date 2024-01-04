@@ -12,3 +12,5 @@ Want to skip to the implementation? Check out these examples:
 ## API
 
 [Expanding API](../api/features/expanding)
+
+## Expanding Feature Guide

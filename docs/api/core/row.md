@@ -120,4 +120,4 @@ An array of the original subRows as returned by the `options.getSubRows` option.
 type getAllCells = () => Cell<TData>[]
 ```
 
-Returns all of the [Cells](./cell.md) for the row.
+Returns all of the [Cells](./cell) for the row.

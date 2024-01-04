@@ -50,12 +50,16 @@
           "to": "guide/migrating"
         },
         {
+          "label": "Tables (Getting Started)",
+          "to": "guide/tables"
+        },
+        {
           "label": "Column Defs",
           "to": "guide/column-defs"
         },
         {
-          "label": "Tables",
-          "to": "guide/tables"
+          "label": "Rows Models",
+          "to": "guide/row-models"
         },
         {
           "label": "Rows",
@@ -78,6 +82,10 @@
           "to": "guide/column-ordering"
         },
         {
+          "label": "Column Pinning",
+          "to": "guide/column-pinning"
+        },
+        {
           "label": "Column Sizing",
           "to": "guide/column-sizing"
         },
@@ -86,8 +94,20 @@
           "to": "guide/column-visibility"
         },
         {
-          "label": "Filters",
-          "to": "guide/filters"
+          "label": "Column Filtering",
+          "to": "guide/column-filtering"
+        },
+        {
+          "label": "Global Filtering",
+          "to": "guide/global-filtering"
+        },
+        {
+          "label": "Fuzzy Filtering",
+          "to": "guide/fuzzy-filtering"
+        },
+        {
+          "label": "Faceted Values",
+          "to": "guide/faceted-values"
         },
         {
           "label": "Sorting",
@@ -106,8 +126,8 @@
           "to": "guide/pagination"
         },
         {
-          "label": "Pinning",
-          "to": "guide/pinning"
+          "label": "Row Pinning",
+          "to": "guide/row-pinning"
         },
         {
           "label": "Row Selection",
