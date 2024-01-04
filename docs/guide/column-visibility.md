@@ -12,3 +12,5 @@ Want to skip to the implementation? Check out these examples:
 ## API
 
 [Column Visibility API](../api/features/column-visibility)
+
+## Column Visibility Guide

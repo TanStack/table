@@ -12,7 +12,7 @@ Want to skip to the implementation? Check out these examples:
 
 [Grouping API](../api/features/grouping)
 
-## Overview
+## Grouping Guide
 
 There are 3 table features that can reorder columns, which happen in the following order:
 

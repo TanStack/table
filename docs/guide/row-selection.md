@@ -14,7 +14,7 @@ Want to skip to the implementation? Check out these examples:
 
 [Row Selection API](../api/features/row-selection)
 
-## Guide
+## Row Selection Guide
 
 The row selection feature keeps track of which rows are selected and allows you to toggle the selection of rows in a myriad of ways. Let's take a look at some common use cases.
 

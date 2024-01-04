@@ -14,7 +14,6 @@ import { makeData, Person } from './makeData'
 import ColumnFilter from './ColumnFilter'
 import { createSignal, For } from 'solid-js'
 
-
 const columns: ColumnDef<Person>[] = [
   {
     header: 'Name',
@@ -70,8 +69,11 @@ const columns: ColumnDef<Person>[] = [
 function App() {
   const [data, setData] = createSignal(makeData(50000))
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>([])
-  const [globalFilter, setGlobalFilter] = createSignal("")
-  const debounceSetGlobalFilter = debounce((value:string) => setGlobalFilter(value), 500)
+  const [globalFilter, setGlobalFilter] = createSignal('')
+  const debounceSetGlobalFilter = debounce(
+    (value: string) => setGlobalFilter(value),
+    500
+  )
   const refreshData = () => setData(makeData(50000))
 
   const table = createSolidTable({
@@ -88,7 +90,7 @@ function App() {
       },
     },
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "includesString",
+    globalFilterFn: 'includesString',
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -103,11 +105,11 @@ function App() {
   return (
     <div class="p-2">
       <input
-            class="p-2 font-lg shadow border border-block"
-            value={globalFilter() ?? ""}
-            onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
-            placeholder="Search all columns..."
-          />
+        class="p-2 font-lg shadow border border-block"
+        value={globalFilter() ?? ''}
+        onInput={e => debounceSetGlobalFilter(e.currentTarget.value)}
+        placeholder="Search all columns..."
+      />
       <div className="h-2" />
       <table>
         <thead>
@@ -125,7 +127,10 @@ function App() {
                           )}
                           {header.column.getCanFilter() ? (
                             <div>
-                              <ColumnFilter column={header.column} table={table} />
+                              <ColumnFilter
+                                column={header.column}
+                                table={table}
+                              />
                             </div>
                           ) : null}
                         </>
