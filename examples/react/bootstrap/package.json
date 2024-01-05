@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
-    "@rollup/plugin-replace": "^5.0.1",
+    "@rollup/plugin-replace": "^5.0.5",
     "@types/bootstrap": "^5.2.6",
     "@types/react-bootstrap": "^0.32.32",
     "@vitejs/plugin-react": "^2.2.0",
