@@ -572,10 +572,10 @@ importers:
   examples/react/material-ui-pagination:
     dependencies:
       '@emotion/react':
-        specifier: ^11.9.3
+        specifier: ^11.10.5
         version: 11.10.6(@types/react@18.2.45)(react@18.2.0)
       '@emotion/styled':
-        specifier: ^11.9.3
+        specifier: ^11.10.5
         version: 11.10.6(@emotion/react@11.10.6)(@types/react@18.2.45)(react@18.2.0)
       '@mui/icons-material':
         specifier: ^5.8.4
