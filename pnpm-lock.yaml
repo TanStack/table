@@ -39,8 +39,8 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4(rollup@4.9.2)
       '@tanstack/config':
-        specifier: ^0.1.6
-        version: 0.1.6(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10)
+        specifier: ^0.1.7
+        version: 0.1.7(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10)
       '@testing-library/jest-dom':
         specifier: ^6.2.0
         version: 6.2.0(vitest@1.1.2)
@@ -4146,8 +4146,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/config@0.1.6(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10):
-    resolution: {integrity: sha512-QNyg/wawvs/idXFdECbHfyDC3TZ8nznrM/Zz75J41+YU1TUcBy7QZvjVw2NT97SPsKvnoXxWJjg/YPzxn9p1ZQ==}
+  /@tanstack/config@0.1.7(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10):
+    resolution: {integrity: sha512-+IbRTGbIEuWSNbouink96KL9aEGwhNzzy7DXtYg6CgCU5fpiGCIuNm7pGddEloTW1hHv+vvlqhlfx63F6ueWuA==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
@@ -8453,7 +8453,7 @@ packages:
   /uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
-      punycode: 2.3.0
+      punycode: 2.3.1
     dev: true
 
   /url-parse@1.5.10:
