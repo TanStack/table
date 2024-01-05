@@ -10,11 +10,13 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "jsx": "react",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "module": "ES2022",
     "moduleResolution": "Bundler",
+    "noImplicitReturns": false, // TODO enable
     "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": false, // TODO enable
+    "noUnusedParameters": false, // TODO enable
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
