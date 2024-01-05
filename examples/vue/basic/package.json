@@ -12,7 +12,7 @@
     "@tanstack/vue-table": "^8.11.3"
   },
   "devDependencies": {
-    "@types/node": "^16.11.27",
+    "@types/node": "^18.19.4",
     "@vitejs/plugin-vue": "^2.3.3",
     "typescript": "5.2.2",
     "vite": "^2.9.9",

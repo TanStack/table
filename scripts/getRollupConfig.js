@@ -3,8 +3,8 @@
 import { resolve } from 'node:path'
 import { babel } from '@rollup/plugin-babel'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { terser } from 'rollup-plugin-terser'
-// @ts-ignore
+import terser from '@rollup/plugin-terser'
+// @ts-expect-error
 import size from 'rollup-plugin-size'
 import replace from '@rollup/plugin-replace'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
