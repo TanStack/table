@@ -1,20 +1,20 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2020"],
-    "target": "ES2020",
-    "module": "ES2020",
-    "moduleResolution": "Bundler",
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "strictNullChecks": true,
-    "jsx": "react",
+    "baseUrl": ".",
+    "checkJs": true,
     "declaration": true,
     "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "allowJs": true,
-    "checkJs": true
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "ES2020"
   },
   "include": ["prettier.config.cjs"]
 }
