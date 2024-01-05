@@ -5,7 +5,6 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "baseUrl": ".",
     "checkJs": true,
     "declaration": true,
     "esModuleInterop": true,
@@ -19,7 +18,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": true,
     "target": "ES2020"
   },
   "include": ["prettier.config.cjs"]
