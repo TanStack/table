@@ -39,8 +39,8 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4(rollup@4.9.2)
       '@tanstack/config':
-        specifier: ^0.1.7
-        version: 0.1.7(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10)
+        specifier: ^0.1.8
+        version: 0.1.8(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10)
       '@testing-library/jest-dom':
         specifier: ^6.2.0
         version: 6.2.0(vitest@1.1.2)
@@ -4146,8 +4146,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/config@0.1.7(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10):
-    resolution: {integrity: sha512-+IbRTGbIEuWSNbouink96KL9aEGwhNzzy7DXtYg6CgCU5fpiGCIuNm7pGddEloTW1hHv+vvlqhlfx63F6ueWuA==}
+  /@tanstack/config@0.1.8(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10):
+    resolution: {integrity: sha512-PK1fMUI+iOU8nVPV8KBEa7HykN2kA7Z4In5LRxywNU77rAZ5qj5os6k+mmGtall+nQmPr0JqkCc7rkYkCCp2qA==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
