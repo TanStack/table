@@ -22,5 +22,5 @@
     "strict": true,
     "target": "ES2020"
   },
-  "include": ["prettier.config.cjs"]
+  "include": ["prettier.config.cjs", "scripts"]
 }
