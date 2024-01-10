@@ -474,8 +474,8 @@ export const Sorting: TableFeature = {
 
     column.getCanSort = () => {
       return (
-        (column.columnDef.enableSorting ?? true) &&
-        (table.options.enableSorting ?? true) &&
+        (table.options.enableSorting ?? false) &&
+        (column.columnDef.enableSorting ?? false) &&
         !!column.accessorFn
       )
     }
