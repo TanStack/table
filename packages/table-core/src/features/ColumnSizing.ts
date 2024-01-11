@@ -187,7 +187,7 @@ export interface ColumnSizingHeader {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getresizehandler)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  getResizeHandler: () => (event: unknown) => void
+  getResizeHandler: (context?: Document) => (event: unknown) => void
   /**
    * Returns the current size of the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getsize)
@@ -319,7 +319,7 @@ export const ColumnSizing: TableFeature = {
 
       return 0
     }
-    header.getResizeHandler = () => {
+    header.getResizeHandler = (contextDocument = document) => {
       const column = table.getColumn(header.column.id)
       const canResize = column?.getCanResize()
 
@@ -411,8 +411,8 @@ export const ColumnSizing: TableFeature = {
         const mouseEvents = {
           moveHandler: (e: MouseEvent) => onMove(e.clientX),
           upHandler: (e: MouseEvent) => {
-            document.removeEventListener('mousemove', mouseEvents.moveHandler)
-            document.removeEventListener('mouseup', mouseEvents.upHandler)
+            contextDocument.removeEventListener('mousemove', mouseEvents.moveHandler)
+            contextDocument.removeEventListener('mouseup', mouseEvents.upHandler)
             onEnd(e.clientX)
           },
         }
@@ -427,8 +427,8 @@ export const ColumnSizing: TableFeature = {
             return false
           },
           upHandler: (e: TouchEvent) => {
-            document.removeEventListener('touchmove', touchEvents.moveHandler)
-            document.removeEventListener('touchend', touchEvents.upHandler)
+            contextDocument.removeEventListener('touchmove', touchEvents.moveHandler)
+            contextDocument.removeEventListener('touchend', touchEvents.upHandler)
             if (e.cancelable) {
               e.preventDefault()
               e.stopPropagation()
@@ -442,23 +442,23 @@ export const ColumnSizing: TableFeature = {
           : false
 
         if (isTouchStartEvent(e)) {
-          document.addEventListener(
+          contextDocument.addEventListener(
             'touchmove',
             touchEvents.moveHandler,
             passiveIfSupported
           )
-          document.addEventListener(
+          contextDocument.addEventListener(
             'touchend',
             touchEvents.upHandler,
             passiveIfSupported
           )
         } else {
-          document.addEventListener(
+          contextDocument.addEventListener(
             'mousemove',
             mouseEvents.moveHandler,
             passiveIfSupported
           )
-          document.addEventListener(
+          contextDocument.addEventListener(
             'mouseup',
             mouseEvents.upHandler,
             passiveIfSupported
@@ -493,7 +493,7 @@ export const ColumnSizing: TableFeature = {
         defaultState
           ? getDefaultColumnSizingInfoState()
           : table.initialState.columnSizingInfo ??
-              getDefaultColumnSizingInfoState()
+          getDefaultColumnSizingInfoState()
       )
     }
     table.getTotalSize = () =>
