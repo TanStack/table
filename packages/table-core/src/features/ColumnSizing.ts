@@ -411,8 +411,14 @@ export const ColumnSizing: TableFeature = {
         const mouseEvents = {
           moveHandler: (e: MouseEvent) => onMove(e.clientX),
           upHandler: (e: MouseEvent) => {
-            contextDocument.removeEventListener('mousemove', mouseEvents.moveHandler)
-            contextDocument.removeEventListener('mouseup', mouseEvents.upHandler)
+            contextDocument.removeEventListener(
+              'mousemove',
+              mouseEvents.moveHandler
+            )
+            contextDocument.removeEventListener(
+              'mouseup',
+              mouseEvents.upHandler
+            )
             onEnd(e.clientX)
           },
         }
@@ -427,8 +433,14 @@ export const ColumnSizing: TableFeature = {
             return false
           },
           upHandler: (e: TouchEvent) => {
-            contextDocument.removeEventListener('touchmove', touchEvents.moveHandler)
-            contextDocument.removeEventListener('touchend', touchEvents.upHandler)
+            contextDocument.removeEventListener(
+              'touchmove',
+              touchEvents.moveHandler
+            )
+            contextDocument.removeEventListener(
+              'touchend',
+              touchEvents.upHandler
+            )
             if (e.cancelable) {
               e.preventDefault()
               e.stopPropagation()
@@ -493,7 +505,7 @@ export const ColumnSizing: TableFeature = {
         defaultState
           ? getDefaultColumnSizingInfoState()
           : table.initialState.columnSizingInfo ??
-          getDefaultColumnSizingInfoState()
+              getDefaultColumnSizingInfoState()
       )
     }
     table.getTotalSize = () =>
