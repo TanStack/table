@@ -319,7 +319,8 @@ export const ColumnSizing: TableFeature = {
 
       return 0
     }
-    header.getResizeHandler = (contextDocument = document) => {
+    header.getResizeHandler = _contextDocument => {
+      const contextDocument = _contextDocument || document
       const column = table.getColumn(header.column.id)
       const canResize = column?.getCanResize()
 
