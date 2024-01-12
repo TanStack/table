@@ -320,7 +320,6 @@ export const ColumnSizing: TableFeature = {
       return 0
     }
     header.getResizeHandler = _contextDocument => {
-      const contextDocument = _contextDocument || document
       const column = table.getColumn(header.column.id)
       const canResize = column?.getCanResize()
 
@@ -409,14 +408,17 @@ export const ColumnSizing: TableFeature = {
           }))
         }
 
+        const contextDocument =
+          _contextDocument || typeof document !== 'undefined' ? document : null
+
         const mouseEvents = {
           moveHandler: (e: MouseEvent) => onMove(e.clientX),
           upHandler: (e: MouseEvent) => {
-            contextDocument.removeEventListener(
+            contextDocument?.removeEventListener(
               'mousemove',
               mouseEvents.moveHandler
             )
-            contextDocument.removeEventListener(
+            contextDocument?.removeEventListener(
               'mouseup',
               mouseEvents.upHandler
             )
@@ -434,11 +436,11 @@ export const ColumnSizing: TableFeature = {
             return false
           },
           upHandler: (e: TouchEvent) => {
-            contextDocument.removeEventListener(
+            contextDocument?.removeEventListener(
               'touchmove',
               touchEvents.moveHandler
             )
-            contextDocument.removeEventListener(
+            contextDocument?.removeEventListener(
               'touchend',
               touchEvents.upHandler
             )
@@ -455,23 +457,23 @@ export const ColumnSizing: TableFeature = {
           : false
 
         if (isTouchStartEvent(e)) {
-          contextDocument.addEventListener(
+          contextDocument?.addEventListener(
             'touchmove',
             touchEvents.moveHandler,
             passiveIfSupported
           )
-          contextDocument.addEventListener(
+          contextDocument?.addEventListener(
             'touchend',
             touchEvents.upHandler,
             passiveIfSupported
           )
         } else {
-          contextDocument.addEventListener(
+          contextDocument?.addEventListener(
             'mousemove',
             mouseEvents.moveHandler,
             passiveIfSupported
           )
-          contextDocument.addEventListener(
+          contextDocument?.addEventListener(
             'mouseup',
             mouseEvents.upHandler,
             passiveIfSupported
