@@ -225,7 +225,9 @@ export const RowSelection: TableFeature = {
 
         const rowSelection = { ...old }
 
-        const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
+        const preGroupedFlatRows = table.options.enableSubRowSelection
+          ? table.getPreGroupedRowModel().flatRows
+          : table.getPreGroupedRowModel().rows
 
         // We don't use `mutateRowIsSelected` here for performance reasons.
         // All of the rows are flat already, so it wouldn't be worth it
