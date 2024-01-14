@@ -326,7 +326,7 @@ describe('RowSelection', () => {
       const data = makeData(2, 1)
       const columns = generateColumns(data)
 
-      let state: Partial<TableState> = {
+      const state: Partial<TableState> = {
         rowSelection: {},
       }
 
@@ -359,7 +359,7 @@ describe('RowSelection', () => {
       const data = makeData(2, 1)
       const columns = generateColumns(data)
 
-      let state: Partial<TableState> = {
+      const state: Partial<TableState> = {
         rowSelection: {},
       }
 
