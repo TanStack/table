@@ -40,7 +40,7 @@ importers:
         version: 0.4.4(rollup@4.9.2)
       '@tanstack/config':
         specifier: ^0.1.8
-        version: 0.1.8(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10)
+        version: 0.1.8(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.11)
       '@testing-library/jest-dom':
         specifier: ^6.2.0
         version: 6.2.0(vitest@1.1.2)
@@ -108,8 +108,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vitest:
         specifier: ^1.1.0
         version: 1.1.2(@types/node@18.19.4)(jsdom@23.0.1)
@@ -120,7 +120,7 @@ importers:
   examples/react/basic:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.11.3
+        specifier: ^8.11.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -134,10 +134,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/bootstrap:
     dependencies:
@@ -171,10 +171,10 @@ importers:
         version: 0.32.32
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-dnd:
     dependencies:
@@ -202,10 +202,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-groups:
     dependencies:
@@ -224,10 +224,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-ordering:
     dependencies:
@@ -249,10 +249,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-pinning:
     dependencies:
@@ -274,10 +274,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-resizing-performant:
     dependencies:
@@ -299,10 +299,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-sizing:
     dependencies:
@@ -321,10 +321,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/column-visibility:
     dependencies:
@@ -343,10 +343,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/editable-data:
     dependencies:
@@ -368,10 +368,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/expanding:
     dependencies:
@@ -393,10 +393,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/filters:
     dependencies:
@@ -421,10 +421,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/full-width-resizable-table:
     dependencies:
@@ -446,10 +446,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/full-width-table:
     dependencies:
@@ -471,10 +471,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/fully-controlled:
     dependencies:
@@ -496,10 +496,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/grouping:
     dependencies:
@@ -521,10 +521,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/kitchen-sink:
     dependencies:
@@ -567,10 +567,10 @@ importers:
         version: 18.2.18
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/material-ui-pagination:
     dependencies:
@@ -604,10 +604,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/pagination:
     dependencies:
@@ -629,10 +629,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/pagination-controlled:
     dependencies:
@@ -657,10 +657,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/row-dnd:
     dependencies:
@@ -688,10 +688,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/row-pinning:
     dependencies:
@@ -713,10 +713,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/row-selection:
     dependencies:
@@ -738,10 +738,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/sorting:
     dependencies:
@@ -763,10 +763,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/sub-components:
     dependencies:
@@ -788,10 +788,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/virtualized-columns:
     dependencies:
@@ -816,10 +816,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/virtualized-infinite-scrolling:
     dependencies:
@@ -827,30 +827,30 @@ importers:
         specifier: ^8.3.1
         version: 8.3.1
       '@tanstack/react-query':
-        specifier: 4.16.1
-        version: 4.16.1(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.17.12
+        version: 5.17.12(react@18.2.0)
       '@tanstack/react-table':
-        specifier: ^8.11.3
+        specifier: ^8.11.6
         version: link:../../../packages/react-table
+      '@tanstack/react-virtual':
+        specifier: ^3.0.1
+        version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      react-virtual:
-        specifier: ^2.10.4
-        version: 2.10.4(react@18.2.0)
     devDependencies:
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/react/virtualized-rows:
     dependencies:
@@ -875,10 +875,10 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.0.10)
+        version: 4.2.1(vite@5.0.11)
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/solid/basic:
     dependencies:
@@ -893,11 +893,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/solid/bootstrap:
     dependencies:
@@ -921,11 +921,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/solid/column-groups:
     dependencies:
@@ -940,11 +940,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/solid/column-ordering:
     dependencies:
@@ -962,11 +962,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/solid/column-visibility:
     dependencies:
@@ -981,11 +981,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/solid/filters:
     dependencies:
@@ -1006,11 +1006,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/solid/sorting:
     dependencies:
@@ -1028,11 +1028,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.6.15)(vite@5.0.10)
+        version: 2.8.0(solid-js@1.6.15)(vite@5.0.11)
 
   examples/svelte/basic:
     devDependencies:
@@ -1041,7 +1041,7 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.10)
+        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
       '@tanstack/svelte-table':
         specifier: ^8.11.3
         version: link:../../../packages/svelte-table
@@ -1058,8 +1058,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/svelte/column-groups:
     devDependencies:
@@ -1068,7 +1068,7 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.10)
+        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
       '@tanstack/svelte-table':
         specifier: ^8.11.3
         version: link:../../../packages/svelte-table
@@ -1085,8 +1085,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/svelte/column-ordering:
     devDependencies:
@@ -1098,7 +1098,7 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.10)
+        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
       '@tanstack/svelte-table':
         specifier: ^8.11.3
         version: link:../../../packages/svelte-table
@@ -1115,8 +1115,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/svelte/column-pinning:
     devDependencies:
@@ -1128,7 +1128,7 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.10)
+        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
       '@tanstack/svelte-table':
         specifier: ^8.11.3
         version: link:../../../packages/svelte-table
@@ -1145,8 +1145,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/svelte/column-visibility:
     devDependencies:
@@ -1155,7 +1155,7 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.10)
+        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
       '@tanstack/svelte-table':
         specifier: ^8.11.3
         version: link:../../../packages/svelte-table
@@ -1172,8 +1172,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/svelte/sorting:
     devDependencies:
@@ -1185,7 +1185,7 @@ importers:
         version: 5.0.5(rollup@4.9.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.10)
+        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
       '@tanstack/svelte-table':
         specifier: ^8.11.3
         version: link:../../../packages/svelte-table
@@ -1202,8 +1202,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
 
   examples/vue/basic:
     dependencies:
@@ -1219,13 +1219,13 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -1247,13 +1247,13 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -1275,13 +1275,13 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -1303,13 +1303,13 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -1331,13 +1331,13 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -1356,16 +1356,16 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       '@vitejs/plugin-vue-jsx':
         specifier: ^3.0.2
-        version: 3.1.0(vite@5.0.10)(vue@3.2.47)
+        version: 3.1.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -1387,13 +1387,13 @@ importers:
         version: 18.19.4
       '@vitejs/plugin-vue':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.0.10)(vue@3.2.47)
+        version: 4.6.0(vite@5.0.11)(vue@3.2.47)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^5.0.10
-        version: 5.0.10(@types/node@18.19.4)
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.4)
       vue-tsc:
         specifier: ^1.8.19
         version: 1.8.27(typescript@5.2.2)
@@ -3775,10 +3775,6 @@ packages:
       zeptomatch: 1.2.2
     dev: true
 
-  /@reach/observe-rect@1.2.0:
-    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
-    dev: false
-
   /@react-aria/ssr@3.5.0(react@18.2.0):
     resolution: {integrity: sha512-h0MJdSWOd1qObLnJ8mprU31wI8tmKFJMuwT22MpWq6psisOOZaga6Ml4u6Ee6M6duWWISjXvqO4Sb/J0PBA+nQ==}
     peerDependencies:
@@ -4104,7 +4100,7 @@ packages:
       solid-js: 1.6.15
     dev: false
 
-  /@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.10):
+  /@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11):
     resolution: {integrity: sha512-gjr9ZFg1BSlIpfZ4PRewigrvYmHWbDrq2uvvPB1AmTWKuM+dI1JXQSUu2pIrYLb/QncyiIGkFDFKTwJ0XqQZZg==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
@@ -4112,30 +4108,30 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.0.1(svelte@4.2.8)(vite@5.0.10)
+      '@sveltejs/vite-plugin-svelte': 3.0.1(svelte@4.2.8)(vite@5.0.11)
       debug: 4.3.4
       svelte: 4.2.8
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.8)(vite@5.0.10):
+  /@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.8)(vite@5.0.11):
     resolution: {integrity: sha512-CGURX6Ps+TkOovK6xV+Y2rn8JKa8ZPUHPZ/NKgCxAmgBrXReavzFl8aOSCj3kQ1xqT7yGJj53hjcV/gqwDAaWA==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.10)
+      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.5
       svelte: 4.2.8
       svelte-hmr: 0.15.3(svelte@4.2.8)
-      vite: 5.0.10(@types/node@18.19.4)
-      vitefu: 0.2.5(vite@5.0.10)
+      vite: 5.0.11(@types/node@18.19.4)
+      vitefu: 0.2.5(vite@5.0.11)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4146,7 +4142,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/config@0.1.8(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10):
+  /@tanstack/config@0.1.8(@types/node@18.19.4)(esbuild@0.19.10)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.11):
     resolution: {integrity: sha512-PK1fMUI+iOU8nVPV8KBEa7HykN2kA7Z4In5LRxywNU77rAZ5qj5os6k+mmGtall+nQmPr0JqkCc7rkYkCCp2qA==}
     engines: {node: '>=18'}
     hasBin: true
@@ -4165,8 +4161,8 @@ packages:
       semver: 7.5.4
       stream-to-array: 2.3.0
       v8flags: 4.0.1
-      vite-plugin-dts: 3.7.0(@types/node@18.19.4)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10)
-      vite-plugin-externalize-deps: 0.8.0(vite@5.0.10)
+      vite-plugin-dts: 3.7.0(@types/node@18.19.4)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.11)
+      vite-plugin-externalize-deps: 0.8.0(vite@5.0.11)
     transitivePeerDependencies:
       - '@types/node'
       - esbuild
@@ -4176,26 +4172,17 @@ packages:
       - vite
     dev: true
 
-  /@tanstack/query-core@4.15.1:
-    resolution: {integrity: sha512-+UfqJsNbPIVo0a9ANW0ZxtjiMfGLaaoIaL9vZeVycvmBuWywJGtSi7fgPVMCPdZQFOzMsaXaOsDtSKQD5xLRVQ==}
+  /@tanstack/query-core@5.17.10:
+    resolution: {integrity: sha512-bJ2oQUDBftvHcEkLS3gyzzShSeZpJyzNNRu8oHK13iNdsofyaDXtNO/c1Zy/PZYVX+PhqOXwoT42gMiEMRSSfQ==}
     dev: false
 
-  /@tanstack/react-query@4.16.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-PDE9u49wSDykPazlCoLFevUpceLjQ0Mm8i6038HgtTEKb/aoVnUZdlUP7C392ds3Cd75+EGlHU7qpEX06R7d9Q==}
+  /@tanstack/react-query@5.17.12(react@18.2.0):
+    resolution: {integrity: sha512-mJQ+3da1ug4t9b+GycUuNzMs5hd6t+F4tJ1hqyaN/dlETP+bWwYwrv2GXFIbZIfI1K1Hu+XWZ6HUhRPbNtZ4QQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 4.15.1
+      '@tanstack/query-core': 5.17.10
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /@tanstack/react-virtual@3.0.1(react-dom@18.2.0)(react@18.2.0):
@@ -4413,7 +4400,7 @@ packages:
     resolution: {integrity: sha512-t/Tvs5qR47OLOr+4E9ckN8AmP2Tf16gWq+/qA4iUGS/OOyHVO8wv2vjJuX8SNOUTJyWb+2t7wJm6cXILFnOROA==}
     dev: false
 
-  /@vitejs/plugin-react@4.2.1(vite@5.0.10):
+  /@vitejs/plugin-react@4.2.1(vite@5.0.11):
     resolution: {integrity: sha512-oojO9IDc4nCUUi8qIR11KoQm0XFFLIwsRBwHRR4d/88IWghn1y6ckz/bJ8GHDCsYEJee8mDzqtJxh15/cisJNQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -4424,12 +4411,12 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.7)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue-jsx@3.1.0(vite@5.0.10)(vue@3.2.47):
+  /@vitejs/plugin-vue-jsx@3.1.0(vite@5.0.11)(vue@3.2.47):
     resolution: {integrity: sha512-w9M6F3LSEU5kszVb9An2/MmXNxocAnUb3WhRr8bHlimhDrXNt6n6D2nJQR3UXpGlZHh/EsgouOHCsM8V3Ln+WA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -4439,20 +4426,20 @@ packages:
       '@babel/core': 7.23.6
       '@babel/plugin-transform-typescript': 7.23.6(@babel/core@7.23.6)
       '@vue/babel-plugin-jsx': 1.1.5(@babel/core@7.23.6)
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
       vue: 3.2.47
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue@4.6.0(vite@5.0.10)(vue@3.2.47):
+  /@vitejs/plugin-vue@4.6.0(vite@5.0.11)(vue@3.2.47):
     resolution: {integrity: sha512-XHuyFdAikWRmHuAd89FOyUGIjrBU5KlxJtyi2hVeR9ySGFxQwE0bl5xAQju/ArMq5azdBivY4d+D2yPKwoYWUg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
       vue: 3.2.47
     dev: true
 
@@ -7406,15 +7393,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /react-virtual@2.10.4(react@18.2.0):
-    resolution: {integrity: sha512-Ir6+oPQZTVHfa6+JL9M7cvMILstFZH/H3jqeYeKI4MSUX+rIruVwFC6nGVXw9wqAw8L0Kg2KvfXxI85OvYQdpQ==}
-    peerDependencies:
-      react: ^16.6.3 || ^17.0.0
-    dependencies:
-      '@reach/observe-rect': 1.2.0
-      react: 18.2.0
-    dev: false
-
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -8463,14 +8441,6 @@ packages:
       requires-port: 1.0.0
     dev: true
 
-  /use-sync-external-store@1.2.0(react@18.2.0):
-    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-    dev: false
-
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
@@ -8498,7 +8468,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -8510,7 +8480,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-dts@3.7.0(@types/node@18.19.4)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.10):
+  /vite-plugin-dts@3.7.0(@types/node@18.19.4)(rollup@4.9.2)(typescript@5.2.2)(vite@5.0.11):
     resolution: {integrity: sha512-np1uPaYzu98AtPReB8zkMnbjwcNHOABsLhqVOf81b3ol9b5M2wPcAVs8oqPnOpr6Us+7yDXVauwkxsk5+ldmRA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -8526,7 +8496,7 @@ packages:
       debug: 4.3.4
       kolorist: 1.8.0
       typescript: 5.2.2
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
       vue-tsc: 1.8.27(typescript@5.2.2)
     transitivePeerDependencies:
       - '@types/node'
@@ -8534,15 +8504,15 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-externalize-deps@0.8.0(vite@5.0.10):
+  /vite-plugin-externalize-deps@0.8.0(vite@5.0.11):
     resolution: {integrity: sha512-MdC8kRNQ1ZjhUicU2HcqGVhL0UUFqv83Zp1JZdHjE82PoPR8wsSWZ3axpot7B6img3sW6g8shYJikE0CKA0chA==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
     dev: true
 
-  /vite-plugin-solid@2.8.0(solid-js@1.6.15)(vite@5.0.10):
+  /vite-plugin-solid@2.8.0(solid-js@1.6.15)(vite@5.0.11):
     resolution: {integrity: sha512-n5FAm7ZmTl94VWUoiJCgG7bouF2NlC9CA1wY/qbVnkFbYDWk++bFWyNoU48aLJ+lMtzNeYzJypJXOHzFKxL9xA==}
     peerDependencies:
       solid-js: ^1.7.2
@@ -8555,14 +8525,14 @@ packages:
       merge-anything: 5.1.7
       solid-js: 1.6.15
       solid-refresh: 0.5.3(solid-js@1.6.15)
-      vite: 5.0.10(@types/node@18.19.4)
-      vitefu: 0.2.5(vite@5.0.10)
+      vite: 5.0.11(@types/node@18.19.4)
+      vitefu: 0.2.5(vite@5.0.11)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /vite@5.0.10(@types/node@18.19.4):
-    resolution: {integrity: sha512-2P8J7WWgmc355HUMlFrwofacvr98DAjoE52BfdbwQtyLH06XKwaL/FMnmKM2crF0iX4MpmMKoDlNCB1ok7zHCw==}
+  /vite@5.0.11(@types/node@18.19.4):
+    resolution: {integrity: sha512-XBMnDjZcNAw/G1gEiskiM1v6yzM4GE5aMGvhWTlHAYYhxb7S3/V1s3m2LDHa8Vh6yIWYYB0iJwsEaS523c4oYA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -8597,7 +8567,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitefu@0.2.5(vite@5.0.10):
+  /vitefu@0.2.5(vite@5.0.11):
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -8605,7 +8575,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
     dev: true
 
   /vitest@1.1.2(@types/node@18.19.4)(jsdom@23.0.1):
@@ -8653,7 +8623,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.8.1
-      vite: 5.0.10(@types/node@18.19.4)
+      vite: 5.0.11(@types/node@18.19.4)
       vite-node: 1.1.2(@types/node@18.19.4)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:

@@ -8,7 +8,14 @@ table {
   border-spacing: 0;
   font-family: arial, sans-serif;
   table-layout: fixed;
-  width: 100%;
+}
+
+thead {
+  background: lightgray;
+}
+
+tr {
+  border-bottom: 1px solid lightgray;
 }
 
 th {
@@ -24,7 +31,10 @@ td {
 
 .container {
   border: 1px solid lightgray;
-  height: 500px;
-  max-width: 900px !important;
-  overflow: auto;
+  margin: 1rem auto;
+}
+
+.app {
+  margin: 1rem auto;
+  text-align: center;
 }

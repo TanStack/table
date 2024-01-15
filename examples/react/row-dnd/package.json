@@ -19,6 +19,6 @@
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.5",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.10"
+    "vite": "^5.0.11"
   }
 }
