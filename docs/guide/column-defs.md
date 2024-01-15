@@ -6,7 +6,7 @@ title: Columns
 
 [Table API](../api/core/table)
 
-## Guide
+## Column Definitions Guide
 
 Column defs are the single most important part of building a table. They are responsible for:
 
