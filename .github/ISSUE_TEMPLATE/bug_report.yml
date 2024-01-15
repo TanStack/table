@@ -11,23 +11,46 @@ body:
         inside of react-table's [Discussions tab](https://github.com/tanstack/table/discussions) instead of filing an issue.
 
         Before submitting a new bug/issue, please check the links below to see if there is a solution or question posted there already:
-        - react-table's [Discussions tab](https://github.com/tanstack/table/discussions)
-        - react-table's [Open Issues](https://github.com/tanstack/table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-        - react-table's [Closed Issues](https://github.com/tanstack/table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
+        - TanStack Table's [Discussions tab](https://github.com/tanstack/table/discussions)
+        - TanStack Table's [Open Issues](https://github.com/tanstack/table/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+        - TanStack Table's [Closed Issues](https://github.com/tanstack/table/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)
 
         The more information you fill in, the better the community can help you.
+
+  - type: input
+    id: tanstack-table-version
+    attributes:
+      label: TanStack Table version
+      description: |
+        - Please let us know the exact version of the TanStack Table framework adapter that you were using when the issue occurred. If you are using an older version, check to see if your bug has already been solved in the latest version. Please don't just put in "latest", as this is subject to change.
+        - The latest "table-core" version is <img alt="" src="https://badgen.net/npm/v/@tanstack/react-table" />
+      placeholder: |
+        e.g. v8.11.6
+    validations:
+      required: true
+
+  - type: input
+    id: framework-library-version
+    attributes:
+      label: Framework/Library version
+      description: Which framework and what version of that framework are you using?
+      placeholder: |
+        e.g. React v17.0.2
+    validations:
+      required: true
 
   - type: textarea
     id: description
     attributes:
-      label: Describe the bug
-      description: Provide a clear and concise description of the challenge you are running into.
+      label: Describe the bug and the steps to reproduce it
+      description: Provide a clear and concise description of the challenge you are running into, and the steps we should take to try to reproduce your bug.
     validations:
       required: true
+
   - type: input
     id: link
     attributes:
-      label: Your minimal, reproducible example
+      label: Your Minimal, Reproducible Example - (Sandbox Highly Recommended)
       description: |
         Please add a link to a minimal reproduction.
         Note:
@@ -39,81 +62,32 @@ body:
           - For TypeScript related issues only, a TypeScript Playground link might be sufficient: https://www.typescriptlang.org/play
           - Please read these tips for providing a minimal example: https://stackoverflow.com/help/mcve.
       placeholder: |
-        e.g. Code Sandbox, Stackblitz, Expo Snack or TypeScript playground
+        e.g. Code Sandbox, Stackblitz, TypeScript Playground, etc.
     validations:
       required: true
-  - type: textarea
-    id: steps
-    attributes:
-      label: Steps to reproduce
-      description: Describe the steps we have to take to reproduce the behavior.
-      placeholder: |
-        1. Go to '...' 2. Click on '....' 3. Scroll down to '....' 4. See error
-    validations:
-      required: true
-  - type: textarea
-    id: expected
-    attributes:
-      label: Expected behavior
-      description: Provide a clear and concise description of what you expected to happen.
-      placeholder: |
-        As a user, I expected **_ behavior but i am seeing _**
-    validations:
-      required: true
-  - type: dropdown
-    attributes:
-      options:
-        - Every time
-        - Often
-        - Sometimes
-        - Only once
-      label: How often does this bug happen?
-      description: |
-        Following the repro steps above, how easily are you able to reproduce this bug?
-        options: - Every time - Often - Sometimes - Only once
+
   - type: textarea
     id: screenshots_or_videos
     attributes:
-      label: Screenshots or Videos
+      label: Screenshots or Videos (Optional)
       description: |
         If applicable, add screenshots or a video to help explain your problem.
         For more information on the supported file image/file types and the file size limits, please refer
         to the following link: https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files
       placeholder: |
         You can drag your video or image files inside of this editor ↓
-  - type: textarea
-    id: platform
+
+  - type: dropdown
     attributes:
-      label: Platform
+      options:
+        - No, because I do not know how
+        - No, because I do not have time to dig into it
+        - Maybe, I'll investigate and start debugging
+        - Yes, I think I know how to fix it and will discuss it in the comments of this issue
+        - Yes, I am also opening a PR that solves the problem along side this issue
+      label: Do you intend to try to help solve this bug with your own PR?
       description: |
-        Please let us know which Operting System, Browser and Browser version you were using when the issue occurred.
-      placeholder: |
-        - OS: [e.g. macOS, Windows, Linux, iOS, Android] - Browser: [e.g. Chrome, Safari, Firefox, React Native] - Version: [e.g. 91.1]
-    validations:
-      required: true
-  - type: input
-    id: library-version
-    attributes:
-      label: react-table version
-      description: |
-        Please let us know the exact version of react-table you were using when the issue occurred. Please don't just put in "latest", as this is subject to change.
-      placeholder: |
-        e.g. v3.30.1
-    validations:
-      required: true
-  - type: input
-    id: ts-version
-    attributes:
-      label: TypeScript version
-      description: |
-        If you are using TypeScript, please let us know the exact version of TypeScript you were using when the issue occurred.
-      placeholder: |
-        e.g. v4.5.4
-  - type: textarea
-    id: additional
-    attributes:
-      label: Additional context
-      description: Add any other context about the problem here.
+        If you think you know the cause of the problem, the fastest way to get it fixed is to suggest a fix, or fix it yourself! However, it is ok if you cannot solve this yourself and are just wanting help.
   - type: checkboxes
     id: agrees-to-terms
     attributes:
