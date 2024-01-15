@@ -20,7 +20,7 @@ export type PersonApiResponse = {
 }
 
 const range = (len: number) => {
-  const arr = []
+  const arr: number[] = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }
@@ -60,7 +60,7 @@ export function makeData(...lens: number[]) {
 const data = makeData(1000)
 
 //simulates a backend api
-export const fetchData = (
+export const fetchData = async (
   start: number,
   size: number,
   sorting: SortingState
@@ -76,6 +76,9 @@ export const fetchData = (
       return a[id] > b[id] ? 1 : -1
     })
   }
+
+  //simulate a backend api
+  await new Promise(resolve => setTimeout(resolve, 200))
 
   return {
     data: dbData.slice(start, start + size),

@@ -99,8 +99,8 @@ function App() {
       {process.env.NODE_ENV === 'development' ? (
         <p>
           <strong>Notice:</strong> You are currently running React in
-          development mode. Rendering performance will be slightly degraded
-          until this application is built for production.
+          development mode. Virtualized rendering performance will be slightly
+          degraded until this application is built for production.
         </p>
       ) : null}
       ({data.length} rows)
