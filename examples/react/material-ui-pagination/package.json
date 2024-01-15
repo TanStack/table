@@ -9,11 +9,11 @@
     "start": "vite"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.8.6",
-    "@tanstack/react-table": "^8.11.3",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.4",
+    "@mui/material": "^5.15.4",
+    "@tanstack/react-table": "^8.11.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

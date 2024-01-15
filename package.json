@@ -30,7 +30,7 @@
   "namespace": "@tanstack",
   "devDependencies": {
     "@babel/core": "^7.23.7",
-    "@babel/preset-env": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@faker-js/faker": "^8.3.1",
@@ -48,22 +48,22 @@
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "babel-plugin-transform-async-to-promises": "^0.8.18",
-    "jsdom": "^23.0.1",
+    "jsdom": "^23.2.0",
     "nx": "^17.2.8",
     "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^5.0.5",
-    "rollup": "^4.9.2",
+    "rollup": "^4.9.5",
     "rollup-plugin-size": "^0.3.1",
     "rollup-plugin-svelte": "^7.1.6",
     "rollup-plugin-visualizer": "^5.12.0",
-    "solid-js": "^1.6.2",
+    "solid-js": "^1.8.11",
     "svelte": "^4.2.8",
-    "typescript": "5.2.2",
+    "typescript": "5.3.3",
     "vite": "^5.0.11",
-    "vitest": "^1.1.0",
-    "vue": "^3.2.33"
+    "vitest": "^1.2.0",
+    "vue": "^3.4.14"
   }
 }
