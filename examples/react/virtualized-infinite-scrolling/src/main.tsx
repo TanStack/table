@@ -9,8 +9,10 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  OnChangeFn,
   Row,
   SortingState,
+  Updater,
   useReactTable,
 } from '@tanstack/react-table'
 import {
@@ -121,18 +123,10 @@ function App() {
     [fetchNextPage, isFetching, totalFetched, totalDBRowCount]
   )
 
-  //a check on mount to see if the table is already scrolled to the bottom and immediately needs to fetch more data
+  //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   React.useEffect(() => {
     fetchMoreOnBottomReached(tableContainerRef.current)
   }, [fetchMoreOnBottomReached])
-
-  //scroll to top of table when sorting or filters change
-  React.useEffect(() => {
-    //scroll to the top of the table when the sorting changes
-    if (!!flatData.length) {
-      rowVirtualizer.scrollToIndex?.(0)
-    }
-  }, [sorting])
 
   const table = useReactTable({
     data: flatData,
@@ -140,12 +134,25 @@ function App() {
     state: {
       sorting,
     },
-    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualSorting: true,
     debugTable: true,
   })
+
+  //scroll to top of table when sorting changes
+  const handleSortingChange: OnChangeFn<SortingState> = updater => {
+    setSorting(updater)
+    if (!!table.getRowModel().rows.length) {
+      rowVirtualizer.scrollToIndex?.(0)
+    }
+  }
+
+  //since this table option is derived from table row model state, we're using the table.setOptions utility
+  table.setOptions(prev => ({
+    ...prev,
+    onSortingChange: handleSortingChange,
+  }))
 
   const { rows } = table.getRowModel()
 
