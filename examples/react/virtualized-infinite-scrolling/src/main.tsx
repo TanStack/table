@@ -12,7 +12,6 @@ import {
   OnChangeFn,
   Row,
   SortingState,
-  Updater,
   useReactTable,
 } from '@tanstack/react-table'
 import {
