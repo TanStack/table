@@ -78,7 +78,7 @@ export const fetchData = async (
   }
 
   //simulate a backend api
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  await new Promise(resolve => setTimeout(resolve, 200))
 
   return {
     data: dbData.slice(start, start + size),
