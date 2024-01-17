@@ -48,7 +48,7 @@ export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
   : unknown extends T
     ? string
     : object extends T
-      ? string
+      ? (keyof T & string)
       : T extends readonly any[] & IsTuple<T>
         ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
         : T extends any[]
