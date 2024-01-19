@@ -7,8 +7,7 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    "isolatedModules": true
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }
