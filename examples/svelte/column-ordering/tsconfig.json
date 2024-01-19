@@ -1,21 +1,13 @@
 {
-  "extends": "../../../tsconfig.json",
-  // "extends": "@tsconfig/svelte/tsconfig.json",
+  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
     "useDefineForClassFields": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true,
-    "baseUrl": "."
+    "allowJs": true,
+    "checkJs": true,
+    "isolatedModules": true
   },
-  "files": ["src/main.ts"],
-  "include": [
-    "src"
-    // "src/**/*.d.ts",
-    // "src/**/*.ts",
-    // "src/**/*.js",
-    // "src/**/*.svelte"
-    // "__tests__/**/*.test.*"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }
