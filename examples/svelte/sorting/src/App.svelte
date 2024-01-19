@@ -7,7 +7,7 @@
     flexRender,
   } from '@tanstack/svelte-table'
   import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
-  import { makeData, Person } from './makeData'
+  import { makeData, type Person } from './makeData'
   import './index.css'
 
   const columns: ColumnDef<Person>[] = [

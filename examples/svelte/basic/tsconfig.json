@@ -6,6 +6,7 @@
     "useDefineForClassFields": true,
     "module": "esnext",
     "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
     "baseUrl": "."
   },
   "files": ["src/main.ts"],
