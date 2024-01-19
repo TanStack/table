@@ -6,8 +6,8 @@
     getSortedRowModel,
     flexRender,
   } from '@tanstack/svelte-table'
-  import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types'
-  import { makeData, Person } from './makeData'
+  import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
+  import { makeData, type Person } from './makeData'
   import './index.css'
 
   const columns: ColumnDef<Person>[] = [

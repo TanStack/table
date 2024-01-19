@@ -6,7 +6,7 @@
     getSortedRowModel,
     flexRender,
   } from '@tanstack/svelte-table'
-  import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types'
+  import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
   import './index.css'
 
   type Person = {
