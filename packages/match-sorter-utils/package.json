@@ -1,19 +1,21 @@
 {
   "name": "@tanstack/match-sorter-utils",
-  "authors": [
+  "version": "8.11.3",
+  "description": "A fork of match-sorter with separated filtering and sorting phases",
+  "contributors": [
     "Kent C. Dodds",
     "Tanner Linsley"
   ],
-  "version": "8.11.3",
-  "description": "A fork of match-sorter with separated filtering and sorting phases",
   "license": "MIT",
-  "homepage": "https://github.com/tanstack/table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanstack/table.git"
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/match-sorter-utils"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "react",
@@ -24,10 +26,6 @@
     "separate",
     "datagrid"
   ],
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/kentcdodds"
-  },
   "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
