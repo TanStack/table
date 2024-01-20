@@ -1,16 +1,18 @@
 {
   "name": "@tanstack/table-core",
-  "author": "Tanner Linsley",
   "version": "8.11.6",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
+  "author": "Tanner Linsley",
   "license": "MIT",
-  "homepage": "https://github.com/tanstack/table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanstack/table.git"
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/table-core"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "react",
@@ -20,10 +22,6 @@
     "table-core",
     "datagrid"
   ],
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/tannerlinsley"
-  },
   "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
