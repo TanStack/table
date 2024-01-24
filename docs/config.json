@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/TanStack/tanstack.com/main/tanstack-docs-config.schema.json",
   "docSearch": {
     "appId": "74SF5EKVW9",
     "apiKey": "9fc015a3310be6669ed66c6c459f319f",
@@ -6,45 +7,33 @@
   },
   "menu": [
     {
-      "label": "Adapters",
+      "label": "Getting Started",
       "children": [
         {
-          "label": "React Table",
-          "to": "adapters/react-table"
+          "label": "Introduction",
+          "to": "introduction"
         },
         {
-          "label": "Solid Table",
-          "to": "adapters/solid-table"
+          "label": "Overview",
+          "to": "overview"
         },
         {
-          "label": "Svelte Table",
-          "to": "adapters/svelte-table"
+          "label": "Installation",
+          "to": "installation"
         },
         {
-          "label": "Vue Table",
-          "to": "adapters/vue-table"
+          "label": "FAQ",
+          "to": "faq"
         },
         {
           "label": "Vanilla JS/TS",
-          "to": "adapters/vanilla"
+          "to": "vanilla"
         }
       ]
     },
     {
-      "label": "Guide",
+      "label": "Guides",
       "children": [
-        {
-          "label": "Introduction",
-          "to": "guide/introduction"
-        },
-        {
-          "label": "Overview",
-          "to": "guide/overview"
-        },
-        {
-          "label": "Installation",
-          "to": "guide/installation"
-        },
         {
           "label": "Migrating to V8",
           "to": "guide/migrating"
@@ -225,217 +214,270 @@
           "to": "enterprise/ag-grid"
         }
       ]
-    },
+    }
+  ],
+  "frameworkMenus": [
     {
-      "label": "React Examples",
-      "children": [
+      "framework": "react",
+      "menuItems": [
         {
-          "to": "examples/react/basic",
-          "label": "Basic"
+          "label": "Getting Started",
+          "children": [
+            {
+              "label": "React Table",
+              "to": "framework/react/react-table"
+            }
+          ]
         },
         {
-          "to": "examples/react/column-groups",
-          "label": "Column Groups"
-        },
-        {
-          "to": "examples/react/column-ordering",
-          "label": "Column Ordering"
-        },
-        {
-          "to": "examples/react/column-dnd",
-          "label": "Column Ordering (DnD)"
-        },
-        {
-          "to": "examples/react/column-pinning",
-          "label": "Column Pinning"
-        },
-        {
-          "to": "examples/react/column-sizing",
-          "label": "Column Sizing"
-        },
-        {
-          "to": "examples/react/column-resizing-performant",
-          "label": "Performant Column Resizing"
-        },
-        {
-          "to": "examples/react/column-visibility",
-          "label": "Column Visibility"
-        },
-        {
-          "to": "examples/react/editable-data",
-          "label": "Editable Data"
-        },
-        {
-          "to": "examples/react/expanding",
-          "label": "Expanding"
-        },
-        {
-          "to": "examples/react/sub-components",
-          "label": "Sub Components"
-        },
-        {
-          "to": "examples/react/filters",
-          "label": "Filters"
-        },
-        {
-          "to": "examples/react/fully-controlled",
-          "label": "Fully Controlled"
-        },
-        {
-          "to": "examples/react/grouping",
-          "label": "Grouping"
-        },
-        {
-          "to": "examples/react/pagination",
-          "label": "Pagination"
-        },
-        {
-          "to": "examples/react/pagination-controlled",
-          "label": "Pagination Controlled"
-        },
-        {
-          "to": "examples/react/row-dnd",
-          "label": "Row DnD"
-        },
-        {
-          "to": "examples/react/row-pinning",
-          "label": "Row Pinning"
-        },
-        {
-          "to": "examples/react/row-selection",
-          "label": "Row Selection"
-        },
-        {
-          "to": "examples/react/sorting",
-          "label": "Sorting"
-        },
-        {
-          "to": "examples/react/virtualized-columns",
-          "label": "Virtualized Columns"
-        },
-        {
-          "to": "examples/react/virtualized-rows",
-          "label": "Virtualized Rows"
-        },
-        {
-          "to": "examples/react/virtualized-infinite-scrolling",
-          "label": "Virtualized Infinite Scrolling"
-        },
-        {
-          "to": "examples/react/kitchen-sink",
-          "label": "Kitchen Sink"
+          "label": "Examples",
+          "children": [
+            {
+              "to": "framework/react/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/react/examples/column-groups",
+              "label": "Column Groups"
+            },
+            {
+              "to": "framework/react/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/react/examples/column-dnd",
+              "label": "Column Ordering (DnD)"
+            },
+            {
+              "to": "framework/react/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "framework/react/examples/column-sizing",
+              "label": "Column Sizing"
+            },
+            {
+              "to": "framework/react/examples/column-resizing-performant",
+              "label": "Performant Column Resizing"
+            },
+            {
+              "to": "framework/react/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/react/examples/editable-data",
+              "label": "Editable Data"
+            },
+            {
+              "to": "framework/react/examples/expanding",
+              "label": "Expanding"
+            },
+            {
+              "to": "framework/react/examples/sub-components",
+              "label": "Sub Components"
+            },
+            {
+              "to": "framework/react/examples/filters",
+              "label": "Filters"
+            },
+            {
+              "to": "framework/react/examples/fully-controlled",
+              "label": "Fully Controlled"
+            },
+            {
+              "to": "framework/react/examples/grouping",
+              "label": "Grouping"
+            },
+            {
+              "to": "framework/react/examples/pagination",
+              "label": "Pagination"
+            },
+            {
+              "to": "framework/react/examples/pagination-controlled",
+              "label": "Pagination Controlled"
+            },
+            {
+              "to": "framework/react/examples/row-dnd",
+              "label": "Row DnD"
+            },
+            {
+              "to": "framework/react/examples/row-pinning",
+              "label": "Row Pinning"
+            },
+            {
+              "to": "framework/react/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/react/examples/sorting",
+              "label": "Sorting"
+            },
+            {
+              "to": "framework/react/examples/virtualized-columns",
+              "label": "Virtualized Columns"
+            },
+            {
+              "to": "framework/react/examples/virtualized-rows",
+              "label": "Virtualized Rows"
+            },
+            {
+              "to": "framework/react/examples/virtualized-infinite-scrolling",
+              "label": "Virtualized Infinite Scrolling"
+            },
+            {
+              "to": "framework/react/examples/kitchen-sink",
+              "label": "Kitchen Sink"
+            },
+            {
+              "to": "framework/react/examples/bootstrap",
+              "label": "React Bootstrap"
+            },
+            {
+              "to": "framework/react/examples/material-ui-pagination",
+              "label": "Material UI Pagination"
+            },
+            {
+              "to": "framework/react/examples/full-width-table",
+              "label": "React Full Width"
+            },
+            {
+              "to": "framework/react/examples/full-width-resizable-table",
+              "label": "React Full Width Resizable"
+            }
+          ]
         }
       ]
     },
     {
-      "label": "Solid Examples",
-      "children": [
+      "framework": "solid",
+      "menuItems": [
         {
-          "to": "examples/solid/basic",
-          "label": "Basic"
+          "label": "Getting Started",
+          "children": [
+            {
+              "label": "Solid Table",
+              "to": "framework/solid/solid-table"
+            }
+          ]
         },
         {
-          "to": "examples/solid/column-groups",
-          "label": "Column Groups"
-        },
-        {
-          "to": "examples/solid/column-ordering",
-          "label": "Column Ordering"
-        },
-        {
-          "to": "examples/solid/column-visibility",
-          "label": "Column Visibility"
-        },
-        {
-          "to": "examples/solid/filters",
-          "label": "Filters"
-        },
-        {
-          "to": "examples/solid/sorting",
-          "label": "Sorting"
+          "label": "Examples",
+          "children": [
+            {
+              "to": "framework/solid/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/solid/examples/column-groups",
+              "label": "Column Groups"
+            },
+            {
+              "to": "framework/solid/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/solid/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/solid/examples/filters",
+              "label": "Filters"
+            },
+            {
+              "to": "framework/solid/examples/sorting",
+              "label": "Sorting"
+            },
+            {
+              "to": "framework/solid/examples/bootstrap",
+              "label": "Solid Bootstrap"
+            }
+          ]
         }
       ]
     },
     {
-      "label": "Svelte Examples",
-      "children": [
+      "framework": "svelte",
+      "menuItems": [
         {
-          "to": "examples/svelte/basic",
-          "label": "Basic"
+          "label": "Getting Started",
+          "children": [
+            {
+              "label": "Svelte Table",
+              "to": "framework/svelte/svelte-table"
+            }
+          ]
         },
         {
-          "to": "examples/svelte/column-groups",
-          "label": "Column Groups"
-        },
-        {
-          "to": "examples/svelte/column-ordering",
-          "label": "Column Ordering"
-        },
-        {
-          "to": "examples/svelte/column-pinning",
-          "label": "Column Pinning"
-        },
-        {
-          "to": "examples/svelte/column-visibility",
-          "label": "Column Visibility"
-        },
-        {
-          "to": "examples/svelte/sorting",
-          "label": "Sorting"
-        }
+          "label": "Examples",
+          "children": [
+            {
+              "to": "framework/svelte/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/svelte/examples/column-groups",
+              "label": "Column Groups"
+            },
+            {
+              "to": "framework/svelte/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/svelte/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "framework/svelte/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/svelte/examples/sorting",
+              "label": "Sorting"
+            }
+          ]
+        }    
       ]
     },
     {
-      "label": "Vue Examples",
-      "children": [
+      "framework": "vue",
+      "menuItems": [
         {
-          "to": "examples/vue/basic",
-          "label": "Basic"
+          "label": "Getting Started",
+          "children": [
+            {
+              "label": "Vue Table",
+              "to": "framework/vue/vue-table"
+            }
+          ]
         },
         {
-          "to": "examples/vue/column-ordering",
-          "label": "Column Ordering"
-        },
-        {
-          "to": "examples/vue/column-pinning",
-          "label": "Column Pinning"
-        },
-        {
-          "to": "examples/vue/pagination",
-          "label": "Pagination"
-        },
-        {
-          "to": "examples/vue/row-selection",
-          "label": "Row Selection"
-        },
-        {
-          "to": "examples/vue/sorting",
-          "label": "Sorting"
-        }
-      ]
-    },
-    {
-      "label": "CSS/Layout Examples",
-      "children": [
-        {
-          "to": "examples/solid/bootstrap",
-          "label": "Solid Bootstrap"
-        },
-        {
-          "to": "examples/react/bootstrap",
-          "label": "React Bootstrap"
-        },
-        {
-          "to": "examples/react/material-ui-pagination",
-          "label": "Material UI Pagination"
-        },
-        {
-          "to": "examples/react/full-width-table",
-          "label": "React Full Width"
-        },
-        {
-          "to": "examples/react/full-width-resizable-table",
-          "label": "React Full Width Resizable"
+          "label": "Examples",
+          "children": [
+            {
+              "to": "framework/vue/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/vue/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/vue/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "framework/vue/examples/pagination",
+              "label": "Pagination"
+            },
+            {
+              "to": "framework/vue/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/vue/examples/sorting",
+              "label": "Sorting"
+            }
+          ]
         }
       ]
     }
