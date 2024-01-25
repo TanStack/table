@@ -16,8 +16,6 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { makeColumns, makeData, Person } from './makeData'
 
-//This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
-//See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
 function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => makeColumns(1_000),
@@ -36,27 +34,18 @@ function App() {
 
   const { rows } = table.getRowModel()
 
+  const visibleColumns = table.getVisibleLeafColumns()
+
   //The virtualizers need to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  //get first 16 column widths and average them for column size estimation
-  const averageColumnWidth = React.useMemo(() => {
-    const columnsWidths =
-      table
-        .getRowModel()
-        .rows[0]?.getCenterVisibleCells()
-        ?.slice(0, 16)
-        ?.map(cell => cell.column.getSize()) ?? []
-    return columnsWidths.reduce((a, b) => a + b, 0) / columnsWidths.length
-  }, [table.getRowModel().rows])
-
-  //we are using a slightly different virtualization strategy for columns in order to support dynamic row heights
+  //we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
   const columnVirtualizer = useVirtualizer({
-    count: table.getVisibleLeafColumns().length,
-    estimateSize: () => averageColumnWidth, //average column width in pixels
+    count: visibleColumns.length,
+    estimateSize: index => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
-    overscan: 3,
+    overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
   })
 
   //dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
