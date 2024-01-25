@@ -79,7 +79,7 @@ function App() {
   )
 
   //react-query has a useInfiniteQuery hook that is perfect for this use case
-  const { data, fetchNextPage, isError, isFetching, isLoading } =
+  const { data, fetchNextPage, isFetching, isLoading } =
     useInfiniteQuery<PersonApiResponse>({
       queryKey: [
         'people',

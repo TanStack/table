@@ -69,7 +69,7 @@ const defaultColumns: ColumnDef<Person>[] = [
 ]
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(200))
+  const [data, _setData] = React.useState(() => makeData(200))
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
@@ -79,6 +79,10 @@ function App() {
   const table = useReactTable({
     data,
     columns,
+    defaultColumn: {
+      minSize: 60,
+      maxSize: 800,
+    },
     columnResizeMode: 'onChange',
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
@@ -125,11 +129,10 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
-      <pre style={{ minHeight: '30rem' }}>
+      <pre style={{ minHeight: '10rem' }}>
         {JSON.stringify(
           {
             columnSizing: table.getState().columnSizing,
-            columnSizingInfo: table.getState().columnSizingInfo,
           },
           null,
           2
