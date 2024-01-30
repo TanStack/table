@@ -6,3 +6,5 @@
 **/docs
 **/old-examples
 pnpm-lock.yaml
+
+.angular

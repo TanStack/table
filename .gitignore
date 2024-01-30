@@ -46,3 +46,5 @@ yarn.lock
 *.tsbuildinfo
 
 .nx/cache
+
+.angular
