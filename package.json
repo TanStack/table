@@ -29,7 +29,7 @@
   },
   "namespace": "@tanstack",
   "devDependencies": {
-    "@angular-devkit/core": "~17.1.0",
+    "@angular/core": "^17.1.2",
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-react": "^7.23.3",
@@ -50,6 +50,7 @@
     "@types/react-dom": "^18.2.18",
     "babel-plugin-transform-async-to-promises": "^0.8.18",
     "jsdom": "^23.2.0",
+    "ng-packagr": "^17.1.2",
     "nx": "^17.2.8",
     "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.1.2",
@@ -66,6 +67,5 @@
     "vite": "^5.0.11",
     "vitest": "^1.2.0",
     "vue": "^3.4.14"
-  },
-  "dependencies": {}
+  }
 }

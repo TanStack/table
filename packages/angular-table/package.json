@@ -20,17 +20,14 @@
     "angular-table",
     "datagrid"
   ],
-  "type": "commonjs",
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
-  "types": "build/lib/index.d.ts",
+  "type": "module",
+  "module": "fesm2022/tanstack-angular-table.mjs",
+  "main": "index.d.ts",
+  "types": "index.d.ts",
   "exports": {
-    ".": {
-      "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js"
-    },
-    "./package.json": "./package.json"
+    "./package.json": {
+      "default": "./package.json"
+    }
   },
   "engines": {
     "node": ">=12"
@@ -43,16 +40,17 @@
   "scripts": {
     "clean": "rimraf ./build",
     "test:types": "tsc --noEmit",
-    "build": "pnpm build:rollup && pnpm build:types",
+    "build": "pnpm ng-packagr -p ng-package.json",
     "build:rollup": "rollup --config rollup.config.mjs",
     "build:types": "tsc --emitDeclarationOnly"
   },
   "dependencies": {
+    "tslib": "^2.3.0",
     "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
-    "@angular/common": "^17.0.0",
-    "@angular/core": "^17.0.0"
+    "@angular/core": "^17.1.2",
+    "@angular/common": "^17.1.2"
   },
   "sideEffects": false
 }
