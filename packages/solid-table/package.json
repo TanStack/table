@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table",
-  "version": "8.11.7",
+  "version": "8.11.8",
   "description": "Headless UI for building powerful tables & datagrids for Solid.",
   "author": "Tanner Linsley",
   "license": "MIT",
