@@ -2,7 +2,6 @@
 import {
   FlexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useVueTable,
   createColumnHelper,
   RowSelectionState,
