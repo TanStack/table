@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./build/lib",
     "declarationMap": false,
+    "declaration": true,
     "types": []
   },
   "angularCompilerOptions": {

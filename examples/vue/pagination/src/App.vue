@@ -76,13 +76,13 @@ function rerender() {
   data.value = defaultData
 }
 
-function handleGoToPage(e) {
+function handleGoToPage(e: any) {
   const page = e.target.value ? Number(e.target.value) - 1 : 0
   goToPageNumber.value = page + 1
   table.setPageIndex(page)
 }
 
-function handlePageSizeChange(e) {
+function handlePageSizeChange(e: any) {
   table.setPageSize(Number(e.target.value))
 }
 </script>

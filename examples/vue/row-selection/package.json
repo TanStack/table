@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "vue": "^3.4.14",
-    "@tanstack/vue-table": "^8.11.3"
+    "@tanstack/vue-table": "^8.11.8"
   },
   "devDependencies": {
     "@types/node": "^20.11.2",

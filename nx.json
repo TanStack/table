@@ -4,11 +4,6 @@
     "defaultBase": "main"
   },
   "defaultBase": "main",
-  "pluginsConfig": {
-    "@nrwl/js": {
-      "analyzeSourceFiles": false
-    }
-  },
   "parallel": 5,
   "namedInputs": {
     "sharedGlobals": [

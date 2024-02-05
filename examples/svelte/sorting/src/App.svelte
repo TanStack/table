@@ -6,7 +6,12 @@
     getSortedRowModel,
     flexRender,
   } from '@tanstack/svelte-table'
-  import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
+  import type {
+    ColumnDef,
+    OnChangeFn,
+    SortingState,
+    TableOptions,
+  } from '@tanstack/svelte-table'
   import { makeData, type Person } from './makeData'
   import './index.css'
 
@@ -64,9 +69,9 @@
 
   const data = makeData(100_000)
 
-  let sorting = []
+  let sorting: SortingState = []
 
-  const setSorting = updater => {
+  const setSorting: OnChangeFn<SortingState> = updater => {
     if (updater instanceof Function) {
       sorting = updater(sorting)
     } else {
@@ -131,10 +136,11 @@
                       header.getContext()
                     )}
                   />
-                  {{
-                    asc: ' 🔼',
-                    desc: ' 🔽',
-                  }[header.column.getIsSorted().toString()] ?? ''}
+                  {#if header.column.getIsSorted().toString() === 'asc'}
+                    🔼
+                  {:else if header.column.getIsSorted().toString() === 'desc'}
+                    🔽
+                  {/if}
                 </div>
               {/if}
             </th>
