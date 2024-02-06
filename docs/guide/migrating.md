@@ -73,7 +73,8 @@ Types are now included in the base package, so you can remove the `@types/react-
 ### Update column definitions
 
 - accessor was renamed to either `accessorKey` or `accessorFn` (depending on whether you are using a string or function)
-- width, minWidth, maxWidth where renamed to size, minSize, maxSize
+- width, minWidth, maxWidth where renamed to size, minSize, maxSize and always have 'px'. If you want percent and etc. you can add a property, for example, isPercent, and do
+`style={{ width: header.getSize() + (header.column.columnDef.isPercent ? '%' : 'px') }}`
 - Optionally, you can use the new `createColumnHelper` function around each column definition for better TypeScript hints. (You can still just use an array of column definitions if you prefer.)
   - The first parameter is the accessor function or accessor string.
   - The second parameter is an object of column options.
@@ -95,6 +96,7 @@ const columns = [
 +  }),
 +  columnHelper.accessor(row => row.lastName, { //accessorFn
 +    header: () => <span>Last Name</span>,
++    size: 320,
 +  }),
 
 // OR (if you prefer)
@@ -105,15 +107,19 @@ const columns = [
 + {
 +   accessorFn: row => row.lastName,
 +   header: () => <span>Last Name</span>,
++   size: 320,
 + },
 ]
 ```
+
+If the cell value is not primitive, then you may need to specify `cell: (item) => item.getValue()` if you do not want to see `[object Object]` in the cell.
 
 > Note: If defining columns inside a component, you should still try to give the column definitions a stable identity. This will help with performance and prevent unnecessary re-renders. Store the column definitions in either a `useMemo` or `useState` hook.
 
 - Column Option Name Changes
 
   - `Header` was renamed to `header`
+  - Previously, the `Header` could accept jsx markup (not as a function). Now it should be a JSX element.
   - `Cell` was renamed to `cell` (The cell render function has also changed. See below)
   - `Footer` was renamed to `footer`
   - All `disable*` column options were renamed to `enable*` column options. (e.g. `disableSortBy` is now `enableSorting`, `disableGroupBy` is now `enableGrouping`, etc.)
@@ -129,7 +135,7 @@ const columns = [
 
 ### Migrate Table Markup
 
-- Use `flexRender()` instead of `cell.render('Cell')` or `column.render('Header')`, etc.
+- Use `flexRender()` instead of `cell.render('Cell')` or `column.render('Header')`, etc. (import from '@tanstack/react-table')
 - `getHeaderProps`, `getFooterProps`, `getCellProps`, `getRowProps`, etc. have all been _deprecated_.
   - TanStack Table does not provide any default `style` or accessibility attributes like `role` anymore. These are still important for you to get right, but it had to be removed in order to support being framework-agnostic.
   - You will need to define `onClick` handlers manually, but there are new `get*Handler` helpers to keep this simple.
@@ -156,6 +162,17 @@ const columns = [
 + </td>
 ```
 
+If you need to get your row properties additionally, you can use `const originalRow = row.original` and do
+```diff
++   {flexRender(
++     cell.column.columnDef.cell,
++     {
++       ...cell.getContext(),
++       ...originalRow
++     }  
++   )}
+```
+
 ```diff
 // in column definitions in this case
 - Header: ({ getToggleAllRowsSelectedProps }) => (
@@ -180,6 +197,28 @@ const columns = [
 +   />
 + ),
 ```
+
+### Column visibility
+
+`setHiddenColumns` and `visibleColumns` from the `useTable` have been replaced with a local state that needs to be passed to the useReactTable.
+
+```diff
+-   const tableInstance = useTable( //tableInstance contains `setHiddenColumns` and `visibleColumns`
+-     { columns,  data },
+-     // etc.
+-   );
++  const [columnVisibility, setColumnVisibility] = useState({});
++  const tableInstance = useReactTable({
++    columns,
++    data,
++    getCoreRowModel: getCoreRowModel(),
++    state: { columnVisibility },
++    onColumnVisibilityChange: setColumnVisibility,
++    // etc.
++  })
+```
+
+> Note: Previously, we checked the hidden property, now the visible property is checked.
 
 ### Other Changes
 
