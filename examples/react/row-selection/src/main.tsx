@@ -28,22 +28,18 @@ function App() {
         id: 'select',
         header: ({ table }) => (
           <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
+            checked={table.getIsAllRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
           />
         ),
         cell: ({ row }) => (
           <div className="px-1">
             <IndeterminateCheckbox
-              {...{
-                checked: row.getIsSelected(),
-                disabled: !row.getCanSelect(),
-                indeterminate: row.getIsSomeSelected(),
-                onChange: row.getToggleSelectedHandler(),
-              }}
+              checked={row.getIsSelected()}
+              disabled={!row.getCanSelect()}
+              indeterminate={row.getIsSomeSelected()}
+              onChange={row.getToggleSelectedHandler()}
             />
           </div>
         ),
@@ -178,11 +174,9 @@ function App() {
           <tr>
             <td className="p-1">
               <IndeterminateCheckbox
-                {...{
-                  checked: table.getIsAllPageRowsSelected(),
-                  indeterminate: table.getIsSomePageRowsSelected(),
-                  onChange: table.getToggleAllPageRowsSelectedHandler(),
-                }}
+                checked={table.getIsAllPageRowsSelected()}
+                indeterminate={table.getIsSomePageRowsSelected()}
+                onChange={table.getToggleAllPageRowsSelectedHandler()}
               />
             </td>
             <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
