@@ -113,6 +113,8 @@ getIsSomeRowsSelected: () => boolean
 
 Returns whether or not any rows in the table are selected.
 
+NOTE: Returns `false` if all rows are selected.
+
 ### `getIsSomePageRowsSelected`
 
 ```tsx
