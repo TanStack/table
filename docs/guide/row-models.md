@@ -90,10 +90,10 @@ For normal rendering use cases, you will probably only need to use the `table.ge
 - `getPaginationRowModel` - returns a row model that only includes the rows that should be displayed on the current page based on the pagination state.
 - `getPrePaginationRowModel` - returns a row model without pagination applied (includes all rows).
 
-- `getSelectedRowModel` - returns a row model of all selected rows (but only based on the `data` that was passed to the table). Runs after `getCoreRowModel`.
-- `getPreSelectedRowModel` - returns a row model before row selection is applied (Just returns `getCoreRowModel`).
-- `getGroupedSelectedRowModel` - returns a row model of selected rows after grouping. Runs after `getSortedRowModel`, which runs after `getGroupedRowModel`, which runs after `getFilteredRowModel`.
-- `getFilteredSelectedRowModel` - returns a row model of selected rows after column filtering and global filtering. Runs after `getFilteredRowModel`.
+- `getSelectedRowModel` - returns a row model of all selected rows (but only based on the data that was passed to the table). Runs after getCoreRowModel.
+- `getPreSelectedRowModel` - returns a row model before row selection is applied (Just returns getCoreRowModel).
+- `getGroupedSelectedRowModel` - returns a row model of selected rows after grouping. Runs after getSortedRowModel, which runs after getGroupedRowModel, which runs after getFilteredRowModel.
+- `getFilteredSelectedRowModel` - returns a row model of selected rows after column filtering and global filtering. Runs after getFilteredRowModel.
 
 ### The Order of Row Model Execution
 
@@ -103,7 +103,7 @@ Internally, this is the order in which each of the row models are applied to the
 
 `getCoreRowModel` -> `getFilteredRowModel` -> `getGroupedRowModel` -> `getSortedRowModel` -> `getExpandedRowModel` -> `getPaginationRowModel` -> `getRowModel`
 
-If in any case the respective is disabled or turned off with a `"manual*" table option, the `getPre*RowModel` will be used instead in that step of the process.
+If in any case the respective feature is disabled or turned off with a `"manual*"` table option, the `getPre*RowModel` will be used instead in that step of the process.
 
 As you can see above, first the data is filtered, then grouped, then sorted, then expanded, and then finally paginated as the final step.
 

@@ -6,9 +6,9 @@ title: Row Selection
 
 Want to skip to the implementation? Check out these examples:
 
-- [React row-selection](../examples/react/row-selection)
+- [React row-selection](../framework/react/examples/row-selection)
 - [Vue row-selection](../examples/vue/row-selection)
-- [React expanding](../examples/react/expanding)
+- [React expanding](../framework/react/examples/expanding)
 
 ## API
 
