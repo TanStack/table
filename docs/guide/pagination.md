@@ -6,13 +6,13 @@ title: Pagination
 
 Want to skip to the implementation? Check out these examples:
 
-- [pagination](../examples/react/pagination)
-- [pagination-controlled](../examples/react/pagination-controlled)
-- [editable-data](../examples/react/editable-data)
-- [expanding](../examples/react/expanding)
-- [filters](../examples/react/filters)
-- [fully-controlled](../examples/react/fully-controlled)
-- [row-selection](../examples/react/row-selection)
+- [pagination](../framework/react/examples/pagination)
+- [pagination-controlled](../framework/react/examples/pagination-controlled)
+- [editable-data](../framework/react/examples/editable-data)
+- [expanding](../framework/react/examples/expanding)
+- [filters](../framework/react/examples/filters)
+- [fully-controlled](../framework/react/examples/fully-controlled)
+- [row-selection](../framework/react/examples/row-selection)
 
 ## API
 

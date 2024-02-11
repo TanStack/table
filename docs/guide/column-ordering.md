@@ -6,7 +6,7 @@ title: Column Ordering
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-ordering](../examples/react/column-ordering)
+- [column-ordering](../framework/react/examples/column-ordering)
 
 ## API
 

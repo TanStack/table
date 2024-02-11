@@ -6,10 +6,10 @@ title: Virtualization
 
 Want to skip to the implementation? Check out these examples:
 
-- [virtualized-columns](../examples/react/virtualized-columns)
-- [virtualized-rows (dynamic row height)](../examples/react/virtualized-rows)
+- [virtualized-columns](../framework/react/examples/virtualized-columns)
+- [virtualized-rows (dynamic row height)](../framework/react/examples/virtualized-rows)
 - [virtualized-rows (fixed row height)](../../../../virtual/v3/docs/examples/react/table)
-- [virtualized-infinite-scrolling](../examples/react/virtualized-infinite-scrolling)
+- [virtualized-infinite-scrolling](../framework/react/examples/virtualized-infinite-scrolling)
 
 ## API
 

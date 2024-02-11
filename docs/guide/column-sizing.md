@@ -6,8 +6,8 @@ title: Column Sizing
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-sizing](../examples/react/column-sizing)
-- [column-resizing-performant](../examples/react/column-resizing-performant)
+- [column-sizing](../framework/react/examples/column-sizing)
+- [column-resizing-performant](../framework/react/examples/column-resizing-performant)
 
 ## API
 
@@ -166,7 +166,7 @@ TanStack Table keeps track of an state object called `columnSizingInfo` that you
 
 If you are creating large or complex tables (and using React 😉), you may find that if you do not add proper memoization to your render logic, your users may experience degraded performance while resizing columns.
 
-We have created a [performant column resizing example](../examples/react/column-resizing-performant) that demonstrates how to achieve 60 fps column resizing renders with a complex table that may otherwise have slow renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
+We have created a [performant column resizing example](../framework/react/examples/column-resizing-performant) that demonstrates how to achieve 60 fps column resizing renders with a complex table that may otherwise have slow renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
 
 1. Don't use `column.getSize()` on every header and every data cell. Instead, calculate all column widths once upfront, **memoized**!
 2. Memoize your Table Body while resizing is in progress.

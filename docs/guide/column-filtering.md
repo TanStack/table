@@ -6,12 +6,12 @@ title: Column Filtering
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../examples/react/filters) (includes faceting)
-- [editable-data](../examples/react/editable-data)
-- [expanding](../examples/react/expanding)
-- [grouping](../examples/react/grouping)
-- [pagination](../examples/react/pagination)
-- [row-selection](../examples/react/row-selection)
+- [filters](../framework/react/examples/filters) (includes faceting)
+- [editable-data](../framework/react/examples/editable-data)
+- [expanding](../framework/react/examples/expanding)
+- [grouping](../framework/react/examples/grouping)
+- [pagination](../framework/react/examples/pagination)
+- [row-selection](../framework/react/examples/row-selection)
 
 ## API
 

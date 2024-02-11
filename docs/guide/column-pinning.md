@@ -6,8 +6,8 @@ title: Column Pinning
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-pinning](../examples/react/column-pinning)
-- [row-pinning](../examples/react/row-pinning)
+- [column-pinning](../framework/react/examples/column-pinning)
+- [row-pinning](../framework/react/examples/row-pinning)
 
 ## API
 
