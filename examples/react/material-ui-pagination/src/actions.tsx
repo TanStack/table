@@ -7,24 +7,33 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { useTheme } from '@mui/material/styles'
+import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions'
 
-const TablePaginationActions = (props: any) => {
+const TablePaginationActions = (props: TablePaginationActionsProps) => {
   const theme = useTheme()
   const { count, page, rowsPerPage, onPageChange } = props
 
-  const handleFirstPageButtonClick = (event: any) => {
+  const handleFirstPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     onPageChange(event, 0)
   }
 
-  const handleBackButtonClick = (event: any) => {
+  const handleBackButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     onPageChange(event, page - 1)
   }
 
-  const handleNextButtonClick = (event: any) => {
+  const handleNextButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     onPageChange(event, page + 1)
   }
 
-  const handleLastPageButtonClick = (event: any) => {
+  const handleLastPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
   }
 
