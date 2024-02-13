@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
 import {
+  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -11,6 +12,31 @@ import {
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 import { faker } from '@faker-js/faker'
+
+//These are the important styles to make sticky column pinning work!
+//Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
+//View the index.css file for more needed styles such as border-collapse: separate
+const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
+  const isPinned = column.getIsPinned()
+  const isLastLeftPinnedColumn =
+    isPinned === 'left' && column.getIsLastColumn('left')
+  const isFirstRightPinnedColumn =
+    isPinned === 'right' && column.getIsFirstColumn('right')
+
+  return {
+    boxShadow: isLastLeftPinnedColumn
+      ? '-4px 0 4px -4px gray inset'
+      : isFirstRightPinnedColumn
+        ? '4px 0 4px -4px gray inset'
+        : undefined,
+    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
+    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    opacity: isPinned ? 0.95 : 1,
+    position: isPinned ? 'sticky' : 'relative',
+    width: column.getSize(),
+    zIndex: isPinned ? 1 : 0,
+  }
+}
 
 const defaultColumns: ColumnDef<Person>[] = [
   {
@@ -125,7 +151,6 @@ function App() {
       <div className="h-4" />
       <div className="table-container">
         <table
-          className="border-2"
           style={{
             width: table.getTotalSize(),
           }}
@@ -135,35 +160,13 @@ function App() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
                   const { column } = header
-                  const isPinned = column.getIsPinned()
-                  const isLastLeftPinnedColumn =
-                    isPinned === 'left' && column.getIsLastColumn('left')
-                  const isFirstRightPinnedColumn =
-                    isPinned === 'right' && column.getIsFirstColumn('right')
+
                   return (
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
-                      style={{
-                        borderRight: isLastLeftPinnedColumn
-                          ? '2px solid red'
-                          : undefined,
-                        borderLeft: isFirstRightPinnedColumn
-                          ? '2px solid blue'
-                          : undefined,
-                        left:
-                          isPinned === 'left'
-                            ? `${column.getStart('left')}px`
-                            : undefined,
-                        right:
-                          isPinned === 'right'
-                            ? `${column.getAfter('right')}px`
-                            : undefined,
-                        opacity: isPinned ? 0.95 : 1,
-                        position: isPinned ? 'sticky' : 'relative',
-                        width: column.getSize(),
-                        zIndex: isPinned ? 1 : 0,
-                      }}
+                      //IMPORTANT: This is where the magic happens!
+                      style={{ ...getCommonPinningStyles(column) }}
                     >
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder
@@ -172,7 +175,7 @@ function App() {
                               header.column.columnDef.header,
                               header.getContext()
                             )}{' '}
-                        {/* Demo getIndex */}
+                        {/* Demo getIndex behavior */}
                         {column.getIndex(column.getIsPinned() || 'center')}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
@@ -230,35 +233,11 @@ function App() {
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
                   const { column } = cell
-                  const isPinned = column.getIsPinned()
-                  const isLastLeftPinnedColumn =
-                    isPinned === 'left' && column.getIsLastColumn('left')
-                  const isFirstRightPinnedColumn =
-                    isPinned === 'right' && column.getIsFirstColumn('right')
-
                   return (
                     <td
                       key={cell.id}
-                      style={{
-                        borderRight: isLastLeftPinnedColumn
-                          ? '2px solid red'
-                          : undefined,
-                        borderLeft: isFirstRightPinnedColumn
-                          ? '2px solid blue'
-                          : undefined,
-                        left:
-                          isPinned === 'left'
-                            ? `${column.getStart('left')}px`
-                            : undefined,
-                        right:
-                          isPinned === 'right'
-                            ? `${column.getAfter('right')}px`
-                            : undefined,
-                        opacity: isPinned ? 0.95 : 1,
-                        position: isPinned ? 'sticky' : 'relative',
-                        width: column.getSize(),
-                        zIndex: isPinned ? 1 : 0,
-                      }}
+                      //IMPORTANT: This is where the magic happens!
+                      style={{ ...getCommonPinningStyles(column) }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

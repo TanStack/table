@@ -7,12 +7,14 @@ html {
   border: 1px solid lightgray;
   overflow-x: scroll;
   width: 100%;
-  max-width: 1000px;
+  max-width: 960px;
   position: relative;
 }
 
 table {
-  border-collapse: collapse;
+  /* box-shadow and borders will not work with positon: sticky otherwise */
+  border-collapse: separate !important;
+  border-spacing: 0;
 }
 
 th {
@@ -27,7 +29,6 @@ th {
 
 td {
   background-color: white;
-  border-right: 1px solid lightgray;
   padding: 2px 4px;
 }
 

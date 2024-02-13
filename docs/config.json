@@ -253,6 +253,10 @@
               "label": "Column Pinning"
             },
             {
+              "to": "framework/react/examples/column-pinning-sticky",
+              "label": "Sticky Column Pinning"
+            },
+            {
               "to": "framework/react/examples/column-sizing",
               "label": "Column Sizing"
             },
