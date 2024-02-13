@@ -10,7 +10,7 @@ TanStack Table is a **Headless UI** library for building powerful tables & datag
 
 The hardest parts of building complex UIs usually revolve around state, events, side-effects, data computation/management. By removing these concerns from the markup, styles and implementation details, our logic and components can be more modular and reusable.
 
-Building UI is a very branded and custom experience, even if that means choosing a design system or adhering to a design spec. To support this custom experience, component-based UI libraries need to support a massive (and seemingly endless) API surface around markup and style customization. Headless UI libraries decouple your logic from your UI
+Building UI is a very branded and custom experience, even if that means choosing a design system or adhering to a design spec. To support this custom experience, component-based UI libraries need to support a massive (and seemingly endless) API surface around markup and style customization. Headless UI libraries decouple your logic from your visual elements.
 
 When you use a headless UI library, the complex task of **data-processing, state-management, and business logic** are handled for you, leaving you to worry about higher-cardinality decisions that differ across implementations and use cases.
 
