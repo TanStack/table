@@ -8,7 +8,7 @@ import {
   Cell,
   RowData,
 } from '../types'
-import { makeStateUpdater, memo } from '../utils'
+import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
 export type RowPinningPosition = false | 'top' | 'bottom'
@@ -426,11 +426,7 @@ export const Pinning: TableFeature = {
 
         return allCells.filter(d => !leftAndRight.includes(d.column.id))
       },
-      {
-        key:
-          process.env.NODE_ENV === 'development' && 'row.getCenterVisibleCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells')
     )
     row.getLeftVisibleCells = memo(
       () => [row._getAllVisibleCells(), table.getState().columnPinning.left, ,],
@@ -442,11 +438,7 @@ export const Pinning: TableFeature = {
 
         return cells
       },
-      {
-        key:
-          process.env.NODE_ENV === 'development' && 'row.getLeftVisibleCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getLeftVisibleCells')
     )
     row.getRightVisibleCells = memo(
       () => [row._getAllVisibleCells(), table.getState().columnPinning.right],
@@ -458,11 +450,7 @@ export const Pinning: TableFeature = {
 
         return cells
       },
-      {
-        key:
-          process.env.NODE_ENV === 'development' && 'row.getRightVisibleCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getRightVisibleCells')
     )
   },
 
@@ -493,10 +481,7 @@ export const Pinning: TableFeature = {
           .map(columnId => allColumns.find(column => column.id === columnId)!)
           .filter(Boolean)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getLeftLeafColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(table.options, 'debugColumns', 'getLeftLeafColumns')
     )
 
     table.getRightLeafColumns = memo(
@@ -506,10 +491,7 @@ export const Pinning: TableFeature = {
           .map(columnId => allColumns.find(column => column.id === columnId)!)
           .filter(Boolean)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getRightLeafColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(table.options, 'debugColumns', 'getRightLeafColumns')
     )
 
     table.getCenterLeafColumns = memo(
@@ -523,10 +505,7 @@ export const Pinning: TableFeature = {
 
         return allColumns.filter(d => !leftAndRight.includes(d.id))
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getCenterLeafColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(table.options, 'debugColumns', 'getCenterLeafColumns')
     )
 
     table.setRowPinning = updater => table.options.onRowPinningChange?.(updater)
@@ -547,34 +526,32 @@ export const Pinning: TableFeature = {
       return Boolean(pinningState[position]?.length)
     }
 
-    table._getPinnedRows = (position: 'top' | 'bottom') =>
-      memo(
-        () => [table.getRowModel().rows, table.getState().rowPinning[position]],
-        (visibleRows, pinnedRowIds) => {
-          const rows =
-            table.options.keepPinnedRows ?? true
-              ? //get all rows that are pinned even if they would not be otherwise visible
-                //account for expanded parent rows, but not pagination or filtering
-                (pinnedRowIds ?? []).map(rowId => {
-                  const row = table.getRow(rowId, true)
-                  return row.getIsAllParentsExpanded() ? row : null
-                })
-              : //else get only visible rows that are pinned
-                (pinnedRowIds ?? []).map(
-                  rowId => visibleRows.find(row => row.id === rowId)!
-                )
+    table._getPinnedRows = memo(
+      position => [
+        table.getRowModel().rows,
+        table.getState().rowPinning[position!],
+        position,
+      ],
+      (visibleRows, pinnedRowIds, position) => {
+        const rows =
+          table.options.keepPinnedRows ?? true
+            ? //get all rows that are pinned even if they would not be otherwise visible
+              //account for expanded parent rows, but not pagination or filtering
+              (pinnedRowIds ?? []).map(rowId => {
+                const row = table.getRow(rowId, true)
+                return row.getIsAllParentsExpanded() ? row : null
+              })
+            : //else get only visible rows that are pinned
+              (pinnedRowIds ?? []).map(
+                rowId => visibleRows.find(row => row.id === rowId)!
+              )
 
-          return rows
-            .filter(Boolean)
-            .map(d => ({ ...d, position })) as Row<TData>[]
-        },
-        {
-          key:
-            process.env.NODE_ENV === 'development' &&
-            `row.get${position === 'top' ? 'Top' : 'Bottom'}Rows`,
-          debug: () => table.options.debugAll ?? table.options.debugRows,
-        }
-      )()
+        return rows
+          .filter(Boolean)
+          .map(d => ({ ...d, position })) as Row<TData>[]
+      },
+      getMemoOptions(table.options, 'debugRows', '_getPinnedRows')
+    )
 
     table.getTopRows = () => table._getPinnedRows('top')
 
@@ -590,10 +567,7 @@ export const Pinning: TableFeature = {
         const topAndBottom = new Set([...(top ?? []), ...(bottom ?? [])])
         return allRows.filter(d => !topAndBottom.has(d.id))
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'row.getCenterRows',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getCenterRows')
     )
   },
 }

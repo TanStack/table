@@ -42,3 +42,29 @@ resetColumnOrder: (defaultState?: boolean) => void
 ```
 
 Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
+
+## Column API
+
+### `getIndex`
+
+```tsx
+getIndex: (position?: ColumnPinningPosition) => number
+```
+
+Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table.
+
+### `getIsFirstColumn`
+
+```tsx
+getIsFirstColumn: (position?: ColumnPinningPosition) => boolean
+```
+
+Returns `true` if the column is the first column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the first in a sub-section of the table.
+
+### `getIsLastColumn`
+
+```tsx
+getIsLastColumn: (position?: ColumnPinningPosition) => boolean
+```
+
+Returns `true` if the column is the last column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the last in a sub-section of the table.

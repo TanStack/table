@@ -61,8 +61,6 @@ The maximum allowed size for the column
 
 ## Column API
 
-## Table Options
-
 ### `getSize`
 
 ```tsx
@@ -77,7 +75,19 @@ Returns the current size of the column
 getStart: (position?: ColumnPinningPosition) => number
 ```
 
-Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the column.
+Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the column, measuring the size of all preceding columns.
+
+Useful for sticky or absolute positioning of columns. (e.g. `left` or `transform`)
+
+### `getAfter`
+
+```tsx
+getAfter: (position?: ColumnPinningPosition) => number
+```
+
+Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the column, measuring the size of all succeeding columns.
+
+Useful for sticky or absolute positioning of columns. (e.g. `right` or `transform`)
 
 ### `getCanResize`
 
@@ -134,7 +144,7 @@ Returns an event handler function that can be used to resize the header. It can 
 
 The dragging and release events are automatically handled for you.
 
-## Table API Options
+## Table Options
 
 ### `enableColumnResizing`
 

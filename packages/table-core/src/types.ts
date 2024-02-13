@@ -8,6 +8,7 @@ import {
   VisibilityRow,
 } from './features/Visibility'
 import {
+  ColumnOrderColumn,
   ColumnOrderInstance,
   ColumnOrderOptions,
   ColumnOrderTableState,
@@ -304,7 +305,8 @@ export interface Column<TData extends RowData, TValue = unknown>
     FiltersColumn<TData>,
     SortingColumn<TData>,
     GroupingColumn<TData>,
-    ColumnSizingColumn {}
+    ColumnSizingColumn,
+    ColumnOrderColumn {}
 
 export interface Cell<TData extends RowData, TValue>
   extends CoreCell<TData, TValue>,

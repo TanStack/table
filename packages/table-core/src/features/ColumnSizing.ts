@@ -1,6 +1,7 @@
+import { _getVisibleLeafColumns } from '..'
 import { TableFeature } from '../core/table'
 import { RowData, Column, Header, OnChangeFn, Table, Updater } from '../types'
-import { makeStateUpdater } from '../utils'
+import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 import { ColumnPinningPosition } from './Pinning'
 
 //
@@ -164,11 +165,15 @@ export interface ColumnSizingColumn {
    */
   getSize: () => number
   /**
-   * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding headers.
+   * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding (left) headers in relation to the current column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getstart)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  getStart: (position?: ColumnPinningPosition) => number
+  getStart: (position?: ColumnPinningPosition | 'center') => number
+  /**
+   * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all succeeding (right) headers in relation to the current column.
+   */
+  getAfter: (position?: ColumnPinningPosition | 'center') => number
   /**
    * Resets the column to its initial size.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#resetsize)
@@ -257,25 +262,37 @@ export const ColumnSizing: TableFeature = {
         column.columnDef.maxSize ?? defaultColumnSizing.maxSize
       )
     }
-    column.getStart = position => {
-      const columns = !position
-        ? table.getVisibleLeafColumns()
-        : position === 'left'
-          ? table.getLeftVisibleLeafColumns()
-          : table.getRightVisibleLeafColumns()
 
-      const index = columns.findIndex(d => d.id === column.id)
+    column.getStart = memo(
+      position => [
+        _getVisibleLeafColumns(table, position),
+        table.getState().columnSizing,
+      ],
+      columns => {
+        const index = columns.findIndex(d => d.id === column.id)
 
-      if (index > 0) {
-        const prevSiblingColumn = columns[index - 1]!
+        return columns
+          .slice(0, index)
+          .reduce((sum, column) => sum + column.getSize(), 0)
+      },
+      getMemoOptions(table.options, 'debugColumns', 'getStart')
+    )
 
-        return (
-          prevSiblingColumn.getStart(position) + prevSiblingColumn.getSize()
-        )
-      }
+    column.getAfter = memo(
+      position => [
+        _getVisibleLeafColumns(table, position),
+        table.getState().columnSizing,
+      ],
+      columns => {
+        const index = columns.findIndex(d => d.id === column.id)
 
-      return 0
-    }
+        return columns
+          .slice(index + 1)
+          .reduce((sum, column) => sum + column.getSize(), 0)
+      },
+      getMemoOptions(table.options, 'debugColumns', 'getAfter')
+    )
+
     column.resetSize = () => {
       table.setColumnSizing(({ [column.id]: _, ...rest }) => {
         return rest
