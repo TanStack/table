@@ -10,6 +10,11 @@ Want to skip to the implementation? Check out these examples:
 - [sticky-column-pinning](../framework/react/examples/column-pinning/sticky)
 - [row-pinning](../framework/react/examples/row-pinning)
 
+ ### Other Examples
+ 
+- [Svelte column-pinning](../framework/svelte/examples/column-pinning)
+- [Vue column-pinning](../framework/vue/examples/column-pinning)
+
 ## API
 
 [Pinning API](../api/features/pinning)
