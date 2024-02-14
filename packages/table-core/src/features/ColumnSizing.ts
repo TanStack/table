@@ -269,13 +269,10 @@ export const ColumnSizing: TableFeature = {
         _getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
-      (position, columns) => {
-        const index = column.getIndex(position)
-
-        return columns
-          .slice(0, index)
-          .reduce((sum, column) => sum + column.getSize(), 0)
-      },
+      (position, columns) =>
+        columns
+          .slice(0, column.getIndex(position))
+          .reduce((sum, column) => sum + column.getSize(), 0),
       getMemoOptions(table.options, 'debugColumns', 'getStart')
     )
 
@@ -285,13 +282,10 @@ export const ColumnSizing: TableFeature = {
         _getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
-      (position, columns) => {
-        const index = column.getIndex(position)
-
-        return columns
-          .slice(index + 1)
-          .reduce((sum, column) => sum + column.getSize(), 0)
-      },
+      (position, columns) =>
+        columns
+          .slice(column.getIndex(position) + 1)
+          .reduce((sum, column) => sum + column.getSize(), 0),
       getMemoOptions(table.options, 'debugColumns', 'getAfter')
     )
 
