@@ -1,6 +1,6 @@
 import { createRow } from '../core/row'
 import { Table, Row, RowModel, RowData } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 
 export function getCoreRowModel<TData extends RowData>(): (
   table: Table<TData>
@@ -75,12 +75,8 @@ export function getCoreRowModel<TData extends RowData>(): (
 
         return rowModel
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {
-          table._autoResetPageIndex()
-        },
-      }
+      getMemoOptions(table.options, 'debugTable', 'getRowModel', () =>
+        table._autoResetPageIndex()
+      )
     )
 }

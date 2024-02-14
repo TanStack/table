@@ -1,6 +1,8 @@
 import { RowData, Column, Header, HeaderGroup, Table } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 import { TableFeature } from './table'
+
+const debug = 'debugHeaders'
 
 export interface CoreHeaderGroup<TData extends RowData> {
   depth: number
@@ -288,10 +290,7 @@ export const Headers: TableFeature = {
 
         return headerGroups
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getHeaderGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getHeaderGroups')
     )
 
     table.getCenterHeaderGroups = memo(
@@ -307,10 +306,7 @@ export const Headers: TableFeature = {
         )
         return buildHeaderGroups(allColumns, leafColumns, table, 'center')
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getCenterHeaderGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getCenterHeaderGroups')
     )
 
     table.getLeftHeaderGroups = memo(
@@ -327,10 +323,7 @@ export const Headers: TableFeature = {
 
         return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getLeftHeaderGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getLeftHeaderGroups')
     )
 
     table.getRightHeaderGroups = memo(
@@ -347,10 +340,7 @@ export const Headers: TableFeature = {
 
         return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getRightHeaderGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getRightHeaderGroups')
     )
 
     // Footer Groups
@@ -360,10 +350,7 @@ export const Headers: TableFeature = {
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getFooterGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getFooterGroups')
     )
 
     table.getLeftFooterGroups = memo(
@@ -371,10 +358,7 @@ export const Headers: TableFeature = {
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getLeftFooterGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getLeftFooterGroups')
     )
 
     table.getCenterFooterGroups = memo(
@@ -382,10 +366,7 @@ export const Headers: TableFeature = {
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getCenterFooterGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getCenterFooterGroups')
     )
 
     table.getRightFooterGroups = memo(
@@ -393,10 +374,7 @@ export const Headers: TableFeature = {
       headerGroups => {
         return [...headerGroups].reverse()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getRightFooterGroups',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getRightFooterGroups')
     )
 
     // Flat Headers
@@ -410,10 +388,7 @@ export const Headers: TableFeature = {
           })
           .flat()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getFlatHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getFlatHeaders')
     )
 
     table.getLeftFlatHeaders = memo(
@@ -425,10 +400,7 @@ export const Headers: TableFeature = {
           })
           .flat()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getLeftFlatHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getLeftFlatHeaders')
     )
 
     table.getCenterFlatHeaders = memo(
@@ -440,10 +412,7 @@ export const Headers: TableFeature = {
           })
           .flat()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getCenterFlatHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getCenterFlatHeaders')
     )
 
     table.getRightFlatHeaders = memo(
@@ -455,10 +424,7 @@ export const Headers: TableFeature = {
           })
           .flat()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getRightFlatHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getRightFlatHeaders')
     )
 
     // Leaf Headers
@@ -468,10 +434,7 @@ export const Headers: TableFeature = {
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getCenterLeafHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getCenterLeafHeaders')
     )
 
     table.getLeftLeafHeaders = memo(
@@ -479,10 +442,7 @@ export const Headers: TableFeature = {
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getLeftLeafHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getLeftLeafHeaders')
     )
 
     table.getRightLeafHeaders = memo(
@@ -490,10 +450,7 @@ export const Headers: TableFeature = {
       flatHeaders => {
         return flatHeaders.filter(header => !header.subHeaders?.length)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getRightLeafHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getRightLeafHeaders')
     )
 
     table.getLeafHeaders = memo(
@@ -513,10 +470,7 @@ export const Headers: TableFeature = {
           })
           .flat()
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getLeafHeaders',
-        debug: () => table.options.debugAll ?? table.options.debugHeaders,
-      }
+      getMemoOptions(table.options, debug, 'getLeafHeaders')
     )
   },
 }

@@ -1,6 +1,6 @@
 import { createRow } from '../core/row'
 import { Table, Row, RowModel, RowData } from '../types'
-import { flattenBy, memo } from '../utils'
+import { flattenBy, getMemoOptions, memo } from '../utils'
 
 export function getGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>
@@ -156,16 +156,12 @@ export function getGroupedRowModel<TData extends RowData>(): (
           rowsById: groupedRowsById,
         }
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getGroupedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {
-          table._queue(() => {
-            table._autoResetExpanded()
-            table._autoResetPageIndex()
-          })
-        },
-      }
+      getMemoOptions(table.options, 'debugTable', 'getGroupedRowModel', () => {
+        table._queue(() => {
+          table._autoResetExpanded()
+          table._autoResetPageIndex()
+        })
+      })
     )
 }
 

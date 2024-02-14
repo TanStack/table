@@ -1,3 +1,4 @@
+import { ColumnPinningPosition } from '..'
 import { TableFeature } from '../core/table'
 import {
   Cell,
@@ -8,7 +9,7 @@ import {
   Row,
   RowData,
 } from '../types'
-import { makeStateUpdater, memo } from '../utils'
+import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 export type VisibilityState = Record<string, boolean>
 
@@ -199,10 +200,7 @@ export const Visibility: TableFeature = {
       cells => {
         return cells.filter(cell => cell.column.getIsVisible())
       },
-      {
-        key: process.env.NODE_ENV === 'production' && 'row._getAllVisibleCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells')
     )
     row.getVisibleCells = memo(
       () => [
@@ -211,10 +209,7 @@ export const Visibility: TableFeature = {
         row.getRightVisibleCells(),
       ],
       (left, center, right) => [...left, ...center, ...right],
-      {
-        key: process.env.NODE_ENV === 'development' && 'row.getVisibleCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getVisibleCells')
     )
   },
 
@@ -234,10 +229,7 @@ export const Visibility: TableFeature = {
         columns => {
           return columns.filter(d => d.getIsVisible?.())
         },
-        {
-          key,
-          debug: () => table.options.debugAll ?? table.options.debugColumns,
-        }
+        getMemoOptions(table.options, 'debugColumns', key)
       )
     }
 
@@ -299,4 +291,17 @@ export const Visibility: TableFeature = {
       }
     }
   },
+}
+
+export function _getVisibleLeafColumns<TData extends RowData>(
+  table: Table<TData>,
+  position?: ColumnPinningPosition | 'center'
+) {
+  return !position
+    ? table.getVisibleLeafColumns()
+    : position === 'center'
+      ? table.getCenterVisibleLeafColumns()
+      : position === 'left'
+        ? table.getLeftVisibleLeafColumns()
+        : table.getRightVisibleLeafColumns()
 }

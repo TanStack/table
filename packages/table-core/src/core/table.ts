@@ -1,4 +1,4 @@
-import { functionalUpdate, memo, RequiredKeys } from '../utils'
+import { functionalUpdate, getMemoOptions, memo, RequiredKeys } from '../utils'
 
 import {
   Updater,
@@ -87,6 +87,12 @@ export interface CoreOptions<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugAll?: boolean
+  /**
+   * Set this option to `true` to output cell debugging information to the console.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcells]
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  debugCells?: boolean
   /**
    * Set this option to `true` to output column debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcolumns)
@@ -422,10 +428,7 @@ export function createTable<TData extends RowData>(
           ...defaultColumn,
         } as Partial<ColumnDef<TData, unknown>>
       },
-      {
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-        key: process.env.NODE_ENV === 'development' && 'getDefaultColumnDef',
-      }
+      getMemoOptions(options, 'debugColumns', '_getDefaultColumnDef')
     ),
 
     _getColumnDefs: () => table.options.columns,
@@ -456,10 +459,7 @@ export function createTable<TData extends RowData>(
 
         return recurseColumns(columnDefs)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllColumns')
     ),
 
     getAllFlatColumns: memo(
@@ -469,10 +469,7 @@ export function createTable<TData extends RowData>(
           return column.getFlatColumns()
         })
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllFlatColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllFlatColumns')
     ),
 
     _getAllFlatColumnsById: memo(
@@ -486,10 +483,7 @@ export function createTable<TData extends RowData>(
           {} as Record<string, Column<TData, unknown>>
         )
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllFlatColumnsById')
     ),
 
     getAllLeafColumns: memo(
@@ -498,10 +492,7 @@ export function createTable<TData extends RowData>(
         let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
         return orderColumns(leafColumns)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllLeafColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllLeafColumns')
     ),
 
     getColumn: columnId => {

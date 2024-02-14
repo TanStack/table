@@ -1,5 +1,5 @@
 import { Table, RowModel, Row, RowData } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
 export function getFacetedRowModel<TData extends RowData>(): (
@@ -39,12 +39,6 @@ export function getFacetedRowModel<TData extends RowData>(): (
 
         return filterRows(preRowModel.rows, filterRowsImpl, table)
       },
-      {
-        key:
-          process.env.NODE_ENV === 'development' &&
-          'getFacetedRowModel_' + columnId,
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {},
-      }
+      getMemoOptions(table.options, 'debugTable', 'getFacetedRowModel')
     )
 }

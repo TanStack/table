@@ -39,7 +39,6 @@ const defaultColumns: ColumnDef<Person>[] = [
     header: 'Age',
     footer: props => props.column.id,
   },
-
   {
     accessorKey: 'visits',
     id: 'visits',

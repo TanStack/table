@@ -1,6 +1,6 @@
 import { Table, Row, RowModel, RowData } from '../types'
 import { SortingFn } from '../features/Sorting'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 
 export function getSortedRowModel<TData extends RowData>(): (
   table: Table<TData>
@@ -111,12 +111,8 @@ export function getSortedRowModel<TData extends RowData>(): (
           rowsById: rowModel.rowsById,
         }
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getSortedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {
-          table._autoResetPageIndex()
-        },
-      }
+      getMemoOptions(table.options, 'debugTable', 'getSortedRowModel', () =>
+        table._autoResetPageIndex()
+      )
     )
 }
