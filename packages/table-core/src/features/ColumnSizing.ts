@@ -265,11 +265,12 @@ export const ColumnSizing: TableFeature = {
 
     column.getStart = memo(
       position => [
+        position,
         _getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
-      columns => {
-        const index = columns.findIndex(d => d.id === column.id)
+      (position, columns) => {
+        const index = column.getIndex(position)
 
         return columns
           .slice(0, index)
@@ -280,11 +281,12 @@ export const ColumnSizing: TableFeature = {
 
     column.getAfter = memo(
       position => [
+        position,
         _getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
-      columns => {
-        const index = columns.findIndex(d => d.id === column.id)
+      (position, columns) => {
+        const index = column.getIndex(position)
 
         return columns
           .slice(index + 1)

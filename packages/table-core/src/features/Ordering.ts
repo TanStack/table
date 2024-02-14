@@ -87,11 +87,7 @@ export const Ordering: TableFeature = {
     table: Table<TData>
   ): void => {
     column.getIndex = memo(
-      position => [
-        _getVisibleLeafColumns(table, position),
-        table.getState().columnPinning,
-        table.getState().columnPinning,
-      ],
+      position => [_getVisibleLeafColumns(table, position)],
       columns => columns.findIndex(d => d.id === column.id),
       getMemoOptions(table.options, 'debugColumns', 'getIndex')
     )
