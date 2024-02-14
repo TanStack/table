@@ -4,6 +4,7 @@
     "defaultBase": "main"
   },
   "defaultBase": "main",
+  "nxCloudAccessToken": "OWExNzViODMtZjU4Ny00MTRmLTk3ZDYtMGY5YzlkOTRhZDQ2fHJlYWQtb25seQ==",
   "parallel": 5,
   "namedInputs": {
     "sharedGlobals": [
