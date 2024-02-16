@@ -25,7 +25,7 @@ There are 3 table features that can reorder columns, which happen in the followi
 2. Manual **Column Ordering** - A manually specified column order is applied.
 3. [Grouping](../guide/grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.columnGroupingMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
-> **Note:** `columnOrder` state will only affect unpinned rows if used in conjunction with column pinning.
+> **Note:** `columnOrder` state will only affect unpinned columns if used in conjunction with column pinning.
 
 ### Column Order State
 
