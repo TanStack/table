@@ -7,7 +7,7 @@ title: Column Pinning
 Want to skip to the implementation? Check out these examples:
 
 - [column-pinning](../framework/react/examples/column-pinning)
-- [sticky-column-pinning](../framework/react/examples/column-pinning/sticky)
+- [sticky-column-pinning](../framework/react/examples/column-pinning-sticky)
 - [row-pinning](../framework/react/examples/row-pinning)
 
  ### Other Examples
