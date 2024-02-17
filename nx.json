@@ -44,7 +44,15 @@
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     },
+    "test:knip": {
+      "cache": true,
+      "inputs": ["{workspaceRoot}/**/*"]
+    },
     "test:format": {
+      "cache": true,
+      "inputs": ["{workspaceRoot}/**/*"]
+    },
+    "test:sherif": {
       "cache": true,
       "inputs": ["{workspaceRoot}/**/*"]
     }
