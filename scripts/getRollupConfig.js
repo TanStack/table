@@ -2,6 +2,7 @@
 
 import { resolve } from 'node:path'
 import { babel } from '@rollup/plugin-babel'
+import commonJS from '@rollup/plugin-commonjs'
 import { visualizer } from 'rollup-plugin-visualizer'
 import terser from '@rollup/plugin-terser'
 // @ts-expect-error
@@ -89,6 +90,7 @@ function mjs({ input, external, banner, outputFile }) {
           hydratable: true,
         },
       }),
+      commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
@@ -122,6 +124,7 @@ function esm({ input, external, banner, outputFile }) {
           hydratable: true,
         },
       }),
+      commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
@@ -153,6 +156,7 @@ function cjs({ input, external, banner }) {
     },
     plugins: [
       svelte(),
+      commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
@@ -184,6 +188,7 @@ function umdDev({ input, external, globals, banner, jsName }) {
     },
     plugins: [
       svelte(),
+      commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       forceEnvPlugin('development'),
@@ -216,6 +221,7 @@ function umdProd({ input, external, globals, banner, jsName }) {
     },
     plugins: [
       svelte(),
+      commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       forceEnvPlugin('production'),

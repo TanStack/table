@@ -21,7 +21,6 @@ module.exports = {
     '@babel/preset-typescript',
   ],
   plugins: [
-    // 'babel-plugin-transform-async-to-promises',
     cjs && ['@babel/transform-modules-commonjs', { loose }],
     // [
     //   '@babel/transform-runtime',
