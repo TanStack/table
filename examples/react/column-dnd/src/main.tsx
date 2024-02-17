@@ -1,203 +1,225 @@
-import React, { FC } from 'react'
+import React, { CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
 import {
-  Column,
+  Cell,
   ColumnDef,
-  ColumnOrderState,
+  Header,
   flexRender,
   getCoreRowModel,
-  Header,
-  Table,
   useReactTable,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+// needed for table body level scope DnD setup
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  type DragEndEvent,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
+import {
+  arrayMove,
+  SortableContext,
+  horizontalListSortingStrategy,
+} from '@dnd-kit/sortable'
 
-const defaultColumns: ColumnDef<Person>[] = [
-  {
-    accessorKey: 'firstName',
-    id: 'firstName',
-    header: 'First Name',
-    cell: info => info.getValue(),
-    footer: props => props.column.id,
-  },
-  {
-    accessorFn: row => row.lastName,
-    id: 'lastName',
-    cell: info => info.getValue(),
-    header: () => <span>Last Name</span>,
-    footer: props => props.column.id,
-  },
-  {
-    accessorKey: 'age',
-    id: 'age',
-    header: 'Age',
-    footer: props => props.column.id,
-  },
-  {
-    accessorKey: 'visits',
-    id: 'visits',
-    header: 'Visits',
-    footer: props => props.column.id,
-  },
-  {
-    accessorKey: 'status',
-    id: 'status',
-    header: 'Status',
-    footer: props => props.column.id,
-  },
-  {
-    accessorKey: 'progress',
-    id: 'progress',
-    header: 'Profile Progress',
-    footer: props => props.column.id,
-  },
-]
+// needed for row & cell level scope DnD setup
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
-const reorderColumn = (
-  draggedColumnId: string,
-  targetColumnId: string,
-  columnOrder: string[]
-): ColumnOrderState => {
-  columnOrder.splice(
-    columnOrder.indexOf(targetColumnId),
-    0,
-    columnOrder.splice(columnOrder.indexOf(draggedColumnId), 1)[0] as string
-  )
-  return [...columnOrder]
-}
-
-const DraggableColumnHeader: FC<{
+const DraggableTableHeader = ({
+  header,
+}: {
   header: Header<Person, unknown>
-  table: Table<Person>
-}> = ({ header, table }) => {
-  const { getState, setColumnOrder } = table
-  const { columnOrder } = getState()
-  const { column } = header
+}) => {
+  const { attributes, isDragging, listeners, setNodeRef, transform } =
+    useSortable({
+      id: header.column.id,
+    })
 
-  const [, dropRef] = useDrop({
-    accept: 'column',
-    drop: (draggedColumn: Column<Person>) => {
-      const newColumnOrder = reorderColumn(
-        draggedColumn.id,
-        column.id,
-        columnOrder
-      )
-      setColumnOrder(newColumnOrder)
-    },
-  })
-
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
-    collect: monitor => ({
-      isDragging: monitor.isDragging(),
-    }),
-    item: () => column,
-    type: 'column',
-  })
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.8 : 1,
+    position: 'relative',
+    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
+    transition: 'width transform 0.2s ease-in-out',
+    whiteSpace: 'nowrap',
+    width: header.column.getSize(),
+    zIndex: isDragging ? 1 : 0,
+  }
 
   return (
-    <th
-      ref={dropRef}
-      colSpan={header.colSpan}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-    >
-      <div ref={previewRef}>
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header, header.getContext())}
-        <button ref={dragRef}>🟰</button>
-      </div>
+    <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+      {header.isPlaceholder
+        ? null
+        : flexRender(header.column.columnDef.header, header.getContext())}
+      <button {...attributes} {...listeners}>
+        🟰
+      </button>
     </th>
   )
 }
 
-function App() {
-  const [data, setData] = React.useState(() => makeData(20))
-  const [columns] = React.useState(() => [...defaultColumns])
+const DragAlongCell = ({ cell }: { cell: Cell<Person, unknown> }) => {
+  const { isDragging, setNodeRef, transform } = useSortable({
+    id: cell.column.id,
+  })
 
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(
-    columns.map(column => column.id as string) //must start out with populated columnOrder so we can splice
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.8 : 1,
+    position: 'relative',
+    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
+    transition: 'width transform 0.2s ease-in-out',
+    width: cell.column.getSize(),
+    zIndex: isDragging ? 1 : 0,
+  }
+
+  return (
+    <td style={style} ref={setNodeRef}>
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </td>
+  )
+}
+
+function App() {
+  const columns = React.useMemo<ColumnDef<Person>[]>(
+    () => [
+      {
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
+        id: 'firstName',
+        size: 150,
+      },
+      {
+        accessorFn: row => row.lastName,
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+        id: 'lastName',
+        size: 150,
+      },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        id: 'age',
+        size: 120,
+      },
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        id: 'visits',
+        size: 120,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        id: 'status',
+        size: 150,
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        id: 'progress',
+        size: 180,
+      },
+    ],
+    []
   )
 
-  const regenerateData = () => setData(() => makeData(20))
+  const [data, setData] = React.useState(() => makeData(20))
+  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
+    columns.map(c => c.id!)
+  )
 
-  const resetOrder = () =>
-    setColumnOrder(columns.map(column => column.id as string))
+  const rerender = () => setData(() => makeData(20))
 
   const table = useReactTable({
     data,
     columns,
+    getCoreRowModel: getCoreRowModel(),
     state: {
       columnOrder,
     },
     onColumnOrderChange: setColumnOrder,
-    getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
   })
 
+  // reorder columns after drag & drop
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (active && over && active.id !== over.id) {
+      setColumnOrder(columnOrder => {
+        const oldIndex = columnOrder.indexOf(active.id as string)
+        const newIndex = columnOrder.indexOf(over.id as string)
+        return arrayMove(columnOrder, oldIndex, newIndex) //this is just a splice util
+      })
+    }
+  }
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {}),
+    useSensor(TouchSensor, {}),
+    useSensor(KeyboardSensor, {})
+  )
+
   return (
-    <div className="p-2">
-      <div className="h-4" />
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => regenerateData()} className="border p-1">
-          Regenerate
-        </button>
-        <button onClick={() => resetOrder()} className="border p-1">
-          Reset Order
-        </button>
+    // NOTE: This provider creates div elements, so don't nest inside of <table> elements
+    <DndContext
+      collisionDetection={closestCenter}
+      modifiers={[restrictToHorizontalAxis]}
+      onDragEnd={handleDragEnd}
+      sensors={sensors}
+    >
+      <div className="p-2">
+        <div className="h-4" />
+        <div className="flex flex-wrap gap-2">
+          <button onClick={() => rerender()} className="border p-1">
+            Regenerate
+          </button>
+        </div>
+        <div className="h-4" />
+        <table>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                <SortableContext
+                  items={columnOrder}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  {headerGroup.headers.map(header => (
+                    <DraggableTableHeader key={header.id} header={header} />
+                  ))}
+                </SortableContext>
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => (
+                  <SortableContext
+                    key={cell.id}
+                    items={columnOrder}
+                    strategy={horizontalListSortingStrategy}
+                  >
+                    <DragAlongCell key={cell.id} cell={cell} />
+                  </SortableContext>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
       </div>
-      <div className="h-4" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <DraggableColumnHeader
-                  key={header.id}
-                  header={header}
-                  table={table}
-                />
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
-      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
-    </div>
+    </DndContext>
   )
 }
 
@@ -205,9 +227,7 @@ const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
-  // <React.StrictMode> //disabled for react-dnd preview bug for now
-  <DndProvider backend={HTML5Backend}>
+  <React.StrictMode>
     <App />
-  </DndProvider>
-  // </React.StrictMode>
+  </React.StrictMode>
 )
