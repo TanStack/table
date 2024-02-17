@@ -55,8 +55,8 @@ const DraggableRow = ({ row }: { row: Row<Person> }) => {
   })
 
   const style: CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition: transition, //let dnd-kit do its thing
+    transform: CSS.Transform.toString(transform), //let dnd-kit do its thing
+    transition: transition,
     opacity: isDragging ? 0.8 : 1,
     zIndex: isDragging ? 1 : 0,
     position: 'relative',
@@ -132,7 +132,7 @@ function App() {
     debugColumns: true,
   })
 
-  // reorder columns after drag & drop
+  // reorder rows after drag & drop
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (active && over && active.id !== over.id) {
