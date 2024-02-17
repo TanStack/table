@@ -43,6 +43,10 @@
       "inputs": ["default", "^public"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
+    },
+    "test:format": {
+      "cache": true,
+      "inputs": ["{workspaceRoot}/**/*"]
     }
   }
 }
