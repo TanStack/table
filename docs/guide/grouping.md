@@ -1,5 +1,5 @@
 ---
-title: Grouping
+title: Grouping Guide
 ---
 
 ## Examples

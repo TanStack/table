@@ -1,5 +1,5 @@
 ---
-title: Row Models
+title: Row Models Guide
 ---
 
 ## Row Models Guide

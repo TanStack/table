@@ -18,6 +18,11 @@ export interface VisibilityTableState {
 }
 
 export interface VisibilityOptions {
+  /**
+   * Whether to enable column hiding. Defaults to `true`.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   */
   enableHiding?: boolean
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnVisibility` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.

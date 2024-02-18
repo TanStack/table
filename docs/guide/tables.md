@@ -1,5 +1,5 @@
 ---
-title: Tables
+title: Tables Guide
 ---
 
 ## API

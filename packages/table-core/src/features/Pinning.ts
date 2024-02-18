@@ -429,7 +429,7 @@ export const Pinning: TableFeature = {
       getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells')
     )
     row.getLeftVisibleCells = memo(
-      () => [row._getAllVisibleCells(), table.getState().columnPinning.left, ,],
+      () => [row._getAllVisibleCells(), table.getState().columnPinning.left],
       (allCells, left) => {
         const cells = (left ?? [])
           .map(columnId => allCells.find(cell => cell.column.id === columnId)!)

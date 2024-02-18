@@ -1,5 +1,5 @@
 ---
-title: Row Pinning
+title: Row Pinning Guide
 ---
 
 ## Examples

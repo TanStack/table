@@ -1,5 +1,5 @@
 ---
-title: Column Ordering
+title: Column Ordering Guide
 ---
 
 ## Examples

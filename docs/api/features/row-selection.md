@@ -1,5 +1,5 @@
 ---
-title: Row Selection
+title: Row Selection APIs
 id: row-selection
 ---
 

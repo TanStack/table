@@ -1,5 +1,5 @@
 ---
-title: Column Filtering
+title: Column Filtering Guide
 ---
 
 ## Examples

@@ -1,5 +1,5 @@
 ---
-title: Global Filtering
+title: Global Filtering Guide
 ---
 
 ## Examples

@@ -1,5 +1,5 @@
 ---
-title: Expanding
+title: Expanding Guide
 ---
 
 ## Examples

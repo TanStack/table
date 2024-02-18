@@ -1,5 +1,5 @@
 ---
-title: Features
+title: Features Guide
 ---
 
 TanStack Table comes with many features, each with their own associated options and API:

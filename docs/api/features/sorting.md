@@ -1,5 +1,5 @@
 ---
-title: Sorting
+title: Sorting APIs
 id: sorting
 ---
 

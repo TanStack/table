@@ -1,5 +1,5 @@
 ---
-title: Column Sizing
+title: Column Sizing Guide
 ---
 
 ## Examples
