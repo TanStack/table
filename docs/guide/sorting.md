@@ -1,5 +1,5 @@
 ---
-title: Sorting
+title: Sorting Guide
 ---
 
 ## Examples

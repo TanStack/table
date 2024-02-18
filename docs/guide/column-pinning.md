@@ -1,5 +1,5 @@
 ---
-title: Column Pinning
+title: Column Pinning Guide
 ---
 
 ## Examples

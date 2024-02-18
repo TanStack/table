@@ -1,5 +1,5 @@
 ---
-title: Headers
+title: Headers Guide
 ---
 
 ## API

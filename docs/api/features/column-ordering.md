@@ -1,5 +1,5 @@
 ---
-title: Column Ordering
+title: Column Ordering APIs
 id: column-ordering
 ---
 

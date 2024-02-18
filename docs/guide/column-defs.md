@@ -1,5 +1,5 @@
 ---
-title: Columns
+title: Columns Guide
 ---
 
 ## API

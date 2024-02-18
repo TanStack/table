@@ -1,5 +1,5 @@
 ---
-title: Fuzzy Filtering
+title: Fuzzy Filtering Guide
 ---
 
 ## Examples

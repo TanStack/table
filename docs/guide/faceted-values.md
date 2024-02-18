@@ -1,5 +1,5 @@
 ---
-title: Faceted Values
+title: Faceted Values Guide
 ---
 
 ## Examples

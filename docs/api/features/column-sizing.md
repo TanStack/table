@@ -1,5 +1,5 @@
 ---
-title: Column Sizing
+title: Column Sizing APIs
 id: column-sizing
 ---
 

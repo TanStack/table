@@ -1,5 +1,5 @@
 ---
-title: Table
+title: Table APIs
 ---
 
 ## `useReactTable` / `createSolidTable` / `useVueTable` / `createSvelteTable`

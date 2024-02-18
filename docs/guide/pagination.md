@@ -1,5 +1,5 @@
 ---
-title: Pagination
+title: Pagination Guide
 ---
 
 ## Examples
