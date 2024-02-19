@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/angular-table",
-  "version": "8.11.7",
+  "version": "8.11.8",
   "description": "Headless UI for building powerful tables & datagrids for Angular.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -21,10 +21,14 @@
     "datagrid"
   ],
   "type": "module",
-  "module": "fesm2022/tanstack-angular-table.mjs",
-  "main": "index.d.ts",
-  "types": "index.d.ts",
+  "module": "build/lib/esm2022/index.mjs",
+  "main": "build/lib/index.js",
+  "types": "build/lib/index.d.ts",
   "exports": {
+    ".": {
+      "types": "./build/lib/index.d.ts",
+      "import": "./build/lib/esm2022/index.mjs"
+    },
     "./package.json": {
       "default": "./package.json"
     }
@@ -34,14 +38,12 @@
   },
   "files": [
     "build/lib/*",
-    "build/umd/*",
     "src"
   ],
   "scripts": {
     "clean": "rimraf ./build",
     "test:types": "tsc --noEmit",
     "build": "pnpm ng-packagr -p ng-package.json",
-    "build:rollup": "rollup --config rollup.config.mjs",
     "build:types": "tsc --emitDeclarationOnly"
   },
   "dependencies": {

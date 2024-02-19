@@ -20,6 +20,7 @@ import {
   getGroupedRowModel,
   getPaginationRowModel,
 } from '@tanstack/angular-table'
+
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs'
 import { Person, columns } from './columns'
 import { mockData } from './mockdata'

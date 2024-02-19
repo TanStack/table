@@ -29,6 +29,8 @@
   },
   "namespace": "@tanstack",
   "devDependencies": {
+    "@angular-devkit/build-angular": "^17.1.2",
+    "@angular/cli": "^17.1.2",
     "@angular/core": "^17.1.2",
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",

@@ -1,14 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./build/lib",
-    "declarationMap": false,
-    "declaration": true,
-    "types": []
+    "rootDir": "./src",
+    "outDir": "./build/lib"
   },
   "angularCompilerOptions": {
     "compilationMode": "partial"
   },
-  "include": ["src", "public-api.ts"],
+  "include": ["src"],
   "exclude": ["**/*.spec.ts"]
 }

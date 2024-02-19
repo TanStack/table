@@ -1,8 +1,8 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "./build/",
+  "dest": "./build/lib",
   "lib": {
-    "entryFile": "src/public-api.ts"
+    "entryFile": "src/index.ts"
   },
   "allowedNonPeerDependencies": ["@tanstack/table-core"]
 }

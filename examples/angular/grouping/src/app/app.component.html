@@ -7,30 +7,28 @@
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colSpan]="header.colSpan">
-                @if (!header.isPlaceholder) {
-                  @if (header.column.getCanGroup()) {
-                    <button
-                      id="group-btn"
-                      (click)="header.column.toggleGrouping()"
-                    >
-                      <span class="material-icons-sharp">
-                        {{
-                          header.column.getIsGrouped()
-                            ? 'remove_circle_outline'
-                            : 'add_circle_outline'
-                        }}
-                      </span>
-                    </button>
-                    <ng-container
-                      *flexRender="
-                        header.column.columnDef.header;
-                        props: header.getContext;
-                        let header
-                      "
-                    >
-                      <span>{{ header }}</span>
-                    </ng-container>
-                  }
+                @if (!header.isPlaceholder && header.column.getCanGroup()) {
+                  <button
+                    id="group-btn"
+                    (click)="header.column.toggleGrouping()"
+                  >
+                    <span class="material-icons-sharp">
+                      {{
+                        header.column.getIsGrouped()
+                          ? 'remove_circle_outline'
+                          : 'add_circle_outline'
+                      }}
+                    </span>
+                  </button>
+                  <ng-container
+                    *flexRender="
+                      header.column.columnDef.header;
+                      props: header.getContext;
+                      let header
+                    "
+                  >
+                    <span>{{ header }}</span>
+                  </ng-container>
                 }
               </th>
             }
@@ -67,7 +65,6 @@
                   >
                     {{ aggregatedCell }}
                   </ng-container>
-                } @else if (cell.getIsPlaceholder()) {
                 } @else {
                   <ng-container
                     *flexRender="
