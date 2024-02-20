@@ -435,6 +435,10 @@
               "label": "Column Visibility"
             },
             {
+              "to": "framework/svelte/examples/filtering",
+              "label": "Filtering"
+            },
+            {
               "to": "framework/svelte/examples/sorting",
               "label": "Sorting"
             }
