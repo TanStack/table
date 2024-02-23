@@ -1,5 +1,6 @@
 {
   "name": "table",
+  "namespace": "@tanstack",
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
   "packageManager": "pnpm@8.12.1",
@@ -16,8 +17,8 @@
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:types": "nx affected --targets=test:types --exclude=examples/**",
     "test:knip": "knip",
-    "build": "nx affected --targets=build --exclude=examples/**",
-    "build:all": "nx run-many --targets=build --exclude=examples/**",
+    "build": "nx affected --targets=build --exclude=examples/** && size-limit",
+    "build:all": "nx run-many --targets=build --exclude=examples/** && size-limit",
     "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all",
     "dev": "pnpm run watch",
     "prettier": "prettier --ignore-unknown '**/*'",
@@ -31,7 +32,16 @@
       "test:sherif"
     ]
   },
-  "namespace": "@tanstack",
+  "size-limit": [
+    {
+      "path": "packages/table-core/build/lib/index.js",
+      "limit": "16 KB"
+    },
+    {
+      "path": "packages/table-core/build/lib/index.mjs",
+      "limit": "15 KB"
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
@@ -43,6 +53,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
+    "@size-limit/preset-small-lib": "^11.0.2",
     "@tanstack/config": "^0.4.2",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
@@ -63,6 +74,7 @@
     "rollup-plugin-svelte": "^7.1.6",
     "rollup-plugin-visualizer": "^5.12.0",
     "sherif": "^0.7.0",
+    "size-limit": "^11.0.2",
     "svelte": "^4.2.8",
     "typescript": "5.3.3",
     "vitest": "^1.2.0"
