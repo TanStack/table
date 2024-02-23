@@ -1,28 +1,28 @@
 <script lang="ts">
-  import './index.css';
-  import { writable } from 'svelte/store';
+  import './index.css'
+  import { writable } from 'svelte/store'
 
-import './index.css';
+  import './index.css'
 
   import {
     createSvelteTable,
     flexRender,
     getCoreRowModel,
-	  getFilteredRowModel,
-	  getPaginationRowModel,
-    type FilterFn
-  } from '@tanstack/svelte-table';
+    getFilteredRowModel,
+    getPaginationRowModel,
+    type FilterFn,
+  } from '@tanstack/svelte-table'
 
-  import { type RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
+  import { type RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
 
-  import { makeData, type Person } from './makeData';
+  import { makeData, type Person } from './makeData'
 
   declare module '@tanstack/table-core' {
     interface FilterFns {
-      fuzzy: FilterFn<unknown>;
+      fuzzy: FilterFn<unknown>
     }
     interface FilterMeta {
-      itemRank: RankingInfo;
+      itemRank: RankingInfo
     }
   }
 
@@ -43,11 +43,11 @@ import './index.css';
     data: makeData(25),
     columns: [
       {
-        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+        accessorFn: row => `${row.firstName} ${row.lastName}`,
         id: 'fullName',
         header: 'Name',
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
+        cell: info => info.getValue(),
+        footer: props => props.column.id,
         filterFn: 'fuzzy',
       },
     ],
@@ -63,7 +63,14 @@ import './index.css';
 
   const table = createSvelteTable(options)
 </script>
-<input type="text" placeholder="Global filter" class="border w-full p-1" bind:value={globalFilter} on:keyup={(e) => $table.setGlobalFilter(String(e.target.value))} />
+
+<input
+  type="text"
+  placeholder="Global filter"
+  class="border w-full p-1"
+  bind:value={globalFilter}
+  on:keyup={e => $table.setGlobalFilter(String(e.target.value))}
+/>
 <div class="h-2" />
 <table class="w-full">
   <thead>
