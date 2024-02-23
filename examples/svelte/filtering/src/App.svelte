@@ -10,21 +10,17 @@
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    type FilterFn,
   } from '@tanstack/svelte-table'
 
-  import { type RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
+  import type {
+    ColumnDef,
+    TableOptions,
+    FilterFn,
+  } from '@tanstack/svelte-table'
+
+  import { rankItem } from '@tanstack/match-sorter-utils'
 
   import { makeData, type Person } from './makeData'
-
-  declare module '@tanstack/table-core' {
-    interface FilterFns {
-      fuzzy: FilterFn<unknown>
-    }
-    interface FilterMeta {
-      itemRank: RankingInfo
-    }
-  }
 
   let globalFilter = ''
 
@@ -39,18 +35,20 @@
     return itemRank.passed
   }
 
+  let columns: ColumnDef<Person>[] = [
+    {
+      accessorFn: row => `${row.firstName} ${row.lastName}`,
+      id: 'fullName',
+      header: 'Name',
+      cell: info => info.getValue(),
+      footer: props => props.column.id,
+      filterFn: 'fuzzy',
+    },
+  ]
+
   const options = writable<TableOptions<any>>({
     data: makeData(25),
-    columns: [
-      {
-        accessorFn: row => `${row.firstName} ${row.lastName}`,
-        id: 'fullName',
-        header: 'Name',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-        filterFn: 'fuzzy',
-      },
-    ],
+    columns,
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -62,6 +60,10 @@
   })
 
   const table = createSvelteTable(options)
+
+  const handleKeyUp = (e: any) => {
+    $table.setGlobalFilter(String(e?.target?.value))
+  }
 </script>
 
 <input
@@ -69,7 +71,7 @@
   placeholder="Global filter"
   class="border w-full p-1"
   bind:value={globalFilter}
-  on:keyup={e => $table.setGlobalFilter(String(e.target.value))}
+  on:keyup={handleKeyUp}
 />
 <div class="h-2" />
 <table class="w-full">
