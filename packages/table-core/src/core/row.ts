@@ -1,5 +1,5 @@
 import { RowData, Cell, Row, Table } from '../types'
-import { flattenBy, memo } from '../utils'
+import { flattenBy, getMemoOptions, memo } from '../utils'
 import { createCell } from './cell'
 
 export interface CoreRow<TData extends RowData> {
@@ -174,10 +174,7 @@ export const createRow = <TData extends RowData>(
           return createCell(table, row as Row<TData>, column, column.id)
         })
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'row.getAllCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getAllCells')
     ),
 
     _getAllCellsByColumnId: memo(
@@ -191,11 +188,7 @@ export const createRow = <TData extends RowData>(
           {} as Record<string, Cell<TData, unknown>>
         )
       },
-      {
-        key:
-          process.env.NODE_ENV === 'production' && 'row.getAllCellsByColumnId',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
     ),
   }
 

@@ -1,13 +1,13 @@
 ---
-title: Expanding
+title: Expanding Guide
 ---
 
 ## Examples
 
 Want to skip to the implementation? Check out these examples:
 
-- [expanding](../examples/react/expanding)
-- [grouping](../examples/react/grouping)
+- [expanding](../framework/react/examples/expanding)
+- [grouping](../framework/react/examples/grouping)
 
 ## API
 

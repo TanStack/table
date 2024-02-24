@@ -1,12 +1,12 @@
 ---
-title: Grouping
+title: Grouping Guide
 ---
 
 ## Examples
 
 Want to skip to the implementation? Check out these examples:
 
-- [grouping](../examples/react/grouping)
+- [grouping](../framework/react/examples/grouping)
 
 ## API
 

@@ -1,5 +1,5 @@
 ---
-title: ColumnDef
+title: ColumnDef APIs
 ---
 
 Column definitions are plain objects with the following options:

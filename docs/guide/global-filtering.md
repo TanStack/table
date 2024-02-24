@@ -1,12 +1,12 @@
 ---
-title: Global Filtering
+title: Global Filtering Guide
 ---
 
 ## Examples
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../examples/react/filters) (includes faceting)
+- [filters](../framework/react/examples/filters) (includes faceting)
 
 ## API
 

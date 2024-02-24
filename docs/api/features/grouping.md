@@ -1,5 +1,5 @@
 ---
-title: Grouping
+title: Grouping APIs
 id: grouping
 ---
 

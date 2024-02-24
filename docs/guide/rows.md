@@ -1,5 +1,5 @@
 ---
-title: Rows
+title: Rows Guide
 ---
 
 ## API

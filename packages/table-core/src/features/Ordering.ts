@@ -1,9 +1,10 @@
-import { makeStateUpdater, memo } from '../utils'
+import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 import { Table, OnChangeFn, Updater, Column, RowData } from '../types'
 
 import { orderColumns } from './Grouping'
 import { TableFeature } from '../core/table'
+import { ColumnPinningPosition, _getVisibleLeafColumns } from '..'
 
 export interface ColumnOrderTableState {
   columnOrder: ColumnOrderState
@@ -18,6 +19,27 @@ export interface ColumnOrderOptions {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
    */
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
+}
+
+export interface ColumnOrderColumn {
+  /**
+   * Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#getindex)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+   */
+  getIndex: (position?: ColumnPinningPosition | 'center') => number
+  /**
+   * Returns `true` if the column is the first column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the first in a sub-section of the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#getisfirstcolumn)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+   */
+  getIsFirstColumn: (position?: ColumnPinningPosition | 'center') => boolean
+  /**
+   * Returns `true` if the column is the last column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the last in a sub-section of the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#getislastcolumn)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+   */
+  getIsLastColumn: (position?: ColumnPinningPosition | 'center') => boolean
 }
 
 export interface ColumnOrderDefaultOptions {
@@ -60,6 +82,25 @@ export const Ordering: TableFeature = {
     }
   },
 
+  createColumn: <TData extends RowData>(
+    column: Column<TData, unknown>,
+    table: Table<TData>
+  ): void => {
+    column.getIndex = memo(
+      position => [_getVisibleLeafColumns(table, position)],
+      columns => columns.findIndex(d => d.id === column.id),
+      getMemoOptions(table.options, 'debugColumns', 'getIndex')
+    )
+    column.getIsFirstColumn = position => {
+      const columns = _getVisibleLeafColumns(table, position)
+      return columns[0]?.id === column.id
+    }
+    column.getIsLastColumn = position => {
+      const columns = _getVisibleLeafColumns(table, position)
+      return columns[columns.length - 1]?.id === column.id
+    }
+  },
+
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnOrder = updater =>
       table.options.onColumnOrderChange?.(updater)
@@ -74,43 +115,41 @@ export const Ordering: TableFeature = {
         table.getState().grouping,
         table.options.groupedColumnMode,
       ],
-      (columnOrder, grouping, groupedColumnMode) => columns => {
-        // Sort grouped columns to the start of the column list
-        // before the headers are built
-        let orderedColumns: Column<TData, unknown>[] = []
+      (columnOrder, grouping, groupedColumnMode) =>
+        (columns: Column<TData, unknown>[]) => {
+          // Sort grouped columns to the start of the column list
+          // before the headers are built
+          let orderedColumns: Column<TData, unknown>[] = []
 
-        // If there is no order, return the normal columns
-        if (!columnOrder?.length) {
-          orderedColumns = columns
-        } else {
-          const columnOrderCopy = [...columnOrder]
+          // If there is no order, return the normal columns
+          if (!columnOrder?.length) {
+            orderedColumns = columns
+          } else {
+            const columnOrderCopy = [...columnOrder]
 
-          // If there is an order, make a copy of the columns
-          const columnsCopy = [...columns]
+            // If there is an order, make a copy of the columns
+            const columnsCopy = [...columns]
 
-          // And make a new ordered array of the columns
+            // And make a new ordered array of the columns
 
-          // Loop over the columns and place them in order into the new array
-          while (columnsCopy.length && columnOrderCopy.length) {
-            const targetColumnId = columnOrderCopy.shift()
-            const foundIndex = columnsCopy.findIndex(
-              d => d.id === targetColumnId
-            )
-            if (foundIndex > -1) {
-              orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
+            // Loop over the columns and place them in order into the new array
+            while (columnsCopy.length && columnOrderCopy.length) {
+              const targetColumnId = columnOrderCopy.shift()
+              const foundIndex = columnsCopy.findIndex(
+                d => d.id === targetColumnId
+              )
+              if (foundIndex > -1) {
+                orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
+              }
             }
+
+            // If there are any columns left, add them to the end
+            orderedColumns = [...orderedColumns, ...columnsCopy]
           }
 
-          // If there are any columns left, add them to the end
-          orderedColumns = [...orderedColumns, ...columnsCopy]
-        }
-
-        return orderColumns(orderedColumns, grouping, groupedColumnMode)
-      },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getOrderColumnsFn',
-        // debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+          return orderColumns(orderedColumns, grouping, groupedColumnMode)
+        },
+      getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn')
     )
   },
 }

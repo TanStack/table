@@ -4,7 +4,7 @@ import React from 'react'
 
 import { styled } from './utils'
 
-export const Entry = styled('div', {
+const Entry = styled('div', {
   fontFamily: 'Menlo, monospace',
   fontSize: '0.7rem',
   lineHeight: '1.7',
@@ -12,27 +12,27 @@ export const Entry = styled('div', {
   wordBreak: 'break-word',
 })
 
-export const Label = styled('span', {
+const Label = styled('span', {
   cursor: 'pointer',
   color: 'white',
 })
 
-export const Value = styled('span', (props, theme) => ({
+const Value = styled('span', (props, theme) => ({
   color: theme.danger,
 }))
 
-export const SubEntries = styled('div', {
+const SubEntries = styled('div', {
   marginLeft: '.1rem',
   paddingLeft: '1rem',
   borderLeft: '2px solid rgba(0,0,0,.15)',
 })
 
-export const Info = styled('span', {
+const Info = styled('span', {
   color: 'grey',
   fontSize: '.7rem',
 })
 
-export const Expander = ({ expanded, style = {}, ...rest }) => (
+const Expander = ({ expanded, style = {}, ...rest }) => (
   <span
     style={{
       display: 'inline-block',

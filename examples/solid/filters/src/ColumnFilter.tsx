@@ -1,94 +1,92 @@
 import { Column, Table } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
-import { createMemo } from 'solid-js'
+import { createMemo, For, Show } from 'solid-js'
 
-function ColumnFilter({
-  column,
-  table,
-}: {
+function ColumnFilter(props: {
   column: Column<any, unknown>
   table: Table<any>
 }) {
-  const firstValue = table
+  const firstValue = props.table
     .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
+    .flatRows[0]?.getValue(props.column.id)
 
-  const columnFilterValue = column.getFilterValue()
+  const columnFilterValue = () => props.column.getFilterValue()
 
-  const sortedUniqueValues = createMemo(
-    () =>
-      typeof firstValue === 'number'
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column.getFacetedUniqueValues()]
+  const sortedUniqueValues = createMemo(() =>
+    typeof firstValue === 'number'
+      ? []
+      : Array.from(props.column.getFacetedUniqueValues().keys()).sort()
   )
 
-  const debounceColumnFilter = debounce(
-    value => column.setFilterValue(value),
-    500
-  )
-
-  return typeof firstValue === 'number' ? (
-    <div>
-      <div className="flex space-x-2">
-        <input
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          onInput={e =>
-            debounceColumnFilter((old: [number, number]) => [
-              e.target.value,
-              old?.[1],
-            ])
-          }
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0]
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ''
-          }`}
-          className="w-24 border shadow rounded"
-        />
-        <input
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          onInput={e =>
-            debounceColumnFilter((old: [number, number]) => [
-              old?.[0],
-              e.target.value,
-            ])
-          }
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ''
-          }`}
-          className="w-24 border shadow rounded"
-        />
+  return (
+    <Show
+      when={typeof firstValue === 'number'}
+      fallback={
+        <div>
+          <datalist id={`${props.column.id}list`}>
+            <For each={sortedUniqueValues().slice(0, 5000)}>
+              {(value: string) => <option value={value} />}
+            </For>
+          </datalist>
+          <input
+            type="text"
+            value={(columnFilterValue() ?? '') as string}
+            onInput={debounce(
+              e => props.column.setFilterValue(e.target.value),
+              500
+            )}
+            placeholder={`Search... (${props.column.getFacetedUniqueValues().size})`}
+            class="w-36 border shadow rounded"
+            list={`${props.column.id}list`}
+          />
+        </div>
+      }
+    >
+      <div>
+        <div class="flex space-x-2">
+          <input
+            type="number"
+            min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
+            max={Number(props.column.getFacetedMinMaxValues()?.[1] ?? '')}
+            value={(columnFilterValue() as [number, number])?.[0] ?? ''}
+            onInput={debounce(
+              e =>
+                props.column.setFilterValue((old: [number, number]) => [
+                  e.target.value,
+                  old?.[1],
+                ]),
+              500
+            )}
+            placeholder={`Min ${
+              props.column.getFacetedMinMaxValues()?.[0]
+                ? `(${props.column.getFacetedMinMaxValues()?.[0]})`
+                : ''
+            }`}
+            class="w-24 border shadow rounded"
+          />
+          <input
+            type="number"
+            min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
+            max={Number(props.column.getFacetedMinMaxValues()?.[1] ?? '')}
+            value={(columnFilterValue() as [number, number])?.[1] ?? ''}
+            onInput={debounce(
+              e =>
+                props.column.setFilterValue((old: [number, number]) => [
+                  old?.[0],
+                  e.target.value,
+                ]),
+              500
+            )}
+            placeholder={`Max ${
+              props.column.getFacetedMinMaxValues()?.[1]
+                ? `(${props.column.getFacetedMinMaxValues()?.[1]})`
+                : ''
+            }`}
+            class="w-24 border shadow rounded"
+          />
+        </div>
       </div>
-      <div className="h-1" />
-    </div>
-  ) : (
-    <>
-      <datalist id={column.id + 'list'}>
-        {sortedUniqueValues()
-          .slice(0, 5000)
-          .map((value: any) => (
-            <option value={value} key={value} />
-          ))}
-      </datalist>
-      <input
-        type="text"
-        value={(columnFilterValue ?? '') as string}
-        onInput={e => debounceColumnFilter(e.target.value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 border shadow rounded"
-        list={column.id + 'list'}
-      />
-      <div className="h-1" />
-    </>
+    </Show>
   )
 }
 

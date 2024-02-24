@@ -3,6 +3,8 @@
 
 # dependencies
 node_modules
+package-lock.json
+yarn.lock
 
 # builds
 types
@@ -36,9 +38,8 @@ stats.html
 
 *.log
 .DS_Store
-node_modules
 .cache
-dist
+.pnpm-store
 
 package-lock.json
 yarn.lock

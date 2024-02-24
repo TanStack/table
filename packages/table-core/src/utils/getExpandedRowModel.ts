@@ -1,5 +1,5 @@
 import { Table, Row, RowModel, RowData } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 
 export function getExpandedRowModel<TData extends RowData>(): (
   table: Table<TData>
@@ -26,10 +26,7 @@ export function getExpandedRowModel<TData extends RowData>(): (
 
         return expandRows(rowModel)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getExpandedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+      getMemoOptions(table.options, 'debugTable', 'getExpandedRowModel')
     )
 }
 

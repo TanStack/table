@@ -32,6 +32,8 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - name: Start Nx Agents
+        run: npx nx-cloud start-ci-run --distribute-on=".nx/workflows/dynamic-changesets.yaml"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
       - name: Get base and head commits for `nx affected`
@@ -39,4 +41,7 @@ jobs:
         with:
           main-branch-name: 'main'
       - name: Run Checks
-        run: pnpm run test:pr
+        run: pnpm run test:pr --parallel=3
+      - name: Stop Nx Agents
+        if: ${{ always() }}
+        run: npx nx-cloud stop-all-agents

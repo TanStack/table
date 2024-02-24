@@ -1,5 +1,5 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
-import { Getter, memo } from '../utils'
+import { Getter, getMemoOptions, memo } from '../utils'
 
 export interface CellContext<TData extends RowData, TValue> {
   cell: Cell<TData, TValue>
@@ -74,10 +74,7 @@ export function createCell<TData extends RowData, TValue>(
         getValue: cell.getValue,
         renderValue: cell.renderValue,
       }),
-      {
-        key: process.env.NODE_ENV === 'development' && 'cell.getContext',
-        debug: () => table.options.debugAll,
-      }
+      getMemoOptions(table.options, 'debugCells', 'cell.getContext')
     ),
   }
 

@@ -1,5 +1,5 @@
 ---
-title: Column Visibility
+title: Column Visibility APIs
 id: column-visibility
 ---
 

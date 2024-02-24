@@ -9,29 +9,29 @@ Install your table adapter as a dependency using your favorite npm package manag
 ## React Table
 
 ```bash
-$ npm install @tanstack/react-table
+npm install @tanstack/react-table
 ```
 
 ## Solid Table
 
 ```bash
-$ npm install @tanstack/solid-table
+npm install @tanstack/solid-table
 ```
 
 ## Svelte Table
 
 ```bash
-$ npm install @tanstack/svelte-table
+npm install @tanstack/svelte-table
 ```
 
 ## Vue Table
 
 ```bash
-$ npm install @tanstack/vue-table
+npm install @tanstack/vue-table
 ```
 
 ## Table Core (no framework)
 
 ```bash
-$ npm install @tanstack/table-core
+npm install @tanstack/table-core
 ```

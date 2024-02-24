@@ -1,4 +1,4 @@
-import { TableState, Updater } from './types'
+import { TableOptionsResolved, TableState, Updater } from './types'
 
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
@@ -134,23 +134,23 @@ export function flattenBy<TNode>(
   return flat
 }
 
-export function memo<TDeps extends readonly any[], TResult>(
-  getDeps: () => [...TDeps],
+export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
+  getDeps: (depArgs?: TDepArgs) => [...TDeps],
   fn: (...args: NoInfer<[...TDeps]>) => TResult,
   opts: {
     key: any
     debug?: () => any
     onChange?: (result: TResult) => void
   }
-): () => TResult {
+): (depArgs?: TDepArgs) => TResult {
   let deps: any[] = []
   let result: TResult | undefined
 
-  return () => {
+  return depArgs => {
     let depTime: number
     if (opts.key && opts.debug) depTime = Date.now()
 
-    const newDeps = getDeps()
+    const newDeps = getDeps(depArgs)
 
     const depsChanged =
       newDeps.length !== deps.length ||
@@ -197,5 +197,24 @@ export function memo<TDeps extends readonly any[], TResult>(
     }
 
     return result!
+  }
+}
+
+export function getMemoOptions(
+  tableOptions: Partial<TableOptionsResolved<any>>,
+  debugLevel:
+    | 'debugAll'
+    | 'debugCells'
+    | 'debugTable'
+    | 'debugColumns'
+    | 'debugRows'
+    | 'debugHeaders',
+  key: string,
+  onChange?: (result: any) => void
+) {
+  return {
+    debug: () => tableOptions?.debugAll ?? tableOptions[debugLevel],
+    key: process.env.NODE_ENV === 'development' && key,
+    onChange,
   }
 }
