@@ -9,8 +9,12 @@ export type Person = {
   status: 'relationship' | 'complicated' | 'single'
   subRows?: Person[]
 }
-
 export const columns: ColumnDef<Person>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => table,
+    cell: ({ row }) => row,
+  },
   {
     header: 'Name',
     footer: props => props.column.id,

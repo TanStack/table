@@ -202,6 +202,79 @@ importers:
         specifier: ~5.3.2
         version: 5.3.3
 
+  examples/angular/expanding:
+    dependencies:
+      '@angular/animations':
+        specifier: ^17.1.0
+        version: 17.2.1(@angular/core@17.1.2)
+      '@angular/common':
+        specifier: ^17.1.0
+        version: 17.1.2(@angular/core@17.1.2)(rxjs@7.8.1)
+      '@angular/compiler':
+        specifier: ^17.1.0
+        version: 17.1.1(@angular/core@17.1.2)
+      '@angular/core':
+        specifier: ^17.1.0
+        version: 17.1.2(rxjs@7.8.1)(zone.js@0.14.3)
+      '@angular/forms':
+        specifier: ^17.1.0
+        version: 17.2.1(@angular/common@17.1.2)(@angular/core@17.1.2)(@angular/platform-browser@17.2.1)(rxjs@7.8.1)
+      '@angular/platform-browser':
+        specifier: ^17.1.0
+        version: 17.2.1(@angular/animations@17.2.1)(@angular/common@17.1.2)(@angular/core@17.1.2)
+      '@angular/platform-browser-dynamic':
+        specifier: ^17.1.0
+        version: 17.2.1(@angular/common@17.1.2)(@angular/compiler@17.1.1)(@angular/core@17.1.2)(@angular/platform-browser@17.2.1)
+      '@angular/router':
+        specifier: ^17.1.0
+        version: 17.2.1(@angular/common@17.1.2)(@angular/core@17.1.2)(@angular/platform-browser@17.2.1)(rxjs@7.8.1)
+      '@tanstack/angular-table':
+        specifier: ^8.11.8
+        version: link:../../../packages/angular-table
+      rxjs:
+        specifier: ~7.8.0
+        version: 7.8.1
+      tslib:
+        specifier: ^2.3.0
+        version: 2.6.2
+      zone.js:
+        specifier: ~0.14.3
+        version: 0.14.3
+    devDependencies:
+      '@angular-devkit/build-angular':
+        specifier: ^17.1.2
+        version: 17.2.0(@angular/compiler-cli@17.1.1)(@types/node@18.19.7)(karma@6.4.2)(ng-packagr@17.1.2)(typescript@5.3.3)
+      '@angular/cli':
+        specifier: ^17.1.2
+        version: 17.2.0
+      '@angular/compiler-cli':
+        specifier: ^17.1.0
+        version: 17.1.1(@angular/compiler@17.1.1)(typescript@5.3.3)
+      '@types/jasmine':
+        specifier: ~5.1.0
+        version: 5.1.4
+      jasmine-core:
+        specifier: ~5.1.0
+        version: 5.1.2
+      karma:
+        specifier: ~6.4.0
+        version: 6.4.2
+      karma-chrome-launcher:
+        specifier: ~3.2.0
+        version: 3.2.0
+      karma-coverage:
+        specifier: ~2.2.0
+        version: 2.2.1
+      karma-jasmine:
+        specifier: ~5.1.0
+        version: 5.1.0(karma@6.4.2)
+      karma-jasmine-html-reporter:
+        specifier: ~2.1.0
+        version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0)(karma@6.4.2)
+      typescript:
+        specifier: ~5.3.2
+        version: 5.3.3
+
   examples/angular/grouping:
     dependencies:
       '@angular/animations':
@@ -2673,6 +2746,7 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.23.9
+    dev: false
 
   /@babel/parser@7.23.6:
     resolution: {integrity: sha512-Z2uID7YJ7oNvAI20O9X0bblw7Qqs8Q2hFy0R9tAfnfLkp5MW0UH9eUvnDSnFwKZ0AvgS1ucqR4KzvVHgnke1VQ==}
@@ -4499,7 +4573,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.9
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/types': 7.23.6
+      '@babel/types': 7.23.9
       esutils: 2.0.3
     dev: true
 
@@ -6745,7 +6819,7 @@ packages:
   /@types/babel__template@7.4.1:
     resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
     dependencies:
-      '@babel/parser': 7.21.3
+      '@babel/parser': 7.23.9
       '@babel/types': 7.23.9
     dev: true
 
@@ -7119,7 +7193,7 @@ packages:
   /@vue/compiler-core@3.2.47:
     resolution: {integrity: sha512-p4D7FDnQb7+YJmO2iPEv0SQNeNzcbHdGByJDsT4lynf63AFkOTFN07HsiRSvjGo0QrxR/o3d0hUyNCUnBU2Tig==}
     dependencies:
-      '@babel/parser': 7.21.3
+      '@babel/parser': 7.23.9
       '@vue/shared': 3.2.47
       estree-walker: 2.0.2
       source-map: 0.6.1
@@ -7128,7 +7202,7 @@ packages:
   /@vue/compiler-core@3.3.13:
     resolution: {integrity: sha512-bwi9HShGu7uaZLOErZgsH2+ojsEdsjerbf2cMXPwmvcgZfVPZ2BVZzCVnwZBxTAYd6Mzbmf6izcUNDkWnBBQ6A==}
     dependencies:
-      '@babel/parser': 7.23.6
+      '@babel/parser': 7.23.9
       '@vue/shared': 3.3.13
       estree-walker: 2.0.2
       source-map-js: 1.0.2

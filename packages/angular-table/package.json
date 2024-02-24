@@ -22,12 +22,13 @@
   ],
   "type": "module",
   "module": "build/lib/esm2022/index.mjs",
-  "main": "build/lib/index.js",
+  "main": "build/lib/index.d.ts",
   "types": "build/lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/esm2022/index.mjs"
+      "import": "./build/lib/esm2022/index.mjs",
+      "default": "./build/lib/index.d.ts"
     },
     "./package.json": {
       "default": "./package.json"

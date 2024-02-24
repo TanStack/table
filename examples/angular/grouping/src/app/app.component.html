@@ -65,6 +65,8 @@
                   >
                     {{ aggregatedCell }}
                   </ng-container>
+                } @else if (cell.getIsPlaceholder()) {
+                  <span></span>
                 } @else {
                   <ng-container
                     *flexRender="
