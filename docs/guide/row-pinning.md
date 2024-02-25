@@ -1,12 +1,12 @@
 ---
-title: Row Pinning
+title: Row Pinning Guide
 ---
 
 ## Examples
 
 Want to skip to the implementation? Check out these examples:
 
-- [row-pinning](../examples/react/row-pinning)
+- [row-pinning](../framework/react/examples/row-pinning)
 
 ## API
 

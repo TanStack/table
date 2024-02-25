@@ -1,5 +1,6 @@
 {
   "name": "table",
+  "namespace": "@tanstack",
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
   "packageManager": "pnpm@8.12.1",
@@ -8,14 +9,16 @@
     "clean": "pnpm --filter \"./packages/**\" run clean",
     "preinstall": "node -e \"if(process.env.CI == 'true') {console.log('Skipping preinstall...'); process.exit(1)}\" || npx -y only-allow pnpm",
     "test": "pnpm run test:ci",
-    "test:pr": "nx affected --targets=test:format,test:lib,test:types,build --exclude=examples/**",
-    "test:ci": "nx run-many --targets=test:format,test:lib,test:types,build --exclude=examples/**",
+    "test:pr": "nx affected --targets=test:format,test:sherif,test:knip,test:lib,test:types,build",
+    "test:ci": "nx run-many --targets=test:format,test:sherif,test:knip,test:lib,test:types,build",
     "test:format": "pnpm run prettier --check",
+    "test:sherif": "sherif",
     "test:lib": "nx affected --targets=test:lib --exclude=examples/**",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:types": "nx affected --targets=test:types --exclude=examples/**",
-    "build": "nx affected --targets=build --exclude=examples/**",
-    "build:all": "nx run-many --targets=build --exclude=examples/**",
+    "test:knip": "knip",
+    "build": "nx affected --targets=build --exclude=examples/** && size-limit",
+    "build:all": "nx run-many --targets=build --exclude=examples/** && size-limit",
     "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all",
     "dev": "pnpm run watch",
     "prettier": "prettier --ignore-unknown '**/*'",
@@ -24,10 +27,21 @@
   },
   "nx": {
     "includedScripts": [
-      "test:format"
+      "test:format",
+      "test:knip",
+      "test:sherif"
     ]
   },
-  "namespace": "@tanstack",
+  "size-limit": [
+    {
+      "path": "packages/table-core/build/lib/index.js",
+      "limit": "16 KB"
+    },
+    {
+      "path": "packages/table-core/build/lib/index.mjs",
+      "limit": "15 KB"
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
@@ -39,16 +53,16 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
-    "@tanstack/config": "^0.1.8",
+    "@size-limit/preset-small-lib": "^11.0.2",
+    "@tanstack/config": "^0.4.2",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "@testing-library/react-hooks": "^8.0.1",
-    "@tsconfig/svelte": "^5.0.2",
     "@types/node": "^18.19.4",
-    "@types/react": "^18.2.45",
+    "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
-    "babel-plugin-transform-async-to-promises": "^0.8.18",
     "jsdom": "^23.2.0",
+    "knip": "^4.6.0",
     "nx": "^17.2.8",
     "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.1.2",
@@ -59,11 +73,10 @@
     "rollup-plugin-size": "^0.3.1",
     "rollup-plugin-svelte": "^7.1.6",
     "rollup-plugin-visualizer": "^5.12.0",
-    "solid-js": "^1.8.11",
+    "sherif": "^0.7.0",
+    "size-limit": "^11.0.2",
     "svelte": "^4.2.8",
     "typescript": "5.3.3",
-    "vite": "^5.0.11",
-    "vitest": "^1.2.0",
-    "vue": "^3.4.14"
+    "vitest": "^1.2.0"
   }
 }

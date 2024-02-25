@@ -5,6 +5,7 @@ export const makeColumns = num =>
     return {
       accessorKey: i.toString(),
       header: 'Column ' + i.toString(),
+      size: Math.floor(Math.random() * 150) + 100,
     }
   })
 

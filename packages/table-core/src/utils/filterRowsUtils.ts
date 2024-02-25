@@ -13,7 +13,7 @@ export function filterRows<TData extends RowData>(
   return filterRowModelFromRoot(rows, filterRowImpl, table)
 }
 
-export function filterRowModelFromLeafs<TData extends RowData>(
+function filterRowModelFromLeafs<TData extends RowData>(
   rowsToFilter: Row<TData>[],
   filterRow: (row: Row<TData>) => Row<TData>[],
   table: Table<TData>
@@ -77,7 +77,7 @@ export function filterRowModelFromLeafs<TData extends RowData>(
   }
 }
 
-export function filterRowModelFromRoot<TData extends RowData>(
+function filterRowModelFromRoot<TData extends RowData>(
   rowsToFilter: Row<TData>[],
   filterRow: (row: Row<TData>) => any,
   table: Table<TData>

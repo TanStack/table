@@ -1,5 +1,5 @@
 ---
-title: Filters
+title: Filter APIs
 id: filters
 ---
 

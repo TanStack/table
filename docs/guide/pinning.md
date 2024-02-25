@@ -1,5 +1,5 @@
 ---
-title: Pinning
+title: Pinning Guide
 ---
 
 <!-- Deprecated  -->

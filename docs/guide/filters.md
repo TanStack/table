@@ -1,5 +1,5 @@
 ---
-title: Filters
+title: Filters Guide
 ---
 
 <!-- Deprecated -->

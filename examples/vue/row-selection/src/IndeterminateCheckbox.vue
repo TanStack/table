@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, useAttrs, toRefs } from 'vue'
+import { ref, toRefs } from 'vue'
 
 const props = defineProps<{
   indeterminate: boolean

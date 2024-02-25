@@ -1,6 +1,11 @@
 import { TableFeature } from '../core/table'
 import { OnChangeFn, Table, RowModel, Updater, RowData } from '../types'
-import { functionalUpdate, makeStateUpdater, memo } from '../utils'
+import {
+  functionalUpdate,
+  getMemoOptions,
+  makeStateUpdater,
+  memo,
+} from '../utils'
 
 export interface PaginationState {
   pageIndex: number
@@ -290,10 +295,7 @@ export const Pagination: TableFeature = {
         }
         return pageOptions
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getPageOptions',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+      getMemoOptions(table.options, 'debugTable', 'getPageOptions')
     )
 
     table.getCanPreviousPage = () => table.getState().pagination.pageIndex > 0

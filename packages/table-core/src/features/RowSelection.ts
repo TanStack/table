@@ -1,6 +1,6 @@
 import { TableFeature } from '../core/table'
 import { OnChangeFn, Table, Row, RowModel, Updater, RowData } from '../types'
-import { makeStateUpdater, memo } from '../utils'
+import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 export type RowSelectionState = Record<string, boolean>
 
@@ -333,10 +333,7 @@ export const RowSelection: TableFeature = {
 
         return selectRowsFn(table, rowModel)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getSelectedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+      getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel')
     )
 
     table.getFilteredSelectedRowModel = memo(
@@ -352,12 +349,7 @@ export const RowSelection: TableFeature = {
 
         return selectRowsFn(table, rowModel)
       },
-      {
-        key:
-          process.env.NODE_ENV === 'production' &&
-          'getFilteredSelectedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+      getMemoOptions(table.options, 'debugTable', 'getFilteredSelectedRowModel')
     )
 
     table.getGroupedSelectedRowModel = memo(
@@ -373,11 +365,7 @@ export const RowSelection: TableFeature = {
 
         return selectRowsFn(table, rowModel)
       },
-      {
-        key:
-          process.env.NODE_ENV === 'production' && 'getGroupedSelectedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-      }
+      getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel')
     )
 
     ///
