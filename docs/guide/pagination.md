@@ -177,6 +177,8 @@ There are several pagination table instance APIs that are useful for hooking up 
 - `setPagination`: Useful for setting all of the pagination state at once.
 - `resetPagination`: Useful for resetting the table state to the original pagination state.
 
+> **Note**: Some of these APIs are new in `v8.13.0`
+
 ```jsx
 <Button
   onClick={() => table.firstPage()}
