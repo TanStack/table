@@ -13,7 +13,7 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@faker-js/faker": "^8.3.1",
+    "@faker-js/faker": "^8.4.1",
     "@tanstack/react-table": "^8.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

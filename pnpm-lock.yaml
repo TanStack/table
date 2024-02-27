@@ -21,8 +21,8 @@ importers:
         specifier: ^7.23.3
         version: 7.23.3(@babel/core@7.23.7)
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.23.7)(rollup@4.9.5)
@@ -161,8 +161,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -200,8 +200,8 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(react@18.2.0)
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -259,8 +259,8 @@ importers:
   examples/react/column-ordering:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -290,8 +290,8 @@ importers:
   examples/react/column-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -321,8 +321,8 @@ importers:
   examples/react/column-pinning-sticky:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -352,8 +352,8 @@ importers:
   examples/react/column-resizing-performant:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -439,8 +439,8 @@ importers:
   examples/react/editable-data:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -470,8 +470,8 @@ importers:
   examples/react/expanding:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -501,8 +501,8 @@ importers:
   examples/react/filters:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/match-sorter-utils':
         specifier: ^8.11.8
         version: link:../../../packages/match-sorter-utils
@@ -535,8 +535,8 @@ importers:
   examples/react/full-width-resizable-table:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -566,8 +566,8 @@ importers:
   examples/react/full-width-table:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -597,8 +597,8 @@ importers:
   examples/react/fully-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -628,8 +628,8 @@ importers:
   examples/react/grouping:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -684,8 +684,8 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1(@babel/core@7.23.7)
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -727,8 +727,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -748,8 +748,8 @@ importers:
   examples/react/pagination:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -779,8 +779,8 @@ importers:
   examples/react/pagination-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-query':
         specifier: ^5.24.1
         version: 5.24.1(react@18.2.0)
@@ -825,8 +825,8 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(react@18.2.0)
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -856,8 +856,8 @@ importers:
   examples/react/row-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -887,8 +887,8 @@ importers:
   examples/react/row-selection:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -918,8 +918,8 @@ importers:
   examples/react/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -949,8 +949,8 @@ importers:
   examples/react/sub-components:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -980,8 +980,8 @@ importers:
   examples/react/virtualized-columns:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -1014,8 +1014,8 @@ importers:
   examples/react/virtualized-infinite-scrolling:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-query':
         specifier: ^5.24.1
         version: 5.24.1(react@18.2.0)
@@ -1051,8 +1051,8 @@ importers:
   examples/react/virtualized-rows:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: link:../../../packages/react-table
@@ -1117,8 +1117,8 @@ importers:
         version: 1.8.11
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -1158,8 +1158,8 @@ importers:
         version: 1.8.11
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -1202,8 +1202,8 @@ importers:
         version: 1.8.11
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -1224,8 +1224,8 @@ importers:
         version: 1.8.11
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -1293,8 +1293,8 @@ importers:
   examples/svelte/column-ordering:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -1323,8 +1323,8 @@ importers:
   examples/svelte/column-pinning:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -1380,8 +1380,8 @@ importers:
   examples/svelte/filtering:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -1413,8 +1413,8 @@ importers:
   examples/svelte/sorting:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.5)
@@ -1468,8 +1468,8 @@ importers:
   examples/vue/column-ordering:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/vue-table':
         specifier: ^8.12.0
         version: link:../../../packages/vue-table
@@ -1496,8 +1496,8 @@ importers:
   examples/vue/column-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/vue-table':
         specifier: ^8.12.0
         version: link:../../../packages/vue-table
@@ -1524,8 +1524,8 @@ importers:
   examples/vue/pagination:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/vue-table':
         specifier: ^8.12.0
         version: link:../../../packages/vue-table
@@ -1552,8 +1552,8 @@ importers:
   examples/vue/pagination-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/vue-table':
         specifier: ^8.12.0
         version: link:../../../packages/vue-table
@@ -1611,8 +1611,8 @@ importers:
   examples/vue/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/vue-table':
         specifier: ^8.12.0
         version: link:../../../packages/vue-table
@@ -3671,14 +3671,9 @@ packages:
     dev: true
     optional: true
 
-  /@faker-js/faker@8.3.1:
-    resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
-
   /@faker-js/faker@8.4.1:
     resolution: {integrity: sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
-    dev: false
 
   /@floating-ui/core@1.5.3:
     resolution: {integrity: sha512-O0WKDOo0yhJuugCx6trZQj5jVJ9yR0ystG2JaNAemYUWce+pmM6WUEFIibnWyEJKdrDxhm75NoSRME35FNaM/Q==}
