@@ -24,3 +24,7 @@ tfoot {
 tfoot th {
   font-weight: normal;
 }
+
+button:disabled {
+  opacity: 0.5;
+}

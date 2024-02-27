@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1",
+    "@faker-js/faker": "^8.4.1",
     "typescript": "5.3.3",
     "vite": "^5.0.11",
     "vite-plugin-solid": "^2.8.0"

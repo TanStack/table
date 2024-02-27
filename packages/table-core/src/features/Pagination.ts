@@ -48,11 +48,17 @@ export interface PaginationOptions {
    */
   onPaginationChange?: OnChangeFn<PaginationState>
   /**
-   * When manually controlling pagination, you should supply a total `pageCount` value to the table if you know it. If you do not know how many pages there are, you can set this to `-1`.
+   * When manually controlling pagination, you can supply a total `pageCount` value to the table if you know it (Or supply a `rowCount` and `pageCount` will be calculated). If you do not know how many pages there are, you can set this to `-1`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#pagecount)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
   pageCount?: number
+  /**
+   * When manually controlling pagination, you can supply a total `rowCount` value to the table if you know it. The `pageCount` can be calculated from this value and the `pageSize`.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#rowcount)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  rowCount?: number
 }
 
 export interface PaginationDefaultOptions {
@@ -80,6 +86,12 @@ export interface PaginationInstance<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
   getPageCount: () => number
+  /**
+   * Returns the row count. If manually paginating or controlling the pagination state, this will come directly from the `options.rowCount` table option, otherwise it will be calculated from the table data.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getrowcount)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  getRowCount: () => number
   /**
    * Returns an array of page options (zero-index-based) for the current page size.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getpageoptions)
@@ -111,6 +123,18 @@ export interface PaginationInstance<TData extends RowData> {
    */
   previousPage: () => void
   /**
+   * Sets the page index to `0`.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#firstpage)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  firstPage: () => void
+  /**
+   * Sets the page index to the last page.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#lastpage)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  lastPage: () => void
+  /**
    * Resets the page index to its initial state. If `defaultState` is `true`, the page index will be reset to `0` regardless of initial state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#resetpageindex)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
@@ -129,9 +153,7 @@ export interface PaginationInstance<TData extends RowData> {
    */
   resetPagination: (defaultState?: boolean) => void
   /**
-   * Updates the page count using the provided function or value.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#setpagecount)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   * @deprecated The page count no longer exists in the pagination state. Just pass as a table option instead.
    */
   setPageCount: (updater: Updater<number>) => void
   /**
@@ -269,6 +291,7 @@ export const Pagination: TableFeature = {
         }
       })
     }
+    //deprecated
     table.setPageCount = updater =>
       table.setPagination(old => {
         let newPageCount = functionalUpdate(
@@ -326,6 +349,14 @@ export const Pagination: TableFeature = {
       })
     }
 
+    table.firstPage = () => {
+      return table.setPageIndex(0)
+    }
+
+    table.lastPage = () => {
+      return table.setPageIndex(table.getPageCount() - 1)
+    }
+
     table.getPrePaginationRowModel = () => table.getExpandedRowModel()
     table.getPaginationRowModel = () => {
       if (
@@ -346,10 +377,13 @@ export const Pagination: TableFeature = {
     table.getPageCount = () => {
       return (
         table.options.pageCount ??
-        Math.ceil(
-          table.getPrePaginationRowModel().rows.length /
-            table.getState().pagination.pageSize
-        )
+        Math.ceil(table.getRowCount() / table.getState().pagination.pageSize)
+      )
+    }
+
+    table.getRowCount = () => {
+      return (
+        table.options.rowCount ?? table.getPrePaginationRowModel().rows.length
       )
     }
   },
