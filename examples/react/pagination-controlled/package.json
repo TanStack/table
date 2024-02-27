@@ -13,7 +13,7 @@
     "@tanstack/react-table": "^8.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.3"
+    "@tanstack/react-query": "^5.24.1"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.5",
