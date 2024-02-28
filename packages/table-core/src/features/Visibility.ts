@@ -178,7 +178,12 @@ export const Visibility: TableFeature = {
       }
     }
     column.getIsVisible = () => {
-      return table.getState().columnVisibility?.[column.id] ?? true
+      const childColumns = column.columns
+      return (
+        (childColumns.length
+          ? childColumns.some(c => c.getIsVisible())
+          : table.getState().columnVisibility?.[column.id]) ?? true
+      )
     }
 
     column.getCanHide = () => {
