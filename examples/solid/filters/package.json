@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@solid-primitives/scheduled": "^1.4.1",
-    "@tanstack/solid-table": "^8.13.0",
+    "@tanstack/solid-table": "^8.13.1",
     "solid-js": "^1.8.11"
   }
 }
