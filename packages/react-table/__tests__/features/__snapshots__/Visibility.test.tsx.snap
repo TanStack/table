@@ -4,12 +4,8 @@ exports[`useReactTable > can toggle column visibility > 0 - after toggling all o
 {
   "footers": [
     [],
-    [],
-    [],
   ],
   "headers": [
-    [],
-    [],
     [],
   ],
   "rows": [
@@ -306,20 +302,6 @@ exports[`useReactTable > can toggle column visibility > 3 - after toggling More 
     ],
     [
       [
-        "",
-        "1",
-      ],
-      [
-        "",
-        "1",
-      ],
-      [
-        "",
-        "1",
-      ],
-    ],
-    [
-      [
         "Name",
         "2",
       ],
@@ -337,20 +319,6 @@ exports[`useReactTable > can toggle column visibility > 3 - after toggling More 
       ],
       [
         "Info",
-        "1",
-      ],
-    ],
-    [
-      [
-        "",
-        "1",
-      ],
-      [
-        "",
-        "1",
-      ],
-      [
-        "",
         "1",
       ],
     ],
