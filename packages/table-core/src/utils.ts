@@ -48,14 +48,14 @@ export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
   : unknown extends T
     ? string
     : T extends readonly any[] & IsTuple<T>
-        ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
-        : T extends any[]
-          ? DeepKeys<T[number], [...TDepth, any]>
-          : T extends Date
-            ? never
-            : T extends object
-              ? (keyof T & string) | DeepKeysPrefix<T, keyof T, TDepth>
-              : never
+      ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
+      : T extends any[]
+        ? DeepKeys<T[number], [...TDepth, any]>
+        : T extends Date
+          ? never
+          : T extends object
+            ? (keyof T & string) | DeepKeysPrefix<T, keyof T, TDepth>
+            : never
 
 type DeepKeysPrefix<
   T,
