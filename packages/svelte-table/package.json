@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/svelte-table",
-  "version": "8.13.1",
+  "version": "8.13.2",
   "description": "Headless UI for building powerful tables & datagrids for Svelte.",
   "author": "Tanner Linsley",
   "license": "MIT",
