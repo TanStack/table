@@ -12,14 +12,12 @@ The `@tanstack/vue-table` adapter is a wrapper around the core table logic. Most
 
 Takes an `options` object and returns a table.
 
-```tsx
+```ts
 import { useVueTable } from '@tanstack/vue-table'
 
-function App() {
-  const table = useVueTable(options)
+const table = useVueTable(options)
+// ...render your table
 
-  // ...render your table
-}
 ```
 
 ### `FlexRender`
