@@ -223,6 +223,37 @@
   ],
   "frameworkMenus": [
     {
+      "framework": "angular",
+      "menuItems": [
+        {
+          "label": "Getting Started",
+          "children": [
+            {
+              "label": "Angular Table",
+              "to": "framework/angular/angular-table"
+            }
+          ]
+        },
+        {
+          "label": "Examples",
+          "children": [
+            {
+              "to": "framework/angular/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/angular/examples/grouping",
+              "label": "Grouping"
+            },
+            {
+              "to": "framework/angular/examples/selection",
+              "label": "Selection"
+            }
+          ]
+        }    
+      ]
+    },
+    {
       "framework": "react",
       "menuItems": [
         {

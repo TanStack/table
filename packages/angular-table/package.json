@@ -48,7 +48,7 @@
     "build:types": "tsc --emitDeclarationOnly"
   },
   "dependencies": {
-    "tslib": "^2.3.0",
+    "tslib": "^2.6.2",
     "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
