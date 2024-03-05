@@ -238,7 +238,7 @@
           "label": "Core Guides",
           "children": [
             {
-              "label": "Table State (React)",
+              "label": "Table State",
               "to": "framework/react/guide/table-state"
             }
           ]
