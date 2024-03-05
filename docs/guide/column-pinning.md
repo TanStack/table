@@ -29,7 +29,7 @@ There are 3 table features that can reorder columns, which happen in the followi
 
 1. **Column Pinning** - If pinning, columns are split into left, center (unpinned), and right pinned columns.
 2. Manual [Column Ordering](../guide/column-ordering) - A manually specified column order is applied.
-3. [Grouping](../guide/grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.columnGroupingMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+3. [Grouping](../guide/grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
 The only way to change the order of the pinned columns is in the `columnPinning.left` and `columnPinning.right` state itself. `columnOrder` state will only affect the order of the unpinned ("center") columns.
 

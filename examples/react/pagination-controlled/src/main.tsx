@@ -1,7 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import {
+  keepPreviousData,
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
 
 import './index.css'
 
@@ -77,43 +82,30 @@ function App() {
     []
   )
 
-  const [{ pageIndex, pageSize }, setPagination] =
-    React.useState<PaginationState>({
-      pageIndex: 0,
-      pageSize: 10,
-    })
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
-  const fetchDataOptions = {
-    pageIndex,
-    pageSize,
-  }
-
-  const dataQuery = useQuery(
-    ['data', fetchDataOptions],
-    () => fetchData(fetchDataOptions),
-    { keepPreviousData: true }
-  )
+  const dataQuery = useQuery({
+    queryKey: ['data', pagination],
+    queryFn: () => fetchData(pagination),
+    placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
+  })
 
   const defaultData = React.useMemo(() => [], [])
-
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  )
 
   const table = useReactTable({
     data: dataQuery.data?.rows ?? defaultData,
     columns,
-    pageCount: dataQuery.data?.pageCount ?? -1,
+    // pageCount: dataQuery.data?.pageCount ?? -1, //you can now pass in `rowCount` instead of pageCount and `pageCount` will be calculated internally (new in v8.13.0)
+    rowCount: dataQuery.data?.rowCount, // new in v8.13.0 - alternatively, just pass in `pageCount` directly
     state: {
       pagination,
     },
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
+    manualPagination: true, //we're doing manual "server-side" pagination
     // getPaginationRowModel: getPaginationRowModel(), // If only doing manual pagination, you don't need this
     debugTable: true,
   })
@@ -165,7 +157,7 @@ function App() {
       <div className="flex items-center gap-2">
         <button
           className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
@@ -186,7 +178,7 @@ function App() {
         </button>
         <button
           className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
@@ -195,7 +187,7 @@ function App() {
           <div>Page</div>
           <strong>
             {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -224,7 +216,10 @@ function App() {
         </select>
         {dataQuery.isFetching ? 'Loading...' : null}
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div>
+        Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+        {dataQuery.data?.rowCount.toLocaleString()} Rows
+      </div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>

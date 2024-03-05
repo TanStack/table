@@ -38,7 +38,15 @@ Enables manual pagination. If this option is set to `true`, the table will not a
 pageCount?: number
 ```
 
-When manually controlling pagination, you should supply a total `pageCount` value to the table if you know it. If you do not know how many pages there are, you can set this to `-1`.
+When manually controlling pagination, you can supply a total `pageCount` value to the table if you know it. If you do not know how many pages there are, you can set this to `-1`. Alternatively, you can provide a `rowCount` value and the table will calculate the `pageCount` internally.
+
+### `rowCount`
+
+```tsx
+rowCount?: number
+```
+
+When manually controlling pagination, you can supply a total `rowCount` value to the table if you know it. `pageCount` will be calculated internally from `rowCount` and `pageSize`.
 
 ### `autoResetPageIndex`
 
@@ -118,14 +126,6 @@ resetPageSize: (defaultState?: boolean) => void
 
 Resets the page size to its initial state. If `defaultState` is `true`, the page size will be reset to `10` regardless of initial state.
 
-### `setPageCount`
-
-```tsx
-setPageCount: (updater: Updater<number>) => void
-```
-
-Updates the page count using the provided function or value.
-
 ### `getPageOptions`
 
 ```tsx
@@ -165,6 +165,22 @@ nextPage: () => void
 ```
 
 Increments the page index by one, if possible.
+
+### `firstPage`
+
+```tsx
+firstPage: () => void
+```
+
+Sets the page index to `0`.
+
+### `lastPage`
+
+```tsx
+lastPage: () => void
+```
+
+Sets the page index to the last available page.
 
 ### `getPageCount`
 
