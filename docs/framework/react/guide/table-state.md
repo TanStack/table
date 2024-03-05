@@ -6,8 +6,8 @@ title: Table State (React) Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [kitchen sink](../examples/kitchen-sink)
-- [fully controlled](../examples/fully-controlled)
+- [kitchen sink](../framework/react/examples/kitchen-sink)
+- [fully controlled](../framework/react/examples/fully-controlled)
 
 ## Table State (React) Guide
 
