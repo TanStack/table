@@ -1,5 +1,5 @@
 ---
-title: Tables Guide
+title: Table Instance Guide
 ---
 
 ## API

@@ -32,14 +32,14 @@
       ]
     },
     {
-      "label": "Guides",
+      "label": "Core Guides",
       "children": [
         {
           "label": "Migrating to V8",
           "to": "guide/migrating"
         },
         {
-          "label": "Tables (Getting Started)",
+          "label": "Table Instance",
           "to": "guide/tables"
         },
         {
@@ -61,7 +61,12 @@
         {
           "label": "Cells",
           "to": "guide/cells"
-        },
+        }
+      ]
+    },
+    {
+      "label": "Feature Guides",
+      "children": [
         {
           "label": "Features",
           "to": "guide/features"
@@ -226,6 +231,15 @@
             {
               "label": "React Table",
               "to": "framework/react/react-table"
+            }
+          ]
+        },
+        {
+          "label": "Core Guides",
+          "children": [
+            {
+              "label": "Table State (React)",
+              "to": "framework/react/guide/table-state"
             }
           ]
         },
