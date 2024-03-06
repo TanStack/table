@@ -8,17 +8,17 @@ id: filters
 The ability for a column to be **column** filtered is determined by the following:
 
 - The column was defined with a valid `accessorKey`/`accessorFn`.
-- `column.enableColumnFilter` is not set to `false`
-- `options.enableColumnFilters` is not set to `false`
-- `options.enableFilters` is not set to `false`
+- `column.enableColumnFilter` is set to `true`
+- `options.enableColumnFilters` is set to `true`
+- `options.enableFilters` is set to `true`
 
 The ability for a column to be **globally** filtered is determined by the following:
 
 - The column was defined a valid `accessorKey`/`accessorFn`.
 - If provided, `options.getColumnCanGlobalFilter` returns `true` for the given column. If it is not provided, the column is assumed to be globally filterable if the value in the first row is a `string` or `number` type.
-- `column.enableColumnFilter` is not set to `false`
-- `options.enableColumnFilters` is not set to `false`
-- `options.enableFilters` is not set to `false`
+- `column.enableColumnFilter` is set to `true`
+- `options.enableColumnFilters` is set to `true`
+- `options.enableFilters` is set to `true`
 
 ## State
 
