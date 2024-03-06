@@ -119,6 +119,9 @@ importers:
       svelte:
         specifier: ^4.2.12
         version: 4.2.12
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -196,7 +199,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0)(karma@6.4.3)
       typescript:
-        specifier: ~5.3.3
+        specifier: 5.3.3
         version: 5.3.3
 
   examples/angular/grouping:
@@ -272,7 +275,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0)(karma@6.4.3)
       typescript:
-        specifier: ~5.3.3
+        specifier: 5.3.3
         version: 5.3.3
 
   examples/angular/selection:
@@ -348,7 +351,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0)(karma@6.4.3)
       typescript:
-        specifier: ~5.3.3
+        specifier: 5.3.3
         version: 5.3.3
 
   examples/react/basic:
@@ -1876,17 +1879,14 @@ importers:
   packages/angular-table:
     dependencies:
       '@angular/common':
-        specifier: ^17.1.2
+        specifier: '>=17'
         version: 17.2.3(@angular/core@17.2.3)(rxjs@7.8.1)
       '@angular/core':
-        specifier: ^17.1.2
+        specifier: '>=17'
         version: 17.2.3(rxjs@7.8.1)(zone.js@0.14.4)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
 
   packages/match-sorter-utils:
     dependencies:
