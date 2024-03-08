@@ -103,7 +103,8 @@ const [sorting, setSorting] = useState<SortingState>([])
 const table = useReactTable({
   columns,
   data,
-  // getCoreRowModel: getCoreRowModel(), //not needed for manual sorting
+  getCoreRowModel: getCoreRowModel(),
+  //getSortedRowModel: getSortedRowModel(), //not needed for manual sorting
   manualSorting: true, //use pre-sorted row model instead of sorted row model
   state: {
     sorting,
