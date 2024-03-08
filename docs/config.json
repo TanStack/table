@@ -68,10 +68,6 @@
       "label": "Feature Guides",
       "children": [
         {
-          "label": "Features",
-          "to": "guide/features"
-        },
-        {
           "label": "Column Ordering",
           "to": "guide/column-ordering"
         },

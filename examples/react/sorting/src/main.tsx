@@ -21,64 +21,49 @@ function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
-        header: 'Name',
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
         footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-          },
-          {
-            accessorFn: row => row.lastName,
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
-          },
-        ],
       },
       {
-        header: 'Info',
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
         footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: props => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-              },
-            ],
-          },
-          {
-            accessorKey: 'createdAt',
-            header: 'Created At',
-          },
-        ],
+      },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        footer: props => props.column.id,
+        sortDescFirst: true, // This column will sort in descending order first (default for number columns anyway)
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
+        // sortingFn: 'datetime' (inferred from the data)
       },
     ],
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(10_000))
+  const refreshData = () => setData(() => makeData(10_000))
 
   const table = useReactTable({
     data,
@@ -104,12 +89,21 @@ function App() {
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div
-                        {...{
-                          className: header.column.getCanSort()
+                        className={
+                          header.column.getCanSort()
                             ? 'cursor-pointer select-none'
-                            : '',
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
+                            : ''
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                        title={
+                          header.column.getCanSort()
+                            ? header.column.getNextSortingOrder() === 'asc'
+                              ? 'Sort ascending'
+                              : header.column.getNextSortingOrder() === 'desc'
+                                ? 'Sort descending'
+                                : 'Clear sort'
+                            : undefined
+                        }
                       >
                         {flexRender(
                           header.column.columnDef.header,
