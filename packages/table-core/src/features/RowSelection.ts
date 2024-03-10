@@ -1,5 +1,5 @@
 import { TableFeature } from '../core/table'
-import { OnChangeFn, Table, Row, RowModel, Updater, RowData } from '../types'
+import { OnChangeFn, Row, RowData, RowModel, Table, Updater } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 export type RowSelectionState = Record<string, boolean>
@@ -118,7 +118,7 @@ export interface RowSelectionInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallpagerowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  getIsAllPageRowsSelected: () => boolean
+  getIsAllPageRowsSelected: (ignoreCanSelect?: boolean) => boolean
   /**
    * Returns whether or not all rows in the table are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallrowsselected)
@@ -130,7 +130,7 @@ export interface RowSelectionInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomepagerowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  getIsSomePageRowsSelected: () => boolean
+  getIsSomePageRowsSelected: (ignoreCanSelect?: boolean) => boolean
   /**
    * Returns whether or not any rows in the table are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomerowsselected)
@@ -238,6 +238,9 @@ export const RowSelection: TableFeature = {
           })
         } else {
           preGroupedFlatRows.forEach(row => {
+            if (!row.getCanSelect()) {
+              return
+            }
             delete rowSelection[row.id]
           })
         }
@@ -253,7 +256,6 @@ export const RowSelection: TableFeature = {
             : !table.getIsAllPageRowsSelected()
 
         const rowSelection: RowSelectionState = { ...old }
-
         table.getRowModel().rows.forEach(row => {
           mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
         })
@@ -405,17 +407,20 @@ export const RowSelection: TableFeature = {
       return isAllRowsSelected
     }
 
-    table.getIsAllPageRowsSelected = () => {
-      const paginationFlatRows = table
-        .getPaginationRowModel()
-        .flatRows.filter(row => row.getCanSelect())
+    table.getIsAllPageRowsSelected = (ignoreCanSelect?: boolean) => {
+      const paginationFlatRows = table.getPaginationRowModel().flatRows
+
+      const filterPaginationFlatRows = ignoreCanSelect
+        ? paginationFlatRows
+        : paginationFlatRows.filter(row => row.getCanSelect())
+
       const { rowSelection } = table.getState()
 
-      let isAllPageRowsSelected = !!paginationFlatRows.length
+      let isAllPageRowsSelected = !!filterPaginationFlatRows.length
 
       if (
         isAllPageRowsSelected &&
-        paginationFlatRows.some(row => !rowSelection[row.id])
+        filterPaginationFlatRows.some(row => !rowSelection[row.id])
       ) {
         isAllPageRowsSelected = false
       }
@@ -433,13 +438,25 @@ export const RowSelection: TableFeature = {
       )
     }
 
-    table.getIsSomePageRowsSelected = () => {
+    table.getIsSomePageRowsSelected = (ignoreCanSelect?: boolean) => {
       const paginationFlatRows = table.getPaginationRowModel().flatRows
-      return table.getIsAllPageRowsSelected()
+
+      const getSelectedRowsBySelectCondition = () => {
+        return ignoreCanSelect
+          ? paginationFlatRows.some(
+              d => d.getIsSelected() || d.getIsSomeSelected()
+            ) &&
+              paginationFlatRows.some(
+                d => !d.getIsSelected() && !d.getIsSomeSelected()
+              )
+          : paginationFlatRows
+              .filter(row => row.getCanSelect())
+              .some(d => d.getIsSelected() || d.getIsSomeSelected())
+      }
+
+      return table.getIsAllPageRowsSelected(ignoreCanSelect)
         ? false
-        : paginationFlatRows
-            .filter(row => row.getCanSelect())
-            .some(d => d.getIsSelected() || d.getIsSomeSelected())
+        : getSelectedRowsBySelectCondition()
     }
 
     table.getToggleAllRowsSelectedHandler = () => {
@@ -552,14 +569,16 @@ const mutateRowIsSelected = <TData extends RowData>(
   //   !isGrouped ||
   //   (isGrouped && table.options.enableGroupingRowSelection)
   // ) {
+
+  const canSelect = row.getCanSelect()
   if (value) {
     if (!row.getCanMultiSelect()) {
       Object.keys(selectedRowIds).forEach(key => delete selectedRowIds[key])
     }
-    if (row.getCanSelect()) {
+    if (canSelect) {
       selectedRowIds[id] = true
     }
-  } else {
+  } else if (canSelect) {
     delete selectedRowIds[id]
   }
   // }

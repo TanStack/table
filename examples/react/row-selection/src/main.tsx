@@ -30,7 +30,7 @@ function App() {
           <IndeterminateCheckbox
             {...{
               checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(true),
               onChange: table.getToggleAllRowsSelectedHandler(),
             }}
           />
@@ -110,8 +110,8 @@ function App() {
     state: {
       rowSelection,
     },
-    enableRowSelection: true, //enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    // enableRowSelection: true, //enable row selection for all rows
+    enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -180,7 +180,7 @@ function App() {
               <IndeterminateCheckbox
                 {...{
                   checked: table.getIsAllPageRowsSelected(),
-                  indeterminate: table.getIsSomePageRowsSelected(),
+                  indeterminate: table.getIsSomePageRowsSelected(true),
                   onChange: table.getToggleAllPageRowsSelectedHandler(),
                 }}
               />
@@ -344,9 +344,9 @@ function IndeterminateCheckbox({
 
   React.useEffect(() => {
     if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = !rest.checked && indeterminate
+      ref.current.indeterminate = indeterminate
     }
-  }, [ref, indeterminate])
+  }, [ref, indeterminate, rest.checked])
 
   return (
     <input
