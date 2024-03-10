@@ -20,11 +20,13 @@ import {
   ColumnPinningOptions,
   ColumnPinningRow,
   ColumnPinningTableState,
+} from './features/ColumnPinning'
+import {
   RowPinningInstance,
   RowPinningOptions,
   RowPinningRow,
   RowPinningTableState,
-} from './features/Pinning'
+} from './features/RowPinning'
 import {
   CoreHeader,
   CoreHeaderGroup,

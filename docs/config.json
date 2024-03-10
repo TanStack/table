@@ -170,6 +170,10 @@
           "to": "api/features/column-ordering"
         },
         {
+          "label": "Column Pinning",
+          "to": "api/features/column-pinning"
+        },
+        {
           "label": "Column Sizing",
           "to": "api/features/column-sizing"
         },
@@ -198,8 +202,8 @@
           "to": "api/features/pagination"
         },
         {
-          "label": "Pinning",
-          "to": "api/features/pinning"
+          "label": "Row Pinning",
+          "to": "api/features/row-pinning"
         },
         {
           "label": "Row Selection",
