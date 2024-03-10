@@ -447,7 +447,7 @@ export const RowSelection: TableFeature = {
               d => d.getIsSelected() || d.getIsSomeSelected()
             ) &&
               paginationFlatRows.some(
-                d => !d.getIsSelected() && !d.getIsSomeSelected()
+                d => !d.getIsSelected() || !d.getIsSomeSelected()
               )
           : paginationFlatRows
               .filter(row => row.getCanSelect())
