@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Pinning API](../api/features/pinning)
+[Row Pinning API](../api/features/row-pinning)
 
 ## Row Pinning Guide
 

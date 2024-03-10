@@ -28,7 +28,8 @@ import { Filters } from '../features/Filters'
 import { Grouping } from '../features/Grouping'
 import { Ordering } from '../features/Ordering'
 import { Pagination } from '../features/Pagination'
-import { Pinning } from '../features/Pinning'
+import { ColumnPinning } from '../features/ColumnPinning'
+import { RowPinning } from '../features/RowPinning'
 import { RowSelection } from '../features/RowSelection'
 import { Sorting } from '../features/Sorting'
 import { Visibility } from '../features/Visibility'
@@ -48,7 +49,8 @@ const features = [
   Headers,
   Visibility,
   Ordering,
-  Pinning,
+  ColumnPinning,
+  RowPinning,
   Filters,
   Sorting,
   Grouping,
