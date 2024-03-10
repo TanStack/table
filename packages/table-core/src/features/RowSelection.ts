@@ -178,7 +178,10 @@ export interface RowSelectionInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#toggleallpagerowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  toggleAllPageRowsSelected: (value?: boolean) => void
+  toggleAllPageRowsSelected: (
+    value?: boolean,
+    ignoreCanSelect?: boolean
+  ) => void
   /**
    * Selects/deselects all rows in the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#toggleallrowsselected)
@@ -248,12 +251,12 @@ export const RowSelection: TableFeature = {
         return rowSelection
       })
     }
-    table.toggleAllPageRowsSelected = value =>
+    table.toggleAllPageRowsSelected = (value, ignoreCanSelect) =>
       table.setRowSelection(old => {
         const resolvedValue =
           typeof value !== 'undefined'
             ? value
-            : !table.getIsAllPageRowsSelected()
+            : !table.getIsAllPageRowsSelected(ignoreCanSelect)
 
         const rowSelection: RowSelectionState = { ...old }
         table.getRowModel().rows.forEach(row => {
@@ -441,7 +444,7 @@ export const RowSelection: TableFeature = {
     table.getIsSomePageRowsSelected = (ignoreCanSelect?: boolean) => {
       const paginationFlatRows = table.getPaginationRowModel().flatRows
 
-      const getSelectedRowsBySelectCondition = () => {
+      const getIsSomeSelectedByCondition = () => {
         return ignoreCanSelect
           ? paginationFlatRows.some(
               d => d.getIsSelected() || d.getIsSomeSelected()
@@ -456,7 +459,7 @@ export const RowSelection: TableFeature = {
 
       return table.getIsAllPageRowsSelected(ignoreCanSelect)
         ? false
-        : getSelectedRowsBySelectCondition()
+        : getIsSomeSelectedByCondition()
     }
 
     table.getToggleAllRowsSelectedHandler = () => {
