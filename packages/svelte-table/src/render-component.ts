@@ -1,89 +1,41 @@
-import type { ComponentType, ComponentProps } from 'svelte'
-import {
-  SvelteComponent,
-  claim_component,
-  create_component,
-  destroy_component,
-  init,
-  mount_component,
-  noop,
-  safe_not_equal,
-  transition_in,
-  transition_out,
-  create_ssr_component,
-  validate_component,
-} from 'svelte/internal'
+import type { SvelteComponent, ComponentType, ComponentProps } from 'svelte'
 
-function create_fragment(ctx: any, Comp: any, props: any) {
-  let c: any
-  let current: any
-  c = new Comp({ props, $$inline: true })
-
-  return {
-    c() {
-      create_component(c.$$.fragment)
-    },
-    l(nodes: any) {
-      claim_component(c.$$.fragment, nodes)
-    },
-    m(target: any, anchor: any) {
-      // @ts-ignore
-      mount_component(c, target, anchor)
-      current = true
-    },
-    p: noop,
-    i(local: any) {
-      if (current) return
-      transition_in(c.$$.fragment, local)
-      current = true
-    },
-    o(local: any) {
-      transition_out(c.$$.fragment, local)
-      current = false
-    },
-    d(detaching: any) {
-      destroy_component(c, detaching)
-    },
-  }
+/**
+ * A helper class to make it easy to identify Svelte components in `columnDef.cell` and `columnDef.header` properties.
+ * @example
+ * ```svelte
+ * {#if cell.column.columnDef.cell(cell.getContext()) instanceof RenderComponentConfig}
+ *   <svelte:component this={columnDef.cell.component} {...columnDef.cell.props} />
+ * {/if}
+ * ```
+ * */
+export class RenderComponentConfig<TComponent extends SvelteComponent> {
+  constructor(
+    public component: ComponentType<TComponent>,
+    public props: ComponentProps<TComponent> | Record<string, never> = {}
+  ) {}
 }
 
-function renderClient<T>(
-  Comp: T,
-  props: T extends ComponentType<infer C> ? ComponentProps<C> : any
-) {
-  return class WrapperComp extends SvelteComponent {
-    constructor(options: any) {
-      super()
-      init(
-        this,
-        options,
-        null,
-        (ctx: any) => create_fragment(ctx, Comp, props),
-        safe_not_equal,
-        {},
-        undefined
-      )
-    }
-  } as ComponentType
-}
-
-function renderServer<T>(
-  Comp: T,
-  props: T extends ComponentType<infer C> ? ComponentProps<C> : any
-) {
-  const WrapperComp = create_ssr_component(
-    ($$result: any, $$props: any, $$bindings: any, slots: any) => {
-      return `${validate_component(Comp, 'TableComponent').$$render(
-        $$result,
-        props,
-        {},
-        {}
-      )}`
-    }
-  )
-
-  return WrapperComp as unknown as ComponentType
-}
-
-export const renderComponent =
-  typeof window === 'undefined' ? renderServer : renderClient
+/**
+ * A helper function to help create cells from Svelte components through ColumnDef's `cell` and `header` properties.
+ * @param component A Svelte component
+ * @param props The props to pass to `component`
+ * @returns A `RenderComponentConfig` object that helps svelte-table know how to render the header/cell component.
+ * @example
+ * ```ts
+ * // +page.svelte
+ * const defaultColumns = [
+ *   columnHelper.accessor('name', {
+ *     header: header => renderComponent(SortHeader, { label: 'Name', header }),
+ *   }),
+ *   columnHelper.accessor('state', {
+ *     header: header => renderComponent(SortHeader, { label: 'State', header }),
+ *   }),
+ * ]
+ * ```
+ * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
+ */
+export const renderComponent = <TComponent extends SvelteComponent>(
+  component: ComponentType<TComponent>,
+  props: ComponentProps<TComponent>
+) => new RenderComponentConfig(component, props)

@@ -51,6 +51,6 @@
     "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
-    "svelte": "^4.0.0 || ^3.49.0"
+    "svelte": "^5.0.0-next"
   }
 }
