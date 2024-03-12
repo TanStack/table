@@ -32,7 +32,7 @@ A Svelte component that renders a cell or header, according to what was specifie
 
 	<table>
 		<thead>
-			{#each table().getHeaderGroups() as headerGroup}
+			{#each table.getHeaderGroups() as headerGroup}
 				<tr>
 					{#each headerGroup.headers as header}
 						<th colspan={header.colSpan}>
@@ -43,7 +43,7 @@ A Svelte component that renders a cell or header, according to what was specifie
 			{/each}
 		</thead>
 		<tbody>
-			{#each table().getRowModel().rows as row}
+			{#each table.getRowModel().rows as row}
 				<tr>
 					{#each row.getVisibleCells() as cell}
 						<td>
