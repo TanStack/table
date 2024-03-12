@@ -85,9 +85,9 @@ function mjs({ input, external, banner, outputFile }) {
       banner,
     },
     plugins: [
-      svelte({ emitCss: false, compilerOptions: { runes: true } }),
       commonJS(),
       babelPlugin,
+      svelte({ compilerOptions: { runes: true } }),
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
   }
@@ -115,9 +115,9 @@ function esm({ input, external, banner, outputFile }) {
       banner,
     },
     plugins: [
-      svelte({ emitCss: false, compilerOptions: { runes: true } }),
       commonJS(),
       babelPlugin,
+      svelte({ compilerOptions: { runes: true } }),
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
   }
@@ -147,9 +147,9 @@ function cjs({ input, external, banner }) {
       banner,
     },
     plugins: [
-      svelte({ emitCss: false, compilerOptions: { runes: true } }),
       commonJS(),
       babelPlugin,
+      svelte({ compilerOptions: { runes: true } }),
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
     ],
   }
@@ -179,9 +179,9 @@ function umdDev({ input, external, globals, banner, jsName }) {
       banner,
     },
     plugins: [
-      svelte({ emitCss: false, compilerOptions: { runes: true } }),
       commonJS(),
       babelPlugin,
+      svelte({ compilerOptions: { runes: true } }),
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       forceEnvPlugin('development'),
     ],
@@ -212,9 +212,9 @@ function umdProd({ input, external, globals, banner, jsName }) {
       banner,
     },
     plugins: [
-      svelte({ emitCss: false, compilerOptions: { runes: true } }),
       commonJS(),
       babelPlugin,
+      svelte({ compilerOptions: { runes: true } }),
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
       forceEnvPlugin('production'),
       terser({

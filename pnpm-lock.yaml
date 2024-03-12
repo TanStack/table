@@ -93,8 +93,8 @@ importers:
         specifier: ^0.3.1
         version: 0.3.1
       rollup-plugin-svelte:
-        specifier: ^7.1.6
-        version: 7.1.6(rollup@4.12.1)(svelte@5.0.0-next.73)
+        specifier: ^7.2.0
+        version: 7.2.0(rollup@4.12.1)(svelte@5.0.0-next.73)
       rollup-plugin-visualizer:
         specifier: ^5.12.0
         version: 5.12.0(rollup@4.12.1)
@@ -8769,8 +8769,8 @@ packages:
       - debug
     dev: true
 
-  /rollup-plugin-svelte@7.1.6(rollup@4.12.1)(svelte@5.0.0-next.73):
-    resolution: {integrity: sha512-nVFRBpGWI2qUY1OcSiEEA/kjCY2+vAjO9BI8SzA7NRrh2GTunLd6w2EYmnMt/atgdg8GvcNjLsmZmbQs/u4SQA==}
+  /rollup-plugin-svelte@7.2.0(rollup@4.12.1)(svelte@5.0.0-next.73):
+    resolution: {integrity: sha512-Qvo5VNFQZtaI+sHSjcCIFDP+olfKVyslAoJIkL3DxuhUpNY5Ys0+hhxUY3kuEKt9BXFgkFJiiic/XRb07zdSbg==}
     engines: {node: '>=10'}
     peerDependencies:
       rollup: '>=2.0.0'
