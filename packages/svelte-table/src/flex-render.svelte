@@ -58,36 +58,34 @@ A Svelte component that renders a cell or header, according to what was specifie
 -->
 
 <script
-	lang="ts"
-	generics="TData, TValue, TContext extends object = HeaderOrCellContext<TData, TValue>"
+  lang="ts"
+  generics="TData, TValue, TContext extends object = HeaderOrCellContext<TData, TValue>"
 >
-	import type { ColumnDefTemplate } from '@tanstack/table-core';
-	import { RenderComponentConfig } from './render-component';
-	import type { HeaderOrCellContext } from './types';
+  import type { ColumnDefTemplate } from '@tanstack/table-core'
+  import { RenderComponentConfig } from './render-component'
+  import type { HeaderOrCellContext } from './types'
 
-	type Props = {
-		/** The cell or header field of the current cell's column definition. */ 
-		content: ColumnDefTemplate<TContext> | undefined;
-		/** The result of the `getContext()` function of the header or cell */ 
-		context: TContext;
-	};
+  type Props = {
+    /** The cell or header field of the current cell's column definition. */
+    content: ColumnDefTemplate<TContext> | undefined
+    /** The result of the `getContext()` function of the header or cell */
+    context: TContext
+  }
 
-	let { content, context } = $props<Props>();
+  let { content, context } = $props<Props>()
 </script>
 
-
-
 {#snippet componentCell()}
-	{#if typeof content === 'string'}
-		{content}
-	{:else if content instanceof Function}
-		{@const result = content(context)}
-		{#if result instanceof RenderComponentConfig}
-			<svelte:component this={result.component} {...result.props} />
-		{:else}
-			{result}
-		{/if}
-	{/if}
+  {#if typeof content === 'string'}
+    {content}
+  {:else if content instanceof Function}
+    {@const result = content(context)}
+    {#if result instanceof RenderComponentConfig}
+      <svelte:component this={result.component} {...result.props} />
+    {:else}
+      {result}
+    {/if}
+  {/if}
 {/snippet}
 
 {@render componentCell()}
