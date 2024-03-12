@@ -75,8 +75,8 @@ importers:
         specifier: ^4.0.0-alpha.8
         version: 4.0.0-alpha.8
       prettier-plugin-svelte:
-        specifier: ^3.1.2
-        version: 3.1.2(prettier@4.0.0-alpha.8)(svelte@5.0.0-next.73)
+        specifier: ^3.2.2
+        version: 3.2.2(prettier@4.0.0-alpha.8)(svelte@5.0.0-next.73)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -8318,8 +8318,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /prettier-plugin-svelte@3.1.2(prettier@4.0.0-alpha.8)(svelte@5.0.0-next.73):
-    resolution: {integrity: sha512-7xfMZtwgAWHMT0iZc8jN4o65zgbAQ3+O32V6W7pXrqNvKnHnkoyQCGCbKeUyXKZLbYE0YhFRnamfxfkEGxm8qA==}
+  /prettier-plugin-svelte@3.2.2(prettier@4.0.0-alpha.8)(svelte@5.0.0-next.73):
+    resolution: {integrity: sha512-ZzzE/wMuf48/1+Lf2Ffko0uDa6pyCfgHV6+uAhtg2U0AAXGrhCSW88vEJNAkAxW5qyrFY1y1zZ4J8TgHrjW++Q==}
     peerDependencies:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
