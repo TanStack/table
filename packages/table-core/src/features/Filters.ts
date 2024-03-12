@@ -276,7 +276,7 @@ type ResolvedFilterFns = keyof FilterFns extends never
       filterFns?: Record<string, FilterFn<any>>
     }
   : {
-      filterFns: Record<keyof FilterFns, FilterFn<any>>
+      filterFns?: Record<keyof FilterFns, FilterFn<any>>
     }
 
 export interface FiltersOptions<TData extends RowData>
