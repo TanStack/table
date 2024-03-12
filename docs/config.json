@@ -5,7 +5,7 @@
     "apiKey": "9fc015a3310be6669ed66c6c459f319f",
     "indexName": "tanstack-table"
   },
-  "menu": [
+  "sections": [
     {
       "label": "Getting Started",
       "children": [
@@ -28,6 +28,44 @@
         {
           "label": "Vanilla JS/TS",
           "to": "vanilla"
+        }
+      ],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            {
+              "label": "React Table",
+              "to": "framework/react/react-table"
+            }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            {
+              "label": "Solid Table",
+              "to": "framework/solid/solid-table"
+            }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            {
+              "label": "Svelte Table",
+              "to": "framework/svelte/svelte-table"
+            }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            {
+              "label": "Vue Table",
+              "to": "framework/vue/vue-table"
+            }
+          ]
         }
       ]
     },
@@ -61,6 +99,17 @@
         {
           "label": "Cells",
           "to": "guide/cells"
+        }
+      ],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/react/guide/table-state"
+            }
+          ]
         }
       ]
     },
@@ -219,32 +268,13 @@
           "to": "enterprise/ag-grid"
         }
       ]
-    }
-  ],
-  "frameworkMenus": [
+    },
     {
-      "framework": "react",
-      "menuItems": [
+      "label": "Examples",
+      "children": [],
+      "frameworks": [
         {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "React Table",
-              "to": "framework/react/react-table"
-            }
-          ]
-        },
-        {
-          "label": "Core Guides",
-          "children": [
-            {
-              "label": "Table State",
-              "to": "framework/react/guide/table-state"
-            }
-          ]
-        },
-        {
-          "label": "Examples",
+          "label": "react",
           "children": [
             {
               "to": "framework/react/examples/basic",
@@ -363,23 +393,9 @@
               "label": "React Full Width Resizable"
             }
           ]
-        }
-      ]
-    },
-    {
-      "framework": "solid",
-      "menuItems": [
-        {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "Solid Table",
-              "to": "framework/solid/solid-table"
-            }
-          ]
         },
         {
-          "label": "Examples",
+          "label": "solid",
           "children": [
             {
               "to": "framework/solid/examples/basic",
@@ -410,23 +426,9 @@
               "label": "Solid Bootstrap"
             }
           ]
-        }
-      ]
-    },
-    {
-      "framework": "svelte",
-      "menuItems": [
-        {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "Svelte Table",
-              "to": "framework/svelte/svelte-table"
-            }
-          ]
         },
         {
-          "label": "Examples",
+          "label": "svelte",
           "children": [
             {
               "to": "framework/svelte/examples/basic",
@@ -457,23 +459,9 @@
               "label": "Sorting"
             }
           ]
-        }    
-      ]
-    },
-    {
-      "framework": "vue",
-      "menuItems": [
-        {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "Vue Table",
-              "to": "framework/vue/vue-table"
-            }
-          ]
         },
         {
-          "label": "Examples",
+          "label": "vue",
           "children": [
             {
               "to": "framework/vue/examples/basic",
