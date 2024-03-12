@@ -22,7 +22,7 @@ function filterRowModelFromLeafs<TData extends RowData>(
   const newFilteredRowsById: Record<string, Row<TData>> = {}
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
-  const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
+  const recurseFilterRows = (rowsToFilter: readonly Row<TData>[], depth = 0) => {
     const rows: Row<TData>[] = []
 
     // Filter from children up first
@@ -87,7 +87,7 @@ function filterRowModelFromRoot<TData extends RowData>(
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   // Filters top level and nested rows
-  const recurseFilterRows = (rowsToFilter: Row<TData>[], depth = 0) => {
+  const recurseFilterRows = (rowsToFilter: readonly Row<TData>[], depth = 0) => {
     // Filter from parents downward first
 
     const rows: Row<TData>[] = []

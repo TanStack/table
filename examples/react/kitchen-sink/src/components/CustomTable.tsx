@@ -14,7 +14,7 @@ type TableGroup = 'center' | 'left' | 'right'
 function getTableHeaderGroups<T extends RowData>(
   table: Table<T>,
   tg?: TableGroup
-): [HeaderGroup<T>[], HeaderGroup<T>[]] {
+): [readonly HeaderGroup<T>[], readonly HeaderGroup<T>[]] {
   if (tg === 'left') {
     return [table.getLeftHeaderGroups(), table.getLeftFooterGroups()]
   }
