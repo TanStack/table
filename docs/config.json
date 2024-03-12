@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/TanStack/tanstack.com/docs-sidebar-restructure/tanstack-docs-config.schema.json",
+  "$schema": "https://raw.githubusercontent.com/TanStack/tanstack.com/main/tanstack-docs-config.schema.json",
   "docSearch": {
     "appId": "74SF5EKVW9",
     "apiKey": "9fc015a3310be6669ed66c6c459f319f",
