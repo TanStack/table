@@ -127,7 +127,7 @@
             <th>
               {#if !header.isPlaceholder}
                 <FlexRender
-                  content={header.column.columnDef.header}
+                  content={header.column.columnDef.footer}
                   context={header.getContext()}
                 />
               {/if}
