@@ -2,7 +2,7 @@
   import { writable } from 'svelte/store'
   import {
     createSvelteTable,
-    flexRender,
+    FlexRender,
     getCoreRowModel,
   } from '@tanstack/svelte-table'
   import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
@@ -79,17 +79,10 @@
     },
   ]
 
-  const options = writable<TableOptions<Person>>({
+  let options: TableOptions<Person> = {
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
-  })
-
-  const rerender = () => {
-    options.update(options => ({
-      ...options,
-      data: defaultData,
-    }))
   }
 
   const table = createSvelteTable(options)
@@ -98,16 +91,14 @@
 <div class="p-2">
   <table>
     <thead>
-      {#each $table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
             <th>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                <FlexRender
+                  content={header.column.columnDef.header}
+                  context={header.getContext()}
                 />
               {/if}
             </th>
@@ -116,12 +107,13 @@
       {/each}
     </thead>
     <tbody>
-      {#each $table.getRowModel().rows as row}
+      {#each table.getRowModel().rows as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component
-                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+              <FlexRender
+                content={cell.column.columnDef.cell}
+                context={cell.getContext()}
               />
             </td>
           {/each}
@@ -129,16 +121,14 @@
       {/each}
     </tbody>
     <tfoot>
-      {#each $table.getFooterGroups() as footerGroup}
+      {#each table.getFooterGroups() as footerGroup}
         <tr>
           {#each footerGroup.headers as header}
             <th>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.footer,
-                    header.getContext()
-                  )}
+                <FlexRender
+                  content={header.column.columnDef.header}
+                  context={header.getContext()}
                 />
               {/if}
             </th>
@@ -148,5 +138,4 @@
     </tfoot>
   </table>
   <div class="h-4" />
-  <button on:click={() => rerender()} class="border p-2"> Rerender </button>
 </div>
