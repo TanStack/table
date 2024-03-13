@@ -59,11 +59,14 @@ A Svelte component that renders a cell or header, according to what was specifie
 
 <script
   lang="ts"
-  generics="TData, TValue, TContext extends object = HeaderOrCellContext<TData, TValue>"
+  generics="TData, TValue, TContext extends object = HeaderContext<TData, TValue> | CellContext<TData, TValue>"
 >
-  import type { ColumnDefTemplate } from '@tanstack/table-core'
+  import type {
+    CellContext,
+    ColumnDefTemplate,
+    HeaderContext,
+  } from '@tanstack/table-core'
   import { RenderComponentConfig } from './render-component'
-  import type { HeaderOrCellContext } from './types'
 
   type Props = {
     /** The cell or header field of the current cell's column definition. */

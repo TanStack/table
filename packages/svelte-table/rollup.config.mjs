@@ -9,10 +9,16 @@ export default defineConfig(
     jsName: 'SvelteTable',
     outputFile: 'index',
     entryFile: 'src/index.ts',
-    external: ['svelte', 'svelte/store', '@tanstack/table-core'],
+    external: [
+      'svelte',
+      'svelte/store',
+      'svelte/internal',
+      '@tanstack/table-core',
+    ],
     globals: {
       svelte: 'Svelte',
       'svelte/store': 'SvelteStore',
+      'svelte/internal': 'SvelteInternal',
     },
   })
 )
