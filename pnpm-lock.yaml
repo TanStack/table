@@ -1245,7 +1245,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@5.0.0-next.78)(vite@5.1.6)
       '@tanstack/svelte-table':
-        specifier: workspace:^
+        specifier: ^8.13.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.2
@@ -1269,8 +1269,8 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.12.1)
       '@sveltejs/vite-plugin-svelte':
-        specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
+        specifier: ^3.0.2
+        version: 3.0.2(svelte@5.0.0-next.78)(vite@5.1.6)
       '@tanstack/svelte-table':
         specifier: ^8.13.2
         version: link:../../../packages/svelte-table
@@ -1278,17 +1278,17 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       svelte:
-        specifier: ^4.2.8
-        version: 4.2.8
+        specifier: 5.0.0-next.78
+        version: 5.0.0-next.78
       svelte-check:
-        specifier: ^3.6.3
-        version: 3.6.3(@babel/core@7.23.7)(svelte@4.2.8)
+        specifier: ^3.6.7
+        version: 3.6.7(@babel/core@7.23.7)(svelte@5.0.0-next.78)
       typescript:
         specifier: 5.3.3
         version: 5.3.3
       vite:
-        specifier: ^5.0.11
-        version: 5.0.11(@types/node@18.19.7)
+        specifier: ^5.1.6
+        version: 5.1.6(@types/node@18.19.7)
 
   examples/svelte/column-ordering:
     devDependencies:
@@ -4054,7 +4054,7 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/set-array': 1.1.2
-      '@jridgewell/sourcemap-codec': 1.4.14
+      '@jridgewell/sourcemap-codec': 1.4.15
       '@jridgewell/trace-mapping': 0.3.17
 
   /@jridgewell/gen-mapping@0.3.5:
@@ -5556,7 +5556,7 @@ packages:
   /@vitest/snapshot@1.2.0:
     resolution: {integrity: sha512-P33EE7TrVgB3HDLllrjK/GG6WSnmUtWohbwcQqmm7TAk9AVHpdgf7M3F3qRHKm6vhr7x3eGIln7VH052Smo6Kw==}
     dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.8
       pathe: 1.1.1
       pretty-format: 29.7.0
     dev: true
@@ -9295,7 +9295,7 @@ packages:
     peerDependencies:
       rollup: 2.x || 3.x || 4.x
     dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.8
       rollup: 4.12.1
     dev: true
 
@@ -10058,7 +10058,7 @@ packages:
       '@babel/core': 7.23.7
       '@types/pug': 2.0.6
       detect-indent: 6.1.0
-      magic-string: 0.30.5
+      magic-string: 0.30.8
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.2.8
