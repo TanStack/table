@@ -75,7 +75,7 @@ A Svelte component that renders a cell or header, according to what was specifie
     context: TContext
   }
 
-  let { content, context } = $props<Props>()
+  let { content, context }: Props = $props()
 </script>
 
 {#snippet componentCell()}
