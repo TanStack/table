@@ -1,5 +1,6 @@
 // @ts-ignore
 import App from './App.svelte'
+import { mount } from 'svelte'
 
 import type { FilterFn } from '@tanstack/svelte-table'
 
@@ -14,7 +15,7 @@ declare module '@tanstack/svelte-table' {
   }
 }
 
-const app = new App({
+const app = mount(App, {
   target: document.getElementById('root')!,
 })
 
