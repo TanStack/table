@@ -1329,8 +1329,8 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.12.1)
       '@sveltejs/vite-plugin-svelte':
-        specifier: ^3.0.1
-        version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
+        specifier: ^3.0.2
+        version: 3.0.2(svelte@5.0.0-next.78)(vite@5.1.6)
       '@tanstack/svelte-table':
         specifier: ^8.13.2
         version: link:../../../packages/svelte-table
@@ -1338,17 +1338,17 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       svelte:
-        specifier: ^4.2.8
-        version: 4.2.8
+        specifier: 5.0.0-next.78
+        version: 5.0.0-next.78
       svelte-check:
-        specifier: ^3.6.3
-        version: 3.6.3(@babel/core@7.23.7)(svelte@4.2.8)
+        specifier: ^3.6.7
+        version: 3.6.7(@babel/core@7.23.7)(svelte@5.0.0-next.78)
       typescript:
         specifier: 5.3.3
         version: 5.3.3
       vite:
-        specifier: ^5.0.11
-        version: 5.0.11(@types/node@18.19.7)
+        specifier: ^5.1.6
+        version: 5.1.6(@types/node@18.19.7)
 
   examples/svelte/column-visibility:
     devDependencies:
