@@ -2,7 +2,8 @@
   import type {
     ColumnDef,
     TableOptions,
-    VisibilityState
+    VisibilityState,
+    Updater,
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
@@ -11,7 +12,6 @@
     getSortedRowModel,
   } from '@tanstack/svelte-table'
   import './index.css'
-  import { createTableState } from './state.svelte'
 
   type Person = {
     firstName: string
@@ -101,15 +101,20 @@
     },
   ]
 
-  const [columnVisibility, setColumnVisibility] =
-    createTableState<VisibilityState>({})
+  let columnVisibility = $state<VisibilityState>({})
+
+  function setColumnVisibility(updater: Updater<VisibilityState>) {
+    if (updater instanceof Function) {
+      columnVisibility = updater(columnVisibility)
+    } else columnVisibility = updater
+  }
 
   const options: TableOptions<Person> = {
     data: defaultData,
     columns,
     state: {
       get columnVisibility() {
-        return columnVisibility()
+        return columnVisibility
       },
     },
     onColumnVisibilityChange: setColumnVisibility,
