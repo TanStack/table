@@ -121,21 +121,6 @@
                   content={header.column.columnDef.header}
                   context={header.getContext()}
                 />
-                <!-- <div
-                  class:cursor-pointer={header.column.getCanSort()}
-                  class:select-none={header.column.getCanSort()}
-                  on:click={header.column.getToggleSortingHandler()}
-                >
-                  <FlexRender
-                    content={header.column.columnDef.header}
-                    context={header.getContext()}
-                  />
-                  {#if header.column.getIsSorted().toString() === 'asc'}
-                    🔼
-                  {:else if header.column.getIsSorted().toString() === 'desc'}
-                    🔽
-                  {/if}
-                </div> -->
               {/if}
             </th>
           {/each}
@@ -147,10 +132,7 @@
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <FlexRender
-                content={cell.column.columnDef.cell}
-                context={cell.getContext()}
-              />
+              <FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
             </td>
           {/each}
         </tr>
@@ -174,9 +156,6 @@
     </tfoot>
   </table>
   <div>{table.getRowModel().rows.length} Rows</div>
-  <div>
-    <button on:click={() => rerender()}>Force Rerender</button>
-  </div>
   <div>
     <button on:click={() => refreshData()}>Refresh Data</button>
   </div>
