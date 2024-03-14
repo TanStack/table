@@ -71,7 +71,6 @@
     "rimraf": "^5.0.5",
     "rollup": "^4.9.5",
     "rollup-plugin-size": "^0.3.1",
-    "rollup-plugin-svelte": "^7.2.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "sherif": "^0.7.0",
     "size-limit": "^11.0.2",

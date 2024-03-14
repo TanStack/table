@@ -92,9 +92,6 @@ importers:
       rollup-plugin-size:
         specifier: ^0.3.1
         version: 0.3.1
-      rollup-plugin-svelte:
-        specifier: ^7.2.0
-        version: 7.2.0(rollup@4.12.1)(svelte@5.0.0-next.73)
       rollup-plugin-visualizer:
         specifier: ^5.12.0
         version: 5.12.0(rollup@4.12.1)
@@ -4791,14 +4788,6 @@ packages:
       terser: 5.26.0
     dev: true
 
-  /@rollup/pluginutils@4.2.1:
-    resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
-    engines: {node: '>= 8.0.0'}
-    dependencies:
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-    dev: true
-
   /@rollup/pluginutils@5.0.2(rollup@4.12.1):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
@@ -9184,11 +9173,6 @@ packages:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
 
-  /resolve.exports@2.0.2:
-    resolution: {integrity: sha512-X2UW6Nw3n/aMgDVy+0rSqgHlv39WZAlZrXCdnbyEiKm17DSqHX4MmQMaST3FbeWR5FTuRcUwYAziZajji0Y7mg==}
-    engines: {node: '>=10'}
-    dev: true
-
   /resolve@1.19.0:
     resolution: {integrity: sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==}
     dependencies:
@@ -9268,19 +9252,6 @@ packages:
       zlib: 1.0.5
     transitivePeerDependencies:
       - debug
-    dev: true
-
-  /rollup-plugin-svelte@7.2.0(rollup@4.12.1)(svelte@5.0.0-next.73):
-    resolution: {integrity: sha512-Qvo5VNFQZtaI+sHSjcCIFDP+olfKVyslAoJIkL3DxuhUpNY5Ys0+hhxUY3kuEKt9BXFgkFJiiic/XRb07zdSbg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      rollup: '>=2.0.0'
-      svelte: '>=3.5.0'
-    dependencies:
-      '@rollup/pluginutils': 4.2.1
-      resolve.exports: 2.0.2
-      rollup: 4.12.1
-      svelte: 5.0.0-next.73
     dev: true
 
   /rollup-plugin-visualizer@5.12.0(rollup@4.12.1):
