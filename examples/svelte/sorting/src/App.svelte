@@ -132,7 +132,10 @@
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
+              <FlexRender
+                content={cell.column.columnDef.cell}
+                context={cell.getContext()}
+              />
             </td>
           {/each}
         </tr>
