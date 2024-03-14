@@ -93,17 +93,13 @@ A Svelte component that renders a cell or header, according to what was specifie
   let { content, context }: Props = $props()
 </script>
 
-{#snippet componentCell()}
-  {#if typeof content === 'string'}
-    {content}
-  {:else if content instanceof Function}
-    {@const  result = content(context as any)}
-    {#if result instanceof RenderComponentConfig}
-      <svelte:component this={result.component} {...result.props} />
-    {:else}
-      {result}
-    {/if}
+{#if typeof content === 'string'}
+  {content}
+{:else if content instanceof Function}
+  {@const   result = content(context as any)}
+  {#if result instanceof RenderComponentConfig}
+    <svelte:component this={result.component} {...result.props} />
+  {:else}
+    {result}
   {/if}
-{/snippet}
-
-{@render componentCell()}
+{/if}
