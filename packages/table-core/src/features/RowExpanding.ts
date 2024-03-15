@@ -160,7 +160,7 @@ export interface ExpandedInstance<TData extends RowData> {
 
 //
 
-export const Expanding: TableFeature = {
+export const RowExpanding: TableFeature = {
   getInitialState: (state): ExpandedTableState => {
     return {
       expanded: {},

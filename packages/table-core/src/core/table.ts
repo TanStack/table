@@ -22,17 +22,19 @@ import { createColumn } from './column'
 import { Headers } from './headers'
 //
 
-import { ColumnSizing } from '../features/ColumnSizing'
-import { Expanding } from '../features/Expanding'
-import { Filters } from '../features/Filters'
-import { Grouping } from '../features/Grouping'
-import { Ordering } from '../features/Ordering'
-import { Pagination } from '../features/Pagination'
+import { ColumnFaceting } from '../features/ColumnFaceting'
+import { ColumnFiltering } from '../features/ColumnFiltering'
+import { ColumnGrouping } from '../features/ColumnGrouping'
+import { ColumnOrdering } from '../features/ColumnOrdering'
 import { ColumnPinning } from '../features/ColumnPinning'
+import { ColumnSizing } from '../features/ColumnSizing'
+import { ColumnVisibility } from '../features/ColumnVisibility'
+import { GlobalFiltering } from '../features/GlobalFiltering'
+import { RowExpanding } from '../features/RowExpanding'
+import { RowPagination } from '../features/RowPagination'
 import { RowPinning } from '../features/RowPinning'
 import { RowSelection } from '../features/RowSelection'
-import { Sorting } from '../features/Sorting'
-import { Visibility } from '../features/Visibility'
+import { RowSorting } from '../features/RowSorting'
 
 export interface TableFeature {
   createCell?: (cell: any, column: any, row: any, table: any) => any
@@ -47,15 +49,17 @@ export interface TableFeature {
 
 const features = [
   Headers,
-  Visibility,
-  Ordering,
+  ColumnVisibility,
+  ColumnOrdering,
   ColumnPinning,
+  ColumnFaceting,
+  ColumnFiltering,
+  GlobalFiltering, //depends on ColumnFiltering and ColumnFaceting
+  RowSorting,
+  ColumnGrouping, //depends on RowSorting
+  RowExpanding,
+  RowPagination,
   RowPinning,
-  Filters,
-  Sorting,
-  Grouping,
-  Expanding,
-  Pagination,
   RowSelection,
   ColumnSizing,
 ] as const

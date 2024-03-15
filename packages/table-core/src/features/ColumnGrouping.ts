@@ -239,7 +239,7 @@ export interface GroupingInstance<TData extends RowData> {
 
 //
 
-export const Grouping: TableFeature = {
+export const ColumnGrouping: TableFeature = {
   getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
     TData,
     unknown

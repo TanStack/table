@@ -149,7 +149,7 @@ export interface VisibilityColumn {
 
 //
 
-export const Visibility: TableFeature = {
+export const ColumnVisibility: TableFeature = {
   getInitialState: (state): VisibilityTableState => {
     return {
       columnVisibility: {},
