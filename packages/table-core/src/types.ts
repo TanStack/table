@@ -6,13 +6,13 @@ import {
   VisibilityOptions,
   VisibilityColumnDef,
   VisibilityRow,
-} from './features/Visibility'
+} from './features/ColumnVisibility'
 import {
   ColumnOrderColumn,
   ColumnOrderInstance,
   ColumnOrderOptions,
   ColumnOrderTableState,
-} from './features/Ordering'
+} from './features/ColumnOrdering'
 import {
   ColumnPinningColumn,
   ColumnPinningColumnDef,
@@ -33,21 +33,29 @@ import {
   HeaderContext,
   HeadersInstance,
 } from './core/headers'
+import { FacetedColumn, FacetedOptions } from './features/ColumnFaceting'
 import {
-  FiltersColumn,
-  FiltersColumnDef,
-  FiltersInstance,
-  FiltersOptions,
-  FiltersRow,
-  FiltersTableState,
-} from './features/Filters'
+  ColumnFiltersColumn,
+  ColumnFiltersColumnDef,
+  ColumnFiltersInstance,
+  ColumnFiltersOptions,
+  ColumnFiltersRow,
+  ColumnFiltersTableState,
+} from './features/ColumnFiltering'
+import {
+  GlobalFilterColumn,
+  GlobalFilterColumnDef,
+  GlobalFilterInstance,
+  GlobalFilterOptions,
+  GlobalFilterTableState,
+} from './features/GlobalFiltering'
 import {
   SortingColumn,
   SortingColumnDef,
   SortingInstance,
   SortingOptions,
   SortingTableState,
-} from './features/Sorting'
+} from './features/RowSorting'
 import {
   GroupingCell,
   GroupingColumn,
@@ -56,13 +64,13 @@ import {
   GroupingOptions,
   GroupingRow,
   GroupingTableState,
-} from './features/Grouping'
+} from './features/ColumnGrouping'
 import {
   ExpandedInstance,
   ExpandedOptions,
   ExpandedTableState,
   ExpandedRow,
-} from './features/Expanding'
+} from './features/RowExpanding'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
@@ -76,7 +84,7 @@ import {
   PaginationInstance,
   PaginationOptions,
   PaginationTableState,
-} from './features/Pagination'
+} from './features/RowPagination'
 import {
   RowSelectionInstance,
   RowSelectionOptions,
@@ -114,7 +122,8 @@ export interface Table<TData extends RowData>
     ColumnOrderInstance<TData>,
     ColumnPinningInstance<TData>,
     RowPinningInstance<TData>,
-    FiltersInstance<TData>,
+    ColumnFiltersInstance<TData>,
+    GlobalFilterInstance<TData>,
     SortingInstance<TData>,
     GroupingInstance<TData>,
     ColumnSizingInstance,
@@ -127,7 +136,9 @@ interface FeatureOptions<TData extends RowData>
     ColumnOrderOptions,
     ColumnPinningOptions,
     RowPinningOptions<TData>,
-    FiltersOptions<TData>,
+    FacetedOptions<TData>,
+    ColumnFiltersOptions<TData>,
+    GlobalFilterOptions<TData>,
     SortingOptions<TData>,
     GroupingOptions,
     ExpandedOptions<TData>,
@@ -150,7 +161,8 @@ export interface TableState
     ColumnOrderTableState,
     ColumnPinningTableState,
     RowPinningTableState,
-    FiltersTableState,
+    ColumnFiltersTableState,
+    GlobalFilterTableState,
     SortingTableState,
     ExpandedTableState,
     GroupingTableState,
@@ -164,7 +176,8 @@ interface CompleteInitialTableState
     ColumnOrderTableState,
     ColumnPinningTableState,
     RowPinningTableState,
-    FiltersTableState,
+    ColumnFiltersTableState,
+    GlobalFilterTableState,
     SortingTableState,
     ExpandedTableState,
     GroupingTableState,
@@ -179,7 +192,7 @@ export interface Row<TData extends RowData>
     VisibilityRow<TData>,
     ColumnPinningRow<TData>,
     RowPinningRow,
-    FiltersRow<TData>,
+    ColumnFiltersRow<TData>,
     GroupingRow,
     RowSelectionRow,
     ExpandedRow {}
@@ -222,7 +235,8 @@ type ColumnIdentifiers<TData extends RowData, TValue> =
 interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
   extends VisibilityColumnDef,
     ColumnPinningColumnDef,
-    FiltersColumnDef<TData>,
+    ColumnFiltersColumnDef<TData>,
+    GlobalFilterColumnDef,
     SortingColumnDef<TData>,
     GroupingColumnDef<TData, TValue>,
     ColumnSizingColumnDef {}
@@ -304,7 +318,9 @@ export interface Column<TData extends RowData, TValue = unknown>
   extends CoreColumn<TData, TValue>,
     ColumnVisibilityColumn,
     ColumnPinningColumn,
-    FiltersColumn<TData>,
+    FacetedColumn<TData>,
+    ColumnFiltersColumn<TData>,
+    GlobalFilterColumn,
     SortingColumn<TData>,
     GroupingColumn<TData>,
     ColumnSizingColumn,
