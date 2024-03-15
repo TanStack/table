@@ -201,7 +201,7 @@ Returns whether this column is sorted.
 
 ### `getFirstSortDir`
 
-```tsx 
+```tsx
 getFirstSortDir: () => SortDirection
 ```
 
@@ -256,7 +256,7 @@ const column = columnHelper.data('key', {
 const table = useReactTable({
   columns: [column],
   sortingFns: {
-    myCustomSorting: (rowA: any, rowB: any, columnId: any): number =>
+    myCustomSorting: (rowA: any, rowB: any, columnId: any, isDesc: boolean): number =>
       rowA.getValue(columnId).value < rowB.getValue(columnId).value ? 1 : -1,
   },
 })

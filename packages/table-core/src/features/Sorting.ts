@@ -32,7 +32,7 @@ export interface SortingTableState {
 }
 
 export interface SortingFn<TData extends RowData> {
-  (rowA: Row<TData>, rowB: Row<TData>, columnId: string): number
+  (rowA: Row<TData>, rowB: Row<TData>, columnId: string, isDesc?: boolean): number
 }
 
 export type CustomSortingFns<TData extends RowData> = Record<

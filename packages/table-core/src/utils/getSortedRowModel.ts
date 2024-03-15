@@ -74,7 +74,7 @@ export function getSortedRowModel<TData extends RowData>(): (
               }
 
               if (sortInt === 0) {
-                sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id)
+                sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id, isDesc)
               }
 
               // If sorting is non-zero, take care of desc and inversion
