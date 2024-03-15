@@ -149,10 +149,6 @@
           "to": "guide/faceted-values"
         },
         {
-          "label": "Sorting",
-          "to": "guide/sorting"
-        },
-        {
           "label": "Grouping",
           "to": "guide/grouping"
         },
@@ -171,6 +167,10 @@
         {
           "label": "Row Selection",
           "to": "guide/row-selection"
+        },
+        {
+          "label": "Sorting",
+          "to": "guide/sorting"
         },
         {
           "label": "Virtualization",
