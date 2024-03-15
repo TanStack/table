@@ -127,8 +127,8 @@ function App() {
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    filterFromLeafRows: true,
-    maxLeafRowFilterDepth: 1,
+    // filterFromLeafRows: true,
+    // maxLeafRowFilterDepth: 0,
     debugTable: true,
   })
 
