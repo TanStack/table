@@ -20,7 +20,6 @@ import {
   SortingFn,
   ColumnDef,
   flexRender,
-  FilterFns,
 } from '@tanstack/react-table'
 
 import {
@@ -31,7 +30,7 @@ import {
 
 import { makeData, Person } from './makeData'
 
-declare module '@tanstack/table-core' {
+declare module '@tanstack/react-table' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>
   }
@@ -141,7 +140,7 @@ function App() {
   )
 
   const [data, setData] = React.useState<Person[]>(() => makeData(50000))
-  const refreshData = () => setData(old => makeData(50000))
+  const refreshData = () => setData(_old => makeData(50000))
 
   const table = useReactTable({
     data,
