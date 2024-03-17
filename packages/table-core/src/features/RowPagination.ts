@@ -1,5 +1,11 @@
-import { TableFeature } from '../core/table'
-import { OnChangeFn, Table, RowModel, Updater, RowData } from '../types'
+import {
+  OnChangeFn,
+  Table,
+  RowModel,
+  Updater,
+  RowData,
+  TableFeature,
+} from '../types'
 import {
   functionalUpdate,
   getMemoOptions,

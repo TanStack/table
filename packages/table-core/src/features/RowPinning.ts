@@ -1,5 +1,11 @@
-import { TableFeature } from '../core/table'
-import { OnChangeFn, Updater, Table, Row, RowData } from '../types'
+import {
+  OnChangeFn,
+  Updater,
+  Table,
+  Row,
+  RowData,
+  TableFeature,
+} from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 export type RowPinningPosition = false | 'top' | 'bottom'

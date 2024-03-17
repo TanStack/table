@@ -1,16 +1,16 @@
 import { RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
-import { TableFeature } from '../core/table'
 import {
+  AggregationFns,
   Cell,
   Column,
-  OnChangeFn,
-  Table,
-  Row,
-  Updater,
   ColumnDefTemplate,
+  OnChangeFn,
+  Row,
   RowData,
-  AggregationFns,
+  Table,
+  TableFeature,
+  Updater,
 } from '../types'
 import { isFunction, makeStateUpdater } from '../utils'
 
