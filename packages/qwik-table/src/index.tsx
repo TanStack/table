@@ -11,6 +11,7 @@ import {
 } from '@tanstack/table-core'
 
 export const flexRender = (comp: any, attrs: any) => {
+  // TODO: this might not handle all cases I'm not sure? Probably needs to be tested
   if (typeof comp === 'function') {
     return comp(attrs)
   }
