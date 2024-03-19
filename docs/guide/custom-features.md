@@ -6,7 +6,7 @@ title: Custom Features Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [custom-features](../framework/react/examples/expanding)
+- [custom-features](../framework/react/examples/custom-features)
 
 ## Custom Features Guide
 
