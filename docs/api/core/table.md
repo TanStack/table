@@ -168,6 +168,14 @@ debugRows?: boolean
 
 Set this option to true to output row debugging information to the console.
 
+### `_features`
+
+```tsx
+_features?: TableFeature[]
+```
+
+An array of extra features that you can add to the table instance.
+
 ### `render`
 
 > ⚠️ This option is only necessary if you are implementing a table adapter.

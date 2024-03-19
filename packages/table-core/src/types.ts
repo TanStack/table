@@ -164,8 +164,9 @@ interface FeatureOptions<TData extends RowData>
     PaginationOptions,
     RowSelectionOptions<TData> {}
 
-export type TableOptionsResolved<TData extends RowData> = CoreOptions<TData> &
-  FeatureOptions<TData>
+export interface TableOptionsResolved<TData extends RowData>
+  extends CoreOptions<TData>,
+    FeatureOptions<TData> {}
 
 export interface TableOptions<TData extends RowData>
   extends PartialKeys<

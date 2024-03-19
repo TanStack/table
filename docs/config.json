@@ -175,6 +175,10 @@
         {
           "label": "Virtualization",
           "to": "guide/virtualization"
+        },
+        {
+          "label": "Custom Features",
+          "to": "guide/custom-features"
         }
       ]
     },
@@ -391,6 +395,10 @@
             {
               "to": "framework/react/examples/full-width-resizable-table",
               "label": "React Full Width Resizable"
+            },
+            {
+              "to": "framework/react/examples/custom-features",
+              "label": "Custom Features"
             }
           ]
         },
