@@ -150,6 +150,10 @@ declare module '@tanstack/react-table' { // or whatever framework adapter you ar
 
 Once we do this correctly, we should have no TypeScript errors when we try to both create our new feature's code and use it in our application.
 
+##### Caveats of Using Declaration Merging
+
+One caveat of using declaration merging is that it will affect the TanStack Table types for every table across your codebase. This is not a problem if you plan on loading the same feature set for every table in your application, but it could be a problem if some of your tables load extra features and some do not. Alternatively, you can just make a bunch of custom types that extend off of the TanStack Table types with your new features added. This is what [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/types.ts) does in order to avoid affecting the types of vanilla TanStack Table tables, but it's a bit more tedious, and requires a lot of type casting at certain points.
+
 #### Step 3: Create the Feature Object
 
 With all of that TypeScript setup out of the way, we can now create the feature object for our new feature. This is where we define all of the methods that will be added to the table instance.
