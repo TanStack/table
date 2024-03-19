@@ -14,17 +14,15 @@ In this guide, we'll cover how to extend TanStack Table with custom features, an
 
 ### TanStack Table Strives to be Lean
 
-TanStack Table has a core set of features that are built into the library such as sorting, filtering, pagination, etc. We've received a lot of requests and sometimes even some well thought out PRs to add even more features to the library. While we are always open to improving the library, we also want to make sure that TanStack Table remains a lean library that does not include too much bloat and code that is unlikely to be used in most use cases.
+TanStack Table has a core set of features that are built into the library such as sorting, filtering, pagination, etc. We've received a lot of requests and sometimes even some well thought out PRs to add even more features to the library. While we are always open to improving the library, we also want to make sure that TanStack Table remains a lean library that does not include too much bloat and code that is unlikely to be used in most use cases. Not every PR can, or should, be accepted into the core library, even if it does solve a real problem. This can be frustrating to developers where TanStack Table solves 90% of their use case, but they need a little bit more control. 
 
-Not every PR can, or should, be accepted into the core library, even if it does solve a real problem. This can be frustrating to developers where TanStack Table solves 90% of their use case, but they need a little bit more control. 
-
-TanStack Table is built in a way that allows it to be highly extensible. The `table` instance that is returned from whichever framework you are using (`useReactTable`, `useVueTable`, etc) is a plain JavaScript object that can have extra properties or APIs added to it. It has always been possible to use composition to add custom logic, state, and APIs to the table instance. Libraries like [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/hooks/useMRT_TableInstance.ts) have simply created custom wrapper hooks around the `useReactTable` hook to extend the table instance with custom functionality.
+TanStack Table has always been built in a way that allows it to be highly extensible (at least since v7). The `table` instance that is returned from whichever framework adapter that you are using (`useReactTable`, `useVueTable`, etc) is a plain JavaScript object that can have extra properties or APIs added to it. It has always been possible to use composition to add custom logic, state, and APIs to the table instance. Libraries like [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/hooks/useMRT_TableInstance.ts) have simply created custom wrapper hooks around the `useReactTable` hook to extend the table instance with custom functionality.
 
 However, starting in version 8.14.0, TanStack Table has exposed a new `_features` table option that allows you to more tightly and cleanly integrate custom code into the table instance in exactly the same way that the built-in table features are already integrated.
 
 > TanStack Table v8.14.0 introduced a new `_features` option that allows you to add custom features to the table instance.
 
-With this new tighter integration, you can easily add more complex custom features to your tables, and possibly even package them up and share them with the community. We'll see how this evolves over time.
+With this new tighter integration, you can easily add more complex custom features to your tables, and possibly even package them up and share them with the community. We'll see how this evolves over time. In a future v9 release, we may even lower the bundle size of TanStack Table by making all features opt-in, but that is still being explored.
 
 ### How TanStack Table Features Work
 
@@ -58,11 +56,11 @@ This might be a bit confusing, so let's break down what each of these methods do
 
 ##### `getDefaultOptions`
 
-The `getDefaultOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `getDefaultOptions` method sets the default `columnResizeMode` option with a value of `"onEnd"`.
+The `getDefaultOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `getDefaultOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 ##### `getDefaultColumnDef`
 
-The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a value of `1`.
+The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
 
 ##### `getInitialState`
 
@@ -145,7 +143,7 @@ declare module '@tanstack/react-table' { // or whatever framework adapter you ar
   // if you need to add header instance APIs...
   // interface Header<TData extends RowData, TValue> extends DensityHeader
 
-  // Note: declaration merging on `ColumnDef` is not possible because it is a type, not an interface.
+  // Note: declaration merging on `ColumnDef` is not possible because it is a complex type, not an interface.
   // But you can still use declaration merging on `ColumnDef.meta`
 }
 ```
@@ -261,3 +259,7 @@ return(
   </td>
 )
 ```
+
+#### Do We Have to Do It This Way?
+
+This is just a new way to integrate custom code along-side the built-in features in TanStack Table. In our example up above, we could have just as easily stored the `density` state in a `React.useState`, defined our own `toggleDensity` handler wherever, and just used it in our code separately from the table instance. Building table features along-side TanStack Table instead of deeply integrating them into the table instance is still a perfectly valid way to build custom features. Depending on your use case, this may or may not be the cleanest way to extend TanStack Table with custom features.
