@@ -1,7 +1,13 @@
 import { FilterFn, FilterFnOption, RowModel } from '..'
-import { TableFeature } from '../core/table'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
-import { Column, OnChangeFn, Table, Updater, RowData } from '../types'
+import {
+  Column,
+  OnChangeFn,
+  Table,
+  Updater,
+  RowData,
+  TableFeature,
+} from '../types'
 import { isFunction, makeStateUpdater } from '../utils'
 
 export interface GlobalFilterTableState {

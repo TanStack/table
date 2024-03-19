@@ -436,6 +436,37 @@ importers:
         specifier: ^5.0.11
         version: 5.0.11(@types/node@18.19.7)
 
+  examples/react/custom-features:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/react-table':
+        specifier: ^8.13.2
+        version: link:../../../packages/react-table
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.5
+        version: 5.0.5(rollup@4.9.5)
+      '@types/react':
+        specifier: ^18.2.48
+        version: 18.2.48
+      '@types/react-dom':
+        specifier: ^18.2.18
+        version: 18.2.18
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.2.1(vite@5.0.11)
+      vite:
+        specifier: ^5.0.11
+        version: 5.0.11(@types/node@18.19.7)
+
   examples/react/editable-data:
     dependencies:
       '@faker-js/faker':
@@ -10121,9 +10152,9 @@ packages:
         optional: true
     dependencies:
       '@types/node': 20.11.2
-      esbuild: 0.19.10
-      postcss: 8.4.32
-      rollup: 4.9.2
+      esbuild: 0.19.12
+      postcss: 8.4.33
+      rollup: 4.9.5
     optionalDependencies:
       fsevents: 2.3.3
     dev: true

@@ -96,6 +96,24 @@ import { PartialKeys, UnionToIntersection } from './utils'
 import { CellContext, CoreCell } from './core/cell'
 import { CoreColumn } from './core/column'
 
+export interface TableFeature<TData extends RowData = any> {
+  createCell?: (
+    cell: Cell<TData, unknown>,
+    column: Column<TData>,
+    row: Row<TData>,
+    table: Table<TData>
+  ) => void
+  createColumn?: (column: Column<TData, unknown>, table: Table<TData>) => void
+  createHeader?: (header: Header<TData, unknown>, table: Table<TData>) => void
+  createRow?: (row: Row<TData>, table: Table<TData>) => void
+  createTable?: (table: Table<TData>) => void
+  getDefaultColumnDef?: () => Partial<ColumnDef<TData, unknown>>
+  getDefaultOptions?: (
+    table: Table<TData>
+  ) => Partial<TableOptionsResolved<TData>>
+  getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
+}
+
 export interface TableMeta<TData extends RowData> {}
 
 export interface ColumnMeta<TData extends RowData, TValue> {}
@@ -146,8 +164,9 @@ interface FeatureOptions<TData extends RowData>
     PaginationOptions,
     RowSelectionOptions<TData> {}
 
-export type TableOptionsResolved<TData extends RowData> = CoreOptions<TData> &
-  FeatureOptions<TData>
+export interface TableOptionsResolved<TData extends RowData>
+  extends CoreOptions<TData>,
+    FeatureOptions<TData> {}
 
 export interface TableOptions<TData extends RowData>
   extends PartialKeys<

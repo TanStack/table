@@ -5,21 +5,21 @@ import './index.css'
 
 import {
   Column,
-  Table,
-  useReactTable,
+  ColumnDef,
   ColumnFiltersState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  getPaginationRowModel,
-  sortingFns,
-  getSortedRowModel,
   FilterFn,
   SortingFn,
-  ColumnDef,
+  Table,
   flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  sortingFns,
+  useReactTable,
 } from '@tanstack/react-table'
 
 import {

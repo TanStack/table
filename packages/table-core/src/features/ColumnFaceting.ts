@@ -1,6 +1,5 @@
 import { RowModel } from '..'
-import { TableFeature } from '../core/table'
-import { Column, Table, RowData } from '../types'
+import { Column, RowData, Table, TableFeature } from '../types'
 
 export interface FacetedColumn<TData extends RowData> {
   _getFacetedMinMaxValues?: () => undefined | [number, number]

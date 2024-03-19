@@ -1,9 +1,15 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
-import { Table, OnChangeFn, Updater, Column, RowData } from '../types'
+import {
+  Column,
+  OnChangeFn,
+  RowData,
+  Table,
+  TableFeature,
+  Updater,
+} from '../types'
 
 import { orderColumns } from './ColumnGrouping'
-import { TableFeature } from '../core/table'
 import { ColumnPinningPosition, _getVisibleLeafColumns } from '..'
 
 export interface ColumnOrderTableState {

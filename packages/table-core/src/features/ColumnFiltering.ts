@@ -1,15 +1,15 @@
 import { RowModel } from '..'
-import { TableFeature } from '../core/table'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
-  OnChangeFn,
-  Table,
-  Row,
-  Updater,
-  RowData,
-  FilterMeta,
   FilterFns,
+  FilterMeta,
+  OnChangeFn,
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  Updater,
 } from '../types'
 import { functionalUpdate, isFunction, makeStateUpdater } from '../utils'
 

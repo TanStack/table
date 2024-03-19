@@ -4,23 +4,123 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  Column,
-  ColumnDef,
-  PaginationState,
-  Table,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
+  makeStateUpdater,
+  getSortedRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  getCoreRowModel,
+  flexRender,
+  TableFeature,
+  Table,
+  RowData,
+  OnChangeFn,
+  ColumnDef,
+  Column,
+  Updater,
+  functionalUpdate,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
 
-function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
+// TypeScript setup for our new feature with all of the same type-safety as stock TanStack Table features
 
+// define types for our new feature's custom state
+export type DensityState = 'sm' | 'md' | 'lg'
+export interface DensityTableState {
+  density: DensityState
+}
+
+// define types for our new feature's table options
+export interface DensityOptions {
+  enableDensity?: boolean
+  onDensityChange?: OnChangeFn<DensityState>
+}
+
+// Define types for our new feature's table APIs
+export interface DensityInstance {
+  setDensity: (updater: Updater<DensityState>) => void
+  toggleDensity: (value?: DensityState) => void
+}
+
+// Use declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
+declare module '@tanstack/react-table' {
+  //merge our new feature's state with the existing table state
+  interface TableState extends DensityTableState {}
+  //merge our new feature's options with the existing table options
+  interface TableOptionsResolved<TData extends RowData>
+    extends DensityOptions {}
+  //merge our new feature's instance APIs with the existing table instance APIs
+  interface Table<TData extends RowData> extends DensityInstance {}
+  // if you need to add cell instance APIs...
+  // interface Cell<TData extends RowData, TValue> extends DensityCell
+  // if you need to add row instance APIs...
+  // interface Row<TData extends RowData> extends DensityRow
+  // if you need to add column instance APIs...
+  // interface Column<TData extends RowData, TValue> extends DensityColumn
+  // if you need to add header instance APIs...
+  // interface Header<TData extends RowData, TValue> extends DensityHeader
+
+  // Note: declaration merging on `ColumnDef` is not possible because it is a type, not an interface.
+  // But you can still use declaration merging on `ColumnDef.meta`
+}
+
+// end of TS setup!
+
+// Here is all of the actual javascript code for our new feature
+export const DensityFeature: TableFeature<any> = {
+  // define the new feature's initial state
+  getInitialState: (state): DensityTableState => {
+    return {
+      density: 'md',
+      ...state,
+    }
+  },
+
+  // define the new feature's default options
+  getDefaultOptions: <TData extends RowData>(
+    table: Table<TData>
+  ): DensityOptions => {
+    return {
+      enableDensity: true,
+      onDensityChange: makeStateUpdater('density', table),
+    } as DensityOptions
+  },
+  // if you need to add a default column definition...
+  // getDefaultColumnDef: <TData extends RowData>(): Partial<ColumnDef<TData>> => {
+  //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
+  // },
+
+  // define the new feature's table instance methods
+  createTable: <TData extends RowData>(table: Table<TData>): void => {
+    table.setDensity = updater => {
+      const safeUpdater: Updater<DensityState> = old => {
+        let newState = functionalUpdate(updater, old)
+        return newState
+      }
+      return table.options.onDensityChange?.(safeUpdater)
+    }
+    table.toggleDensity = value => {
+      table.setDensity(old => {
+        if (value) return value
+        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' //cycle through the 3 options
+      })
+    }
+  },
+
+  // if you need to add row instance APIs...
+  // createRow: <TData extends RowData>(row, table): void => {},
+  // if you need to add cell instance APIs...
+  // createCell: <TData extends RowData>(cell, column, row, table): void => {},
+  // if you need to add column instance APIs...
+  // createColumn: <TData extends RowData>(column, table): void => {},
+  // if you need to add header instance APIs...
+  // createHeader: <TData extends RowData>(header, table): void => {},
+}
+//end of custom feature code
+
+//app code
+function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
@@ -59,41 +159,11 @@ function App() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
-
-  return (
-    <>
-      <MyTable
-        {...{
-          data,
-          columns,
-        }}
-      />
-      <hr />
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-    </>
-  )
-}
-
-function MyTable({
-  data,
-  columns,
-}: {
-  data: Person[]
-  columns: ColumnDef<Person>[]
-}) {
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
+  const [data, _setData] = React.useState(() => makeData(1000))
+  const [density, setDensity] = React.useState<DensityState>('md')
 
   const table = useReactTable({
+    _features: [DensityFeature], //pass our custom feature to the table to be instantiated upon creation
     columns,
     data,
     debugTable: true,
@@ -101,24 +171,41 @@ function MyTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
-    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
-      pagination,
+      density, //passing the density state to the table, TS is still happy :)
     },
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
+    onDensityChange: setDensity, //using the new onDensityChange option, TS is still happy :)
   })
 
   return (
     <div className="p-2">
       <div className="h-2" />
+      <button
+        onClick={() => table.toggleDensity()}
+        className="border rounded p-1 bg-blue-500 text-white mb-2 w-64"
+      >
+        Toggle Density
+      </button>
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{
+                      //using our new feature
+                      padding:
+                        density === 'sm'
+                          ? '4px'
+                          : density === 'md'
+                            ? '8px'
+                            : '16px',
+                      transition: 'padding 0.2s',
+                    }}
+                  >
                     <div
                       {...{
                         className: header.column.getCanSort()
@@ -135,12 +222,12 @@ function MyTable({
                         asc: ' 🔼',
                         desc: ' 🔽',
                       }[header.column.getIsSorted() as string] ?? null}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
-                      ) : null}
                     </div>
+                    {header.column.getCanFilter() ? (
+                      <div>
+                        <Filter column={header.column} table={table} />
+                      </div>
+                    ) : null}
                   </th>
                 )
               })}
@@ -153,7 +240,19 @@ function MyTable({
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
                   return (
-                    <td key={cell.id}>
+                    <td
+                      key={cell.id}
+                      style={{
+                        //using our new feature
+                        padding:
+                          density === 'sm'
+                            ? '4px'
+                            : density === 'md'
+                              ? '8px'
+                              : '16px',
+                        transition: 'padding 0.2s',
+                      }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

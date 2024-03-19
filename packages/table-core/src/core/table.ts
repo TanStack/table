@@ -15,6 +15,7 @@ import {
   TableMeta,
   ColumnDefResolved,
   GroupColumnDef,
+  TableFeature,
 } from '../types'
 
 //
@@ -36,18 +37,7 @@ import { RowPinning } from '../features/RowPinning'
 import { RowSelection } from '../features/RowSelection'
 import { RowSorting } from '../features/RowSorting'
 
-export interface TableFeature {
-  createCell?: (cell: any, column: any, row: any, table: any) => any
-  createColumn?: (column: any, table: any) => any
-  createHeader?: (column: any, table: any) => any
-  createRow?: (row: any, table: any) => any
-  createTable?: (table: any) => any
-  getDefaultColumnDef?: () => any
-  getDefaultOptions?: (table: any) => any
-  getInitialState?: (initialState?: InitialTableState) => any
-}
-
-const features = [
+const builtInFeatures = [
   Headers,
   ColumnVisibility,
   ColumnOrdering,
@@ -69,6 +59,12 @@ const features = [
 export interface CoreTableState {}
 
 export interface CoreOptions<TData extends RowData> {
+  /**
+   * An array of extra features that you can add to the table instance.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  _features?: TableFeature[]
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -285,11 +281,16 @@ export interface CoreInstance<TData extends RowData> {
 export function createTable<TData extends RowData>(
   options: TableOptionsResolved<TData>
 ): Table<TData> {
-  if (options.debugAll || options.debugTable) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    (options.debugAll || options.debugTable)
+  ) {
     console.info('Creating Table Instance...')
   }
 
-  let table = { _features: features } as unknown as Table<TData>
+  const _features = [...builtInFeatures, ...(options._features ?? [])]
+
+  let table = { _features } as unknown as Table<TData>
 
   const defaultOptions = table._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(table))
@@ -314,14 +315,15 @@ export function createTable<TData extends RowData>(
   } as TableState
 
   table._features.forEach(feature => {
-    initialState = feature.getInitialState?.(initialState) ?? initialState
+    initialState = (feature.getInitialState?.(initialState) ??
+      initialState) as TableState
   })
 
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
   const coreInstance: CoreInstance<TData> = {
-    _features: features,
+    _features,
     options: {
       ...defaultOptions,
       ...options,
