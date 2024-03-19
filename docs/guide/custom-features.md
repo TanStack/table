@@ -108,7 +108,7 @@ The `createCell` method in a table feature is responsible for adding methods to 
 
 Let's walk through making a custom table feature for a hypothetical use case. Let's say we want to add a feature to the table instance that allows the user to change the "density" (padding of cells) of the table. 
 
-Check out the full [custom-features](../framework/react/examples/expanding) example to see the full implementation, but here's an in-depth look at the steps to create a custom feature.
+Check out the full [custom-features](../framework/react/examples/custom-features) example to see the full implementation, but here's an in-depth look at the steps to create a custom feature.
 
 #### Step 1: Set up TypeScript Types
 
