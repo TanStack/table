@@ -1,5 +1,7 @@
 import {
   AccessorFn,
+  AccessorFnColumnDef,
+  AccessorKeyColumnDef,
   ColumnDef,
   DisplayColumnDef,
   GroupColumnDef,
@@ -20,7 +22,7 @@ import { DeepKeys, DeepValue } from './utils'
 //     foo: [
 //       {
 //         bar: 'bar'
-//       }
+//       },
 //     ]
 //     bar: { subBar: boolean }[]
 //     baz: {
@@ -62,9 +64,11 @@ export type ColumnHelper<TData extends RowData> = {
     column: TAccessor extends AccessorFn<TData>
       ? DisplayColumnDef<TData, TValue>
       : IdentifiedColumnDef<TData, TValue>
-  ) => ColumnDef<TData, TValue>
-  display: (column: DisplayColumnDef<TData>) => ColumnDef<TData, unknown>
-  group: (column: GroupColumnDef<TData>) => ColumnDef<TData, unknown>
+  ) => TAccessor extends AccessorFn<TData>
+    ? AccessorFnColumnDef<TData, TValue>
+    : AccessorKeyColumnDef<TData, TValue>
+  display: (column: DisplayColumnDef<TData>) => DisplayColumnDef<TData, unknown>
+  group: (column: GroupColumnDef<TData>) => GroupColumnDef<TData, unknown>
 }
 
 export function createColumnHelper<
@@ -82,7 +86,7 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
-    display: column => column as ColumnDef<TData, unknown>,
-    group: column => column as ColumnDef<TData, unknown>,
+    display: column => column,
+    group: column => column,
   }
 }
