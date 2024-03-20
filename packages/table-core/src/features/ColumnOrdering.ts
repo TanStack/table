@@ -1,9 +1,15 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
-import { Table, OnChangeFn, Updater, Column, RowData } from '../types'
+import {
+  Column,
+  OnChangeFn,
+  RowData,
+  Table,
+  TableFeature,
+  Updater,
+} from '../types'
 
-import { orderColumns } from './Grouping'
-import { TableFeature } from '../core/table'
+import { orderColumns } from './ColumnGrouping'
 import { ColumnPinningPosition, _getVisibleLeafColumns } from '..'
 
 export interface ColumnOrderTableState {
@@ -66,7 +72,7 @@ export interface ColumnOrderInstance<TData extends RowData> {
 
 //
 
-export const Ordering: TableFeature = {
+export const ColumnOrdering: TableFeature = {
   getInitialState: (state): ColumnOrderTableState => {
     return {
       columnOrder: [],

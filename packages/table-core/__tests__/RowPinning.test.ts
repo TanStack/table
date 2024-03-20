@@ -5,7 +5,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
 } from '../src'
-import * as Pinning from '../src/features/Pinning'
+import * as RowPinning from '../src/features/RowPinning'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person
@@ -20,7 +20,7 @@ function generateColumns(people: Person[]): PersonColumn[] {
   })
 }
 
-describe('Pinning', () => {
+describe('RowPinning', () => {
   describe('createTable', () => {
     describe('_getPinnedRows', () => {
       it('should return pinned rows when keepPinnedRows is true rows are visible', () => {

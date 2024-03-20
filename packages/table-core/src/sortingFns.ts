@@ -1,4 +1,4 @@
-import { SortingFn } from './features/Sorting'
+import { SortingFn } from './features/RowSorting'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
