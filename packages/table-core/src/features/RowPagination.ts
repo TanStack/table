@@ -1,5 +1,11 @@
-import { TableFeature } from '../core/table'
-import { OnChangeFn, Table, RowModel, Updater, RowData } from '../types'
+import {
+  OnChangeFn,
+  Table,
+  RowModel,
+  Updater,
+  RowData,
+  TableFeature,
+} from '../types'
 import {
   functionalUpdate,
   getMemoOptions,
@@ -186,7 +192,7 @@ const getDefaultPaginationState = (): PaginationState => ({
   pageSize: defaultPageSize,
 })
 
-export const Pagination: TableFeature = {
+export const RowPagination: TableFeature = {
   getInitialState: (state): PaginationTableState => {
     return {
       ...state,

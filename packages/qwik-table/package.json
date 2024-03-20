@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/qwik-table",
-  "version": "8.13.2",
+  "version": "8.14.0",
   "description": "Headless UI for building powerful tables & datagrids for Qwik.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
-    "react",
+    "qwik",
     "table",
     "qwik-table",
     "datagrid"
@@ -43,8 +43,6 @@
   ],
   "scripts": {
     "clean": "rimraf ./build",
-    "test:lib": "vitest",
-    "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc --noEmit",
     "build": "pnpm build:rollup && pnpm build:types",
     "build:rollup": "rollup --config rollup.config.mjs",
@@ -53,10 +51,7 @@
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
   },
-  "devDependencies": {
-    "@builder.io/qwik": "^1.5.1"
-  },
   "peerDependencies": {
-    "builder.io/qwik": "^1.5.1"
+    "@builder.io/qwik": ">=1.5"
   }
 }

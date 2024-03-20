@@ -8,7 +8,6 @@ Want to skip to the implementation? Check out these examples:
 
 - [column-pinning](../framework/react/examples/column-pinning)
 - [sticky-column-pinning](../framework/react/examples/column-pinning-sticky)
-- [row-pinning](../framework/react/examples/row-pinning)
 
  ### Other Examples
  
@@ -17,7 +16,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Pinning API](../api/features/pinning)
+[Column Pinning API](../api/features/column-pinning)
 
 ## Column Pinning Guide
 
@@ -78,13 +77,13 @@ const table = useReactTable({
 
 There are a handful of useful Column API methods to help you implement column pinning features:
 
-- [`column.getCanPin`](../api/features/pinning#getcanpin): Use to determine if a column can be pinned.
-- [`column.pin`](../api/features/pinning#pin): Use to pin a column to the left or right. Or use to unpin a column.
-- [`column.getIsPinned`](../api/features/pinning#getispinned): Use to determine where a column is pinned.
-- [`column.getStart`](../api/features/pinning#getstart): Use to provide the correct `left` CSS value for a pinned column.
-- [`column.getAfter`](../api/features/pinning#getafter): Use to provide the correct `right` CSS value for a pinned column.
-- [`column.getIsLastColumn`](../api/features/pinning#getislastcolumn): Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow
-- [`column.getIsFirstColumn`](../api/features/pinning#getisfirstcolumn): Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow
+- [`column.getCanPin`](../api/features/column-pinning#getcanpin): Use to determine if a column can be pinned.
+- [`column.pin`](../api/features/column-pinning#pin): Use to pin a column to the left or right. Or use to unpin a column.
+- [`column.getIsPinned`](../api/features/column-pinning#getispinned): Use to determine where a column is pinned.
+- [`column.getStart`](../api/features/column-pinning#getstart): Use to provide the correct `left` CSS value for a pinned column.
+- [`column.getAfter`](../api/features/column-pinning#getafter): Use to provide the correct `right` CSS value for a pinned column.
+- [`column.getIsLastColumn`](../api/features/column-pinning#getislastcolumn): Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow
+- [`column.getIsFirstColumn`](../api/features/column-pinning#getisfirstcolumn): Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow
 
 ### Split Table Column Pinning
 

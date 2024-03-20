@@ -9,10 +9,9 @@ export default defineConfig(
     jsName: 'QwikTable',
     outputFile: 'index',
     entryFile: 'src/index.tsx',
-    external: ['react', '@tanstack/table-core', '@builder.io/qwik'],
+    external: ['@tanstack/table-core', '@builder.io/qwik'],
     globals: {
-      react: 'React',
-      '@builder.io/qwik': '@builder.io/qwik',
+      '@builder.io/qwik': 'Qwik',
     },
   })
 )

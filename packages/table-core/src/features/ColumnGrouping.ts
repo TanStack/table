@@ -1,16 +1,16 @@
 import { RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
-import { TableFeature } from '../core/table'
 import {
+  AggregationFns,
   Cell,
   Column,
-  OnChangeFn,
-  Table,
-  Row,
-  Updater,
   ColumnDefTemplate,
+  OnChangeFn,
+  Row,
   RowData,
-  AggregationFns,
+  Table,
+  TableFeature,
+  Updater,
 } from '../types'
 import { isFunction, makeStateUpdater } from '../utils'
 
@@ -239,7 +239,7 @@ export interface GroupingInstance<TData extends RowData> {
 
 //
 
-export const Grouping: TableFeature = {
+export const ColumnGrouping: TableFeature = {
   getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
     TData,
     unknown
