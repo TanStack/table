@@ -133,9 +133,11 @@ const App = component$(() => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     enableSorting: true,
-    onRowSelectionChange: newSelection => {
-      // @ts-ignore
-      rowSelection.value = newSelection(rowSelection.value) //TODO: how can ts-ignore be avoided?
+    onRowSelectionChange: updater => {
+      rowSelection.value =
+        updater instanceof Function
+          ? updater(rowSelection.value)
+          : updater
     },
     state: {
       rowSelection: rowSelection.value,

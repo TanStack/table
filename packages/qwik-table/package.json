@@ -15,7 +15,7 @@
     "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
-    "react",
+    "quik",
     "table",
     "qwik-table",
     "datagrid"
@@ -54,7 +54,6 @@
     "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "@builder.io/qwik": ">=1.5"
   }
 }
