@@ -11,13 +11,13 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "typescript": "5.3.3",
-    "vite": "^5.0.11",
-    "vite-plugin-solid": "^2.8.0"
+    "typescript": "5.4.2",
+    "vite": "^5.2.2",
+    "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
-    "@solid-primitives/scheduled": "^1.4.1",
+    "@solid-primitives/scheduled": "^1.4.3",
     "@tanstack/solid-table": "^8.14.0",
-    "solid-js": "^1.8.11"
+    "solid-js": "^1.8.16"
   }
 }

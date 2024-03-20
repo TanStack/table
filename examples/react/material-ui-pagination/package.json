@@ -9,10 +9,10 @@
     "start": "vite"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.4",
-    "@mui/material": "^5.15.4",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
     "@tanstack/react-table": "^8.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -20,9 +20,9 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@rollup/plugin-replace": "^5.0.5",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.11"
+    "vite": "^5.2.2"
   }
 }
