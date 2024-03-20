@@ -11,11 +11,11 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "5.4.2",
-    "vite": "^5.1.6",
+    "vite": "^5.2.2",
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
     "@tanstack/solid-table": "^8.14.0",
-    "solid-js": "^1.8.15"
+    "solid-js": "^1.8.16"
   }
 }
