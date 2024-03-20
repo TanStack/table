@@ -22,7 +22,7 @@ import { DeepKeys, DeepValue } from './utils'
 //     foo: [
 //       {
 //         bar: 'bar'
-//       },
+//       }
 //     ]
 //     bar: { subBar: boolean }[]
 //     baz: {
