@@ -135,9 +135,7 @@ const App = component$(() => {
     enableSorting: true,
     onRowSelectionChange: updater => {
       rowSelection.value =
-        updater instanceof Function
-          ? updater(rowSelection.value)
-          : updater
+        updater instanceof Function ? updater(rowSelection.value) : updater
     },
     state: {
       rowSelection: rowSelection.value,

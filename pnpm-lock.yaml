@@ -119,34 +119,40 @@ importers:
 
   examples/qwik/basic:
     dependencies:
+      '@tanstack/qwik-table':
+        specifier: ^8.14.0
+        version: link:../../../packages/qwik-table
+    devDependencies:
       '@builder.io/qwik':
         specifier: ^1.5.1
         version: 1.5.1(@types/node@20.11.30)(undici@6.9.0)
-    devDependencies:
       serve:
         specifier: ^14.2.1
         version: 14.2.1
       typescript:
-        specifier: ^5.2.2
+        specifier: 5.4.2
         version: 5.4.2
       vite:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2(@types/node@20.11.30)
 
-  examples/qwik/selection:
+  examples/qwik/row-selection:
     dependencies:
+      '@tanstack/qwik-table':
+        specifier: ^8.14.0
+        version: link:../../../packages/qwik-table
+    devDependencies:
       '@builder.io/qwik':
         specifier: ^1.5.1
         version: 1.5.1(@types/node@20.11.30)(undici@6.9.0)
-    devDependencies:
       serve:
         specifier: ^14.2.1
         version: 14.2.1
       typescript:
-        specifier: ^5.2.2
+        specifier: 5.4.2
         version: 5.4.2
       vite:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2(@types/node@20.11.30)
 
   examples/react/basic:
