@@ -29,6 +29,7 @@ export function useQwikTable<TData extends RowData>(
     ...options,
   }
 
+  // Create a new table instance and store it in a Qwik store
   const table = Qwik.useStore<{
     instance: Qwik.NoSerialize<Table<TData>>
   }>({
@@ -47,6 +48,8 @@ export function useQwikTable<TData extends RowData>(
       ...state,
       ...options.state,
     },
+    // Similarly, we'll maintain both our internal state and any user-provided
+    // state.
     onStateChange: updater => {
       state = updater instanceof Function ? updater(state) : updater
       options.onStateChange?.(updater)
