@@ -2,7 +2,6 @@ import {
   AccessorFn,
   AccessorFnColumnDef,
   AccessorKeyColumnDef,
-  ColumnDef,
   DisplayColumnDef,
   GroupColumnDef,
   IdentifiedColumnDef,
