@@ -1,5 +1,5 @@
 {
-  "name": "basic",
+  "name": "tanstack-table-example-qwik-filters",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,12 +9,13 @@
     "preview": "serve dist"
   },
   "devDependencies": {
+    "@builder.io/qwik": "^1.5.1",
     "serve": "^14.2.1",
-    "typescript": "^5.2.2",
-    "vite": "^5.1.6"
+    "typescript": "5.4.2",
+    "vite": "^5.2.2"
   },
   "dependencies": {
-    "@builder.io/qwik": "^1.5.1",
+    "@tanstack/qwik-table": "^8.14.0",
     "@tanstack/match-sorter-utils": "^8.11.8"
   }
 }

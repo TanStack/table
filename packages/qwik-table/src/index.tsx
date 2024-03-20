@@ -7,7 +7,6 @@ import {
   RowData,
   createTable,
   type Table,
-  type TableState,
 } from '@tanstack/table-core'
 
 export const flexRender = (comp: any, attrs: any) => {
@@ -19,17 +18,12 @@ export const flexRender = (comp: any, attrs: any) => {
   return comp
 }
 
-// @ts-ignore
-const dummyState: TableState = {
-  columnPinning: { left: [], right: [] },
-  pagination: { pageIndex: 0, pageSize: 5 },
-}
-
 export function useQwikTable<TData extends RowData>(
   options: TableOptions<TData>
 ) {
+  // Compose in the generic options to the user options
   const resolvedOptions: TableOptionsResolved<TData> = {
-    state: dummyState,
+    state: {},
     onStateChange: () => {},
     renderFallbackValue: null,
     ...options,
@@ -37,22 +31,24 @@ export function useQwikTable<TData extends RowData>(
 
   const table = Qwik.useStore<{
     instance: Qwik.NoSerialize<Table<TData>>
-    state: TableState
   }>({
     instance: Qwik.noSerialize(createTable(resolvedOptions)),
-    state: dummyState,
   })
 
-  table.instance?.setOptions(prev => ({
+  // By default, manage table state here using the table's initial state
+  let state = Qwik.useStore(table.instance!.initialState)
+
+  // Compose the default state above with any user state. This will allow the user
+  // to only control a subset of the state if desired.
+  table.instance!.setOptions(prev => ({
     ...prev,
     ...options,
     state: {
-      ...table.state,
+      ...state,
       ...options.state,
     },
     onStateChange: updater => {
-      // @ts-ignore
-      table.state = updater(table.state)
+      state = updater instanceof Function ? updater(state) : updater
       options.onStateChange?.(updater)
     },
   }))

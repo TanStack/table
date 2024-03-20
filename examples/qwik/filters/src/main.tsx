@@ -1,6 +1,6 @@
 import '@builder.io/qwik/qwikloader.js'
 
-import { $, render, useSignal, useTask$ } from '@builder.io/qwik'
+import { $, render, useSignal } from '@builder.io/qwik'
 import './index.css'
 
 import {
@@ -20,11 +20,24 @@ import {
   Column,
   Table,
   sortingFns,
-} from '../../../../packages/qwik-table/src/index'
+} from '@tanstack/qwik-table'
 
 import { component$ } from '@builder.io/qwik'
 
-import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
+import {
+  rankItem,
+  compareItems,
+  RankingInfo,
+} from '@tanstack/match-sorter-utils'
+
+declare module '@tanstack/qwik-table' {
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo
+  }
+}
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -277,7 +290,8 @@ const App = component$(() => {
       globalFilter: globalFilter.value,
     },
     onColumnFiltersChange: updater => {
-      const updated = updater(columnFilters.value)
+      const updated =
+        updater instanceof Function ? updater(columnFilters.value) : updater
       columnFilters.value = updated
     },
     onGlobalFilterChange: updater => {
