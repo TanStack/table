@@ -53,6 +53,6 @@
     "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
-    "solid-js": "^1.3.13"
+    "solid-js": ">=1.3"
   }
 }

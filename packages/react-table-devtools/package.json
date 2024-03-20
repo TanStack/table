@@ -49,8 +49,8 @@
     "build:types": "tsc --emitDeclarationOnly"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "react-dom": ">=16"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   },
   "dependencies": {
     "@tanstack/react-table": "workspace:*"

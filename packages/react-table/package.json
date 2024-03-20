@@ -58,7 +58,7 @@
     "react": "^18.2.0"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "react-dom": ">=16"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   }
 }
