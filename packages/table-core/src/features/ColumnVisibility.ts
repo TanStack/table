@@ -1,5 +1,4 @@
 import { ColumnPinningPosition } from '..'
-import { TableFeature } from '../core/table'
 import {
   Cell,
   Column,
@@ -8,6 +7,7 @@ import {
   Updater,
   Row,
   RowData,
+  TableFeature,
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
@@ -149,7 +149,7 @@ export interface VisibilityColumn {
 
 //
 
-export const Visibility: TableFeature = {
+export const ColumnVisibility: TableFeature = {
   getInitialState: (state): VisibilityTableState => {
     return {
       columnVisibility: {},
