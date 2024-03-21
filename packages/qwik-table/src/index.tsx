@@ -9,13 +9,17 @@ import {
   type Table,
 } from '@tanstack/table-core'
 
-export const flexRender = (comp: any, attrs: any) => {
-  // TODO: this might not handle all cases I'm not sure? Probably needs to be tested
-  if (typeof comp === 'function') {
-    return comp(attrs)
-  }
+type QwikComps = Qwik.Component | Qwik.FunctionComponent
 
-  return comp
+export function flexRender<TProps extends object>(
+  Comp: any, // TODO: add renderable type
+  props: TProps
+) {
+  return !Comp ? null : isQwikComponent(Comp) ? <Comp {...props} /> : Comp
+}
+
+function isQwikComponent(comp: unknown): comp is QwikComps {
+  return !!(typeof comp === 'function' && comp.name === 'QwikComponent')
 }
 
 export function useQwikTable<TData extends RowData>(
@@ -37,7 +41,7 @@ export function useQwikTable<TData extends RowData>(
   })
 
   // By default, manage table state here using the table's initial state
-  let state = Qwik.useStore(table.instance!.initialState)
+  const state = Qwik.useSignal(table.instance!.initialState)
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
@@ -51,7 +55,7 @@ export function useQwikTable<TData extends RowData>(
     // Similarly, we'll maintain both our internal state and any user-provided
     // state.
     onStateChange: updater => {
-      state = updater instanceof Function ? updater(state) : updater
+      state.value = updater instanceof Function ? updater(state.value) : updater
       options.onStateChange?.(updater)
     },
   }))
