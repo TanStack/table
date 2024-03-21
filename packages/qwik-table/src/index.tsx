@@ -49,7 +49,7 @@ export function useQwikTable<TData extends RowData>(
     ...prev,
     ...options,
     state: {
-      ...state,
+      ...state.value,
       ...options.state,
     },
     // Similarly, we'll maintain both our internal state and any user-provided
