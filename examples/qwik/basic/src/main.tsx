@@ -1,18 +1,14 @@
 import '@builder.io/qwik/qwikloader.js'
+import { render, component$ } from '@builder.io/qwik'
 
-import { $, render } from '@builder.io/qwik'
 import './index.css'
 
 import {
   createColumnHelper,
   getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   flexRender,
   useQwikTable,
 } from '../../../../packages/qwik-table/src/index'
-
-import { component$ } from '@builder.io/qwik'
 
 type Person = {
   firstName: string
@@ -61,49 +57,32 @@ const defaultData: Person[] = [
 const columnHelper = createColumnHelper<Person>()
 
 const columns = [
-  columnHelper.group({
-    id: 'hello',
-    header: () => <span>Hello</span>,
-    // footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      }),
-      columnHelper.accessor(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-      }),
-    ],
+  columnHelper.accessor('firstName', {
+    cell: info => info.getValue(),
+    footer: info => info.column.id,
   }),
-  columnHelper.group({
-    header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => <span>Visits</span>,
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-    ],
+  columnHelper.accessor(row => row.lastName, {
+    id: 'lastName',
+    cell: info => <i>{info.getValue()}</i>,
+    header: () => <span>Last Name</span>,
+    footer: info => info.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    cell: info => info.renderValue(),
+    footer: info => info.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => <span>Visits</span>,
+    footer: info => info.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: info => info.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: info => info.column.id,
   }),
 ]
 
@@ -112,87 +91,54 @@ const App = component$(() => {
     columns,
     data: defaultData,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     enableSorting: true,
   })
 
   return (
-    <div>
-      <table class="table">
+    <div class="p-2">
+      <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                const { column } = header
-                const id = column.id
-                return (
-                  <th
-                    key={id}
-                    onClick$={$(() => {
-                      const thisCol = table.getColumn(id)!
-                      thisCol.toggleSorting()
-                    })}
-                    colSpan={header.colSpan}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </th>
-                )
-              })}
+              {headerGroup.headers.map(header => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
             </tr>
           ))}
         </thead>
-
         <tbody>
-          {table.getRowModel().rows.map(row => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            )
-          })}
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
-
         <tfoot>
-          <tr>
-            <td colSpan={99}>
-              <div class="flex w-full justify-end">
-                <div class="join">
-                  <button
-                    class="btn join-item"
-                    onClick$={$(() => {
-                      if (!table.getCanPreviousPage()) return
-                      table.previousPage()
-                    })}
-                  >
-                    Left
-                  </button>
-                  <button class="btn join-item">
-                    Page {(table.getState().pagination.pageIndex || 0) + 1} of{' '}
-                    {table.getPageCount()}
-                  </button>
-                  <button
-                    class="btn join-item"
-                    onClick$={$(() => {
-                      if (!table.getCanNextPage()) return
-                      table.nextPage()
-                    })}
-                  >
-                    Right
-                  </button>
-                </div>
-              </div>
-            </td>
-          </tr>
+          {table.getFooterGroups().map(footerGroup => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map(header => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </tfoot>
       </table>
     </div>

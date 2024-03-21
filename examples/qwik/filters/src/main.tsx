@@ -255,7 +255,6 @@ const App = component$(() => {
             </tr>
           ))}
         </thead>
-
         <tbody>
           {table.getRowModel().rows.map(row => {
             return (
@@ -269,39 +268,6 @@ const App = component$(() => {
             )
           })}
         </tbody>
-
-        <tfoot>
-          <tr>
-            <td colSpan={99}>
-              <div class="flex w-full justify-end">
-                <div class="join">
-                  <button
-                    class="btn join-item"
-                    onClick$={$(() => {
-                      if (!table.getCanPreviousPage()) return
-                      table.previousPage()
-                    })}
-                  >
-                    Left
-                  </button>
-                  <button class="btn join-item">
-                    Page {(table.getState().pagination.pageIndex || 0) + 1} of{' '}
-                    {table.getPageCount()}
-                  </button>
-                  <button
-                    class="btn join-item"
-                    onClick$={$(() => {
-                      if (!table.getCanNextPage()) return
-                      table.nextPage()
-                    })}
-                  >
-                    Right
-                  </button>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tfoot>
       </table>
       <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
       <pre>{JSON.stringify(table.getState(), null, 2)}</pre>

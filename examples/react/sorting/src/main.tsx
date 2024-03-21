@@ -143,7 +143,7 @@ function App() {
             })}
         </tbody>
       </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
