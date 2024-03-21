@@ -24,13 +24,18 @@
         {
           "label": "FAQ",
           "to": "faq"
-        },
-        {
-          "label": "Vanilla JS/TS",
-          "to": "vanilla"
         }
       ],
       "frameworks": [
+        {
+          "label": "qwik",
+          "children": [
+            {
+              "label": "Qwik Table",
+              "to": "framework/react/qwik-table"
+            }
+          ]
+        },
         {
           "label": "react",
           "children": [
@@ -64,6 +69,15 @@
             {
               "label": "Vue Table",
               "to": "framework/vue/vue-table"
+            }
+          ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            {
+              "label": "Vanilla JS/TS",
+              "to": "vanilla"
             }
           ]
         }
@@ -277,6 +291,23 @@
       "label": "Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "qwik",
+          "children": [
+            {
+              "to": "framework/qwik/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/qwik/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/qwik/examples/filters",
+              "label": "Filters"
+            }
+          ]
+        },
         {
           "label": "react",
           "children": [

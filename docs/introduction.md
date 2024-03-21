@@ -2,7 +2,7 @@
 title: Introduction
 ---
 
-TanStack Table is a **Headless UI** library for building powerful tables & datagrids for TS/JS, React, Vue, Solid, and Svelte.
+TanStack Table is a **Headless UI** library for building powerful tables & datagrids for TS/JS, React, Vue, Solid, Qwik, and Svelte.
 
 ## What is "headless" UI?
 
