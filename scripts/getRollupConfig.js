@@ -9,7 +9,6 @@ import terser from '@rollup/plugin-terser'
 import size from 'rollup-plugin-size'
 import replace from '@rollup/plugin-replace'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import svelte from 'rollup-plugin-svelte'
 import { rootDir } from './config.js'
 
 /** @param {'development' | 'production'} type */
@@ -85,11 +84,6 @@ function mjs({ input, external, banner, outputFile }) {
       banner,
     },
     plugins: [
-      svelte({
-        compilerOptions: {
-          hydratable: true,
-        },
-      }),
       commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
@@ -119,11 +113,6 @@ function esm({ input, external, banner, outputFile }) {
       banner,
     },
     plugins: [
-      svelte({
-        compilerOptions: {
-          hydratable: true,
-        },
-      }),
       commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
@@ -155,7 +144,6 @@ function cjs({ input, external, banner }) {
       banner,
     },
     plugins: [
-      svelte(),
       commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
@@ -187,7 +175,6 @@ function umdDev({ input, external, globals, banner, jsName }) {
       banner,
     },
     plugins: [
-      svelte(),
       commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),
@@ -220,7 +207,6 @@ function umdProd({ input, external, globals, banner, jsName }) {
       banner,
     },
     plugins: [
-      svelte(),
       commonJS(),
       babelPlugin,
       nodeResolve({ extensions: ['.ts', '.tsx'] }),

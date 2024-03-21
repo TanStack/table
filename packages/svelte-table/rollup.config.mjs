@@ -11,14 +11,14 @@ export default defineConfig(
     entryFile: 'src/index.ts',
     external: [
       'svelte',
-      'svelte/internal',
       'svelte/store',
+      'svelte/internal',
       '@tanstack/table-core',
     ],
     globals: {
       svelte: 'Svelte',
-      'svelte/internal': 'SvelteInternal',
       'svelte/store': 'SvelteStore',
+      'svelte/internal': 'SvelteInternal',
     },
   })
 )
