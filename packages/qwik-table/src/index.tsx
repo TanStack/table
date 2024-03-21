@@ -11,15 +11,23 @@ import {
 
 type QwikComps = Qwik.Component | Qwik.FunctionComponent
 
+const isFunction = (comp: unknown): comp is Function =>
+  typeof comp === 'function'
+
+const isQwikComponent = (comp: unknown): comp is QwikComps =>
+  isFunction(comp) && comp.name === 'QwikComponent'
+
 export function flexRender<TProps extends object>(
   Comp: any, // TODO: add renderable type
   props: TProps
 ) {
-  return !Comp ? null : isQwikComponent(Comp) ? <Comp {...props} /> : Comp
-}
-
-function isQwikComponent(comp: unknown): comp is QwikComps {
-  return !!(typeof comp === 'function' && comp.name === 'QwikComponent')
+  return !Comp ? null : isQwikComponent(Comp) ? (
+    <Comp {...props} />
+  ) : isFunction(Comp) ? (
+    Comp(props)
+  ) : (
+    Comp
+  )
 }
 
 export function useQwikTable<TData extends RowData>(
