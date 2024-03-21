@@ -102,12 +102,10 @@ const App = component$(() => {
                             ? 'cursor-pointer select-none'
                             : ''
                         }
-                        onClick$={
-                          $((event) => {
-                            const col = table.getColumn(id)! //avoid serializing errors
-                            col.getToggleSortingHandler()!(event)
-                          })
-                        }
+                        onClick$={$(event => {
+                          const col = table.getColumn(id)! //avoid serializing errors
+                          col.getToggleSortingHandler()!(event)
+                        })}
                         title={
                           column.getCanSort()
                             ? column.getNextSortingOrder() === 'asc'
