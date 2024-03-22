@@ -13,6 +13,10 @@ export const packages = [
     packageDir: 'packages/table-core',
   },
   {
+    name: '@tanstack/qwik-table',
+    packageDir: 'packages/qwik-table',
+  },
+  {
     name: '@tanstack/react-table',
     packageDir: 'packages/react-table',
   },

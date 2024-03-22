@@ -15,7 +15,7 @@ TanStack Table has a simple underlying internal state management system to store
 
 ### Accessing Table State
 
-You do not need to set up anything special in order for the table state to work. If you pass noting into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
+You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
 ```jsx
 const table = useReactTable({

@@ -5,15 +5,15 @@ import './index.css'
 
 import {
   Column,
-  Table as ReactTable,
+  ColumnDef,
   PaginationState,
-  useReactTable,
+  Table,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  ColumnDef,
-  flexRender,
   getSortedRowModel,
+  useReactTable,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -64,7 +64,7 @@ function App() {
 
   return (
     <>
-      <Table
+      <MyTable
         {...{
           data,
           columns,
@@ -81,7 +81,7 @@ function App() {
   )
 }
 
-function Table({
+function MyTable({
   data,
   columns,
 }: {
@@ -236,12 +236,13 @@ function Table({
     </div>
   )
 }
+
 function Filter({
   column,
   table,
 }: {
   column: Column<any, any>
-  table: ReactTable<any>
+  table: Table<any>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

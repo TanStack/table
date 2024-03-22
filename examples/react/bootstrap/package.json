@@ -9,20 +9,20 @@
     "start": "vite"
   },
   "dependencies": {
-    "@tanstack/react-table": "^8.13.2",
+    "@tanstack/react-table": "^8.15.0",
     "bootstrap": "^5.3.3",
     "react": "^18.2.0",
-    "react-bootstrap": "2.10.1",
+    "react-bootstrap": "2.10.2",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@rollup/plugin-replace": "^5.0.5",
     "@types/bootstrap": "^5.2.10",
-    "@types/react": "^18.2.63",
+    "@types/react": "^18.2.67",
     "@types/react-bootstrap": "^0.32.36",
-    "@types/react-dom": "^18.2.20",
+    "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.1.5"
+    "vite": "^5.2.2"
   }
 }

@@ -5,7 +5,7 @@
     "apiKey": "9fc015a3310be6669ed66c6c459f319f",
     "indexName": "tanstack-table"
   },
-  "menu": [
+  "sections": [
     {
       "label": "Getting Started",
       "children": [
@@ -24,10 +24,71 @@
         {
           "label": "FAQ",
           "to": "faq"
+        }
+      ],
+      "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Angular Table",
+              "to": "framework/angular/angular-table"
+            }
+          ]
         },
         {
-          "label": "Vanilla JS/TS",
-          "to": "vanilla"
+          "label": "qwik",
+          "children": [
+            {
+              "label": "Qwik Table",
+              "to": "framework/react/qwik-table"
+            }
+          ]
+        },
+        {
+          "label": "react",
+          "children": [
+            {
+              "label": "React Table",
+              "to": "framework/react/react-table"
+            }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            {
+              "label": "Solid Table",
+              "to": "framework/solid/solid-table"
+            }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            {
+              "label": "Svelte Table",
+              "to": "framework/svelte/svelte-table"
+            }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            {
+              "label": "Vue Table",
+              "to": "framework/vue/vue-table"
+            }
+          ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            {
+              "label": "Vanilla JS/TS",
+              "to": "vanilla"
+            }
+          ]
         }
       ]
     },
@@ -62,15 +123,22 @@
           "label": "Cells",
           "to": "guide/cells"
         }
+      ],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/react/guide/table-state"
+            }
+          ]
+        }
       ]
     },
     {
       "label": "Feature Guides",
       "children": [
-        {
-          "label": "Features",
-          "to": "guide/features"
-        },
         {
           "label": "Column Ordering",
           "to": "guide/column-ordering"
@@ -104,10 +172,6 @@
           "to": "guide/faceted-values"
         },
         {
-          "label": "Sorting",
-          "to": "guide/sorting"
-        },
-        {
           "label": "Grouping",
           "to": "guide/grouping"
         },
@@ -128,8 +192,16 @@
           "to": "guide/row-selection"
         },
         {
+          "label": "Sorting",
+          "to": "guide/sorting"
+        },
+        {
           "label": "Virtualization",
           "to": "guide/virtualization"
+        },
+        {
+          "label": "Custom Features",
+          "to": "guide/custom-features"
         }
       ]
     },
@@ -174,6 +246,10 @@
           "to": "api/features/column-ordering"
         },
         {
+          "label": "Column Pinning",
+          "to": "api/features/column-pinning"
+        },
+        {
           "label": "Column Sizing",
           "to": "api/features/column-sizing"
         },
@@ -202,8 +278,8 @@
           "to": "api/features/pagination"
         },
         {
-          "label": "Pinning",
-          "to": "api/features/pinning"
+          "label": "Row Pinning",
+          "to": "api/features/row-pinning"
         },
         {
           "label": "Row Selection",
@@ -219,23 +295,13 @@
           "to": "enterprise/ag-grid"
         }
       ]
-    }
-  ],
-  "frameworkMenus": [
+    },
     {
-      "framework": "angular",
-      "menuItems": [
+      "label": "Examples",
+      "children": [],
+      "frameworks": [
         {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "Angular Table",
-              "to": "framework/angular/angular-table"
-            }
-          ]
-        },
-        {
-          "label": "Examples",
+          "label": "angular",
           "children": [
             {
               "to": "framework/angular/examples/basic",
@@ -250,32 +316,26 @@
               "label": "Selection"
             }
           ]
-        }    
-      ]
-    },
-    {
-      "framework": "react",
-      "menuItems": [
+        },
         {
-          "label": "Getting Started",
+          "label": "qwik",
           "children": [
             {
-              "label": "React Table",
-              "to": "framework/react/react-table"
+              "to": "framework/qwik/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/qwik/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/qwik/examples/filters",
+              "label": "Filters"
             }
           ]
         },
         {
-          "label": "Core Guides",
-          "children": [
-            {
-              "label": "Table State",
-              "to": "framework/react/guide/table-state"
-            }
-          ]
-        },
-        {
-          "label": "Examples",
+          "label": "react",
           "children": [
             {
               "to": "framework/react/examples/basic",
@@ -392,25 +452,15 @@
             {
               "to": "framework/react/examples/full-width-resizable-table",
               "label": "React Full Width Resizable"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "framework": "solid",
-      "menuItems": [
-        {
-          "label": "Getting Started",
-          "children": [
+            },
             {
-              "label": "Solid Table",
-              "to": "framework/solid/solid-table"
+              "to": "framework/react/examples/custom-features",
+              "label": "Custom Features"
             }
           ]
         },
         {
-          "label": "Examples",
+          "label": "solid",
           "children": [
             {
               "to": "framework/solid/examples/basic",
@@ -441,23 +491,9 @@
               "label": "Solid Bootstrap"
             }
           ]
-        }
-      ]
-    },
-    {
-      "framework": "svelte",
-      "menuItems": [
-        {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "Svelte Table",
-              "to": "framework/svelte/svelte-table"
-            }
-          ]
         },
         {
-          "label": "Examples",
+          "label": "svelte",
           "children": [
             {
               "to": "framework/svelte/examples/basic",
@@ -488,23 +524,9 @@
               "label": "Sorting"
             }
           ]
-        }    
-      ]
-    },
-    {
-      "framework": "vue",
-      "menuItems": [
-        {
-          "label": "Getting Started",
-          "children": [
-            {
-              "label": "Vue Table",
-              "to": "framework/vue/vue-table"
-            }
-          ]
         },
         {
-          "label": "Examples",
+          "label": "vue",
           "children": [
             {
               "to": "framework/vue/examples/basic",

@@ -1,5 +1,4 @@
 import { RowModel } from '..'
-import { TableFeature } from '../core/table'
 import {
   BuiltInSortingFn,
   reSplitAlphaNumeric,
@@ -14,6 +13,7 @@ import {
   Updater,
   RowData,
   SortingFns,
+  TableFeature,
 } from '../types'
 
 import { isFunction, makeStateUpdater } from '../utils'
@@ -80,12 +80,15 @@ export interface SortingColumnDef<TData extends RowData> {
    */
   sortingFn?: SortingFnOption<TData>
   /**
+   * The priority of undefined values when sorting this column.
    * - `false`
    *   - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
    * - `-1`
    *   - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
    * - `1`
    *   - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortundefined)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
   sortUndefined?: false | -1 | 1
 }
@@ -272,7 +275,7 @@ export interface SortingInstance<TData extends RowData> {
 
 //
 
-export const Sorting: TableFeature = {
+export const RowSorting: TableFeature = {
   getInitialState: (state): SortingTableState => {
     return {
       sorting: [],
