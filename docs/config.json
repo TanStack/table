@@ -344,12 +344,16 @@
               "label": "Basic"
             },
             {
+              "to": "framework/qwik/examples/filters",
+              "label": "Filters"
+            },
+            {
               "to": "framework/qwik/examples/row-selection",
               "label": "Row Selection"
             },
             {
-              "to": "framework/qwik/examples/filters",
-              "label": "Filters"
+              "to": "framework/qwik/examples/sorting",
+              "label": "Sorting"
             }
           ]
         },
