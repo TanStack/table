@@ -148,6 +148,9 @@ importers:
       '@builder.io/qwik':
         specifier: ^1.5.1
         version: 1.5.1(@types/node@20.11.30)(undici@6.9.0)
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       serve:
         specifier: ^14.2.1
         version: 14.2.1
@@ -167,6 +170,9 @@ importers:
       '@builder.io/qwik':
         specifier: ^1.5.1
         version: 1.5.1(@types/node@20.11.30)(undici@6.9.0)
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       serve:
         specifier: ^14.2.1
         version: 14.2.1
@@ -186,6 +192,9 @@ importers:
       '@builder.io/qwik':
         specifier: ^1.5.1
         version: 1.5.1(@types/node@20.11.30)(undici@6.9.0)
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       serve:
         specifier: ^14.2.1
         version: 14.2.1
