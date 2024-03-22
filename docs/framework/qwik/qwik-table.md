@@ -20,9 +20,9 @@ const table = useQwikTable(options)
 
 ```
 
-### `FlexRender`
+### `flexRender`
 
-A Qwik component for rendering cell/header/footer templates with dynamic values.
+A utility function for rendering cell/header/footer templates with dynamic values.
 
 Example:
 
