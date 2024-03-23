@@ -41,7 +41,7 @@
           "children": [
             {
               "label": "Qwik Table",
-              "to": "framework/react/qwik-table"
+              "to": "framework/qwik/qwik-table"
             }
           ]
         },
@@ -126,11 +126,56 @@
       ],
       "frameworks": [
         {
+          "label": "qwik",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/qwik/guide/table-state"
+            }
+          ]
+        },
+        {
           "label": "react",
           "children": [
             {
               "label": "Table State",
               "to": "framework/react/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/solid/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/svelte/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/vue/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/vanilla/guide/table-state"
             }
           ]
         }
@@ -325,12 +370,16 @@
               "label": "Basic"
             },
             {
+              "to": "framework/qwik/examples/filters",
+              "label": "Filters"
+            },
+            {
               "to": "framework/qwik/examples/row-selection",
               "label": "Row Selection"
             },
             {
-              "to": "framework/qwik/examples/filters",
-              "label": "Filters"
+              "to": "framework/qwik/examples/sorting",
+              "label": "Sorting"
             }
           ]
         },

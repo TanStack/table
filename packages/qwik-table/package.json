@@ -51,6 +51,9 @@
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
   },
+  "devDependencies": {
+    "@builder.io/qwik": "1.5.1"
+  },
   "peerDependencies": {
     "@builder.io/qwik": ">=1.5"
   }
