@@ -12,8 +12,8 @@
     "@builder.io/qwik": "^1.5.1",
     "@faker-js/faker": "^8.4.1",
     "serve": "^14.2.1",
-    "typescript": "5.4.2",
-    "vite": "^5.2.2"
+    "typescript": "5.4.3",
+    "vite": "^5.2.4"
   },
   "dependencies": {
     "@tanstack/qwik-table": "^8.15.0",

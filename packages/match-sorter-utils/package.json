@@ -57,6 +57,6 @@
     "build:types": "tsc --emitDeclarationOnly"
   },
   "dependencies": {
-    "remove-accents": "0.4.2"
+    "remove-accents": "0.5.0"
   }
 }
