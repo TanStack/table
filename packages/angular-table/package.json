@@ -51,8 +51,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "peerDependencies": {
-    "@angular/core": ">=17",
-    "@angular/common": ">=17"
+    "@angular/core": ">=17"
   },
   "sideEffects": false
 }
