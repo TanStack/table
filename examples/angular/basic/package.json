@@ -1,5 +1,5 @@
 {
-  "name": "basic",
+  "name": "tanstack-table-example-angular-basic",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -18,9 +18,8 @@
     "@angular/platform-browser": "^17.3.1",
     "@angular/platform-browser-dynamic": "^17.3.1",
     "@angular/router": "^17.3.1",
-    "@tanstack/angular-table": "^8.12.0",
+    "@tanstack/angular-table": "^8.14.0",
     "rxjs": "~7.8.1",
-    "tslib": "^2.6.2",
     "zone.js": "~0.14.4"
   },
   "devDependencies": {
@@ -34,6 +33,7 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "tslib": "^2.6.2",
     "typescript": "5.4.3"
   }
 }

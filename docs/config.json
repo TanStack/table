@@ -126,6 +126,15 @@
       ],
       "frameworks": [
         {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/angular/guide/table-state"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
@@ -357,8 +366,8 @@
               "label": "Grouping"
             },
             {
-              "to": "framework/angular/examples/selection",
-              "label": "Selection"
+              "to": "framework/angular/examples/row-selection",
+              "label": "Row Selection"
             }
           ]
         },
