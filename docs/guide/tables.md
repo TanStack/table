@@ -8,7 +8,7 @@ title: Table Instance Guide
 
 ## Table Instance Guide
 
-TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `useReactTable`, `createSolidTable`, `createSvelteTable`, `useQwikTable`, `useVueTable`).
+TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `createAngularTable`, `useReactTable`, `createSolidTable`, `createSvelteTable`, `useQwikTable`, `useVueTable`).
 
 ### Creating a Table Instance
 
@@ -88,6 +88,9 @@ With our `columns` and `data` defined, we can now create our basic table instanc
 ```ts
 //vanilla js
 const table = createTable({ columns, data })
+
+//angular
+this.table = createAngularTable({ data: this.columns, data: this.data })
 
 //react
 const table = useReactTable({ columns, data })

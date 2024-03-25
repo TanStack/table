@@ -28,6 +28,15 @@
       ],
       "frameworks": [
         {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Angular Table",
+              "to": "framework/angular/angular-table"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
@@ -336,6 +345,23 @@
       "label": "Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "to": "framework/angular/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/angular/examples/grouping",
+              "label": "Grouping"
+            },
+            {
+              "to": "framework/angular/examples/selection",
+              "label": "Selection"
+            }
+          ]
+        },
         {
           "label": "qwik",
           "children": [

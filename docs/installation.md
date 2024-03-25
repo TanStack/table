@@ -6,6 +6,12 @@ Before we dig in to the API, let's get you set up!
 
 Install your table adapter as a dependency using your favorite npm package manager
 
+## Angular Table
+
+```bash
+npm install @tanstack/angular-table
+```
+
 ## Qwik Table
 
 ```bash
