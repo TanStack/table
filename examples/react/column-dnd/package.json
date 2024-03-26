@@ -20,10 +20,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.5",
-    "@types/react": "^18.2.69",
+    "@types/react": "^18.2.70",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "5.4.3",
-    "vite": "^5.2.4"
+    "vite": "^5.2.6"
   }
 }
