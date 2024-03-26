@@ -2,8 +2,6 @@
 title: Table State (Svelte) Guide
 ---
 
-## Examples
-
 ## Table State (Svelte) Guide
 
 TanStack Table has a simple underlying internal state management system to store and manage the state of the table. It also lets you selectively pull out any state that you need to manage in your own state management. This guide will walk you through the different ways in which you can interact with and manage the state of the table.
