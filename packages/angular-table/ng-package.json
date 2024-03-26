@@ -4,5 +4,6 @@
   "lib": {
     "entryFile": "src/index.ts"
   },
+  "deleteDestPath": false,
   "allowedNonPeerDependencies": ["@tanstack/table-core"]
 }

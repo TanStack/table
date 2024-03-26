@@ -4,6 +4,11 @@
   "newProjectRoot": "projects",
   "projects": {
     "basic": {
+      "cli": {
+        "cache": {
+          "enabled": false
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

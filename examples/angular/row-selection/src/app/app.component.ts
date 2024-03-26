@@ -1,107 +1,85 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common'
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
+import { Component, computed, signal } from '@angular/core'
 import {
   ColumnFiltersState,
-  FlexRenderDirective,
-  PaginationState,
-  RowSelectionState,
-  SortingState,
-  Table,
   createAngularTable,
+  FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
+  RowSelectionState,
+  SortingState,
 } from '@tanstack/angular-table'
-import { BehaviorSubject, Subject, combineLatest, map, takeUntil } from 'rxjs'
-import { Person, columns } from './columns'
+import { columns, Person } from './columns'
 import { FilterComponent } from './filter'
 import { mockData } from './mockdata'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NgFor, NgIf, AsyncPipe, FilterComponent, FlexRenderDirective],
+  imports: [FilterComponent, FlexRenderDirective],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
-  table!: Table<Person>
-  private destroy$ = new Subject<void>()
-  private rowSelectionState = new BehaviorSubject<RowSelectionState>({})
-  private paginationState = new BehaviorSubject<PaginationState>({
+export class AppComponent {
+  private rowSelectionState = signal<RowSelectionState>({})
+  private paginationState = signal<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
-  } as PaginationState)
-  private columnFilterState = new BehaviorSubject<ColumnFiltersState>([])
-  sortingState = new BehaviorSubject<SortingState>([])
+  })
+  private columnFilterState = signal<ColumnFiltersState>([])
+  sortingState = signal<SortingState>([])
   data: Person[] = mockData(10000)
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  table = createAngularTable(() => ({
+    data: this.data,
+    columns: columns,
+    state: {
+      rowSelection: this.rowSelectionState(),
+      pagination: this.paginationState(),
+      columnFilters: this.columnFilterState(),
+      sorting: this.sortingState(),
+    },
+    enableRowSelection: true,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
+    onRowSelectionChange: updaterOrValue => {
+      this.rowSelectionState.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.rowSelectionState())
+          : updaterOrValue
+      )
+    },
+    onPaginationChange: updaterOrValue => {
+      this.paginationState.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.paginationState())
+          : updaterOrValue
+      )
+    },
+    onColumnFiltersChange: updaterOrValue => {
+      this.columnFilterState.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.columnFilterState())
+          : updaterOrValue
+      )
+    },
+    onSortingChange: updaterOrValue => {
+      this.sortingState.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.sortingState())
+          : updaterOrValue
+      )
+    },
+  }))
 
-  ngOnInit() {
-    this.createTable()
-    combineLatest([
-      this.rowSelectionState,
-      this.paginationState,
-      this.sortingState,
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([rowSelectionState, paginationState, sortingState]) => {
-        this.table.options.state.rowSelection = rowSelectionState
-        this.table.options.state.pagination = paginationState
-        this.table.options.state.sorting = sortingState
-        this.cdr.detectChanges()
-      })
-  }
-  createTable() {
-    this.table = createAngularTable({
-      data: this.data,
-      columns: columns,
-      state: {
-        rowSelection: this.rowSelectionState.getValue(),
-        pagination: this.paginationState.getValue(),
-        columnFilters: this.columnFilterState.getValue(),
-        sorting: this.sortingState.getValue(),
-      },
-      enableRowSelection: true,
-      onRowSelectionChange: updaterOrValue => {
-        this.rowSelectionState.next(
-          typeof updaterOrValue === 'function'
-            ? updaterOrValue(this.rowSelectionState.getValue())
-            : updaterOrValue
-        )
-      },
-      onPaginationChange: Updater => {
-        const newvalue =
-          typeof Updater === 'function'
-            ? Updater(this.paginationState.getValue())
-            : Updater
-        this.table.options.state.pagination = newvalue
-        this.paginationState.next(newvalue)
-      },
-      onColumnFiltersChange: updater => {
-        const filter =
-          typeof updater === 'function'
-            ? updater(this.columnFilterState.getValue())
-            : updater
-        this.table.options.state.columnFilters = filter
-        this.columnFilterState.next(filter)
-      },
-      onSortingChange: updaterOrValue => {
-        const sorting =
-          typeof updaterOrValue == 'function'
-            ? updaterOrValue([...this.sortingState.getValue()])
-            : updaterOrValue
-        this.sortingState.next(sorting)
-      },
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      debugTable: true,
-    })
-  }
+  rowSelectionLength = computed(
+    () => Object.keys(this.rowSelectionState()).length
+  )
 
   onPageInputChange(event: Event) {
     const inputElement = event.target as HTMLInputElement
@@ -111,13 +89,5 @@ export class AppComponent implements OnInit {
 
   onPageSizeChange(event: any) {
     this.table.setPageSize(Number(event.target.value))
-  }
-
-  getRowSelectionLength() {
-    return this.rowSelectionState.pipe(map(val => Object.keys(val).length))
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next()
-    this.destroy$.complete()
   }
 }

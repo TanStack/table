@@ -1,10 +1,14 @@
-import { Component } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  type OnInit,
+  signal,
+} from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import {
   ColumnDef,
-  FlexRenderDirective,
-  Table,
   createAngularTable,
+  FlexRenderDirective,
   getCoreRowModel,
 } from '@tanstack/angular-table'
 
@@ -87,16 +91,18 @@ const defaultData: Person[] = [
   imports: [RouterOutlet, FlexRenderDirective],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {
-  data: Person[] = []
-  table!: Table<Person>
+export class AppComponent implements OnInit {
+  data = signal<Person[]>([])
+
+  table = createAngularTable(() => ({
+    data: this.data(),
+    columns: defaultColumns,
+    getCoreRowModel: getCoreRowModel(),
+  }))
+
   ngOnInit() {
-    this.data = [...defaultData]
-    this.table = createAngularTable({
-      data: this.data,
-      columns: defaultColumns,
-      getCoreRowModel: getCoreRowModel(),
-    })
+    this.data.set(defaultData)
   }
 }

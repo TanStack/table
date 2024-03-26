@@ -1,16 +1,25 @@
 import {
+  computed,
   Directive,
+  effect,
+  inject,
+  Injector,
   Input,
   OnInit,
+  runInInjectionContext,
+  signal,
   TemplateRef,
+  untracked,
   ViewContainerRef,
 } from '@angular/core'
 import {
+  createTable,
+  getCoreRowModel,
   RowData,
   TableOptions,
   TableOptionsResolved,
-  createTable,
 } from '@tanstack/table-core'
+import { proxifyTable, type TableProxy } from './proxy'
 
 export * from '@tanstack/table-core'
 
@@ -67,31 +76,54 @@ export class FlexRenderDirective implements OnInit {
 }
 
 export function createAngularTable<TData extends RowData>(
-  options: TableOptions<TData>
-) {
-  const resolvedOptions: TableOptionsResolved<TData> = {
-    state: {},
-    onStateChange: () => {},
-    renderFallbackValue: null,
-    ...options,
-  }
+  options: () => TableOptions<TData>
+): TableProxy<TData> {
+  const injector = inject(Injector)
+  return runInInjectionContext(injector, () => {
+    const resolvedOptionsSignal = computed<TableOptionsResolved<TData>>(() => {
+      return {
+        state: {},
+        onStateChange: () => {},
+        renderFallbackValue: null,
+        ...options(),
+      }
+    })
 
-  let table = createTable<TData>(resolvedOptions)
-  let state = table.initialState
-  // Compose the default state above with any user state.
-  table.setOptions((prev: any) => {
-    return {
-      ...prev,
-      ...options,
-      state: {
-        ...state,
-        ...options.state,
-      },
-      onStateChange: (updater: any) => {
-        options.onStateChange?.(updater)
-      },
+    const table = signal(createTable(resolvedOptionsSignal()), {
+      equal: () => false,
+    })
+    const state = signal(untracked(table).initialState)
+
+    function updateOptions() {
+      const tableState = state()
+      const resolvedOptions = resolvedOptionsSignal()
+      untracked(() => {
+        table().setOptions(prev => ({
+          ...prev,
+          ...resolvedOptions,
+          state: { ...tableState, ...resolvedOptions.state },
+          onStateChange: updater => {
+            const value =
+              updater instanceof Function ? updater(tableState) : updater
+            state.set(value)
+            resolvedOptions.onStateChange?.(updater)
+          },
+        }))
+        table.update(v => v)
+      })
     }
-  })
 
-  return table
+    updateOptions()
+
+    let skip = true
+    effect(() => {
+      void [state(), resolvedOptionsSignal()]
+      if (skip) {
+        return (skip = false)
+      }
+      untracked(() => updateOptions())
+    })
+
+    return proxifyTable(table.asReadonly())
+  })
 }

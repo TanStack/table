@@ -1,107 +1,105 @@
 <h2>Select</h2>
-@if (table) {
-  <table aria-describedby="tanstack table row select implementation in angular">
-    <thead>
-      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-        <tr>
-          @for (header of headerGroup.headers; track header.id) {
-            <th
-              [attr.colSpan]="header.colSpan"
-              (click)="header.column.toggleSorting()"
-            >
-              @if (!header.isPlaceholder) {
-                @if (header.id == 'select') {
-                  <input
-                    type="checkbox"
-                    id="select"
-                    [checked]="table.getIsAllRowsSelected()"
-                    [indeterminate]="table.getIsSomeRowsSelected()"
-                    (change)="table.toggleAllRowsSelected()"
-                  />
-                } @else {
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let headerCell
-                    "
-                  >
-                    {{ headerCell }}
-                    @if (header.column.getCanSort()) {
-                      <span class="material-icons-sharp">
-                        {{
-                          header.column.getIsSorted() === 'asc'
-                            ? 'arrow_drop_up'
-                            : header.column.getIsSorted() === 'desc'
-                              ? 'arrow_drop_down'
-                              : ''
-                        }}
-                      </span>
-                    }
-                  </ng-container>
-                  @if (header.column.getCanFilter()) {
-                    <Filter [column]="header.column" [table]="table"></Filter>
-                  }
-                }
-              }
-            </th>
-          }
-        </tr>
-      }
-    </thead>
-    <tbody>
-      @for (row of table.getRowModel().rows; track row.id) {
-        <tr>
-          @for (cell of row.getVisibleCells(); track cell.id) {
-            <td>
-              @if (cell.id.endsWith('select')) {
+<table aria-describedby="tanstack table row select implementation in angular">
+  <thead>
+    @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+      <tr>
+        @for (header of headerGroup.headers; track header.id) {
+          <th
+            [attr.colSpan]="header.colSpan"
+            (click)="header.column.toggleSorting()"
+          >
+            @if (!header.isPlaceholder) {
+              @if (header.id == 'select') {
                 <input
                   type="checkbox"
                   id="select"
-                  [checked]="row.getIsSelected()"
-                  [disabled]="!row.getCanSelect()"
-                  [indeterminate]="row.getIsSomeSelected()"
-                  (change)="row.toggleSelected()"
+                  [checked]="table.getIsAllRowsSelected()"
+                  [indeterminate]="table.getIsSomeRowsSelected()"
+                  (change)="table.toggleAllRowsSelected()"
                 />
               } @else {
                 <ng-container
                   *flexRender="
+                      header.column.columnDef.header;
+                      props: header.getContext();
+                      let headerCell
+                    "
+                >
+                  {{ headerCell }}
+                  @if (header.column.getCanSort()) {
+                    <span class="material-icons-sharp">
+                        {{
+                        header.column.getIsSorted() === 'asc'
+                          ? 'arrow_drop_up'
+                          : header.column.getIsSorted() === 'desc'
+                            ? 'arrow_drop_down'
+                            : ''
+                      }}
+                      </span>
+                  }
+                </ng-container>
+                @if (header.column.getCanFilter()) {
+                  <Filter [column]="header.column" [table]="table"></Filter>
+                }
+              }
+            }
+          </th>
+        }
+      </tr>
+    }
+  </thead>
+  <tbody>
+    @for (row of table.getRowModel().rows; track row.id) {
+      <tr>
+        @for (cell of row.getVisibleCells(); track cell.id) {
+          <td>
+            @if (cell.id.endsWith('select')) {
+              <input
+                type="checkbox"
+                id="select"
+                [checked]="row.getIsSelected()"
+                [disabled]="!row.getCanSelect()"
+                [indeterminate]="row.getIsSomeSelected()"
+                (change)="row.toggleSelected()"
+              />
+            } @else {
+              <ng-container
+                *flexRender="
                     cell.column.columnDef.cell;
                     props: cell.getContext();
                     let renderCell
                   "
-                >
-                  {{ renderCell }}
-                </ng-container>
-              }
-            </td>
-          }
-        </tr>
-      }
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>
-          <input
-            type="checkbox"
-            name=""
-            id=""
-            [checked]="table.getIsAllPageRowsSelected()"
-            [indeterminate]="table.getIsSomePageRowsSelected()"
-            (change)="table.toggleAllPageRowsSelected()"
-          />
-        </th>
-        <th [attr.colspan]="6">
-          Page Rows ({{ table.getRowModel().rows.length }})
-        </th>
+              >
+                {{ renderCell }}
+              </ng-container>
+            }
+          </td>
+        }
       </tr>
-    </tfoot>
-  </table>
-}
+    }
+  </tbody>
+  <tfoot>
+  <tr>
+    <th>
+      <input
+        type="checkbox"
+        name=""
+        id=""
+        [checked]="table.getIsAllPageRowsSelected()"
+        [indeterminate]="table.getIsSomePageRowsSelected()"
+        (change)="table.toggleAllPageRowsSelected()"
+      />
+    </th>
+    <th [attr.colspan]="6">
+      Page Rows ({{ table.getRowModel().rows.length }})
+    </th>
+  </tr>
+  </tfoot>
+</table>
 
 <div class="pagination-container">
   <div>
-    {{ getRowSelectionLength() | async }} of
+    {{ rowSelectionLength() }} of
     {{ table.getPreFilteredRowModel().rows.length }} Total Rows Selected
   </div>
   <div class="pagination-actions">
@@ -154,9 +152,11 @@
       class="pagination-select"
       (change)="onPageSizeChange($event)"
     >
-      <option *ngFor="let pageSize of [10, 20, 30, 40, 50]" [value]="pageSize">
-        Show {{ pageSize }}
-      </option>
+      @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+        <option [value]="pageSize">
+          Show {{ pageSize }}
+        </option>
+      }
     </select>
   </div>
 </div>
