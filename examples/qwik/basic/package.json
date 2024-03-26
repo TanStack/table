@@ -12,7 +12,7 @@
     "@builder.io/qwik": "^1.5.1",
     "serve": "^14.2.1",
     "typescript": "5.4.3",
-    "vite": "^5.2.4"
+    "vite": "^5.2.6"
   },
   "dependencies": {
     "@tanstack/qwik-table": "^8.15.0"

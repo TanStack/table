@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@tanstack/react-query": "^5.28.6",
+    "@tanstack/react-query": "^5.28.8",
     "@tanstack/react-table": "^8.15.0",
     "@tanstack/react-virtual": "^3.2.0",
     "react": "^18.2.0",
@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.5",
-    "@types/react": "^18.2.69",
+    "@types/react": "^18.2.70",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "5.4.3",
-    "vite": "^5.2.4"
+    "vite": "^5.2.6"
   }
 }
