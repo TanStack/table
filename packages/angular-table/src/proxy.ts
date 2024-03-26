@@ -55,9 +55,7 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>) {
                   if (computedSignal) {
                     return computedSignal()
                   }
-                  computedSignal = computed(() =>
-                    Reflect.apply(target, thisArg, argArray)
-                  )
+                  computedSignal = computed(() => untypedTarget()[property]())
                   // We don't need the proxy anymore, so we'll override the cache value
                   // in order to use the existing signal in the next change detection cycle
                   propertyCache[property] = computedSignal
@@ -87,7 +85,7 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>) {
         }
       }
 
-      return table[property]
+      return untypedTarget[property] || table[property]
     },
   })
 
