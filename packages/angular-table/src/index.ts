@@ -14,12 +14,11 @@ import {
 } from '@angular/core'
 import {
   createTable,
-  getCoreRowModel,
   RowData,
   TableOptions,
   TableOptionsResolved,
 } from '@tanstack/table-core'
-import { proxifyTable, type TableProxy } from './proxy'
+import { proxifyTable, type TableResult } from './proxy'
 
 export * from '@tanstack/table-core'
 
@@ -77,7 +76,7 @@ export class FlexRenderDirective implements OnInit {
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>
-): TableProxy<TData> {
+): TableResult<TData> {
   const injector = inject(Injector)
   return runInInjectionContext(injector, () => {
     const resolvedOptionsSignal = computed<TableOptionsResolved<TData>>(() => {

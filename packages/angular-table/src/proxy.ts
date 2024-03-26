@@ -1,18 +1,24 @@
 import { computed, isSignal, type Signal, untracked } from '@angular/core'
 import type { Table } from '@tanstack/table-core'
 
+type Prettify<T> = {
+  [K in keyof T]: T[K]
+} & {}
+
 type TableProxyAccessor<T> = T extends () => infer U ? Signal<U> : never
 
-type _TableProxy<T extends Table<any>> = {
-  [K in keyof T]: K extends `get${string}` ? TableProxyAccessor<T[K]> : T[K]
-} & {
-  options: Signal<T['options']>
-}
+type TableProxy<T extends Table<any>> = Prettify<
+  {
+    [K in keyof T]: K extends `get${string}` ? TableProxyAccessor<T[K]> : T[K]
+  } & {
+    options: Signal<T['options']>
+  }
+>
 
-export type TableProxy<T> = Signal<Table<T>> & _TableProxy<Table<T>>
+export type TableResult<T> = Signal<Table<T>> & TableProxy<Table<T>>
 
 // WIP
-export function proxifyTable<T>(tableSignal: Signal<Table<T>>) {
+export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
   const propertyCache: Record<string, any> = {}
 
   const proxyTable = new Proxy(tableSignal, {
@@ -91,5 +97,5 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>) {
 
   return Object.assign(proxyTable, {
     options: computed(() => tableSignal().options),
-  }) as TableProxy<T>
+  }) as TableResult<T>
 }
