@@ -204,8 +204,12 @@
           "to": "guide/fuzzy-filtering"
         },
         {
-          "label": "Faceted Values",
-          "to": "guide/faceted-values"
+          "label": "Column Faceting",
+          "to": "guide/column-faceting"
+        },
+        {
+          "label": "Global Faceting",
+          "to": "guide/global-faceting"
         },
         {
           "label": "Grouping",
@@ -278,6 +282,14 @@
       "label": "Feature APIs",
       "children": [
         {
+          "label": "Column Filtering",
+          "to": "api/features/column-filtering"
+        },
+        {
+          "label": "Column Faceting",
+          "to": "api/features/column-faceting"
+        },
+        {
           "label": "Column Ordering",
           "to": "api/features/column-ordering"
         },
@@ -294,8 +306,12 @@
           "to": "api/features/column-visibility"
         },
         {
-          "label": "Filters",
-          "to": "api/features/filters"
+          "label": "Global Faceting",
+          "to": "api/features/global-faceting"
+        },
+        {
+          "label": "Global Filtering",
+          "to": "api/features/global-filtering"
         },
         {
           "label": "Sorting",

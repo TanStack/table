@@ -34,6 +34,7 @@ import {
   HeadersInstance,
 } from './core/headers'
 import { FacetedColumn, FacetedOptions } from './features/ColumnFaceting'
+import { GlobalFacetingInstance } from './features/GlobalFaceting'
 import {
   ColumnFiltersColumn,
   ColumnFiltersColumnDef,
@@ -142,6 +143,7 @@ export interface Table<TData extends RowData>
     RowPinningInstance<TData>,
     ColumnFiltersInstance<TData>,
     GlobalFilterInstance<TData>,
+    GlobalFacetingInstance<TData>,
     SortingInstance<TData>,
     GroupingInstance<TData>,
     ColumnSizingInstance,
