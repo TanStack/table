@@ -1,11 +1,15 @@
-import { computed, isSignal, type Signal, untracked } from '@angular/core'
-import type { Table } from '@tanstack/table-core'
+import { computed, type Signal, untracked } from '@angular/core'
+import { type Table } from '@tanstack/table-core'
 
 type Prettify<T> = {
   [K in keyof T]: T[K]
 } & {}
 
-type TableProxyAccessor<T> = T extends () => infer U ? Signal<U> : never
+type TableProxyAccessor<T> = T extends (...args: any[]) => any
+  ? T
+  : T extends () => infer U
+    ? Signal<U>
+    : never
 
 type TableProxy<T extends Table<any>> = Prettify<
   {
@@ -19,13 +23,8 @@ export type TableResult<T> = Signal<Table<T>> & TableProxy<Table<T>>
 
 // WIP
 export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
-  const propertyCache: Record<string, any> = {}
-
   const proxyTable = new Proxy(tableSignal, {
     get(target: Signal<Table<T>>, property: keyof Table<T>): any {
-      if (propertyCache[property]) {
-        return propertyCache[property]
-      }
       const untypedTarget = target as any
       if (untypedTarget[property]) {
         return untypedTarget[property]
@@ -52,29 +51,26 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
 
           // Accessors with one argument could be a memoized fn (e.g. `getHeaderGroups(memoArgs)`)
           // or a fn with some dependent parameter in their signature (e.g. `getIsSomeRowsPinned(position)`)
-          // TODO: need to check better this, since there are some fns that have an optional argument
+          // TODO: need to check better this, since there are some fns that have an optional argument.
+          //  This may work also for fns with more than 1 argument.
           if (maybeFn.length === 1) {
-            let computedSignal: Signal<unknown> | undefined
-            const maybeComputedTrap = new Proxy(maybeFn, {
+            const computedCache: Record<string, Signal<unknown>> = {}
+            const computedTrap = new Proxy(maybeFn, {
               apply(target: any, thisArg: any, argArray: any[]): any {
-                if (argArray.length === 0) {
-                  if (computedSignal) {
-                    return computedSignal()
-                  }
-                  computedSignal = computed(() => untypedTarget()[property]())
-                  // We don't need the proxy anymore, so we'll override the cache value
-                  // in order to use the existing signal in the next change detection cycle
-                  propertyCache[property] = computedSignal
-                  return computedSignal()
+                const args = JSON.stringify(argArray)
+                if (computedCache[args]) {
+                  return computedCache[args]?.()
                 }
-                return Reflect.apply(target, thisArg, argArray)
+                const computedSignal = computed(() => {
+                  untypedTarget()[property]()
+                  return Reflect.apply(target, thisArg, argArray)
+                })
+                computedCache[args] = computedSignal
+                return computedSignal()
               },
             })
-
-            propertyCache[property] = maybeComputedTrap
-
             Object.defineProperty(untypedTarget, property, {
-              value: maybeComputedTrap,
+              value: computedTrap,
               configurable: true,
               enumerable: true,
             })
