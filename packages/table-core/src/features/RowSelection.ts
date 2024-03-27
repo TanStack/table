@@ -232,21 +232,40 @@ export const RowSelection: TableFeature = {
 
         const rowSelection = { ...old }
 
-        const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
-
-        // We don't use `mutateRowIsSelected` here for performance reasons.
-        // All of the rows are flat already, so it wouldn't be worth it
-        if (value) {
-          preGroupedFlatRows.forEach(row => {
-            if (!row.getCanSelect()) {
-              return
-            }
-            rowSelection[row.id] = true
+        if (typeof table.options.enableSubRowSelection === 'function') {
+          // There's no easy workaround like using flat rows here in the case enableSubRowSelection is a function
+          // We need to recursively check if the current row/subrow can be selected so just
+          // using mutateRowIsSelected is easier
+          table.getFilteredRowModel().rows.forEach(row => {
+            mutateRowIsSelected(
+              rowSelection,
+              row.id,
+              value ?? false,
+              true,
+              table
+            )
           })
         } else {
-          preGroupedFlatRows.forEach(row => {
-            delete rowSelection[row.id]
-          })
+          // Here we check if only the first level of rows should be selected (enableSubRowSelection is true.)
+          // If that's the case we just get the first level of rows, otherwise we get the flat rows.
+          const preGroupedFlatRows = table.options.enableSubRowSelection
+            ? table.getPreGroupedRowModel().flatRows
+            : table.getPreGroupedRowModel().rows
+
+          // We don't use `mutateRowIsSelected` here for performance reasons.
+          // The rows are either flat or just the first level is being selected, so it wouldn't be worth it
+          if (value) {
+            preGroupedFlatRows.forEach(row => {
+              if (!row.getCanSelect()) {
+                return
+              }
+              rowSelection[row.id] = true
+            })
+          } else {
+            preGroupedFlatRows.forEach(row => {
+              delete rowSelection[row.id]
+            })
+          }
         }
 
         return rowSelection

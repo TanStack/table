@@ -1,5 +1,6 @@
 import {
   ColumnDef,
+  TableState,
   createColumnHelper,
   createTable,
   getCoreRowModel,
@@ -317,6 +318,113 @@ describe('RowSelection', () => {
       )
 
       expect(result).toEqual('some')
+    })
+  })
+
+  describe('toggleAllRowsSelected', () => {
+    test('it should not select subrows if enableSubRowSelection is set to false', () => {
+      const data = makeData(2, 1)
+      const columns = generateColumns(data)
+
+      const state: Partial<TableState> = {
+        rowSelection: {},
+      }
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        columns,
+        getSubRows: row => row.subRows,
+        state,
+        onRowSelectionChange(updater) {
+          state.rowSelection =
+            typeof updater === 'function'
+              ? updater(state.rowSelection ?? {})
+              : updater
+        },
+        enableSubRowSelection: false,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      table.toggleAllRowsSelected(true)
+      const allRows = table
+        .getCoreRowModel()
+        .flatRows.map(v => v.getIsSelected())
+      expect(allRows).toEqual([true, false, true, false])
+    })
+
+    test('it should not select subrows if enableSubRowSelection is a function and it evaluates to false', () => {
+      const data = makeData(2, 2, 1)
+      const columns = generateColumns(data)
+
+      const state: Partial<TableState> = {
+        rowSelection: {},
+      }
+
+      const table = createTable<Person>({
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        columns,
+        getSubRows: row => row.subRows,
+        state,
+        onRowSelectionChange(updater) {
+          state.rowSelection =
+            typeof updater === 'function'
+              ? updater(state.rowSelection ?? {})
+              : updater
+        },
+        enableRowSelection: true,
+        enableSubRowSelection: row =>
+          row.id === '0' || row.id.startsWith('0.0'),
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      table.toggleAllRowsSelected(true)
+      const selectionState = table.getState().rowSelection
+
+      expect(selectionState).toEqual({
+        '0': true,
+        '0.0': true,
+        '0.0.0': true,
+        '0.1': true,
+        '1': true,
+      })
+    })
+
+    test('it should select subrows if enableSubRowSelection is set to true', () => {
+      const data = makeData(2, 1)
+      const columns = generateColumns(data)
+
+      const state: Partial<TableState> = {
+        rowSelection: {},
+      }
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        columns,
+        getSubRows: row => row.subRows,
+        state,
+        onRowSelectionChange(updater) {
+          state.rowSelection =
+            typeof updater === 'function'
+              ? updater(state.rowSelection ?? {})
+              : updater
+        },
+        enableSubRowSelection: true,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      table.toggleAllRowsSelected(true)
+      const allRows = table
+        .getCoreRowModel()
+        .flatRows.map(v => v.getIsSelected())
+      expect(allRows).toEqual([true, true, true, true])
     })
   })
 })
