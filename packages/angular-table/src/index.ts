@@ -88,7 +88,7 @@ export function createAngularTable<TData extends RowData>(
       }
     })
 
-    const table = signal(createTable(resolvedOptionsSignal()), {
+    const table = signal(createTable(untracked(resolvedOptionsSignal)), {
       equal: () => false,
     })
     const state = signal(untracked(table).initialState)
@@ -108,19 +108,17 @@ export function createAngularTable<TData extends RowData>(
             resolvedOptions.onStateChange?.(updater)
           },
         }))
-        table.update(v => v)
       })
     }
 
     updateOptions()
 
-    let skip = true
     effect(() => {
       void [state(), resolvedOptionsSignal()]
-      if (skip) {
-        return (skip = false)
-      }
-      untracked(() => updateOptions())
+      untracked(() => {
+        updateOptions()
+        table.update(value => ({ ...value }))
+      })
     })
 
     return proxifyTable(table.asReadonly())
