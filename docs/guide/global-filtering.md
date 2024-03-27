@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Filters API](../api/features/filters)
+[Global Filtering API](../api/features/global-filtering)
 
 ## Overview
 

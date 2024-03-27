@@ -1,5 +1,5 @@
 ---
-title: Faceted Values Guide
+title: Column Faceting Guide
 ---
 
 ## Examples
@@ -10,6 +10,6 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Filters API](../api/features/filters)
+[Column Faceting API](../api/features/column-faceting)
 
-## Faceted Values Guide
+## Column Faceting Guide
