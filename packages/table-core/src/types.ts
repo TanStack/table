@@ -291,8 +291,10 @@ export type GroupColumnDef<
   TValue = unknown,
 > = GroupColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
-interface AccessorFnColumnDefBase<TData extends RowData, TValue = unknown>
-  extends ColumnDefBase<TData, TValue> {
+export interface AccessorFnColumnDefBase<
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDefBase<TData, TValue> {
   accessorFn: AccessorFn<TData, TValue>
 }
 
