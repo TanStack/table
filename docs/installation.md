@@ -41,3 +41,5 @@ npm install @tanstack/vue-table
 ```bash
 npm install @tanstack/table-core
 ```
+
+Don't see your favorite framework (or favorite version of your framework) listed? You can always just use the `@tanstack/table-core` package and build your own adapter in your own codebase. Usually, only a thin wrapper is needed to manage state and rendering for your specific framework. Browse the [source code](https://github.com/TanStack/table/tree/main/packages) of all of the other adapters to see how they work.
