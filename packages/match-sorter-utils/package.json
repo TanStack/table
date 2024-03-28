@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/match-sorter-utils",
-  "version": "8.11.8",
+  "version": "8.15.1",
   "description": "A fork of match-sorter with separated filtering and sorting phases",
   "contributors": [
     "Kent C. Dodds",

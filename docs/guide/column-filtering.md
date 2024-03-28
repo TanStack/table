@@ -15,7 +15,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Filters API](../api/features/filters)
+[Column Filtering API](../api/features/column-filtering)
 
 ## Column Filtering Guide
 
@@ -29,7 +29,7 @@ TanStack table supports both both client-side and manual server-side filtering. 
 
 If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc. 
 
-However, as also discussed in the [Pagination Guide](./pagination#should-you-use-client-side-pagination), a lot of devs underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
+However, as also discussed in the [Pagination Guide](./pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
 
 > TanStack Table can handle thousands of client-side rows with good performance. Don't rule out client-side filtering, pagination, sorting, etc. without some thought first.
 
@@ -325,7 +325,7 @@ There are a lot of Column and Table APIs that you can use to interact with the c
 - `table.resetColumnFilters` - Useful for a "clear all/reset filters" button
 
 - **`column.getFilterValue`** - Useful for getting the default initial filter value for an input, or even directly providing the filter value to a filter input
-- **`column.setFilterValue`** - Useful for connecting filter inputs to their `onChange` handlers
+- **`column.setFilterValue`** - Useful for connecting filter inputs to their `onChange` or `onBlur` handlers
 
 - `column.getCanFilter` - Useful for disabling/enabling filter inputs
 - `column.getIsFiltered` - Useful for displaying a visual indicator that a column is currently being filtered

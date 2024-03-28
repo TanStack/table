@@ -333,7 +333,7 @@ importers:
   examples/qwik/basic:
     dependencies:
       '@tanstack/qwik-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
@@ -352,10 +352,10 @@ importers:
   examples/qwik/filters:
     dependencies:
       '@tanstack/match-sorter-utils':
-        specifier: ^8.11.8
+        specifier: ^8.15.1
         version: link:../../../packages/match-sorter-utils
       '@tanstack/qwik-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
@@ -377,7 +377,7 @@ importers:
   examples/qwik/row-selection:
     dependencies:
       '@tanstack/qwik-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
@@ -399,7 +399,7 @@ importers:
   examples/qwik/sorting:
     dependencies:
       '@tanstack/qwik-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
@@ -421,7 +421,7 @@ importers:
   examples/react/basic:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -452,7 +452,7 @@ importers:
   examples/react/bootstrap:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       bootstrap:
         specifier: ^5.3.3
@@ -513,7 +513,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -544,7 +544,7 @@ importers:
   examples/react/column-groups:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -578,7 +578,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -612,7 +612,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -646,7 +646,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -680,7 +680,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -711,7 +711,7 @@ importers:
   examples/react/column-sizing:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -742,7 +742,7 @@ importers:
   examples/react/column-visibility:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -776,7 +776,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -810,7 +810,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -844,7 +844,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -878,10 +878,10 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/match-sorter-utils':
-        specifier: ^8.11.8
+        specifier: ^8.15.1
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -915,7 +915,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -949,7 +949,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -983,7 +983,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1017,7 +1017,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1054,10 +1054,10 @@ importers:
         specifier: ^11.11.0
         version: 11.11.0(@emotion/react@11.11.4)(@types/react@18.2.70)(react@18.2.0)
       '@tanstack/match-sorter-utils':
-        specifier: ^8.11.8
+        specifier: ^8.15.1
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1109,7 +1109,7 @@ importers:
         specifier: ^5.15.14
         version: 5.15.14(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.70)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1146,7 +1146,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1183,7 +1183,7 @@ importers:
         specifier: ^5.28.8
         version: 5.28.8(react@18.2.0)
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1229,7 +1229,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1263,7 +1263,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1297,7 +1297,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1331,7 +1331,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1365,7 +1365,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       react:
         specifier: ^18.2.0
@@ -1399,7 +1399,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.2.0
@@ -1439,7 +1439,7 @@ importers:
         specifier: ^5.28.8
         version: 5.28.8(react@18.2.0)
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.2.0
@@ -1476,7 +1476,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.2.0
@@ -1510,7 +1510,7 @@ importers:
   examples/solid/basic:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1529,7 +1529,7 @@ importers:
   examples/solid/bootstrap:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       bootstrap:
         specifier: ^5.3.3
@@ -1557,7 +1557,7 @@ importers:
   examples/solid/column-groups:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1576,7 +1576,7 @@ importers:
   examples/solid/column-ordering:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1598,7 +1598,7 @@ importers:
   examples/solid/column-visibility:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1620,7 +1620,7 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3(solid-js@1.8.16)
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1642,7 +1642,7 @@ importers:
   examples/solid/sorting:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1670,7 +1670,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1697,7 +1697,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1727,7 +1727,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1757,7 +1757,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1784,7 +1784,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1814,10 +1814,10 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/match-sorter-utils':
-        specifier: ^8.11.8
+        specifier: ^8.15.1
         version: link:../../../packages/match-sorter-utils
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1847,7 +1847,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.6)
       '@tanstack/svelte-table':
-        specifier: ^8.14.0
+        specifier: ^8.15.1
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.3
@@ -1868,7 +1868,7 @@ importers:
   examples/vue/basic:
     dependencies:
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21
@@ -1896,7 +1896,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21
@@ -1924,7 +1924,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21
@@ -1952,7 +1952,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21
@@ -1980,7 +1980,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21
@@ -2008,7 +2008,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21
@@ -2039,7 +2039,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.15.0
+        specifier: ^8.15.1
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.21

@@ -11,8 +11,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
-    "@tanstack/match-sorter-utils": "^8.11.8",
-    "@tanstack/react-table": "^8.15.0",
+    "@tanstack/match-sorter-utils": "^8.15.1",
+    "@tanstack/react-table": "^8.15.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

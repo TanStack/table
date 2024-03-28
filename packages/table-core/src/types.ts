@@ -34,6 +34,7 @@ import {
   HeadersInstance,
 } from './core/headers'
 import { FacetedColumn, FacetedOptions } from './features/ColumnFaceting'
+import { GlobalFacetingInstance } from './features/GlobalFaceting'
 import {
   ColumnFiltersColumn,
   ColumnFiltersColumnDef,
@@ -142,6 +143,7 @@ export interface Table<TData extends RowData>
     RowPinningInstance<TData>,
     ColumnFiltersInstance<TData>,
     GlobalFilterInstance<TData>,
+    GlobalFacetingInstance<TData>,
     SortingInstance<TData>,
     GroupingInstance<TData>,
     ColumnSizingInstance,
@@ -291,8 +293,10 @@ export type GroupColumnDef<
   TValue = unknown,
 > = GroupColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
-interface AccessorFnColumnDefBase<TData extends RowData, TValue = unknown>
-  extends ColumnDefBase<TData, TValue> {
+export interface AccessorFnColumnDefBase<
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDefBase<TData, TValue> {
   accessorFn: AccessorFn<TData, TValue>
 }
 
