@@ -127,7 +127,7 @@ export default function MyComponent() {
 }
 ```
 
-### The Ultimate Solution: React Forget
+### React Forget
 
 When React Forget is released, these problems might be a thing of the past. Or use Solid.js... 🤓
 
