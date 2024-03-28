@@ -201,7 +201,7 @@ Returns whether this column is sorted.
 
 ### `getFirstSortDir`
 
-```tsx 
+```tsx
 getFirstSortDir: () => SortDirection
 ```
 
@@ -311,6 +311,14 @@ enableMultiSort?: boolean
 ```
 
 Enables/Disables multi-sorting for the table.
+
+### `autoResetSorting`
+
+```tsx
+autoResetSorting?: boolean
+```
+
+Enable this setting to automatically reset the sorting state of the table when sorting state changes.
 
 ### `sortDescFirst`
 
