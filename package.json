@@ -12,7 +12,7 @@
     "test:pr": "nx affected --targets=test:format,test:sherif,test:knip,test:lib,test:types,build",
     "test:ci": "nx run-many --targets=test:format,test:sherif,test:knip,test:lib,test:types,build",
     "test:format": "pnpm run prettier --check",
-    "test:sherif": "sherif -i react -i react-dom -i vue -i solid-js -i svelte -i @builder.io/qwik",
+    "test:sherif": "sherif -i react -i react-dom -i vue -i solid-js -i svelte -i @builder.io/qwik -i @angular/core",
     "test:lib": "nx affected --targets=test:lib --exclude=examples/**",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:types": "nx affected --targets=test:types --exclude=examples/**",
@@ -61,6 +61,7 @@
     "@types/node": "^20.11.30",
     "jsdom": "^24.0.0",
     "knip": "^5.5.0",
+    "ng-packagr": "^17.3.0",
     "nx": "^18.1.3",
     "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.2.2",
@@ -71,6 +72,7 @@
     "rollup-plugin-visualizer": "^5.12.0",
     "sherif": "^0.8.1",
     "size-limit": "^11.1.2",
+    "tslib": "^2.6.2",
     "typescript": "5.4.3",
     "vitest": "^1.4.0"
   }

@@ -49,3 +49,5 @@ yarn.lock
 .nx/cache
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.angular

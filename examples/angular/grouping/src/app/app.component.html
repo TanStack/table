@@ -1,0 +1,154 @@
+<div class="tanstack-table">
+  <h2>Grouping</h2>
+  <table aria-describedby="tanstack table grouping implementation in angular">
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder && header.column.getCanGroup()) {
+                <button
+                  id="group-btn"
+                  (click)="header.column.toggleGrouping()"
+                >
+                    <span class="material-icons-sharp">
+                      {{
+                        header.column.getIsGrouped()
+                          ? 'remove_circle_outline'
+                          : 'add_circle_outline'
+                      }}
+                    </span>
+                </button>
+                <ng-container
+                  *flexRender="
+                      header.column.columnDef.header;
+                      props: header.getContext;
+                      let header
+                    "
+                >
+                  <span>{{ header }}</span>
+                </ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let row of table.getRowModel().rows">
+      <tr>
+        @for (cell of row.getVisibleCells(); track cell.id) {
+          <td>
+            @if (cell.getIsGrouped()) {
+              <button (click)="row.toggleExpanded()">
+                    <span class="material-icons-sharp">
+                      {{ row.getIsExpanded() ? 'expand_less' : 'expand_more' }}
+                    </span>
+              </button>
+              <ng-container
+                *flexRender="
+                      cell.column.columnDef.cell;
+                      props: cell.getContext();
+                      let cell
+                    "
+              >
+                <span>{{ cell }}</span>
+              </ng-container>
+            } @else if (cell.getIsAggregated()) {
+              <ng-container
+                *flexRender="
+                      cell.column.columnDef.aggregatedCell;
+                      props: cell.getContext();
+                      let aggregatedCell
+                    "
+              >
+                {{ aggregatedCell }}
+              </ng-container>
+            } @else if (cell.getIsPlaceholder()) {
+              <span></span>
+            } @else {
+              <ng-container
+                *flexRender="
+                      cell.column.columnDef.cell;
+                      props: cell.getContext();
+                      let cell
+                    "
+              >
+                {{ cell }}
+              </ng-container>
+            }
+          </td>
+        }
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+
+  <div class="pagination-container">
+    <div class="pagination-actions">
+      <button
+        class="pagination-button"
+        (click)="table.setPageIndex(0)"
+        [disabled]="!table.getCanPreviousPage()"
+      >
+        <span class="material-icons-sharp">first_page</span>
+      </button>
+      <button
+        class="pagination-button"
+        (click)="table.previousPage()"
+        [disabled]="!table.getCanPreviousPage()"
+      >
+        <span class="material-icons-sharp">chevron_left</span>
+      </button>
+      <button
+        class="pagination-button"
+        (click)="table.nextPage()"
+        [disabled]="!table.getCanNextPage()"
+      >
+        <span class="material-icons-sharp">chevron_right</span>
+      </button>
+      <button
+        class="pagination-button"
+        (click)="table.setPageIndex(table.getPageCount() - 1)"
+        [disabled]="!table.getCanNextPage()"
+      >
+        <span class="material-icons-sharp">last_page</span>
+      </button>
+      <span class="pagination-info">
+        <div>Page</div>
+        <strong>
+          {{ table.getState().pagination.pageIndex + 1 }} of
+          {{ table.getPageCount() }}
+        </strong>
+      </span>
+      <span class="pagination-info">
+        | Go to page:
+        <input
+          type="number"
+          [value]="table.getState().pagination.pageIndex + 1"
+          (input)="onPageInputChange($event)"
+          class="pagination-input"
+        />
+      </span>
+      <select
+        [value]="table.getState().pagination.pageSize"
+        class="pagination-select"
+        (change)="onPageSizeChange($event)"
+      >
+        @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+          <option
+            [value]="pageSize"
+          >
+            Show {{ pageSize }}
+          </option>
+        }
+
+      </select>
+    </div>
+  </div>
+
+  <div>{{ table.getRowModel().rows.length }} Rows</div>
+  <div>
+    <button (click)="refreshData()">Refresh Data</button>
+  </div>
+</div>

@@ -2,7 +2,7 @@
 title: Table APIs
 ---
 
-## `useReactTable` / `createSolidTable` / `useQwikTable` / `useVueTable` / `createSvelteTable`
+## `createAngularTable` / `useReactTable` / `createSolidTable` / `useQwikTable` / `useVueTable` / `createSvelteTable`
 
 ```tsx
 type useReactTable = <TData extends AnyData>(

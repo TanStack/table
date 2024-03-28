@@ -1,0 +1,60 @@
+{
+  "name": "@tanstack/angular-table",
+  "version": "8.14.0",
+  "description": "Headless UI for building powerful tables & datagrids for Angular.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/angular-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "angular",
+    "table",
+    "angular-table",
+    "datagrid"
+  ],
+  "type": "module",
+  "module": "build/lib/esm2022/index.mjs",
+  "main": "build/lib/index.d.ts",
+  "types": "build/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/lib/index.d.ts",
+      "import": "./build/lib/esm2022/index.mjs",
+      "default": "./build/lib/index.d.ts"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "build/lib/*",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm ng-packagr -p ng-package.json",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@angular/core": "17.3.1"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=17"
+  },
+  "sideEffects": false
+}

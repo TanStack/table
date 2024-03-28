@@ -40,6 +40,10 @@ export const packages = [
     name: '@tanstack/match-sorter-utils',
     packageDir: 'packages/match-sorter-utils',
   },
+  {
+    name: '@tanstack/angular-table',
+    packageDir: 'packages/angular-table',
+  },
 ]
 
 /**
