@@ -129,7 +129,7 @@ export default function MyComponent() {
 
 ### React Forget
 
-When React Forget is released, these problems might be a thing of the past. Or use Solid.js... 🤓
+When React Forget is released, these problems might be a thing of the past. Or just use Solid.js... 🤓
 
 ## How do I stop my table state from automatically resetting when my data changes?
 
