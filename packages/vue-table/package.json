@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table",
-  "version": "8.15.1",
+  "version": "8.15.2",
   "description": "Headless UI for building powerful tables & datagrids for Vue.",
   "author": "Tanner Linsley",
   "license": "MIT",
