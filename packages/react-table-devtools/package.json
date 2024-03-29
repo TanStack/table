@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/react-table-devtools",
-  "version": "8.15.2",
+  "version": "8.15.3",
   "description": "Devtools for React Table",
   "author": "Tanner Linsley",
   "license": "MIT",
