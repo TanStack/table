@@ -1,5 +1,5 @@
 import { RowData, Cell, Row, Table } from '../types'
-import { flattenBy, memo } from '../utils'
+import { flattenBy, getMemoOptions, memo } from '../utils'
 import { createCell } from './cell'
 
 export interface CoreRow<TData extends RowData> {
@@ -154,7 +154,8 @@ export const createRow = <TData extends RowData>(
       row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
     getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
-    getParentRow: () => (row.parentId ? table.getRow(row.parentId, true) : undefined),
+    getParentRow: () =>
+      row.parentId ? table.getRow(row.parentId, true) : undefined,
     getParentRows: () => {
       let parentRows: Row<TData>[] = []
       let currentRow = row
@@ -173,10 +174,7 @@ export const createRow = <TData extends RowData>(
           return createCell(table, row as Row<TData>, column, column.id)
         })
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'row.getAllCells',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getAllCells')
     ),
 
     _getAllCellsByColumnId: memo(
@@ -190,17 +188,13 @@ export const createRow = <TData extends RowData>(
           {} as Record<string, Cell<TData, unknown>>
         )
       },
-      {
-        key:
-          process.env.NODE_ENV === 'production' && 'row.getAllCellsByColumnId',
-        debug: () => table.options.debugAll ?? table.options.debugRows,
-      }
+      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
     ),
   }
 
   for (let i = 0; i < table._features.length; i++) {
     const feature = table._features[i]
-    feature?.createRow?.(row, table)
+    feature?.createRow?.(row as Row<TData>, table)
   }
 
   return row as Row<TData>

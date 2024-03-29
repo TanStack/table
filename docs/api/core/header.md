@@ -1,5 +1,5 @@
 ---
-title: Header
+title: Header APIs
 ---
 
 These are **core** options and API properties for all headers. More options and API properties may be available for other [table features](../../guide/features).
@@ -19,7 +19,7 @@ The unique identifier for the header.
 ### `index`
 
 ```tsx
-id: number
+index: number
 ```
 
 The index for the header within the header group.
@@ -27,7 +27,7 @@ The index for the header within the header group.
 ### `depth`
 
 ```tsx
-id: number
+depth: number
 ```
 
 The depth of the header, zero-indexed based.
@@ -38,7 +38,7 @@ The depth of the header, zero-indexed based.
 column: Column<TData>
 ```
 
-The header's associated [Column](./column.md) object
+The header's associated [Column](./column) object
 
 ### `headerGroup`
 
@@ -46,7 +46,7 @@ The header's associated [Column](./column.md) object
 headerGroup: HeaderGroup<TData>
 ```
 
-The header's associated [HeaderGroup](./header-group.md) object
+The header's associated [HeaderGroup](./header-group) object
 
 ### `subHeaders`
 

@@ -6,7 +6,7 @@ import {
   RowData,
   ColumnDefResolved,
 } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 
 export interface CoreColumn<TData extends RowData, TValue> {
   /**
@@ -137,10 +137,7 @@ export function createColumn<TData extends RowData, TValue>(
           ...column.columns?.flatMap(d => d.getFlatColumns()),
         ]
       },
-      {
-        key: process.env.NODE_ENV === 'production' && 'column.getFlatColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(table.options, 'debugColumns', 'column.getFlatColumns')
     ),
     getLeafColumns: memo(
       () => [table._getOrderColumnsFn()],
@@ -155,17 +152,14 @@ export function createColumn<TData extends RowData, TValue>(
 
         return [column as Column<TData, TValue>]
       },
-      {
-        key: process.env.NODE_ENV === 'production' && 'column.getLeafColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(table.options, 'debugColumns', 'column.getLeafColumns')
     ),
   }
 
   for (const feature of table._features) {
-    feature.createColumn?.(column, table)
+    feature.createColumn?.(column as Column<TData, TValue>, table)
   }
 
-  // Yes, we have to convert table to uknown, because we know more than the compiler here.
+  // Yes, we have to convert table to unknown, because we know more than the compiler here.
   return column as Column<TData, TValue>
 }

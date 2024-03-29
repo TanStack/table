@@ -154,10 +154,10 @@ function App() {
                           background: cell.getIsGrouped()
                             ? '#0aff0082'
                             : cell.getIsAggregated()
-                            ? '#ffa50078'
-                            : cell.getIsPlaceholder()
-                            ? '#ff000042'
-                            : 'white',
+                              ? '#ffa50078'
+                              : cell.getIsPlaceholder()
+                                ? '#ff000042'
+                                : 'white',
                         },
                       }}
                     >

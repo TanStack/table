@@ -1,6 +1,6 @@
-import { ResolvedColumnFilter } from '../features/Filters'
+import { ResolvedColumnFilter } from '../features/ColumnFiltering'
 import { Table, RowModel, Row, RowData } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
 export function getFilteredRowModel<TData extends RowData>(): (
@@ -144,12 +144,8 @@ export function getFilteredRowModel<TData extends RowData>(): (
         // Filter final rows using all of the active filters
         return filterRows(rowModel.rows, filterRowsImpl, table)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getFilteredRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {
-          table._autoResetPageIndex()
-        },
-      }
+      getMemoOptions(table.options, 'debugTable', 'getFilteredRowModel', () =>
+        table._autoResetPageIndex()
+      )
     )
 }

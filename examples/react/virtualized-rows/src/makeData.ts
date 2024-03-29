@@ -12,7 +12,7 @@ export type Person = {
 }
 
 const range = (len: number) => {
-  const arr = []
+  const arr: number[] = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }
@@ -27,7 +27,7 @@ const newPerson = (index: number): Person => {
     age: faker.number.int(40),
     visits: faker.number.int(1000),
     progress: faker.number.int(100),
-    createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
+    createdAt: faker.date.anytime(),
     status: faker.helpers.shuffle<Person['status']>([
       'relationship',
       'complicated',

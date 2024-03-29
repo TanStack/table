@@ -1,5 +1,5 @@
 import { Table, RowData } from '../types'
-import { memo } from '../utils'
+import { getMemoOptions, memo } from '../utils'
 
 export function getFacetedMinMaxValues<TData extends RowData>(): (
   table: Table<TData>,
@@ -37,12 +37,6 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
 
         return facetedMinMaxValues
       },
-      {
-        key:
-          process.env.NODE_ENV === 'development' &&
-          'getFacetedMinMaxValues_' + columnId,
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {},
-      }
+      getMemoOptions(table.options, 'debugTable', 'getFacetedMinMaxValues')
     )
 }

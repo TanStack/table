@@ -1,7 +1,9 @@
 ---
-title: Headers
+title: Headers Guide
 ---
 
 ## API
 
 [Header API](../api/core/header)
+
+## Headers Guide

@@ -1,0 +1,23 @@
+{
+  "name": "tanstack-table-example-solid-filters",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "typescript": "5.4.3",
+    "vite": "^5.2.6",
+    "vite-plugin-solid": "^2.10.2"
+  },
+  "dependencies": {
+    "@solid-primitives/scheduled": "^1.4.3",
+    "@tanstack/solid-table": "^8.15.2",
+    "solid-js": "^1.8.16"
+  }
+}

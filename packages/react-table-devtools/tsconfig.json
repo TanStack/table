@@ -1,11 +1,9 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
+    "jsx": "react",
     "rootDir": "./src",
-    "outDir": "./build/lib",
-    "tsBuildInfoFile": "./build/.tsbuildinfo"
+    "outDir": "./build/lib"
   },
-  "include": ["src"],
-  "references": [{ "path": "../react-table" }]
+  "include": ["src"]
 }

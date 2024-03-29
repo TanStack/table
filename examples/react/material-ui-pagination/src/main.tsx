@@ -177,9 +177,11 @@ function LocalTable({
         count={table.getFilteredRowModel().rows.length}
         rowsPerPage={pageSize}
         page={pageIndex}
-        SelectProps={{
-          inputProps: { 'aria-label': 'rows per page' },
-          native: true,
+        slotProps={{
+          select: {
+            inputProps: { 'aria-label': 'rows per page' },
+            native: true,
+          },
         }}
         onPageChange={(_, page) => {
           table.setPageIndex(page)

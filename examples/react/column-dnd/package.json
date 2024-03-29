@@ -9,16 +9,21 @@
     "start": "vite"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
-    "@tanstack/react-table": "8.10.7",
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/modifiers": "^7.0.0",
+    "@dnd-kit/sortable": "^8.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@faker-js/faker": "^8.4.1",
+    "@tanstack/react-table": "^8.15.2",
     "react": "^18.2.0",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^5.0.1",
-    "@vitejs/plugin-react": "^2.2.0",
-    "vite": "^3.2.3"
+    "@rollup/plugin-replace": "^5.0.5",
+    "@types/react": "^18.2.70",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "5.4.3",
+    "vite": "^5.2.6"
   }
 }

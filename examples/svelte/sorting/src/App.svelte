@@ -4,11 +4,15 @@
     createSvelteTable,
     getCoreRowModel,
     getSortedRowModel,
-    ColumnDef,
-    TableOptions,
-    flexRender
+    flexRender,
   } from '@tanstack/svelte-table'
-  import { makeData, Person } from './makeData'
+  import type {
+    ColumnDef,
+    OnChangeFn,
+    SortingState,
+    TableOptions,
+  } from '@tanstack/svelte-table'
+  import { makeData, type Person } from './makeData'
   import './index.css'
 
   const columns: ColumnDef<Person>[] = [
@@ -21,7 +25,7 @@
           cell: info => info.getValue(),
           footer: props => props.column.id,
         },
-         {
+        {
           accessorFn: row => row.lastName,
           id: 'lastName',
           cell: info => info.getValue(),
@@ -65,9 +69,9 @@
 
   const data = makeData(100_000)
 
-  let sorting = []
+  let sorting: SortingState = []
 
-  const setSorting = updater => {
+  const setSorting: OnChangeFn<SortingState> = updater => {
     if (updater instanceof Function) {
       sorting = updater(sorting)
     } else {
@@ -82,19 +86,17 @@
     }))
   }
 
-  const options = writable<TableOptions<Person>>(
-    {
-      data,
-      columns,
-      state: {
-        sorting,
-      },
-      onSortingChange: setSorting,
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      debugTable: true,
-    }
-  )
+  const options = writable<TableOptions<Person>>({
+    data,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
+  })
 
   const refreshData = () => {
     console.info('refresh')
@@ -128,11 +130,17 @@
                   class:select-none={header.column.getCanSort()}
                   on:click={header.column.getToggleSortingHandler()}
                 >
-                  <svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-                  {{
-                    asc: ' 🔼',
-                    desc: ' 🔽',
-                  }[header.column.getIsSorted().toString()] ?? ''}
+                  <svelte:component
+                    this={flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  />
+                  {#if header.column.getIsSorted().toString() === 'asc'}
+                    🔼
+                  {:else if header.column.getIsSorted().toString() === 'desc'}
+                    🔽
+                  {/if}
                 </div>
               {/if}
             </th>
@@ -145,7 +153,9 @@
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+              <svelte:component
+                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+              />
             </td>
           {/each}
         </tr>
@@ -157,7 +167,12 @@
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
+                <svelte:component
+                  this={flexRender(
+                    header.column.columnDef.footer,
+                    header.getContext()
+                  )}
+                />
               {/if}
             </th>
           {/each}

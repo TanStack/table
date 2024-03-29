@@ -1,4 +1,4 @@
-import { TableState, Updater } from './types'
+import { TableOptionsResolved, TableState, Updater } from './types'
 
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
@@ -40,24 +40,22 @@ type AllowedIndexes<
 > = Tuple extends readonly []
   ? Keys
   : Tuple extends readonly [infer _, ...infer Tail]
-  ? AllowedIndexes<Tail, Keys | Tail['length']>
-  : Keys
+    ? AllowedIndexes<Tail, Keys | Tail['length']>
+    : Keys
 
 export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
   ? never
   : unknown extends T
-  ? string
-  : object extends T
-  ? string
-  : T extends readonly any[] & IsTuple<T>
-  ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
-  : T extends any[]
-  ? DeepKeys<T[number], [...TDepth, any]>
-  : T extends Date
-  ? never
-  : T extends object
-  ? (keyof T & string) | DeepKeysPrefix<T, keyof T, TDepth>
-  : never
+    ? string
+    : T extends readonly any[] & IsTuple<T>
+      ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
+      : T extends any[]
+        ? DeepKeys<T[number], [...TDepth, any]>
+        : T extends Date
+          ? never
+          : T extends object
+            ? (keyof T & string) | DeepKeysPrefix<T, keyof T, TDepth>
+            : never
 
 type DeepKeysPrefix<
   T,
@@ -134,23 +132,23 @@ export function flattenBy<TNode>(
   return flat
 }
 
-export function memo<TDeps extends readonly any[], TResult>(
-  getDeps: () => [...TDeps],
+export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
+  getDeps: (depArgs?: TDepArgs) => [...TDeps],
   fn: (...args: NoInfer<[...TDeps]>) => TResult,
   opts: {
     key: any
     debug?: () => any
     onChange?: (result: TResult) => void
   }
-): () => TResult {
+): (depArgs?: TDepArgs) => TResult {
   let deps: any[] = []
   let result: TResult | undefined
 
-  return () => {
+  return depArgs => {
     let depTime: number
     if (opts.key && opts.debug) depTime = Date.now()
 
-    const newDeps = getDeps()
+    const newDeps = getDeps(depArgs)
 
     const depsChanged =
       newDeps.length !== deps.length ||
@@ -197,5 +195,24 @@ export function memo<TDeps extends readonly any[], TResult>(
     }
 
     return result!
+  }
+}
+
+export function getMemoOptions(
+  tableOptions: Partial<TableOptionsResolved<any>>,
+  debugLevel:
+    | 'debugAll'
+    | 'debugCells'
+    | 'debugTable'
+    | 'debugColumns'
+    | 'debugRows'
+    | 'debugHeaders',
+  key: string,
+  onChange?: (result: any) => void
+) {
+  return {
+    debug: () => tableOptions?.debugAll ?? tableOptions[debugLevel],
+    key: process.env.NODE_ENV === 'development' && key,
+    onChange,
   }
 }

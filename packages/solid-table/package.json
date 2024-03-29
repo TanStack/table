@@ -1,16 +1,18 @@
 {
   "name": "@tanstack/solid-table",
-  "author": "Tanner Linsley",
-  "version": "8.10.7",
+  "version": "8.15.2",
   "description": "Headless UI for building powerful tables & datagrids for Solid.",
+  "author": "Tanner Linsley",
   "license": "MIT",
-  "homepage": "https://github.com/tanstack/table#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanstack/table.git"
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/solid-table"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "solid",
@@ -18,10 +20,7 @@
     "solid-table",
     "datagrid"
   ],
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/tannerlinsley"
-  },
+  "type": "commonjs",
   "module": "build/lib/index.esm.js",
   "main": "build/lib/index.js",
   "types": "build/lib/index.d.ts",
@@ -43,10 +42,20 @@
     "build/umd/*",
     "src"
   ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:types": "tsc --noEmit",
+    "build": "pnpm build:rollup && pnpm build:types",
+    "build:rollup": "rollup --config rollup.config.mjs",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
   "dependencies": {
-    "@tanstack/table-core": "8.10.7"
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "solid-js": "^1.8.16"
   },
   "peerDependencies": {
-    "solid-js": "^1.3.13"
+    "solid-js": ">=1.3"
   }
 }

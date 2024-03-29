@@ -4,11 +4,16 @@
     getCoreRowModel,
     createSvelteTable,
     getSortedRowModel,
-    TableOptions,
     flexRender,
-    ColumnDef,
   } from '@tanstack/svelte-table'
-  import { makeData, Person } from './makeData'
+  import type {
+    ColumnDef,
+    ColumnOrderState,
+    OnChangeFn,
+    TableOptions,
+    VisibilityState,
+  } from '@tanstack/svelte-table'
+  import { makeData, type Person } from './makeData'
   import { faker } from '@faker-js/faker'
   import './index.css'
 
@@ -66,10 +71,10 @@
 
   const data = makeData(5000)
 
-  let columnOrder = []
-  let columnVisibility = {}
+  let columnOrder: ColumnOrderState = []
+  let columnVisibility: VisibilityState = {}
 
-  const setColumnOrder = updater => {
+  const setColumnOrder: OnChangeFn<ColumnOrderState> = updater => {
     if (updater instanceof Function) {
       columnOrder = updater(columnOrder)
     } else {
@@ -84,7 +89,7 @@
     }))
   }
 
-  const setColumnVisibility = updater => {
+  const setColumnVisibility: OnChangeFn<VisibilityState> = updater => {
     if (updater instanceof Function) {
       columnVisibility = updater(columnVisibility)
     } else {

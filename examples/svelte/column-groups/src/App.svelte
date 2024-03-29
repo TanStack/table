@@ -1,12 +1,11 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import {
-    ColumnDef,
     createSvelteTable,
     flexRender,
     getCoreRowModel,
-    TableOptions,
   } from '@tanstack/svelte-table'
+  import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
   import './index.css'
 
   type Person = {

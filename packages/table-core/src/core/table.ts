@@ -1,4 +1,4 @@
-import { functionalUpdate, memo, RequiredKeys } from '../utils'
+import { functionalUpdate, getMemoOptions, memo, RequiredKeys } from '../utils'
 
 import {
   Updater,
@@ -15,6 +15,7 @@ import {
   TableMeta,
   ColumnDefResolved,
   GroupColumnDef,
+  TableFeature,
 } from '../types'
 
 //
@@ -22,38 +23,35 @@ import { createColumn } from './column'
 import { Headers } from './headers'
 //
 
+import { ColumnFaceting } from '../features/ColumnFaceting'
+import { ColumnFiltering } from '../features/ColumnFiltering'
+import { ColumnGrouping } from '../features/ColumnGrouping'
+import { ColumnOrdering } from '../features/ColumnOrdering'
+import { ColumnPinning } from '../features/ColumnPinning'
 import { ColumnSizing } from '../features/ColumnSizing'
-import { Expanding } from '../features/Expanding'
-import { Filters } from '../features/Filters'
-import { Grouping } from '../features/Grouping'
-import { Ordering } from '../features/Ordering'
-import { Pagination } from '../features/Pagination'
-import { Pinning } from '../features/Pinning'
+import { ColumnVisibility } from '../features/ColumnVisibility'
+import { GlobalFaceting } from '../features/GlobalFaceting'
+import { GlobalFiltering } from '../features/GlobalFiltering'
+import { RowExpanding } from '../features/RowExpanding'
+import { RowPagination } from '../features/RowPagination'
+import { RowPinning } from '../features/RowPinning'
 import { RowSelection } from '../features/RowSelection'
-import { Sorting } from '../features/Sorting'
-import { Visibility } from '../features/Visibility'
+import { RowSorting } from '../features/RowSorting'
 
-export interface TableFeature {
-  createCell?: (cell: any, column: any, row: any, table: any) => any
-  createColumn?: (column: any, table: any) => any
-  createHeader?: (column: any, table: any) => any
-  createRow?: (row: any, table: any) => any
-  createTable?: (table: any) => any
-  getDefaultColumnDef?: () => any
-  getDefaultOptions?: (table: any) => any
-  getInitialState?: (initialState?: InitialTableState) => any
-}
-
-const features = [
+const builtInFeatures = [
   Headers,
-  Visibility,
-  Ordering,
-  Pinning,
-  Filters,
-  Sorting,
-  Grouping,
-  Expanding,
-  Pagination,
+  ColumnVisibility,
+  ColumnOrdering,
+  ColumnPinning,
+  ColumnFaceting,
+  ColumnFiltering,
+  GlobalFaceting, //depends on ColumnFaceting
+  GlobalFiltering, //depends on ColumnFiltering
+  RowSorting,
+  ColumnGrouping, //depends on RowSorting
+  RowExpanding,
+  RowPagination,
+  RowPinning,
   RowSelection,
   ColumnSizing,
 ] as const
@@ -63,6 +61,12 @@ const features = [
 export interface CoreTableState {}
 
 export interface CoreOptions<TData extends RowData> {
+  /**
+   * An array of extra features that you can add to the table instance.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  _features?: TableFeature[]
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -87,6 +91,12 @@ export interface CoreOptions<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugAll?: boolean
+  /**
+   * Set this option to `true` to output cell debugging information to the console.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcells]
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  debugCells?: boolean
   /**
    * Set this option to `true` to output column debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcolumns)
@@ -273,11 +283,16 @@ export interface CoreInstance<TData extends RowData> {
 export function createTable<TData extends RowData>(
   options: TableOptionsResolved<TData>
 ): Table<TData> {
-  if (options.debugAll || options.debugTable) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    (options.debugAll || options.debugTable)
+  ) {
     console.info('Creating Table Instance...')
   }
 
-  let table = { _features: features } as unknown as Table<TData>
+  const _features = [...builtInFeatures, ...(options._features ?? [])]
+
+  let table = { _features } as unknown as Table<TData>
 
   const defaultOptions = table._features.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultOptions?.(table))
@@ -302,14 +317,15 @@ export function createTable<TData extends RowData>(
   } as TableState
 
   table._features.forEach(feature => {
-    initialState = feature.getInitialState?.(initialState) ?? initialState
+    initialState = (feature.getInitialState?.(initialState) ??
+      initialState) as TableState
   })
 
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
   const coreInstance: CoreInstance<TData> = {
-    _features: features,
+    _features,
     options: {
       ...defaultOptions,
       ...options,
@@ -374,15 +390,20 @@ export function createTable<TData extends RowData>(
     getRowModel: () => {
       return table.getPaginationRowModel()
     },
+    //in next version, we should just pass in the row model as the optional 2nd arg
     getRow: (id: string, searchAll?: boolean) => {
-      const row = (searchAll ? table.getCoreRowModel() : table.getRowModel())
-        .rowsById[id]
+      let row = (
+        searchAll ? table.getPrePaginationRowModel() : table.getRowModel()
+      ).rowsById[id]
 
       if (!row) {
-        if (process.env.NODE_ENV !== 'production') {
-          throw new Error(`getRow expected an ID, but got ${id}`)
+        row = table.getCoreRowModel().rowsById[id]
+        if (!row) {
+          if (process.env.NODE_ENV !== 'production') {
+            throw new Error(`getRow could not find row with ID: ${id}`)
+          }
+          throw new Error()
         }
-        throw new Error()
       }
 
       return row
@@ -417,10 +438,7 @@ export function createTable<TData extends RowData>(
           ...defaultColumn,
         } as Partial<ColumnDef<TData, unknown>>
       },
-      {
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-        key: process.env.NODE_ENV === 'development' && 'getDefaultColumnDef',
-      }
+      getMemoOptions(options, 'debugColumns', '_getDefaultColumnDef')
     ),
 
     _getColumnDefs: () => table.options.columns,
@@ -451,10 +469,7 @@ export function createTable<TData extends RowData>(
 
         return recurseColumns(columnDefs)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllColumns')
     ),
 
     getAllFlatColumns: memo(
@@ -464,10 +479,7 @@ export function createTable<TData extends RowData>(
           return column.getFlatColumns()
         })
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllFlatColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllFlatColumns')
     ),
 
     _getAllFlatColumnsById: memo(
@@ -481,10 +493,7 @@ export function createTable<TData extends RowData>(
           {} as Record<string, Column<TData, unknown>>
         )
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllFlatColumnsById',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllFlatColumnsById')
     ),
 
     getAllLeafColumns: memo(
@@ -493,10 +502,7 @@ export function createTable<TData extends RowData>(
         let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
         return orderColumns(leafColumns)
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getAllLeafColumns',
-        debug: () => table.options.debugAll ?? table.options.debugColumns,
-      }
+      getMemoOptions(options, 'debugColumns', 'getAllLeafColumns')
     ),
 
     getColumn: columnId => {

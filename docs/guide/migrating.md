@@ -1,5 +1,5 @@
 ---
-title: Migrating to V8
+title: Migrating to V8 Guide
 ---
 
 ## Migrating to V8

@@ -1,7 +1,15 @@
-import { TableFeature } from '../core/table'
-import { RowData, Column, Header, OnChangeFn, Table, Updater } from '../types'
-import { makeStateUpdater } from '../utils'
-import { ColumnPinningPosition } from './Pinning'
+import { _getVisibleLeafColumns } from '..'
+import {
+  RowData,
+  Column,
+  Header,
+  OnChangeFn,
+  Table,
+  Updater,
+  TableFeature,
+} from '../types'
+import { getMemoOptions, makeStateUpdater, memo } from '../utils'
+import { ColumnPinningPosition } from './ColumnPinning'
 
 //
 
@@ -23,6 +31,8 @@ export interface ColumnSizingInfoState {
 
 export type ColumnResizeMode = 'onChange' | 'onEnd'
 
+export type ColumnResizeDirection = 'ltr' | 'rtl'
+
 export interface ColumnSizingOptions {
   /**
    * Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
@@ -36,6 +46,12 @@ export interface ColumnSizingOptions {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
   enableColumnResizing?: boolean
+  /**
+   * Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#columnResizeDirection)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
+   */
+  columnResizeDirection?: ColumnResizeDirection
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnSizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnSizing` from your own managed state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnsizingchange)
@@ -52,7 +68,10 @@ export interface ColumnSizingOptions {
 
 export type ColumnSizingDefaultOptions = Pick<
   ColumnSizingOptions,
-  'columnResizeMode' | 'onColumnSizingChange' | 'onColumnSizingInfoChange'
+  | 'columnResizeMode'
+  | 'onColumnSizingChange'
+  | 'onColumnSizingInfoChange'
+  | 'columnResizeDirection'
 >
 
 export interface ColumnSizingInstance {
@@ -153,11 +172,15 @@ export interface ColumnSizingColumn {
    */
   getSize: () => number
   /**
-   * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding headers.
+   * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding (left) headers in relation to the current column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getstart)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  getStart: (position?: ColumnPinningPosition) => number
+  getStart: (position?: ColumnPinningPosition | 'center') => number
+  /**
+   * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all succeeding (right) headers in relation to the current column.
+   */
+  getAfter: (position?: ColumnPinningPosition | 'center') => number
   /**
    * Resets the column to its initial size.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#resetsize)
@@ -176,7 +199,7 @@ export interface ColumnSizingHeader {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getresizehandler)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  getResizeHandler: () => (event: unknown) => void
+  getResizeHandler: (context?: Document) => (event: unknown) => void
   /**
    * Returns the current size of the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getsize)
@@ -225,6 +248,7 @@ export const ColumnSizing: TableFeature = {
   ): ColumnSizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
+      columnResizeDirection: 'ltr',
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
       onColumnSizingInfoChange: makeStateUpdater('columnSizingInfo', table),
     }
@@ -245,25 +269,33 @@ export const ColumnSizing: TableFeature = {
         column.columnDef.maxSize ?? defaultColumnSizing.maxSize
       )
     }
-    column.getStart = position => {
-      const columns = !position
-        ? table.getVisibleLeafColumns()
-        : position === 'left'
-        ? table.getLeftVisibleLeafColumns()
-        : table.getRightVisibleLeafColumns()
 
-      const index = columns.findIndex(d => d.id === column.id)
+    column.getStart = memo(
+      position => [
+        position,
+        _getVisibleLeafColumns(table, position),
+        table.getState().columnSizing,
+      ],
+      (position, columns) =>
+        columns
+          .slice(0, column.getIndex(position))
+          .reduce((sum, column) => sum + column.getSize(), 0),
+      getMemoOptions(table.options, 'debugColumns', 'getStart')
+    )
 
-      if (index > 0) {
-        const prevSiblingColumn = columns[index - 1]!
+    column.getAfter = memo(
+      position => [
+        position,
+        _getVisibleLeafColumns(table, position),
+        table.getState().columnSizing,
+      ],
+      (position, columns) =>
+        columns
+          .slice(column.getIndex(position) + 1)
+          .reduce((sum, column) => sum + column.getSize(), 0),
+      getMemoOptions(table.options, 'debugColumns', 'getAfter')
+    )
 
-        return (
-          prevSiblingColumn.getStart(position) + prevSiblingColumn.getSize()
-        )
-      }
-
-      return 0
-    }
     column.resetSize = () => {
       table.setColumnSizing(({ [column.id]: _, ...rest }) => {
         return rest
@@ -307,7 +339,7 @@ export const ColumnSizing: TableFeature = {
 
       return 0
     }
-    header.getResizeHandler = () => {
+    header.getResizeHandler = _contextDocument => {
       const column = table.getColumn(header.column.id)
       const canResize = column?.getCanResize()
 
@@ -346,7 +378,10 @@ export const ColumnSizing: TableFeature = {
           }
 
           table.setColumnSizingInfo(old => {
-            const deltaOffset = clientXPos - (old?.startOffset ?? 0)
+            const deltaDirection =
+              table.options.columnResizeDirection === 'rtl' ? -1 : 1
+            const deltaOffset =
+              (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
             const deltaPercentage = Math.max(
               deltaOffset / (old?.startSize ?? 0),
               -0.999999
@@ -393,11 +428,20 @@ export const ColumnSizing: TableFeature = {
           }))
         }
 
+        const contextDocument =
+          _contextDocument || typeof document !== 'undefined' ? document : null
+
         const mouseEvents = {
           moveHandler: (e: MouseEvent) => onMove(e.clientX),
           upHandler: (e: MouseEvent) => {
-            document.removeEventListener('mousemove', mouseEvents.moveHandler)
-            document.removeEventListener('mouseup', mouseEvents.upHandler)
+            contextDocument?.removeEventListener(
+              'mousemove',
+              mouseEvents.moveHandler
+            )
+            contextDocument?.removeEventListener(
+              'mouseup',
+              mouseEvents.upHandler
+            )
             onEnd(e.clientX)
           },
         }
@@ -412,8 +456,14 @@ export const ColumnSizing: TableFeature = {
             return false
           },
           upHandler: (e: TouchEvent) => {
-            document.removeEventListener('touchmove', touchEvents.moveHandler)
-            document.removeEventListener('touchend', touchEvents.upHandler)
+            contextDocument?.removeEventListener(
+              'touchmove',
+              touchEvents.moveHandler
+            )
+            contextDocument?.removeEventListener(
+              'touchend',
+              touchEvents.upHandler
+            )
             if (e.cancelable) {
               e.preventDefault()
               e.stopPropagation()
@@ -427,23 +477,23 @@ export const ColumnSizing: TableFeature = {
           : false
 
         if (isTouchStartEvent(e)) {
-          document.addEventListener(
+          contextDocument?.addEventListener(
             'touchmove',
             touchEvents.moveHandler,
             passiveIfSupported
           )
-          document.addEventListener(
+          contextDocument?.addEventListener(
             'touchend',
             touchEvents.upHandler,
             passiveIfSupported
           )
         } else {
-          document.addEventListener(
+          contextDocument?.addEventListener(
             'mousemove',
             mouseEvents.moveHandler,
             passiveIfSupported
           )
-          document.addEventListener(
+          contextDocument?.addEventListener(
             'mouseup',
             mouseEvents.upHandler,
             passiveIfSupported

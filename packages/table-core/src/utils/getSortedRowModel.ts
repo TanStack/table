@@ -1,6 +1,6 @@
 import { Table, Row, RowModel, RowData } from '../types'
-import { SortingFn } from '../features/Sorting'
-import { memo } from '../utils'
+import { SortingFn } from '../features/RowSorting'
+import { getMemoOptions, memo } from '../utils'
 
 export function getSortedRowModel<TData extends RowData>(): (
   table: Table<TData>
@@ -18,8 +18,8 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortedFlatRows: Row<TData>[] = []
 
         // Filter out sortings that correspond to non existing columns
-        const availableSorting = sortingState.filter(sort =>
-          table.getColumn(sort.id)?.getCanSort()
+        const availableSorting = sortingState.filter(
+          sort => table.getColumn(sort.id)?.getCanSort()
         )
 
         const columnInfoById: Record<
@@ -45,7 +45,7 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortData = (rows: Row<TData>[]) => {
           // This will also perform a stable sorting using the row index
           // if needed.
-          const sortedData = rows.map(row => ({...row}))
+          const sortedData = rows.map(row => ({ ...row }))
 
           sortedData.sort((rowA, rowB) => {
             for (let i = 0; i < availableSorting.length; i += 1) {
@@ -68,8 +68,8 @@ export function getSortedRowModel<TData extends RowData>(): (
                     aUndefined && bUndefined
                       ? 0
                       : aUndefined
-                      ? columnInfo.sortUndefined
-                      : -columnInfo.sortUndefined
+                        ? columnInfo.sortUndefined
+                        : -columnInfo.sortUndefined
                 }
               }
 
@@ -111,12 +111,8 @@ export function getSortedRowModel<TData extends RowData>(): (
           rowsById: rowModel.rowsById,
         }
       },
-      {
-        key: process.env.NODE_ENV === 'development' && 'getSortedRowModel',
-        debug: () => table.options.debugAll ?? table.options.debugTable,
-        onChange: () => {
-          table._autoResetPageIndex()
-        },
-      }
+      getMemoOptions(table.options, 'debugTable', 'getSortedRowModel', () =>
+        table._autoResetPageIndex()
+      )
     )
 }

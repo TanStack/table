@@ -1,0 +1,7 @@
+packages:
+  - 'packages/*'
+  - 'examples/qwik/*'
+  - 'examples/react/*'
+  - 'examples/solid/*'
+  - 'examples/svelte/*'
+  - 'examples/vue/*'

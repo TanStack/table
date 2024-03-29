@@ -4,9 +4,13 @@
     createSvelteTable,
     getCoreRowModel,
     getSortedRowModel,
-    TableOptions,
     flexRender,
+  } from '@tanstack/svelte-table'
+  import type {
     ColumnDef,
+    OnChangeFn,
+    TableOptions,
+    VisibilityState,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -98,9 +102,9 @@
     },
   ]
 
-  let columnVisibility = {}
+  let columnVisibility: VisibilityState = {}
 
-  const setColumnVisibility = updater => {
+  const setColumnVisibility: OnChangeFn<VisibilityState> = updater => {
     if (updater instanceof Function) {
       columnVisibility = updater(columnVisibility)
     } else {

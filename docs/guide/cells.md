@@ -1,5 +1,5 @@
 ---
-title: Cells
+title: Cells Guide
 ---
 
 ## API

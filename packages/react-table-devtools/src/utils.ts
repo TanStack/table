@@ -3,7 +3,7 @@ import React from 'react'
 import { Theme, useTheme } from './theme'
 import useMediaQuery from './useMediaQuery'
 
-export const isServer = typeof window === 'undefined'
+const isServer = typeof window === 'undefined'
 
 type StyledComponent<T> = T extends 'button'
   ? React.DetailedHTMLProps<
@@ -11,18 +11,18 @@ type StyledComponent<T> = T extends 'button'
       HTMLButtonElement
     >
   : T extends 'input'
-  ? React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      HTMLInputElement
-    >
-  : T extends 'select'
-  ? React.DetailedHTMLProps<
-      React.SelectHTMLAttributes<HTMLSelectElement>,
-      HTMLSelectElement
-    >
-  : T extends keyof HTMLElementTagNameMap
-  ? React.HTMLAttributes<HTMLElementTagNameMap[T]>
-  : never
+    ? React.DetailedHTMLProps<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+      >
+    : T extends 'select'
+      ? React.DetailedHTMLProps<
+          React.SelectHTMLAttributes<HTMLSelectElement>,
+          HTMLSelectElement
+        >
+      : T extends keyof HTMLElementTagNameMap
+        ? React.HTMLAttributes<HTMLElementTagNameMap[T]>
+        : never
 
 // export function getStatusColor(match: RouteMatch, theme: Theme) {
 //   return match.isLoading
@@ -104,7 +104,7 @@ export function useIsMounted() {
  * to prevent updating a component state while React is rendering different components
  * or when the component is not mounted anymore.
  */
-export function useSafeState<T>(initialState: T): [T, (value: T) => void] {
+function useSafeState<T>(initialState: T): [T, (value: T) => void] {
   const isMounted = useIsMounted()
   const [state, setState] = React.useState(initialState)
 

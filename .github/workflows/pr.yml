@@ -1,25 +1,47 @@
 name: pr
-on: [pull_request]
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'media/**'
+      - '**/*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
 jobs:
   test:
-    name: 'Test (node ${{ matrix.node }})'
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [16]
-
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/checkout@v4
         with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
-
-      - name: Install Dependencies
-        run: yarn --frozen-lockfile
-
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Start Nx Agents
+        run: npx nx-cloud start-ci-run --distribute-on=".nx/workflows/dynamic-changesets.yaml"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Get base and head commits for `nx affected`
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: 'main'
       - name: Run Checks
-        run: npm run pr
+        run: pnpm run test:pr --parallel=3
+      - name: Stop Nx Agents
+        if: ${{ always() }}
+        run: npx nx-cloud stop-all-agents

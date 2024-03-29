@@ -20,7 +20,7 @@ export const Panel = styled(
   }
 )
 
-export const ActivePanel = styled(
+const ActivePanel = styled(
   'div',
   () => ({
     flex: '1 1 500px',
@@ -63,11 +63,11 @@ export const Button = styled('button', (props, theme) => ({
 //   borderRadius: '.2em',
 // })
 
-export const Code = styled('code', {
+const Code = styled('code', {
   fontSize: '.9em',
 })
 
-export const Input = styled('input', (_props, theme) => ({
+const Input = styled('input', (_props, theme) => ({
   backgroundColor: theme.inputBackgroundColor,
   border: 0,
   borderRadius: '.2em',
@@ -77,7 +77,7 @@ export const Input = styled('input', (_props, theme) => ({
   padding: '.3em .4em',
 }))
 
-export const Select = styled(
+const Select = styled(
   'select',
   (_props, theme) => ({
     display: `inline-block`,
