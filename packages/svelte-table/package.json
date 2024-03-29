@@ -47,9 +47,6 @@
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
   },
-  "devDependencies": {
-    "svelte": "^3.59.2"
-  },
   "peerDependencies": {
     "svelte": "^5.0.0-next",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
