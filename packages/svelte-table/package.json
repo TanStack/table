@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/svelte-table",
-  "version": "8.13.2",
+  "version": "8.15.3",
   "description": "Headless UI for building powerful tables & datagrids for Svelte.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -46,6 +46,9 @@
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "svelte": "^3.59.2"
   },
   "peerDependencies": {
     "svelte": "^5.0.0-next",

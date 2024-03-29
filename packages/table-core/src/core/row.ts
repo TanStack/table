@@ -194,7 +194,7 @@ export const createRow = <TData extends RowData>(
 
   for (let i = 0; i < table._features.length; i++) {
     const feature = table._features[i]
-    feature?.createRow?.(row, table)
+    feature?.createRow?.(row as Row<TData>, table)
   }
 
   return row as Row<TData>

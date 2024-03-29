@@ -9,10 +9,10 @@
     "start": "vite"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
-    "@tanstack/match-sorter-utils": "^8.11.8",
-    "@tanstack/react-table": "^8.13.2",
+    "@tanstack/match-sorter-utils": "^8.15.1",
+    "@tanstack/react-table": "^8.15.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -21,9 +21,10 @@
     "@emotion/babel-plugin-jsx-pragmatic": "^0.2.1",
     "@faker-js/faker": "^8.4.1",
     "@rollup/plugin-replace": "^5.0.5",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.70",
+    "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.11"
+    "typescript": "5.4.3",
+    "vite": "^5.2.6"
   }
 }

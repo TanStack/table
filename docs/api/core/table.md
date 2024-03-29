@@ -2,7 +2,7 @@
 title: Table APIs
 ---
 
-## `useReactTable` / `createSolidTable` / `useVueTable` / `createSvelteTable`
+## `useReactTable` / `createSolidTable` / `useQwikTable` / `useVueTable` / `createSvelteTable`
 
 ```tsx
 type useReactTable = <TData extends AnyData>(
@@ -167,6 +167,14 @@ debugRows?: boolean
 ```
 
 Set this option to true to output row debugging information to the console.
+
+### `_features`
+
+```tsx
+_features?: TableFeature[]
+```
+
+An array of extra features that you can add to the table instance.
 
 ### `render`
 
