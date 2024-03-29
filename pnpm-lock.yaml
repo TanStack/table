@@ -1688,8 +1688,8 @@ importers:
         specifier: ^5.0.0-next
         version: 5.0.0-next.73
       svelte-check:
-        specifier: ^3.6.7
-        version: 3.6.7(@babel/core@7.23.7)(postcss@8.4.35)(svelte@5.0.0-next.73)
+        specifier: ^3.6.8
+        version: 3.6.8(@babel/core@7.23.7)(postcss@8.4.35)(svelte@5.0.0-next.73)
       svelte-eslint-parser:
         specifier: ^0.33.1
         version: 0.33.1(svelte@5.0.0-next.73)
@@ -9865,33 +9865,6 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check@3.6.7(@babel/core@7.23.7)(postcss@8.4.35)(svelte@5.0.0-next.73):
-    resolution: {integrity: sha512-tKEjemK9FYCySAseCaIt+ps5o0XRvLC7ECjyJXXtO7vOQhR9E6JavgoUbGP1PCulD2OTcB/fi9RjV3nyF1AROw==}
-    hasBin: true
-    peerDependencies:
-      svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.25
-      chokidar: 3.6.0
-      fast-glob: 3.3.2
-      import-fresh: 3.3.0
-      picocolors: 1.0.0
-      sade: 1.8.1
-      svelte: 5.0.0-next.73
-      svelte-preprocess: 5.1.3(@babel/core@7.23.7)(postcss@8.4.35)(svelte@5.0.0-next.73)(typescript@5.3.3)
-      typescript: 5.3.3
-    transitivePeerDependencies:
-      - '@babel/core'
-      - coffeescript
-      - less
-      - postcss
-      - postcss-load-config
-      - pug
-      - sass
-      - stylus
-      - sugarss
-    dev: false
-
   /svelte-check@3.6.7(@babel/core@7.23.7)(svelte@5.0.0-next.78):
     resolution: {integrity: sha512-tKEjemK9FYCySAseCaIt+ps5o0XRvLC7ECjyJXXtO7vOQhR9E6JavgoUbGP1PCulD2OTcB/fi9RjV3nyF1AROw==}
     hasBin: true
@@ -9918,6 +9891,33 @@ packages:
       - stylus
       - sugarss
     dev: true
+
+  /svelte-check@3.6.8(@babel/core@7.23.7)(postcss@8.4.35)(svelte@5.0.0-next.73):
+    resolution: {integrity: sha512-rhXU7YCDtL+lq2gCqfJDXKTxJfSsCgcd08d7VWBFxTw6IWIbMWSaASbAOD3N0VV9TYSSLUqEBiratLd8WxAJJA==}
+    hasBin: true
+    peerDependencies:
+      svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.25
+      chokidar: 3.6.0
+      fast-glob: 3.3.2
+      import-fresh: 3.3.0
+      picocolors: 1.0.0
+      sade: 1.8.1
+      svelte: 5.0.0-next.73
+      svelte-preprocess: 5.1.3(@babel/core@7.23.7)(postcss@8.4.35)(svelte@5.0.0-next.73)(typescript@5.3.3)
+      typescript: 5.3.3
+    transitivePeerDependencies:
+      - '@babel/core'
+      - coffeescript
+      - less
+      - postcss
+      - postcss-load-config
+      - pug
+      - sass
+      - stylus
+      - sugarss
+    dev: false
 
   /svelte-eslint-parser@0.33.1(svelte@5.0.0-next.73):
     resolution: {integrity: sha512-vo7xPGTlKBGdLH8T5L64FipvTrqv3OQRx9d2z5X05KKZDlF4rQk8KViZO4flKERY+5BiVdOh7zZ7JGJWo5P0uA==}
