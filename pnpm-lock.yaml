@@ -43,7 +43,7 @@ importers:
         version: 11.1.2(size-limit@11.1.2)
       '@tanstack/config':
         specifier: ^0.6.0
-        version: 0.6.0(@types/node@20.11.30)(esbuild@0.20.1)(rollup@4.13.0)(typescript@5.4.3)(vite@5.2.7)
+        version: 0.6.0(@types/node@20.11.30)(esbuild@0.20.2)(rollup@4.13.0)(typescript@5.4.3)(vite@5.2.7)
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.2(vitest@1.4.0)
@@ -5227,7 +5227,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/config@0.6.0(@types/node@20.11.30)(esbuild@0.20.1)(rollup@4.13.0)(typescript@5.4.3)(vite@5.2.7):
+  /@tanstack/config@0.6.0(@types/node@20.11.30)(esbuild@0.20.2)(rollup@4.13.0)(typescript@5.4.3)(vite@5.2.7):
     resolution: {integrity: sha512-ndVPsyXWZFz3RcpRF7q5L4Ol5zY+m1H2lAiufw+J4BrV09042PETU2OZAREYz88ZcLtu6p+LZAHKltmqrL8gDg==}
     engines: {node: '>=18'}
     hasBin: true
@@ -5237,7 +5237,7 @@ packages:
       chalk: 5.3.0
       commander: 12.0.0
       current-git-branch: 1.1.0
-      esbuild-register: 3.5.0(esbuild@0.20.1)
+      esbuild-register: 3.5.0(esbuild@0.20.2)
       git-log-parser: 1.2.0
       interpret: 3.1.1
       jsonfile: 6.1.0
@@ -6828,13 +6828,13 @@ packages:
   /es6-promise@3.3.1:
     resolution: {integrity: sha512-SOp9Phqvqn7jtEUxPWdWfWoLmyt2VaJ6MpvP9Comy1MceMXqE6bxvaTu4iaxpYYPzhny28Lc+M87/c2cPK6lDg==}
 
-  /esbuild-register@3.5.0(esbuild@0.20.1):
+  /esbuild-register@3.5.0(esbuild@0.20.2):
     resolution: {integrity: sha512-+4G/XmakeBAsvJuDugJvtyF1x+XJT4FMocynNpxrvEBViirpfUn2PgNpCHedfWhF4WokNsO/OvMKrmJOIJsI5A==}
     peerDependencies:
       esbuild: '>=0.12 <1'
     dependencies:
       debug: 4.3.4
-      esbuild: 0.20.1
+      esbuild: 0.20.2
     transitivePeerDependencies:
       - supports-color
     dev: true
