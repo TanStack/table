@@ -4,4 +4,4 @@ title: Rows Guide
 
 ## API
 
-[Row API](../api/core/row)
+[Row API](../../api/core/row)

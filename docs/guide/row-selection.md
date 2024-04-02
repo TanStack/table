@@ -6,13 +6,13 @@ title: Row Selection Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [React row-selection](../framework/react/examples/row-selection)
+- [React row-selection](../../framework/react/examples/row-selection)
 - [Vue row-selection](../examples/vue/row-selection)
-- [React expanding](../framework/react/examples/expanding)
+- [React expanding](../../framework/react/examples/expanding)
 
 ## API
 
-[Row Selection API](../api/features/row-selection)
+[Row Selection API](../../api/features/row-selection)
 
 ## Row Selection Guide
 

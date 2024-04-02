@@ -6,11 +6,11 @@ title: Fuzzy Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../framework/react/examples/filters)
+- [filters](../../framework/react/examples/filters)
 
 ## API
 
-[Filters API](../api/features/filters)
+[Filters API](../../api/features/filters)
 
 ## Fuzzy Filtering Guide
 

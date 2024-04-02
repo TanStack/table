@@ -4,4 +4,4 @@ title: Cells Guide
 
 ## API
 
-[Cell API](../api/core/cell)
+[Cell API](../../api/core/cell)

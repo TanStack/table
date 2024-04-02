@@ -4,7 +4,7 @@ title: Table Instance Guide
 
 ## API
 
-[Table API](../api/core/table)
+[Table API](../../api/core/table)
 
 ## Table Instance Guide
 
@@ -122,7 +122,7 @@ There are dozens of table APIs created by each feature to help you either read o
 
 API reference docs for the core table instance and all other feature APIs can be found throughout the API docs.
 
-For example, you can find the core table instance API docs here: [Table API](../api/core/table#table-api)
+For example, you can find the core table instance API docs here: [Table API](../../api/core/table#table-api)
 
 ### Table Row Models
 

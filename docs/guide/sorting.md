@@ -6,12 +6,12 @@ title: Sorting Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [sorting](../framework/react/examples/sorting)
-- [filters](../framework/react/examples/filters)
+- [sorting](../../framework/react/examples/sorting)
+- [filters](../../framework/react/examples/filters)
 
 ## API
 
-[Sorting API](../api/features/sorting)
+[Sorting API](../../api/features/sorting)
 
 ## Sorting Guide
 

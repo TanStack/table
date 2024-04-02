@@ -6,17 +6,17 @@ title: Pagination Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [pagination](../framework/react/examples/pagination)
-- [pagination-controlled (React Query)](../framework/react/examples/pagination-controlled)
-- [editable-data](../framework/react/examples/editable-data)
-- [expanding](../framework/react/examples/expanding)
-- [filters](../framework/react/examples/filters)
-- [fully-controlled](../framework/react/examples/fully-controlled)
-- [row-selection](../framework/react/examples/row-selection)
+- [pagination](../../framework/react/examples/pagination)
+- [pagination-controlled (React Query)](../../framework/react/examples/pagination-controlled)
+- [editable-data](../../framework/react/examples/editable-data)
+- [expanding](../../framework/react/examples/expanding)
+- [filters](../../framework/react/examples/filters)
+- [fully-controlled](../../framework/react/examples/fully-controlled)
+- [row-selection](../../framework/react/examples/row-selection)
 
 ## API
 
-[Pagination API](../api/features/pagination)
+[Pagination API](../../api/features/pagination)
 
 ## Pagination Guide
 
@@ -30,7 +30,7 @@ Using client-side pagination means that the `data` that you fetch will contain *
 
 Client-side pagination is usually the simplest way to implement pagination when using TanStack Table, but it might not be practical for very large datasets.
 
-However, a lot of people underestimate just how much data can be handled client-side. If your table will only ever have a few thousand rows or less, client-side pagination can still be a viable option. TanStack Table is designed to scale up to 10s of thousands of rows with decent performance for pagination, filtering, sorting, and grouping. The [official pagination example](../framework/react/examples/pagination) loads 100,000 rows and still performs well, albeit with only handful of columns.
+However, a lot of people underestimate just how much data can be handled client-side. If your table will only ever have a few thousand rows or less, client-side pagination can still be a viable option. TanStack Table is designed to scale up to 10s of thousands of rows with decent performance for pagination, filtering, sorting, and grouping. The [official pagination example](../../framework/react/examples/pagination) loads 100,000 rows and still performs well, albeit with only handful of columns.
 
 Every use-case is different and will depend on the complexity of the table, how many columns you have, how large every piece of data is, etc. The main bottlenecks to pay attention to are:
 

@@ -4,7 +4,7 @@ title: Columns Guide
 
 ## API
 
-[Table API](../api/core/table)
+[Table API](../../api/core/table)
 
 ## Column Definitions Guide
 
@@ -242,7 +242,7 @@ columnHelper.accessor('firstName', {
 
 ## Aggregated Cell Formatting
 
-For more info on aggregated cells, see [grouping](../guide/grouping).
+For more info on aggregated cells, see [grouping](../grouping).
 
 ## Header & Footer Formatting
 
