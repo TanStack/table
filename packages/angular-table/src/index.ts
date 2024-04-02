@@ -55,7 +55,7 @@ export class FlexRenderDirective implements OnInit {
     }
   }
 
-  renderComponent() {
+  private renderComponent() {
     this.vcr.clear()
     if (!this._flexRender) {
       return null

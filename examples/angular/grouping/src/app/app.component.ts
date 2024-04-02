@@ -1,20 +1,26 @@
-import {CommonModule} from '@angular/common'
-import {ChangeDetectionStrategy, Component, computed, effect, signal} from '@angular/core'
+import { CommonModule } from '@angular/common'
 import {
-  createAngularTable,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  signal,
+} from '@angular/core'
+import {
   ExpandedState,
   FlexRenderDirective,
+  GroupingState,
+  PaginationState,
+  Updater,
+  createAngularTable,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
   getPaginationRowModel,
-  GroupingState,
-  PaginationState,
-  Updater,
 } from '@tanstack/angular-table'
-import {columns} from './columns'
-import {mockData} from './mockdata'
+import { columns } from './columns'
+import { mockData } from './mockdata'
 
 @Component({
   selector: 'app-root',
@@ -65,28 +71,28 @@ export class AppComponent {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-  }));
+  }))
 
   constructor() {
     effect(() => {
       // run on every state/option change
-      this.table().getPageOptions();
-    });
+      this.table().getPageOptions()
+    })
 
     // more granular state, run on every "getPageOptions" change (e.g. only when pagination state change)
     effect(() => {
       this.table.getPageOptions()
-    });
+    })
 
     // granular state is still possible using computed manually, but it must be done manually
-    const pageOptions = computed(() => this.table().getPageOptions());
+    const pageOptions = computed(() => this.table().getPageOptions())
     effect(() => {
       pageOptions()
-    });
+    })
 
     // these two are lines does the same thing, they access to the same table instance property.
-    this.table().setPageSize(...)
-    this.table.setPageSize() // this one is evaluated lazily with proxy
+    this.table().setPageSize(10)
+    this.table.setPageSize(10) // this one is evaluated lazily with proxy
   }
 
   onPageInputChange(event: any): void {
