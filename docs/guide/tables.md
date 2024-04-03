@@ -71,7 +71,7 @@ const data = ref<User[]>([])
 
 #### Defining Columns
 
-Column definitions are covered in detail in the next section in the [Column Def Guide](./guide/column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
+Column definitions are covered in detail in the next section in the [Column Def Guide](../column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
 
 ```ts
 const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
@@ -79,7 +79,7 @@ const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
 const columnHelper = createColumnHelper<User>() //Pass User type as the generic TData type
 ```
 
-The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](./guide/column-defs#creating-accessor-columns) for more info.
+The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../column-defs#creating-accessor-columns) for more info.
 
 #### Creating the Table Instance
 

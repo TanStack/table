@@ -2,7 +2,7 @@
 title: Header APIs
 ---
 
-These are **core** options and API properties for all headers. More options and API properties may be available for other [table features](../../guide/features).
+These are **core** options and API properties for all headers. More options and API properties may be available for other [table features](../../../guide/features).
 
 ## Header API
 
@@ -38,7 +38,7 @@ The depth of the header, zero-indexed based.
 column: Column<TData>
 ```
 
-The header's associated [Column](./column) object
+The header's associated [Column](../column) object
 
 ### `headerGroup`
 
@@ -46,7 +46,7 @@ The header's associated [Column](./column) object
 headerGroup: HeaderGroup<TData>
 ```
 
-The header's associated [HeaderGroup](./header-group) object
+The header's associated [HeaderGroup](../header-group) object
 
 ### `subHeaders`
 
