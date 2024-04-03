@@ -13,7 +13,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[TanStack Virtual Virtualizer API](../../../../virtual/v3/docs/api/virtualizer)
+[TanStack Virtual Virtualizer API](../../../../../virtual/v3/docs/api/virtualizer)
 
 ## Virtualization Guide
 
