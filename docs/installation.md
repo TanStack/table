@@ -4,13 +4,9 @@ title: Installation
 
 Before we dig in to the API, let's get you set up!
 
-Install your table adapter as a dependency using your favorite npm package manager
+Install your table adapter as a dependency using your favorite npm package manager.
 
-## Qwik Table
-
-```bash
-npm install @tanstack/qwik-table
-```
+_Only install ONE of the following packages:_
 
 ## React Table
 
@@ -18,11 +14,23 @@ npm install @tanstack/qwik-table
 npm install @tanstack/react-table
 ```
 
+The `@tanstack/react-table` package works with React 16.8, React 17, React 18, and React 19.
+
+## Vue Table
+
+```bash
+npm install @tanstack/vue-table
+```
+
+The `@tanstack/vue-table` package works with Vue 3.
+
 ## Solid Table
 
 ```bash
 npm install @tanstack/solid-table
 ```
+
+The `@tanstack/solid-table` package works with Solid-JS 1
 
 ## Svelte Table
 
@@ -30,11 +38,25 @@ npm install @tanstack/solid-table
 npm install @tanstack/svelte-table
 ```
 
-## Vue Table
+The `@tanstack/svelte-table` package works with Svelte 3 and Svelte 4.
+
+> NOTE: There is not a built-in Svelte 5 adapter yet, but you can still use TanStack Table with Svelte 5 by installing the `@tanstack/table-core` package and using a custom adapter from the community. See this [PR](https://github.com/TanStack/table/pull/5403) for inspiration.
+
+## Qwik Table
 
 ```bash
-npm install @tanstack/vue-table
+npm install @tanstack/qwik-table
 ```
+
+The `@tanstack/qwik-table` package works with Qwik 1. 
+
+> NOTE: There will be a "breaking change" release in the near future to support Qwik 2. This will be released as a minor version bump, but will be documented. Qwik 2 itself will have no breaking changes, but its name on the npm registry will change, and require different peer dependencies.
+
+## Angular Table
+
+(Coming Soon) - Help with this adapter is needed! See this [PR](https://github.com/TanStack/table/pull/5432) if you want to help, or use as inspiration for your own adapter.
+
+The official TanStack Table Angular adapter will most likely only work with Angular 17+ and use a "signals" implementation for state management.
 
 ## Table Core (no framework)
 
