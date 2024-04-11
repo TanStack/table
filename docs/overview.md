@@ -26,14 +26,14 @@ Since TanStack Table is headless and runs on a vanilla JavaScript core, it is ag
 TanStack Table will help you build just about any type of table you can imagine. It has built-in state and APIs for the following features:
 
 - [Column Faceting](../guide/column-faceting) - List unique lists of column values or min/max values for a column
-- [Column Filtering](../guide/column-filtering) - Filter rows based based on search values for a column
+- [Column Filtering](../guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](../guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](../guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](../guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Sizing](../guide/column-sizing) - Dynamically change the size of columns (column resizing handles)
 - [Column Visibility](../guide/column-visibility) - Hide/show columns
 - [Global Faceting](../guide/global-faceting) - List unique lists of column values or min/max values for the entire table
-- [Global Filtering](../guide/global-filtering) - Filter rows based based on search values for the entire table
+- [Global Filtering](../guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](../guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](../guide/pagination) - Paginate rows
 - [Row Pinning](../guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
