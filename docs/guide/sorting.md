@@ -284,16 +284,20 @@ Any undefined or nullish values will be sorted to the beginning or end of the li
 
 In not specified, the default value for `sortUndefined` is `1`, and undefined values will be sorted with lower priority (descending), if ascending, undefined will appear on the end of the list.
 
+- `'first'` - Undefined values will be pushed to the beginning of the list
+- `'last'` - Undefined values will be pushed to the end of the list
 - `false` - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
 - `-1` - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1` - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
+
+> NOTE: `'first'` and `'last'` options are new in v8.16.0
 
 ```jsx
 const columns = [
   {
     header: () => 'Rank',
     accessorKey: 'rank',
-    sortUndefined: -1, // 1 | -1 | false
+    sortUndefined: -1, // 'first' | 'last' | 1 | -1 | false
   },
 ]
 ```
