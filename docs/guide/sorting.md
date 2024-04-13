@@ -278,9 +278,9 @@ const columns = [
 ]
 ```
 
-#### Sort Undefined or Nullish Values
+#### Sort Undefined Values
 
-Any undefined or nullish values will be sorted to the beginning or end of the list based on the `sortUndefined` column option or table option. You can customize this behavior for your specific use-case.
+Any undefined values will be sorted to the beginning or end of the list based on the `sortUndefined` column option or table option. You can customize this behavior for your specific use-case.
 
 In not specified, the default value for `sortUndefined` is `1`, and undefined values will be sorted with lower priority (descending), if ascending, undefined will appear on the end of the list.
 
