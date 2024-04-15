@@ -8,9 +8,13 @@ import {
 import { createComputed, mergeProps, createComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
+import type { JSX } from 'solid-js'
 export * from '@tanstack/table-core'
 
-export function flexRender<TProps extends {}>(Comp: any, props: TProps) {
+export function flexRender<TProps>(
+  Comp: ((props: TProps) => JSX.Element) | JSX.Element | undefined,
+  props: TProps
+): JSX.Element {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
