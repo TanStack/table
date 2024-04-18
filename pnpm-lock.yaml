@@ -1279,7 +1279,7 @@ importers:
   examples/solid/basic:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1298,7 +1298,7 @@ importers:
   examples/solid/bootstrap:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       bootstrap:
         specifier: ^5.3.3
@@ -1326,7 +1326,7 @@ importers:
   examples/solid/column-groups:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1345,7 +1345,7 @@ importers:
   examples/solid/column-ordering:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1367,7 +1367,7 @@ importers:
   examples/solid/column-visibility:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1389,7 +1389,7 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3(solid-js@1.8.16)
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
@@ -1411,7 +1411,7 @@ importers:
   examples/solid/sorting:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^8.16.0
+        specifier: ^8.16.1
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.8.16
