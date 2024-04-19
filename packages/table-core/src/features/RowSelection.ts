@@ -436,7 +436,7 @@ export const RowSelection: TableFeature = {
       ).length
       return (
         totalSelected > 0 &&
-        totalSelected < table.getFilteredRowModel().flatRows.length
+        totalSelected <= table.getFilteredRowModel().flatRows.length
       )
     }
 
