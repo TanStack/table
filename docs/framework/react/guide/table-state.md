@@ -183,7 +183,7 @@ const table = useReactTable({
     const newSortingValue = updater instanceof Function ? updater(sorting) : updater
     //do something with the new sorting value
     //...
-    setSorting(updater) //normal state update
+    setSorting(newSortingValue) //normal state update
   }
 })
 ```
