@@ -87,7 +87,7 @@ const table = useReactTable({
 
 ### Pagination State
 
-Whether or not you are using client-side or manual server-side pagination, you can use the built-in `pagination` state state and APIs.
+Whether or not you are using client-side or manual server-side pagination, you can use the built-in `pagination` state and APIs.
 
 The `pagination` state is an object that contains the following properties:
 
@@ -170,14 +170,14 @@ There are several pagination table instance APIs that are useful for hooking up 
 - `nextPage`: Useful for going to the next page. (Button click handler)
 - `firstPage`: Useful for going to the first page. (Button click handler)
 - `lastPage`: Useful for going to the last page. (Button click handler)
-- `setPageIndex`: uUseful for a "go to page" input.
+- `setPageIndex`: Useful for a "go to page" input.
 - `resetPageIndex`: Useful for resetting the table state to the original page index.
-- `setPageSize`: Useful for a "page size" input/select
+- `setPageSize`: Useful for a "page size" input/select.
 - `resetPageSize`: Useful for resetting the table state to the original page size.
 - `setPagination`: Useful for setting all of the pagination state at once.
 - `resetPagination`: Useful for resetting the table state to the original pagination state.
 
-> **Note**: Some of these APIs are new in `v8.13.0`
+> **Note**: Some of these APIs are new in `v8.13.0`.
 
 ```jsx
 <Button
@@ -204,7 +204,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 >
   {'>>'}
 </Button>
- <select
+<select
   value={table.getState().pagination.pageSize}
   onChange={e => {
     table.setPageSize(Number(e.target.value))
