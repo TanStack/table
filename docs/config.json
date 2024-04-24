@@ -382,7 +382,19 @@
             },
             {
               "to": "framework/react/examples/column-groups",
-              "label": "Column Groups"
+              "label": "Header Groups"
+            },
+            {
+              "to": "framework/react/examples/filters",
+              "label": "Column Filters"
+            },
+            {
+              "to": "framework/react/examples/filters-faceted",
+              "label": "Column Filters (Faceted)"
+            },
+            {
+              "to": "framework/react/examples/filters-fuzzy",
+              "label": "Fuzzy Search Filters"
             },
             {
               "to": "framework/react/examples/column-ordering",
@@ -423,10 +435,6 @@
             {
               "to": "framework/react/examples/sub-components",
               "label": "Sub Components"
-            },
-            {
-              "to": "framework/react/examples/filters",
-              "label": "Filters"
             },
             {
               "to": "framework/react/examples/fully-controlled",

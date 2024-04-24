@@ -6,7 +6,7 @@ title: Global Faceting Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../../framework/react/examples/filters) (includes faceting)
+- [filters-faceted](../../framework/react/examples/filters)
 
 ## API
 
