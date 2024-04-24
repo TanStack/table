@@ -6,7 +6,7 @@ title: Global Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../../framework/react/examples/filters) (includes faceting)
+- [filters-fuzzy](../../framework/react/examples/filters)
 
 ## API
 

@@ -7,22 +7,64 @@ import {
   Column,
   ColumnDef,
   ColumnFiltersState,
-  RowData,
+  FilterFn,
+  SortingFn,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  sortingFns,
   useReactTable,
 } from '@tanstack/react-table'
+
+// A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
+import {
+  RankingInfo,
+  rankItem,
+  compareItems,
+} from '@tanstack/match-sorter-utils'
 
 import { makeData, Person } from './makeData'
 
 declare module '@tanstack/react-table' {
-  //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: 'text' | 'range' | 'select'
+  //add fuzzy filter to the filterFns
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>
   }
+  interface FilterMeta {
+    itemRank: RankingInfo
+  }
+}
+
+// Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  })
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
+
+// Define a custom fuzzy sort function that will sort by rank if the row has ranking information
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0
+
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]?.itemRank!,
+      rowB.columnFiltersMeta[columnId]?.itemRank!
+    )
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
 function App() {
@@ -31,52 +73,34 @@ function App() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+  const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo<ColumnDef<Person, any>[]>(
     () => [
       {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        accessorKey: 'id',
+        filterFn: 'equalsString', //note: normal non-fuzzy filter column - exact match required
       },
       {
-        accessorFn: row => row.lastName,
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
+        filterFn: 'includesStringSensitive', //note: normal non-fuzzy filter column
+      },
+      {
+        accessorFn: row => row.lastName, //note: normal non-fuzzy filter column - case sensitive
         id: 'lastName',
         cell: info => info.getValue(),
         header: () => <span>Last Name</span>,
+        filterFn: 'includesString', //note: normal non-fuzzy filter column - case insensitive
       },
       {
         accessorFn: row => `${row.firstName} ${row.lastName}`,
         id: 'fullName',
         header: 'Full Name',
         cell: info => info.getValue(),
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        meta: {
-          filterVariant: 'select',
-        },
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        meta: {
-          filterVariant: 'range',
-        },
+        filterFn: 'fuzzy', //using our custom fuzzy filter function
+        // filterFn: fuzzyFilter, //or just define with the function
+        sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
       },
     ],
     []
@@ -88,11 +112,16 @@ function App() {
   const table = useReactTable({
     data,
     columns,
-    filterFns: {},
+    filterFns: {
+      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+    },
     state: {
       columnFilters,
+      globalFilter,
     },
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'fuzzy', //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
@@ -102,8 +131,26 @@ function App() {
     debugColumns: false,
   })
 
+  //apply the fuzzy sort if the fullName column is being filtered
+  React.useEffect(() => {
+    if (table.getState().columnFilters[0]?.id === 'fullName') {
+      if (table.getState().sorting[0]?.id !== 'fullName') {
+        table.setSorting([{ id: 'fullName', desc: false }])
+      }
+    }
+  }, [table.getState().columnFilters[0]?.id])
+
   return (
     <div className="p-2">
+      <div>
+        <DebouncedInput
+          value={globalFilter ?? ''}
+          onChange={value => setGlobalFilter(String(value))}
+          className="p-2 font-lg shadow border border-block"
+          placeholder="Search all columns..."
+        />
+      </div>
+      <div className="h-2" />
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
@@ -233,7 +280,10 @@ function App() {
       </div>
       <pre>
         {JSON.stringify(
-          { columnFilters: table.getState().columnFilters },
+          {
+            columnFilters: table.getState().columnFilters,
+            globalFilter: table.getState().globalFilter,
+          },
           null,
           2
         )}
@@ -244,53 +294,15 @@ function App() {
 
 function Filter({ column }: { column: Column<any, unknown> }) {
   const columnFilterValue = column.getFilterValue()
-  const { filterVariant } = column.columnDef.meta ?? {}
 
-  return filterVariant === 'range' ? (
-    <div>
-      <div className="flex space-x-2">
-        {/* See faceted column filters example for min max values functionality */}
-        <DebouncedInput
-          type="number"
-          value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          onChange={value =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-          }
-          placeholder={`Min`}
-          className="w-24 border shadow rounded"
-        />
-        <DebouncedInput
-          type="number"
-          value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          onChange={value =>
-            column.setFilterValue((old: [number, number]) => [old?.[0], value])
-          }
-          placeholder={`Max`}
-          className="w-24 border shadow rounded"
-        />
-      </div>
-      <div className="h-1" />
-    </div>
-  ) : filterVariant === 'select' ? (
-    <select
-      onChange={e => column.setFilterValue(e.target.value)}
-      value={columnFilterValue?.toString()}
-    >
-      {/* See faceted column filters example for dynamic select options */}
-      <option value="">All</option>
-      <option value="complicated">complicated</option>
-      <option value="relationship">relationship</option>
-      <option value="single">single</option>
-    </select>
-  ) : (
+  return (
     <DebouncedInput
-      className="w-36 border shadow rounded"
-      onChange={value => column.setFilterValue(value)}
-      placeholder={`Search...`}
       type="text"
       value={(columnFilterValue ?? '') as string}
+      onChange={value => column.setFilterValue(value)}
+      placeholder={`Search...`}
+      className="w-36 border shadow rounded"
     />
-    // See faceted column filters example for datalist search suggestions
   )
 }
 

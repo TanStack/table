@@ -678,6 +678,80 @@ importers:
         specifier: ^5.2.6
         version: 5.2.6(@types/node@20.11.30)
 
+  examples/react/filters-faceted:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/match-sorter-utils':
+        specifier: ^8.15.1
+        version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-table':
+        specifier: ^8.16.0
+        version: link:../../../packages/react-table
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.5
+        version: 5.0.5(rollup@4.13.0)
+      '@types/react':
+        specifier: ^18.2.70
+        version: 18.2.70
+      '@types/react-dom':
+        specifier: ^18.2.22
+        version: 18.2.22
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.2.1(vite@5.2.6)
+      typescript:
+        specifier: 5.4.3
+        version: 5.4.3
+      vite:
+        specifier: ^5.2.6
+        version: 5.2.6(@types/node@20.11.30)
+
+  examples/react/filters-fuzzy:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/match-sorter-utils':
+        specifier: ^8.15.1
+        version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-table':
+        specifier: ^8.16.0
+        version: link:../../../packages/react-table
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.5
+        version: 5.0.5(rollup@4.13.0)
+      '@types/react':
+        specifier: ^18.2.70
+        version: 18.2.70
+      '@types/react-dom':
+        specifier: ^18.2.22
+        version: 18.2.22
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.2.1(vite@5.2.6)
+      typescript:
+        specifier: 5.4.3
+        version: 5.4.3
+      vite:
+        specifier: ^5.2.6
+        version: 5.2.6(@types/node@20.11.30)
+
   examples/react/full-width-resizable-table:
     dependencies:
       '@faker-js/faker':

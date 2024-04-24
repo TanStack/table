@@ -7,6 +7,8 @@ title: Column Filtering Guide
 Want to skip to the implementation? Check out these examples:
 
 - [filters](../../framework/react/examples/filters) (includes faceting)
+- [filters-faceted](../../framework/react/examples/filters-faceted)
+- [filters-fuzzy](../../framework/react/examples/filters-fuzzy)
 - [editable-data](../../framework/react/examples/editable-data)
 - [expanding](../../framework/react/examples/expanding)
 - [grouping](../../framework/react/examples/grouping)

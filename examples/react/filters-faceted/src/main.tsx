@@ -10,6 +10,9 @@ import {
   RowData,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -45,12 +48,6 @@ function App() {
         header: () => <span>Last Name</span>,
       },
       {
-        accessorFn: row => `${row.firstName} ${row.lastName}`,
-        id: 'fullName',
-        header: 'Full Name',
-        cell: info => info.getValue(),
-      },
-      {
         accessorKey: 'age',
         header: () => 'Age',
         meta: {
@@ -83,20 +80,22 @@ function App() {
   )
 
   const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
-  const refreshData = () => setData(_old => makeData(50_000)) //stress test
+  const refreshData = () => setData(_old => makeData(100_000)) //stress test
 
   const table = useReactTable({
     data,
     columns,
-    filterFns: {},
     state: {
       columnFilters,
     },
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    getFilteredRowModel: getFilteredRowModel(), //client-side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(), // client-side faceting
+    getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
+    getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
@@ -243,29 +242,51 @@ function App() {
 }
 
 function Filter({ column }: { column: Column<any, unknown> }) {
-  const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
+
+  const columnFilterValue = column.getFilterValue()
+
+  const sortedUniqueValues = React.useMemo(
+    () =>
+      filterVariant === 'range'
+        ? []
+        : Array.from(column.getFacetedUniqueValues().keys())
+            .sort()
+            .slice(0, 5000),
+    [column.getFacetedUniqueValues(), filterVariant]
+  )
 
   return filterVariant === 'range' ? (
     <div>
       <div className="flex space-x-2">
-        {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
           type="number"
+          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
+          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[0] ?? ''}
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
-          placeholder={`Min`}
+          placeholder={`Min ${
+            column.getFacetedMinMaxValues()?.[0] !== undefined
+              ? `(${column.getFacetedMinMaxValues()?.[0]})`
+              : ''
+          }`}
           className="w-24 border shadow rounded"
         />
         <DebouncedInput
           type="number"
+          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
+          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[1] ?? ''}
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
-          placeholder={`Max`}
+          placeholder={`Max ${
+            column.getFacetedMinMaxValues()?.[1]
+              ? `(${column.getFacetedMinMaxValues()?.[1]})`
+              : ''
+          }`}
           className="w-24 border shadow rounded"
         />
       </div>
@@ -276,21 +297,32 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       onChange={e => column.setFilterValue(e.target.value)}
       value={columnFilterValue?.toString()}
     >
-      {/* See faceted column filters example for dynamic select options */}
       <option value="">All</option>
-      <option value="complicated">complicated</option>
-      <option value="relationship">relationship</option>
-      <option value="single">single</option>
+      {sortedUniqueValues.map(value => (
+        //dynamically generated select options from faceted values feature
+        <option value={value} key={value}>
+          {value}
+        </option>
+      ))}
     </select>
   ) : (
-    <DebouncedInput
-      className="w-36 border shadow rounded"
-      onChange={value => column.setFilterValue(value)}
-      placeholder={`Search...`}
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-    />
-    // See faceted column filters example for datalist search suggestions
+    <>
+      {/* Autocomplete suggestions from faceted values feature */}
+      <datalist id={column.id + 'list'}>
+        {sortedUniqueValues.map((value: any) => (
+          <option value={value} key={value} />
+        ))}
+      </datalist>
+      <DebouncedInput
+        type="text"
+        value={(columnFilterValue ?? '') as string}
+        onChange={value => column.setFilterValue(value)}
+        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
+        className="w-36 border shadow rounded"
+        list={column.id + 'list'}
+      />
+      <div className="h-1" />
+    </>
   )
 }
 
