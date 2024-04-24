@@ -333,5 +333,5 @@ There are a lot of Column and Table APIs that you can use to interact with the c
 - `column.getIsFiltered` - Useful for displaying a visual indicator that a column is currently being filtered
 - `column.getFilterIndex` - Useful for displaying in what order the current filter is being applied
 
-- `column.getAutoFilterFn` - 
+- `column.getAutoFilterFn` - Used internally to find the default filter function for a column if none is specified.
 - `column.getFilterFn` - Useful for displaying which filter mode or function is currently being used
