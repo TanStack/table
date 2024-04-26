@@ -9,11 +9,11 @@
     "preview": "serve dist"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.5.1",
+    "@builder.io/qwik": "^1.5.2",
     "@faker-js/faker": "^8.4.1",
-    "serve": "^14.2.1",
-    "typescript": "5.4.3",
-    "vite": "^5.2.6"
+    "serve": "^14.2.3",
+    "typescript": "5.4.5",
+    "vite": "^5.2.10"
   },
   "dependencies": {
     "@tanstack/qwik-table": "^8.16.0"
