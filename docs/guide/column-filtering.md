@@ -31,7 +31,7 @@ TanStack table supports both both client-side and manual server-side filtering. 
 
 If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc. 
 
-However, as also discussed in the [Pagination Guide](../pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
+However, as also discussed in the [Pagination Guide](../pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
 
 > TanStack Table can handle thousands of client-side rows with good performance. Don't rule out client-side filtering, pagination, sorting, etc. without some thought first.
 
@@ -59,7 +59,7 @@ const table = useReactTable({
 })
 ```
 
-> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When is `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
+> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
 
 ### Client-Side Filtering
 
@@ -217,8 +217,8 @@ const table = useReactTable({
   data,
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
-  filterFns: { //add a custom sorting function
-    myCustomFilterFn: (row, columnId, filterValue) => { //defined inline here
+  filterFns: { // add a custom global filter function
+    myCustomFilterFn: (row, columnId, filterValue) => { // defined inline here
       return // true or false based on your custom logic
     },
     startsWith: startsWithFilterFn, // defined elsewhere
