@@ -11,16 +11,16 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@tanstack/react-table": "^8.16.0",
-    "@tanstack/react-virtual": "^3.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@tanstack/react-virtual": "^3.4.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.5",
-    "@types/react": "^18.2.70",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "typescript": "5.4.3",
-    "vite": "^5.2.6"
+    "typescript": "5.4.5",
+    "vite": "^5.2.10"
   }
 }

@@ -9,13 +9,13 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@tanstack/vue-table": "^8.16.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.25"
   },
   "devDependencies": {
-    "@types/node": "^20.11.30",
+    "@types/node": "^20.12.7",
     "@vitejs/plugin-vue": "^5.0.4",
-    "typescript": "5.4.3",
-    "vite": "^5.2.6",
-    "vue-tsc": "^2.0.7"
+    "typescript": "5.4.5",
+    "vite": "^5.2.10",
+    "vue-tsc": "^2.0.14"
   }
 }

@@ -54,8 +54,8 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^18.2.70",
-    "react": "^18.2.0"
+    "@types/react": "^18.3.0",
+    "react": "^18.3.0"
   },
   "peerDependencies": {
     "react": ">=16.8",
