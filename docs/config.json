@@ -107,12 +107,16 @@
           "to": "guide/rows"
         },
         {
-          "label": "Headers",
-          "to": "guide/headers"
-        },
-        {
           "label": "Cells",
           "to": "guide/cells"
+        },
+        {
+          "label": "Header Groups",
+          "to": "guide/headers-groups"
+        },
+        {
+          "label": "Headers",
+          "to": "guide/headers"
         }
       ],
       "frameworks": [
