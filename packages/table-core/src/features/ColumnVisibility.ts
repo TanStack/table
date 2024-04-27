@@ -205,22 +205,17 @@ export const ColumnVisibility: TableFeature = {
     row: Row<TData>,
     table: Table<TData>
   ): void => {
-    row._getAllVisibleCells = memo(
-      () => [row.getAllCells(), table.getState().columnVisibility],
-      cells => {
-        return cells.filter(cell => cell.column.getIsVisible())
-      },
-      getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells')
-    )
-    row.getVisibleCells = memo(
-      () => [
-        row.getLeftVisibleCells(),
-        row.getCenterVisibleCells(),
-        row.getRightVisibleCells(),
-      ],
-      (left, center, right) => [...left, ...center, ...right],
-      getMemoOptions(table.options, 'debugRows', 'getVisibleCells')
-    )
+    row._getAllVisibleCells = function () {
+      const cells = this.getAllCells()
+      return cells.filter(cell => cell.column.getIsVisible())
+    }
+    row.getVisibleCells = function () {
+      return [
+        ...this.getLeftVisibleCells(),
+        ...this.getCenterVisibleCells(),
+        ...this.getRightVisibleCells(),
+      ]
+    }
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
