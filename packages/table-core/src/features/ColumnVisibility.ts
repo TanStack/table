@@ -205,15 +205,15 @@ export const ColumnVisibility: TableFeature = {
     row: Row<TData>,
     table: Table<TData>
   ): void => {
-    row._getAllVisibleCells = function () {
-      const cells = this.getAllCells()
+    row._getAllVisibleCells = () => {
+      const cells = row.getAllCells()
       return cells.filter(cell => cell.column.getIsVisible())
     }
-    row.getVisibleCells = function () {
+    row.getVisibleCells = () => {
       return [
-        ...this.getLeftVisibleCells(),
-        ...this.getCenterVisibleCells(),
-        ...this.getRightVisibleCells(),
+        ...row.getLeftVisibleCells(),
+        ...row.getCenterVisibleCells(),
+        ...row.getRightVisibleCells(),
       ]
     }
   },

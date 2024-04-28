@@ -101,7 +101,7 @@ export const createRow = <TData extends RowData>(
   subRows?: Row<TData>[],
   parentId?: string
 ): Row<TData> => {
-  const row: CoreRow<TData> = {
+  let row: CoreRow<TData> = {
     id,
     index: rowIndex,
     original,
@@ -109,9 +109,9 @@ export const createRow = <TData extends RowData>(
     parentId,
     _valuesCache: {},
     _uniqueValuesCache: {},
-    getValue(columnId) {
-      if (this._valuesCache.hasOwnProperty(columnId)) {
-        return this._valuesCache[columnId]
+    getValue: columnId => {
+      if (row._valuesCache.hasOwnProperty(columnId)) {
+        return row._valuesCache[columnId]
       }
 
       const column = table.getColumn(columnId)
@@ -120,16 +120,16 @@ export const createRow = <TData extends RowData>(
         return undefined
       }
 
-      this._valuesCache[columnId] = column.accessorFn(
-        this.original as TData,
+      row._valuesCache[columnId] = column.accessorFn(
+        row.original as TData,
         rowIndex
       )
 
-      return this._valuesCache[columnId] as any
+      return row._valuesCache[columnId] as any
     },
-    getUniqueValues(columnId) {
-      if (this._uniqueValuesCache.hasOwnProperty(columnId)) {
-        return this._uniqueValuesCache[columnId]
+    getUniqueValues: columnId => {
+      if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
+        return row._uniqueValuesCache[columnId]
       }
 
       const column = table.getColumn(columnId)
@@ -139,30 +139,26 @@ export const createRow = <TData extends RowData>(
       }
 
       if (!column.columnDef.getUniqueValues) {
-        this._uniqueValuesCache[columnId] = [this.getValue(columnId)]
-        return this._uniqueValuesCache[columnId]
+        row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
+        return row._uniqueValuesCache[columnId]
       }
 
-      this._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
-        this.original as TData,
+      row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
+        row.original as TData,
         rowIndex
       )
 
-      return this._uniqueValuesCache[columnId] as any
+      return row._uniqueValuesCache[columnId] as any
     },
-    renderValue(columnId) {
-      return this.getValue(columnId) ?? table.options.renderFallbackValue
-    },
+    renderValue: columnId =>
+      row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
-    getLeafRows() {
-      return flattenBy(this.subRows, d => d.subRows)
-    },
-    getParentRow() {
-      return this.parentId ? table.getRow(this.parentId, true) : undefined
-    },
-    getParentRows() {
-      const parentRows: Row<TData>[] = []
-      let currentRow = this
+    getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
+    getParentRow: () =>
+      row.parentId ? table.getRow(row.parentId, true) : undefined,
+    getParentRows: () => {
+      let parentRows: Row<TData>[] = []
+      let currentRow = row
       while (true) {
         const parentRow = currentRow.getParentRow()
         if (!parentRow) break
@@ -171,23 +167,26 @@ export const createRow = <TData extends RowData>(
       }
       return parentRows.reverse()
     },
-    getAllCells() {
+    getAllCells: () => {
       const leafColumns = table.getAllLeafColumns()
       return leafColumns.map(column => {
-        return createCell(table, this as Row<TData>, column, column.id)
+        return createCell(table, row, column, column.id)
       })
     },
 
-    _getAllCellsByColumnId() {
-      const allCells = this.getAllCells()
-      return allCells.reduce(
-        (acc, cell) => {
-          acc[cell.column.id] = cell
-          return acc
-        },
-        {} as Record<string, Cell<TData, unknown>>
-      )
-    },
+    _getAllCellsByColumnId: memo(
+      () => [row.getAllCells()],
+      allCells => {
+        return allCells.reduce(
+          (acc, cell) => {
+            acc[cell.column.id] = cell
+            return acc
+          },
+          {} as Record<string, Cell<TData, unknown>>
+        )
+      },
+      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
+    ),
   }
 
   for (let i = 0; i < table._features.length; i++) {

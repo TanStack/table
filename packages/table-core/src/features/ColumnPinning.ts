@@ -240,9 +240,9 @@ export const ColumnPinning: TableFeature = {
     row: Row<TData>,
     table: Table<TData>
   ): void => {
-    row.getCenterVisibleCells = function () {
+    row.getCenterVisibleCells = () => {
       const [allCells, left, right] = [
-        this._getAllVisibleCells(),
+        row._getAllVisibleCells(),
         table.getState().columnPinning.left,
         table.getState().columnPinning.right,
       ]
@@ -250,9 +250,9 @@ export const ColumnPinning: TableFeature = {
 
       return allCells.filter(d => !leftAndRight.includes(d.column.id))
     }
-    row.getLeftVisibleCells = function () {
+    row.getLeftVisibleCells = () => {
       const [allCells, left] = [
-        this._getAllVisibleCells(),
+        row._getAllVisibleCells(),
         table.getState().columnPinning.left,
       ]
       const cells = (left ?? [])
@@ -262,9 +262,9 @@ export const ColumnPinning: TableFeature = {
 
       return cells
     }
-    row.getRightVisibleCells = function () {
+    row.getRightVisibleCells = () => {
       const [allCells, right] = [
-        this._getAllVisibleCells(),
+        row._getAllVisibleCells(),
         table.getState().columnPinning.right,
       ]
       const cells = (right ?? [])
