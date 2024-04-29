@@ -4,6 +4,6 @@ title: Headers Guide
 
 ## API
 
-[Header API](../api/core/header)
+[Header API](../../api/core/header)
 
 ## Headers Guide

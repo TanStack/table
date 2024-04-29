@@ -45,8 +45,8 @@ import {
 }
 //...
 const table = useReactTable({
-  data,
   columns,
+  data,
   getCoreRowModel: getCoreRowModel(),
   getExpandedRowModel: getExpandedRowModel(),
   getFacetedMinMaxValues: getFacetedMinMaxValues(),
