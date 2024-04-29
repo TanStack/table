@@ -1,16 +1,11 @@
 import {
-  computed,
-  Directive,
+  computed, Directive,
   effect,
   inject,
-  Injector,
-  Input,
-  OnInit,
+  Injector, Input, type OnInit,
   runInInjectionContext,
-  signal,
-  TemplateRef,
-  untracked,
-  ViewContainerRef,
+  signal, TemplateRef,
+  untracked, ViewContainerRef,
 } from '@angular/core'
 import {
   createTable,
@@ -61,7 +56,7 @@ export class FlexRenderDirective implements OnInit {
       return null
     }
     if (typeof this._flexRender === 'string') {
-      return this.vcr.createEmbeddedView(this.templateRef, {
+      const embeddedView = this.vcr.createEmbeddedView(this.templateRef, {
         $implicit: this._flexRender,
       })
     } else if (typeof this._flexRender === 'function') {
