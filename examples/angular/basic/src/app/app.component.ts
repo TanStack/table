@@ -98,14 +98,14 @@ export class AppComponent implements OnInit {
     data: this.data(),
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
-    debugTable: true
+    debugTable: true,
   }))
 
   ngOnInit() {
-    this.data.set(defaultData);
+    this.data.set(defaultData)
   }
 
   rerender() {
-    this.data.set(defaultData);
+    this.data.set(defaultData)
   }
 }

@@ -67,10 +67,7 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
  * we'll wrap all accessors into a cached function wrapping a computed
  * that return it's value based on the given parameters
  */
-function toComputed<T>(
-  signal: Signal<Table<T>>,
-  fn: Function
-) {
+function toComputed<T>(signal: Signal<Table<T>>, fn: Function) {
   const computedCache: Record<string, Signal<unknown>> = {}
 
   return (...argsArray: any[]) => {

@@ -7,24 +7,21 @@
           @for (header of headerGroup.headers; track header.id) {
             <th [attr.colSpan]="header.colSpan">
               @if (!header.isPlaceholder && header.column.getCanGroup()) {
-                <button
-                  id="group-btn"
-                  (click)="header.column.toggleGrouping()"
-                >
-                    <span class="material-icons-sharp">
-                      {{
-                        header.column.getIsGrouped()
-                          ? 'remove_circle_outline'
-                          : 'add_circle_outline'
-                      }}
-                    </span>
+                <button id="group-btn" (click)="header.column.toggleGrouping()">
+                  <span class="material-icons-sharp">
+                    {{
+                      header.column.getIsGrouped()
+                        ? 'remove_circle_outline'
+                        : 'add_circle_outline'
+                    }}
+                  </span>
                 </button>
                 <ng-container
                   *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext;
-                      let header
-                    "
+                    header.column.columnDef.header;
+                    props: header.getContext;
+                    let header
+                  "
                 >
                   <span>{{ header }}</span>
                 </ng-container>
@@ -35,52 +32,52 @@
       }
     </thead>
     <tbody>
-    <ng-container *ngFor="let row of table.getRowModel().rows">
-      <tr>
-        @for (cell of row.getVisibleCells(); track cell.id) {
-          <td>
-            @if (cell.getIsGrouped()) {
-              <button (click)="row.toggleExpanded()">
-                    <span class="material-icons-sharp">
-                      {{ row.getIsExpanded() ? 'expand_less' : 'expand_more' }}
-                    </span>
-              </button>
-              <ng-container
-                *flexRender="
-                      cell.column.columnDef.cell;
-                      props: cell.getContext();
-                      let cell
-                    "
-              >
-                <span>{{ cell }}</span>
-              </ng-container>
-            } @else if (cell.getIsAggregated()) {
-              <ng-container
-                *flexRender="
-                      cell.column.columnDef.aggregatedCell;
-                      props: cell.getContext();
-                      let aggregatedCell
-                    "
-              >
-                {{ aggregatedCell }}
-              </ng-container>
-            } @else if (cell.getIsPlaceholder()) {
-              <span></span>
-            } @else {
-              <ng-container
-                *flexRender="
-                      cell.column.columnDef.cell;
-                      props: cell.getContext();
-                      let cell
-                    "
-              >
-                {{ cell }}
-              </ng-container>
-            }
-          </td>
-        }
-      </tr>
-    </ng-container>
+      <ng-container *ngFor="let row of table.getRowModel().rows">
+        <tr>
+          @for (cell of row.getVisibleCells(); track cell.id) {
+            <td>
+              @if (cell.getIsGrouped()) {
+                <button (click)="row.toggleExpanded()">
+                  <span class="material-icons-sharp">
+                    {{ row.getIsExpanded() ? 'expand_less' : 'expand_more' }}
+                  </span>
+                </button>
+                <ng-container
+                  *flexRender="
+                    cell.column.columnDef.cell;
+                    props: cell.getContext();
+                    let cell
+                  "
+                >
+                  <span>{{ cell }}</span>
+                </ng-container>
+              } @else if (cell.getIsAggregated()) {
+                <ng-container
+                  *flexRender="
+                    cell.column.columnDef.aggregatedCell;
+                    props: cell.getContext();
+                    let aggregatedCell
+                  "
+                >
+                  {{ aggregatedCell }}
+                </ng-container>
+              } @else if (cell.getIsPlaceholder()) {
+                <span></span>
+              } @else {
+                <ng-container
+                  *flexRender="
+                    cell.column.columnDef.cell;
+                    props: cell.getContext();
+                    let cell
+                  "
+                >
+                  {{ cell }}
+                </ng-container>
+              }
+            </td>
+          }
+        </tr>
+      </ng-container>
     </tbody>
   </table>
 
@@ -136,13 +133,8 @@
         (change)="onPageSizeChange($event)"
       >
         @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
-          <option
-            [value]="pageSize"
-          >
-            Show {{ pageSize }}
-          </option>
+          <option [value]="pageSize">Show {{ pageSize }}</option>
         }
-
       </select>
     </div>
   </div>

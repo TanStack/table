@@ -1,11 +1,16 @@
 import {
-  computed, Directive,
+  computed,
+  Directive,
   effect,
   inject,
-  Injector, Input, type OnInit,
+  Injector,
+  Input,
+  type OnInit,
   runInInjectionContext,
-  signal, TemplateRef,
-  untracked, ViewContainerRef,
+  signal,
+  TemplateRef,
+  untracked,
+  ViewContainerRef,
 } from '@angular/core'
 import {
   createTable,
