@@ -24,8 +24,8 @@
                       props: header.getContext();
                       let headerCell
                     "
+                  [innerHTML]="headerCell"
                 >
-                  {{ headerCell }}
                   @if (header.column.getCanSort()) {
                     <span class="material-icons-sharp">
                         {{
