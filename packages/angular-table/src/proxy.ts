@@ -63,9 +63,9 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
  * - 1 required argument -> e.g. table.getColumn(columnId)
  * - 1+ argument -> e.g. table.getRow(id, searchAll?)
  *
- * Since we are not able to detect automatically which accessor could be only 0 argument or with an optional
- * parameter, we'll wrap all accessors into a getter which will cache the resolved properties and
- * return it's value based on the given parameters.
+ * Since we are not able to detect automatically the accessors parameters,
+ * we'll wrap all accessors into a cached function wrapping a computed
+ * that return it's value based on the given parameters
  */
 function toComputed<T>(
   signal: Signal<Table<T>>,
@@ -73,16 +73,13 @@ function toComputed<T>(
 ) {
   const computedCache: Record<string, Signal<unknown>> = {}
 
-  const computedFunction = (...argsArray: any[]) => {
+  return (...argsArray: any[]) => {
     const serializedArgs = serializeArgs(...argsArray)
     if (computedCache.hasOwnProperty(serializedArgs)) {
       return computedCache[serializedArgs]?.()
     }
     const computedSignal = computed(() => {
-      // The computed signal will be run on every `table` change
-      // but the value will be memoized
       void signal()
-      // We'll call the function with the given arguments
       return fn(...argsArray)
     })
 
@@ -90,15 +87,6 @@ function toComputed<T>(
 
     return computedSignal()
   }
-
-  Object.defineProperty(computedFunction, '__cache', {
-    value: computedCache,
-    enumerable: true,
-    writable: false,
-    configurable: true,
-  })
-
-  return computedFunction
 }
 
 function serializeArgs(...args: any[]) {

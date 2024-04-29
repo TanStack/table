@@ -1,5 +1,5 @@
-import {CommonModule} from '@angular/common'
-import {ChangeDetectionStrategy, Component, computed, effect, signal} from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   createAngularTable,
   ExpandedState,
@@ -13,8 +13,8 @@ import {
   PaginationState,
   Updater,
 } from '@tanstack/angular-table'
-import {columns} from './columns'
-import {mockData} from './mockdata'
+import { columns } from './columns'
+import { mockData } from './mockdata'
 
 @Component({
   selector: 'app-root',
@@ -65,29 +65,7 @@ export class AppComponent {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-  }));
-
-  constructor() {
-    effect(() => {
-      // run on every state/option change
-      this.table().getPageOptions();
-    });
-
-    // more granular state, run on every "getPageOptions" change (e.g. only when pagination state change)
-    effect(() => {
-      this.table.getPageOptions()
-    });
-
-    // granular state is still possible using computed manually, but it must be done manually
-    const pageOptions = computed(() => this.table().getPageOptions());
-    effect(() => {
-      pageOptions()
-    });
-
-    // these two are lines does the same thing, they access to the same table instance property.
-    this.table().setPageSize(...)
-    this.table.setPageSize() // this one is evaluated lazily with proxy
-  }
+  }))
 
   onPageInputChange(event: any): void {
     const page = event.target.value ? Number(event.target.value) - 1 : 0
