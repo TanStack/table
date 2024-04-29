@@ -4,7 +4,7 @@ title: Columns Guide
 
 ## API
 
-[Table API](../api/core/table)
+[Table API](../../api/core/table)
 
 ## Column Definitions Guide
 
@@ -12,7 +12,7 @@ Column defs are the single most important part of building a table. They are res
 
 - Building the underlying data model that will be used for everything including sorting, filtering, grouping, etc.
 - Formatting the data model into what will be displayed in the table
-- Creating [header groups](./api/core/header-group), [headers](./api/core/header) and [footers](./api/core/column-def#footer)
+- Creating [header groups](../../../api/core/header-group), [headers](../../../api/core/header) and [footers](../../../api/core/column-def#footer)
 - Creating columns for display-only purposes, eg. action buttons, checkboxes, expanders, sparklines, etc.
 
 ## Column Def Types
@@ -242,7 +242,7 @@ columnHelper.accessor('firstName', {
 
 ## Aggregated Cell Formatting
 
-For more info on aggregated cells, see [grouping](../guide/grouping).
+For more info on aggregated cells, see [grouping](../grouping).
 
 ## Header & Footer Formatting
 
