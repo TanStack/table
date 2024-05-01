@@ -2142,7 +2142,7 @@ importers:
         version: link:../table-core
     devDependencies:
       '@angular/core':
-        specifier: 17.3.1
+        specifier: ^17.3.1
         version: 17.3.1(rxjs@7.8.1)(zone.js@0.14.4)
 
   packages/match-sorter-utils:
