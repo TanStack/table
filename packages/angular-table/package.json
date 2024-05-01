@@ -51,7 +51,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@angular/core": "17.3.1"
+    "@angular/core": "^17.3.1"
   },
   "peerDependencies": {
     "@angular/core": ">=17"

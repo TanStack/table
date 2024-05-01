@@ -13,49 +13,56 @@ export type Person = {
 export const columns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
         header: 'First Name',
+        cell: info => info.getValue(),
+        /**
+         * override the value used for row grouping
+         * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+         */
+        getGroupingValue: row => `${row.firstName} ${row.lastName}`,
       },
       {
         accessorFn: row => row.lastName,
         id: 'lastName',
+        header: () => `Last Name`,
         cell: info => info.getValue(),
-        header: () => 'Last Name',
-        footer: props => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        aggregatedCell: ({ getValue }) =>
+          Math.round(getValue<number>() * 100) / 100,
+        aggregationFn: 'median',
       },
       {
         header: 'More Info',
         columns: [
           {
             accessorKey: 'visits',
-            header: () => 'Visits',
-            footer: props => props.column.id,
+            header: () => `Visits`,
+            aggregationFn: 'sum',
+            // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            cell: ({ getValue }) =>
+              Math.round(getValue<number>() * 100) / 100 + '%',
+            aggregationFn: 'mean',
+            aggregatedCell: ({ getValue }) =>
+              Math.round(getValue<number>() * 100) / 100 + '%',
           },
         ],
       },
