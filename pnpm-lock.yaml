@@ -178,6 +178,79 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
 
+  examples/angular/column-visibility:
+    dependencies:
+      '@angular/animations':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/core@17.3.1)
+      '@angular/common':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/core@17.3.1)(rxjs@7.8.1)
+      '@angular/compiler':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/core@17.3.1)
+      '@angular/core':
+        specifier: ^17.3.1
+        version: 17.3.1(rxjs@7.8.1)(zone.js@0.14.4)
+      '@angular/forms':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/common@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)(rxjs@7.8.1)
+      '@angular/platform-browser':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/animations@17.3.6)(@angular/common@17.3.6)(@angular/core@17.3.1)
+      '@angular/platform-browser-dynamic':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/common@17.3.6)(@angular/compiler@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)
+      '@angular/router':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/common@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)(rxjs@7.8.1)
+      '@tanstack/angular-table':
+        specifier: ^8.14.0
+        version: link:../../../packages/angular-table
+      rxjs:
+        specifier: ~7.8.1
+        version: 7.8.1
+      zone.js:
+        specifier: ~0.14.4
+        version: 0.14.4
+    devDependencies:
+      '@angular-devkit/build-angular':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+      '@angular/cli':
+        specifier: ^17.3.1
+        version: 17.3.6
+      '@angular/compiler-cli':
+        specifier: ^17.3.1
+        version: 17.3.6(@angular/compiler@17.3.6)(typescript@5.4.5)
+      '@types/jasmine':
+        specifier: ~5.1.4
+        version: 5.1.4
+      jasmine-core:
+        specifier: ~5.1.2
+        version: 5.1.2
+      karma:
+        specifier: ~6.4.3
+        version: 6.4.3
+      karma-chrome-launcher:
+        specifier: ~3.2.0
+        version: 3.2.0
+      karma-coverage:
+        specifier: ~2.2.1
+        version: 2.2.1
+      karma-jasmine:
+        specifier: ~5.1.0
+        version: 5.1.0(karma@6.4.3)
+      karma-jasmine-html-reporter:
+        specifier: ~2.1.0
+        version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0)(karma@6.4.3)
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+
   examples/angular/grouping:
     dependencies:
       '@angular/animations':
@@ -2592,11 +2665,6 @@ packages:
       '@babel/highlight': 7.24.2
       picocolors: 1.0.0
 
-  /@babel/compat-data@7.24.1:
-    resolution: {integrity: sha512-Pc65opHDliVpRHuKfzI+gSA4zcgr65O4cl64fFJIWEEh8JoHIHh0Oez1Eo8Arz8zq/JhgKodQaxEwUPRtZylVA==}
-    engines: {node: '>=6.9.0'}
-    dev: true
-
   /@babel/compat-data@7.24.4:
     resolution: {integrity: sha512-vg8Gih2MLK+kOkHJp4gBEIkyaIi00jgWot2D9QOmmfLC8jINSOzmCLta6Bvz/JSBCqnegV0L80jhxkol5GWNfQ==}
     engines: {node: '>=6.9.0'}
@@ -2742,7 +2810,7 @@ packages:
     resolution: {integrity: sha512-9JB548GZoQVmzrFgp8o7KxdgkTGm6xs9DW0o/Pim72UDjzr5ObUQ6ZzYPqA+g9OTS2bBQoctLJrky0RDCAWRgQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/compat-data': 7.24.1
+      '@babel/compat-data': 7.24.4
       '@babel/helper-validator-option': 7.23.5
       browserslist: 4.23.0
       lru-cache: 5.1.1
@@ -5096,7 +5164,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.24.2
-      '@babel/parser': 7.24.1
+      '@babel/parser': 7.24.4
       '@babel/types': 7.24.0
     dev: true
 
@@ -5105,12 +5173,12 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.24.2
-      '@babel/generator': 7.24.1
+      '@babel/generator': 7.24.4
       '@babel/helper-environment-visitor': 7.22.20
       '@babel/helper-function-name': 7.23.0
       '@babel/helper-hoist-variables': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
-      '@babel/parser': 7.24.1
+      '@babel/parser': 7.24.4
       '@babel/types': 7.24.0
       debug: 4.3.4
       globals: 11.12.0
@@ -6402,7 +6470,7 @@ packages:
     resolution: {integrity: sha512-OrcNPXdpSl9UX7qPVRWbmWMCSXrcDa2M9DvrbOTj7ao1S4PlqVFYv9/yLKMkrJKZ/V5A/kDBC690or307i26Og==}
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
-      agent-base: 7.1.0
+      agent-base: 7.1.1
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
       lru-cache: 10.2.0
@@ -7607,7 +7675,7 @@ packages:
   /@vitest/snapshot@1.5.2:
     resolution: {integrity: sha512-CTEp/lTYos8fuCc9+Z55Ga5NVPKUgExritjF5VY7heRFUfheoAqBneUlvXSUJHUZPjnPmyZA96yLRJDP1QATFQ==}
     dependencies:
-      magic-string: 0.30.8
+      magic-string: 0.30.10
       pathe: 1.1.2
       pretty-format: 29.7.0
     dev: true
@@ -7747,7 +7815,7 @@ packages:
       '@vue/compiler-ssr': 3.4.21
       '@vue/shared': 3.4.21
       estree-walker: 2.0.2
-      magic-string: 0.30.8
+      magic-string: 0.30.10
       postcss: 8.4.38
       source-map-js: 1.2.0
     dev: true
@@ -10532,7 +10600,7 @@ packages:
     resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
     engines: {node: '>= 14'}
     dependencies:
-      agent-base: 7.1.0
+      agent-base: 7.1.1
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
@@ -13258,7 +13326,7 @@ packages:
       rollup: 2.x || 3.x || 4.x
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.16.4)
-      magic-string: 0.30.8
+      magic-string: 0.30.10
       rollup: 4.16.4
     dev: true
 
@@ -14318,7 +14386,7 @@ packages:
       '@babel/core': 7.24.4
       '@types/pug': 2.0.10
       detect-indent: 6.1.0
-      magic-string: 0.30.8
+      magic-string: 0.30.10
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.2.15
@@ -14927,7 +14995,7 @@ packages:
       '@vue/language-core': 1.8.27(typescript@5.4.5)
       debug: 4.3.4
       kolorist: 1.8.0
-      magic-string: 0.30.8
+      magic-string: 0.30.10
       typescript: 5.4.5
       vite: 5.2.10(@types/node@20.12.7)
       vue-tsc: 1.8.27(typescript@5.4.5)
