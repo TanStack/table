@@ -1,8 +1,17 @@
 import { faker } from '@faker-js/faker'
-import { Person } from './columns'
+
+export type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  progress: number
+  status: 'relationship' | 'complicated' | 'single'
+  subRows?: Person[]
+}
 
 const range = (len: number) => {
-  const arr = []
+  const arr: number[] = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }
@@ -24,7 +33,7 @@ const newPerson = (): Person => {
   }
 }
 
-export function mockData(...lens: number[]) {
+export function makeData(...lens: number[]) {
   const makeDataLevel = (depth = 0): Person[] => {
     const len = lens[depth]!
     return range(len).map((d): Person => {
@@ -34,5 +43,6 @@ export function mockData(...lens: number[]) {
       }
     })
   }
+
   return makeDataLevel()
 }

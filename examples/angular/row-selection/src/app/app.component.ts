@@ -1,93 +1,76 @@
 import { Component, computed, signal } from '@angular/core'
 import {
-  ColumnFiltersState,
   createAngularTable,
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
-  PaginationState,
   RowSelectionState,
-  SortingState,
 } from '@tanstack/angular-table'
-import { columns, Person } from './columns'
+import { columns } from './columns'
 import { FilterComponent } from './filter'
-import { mockData } from './mockdata'
+import { makeData } from './makeData'
+import { FormsModule } from '@angular/forms'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FilterComponent, FlexRenderDirective],
+  imports: [FilterComponent, FlexRenderDirective, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  private rowSelectionState = signal<RowSelectionState>({})
-  private paginationState = signal<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-  private columnFilterState = signal<ColumnFiltersState>([])
-  sortingState = signal<SortingState>([])
-  data: Person[] = mockData(10000)
+  private readonly rowSelection = signal<RowSelectionState>({})
+  readonly globalFilter = signal<string>('')
+  readonly data = signal(makeData(10_000))
 
   table = createAngularTable(() => ({
-    data: this.data,
+    data: this.data(),
     columns: columns,
     state: {
-      rowSelection: this.rowSelectionState(),
-      pagination: this.paginationState(),
-      columnFilters: this.columnFilterState(),
-      sorting: this.sortingState(),
+      rowSelection: this.rowSelection(),
     },
-    enableRowSelection: true,
+    enableRowSelection: true, // enable row selection for all rows
+    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    onRowSelectionChange: updaterOrValue => {
+      this.rowSelection.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.rowSelection())
+          : updaterOrValue
+      )
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     debugTable: true,
-    onRowSelectionChange: updaterOrValue => {
-      this.rowSelectionState.set(
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue(this.rowSelectionState())
-          : updaterOrValue
-      )
-    },
-    onPaginationChange: updaterOrValue => {
-      this.paginationState.set(
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue(this.paginationState())
-          : updaterOrValue
-      )
-    },
-    onColumnFiltersChange: updaterOrValue => {
-      this.columnFilterState.set(
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue(this.columnFilterState())
-          : updaterOrValue
-      )
-    },
-    onSortingChange: updaterOrValue => {
-      this.sortingState.set(
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue(this.sortingState())
-          : updaterOrValue
-      )
-    },
   }))
 
-  rowSelectionLength = computed(
-    () => Object.keys(this.rowSelectionState()).length
+  readonly stringifiedRowSelection = computed(() =>
+    JSON.stringify(this.rowSelection(), null, 2)
   )
 
-  onPageInputChange(event: Event) {
+  readonly rowSelectionLength = computed(
+    () => Object.keys(this.rowSelection()).length
+  )
+
+  onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement
     const page = inputElement.value ? Number(inputElement.value) - 1 : 0
     this.table.setPageIndex(page)
   }
 
-  onPageSizeChange(event: any) {
+  onPageSizeChange(event: any): void {
     this.table.setPageSize(Number(event.target.value))
+  }
+
+  logSelectedFlatRows(): void {
+    console.info(
+      'table.getSelectedRowModel().flatRows',
+      this.table.getSelectedRowModel().flatRows
+    )
+  }
+
+  refreshData(): void {
+    this.data.set(makeData(10_000))
   }
 }

@@ -19,9 +19,11 @@ type TableProxy<T extends Table<any>> = Prettify<
   }
 >
 
-export type TableResult<T> = Signal<Table<T>> & TableProxy<Table<T>>
+export type TableInstance<T> = Signal<Table<T>> & TableProxy<Table<T>>
 
-export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
+export function proxifyTable<T>(
+  tableSignal: Signal<Table<T>>
+): TableInstance<T> {
   const proxyTable = new Proxy(tableSignal, {
     get(target: Signal<Table<T>>, property: keyof Table<T>): any {
       const untypedTarget = target as any
@@ -53,7 +55,7 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>): TableResult<T> {
 
   return Object.assign(proxyTable, {
     options: computed(() => tableSignal().options),
-  }) as TableResult<T>
+  }) as TableInstance<T>
 }
 
 /**

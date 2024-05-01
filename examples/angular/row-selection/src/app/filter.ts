@@ -1,80 +1,75 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnInit } from '@angular/core'
-import { Column, Table } from '@tanstack/angular-table'
+import { Component, input, OnInit } from '@angular/core'
+import { Column } from '@tanstack/angular-table'
+import type { TableInstance } from '@tanstack/angular-table/build/lib/proxy'
 
 @Component({
-  selector: 'Filter',
+  selector: 'app-table-filter',
   template: ` @if (columnType) {
     @if (columnType == 'number') {
-      <div>
+      <div class="flex space-x-2">
         <input
-          type="number"
-          [value]="getMinValue()"
-          placeholder="min"
           #min
-          (change)="updateMinFilterValue(min.value)"
-          (click)="$event.stopPropagation()"
+          type="number"
+          class="w-24 border shadow rounded"
+          placeholder="Min"
+          [value]="getMinValue()"
+          (input)="updateMinFilterValue(min.value)"
         />
         <input
-          type="number"
-          [value]="getMaxValue()"
-          placeholder="max"
           #max
-          (change)="updateMaxFilterValue(max.value)"
-          (click)="$event.stopPropagation()"
+          type="number"
+          class="w-36 border shadow rounded"
+          placeholder="max"
+          [value]="getMaxValue()"
+          (input)="updateMaxFilterValue(max.value)"
         />
       </div>
     } @else {
       <input
-        type="text"
-        [value]="column.getFilterValue() ?? ''"
         #search
+        type="text"
+        class="w-36 border shadow rounded"
         placeholder="Search..."
-        (change)="column.setFilterValue(search.value)"
-        (click)="$event.stopPropagation()"
+        [value]="column().getFilterValue() ?? ''"
+        (input)="column().setFilterValue(search.value)"
       />
     }
   }`,
   standalone: true,
   imports: [CommonModule],
 })
-export class FilterComponent implements OnInit {
-  @Input({ required: true })
-  column!: Column<any, any>
+export class FilterComponent<T> implements OnInit {
+  column = input.required<Column<any, any>>()
 
-  @Input({ required: true })
-  table!: Table<any>
+  table = input.required<TableInstance<T>>()
 
-  private _columnType!: string
-
-  public get columnType(): string {
-    return this._columnType
-  }
-  public set columnType(value: string) {
-    this._columnType = value
-  }
+  columnType!: string
 
   ngOnInit() {
-    this.columnType = typeof this.table
+    this.columnType = typeof this.table()
       .getPreFilteredRowModel()
-      .flatRows[0]?.getValue(this.column.id)
+      .flatRows[0]?.getValue(this.column().id)
   }
+
   getMinValue() {
-    const minValue = this.column.getFilterValue() as any
+    const minValue = this.column().getFilterValue() as any
 
     return (minValue?.[0] ?? '') as string
   }
+
   getMaxValue() {
-    const maxValue = this.column.getFilterValue() as any
+    const maxValue = this.column().getFilterValue() as any
     return (maxValue?.[1] ?? '') as string
   }
 
-  updateMinFilterValue(newValue: any): void {
-    this.column.setFilterValue((old: any) => {
+  updateMinFilterValue(newValue: string): void {
+    this.column().setFilterValue((old: any) => {
       return [newValue, old?.[1]]
     })
   }
-  updateMaxFilterValue(newValue: any): void {
-    this.column.setFilterValue((old: any) => [old?.[0], newValue])
+
+  updateMaxFilterValue(newValue: string): void {
+    this.column().setFilterValue((old: any) => [old?.[0], newValue])
   }
 }
