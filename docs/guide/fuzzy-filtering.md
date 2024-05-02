@@ -6,7 +6,7 @@ title: Fuzzy Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../../framework/react/examples/filters)
+- [filters-fuzzy](../../framework/react/examples/filters-fuzzy)
 
 ## API
 
