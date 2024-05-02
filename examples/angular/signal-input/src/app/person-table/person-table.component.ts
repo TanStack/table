@@ -74,4 +74,10 @@ export class PersonTableComponent {
   onPageSizeChange(event: any) {
     this.table.setPageSize(Number(event.target.value))
   }
+
+  constructor() {
+    setTimeout(() => {
+      console.log({...this.table});
+    }, 1000)
+  }
 }
