@@ -5,7 +5,6 @@ import {
   type OnInit,
   signal,
 } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
 import {
   ColumnDef,
   createAngularTable,
@@ -105,7 +104,7 @@ const defaultColumns: ColumnDef<Person>[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FlexRenderDirective],
+  imports: [FlexRenderDirective],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

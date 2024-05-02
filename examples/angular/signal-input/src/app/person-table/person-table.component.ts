@@ -29,13 +29,13 @@ import {
 export class PersonTableComponent {
   readonly data = input.required<Person[]>()
 
-  readonly pagination = model.required<PaginationState>();
+  readonly pagination = model.required<PaginationState>()
 
   readonly columns: ColumnDef<Person>[] = [
     {
       accessorKey: 'firstName',
       header: 'First Name',
-      cell: info => info.getValue()
+      cell: info => info.getValue(),
     },
     {
       accessorFn: row => row.lastName,
@@ -77,7 +77,7 @@ export class PersonTableComponent {
 
   constructor() {
     setTimeout(() => {
-      console.log({...this.table});
+      console.log({ ...this.table })
     }, 1000)
   }
 }

@@ -43,10 +43,10 @@ export class AppComponent {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
-  }));
+  }))
 
   constructor() {
-    console.log("table", this.table);
+    console.log('table', this.table)
   }
 
   readonly stringifiedRowSelection = computed(() =>

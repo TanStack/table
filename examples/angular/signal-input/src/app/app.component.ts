@@ -1,4 +1,9 @@
-import {ChangeDetectionStrategy, Component, effect, signal} from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  signal,
+} from '@angular/core'
 import { type PaginationState } from '@tanstack/angular-table'
 import { makeData } from './makeData'
 import { PersonTableComponent } from './person-table/person-table.component'
@@ -9,7 +14,6 @@ import { PersonTableComponent } from './person-table/person-table.component'
   imports: [PersonTableComponent],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-
 })
 export class AppComponent {
   data = signal(makeData(10000))
@@ -25,14 +29,14 @@ export class AppComponent {
   previousPage(): void {
     this.pagination.update(pagination => ({
       ...pagination,
-      pageIndex: pagination.pageIndex - 1
+      pageIndex: pagination.pageIndex - 1,
     }))
   }
 
   nextPage(): void {
     this.pagination.update(pagination => ({
       ...pagination,
-      pageIndex: pagination.pageIndex + 1
+      pageIndex: pagination.pageIndex + 1,
     }))
   }
 }
