@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, input, OnInit } from '@angular/core'
 import { Column } from '@tanstack/angular-table'
-import type { TableInstance } from '@tanstack/angular-table/build/lib/proxy'
+import type { Table } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-table-filter',
@@ -42,7 +42,7 @@ import type { TableInstance } from '@tanstack/angular-table/build/lib/proxy'
 export class FilterComponent<T> implements OnInit {
   column = input.required<Column<any, any>>()
 
-  table = input.required<TableInstance<T>>()
+  table = input.required<Table<T>>()
 
   columnType!: string
 

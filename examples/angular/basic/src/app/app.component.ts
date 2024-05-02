@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
   }))
 
   ngOnInit() {
-    this.data.set(defaultData)
+    this.data.set(defaultData);
   }
 
   rerender() {
