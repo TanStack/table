@@ -48,8 +48,8 @@ export function createAngularTable<TData extends RowData>(
       const state = signal(table.initialState)
 
       function updateOptions() {
-        const tableState = state()
-        const resolvedOptions = resolvedOptionsSignal()
+        const tableState = untracked(state)
+        const resolvedOptions = untracked(resolvedOptionsSignal)
         untracked(() => {
           table.setOptions(prev => ({
             ...prev,
@@ -67,11 +67,11 @@ export function createAngularTable<TData extends RowData>(
 
       updateOptions()
 
-      let skip = true
+      let firstRender = true
       effect(() => {
         void [state(), resolvedOptionsSignal()]
-        if (skip) {
-          return (skip = false)
+        if (firstRender) {
+          return (firstRender = false)
         }
         untracked(() => {
           updateOptions()
