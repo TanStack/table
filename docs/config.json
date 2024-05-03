@@ -126,6 +126,10 @@
         {
           "label": "Headers",
           "to": "guide/headers"
+        },
+        {
+          "label": "Columns",
+          "to": "guide/columns"
         }
       ],
       "frameworks": [
