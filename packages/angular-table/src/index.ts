@@ -89,7 +89,7 @@ export function createAngularTable<TData extends RowData>(
         }
       )
 
-      return tableValue()
+      return proxifyTable(tableValue)
     })
   )
 }

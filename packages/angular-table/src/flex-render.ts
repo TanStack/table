@@ -50,6 +50,8 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ngDoCheck() {
     if (this.ref instanceof ComponentRef) {
       this.ref.injector.get(ChangeDetectorRef).markForCheck()
+    } else if (this.ref instanceof EmbeddedViewRef) {
+      this.ref.markForCheck()
     }
   }
 
@@ -61,11 +63,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     }
 
     if (typeof content === 'string') {
-      return this.viewContainerRef.createEmbeddedView(this.templateRef, {
-        get $implicit() {
-          return content
-        },
-      })
+      return this.renderStringContent()
     }
     if (typeof content === 'function') {
       return this.renderContent(content(props))
@@ -75,21 +73,28 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   private renderContent(content: FlexRenderContent<TProps>) {
     if (typeof content === 'string') {
-      return this.viewContainerRef.createEmbeddedView(this.templateRef, {
-        get $implicit() {
-          return content
-        },
-      })
+      return this.renderStringContent()
     }
     if (content instanceof TemplateRef) {
-      const props = () => this.props
-      return this.viewContainerRef.createEmbeddedView(content, {
-        get $implicit() {
-          return props()
-        },
-      })
+      return this.viewContainerRef.createEmbeddedView(
+        content,
+        this.getTemplateRefContext()
+      )
     }
     return this.renderComponent(content)
+  }
+
+  private renderStringContent() {
+    const context = () => {
+      return typeof this.content === 'string'
+        ? this.content
+        : this.content?.(this.props)
+    }
+    return this.viewContainerRef.createEmbeddedView(this.templateRef, {
+      get $implicit() {
+        return context()
+      },
+    })
   }
 
   private renderComponent(flexRenderComponent: FlexRenderComponent<TProps>) {
@@ -115,6 +120,15 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       }
     }
     return componentRef
+  }
+
+  private getTemplateRefContext() {
+    const getContext = () => this.props
+    return {
+      get $implicit() {
+        return getContext()
+      },
+    }
   }
 }
 

@@ -19,6 +19,7 @@ import {
   getPaginationRowModel,
   PaginationState,
 } from '@tanstack/angular-table'
+
 @Component({
   selector: 'app-person-table',
   templateUrl: 'person-table.component.html',
@@ -46,6 +47,7 @@ export class PersonTableComponent {
   ]
 
   table = createAngularTable(() => {
+    const data = this.data();
     return {
       data: this.data(),
       columns: this.columns,
@@ -73,11 +75,5 @@ export class PersonTableComponent {
 
   onPageSizeChange(event: any) {
     this.table.setPageSize(Number(event.target.value))
-  }
-
-  constructor() {
-    setTimeout(() => {
-      console.log({ ...this.table })
-    }, 1000)
   }
 }
