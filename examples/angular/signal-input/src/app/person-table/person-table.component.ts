@@ -47,7 +47,7 @@ export class PersonTableComponent {
   ]
 
   table = createAngularTable(() => {
-    const data = this.data();
+    const data = this.data()
     return {
       data: this.data(),
       columns: this.columns,
