@@ -8,32 +8,23 @@
           @for (header of headerGroup.headers; track header.id) {
             <th [attr.colSpan]="header.colSpan">
               @if (!header.isPlaceholder) {
-                @if (header.id == 'select') {
-                  <input
-                    type="checkbox"
-                    [checked]="table.getIsAllRowsSelected()"
-                    [indeterminate]="table.getIsSomeRowsSelected()"
-                    (change)="table.toggleAllRowsSelected()"
-                  />
-                } @else {
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let headerCell
-                    "
-                  >
-                    {{ headerCell }}
-                  </ng-container>
+                <ng-container
+                  *flexRender="
+                    header.column.columnDef.header;
+                    props: header.getContext();
+                    let headerCell
+                  "
+                >
+                  {{ headerCell }}
+                </ng-container>
 
-                  @if (header.column.getCanFilter()) {
-                    <div>
-                      <app-table-filter
-                        [column]="header.column"
-                        [table]="table"
-                      />
-                    </div>
-                  }
+                @if (header.column.getCanFilter()) {
+                  <div>
+                    <app-table-filter
+                      [column]="header.column"
+                      [table]="table"
+                    />
+                  </div>
                 }
               }
             </th>
@@ -46,25 +37,15 @@
         <tr>
           @for (cell of row.getVisibleCells(); track cell.id) {
             <td>
-              @if (cell.id.endsWith('select')) {
-                <input
-                  type="checkbox"
-                  [checked]="row.getIsSelected()"
-                  [disabled]="!row.getCanSelect()"
-                  [indeterminate]="row.getIsSomeSelected()"
-                  (change)="row.toggleSelected()"
-                />
-              } @else {
-                <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let renderCell
-                  "
-                >
-                  {{ renderCell }}
-                </ng-container>
-              }
+              <ng-container
+                *flexRender="
+                  cell.column.columnDef.cell;
+                  props: cell.getContext();
+                  let renderCell
+                "
+              >
+                {{ renderCell }}
+              </ng-container>
             </td>
           }
         </tr>
@@ -165,3 +146,7 @@
     <pre>{{ stringifiedRowSelection() }}</pre>
   </div>
 </div>
+
+<ng-template #ageHeaderCell let-context>
+  <span>Age 🥳</span>
+</ng-template>

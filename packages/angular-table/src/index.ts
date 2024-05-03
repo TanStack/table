@@ -19,7 +19,7 @@ import { lazyInit } from './lazy-signal-initializer'
 
 export * from '@tanstack/table-core'
 
-export { FlexRenderDirective } from './flex-render'
+export { FlexRenderDirective, FlexRenderComponent } from './flex-render'
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>
