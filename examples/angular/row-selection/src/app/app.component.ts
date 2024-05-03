@@ -23,14 +23,11 @@ import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
 } from './selection-column.component'
-import { toSignal } from '@angular/core/rxjs-interop'
-import { interval } from 'rxjs'
-import { JsonPipe } from '@angular/common'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FilterComponent, FlexRenderDirective, FormsModule, JsonPipe],
+  imports: [FilterComponent, FlexRenderDirective, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,18 +37,17 @@ export class AppComponent {
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(10_000))
 
-  readonly ageHeaderCell = viewChild.required<TemplateRef<unknown>>(
-    'ageHeaderCell'
-  )
+  readonly ageHeaderCell =
+    viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
   readonly columns: ColumnDef<Person>[] = [
     {
       id: 'select',
-      header: props => {
-        return new FlexRenderComponent(TableHeadSelectionComponent, { props })
+      header: () => {
+        return new FlexRenderComponent(TableHeadSelectionComponent)
       },
-      cell: props => {
-        return new FlexRenderComponent(TableRowSelectionComponent, { props })
+      cell: () => {
+        return new FlexRenderComponent(TableRowSelectionComponent)
       },
     },
     {

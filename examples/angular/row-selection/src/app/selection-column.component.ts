@@ -1,32 +1,43 @@
-import { type CellContext, type HeaderContext } from '@tanstack/angular-table'
-import { Component, input } from '@angular/core'
+import {
+  type CellContext,
+  type HeaderContext,
+  injectFlexRenderContext,
+} from '@tanstack/angular-table'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 @Component({
-  selector: 'app-table-head-selection',
   template: `
     <input
       type="checkbox"
-      [checked]="props().table.getIsAllRowsSelected()"
-      [indeterminate]="props().table.getIsSomeRowsSelected()"
-      (change)="props().table.toggleAllRowsSelected()"
+      [checked]="context.table.getIsAllRowsSelected()"
+      [indeterminate]="context.table.getIsSomeRowsSelected()"
+      (change)="context.table.toggleAllRowsSelected()"
     />
   `,
+  host: {
+    class: 'px-1 block',
+  },
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeadSelectionComponent<T> {
-  props = input.required<HeaderContext<T, unknown>>()
+  context = injectFlexRenderContext<HeaderContext<T, unknown>>()
 }
 
 @Component({
   template: `
     <input
       type="checkbox"
-      [checked]="props().row.getIsSelected()"
-      (change)="props().row.getToggleSelectedHandler()($event)"
+      [checked]="context.row.getIsSelected()"
+      (change)="context.row.getToggleSelectedHandler()($event)"
     />
   `,
+  host: {
+    class: 'px-1 block',
+  },
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowSelectionComponent<T> {
-  props = input.required<CellContext<T, unknown>>()
+  context = injectFlexRenderContext<CellContext<T, unknown>>()
 }

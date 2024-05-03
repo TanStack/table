@@ -1,5 +1,9 @@
 import {
+  ChangeDetectorRef,
+  ComponentRef,
   Directive,
+  type DoCheck,
+  EmbeddedViewRef,
   inject,
   InjectionToken,
   Injector,
@@ -20,7 +24,7 @@ type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnInit
+  implements OnInit, DoCheck
 {
   @Input({ required: true, alias: 'flexRender' })
   content: string | ((props: TProps) => FlexRenderContent<TProps>) | undefined =
@@ -37,8 +41,16 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     private templateRef: TemplateRef<any>
   ) {}
 
+  ref?: ComponentRef<any> | EmbeddedViewRef<any> | null = null
+
   ngOnInit(): void {
-    this.render()
+    this.ref = this.render()
+  }
+
+  ngDoCheck() {
+    if (this.ref instanceof ComponentRef) {
+      this.ref.injector.get(ChangeDetectorRef).markForCheck()
+    }
   }
 
   render() {
@@ -56,8 +68,9 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       })
     }
     if (typeof content === 'function') {
-      return this.renderContent(content(props));
+      return this.renderContent(content(props))
     }
+    return null
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
@@ -80,21 +93,43 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   private renderComponent(flexRenderComponent: FlexRenderComponent<TProps>) {
-    const { component, props } = flexRenderComponent
-    const componentRef = this.viewContainerRef.createComponent(component, {
-      injector: this.injector,
+    const { component, inputs, injector } = flexRenderComponent
+
+    const getContext = () => this.props
+
+    const proxy = new Proxy(this.props, {
+      get: (_, key) => getContext()?.[key as keyof typeof _],
     })
-    for (const prop in props) {
+
+    const componentInjector = Injector.create({
+      parent: injector ?? this.injector,
+      providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
+    })
+
+    const componentRef = this.viewContainerRef.createComponent(component, {
+      injector: componentInjector,
+    })
+    for (const prop in inputs) {
       if (componentRef.instance?.hasOwnProperty(prop)) {
-        componentRef.setInput(prop, props[prop])
+        componentRef.setInput(prop, inputs[prop])
       }
     }
+    return componentRef
   }
 }
 
 export class FlexRenderComponent<T extends NonNullable<unknown>> {
   constructor(
     readonly component: Type<unknown>,
-    readonly props: T
+    readonly inputs: T = {} as T,
+    readonly injector?: Injector
   ) {}
+}
+
+const FlexRenderComponentProps = new InjectionToken<NonNullable<unknown>>(
+  '[@tanstack/angular-table] Flex render component context props'
+)
+
+export function injectFlexRenderContext<T extends NonNullable<unknown>>(): T {
+  return inject<T>(FlexRenderComponentProps)
 }

@@ -19,7 +19,11 @@ import { lazyInit } from './lazy-signal-initializer'
 
 export * from '@tanstack/table-core'
 
-export { FlexRenderDirective, FlexRenderComponent } from './flex-render'
+export {
+  FlexRenderDirective,
+  FlexRenderComponent,
+  injectFlexRenderContext,
+} from './flex-render'
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>
@@ -85,7 +89,7 @@ export function createAngularTable<TData extends RowData>(
         }
       )
 
-      return proxifyTable(tableValue)
+      return tableValue()
     })
   )
 }
