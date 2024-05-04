@@ -1,6 +1,7 @@
 packages:
   - 'packages/*'
   - 'examples/qwik/*'
+  - 'examples/lit/*'
   - 'examples/react/*'
   - 'examples/solid/*'
   - 'examples/svelte/*'
