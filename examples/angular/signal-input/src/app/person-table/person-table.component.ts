@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  effect,
-  inject,
-  input,
-  model,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import type { Person } from '../makeData'
 import {
   ColumnDef,
@@ -47,7 +39,6 @@ export class PersonTableComponent {
   ]
 
   table = createAngularTable(() => {
-    const data = this.data()
     return {
       data: this.data(),
       columns: this.columns,
