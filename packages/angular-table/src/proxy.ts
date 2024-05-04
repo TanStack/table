@@ -1,11 +1,18 @@
 import { computed, type Signal, untracked } from '@angular/core'
 import { type Table } from '@tanstack/table-core'
 
-export function proxifyTable<T>(tableSignal: Signal<Table<T>>): Table<T> {
-  const internalState = {} as Table<T>
+type TableSignal<T> = Table<T> & Signal<Table<T>>
+
+export function proxifyTable<T>(
+  tableSignal: Signal<Table<T>>
+): Table<T> & Signal<Table<T>> {
+  const internalState = tableSignal as TableSignal<T>
 
   return new Proxy(internalState, {
-    get(target: Table<T>, property: keyof Table<T>): any {
+    apply() {
+      return tableSignal()
+    },
+    get(target, property: keyof Table<T>): any {
       if (target[property]) {
         return target[property]
       }
@@ -28,7 +35,6 @@ export function proxifyTable<T>(tableSignal: Signal<Table<T>>): Table<T> {
           return target[property]
         }
       }
-
       // @ts-expect-error
       return (target[property] = table[property])
     },

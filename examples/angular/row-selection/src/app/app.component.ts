@@ -1,32 +1,109 @@
-import { Component, computed, signal } from '@angular/core'
 import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+  TemplateRef,
+  viewChild,
+} from '@angular/core'
+import {
+  ColumnDef,
   createAngularTable,
+  FlexRenderComponent,
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   RowSelectionState,
 } from '@tanstack/angular-table'
-import { columns } from './columns'
 import { FilterComponent } from './filter'
-import { makeData } from './makeData'
+import { makeData, type Person } from './makeData'
 import { FormsModule } from '@angular/forms'
+import {
+  TableHeadSelectionComponent,
+  TableRowSelectionComponent,
+} from './selection-column.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [FilterComponent, FlexRenderDirective, FormsModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(10_000))
 
+  readonly ageHeaderCell =
+    viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
+
+  readonly columns: ColumnDef<Person>[] = [
+    {
+      id: 'select',
+      header: () => {
+        return new FlexRenderComponent(TableHeadSelectionComponent)
+      },
+      cell: () => {
+        return new FlexRenderComponent(TableRowSelectionComponent)
+      },
+    },
+    {
+      header: 'Name',
+      footer: props => props.column.id,
+      columns: [
+        {
+          accessorKey: 'firstName',
+          cell: info => info.getValue(),
+          footer: props => props.column.id,
+          header: 'First name',
+        },
+        {
+          accessorFn: row => row.lastName,
+          id: 'lastName',
+          cell: info => info.getValue(),
+          header: () => 'Last Name',
+          footer: props => props.column.id,
+        },
+      ],
+    },
+    {
+      header: 'Info',
+      footer: props => props.column.id,
+      columns: [
+        {
+          accessorKey: 'age',
+          header: () => this.ageHeaderCell(),
+          footer: props => props.column.id,
+        },
+        {
+          header: 'More Info',
+          columns: [
+            {
+              accessorKey: 'visits',
+              header: () => 'Visits',
+              footer: props => props.column.id,
+            },
+            {
+              accessorKey: 'status',
+              header: 'Status',
+              footer: props => props.column.id,
+            },
+            {
+              accessorKey: 'progress',
+              header: 'Profile Progress',
+              footer: props => props.column.id,
+            },
+          ],
+        },
+      ],
+    },
+  ]
+
   table = createAngularTable(() => ({
     data: this.data(),
-    columns: columns,
+    columns: this.columns,
     state: {
       rowSelection: this.rowSelection(),
     },
@@ -44,10 +121,6 @@ export class AppComponent {
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   }))
-
-  constructor() {
-    console.log('table', this.table)
-  }
 
   readonly stringifiedRowSelection = computed(() =>
     JSON.stringify(this.rowSelection(), null, 2)

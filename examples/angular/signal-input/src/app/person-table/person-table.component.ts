@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  effect,
-  inject,
-  input,
-  model,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import type { Person } from '../makeData'
 import {
   ColumnDef,
@@ -19,6 +11,7 @@ import {
   getPaginationRowModel,
   PaginationState,
 } from '@tanstack/angular-table'
+
 @Component({
   selector: 'app-person-table',
   templateUrl: 'person-table.component.html',
@@ -73,11 +66,5 @@ export class PersonTableComponent {
 
   onPageSizeChange(event: any) {
     this.table.setPageSize(Number(event.target.value))
-  }
-
-  constructor() {
-    setTimeout(() => {
-      console.log({ ...this.table })
-    }, 1000)
   }
 }
