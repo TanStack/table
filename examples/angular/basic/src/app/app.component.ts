@@ -88,7 +88,6 @@ const defaultColumns: ColumnDef<Person>[] = [
   standalone: true,
   imports: [RouterOutlet, FlexRenderDirective],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {

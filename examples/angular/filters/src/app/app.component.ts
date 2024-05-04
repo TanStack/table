@@ -17,7 +17,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
 } from '@tanstack/angular-table'
-import { FilterComponent } from './filter'
+import { FilterComponent } from './table-filter.component'
 import { makeData, type Person } from './makeData'
 import { FormsModule } from '@angular/forms'
 import { NgClass } from '@angular/common'
@@ -27,7 +27,6 @@ import { NgClass } from '@angular/common'
   standalone: true,
   imports: [FilterComponent, FlexRenderDirective, FormsModule, NgClass],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
@@ -110,13 +109,6 @@ export class AppComponent {
 
   onPageSizeChange(event: any): void {
     this.table.setPageSize(Number(event.target.value))
-  }
-
-  logSelectedFlatRows(): void {
-    console.info(
-      'table.getSelectedRowModel().flatRows',
-      this.table.getSelectedRowModel().flatRows
-    )
   }
 
   refreshData(): void {

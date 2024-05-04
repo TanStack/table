@@ -29,7 +29,6 @@ import {
   standalone: true,
   imports: [FilterComponent, FlexRenderDirective, FormsModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
