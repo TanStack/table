@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  type OnInit,
+  Injectable,
   signal,
 } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
@@ -91,8 +91,8 @@ const defaultColumns: ColumnDef<Person>[] = [
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
-  data = signal<Person[]>([])
+export class AppComponent {
+  data = signal<Person[]>(defaultData)
 
   table = createAngularTable(() => ({
     data: this.data(),
@@ -101,11 +101,7 @@ export class AppComponent implements OnInit {
     debugTable: true,
   }))
 
-  ngOnInit() {
-    this.data.set(defaultData)
-  }
-
   rerender() {
-    this.data.set(defaultData)
+    this.data.set([...defaultData.sort(() => -1)])
   }
 }
