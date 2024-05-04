@@ -4,6 +4,7 @@ import {
   inject,
   Injector,
   runInInjectionContext,
+  type Signal,
   signal,
   untracked,
 } from '@angular/core'
@@ -27,7 +28,7 @@ export {
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>
-): Table<TData> {
+): Table<TData> & Signal<Table<TData>> {
   const injector = inject(Injector)
 
   return lazyInit(() =>
@@ -79,7 +80,7 @@ export function createAngularTable<TData extends RowData>(
         })
       })
 
-      const tableValue = computed(
+      const tableSignal = computed(
         () => {
           notifier()
           return table
@@ -89,7 +90,7 @@ export function createAngularTable<TData extends RowData>(
         }
       )
 
-      return proxifyTable(tableValue)
+      return proxifyTable(tableSignal)
     })
   )
 }
