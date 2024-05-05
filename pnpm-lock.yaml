@@ -132,7 +132,7 @@ importers:
         specifier: ^17.3.1
         version: 17.3.6(@angular/common@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)(rxjs@7.8.1)
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -202,7 +202,7 @@ importers:
         specifier: ^17.3.1
         version: 17.3.6(@angular/common@17.3.6)(@angular/compiler@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -272,7 +272,7 @@ importers:
         specifier: ^17.3.1
         version: 17.3.6(@angular/common@17.3.6)(@angular/compiler@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -342,7 +342,7 @@ importers:
         specifier: ^17.3.1
         version: 17.3.6(@angular/common@17.3.6)(@angular/compiler@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -412,7 +412,7 @@ importers:
         specifier: ^17.3.1
         version: 17.3.6(@angular/common@17.3.6)(@angular/compiler@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -485,7 +485,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -558,7 +558,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -631,7 +631,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -701,7 +701,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^8.14.0
+        specifier: ^8.16.0
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -11762,6 +11762,8 @@ packages:
       webpack: '*'
     peerDependenciesMeta:
       webpack:
+        optional: true
+      webpack-sources:
         optional: true
     dependencies:
       webpack: 5.90.3(esbuild@0.20.2)
