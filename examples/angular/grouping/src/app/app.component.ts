@@ -8,7 +8,6 @@ import {
 import {
   FlexRenderDirective,
   GroupingState,
-  PaginationState,
   Updater,
   createAngularTable,
   getCoreRowModel,
@@ -31,7 +30,6 @@ export class AppComponent {
   title = 'grouping'
   data = signal(makeData(10000))
   grouping = signal<GroupingState>([])
-  pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
   stringifiedGrouping = computed(() => JSON.stringify(this.grouping(), null, 2))
 
@@ -40,7 +38,6 @@ export class AppComponent {
     columns: columns,
     state: {
       grouping: this.grouping(),
-      pagination: this.pagination(),
     },
     onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {
       const groupingState =
@@ -48,13 +45,6 @@ export class AppComponent {
           ? updaterOrValue([...this.grouping()])
           : updaterOrValue
       this.grouping.set(groupingState)
-    },
-    onPaginationChange: (updaterOrValue: Updater<PaginationState>) => {
-      const paginationState =
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue({ ...this.pagination() })
-          : updaterOrValue
-      this.pagination.set(paginationState)
     },
     getExpandedRowModel: getExpandedRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
@@ -75,6 +65,5 @@ export class AppComponent {
 
   refreshData() {
     this.data.set(makeData(10000))
-    this.pagination.set({ pageIndex: 0, pageSize: 10 })
   }
 }

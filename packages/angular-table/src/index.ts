@@ -8,10 +8,15 @@ import {
   type Table,
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
+import { proxifyTable } from './proxy'
 
 export * from '@tanstack/table-core'
 
-export { FlexRenderDirective } from './flex-render'
+export {
+  FlexRenderComponent,
+  FlexRenderDirective,
+  injectFlexRenderContext,
+} from './flex-render'
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>,
@@ -56,6 +61,18 @@ export function createAngularTable<TData extends RowData>(
     // set table options for the first time
     updateOptions()
 
-    return table
+    // convert table instance to signal for proxify to listen to any table state and options changes
+    const tableSignal = computed(
+      () => {
+        void [state(), resolvedOptionsSignal()]
+        return table
+      },
+      {
+        equal: () => false,
+      }
+    )
+
+    // proxify Table instance to provide ability for consumer to listen to any table state changes
+    return proxifyTable(tableSignal)
   })
 }
