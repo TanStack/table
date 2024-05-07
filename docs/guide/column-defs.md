@@ -4,7 +4,7 @@ title: Columns Guide
 
 ## API
 
-[Table API](../../api/core/table)
+[Column Def](../../api/core/column-def)
 
 ## Column Definitions Guide
 
@@ -142,6 +142,38 @@ columnHelper.accessor('firstName')
 
 {
   accessorKey: 'firstName',
+}
+```
+
+## Deep Keys
+
+If each of your items is an object with the following shape:
+
+```tsx
+type Person = {
+  name: {
+    first: string
+    last: string
+  }
+  info: {
+    age: number
+    visits: number
+  }
+}
+```
+
+You could extract the `first` value like so:
+
+```tsx
+columnHelper.accessor('name.first'), {
+  id: 'firstName',
+}
+
+// OR
+
+{
+  accessorKey: 'name.first',
+  id: 'firstName',
 }
 ```
 

@@ -22,6 +22,10 @@
           "to": "installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "FAQ",
           "to": "faq"
         }
@@ -31,7 +35,7 @@
           "label": "qwik",
           "children": [
             {
-              "label": "Qwik Table",
+              "label": "Qwik Table Adapter",
               "to": "framework/qwik/qwik-table"
             }
           ]
@@ -40,7 +44,7 @@
           "label": "react",
           "children": [
             {
-              "label": "React Table",
+              "label": "React Table Adapter",
               "to": "framework/react/react-table"
             }
           ]
@@ -49,7 +53,7 @@
           "label": "solid",
           "children": [
             {
-              "label": "Solid Table",
+              "label": "Solid Table Adapter",
               "to": "framework/solid/solid-table"
             }
           ]
@@ -58,7 +62,7 @@
           "label": "svelte",
           "children": [
             {
-              "label": "Svelte Table",
+              "label": "Svelte Table Adapter",
               "to": "framework/svelte/svelte-table"
             }
           ]
@@ -67,7 +71,7 @@
           "label": "vue",
           "children": [
             {
-              "label": "Vue Table",
+              "label": "Vue Table Adapter",
               "to": "framework/vue/vue-table"
             }
           ]
@@ -76,7 +80,7 @@
           "label": "vanilla",
           "children": [
             {
-              "label": "Vanilla JS/TS",
+              "label": "Vanilla JS (No Framework)",
               "to": "vanilla"
             }
           ]
@@ -87,16 +91,16 @@
       "label": "Core Guides",
       "children": [
         {
-          "label": "Migrating to V8",
-          "to": "guide/migrating"
-        },
-        {
-          "label": "Table Instance",
-          "to": "guide/tables"
+          "label": "Data (and TypeScript)",
+          "to": "guide/data"
         },
         {
           "label": "Column Defs",
           "to": "guide/column-defs"
+        },
+        {
+          "label": "Table Instance",
+          "to": "guide/tables"
         },
         {
           "label": "Rows Models",
