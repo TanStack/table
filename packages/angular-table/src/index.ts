@@ -1,10 +1,10 @@
-import { computed, effect, inject, Injector, signal } from '@angular/core'
+import { computed, signal } from '@angular/core'
 import {
-  createTable,
   RowData,
   TableOptions,
   TableOptionsResolved,
   TableState,
+  createTable,
   type Table,
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
@@ -19,62 +19,46 @@ export {
 } from './flex-render'
 
 export function createAngularTable<TData extends RowData>(
-  options: () => TableOptions<TData>,
-  injector?: Injector
+  options: () => TableOptions<TData>
 ): Table<TData> {
-  if (!injector) injector = inject(Injector)
-
   return lazyInit(() => {
-    // Compose table resolved options as computed.
-    // This will allow the effect to be triggered when options are updated.
-    const resolvedOptionsSignal = computed<TableOptionsResolved<TData>>(() => ({
+    const resolvedOptions = {
       state: {},
       onStateChange: () => {},
       renderFallbackValue: null,
       ...options(),
-    }))
+    }
 
-    const table = createTable(resolvedOptionsSignal())
+    const table = createTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
     const state = signal<TableState>(table.initialState)
 
-    function updateOptions() {
+    // Compose table options using computed.
+    // This is to allow `tableSignal` to listen and set table option
+    const updatedOptions = computed<TableOptionsResolved<TData>>(() => {
+      // listen to table state changed
       const tableState = state()
-      const resolvedOptions = resolvedOptionsSignal()
-      table.setOptions(prev => ({
-        ...prev,
+      // listen to input options changed
+      const tableOptions = options()
+      return {
+        ...table.options,
         ...resolvedOptions,
-        state: { ...tableState, ...resolvedOptions.state },
+        ...tableOptions,
+        state: { ...tableState, ...tableOptions.state },
         onStateChange: updater => {
           const value =
             updater instanceof Function ? updater(tableState) : updater
           state.set(value)
           resolvedOptions.onStateChange?.(updater)
         },
-      }))
-    }
-
-    // notifier for tableSignal whenever `updateOptions` is invoked
-    // this to make sure that table options is set first before table
-    // instance change is propagated to consumer
-    const tableChangeNotifier = signal([], { equal: () => false })
-    // set table options again when options are updated
-    effect(
-      () => {
-        updateOptions()
-        tableChangeNotifier.set([])
-      },
-      { injector }
-    )
-
-    // set table options for the first time
-    updateOptions()
+      }
+    })
 
     // convert table instance to signal for proxify to listen to any table state and options changes
     const tableSignal = computed(
       () => {
-        tableChangeNotifier()
+        table.setOptions(updatedOptions())
         return table
       },
       {
