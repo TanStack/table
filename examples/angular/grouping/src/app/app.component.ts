@@ -3,19 +3,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   signal,
 } from '@angular/core'
 import {
-  createAngularTable,
   FlexRenderDirective,
+  GroupingState,
+  Updater,
+  createAngularTable,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
   getPaginationRowModel,
-  GroupingState,
-  Updater,
 } from '@tanstack/angular-table'
 import { columns } from './columns'
 import { makeData } from './makeData'
@@ -34,7 +33,7 @@ export class AppComponent {
 
   stringifiedGrouping = computed(() => JSON.stringify(this.grouping(), null, 2))
 
-  table = createAngularTable(() => ({
+  tableOptions = computed(() => ({
     data: this.data(),
     columns: columns,
     state: {
@@ -54,6 +53,8 @@ export class AppComponent {
     getFilteredRowModel: getFilteredRowModel(),
     debugTable: true,
   }))
+
+  table = createAngularTable(this.tableOptions)
 
   onPageInputChange(event: any): void {
     const page = event.target.value ? Number(event.target.value) - 1 : 0
