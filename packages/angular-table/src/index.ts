@@ -55,8 +55,18 @@ export function createAngularTable<TData extends RowData>(
       }))
     }
 
+    // notifier for tableSignal whenever `updateOptions` is invoked
+    // this to make sure that table options is set first before table
+    // instance change is propagated to consumer
+    const tableChangeNotifier = signal([], { equal: () => false })
     // set table options again when options are updated
-    effect(() => updateOptions(), { injector })
+    effect(
+      () => {
+        updateOptions()
+        tableChangeNotifier.set([])
+      },
+      { injector }
+    )
 
     // set table options for the first time
     updateOptions()
@@ -64,7 +74,7 @@ export function createAngularTable<TData extends RowData>(
     // convert table instance to signal for proxify to listen to any table state and options changes
     const tableSignal = computed(
       () => {
-        void [state(), resolvedOptionsSignal()]
+        tableChangeNotifier()
         return table
       },
       {
