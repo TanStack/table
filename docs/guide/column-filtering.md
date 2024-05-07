@@ -6,14 +6,14 @@ title: Column Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters](../../framework/react/examples/filters) (includes faceting)
-- [filters-faceted](../../framework/react/examples/filters-faceted)
-- [filters-fuzzy](../../framework/react/examples/filters-fuzzy)
-- [editable-data](../../framework/react/examples/editable-data)
-- [expanding](../../framework/react/examples/expanding)
-- [grouping](../../framework/react/examples/grouping)
-- [pagination](../../framework/react/examples/pagination)
-- [row-selection](../../framework/react/examples/row-selection)
+- [Column Filters](../../framework/react/examples/filters)
+- [Faceted Filters](../../framework/react/examples/filters-faceted) (Autocomplete and Range filters)
+- [Fuzzy Search](../../framework/react/examples/filters-fuzzy) (Match Sorter)
+- [Editable Data](../../framework/react/examples/editable-data)
+- [Expanding](../../framework/react/examples/expanding) (Filtering from Sub-Rows)
+- [Grouping](../../framework/react/examples/grouping)
+- [Pagination](../../framework/react/examples/pagination)
+- [Row Selection](../../framework/react/examples/row-selection)
 
 ## API
 
