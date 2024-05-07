@@ -2,7 +2,7 @@
 title: Data Guide
 ---
 
-## Data (and TypeScript) Guide
+## Data Guide
 
 Tables start with your data. Your column definitions and rows will depend on the shape of your data. TanStack Table has some TypeScript features that will help you create the rest of your table code with a great type-safe experience. If you set up your data and types correctly, TanStack Table will be able to infer the shape of your data and enforce that your column definitions are made correctly.
 
