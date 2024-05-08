@@ -105,8 +105,6 @@ function App() {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  console.log(table.getAllFlatColumns())
-
   return (
     <div className="p-2">
       <table>
