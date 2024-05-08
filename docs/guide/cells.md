@@ -8,7 +8,7 @@ title: Cells Guide
 
 ## Cells Guide
 
-This quick guide will discuss the different ways you can retrieve and interact with cell objects in TanStack Table.
+This quick guide will discuss the different ways you can retrieve and interact with `cell` objects in TanStack Table.
 
 ### Where to Get Cells From
 

@@ -8,6 +8,8 @@ title: Columns Guide
 
 ## Column Definitions Guide
 
+> Note: This guide is about setting up column definitions for your table and NOT about the actual [`column`](../columns) objects that are generated within the table instance.
+
 Column defs are the single most important part of building a table. They are responsible for:
 
 - Building the underlying data model that will be used for everything including sorting, filtering, grouping, etc.
