@@ -170,7 +170,7 @@ export const createRow = <TData extends RowData>(
     getAllCells: () => {
       const leafColumns = table.getAllLeafColumns()
       return leafColumns.map(column => {
-        return createCell(table, row, column, column.id)
+        return createCell(table, row as Row<TData>, column, column.id)
       })
     },
 
