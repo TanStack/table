@@ -80,10 +80,10 @@ export class AppComponent {
     state: {
       columnFilters: this.columnFilters(),
     },
-    onColumnFiltersChange: updaterOrValue => {
-      typeof updaterOrValue === 'function'
-        ? this.columnFilters.update(updaterOrValue)
-        : this.columnFilters.set(updaterOrValue)
+    onColumnFiltersChange: updater => {
+      updater instanceof Function
+        ? this.columnFilters.update(updater)
+        : this.columnFilters.set(updater)
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), //client-side filtering

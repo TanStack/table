@@ -2,7 +2,7 @@
 title: Angular Table
 ---
 
-The `@tanstack/angular-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing state the "angular" way, providing types and the rendering implementation of cell/header/footer templates.
+The `@tanstack/angular-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing state the "angular signals" way, providing types and the rendering implementation of cell/header/footer templates.
 
 ## Exports
 
@@ -15,8 +15,14 @@ Takes an `options` object and returns a table.
 ```ts
 import { createAngularTable } from '@tanstack/angular-table'
 
-ngOnInit() {
-  this.table = createAngularTable(options)
+export class AppComponent {
+  data = signal<Person[]>([])
+
+  table = createAngularTable(() => ({
+    data: this.data(),
+    columns: defaultColumns,
+    getCoreRowModel: getCoreRowModel(),
+  }))
 }
 // ...render your table in template
 
@@ -36,24 +42,23 @@ Example:
 ```
 
 ```angular2html
-  <tbody>
-    @for (row of table.getRowModel().rows; track row.id) {
-      <tr>
-        @for (cell of row.getVisibleCells(); track cell.id) {
-          <td>
-            <ng-container
-              *flexRender="
-                cell.column.columnDef.cell;
-                props: cell.getContext();
-                let cell
-              "
-            >
-              {{ cell }}
-            </ng-container>
-          </td>
-        }
-      </tr>
-    }
-  </tbody>
-</template>
+<tbody>
+  @for (row of table.getRowModel().rows; track row.id) {
+    <tr>
+      @for (cell of row.getVisibleCells(); track cell.id) {
+        <td>
+          <ng-container
+            *flexRender="
+              cell.column.columnDef.cell;
+              props: cell.getContext();
+              let cell
+            "
+          >
+            <div [innerHTML]="cell"></div>
+          </ng-container>
+        </td>
+      }
+    </tr>
+  }
+</tbody>
 ```

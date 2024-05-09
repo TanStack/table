@@ -11,14 +11,16 @@ TanStack Table has a simple underlying internal state management system to store
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
 ```ts
-this.table = createAngularTable({
-  data: this.data,
-  columns: columns,
+table = createAngularTable(() => ({
+  columns: this.columns,
+  data: this.data(),
   //...
-})
+}))
 
-console.log(this.table.getState()) //access the entire internal state
-console.log(this.table.getState().rowSelection) //access just the row selection state
+someHandler() {
+  console.log(this.table.getState()) //access the entire internal state
+  console.log(this.table.getState().rowSelection) //access just the row selection state
+}
 ```
 
 ### Custom Initial State
@@ -26,9 +28,9 @@ console.log(this.table.getState().rowSelection) //access just the row selection 
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
 ```jsx
-const table = useAngularTable({
-  columns,
-  data,
+table = createAngularTable(() => ({
+  columns: this.columns,
+  data: this.data(),
   initialState: {
     columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
     columnVisibility: {
@@ -43,7 +45,7 @@ const table = useAngularTable({
     ]
   },
   //...
-})
+}))
 ```
 
 > **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
@@ -61,39 +63,50 @@ In order to control a particular state, you need to both pass in the correspondi
 Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
 
 ```jsx
-const columnFilters = Angular.useSignal([]) //no default filters
-const sorting = Angular.useSignal([{
-  id: 'age',
-  desc: true, //sort by age in descending order by default
-}]) 
-const pagination = Angular.useSignal({ pageIndex: 0, pageSize: 15 })
+readonly columnFilters = Angular.signal<ColumnFiltersState>([]) //no default filters
+readonly sorting = Angular.signal<SortingState[]>([
+  {
+    id: 'age',
+    desc: true, //sort by age in descending order by default
+  }
+])
+readonly pagination = Angular.signal<PaginationState>({
+  pageIndex: 0,
+  pageSize: 15
+})
 
 //Use our controlled state values to fetch data
-const tableQuery = useQuery({
+tableQuery = injectQuery(() => ({
   queryKey: ['users', columnFilters.value, sorting.value, pagination.value],
   queryFn: () => fetchUsers(columnFilters.value, sorting.value, pagination.value),
   //...
-})
+}))
 
-const table = useAngularTable({
-  columns: columns.value,
-  data: tableQuery.data,
+table = createAngularTable(() => ({
+  columns: this.columns,
+  data: tableQuery.data(),
   //...
   state: {
-    columnFilters: columnFilters.value, //pass controlled state back to the table (overrides internal state)
-    sorting: sorting.value,
-    pagination: pagination.value,
+    columnFilters: this.columnFilters(), //pass controlled state back to the table (overrides internal state)
+    sorting: this.sorting(),
+    pagination: this.pagination(),
   },
-  onColumnFiltersChange: updater => {
-    columnFilters.value = updater instanceOf Function ? updater(columnFilters.value) : updater //hoist columnFilters state into our own state management
+  onColumnFiltersChange: updater => { //hoist columnFilters state into our own state management
+    updater instanceof Function
+      ? this.columnFilters.update(updater)
+      : this.columnFilters.set(updater)
   },
   onSortingChange: updater => {
-    sorting.value = updater instanceOf Function ? updater(sorting.value) : updater
+    updater instanceof Function
+      ? this.sorting.update(updater)
+      : this.sorting.set(updater)
   },
   onPaginationChange: updater => {
-    pagination.value = updater instanceOf Function ? updater(pagination.value) : updater
+    updater instanceof Function
+      ? this.pagination.update(updater)
+      : this.pagination.set(updater)
   },
-})
+}))
 //...
 ```
 
@@ -105,15 +118,15 @@ A couple of more tricks may be needed to make this work. If you use the `onState
 
 ```jsx
 //create a table instance with default state values
-const table = useAngularTable({
-  columns,
-  data,
+initTable = createAngularTable(() => ({
+  columns: this.columns,
+  data: this.data(),
   //... Note: `state` values are NOT passed in yet
-})
+}))
 
 
-const sate = Angular.useSignal({
-  ...table.initialState, //populate the initial state with all of the default state values from the table instance
+sate = Angular.useSignal({
+  ...initTable.initialState, //populate the initial state with all of the default state values from the table instance
   pagination: {
     pageIndex: 0,
     pageSize: 15 //optionally customize the initial pagination state.
@@ -121,13 +134,14 @@ const sate = Angular.useSignal({
 })
 
 //Use the table.setOptions API to merge our fully controlled state onto the table instance
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  state: state.value, //our fully controlled state overrides the internal state
-  onStateChange: updater => {
-    state.value = updater instanceOf Function ? updater(state.value) : updater //any state changes will be pushed up to our own state management
-  },
-}))
+//TODO - how to do this in Angular class?
+// table = initTable.setOptions(prev => ({
+//   ...prev, //preserve any other options that we have set up above
+//   state: state.value, //our fully controlled state overrides the internal state
+//   onStateChange: updater => {
+//     state.value = updater instanceOf Function ? updater(state.value) : updater //any state changes will be pushed up to our own state management
+//   },
+// }))
 ```
 
 ### On State Change Callbacks
@@ -139,19 +153,21 @@ So far, we have seen the `on[State]Change` and `onStateChange` table options wor
 Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
 
 ```jsx
-const sorting = Angular.useSignal([])
+sorting = Angular.useSignal([])
 //...
-const table = useAngularTable({
-  columns,
-  data,
+table = createAngularTable(() => ({
+  columns: this.columns,
+  data: this.data(),
   //...
   state: {
-    sorting: sorting.value, //required because we are using `onSortingChange`
+    sorting: this.sorting(), //required because we are using `onSortingChange`
   },
-  onSortingChange: updater => {
-    sorting.value = updater instanceOf Function ? updater(sorting) : updater //makes the `state.sorting` controlled
-  }, 
-})
+  onSortingChange: updater => { // makes the `state.sorting` controlled
+    updater instanceof Function
+      ? this.sorting.update(updater)
+      : this.sorting.set(updater)
+  }
+}))
 ```
 
 #### 2. **Updaters can either be raw values or callback functions**.
@@ -160,14 +176,14 @@ The `on[State]Change` and `onStateChange` callbacks work exactly like the `setSt
 
 What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
 
-This is why you will see the `updater instanceOf Function ? updater(state.value) : updater` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value.
+This is why you will see the `updater instanceOf Function ? this.state.update(updater) : this.state.set(updater)` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value.
 
 ### State Types
 
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { useAngularTable, SortingState } from '@tanstack/angular-table'
+import { createAngularTable, SortingState } from '@tanstack/angular-table'
 //...
 const sorting = Angular.useSignal<SortingState[]>([
   {

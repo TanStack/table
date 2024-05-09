@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Injectable,
   signal,
 } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
