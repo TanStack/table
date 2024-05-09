@@ -19,7 +19,21 @@ As it was mentioned extensively in the [Intro](../introduction) section, TanStac
 Since TanStack Table is headless and runs on a vanilla JavaScript core, it is agnostic in a couple of ways:
 
 1. TanStack Table is **Framework Agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Vue, Solid, Svelte, and Qwik out of the box, but you can create your own adapter if you need to.
-2. TanStack Table is **CSS / Component Library Agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind or ShadCN? No problem! Want to use Material UI or Bootstrap? No problem!
+2. TanStack Table is **CSS / Component Library Agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind or ShadCN? No problem! Want to use Material UI or Bootstrap? No problem! Have your own custom design system? TanStack Table was made for you!
+
+## Core Objects and Types
+
+The table core uses the following abstractions, commonly exposed by adapters:
+
+- [Data](../guide/data) - The core data array you provide the table
+- [Column Defs](../guide/column-defs): Objects used to configure a column and its data model, display templates, and more
+- [Table Instance](../guide/tables): The core table object containing both state and API
+- [Row Models](../guide/row-models): How the `data` array is transformed into useful rows depending on the features you are using
+- [Rows](../guide/rows): Each row mirrors its respective row data and provides row-specific APIs
+- [Cells](../guide/cells): Each cell mirrors its respective row-column intersection and provides cell-specific APIs
+- [Header Groups](../guide/header-groups):  Header groups are computed slices of nested header levels, each containing a group of headers
+- [Headers](../guide/headers): Each header is either directly associated with or derived from its column def and provides header-specific APIs
+- [Columns](../guide/columns): Each column mirrors its respective column def and also provides column-specific APIs
 
 ## Features
 
@@ -47,24 +61,3 @@ These are just some of the capabilities that you can build with TanStack Table. 
 TanStack Table also supports [Custom Features](../guide/custom-features) (plugins) that you can use to modify the table instance to add your own custom logic to the table in a more integrated way.
 
 And of course, you can just write your own state and hooks to add whatever other features you want for your table. The features from the TanStack Table core are just a solid foundation to build on, with a large focus on performance and DX.
-
-## Core Objects and Types
-
-The table core uses the following abstractions, commonly exposed by adapters:
-
-- Column Defs
-  - Objects used to configure a column and its data model, display templates, and more
-- Table
-  - The core table object containing both state and API
-- Table Data
-  - The core data array you provide the table
-- Columns
-  - Each column mirrors its respective column def and also provides column-specific APIs
-- Rows
-  - Each row mirrors its respective row data and provides row-specific APIs
-- Header Groups
-  - Header groups are computed slices of nested header levels, each containing a group of headers
-- Headers
-  - Each header is either directly associated with or derived from its column def and provides header-specific APIs
-- Cells
-  - Each cell mirrors its respective row-column intersection and provides cell-specific APIs

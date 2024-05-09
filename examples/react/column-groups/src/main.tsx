@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -97,7 +96,7 @@ const columns = [
 ]
 
 function App() {
-  const [data, setData] = React.useState(() => [...defaultData])
+  const [data, _setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useReactTable({
