@@ -22,7 +22,7 @@ Define your data as an array of objects with a stable reference. `data` can come
 
 #### Defining Columns
 
-Column definitions are covered in detail in the next section in the [Column Def Guide](../column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
+Column definitions are covered in detail in the previous section in the [Column Def Guide](../column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
 
 ```ts
 const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
@@ -79,4 +79,4 @@ For example, you can find the core table instance API docs here: [Table API](../
 
 ### Table Row Models
 
-There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](../guide/row-models).
+There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](../row-models).
