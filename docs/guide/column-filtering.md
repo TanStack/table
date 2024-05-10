@@ -323,15 +323,15 @@ const table = useReactTable({
 
 There are a lot of Column and Table APIs that you can use to interact with the column filter state and hook up to your UI components. Here is a list of the available APIs and their most common use-cases:
 
-- `table.setColumnFilters` - Overwrite the entire column filter state with a new state
-- `table.resetColumnFilters` - Useful for a "clear all/reset filters" button
+- `table.setColumnFilters` - Overwrite the entire column filter state with a new state.
+- `table.resetColumnFilters` - Useful for a "clear all/reset filters" button.
 
-- **`column.getFilterValue`** - Useful for getting the default initial filter value for an input, or even directly providing the filter value to a filter input
-- **`column.setFilterValue`** - Useful for connecting filter inputs to their `onChange` or `onBlur` handlers
+- **`column.getFilterValue`** - Useful for getting the default initial filter value for an input, or even directly providing the filter value to a filter input.
+- **`column.setFilterValue`** - Useful for connecting filter inputs to their `onChange` or `onBlur` handlers.
 
-- `column.getCanFilter` - Useful for disabling/enabling filter inputs
-- `column.getIsFiltered` - Useful for displaying a visual indicator that a column is currently being filtered
-- `column.getFilterIndex` - Useful for displaying in what order the current filter is being applied
+- `column.getCanFilter` - Useful for disabling/enabling filter inputs.
+- `column.getIsFiltered` - Useful for displaying a visual indicator that a column is currently being filtered.
+- `column.getFilterIndex` - Useful for displaying in what order the current filter is being applied.
 
-- `column.getAutoFilterFn` - 
-- `column.getFilterFn` - Useful for displaying which filter mode or function is currently being used
+- `column.getAutoFilterFn` - Used internally to find the default filter function for a column if none is specified.
+- `column.getFilterFn` - Useful for displaying which filter mode or function is currently being used.
