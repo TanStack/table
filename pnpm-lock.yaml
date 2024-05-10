@@ -118,6 +118,25 @@ importers:
         specifier: ^5.2.10
         version: 5.2.10(@types/node@20.12.7)
 
+  examples/lit/filters:
+    dependencies:
+      '@tanstack/lit-table':
+        specifier: workspace:*
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.1.3
+        version: 3.1.3
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.5
+        version: 5.0.5(rollup@4.16.4)
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.2.10
+        version: 5.2.10(@types/node@20.12.7)
+
   examples/lit/sorting:
     dependencies:
       '@tanstack/lit-table':
