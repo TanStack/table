@@ -58,7 +58,7 @@ The `@tanstack/qwik-table` package works with Qwik 1.
 npm install @tanstack/angular-table
 ```
 
-The `@tanstack/angular-table` package works with Angular 17.
+The `@tanstack/angular-table` package works with Angular 17. The Angular adapter uses a new Angular Signal implementation.
 
 ## Table Core (no framework)
 

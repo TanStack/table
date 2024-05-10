@@ -391,11 +391,35 @@
             },
             {
               "to": "framework/angular/examples/grouping",
-              "label": "Grouping"
+              "label": "Column Grouping"
+            },
+            {
+              "to": "framework/angular/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/angular/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "column-pinning-sticky",
+              "label": "Sticky Column Pinning"
+            },
+            {
+              "to": "framework/angular/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/angular/examples/filters",
+              "label": "Column Filters"
             },
             {
               "to": "framework/angular/examples/row-selection",
               "label": "Row Selection"
+            },
+            {
+              "to": "framework/angular/examples/signal-input",
+              "label": "Signal Input"
             }
           ]
         },
