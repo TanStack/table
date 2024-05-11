@@ -1,8 +1,5 @@
 import { customElement } from 'lit/decorators.js'
-import {
-  html,
-  LitElement
-} from 'lit'
+import { html, LitElement } from 'lit'
 import {
   ColumnDef,
   flexRender,
@@ -141,26 +138,27 @@ class LitTableExample extends LitElement {
           )}
         </thead>
         <tbody>
-          ${repeat(
-            table.getRowModel().rows.slice(0, 10),
-            row => row.id,
-            row => html`
-              <tr>
-                ${repeat(
-                  row.getVisibleCells(),
-                  cell => cell.id,
-                  cell => html`
-                    <td>
-                      ${flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  `
-                )}
-              </tr>
-            `
-          )}
+          ${table
+            .getRowModel()
+            .rows.slice(0, 10)
+            .map(
+              row => html`
+                <tr>
+                  ${row
+                    .getVisibleCells()
+                    .map(
+                      cell => html`
+                        <td>
+                          ${flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      `
+                    )}
+                </tr>
+              `
+            )}
         </tbody>
       </table>
       <pre>${JSON.stringify(this._sorting, null, 2)}</pre>
