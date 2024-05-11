@@ -79,7 +79,7 @@ class LitTableExample extends LitElement {
 
   private tableController = new TableController<Person>(this)
 
-  protected render(): unknown {
+  protected render() {
     const table = this.tableController.getTable({
       columns,
       data,
