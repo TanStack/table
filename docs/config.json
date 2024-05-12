@@ -402,7 +402,7 @@
               "label": "Column Pinning"
             },
             {
-              "to": "column-pinning-sticky",
+              "to": "framework/angular/examples/column-pinning-sticky",
               "label": "Sticky Column Pinning"
             },
             {
