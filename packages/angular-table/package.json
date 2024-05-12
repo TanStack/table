@@ -26,7 +26,8 @@
   "exports": {
     ".": {
       "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/esm2022/index.mjs",
+      "esm": "./build/lib/esm2022/index.mjs",
+      "esm2022": "./build/lib/esm2022/index.mjs",
       "default": "./build/lib/fesm2022/tanstack-angular-table.mjs"
     },
     "./package.json": {
