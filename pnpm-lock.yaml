@@ -335,6 +335,9 @@ importers:
       '@angular/platform-browser-dynamic':
         specifier: ^17.3.1
         version: 17.3.6(@angular/common@17.3.6)(@angular/compiler@17.3.6)(@angular/core@17.3.1)(@angular/platform-browser@17.3.6)
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/angular-table':
         specifier: ^8.17.0
         version: link:../../../packages/angular-table
@@ -11761,6 +11764,8 @@ packages:
       webpack: '*'
     peerDependenciesMeta:
       webpack:
+        optional: true
+      webpack-sources:
         optional: true
     dependencies:
       webpack: 5.90.3(esbuild@0.20.2)
