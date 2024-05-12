@@ -62,9 +62,6 @@ importers:
       knip:
         specifier: ^5.10.0
         version: 5.10.0(@types/node@20.12.7)(typescript@5.4.5)
-      ng-packagr:
-        specifier: ^17.3.0
-        version: 17.3.0(@angular/compiler-cli@17.3.6)(tslib@2.6.2)(typescript@5.4.5)
       nx:
         specifier: ^18.3.4
         version: 18.3.4
@@ -95,9 +92,6 @@ importers:
       size-limit:
         specifier: ^11.1.2
         version: 11.1.2
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -143,7 +137,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -213,7 +207,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -283,7 +277,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -353,7 +347,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -423,7 +417,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -499,7 +493,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -569,7 +563,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -645,7 +639,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -712,7 +706,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^17.3.1
-        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5)
+        version: 17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5)
       '@angular/cli':
         specifier: ^17.3.1
         version: 17.3.6
@@ -2557,10 +2551,16 @@ importers:
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
     devDependencies:
       '@angular/core':
         specifier: ^17.3.1
         version: 17.3.1(rxjs@7.8.1)(zone.js@0.14.4)
+      ng-packagr:
+        specifier: ^17.3.0
+        version: 17.3.0(@angular/compiler-cli@17.3.6)(tslib@2.6.2)(typescript@5.4.5)
 
   packages/match-sorter-utils:
     dependencies:
@@ -2666,7 +2666,7 @@ packages:
       - chokidar
     dev: true
 
-  /@angular-devkit/build-angular@17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(ng-packagr@17.3.0)(typescript@5.4.5):
+  /@angular-devkit/build-angular@17.3.6(@angular/compiler-cli@17.3.6)(@types/node@20.12.7)(karma@6.4.3)(typescript@5.4.5):
     resolution: {integrity: sha512-K4CEZvhQZUUOpmXPVoI1YBM8BARbIlqE6FZRxakmnr+YOtVTYE5s+Dr1wgja8hZIohNz6L7j167G9Aut7oPU/w==}
     engines: {node: ^18.13.0 || >=20.9.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
@@ -2747,7 +2747,6 @@ packages:
       magic-string: 0.30.8
       mini-css-extract-plugin: 2.8.1(webpack@5.90.3)
       mrmime: 2.0.0
-      ng-packagr: 17.3.0(@angular/compiler-cli@17.3.6)(tslib@2.6.2)(typescript@5.4.5)
       open: 8.4.2
       ora: 5.4.1
       parse5-html-rewriting-stream: 7.0.0
@@ -12362,7 +12361,7 @@ packages:
       injection-js: 2.4.0
       jsonc-parser: 3.2.1
       less: 4.2.0
-      ora: 5.3.0
+      ora: 5.4.1
       piscina: 4.4.0
       postcss: 8.4.38
       rxjs: 7.8.1
