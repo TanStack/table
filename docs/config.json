@@ -32,6 +32,15 @@
       ],
       "frameworks": [
         {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Angular Table Adapter",
+              "to": "framework/angular/angular-table"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
@@ -128,6 +137,15 @@
         }
       ],
       "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/angular/guide/table-state"
+            }
+          ]
+        },
         {
           "label": "qwik",
           "children": [
@@ -364,6 +382,47 @@
       "label": "Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "to": "framework/angular/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/angular/examples/grouping",
+              "label": "Column Grouping"
+            },
+            {
+              "to": "framework/angular/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/angular/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "column-pinning-sticky",
+              "label": "Sticky Column Pinning"
+            },
+            {
+              "to": "framework/angular/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/angular/examples/filters",
+              "label": "Column Filters"
+            },
+            {
+              "to": "framework/angular/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/angular/examples/signal-input",
+              "label": "Signal Input"
+            }
+          ]
+        },
         {
           "label": "qwik",
           "children": [

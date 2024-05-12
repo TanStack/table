@@ -12,7 +12,7 @@ If you use TypeScript, you will get top-notch type safety and editor autocomplet
 
 ## Headless
 
-As it was mentioned extensively in the [Intro](../introduction) section, TanStack Table is **headless**. This means that it doesn't render any DOM elements, and instead relies on you, the UI/UX developer to provide the table's markup and styles. This is a great way to build a table that can be used in any UI framework, including React, Vue, Solid, Svelte, Qwik, and even JS-to-native platforms like React Native!
+As it was mentioned extensively in the [Intro](../introduction) section, TanStack Table is **headless**. This means that it doesn't render any DOM elements, and instead relies on you, the UI/UX developer to provide the table's markup and styles. This is a great way to build a table that can be used in any UI framework, including React, Vue, Solid, Svelte, Qwik, Angular, and even JS-to-native platforms like React Native!
 
 ## Agnostic
 

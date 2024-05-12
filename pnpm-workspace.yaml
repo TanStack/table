@@ -1,5 +1,6 @@
 packages:
   - 'packages/*'
+  - 'examples/angular/*'
   - 'examples/qwik/*'
   - 'examples/react/*'
   - 'examples/solid/*'

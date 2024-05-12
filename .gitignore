@@ -39,6 +39,7 @@ stats.html
 *.log
 .DS_Store
 .cache
+.idea
 .pnpm-store
 
 package-lock.json
@@ -49,3 +50,5 @@ yarn.lock
 .nx/cache
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.angular

@@ -8,13 +8,13 @@ title: Table Instance Guide
 
 ## Table Instance Guide
 
-TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `useReactTable`, `createSolidTable`, `createSvelteTable`, `useQwikTable`, `useVueTable`).
+TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `useReactTable`, `useVueTable`, `createSolidTable`, `createSvelteTable`, `createAngularTable`, `useQwikTable`).
 
-The `table` instance that is returned from the `createTable` function (from the framework adapter) is the main object that you will interact with to read and mutate the table state. It is the one place where everything happens in TanStack Table.
+The `table` instance that is returned from the `createTable` function (from the framework adapter) is the main object that you will interact with to read and mutate the table state. It is the one place where everything happens in TanStack Table. When you get to the point where you are rendering your UI, you will use APIs from this `table` instance.
 
 ### Creating a Table Instance
 
-To create a table instance, 2 `options` are required: `columns` and `data`. There are dozens of other table options to configure features and behavior, but these 2 are required.
+To create a table instance, 3 `options` are required: `columns`, `data`, and a `getCoreRowModel` implementation. There are dozens of other table options to configure features and behavior, but these 3 are required.
 
 #### Defining Data
 
@@ -32,19 +32,35 @@ const columnHelper = createColumnHelper<User>() //Pass User type as the generic 
 
 The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../column-defs#creating-accessor-columns) for more info.
 
+#### Passing in Row Models
+
+This is explained in much more detail in the [Row Models Guide](../row-models), but for now, just import the `getCoreRowModel` function from TanStack Table and pass it in as a table option. Depending on the features you plan to use, you may need to pass in additional row models later.
+
+```ts
+import { getCoreRowModel } from '@tanstack/[framework]-table'
+
+const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+```
+
 #### Initializing the Table Instance
 
-With our `columns` and `data` defined, we can now create our basic table instance, along side the required row models and any other table options that we want to pass in.
+With our `columns`, `data`, and `getCoreRowModel` defined, we can now create our basic table instance, along side any other table options that we want to pass in.
 
 ```ts
 //vanilla js
 const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
+//angular
+this.table = createAngularTable({ columns: this.columns, data: this.data(), getCoreRowModel: getCoreRowModel() })
+
+//qwik
+const table = useQwikTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+
 //react
 const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //solid
-const table = createSolidTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = createSolidTable({ columns, get data() { return data() }, getCoreRowModel: getCoreRowModel() })
 
 //svelte
 const table = createSvelteTable({ columns, data, getCoreRowModel: getCoreRowModel() })
