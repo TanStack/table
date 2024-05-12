@@ -41,7 +41,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     private templateRef: TemplateRef<any>
   ) {}
 
-  ref?: ComponentRef<any> | EmbeddedViewRef<any> | null = null
+  ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 
   ngOnInit(): void {
     this.ref = this.render()
