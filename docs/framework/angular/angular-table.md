@@ -172,7 +172,7 @@ class AppComponent {
 }
 ```
 
-#### Rendering a TemplateRef
+#### Rendering a Component
 
 To render a Component into a specific column header/cell/footer, you can pass a `FlexRenderComponent instantiated with
 your `ComponentType, with the ability to include optional parameters such as inputs and an injector.
