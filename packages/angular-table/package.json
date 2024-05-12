@@ -48,10 +48,12 @@
     "build:types": "tsc --emitDeclarationOnly"
   },
   "dependencies": {
-    "@tanstack/table-core": "workspace:*"
+    "@tanstack/table-core": "workspace:*",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@angular/core": "^17.3.1"
+    "@angular/core": "^17.3.1",
+    "ng-packagr": "^17.3.0"
   },
   "peerDependencies": {
     "@angular/core": ">=17"
