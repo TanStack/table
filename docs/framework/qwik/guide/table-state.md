@@ -85,13 +85,13 @@ const table = useQwikTable({
     pagination: pagination.value,
   },
   onColumnFiltersChange: updater => {
-    columnFilters.value = updater instanceOf Function ? updater(columnFilters.value) : updater //hoist columnFilters state into our own state management
+    columnFilters.value = updater instanceof Function ? updater(columnFilters.value) : updater //hoist columnFilters state into our own state management
   },
   onSortingChange: updater => {
-    sorting.value = updater instanceOf Function ? updater(sorting.value) : updater
+    sorting.value = updater instanceof Function ? updater(sorting.value) : updater
   },
   onPaginationChange: updater => {
-    pagination.value = updater instanceOf Function ? updater(pagination.value) : updater
+    pagination.value = updater instanceof Function ? updater(pagination.value) : updater
   },
 })
 //...
@@ -125,7 +125,7 @@ table.setOptions(prev => ({
   ...prev, //preserve any other options that we have set up above
   state: state.value, //our fully controlled state overrides the internal state
   onStateChange: updater => {
-    state.value = updater instanceOf Function ? updater(state.value) : updater //any state changes will be pushed up to our own state management
+    state.value = updater instanceof Function ? updater(state.value) : updater //any state changes will be pushed up to our own state management
   },
 }))
 ```
@@ -149,7 +149,7 @@ const table = useQwikTable({
     sorting: sorting.value, //required because we are using `onSortingChange`
   },
   onSortingChange: updater => {
-    sorting.value = updater instanceOf Function ? updater(sorting) : updater //makes the `state.sorting` controlled
+    sorting.value = updater instanceof Function ? updater(sorting) : updater //makes the `state.sorting` controlled
   }, 
 })
 ```
@@ -160,7 +160,7 @@ The `on[State]Change` and `onStateChange` callbacks work exactly like the `setSt
 
 What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
 
-This is why you will see the `updater instanceOf Function ? updater(state.value) : updater` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value.
+This is why you will see the `updater instanceof Function ? updater(state.value) : updater` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value.
 
 ### State Types
 

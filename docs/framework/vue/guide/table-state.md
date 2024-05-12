@@ -94,19 +94,19 @@ const table = useVueTable({
   },
   onColumnFiltersChange: updater => {
     columnFilters.value =
-      updater instanceOf Function
+      updater instanceof Function
         ? updater(columnFilters.value)
         : updater
   },
   onSortingChange: updater => {
     sorting.value =
-      updater instanceOf Function
+      updater instanceof Function
         ? updater(sorting.value)
         : updater
   },
   onPaginationChange: updater => {
     pagination.value =
-      updater instanceOf Function
+      updater instanceof Function
         ? updater(pagination.value)
         : updater
   },

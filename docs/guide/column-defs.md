@@ -1,12 +1,14 @@
 ---
-title: Columns Guide
+title: Columns Definitions Guide
 ---
 
 ## API
 
-[Table API](../../api/core/table)
+[Column Def](../../api/core/column-def)
 
 ## Column Definitions Guide
+
+> Note: This guide is about setting up column definitions for your table and NOT about the actual [`column`](../columns) objects that are generated within the table instance.
 
 Column defs are the single most important part of building a table. They are responsible for:
 
@@ -142,6 +144,38 @@ columnHelper.accessor('firstName')
 
 {
   accessorKey: 'firstName',
+}
+```
+
+## Deep Keys
+
+If each of your items is an object with the following shape:
+
+```tsx
+type Person = {
+  name: {
+    first: string
+    last: string
+  }
+  info: {
+    age: number
+    visits: number
+  }
+}
+```
+
+You could extract the `first` value like so:
+
+```tsx
+columnHelper.accessor('name.first', {
+  id: 'firstName',
+})
+
+// OR
+
+{
+  accessorKey: 'name.first',
+  id: 'firstName',
 }
 ```
 

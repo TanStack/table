@@ -46,6 +46,7 @@ Try other [TanStack](https://tanstack.com) libraries:
 
 You may know **TanStack Table** by our adapter names, too!
 
+- [Angular Table](https://tanstack.com/table/v8/docs/adapters/angular-table)
 - [Qwik Table](https://tanstack.com/table/v8/docs/adapters/qwik-table)
 - [**React Table**](https://tanstack.com/table/v8/docs/adapters/react-table)
 - [Solid Table](https://tanstack.com/table/v8/docs/adapters/solid-table)
@@ -115,6 +116,7 @@ Install one of the following packages based on your framework of choice:
 
 ```bash
 # Npm
+npm install @tanstack/angular-table
 npm install @tanstack/qwik-table
 npm install @tanstack/react-table
 npm install @tanstack/solid-table
