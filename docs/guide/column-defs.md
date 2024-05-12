@@ -167,9 +167,9 @@ type Person = {
 You could extract the `first` value like so:
 
 ```tsx
-columnHelper.accessor('name.first'), {
+columnHelper.accessor('name.first', {
   id: 'firstName',
-}
+})
 
 // OR
 
