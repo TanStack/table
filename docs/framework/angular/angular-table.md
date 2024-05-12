@@ -77,13 +77,13 @@ Example:
 
 #### Rendering a TemplateRef
 
-In order to render a TemplateRef into a specific column header/cell/footer, you can
-pass the TemplateRef into the column definition.
+In order to render a TemplateRef into a specific column header/cell/footer, you can pass the TemplateRef into the column
+definition.
 
-You can access to the TemplateRef `data` via the $implicit property, which is
-valued based on what is passed in the `props` field of flexRender
+You can access the TemplateRef data via the `$implicit` property, which is valued based on what is passed in the props
+field of flexRender.
 
-In most cases, each TemplateRef will be rendered with the `$implicit` context valued based on the cell type in this way:
+In most cases, each TemplateRef will be rendered with the $implicit context valued based on the cell type in this way:
 
 - Header: `HeaderContext<T, ?>`
 - Cell: `CellContext<T, ?>`,
@@ -174,9 +174,8 @@ class AppComponent {
 
 #### Rendering a TemplateRef
 
-In order to render a Component into a specific column header/cell/footer, you can
-pass a `FlexRenderComponent` instantiated with your `ComponentType`, being able to pass
-inputs and injector as optional parameters.
+To render a Component into a specific column header/cell/footer, you can pass a `FlexRenderComponent instantiated with
+your `ComponentType, with the ability to include optional parameters such as inputs and an injector.
 
 ```ts
 import {FlexRenderComponent} from "@tanstack/angular-table";
@@ -196,12 +195,12 @@ class AppComponent {
 }
 ```
 
-Underneath, this uses
-the [ViewContainerRef#createComponent](https://angular.dev/api/core/ViewContainerRef#createComponent) api,
-so you should declare your custom inputs via the `@Input` decorator or `input/model` signals.
+Underneath, this utilizes
+the [ViewContainerRef#createComponent](https://angular.dev/api/core/ViewContainerRef#createComponent) api.
+Therefore, you should declare your custom inputs using the @Input decorator or input/model signals.
 
-You can still access to the table cell context, via the `injectFlexRenderContext` function, which
-returns the context value based on the props you pass to the `FlexRenderDirective`.
+You can still access the table cell context through the `injectFlexRenderContext` function, which returns the context
+value based on the props you pass to the `FlexRenderDirective`.
 
 ```ts
 @Component({
