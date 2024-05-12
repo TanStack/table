@@ -125,7 +125,7 @@ class TableComponent {
 
 Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a component tree, like `columnSizingInfo` state`, might cause bad performance issues.
 
-A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
+A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use a constructor in a special way as shown below.
 
 ```ts
 
@@ -197,7 +197,7 @@ The `on[State]Change` and `onStateChange` callbacks work exactly like the `setSt
 
 What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
 
-This is why you will see the `updater instanceof Function ? this.state.update(updater) : this.state.set(updater)` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value.
+This is why you will see the `updater instanceof Function ? this.state.update(updater) : this.state.set(updater)` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value, or the signal will require `signal.update` to be called with the updater instead of `signal.set`.
 
 ### State Types
 

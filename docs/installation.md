@@ -52,6 +52,8 @@ The `@tanstack/qwik-table` package works with Qwik 1.
 
 > NOTE: There will be a "breaking change" release in the near future to support Qwik 2. This will be released as a minor version bump, but will be documented. Qwik 2 itself will have no breaking changes, but its name on the npm registry will change, and require different peer dependencies.
 
+> NOTE: The current qwik adapter only works with CSR. More improvements may not be available until a future table version.
+
 ## Angular Table
 
 ```bash
