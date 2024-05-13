@@ -16,6 +16,7 @@ import {
 
 type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
+  | number
   | FlexRenderComponent<TProps>
   | TemplateRef<{ $implicit: TProps }>
   | null
@@ -28,8 +29,11 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   implements OnInit, DoCheck
 {
   @Input({ required: true, alias: 'flexRender' })
-  content: string | ((props: TProps) => FlexRenderContent<TProps>) | undefined =
-    undefined
+  content:
+    | number
+    | string
+    | ((props: TProps) => FlexRenderContent<TProps>)
+    | undefined = undefined
 
   @Input({ required: true, alias: 'flexRenderProps' })
   props: TProps = {} as TProps
@@ -63,7 +67,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return null
     }
 
-    if (typeof content === 'string') {
+    if (typeof content === 'string' || typeof content === 'number') {
       return this.renderStringContent()
     }
     if (typeof content === 'function') {
@@ -73,7 +77,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
-    if (typeof content === 'string') {
+    if (typeof content === 'string' || typeof content === 'number') {
       return this.renderStringContent()
     }
     if (content instanceof TemplateRef) {
@@ -90,7 +94,8 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   private renderStringContent(): EmbeddedViewRef<unknown> {
     const context = () => {
-      return typeof this.content === 'string'
+      return typeof this.content === 'string' ||
+        typeof this.content === 'number'
         ? this.content
         : this.content?.(this.props)
     }
