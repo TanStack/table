@@ -768,6 +768,9 @@ importers:
 
   examples/lit/filters:
     dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/lit-table':
         specifier: ^8.17.0
         version: link:../../../packages/lit-table
@@ -787,6 +790,9 @@ importers:
 
   examples/lit/row-selection:
     dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/lit-table':
         specifier: ^8.17.0
         version: link:../../../packages/lit-table
@@ -806,6 +812,9 @@ importers:
 
   examples/lit/sorting:
     dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@tanstack/lit-table':
         specifier: ^8.17.0
         version: link:../../../packages/lit-table
