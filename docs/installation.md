@@ -62,6 +62,14 @@ npm install @tanstack/angular-table
 
 The `@tanstack/angular-table` package works with Angular 17. The Angular adapter uses a new Angular Signal implementation.
 
+## Lit Table
+
+```bash
+npm install @tanstack/lit-table
+```
+
+The `@tanstack/lit-table` package works with Lit 3.
+
 ## Table Core (no framework)
 
 ```bash
