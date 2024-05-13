@@ -80,11 +80,16 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
         content,
         this.getTemplateRefContext()
       )
+    } else if (
+      typeof content === 'object' &&
+      content !== null &&
+      content !== undefined
+    ) {
+      return this.renderComponent(content)
     }
-    return this.renderComponent(content)
   }
 
-  private renderStringContent() {
+  private renderStringContent(): EmbeddedViewRef<unknown> {
     const context = () => {
       return typeof this.content === 'string'
         ? this.content
@@ -97,7 +102,9 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     })
   }
 
-  private renderComponent(flexRenderComponent: FlexRenderComponent<TProps>) {
+  private renderComponent(
+    flexRenderComponent: FlexRenderComponent<TProps>
+  ): ComponentRef<unknown> {
     const { component, inputs, injector } = flexRenderComponent
 
     const getContext = () => this.props
