@@ -18,6 +18,7 @@ type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
   | FlexRenderComponent<TProps>
   | TemplateRef<{ $implicit: TProps }>
+  | null
 
 @Directive({
   selector: '[flexRender]',
@@ -80,12 +81,10 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
         content,
         this.getTemplateRefContext()
       )
-    } else if (
-      typeof content === 'object' &&
-      content !== null &&
-      content !== undefined
-    ) {
+    } else if (content instanceof FlexRenderComponent) {
       return this.renderComponent(content)
+    } else {
+      return null
     }
   }
 
