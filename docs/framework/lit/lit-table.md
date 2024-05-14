@@ -6,18 +6,24 @@ The `@tanstack/lit-table` adapter is a wrapper around the core table logic. Most
 
 ## Exports
 
-`@tanstack/lit-table` re-exports all of `@tanstack/table-core`'s and the following:
+`@tanstack/lit-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
-### `useLitTable`
+### `TableController`
 
-Takes an `options` object and returns a table from a Lit Store with `NoSerialize`.
+Is a reactive controller that provides a `getTable` API that takes an `options` object and returns a table instance.
 
 ```ts
-import { useLitTable } from '@tanstack/lit-table'
+import { TableController } from '@tanstack/lit-table'
 
-const table = useLitTable(options)
-// ...render your table
+@customElement('my-table-element')
+class MyTableElement extends LitElement {
+  private tableController = new TableController<Person>(this)
 
+  protected render() {
+    const table = this.tableController.getTable(options)
+    // ...render your table
+  }
+}
 ```
 
 ### `flexRender`
@@ -29,19 +35,29 @@ Example:
 ```jsx
 import { flexRender } from '@tanstack/lit-table'
 //...
-return (
-  <tbody>
-    {table.getRowModel().rows.map(row => {
-      return (
-        <tr key={row.id}>
-          {row.getVisibleCells().map(cell => (
-            <td key={cell.id}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </td>
-          ))}
+return html`
+<tbody>
+  ${table
+    .getRowModel()
+    .rows.slice(0, 10)
+    .map(
+      row => html`
+        <tr>
+          ${row
+            .getVisibleCells()
+            .map(
+              cell => html`
+                <td>
+                  ${flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
+                </td>
+              `
+            )}
         </tr>
-      )
-    })}
-  </tbody>
-);
+      `
+    )}
+</tbody>
+`
 ```

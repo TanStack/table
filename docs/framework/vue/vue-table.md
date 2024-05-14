@@ -6,7 +6,7 @@ The `@tanstack/vue-table` adapter is a wrapper around the core table logic. Most
 
 ## Exports
 
-`@tanstack/vue-table` re-exports all of `@tanstack/table-core`'s and the following:
+`@tanstack/vue-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
 ### `useVueTable`
 
