@@ -53,7 +53,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           })
         })
 
-        const filterableIds = columnFilters.map(d => d.id)
+        const filterableIds = (columnFilters ?? []).map(d => d.id)
 
         const globalFilterFn = table.getGlobalFilterFn()
 
