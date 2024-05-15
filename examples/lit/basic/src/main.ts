@@ -116,7 +116,7 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<Person>(this)
 
   protected render(): unknown {
-    const table = this.tableController.getTable({
+    const table = this.tableController.useLitTable({
       columns,
       data,
       getCoreRowModel: getCoreRowModel(),

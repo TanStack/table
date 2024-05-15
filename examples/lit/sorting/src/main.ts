@@ -12,7 +12,7 @@ import {
   TableController,
 } from '@tanstack/lit-table'
 
-import { makeData, Person } from './makeData.ts'
+import { makeData, Person } from './makeData'
 
 const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
@@ -67,7 +67,7 @@ const columns: ColumnDef<Person>[] = [
   },
 ]
 
-const data: Person[] = makeData(100_000)
+const data: Person[] = makeData(1000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
@@ -77,7 +77,7 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<Person>(this)
 
   protected render() {
-    const table = this.tableController.getTable({
+    const table = this.tableController.useLitTable({
       columns,
       data,
       state: {
@@ -102,9 +102,7 @@ class LitTableExample extends LitElement {
             headerGroup => headerGroup.id,
             headerGroup => html`
               <tr>
-                ${repeat(
-                  headerGroup.headers,
-                  header => header.id,
+                ${headerGroup.headers.map(
                   header => html`
                     <th colspan="${header.colSpan}">
                       ${header.isPlaceholder

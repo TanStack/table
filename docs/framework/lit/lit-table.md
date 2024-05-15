@@ -10,7 +10,7 @@ The `@tanstack/lit-table` adapter is a wrapper around the core table logic. Most
 
 ### `TableController`
 
-Is a reactive controller that provides a `getTable` API that takes an `options` object and returns a table instance.
+Is a reactive controller that provides a `useLitTable` API that takes an `options` object and returns a table instance.
 
 ```ts
 import { TableController } from '@tanstack/lit-table'
@@ -20,7 +20,7 @@ class MyTableElement extends LitElement {
   private tableController = new TableController<Person>(this)
 
   protected render() {
-    const table = this.tableController.getTable(options)
+    const table = this.tableController.useLitTable(options)
     // ...render your table
   }
 }

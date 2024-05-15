@@ -135,7 +135,7 @@ class LitTableExample extends LitElement {
   private _columnFilters: ColumnFiltersState = []
 
   protected render(): unknown {
-    const table = this.tableController.getTable({
+    const table = this.tableController.useLitTable({
       data,
       columns,
       filterFns: {},

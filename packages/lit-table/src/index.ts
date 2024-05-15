@@ -6,14 +6,14 @@ import {
   TableOptionsResolved,
   TableState,
 } from '@tanstack/table-core'
-import { ReactiveController, ReactiveControllerHost } from 'lit'
+import { ReactiveController, ReactiveControllerHost, TemplateResult } from 'lit'
 
 export * from '@tanstack/table-core'
 
 export function flexRender<TProps>(
-  Comp: ((props: TProps) => string) | string | undefined,
+  Comp: ((props: TProps) => string) | string | TemplateResult | undefined,
   props: TProps
-): string | null {
+): TemplateResult | string | null {
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
@@ -36,7 +36,7 @@ export class TableController<TData extends RowData>
     ;(this.host = host).addController(this)
   }
 
-  public getTable(options: TableOptions<TData>) {
+  public useLitTable(options: TableOptions<TData>) {
     if (!this.table) {
       const resolvedOptions: TableOptionsResolved<TData> = {
         state: {},

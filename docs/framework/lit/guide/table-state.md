@@ -10,40 +10,48 @@ TanStack Table has a simple underlying internal state management system to store
 
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
-```jsx
-const table = TableController({
-  columns,
-  data,
-  //...
-})
+```ts
+private tableController = new TableController<Person>(this);
 
-console.log(table.getState()) //access the entire internal state
-console.log(table.getState().rowSelection) //access just the row selection state
+render() {
+  const table = this.tableController.useLitTable({
+    columns,
+    data,
+    ...
+  })
+
+  console.log(table.getState()) //access the entire internal state
+  console.log(table.getState().rowSelection) //access just the row selection state
+  // ...
+}
 ```
 
 ### Custom Initial State
 
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
-```jsx
-const table = TableController({
-  columns,
-  data,
-  initialState: {
-    columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
-    columnVisibility: {
-      id: false //hide the id column by default
+```ts
+render() {
+  const table = this.tableController.useLitTable({
+    columns,
+    data,
+    initialState: {
+      columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
+      columnVisibility: {
+        id: false //hide the id column by default
+      },
+      expanded: true, //expand all rows by default
+      sorting: [
+        {
+          id: 'age',
+          desc: true //sort by age in descending order by default
+        }
+      ]
     },
-    expanded: true, //expand all rows by default
-    sorting: [
-      {
-        id: 'age',
-        desc: true //sort by age in descending order by default
-      }
-    ]
-  },
-  //...
-})
+  })
+
+  return html`...`;
+}
 ```
 
 > **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
@@ -61,39 +69,34 @@ In order to control a particular state, you need to both pass in the correspondi
 Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
 
 ```jsx
-const columnFilters = Lit.useSignal([]) //no default filters
-const sorting = Lit.useSignal([{
-  id: 'age',
-  desc: true, //sort by age in descending order by default
-}]) 
-const pagination = Lit.useSignal({ pageIndex: 0, pageSize: 15 })
+import {html} from "lit";
 
-//Use our controlled state values to fetch data
-const tableQuery = useQuery({
-  queryKey: ['users', columnFilters.value, sorting.value, pagination.value],
-  queryFn: () => fetchUsers(columnFilters.value, sorting.value, pagination.value),
-  //...
-})
+@customElement('my-component')
+class MyComponent extends LitElement {
+  @state()
+  private _sorting: SortingState = []
 
-const table = TableController({
-  columns: columns.value,
-  data: tableQuery.data,
-  //...
-  state: {
-    columnFilters: columnFilters.value, //pass controlled state back to the table (overrides internal state)
-    sorting: sorting.value,
-    pagination: pagination.value,
-  },
-  onColumnFiltersChange: updater => {
-    columnFilters.value = updater instanceof Function ? updater(columnFilters.value) : updater //hoist columnFilters state into our own state management
-  },
-  onSortingChange: updater => {
-    sorting.value = updater instanceof Function ? updater(sorting.value) : updater
-  },
-  onPaginationChange: updater => {
-    pagination.value = updater instanceof Function ? updater(pagination.value) : updater
-  },
-})
+  render() {
+    const table = this.tableController.useLitTable({
+      columns,
+      data,
+      state: {
+        sorting: this._sorting,
+      },
+      onSortingChange: updaterOrValue => {
+        if (typeof updaterOrValue === 'function') {
+          this._sorting = updaterOrValue(this._sorting)
+        } else {
+          this._sorting = updaterOrValue
+        }
+      },
+      getSortedRowModel: getSortedRowModel(),
+      getCoreRowModel: getCoreRowModel(),
+    })
+
+    return html`...`
+  }
+}
 //...
 ```
 
@@ -103,31 +106,32 @@ Alternatively, you can control the entire table state with the `onStateChange` t
 
 A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
 
-```jsx
-//create a table instance with default state values
-const table = TableController({
-  columns,
-  data,
-  //... Note: `state` values are NOT passed in yet
-})
+```ts
 
+private tableController = new TableController<Person>(this);
 
-const sate = Lit.useSignal({
-  ...table.initialState, //populate the initial state with all of the default state values from the table instance
-  pagination: {
-    pageIndex: 0,
-    pageSize: 15 //optionally customize the initial pagination state.
-  }
-})
+@state()
+private _tableState;
 
-//Use the table.setOptions API to merge our fully controlled state onto the table instance
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  state: state.value, //our fully controlled state overrides the internal state
-  onStateChange: updater => {
-    state.value = updater instanceof Function ? updater(state.value) : updater //any state changes will be pushed up to our own state management
-  },
-}))
+render() {
+  const table = this.tableController.useLitTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel()
+  })
+  const state = { ...table.initialState, ...this._tableState };
+  table.setOptions(prev => ({
+    ...prev,
+    state,
+    onStateChange: updater => {
+      this._tableState =
+        updater instanceof Function ? updater(state) : updater //any state changes will be pushed up to our own state management
+    },
+  }))
+
+  return html`...`;
+}
 ```
 
 ### On State Change Callbacks
@@ -139,19 +143,29 @@ So far, we have seen the `on[State]Change` and `onStateChange` table options wor
 Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
 
 ```jsx
-const sorting = Lit.useSignal([])
+@state()
+private _sorting = [];
 //...
-const table = TableController({
-  columns,
-  data,
-  //...
-  state: {
-    sorting: sorting.value, //required because we are using `onSortingChange`
-  },
-  onSortingChange: updater => {
-    sorting.value = updater instanceof Function ? updater(sorting) : updater //makes the `state.sorting` controlled
-  }, 
-})
+render() {
+  const table = this.tableController.useLitTable({
+    columns,
+    data,
+    state: {
+      sorting: this._sorting,
+    },
+    onSortingChange: updaterOrValue => {
+      if (typeof updaterOrValue === 'function') {
+        this._sorting = updaterOrValue(this._sorting)
+      } else {
+        this._sorting = updaterOrValue
+      }
+    },
+    getSortedRowModel: getSortedRowModel(),
+    getCoreRowModel: getCoreRowModel(),
+  })
+
+  return html`...`;
+}
 ```
 
 #### 2. **Updaters can either be raw values or callback functions**.
@@ -167,12 +181,12 @@ This is why you will see the `updater instanceof Function ? updater(state.value)
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { TableController, SortingState } from '@tanstack/lit-table'
 //...
-const sorting = Lit.useSignal<SortingState[]>([
+@state()
+private _sorting = [
   {
     id: 'age', //you should get autocomplete for the `id` and `desc` properties
     desc: true,
   }
-])
+]
 ```
