@@ -9,9 +9,9 @@ export default defineConfig(
     jsName: 'LitTable',
     outputFile: 'index',
     entryFile: 'src/index.ts',
-    external: ['lit'],
+    external: ['lit', '@tanstack/table-core'],
     globals: {
-      lit: 'lit',
+      lit: 'Lit',
     },
   })
 )

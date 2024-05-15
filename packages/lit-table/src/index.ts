@@ -23,7 +23,9 @@ export function flexRender<TProps>(
   return Comp
 }
 
-export class TableController<TData extends RowData> implements ReactiveController {
+export class TableController<TData extends RowData>
+  implements ReactiveController
+{
   host: ReactiveControllerHost
 
   private table: Table<TData> | null = null

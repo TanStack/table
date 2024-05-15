@@ -1,5 +1,7 @@
 import { customElement } from 'lit/decorators.js'
 import { html, LitElement } from 'lit'
+import { repeat } from 'lit/directives/repeat.js'
+import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
   flexRender,
@@ -9,10 +11,8 @@ import {
   type SortingState,
   TableController,
 } from '@tanstack/lit-table'
-import { repeat } from 'lit/directives/repeat.js'
 
 import { makeData, Person } from './makeData.ts'
-import { state } from 'lit/decorators/state.js'
 
 const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status

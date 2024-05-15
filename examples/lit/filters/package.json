@@ -9,7 +9,8 @@
     "start": "vite"
   },
   "dependencies": {
-    "@tanstack/lit-table": "workspace:*",
+    "@faker-js/faker": "^8.4.1",
+    "@tanstack/lit-table": "^8.17.0",
     "lit": "^3.1.3"
   },
   "devDependencies": {
