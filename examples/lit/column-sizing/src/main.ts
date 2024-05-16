@@ -57,7 +57,7 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<Person>(this)
 
   protected render() {
-    const table = this.tableController.useLitTable({
+    const table = this.tableController.table({
       data,
       columns,
       columnResizeMode: 'onChange',

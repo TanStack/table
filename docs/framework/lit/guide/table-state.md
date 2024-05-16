@@ -14,7 +14,7 @@ You do not need to set up anything special in order for the table state to work.
 private tableController = new TableController<Person>(this);
 
 render() {
-  const table = this.tableController.useLitTable({
+  const table = this.tableController.table({
     columns,
     data,
     ...
@@ -32,7 +32,7 @@ If all you need to do for certain states is customize their initial default valu
 
 ```ts
 render() {
-  const table = this.tableController.useLitTable({
+  const table = this.tableController.table({
     columns,
     data,
     initialState: {
@@ -77,7 +77,7 @@ class MyComponent extends LitElement {
   private _sorting: SortingState = []
 
   render() {
-    const table = this.tableController.useLitTable({
+    const table = this.tableController.table({
       columns,
       data,
       state: {
@@ -114,7 +114,7 @@ private tableController = new TableController<Person>(this);
 private _tableState;
 
 render() {
-  const table = this.tableController.useLitTable({
+  const table = this.tableController.table({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
@@ -147,7 +147,7 @@ Specifying an `on[State]Change` callback tells the table instance that this will
 private _sorting = [];
 //...
 render() {
-  const table = this.tableController.useLitTable({
+  const table = this.tableController.table({
     columns,
     data,
     state: {

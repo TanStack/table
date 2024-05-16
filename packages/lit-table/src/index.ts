@@ -28,7 +28,7 @@ export class TableController<TData extends RowData>
 {
   host: ReactiveControllerHost
 
-  private table: Table<TData> | null = null
+  private tableInstance: Table<TData> | null = null
 
   private _tableState: TableState | null = null
 
@@ -36,8 +36,8 @@ export class TableController<TData extends RowData>
     ;(this.host = host).addController(this)
   }
 
-  public useLitTable(options: TableOptions<TData>) {
-    if (!this.table) {
+  public table(options: TableOptions<TData>) {
+    if (!this.tableInstance) {
       const resolvedOptions: TableOptionsResolved<TData> = {
         state: {},
         onStateChange: () => {}, // noop
@@ -45,11 +45,11 @@ export class TableController<TData extends RowData>
         ...options,
       }
 
-      this.table = createTable(resolvedOptions)
-      this._tableState = { ...this.table.initialState, ...options.state }
+      this.tableInstance = createTable(resolvedOptions)
+      this._tableState = { ...this.tableInstance.initialState, ...options.state }
     }
 
-    this.table.setOptions(prev => ({
+    this.tableInstance.setOptions(prev => ({
       ...prev,
       state: { ...this._tableState, ...options.state },
       onStateChange: (updater: any) => {
@@ -59,7 +59,7 @@ export class TableController<TData extends RowData>
       },
     }))
 
-    return this.table
+    return this.tableInstance
   }
 
   hostDisconnected() {}

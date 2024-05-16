@@ -76,7 +76,7 @@ class LitTableExample extends LitElement {
   private _rowSelection: Record<string, boolean> = {}
 
   protected render(): unknown {
-    const table = this.tableController.useLitTable({
+    const table = this.tableController.table({
       data,
       columns,
       filterFns: {},
