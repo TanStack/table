@@ -128,7 +128,16 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>123</pre>
+      <pre>
+${JSON.stringify(
+          {
+            columnSizing: table.getState().columnSizing,
+            columnSizingInfo: table.getState().columnSizingInfo,
+          },
+          null,
+          2
+        )}</pre
+      >
       <style>
         * {
           font-family: sans-serif;
