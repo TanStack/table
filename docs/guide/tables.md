@@ -53,6 +53,9 @@ const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 //angular
 this.table = createAngularTable({ columns: this.columns, data: this.data(), getCoreRowModel: getCoreRowModel() })
 
+//lit
+const table = this.tableController.table({ columns, data, getCoreRowModel: getCoreRowModel() })
+
 //qwik
 const table = useQwikTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
