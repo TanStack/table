@@ -7,7 +7,7 @@ state the "angular signals" way, providing types and the rendering implementatio
 
 ## Exports
 
-`@tanstack/angular-table` re-exports all of `@tanstack/table-core`'s and the following:
+`@tanstack/angular-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
 ### `createAngularTable`
 

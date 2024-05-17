@@ -204,7 +204,7 @@ This is why you will see the `updater instanceof Function ? this.state.update(up
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```ts
-import {createAngularTable, SortingState} from '@tanstack/angular-table'
+import {createAngularTable, type SortingState} from '@tanstack/angular-table'
 
 class TableComponent {
   readonly sorting = signal<SortingState>([

@@ -1,8 +1,8 @@
 ---
-title: Table State (Vue) Guide
+title: Table State (Lit) Guide
 ---
 
-## Table State (Vue) Guide
+## Table State (Lit) Guide
 
 TanStack Table has a simple underlying internal state management system to store and manage the state of the table. It also lets you selectively pull out any state that you need to manage in your own state management. This guide will walk you through the different ways in which you can interact with and manage the state of the table.
 
@@ -11,41 +11,47 @@ TanStack Table has a simple underlying internal state management system to store
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
 ```ts
-const table = useVueTable({
-  columns,
-  get data() {
-    return data.value
-  },
-  //...
-})
+private tableController = new TableController<Person>(this);
 
-console.log(table.getState()) //access the entire internal state
-console.log(table.getState().rowSelection) //access just the row selection state
+render() {
+  const table = this.tableController.table({
+    columns,
+    data,
+    ...
+  })
+
+  console.log(table.getState()) //access the entire internal state
+  console.log(table.getState().rowSelection) //access just the row selection state
+  // ...
+}
 ```
 
 ### Custom Initial State
 
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
-```jsx
-const table = useVueTable({
-  columns,
-  data,
-  initialState: {
-    columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
-    columnVisibility: {
-      id: false //hide the id column by default
+```ts
+render() {
+  const table = this.tableController.table({
+    columns,
+    data,
+    initialState: {
+      columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
+      columnVisibility: {
+        id: false //hide the id column by default
+      },
+      expanded: true, //expand all rows by default
+      sorting: [
+        {
+          id: 'age',
+          desc: true //sort by age in descending order by default
+        }
+      ]
     },
-    expanded: true, //expand all rows by default
-    sorting: [
-      {
-        id: 'age',
-        desc: true //sort by age in descending order by default
-      }
-    ]
-  },
-  //...
-})
+  })
+
+  return html`...`;
+}
 ```
 
 > **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
@@ -62,95 +68,70 @@ In order to control a particular state, you need to both pass in the correspondi
 
 Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
 
-```ts
-const columnFilters = ref([]) //no default filters
-const sorting = ref([{
-  id: 'age',
-  desc: true, //sort by age in descending order by default
-}])
-const pagination = ref({ pageIndex: 0, pageSize: 15 }
+```jsx
+import {html} from "lit";
 
-//Use our controlled state values to fetch data
-const tableQuery = useQuery({
-  queryKey: ['users', columnFilters, sorting, pagination],
-  queryFn: () => fetchUsers(columnFilters, sorting, pagination),
-  //...
-})
+@customElement('my-component')
+class MyComponent extends LitElement {
+  @state()
+  private _sorting: SortingState = []
 
-const table = useVueTable({
-  columns,
-  data: tableQuery.data,
-  //...
-  state: {
-    get columnFilters() {
-      return columnFilters.value
-    },
-    get sorting() {
-      return sorting.value
-    },
-    get pagination() {
-      return pagination.value
-    }
-  },
-  onColumnFiltersChange: updater => {
-    columnFilters.value =
-      updater instanceof Function
-        ? updater(columnFilters.value)
-        : updater
-  },
-  onSortingChange: updater => {
-    sorting.value =
-      updater instanceof Function
-        ? updater(sorting.value)
-        : updater
-  },
-  onPaginationChange: updater => {
-    pagination.value =
-      updater instanceof Function
-        ? updater(pagination.value)
-        : updater
-  },
-})
+  render() {
+    const table = this.tableController.table({
+      columns,
+      data,
+      state: {
+        sorting: this._sorting,
+      },
+      onSortingChange: updaterOrValue => {
+        if (typeof updaterOrValue === 'function') {
+          this._sorting = updaterOrValue(this._sorting)
+        } else {
+          this._sorting = updaterOrValue
+        }
+      },
+      getSortedRowModel: getSortedRowModel(),
+      getCoreRowModel: getCoreRowModel(),
+    })
+
+    return html`...`
+  }
+}
 //...
 ```
 
 #### Fully Controlled State
 
-Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a react tree, like `columnSizingInfo` state`, might cause bad performance issues.
+Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a component tree, like `columnSizingInfo` state`, might cause bad performance issues.
 
 A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
 
-```jsx
-//create a table instance with default state values
-const table = useVueTable({
-  get columns() {
-    return columns.value
-  },
-  get data() {
-    return data.value
-  },
-  //... Note: `state` values are NOT passed in yet
-})
+```ts
 
-const state = ref({
-  ...table.initialState,
-  pagination: {
-    pageIndex: 0,
-    pageSize: 15
-  }
-})
-const setState = updater => {
-  state.value = updater instanceof Function ? updater(state.value) : updater
+private tableController = new TableController<Person>(this);
+
+@state()
+private _tableState;
+
+render() {
+  const table = this.tableController.table({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel()
+  })
+  const state = { ...table.initialState, ...this._tableState };
+  table.setOptions(prev => ({
+    ...prev,
+    state,
+    onStateChange: updater => {
+      this._tableState =
+        updater instanceof Function ? updater(state) : updater //any state changes will be pushed up to our own state management
+    },
+  }))
+
+  return html`...`;
 }
-
-//Use the table.setOptions API to merge our fully controlled state onto the table instance
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  get state() {
-    return state.value
-  },
-  onStateChange: setState //any state changes will be pushed up to our own state management
-}))
 ```
 
 ### On State Change Callbacks
@@ -162,22 +143,29 @@ So far, we have seen the `on[State]Change` and `onStateChange` table options wor
 Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
 
 ```jsx
-const sorting = ref([])
-const setSorting = updater => {
-  sorting.value = updater instanceof Function ? updater(sorting.value) : updater
-}
+@state()
+private _sorting = [];
 //...
-const table = useVueTable({
-  columns,
-  data,
-  //...
-  state: {
-    get sorting() {
-      return sorting //required because we are using `onSortingChange`
+render() {
+  const table = this.tableController.table({
+    columns,
+    data,
+    state: {
+      sorting: this._sorting,
     },
-  },
-  onSortingChange: setSorting, //makes the `state.sorting` controlled
-})
+    onSortingChange: updaterOrValue => {
+      if (typeof updaterOrValue === 'function') {
+        this._sorting = updaterOrValue(this._sorting)
+      } else {
+        this._sorting = updaterOrValue
+      }
+    },
+    getSortedRowModel: getSortedRowModel(),
+    getCoreRowModel: getCoreRowModel(),
+  })
+
+  return html`...`;
+}
 ```
 
 #### 2. **Updaters can either be raw values or callback functions**.
@@ -186,19 +174,20 @@ The `on[State]Change` and `onStateChange` callbacks work exactly like the `setSt
 
 What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
 
-This is why we have the `updater instanceof Function` check in the `setState` functions above. This check allows us to handle both raw values and callback functions in the same function.
+This is why you will see the `updater instanceof Function ? updater(state.value) : updater` pattern in the examples above. This pattern checks if the updater is a function, and if it is, it calls the function with the previous state value to get the new state value.
 
 ### State Types
 
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { useVueTable, type SortingState } from '@tanstack/vue-table'
+import { TableController, type SortingState } from '@tanstack/lit-table'
 //...
-const sorting = ref<SortingState[]>([
+@state()
+private _sorting: SortingState = [
   {
     id: 'age', //you should get autocomplete for the `id` and `desc` properties
     desc: true,
   }
-])
+]
 ```

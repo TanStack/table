@@ -41,6 +41,15 @@
           ]
         },
         {
+          "label": "lit",
+          "children": [
+            {
+              "label": "Lit Table Adapter",
+              "to": "framework/lit/lit-table"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
@@ -143,6 +152,15 @@
             {
               "label": "Table State",
               "to": "framework/angular/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/lit/guide/table-state"
             }
           ]
         },
@@ -420,6 +438,31 @@
             {
               "to": "framework/angular/examples/signal-input",
               "label": "Signal Input"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "to": "framework/lit/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/lit/examples/column-sizing",
+              "label": "Column Sizing"
+            },
+            {
+              "to": "framework/lit/examples/filters",
+              "label": "Filters"
+            },
+            {
+              "to": "framework/lit/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/lit/examples/sorting",
+              "label": "Sorting"
             }
           ]
         },

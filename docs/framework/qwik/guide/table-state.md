@@ -167,7 +167,7 @@ This is why you will see the `updater instanceof Function ? updater(state.value)
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { useQwikTable, SortingState } from '@tanstack/qwik-table'
+import { useQwikTable, type SortingState } from '@tanstack/qwik-table'
 //...
 const sorting = Qwik.useSignal<SortingState[]>([
   {

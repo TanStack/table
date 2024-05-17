@@ -35,6 +35,7 @@ stats-hydration.json
 stats-react.json
 stats.html
 .vscode/settings.json
+.idea
 
 *.log
 .DS_Store
