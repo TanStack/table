@@ -449,6 +449,10 @@
               "label": "Basic"
             },
             {
+              "to": "framework/lit/examples/column-sizing",
+              "label": "Column Sizing"
+            },
+            {
               "to": "framework/lit/examples/filters",
               "label": "Filters"
             },
