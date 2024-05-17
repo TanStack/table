@@ -103,71 +103,69 @@ class LitTableExample extends LitElement {
     return html`
       <table>
         <thead>
-        ${repeat(
-          table.getHeaderGroups(),
-          headerGroup => headerGroup.id,
-          headerGroup =>
-            html`${repeat(
-              headerGroup.headers,
-              header => header.id,
-              header =>
-                html`
-                  <th>
+          ${repeat(
+            table.getHeaderGroups(),
+            headerGroup => headerGroup.id,
+            headerGroup =>
+              html`${repeat(
+                headerGroup.headers,
+                header => header.id,
+                header =>
+                  html` <th>
                     ${header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </th>`
-            )}`
-        )}
+              )}`
+          )}
         </thead>
         <tbody>
-        ${repeat(
-          table.getRowModel().rows,
-          row => row.id,
-          row => html`
-            <tr>
-              ${repeat(
-                row.getVisibleCells(),
-                cell => cell.id,
-                cell =>
-                  html`
-                    <td>
+          ${repeat(
+            table.getRowModel().rows,
+            row => row.id,
+            row => html`
+              <tr>
+                ${repeat(
+                  row.getVisibleCells(),
+                  cell => cell.id,
+                  cell =>
+                    html` <td>
                       ${flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
                     </td>`
-              )}
-            </tr>
-          `
-        )}
+                )}
+              </tr>
+            `
+          )}
         </tbody>
         <tfoot>
-        ${repeat(
-          table.getFooterGroups(),
-          footerGroup => footerGroup.id,
-          footerGroup => html`
-            <tr>
-              ${repeat(
-                footerGroup.headers,
-                header => header.id,
-                header => html`
-                  <th>
-                    ${header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                  </th>
-                `
-              )}
-            </tr>
-          `
-        )}
+          ${repeat(
+            table.getFooterGroups(),
+            footerGroup => footerGroup.id,
+            footerGroup => html`
+              <tr>
+                ${repeat(
+                  footerGroup.headers,
+                  header => header.id,
+                  header => html`
+                    <th>
+                      ${header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext()
+                          )}
+                    </th>
+                  `
+                )}
+              </tr>
+            `
+          )}
         </tfoot>
       </table>
       <style>
@@ -199,7 +197,6 @@ class LitTableExample extends LitElement {
         tfoot th {
           font-weight: normal;
         }
-
       </style>
     `
   }

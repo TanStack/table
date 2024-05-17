@@ -46,7 +46,10 @@ export class TableController<TData extends RowData>
       }
 
       this.tableInstance = createTable(resolvedOptions)
-      this._tableState = { ...this.tableInstance.initialState, ...options.state }
+      this._tableState = {
+        ...this.tableInstance.initialState,
+        ...options.state,
+      }
     }
 
     this.tableInstance.setOptions(prev => ({

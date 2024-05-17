@@ -3,8 +3,5 @@ import presetAutoprefix from '@twind/preset-autoprefix'
 import presetTailwind from '@twind/preset-tailwind/base'
 
 export default defineConfig({
-  presets: [
-    presetAutoprefix(),
-    presetTailwind(),
-  ]
+  presets: [presetAutoprefix(), presetTailwind()],
 })
