@@ -181,9 +181,10 @@ This is why you will see the `updater instanceof Function ? updater(state.value)
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
+import { TableController, type SortingState } from '@tanstack/lit-table'
 //...
 @state()
-private _sorting = [
+private _sorting: SortingState = [
   {
     id: 'age', //you should get autocomplete for the `id` and `desc` properties
     desc: true,

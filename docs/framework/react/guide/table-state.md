@@ -193,7 +193,7 @@ const table = useReactTable({
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { useReactTable, SortingState } from '@tanstack/react-table'
+import { useReactTable, type SortingState } from '@tanstack/react-table'
 //...
 const [sorting, setSorting] = React.useState<SortingState[]>([
   {
