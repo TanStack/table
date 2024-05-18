@@ -1,17 +1,15 @@
 import {
-  ChangeDetectorRef,
   ComponentRef,
   Directive,
-  type DoCheck,
   EmbeddedViewRef,
-  inject,
   InjectionToken,
   Injector,
-  Input,
-  type OnInit,
   TemplateRef,
-  type Type,
   ViewContainerRef,
+  effect,
+  inject,
+  input,
+  type Type,
 } from '@angular/core'
 
 type FlexRenderContent<TProps extends NonNullable<unknown>> =
@@ -25,61 +23,36 @@ type FlexRenderContent<TProps extends NonNullable<unknown>> =
   selector: '[flexRender]',
   standalone: true,
 })
-export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnInit, DoCheck
-{
-  @Input({ required: true, alias: 'flexRender' })
-  content:
-    | number
-    | string
-    | ((props: TProps) => FlexRenderContent<TProps>)
-    | undefined = undefined
+export class FlexRenderDirective<TProps extends NonNullable<unknown>> {
+  // set the type to unknown as input signal is not able to recognize the types correctly
+  // which causes build error
+  content = input.required<unknown>({ alias: 'flexRender' })
 
-  @Input({ required: true, alias: 'flexRenderProps' })
-  props: TProps = {} as TProps
+  props = input<TProps>({} as TProps, { alias: 'flexRenderProps' })
 
-  @Input({ required: false, alias: 'flexRenderInjector' })
-  injector: Injector = inject(Injector)
+  injector = input(inject(Injector), { alias: 'flexRenderInjector' })
 
-  constructor(
-    private viewContainerRef: ViewContainerRef,
-    private templateRef: TemplateRef<any>
-  ) {}
+  viewContainerRef = inject(ViewContainerRef)
+  templateRef = inject(TemplateRef<any>)
 
-  ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
-
-  ngOnInit(): void {
-    this.ref = this.render()
-  }
-
-  ngDoCheck() {
-    if (this.ref instanceof ComponentRef) {
-      this.ref.injector.get(ChangeDetectorRef).markForCheck()
-    } else if (this.ref instanceof EmbeddedViewRef) {
-      this.ref.markForCheck()
-    }
+  constructor() {
+    effect(() => this.render())
   }
 
   render() {
     this.viewContainerRef.clear()
-    const { content, props } = this
-    if (!this.content) {
+    const content = this.content()
+    if (!content) {
       return null
     }
 
-    if (typeof content === 'string' || typeof content === 'number') {
-      return this.renderStringContent()
-    }
     if (typeof content === 'function') {
-      return this.renderContent(content(props))
+      return this.renderContent(content(this.props()))
     }
-    return null
+    return this.renderStringContent()
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
-    if (typeof content === 'string' || typeof content === 'number') {
-      return this.renderStringContent()
-    }
     if (content instanceof TemplateRef) {
       return this.viewContainerRef.createEmbeddedView(
         content,
@@ -87,6 +60,8 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       )
     } else if (content instanceof FlexRenderComponent) {
       return this.renderComponent(content)
+    } else if (content) {
+      return this.renderStringContent()
     } else {
       return null
     }
@@ -94,10 +69,8 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   private renderStringContent(): EmbeddedViewRef<unknown> {
     const context = () => {
-      return typeof this.content === 'string' ||
-        typeof this.content === 'number'
-        ? this.content
-        : this.content?.(this.props)
+      const content = this.content()
+      return typeof content === 'function' ? content?.(this.props()) : content
     }
     return this.viewContainerRef.createEmbeddedView(this.templateRef, {
       get $implicit() {
@@ -111,14 +84,14 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ): ComponentRef<unknown> {
     const { component, inputs, injector } = flexRenderComponent
 
-    const getContext = () => this.props
+    const getContext = () => this.props()
 
-    const proxy = new Proxy(this.props, {
+    const proxy = new Proxy(this.props(), {
       get: (_, key) => getContext()?.[key as keyof typeof _],
     })
 
     const componentInjector = Injector.create({
-      parent: injector ?? this.injector,
+      parent: injector ?? this.injector(),
       providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
     })
 
@@ -134,7 +107,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   private getTemplateRefContext() {
-    const getContext = () => this.props
+    const getContext = () => this.props()
     return {
       get $implicit() {
         return getContext()
