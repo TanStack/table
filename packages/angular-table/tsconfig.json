@@ -3,10 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./build/lib",
-    "declaration": true,
-    "declarationMap": true,
     "useDefineForClassFields": false,
-    "target": "es2022",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
@@ -16,7 +13,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "module": "ES2022",
     "types": ["vitest/globals"]
   },
   "angularCompilerOptions": {
