@@ -13,6 +13,7 @@ import { proxifyTable } from './proxy'
 export * from '@tanstack/table-core'
 
 export {
+  type FlexRenderContent,
   FlexRenderComponent,
   FlexRenderDirective,
   injectFlexRenderContext,

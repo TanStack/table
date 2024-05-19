@@ -4,6 +4,7 @@ import {
   Directive,
   type DoCheck,
   EmbeddedViewRef,
+  Inject,
   inject,
   InjectionToken,
   Injector,
@@ -14,12 +15,13 @@ import {
   ViewContainerRef,
 } from '@angular/core'
 
-type FlexRenderContent<TProps extends NonNullable<unknown>> =
+export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
   | number
   | FlexRenderComponent<TProps>
   | TemplateRef<{ $implicit: TProps }>
   | null
+  | undefined
 
 @Directive({
   selector: '[flexRender]',
@@ -41,10 +43,9 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
-  constructor(
-    private viewContainerRef: ViewContainerRef,
-    private templateRef: TemplateRef<any>
-  ) {}
+  private readonly viewContainerRef = inject(ViewContainerRef)
+
+  private readonly templateRef: TemplateRef<any> = inject(TemplateRef)
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 

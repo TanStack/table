@@ -2,11 +2,34 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./build/lib"
+    "outDir": "./build/lib",
+    "declaration": true,
+    "declarationMap": true,
+    "useDefineForClassFields": false,
+    "target": "es2022",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "ES2022",
+    "types": ["vitest/globals"]
   },
   "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
     "compilationMode": "partial"
   },
-  "include": ["src"],
-  "exclude": ["**/*.spec.ts"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ]
 }
