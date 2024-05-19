@@ -2728,6 +2728,9 @@ importers:
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.2.1(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       react:
         specifier: ^18.3.0
         version: 18.3.0
@@ -12436,7 +12439,7 @@ snapshots:
 
   '@types/babel__core@7.20.5':
     dependencies:
-      '@babel/parser': 7.24.1
+      '@babel/parser': 7.24.4
       '@babel/types': 7.24.0
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
