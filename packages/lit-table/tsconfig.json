@@ -1,11 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "jsx": "react",
-    "rootDir": "./src",
-    "outDir": "./build/lib",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }
