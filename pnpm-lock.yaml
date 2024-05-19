@@ -2779,6 +2779,9 @@ importers:
         specifier: workspace:*
         version: link:../table-core
     devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^5.0.4
+        version: 5.0.4(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))(vue@3.4.25(typescript@5.4.5))
       vue:
         specifier: ^3.4.25
         version: 3.4.25(typescript@5.4.5)
