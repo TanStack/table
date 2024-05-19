@@ -34,7 +34,7 @@ describe('createAngularTable', () => {
     fixture.detectChanges()
   })
 
-  describe('proxy trap', () => {
+  describe('Proxy table', () => {
     type Data = { id: string; title: string }
     const data = signal<Data[]>([{ id: '1', title: 'Title' }])
     const columns: ColumnDef<Data>[] = [
@@ -69,7 +69,7 @@ describe('createAngularTable', () => {
         property,
         testShouldBeComputedProperty(untracked(table), property),
       ])
-    )('property (%s) is computed -> %s', (name, expected) => {
+    )('property (%s) is computed -> (%s)', (name, expected) => {
       const tableProperty = table[name as keyof typeof table]
       expect(isSignal(tableProperty)).toEqual(expected)
     })
