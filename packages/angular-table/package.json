@@ -55,11 +55,9 @@
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^1.3.1",
-    "@angular/common": "^17.3.1",
     "@angular/core": "^17.3.1",
     "@angular/platform-browser": "^17.3.1",
     "@angular/platform-browser-dynamic": "^17.3.1",
-    "@testing-library/angular": "^16.0.0",
     "ng-packagr": "^17.3.0"
   },
   "peerDependencies": {
