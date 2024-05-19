@@ -43,9 +43,12 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
-  private readonly viewContainerRef = inject(ViewContainerRef)
-
-  private readonly templateRef: TemplateRef<any> = inject(TemplateRef)
+  constructor(
+    @Inject(ViewContainerRef)
+    private readonly viewContainerRef: ViewContainerRef,
+    @Inject(TemplateRef)
+    private readonly templateRef: TemplateRef<any>
+  ) {}
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 
