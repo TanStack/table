@@ -56,3 +56,7 @@ function componentHasSignalInputProperty<TProperty extends string>(
     component.hasOwnProperty(property) && (component as any)[property][SIGNAL]
   )
 }
+
+export async function flushQueue() {
+  await new Promise(setImmediate)
+}

@@ -15,7 +15,7 @@ export function lazyInit<T extends object>(initializer: () => T): T {
 
   queueMicrotask(() => initializeObject())
 
-  function table() {}
+  const table = () => {}
 
   return new Proxy<T>(table as T, {
     apply(target: T, thisArg: any, argArray: any[]): any {

@@ -59,6 +59,7 @@
     "@angular/core": "^17.3.9",
     "@angular/platform-browser": "^17.3.9",
     "@angular/platform-browser-dynamic": "^17.3.9",
+    "@testing-library/angular": "^16.0.0",
     "ng-packagr": "^17.3.0"
   },
   "peerDependencies": {

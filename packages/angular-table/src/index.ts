@@ -1,4 +1,4 @@
-import { computed, signal } from '@angular/core'
+import { computed, type Signal, signal } from '@angular/core'
 import {
   RowData,
   TableOptions,
@@ -21,7 +21,7 @@ export {
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>
-): Table<TData> {
+): Table<TData> & Signal<Table<TData>> {
   return lazyInit(() => {
     const resolvedOptions = {
       state: {},

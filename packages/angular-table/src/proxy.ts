@@ -23,7 +23,8 @@ export function proxifyTable<T>(
        */
       if (
         property.startsWith('get') &&
-        (!property.endsWith('Handler') || !property.endsWith('Model'))
+        !property.endsWith('Handler') &&
+        !property.endsWith('Model')
       ) {
         const maybeFn = table[property] as Function | never
         if (typeof maybeFn === 'function') {
