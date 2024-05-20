@@ -48,6 +48,7 @@ yarn.lock
 *.tsbuildinfo
 *.tsbuildinfo
 
+.svelte-kit
 .nx/cache
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
