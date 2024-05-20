@@ -42,8 +42,7 @@
     "node": ">=12"
   },
   "files": [
-    "build/lib/*",
-    "build/umd/*",
+    "dist",
     "src"
   ],
   "scripts": {

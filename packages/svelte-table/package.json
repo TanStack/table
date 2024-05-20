@@ -40,7 +40,7 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./dist",
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "svelte-package --input ./src --output ./dist"

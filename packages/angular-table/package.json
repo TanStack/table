@@ -42,7 +42,7 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./dist",
     "test:types": "tsc --noEmit",
     "build": "pnpm ng-packagr -p ng-package.json && rimraf ./build/lib/package.json",
     "build:types": "tsc --emitDeclarationOnly"
