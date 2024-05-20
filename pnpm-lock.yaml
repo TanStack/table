@@ -2763,6 +2763,9 @@ importers:
       solid-js:
         specifier: ^1.8.17
         version: 1.8.17
+      vite-plugin-solid:
+        specifier: ^2.10.2
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.5.2(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.1)(terser@5.29.2)))(solid-js@1.8.17)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
 
   packages/svelte-table:
     dependencies:
