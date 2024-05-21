@@ -22,16 +22,38 @@
           "to": "installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "FAQ",
           "to": "faq"
         }
       ],
       "frameworks": [
         {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Angular Table Adapter",
+              "to": "framework/angular/angular-table"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "label": "Lit Table Adapter",
+              "to": "framework/lit/lit-table"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
-              "label": "Qwik Table",
+              "label": "Qwik Table Adapter",
               "to": "framework/qwik/qwik-table"
             }
           ]
@@ -40,7 +62,7 @@
           "label": "react",
           "children": [
             {
-              "label": "React Table",
+              "label": "React Table Adapter",
               "to": "framework/react/react-table"
             }
           ]
@@ -49,7 +71,7 @@
           "label": "solid",
           "children": [
             {
-              "label": "Solid Table",
+              "label": "Solid Table Adapter",
               "to": "framework/solid/solid-table"
             }
           ]
@@ -58,7 +80,7 @@
           "label": "svelte",
           "children": [
             {
-              "label": "Svelte Table",
+              "label": "Svelte Table Adapter",
               "to": "framework/svelte/svelte-table"
             }
           ]
@@ -67,7 +89,7 @@
           "label": "vue",
           "children": [
             {
-              "label": "Vue Table",
+              "label": "Vue Table Adapter",
               "to": "framework/vue/vue-table"
             }
           ]
@@ -76,7 +98,7 @@
           "label": "vanilla",
           "children": [
             {
-              "label": "Vanilla JS/TS",
+              "label": "Vanilla JS (No Framework)",
               "to": "vanilla"
             }
           ]
@@ -87,16 +109,16 @@
       "label": "Core Guides",
       "children": [
         {
-          "label": "Migrating to V8",
-          "to": "guide/migrating"
-        },
-        {
-          "label": "Table Instance",
-          "to": "guide/tables"
+          "label": "Data",
+          "to": "guide/data"
         },
         {
           "label": "Column Defs",
           "to": "guide/column-defs"
+        },
+        {
+          "label": "Table Instance",
+          "to": "guide/tables"
         },
         {
           "label": "Rows Models",
@@ -112,14 +134,36 @@
         },
         {
           "label": "Header Groups",
-          "to": "guide/headers-groups"
+          "to": "guide/header-groups"
         },
         {
           "label": "Headers",
           "to": "guide/headers"
+        },
+        {
+          "label": "Columns",
+          "to": "guide/columns"
         }
       ],
       "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/angular/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/lit/guide/table-state"
+            }
+          ]
+        },
         {
           "label": "qwik",
           "children": [
@@ -356,6 +400,72 @@
       "label": "Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "to": "framework/angular/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/angular/examples/grouping",
+              "label": "Column Grouping"
+            },
+            {
+              "to": "framework/angular/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/angular/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "framework/angular/examples/column-pinning-sticky",
+              "label": "Sticky Column Pinning"
+            },
+            {
+              "to": "framework/angular/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/angular/examples/filters",
+              "label": "Column Filters"
+            },
+            {
+              "to": "framework/angular/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/angular/examples/signal-input",
+              "label": "Signal Input"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "to": "framework/lit/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/lit/examples/column-sizing",
+              "label": "Column Sizing"
+            },
+            {
+              "to": "framework/lit/examples/filters",
+              "label": "Filters"
+            },
+            {
+              "to": "framework/lit/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/lit/examples/sorting",
+              "label": "Sorting"
+            }
+          ]
+        },
         {
           "label": "qwik",
           "children": [

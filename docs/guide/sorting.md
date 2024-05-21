@@ -158,6 +158,8 @@ const myCustomSortingFn: SortingFn<TData> = (rowA: Row<TData>, rowB: Row<TData>,
 }
 ```
 
+> Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take of that logic. `sortingFn` functions only need to provide a consistent comparison.
+
 Every sorting function receives 2 rows and a column ID and are expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
 | Return | Ascending Order |

@@ -36,10 +36,12 @@ stats-hydration.json
 stats-react.json
 stats.html
 .vscode/settings.json
+.idea
 
 *.log
 .DS_Store
 .cache
+.idea
 .pnpm-store
 
 package-lock.json
@@ -47,6 +49,9 @@ yarn.lock
 *.tsbuildinfo
 *.tsbuildinfo
 
+.svelte-kit
 .nx/cache
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.angular

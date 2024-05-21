@@ -2,9 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "rootDir": "./src",
-    "outDir": "./build/lib"
+    "jsxImportSource": "solid-js"
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

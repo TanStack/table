@@ -1,16 +1,13 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "affected": {
-    "defaultBase": "main"
-  },
   "defaultBase": "main",
   "nxCloudAccessToken": "OWExNzViODMtZjU4Ny00MTRmLTk3ZDYtMGY5YzlkOTRhZDQ2fHJlYWQtb25seQ==",
+  "useInferencePlugins": false,
   "parallel": 5,
   "namedInputs": {
     "sharedGlobals": [
       "{workspaceRoot}/.nvmrc",
       "{workspaceRoot}/package.json",
-      "{workspaceRoot}/scripts/getRollupConfig.js",
       "{workspaceRoot}/tsconfig.json"
     ],
     "default": [
@@ -35,6 +32,11 @@
     },
     "test:types": {
       "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
+      "cache": true
+    },
+    "test:build": {
+      "dependsOn": ["build"],
       "inputs": ["default", "^public"],
       "cache": true
     },

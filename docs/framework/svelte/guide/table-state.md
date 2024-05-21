@@ -235,7 +235,7 @@ This is why you see the `if (updater instanceof Function)` check in the `setStat
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```ts
-import { createSvelteTable, SortingState, Updater } from '@tanstack/svelte-table'
+import { createSvelteTable, type SortingState, type Updater } from '@tanstack/svelte-table'
 //...
 let sorting: SortingState[] = [
   {
