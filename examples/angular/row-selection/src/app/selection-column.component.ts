@@ -1,8 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import {
-  Row,
-  Table
-} from '@tanstack/angular-table';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core'
+import { Row, Table } from '@tanstack/angular-table'
 
 @Component({
   template: `
@@ -28,7 +25,7 @@ export class TableHeadSelectionComponent<T> {
 
   //column = input.required<Column<T, unknown>>();
   //header = input.required<Header<T, unknown>>();
-  table = input.required<Table<T>>();
+  table = input.required<Table<T>>()
 }
 
 @Component({
@@ -46,5 +43,5 @@ export class TableHeadSelectionComponent<T> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowSelectionComponent<T> {
-  row = input.required<Row<T>>();
+  row = input.required<Row<T>>()
 }

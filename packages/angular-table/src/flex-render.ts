@@ -7,7 +7,7 @@ import {
   Type,
   ViewContainerRef,
   inject,
-  input
+  input,
 } from '@angular/core'
 
 type FlexRenderContent<TProps extends NonNullable<unknown>> =
