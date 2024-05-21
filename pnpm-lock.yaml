@@ -42,8 +42,8 @@ importers:
         specifier: ^11.1.2
         version: 11.1.2(size-limit@11.1.2)
       '@tanstack/config':
-        specifier: ^0.7.5
-        version: 0.7.5(@types/node@20.12.7)(esbuild@0.20.2)(rollup@4.16.4)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
+        specifier: ^0.7.6
+        version: 0.7.6(@types/node@20.12.7)(esbuild@0.20.2)(rollup@4.16.4)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.2(vitest@1.5.2(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
@@ -4809,8 +4809,8 @@ packages:
   '@swc/helpers@0.5.7':
     resolution: {integrity: sha512-BVvNZhx362+l2tSwSuyEUV4h7+jk9raNdoTSdLfwTshXJSaGmYKluGRJznziCI3KX02Z19DdsQrdfrpXAU3Hfg==}
 
-  '@tanstack/config@0.7.5':
-    resolution: {integrity: sha512-22Do1jXuIkeCdMUzCYfgpfAlRgYfaGlwFyFvVCEmJCsSEPL1IiqCdru8pzGgYRRikJ117BoKEmmcKPnL1WL9yw==}
+  '@tanstack/config@0.7.6':
+    resolution: {integrity: sha512-vKCv+E5/TgVz7oCmWVpwzeAirNavrWpeRvLpvUIwFpxdl+WSPHhWCL+vT33r9A+UHrS+KdYJwABD6uihBpbEqg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -9679,7 +9679,7 @@ snapshots:
       chokidar: 3.6.0
       convert-source-map: 1.9.0
       reflect-metadata: 0.2.2
-      semver: 7.6.0
+      semver: 7.6.2
       tslib: 2.6.2
       typescript: 5.4.5
       yargs: 17.7.2
@@ -12302,7 +12302,7 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  '@tanstack/config@0.7.5(@types/node@20.12.7)(esbuild@0.20.2)(rollup@4.16.4)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))':
+  '@tanstack/config@0.7.6(@types/node@20.12.7)(esbuild@0.20.2)(rollup@4.16.4)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))':
     dependencies:
       '@commitlint/parse': 19.0.3
       chalk: 5.3.0
