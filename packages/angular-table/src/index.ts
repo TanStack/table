@@ -13,9 +13,7 @@ import { proxifyTable } from './proxy'
 export * from '@tanstack/table-core'
 
 export {
-  FlexRenderComponent,
-  FlexRenderDirective,
-  injectFlexRenderContext,
+  FlexRenderDirective
 } from './flex-render'
 
 export function createAngularTable<TData extends RowData>(

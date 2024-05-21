@@ -1,17 +1,16 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
-  type CellContext,
-  type HeaderContext,
-  injectFlexRenderContext,
-} from '@tanstack/angular-table'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+  Row,
+  Table
+} from '@tanstack/angular-table';
 
 @Component({
   template: `
     <input
       type="checkbox"
-      [checked]="context.table.getIsAllRowsSelected()"
-      [indeterminate]="context.table.getIsSomeRowsSelected()"
-      (change)="context.table.toggleAllRowsSelected()"
+      [checked]="table().getIsAllRowsSelected()"
+      [indeterminate]="table().getIsSomeRowsSelected()"
+      (change)="table().toggleAllRowsSelected()"
     />
   `,
   host: {
@@ -21,15 +20,23 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeadSelectionComponent<T> {
-  context = injectFlexRenderContext<HeaderContext<T, unknown>>()
+  // Your component should also reflect the fields you use as props in flexRenderer directive.
+  // Define the fields as input you want to use in your component
+  // ie. In this case, you are passing HeaderContext object as props in flexRenderer directive.
+  // You can define and use the table field, which is defined in HeaderContext.
+  // Please take note that only signal based input is supported.
+
+  //column = input.required<Column<T, unknown>>();
+  //header = input.required<Header<T, unknown>>();
+  table = input.required<Table<T>>();
 }
 
 @Component({
   template: `
     <input
       type="checkbox"
-      [checked]="context.row.getIsSelected()"
-      (change)="context.row.getToggleSelectedHandler()($event)"
+      [checked]="row().getIsSelected()"
+      (change)="row().getToggleSelectedHandler()($event)"
     />
   `,
   host: {
@@ -39,5 +46,5 @@ export class TableHeadSelectionComponent<T> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowSelectionComponent<T> {
-  context = injectFlexRenderContext<CellContext<T, unknown>>()
+  row = input.required<Row<T>>();
 }

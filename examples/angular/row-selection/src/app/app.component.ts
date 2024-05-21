@@ -9,7 +9,6 @@ import {
 import {
   ColumnDef,
   createAngularTable,
-  FlexRenderComponent,
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
@@ -18,7 +17,6 @@ import {
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'
 import { makeData, type Person } from './makeData'
-import { FormsModule } from '@angular/forms'
 import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
@@ -27,7 +25,7 @@ import {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FilterComponent, FlexRenderDirective, FormsModule],
+  imports: [FilterComponent, FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -42,12 +40,8 @@ export class AppComponent {
   readonly columns: ColumnDef<Person>[] = [
     {
       id: 'select',
-      header: () => {
-        return new FlexRenderComponent(TableHeadSelectionComponent)
-      },
-      cell: () => {
-        return new FlexRenderComponent(TableRowSelectionComponent)
-      },
+      header: () => TableHeadSelectionComponent<Person>,
+      cell: () => TableRowSelectionComponent<Person>,
     },
     {
       header: 'Name',

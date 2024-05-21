@@ -2,20 +2,18 @@ import {
   ComponentRef,
   Directive,
   EmbeddedViewRef,
-  InjectionToken,
   Injector,
   TemplateRef,
+  Type,
   ViewContainerRef,
-  effect,
   inject,
-  input,
-  type Type,
+  input
 } from '@angular/core'
 
 type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
   | number
-  | FlexRenderComponent<TProps>
+  | Type<TProps>
   | TemplateRef<{ $implicit: TProps }>
   | null
 
@@ -30,13 +28,12 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>> {
 
   props = input<TProps>({} as TProps, { alias: 'flexRenderProps' })
 
-  injector = input(inject(Injector), { alias: 'flexRenderInjector' })
+  private readonly injector = inject(Injector)
+  private readonly viewContainerRef = inject(ViewContainerRef)
+  private readonly templateRef = inject(TemplateRef<any>)
 
-  viewContainerRef = inject(ViewContainerRef)
-  templateRef = inject(TemplateRef<any>)
-
-  constructor() {
-    effect(() => this.render())
+  ngOnInit(): void {
+    this.render()
   }
 
   render() {
@@ -49,7 +46,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>> {
     if (typeof content === 'function') {
       return this.renderContent(content(this.props()))
     }
-    return this.renderStringContent()
+    return this.renderStringContent(content as FlexRenderContent<TProps>)
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
@@ -58,20 +55,19 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>> {
         content,
         this.getTemplateRefContext()
       )
-    } else if (content instanceof FlexRenderComponent) {
+    } else if (content instanceof Type) {
       return this.renderComponent(content)
     } else if (content) {
-      return this.renderStringContent()
+      return this.renderStringContent(content)
     } else {
       return null
     }
   }
 
-  private renderStringContent(): EmbeddedViewRef<unknown> {
-    const context = () => {
-      const content = this.content()
-      return typeof content === 'function' ? content?.(this.props()) : content
-    }
+  private renderStringContent(
+    content: FlexRenderContent<TProps>
+  ): EmbeddedViewRef<unknown> {
+    const context = () => content
     return this.viewContainerRef.createEmbeddedView(this.templateRef, {
       get $implicit() {
         return context()
@@ -79,28 +75,15 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>> {
     })
   }
 
-  private renderComponent(
-    flexRenderComponent: FlexRenderComponent<TProps>
-  ): ComponentRef<unknown> {
-    const { component, inputs, injector } = flexRenderComponent
-
-    const getContext = () => this.props()
-
-    const proxy = new Proxy(this.props(), {
-      get: (_, key) => getContext()?.[key as keyof typeof _],
-    })
-
-    const componentInjector = Injector.create({
-      parent: injector ?? this.injector(),
-      providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
-    })
-
+  private renderComponent(component: Type<unknown>): ComponentRef<unknown> {
     const componentRef = this.viewContainerRef.createComponent(component, {
-      injector: componentInjector,
+      injector: this.injector,
     })
-    for (const prop in inputs) {
+    const props = this.props()
+    for (const prop in props) {
+      // Only signal based input can be added here
       if (componentRef.instance?.hasOwnProperty(prop)) {
-        componentRef.setInput(prop, inputs[prop])
+        componentRef.setInput(prop, props[prop])
       }
     }
     return componentRef
@@ -114,20 +97,4 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>> {
       },
     }
   }
-}
-
-export class FlexRenderComponent<T extends NonNullable<unknown>> {
-  constructor(
-    readonly component: Type<unknown>,
-    readonly inputs: T = {} as T,
-    readonly injector?: Injector
-  ) {}
-}
-
-const FlexRenderComponentProps = new InjectionToken<NonNullable<unknown>>(
-  '[@tanstack/angular-table] Flex render component context props'
-)
-
-export function injectFlexRenderContext<T extends NonNullable<unknown>>(): T {
-  return inject<T>(FlexRenderComponentProps)
 }
