@@ -20,16 +20,20 @@
     "solid-table",
     "datagrid"
   ],
-  "type": "commonjs",
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
-  "types": "build/lib/index.d.ts",
+  "type": "module",
+  "types": "dist/esm/index.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
-      "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js",
-      "solid": "./src/index.tsx"
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -38,22 +42,21 @@
     "node": ">=12"
   },
   "files": [
-    "build/lib/*",
-    "build/umd/*",
+    "dist",
     "src"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
-    "test:types": "tsc --noEmit",
-    "build": "pnpm build:rollup && pnpm build:types",
-    "build:rollup": "rollup --config rollup.config.mjs",
-    "build:types": "tsc --emitDeclarationOnly"
+    "clean": "rimraf ./dist",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "vite build"
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "solid-js": "^1.8.17"
+    "solid-js": "^1.8.17",
+    "vite-plugin-solid": "^2.10.2"
   },
   "peerDependencies": {
     "solid-js": ">=1.3"

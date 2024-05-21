@@ -8,7 +8,6 @@
     "sharedGlobals": [
       "{workspaceRoot}/.nvmrc",
       "{workspaceRoot}/package.json",
-      "{workspaceRoot}/scripts/getRollupConfig.js",
       "{workspaceRoot}/tsconfig.json"
     ],
     "default": [
@@ -33,6 +32,11 @@
     },
     "test:types": {
       "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
+      "cache": true
+    },
+    "test:build": {
+      "dependsOn": ["build"],
       "inputs": ["default", "^public"],
       "cache": true
     },
