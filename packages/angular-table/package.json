@@ -44,6 +44,8 @@
   "scripts": {
     "clean": "rimraf ./build",
     "test:types": "tsc --noEmit",
+    "test:lib": "vitest",
+    "test:lib:dev": "vitest --watch",
     "build": "pnpm ng-packagr -p ng-package.json && rimraf ./build/lib/package.json",
     "build:types": "tsc --emitDeclarationOnly"
   },
@@ -52,7 +54,10 @@
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@angular/core": "^17.3.1",
+    "@analogjs/vite-plugin-angular": "^1.3.1",
+    "@angular/core": "^17.3.9",
+    "@angular/platform-browser": "^17.3.9",
+    "@angular/platform-browser-dynamic": "^17.3.9",
     "ng-packagr": "^17.3.0"
   },
   "peerDependencies": {
