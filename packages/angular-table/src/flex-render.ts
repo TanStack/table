@@ -11,6 +11,7 @@ import {
   Type,
   ViewContainerRef,
   inject,
+  isSignal,
   type DoCheck,
   type OnInit,
 } from '@angular/core'
@@ -148,7 +149,11 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     })
     for (const prop in this.props) {
       // Only signal based input can be added here
-      if (componentRef.instance?.hasOwnProperty(prop)) {
+      if (
+        componentRef.instance?.hasOwnProperty(prop) &&
+        // @ts-ignore
+        isSignal(componentRef.instance[prop])
+      ) {
         componentRef.setInput(prop, this.props[prop])
       }
     }
