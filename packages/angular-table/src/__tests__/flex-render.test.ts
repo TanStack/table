@@ -1,6 +1,7 @@
 import { Component, ViewChild, input, type TemplateRef } from '@angular/core'
 import { TestBed, type ComponentFixture } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
+import { skip } from 'node:test'
 import { describe, expect, test } from 'vitest'
 import {
   FlexRenderComponent,
@@ -115,9 +116,9 @@ describe('FlexRenderDirective', () => {
     expect(fixture.nativeElement.textContent).toEqual('Updated value')
   })
 
-  // Skipq for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
+  // Skip for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
   // as component inputs
-  it.skip('should render custom components', () => {
+  skip('should render custom components', () => {
     @Component({
       template: `{{ row().property }}`,
       standalone: true,
