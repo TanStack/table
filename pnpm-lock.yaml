@@ -680,6 +680,79 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
 
+  examples/angular/row-selection-signal:
+    dependencies:
+      '@angular/animations':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      '@angular/common':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1)
+      '@angular/compiler':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      '@angular/core':
+        specifier: ^17.3.9
+        version: 17.3.9(rxjs@7.8.1)(zone.js@0.14.5)
+      '@angular/forms':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(rxjs@7.8.1)
+      '@angular/platform-browser':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      '@angular/platform-browser-dynamic':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/angular-table':
+        specifier: ^8.18.1
+        version: link:../../../packages/angular-table
+      rxjs:
+        specifier: ~7.8.1
+        version: 7.8.1
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
+      zone.js:
+        specifier: ~0.14.4
+        version: 0.14.5
+    devDependencies:
+      '@angular-devkit/build-angular':
+        specifier: ^17.3.8
+        version: 17.3.8(@angular/compiler-cli@17.3.9(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.12.7)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.9(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(typescript@5.4.5))(tslib@2.6.2)(typescript@5.4.5))(typescript@5.4.5)
+      '@angular/cli':
+        specifier: ^17.3.8
+        version: 17.3.8(chokidar@3.6.0)
+      '@angular/compiler-cli':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(typescript@5.4.5)
+      '@types/jasmine':
+        specifier: ~5.1.4
+        version: 5.1.4
+      jasmine-core:
+        specifier: ~5.1.2
+        version: 5.1.2
+      karma:
+        specifier: ~6.4.3
+        version: 6.4.3
+      karma-chrome-launcher:
+        specifier: ~3.2.0
+        version: 3.2.0
+      karma-coverage:
+        specifier: ~2.2.1
+        version: 2.2.1
+      karma-jasmine:
+        specifier: ~5.1.0
+        version: 5.1.0(karma@6.4.3)
+      karma-jasmine-html-reporter:
+        specifier: ~2.1.0
+        version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0(karma@6.4.3))(karma@6.4.3)
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+
   examples/angular/signal-input:
     dependencies:
       '@angular/animations':
