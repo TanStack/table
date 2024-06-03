@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/angular-table",
-  "version": "8.18.1",
+  "version": "8.19.0",
   "description": "Headless UI for building powerful tables & datagrids for Angular.",
   "author": "Tanner Linsley",
   "license": "MIT",
