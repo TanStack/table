@@ -214,4 +214,58 @@ class CustomCellComponent {
 }
 ```
 
+Alternatively, you can render a component into a specific column header, cell, or footer by passing the component type 
+to the corresponding column definitions. These column definitions will be provided to the `flexRender` directive along with the `context`.
 
+```ts
+import {FlexRenderComponent} from "@tanstack/angular-table";
+
+class AppComponent {
+  columns: ColumnDef<Person>[] = [
+    {
+      id: 'select',
+      header: () => TableHeadSelectionComponent<Person>,
+      cell: () => TableRowSelectionComponent<Person>,
+    },
+  ]
+}
+```
+
+```angular2html
+<ng-container
+  *flexRender="
+    header.column.columnDef.header;
+    props: header.getContext();
+    let headerCell
+  "
+>
+  {{ headerCell }}
+</ng-container>
+```
+
+Properties of `context` provided in the `flexRender` directive will be accessible to your component. 
+You can explicitly define the context properties required by your component. 
+In this example, the context provided to flexRender is of type HeaderContext. 
+Input signal `table`, which is a property of HeaderContext together with `column` and `header` properties,
+is then defined to be used in the component. If any of the context properties are 
+needed in your component, feel free to use them. Please take note that only input signal is supported, 
+when defining access to context properties, using this approach.
+
+```ts
+@Component({
+  template: `
+    <input
+      type="checkbox"
+      [checked]="table().getIsAllRowsSelected()"
+      [indeterminate]="table().getIsSomeRowsSelected()"
+      (change)="table().toggleAllRowsSelected()"
+    />
+  `,
+  // ...
+})
+export class TableHeadSelectionComponent<T> {
+  //column = input.required<Column<T, unknown>>()
+  //header = input.required<Header<T, unknown>>()
+  table = input.required<Table<T>>()
+}
+```
