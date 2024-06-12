@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { writable } from 'svelte/store'
+  import type {
+    ColumnDef,
+    TableOptions,
+    VisibilityState,
+    Updater,
+  } from '@tanstack/svelte-table'
   import {
+    FlexRender,
     createSvelteTable,
     getCoreRowModel,
     getSortedRowModel,
-    flexRender,
-  } from '@tanstack/svelte-table'
-  import type {
-    ColumnDef,
-    OnChangeFn,
-    TableOptions,
-    VisibilityState,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -102,41 +101,28 @@
     },
   ]
 
-  let columnVisibility: VisibilityState = {}
+  let columnVisibility = $state<VisibilityState>({})
 
-  const setColumnVisibility: OnChangeFn<VisibilityState> = updater => {
+  function setColumnVisibility(updater: Updater<VisibilityState>) {
     if (updater instanceof Function) {
       columnVisibility = updater(columnVisibility)
-    } else {
-      columnVisibility = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        columnVisibility,
-      },
-    }))
+    } else columnVisibility = updater
   }
 
-  const options = writable<TableOptions<Person>>({
+  const options: TableOptions<Person> = {
     data: defaultData,
     columns,
     state: {
-      columnVisibility,
+      get columnVisibility() {
+        return columnVisibility
+      },
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
-  })
-
-  const rerender = () => {
-    options.update(options => ({
-      ...options,
-      data: defaultData,
-    }))
   }
+
   const table = createSvelteTable(options)
 </script>
 
@@ -145,16 +131,16 @@
     <div class="px-1 border-b border-black">
       <label>
         <input
-          checked={$table.getIsAllColumnsVisible()}
+          checked={table.getIsAllColumnsVisible()}
           on:change={e => {
-            console.info($table.getToggleAllColumnsVisibilityHandler()(e))
+            console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
         />{' '}
         Toggle All
       </label>
     </div>
-    {#each $table.getAllLeafColumns() as column}
+    {#each table.getAllLeafColumns() as column}
       <div class="px-1">
         <label>
           <input
@@ -170,16 +156,14 @@
   <div class="h-4" />
   <table>
     <thead>
-      {#each $table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup}
         <tr>
           {#each headerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                <FlexRender
+                  content={header.column.columnDef.header}
+                  context={header.getContext()}
                 />
               {/if}
             </th>
@@ -188,12 +172,13 @@
       {/each}
     </thead>
     <tbody>
-      {#each $table.getCoreRowModel().rows.slice(0, 20) as row}
+      {#each table.getCoreRowModel().rows.slice(0, 20) as row}
         <tr>
           {#each row.getVisibleCells() as cell}
             <td>
-              <svelte:component
-                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+              <FlexRender
+                content={cell.column.columnDef.cell}
+                context={cell.getContext()}
               />
             </td>
           {/each}
@@ -201,16 +186,14 @@
       {/each}
     </tbody>
     <tfoot>
-      {#each $table.getFooterGroups() as footerGroup}
+      {#each table.getFooterGroups() as footerGroup}
         <tr>
           {#each footerGroup.headers as header}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.footer,
-                    header.getContext()
-                  )}
+                <FlexRender
+                  content={header.column.columnDef.header}
+                  context={header.getContext()}
                 />
               {/if}
             </th>
@@ -220,7 +203,5 @@
     </tfoot>
   </table>
   <div class="h-4" />
-  <button on:click={() => rerender()} class="border p-2"> Rerender </button>
-  <div class="h-4" />
-  <pre>{JSON.stringify($table.getState().columnVisibility, null, 2)}</pre>
+  <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
 </div>

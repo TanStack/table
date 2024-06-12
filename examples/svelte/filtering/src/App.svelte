@@ -1,28 +1,22 @@
 <script lang="ts">
-  import './index.css'
-  import { writable } from 'svelte/store'
-
-  import './index.css'
-
+  import { rankItem } from '@tanstack/match-sorter-utils'
+  import type {
+    ColumnDef,
+    FilterFn,
+    TableOptions,
+  } from '@tanstack/svelte-table'
   import {
+    FlexRender,
     createSvelteTable,
-    flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
   } from '@tanstack/svelte-table'
-
-  import type {
-    ColumnDef,
-    TableOptions,
-    FilterFn,
-  } from '@tanstack/svelte-table'
-
-  import { rankItem } from '@tanstack/match-sorter-utils'
-
+  import { type Updater } from 'svelte/store'
+  import './index.css'
   import { makeData, type Person } from './makeData'
 
-  let globalFilter = ''
+  let globalFilter = $state('')
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -46,24 +40,36 @@
     },
   ]
 
-  const options = writable<TableOptions<any>>({
+  function setGlobalFilter(updater: Updater<string>) {
+    if (updater instanceof Function) {
+      globalFilter = updater(globalFilter)
+    } else globalFilter = updater
+  }
+
+  const options: TableOptions<Person> = {
     data: makeData(25),
     columns,
+    state: {
+      get globalFilter() {
+        return globalFilter
+      },
+    },
     filterFns: {
       fuzzy: fuzzyFilter,
     },
-    enableMultiRowSelection: true,
+    onGlobalFilterChange: setGlobalFilter,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     globalFilterFn: fuzzyFilter,
     getFilteredRowModel: getFilteredRowModel(),
-  })
+    enableMultiRowSelection: true,
+  }
 
   const table = createSvelteTable(options)
 
-  const handleKeyUp = (e: any) => {
-    $table.setGlobalFilter(String(e?.target?.value))
-  }
+  $effect(() => {
+    table.setGlobalFilter(globalFilter)
+  })
 </script>
 
 <input
@@ -71,21 +77,18 @@
   placeholder="Global filter"
   class="border w-full p-1"
   bind:value={globalFilter}
-  on:keyup={handleKeyUp}
 />
 <div class="h-2" />
 <table class="w-full">
   <thead>
-    {#each $table.getHeaderGroups() as headerGroup}
+    {#each table.getHeaderGroups() as headerGroup}
       <tr>
         {#each headerGroup.headers as header, idx}
           <th scope="col">
             {#if !header.isPlaceholder}
-              <svelte:component
-                this={flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
+              <FlexRender
+                content={header.column.columnDef.header}
+                context={header.getContext()}
               />
             {/if}
           </th>
@@ -94,12 +97,13 @@
     {/each}
   </thead>
   <tbody>
-    {#each $table.getRowModel().rows as row}
+    {#each table.getRowModel().rows as row}
       <tr>
         {#each row.getVisibleCells() as cell}
           <td>
-            <svelte:component
-              this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <FlexRender
+              content={cell.column.columnDef.cell}
+              context={cell.getContext()}
             />
           </td>
         {/each}
@@ -108,4 +112,4 @@
   </tbody>
 </table>
 <div class="h-2" />
-<pre>"globalFilter": "{$table.getState().globalFilter}"</pre>
+<pre>"globalFilter": "{table.getState().globalFilter}"</pre>
