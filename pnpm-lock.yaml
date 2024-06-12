@@ -686,8 +686,8 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^8.19.0
-        version: 8.19.0(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+        specifier: ^9.0.0-alpha.1
+        version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
         version: 7.8.1
@@ -4828,12 +4828,6 @@ packages:
   '@swc/helpers@0.5.7':
     resolution: {integrity: sha512-BVvNZhx362+l2tSwSuyEUV4h7+jk9raNdoTSdLfwTshXJSaGmYKluGRJznziCI3KX02Z19DdsQrdfrpXAU3Hfg==}
 
-  '@tanstack/angular-table@8.19.0':
-    resolution: {integrity: sha512-hDlEWC63OkPxW1VpygyzuYQNkKtC/Uizf95w4QwFsHutAsXguzKdTkA2R+SR60tqqdhxPJaKgN/4u9xjIKBc3A==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      '@angular/core': '>=17'
-
   '@tanstack/config@0.7.6':
     resolution: {integrity: sha512-vKCv+E5/TgVz7oCmWVpwzeAirNavrWpeRvLpvUIwFpxdl+WSPHhWCL+vT33r9A+UHrS+KdYJwABD6uihBpbEqg==}
     engines: {node: '>=18'}
@@ -4852,10 +4846,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  '@tanstack/table-core@8.17.3':
-    resolution: {integrity: sha512-mPBodDGVL+fl6d90wUREepHa/7lhsghg2A3vFpakEhrhtbIlgNAZiMr7ccTgak5qbHqF14Fwy+W1yFWQt+WmYQ==}
-    engines: {node: '>=12'}
 
   '@tanstack/virtual-core@3.4.0':
     resolution: {integrity: sha512-75jXqXxqq5M5Veb9KP1STi8kA5u408uOOAefk2ftHDGCpUk3RP6zX++QqfbmHJTBiU72NQ+ghgCZVts/Wocz8Q==}
@@ -12220,12 +12210,6 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  '@tanstack/angular-table@8.19.0(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))':
-    dependencies:
-      '@angular/core': 17.3.9(rxjs@7.8.1)(zone.js@0.14.5)
-      '@tanstack/table-core': 8.17.3
-      tslib: 2.6.2
-
   '@tanstack/config@0.7.6(@types/node@20.12.7)(esbuild@0.20.2)(rollup@4.16.4)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))':
     dependencies:
       '@commitlint/parse': 19.0.3
@@ -12266,8 +12250,6 @@ snapshots:
       '@tanstack/virtual-core': 3.4.0
       react: 18.3.0
       react-dom: 18.3.0(react@18.3.0)
-
-  '@tanstack/table-core@8.17.3': {}
 
   '@tanstack/virtual-core@3.4.0': {}
 
