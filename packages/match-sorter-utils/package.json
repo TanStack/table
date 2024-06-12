@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/match-sorter-utils",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.4",
   "description": "A fork of match-sorter with separated filtering and sorting phases",
   "contributors": [
     "Kent C. Dodds",
