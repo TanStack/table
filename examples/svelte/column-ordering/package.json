@@ -12,7 +12,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@rollup/plugin-replace": "^5.0.5",
-    "svelte": "5.0.0-next.78",
+    "svelte": "5.0.0-next.153",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@tanstack/svelte-table": "^9.0.0-alpha.0",
     "@tsconfig/svelte": "^5.0.4",

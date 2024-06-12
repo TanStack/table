@@ -12,7 +12,7 @@
     "test:pr": "nx affected --targets=test:format,test:sherif,test:knip,test:lib,test:types,test:build,build",
     "test:ci": "nx run-many --targets=test:format,test:sherif,test:knip,test:lib,test:types,test:build,build",
     "test:format": "pnpm run prettier --check",
-    "test:sherif": "sherif -i svelte",
+    "test:sherif": "sherif",
     "test:lib": "nx affected --targets=test:lib --exclude=examples/**",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:build": "nx affected --target=test:build --exclude=examples/**",
@@ -24,6 +24,7 @@
     "dev": "pnpm run watch",
     "prettier": "prettier --ignore-unknown '**/*'",
     "prettier:write": "pnpm run prettier --write",
+    "format": "pnpm run prettier:write",
     "cipublish": "node scripts/publish.js"
   },
   "nx": {
@@ -64,7 +65,7 @@
     "rimraf": "^5.0.5",
     "sherif": "^0.8.4",
     "size-limit": "^11.1.2",
-    "svelte": "^5.0.0-next",
+    "svelte": "5.0.0-next.153",
     "typescript": "5.4.5",
     "vite": "^5.2.10",
     "vitest": "^1.5.2"
