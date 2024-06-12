@@ -11,9 +11,9 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "svelte": "5.0.0-next.153",
+    "svelte": "^5.0.0-next",
     "@rollup/plugin-replace": "^5.0.5",
-    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0-next",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.0",
     "@tanstack/svelte-table": "^9.0.0-alpha.2",
     "@tsconfig/svelte": "^5.0.4",

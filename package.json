@@ -65,7 +65,7 @@
     "rimraf": "^5.0.5",
     "sherif": "^0.8.4",
     "size-limit": "^11.1.2",
-    "svelte": "5.0.0-next.153",
+    "svelte": "^5.0.0-next",
     "typescript": "5.4.5",
     "vite": "^5.2.10",
     "vitest": "^1.5.2"
