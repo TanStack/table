@@ -52,7 +52,7 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./build && rimraf ./dist",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",

@@ -44,7 +44,7 @@
   "scripts": {
     "build": "pnpm ng-packagr -p ng-package.json && rimraf ./dist/package.json",
     "build:types": "tsc --emitDeclarationOnly",
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./build && rimraf ./dist",
     "test:build": "publint --strict",
     "test:lib": "vitest",
     "test:lib:dev": "vitest --watch",
