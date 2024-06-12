@@ -46,7 +46,7 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./build && rimraf ./dist",
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "vite build"

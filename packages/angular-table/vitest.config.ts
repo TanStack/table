@@ -4,6 +4,7 @@ import packageJson from './package.json'
 export default defineConfig(({ mode }) => ({
   test: {
     name: packageJson.name,
+    watch: false,
     globals: true,
     setupFiles: ['src/__tests__/test-setup.ts'],
     environment: 'jsdom',
