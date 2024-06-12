@@ -2830,12 +2830,16 @@ importers:
 
   packages/svelte-table:
     dependencies:
-      '@sveltejs/vite-plugin-svelte':
-        specifier: ^3.0.2
-        version: 3.1.0(svelte@5.0.0-next.78)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
+    devDependencies:
+      '@sveltejs/package':
+        specifier: ^2.3.1
+        version: 2.3.1(svelte@5.0.0-next.78)(typescript@5.4.5)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^3.0.2
+        version: 3.1.0(svelte@5.0.0-next.78)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       svelte:
         specifier: ^5.0.0-next
         version: 5.0.0-next.78
@@ -2845,10 +2849,6 @@ importers:
       svelte-eslint-parser:
         specifier: ^0.33.1
         version: 0.33.1(svelte@5.0.0-next.78)
-    devDependencies:
-      '@sveltejs/package':
-        specifier: ^2.3.1
-        version: 2.3.1(svelte@5.0.0-next.78)(typescript@5.4.5)
 
   packages/table-core: {}
 
