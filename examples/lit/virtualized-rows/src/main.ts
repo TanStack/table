@@ -3,11 +3,9 @@ import { html, LitElement } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   ColumnDef,
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  Row,
   TableController,
 } from '@tanstack/lit-table'
 import install from '@twind/with-web-components'
