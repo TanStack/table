@@ -2262,7 +2262,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@5.0.0-next.153)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2289,7 +2289,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@5.0.0-next.153)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2319,7 +2319,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@5.0.0-next.153)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2349,7 +2349,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@5.0.0-next.153)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2376,7 +2376,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@5.0.0-next.153)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2409,7 +2409,7 @@ importers:
         specifier: ^9.0.0-alpha.0
         version: link:../../../packages/match-sorter-utils
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2439,7 +2439,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@5.0.0-next.153)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.0
+        specifier: ^9.0.0-alpha.2
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
