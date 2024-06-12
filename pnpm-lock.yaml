@@ -659,6 +659,79 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
 
+  examples/angular/row-selection-signal:
+    dependencies:
+      '@angular/animations':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      '@angular/common':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1)
+      '@angular/compiler':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      '@angular/core':
+        specifier: ^17.3.9
+        version: 17.3.9(rxjs@7.8.1)(zone.js@0.14.5)
+      '@angular/forms':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(rxjs@7.8.1)
+      '@angular/platform-browser':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      '@angular/platform-browser-dynamic':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/angular-table':
+        specifier: ^8.19.0
+        version: 8.19.0(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))
+      rxjs:
+        specifier: ~7.8.1
+        version: 7.8.1
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
+      zone.js:
+        specifier: ~0.14.4
+        version: 0.14.5
+    devDependencies:
+      '@angular-devkit/build-angular':
+        specifier: ^17.3.8
+        version: 17.3.8(@angular/compiler-cli@17.3.9(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.12.7)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.9(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(typescript@5.4.5))(tslib@2.6.2)(typescript@5.4.5))(typescript@5.4.5)
+      '@angular/cli':
+        specifier: ^17.3.8
+        version: 17.3.8(chokidar@3.6.0)
+      '@angular/compiler-cli':
+        specifier: ^17.3.9
+        version: 17.3.9(@angular/compiler@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5)))(typescript@5.4.5)
+      '@types/jasmine':
+        specifier: ~5.1.4
+        version: 5.1.4
+      jasmine-core:
+        specifier: ~5.1.2
+        version: 5.1.2
+      karma:
+        specifier: ~6.4.3
+        version: 6.4.3
+      karma-chrome-launcher:
+        specifier: ~3.2.0
+        version: 3.2.0
+      karma-coverage:
+        specifier: ~2.2.1
+        version: 2.2.1
+      karma-jasmine:
+        specifier: ~5.1.0
+        version: 5.1.0(karma@6.4.3)
+      karma-jasmine-html-reporter:
+        specifier: ~2.1.0
+        version: 2.1.0(jasmine-core@5.1.2)(karma-jasmine@5.1.0(karma@6.4.3))(karma@6.4.3)
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+
   examples/angular/signal-input:
     dependencies:
       '@angular/animations':
@@ -4755,6 +4828,12 @@ packages:
   '@swc/helpers@0.5.7':
     resolution: {integrity: sha512-BVvNZhx362+l2tSwSuyEUV4h7+jk9raNdoTSdLfwTshXJSaGmYKluGRJznziCI3KX02Z19DdsQrdfrpXAU3Hfg==}
 
+  '@tanstack/angular-table@8.19.0':
+    resolution: {integrity: sha512-hDlEWC63OkPxW1VpygyzuYQNkKtC/Uizf95w4QwFsHutAsXguzKdTkA2R+SR60tqqdhxPJaKgN/4u9xjIKBc3A==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@angular/core': '>=17'
+
   '@tanstack/config@0.7.6':
     resolution: {integrity: sha512-vKCv+E5/TgVz7oCmWVpwzeAirNavrWpeRvLpvUIwFpxdl+WSPHhWCL+vT33r9A+UHrS+KdYJwABD6uihBpbEqg==}
     engines: {node: '>=18'}
@@ -4773,6 +4852,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  '@tanstack/table-core@8.17.3':
+    resolution: {integrity: sha512-mPBodDGVL+fl6d90wUREepHa/7lhsghg2A3vFpakEhrhtbIlgNAZiMr7ccTgak5qbHqF14Fwy+W1yFWQt+WmYQ==}
+    engines: {node: '>=12'}
 
   '@tanstack/virtual-core@3.4.0':
     resolution: {integrity: sha512-75jXqXxqq5M5Veb9KP1STi8kA5u408uOOAefk2ftHDGCpUk3RP6zX++QqfbmHJTBiU72NQ+ghgCZVts/Wocz8Q==}
@@ -8133,6 +8216,7 @@ packages:
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rimraf@3.0.2:
@@ -9687,7 +9771,7 @@ snapshots:
   '@babel/code-frame@7.24.2':
     dependencies:
       '@babel/highlight': 7.24.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
 
   '@babel/compat-data@7.24.4': {}
 
@@ -12136,6 +12220,12 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  '@tanstack/angular-table@8.19.0(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.5))':
+    dependencies:
+      '@angular/core': 17.3.9(rxjs@7.8.1)(zone.js@0.14.5)
+      '@tanstack/table-core': 8.17.3
+      tslib: 2.6.2
+
   '@tanstack/config@0.7.6(@types/node@20.12.7)(esbuild@0.20.2)(rollup@4.16.4)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.1)(terser@5.29.2))':
     dependencies:
       '@commitlint/parse': 19.0.3
@@ -12176,6 +12266,8 @@ snapshots:
       '@tanstack/virtual-core': 3.4.0
       react: 18.3.0
       react-dom: 18.3.0(react@18.3.0)
+
+  '@tanstack/table-core@8.17.3': {}
 
   '@tanstack/virtual-core@3.4.0': {}
 
@@ -14703,7 +14795,7 @@ snapshots:
 
   launch-editor@2.6.1:
     dependencies:
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       shell-quote: 1.8.1
 
   less-loader@11.1.0(less@4.2.0)(webpack@5.90.3(esbuild@0.20.1)):
@@ -15569,7 +15661,7 @@ snapshots:
   postcss@8.4.35:
     dependencies:
       nanoid: 3.3.7
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       source-map-js: 1.2.0
 
   postcss@8.4.38:

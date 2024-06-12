@@ -1,22 +1,13 @@
-import { describe, expect, test } from 'vitest'
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Input,
-  input,
-  type OnInit,
-  type TemplateRef,
-  ViewChild,
-} from '@angular/core'
+import { Component, ViewChild, input, type TemplateRef } from '@angular/core'
+import { TestBed, type ComponentFixture } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
+import { skip } from 'node:test'
+import { describe, expect, test } from 'vitest'
 import {
   FlexRenderComponent,
   FlexRenderDirective,
   injectFlexRenderContext,
 } from '../flex-render'
-import { type ComponentFixture, TestBed } from '@angular/core/testing'
 import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
 
 interface Data {
@@ -120,6 +111,37 @@ describe('FlexRenderDirective', () => {
     expect(fixture.nativeElement.textContent).toEqual('Context value')
 
     setFixtureSignalInput(fixture, 'context', { property: 'Updated value' })
+    fixture.detectChanges()
+
+    expect(fixture.nativeElement.textContent).toEqual('Updated value')
+  })
+
+  // Skip for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
+  // as component inputs
+  skip('should render custom components', () => {
+    @Component({
+      template: `{{ row().property }}`,
+      standalone: true,
+    })
+    class FakeComponent {
+      row = input.required<{ property: string }>()
+    }
+
+    const fixture = TestBed.createComponent(TestRenderComponent)
+    setFixtureSignalInputs(fixture, {
+      content: () => FakeComponent,
+      context: {
+        row: {
+          property: 'Row value',
+        },
+      },
+    })
+
+    expect(fixture.nativeElement.textContent).toEqual('Row value')
+
+    setFixtureSignalInput(fixture, 'context', {
+      row: { property: 'Updated value' },
+    })
     fixture.detectChanges()
 
     expect(fixture.nativeElement.textContent).toEqual('Updated value')

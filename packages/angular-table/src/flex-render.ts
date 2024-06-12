@@ -2,22 +2,24 @@ import {
   ChangeDetectorRef,
   ComponentRef,
   Directive,
-  type DoCheck,
   EmbeddedViewRef,
   Inject,
-  inject,
   InjectionToken,
   Injector,
   Input,
-  type OnInit,
   TemplateRef,
-  type Type,
+  Type,
   ViewContainerRef,
+  inject,
+  isSignal,
+  type DoCheck,
+  type OnInit,
 } from '@angular/core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
   | number
+  | Type<TProps>
   | FlexRenderComponent<TProps>
   | TemplateRef<{ $implicit: TProps }>
   | null
@@ -91,6 +93,8 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       )
     } else if (content instanceof FlexRenderComponent) {
       return this.renderComponent(content)
+    } else if (content instanceof Type) {
+      return this.renderCustomComponent(content)
     } else {
       return null
     }
@@ -132,6 +136,25 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     for (const prop in inputs) {
       if (componentRef.instance?.hasOwnProperty(prop)) {
         componentRef.setInput(prop, inputs[prop])
+      }
+    }
+    return componentRef
+  }
+
+  private renderCustomComponent(
+    component: Type<unknown>
+  ): ComponentRef<unknown> {
+    const componentRef = this.viewContainerRef.createComponent(component, {
+      injector: this.injector,
+    })
+    for (const prop in this.props) {
+      // Only signal based input can be added here
+      if (
+        componentRef.instance?.hasOwnProperty(prop) &&
+        // @ts-ignore
+        isSignal(componentRef.instance[prop])
+      ) {
+        componentRef.setInput(prop, this.props[prop])
       }
     }
     return componentRef
