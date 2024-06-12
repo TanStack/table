@@ -3,7 +3,6 @@
   "namespace": "@tanstack",
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
-  "packageManager": "pnpm@9.1.1",
   "type": "module",
   "scripts": {
     "clean": "pnpm --filter \"./packages/**\" run clean",
