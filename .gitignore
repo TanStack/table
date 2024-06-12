@@ -51,6 +51,7 @@ yarn.lock
 
 .svelte-kit
 .nx/cache
+.nx/workspace-data
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 

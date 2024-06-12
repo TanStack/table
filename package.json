@@ -58,7 +58,7 @@
     "@types/node": "^20.12.7",
     "jsdom": "^24.0.0",
     "knip": "^5.10.0",
-    "nx": "^19.0.4",
+    "nx": "^19.2.3",
     "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.2.3",
     "publint": "^0.2.8",
