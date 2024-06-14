@@ -45,10 +45,10 @@
     }
   ],
   "devDependencies": {
-    "@babel/core": "^7.24.4",
-    "@babel/preset-env": "^7.24.4",
-    "@babel/preset-react": "^7.24.1",
-    "@babel/preset-typescript": "^7.24.1",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
     "@faker-js/faker": "^8.4.1",
     "@size-limit/preset-small-lib": "^11.1.2",
     "@tanstack/config": "^0.7.6",
