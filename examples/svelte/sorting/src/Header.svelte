@@ -13,7 +13,7 @@
 <button
   class:cursor-pointer={header.column.getCanSort()}
   class:select-none={header.column.getCanSort()}
-  on:click={header.column.getToggleSortingHandler()}
+  onclick={header.column.getToggleSortingHandler()}
 >
   {label ?? header.column.id}
   {#if header.column.getIsSorted().toString() === 'asc'}

@@ -109,7 +109,7 @@
 </script>
 
 <div class="p-2">
-  <div class="h-2" />
+  <div class="h-2"></div>
   <table>
     <thead>
       {#each table.getHeaderGroups() as headerGroup}
@@ -160,7 +160,7 @@
   </table>
   <div>{table.getRowModel().rows.length} Rows</div>
   <div>
-    <button on:click={() => refreshData()}>Refresh Data</button>
+    <button onclick={() => refreshData()}>Refresh Data</button>
   </div>
   <pre>{JSON.stringify(table.getState().sorting, null, 2)}</pre>
 </div>

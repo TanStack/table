@@ -110,7 +110,7 @@
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
-          on:change={e => {
+          onchange={e => {
             console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
@@ -123,7 +123,7 @@
         <label>
           <input
             checked={column.getIsVisible()}
-            on:change={column.getToggleVisibilityHandler()}
+            onchange={column.getToggleVisibilityHandler()}
             type="checkbox"
           />{' '}
           {column.id}
@@ -131,21 +131,21 @@
       </div>
     {/each}
   </div>
-  <div class="h-4" />
+  <div class="h-4"></div>
   <div class="flex flex-wrap gap-2">
     <button
-      on:click={() => {
+      onclick={() => {
         data = makeData(5000)
       }}
       class="border p-1"
     >
       Refresh Data
     </button>
-    <button on:click={() => randomizeColumns()} class="border p-1">
+    <button onclick={() => randomizeColumns()} class="border p-1">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4" />
+  <div class="h-4"></div>
   <table class="border-2 border-black">
     <thead>
       {#each table.getHeaderGroups() as headerGroup}

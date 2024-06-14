@@ -153,5 +153,5 @@
       {/each}
     </tfoot>
   </table>
-  <div class="h-4" />
+  <div class="h-4"></div>
 </div>

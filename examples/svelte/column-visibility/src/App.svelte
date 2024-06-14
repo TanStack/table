@@ -132,7 +132,7 @@
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
-          on:change={e => {
+          onchange={e => {
             console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
@@ -145,7 +145,7 @@
         <label>
           <input
             checked={column.getIsVisible()}
-            on:change={column.getToggleVisibilityHandler()}
+            onchange={column.getToggleVisibilityHandler()}
             type="checkbox"
           />{' '}
           {column.id}
@@ -153,7 +153,7 @@
       </div>
     {/each}
   </div>
-  <div class="h-4" />
+  <div class="h-4"></div>
   <table>
     <thead>
       {#each table.getHeaderGroups() as headerGroup}
@@ -202,6 +202,6 @@
       {/each}
     </tfoot>
   </table>
-  <div class="h-4" />
+  <div class="h-4"></div>
   <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
 </div>

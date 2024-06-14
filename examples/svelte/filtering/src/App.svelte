@@ -78,7 +78,7 @@
   class="border w-full p-1"
   bind:value={globalFilter}
 />
-<div class="h-2" />
+<div class="h-2"></div>
 <table class="w-full">
   <thead>
     {#each table.getHeaderGroups() as headerGroup}
@@ -111,5 +111,5 @@
     {/each}
   </tbody>
 </table>
-<div class="h-2" />
+<div class="h-2"></div>
 <pre>"globalFilter": "{table.getState().globalFilter}"</pre>
