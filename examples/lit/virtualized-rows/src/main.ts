@@ -8,13 +8,10 @@ import {
   getSortedRowModel,
   TableController,
 } from '@tanstack/lit-table'
-import install from '@twind/with-web-components'
 import config from '../twind.config'
 import { styleMap } from 'lit/directives/style-map.js'
 import { virtualize, virtualizerRef } from '@lit-labs/virtualizer/virtualize.js'
 import { makeData, Person } from './makeData.ts'
-
-const withTwind = install(config)
 
 const columns: ColumnDef<Person>[] = [
   {
@@ -61,7 +58,6 @@ const columns: ColumnDef<Person>[] = [
 const data = makeData(50_000)
 
 @customElement('lit-table-example')
-@withTwind
 class LitTableExample extends LitElement {
   private tableController = new TableController<Person>(this)
 
