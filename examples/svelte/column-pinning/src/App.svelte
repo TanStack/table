@@ -117,7 +117,7 @@
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
-          on:change={e => {
+          onchange={e => {
             console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
@@ -130,7 +130,7 @@
         <label>
           <input
             checked={column.getIsVisible()}
-            on:change={column.getToggleVisibilityHandler()}
+            onchange={column.getToggleVisibilityHandler()}
             type="checkbox"
           />{' '}
           {column.id}
@@ -138,27 +138,27 @@
       </div>
     {/each}
   </div>
-  <div class="h-4" />
+  <div class="h-4"></div>
   <div class="flex flex-wrap gap-2">
     <button
-      on:click={() => {
+      onclick={() => {
         data = makeData(5000)
       }}
       class="border p-1"
     >
       Refresh Data
     </button>
-    <button on:click={() => randomizeColumns()} class="border p-1">
+    <button onclick={() => randomizeColumns()} class="border p-1">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4" />
+  <div class="h-4"></div>
   <div>
     <label>
       <input
         type="checkbox"
         checked={isSplit}
-        on:change={e => (isSplit = e.currentTarget.checked)}
+        onchange={e => (isSplit = e.currentTarget.checked)}
       />{' '}
       Split Mode
     </label>
@@ -184,7 +184,7 @@
                       {#if header.column.getIsPinned() !== 'left'}
                         <button
                           class="border rounded px-2"
-                          on:click={() => {
+                          onclick={() => {
                             header.column.pin('left')
                           }}
                         >
@@ -194,7 +194,7 @@
                       {#if header.column.getIsPinned()}
                         <button
                           class="border rounded px-2"
-                          on:click={() => {
+                          onclick={() => {
                             header.column.pin(false)
                           }}
                         >
@@ -204,7 +204,7 @@
                       {#if header.column.getIsPinned() !== 'right'}
                         <button
                           class="border rounded px-2"
-                          on:click={() => {
+                          onclick={() => {
                             header.column.pin('right')
                           }}
                         >
@@ -253,7 +253,7 @@
                     {#if header.column.getIsPinned() !== 'left'}
                       <button
                         class="border rounded px-2"
-                        on:click={() => {
+                        onclick={() => {
                           header.column.pin('left')
                         }}
                       >
@@ -263,7 +263,7 @@
                     {#if header.column.getIsPinned()}
                       <button
                         class="border rounded px-2"
-                        on:click={() => {
+                        onclick={() => {
                           header.column.pin(false)
                         }}
                       >
@@ -273,7 +273,7 @@
                     {#if header.column.getIsPinned() !== 'right'}
                       <button
                         class="border rounded px-2"
-                        on:click={() => {
+                        onclick={() => {
                           header.column.pin('right')
                         }}
                       >
@@ -322,7 +322,7 @@
                       {#if header.column.getIsPinned() !== 'left'}
                         <button
                           class="border rounded px-2"
-                          on:click={() => {
+                          onclick={() => {
                             header.column.pin('left')
                           }}
                         >
@@ -332,7 +332,7 @@
                       {#if header.column.getIsPinned()}
                         <button
                           class="border rounded px-2"
-                          on:click={() => {
+                          onclick={() => {
                             header.column.pin(false)
                           }}
                         >
@@ -342,7 +342,7 @@
                       {#if header.column.getIsPinned() !== 'right'}
                         <button
                           class="border rounded px-2"
-                          on:click={() => {
+                          onclick={() => {
                             header.column.pin('right')
                           }}
                         >

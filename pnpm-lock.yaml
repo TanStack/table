@@ -28,7 +28,7 @@ importers:
         version: 11.1.2(size-limit@11.1.2)
       '@tanstack/config':
         specifier: ^0.7.6
-        version: 0.7.6(@types/node@20.12.7)(esbuild@0.21.5)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 0.7.6(@types/node@20.12.7)(esbuild@0.21.5)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
@@ -48,8 +48,8 @@ importers:
         specifier: ^5.10.0
         version: 5.10.0(@types/node@20.12.7)(typescript@5.4.5)
       nx:
-        specifier: ^19.2.3
-        version: 19.2.3
+        specifier: ^19.3.0
+        version: 19.3.0
       prettier:
         specifier: ^4.0.0-alpha.8
         version: 4.0.0-alpha.8
@@ -75,8 +75,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
@@ -824,14 +824,14 @@ importers:
         version: 3.1.3
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/lit/column-sizing:
     dependencies:
@@ -846,14 +846,14 @@ importers:
         version: 3.1.3
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/lit/filters:
     dependencies:
@@ -868,14 +868,14 @@ importers:
         version: 3.1.3
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/lit/row-selection:
     dependencies:
@@ -890,14 +890,14 @@ importers:
         version: 3.1.3
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/lit/sorting:
     dependencies:
@@ -912,14 +912,14 @@ importers:
         version: 3.1.3
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/qwik/basic:
     dependencies:
@@ -937,8 +937,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/qwik/filters:
     dependencies:
@@ -962,8 +962,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/qwik/row-selection:
     dependencies:
@@ -984,8 +984,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/qwik/sorting:
     dependencies:
@@ -1006,8 +1006,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/basic:
     dependencies:
@@ -1022,8 +1022,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1032,13 +1032,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/bootstrap:
     dependencies:
@@ -1062,8 +1062,8 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/bootstrap':
         specifier: ^5.2.10
         version: 5.2.10
@@ -1078,13 +1078,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-dnd:
     dependencies:
@@ -1114,8 +1114,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1124,13 +1124,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-groups:
     dependencies:
@@ -1145,8 +1145,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1155,13 +1155,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-ordering:
     dependencies:
@@ -1179,8 +1179,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1189,13 +1189,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-pinning:
     dependencies:
@@ -1213,8 +1213,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1223,13 +1223,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-pinning-sticky:
     dependencies:
@@ -1247,8 +1247,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1257,13 +1257,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-resizing-performant:
     dependencies:
@@ -1281,8 +1281,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1291,13 +1291,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-sizing:
     dependencies:
@@ -1312,8 +1312,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1322,13 +1322,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/column-visibility:
     dependencies:
@@ -1343,8 +1343,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1353,13 +1353,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/custom-features:
     dependencies:
@@ -1377,8 +1377,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1387,13 +1387,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/editable-data:
     dependencies:
@@ -1411,8 +1411,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1421,13 +1421,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/expanding:
     dependencies:
@@ -1445,8 +1445,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1455,13 +1455,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/filters:
     dependencies:
@@ -1482,8 +1482,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1492,13 +1492,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/filters-faceted:
     dependencies:
@@ -1519,8 +1519,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1529,13 +1529,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/filters-fuzzy:
     dependencies:
@@ -1556,8 +1556,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1566,13 +1566,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/full-width-resizable-table:
     dependencies:
@@ -1590,8 +1590,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1600,13 +1600,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/full-width-table:
     dependencies:
@@ -1624,8 +1624,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1634,13 +1634,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/fully-controlled:
     dependencies:
@@ -1658,8 +1658,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1668,13 +1668,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/grouping:
     dependencies:
@@ -1692,8 +1692,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1702,13 +1702,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/kitchen-sink:
     dependencies:
@@ -1736,13 +1736,13 @@ importers:
         version: 11.11.0
       '@emotion/babel-plugin-jsx-pragmatic':
         specifier: ^0.2.1
-        version: 0.2.1(@babel/core@7.24.4)
+        version: 0.2.1(@babel/core@7.24.7)
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1751,13 +1751,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/material-ui-pagination:
     dependencies:
@@ -1787,8 +1787,8 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1797,13 +1797,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/pagination:
     dependencies:
@@ -1821,8 +1821,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1831,13 +1831,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/pagination-controlled:
     dependencies:
@@ -1858,8 +1858,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1868,13 +1868,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/row-dnd:
     dependencies:
@@ -1904,8 +1904,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1914,13 +1914,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/row-pinning:
     dependencies:
@@ -1938,8 +1938,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1948,13 +1948,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/row-selection:
     dependencies:
@@ -1972,8 +1972,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -1982,13 +1982,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/sorting:
     dependencies:
@@ -2006,8 +2006,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -2016,13 +2016,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/sub-components:
     dependencies:
@@ -2040,8 +2040,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -2050,13 +2050,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/virtualized-columns:
     dependencies:
@@ -2077,8 +2077,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -2087,13 +2087,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/virtualized-infinite-scrolling:
     dependencies:
@@ -2117,8 +2117,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -2127,13 +2127,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/react/virtualized-rows:
     dependencies:
@@ -2154,8 +2154,8 @@ importers:
         version: 18.3.0(react@18.3.0)
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.0
@@ -2164,13 +2164,13 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/solid/basic:
     dependencies:
@@ -2185,11 +2185,11 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/solid/bootstrap:
     dependencies:
@@ -2213,11 +2213,11 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/solid/column-groups:
     dependencies:
@@ -2232,11 +2232,11 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/solid/column-ordering:
     dependencies:
@@ -2254,11 +2254,11 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/solid/column-visibility:
     dependencies:
@@ -2273,11 +2273,11 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/solid/filters:
     dependencies:
@@ -2298,11 +2298,11 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/solid/sorting:
     dependencies:
@@ -2320,20 +2320,20 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   examples/svelte/basic:
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/svelte-table
@@ -2342,25 +2342,25 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/svelte/column-groups:
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/svelte-table
@@ -2369,16 +2369,16 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/svelte/column-ordering:
     devDependencies:
@@ -2386,11 +2386,11 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/svelte-table
@@ -2399,16 +2399,16 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/svelte/column-pinning:
     devDependencies:
@@ -2416,11 +2416,11 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/svelte-table
@@ -2429,25 +2429,25 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/svelte/column-visibility:
     devDependencies:
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/svelte-table
@@ -2456,16 +2456,16 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/svelte/filtering:
     devDependencies:
@@ -2473,11 +2473,11 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
@@ -2489,16 +2489,16 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/svelte/sorting:
     devDependencies:
@@ -2506,11 +2506,11 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.18.0)
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.18.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/svelte-table
@@ -2519,16 +2519,16 @@ importers:
         version: 5.0.4
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.153
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   examples/vue/basic:
     dependencies:
@@ -2544,13 +2544,13 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2572,13 +2572,13 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2600,13 +2600,13 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2628,13 +2628,13 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2656,13 +2656,13 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2684,16 +2684,16 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       '@vitejs/plugin-vue-jsx':
         specifier: ^3.1.0
-        version: 3.1.0(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 3.1.0(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2715,13 +2715,13 @@ importers:
         version: 20.12.7
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.0
-        version: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue-tsc:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.4.5)
@@ -2791,7 +2791,7 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       react:
         specifier: ^18.3.0
         version: 18.3.0
@@ -2810,7 +2810,7 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       react:
         specifier: ^18.3.0
         version: 18.3.0
@@ -2826,7 +2826,7 @@ importers:
         version: 1.8.17
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
 
   packages/svelte-table:
     dependencies:
@@ -2835,17 +2835,17 @@ importers:
         version: link:../table-core
     devDependencies:
       '@sveltejs/package':
-        specifier: ^2.3.1
-        version: 2.3.1(svelte@5.0.0-next.78)(typescript@5.4.5)
+        specifier: ^2.3.2
+        version: 2.3.2(svelte@5.0.0-next.155)(typescript@5.4.5)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0-next
-        version: 4.0.0-next.3(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+        version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       svelte:
         specifier: ^5.0.0-next
-        version: 5.0.0-next.78
+        version: 5.0.0-next.155
       svelte-check:
-        specifier: ^3.7.0
-        version: 3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.78)
+        specifier: ^3.8.0
+        version: 3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)
 
   packages/table-core: {}
 
@@ -2857,7 +2857,7 @@ importers:
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
+        version: 5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))
       vue:
         specifier: ^3.4.25
         version: 3.4.25(typescript@5.4.5)
@@ -5016,66 +5016,66 @@ packages:
     resolution: {integrity: sha512-y7efHHwghQfk28G2z3tlZ67pLG0XdfYbcVG26r7YIXALRsrVQcTq4/tdenSmdOrEsNahIYA/eh8aEVROWGFUDg==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  '@nrwl/tao@19.2.3':
-    resolution: {integrity: sha512-vwo6ogcy6A9vJggDOsHGi1F0cTRqSqRypbgq/EdNuZqL7rGyZB/ctId69/i8dV6cLkl8BJG/4WpEe5BIrMTsjA==}
+  '@nrwl/tao@19.3.0':
+    resolution: {integrity: sha512-MyGYeHbh9O4Tv9xmz3Du+/leY5sKUHaPy4ancfNyShHgYi21hemX0/YYjzzoYHi44D8GzSc1XG2rAuwba7Kilw==}
     hasBin: true
 
-  '@nx/nx-darwin-arm64@19.2.3':
-    resolution: {integrity: sha512-1beJscdMraGgLHpvjyC5FXUzpdQYW8JwnPK0Yj9iti9Vnahtx3PLQHCFOFwoE0KZF9VEL1KsZSSVPljMgW/j+g==}
+  '@nx/nx-darwin-arm64@19.3.0':
+    resolution: {integrity: sha512-TMTxjrN7Y/UsKFjmz0YfhVItLTGWqvud8cmQchw5NEjdNakfjXk0mREufO5/5PwoiRIsen6MbThoTprLpjOUiQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@nx/nx-darwin-x64@19.2.3':
-    resolution: {integrity: sha512-wCpIRThGKL/FebPe+WaFk/V6nk31mMc83APoEyhyS5kAodqeKjb6iPud+QNydtUJ/jsF9aQ/DaHIioKC9wbg8A==}
+  '@nx/nx-darwin-x64@19.3.0':
+    resolution: {integrity: sha512-GH2L6ftnzdIs7JEdv7ZPCdbpAdB5sW6NijK07riYZSONzq5fEruD1yDWDkyZbYBb8RTxsparUWJnq8q1qxEPHQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@nx/nx-freebsd-x64@19.2.3':
-    resolution: {integrity: sha512-ytY18USCyf83wqyUgFaeRO/3zvysJXPJf1Di8czBhiUSroSMB6088OaeqW7SnzdcYNdACZUv0Q6PupXpx3w2Ng==}
+  '@nx/nx-freebsd-x64@19.3.0':
+    resolution: {integrity: sha512-1ow7Xku1yyjHviCKsWiuHCAnTd3fD+5O5c+e4DXHVthT8wnadKSotvBIWf38DMbMthl7na82e72OzxcdSbrVqQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [freebsd]
 
-  '@nx/nx-linux-arm-gnueabihf@19.2.3':
-    resolution: {integrity: sha512-FPtqIMzdOzYSSDnLXUpcrflqEsNe6UgpAgYoHLVbWiR47O3qJnpQRDfYUsP7Lv+2C0CBKNXgwPEvmDLXKHcfYg==}
+  '@nx/nx-linux-arm-gnueabihf@19.3.0':
+    resolution: {integrity: sha512-mYQMIUvNr2gww8vbg766uk/C1RxoC1fwioeP87bmV5NRUKSzJ8WEJVxAsqc9RGhAOUaNXOgEuKYrMcVhKyIKJQ==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  '@nx/nx-linux-arm64-gnu@19.2.3':
-    resolution: {integrity: sha512-VOuzPD5FBPZmctvXqdB9K1MYVzkV8TgOZFS7Md6ClH7UwJTEOjnMoomYCMM1VlOZV4P0S5E0u/Zere5YWh+ZWw==}
+  '@nx/nx-linux-arm64-gnu@19.3.0':
+    resolution: {integrity: sha512-rHL3eQ0RHkeAXnhHHu/NIyouN/ykiXvgyNU3TuCd50+2MZcAbjB+Xq3mwL0MwiP+BQuptiE+snTuxFUJp4ZH6A==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@nx/nx-linux-arm64-musl@19.2.3':
-    resolution: {integrity: sha512-qd6QZysktt0D7rNCOlBaV3ME0/J0VwvC1cmdjtZoljwtsX6Zc56AEdfwsgGzsZNU4w+N+BtXxowan3D44iiSzQ==}
+  '@nx/nx-linux-arm64-musl@19.3.0':
+    resolution: {integrity: sha512-im0+OgOD6ShpTkI9ZRz7BjzxhQ/Lk3xjYmmCu+PFGmaybEnkNNDFwsgS0iEVKMdWZ/EQoQvJrqOYsX125iIBuQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@nx/nx-linux-x64-gnu@19.2.3':
-    resolution: {integrity: sha512-wE08BstTD65dt6c+9L9bEp98PxFwc7CuaUVX2cZTDFAERBXCMhu7y6Gb1JbiAvfVci4+yLrm+h0E1ieY1wMTXw==}
+  '@nx/nx-linux-x64-gnu@19.3.0':
+    resolution: {integrity: sha512-k8q/d6WBSXOeUpBq6Mw69yMKL4n9LaX3o4LBNwBkVCEZ8p6s0njwKefLtjwnKlai0g/k5f0NcilU2zTwP/Ex8g==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@nx/nx-linux-x64-musl@19.2.3':
-    resolution: {integrity: sha512-IA09+NZ0kKPSfK/dXsyjZ8TN+hN/1PcnbdNuUCn1Opmbrdda9GBfzHSDFKXxoA6TVB/j/qnXHKgKxhhVH05TGg==}
+  '@nx/nx-linux-x64-musl@19.3.0':
+    resolution: {integrity: sha512-sahEV99glBlpGKG1TIQ5PkJ0QvpHp69wWsBFK2DKtCETxOtsWqwvIjemxTCXRirTqeHiP7BiR6VWsf2YqqqBdw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@nx/nx-win32-arm64-msvc@19.2.3':
-    resolution: {integrity: sha512-fkbcTp+XuxGaL5e4Ve8AjxNEim5Ifdn61ofaxEDMoGjauKvKZBejbLhBFOonCKDqntXsY8D2nDXjhcsdNYxzMg==}
+  '@nx/nx-win32-arm64-msvc@19.3.0':
+    resolution: {integrity: sha512-w03gFwLijStmhUji70QJHYo/U16ovybNczxGO7+5TT330X8/y+ihw9FCGHiIcujAjTAE88h0DKGn05WlNqRmfg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@nx/nx-win32-x64-msvc@19.2.3':
-    resolution: {integrity: sha512-E2q3c504xjFXTY+/iq57DOZmS6CPA8RbFwLf6bCG5wo2BDajxmvU3VCeCSkxqXEwCY7NJSI3PT1V/3vRDzJ3lQ==}
+  '@nx/nx-win32-x64-msvc@19.3.0':
+    resolution: {integrity: sha512-M7e2zXGfTjH8NLiwqKLdWC9VlfMSQDYlI4/SM4OSpPqhUTfPlRPa+wNKNTG7perKfDXxE9ei8yjocujknXJk/A==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -5128,8 +5128,8 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-replace@5.0.5':
-    resolution: {integrity: sha512-rYO4fOi8lMaTg/z5Jb+hKnrHHVn8j2lwkqwyS4kTRhKyWOLf2wST2sWXr4WzWiTcoHTp2sTjqUbqIj2E39slKQ==}
+  '@rollup/plugin-replace@5.0.7':
+    resolution: {integrity: sha512-PqxSfuorkHz/SPpyngLyg5GCEkOcee9M1bkxiVDr41Pd61mqP1PLOoDPbpl44SB2mQGKwV/In74gqQmGITOhEQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
@@ -5398,8 +5398,8 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  '@sveltejs/package@2.3.1':
-    resolution: {integrity: sha512-JvR2J4ost1oCn1CSdqenYRwGX/1RX+7LN+VZ71aPnz3JAlIFaEKQd1pBxlb+OSQTfeugJO0W39gB9voAbBO5ow==}
+  '@sveltejs/package@2.3.2':
+    resolution: {integrity: sha512-6M8/Te7iXRG7SiH92wugqfyoJpuepjn78L433LnXicUeMso9M/N4vdL9DPK3MfTkVVY4klhNRptVqme3p4oZWA==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     peerDependencies:
@@ -5894,6 +5894,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  acorn@8.12.0:
+    resolution: {integrity: sha512-RTvkC4w+KNXrM39/lWCUaG0IbRkWdCv7W/IOW9oU6SawyxulvkQy5HQPVTKxEjczcUvapcrw3cFx/60VN/NRNw==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
   adjust-sourcemap-loader@4.0.0:
     resolution: {integrity: sha512-OXwN5b9pCUXNQHJpwwD2qP40byEmSgzj8B4ydSN0uMNYWiFmJ6x6KwUllMmfk8Rwu/HJDFR7U8ubsWBoN0Xp0A==}
     engines: {node: '>=8.9'}
@@ -6154,13 +6159,18 @@ packages:
     resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
     engines: {node: '>=8'}
 
+  braces@3.0.3:
+    resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
+    engines: {node: '>=8'}
+
   browserslist@4.23.0:
     resolution: {integrity: sha512-QW8HiM1shhT2GuzkvklfjcKDiWFXHOeFCIA/huJPwHsslwcydgk7X+z2zXpEijP98UCY7HbubZt5J2Zgvf0CaQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  buffer-crc32@0.2.13:
-    resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
+  buffer-crc32@1.0.0:
+    resolution: {integrity: sha512-Db1SbgBS/fg/392AblrMJk97KggmvYhr4pB5ZIMTWtaivCPMWLkmb7m21cJvpvgK+J3nsU2CmmixNBZx4vFj/w==}
+    engines: {node: '>=8.0.0'}
 
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
@@ -6524,6 +6534,15 @@ packages:
 
   debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.3.5:
+    resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -6919,6 +6938,10 @@ packages:
 
   fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
+    engines: {node: '>=8'}
+
+  fill-range@7.1.1:
+    resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
 
   filter-iterator@0.0.1:
@@ -8240,8 +8263,8 @@ packages:
   nwsapi@2.2.7:
     resolution: {integrity: sha512-ub5E4+FBPKwAZx0UwIQOjYWGHTEq5sPqHQNRN8Z9e4A7u3Tj1weLJsL59yH9vmvqEtBHaOmT6cYQKIZOxp35FQ==}
 
-  nx@19.2.3:
-    resolution: {integrity: sha512-SvxFgk9PD2m6tXEaqB6DENOpe4jhov/Ili/2JmOnPAAIGUR6H9WajCzVuHfq3bvQxmGRvkQQRv/rfvAuLTme3g==}
+  nx@19.3.0:
+    resolution: {integrity: sha512-WILWiROUkZWwuPJ12tP24Z0NULPEhxFN9i55/fECuVXYaFtkg6FvEne9C4d4bRqhZPcbrz6WhHnzE3NhdjH7XQ==}
     hasBin: true
     peerDependencies:
       '@swc-node/register': ^1.8.0
@@ -9168,8 +9191,8 @@ packages:
     peerDependencies:
       tslib: '2'
 
-  sorcery@0.11.0:
-    resolution: {integrity: sha512-J69LQ22xrQB1cIFJhPfgtLuI6BpWRiWu1Y3vSsIwK/eAScqJxd/+CJlUuHQRdX2C9NGFamq+KqNywGgaThwfHw==}
+  sorcery@0.11.1:
+    resolution: {integrity: sha512-o7npfeJE6wi6J9l0/5LKshFzZ2rMatRiCDwYeDQaOzqdzRJwALhX7mk/A/ecg6wjMu7wdZbmXfD2S/vpOg0bdQ==}
     hasBin: true
 
   source-map-js@1.2.0:
@@ -9363,15 +9386,15 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  svelte-check@3.7.0:
-    resolution: {integrity: sha512-Va6sGL4Vy4znn0K+vaatk98zoBvG2aDee4y3r5X4S80z8DXfbACHvdLlyXa4C4c5tQzK9H0Uq2pbd20wH3ucjQ==}
+  svelte-check@3.8.0:
+    resolution: {integrity: sha512-7Nxn+3X97oIvMzYJ7t27w00qUf1Y52irE2RU2dQAd5PyvfGp4E7NLhFKVhb6PV2fx7dCRMpNKDIuazmGthjpSQ==}
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
 
-  svelte-preprocess@5.1.3:
-    resolution: {integrity: sha512-xxAkmxGHT+J/GourS5mVJeOXZzne1FR5ljeOUAMXUkfEhkLEllRreXpbl3dIYJlcJRfL1LO1uIAPpBpBfiqGPw==}
-    engines: {node: '>= 16.0.0', pnpm: ^8.0.0}
+  svelte-preprocess@5.1.4:
+    resolution: {integrity: sha512-IvnbQ6D6Ao3Gg6ftiM5tdbR6aAETwjhHV+UKGf5bHGYR69RQvF1ho0JKPcbUON4vy4R7zom13jPjgdOWCQ5hDA==}
+    engines: {node: '>= 16.0.0'}
     peerDependencies:
       '@babel/core': ^7.10.2
       coffeescript: ^2.5.1
@@ -9416,8 +9439,8 @@ packages:
     resolution: {integrity: sha512-ZbRnvO0UWXhE71Va5Rjg+nY4tbCUnqJFQC0VXHdqkHT/i5nqW8DPtw0rBlsFg4mq2uDQ8iOO/P7tR3OVXaSI7g==}
     engines: {node: '>=18'}
 
-  svelte@5.0.0-next.78:
-    resolution: {integrity: sha512-wS/FWyyqWX9iazm/ZfTDqtarpHEap4Jodj0dDeErvvvjBKC1Jt3HTQQ7pUnyJYzSCtBVz2x9OTrLgoJf8nUWHQ==}
+  svelte@5.0.0-next.155:
+    resolution: {integrity: sha512-4a4EZuiTmg4eQJuQ6LTyK+DxRAZCYm4mXgqSWcZ7TellzLfaC1Je5nxBl1aZP3xdNhvPFIstQ8c7I6d+99FdZQ==}
     engines: {node: '>=18'}
 
   svg-tags@1.0.0:
@@ -9828,8 +9851,8 @@ packages:
       terser:
         optional: true
 
-  vite@5.3.0:
-    resolution: {integrity: sha512-hA6vAVK977NyW1Qw+fLvqSo7xDPej7von7C3DwwqPRmnnnK36XEBC/J3j1V5lP8fbt7y0TgTKJbpNGSwM+Bdeg==}
+  vite@5.3.1:
+    resolution: {integrity: sha512-XBmSKRLXLxiaPYamLv3/hnP/KXDai1NDexN0FpkTaZXTfycHvkRHoenpgl/fvuK/kPbB6xAgoyiryAhQNxYmAQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -10482,7 +10505,7 @@ snapshots:
       '@babel/traverse': 7.24.7
       '@babel/types': 7.24.7
       convert-source-map: 2.0.0
-      debug: 4.3.4
+      debug: 4.3.5
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -11058,6 +11081,11 @@ snapshots:
   '@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.24.4)':
     dependencies:
       '@babel/core': 7.24.4
+      '@babel/helper-plugin-utils': 7.24.0
+
+  '@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.24.7)':
+    dependencies:
+      '@babel/core': 7.24.7
       '@babel/helper-plugin-utils': 7.24.0
 
   '@babel/plugin-syntax-jsx@7.24.7(@babel/core@7.24.7)':
@@ -12143,7 +12171,7 @@ snapshots:
     dependencies:
       csstype: 3.1.3
       undici: 6.18.0
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -12200,10 +12228,10 @@ snapshots:
       react: 18.3.0
       tslib: 2.6.3
 
-  '@emotion/babel-plugin-jsx-pragmatic@0.2.1(@babel/core@7.24.4)':
+  '@emotion/babel-plugin-jsx-pragmatic@0.2.1(@babel/core@7.24.7)':
     dependencies:
-      '@babel/core': 7.24.4
-      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.4)
+      '@babel/core': 7.24.7
+      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.7)
 
   '@emotion/babel-plugin@11.11.0':
     dependencies:
@@ -12867,43 +12895,43 @@ snapshots:
       - bluebird
       - supports-color
 
-  '@nrwl/tao@19.2.3':
+  '@nrwl/tao@19.3.0':
     dependencies:
-      nx: 19.2.3
+      nx: 19.3.0
       tslib: 2.6.3
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
       - debug
 
-  '@nx/nx-darwin-arm64@19.2.3':
+  '@nx/nx-darwin-arm64@19.3.0':
     optional: true
 
-  '@nx/nx-darwin-x64@19.2.3':
+  '@nx/nx-darwin-x64@19.3.0':
     optional: true
 
-  '@nx/nx-freebsd-x64@19.2.3':
+  '@nx/nx-freebsd-x64@19.3.0':
     optional: true
 
-  '@nx/nx-linux-arm-gnueabihf@19.2.3':
+  '@nx/nx-linux-arm-gnueabihf@19.3.0':
     optional: true
 
-  '@nx/nx-linux-arm64-gnu@19.2.3':
+  '@nx/nx-linux-arm64-gnu@19.3.0':
     optional: true
 
-  '@nx/nx-linux-arm64-musl@19.2.3':
+  '@nx/nx-linux-arm64-musl@19.3.0':
     optional: true
 
-  '@nx/nx-linux-x64-gnu@19.2.3':
+  '@nx/nx-linux-x64-gnu@19.3.0':
     optional: true
 
-  '@nx/nx-linux-x64-musl@19.2.3':
+  '@nx/nx-linux-x64-musl@19.3.0':
     optional: true
 
-  '@nx/nx-win32-arm64-msvc@19.2.3':
+  '@nx/nx-win32-arm64-msvc@19.3.0':
     optional: true
 
-  '@nx/nx-win32-x64-msvc@19.2.3':
+  '@nx/nx-win32-x64-msvc@19.3.0':
     optional: true
 
   '@pkgjs/parseargs@0.11.0':
@@ -12974,7 +13002,7 @@ snapshots:
     optionalDependencies:
       rollup: 4.18.0
 
-  '@rollup/plugin-replace@5.0.5(rollup@4.18.0)':
+  '@rollup/plugin-replace@5.0.7(rollup@4.18.0)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.18.0)
       magic-string: 0.30.10
@@ -13195,58 +13223,36 @@ snapshots:
     dependencies:
       solid-js: 1.8.17
 
-  '@sveltejs/package@2.3.1(svelte@5.0.0-next.78)(typescript@5.4.5)':
+  '@sveltejs/package@2.3.2(svelte@5.0.0-next.155)(typescript@5.4.5)':
     dependencies:
       chokidar: 3.6.0
       kleur: 4.1.5
       sade: 1.8.1
       semver: 7.6.2
-      svelte: 5.0.0-next.78
-      svelte2tsx: 0.7.9(svelte@5.0.0-next.78)(typescript@5.4.5)
+      svelte: 5.0.0-next.155
+      svelte2tsx: 0.7.9(svelte@5.0.0-next.155)(typescript@5.4.5)
     transitivePeerDependencies:
       - typescript
 
-  '@sveltejs/vite-plugin-svelte-inspector@3.0.0-next.2(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
+  '@sveltejs/vite-plugin-svelte-inspector@3.0.0-next.2(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-      debug: 4.3.4
-      svelte: 5.0.0-next.153
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      '@sveltejs/vite-plugin-svelte': 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      debug: 4.3.5
+      svelte: 5.0.0-next.155
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte-inspector@3.0.0-next.2(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
+  '@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 4.0.0-next.3(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-      debug: 4.3.4
-      svelte: 5.0.0-next.78
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
-    transitivePeerDependencies:
-      - supports-color
-
-  '@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
-    dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 3.0.0-next.2(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(svelte@5.0.0-next.153)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-      debug: 4.3.4
+      '@sveltejs/vite-plugin-svelte-inspector': 3.0.0-next.2(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      debug: 4.3.5
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
-      svelte: 5.0.0-next.153
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
-      vitefu: 0.2.5(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-    transitivePeerDependencies:
-      - supports-color
-
-  '@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
-    dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 3.0.0-next.2(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(svelte@5.0.0-next.78)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-      debug: 4.3.4
-      deepmerge: 4.3.1
-      kleur: 4.1.5
-      magic-string: 0.30.10
-      svelte: 5.0.0-next.78
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
-      vitefu: 0.2.5(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      svelte: 5.0.0-next.155
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vitefu: 0.2.5(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -13254,7 +13260,7 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  '@tanstack/config@0.7.6(@types/node@20.12.7)(esbuild@0.21.5)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
+  '@tanstack/config@0.7.6(@types/node@20.12.7)(esbuild@0.21.5)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
     dependencies:
       '@commitlint/parse': 19.0.3
       chalk: 5.3.0
@@ -13271,9 +13277,9 @@ snapshots:
       semver: 7.6.2
       stream-to-array: 2.3.0
       v8flags: 4.0.1
-      vite-plugin-dts: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-      vite-plugin-externalize-deps: 0.8.0(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
-      vite-tsconfig-paths: 4.3.2(typescript@5.4.5)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      vite-plugin-dts: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      vite-plugin-externalize-deps: 0.8.0(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      vite-tsconfig-paths: 4.3.2(typescript@5.4.5)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
     transitivePeerDependencies:
       - '@types/node'
       - esbuild
@@ -13538,30 +13544,30 @@ snapshots:
     dependencies:
       vite: 5.2.11(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
-  '@vitejs/plugin-react@4.2.1(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
+  '@vitejs/plugin-react@4.2.1(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))':
     dependencies:
       '@babel/core': 7.24.4
       '@babel/plugin-transform-react-jsx-self': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-react-jsx-source': 7.24.1(@babel/core@7.24.4)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue-jsx@3.1.0(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))':
+  '@vitejs/plugin-vue-jsx@3.1.0(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))':
     dependencies:
       '@babel/core': 7.24.4
       '@babel/plugin-transform-typescript': 7.24.1(@babel/core@7.24.4)
       '@vue/babel-plugin-jsx': 1.2.2(@babel/core@7.24.4)
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue: 3.4.25(typescript@5.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.0.4(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))':
+  '@vitejs/plugin-vue@5.0.4(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))(vue@3.4.25(typescript@5.4.5))':
     dependencies:
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vue: 3.4.25(typescript@5.4.5)
 
   '@vitest/expect@1.6.0':
@@ -13832,17 +13838,23 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  acorn-import-assertions@1.9.0(acorn@8.11.3):
+  acorn-import-assertions@1.9.0(acorn@8.12.0):
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.0
 
   acorn-typescript@1.4.13(acorn@8.11.3):
     dependencies:
       acorn: 8.11.3
 
+  acorn-typescript@1.4.13(acorn@8.12.0):
+    dependencies:
+      acorn: 8.12.0
+
   acorn-walk@8.3.2: {}
 
   acorn@8.11.3: {}
+
+  acorn@8.12.0: {}
 
   adjust-sourcemap-loader@4.0.0:
     dependencies:
@@ -13990,7 +14002,7 @@ snapshots:
 
   axios@1.6.8:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.5)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -14159,6 +14171,10 @@ snapshots:
     dependencies:
       fill-range: 7.0.1
 
+  braces@3.0.3:
+    dependencies:
+      fill-range: 7.1.1
+
   browserslist@4.23.0:
     dependencies:
       caniuse-lite: 1.0.30001600
@@ -14166,7 +14182,7 @@ snapshots:
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
-  buffer-crc32@0.2.13: {}
+  buffer-crc32@1.0.0: {}
 
   buffer-from@1.1.2: {}
 
@@ -14265,7 +14281,7 @@ snapshots:
   chokidar@3.6.0:
     dependencies:
       anymatch: 3.1.3
-      braces: 3.0.2
+      braces: 3.0.3
       glob-parent: 5.1.2
       is-binary-path: 2.1.0
       is-glob: 4.0.3
@@ -14541,6 +14557,10 @@ snapshots:
       ms: 2.0.0
 
   debug@4.3.4:
+    dependencies:
+      ms: 2.1.2
+
+  debug@4.3.5:
     dependencies:
       ms: 2.1.2
 
@@ -15010,6 +15030,10 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
+  fill-range@7.1.1:
+    dependencies:
+      to-regex-range: 5.0.1
+
   filter-iterator@0.0.1: {}
 
   filter-obj@1.1.0: {}
@@ -15093,9 +15117,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.6(debug@4.3.4):
+  follow-redirects@1.15.6(debug@4.3.5):
     optionalDependencies:
-      debug: 4.3.4
+      debug: 4.3.5
 
   for-in@1.0.2: {}
 
@@ -15363,7 +15387,7 @@ snapshots:
   http-proxy-middleware@2.0.6(@types/express@4.17.21):
     dependencies:
       '@types/http-proxy': 1.17.14
-      http-proxy: 1.18.1(debug@4.3.4)
+      http-proxy: 1.18.1(debug@4.3.5)
       is-glob: 4.0.3
       is-plain-obj: 3.0.0
       micromatch: 4.0.5
@@ -15375,18 +15399,18 @@ snapshots:
   http-proxy-middleware@3.0.0:
     dependencies:
       '@types/http-proxy': 1.17.14
-      debug: 4.3.4
-      http-proxy: 1.18.1(debug@4.3.4)
+      debug: 4.3.5
+      http-proxy: 1.18.1(debug@4.3.5)
       is-glob: 4.0.3
       is-plain-obj: 3.0.0
       micromatch: 4.0.5
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy@1.18.1(debug@4.3.4):
+  http-proxy@1.18.1(debug@4.3.5):
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.5)
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -15394,7 +15418,7 @@ snapshots:
   https-proxy-agent@7.0.4:
     dependencies:
       agent-base: 7.1.1
-      debug: 4.3.4
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
 
@@ -15798,7 +15822,7 @@ snapshots:
       dom-serialize: 2.2.1
       glob: 7.2.3
       graceful-fs: 4.2.11
-      http-proxy: 1.18.1(debug@4.3.4)
+      http-proxy: 1.18.1(debug@4.3.5)
       isbinaryfile: 4.0.10
       lodash: 4.17.21
       log4js: 6.9.1
@@ -16183,7 +16207,7 @@ snapshots:
 
   mlly@1.6.1:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.0
       pathe: 1.1.2
       pkg-types: 1.0.3
       ufo: 1.5.3
@@ -16409,9 +16433,9 @@ snapshots:
 
   nwsapi@2.2.7: {}
 
-  nx@19.2.3:
+  nx@19.3.0:
     dependencies:
-      '@nrwl/tao': 19.2.3
+      '@nrwl/tao': 19.3.0
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.46
       '@zkochan/js-yaml': 0.0.7
@@ -16446,16 +16470,16 @@ snapshots:
       yargs: 17.7.2
       yargs-parser: 21.1.1
     optionalDependencies:
-      '@nx/nx-darwin-arm64': 19.2.3
-      '@nx/nx-darwin-x64': 19.2.3
-      '@nx/nx-freebsd-x64': 19.2.3
-      '@nx/nx-linux-arm-gnueabihf': 19.2.3
-      '@nx/nx-linux-arm64-gnu': 19.2.3
-      '@nx/nx-linux-arm64-musl': 19.2.3
-      '@nx/nx-linux-x64-gnu': 19.2.3
-      '@nx/nx-linux-x64-musl': 19.2.3
-      '@nx/nx-win32-arm64-msvc': 19.2.3
-      '@nx/nx-win32-x64-msvc': 19.2.3
+      '@nx/nx-darwin-arm64': 19.3.0
+      '@nx/nx-darwin-x64': 19.3.0
+      '@nx/nx-freebsd-x64': 19.3.0
+      '@nx/nx-linux-arm-gnueabihf': 19.3.0
+      '@nx/nx-linux-arm64-gnu': 19.3.0
+      '@nx/nx-linux-arm64-musl': 19.3.0
+      '@nx/nx-linux-x64-gnu': 19.3.0
+      '@nx/nx-linux-x64-musl': 19.3.0
+      '@nx/nx-win32-arm64-msvc': 19.3.0
+      '@nx/nx-win32-x64-msvc': 19.3.0
     transitivePeerDependencies:
       - debug
 
@@ -17466,10 +17490,10 @@ snapshots:
       tree-dump: 1.0.1(tslib@2.6.3)
       tslib: 2.6.3
 
-  sorcery@0.11.0:
+  sorcery@0.11.1:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
-      buffer-crc32: 0.2.13
+      buffer-crc32: 1.0.0
       minimist: 1.2.8
       sander: 0.5.1
 
@@ -17510,7 +17534,7 @@ snapshots:
 
   spdy-transport@3.0.0:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.5
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -17521,7 +17545,7 @@ snapshots:
 
   spdy@4.0.2:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.5
       handle-thing: 2.0.1
       http-deceiver: 1.2.7
       select-hose: 2.0.0
@@ -17659,16 +17683,16 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153):
+  svelte-check@3.8.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 3.6.0
       fast-glob: 3.3.2
       import-fresh: 3.3.0
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       sade: 1.8.1
-      svelte: 5.0.0-next.153
-      svelte-preprocess: 5.1.3(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)(typescript@5.4.5)
+      svelte: 5.0.0-next.155
+      svelte-preprocess: 5.1.4(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -17681,36 +17705,14 @@ snapshots:
       - stylus
       - sugarss
 
-  svelte-check@3.7.0(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.78):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.25
-      chokidar: 3.6.0
-      fast-glob: 3.3.2
-      import-fresh: 3.3.0
-      picocolors: 1.0.0
-      sade: 1.8.1
-      svelte: 5.0.0-next.78
-      svelte-preprocess: 5.1.3(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.78)(typescript@5.4.5)
-      typescript: 5.4.5
-    transitivePeerDependencies:
-      - '@babel/core'
-      - coffeescript
-      - less
-      - postcss
-      - postcss-load-config
-      - pug
-      - sass
-      - stylus
-      - sugarss
-
-  svelte-preprocess@5.1.3(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.153)(typescript@5.4.5):
+  svelte-preprocess@5.1.4(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.155)(typescript@5.4.5):
     dependencies:
       '@types/pug': 2.0.10
       detect-indent: 6.1.0
       magic-string: 0.30.10
-      sorcery: 0.11.0
+      sorcery: 0.11.1
       strip-indent: 3.0.0
-      svelte: 5.0.0-next.153
+      svelte: 5.0.0-next.155
     optionalDependencies:
       '@babel/core': 7.24.7
       less: 4.2.0
@@ -17718,26 +17720,11 @@ snapshots:
       sass: 1.77.2
       typescript: 5.4.5
 
-  svelte-preprocess@5.1.3(@babel/core@7.24.7)(less@4.2.0)(postcss@8.4.38)(sass@1.77.2)(svelte@5.0.0-next.78)(typescript@5.4.5):
-    dependencies:
-      '@types/pug': 2.0.10
-      detect-indent: 6.1.0
-      magic-string: 0.30.10
-      sorcery: 0.11.0
-      strip-indent: 3.0.0
-      svelte: 5.0.0-next.78
-    optionalDependencies:
-      '@babel/core': 7.24.7
-      less: 4.2.0
-      postcss: 8.4.38
-      sass: 1.77.2
-      typescript: 5.4.5
-
-  svelte2tsx@0.7.9(svelte@5.0.0-next.78)(typescript@5.4.5):
+  svelte2tsx@0.7.9(svelte@5.0.0-next.155)(typescript@5.4.5):
     dependencies:
       dedent-js: 1.0.1
       pascal-case: 3.1.2
-      svelte: 5.0.0-next.78
+      svelte: 5.0.0-next.155
       typescript: 5.4.5
 
   svelte@5.0.0-next.153:
@@ -17756,13 +17743,13 @@ snapshots:
       magic-string: 0.30.10
       zimmerframe: 1.1.2
 
-  svelte@5.0.0-next.78:
+  svelte@5.0.0-next.155:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@jridgewell/sourcemap-codec': 1.4.15
       '@types/estree': 1.0.5
-      acorn: 8.11.3
-      acorn-typescript: 1.4.13(acorn@8.11.3)
+      acorn: 8.12.0
+      acorn-typescript: 1.4.13(acorn@8.12.0)
       aria-query: 5.3.0
       axobject-query: 4.0.0
       esm-env: 1.0.0
@@ -17811,7 +17798,7 @@ snapshots:
   terser@5.31.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.11.3
+      acorn: 8.12.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -18084,7 +18071,7 @@ snapshots:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.1
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -18095,7 +18082,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-dts@3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
+  vite-plugin-dts@3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
     dependencies:
       '@microsoft/api-extractor': 7.43.0(@types/node@20.12.7)
       '@rollup/pluginutils': 5.1.0(rollup@4.18.0)
@@ -18106,17 +18093,17 @@ snapshots:
       typescript: 5.4.5
       vue-tsc: 1.8.27(typescript@5.4.5)
     optionalDependencies:
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
     transitivePeerDependencies:
       - '@types/node'
       - rollup
       - supports-color
 
-  vite-plugin-externalize-deps@0.8.0(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
+  vite-plugin-externalize-deps@0.8.0(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
     dependencies:
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
-  vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
+  vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)))(solid-js@1.8.17)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
     dependencies:
       '@babel/core': 7.24.4
       '@types/babel__core': 7.20.5
@@ -18124,20 +18111,20 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.8.17
       solid-refresh: 0.6.3(solid-js@1.8.17)
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
-      vitefu: 0.2.5(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vitefu: 0.2.5(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
     optionalDependencies:
       '@testing-library/jest-dom': 6.4.2(vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
     transitivePeerDependencies:
       - supports-color
 
-  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
+  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.4.5)
     optionalDependencies:
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -18154,11 +18141,11 @@ snapshots:
       sass: 1.77.2
       terser: 5.31.0
 
-  vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0):
+  vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.38
-      rollup: 4.16.4
+      rollup: 4.18.0
     optionalDependencies:
       '@types/node': 20.12.7
       fsevents: 2.3.3
@@ -18166,9 +18153,9 @@ snapshots:
       sass: 1.77.2
       terser: 5.31.0
 
-  vitefu@0.2.5(vite@5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
+  vitefu@0.2.5(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)):
     optionalDependencies:
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   vitest@1.6.0(@types/node@20.12.7)(jsdom@24.0.0)(less@4.2.0)(sass@1.77.2)(terser@5.31.0):
     dependencies:
@@ -18189,7 +18176,7 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.4
-      vite: 5.3.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+      vite: 5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       vite-node: 1.6.0(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
       why-is-node-running: 2.2.2
     optionalDependencies:
@@ -18333,8 +18320,8 @@ snapshots:
       '@webassemblyjs/ast': 1.12.1
       '@webassemblyjs/wasm-edit': 1.12.1
       '@webassemblyjs/wasm-parser': 1.12.1
-      acorn: 8.11.3
-      acorn-import-assertions: 1.9.0(acorn@8.11.3)
+      acorn: 8.12.0
+      acorn-import-assertions: 1.9.0(acorn@8.12.0)
       browserslist: 4.23.0
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.16.1

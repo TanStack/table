@@ -1,4 +1,4 @@
-import type { SvelteComponent, ComponentType, ComponentProps } from 'svelte'
+import type { Component, ComponentProps } from 'svelte'
 
 /**
  * A helper class to make it easy to identify Svelte components in `columnDef.cell` and `columnDef.header` properties.
@@ -9,10 +9,10 @@ import type { SvelteComponent, ComponentType, ComponentProps } from 'svelte'
  * {/if}
  * ```
  * */
-export class RenderComponentConfig<TComponent extends SvelteComponent> {
+export class RenderComponentConfig<TComponent extends Component<any>> {
   constructor(
-    public component: ComponentType<TComponent>,
-    public props: ComponentProps<TComponent> | Record<string, never> = {}
+    public component: TComponent,
+    public props: ComponentProps<TComponent>
   ) {}
 }
 
@@ -35,7 +35,7 @@ export class RenderComponentConfig<TComponent extends SvelteComponent> {
  * ```
  * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
  */
-export const renderComponent = <TComponent extends SvelteComponent>(
-  component: ComponentType<TComponent>,
+export const renderComponent = <TComponent extends Component<any>>(
+  component: TComponent,
   props: ComponentProps<TComponent>
 ) => new RenderComponentConfig(component, props)
