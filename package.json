@@ -3,7 +3,7 @@
   "namespace": "@tanstack",
   "private": true,
   "repository": "https://github.com/tanstack/table.git",
-  "packageManager": "pnpm@9.1.1",
+  "packageManager": "pnpm@9.3.0",
   "type": "module",
   "scripts": {
     "clean": "pnpm --filter \"./packages/**\" run clean",
@@ -61,7 +61,7 @@
     "@types/node": "^20.12.7",
     "jsdom": "^24.0.0",
     "knip": "^5.10.0",
-    "nx": "^19.0.4",
+    "nx": "^19.3.0",
     "prettier": "^4.0.0-alpha.8",
     "prettier-plugin-svelte": "^3.2.3",
     "rimraf": "^5.0.5",
