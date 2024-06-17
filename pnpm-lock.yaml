@@ -108,7 +108,7 @@ importers:
         specifier: ^18.0.3
         version: 18.0.3(@angular/common@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@18.0.3(@angular/animations@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))(rxjs@7.8.1)
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -178,7 +178,7 @@ importers:
         specifier: ^18.0.3
         version: 18.0.3(@angular/common@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/compiler@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@18.0.3(@angular/animations@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -251,7 +251,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -324,7 +324,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -394,7 +394,7 @@ importers:
         specifier: ^18.0.3
         version: 18.0.3(@angular/common@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/compiler@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(@angular/platform-browser@18.0.3(@angular/animations@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))(@angular/common@18.0.3(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(@angular/core@18.0.3(rxjs@7.8.1)(zone.js@0.14.5)))
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -467,7 +467,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -540,7 +540,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -613,7 +613,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -686,7 +686,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -756,7 +756,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.1
@@ -2335,7 +2335,7 @@ importers:
         specifier: ^4.0.0-next
         version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2362,7 +2362,7 @@ importers:
         specifier: ^4.0.0-next
         version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2392,7 +2392,7 @@ importers:
         specifier: ^4.0.0-next
         version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2422,7 +2422,7 @@ importers:
         specifier: ^4.0.0-next
         version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2449,7 +2449,7 @@ importers:
         specifier: ^4.0.0-next
         version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2482,7 +2482,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
@@ -2512,7 +2512,7 @@ importers:
         specifier: ^4.0.0-next
         version: 4.0.0-next.3(svelte@5.0.0-next.155)(vite@5.3.1(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.4
+        specifier: ^9.0.0-alpha.5
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.4
