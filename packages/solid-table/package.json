@@ -21,18 +21,17 @@
     "datagrid"
   ],
   "type": "module",
-  "types": "dist/esm/index.d.ts",
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.jsx",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
+      "solid": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.jsx"
       },
-      "require": {
-        "types": "./dist/cjs/index.d.cts",
-        "default": "./dist/cjs/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.jsx"
       }
     },
     "./package.json": "./package.json"
@@ -49,7 +48,7 @@
     "clean": "rimraf ./build && rimraf ./dist",
     "test:types": "tsc",
     "test:build": "publint --strict",
-    "build": "vite build"
+    "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"

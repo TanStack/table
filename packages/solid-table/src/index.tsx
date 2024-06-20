@@ -1,4 +1,3 @@
-// /** @jsxImportSource solid-js */
 import {
   TableOptions,
   _createTable,

@@ -36,11 +36,11 @@
   },
   "size-limit": [
     {
-      "path": "packages/table-core/build/lib/index.js",
+      "path": "packages/table-core/dist/cjs/index.cjs",
       "limit": "16 KB"
     },
     {
-      "path": "packages/table-core/build/lib/index.mjs",
+      "path": "packages/table-core/dist/esm/index.js",
       "limit": "15 KB"
     }
   ],
