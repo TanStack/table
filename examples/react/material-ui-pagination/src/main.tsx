@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper'
 import {
   Column,
   Table as ReactTable,
-  useReactTable,
+  useTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -109,7 +109,7 @@ function LocalTable({
   data: Person[]
   columns: ColumnDef<Person>[]
 }) {
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     // Pipeline

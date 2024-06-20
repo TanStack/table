@@ -4,7 +4,7 @@ import './index.css'
 
 import {
   PaginationState,
-  useReactTable,
+  useTable,
   getCoreRowModel,
   getPaginationRowModel,
   ColumnDef,
@@ -73,7 +73,7 @@ function App() {
     pageSize: 10,
   })
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     state: {

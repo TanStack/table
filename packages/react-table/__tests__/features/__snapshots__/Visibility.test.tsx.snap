@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`useReactTable > can toggle column visibility > 0 - after toggling all off 1`] = `
+exports[`useTable > can toggle column visibility > 0 - after toggling all off 1`] = `
 {
   "footers": [
     [],
@@ -16,7 +16,7 @@ exports[`useReactTable > can toggle column visibility > 0 - after toggling all o
 }
 `;
 
-exports[`useReactTable > can toggle column visibility > 1 - after toggling all on 1`] = `
+exports[`useTable > can toggle column visibility > 1 - after toggling all on 1`] = `
 {
   "footers": [
     [
@@ -159,7 +159,7 @@ exports[`useReactTable > can toggle column visibility > 1 - after toggling all o
 }
 `;
 
-exports[`useReactTable > can toggle column visibility > 2 - after toggling firstName off 1`] = `
+exports[`useTable > can toggle column visibility > 2 - after toggling firstName off 1`] = `
 {
   "footers": [
     [
@@ -283,7 +283,7 @@ exports[`useReactTable > can toggle column visibility > 2 - after toggling first
 }
 `;
 
-exports[`useReactTable > can toggle column visibility > 3 - after toggling More Info off 1`] = `
+exports[`useTable > can toggle column visibility > 3 - after toggling More Info off 1`] = `
 {
   "footers": [
     [

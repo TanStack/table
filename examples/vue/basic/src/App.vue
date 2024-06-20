@@ -2,7 +2,7 @@
 import {
   FlexRender,
   getCoreRowModel,
-  useVueTable,
+  useTable,
   createColumnHelper,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
@@ -97,7 +97,7 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },

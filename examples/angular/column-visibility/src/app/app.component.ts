@@ -7,7 +7,7 @@ import {
 } from '@angular/core'
 import {
   ColumnDef,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   type VisibilityState,
@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
   data = signal<Person[]>([])
   readonly columnVisibility = signal<VisibilityState>({})
 
-  table = createAngularTable(() => ({
+  table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     state: {

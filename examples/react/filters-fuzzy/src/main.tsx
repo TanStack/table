@@ -15,7 +15,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   sortingFns,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
@@ -109,7 +109,7 @@ function App() {
   const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
   const refreshData = () => setData(_old => makeData(50_000)) //stress test
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     filterFns: {

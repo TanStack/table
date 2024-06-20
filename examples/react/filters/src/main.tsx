@@ -13,7 +13,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -85,7 +85,7 @@ function App() {
   const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
   const refreshData = () => setData(_old => makeData(50_000)) //stress test
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     filterFns: {},

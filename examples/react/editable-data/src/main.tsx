@@ -9,7 +9,7 @@ import {
   Column,
   Table,
   ColumnDef,
-  useReactTable,
+  useTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -128,7 +128,7 @@ function App() {
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     defaultColumn,

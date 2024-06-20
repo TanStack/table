@@ -1,6 +1,6 @@
 import { RowData, Cell, Row, Table } from '../types'
 import { flattenBy, getMemoOptions, memo } from '../utils'
-import { createCell } from './cell'
+import { _createCell } from './cell'
 
 export interface CoreRow<TData extends RowData> {
   _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
@@ -92,7 +92,7 @@ export interface CoreRow<TData extends RowData> {
   subRows: Row<TData>[]
 }
 
-export const createRow = <TData extends RowData>(
+export const _createRow = <TData extends RowData>(
   table: Table<TData>,
   id: string,
   original: TData,
@@ -171,7 +171,7 @@ export const createRow = <TData extends RowData>(
       () => [table.getAllLeafColumns()],
       leafColumns => {
         return leafColumns.map(column => {
-          return createCell(table, row as Row<TData>, column, column.id)
+          return _createCell(table, row as Row<TData>, column, column.id)
         })
       },
       getMemoOptions(table.options, 'debugRows', 'getAllCells')
@@ -194,7 +194,7 @@ export const createRow = <TData extends RowData>(
 
   for (let i = 0; i < table._features.length; i++) {
     const feature = table._features[i]
-    feature?.createRow?.(row as Row<TData>, table)
+    feature?._createRow?.(row as Row<TData>, table)
   }
 
   return row as Row<TData>

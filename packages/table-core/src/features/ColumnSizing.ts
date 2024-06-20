@@ -232,10 +232,10 @@ const getDefaultColumnSizingInfoState = (): ColumnSizingInfoState => ({
 })
 
 export const ColumnSizing: TableFeature = {
-  getDefaultColumnDef: (): ColumnSizingColumnDef => {
+  _getDefaultColumnDef: (): ColumnSizingColumnDef => {
     return defaultColumnSizing
   },
-  getInitialState: (state): ColumnSizingTableState => {
+  _getInitialState: (state): ColumnSizingTableState => {
     return {
       columnSizing: {},
       columnSizingInfo: getDefaultColumnSizingInfoState(),
@@ -243,7 +243,7 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): ColumnSizingDefaultOptions => {
     return {
@@ -254,7 +254,7 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData, TValue>(
+  _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
     table: Table<TData>
   ): void => {
@@ -312,7 +312,7 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createHeader: <TData extends RowData, TValue>(
+  _createHeader: <TData extends RowData, TValue>(
     header: Header<TData, TValue>,
     table: Table<TData>
   ): void => {
@@ -513,7 +513,7 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnSizing = updater =>
       table.options.onColumnSizingChange?.(updater)
     table.setColumnSizingInfo = updater =>

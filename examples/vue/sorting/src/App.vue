@@ -2,7 +2,7 @@
 import {
   FlexRender,
   getCoreRowModel,
-  useVueTable,
+  useTable,
   SortingState,
   createColumnHelper,
   getSortedRowModel,
@@ -76,7 +76,7 @@ const rerender = () => {
 
 const sorting = ref<SortingState>([])
 
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },

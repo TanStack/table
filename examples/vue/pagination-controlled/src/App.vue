@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import {
   FlexRender,
   getCoreRowModel,
-  useVueTable,
+  useTable,
   createColumnHelper,
   PaginationState,
 } from '@tanstack/vue-table'
@@ -39,7 +39,7 @@ const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 
 const { data, isLoading, pageCount } = useService(pagination)
 
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value ?? []
   },

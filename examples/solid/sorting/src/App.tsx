@@ -4,7 +4,7 @@ import {
   getSortedRowModel,
   SortingState,
   ColumnDef,
-  createSolidTable,
+  createTable,
 } from '@tanstack/solid-table'
 import { makeData, Person } from './makeData'
 import { createSignal, For, Show } from 'solid-js'
@@ -66,7 +66,7 @@ function App() {
     },
   ]
 
-  const table = createSolidTable({
+  const table = createTable({
     get data() {
       return data()
     },

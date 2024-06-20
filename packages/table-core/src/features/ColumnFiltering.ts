@@ -241,7 +241,7 @@ export interface ColumnFiltersInstance<TData extends RowData> {
 //
 
 export const ColumnFiltering: TableFeature = {
-  getDefaultColumnDef: <
+  _getDefaultColumnDef: <
     TData extends RowData,
   >(): ColumnFiltersColumnDef<TData> => {
     return {
@@ -249,14 +249,14 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  getInitialState: (state): ColumnFiltersTableState => {
+  _getInitialState: (state): ColumnFiltersTableState => {
     return {
       columnFilters: [],
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): ColumnFiltersOptions<TData> => {
     return {
@@ -266,7 +266,7 @@ export const ColumnFiltering: TableFeature = {
     } as ColumnFiltersOptions<TData>
   },
 
-  createColumn: <TData extends RowData>(
+  _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
     table: Table<TData>
   ): void => {
@@ -362,7 +362,7 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     _table: Table<TData>
   ): void => {
@@ -370,7 +370,7 @@ export const ColumnFiltering: TableFeature = {
     row.columnFiltersMeta = {}
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) => {
       const leafColumns = table.getAllLeafColumns()
 

@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   SortingFn,
   SortingState,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -79,7 +79,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) //stress test with 100k rows
 
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data,
     debugTable: true,

@@ -151,14 +151,14 @@ const getDefaultColumnPinningState = (): ColumnPinningState => ({
 })
 
 export const ColumnPinning: TableFeature = {
-  getInitialState: (state): ColumnPinningTableState => {
+  _getInitialState: (state): ColumnPinningTableState => {
     return {
       columnPinning: getDefaultColumnPinningState(),
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): ColumnPinningDefaultOptions => {
     return {
@@ -166,7 +166,7 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData, TValue>(
+  _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
     table: Table<TData>
   ): void => {
@@ -236,7 +236,7 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {
@@ -279,7 +279,7 @@ export const ColumnPinning: TableFeature = {
     )
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnPinning = updater =>
       table.options.onColumnPinningChange?.(updater)
 

@@ -150,14 +150,14 @@ export interface VisibilityColumn {
 //
 
 export const ColumnVisibility: TableFeature = {
-  getInitialState: (state): VisibilityTableState => {
+  _getInitialState: (state): VisibilityTableState => {
     return {
       columnVisibility: {},
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): VisibilityDefaultOptions => {
     return {
@@ -165,7 +165,7 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData, TValue>(
+  _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
     table: Table<TData>
   ): void => {
@@ -201,7 +201,7 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {
@@ -223,7 +223,7 @@ export const ColumnVisibility: TableFeature = {
     )
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     const makeVisibleColumnsMethod = (
       key: string,
       getColumns: () => Column<TData, unknown>[]

@@ -1,6 +1,6 @@
 import {
   TableOptions,
-  createTable,
+  _createTable,
   TableOptionsResolved,
   RowData,
 } from '@tanstack/table-core'
@@ -25,9 +25,7 @@ export const FlexRender = defineComponent({
   },
 })
 
-export function useVueTable<TData extends RowData>(
-  options: TableOptions<TData>
-) {
+export function useTable<TData extends RowData>(options: TableOptions<TData>) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeProxy(
     {
       state: {}, // Dummy state
@@ -43,7 +41,7 @@ export function useVueTable<TData extends RowData>(
     options
   )
 
-  const table = createTable<TData>(resolvedOptions)
+  const table = _createTable<TData>(resolvedOptions)
   // can't use `reactive` because update needs to be immutable
   const state = ref(table.initialState)
 

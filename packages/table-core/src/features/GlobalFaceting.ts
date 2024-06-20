@@ -28,7 +28,7 @@ export interface GlobalFacetingInstance<TData extends RowData> {
 //
 
 export const GlobalFaceting: TableFeature = {
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table._getGlobalFacetedRowModel =
       table.options.getFacetedRowModel &&
       table.options.getFacetedRowModel(table, '__global__')

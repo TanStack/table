@@ -11,7 +11,7 @@ TanStack Table has a simple underlying internal state management system to store
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
 ```ts
-table = createAngularTable(() => ({
+table = injectTable(() => ({
   columns: this.columns,
   data: this.data(),
   //...
@@ -28,7 +28,7 @@ someHandler() {
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
 ```jsx
-table = createAngularTable(() => ({
+table = injectTable(() => ({
   columns: this.columns,
   data: this.data(),
   initialState: {
@@ -91,7 +91,7 @@ class TableComponent {
   )
   readonly data = toSignal(this.data$);
 
-  readonly table = createAngularTable(() => ({
+  readonly table = injectTable(() => ({
     columns: this.columns,
     data: this.data(),
     //...
@@ -135,7 +135,7 @@ class TableComponent {
   readonly state = signal({} as TableState);
 
   // create a table instance with default state values
-  readonly table = createAngularTable(() => ({
+  readonly table = injectTable(() => ({
     columns: this.columns,
     data: this.data(),
     // our fully controlled state overrides the internal state
@@ -175,7 +175,7 @@ Specifying an `on[State]Change` callback tells the table instance that this will
 class TableComponent {
   sorting = signal<SortingState>([])
 
-  table = createAngularTable(() => ({
+  table = injectTable(() => ({
     columns: this.columns,
     data: this.data(),
     //...
@@ -204,7 +204,7 @@ This is why you will see the `updater instanceof Function ? this.state.update(up
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```ts
-import {createAngularTable, type SortingState} from '@tanstack/angular-table'
+import {injectTable, type SortingState} from '@tanstack/angular-table'
 
 class TableComponent {
   readonly sorting = signal<SortingState>([

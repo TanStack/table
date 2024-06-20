@@ -8,9 +8,9 @@ title: Table Instance Guide
 
 ## Table Instance Guide
 
-TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `useReactTable`, `useVueTable`, `createSolidTable`, `createSvelteTable`, `createAngularTable`, `useQwikTable`).
+TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `_createTable` function (e.g. `useTable`, `useTable`, `createTable`, `createTable`, `injectTable`, `useTable`).
 
-The `table` instance that is returned from the `createTable` function (from the framework adapter) is the main object that you will interact with to read and mutate the table state. It is the one place where everything happens in TanStack Table. When you get to the point where you are rendering your UI, you will use APIs from this `table` instance.
+The `table` instance that is returned from the `_createTable` function (from the framework adapter) is the main object that you will interact with to read and mutate the table state. It is the one place where everything happens in TanStack Table. When you get to the point where you are rendering your UI, you will use APIs from this `table` instance.
 
 ### Creating a Table Instance
 
@@ -39,7 +39,7 @@ This is explained in much more detail in the [Row Models Guide](../row-models), 
 ```ts
 import { getCoreRowModel } from '@tanstack/[framework]-table'
 
-const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = _createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 ```
 
 #### Initializing the Table Instance
@@ -48,28 +48,28 @@ With our `columns`, `data`, and `getCoreRowModel` defined, we can now create our
 
 ```ts
 //vanilla js
-const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = _createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //angular
-this.table = createAngularTable({ columns: this.columns, data: this.data(), getCoreRowModel: getCoreRowModel() })
+this.table = injectTable({ columns: this.columns, data: this.data(), getCoreRowModel: getCoreRowModel() })
 
 //lit
 const table = this.tableController.table({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //qwik
-const table = useQwikTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = useTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //react
-const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = useTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //solid
-const table = createSolidTable({ columns, get data() { return data() }, getCoreRowModel: getCoreRowModel() })
+const table = createTable({ columns, get data() { return data() }, getCoreRowModel: getCoreRowModel() })
 
 //svelte
-const table = createSvelteTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //vue
-const table = useVueTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = useTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 ```
 
 So what's in the `table` instance? Let's take a look at what interactions we can have with the table instance.

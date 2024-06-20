@@ -7,7 +7,7 @@ import {
   createColumnHelper,
   getCoreRowModel,
   flexRender,
-  useQwikTable,
+  useTable,
 } from '@tanstack/qwik-table'
 
 type Person = {
@@ -87,7 +87,7 @@ const columns = [
 ]
 
 const App = component$(() => {
-  const table = useQwikTable({
+  const table = useTable({
     columns,
     data: defaultData,
     getCoreRowModel: getCoreRowModel(),

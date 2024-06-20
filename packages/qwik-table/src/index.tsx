@@ -5,7 +5,7 @@ import {
   TableOptions,
   TableOptionsResolved,
   RowData,
-  createTable,
+  _createTable,
   type Table,
 } from '@tanstack/table-core'
 
@@ -30,9 +30,7 @@ export function flexRender<TProps extends object>(
   )
 }
 
-export function useQwikTable<TData extends RowData>(
-  options: TableOptions<TData>
-) {
+export function useTable<TData extends RowData>(options: TableOptions<TData>) {
   // Compose in the generic options to the user options
   const resolvedOptions: TableOptionsResolved<TData> = {
     state: {},
@@ -45,7 +43,7 @@ export function useQwikTable<TData extends RowData>(
   const table = Qwik.useStore<{
     instance: Qwik.NoSerialize<Table<TData>>
   }>({
-    instance: Qwik.noSerialize(createTable(resolvedOptions)),
+    instance: Qwik.noSerialize(_createTable(resolvedOptions)),
   })
 
   // By default, manage table state here using the table's initial state

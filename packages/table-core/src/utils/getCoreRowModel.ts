@@ -1,4 +1,4 @@
-import { createRow } from '../core/row'
+import { _createRow } from '../core/row'
 import { Table, Row, RowModel, RowData } from '../types'
 import { getMemoOptions, memo } from '../utils'
 
@@ -37,7 +37,7 @@ export function getCoreRowModel<TData extends RowData>(): (
             // }
 
             // Make the row
-            const row = createRow(
+            const row = _createRow(
               table,
               table._getRowId(originalRows[i]!, i, parentRow),
               originalRows[i]!,

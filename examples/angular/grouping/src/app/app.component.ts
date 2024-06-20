@@ -9,7 +9,7 @@ import {
   FlexRenderDirective,
   GroupingState,
   Updater,
-  createAngularTable,
+  injectTable,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
@@ -54,7 +54,7 @@ export class AppComponent {
     debugTable: true,
   }))
 
-  table = createAngularTable(this.tableOptions)
+  table = injectTable(this.tableOptions)
 
   onPageInputChange(event: any): void {
     const page = event.target.value ? Number(event.target.value) - 1 : 0

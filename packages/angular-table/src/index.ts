@@ -4,7 +4,7 @@ import {
   TableOptions,
   TableOptionsResolved,
   TableState,
-  createTable,
+  _createTable,
   type Table,
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
@@ -19,7 +19,7 @@ export {
   injectFlexRenderContext,
 } from './flex-render'
 
-export function createAngularTable<TData extends RowData>(
+export function injectTable<TData extends RowData>(
   options: () => TableOptions<TData>
 ): Table<TData> & Signal<Table<TData>> {
   return lazyInit(() => {
@@ -30,7 +30,7 @@ export function createAngularTable<TData extends RowData>(
       ...options(),
     }
 
-    const table = createTable(resolvedOptions)
+    const table = _createTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
     const state = signal<TableState>(table.initialState)

@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   flexRender,
-  useQwikTable,
+  useTable,
   getFilteredRowModel,
   ColumnDef,
 } from '@tanstack/qwik-table'
@@ -127,7 +127,7 @@ const columns: ColumnDef<Person, any>[] = [
 const App = component$(() => {
   const rowSelection = useSignal({})
 
-  const table = useQwikTable({
+  const table = useTable({
     columns,
     data: defaultData,
     getCoreRowModel: getCoreRowModel(),

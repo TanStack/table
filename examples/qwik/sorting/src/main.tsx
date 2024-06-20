@@ -7,7 +7,7 @@ import { makeData } from './makeData'
 import {
   getCoreRowModel,
   flexRender,
-  useQwikTable,
+  useTable,
   SortingState,
   ColumnDef,
   getSortedRowModel,
@@ -69,7 +69,7 @@ const App = component$(() => {
 
   const sorting = useSignal<SortingState>([])
 
-  const table = useQwikTable({
+  const table = useTable({
     columns,
     data: data.value,
     getCoreRowModel: getCoreRowModel(),

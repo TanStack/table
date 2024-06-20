@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
-    createSvelteTable,
+    createTable,
     FlexRender,
     getCoreRowModel,
   } from '@tanstack/svelte-table'
@@ -101,7 +101,7 @@
     getCoreRowModel: getCoreRowModel(),
   }
 
-  const table = createSvelteTable(options)
+  const table = createTable(options)
 </script>
 
 <div class="p-2">

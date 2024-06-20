@@ -3,7 +3,7 @@ import {
   createColumnHelper,
   FlexRender,
   getCoreRowModel,
-  useVueTable,
+  useTable,
 } from '@tanstack/vue-table'
 import type {
   Column,
@@ -74,7 +74,7 @@ const isSplit = ref(false)
 
 const rerender = () => (data.value = makeData(5000))
 
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },

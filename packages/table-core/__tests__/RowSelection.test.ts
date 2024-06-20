@@ -1,7 +1,7 @@
 import {
   ColumnDef,
   createColumnHelper,
-  createTable,
+  _createTable,
   getCoreRowModel,
 } from '../src'
 import * as RowSelection from '../src/features/RowSelection'
@@ -25,7 +25,7 @@ describe('RowSelection', () => {
       const data = makeData(5)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -54,7 +54,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2) // assuming 3 parent rows with 2 sub-rows each
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -83,7 +83,7 @@ describe('RowSelection', () => {
       const data = makeData(5)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -151,7 +151,7 @@ describe('RowSelection', () => {
       const data = makeData(3)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -176,7 +176,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -204,7 +204,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -234,7 +234,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -264,7 +264,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: row => row.index === 0, // only first row is selectable (of 2 sub-rows)
         onStateChange() {},
         renderFallbackValue: '',
@@ -293,7 +293,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2, 2)
       const columns = generateColumns(data)
 
-      const table = createTable<Person>({
+      const table = _createTable<Person>({
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',

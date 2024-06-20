@@ -123,14 +123,14 @@ const getDefaultRowPinningState = (): RowPinningState => ({
 })
 
 export const RowPinning: TableFeature = {
-  getInitialState: (state): RowPinningTableState => {
+  _getInitialState: (state): RowPinningTableState => {
     return {
       rowPinning: getDefaultRowPinningState(),
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): RowPinningDefaultOptions => {
     return {
@@ -138,7 +138,7 @@ export const RowPinning: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {
@@ -207,7 +207,7 @@ export const RowPinning: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setRowPinning = updater => table.options.onRowPinningChange?.(updater)
 
     table.resetRowPinning = defaultState =>

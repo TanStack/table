@@ -210,7 +210,7 @@ export interface HeadersInstance<TData extends RowData> {
 
 //
 
-function createHeader<TData extends RowData, TValue>(
+function _createHeader<TData extends RowData, TValue>(
   table: Table<TData>,
   column: Column<TData, TValue>,
   options: {
@@ -256,14 +256,14 @@ function createHeader<TData extends RowData, TValue>(
   }
 
   table._features.forEach(feature => {
-    feature.createHeader?.(header as Header<TData, TValue>, table)
+    feature._createHeader?.(header as Header<TData, TValue>, table)
   })
 
   return header as Header<TData, TValue>
 }
 
 export const Headers: TableFeature = {
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     // Header Groups
 
     table.getHeaderGroups = memo(
@@ -553,7 +553,7 @@ export function buildHeaderGroups<TData extends RowData>(
         latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
         // This is a new header. Let's create it
-        const header = createHeader(table, column, {
+        const header = _createHeader(table, column, {
           id: [headerFamily, depth, column.id, headerToGroup?.id]
             .filter(Boolean)
             .join('_'),
@@ -584,7 +584,7 @@ export function buildHeaderGroups<TData extends RowData>(
   }
 
   const bottomHeaders = columnsToGroup.map((column, index) =>
-    createHeader(table, column, {
+    _createHeader(table, column, {
       depth: maxDepth,
       index,
     })

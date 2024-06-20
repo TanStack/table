@@ -8,14 +8,14 @@ The `@tanstack/qwik-table` adapter is a wrapper around the core table logic. Mos
 
 `@tanstack/qwik-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
-### `useQwikTable`
+### `useTable`
 
 Takes an `options` object and returns a table from a Qwik Store with `NoSerialize`.
 
 ```ts
-import { useQwikTable } from '@tanstack/qwik-table'
+import { useTable } from '@tanstack/qwik-table'
 
-const table = useQwikTable(options)
+const table = useTable(options)
 // ...render your table
 
 ```

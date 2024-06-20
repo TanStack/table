@@ -9,7 +9,7 @@
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createSvelteTable,
+    createTable,
     getCoreRowModel,
     getSortedRowModel,
   } from '@tanstack/svelte-table'
@@ -108,7 +108,7 @@
     )
   }
 
-  const table = createSvelteTable(options)
+  const table = createTable(options)
 </script>
 
 <div class="p-2">

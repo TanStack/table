@@ -13,7 +13,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   Table,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 function App() {
@@ -104,7 +104,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100000))
   const refreshData = () => setData(() => makeData(100000))
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     state: {

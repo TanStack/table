@@ -9,17 +9,17 @@ state the "angular signals" way, providing types and the rendering implementatio
 
 `@tanstack/angular-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
-### `createAngularTable`
+### `injectTable`
 
 Accepts an options function or a computed value that returns the table options, and returns a table.
 
 ```ts
-import {createAngularTable} from '@tanstack/angular-table'
+import {injectTable} from '@tanstack/angular-table'
 
 export class AppComponent {
   data = signal<Person[]>([])
 
-  table = createAngularTable(() => ({
+  table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),

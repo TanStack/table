@@ -50,7 +50,7 @@ If you have decided that you need to implement server-side filtering instead of 
 No `getFilteredRowModel` table option is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have passed a `getFilteredRowModel` table option, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   data,
   columns,
   getCoreRowModel: getCoreRowModel(),
@@ -66,9 +66,9 @@ const table = useReactTable({
 If you are using the built-in client-side filtering features, first you need to pass in a `getFilteredRowModel` function to the table options. This function will be called whenever the table needs to filter the data. You can either import the default `getFilteredRowModel` function from TanStack Table or create your own.
 
 ```jsx
-import { useReactTable, getFilteredRowModel } from '@tanstack/react-table'
+import { useTable, getFilteredRowModel } from '@tanstack/react-table'
 //...
-const table = useReactTable({
+const table = useTable({
   data,
   columns,
   getCoreRowModel: getCoreRowModel(),
@@ -97,7 +97,7 @@ Since the column filter state is an array of objects, you can have multiple colu
 You can access the column filter state from the table instance just like any other table state using the `table.getState()` API.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -115,7 +115,7 @@ If you need easy access to the column filter state, you can control/manage the c
 ```tsx
 const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // can set initial column filter state here
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -131,7 +131,7 @@ const table = useReactTable({
 If you do not need to control the column filter state in your own state management or scope, but you still want to set an initial column filter state, you can use the `initialState` table option instead of `state`.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -212,7 +212,7 @@ const columns = [
   }
 ]
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -274,7 +274,7 @@ const columns = [
   //...
 ]
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   enableColumnFilters: false, // disable column filtering for all columns
@@ -292,7 +292,7 @@ By default, filtering is done from parent rows down, so if a parent row is filte
 However, if you want to allow sub-rows to be filtered and searched through, regardless of whether the parent row is filtered out, you can set the `filterFromLeafRows` table option to `true`. Setting this option to `true` will cause filtering to be done from leaf rows up, which means parent rows will be included so long as one of their child or grand-child rows is also included.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -309,7 +309,7 @@ By default, filtering is done for all rows in a tree, no matter if they are root
 Use `maxLeafRowFilterDepth: 0` if you want to preserve a parent row's sub-rows from being filtered out while the parent row is passing the filter.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),

@@ -8,14 +8,14 @@ The `@tanstack/vue-table` adapter is a wrapper around the core table logic. Most
 
 `@tanstack/vue-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
-### `useVueTable`
+### `useTable`
 
 Takes an `options` object and returns a table.
 
 ```ts
-import { useVueTable } from '@tanstack/vue-table'
+import { useTable } from '@tanstack/vue-table'
 
-const table = useVueTable(options)
+const table = useTable(options)
 // ...render your table
 
 ```

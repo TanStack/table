@@ -8,7 +8,7 @@ import {
 } from '@angular/core'
 import {
   ColumnDef,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
@@ -95,7 +95,7 @@ export class AppComponent {
     },
   ]
 
-  table = createAngularTable(() => ({
+  table = injectTable(() => ({
     data: this.data(),
     columns: this.columns,
     state: {

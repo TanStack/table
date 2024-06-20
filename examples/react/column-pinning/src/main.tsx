@@ -9,7 +9,7 @@ import {
   ColumnOrderState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  useTable,
   VisibilityState,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
@@ -78,7 +78,7 @@ function App() {
   const [isSplit, setIsSplit] = React.useState(false)
   const rerender = () => setData(() => makeData(5000))
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     state: {

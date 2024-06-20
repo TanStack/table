@@ -9,7 +9,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   GroupingState,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import React from 'react'
 import { makeData } from './makeData'
@@ -87,7 +87,7 @@ export const App = () => {
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     defaultColumn,

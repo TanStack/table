@@ -276,21 +276,21 @@ export interface SortingInstance<TData extends RowData> {
 //
 
 export const RowSorting: TableFeature = {
-  getInitialState: (state): SortingTableState => {
+  _getInitialState: (state): SortingTableState => {
     return {
       sorting: [],
       ...state,
     }
   },
 
-  getDefaultColumnDef: <TData extends RowData>(): SortingColumnDef<TData> => {
+  _getDefaultColumnDef: <TData extends RowData>(): SortingColumnDef<TData> => {
     return {
       sortingFn: 'auto',
       sortUndefined: 1,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): SortingOptions<TData> => {
     return {
@@ -301,7 +301,7 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData, TValue>(
+  _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
     table: Table<TData>
   ): void => {
@@ -521,7 +521,7 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setSorting = updater => table.options.onSortingChange?.(updater)
     table.resetSorting = defaultState => {
       table.setSorting(defaultState ? [] : table.initialState?.sorting ?? [])

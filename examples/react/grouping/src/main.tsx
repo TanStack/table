@@ -5,7 +5,7 @@ import './index.css'
 
 import {
   GroupingState,
-  useReactTable,
+  useTable,
   getPaginationRowModel,
   getFilteredRowModel,
   getCoreRowModel,
@@ -87,7 +87,7 @@ function App() {
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     state: {

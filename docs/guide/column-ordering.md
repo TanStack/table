@@ -36,7 +36,7 @@ If you don't provide a `columnOrder` state, TanStack Table will just use the ord
 If all you need to do is specify the initial column order, you can just specify the `columnOrder` state in the `initialState` table option.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   //...
   initialState: {
     columnOrder: ['columnId1', 'columnId2', 'columnId3'],
@@ -54,7 +54,7 @@ If you need to dynamically change the column order, or set the column order afte
 ```jsx
 const [columnOrder, setColumnOrder] = useState<string[]>(['columnId1', 'columnId2', 'columnId3']); //optionally initialize the column order
 //...
-const table = useReactTable({
+const table = useTable({
   //...
   state: {
     columnOrder,

@@ -1,7 +1,7 @@
 import {
   ColumnDef,
   createColumnHelper,
-  createTable,
+  _createTable,
   getCoreRowModel,
   getPaginationRowModel,
 } from '../src'
@@ -21,13 +21,13 @@ function generateColumns(people: Person[]): PersonColumn[] {
 }
 
 describe('RowPinning', () => {
-  describe('createTable', () => {
+  describe('_createTable', () => {
     describe('_getPinnedRows', () => {
       it('should return pinned rows when keepPinnedRows is true rows are visible', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -57,7 +57,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -87,7 +87,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: false,
           onStateChange() {},
@@ -117,7 +117,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: false,
           onStateChange() {},
@@ -147,7 +147,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -179,7 +179,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -211,7 +211,7 @@ describe('RowPinning', () => {
         const data = makeData(6)
         const columns = generateColumns(data)
 
-        const table = createTable<Person>({
+        const table = _createTable<Person>({
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},

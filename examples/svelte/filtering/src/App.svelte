@@ -7,7 +7,7 @@
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createSvelteTable,
+    createTable,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
@@ -65,7 +65,7 @@
     enableMultiRowSelection: true,
   }
 
-  const table = createSvelteTable(options)
+  const table = createTable(options)
 
   $effect(() => {
     table.setGlobalFilter(globalFilter)

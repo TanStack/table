@@ -26,8 +26,8 @@ export default function MyComponent() {
     // ...
   ];
 
-  //❌ Columns and data are defined in the same scope as `useReactTable` without a stable reference, will cause infinite loop!
-  const table = useReactTable({
+  //❌ Columns and data are defined in the same scope as `useTable` without a stable reference, will cause infinite loop!
+  const table = useTable({
     columns,
     data,
   });
@@ -64,7 +64,7 @@ export default function MyComponent() {
   ]);
 
   // Columns and data are defined in a stable reference, will not cause infinite loop!
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data,
   });
@@ -89,7 +89,7 @@ export default function MyComponent() {
     //...
   });
 
-  const table = useReactTable({
+  const table = useTable({
     columns,
     //❌ BAD: This will cause an infinite loop of re-renders because `data` is mutated in place (destroys stable reference)
     data: data?.filter(d => d.isActive) ?? [],
@@ -118,7 +118,7 @@ export default function MyComponent() {
   //✅ GOOD: This will not cause an infinite loop of re-renders because `filteredData` is memoized
   const filteredData = useMemo(() => data?.filter(d => d.isActive) ?? [], [data]);
 
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data: filteredData, // stable reference!
   });
@@ -156,7 +156,7 @@ React.useEffect(() => {
   skipPageResetRef.current = false
 })
 
-useReactTable({
+useTable({
   ...
   autoResetPageIndex: !skipPageResetRef.current,
   autoResetExpanded: !skipPageResetRef.current,

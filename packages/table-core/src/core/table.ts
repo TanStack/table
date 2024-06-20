@@ -19,7 +19,7 @@ import {
 } from '../types'
 
 //
-import { createColumn } from './column'
+import { _createColumn } from './column'
 import { Headers } from './headers'
 //
 
@@ -192,6 +192,42 @@ export interface CoreOptions<TData extends RowData> {
   state: Partial<TableState>
 }
 
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'columns'>
+): Omit<TableOptions<TData>, 'columns'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data'>
+): Omit<TableOptions<TData>, 'data'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'getCoreRowModel'>
+): Omit<TableOptions<TData>, 'getCoreRowModel'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data' | 'columns'>
+): Omit<TableOptions<TData>, 'data' | 'columns'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
+): Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
+): Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
+): Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: TableOptions<TData>
+): TableOptions<TData>
+
+export function tableOptions(options: unknown) {
+  return options
+}
+
 export interface CoreInstance<TData extends RowData> {
   _features: readonly TableFeature[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
@@ -280,7 +316,7 @@ export interface CoreInstance<TData extends RowData> {
   setState: (updater: Updater<TableState>) => void
 }
 
-export function createTable<TData extends RowData>(
+export function _createTable<TData extends RowData>(
   options: TableOptionsResolved<TData>
 ): Table<TData> {
   if (
@@ -295,7 +331,7 @@ export function createTable<TData extends RowData>(
   let table = { _features } as unknown as Table<TData>
 
   const defaultOptions = table._features.reduce((obj, feature) => {
-    return Object.assign(obj, feature.getDefaultOptions?.(table))
+    return Object.assign(obj, feature._getDefaultOptions?.(table))
   }, {}) as TableOptionsResolved<TData>
 
   const mergeOptions = (options: TableOptionsResolved<TData>) => {
@@ -317,7 +353,7 @@ export function createTable<TData extends RowData>(
   } as TableState
 
   table._features.forEach(feature => {
-    initialState = (feature.getInitialState?.(initialState) ??
+    initialState = (feature._getInitialState?.(initialState) ??
       initialState) as TableState
   })
 
@@ -433,7 +469,7 @@ export function createTable<TData extends RowData>(
           // footer: props => props.header.column.id,
           cell: props => props.renderValue<any>()?.toString?.() ?? null,
           ...table._features.reduce((obj, feature) => {
-            return Object.assign(obj, feature.getDefaultColumnDef?.())
+            return Object.assign(obj, feature._getDefaultColumnDef?.())
           }, {}),
           ...defaultColumn,
         } as Partial<ColumnDef<TData, unknown>>
@@ -452,7 +488,7 @@ export function createTable<TData extends RowData>(
           depth = 0
         ): Column<TData, unknown>[] => {
           return columnDefs.map(columnDef => {
-            const column = createColumn(table, columnDef, depth, parent)
+            const column = _createColumn(table, columnDef, depth, parent)
 
             const groupingColumnDef = columnDef as GroupColumnDef<
               TData,
@@ -520,7 +556,7 @@ export function createTable<TData extends RowData>(
 
   for (let index = 0; index < table._features.length; index++) {
     const feature = table._features[index]
-    feature?.createTable?.(table)
+    feature?._createTable?.(table)
   }
 
   return table
