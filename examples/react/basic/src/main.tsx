@@ -7,7 +7,7 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -82,7 +82,7 @@ function App() {
   const [data, _setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

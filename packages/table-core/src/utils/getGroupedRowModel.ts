@@ -1,4 +1,4 @@
-import { createRow } from '../core/row'
+import { _createRow } from '../core/row'
 import { Table, Row, RowModel, RowData } from '../types'
 import { flattenBy, getMemoOptions, memo } from '../utils'
 
@@ -67,7 +67,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 ? flattenBy(groupedRows, row => row.subRows)
                 : groupedRows
 
-              const row = createRow(
+              const row = _createRow(
                 table,
                 id,
                 leafRows[0]!.original,

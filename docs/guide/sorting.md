@@ -36,7 +36,7 @@ Since the sorting state is an array, it is possible to sort by multiple columns 
 You can access the sorting state directly from the table instance just like any other state using the `table.getState()` API.
 
 ```tsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -56,7 +56,7 @@ const [sorting, setSorting] = useState<SortingState>([]) // can set initial sort
 //...
 // use sorting state to fetch data from your server or something...
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -72,7 +72,7 @@ const table = useReactTable({
 If you do not need to control the sorting state in your own state management or scope, but you still want to set an initial sorting state, you can use the `initialState` table option instead of `state`.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -100,7 +100,7 @@ If you plan to just use your own server-side sorting in your back-end logic, you
 ```jsx
 const [sorting, setSorting] = useState<SortingState>([])
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -120,9 +120,9 @@ const table = useReactTable({
 To implement client-side sorting, first you have to provide a sorting row model to the table. You can import the `getSortedRowModel` function from TanStack Table, and it will be used to transform your rows into sorted rows.
 
 ```jsx
-import { useReactTable } from '@tanstack/react-table'
+import { useTable } from '@tanstack/react-table'
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -195,7 +195,7 @@ const columns = [
   }
 ]
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -230,7 +230,7 @@ const columns = [
   //...
 ]
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -256,7 +256,7 @@ const columns = [
   //...
 ]
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -321,7 +321,7 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 > Set `enableSortingRemoval` to `false` if you want to ensure that at least one column is always sorted.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
@@ -346,7 +346,7 @@ const columns = [
   //...
 ]
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   enableMultiSorting: false, // disable multi-sorting for the entire table
@@ -358,7 +358,7 @@ const table = useReactTable({
 By default, the `Shift` key is used to trigger multi-sorting. You can change this behavior with the `isMultiSortEvent` table option. You can even specify that all sorting events should trigger multi-sorting by returning `true` from the custom function.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -372,7 +372,7 @@ const table = useReactTable({
 By default, there is no limit to the number of columns that can be sorted at once. You can set a limit using the `maxMultiSortColCount` table option.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -384,7 +384,7 @@ const table = useReactTable({
 By default, the ability to remove multi-sorts is enabled. You can disable this behavior using the `enableMultiRemove` table option.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

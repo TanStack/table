@@ -193,7 +193,7 @@ const getDefaultPaginationState = (): PaginationState => ({
 })
 
 export const RowPagination: TableFeature = {
-  getInitialState: (state): PaginationTableState => {
+  _getInitialState: (state): PaginationTableState => {
     return {
       ...state,
       pagination: {
@@ -203,7 +203,7 @@ export const RowPagination: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): PaginationDefaultOptions => {
     return {
@@ -211,7 +211,7 @@ export const RowPagination: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     let registered = false
     let queued = false
 

@@ -12,7 +12,7 @@ import './index.css'
 
 import {
   PaginationState,
-  useReactTable,
+  useTable,
   getCoreRowModel,
   ColumnDef,
   flexRender,
@@ -95,7 +95,7 @@ function App() {
 
   const defaultData = React.useMemo(() => [], [])
 
-  const table = useReactTable({
+  const table = useTable({
     data: dataQuery.data?.rows ?? defaultData,
     columns,
     // pageCount: dataQuery.data?.pageCount ?? -1, //you can now pass in `rowCount` instead of pageCount and `pageCount` will be calculated internally (new in v8.13.0)

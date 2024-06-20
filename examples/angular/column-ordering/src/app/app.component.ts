@@ -7,7 +7,7 @@ import {
 import {
   ColumnDef,
   type ColumnOrderState,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   type VisibilityState,
@@ -79,7 +79,7 @@ export class AppComponent {
   readonly columnVisibility = signal<VisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
 
-  readonly table = createAngularTable(() => ({
+  readonly table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     state: {

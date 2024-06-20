@@ -94,14 +94,14 @@ export interface GlobalFilterInstance<TData extends RowData> {
 //
 
 export const GlobalFiltering: TableFeature = {
-  getInitialState: (state): GlobalFilterTableState => {
+  _getInitialState: (state): GlobalFilterTableState => {
     return {
       globalFilter: undefined,
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): GlobalFilterOptions<TData> => {
     return {
@@ -118,7 +118,7 @@ export const GlobalFiltering: TableFeature = {
     } as GlobalFilterOptions<TData>
   },
 
-  createColumn: <TData extends RowData>(
+  _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
     table: Table<TData>
   ): void => {
@@ -133,7 +133,7 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.getGlobalAutoFilterFn = () => {
       return filterFns.includesString
     }

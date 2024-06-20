@@ -53,7 +53,7 @@ Every row object contains row data and many APIs to either interact with the tab
 Every row object has an `id` property that makes it unique within the table instance. By default the `row.id` is the same as the `row.index` that is created in the row model. However, it can be useful to override each row's `id` with a unique identifier from the row's data. You can use the `getRowId` table option to do this.
 
 ```js
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getRowId: originalRow => originalRow.uuid, //override the row.id with the uuid from the original row's data

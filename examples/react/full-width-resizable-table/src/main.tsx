@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   ColumnDef,
   flexRender,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -65,7 +65,7 @@ const columns: ColumnDef<Person>[] = [
 function App() {
   const data = React.useMemo(() => makeData(20), [])
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     enableColumnResizing: true,

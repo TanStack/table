@@ -17,7 +17,7 @@ import {
   Row,
   RowPinningState,
   Table,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 function App() {
@@ -142,7 +142,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1000, 2, 2))
   const refreshData = () => setData(() => makeData(1000, 2, 2))
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     initialState: { pagination: { pageSize: 20, pageIndex: 0 } },

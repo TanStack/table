@@ -7,7 +7,7 @@ import {
   Column,
   Table,
   ExpandedState,
-  useReactTable,
+  useTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
@@ -115,7 +115,7 @@ function App() {
 
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     state: {

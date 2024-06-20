@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import type { Person } from '../makeData'
 import {
   ColumnDef,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   getExpandedRowModel,
@@ -38,7 +38,7 @@ export class PersonTableComponent {
     },
   ]
 
-  table = createAngularTable(() => {
+  table = injectTable(() => {
     return {
       data: this.data(),
       columns: this.columns,

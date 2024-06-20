@@ -11,7 +11,7 @@ TanStack Table has a simple underlying internal state management system to store
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
 ```ts
-const table = useVueTable({
+const table = useTable({
   columns,
   get data() {
     return data.value
@@ -28,7 +28,7 @@ console.log(table.getState().rowSelection) //access just the row selection state
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
 ```jsx
-const table = useVueTable({
+const table = useTable({
   columns,
   data,
   initialState: {
@@ -77,7 +77,7 @@ const tableQuery = useQuery({
   //...
 })
 
-const table = useVueTable({
+const table = useTable({
   columns,
   data: tableQuery.data,
   //...
@@ -122,7 +122,7 @@ A couple of more tricks may be needed to make this work. If you use the `onState
 
 ```jsx
 //create a table instance with default state values
-const table = useVueTable({
+const table = useTable({
   get columns() {
     return columns.value
   },
@@ -167,7 +167,7 @@ const setSorting = updater => {
   sorting.value = updater instanceof Function ? updater(sorting.value) : updater
 }
 //...
-const table = useVueTable({
+const table = useTable({
   columns,
   data,
   //...
@@ -193,7 +193,7 @@ This is why we have the `updater instanceof Function` check in the `setState` fu
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { useVueTable, type SortingState } from '@tanstack/vue-table'
+import { useTable, type SortingState } from '@tanstack/vue-table'
 //...
 const sorting = ref<SortingState[]>([
   {

@@ -1,5 +1,5 @@
 import {
-  createTable,
+  _createTable,
   type RowData,
   type TableOptions,
   type TableOptionsResolved,
@@ -13,7 +13,7 @@ import {
  * @example
  * ```svelte
  * <script>
- *   const table = createSvelteTable({ ... })
+ *   const table = createTable({ ... })
  * </script>
  *
  * <table>
@@ -32,7 +32,7 @@ import {
  * </table>
  * ```
  */
-export function createSvelteTable<TData extends RowData>(
+export function createTable<TData extends RowData>(
   options: TableOptions<TData>
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeObjects(
@@ -50,7 +50,7 @@ export function createSvelteTable<TData extends RowData>(
     options
   )
 
-  const table = createTable(resolvedOptions)
+  const table = _createTable(resolvedOptions)
   let state = $state<Partial<TableState>>(table.initialState)
 
   function updateOptions() {

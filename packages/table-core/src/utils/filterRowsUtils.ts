@@ -1,4 +1,4 @@
-import { createRow } from '../core/row'
+import { _createRow } from '../core/row'
 import { Row, RowModel, Table, RowData } from '../types'
 
 export function filterRows<TData extends RowData>(
@@ -29,7 +29,7 @@ function filterRowModelFromLeafs<TData extends RowData>(
     for (let i = 0; i < rowsToFilter.length; i++) {
       let row = rowsToFilter[i]!
 
-      const newRow = createRow(
+      const newRow = _createRow(
         table,
         row.id,
         row.original,
@@ -100,7 +100,7 @@ function filterRowModelFromRoot<TData extends RowData>(
 
       if (pass) {
         if (row.subRows?.length && depth < maxDepth) {
-          const newRow = createRow(
+          const newRow = _createRow(
             table,
             row.id,
             row.original,

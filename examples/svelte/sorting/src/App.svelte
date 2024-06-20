@@ -7,7 +7,7 @@
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createSvelteTable,
+    createTable,
     getCoreRowModel,
     getSortedRowModel,
     renderComponent,
@@ -105,7 +105,7 @@
     data = makeData(100_000)
   }
 
-  const table = createSvelteTable(options)
+  const table = createTable(options)
 </script>
 
 <div class="p-2">

@@ -73,14 +73,14 @@ export interface ColumnOrderInstance<TData extends RowData> {
 //
 
 export const ColumnOrdering: TableFeature = {
-  getInitialState: (state): ColumnOrderTableState => {
+  _getInitialState: (state): ColumnOrderTableState => {
     return {
       columnOrder: [],
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): ColumnOrderDefaultOptions => {
     return {
@@ -88,7 +88,7 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData>(
+  _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
     table: Table<TData>
   ): void => {
@@ -107,7 +107,7 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnOrder = updater =>
       table.options.onColumnOrderChange?.(updater)
     table.resetColumnOrder = defaultState => {

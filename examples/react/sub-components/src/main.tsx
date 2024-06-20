@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  useReactTable,
+  useTable,
   getCoreRowModel,
   getExpandedRowModel,
   ColumnDef,
@@ -109,7 +109,7 @@ function Table({
   renderSubComponent,
   getRowCanExpand,
 }: TableProps<Person>): JSX.Element {
-  const table = useReactTable<Person>({
+  const table = useTable<Person>({
     data,
     columns,
     getRowCanExpand,

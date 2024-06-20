@@ -240,7 +240,7 @@ export interface GroupingInstance<TData extends RowData> {
 //
 
 export const ColumnGrouping: TableFeature = {
-  getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
+  _getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
     TData,
     unknown
   > => {
@@ -250,14 +250,14 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  getInitialState: (state): GroupingTableState => {
+  _getInitialState: (state): GroupingTableState => {
     return {
       grouping: [],
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): GroupingOptions => {
     return {
@@ -266,7 +266,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData, TValue>(
+  _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
     table: Table<TData>
   ): void => {
@@ -334,7 +334,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setGrouping = updater => table.options.onGroupingChange?.(updater)
 
     table.resetGrouping = defaultState => {
@@ -355,7 +355,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {
@@ -380,7 +380,7 @@ export const ColumnGrouping: TableFeature = {
     row._groupingValuesCache = {}
   },
 
-  createCell: <TData extends RowData, TValue>(
+  _createCell: <TData extends RowData, TValue>(
     cell: Cell<TData, TValue>,
     column: Column<TData, TValue>,
     row: Row<TData>,

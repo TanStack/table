@@ -62,7 +62,7 @@ export interface CoreColumn<TData extends RowData, TValue> {
   parent?: Column<TData, TValue>
 }
 
-export function createColumn<TData extends RowData, TValue>(
+export function _createColumn<TData extends RowData, TValue>(
   table: Table<TData>,
   columnDef: ColumnDef<TData, TValue>,
   depth: number,
@@ -157,7 +157,7 @@ export function createColumn<TData extends RowData, TValue>(
   }
 
   for (const feature of table._features) {
-    feature.createColumn?.(column as Column<TData, TValue>, table)
+    feature._createColumn?.(column as Column<TData, TValue>, table)
   }
 
   // Yes, we have to convert table to unknown, because we know more than the compiler here.

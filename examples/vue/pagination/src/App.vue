@@ -3,7 +3,7 @@ import {
   FlexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  useVueTable,
+  useTable,
   createColumnHelper,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
@@ -63,7 +63,7 @@ const columns = [
   }),
 ]
 
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },

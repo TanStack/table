@@ -12,7 +12,7 @@ import {
   OnChangeFn,
   Row,
   SortingState,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import {
   keepPreviousData,
@@ -127,7 +127,7 @@ function App() {
     fetchMoreOnBottomReached(tableContainerRef.current)
   }, [fetchMoreOnBottomReached])
 
-  const table = useReactTable({
+  const table = useTable({
     data: flatData,
     columns,
     state: {

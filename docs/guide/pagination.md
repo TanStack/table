@@ -49,9 +49,9 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 If you want to take advantage of the built-in client-side pagination in TanStack Table, you first need to pass in the pagination row model.
 
 ```jsx
-import { useReactTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { useTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -70,9 +70,9 @@ No pagination row model is needed for server-side pagination, but if you have pr
 The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case.
 
 ```jsx
-import { useReactTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { useTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -97,14 +97,14 @@ The `pagination` state is an object that contains the following properties:
 You can manage the `pagination` state just like any other state in the table instance.
 
 ```jsx
-import { useReactTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { useTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
 //...
 const [pagination, setPagination] = useState({
   pageIndex: 0, //initial page index
   pageSize: 10, //default page size
 });
 
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -120,7 +120,7 @@ const table = useReactTable({
 Alternatively, if you have no need for managing the `pagination` state in your own scope, but you need to set different initial values for the `pageIndex` and `pageSize`, you can use the `initialState` option.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -145,7 +145,7 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 By default, `pageIndex` is reset to `0` when page-altering state changes occur, such as when the `data` is updated, filters change, grouping changes, etc. This behavior is automatically disabled when `manualPagination` is true but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),

@@ -17,7 +17,7 @@ const options = writable({
   //...
 })
 
-const table = createSvelteTable(options)
+const table = createTable(options)
 
 console.log(table.getState()) //access the entire internal state
 console.log(table.getState().rowSelection) //access just the row selection state
@@ -47,7 +47,7 @@ const options = writable({
   //...
 })
 
-const table = createSvelteTable(options)
+const table = createTable(options)
 ```
 
 > **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
@@ -139,7 +139,7 @@ const options = writable({
   onPaginationChange: setPagination,
 })
 
-const table = createSvelteTable(options)
+const table = createTable(options)
 //...
 ```
 
@@ -156,7 +156,7 @@ const options = writable({
   data,
   //... Note: `state` values are NOT passed in yet
 })
-const table = createSvelteTable(options)
+const table = createTable(options)
 
 let state = {
   ...table.initialState, //populate the initial state with all of the default state values from the table instance
@@ -219,7 +219,7 @@ const options = writable({
   },
   onSortingChange: setSorting, //makes the `state.sorting` controlled
 })
-const table = createSvelteTable(options)
+const table = createTable(options)
 ```
 
 #### 2. **Updaters can either be raw values or callback functions**.
@@ -235,7 +235,7 @@ This is why you see the `if (updater instanceof Function)` check in the `setStat
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```ts
-import { createSvelteTable, type SortingState, type Updater } from '@tanstack/svelte-table'
+import { createTable, type SortingState, type Updater } from '@tanstack/svelte-table'
 //...
 let sorting: SortingState[] = [
   {

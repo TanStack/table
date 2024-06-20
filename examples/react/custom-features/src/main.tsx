@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  useReactTable,
+  useTable,
   makeStateUpdater,
   getSortedRowModel,
   getPaginationRowModel,
@@ -70,7 +70,7 @@ declare module '@tanstack/react-table' {
 // Here is all of the actual javascript code for our new feature
 export const DensityFeature: TableFeature<any> = {
   // define the new feature's initial state
-  getInitialState: (state): DensityTableState => {
+  _getInitialState: (state): DensityTableState => {
     return {
       density: 'md',
       ...state,
@@ -78,7 +78,7 @@ export const DensityFeature: TableFeature<any> = {
   },
 
   // define the new feature's default options
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): DensityOptions => {
     return {
@@ -87,12 +87,12 @@ export const DensityFeature: TableFeature<any> = {
     } as DensityOptions
   },
   // if you need to add a default column definition...
-  // getDefaultColumnDef: <TData extends RowData>(): Partial<ColumnDef<TData>> => {
+  // _getDefaultColumnDef: <TData extends RowData>(): Partial<ColumnDef<TData>> => {
   //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
   // },
 
   // define the new feature's table instance methods
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setDensity = updater => {
       const safeUpdater: Updater<DensityState> = old => {
         let newState = functionalUpdate(updater, old)
@@ -109,13 +109,13 @@ export const DensityFeature: TableFeature<any> = {
   },
 
   // if you need to add row instance APIs...
-  // createRow: <TData extends RowData>(row, table): void => {},
+  // _createRow: <TData extends RowData>(row, table): void => {},
   // if you need to add cell instance APIs...
-  // createCell: <TData extends RowData>(cell, column, row, table): void => {},
+  // _createCell: <TData extends RowData>(cell, column, row, table): void => {},
   // if you need to add column instance APIs...
-  // createColumn: <TData extends RowData>(column, table): void => {},
+  // _createColumn: <TData extends RowData>(column, table): void => {},
   // if you need to add header instance APIs...
-  // createHeader: <TData extends RowData>(header, table): void => {},
+  // _createHeader: <TData extends RowData>(header, table): void => {},
 }
 //end of custom feature code
 
@@ -162,7 +162,7 @@ function App() {
   const [data, _setData] = React.useState(() => makeData(1000))
   const [density, setDensity] = React.useState<DensityState>('md')
 
-  const table = useReactTable({
+  const table = useTable({
     _features: [DensityFeature], //pass our custom feature to the table to be instantiated upon creation
     columns,
     data,

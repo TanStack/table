@@ -202,7 +202,7 @@ export default function MyComponent() {
   ]);
 
   // Columns and data are defined in a stable reference, will not cause infinite loop!
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data ?? fallbackData, //also good to use a fallback array that is defined outside of the component (stable reference)
   });
@@ -213,7 +213,7 @@ export default function MyComponent() {
 
 `React.useState` and `React.useMemo` are not the only ways to give your data a stable reference. You can also define your data outside of the component or use a 3rd party state management library like Redux, Zustand, or TanStack Query.
 
-The main thing to avoid is defining the `data` array inside the same scope as the `useReactTable` call. That will cause the `data` array to be redefined on every render, which will cause an infinite loop of re-renders.
+The main thing to avoid is defining the `data` array inside the same scope as the `useTable` call. That will cause the `data` array to be redefined on every render, which will cause an infinite loop of re-renders.
 
 ```tsx
 export default function MyComponent() {
@@ -227,8 +227,8 @@ export default function MyComponent() {
     // ...
   ];
 
-  //❌ Columns and data are defined in the same scope as `useReactTable` without a stable reference, will cause infinite loop!
-  const table = useReactTable({
+  //❌ Columns and data are defined in the same scope as `useTable` without a stable reference, will cause infinite loop!
+  const table = useTable({
     columns,
     data ?? [], //❌ Also bad because the fallback array is re-created on every render
   });

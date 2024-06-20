@@ -29,7 +29,7 @@ import {
   getFacetedUniqueValues, //depends on getFacetedRowModel
 }
 //...
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
@@ -68,7 +68,7 @@ const facetingQuery = useQuery(
   //...
 )
 
-const table = useReactTable({
+const table = useTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),

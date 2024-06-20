@@ -3,7 +3,7 @@ import {
   flexRender,
   getCoreRowModel,
   TableOptions,
-  useReactTable,
+  useTable,
 } from '../../src'
 import { fireEvent, render, screen } from '@testing-library/react'
 import React, { FC } from 'react'
@@ -102,7 +102,7 @@ const defaultPaginatedColumns: ColumnDef<Person>[] = [
 const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
   options = {},
 }) => {
-  const table = useReactTable({
+  const table = useTable({
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),

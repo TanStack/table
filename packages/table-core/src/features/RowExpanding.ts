@@ -167,14 +167,14 @@ export interface ExpandedInstance<TData extends RowData> {
 //
 
 export const RowExpanding: TableFeature = {
-  getInitialState: (state): ExpandedTableState => {
+  _getInitialState: (state): ExpandedTableState => {
     return {
       expanded: {},
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): ExpandedOptions<TData> => {
     return {
@@ -183,7 +183,7 @@ export const RowExpanding: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     let registered = false
     let queued = false
 
@@ -283,7 +283,7 @@ export const RowExpanding: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {

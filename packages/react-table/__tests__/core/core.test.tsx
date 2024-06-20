@@ -2,12 +2,7 @@ import * as React from 'react'
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
-import {
-  useReactTable,
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-} from '../../src'
+import { useTable, getCoreRowModel, ColumnDef, flexRender } from '../../src'
 
 type Person = {
   firstName: string
@@ -108,7 +103,7 @@ describe('core', () => {
 
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const table = useReactTable({
+      const table = useTable({
         data,
         columns,
         onColumnVisibilityChange: setColumnVisibility,
@@ -218,7 +213,7 @@ describe('core', () => {
     const { result } = renderHook(() => {
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const table = useReactTable({
+      const table = useTable({
         data: defaultData,
         columns: defaultColumns,
         getCoreRowModel: getCoreRowModel(),
@@ -245,7 +240,7 @@ describe('core', () => {
     const { result } = renderHook(() => {
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const table = useReactTable({
+      const table = useTable({
         data: defaultData,
         columns: defaultColumns,
         getCoreRowModel: getCoreRowModel(),

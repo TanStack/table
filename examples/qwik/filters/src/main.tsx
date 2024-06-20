@@ -9,7 +9,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   flexRender,
-  useQwikTable,
+  useTable,
   ColumnFiltersState,
   SortingFn,
   FilterFn,
@@ -171,7 +171,7 @@ const App = component$(() => {
   const columnFilters = useSignal<ColumnFiltersState>([])
   const globalFilter = useSignal('')
 
-  const table = useQwikTable({
+  const table = useTable({
     data: defaultData,
     columns,
     enableSorting: true,

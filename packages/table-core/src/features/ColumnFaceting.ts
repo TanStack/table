@@ -46,7 +46,7 @@ export interface FacetedOptions<TData extends RowData> {
 //
 
 export const ColumnFaceting: TableFeature = {
-  createColumn: <TData extends RowData>(
+  _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
     table: Table<TData>
   ): void => {

@@ -9,7 +9,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -69,7 +69,7 @@ function App() {
   const [data, setData] = React.useState(makeData(10))
   const rerender = () => setData(makeData(10))
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

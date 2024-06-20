@@ -1,7 +1,7 @@
 // /** @jsxImportSource solid-js */
 import {
   TableOptions,
-  createTable,
+  _createTable,
   TableOptionsResolved,
   RowData,
 } from '@tanstack/table-core'
@@ -24,7 +24,7 @@ export function flexRender<TProps>(
   return Comp
 }
 
-export function createSolidTable<TData extends RowData>(
+export function createTable<TData extends RowData>(
   options: TableOptions<TData>
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeProps(
@@ -42,7 +42,7 @@ export function createSolidTable<TData extends RowData>(
     options
   )
 
-  const table = createTable<TData>(resolvedOptions)
+  const table = _createTable<TData>(resolvedOptions)
   const [state, setState] = createStore(table.initialState)
 
   createComputed(() => {

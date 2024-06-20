@@ -242,7 +242,7 @@ const column = columnHelper.data('key', {
   aggregationFn: 'myCustomAggregation',
 })
 
-const table = useReactTable({
+const table = useTable({
   columns: [column],
   aggregationFns: {
     myCustomAggregation: (columnId, leafRows, childRows) => {

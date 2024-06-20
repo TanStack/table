@@ -1,7 +1,7 @@
 import { describe, test } from 'vitest'
 import {
   type ColumnDef,
-  createAngularTable,
+  injectTable,
   getCoreRowModel,
   type Table,
 } from '../index'
@@ -9,7 +9,7 @@ import { Component, input, isSignal, signal, untracked } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { setSignalInputs } from './test-utils'
 
-describe('createAngularTable', () => {
+describe('injectTable', () => {
   test('should render with required signal inputs', () => {
     @Component({
       selector: 'app-fake',
@@ -19,7 +19,7 @@ describe('createAngularTable', () => {
     class FakeComponent {
       data = input.required<any[]>()
 
-      table = createAngularTable(() => ({
+      table = injectTable(() => ({
         data: this.data(),
         columns: [],
         getCoreRowModel: getCoreRowModel(),
@@ -41,7 +41,7 @@ describe('createAngularTable', () => {
       { id: 'id', header: 'Id', cell: context => context.getValue() },
       { id: 'title', header: 'Title', cell: context => context.getValue() },
     ]
-    const table = createAngularTable(() => ({
+    const table = injectTable(() => ({
       data: data(),
       columns: columns,
       getCoreRowModel: getCoreRowModel(),

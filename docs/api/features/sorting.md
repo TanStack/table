@@ -259,7 +259,7 @@ const column = columnHelper.data('key', {
   sortingFn: 'myCustomSorting',
 })
 
-const table = useReactTable({
+const table = useTable({
   columns: [column],
   sortingFns: {
     myCustomSorting: (rowA: any, rowB: any, columnId: any): number =>

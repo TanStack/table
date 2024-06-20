@@ -3,7 +3,7 @@ import {
   type ColumnOrderState,
   FlexRender,
   getCoreRowModel,
-  useVueTable,
+  useTable,
   type Column,
   createColumnHelper,
 } from '@tanstack/vue-table'
@@ -66,7 +66,7 @@ const columnOrder = ref<ColumnOrderState>([])
 
 const rerender = () => (data.value = makeData(20))
 
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },

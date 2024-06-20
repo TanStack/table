@@ -7,7 +7,7 @@ import {
 import {
   ColumnDef,
   type ColumnFiltersState,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -74,7 +74,7 @@ export class AppComponent {
     },
   ]
 
-  table = createAngularTable<Person>(() => ({
+  table = injectTable<Person>(() => ({
     columns: this.columns,
     data: this.data(),
     state: {

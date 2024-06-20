@@ -34,7 +34,7 @@ const [columnVisibility, setColumnVisibility] = useState({
   columnId3: true,
 });
 
-const table = useReactTable({
+const table = useTable({
   //...
   state: {
     columnVisibility,
@@ -49,7 +49,7 @@ Alternatively, if you don't need to manage the column visibility state outside o
 > **Note**: If `columnVisibility` is provided to both `initialState` and `state`, the `state` initialization will take precedence and `initialState` will be ignored. Do not provide `columnVisibility` to both `initialState` and `state`, only one or the other.
 
 ```jsx
-const table = useReactTable({
+const table = useTable({
   //...
   initialState: {
     columnVisibility: {

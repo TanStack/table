@@ -1,6 +1,6 @@
 import { ColumnDef, getCoreRowModel } from '../src'
 import { createColumnHelper } from '../src/columnHelper'
-import { createTable } from '../src/core/table'
+import { _createTable } from '../src/core/table'
 import { getGroupedRowModel } from '../src/utils/getGroupedRowModel'
 import { makeData, Person } from './makeTestData'
 
@@ -27,7 +27,7 @@ describe('#getGroupedRowModel', () => {
     data.forEach(p => (p.lastName = 'Name'))
     data.forEach(p => (p.age = 123))
 
-    const table = createTable<Person>({
+    const table = _createTable<Person>({
       onStateChange() {},
       renderFallbackValue: '',
       data,

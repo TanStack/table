@@ -8,7 +8,7 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 
@@ -82,7 +82,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // Create the table and pass your options
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

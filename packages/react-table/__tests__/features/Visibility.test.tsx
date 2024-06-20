@@ -3,12 +3,7 @@ import * as React from 'react'
 // import { renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {
-  useReactTable,
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-} from '../../src'
+import { useTable, getCoreRowModel, ColumnDef, flexRender } from '../../src'
 
 type Person = {
   firstName: string
@@ -98,7 +93,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   },
 ]
 
-describe('useReactTable', () => {
+describe('useTable', () => {
   it('can toggle column visibility', () => {
     const Table = () => {
       const [data] = React.useState<Person[]>(() => [...defaultData])
@@ -109,7 +104,7 @@ describe('useReactTable', () => {
 
       const rerender = React.useReducer(() => ({}), {})[1]
 
-      const table = useReactTable({
+      const table = useTable({
         data,
         columns,
         onColumnVisibilityChange: setColumnVisibility,

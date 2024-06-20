@@ -8,7 +8,7 @@ import {
   ColumnDef,
   type ColumnOrderState,
   type ColumnPinningState,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   type VisibilityState,
@@ -92,7 +92,7 @@ export class AppComponent {
   readonly columnPinning = signal<ColumnPinningState>({})
   readonly split = signal(false)
 
-  table = createAngularTable(() => ({
+  table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     state: {

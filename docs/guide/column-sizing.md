@@ -40,7 +40,7 @@ const columns = [
   //...
 ]
 
-const table = useReactTable({
+const table = useTable({
   //override default column sizing
   defaultColumn: {
     size: 200, //starting column size
@@ -94,7 +94,7 @@ In React TanStack Table adapter, where achieving 60 fps column resizing renders 
 If you want to change the column resize mode to `"onChange"` for immediate column resizing renders, you can do so with the `columnResizeMode` table option.
 
 ```tsx
-const table = useReactTable({
+const table = useTable({
   //...
   columnResizeMode: 'onChange', //change column resize mode to "onChange"
 })
@@ -105,7 +105,7 @@ const table = useReactTable({
 By default, TanStack Table assumes that the table markup is laid out in a left-to-right direction. For right-to-left layouts, you may need to change the column resize direction to `"rtl"`.
 
 ```tsx
-const table = useReactTable({
+const table = useTable({
   //...
   columnResizeDirection: 'rtl', //change column resize direction to "rtl" for certain locales
 })

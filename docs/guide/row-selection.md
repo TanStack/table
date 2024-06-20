@@ -45,7 +45,7 @@ Use the `onRowSelectionChange` table option to hoist up the row selection state 
 ```ts
 const [rowSelection, setRowSelection] = useState<RowSelectionState>({}) //manage your own row selection state
 
-const table = useReactTable({
+const table = useTable({
   //...
   onRowSelectionChange: setRowSelection, //hoist up the row selection state to your own scope
   state: {
@@ -59,7 +59,7 @@ const table = useReactTable({
 By default, the row id for each row is simply the `row.index`. If you are using row selection features, you most likely want to use a more useful row identifier, since the row selection state is keyed by row id. You can use the `getRowId` table option to specify a function that returns a unique row id for each row.
 
 ```ts
-const table = useReactTable({
+const table = useTable({
   //...
   getRowId: row => row.uuid, //use the row's uuid from your database as the row id
 })
@@ -90,7 +90,7 @@ instead of this:
 Row selection is enabled by default for all rows. To either enable row selection conditionally for certain rows or disable row selection for all rows, you can use the `enableRowSelection` table option which accepts either a boolean or a function for more granular control.
 
 ```ts
-const table = useReactTable({
+const table = useTable({
   //...
   enableRowSelection: row => row.original.age > 18, //only enable row selection for adults
 })
@@ -105,7 +105,7 @@ By default, the table allows multiple rows to be selected at once. If, however, 
 This is useful for making tables that have radio buttons instead of checkboxes.
 
 ```ts
-const table = useReactTable({
+const table = useTable({
   //...
   enableMultiRowSelection: false, //only allow a single row to be selected at once
   // enableMultiRowSelection: row => row.original.age > 18, //only allow a single row to be selected at once for adults
@@ -117,7 +117,7 @@ const table = useReactTable({
 By default, selecting a parent row will select all of its sub-rows. If you want to disable auto sub-row selection, you can set the `enableSubRowSelection` table option to `false` to disable sub-row selection, or pass in a function to disable sub-row selection conditionally for a row's sub-rows.
 
 ```ts
-const table = useReactTable({
+const table = useTable({
   //...
   enableSubRowSelection: false, //disable sub-row selection
   // enableSubRowSelection: row => row.original.age > 18, //disable sub-row selection for adults

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import {
   ColumnDef,
-  createAngularTable,
+  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
 } from '@tanstack/angular-table'
@@ -88,7 +88,7 @@ const defaultColumns: ColumnDef<Person>[] = [
 export class AppComponent {
   data = signal<Person[]>(defaultData)
 
-  table = createAngularTable(() => ({
+  table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),

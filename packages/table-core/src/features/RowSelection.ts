@@ -197,14 +197,14 @@ export interface RowSelectionInstance<TData extends RowData> {
 //
 
 export const RowSelection: TableFeature = {
-  getInitialState: (state): RowSelectionTableState => {
+  _getInitialState: (state): RowSelectionTableState => {
     return {
       rowSelection: {},
       ...state,
     }
   },
 
-  getDefaultOptions: <TData extends RowData>(
+  _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
   ): RowSelectionOptions<TData> => {
     return {
@@ -218,7 +218,7 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setRowSelection = updater =>
       table.options.onRowSelectionChange?.(updater)
     table.resetRowSelection = defaultState =>
@@ -466,7 +466,7 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
+  _createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {

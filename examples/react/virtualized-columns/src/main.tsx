@@ -9,7 +9,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   Row,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -24,7 +24,7 @@ function App() {
 
   const [data, _setData] = React.useState(() => makeData(1_000, columns))
 
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

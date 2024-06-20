@@ -135,7 +135,7 @@ const column = columnHelper.data('key', {
   filterFn: 'myCustomFilter',
 })
 
-const table = useReactTable({
+const table = useTable({
   columns: [column],
   filterFns: {
     myCustomFilter: (rows, columnIds, filterValue) => {

@@ -13,7 +13,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -93,7 +93,7 @@ function MyTable({
     pageSize: 10,
   })
 
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data,
     debugTable: true,

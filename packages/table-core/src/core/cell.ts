@@ -49,7 +49,7 @@ export interface CoreCell<TData extends RowData, TValue> {
   row: Row<TData>
 }
 
-export function createCell<TData extends RowData, TValue>(
+export function _createCell<TData extends RowData, TValue>(
   table: Table<TData>,
   row: Row<TData>,
   column: Column<TData, TValue>,
@@ -79,7 +79,7 @@ export function createCell<TData extends RowData, TValue>(
   }
 
   table._features.forEach(feature => {
-    feature.createCell?.(
+    feature._createCell?.(
       cell as Cell<TData, TValue>,
       column,
       row as Row<TData>,

@@ -1,5 +1,5 @@
 import {
-  createTable,
+  _createTable,
   RowData,
   Table,
   TableOptions,
@@ -45,7 +45,7 @@ export class TableController<TData extends RowData>
         ...options,
       }
 
-      this.tableInstance = createTable(resolvedOptions)
+      this.tableInstance = _createTable(resolvedOptions)
       this._tableState = {
         ...this.tableInstance.initialState,
         ...options.state,

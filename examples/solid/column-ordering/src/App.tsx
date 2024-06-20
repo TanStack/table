@@ -7,7 +7,7 @@ import {
   ColumnOrderState,
   VisibilityState,
   ColumnDef,
-  createSolidTable,
+  createTable,
 } from '@tanstack/solid-table'
 
 const defaultColumns: ColumnDef<Person>[] = [
@@ -70,7 +70,7 @@ function App() {
   )
   const rerender = () => setData(() => makeData(20))
 
-  const table = createSolidTable({
+  const table = createTable({
     get data() {
       return data()
     },
