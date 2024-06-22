@@ -10,14 +10,14 @@ TanStack Table has a simple underlying internal state management system to store
 
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
-```jsx
-const options = writable({
+```ts
+const table = createTable({
   columns,
-  data,
+  get data() {
+    return data
+  },
   //...
 })
-
-const table = createTable(options)
 
 console.log(table.getState()) //access the entire internal state
 console.log(table.getState().rowSelection) //access just the row selection state
@@ -27,8 +27,8 @@ console.log(table.getState().rowSelection) //access just the row selection state
 
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
-```jsx
-const options = writable({
+```ts
+const table = createTable({
   columns,
   data,
   initialState: {
@@ -46,11 +46,9 @@ const options = writable({
   },
   //...
 })
-
-const table = createTable(options)
 ```
 
-> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
+> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will overwrite any corresponding value in `initialState`.
 
 ### Controlled State
 
@@ -65,79 +63,57 @@ In order to control a particular state, you need to both pass in the correspondi
 Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
 
 ```ts
-let sorting = [
+let sorting: SortingState = $state([
   {
     id: 'age',
     desc: true, //sort by age in descending order by default
   },
-]
-const setSorting = updater => {
+])
+function setSorting(updater: Updater<SortingState>) {
   if (updater instanceof Function) {
     sorting = updater(sorting)
-  } else {
-    sorting = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      sorting,
-    },
-  }))
+  } else sorting = updater
 }
 
-let columnFilters = [] //no default filters
-const setColumnFilters = updater => {
+let columnFilters: ColumnFiltersState = $state([]) //no default filters
+function setColumnFilters(updater: Updater<ColumnFiltersState>) {
   if (updater instanceof Function) {
     columnFilters = updater(columnFilters)
-  } else {
-    columnFilters = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      columnFilters,
-    },
-  }))
+  } else columnFilters = updater
 }
 
-let pagination = { pageIndex: 0, pageSize: 15 } //default pagination
-const setPagination = updater => {
+let pagination: PaginationState = $state(
+  { pageIndex: 0, pageSize: 15 } //default pagination
+)
+function setPagination(updater: Updater<PaginationState>) {
   if (updater instanceof Function) {
     pagination = updater(pagination)
-  } else {
-    pagination = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      pagination,
-    },
-  }))
+  } else pagination = updater
 }
 
-//Use our controlled state values to fetch data
-const tableQuery = createQuery({
-  queryKey: ['users', columnFilters, sorting, pagination],
-  queryFn: () => fetchUsers(columnFilters, sorting, pagination),
-  //...
-})
+let data = $state(makeData(100_000))
 
-const options = writable({
+const options = {
   columns,
-  data: tableQuery.data,
+  get data() {
+    return data
+  }
   //...
   state: {
-    columnFilters, //pass controlled state back to the table (overrides internal state)
-    sorting,
-    pagination
+    get sorting() {
+      return sorting
+    },
+    get columnFilters() {
+      return columnFilters
+    },
+    get pagination() {
+      return pagination
+    }
   },
   onColumnFiltersChange: setColumnFilters, //hoist columnFilters state into our own state management
   onSortingChange: setSorting,
   onPaginationChange: setPagination,
-})
+}
 
 const table = createTable(options)
 //...
@@ -145,81 +121,71 @@ const table = createTable(options)
 
 #### Fully Controlled State
 
-Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a svelte tree, like `columnSizingInfo` state`, might cause bad performance issues.
+Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a Svelte tree, like `columnSizingInfo` state, might cause bad performance issues.
 
 A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
 
-```jsx
+```ts
 //create a table instance with default state values
-const options = writable({
+const table = createTable({
   columns,
-  data,
+  get data() {
+    return data
+  },
   //... Note: `state` values are NOT passed in yet
 })
-const table = createTable(options)
 
-let state = {
+const state = $state({
   ...table.initialState, //populate the initial state with all of the default state values from the table instance
   pagination: {
     pageIndex: 0,
     pageSize: 15 //optionally customize the initial pagination state.
   }
-}
+})
+
 const setState = updater => {
   if (updater instanceof Function) {
     state = updater(state)
-  } else {
-    state = updater
-  }
-  options.update(old => ({
-    ...old,
-    state,
-  }))
+  } state = updater
 }
 
 //Use the table.setOptions API to merge our fully controlled state onto the table instance
 table.setOptions(prev => ({
   ...prev, //preserve any other options that we have set up above
-  state, //our fully controlled state overrides the internal state
+  get state() {
+    return state //our fully controlled state overrides the internal state
+  },
   onStateChange: setState //any state changes will be pushed up to our own state management
 }))
 ```
 
 ### On State Change Callbacks
 
-So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about these using these options that you should be aware of.
+So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about using these options that you should be aware of.
 
 #### 1. **State Change Callbacks MUST have their corresponding state value in the `state` option**.
 
 Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
 
 ```ts
-let sorting = []
+let sorting = $state([])
 const setSorting = updater => {
   if (updater instanceof Function) {
     sorting = updater(sorting)
-  } else {
-    sorting = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      sorting,
-    },
-  }))
+  } else sorting = updater
 }
-//...
-const options = writable({
+// ...
+const table = createTable({
   columns,
   data,
   //...
   state: {
-    sorting, //required because we are using `onSortingChange`
+    get sorting() {
+      return sorting //required because we are using `onSortingChange`
+    },
   },
   onSortingChange: setSorting, //makes the `state.sorting` controlled
 })
-const table = createTable(options)
 ```
 
 #### 2. **Updaters can either be raw values or callback functions**.
@@ -246,15 +212,6 @@ let sorting: SortingState[] = [
 const setSorting = (updater: Updater<SortingState>)  => {
   if (updater instanceof Function) {
     sorting = updater(sorting)
-  } else {
-    sorting = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      sorting,
-    },
-  }))
+  } else sorting = updater
 }
 ```
