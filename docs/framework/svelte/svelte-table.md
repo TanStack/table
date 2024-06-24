@@ -2,8 +2,8 @@
 title: Svelte Table
 ---
 
-> **IMPORTANT:** This version of `@tanstack/svelte-table` only supports **Svelte 5 or 
-> newer**. For Svelte 3/4 support, use version 8 of `@tanstack/svelte-table`.
+> **IMPORTANT:** This version of `@tanstack/svelte-table` only supports **Svelte 5 or  newer**. For Svelte 3/4 support, use version 8 of `@tanstack/svelte-table`.
+> Alternatively, you can still use `@tanstack/table-core` v9 with Svelte 3/4 by copying the source code from the [v8 `@tanstack/svelte-table`](https://github.com/TanStack/table/tree/v8/packages/svelte-table/src) as a custom adapter.
 
 The `@tanstack/svelte-table` adapter is a wrapper around the core table logic. Most of its job is related to managing state the "Svelte" way, providing types and the rendering implementation of cell/header/footer templates.
 
