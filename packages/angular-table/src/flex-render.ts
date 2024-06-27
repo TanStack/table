@@ -2,18 +2,19 @@ import {
   ChangeDetectorRef,
   ComponentRef,
   Directive,
+  type DoCheck,
   EmbeddedViewRef,
   Inject,
+  inject,
   InjectionToken,
   Injector,
   Input,
+  isSignal,
+  type OnChanges,
+  type SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
-  inject,
-  isSignal,
-  type DoCheck,
-  type OnInit,
 } from '@angular/core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
@@ -30,13 +31,14 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnInit, DoCheck
+  implements OnChanges, DoCheck
 {
   @Input({ required: true, alias: 'flexRender' })
   content:
     | number
     | string
     | ((props: TProps) => FlexRenderContent<TProps>)
+    | null
     | undefined = undefined
 
   @Input({ required: true, alias: 'flexRenderProps' })
@@ -54,14 +56,18 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 
-  ngOnInit(): void {
-    this.ref = this.render()
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.ref instanceof ComponentRef) {
+      this.ref.injector.get(ChangeDetectorRef).markForCheck()
+    }
+    if (!changes['content']) {
+      return
+    }
+    this.render()
   }
 
   ngDoCheck() {
-    if (this.ref instanceof ComponentRef) {
-      this.ref.injector.get(ChangeDetectorRef).markForCheck()
-    } else if (this.ref instanceof EmbeddedViewRef) {
+    if (this.ref instanceof EmbeddedViewRef) {
       this.ref.markForCheck()
     }
   }
@@ -69,17 +75,15 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   render() {
     this.viewContainerRef.clear()
     const { content, props } = this
-    if (!this.content) {
-      return null
-    }
-
-    if (typeof content === 'string' || typeof content === 'number') {
-      return this.renderStringContent()
+    if (content === null || content === undefined) {
+      this.ref = null
+      return
     }
     if (typeof content === 'function') {
       return this.renderContent(content(props))
+    } else {
+      return this.renderContent(content)
     }
-    return null
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
