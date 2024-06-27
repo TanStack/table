@@ -58,7 +58,7 @@ describe('FlexRenderDirective', () => {
     })
     expectPrimitiveValueIs(fixture, 'My value 2')
 
-    // Set again to null to be sure content is destroyed has been destroyed
+    // Set again to null to be sure content has been destroyed
     setFixtureSignalInputs(fixture, {
       content: () => null,
       context: {},
