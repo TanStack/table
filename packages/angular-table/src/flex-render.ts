@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   ComponentRef,
   Directive,
-  type DoCheck,
   EmbeddedViewRef,
   Inject,
   inject,
@@ -31,7 +30,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnChanges, DoCheck
+  implements OnChanges
 {
   @Input({ required: true, alias: 'flexRender' })
   content:
@@ -64,12 +63,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return
     }
     this.render()
-  }
-
-  ngDoCheck() {
-    if (this.ref instanceof EmbeddedViewRef) {
-      this.ref.markForCheck()
-    }
   }
 
   render() {
