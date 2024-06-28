@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-basic",
+  "name": "tanstack-table-example-query-router-search-params",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "react-dom": "^18.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@tanstack/router-vite-plugin": "^1.37.0",
     "@rollup/plugin-replace": "^5.0.5",
     "@types/react": "^18.3.0",
