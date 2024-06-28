@@ -66,7 +66,7 @@ importers:
         specifier: ^19.3.0
         version: 19.3.1
       prettier:
-        specifier: ^4.0.0-alpha.8
+        specifier: 4.0.0-alpha.9
         version: 4.0.0-alpha.9
       prettier-plugin-svelte:
         specifier: ^3.2.3
