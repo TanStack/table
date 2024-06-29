@@ -60,7 +60,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^20.12.7",
     "jsdom": "^24.0.0",
-    "knip": "^5.10.0",
+    "knip": "^5.23.1",
     "nx": "^19.3.0",
     "prettier": "^3.3.2",
     "prettier-plugin-svelte": "^3.2.3",

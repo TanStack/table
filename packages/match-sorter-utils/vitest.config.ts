@@ -7,6 +7,6 @@ export default defineConfig({
     dir: './tests',
     watch: false,
     environment: 'jsdom',
-    setupFiles: ['test-setup.ts'],
+    setupFiles: ['./tests/test-setup.ts'],
   },
 })
