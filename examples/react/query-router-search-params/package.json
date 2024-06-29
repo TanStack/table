@@ -11,7 +11,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.32.0",
     "@tanstack/react-router": "^1.36.3",
-    "@tanstack/react-table": "^8.17.3",
+    "@tanstack/react-table": "^8.19.1",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },

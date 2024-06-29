@@ -9,7 +9,7 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "vue": "^3.4.25",
-    "@tanstack/vue-table": "^8.17.3"
+    "@tanstack/vue-table": "^8.19.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

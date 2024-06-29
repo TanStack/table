@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/lit-table",
-  "version": "8.18.0",
+  "version": "8.19.1",
   "description": "Headless UI for building powerful tables & datagrids for Lit.",
   "author": "Tanner Linsley",
   "license": "MIT",
