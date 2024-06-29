@@ -26,7 +26,7 @@
 {#if typeof content === 'string'}
   {content}
 {:else if content instanceof Function}
-  {@const     result = content(context as any)}
+  {@const result = content(context as any)}
   {#if result instanceof RenderComponentConfig}
     <svelte:component this={result.component} {...result.props} />
   {:else}

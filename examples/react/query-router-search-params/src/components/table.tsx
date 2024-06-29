@@ -6,7 +6,7 @@ import {
   PaginationOptions,
   PaginationState,
   SortingState,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import { Filters } from '../api/types'
 import { DebouncedInput } from './debouncedInput'
@@ -35,7 +35,7 @@ export default function Table<T extends Record<string, string | number>>({
   sorting,
   onSortingChange,
 }: Props<T>) {
-  const table = useReactTable({
+  const table = useTable({
     data,
     columns,
     state: { pagination, sorting },
