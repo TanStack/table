@@ -46,8 +46,7 @@
     "test:types": "tsc --noEmit",
     "test:lib": "vitest",
     "test:lib:dev": "vitest --watch",
-    "build": "pnpm ng-packagr -p ng-package.json && rimraf ./build/lib/package.json",
-    "build:types": "tsc --emitDeclarationOnly"
+    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./build/lib/package.json"
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*",

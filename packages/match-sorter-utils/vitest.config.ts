@@ -1,11 +1,12 @@
 import { defineConfig } from 'vitest/config'
+import packageJson from './package.json'
 
 export default defineConfig({
   test: {
+    name: packageJson.name,
+    dir: './tests',
     watch: false,
-    setupFiles: ['test-setup.ts'],
     environment: 'jsdom',
-    globals: true,
-    dir: '__tests__',
+    setupFiles: ['./tests/test-setup.ts'],
   },
 })

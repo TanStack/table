@@ -1,15 +1,13 @@
 import { defineConfig } from 'vitest/config'
 import packageJson from './package.json'
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   test: {
     name: packageJson.name,
-    globals: true,
-    setupFiles: ['src/__tests__/test-setup.ts'],
+    dir: './tests',
+    watch: false,
     environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    setupFiles: ['./tests/test-setup.ts'],
+    globals: true,
   },
-  define: {
-    'import.meta.vitest': mode !== 'production',
-  },
-}))
+})

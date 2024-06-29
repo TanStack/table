@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { lazyInit } from '../lazy-signal-initializer'
+import { lazyInit } from '../src/lazy-signal-initializer'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
 
 describe('lazyInit', () => {

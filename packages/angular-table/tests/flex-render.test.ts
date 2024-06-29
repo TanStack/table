@@ -7,7 +7,7 @@ import {
   FlexRenderComponent,
   FlexRenderDirective,
   injectFlexRenderContext,
-} from '../flex-render'
+} from '../src/flex-render'
 import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
 
 interface Data {

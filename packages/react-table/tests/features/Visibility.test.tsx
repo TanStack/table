@@ -1,6 +1,6 @@
 import * as React from 'react'
-
-import { act, renderHook } from '@testing-library/react-hooks'
+import { describe, expect, it } from 'vitest'
+// import { renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
 import {
   useReactTable,
@@ -52,13 +52,13 @@ const defaultColumns: ColumnDef<Person>[] = [
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.renderValue(),
+        cell: props => props.renderValue(),
         footer: props => props.column.id,
       },
       {
         accessorFn: row => row.lastName,
         id: 'lastName',
-        cell: info => info.renderValue(),
+        cell: props => props.renderValue(),
         header: () => <span>Last Name</span>,
         footer: props => props.column.id,
       },
@@ -97,8 +97,8 @@ const defaultColumns: ColumnDef<Person>[] = [
   },
 ]
 
-describe('core', () => {
-  it('renders a table with markup', () => {
+describe('useReactTable', () => {
+  it('can toggle column visibility', () => {
     const Table = () => {
       const [data] = React.useState<Person[]>(() => [...defaultData])
       const [columns] = React.useState<typeof defaultColumns>(() => [
@@ -121,6 +121,37 @@ describe('core', () => {
 
       return (
         <div className="p-2">
+          <div className="inline-block border border-black shadow rounded">
+            <div className="px-1 border-b border-black">
+              <label>
+                <input
+                  {...{
+                    type: 'checkbox',
+                    checked: table.getIsAllColumnsVisible(),
+                    onChange: table.getToggleAllColumnsVisibilityHandler(),
+                  }}
+                />{' '}
+                Toggle All
+              </label>
+            </div>
+            {table.getAllLeafColumns().map(column => {
+              return (
+                <div key={column.id} className="px-1">
+                  <label>
+                    <input
+                      {...{
+                        type: 'checkbox',
+                        checked: column.getIsVisible(),
+                        onChange: column.getToggleVisibilityHandler(),
+                      }}
+                    />{' '}
+                    {column.id}
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          <div className="h-4" />
           <table>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -183,84 +214,49 @@ describe('core', () => {
 
     // RTL.screen.logTestingPlaygroundURL()
 
-    RTL.screen.getByRole('table')
-    expect(RTL.screen.getAllByRole('rowgroup').length).toEqual(3)
-    expect(RTL.screen.getAllByRole('row').length).toEqual(9)
-    expect(RTL.screen.getAllByRole('columnheader').length).toEqual(24)
-    expect(RTL.screen.getAllByRole('cell').length).toEqual(18)
+    let snapIndex = 0
 
-    expect(
-      Array.from(rendered.container.querySelectorAll('thead > tr')).map(d =>
-        Array.from(d.querySelectorAll('th')).map(d => [
-          d.innerHTML,
-          d.getAttribute('colspan'),
-        ])
-      )
-    ).toMatchSnapshot()
+    const snap = (name: string) => {
+      expect({
+        headers: Array.from(
+          rendered.container.querySelectorAll('thead > tr')
+        ).map(d =>
+          Array.from(d.querySelectorAll('th')).map(d => [
+            d.innerHTML,
+            d.getAttribute('colspan'),
+          ])
+        ),
+        rows: Array.from(rendered.container.querySelectorAll('tbody > tr')).map(
+          d => Array.from(d.querySelectorAll('td')).map(d => d.innerHTML)
+        ),
+        footers: Array.from(
+          rendered.container.querySelectorAll('tfoot > tr')
+        ).map(d =>
+          Array.from(d.querySelectorAll('th')).map(d => [
+            d.innerHTML,
+            d.getAttribute('colspan'),
+          ])
+        ),
+      }).toMatchSnapshot(`${snapIndex++} - ${name}`)
+    }
 
-    expect(
-      Array.from(rendered.container.querySelectorAll('tbody > tr')).map(d =>
-        Array.from(d.querySelectorAll('td')).map(d => d.innerHTML)
-      )
-    ).toMatchSnapshot()
+    RTL.fireEvent.click(rendered.getByLabelText('Toggle All'))
 
-    expect(
-      Array.from(rendered.container.querySelectorAll('tfoot > tr')).map(d =>
-        Array.from(d.querySelectorAll('th')).map(d => [
-          d.innerHTML,
-          d.getAttribute('colspan'),
-        ])
-      )
-    ).toMatchSnapshot()
-  })
+    snap('after toggling all off')
 
-  it('has a stable api', () => {
-    const { result } = renderHook(() => {
-      const rerender = React.useReducer(() => ({}), {})[1]
+    RTL.fireEvent.click(rendered.getByLabelText('Toggle All'))
 
-      const table = useReactTable({
-        data: defaultData,
-        columns: defaultColumns,
-        getCoreRowModel: getCoreRowModel(),
-      })
+    snap('after toggling all on')
 
-      return {
-        table,
-        rerender,
-      }
-    })
+    RTL.fireEvent.click(rendered.getByLabelText('firstName'))
 
-    const prev = result.current
+    snap('after toggling firstName off')
 
-    act(() => {
-      result.current.rerender()
-    })
+    RTL.fireEvent.click(rendered.getByLabelText('firstName'))
+    RTL.fireEvent.click(rendered.getByLabelText('visits'))
+    RTL.fireEvent.click(rendered.getByLabelText('status'))
+    RTL.fireEvent.click(rendered.getByLabelText('progress'))
 
-    const next = result.current
-
-    expect(prev).toStrictEqual(next)
-  })
-
-  it('can return the rowModel', () => {
-    const { result } = renderHook(() => {
-      const rerender = React.useReducer(() => ({}), {})[1]
-
-      const table = useReactTable({
-        data: defaultData,
-        columns: defaultColumns,
-        getCoreRowModel: getCoreRowModel(),
-      })
-
-      return {
-        table,
-        rerender,
-      }
-    })
-
-    const rowModel = result.current.table.getRowModel()
-
-    expect(rowModel.rows.length).toEqual(3)
-    expect(rowModel.flatRows.length).toEqual(3)
-    expect(rowModel.rowsById['2']?.original).toEqual(defaultData[2])
+    snap('after toggling More Info off')
   })
 })
