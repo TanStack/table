@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {
-FlexRender,
-createColumnHelper,
-getCoreRowModel,
-getExpandedRowModel,
-useVueTable,
-type ExpandedState,
-type Row,
-} from '@tanstack/vue-table';
-import { Text, h, ref } from 'vue';
+  FlexRender,
+  createColumnHelper,
+  getCoreRowModel,
+  getExpandedRowModel,
+  useVueTable,
+  type ExpandedState,
+  type Row,
+} from '@tanstack/vue-table'
+import { Text, h, ref } from 'vue'
 type Person = {
   firstName: string
   lastName: string
@@ -48,10 +48,14 @@ function renderExpanded(row: Row<Person>) {
   if (!row.getCanExpand()) {
     return h(Text, '🔵')
   }
-  return h('button', {
-    onClick: row.getToggleExpandedHandler(),
-    style: { cursor: 'pointer' },
-  }, row.getIsExpanded() ? '👇' : '👉')
+  return h(
+    'button',
+    {
+      onClick: row.getToggleExpandedHandler(),
+      style: { cursor: 'pointer' },
+    },
+    row.getIsExpanded() ? '👇' : '👉'
+  )
 }
 const columns = [
   columnHelper.group({
@@ -61,7 +65,7 @@ const columns = [
       columnHelper.display({
         id: 'expander',
         header: () => null,
-        cell: ({row}) => renderExpanded(row)
+        cell: ({ row }) => renderExpanded(row),
       }),
       columnHelper.accessor('firstName', {
         footer: props => props.column.id,
@@ -113,7 +117,7 @@ const table = useVueTable({
   },
   state: {
     get expanded() {
-        return expanded.value
+      return expanded.value
     },
   },
   columns,
@@ -161,11 +165,11 @@ const table = useVueTable({
             </td>
           </tr>
           <tr v-if="row.getIsExpanded()">
-              <td :colspan="row.getAllCells().length">
-                <pre :style="{ fontSize: '10px' }">
+            <td :colspan="row.getAllCells().length">
+              <pre :style="{ fontSize: '10px' }">
                   <code>{{ JSON.stringify(row.original, null, 2) }}</code>
                 </pre>
-              </td>
+            </td>
           </tr>
         </template>
       </tbody>
