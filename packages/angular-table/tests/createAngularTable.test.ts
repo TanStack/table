@@ -1,10 +1,10 @@
-import { describe, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import {
   type ColumnDef,
   createAngularTable,
   getCoreRowModel,
   type Table,
-} from '../index'
+} from '../src/index'
 import { Component, input, isSignal, signal, untracked } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { setSignalInputs } from './test-utils'
