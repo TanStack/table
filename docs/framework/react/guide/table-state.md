@@ -131,7 +131,7 @@ table.setOptions(prev => ({
 
 ### On State Change Callbacks
 
-So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about these using these options that you should be aware of.
+So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about using these options that you should be aware of.
 
 #### 1. **State Change Callbacks MUST have their corresponding state value in the `state` option**.
 

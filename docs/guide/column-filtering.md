@@ -25,7 +25,7 @@ Filtering comes in 2 flavors: Column Filtering and Global Filtering.
 
 This guide will focus on column filtering, which is a filter that is applied to a single column's accessor value.
 
-TanStack table supports both both client-side and manual server-side filtering. This guide will go over how to implement and customize both, and help you decide which one is best for your use-case.
+TanStack table supports both client-side and manual server-side filtering. This guide will go over how to implement and customize both, and help you decide which one is best for your use-case.
 
 ### Client-Side vs Server-Side Filtering
 
