@@ -1,10 +1,6 @@
 {
-  "$schema": "https://unpkg.com/knip@4/schema.json",
-  "ignoreDependencies": [
-    "size-limit",
-    "@size-limit/preset-small-lib",
-    "@builder.io/qwik"
-  ],
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignoreDependencies": ["@size-limit/preset-small-lib"],
   "ignoreWorkspaces": ["examples/**"],
   "workspaces": {
     "packages/match-sorter-utils": {
