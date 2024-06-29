@@ -9,7 +9,7 @@
     "start": "vite"
   },
   "dependencies": {
-    "@tanstack/react-table": "^8.17.3",
+    "@tanstack/react-table": "^8.19.1",
     "bootstrap": "^5.3.3",
     "react": "^18.3.0",
     "react-bootstrap": "2.10.2",

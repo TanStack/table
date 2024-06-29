@@ -617,6 +617,10 @@
             {
               "to": "framework/react/examples/custom-features",
               "label": "Custom Features"
+            },
+            {
+              "to": "framework/react/examples/query-router-search-params",
+              "label": "Query Router Search Params"
             }
           ]
         },
@@ -712,6 +716,10 @@
             {
               "to": "framework/vue/examples/sorting",
               "label": "Sorting"
+            },
+            {
+              "to": "framework/vue/examples/sub-components",
+              "label": "Sub Components"
             }
           ]
         }

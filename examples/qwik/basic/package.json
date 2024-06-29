@@ -5,16 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "serve dist"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.5.2",
+    "@builder.io/qwik": "^1.6.0",
     "serve": "^14.2.3",
     "typescript": "5.4.5",
     "vite": "^5.2.10"
   },
   "dependencies": {
-    "@tanstack/qwik-table": "^8.17.3"
+    "@tanstack/qwik-table": "^8.19.1"
   }
 }
