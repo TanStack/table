@@ -463,6 +463,10 @@
             {
               "to": "framework/lit/examples/sorting",
               "label": "Sorting"
+            },
+            {
+              "to": "framework/lit/examples/virtualized-rows",
+              "label": "Virtualized Rows"
             }
           ]
         },
