@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { ColumnDef, getCoreRowModel } from '../src'
 import { createColumnHelper } from '../src/columnHelper'
 import { createTable } from '../src/core/table'

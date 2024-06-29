@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config'
 import packageJson from './package.json'
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   test: {
     name: packageJson.name,
     dir: './tests',
@@ -10,7 +10,4 @@ export default defineConfig(({ mode }) => ({
     setupFiles: ['./tests/test-setup.ts'],
     globals: true,
   },
-  define: {
-    'import.meta.vitest': mode !== 'production',
-  },
-}))
+})
