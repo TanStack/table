@@ -1873,8 +1873,8 @@ importers:
         specifier: ^1.36.3
         version: 1.40.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-table':
-        specifier: ^8.17.3
-        version: 8.17.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^9.0.0-alpha.6
+        version: link:../../../packages/react-table
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -1886,7 +1886,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@rollup/plugin-replace':
-        specifier: ^5.0.5
+        specifier: ^5.0.7
         version: 5.0.7(rollup@4.18.0)
       '@tanstack/router-vite-plugin':
         specifier: ^1.37.0
@@ -1904,7 +1904,7 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.10
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)
 
   examples/react/row-dnd:
@@ -4985,13 +4985,6 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@tanstack/react-table@8.17.3':
-    resolution: {integrity: sha512-5gwg5SvPD3lNAXPuJJz1fOCEZYk9/GeBFH3w/hCgnfyszOIzwkwgp5I7Q4MJtn0WECp84b5STQUDdmvGi8m3nA==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-
   '@tanstack/react-virtual@3.7.0':
     resolution: {integrity: sha512-3RtOwEU1HKS4iFBoTcCrV3Szqt4KoERMhZr8v57dvnh5o70sR9GAdF+0aE/qhiOmePrKujGwAayFNJSr/8Dbqw==}
     peerDependencies:
@@ -5020,10 +5013,6 @@ packages:
 
   '@tanstack/store@0.1.3':
     resolution: {integrity: sha512-GnolmC8Fr4mvsHE1fGQmR3Nm0eBO3KnZjDU0a+P3TeQNM/dDscFGxtA7p31NplQNW3KwBw4t1RVFmz0VeKLxcw==}
-
-  '@tanstack/table-core@8.17.3':
-    resolution: {integrity: sha512-mPBodDGVL+fl6d90wUREepHa/7lhsghg2A3vFpakEhrhtbIlgNAZiMr7ccTgak5qbHqF14Fwy+W1yFWQt+WmYQ==}
-    engines: {node: '>=12'}
 
   '@tanstack/virtual-core@3.7.0':
     resolution: {integrity: sha512-p0CWuqn+n8iZmsL7/l0Xg7kbyIKnHNqkEJkMDOkg4x3Ni3LohszmnJY8FPhTgG7Ad9ZFGcdKmn1R1mKUGEh9Xg==}
@@ -12242,12 +12231,6 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       use-sync-external-store: 1.2.2(react@18.3.1)
 
-  '@tanstack/react-table@8.17.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@tanstack/table-core': 8.17.3
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
   '@tanstack/react-virtual@3.7.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/virtual-core': 3.7.0
@@ -12291,8 +12274,6 @@ snapshots:
       - vite
 
   '@tanstack/store@0.1.3': {}
-
-  '@tanstack/table-core@8.17.3': {}
 
   '@tanstack/virtual-core@3.7.0': {}
 
