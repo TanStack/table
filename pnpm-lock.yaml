@@ -2790,6 +2790,34 @@ importers:
         specifier: ^2.0.14
         version: 2.0.22(typescript@5.4.5)
 
+  examples/vue/sub-components:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/vue-table':
+        specifier: ^8.17.3
+        version: link:../../../packages/vue-table
+      vue:
+        specifier: ^3.4.25
+        version: 3.4.30(typescript@5.4.5)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.14.9
+      '@vitejs/plugin-vue':
+        specifier: ^5.0.4
+        version: 5.0.5(vite@5.3.1(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))(vue@3.4.30(typescript@5.4.5))
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.2.10
+        version: 5.3.1(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)
+      vue-tsc:
+        specifier: ^2.0.14
+        version: 2.0.22(typescript@5.4.5)
+
   packages/angular-table:
     dependencies:
       '@tanstack/table-core':
