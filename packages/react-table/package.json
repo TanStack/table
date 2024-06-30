@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/react-table",
-  "version": "9.0.0-alpha.8",
+  "version": "9.0.0-alpha.9",
   "description": "Headless UI for building powerful tables & datagrids for React.",
   "author": "Tanner Linsley",
   "license": "MIT",
