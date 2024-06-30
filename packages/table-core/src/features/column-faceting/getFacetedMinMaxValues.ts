@@ -1,5 +1,5 @@
-import { Table, RowData } from '../types'
-import { getMemoOptions, memo } from '../utils'
+import { Table, RowData } from '../../types'
+import { getMemoOptions, memo } from '../../utils'
 
 export function getFacetedMinMaxValues<TData extends RowData>(): (
   table: Table<TData>,

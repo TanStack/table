@@ -29,8 +29,6 @@ declare module '@tanstack/react-table' {
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -81,6 +79,7 @@ function App() {
 
   const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
   const refreshData = () => setData(_old => makeData(100_000)) //stress test
+  const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
     data,
@@ -225,10 +224,10 @@ function App() {
       </div>
       <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
       <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
+        <button onClick={rerender}>Force Rerender</button>
       </div>
       <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
+        <button onClick={refreshData}>Refresh Data</button>
       </div>
       <pre>
         {JSON.stringify(
@@ -246,6 +245,8 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
   const columnFilterValue = column.getFilterValue()
 
+  const minMaxValues = column.getFacetedMinMaxValues()
+
   const sortedUniqueValues = React.useMemo(
     () =>
       filterVariant === 'range'
@@ -261,31 +262,27 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       <div className="flex space-x-2">
         <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
+          min={Number(minMaxValues?.[0] ?? '')}
+          max={Number(minMaxValues?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[0] ?? ''}
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
           placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0] !== undefined
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ''
+            minMaxValues?.[0] !== undefined ? `(${minMaxValues?.[0]})` : ''
           }`}
           className="w-24 border shadow rounded"
         />
         <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
+          min={Number(minMaxValues?.[0] ?? '')}
+          max={Number(minMaxValues?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[1] ?? ''}
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
           placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ''
+            minMaxValues?.[1] ? `(${minMaxValues?.[1]})` : ''
           }`}
           className="w-24 border shadow rounded"
         />

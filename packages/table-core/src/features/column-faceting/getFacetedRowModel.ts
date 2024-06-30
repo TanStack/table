@@ -1,6 +1,6 @@
-import { Table, RowModel, Row, RowData } from '../types'
-import { getMemoOptions, memo } from '../utils'
-import { filterRows } from './filterRowsUtils'
+import { Table, RowModel, Row, RowData } from '../../types'
+import { getMemoOptions, memo } from '../../utils'
+import { filterRows } from '../../utils/filterRowsUtils'
 
 export function getFacetedRowModel<TData extends RowData>(): (
   table: Table<TData>,

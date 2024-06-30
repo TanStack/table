@@ -33,7 +33,10 @@ import {
   HeaderContext,
   HeadersInstance,
 } from './core/headers'
-import { FacetedColumn, FacetedOptions } from './features/ColumnFaceting'
+import {
+  ColumnFacetingColumn,
+  ColumnFacetingOptions,
+} from './features/column-faceting/ColumnFaceting.types'
 import { GlobalFacetingInstance } from './features/GlobalFaceting'
 import {
   ColumnFiltersColumn,
@@ -132,6 +135,8 @@ export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
 export type RowData = unknown | object | any[]
 
+export type CellData = unknown
+
 export type AnyRender = (Comp: any, props: any) => any
 
 export interface Table<TData extends RowData>
@@ -156,7 +161,7 @@ interface FeatureOptions<TData extends RowData>
     ColumnOrderOptions,
     ColumnPinningOptions,
     RowPinningOptions<TData>,
-    FacetedOptions<TData>,
+    ColumnFacetingOptions<TData>,
     ColumnFiltersOptions<TData>,
     GlobalFilterOptions<TData>,
     SortingOptions<TData>,
@@ -341,7 +346,7 @@ export interface Column<TData extends RowData, TValue = unknown>
   extends CoreColumn<TData, TValue>,
     ColumnVisibilityColumn,
     ColumnPinningColumn,
-    FacetedColumn<TData>,
+    ColumnFacetingColumn<TData>,
     ColumnFiltersColumn<TData>,
     GlobalFilterColumn,
     SortingColumn<TData>,

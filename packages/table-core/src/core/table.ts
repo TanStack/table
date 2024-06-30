@@ -23,7 +23,7 @@ import { _createColumn } from './column'
 import { Headers } from './headers'
 //
 
-import { ColumnFaceting } from '../features/ColumnFaceting'
+import { ColumnFaceting } from '../features/column-faceting/ColumnFaceting'
 import { ColumnFiltering } from '../features/ColumnFiltering'
 import { ColumnGrouping } from '../features/ColumnGrouping'
 import { ColumnOrdering } from '../features/ColumnOrdering'

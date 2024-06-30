@@ -1,43 +1,87 @@
-//types
+/**
+ * Types
+ */
+
 export * from './columnHelper'
 export * from './types'
 
-//core
+/**
+ * Core
+ */
+
 export * from './core/cell'
 export * from './core/column'
 export * from './core/headers'
 export * from './core/row'
 export * from './core/table'
 
-//features
-export * from './features/ColumnFaceting'
+/**
+ * Features
+ */
+
+//ColumnFaceting
+export * from './features/column-faceting/ColumnFaceting'
+export * from './features/column-faceting/ColumnFaceting.types'
+export * from './features/column-faceting/ColumnFaceting.utils'
+export * from './features/column-faceting/getFacetedMinMaxValues'
+export * from './features/column-faceting/getFacetedRowModel'
+export * from './features/column-faceting/getFacetedUniqueValues'
+
+//ColumnFiltering
 export * from './features/ColumnFiltering'
+
+//ColumnGrouping
 export * from './features/ColumnGrouping'
+
+//ColumnOrdering
 export * from './features/ColumnOrdering'
+
+//ColumnPinning
 export * from './features/ColumnPinning'
+
+//ColumnSizing
 export * from './features/ColumnSizing'
+
+//ColumnVisibility
 export * from './features/ColumnVisibility'
+
+//GlobalFaceting
 export * from './features/GlobalFaceting'
+
+//GlobalFiltering
 export * from './features/GlobalFiltering'
+
+//RowExpanding
 export * from './features/RowExpanding'
+
+//RowPagination
 export * from './features/RowPagination'
+
+//RowPinning
 export * from './features/RowPinning'
+
+//RowSelection
 export * from './features/RowSelection'
+
+//RowSorting
 export * from './features/RowSorting'
 
-//utils
+/**
+ * Utils
+ */
+
 export * from './utils'
 export * from './utils/getCoreRowModel'
 export * from './utils/getExpandedRowModel'
-export * from './utils/getFacetedMinMaxValues'
-export * from './utils/getFacetedRowModel'
-export * from './utils/getFacetedUniqueValues'
 export * from './utils/getFilteredRowModel'
 export * from './utils/getGroupedRowModel'
 export * from './utils/getPaginationRowModel'
 export * from './utils/getSortedRowModel'
 
-//fns
+/**
+ * Fns
+ */
+
 export * from './aggregationFns'
 export * from './filterFns'
 export * from './sortingFns'
