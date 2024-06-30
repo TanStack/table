@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table",
-  "version": "9.0.0-alpha.9",
+  "version": "9.0.0-alpha.10",
   "description": "Headless UI for building powerful tables & datagrids for Vue.",
   "author": "Tanner Linsley",
   "license": "MIT",
