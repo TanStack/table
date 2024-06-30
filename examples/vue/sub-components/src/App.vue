@@ -4,7 +4,7 @@ import {
   createColumnHelper,
   getCoreRowModel,
   getExpandedRowModel,
-  useVueTable,
+  useTable,
   type ExpandedState,
   type Row,
 } from '@tanstack/vue-table'
@@ -111,7 +111,7 @@ const expanded = ref<ExpandedState>({})
 const rerender = () => {
   data.value = defaultData
 }
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },
