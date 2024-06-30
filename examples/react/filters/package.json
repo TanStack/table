@@ -11,7 +11,7 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@tanstack/match-sorter-utils": "^8.15.1",
-    "@tanstack/react-table": "^8.19.1",
+    "@tanstack/react-table": "^8.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

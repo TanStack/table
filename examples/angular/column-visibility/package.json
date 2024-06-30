@@ -17,7 +17,7 @@
     "@angular/forms": "^17.3.9",
     "@angular/platform-browser": "^17.3.9",
     "@angular/platform-browser-dynamic": "^17.3.9",
-    "@tanstack/angular-table": "^8.19.1",
+    "@tanstack/angular-table": "^8.19.2",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.4"
   },
