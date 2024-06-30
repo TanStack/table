@@ -94,19 +94,19 @@ const table = useVueTable({
   },
   onColumnFiltersChange: updater => {
     columnFilters.value =
-      updater instanceOf Function
+      updater instanceof Function
         ? updater(columnFilters.value)
         : updater
   },
   onSortingChange: updater => {
     sorting.value =
-      updater instanceOf Function
+      updater instanceof Function
         ? updater(sorting.value)
         : updater
   },
   onPaginationChange: updater => {
     pagination.value =
-      updater instanceOf Function
+      updater instanceof Function
         ? updater(pagination.value)
         : updater
   },
@@ -193,7 +193,7 @@ This is why we have the `updater instanceof Function` check in the `setState` fu
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { useVueTable, SortingState } from '@tanstack/vue-table'
+import { useVueTable, type SortingState } from '@tanstack/vue-table'
 //...
 const sorting = ref<SortingState[]>([
   {

@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table",
-  "version": "8.16.1",
+  "version": "8.19.1",
   "description": "Headless UI for building powerful tables & datagrids for Solid.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -53,7 +53,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "solid-js": "^1.8.17"
+    "solid-js": "^1.8.18"
   },
   "peerDependencies": {
     "solid-js": ">=1.3"

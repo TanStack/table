@@ -6,7 +6,7 @@ The `@tanstack/qwik-table` adapter is a wrapper around the core table logic. Mos
 
 ## Exports
 
-`@tanstack/qwik-table` re-exports all of `@tanstack/table-core`'s and the following:
+`@tanstack/qwik-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
 
 ### `useQwikTable`
 

@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table",
-  "version": "8.16.0",
+  "version": "8.19.1",
   "description": "Headless UI for building powerful tables & datagrids for Vue.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -52,7 +52,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "vue": "^3.4.25"
+    "vue": "^3.4.31"
   },
   "peerDependencies": {
     "vue": ">=3.2"

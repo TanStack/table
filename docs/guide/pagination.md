@@ -142,9 +142,7 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 
 #### Auto Reset Page Index
 
-The `autoResetPageIndex` table option is true by default, and it will reset the `pageIndex` to `0` when page-altering state changes occur, such as when the `data` is updated, filters change, grouping changes, etc. This is useful to prevent the table from showing an empty page when the `pageIndex` is out of range.
-
-However, you can opt out of this behavior by setting the `autoResetPageIndex` option to `false`.
+By default, `pageIndex` is reset to `0` when page-altering state changes occur, such as when the `data` is updated, filters change, grouping changes, etc. This behavior is automatically disabled when `manualPagination` is true but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option.
 
 ```jsx
 const table = useReactTable({
