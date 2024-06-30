@@ -13,18 +13,18 @@
     "@emotion/styled": "^11.11.5",
     "@tanstack/match-sorter-utils": "^8.15.1",
     "@tanstack/react-table": "^8.19.1",
-    "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.11.0",
     "@emotion/babel-plugin-jsx-pragmatic": "^0.2.1",
     "@faker-js/faker": "^8.4.1",
-    "@rollup/plugin-replace": "^5.0.5",
-    "@types/react": "^18.3.0",
+    "@rollup/plugin-replace": "^5.0.7",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.3.1",
     "typescript": "5.4.5",
-    "vite": "^5.2.10"
+    "vite": "^5.3.2"
   }
 }

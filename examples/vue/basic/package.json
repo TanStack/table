@@ -9,14 +9,14 @@
     "test:types": "vue-tsc"
   },
   "dependencies": {
-    "vue": "^3.4.25",
+    "vue": "^3.4.31",
     "@tanstack/vue-table": "^8.19.1"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/node": "^20.14.9",
+    "@vitejs/plugin-vue": "^5.0.5",
     "typescript": "5.4.5",
-    "vite": "^5.2.10",
-    "vue-tsc": "^2.0.14"
+    "vite": "^5.3.2",
+    "vue-tsc": "^2.0.22"
   }
 }

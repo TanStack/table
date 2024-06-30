@@ -52,7 +52,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "lit": "^3.1.3"
+    "lit": "^3.1.4"
   },
   "peerDependencies": {
     "lit": "^3.1.3"
