@@ -52,7 +52,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "vue": "^3.4.25"
+    "vue": "^3.4.31"
   },
   "peerDependencies": {
     "vue": ">=3.2"
