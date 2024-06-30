@@ -76,7 +76,11 @@ export interface RowPinningRow {
 }
 
 export interface RowPinningInstance<TData extends RowData> {
-  _getPinnedRows: (position: 'top' | 'bottom') => Row<TData>[]
+  _getPinnedRows: (
+    visiblePinnedRows: Array<Row<TData>>,
+    pinnedRowIds: Array<string> | undefined,
+    position: 'top' | 'bottom'
+  ) => Row<TData>[]
   /**
    * Returns all bottom pinned rows.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#getbottomrows)
@@ -199,9 +203,9 @@ export const RowPinning: TableFeature = {
       const position = row.getIsPinned()
       if (!position) return -1
 
-      const visiblePinnedRowIds = table
-        ._getPinnedRows(position)
-        ?.map(({ id }) => id)
+      const visiblePinnedRowIds = (
+        position === 'top' ? table.getTopRows() : table.getBottomRows()
+      )?.map(({ id }) => id)
 
       return visiblePinnedRowIds?.indexOf(row.id) ?? -1
     }
@@ -226,36 +230,36 @@ export const RowPinning: TableFeature = {
       return Boolean(pinningState[position]?.length)
     }
 
-    table._getPinnedRows = memo(
-      position => [
-        table.getRowModel().rows,
-        table.getState().rowPinning[position!],
-        position,
-      ],
-      (visibleRows, pinnedRowIds, position) => {
-        const rows =
-          table.options.keepPinnedRows ?? true
-            ? //get all rows that are pinned even if they would not be otherwise visible
-              //account for expanded parent rows, but not pagination or filtering
-              (pinnedRowIds ?? []).map(rowId => {
-                const row = table.getRow(rowId, true)
-                return row.getIsAllParentsExpanded() ? row : null
-              })
-            : //else get only visible rows that are pinned
-              (pinnedRowIds ?? []).map(
-                rowId => visibleRows.find(row => row.id === rowId)!
-              )
+    table._getPinnedRows = (visibleRows, pinnedRowIds, position) => {
+      const rows =
+        table.options.keepPinnedRows ?? true
+          ? //get all rows that are pinned even if they would not be otherwise visible
+            //account for expanded parent rows, but not pagination or filtering
+            (pinnedRowIds ?? []).map(rowId => {
+              const row = table.getRow(rowId, true)
+              return row.getIsAllParentsExpanded() ? row : null
+            })
+          : //else get only visible rows that are pinned
+            (pinnedRowIds ?? []).map(
+              rowId => visibleRows.find(row => row.id === rowId)!
+            )
 
-        return rows
-          .filter(Boolean)
-          .map(d => ({ ...d, position })) as Row<TData>[]
-      },
-      getMemoOptions(table.options, 'debugRows', '_getPinnedRows')
+      return rows.filter(Boolean).map(d => ({ ...d, position })) as Row<TData>[]
+    }
+
+    table.getTopRows = memo(
+      () => [table.getRowModel().rows, table.getState().rowPinning.top],
+      (allRows, topPinnedRowIds) =>
+        table._getPinnedRows(allRows, topPinnedRowIds, 'top'),
+      getMemoOptions(table.options, 'debugRows', 'getTopRows')
     )
 
-    table.getTopRows = () => table._getPinnedRows('top')
-
-    table.getBottomRows = () => table._getPinnedRows('bottom')
+    table.getBottomRows = memo(
+      () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
+      (allRows, bottomPinnedRowIds) =>
+        table._getPinnedRows(allRows, bottomPinnedRowIds, 'bottom'),
+      getMemoOptions(table.options, 'debugRows', 'getBottomRows')
+    )
 
     table.getCenterRows = memo(
       () => [
