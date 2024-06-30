@@ -58,7 +58,9 @@ export * from './features/RowExpanding'
 export * from './features/RowPagination'
 
 //RowPinning
-export * from './features/RowPinning'
+export * from './features/row-pinning/RowPinning'
+export * from './features/row-pinning/RowPinning.types'
+export * from './features/row-pinning/RowPinning.utils'
 
 //RowSelection
 export * from './features/RowSelection'

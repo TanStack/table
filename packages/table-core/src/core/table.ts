@@ -34,7 +34,7 @@ import { GlobalFaceting } from '../features/GlobalFaceting'
 import { GlobalFiltering } from '../features/GlobalFiltering'
 import { RowExpanding } from '../features/RowExpanding'
 import { RowPagination } from '../features/RowPagination'
-import { RowPinning } from '../features/RowPinning'
+import { RowPinning } from '../features/row-pinning/RowPinning'
 import { RowSelection } from '../features/RowSelection'
 import { RowSorting } from '../features/RowSorting'
 

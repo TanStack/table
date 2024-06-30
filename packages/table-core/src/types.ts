@@ -26,7 +26,7 @@ import {
   RowPinningOptions,
   RowPinningRow,
   RowPinningTableState,
-} from './features/RowPinning'
+} from './features/row-pinning/RowPinning.types'
 import {
   CoreHeader,
   CoreHeaderGroup,
