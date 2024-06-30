@@ -1,7 +1,6 @@
 import { Component, ViewChild, input, type TemplateRef } from '@angular/core'
 import { TestBed, type ComponentFixture } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
-import { skip } from 'node:test'
 import { describe, expect, test } from 'vitest'
 import {
   FlexRenderComponent,
@@ -24,6 +23,20 @@ describe('FlexRenderDirective', () => {
   test('should render primitives', async () => {
     const fixture = TestBed.createComponent(TestRenderComponent)
 
+    // Null
+    setFixtureSignalInputs(fixture, {
+      content: () => null,
+      context: {},
+    })
+    expect((fixture.nativeElement as HTMLElement).matches(':empty')).toBe(true)
+
+    // Undefined
+    setFixtureSignalInputs(fixture, {
+      content: () => undefined,
+      context: {},
+    })
+    expect((fixture.nativeElement as HTMLElement).matches(':empty')).toBe(true)
+
     // String
     setFixtureSignalInputs(fixture, {
       content: 'My value',
@@ -45,19 +58,12 @@ describe('FlexRenderDirective', () => {
     })
     expectPrimitiveValueIs(fixture, 'My value 2')
 
-    // Null
+    // Set again to null to be sure content has been destroyed
     setFixtureSignalInputs(fixture, {
       content: () => null,
       context: {},
     })
-    expectPrimitiveValueIs(fixture, '')
-
-    // Undefined
-    setFixtureSignalInputs(fixture, {
-      content: () => undefined,
-      context: {},
-    })
-    expectPrimitiveValueIs(fixture, '')
+    expect((fixture.nativeElement as HTMLElement).matches(':empty')).toBe(true)
   })
 
   test('should render TemplateRef', () => {
@@ -118,7 +124,7 @@ describe('FlexRenderDirective', () => {
 
   // Skip for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
   // as component inputs
-  skip('should render custom components', () => {
+  test.skip('should render custom components', () => {
     @Component({
       template: `{{ row().property }}`,
       standalone: true,
@@ -172,6 +178,7 @@ function expectPrimitiveValueIs(
   fixture: ComponentFixture<unknown>,
   value: unknown
 ) {
+  expect(fixture.nativeElement.matches(':empty')).toBe(false)
   const span = fixture.nativeElement.querySelector('span')
   expect(span).toBeDefined()
   expect(span.innerHTML).toEqual(value)

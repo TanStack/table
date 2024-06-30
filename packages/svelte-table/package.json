@@ -52,7 +52,7 @@
     "@sveltejs/package": "^2.3.2",
     "@sveltejs/vite-plugin-svelte": "^4.0.0-next",
     "svelte": "^5.0.0-next",
-    "svelte-check": "^3.8.0"
+    "svelte-check": "^3.8.4"
   },
   "peerDependencies": {
     "svelte": "^5.0.0-next"

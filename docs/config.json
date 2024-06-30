@@ -463,6 +463,10 @@
             {
               "to": "framework/lit/examples/sorting",
               "label": "Sorting"
+            },
+            {
+              "to": "framework/lit/examples/virtualized-rows",
+              "label": "Virtualized Rows"
             }
           ]
         },
@@ -716,6 +720,10 @@
             {
               "to": "framework/vue/examples/sorting",
               "label": "Sorting"
+            },
+            {
+              "to": "framework/vue/examples/sub-components",
+              "label": "Sub Components"
             }
           ]
         }
