@@ -85,7 +85,9 @@ export * from './features/row-pinning/RowPinning.types'
 export * from './features/row-pinning/RowPinning.utils'
 
 //RowSelection
-export * from './features/RowSelection'
+export * from './features/row-selection/RowSelection'
+export * from './features/row-selection/RowSelection.types'
+export * from './features/row-selection/RowSelection.utils'
 
 //RowSorting
 export * from './features/RowSorting'

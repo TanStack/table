@@ -35,7 +35,7 @@ import { GlobalFiltering } from '../features/global-filtering/GlobalFiltering'
 import { RowExpanding } from '../features/row-expanding/RowExpanding'
 import { RowPagination } from '../features/row-pagination/RowPagination'
 import { RowPinning } from '../features/row-pinning/RowPinning'
-import { RowSelection } from '../features/RowSelection'
+import { RowSelection } from '../features/row-selection/RowSelection'
 import { RowSorting } from '../features/RowSorting'
 
 const builtInFeatures = [
