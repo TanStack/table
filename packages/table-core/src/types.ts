@@ -74,7 +74,7 @@ import {
   ExpandedOptions,
   ExpandedTableState,
   ExpandedRow,
-} from './features/RowExpanding'
+} from './features/row-expanding/RowExpanding.types'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,

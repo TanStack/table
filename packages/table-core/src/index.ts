@@ -51,6 +51,8 @@ export * from './features/column-pinning/ColumnPinning.utils'
 export * from './features/column-sizing/ColumnSizing'
 export * from './features/column-sizing/ColumnSizing.types'
 export * from './features/column-sizing/ColumnSizing.utils'
+export * from './features/column-sizing/isTouchStartEvent'
+export * from './features/column-sizing/passiveSupported'
 
 //ColumnVisibility
 export * from './features/column-visibility/ColumnVisibility'
@@ -68,7 +70,9 @@ export * from './features/global-filtering/GlobalFiltering.types'
 export * from './features/global-filtering/GlobalFiltering.utils'
 
 //RowExpanding
-export * from './features/RowExpanding'
+export * from './features/row-expanding/RowExpanding'
+export * from './features/row-expanding/RowExpanding.types'
+export * from './features/row-expanding/RowExpanding.utils'
 
 //RowPagination
 export * from './features/RowPagination'
