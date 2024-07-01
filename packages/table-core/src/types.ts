@@ -52,7 +52,7 @@ import {
   GlobalFilterInstance,
   GlobalFilterOptions,
   GlobalFilterTableState,
-} from './features/GlobalFiltering'
+} from './features/global-filtering/GlobalFiltering.types'
 import {
   SortingColumn,
   SortingColumnDef,

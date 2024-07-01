@@ -63,7 +63,9 @@ export * from './features/global-faceting/GlobalFaceting.types'
 export * from './features/global-faceting/GlobalFaceting.utils'
 
 //GlobalFiltering
-export * from './features/GlobalFiltering'
+export * from './features/global-filtering/GlobalFiltering'
+export * from './features/global-filtering/GlobalFiltering.types'
+export * from './features/global-filtering/GlobalFiltering.utils'
 
 //RowExpanding
 export * from './features/RowExpanding'
