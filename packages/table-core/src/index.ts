@@ -28,7 +28,9 @@ export * from './features/column-faceting/getFacetedRowModel'
 export * from './features/column-faceting/getFacetedUniqueValues'
 
 //ColumnFiltering
-export * from './features/ColumnFiltering'
+export * from './features/column-filtering/ColumnFiltering'
+export * from './features/column-filtering/ColumnFiltering.types'
+export * from './features/column-filtering/ColumnFiltering.utils'
 
 //ColumnGrouping
 export * from './features/ColumnGrouping'

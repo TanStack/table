@@ -1,4 +1,4 @@
-import { FilterFn } from './features/ColumnFiltering'
+import { FilterFn } from './features/column-filtering/ColumnFiltering.types'
 
 const includesString: FilterFn<any> = (
   row,

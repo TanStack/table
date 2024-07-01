@@ -1,5 +1,4 @@
-import { RowModel } from '..'
-import { BuiltInFilterFn, filterFns } from '../filterFns'
+import { BuiltInFilterFn } from '../../filterFns'
 import {
   Column,
   FilterFns,
@@ -7,11 +6,10 @@ import {
   OnChangeFn,
   Row,
   RowData,
+  RowModel,
   Table,
-  TableFeature,
   Updater,
-} from '../types'
-import { functionalUpdate, isFunction, makeStateUpdater } from '../utils'
+} from '../../types'
 
 export interface ColumnFiltersTableState {
   columnFilters: ColumnFiltersState
@@ -171,12 +169,12 @@ interface ColumnFiltersOptionsBase<TData extends RowData> {
    */
   manualFiltering?: boolean
   /**
-   * By default, filtering is done for all rows (max depth of 100), no matter if they are root level parent rows or the child leaf rows of a parent row. Setting this option to `0` will cause filtering to only be applied to the root level parent rows, with all sub-rows remaining unfiltered. Similarly, setting this option to `1` will cause filtering to only be applied to child leaf rows 1 level deep, and so on.
-
-   * This is useful for situations where you want a row's entire child hierarchy to be visible regardless of the applied filter.
-    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#maxleafrowfilterdepth)
-    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
+     * By default, filtering is done for all rows (max depth of 100), no matter if they are root level parent rows or the child leaf rows of a parent row. Setting this option to `0` will cause filtering to only be applied to the root level parent rows, with all sub-rows remaining unfiltered. Similarly, setting this option to `1` will cause filtering to only be applied to child leaf rows 1 level deep, and so on.
+  
+     * This is useful for situations where you want a row's entire child hierarchy to be visible regardless of the applied filter.
+      * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#maxleafrowfilterdepth)
+      * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+     */
   maxLeafRowFilterDepth?: number
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnFilters` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
@@ -236,194 +234,4 @@ export interface ColumnFiltersInstance<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
    */
   setGlobalFilter: (updater: Updater<any>) => void
-}
-
-//
-
-export const ColumnFiltering: TableFeature = {
-  _getDefaultColumnDef: <
-    TData extends RowData,
-  >(): ColumnFiltersColumnDef<TData> => {
-    return {
-      filterFn: 'auto',
-    }
-  },
-
-  _getInitialState: (state): ColumnFiltersTableState => {
-    return {
-      columnFilters: [],
-      ...state,
-    }
-  },
-
-  _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
-  ): ColumnFiltersOptions<TData> => {
-    return {
-      onColumnFiltersChange: makeStateUpdater('columnFilters', table),
-      filterFromLeafRows: false,
-      maxLeafRowFilterDepth: 100,
-    } as ColumnFiltersOptions<TData>
-  },
-
-  _createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
-    table: Table<TData>
-  ): void => {
-    column.getAutoFilterFn = () => {
-      const firstRow = table.getCoreRowModel().flatRows[0]
-
-      const value = firstRow?.getValue(column.id)
-
-      if (typeof value === 'string') {
-        return filterFns.includesString
-      }
-
-      if (typeof value === 'number') {
-        return filterFns.inNumberRange
-      }
-
-      if (typeof value === 'boolean') {
-        return filterFns.equals
-      }
-
-      if (value !== null && typeof value === 'object') {
-        return filterFns.equals
-      }
-
-      if (Array.isArray(value)) {
-        return filterFns.arrIncludes
-      }
-
-      return filterFns.weakEquals
-    }
-    column.getFilterFn = () => {
-      return isFunction(column.columnDef.filterFn)
-        ? column.columnDef.filterFn
-        : column.columnDef.filterFn === 'auto'
-          ? column.getAutoFilterFn()
-          : // @ts-ignore
-            table.options.filterFns?.[column.columnDef.filterFn as string] ??
-            filterFns[column.columnDef.filterFn as BuiltInFilterFn]
-    }
-    column.getCanFilter = () => {
-      return (
-        (column.columnDef.enableColumnFilter ?? true) &&
-        (table.options.enableColumnFilters ?? true) &&
-        (table.options.enableFilters ?? true) &&
-        !!column.accessorFn
-      )
-    }
-
-    column.getIsFiltered = () => column.getFilterIndex() > -1
-
-    column.getFilterValue = () =>
-      table.getState().columnFilters?.find(d => d.id === column.id)?.value
-
-    column.getFilterIndex = () =>
-      table.getState().columnFilters?.findIndex(d => d.id === column.id) ?? -1
-
-    column.setFilterValue = value => {
-      table.setColumnFilters(old => {
-        const filterFn = column.getFilterFn()
-        const previousFilter = old?.find(d => d.id === column.id)
-
-        const newFilter = functionalUpdate(
-          value,
-          previousFilter ? previousFilter.value : undefined
-        )
-
-        //
-        if (
-          shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column)
-        ) {
-          return old?.filter(d => d.id !== column.id) ?? []
-        }
-
-        const newFilterObj = { id: column.id, value: newFilter }
-
-        if (previousFilter) {
-          return (
-            old?.map(d => {
-              if (d.id === column.id) {
-                return newFilterObj
-              }
-              return d
-            }) ?? []
-          )
-        }
-
-        if (old?.length) {
-          return [...old, newFilterObj]
-        }
-
-        return [newFilterObj]
-      })
-    }
-  },
-
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    _table: Table<TData>
-  ): void => {
-    row.columnFilters = {}
-    row.columnFiltersMeta = {}
-  },
-
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnFilters = (updater: Updater<ColumnFiltersState>) => {
-      const leafColumns = table.getAllLeafColumns()
-
-      const updateFn = (old: ColumnFiltersState) => {
-        return functionalUpdate(updater, old)?.filter(filter => {
-          const column = leafColumns.find(d => d.id === filter.id)
-
-          if (column) {
-            const filterFn = column.getFilterFn()
-
-            if (shouldAutoRemoveFilter(filterFn, filter.value, column)) {
-              return false
-            }
-          }
-
-          return true
-        })
-      }
-
-      table.options.onColumnFiltersChange?.(updateFn)
-    }
-
-    table.resetColumnFilters = defaultState => {
-      table.setColumnFilters(
-        defaultState ? [] : table.initialState?.columnFilters ?? []
-      )
-    }
-
-    table.getPreFilteredRowModel = () => table.getCoreRowModel()
-    table.getFilteredRowModel = () => {
-      if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
-        table._getFilteredRowModel = table.options.getFilteredRowModel(table)
-      }
-
-      if (table.options.manualFiltering || !table._getFilteredRowModel) {
-        return table.getPreFilteredRowModel()
-      }
-
-      return table._getFilteredRowModel()
-    }
-  },
-}
-
-export function shouldAutoRemoveFilter<TData extends RowData>(
-  filterFn?: FilterFn<TData>,
-  value?: any,
-  column?: Column<TData, unknown>
-) {
-  return (
-    (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column)
-      : false) ||
-    typeof value === 'undefined' ||
-    (typeof value === 'string' && !value)
-  )
 }
