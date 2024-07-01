@@ -58,7 +58,9 @@ export * from './features/column-visibility/ColumnVisibility.types'
 export * from './features/column-visibility/ColumnVisibility.utils'
 
 //GlobalFaceting
-export * from './features/GlobalFaceting'
+export * from './features/global-faceting/GlobalFaceting'
+export * from './features/global-faceting/GlobalFaceting.types'
+export * from './features/global-faceting/GlobalFaceting.utils'
 
 //GlobalFiltering
 export * from './features/GlobalFiltering'

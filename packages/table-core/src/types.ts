@@ -37,7 +37,7 @@ import {
   ColumnFacetingColumn,
   ColumnFacetingOptions,
 } from './features/column-faceting/ColumnFaceting.types'
-import { GlobalFacetingInstance } from './features/GlobalFaceting'
+import { GlobalFacetingInstance } from './features/global-faceting/GlobalFaceting.types'
 import {
   ColumnFiltersColumn,
   ColumnFiltersColumnDef,
