@@ -1,4 +1,4 @@
-import { _getVisibleLeafColumns } from '..'
+import { column_getVisibleLeafColumns } from '..'
 import {
   RowData,
   Column,
@@ -273,7 +273,7 @@ export const ColumnSizing: TableFeature = {
     column.getStart = memo(
       position => [
         position,
-        _getVisibleLeafColumns(table, position),
+        column_getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
       (position, columns) =>
@@ -286,7 +286,7 @@ export const ColumnSizing: TableFeature = {
     column.getAfter = memo(
       position => [
         position,
-        _getVisibleLeafColumns(table, position),
+        column_getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
       (position, columns) =>

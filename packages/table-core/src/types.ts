@@ -6,7 +6,7 @@ import {
   VisibilityOptions,
   VisibilityColumnDef,
   VisibilityRow,
-} from './features/ColumnVisibility'
+} from './features/column-visibility/ColumnVisibility.types'
 import {
   ColumnOrderColumn,
   ColumnOrderInstance,

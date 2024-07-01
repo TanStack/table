@@ -10,7 +10,7 @@ import {
 } from '../types'
 
 import { orderColumns } from './ColumnGrouping'
-import { ColumnPinningPosition, _getVisibleLeafColumns } from '..'
+import { ColumnPinningPosition, column_getVisibleLeafColumns } from '..'
 
 export interface ColumnOrderTableState {
   columnOrder: ColumnOrderState
@@ -93,16 +93,16 @@ export const ColumnOrdering: TableFeature = {
     table: Table<TData>
   ): void => {
     column.getIndex = memo(
-      position => [_getVisibleLeafColumns(table, position)],
+      position => [column_getVisibleLeafColumns(table, position)],
       columns => columns.findIndex(d => d.id === column.id),
       getMemoOptions(table.options, 'debugColumns', 'getIndex')
     )
     column.getIsFirstColumn = position => {
-      const columns = _getVisibleLeafColumns(table, position)
+      const columns = column_getVisibleLeafColumns(table, position)
       return columns[0]?.id === column.id
     }
     column.getIsLastColumn = position => {
-      const columns = _getVisibleLeafColumns(table, position)
+      const columns = column_getVisibleLeafColumns(table, position)
       return columns[columns.length - 1]?.id === column.id
     }
   },
