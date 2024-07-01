@@ -36,7 +36,7 @@ import { RowExpanding } from '../features/row-expanding/RowExpanding'
 import { RowPagination } from '../features/row-pagination/RowPagination'
 import { RowPinning } from '../features/row-pinning/RowPinning'
 import { RowSelection } from '../features/row-selection/RowSelection'
-import { RowSorting } from '../features/RowSorting'
+import { RowSorting } from '../features/row-sorting/RowSorting'
 
 const builtInFeatures = [
   Headers,

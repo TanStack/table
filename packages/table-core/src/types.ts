@@ -59,7 +59,7 @@ import {
   SortingInstance,
   SortingOptions,
   SortingTableState,
-} from './features/RowSorting'
+} from './features/row-sorting/RowSorting.types'
 import {
   GroupingCell,
   GroupingColumn,

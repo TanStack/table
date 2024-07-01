@@ -90,7 +90,9 @@ export * from './features/row-selection/RowSelection.types'
 export * from './features/row-selection/RowSelection.utils'
 
 //RowSorting
-export * from './features/RowSorting'
+export * from './features/row-sorting/RowSorting'
+export * from './features/row-sorting/RowSorting.types'
+export * from './features/row-sorting/RowSorting.utils'
 
 /**
  * Utils
