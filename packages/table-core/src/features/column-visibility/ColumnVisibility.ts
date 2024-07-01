@@ -20,8 +20,6 @@ import {
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
 
-//
-
 export const ColumnVisibility: TableFeature = {
   _getInitialState: (state): VisibilityTableState => {
     return {
