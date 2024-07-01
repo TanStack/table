@@ -43,7 +43,9 @@ export * from './features/ColumnPinning'
 export * from './features/ColumnSizing'
 
 //ColumnVisibility
-export * from './features/ColumnVisibility'
+export * from './features/column-visibility/ColumnVisibility'
+export * from './features/column-visibility/ColumnVisibility.types'
+export * from './features/column-visibility/ColumnVisibility.utils'
 
 //GlobalFaceting
 export * from './features/GlobalFaceting'
