@@ -68,7 +68,7 @@ import {
   GroupingOptions,
   GroupingRow,
   GroupingTableState,
-} from './features/ColumnGrouping'
+} from './features/column-grouping/ColumnGrouping.types'
 import {
   ExpandedInstance,
   ExpandedOptions,

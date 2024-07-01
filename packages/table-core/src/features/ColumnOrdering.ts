@@ -9,7 +9,7 @@ import {
   Updater,
 } from '../types'
 
-import { orderColumns } from './ColumnGrouping'
+import { orderColumns } from '../'
 import { ColumnPinningPosition, column_getVisibleLeafColumns } from '..'
 
 export interface ColumnOrderTableState {
