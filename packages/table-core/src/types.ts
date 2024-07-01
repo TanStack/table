@@ -45,7 +45,7 @@ import {
   ColumnFiltersOptions,
   ColumnFiltersRow,
   ColumnFiltersTableState,
-} from './features/ColumnFiltering'
+} from './features/column-filtering/ColumnFiltering.types'
 import {
   GlobalFilterColumn,
   GlobalFilterColumnDef,

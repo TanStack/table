@@ -1,4 +1,4 @@
-import { ResolvedColumnFilter } from '../features/ColumnFiltering'
+import { ResolvedColumnFilter } from '../features/column-filtering/ColumnFiltering.types'
 import { Table, RowModel, Row, RowData } from '../types'
 import { getMemoOptions, memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
