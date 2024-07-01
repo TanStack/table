@@ -88,7 +88,7 @@ import {
   PaginationInstance,
   PaginationOptions,
   PaginationTableState,
-} from './features/RowPagination'
+} from './features/row-pagination/RowPagination.types'
 import {
   RowSelectionInstance,
   RowSelectionOptions,

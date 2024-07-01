@@ -75,7 +75,9 @@ export * from './features/row-expanding/RowExpanding.types'
 export * from './features/row-expanding/RowExpanding.utils'
 
 //RowPagination
-export * from './features/RowPagination'
+export * from './features/row-pagination/RowPagination'
+export * from './features/row-pagination/RowPagination.types'
+export * from './features/row-pagination/RowPagination.utils'
 
 //RowPinning
 export * from './features/row-pinning/RowPinning'

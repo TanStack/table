@@ -33,7 +33,7 @@ import { ColumnVisibility } from '../features/column-visibility/ColumnVisibility
 import { GlobalFaceting } from '../features/global-faceting/GlobalFaceting'
 import { GlobalFiltering } from '../features/global-filtering/GlobalFiltering'
 import { RowExpanding } from '../features/row-expanding/RowExpanding'
-import { RowPagination } from '../features/RowPagination'
+import { RowPagination } from '../features/row-pagination/RowPagination'
 import { RowPinning } from '../features/row-pinning/RowPinning'
 import { RowSelection } from '../features/RowSelection'
 import { RowSorting } from '../features/RowSorting'
