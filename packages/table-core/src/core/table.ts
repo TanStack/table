@@ -25,7 +25,7 @@ import { Headers } from './headers'
 
 import { ColumnFaceting } from '../features/column-faceting/ColumnFaceting'
 import { ColumnFiltering } from '../features/column-filtering/ColumnFiltering'
-import { ColumnGrouping } from '../features/ColumnGrouping'
+import { ColumnGrouping } from '../features/column-grouping/ColumnGrouping'
 import { ColumnOrdering } from '../features/ColumnOrdering'
 import { ColumnPinning } from '../features/ColumnPinning'
 import { ColumnSizing } from '../features/ColumnSizing'

@@ -1,4 +1,4 @@
-import { AggregationFn } from './features/ColumnGrouping'
+import { AggregationFn } from './features/column-grouping/ColumnGrouping.types'
 import { isNumberArray } from './utils'
 
 const sum: AggregationFn<any> = (columnId, _leafRows, childRows) => {

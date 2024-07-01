@@ -33,7 +33,9 @@ export * from './features/column-filtering/ColumnFiltering.types'
 export * from './features/column-filtering/ColumnFiltering.utils'
 
 //ColumnGrouping
-export * from './features/ColumnGrouping'
+export * from './features/column-grouping/ColumnGrouping'
+export * from './features/column-grouping/ColumnGrouping.types'
+export * from './features/column-grouping/ColumnGrouping.utils'
 
 //ColumnOrdering
 export * from './features/ColumnOrdering'
