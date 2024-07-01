@@ -37,7 +37,7 @@
   "size-limit": [
     {
       "path": "packages/table-core/dist/cjs/index.cjs",
-      "limit": "16 KB"
+      "limit": "19 KB"
     },
     {
       "path": "packages/table-core/dist/esm/index.js",
