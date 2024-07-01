@@ -1,7 +1,7 @@
 import { BuiltInAggregationFn, aggregationFns } from '../../aggregationFns'
 import { Cell, Column, Row, RowData, Table, Updater } from '../../types'
 import { isFunction } from '../../utils'
-import { GroupingColumnMode, GroupingState } from './ColumnGrouping.types'
+import { GroupingState } from './ColumnGrouping.types'
 
 export function column_toggleGrouping<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
@@ -169,28 +169,4 @@ export function cell_getIsAggregated<TData extends RowData, TValue>(
   return (
     !cell.getIsGrouped() && !cell.getIsPlaceholder() && !!row.subRows?.length
   )
-}
-
-export function orderColumns<TData extends RowData>(
-  leafColumns: Column<TData, unknown>[],
-  grouping: string[],
-  groupedColumnMode?: GroupingColumnMode
-) {
-  if (!grouping?.length || !groupedColumnMode) {
-    return leafColumns
-  }
-
-  const nonGroupingColumns = leafColumns.filter(
-    col => !grouping.includes(col.id)
-  )
-
-  if (groupedColumnMode === 'remove') {
-    return nonGroupingColumns
-  }
-
-  const groupingColumns = grouping
-    .map(g => leafColumns.find(col => col.id === g)!)
-    .filter(Boolean)
-
-  return [...groupingColumns, ...nonGroupingColumns]
 }

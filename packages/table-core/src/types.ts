@@ -12,7 +12,7 @@ import {
   ColumnOrderInstance,
   ColumnOrderOptions,
   ColumnOrderTableState,
-} from './features/ColumnOrdering'
+} from './features/column-ordering/ColumnOrdering.types'
 import {
   ColumnPinningColumn,
   ColumnPinningColumnDef,
