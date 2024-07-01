@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import {
-ColumnFiltersState,
-FlexRender,
-createColumnHelper,
-getCoreRowModel,
-getFacetedMinMaxValues,
-getFacetedRowModel,
-getFacetedUniqueValues,
-getFilteredRowModel,
-useVueTable,
-} from '@tanstack/vue-table';
-import { ref } from 'vue';
-import DebouncedInput from './DebouncedInput.vue';
-import Filter from './Filter.vue';
+  ColumnFiltersState,
+  FlexRender,
+  createColumnHelper,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  useVueTable,
+} from '@tanstack/vue-table'
+import { ref } from 'vue'
+import DebouncedInput from './DebouncedInput.vue'
+import Filter from './Filter.vue'
 type Person = {
   firstName: string
   lastName: string
@@ -135,17 +135,33 @@ const table = useVueTable({
 <template>
   <div class="p-2">
     <div>
-      <DebouncedInput :modelValue="globalFilter ?? ''" @update:modelValue="value => (globalFilter = String(value))"
-        className="p-2 font-lg shadow border border-block" placeholder="Search all columns..." />
+      <DebouncedInput
+        :modelValue="globalFilter ?? ''"
+        @update:modelValue="value => (globalFilter = String(value))"
+        className="p-2 font-lg shadow border border-block"
+        placeholder="Search all columns..."
+      />
     </div>
     <div className="h-2" />
     <table>
       <thead>
-        <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-          <th v-for="header in headerGroup.headers" :key="header.id" :colSpan="header.colSpan">
-            <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header"
-              :props="header.getContext()" />
-            <template v-if="!header.isPlaceholder && header.column.getCanFilter()">
+        <tr
+          v-for="headerGroup in table.getHeaderGroups()"
+          :key="headerGroup.id"
+        >
+          <th
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+            :colSpan="header.colSpan"
+          >
+            <FlexRender
+              v-if="!header.isPlaceholder"
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
+            />
+            <template
+              v-if="!header.isPlaceholder && header.column.getCanFilter()"
+            >
               <Filter :column="header.column" :table="table" />
             </template>
           </th>
@@ -154,15 +170,28 @@ const table = useVueTable({
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+            <FlexRender
+              :render="cell.column.columnDef.cell"
+              :props="cell.getContext()"
+            />
           </td>
         </tr>
       </tbody>
       <tfoot>
-        <tr v-for="footerGroup in table.getFooterGroups()" :key="footerGroup.id">
-          <th v-for="header in footerGroup.headers" :key="header.id" :colSpan="header.colSpan">
-            <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.footer"
-              :props="header.getContext()" />
+        <tr
+          v-for="footerGroup in table.getFooterGroups()"
+          :key="footerGroup.id"
+        >
+          <th
+            v-for="header in footerGroup.headers"
+            :key="header.id"
+            :colSpan="header.colSpan"
+          >
+            <FlexRender
+              v-if="!header.isPlaceholder"
+              :render="header.column.columnDef.footer"
+              :props="header.getContext()"
+            />
           </th>
         </tr>
       </tfoot>
