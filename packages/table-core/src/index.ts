@@ -38,7 +38,9 @@ export * from './features/column-grouping/ColumnGrouping.types'
 export * from './features/column-grouping/ColumnGrouping.utils'
 
 //ColumnOrdering
-export * from './features/ColumnOrdering'
+export * from './features/column-ordering/ColumnOrdering'
+export * from './features/column-ordering/ColumnOrdering.types'
+export * from './features/column-ordering/ColumnOrdering.utils'
 
 //ColumnPinning
 export * from './features/ColumnPinning'
