@@ -1,4 +1,4 @@
-import { column_getVisibleLeafColumns } from '..'
+import { ColumnPinningPosition, column_getVisibleLeafColumns } from '..'
 import {
   RowData,
   Column,
@@ -9,9 +9,6 @@ import {
   TableFeature,
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
-import { ColumnPinningPosition } from './ColumnPinning'
-
-//
 
 export interface ColumnSizingTableState {
   columnSizing: ColumnSizingState

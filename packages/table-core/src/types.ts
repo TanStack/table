@@ -20,7 +20,7 @@ import {
   ColumnPinningOptions,
   ColumnPinningRow,
   ColumnPinningTableState,
-} from './features/ColumnPinning'
+} from './features/column-pinning/ColumnPinning.types'
 import {
   RowPinningInstance,
   RowPinningOptions,

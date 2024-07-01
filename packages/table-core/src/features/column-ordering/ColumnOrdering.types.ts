@@ -1,5 +1,5 @@
 import { Column, OnChangeFn, RowData, Updater } from '../../types'
-import { ColumnPinningPosition } from '../ColumnPinning'
+import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
 export interface ColumnOrderTableState {
   columnOrder: ColumnOrderState

@@ -43,7 +43,9 @@ export * from './features/column-ordering/ColumnOrdering.types'
 export * from './features/column-ordering/ColumnOrdering.utils'
 
 //ColumnPinning
-export * from './features/ColumnPinning'
+export * from './features/column-pinning/ColumnPinning'
+export * from './features/column-pinning/ColumnPinning.types'
+export * from './features/column-pinning/ColumnPinning.utils'
 
 //ColumnSizing
 export * from './features/ColumnSizing'
