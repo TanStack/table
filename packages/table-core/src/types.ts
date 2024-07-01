@@ -94,7 +94,7 @@ import {
   RowSelectionOptions,
   RowSelectionRow,
   RowSelectionTableState,
-} from './features/RowSelection'
+} from './features/row-selection/RowSelection.types'
 import { CoreRow } from './core/row'
 import { PartialKeys, UnionToIntersection } from './utils'
 import { CellContext, CoreCell } from './core/cell'
