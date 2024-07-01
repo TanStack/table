@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref } from 'vue'
+
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -10,8 +11,11 @@ const props = defineProps({
     default: 500,
   },
 })
+
 const emit = defineEmits(['update:modelValue'])
-const timeout = ref<number>()
+
+const timeout = ref<ReturnType<typeof setTimeout>>()
+
 const localValue = computed({
   get() {
     return props.modelValue
