@@ -19,9 +19,8 @@ import {
   table_resetSorting,
   table_setSorting,
 } from '../..'
-import { BuiltInSortingFn, sortingFns } from '../../sortingFns'
 import { Column, Table, RowData, TableFeature } from '../../types'
-import { isFunction, makeStateUpdater } from '../../utils'
+import { makeStateUpdater } from '../../utils'
 
 export const RowSorting: TableFeature = {
   _getInitialState: (state): SortingTableState => {
