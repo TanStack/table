@@ -2700,6 +2700,34 @@ importers:
         specifier: ^2.0.22
         version: 2.0.22(typescript@5.4.5)
 
+  examples/vue/filters:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/vue-table':
+        specifier: ^8.19.2
+        version: link:../../../packages/vue-table
+      vue:
+        specifier: ^3.4.31
+        version: 3.4.31(typescript@5.4.5)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.14.9
+        version: 20.14.9
+      '@vitejs/plugin-vue':
+        specifier: ^5.0.5
+        version: 5.0.5(vite@5.3.2(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))(vue@3.4.31(typescript@5.4.5))
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.3.2
+        version: 5.3.2(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)
+      vue-tsc:
+        specifier: ^2.0.22
+        version: 2.0.22(typescript@5.4.5)
+
   examples/vue/pagination:
     dependencies:
       '@faker-js/faker':
