@@ -5,7 +5,7 @@ import {
   _createTable,
   getCoreRowModel,
 } from '../src'
-import * as RowSelection from '../src/features/RowSelection'
+import * as RowSelection from '../src/features/row-selection/RowSelection.utils'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person

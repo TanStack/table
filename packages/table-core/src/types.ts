@@ -12,7 +12,7 @@ import {
   ColumnOrderInstance,
   ColumnOrderOptions,
   ColumnOrderTableState,
-} from './features/ColumnOrdering'
+} from './features/column-ordering/ColumnOrdering.types'
 import {
   ColumnPinningColumn,
   ColumnPinningColumnDef,
@@ -20,7 +20,7 @@ import {
   ColumnPinningOptions,
   ColumnPinningRow,
   ColumnPinningTableState,
-} from './features/ColumnPinning'
+} from './features/column-pinning/ColumnPinning.types'
 import {
   RowPinningInstance,
   RowPinningOptions,
@@ -37,7 +37,7 @@ import {
   ColumnFacetingColumn,
   ColumnFacetingOptions,
 } from './features/column-faceting/ColumnFaceting.types'
-import { GlobalFacetingInstance } from './features/GlobalFaceting'
+import { GlobalFacetingInstance } from './features/global-faceting/GlobalFaceting.types'
 import {
   ColumnFiltersColumn,
   ColumnFiltersColumnDef,
@@ -52,14 +52,14 @@ import {
   GlobalFilterInstance,
   GlobalFilterOptions,
   GlobalFilterTableState,
-} from './features/GlobalFiltering'
+} from './features/global-filtering/GlobalFiltering.types'
 import {
   SortingColumn,
   SortingColumnDef,
   SortingInstance,
   SortingOptions,
   SortingTableState,
-} from './features/RowSorting'
+} from './features/row-sorting/RowSorting.types'
 import {
   GroupingCell,
   GroupingColumn,
@@ -74,7 +74,7 @@ import {
   ExpandedOptions,
   ExpandedTableState,
   ExpandedRow,
-} from './features/RowExpanding'
+} from './features/row-expanding/RowExpanding.types'
 import {
   ColumnSizingColumn,
   ColumnSizingColumnDef,
@@ -82,19 +82,19 @@ import {
   ColumnSizingInstance,
   ColumnSizingOptions,
   ColumnSizingTableState,
-} from './features/ColumnSizing'
+} from './features/column-sizing/ColumnSizing.types'
 import {
   PaginationInitialTableState,
   PaginationInstance,
   PaginationOptions,
   PaginationTableState,
-} from './features/RowPagination'
+} from './features/row-pagination/RowPagination.types'
 import {
   RowSelectionInstance,
   RowSelectionOptions,
   RowSelectionRow,
   RowSelectionTableState,
-} from './features/RowSelection'
+} from './features/row-selection/RowSelection.types'
 import { CoreRow } from './core/row'
 import { PartialKeys, UnionToIntersection } from './utils'
 import { CellContext, CoreCell } from './core/cell'

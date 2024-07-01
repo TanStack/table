@@ -1,14 +1,8 @@
-import { FilterFn, FilterFnOption } from '..'
-import { BuiltInFilterFn, filterFns } from '../filterFns'
+import { Column, OnChangeFn, RowData, Updater } from '../../types'
 import {
-  Column,
-  OnChangeFn,
-  Table,
-  Updater,
-  RowData,
-  TableFeature,
-} from '../types'
-import { isFunction, makeStateUpdater } from '../utils'
+  FilterFn,
+  FilterFnOption,
+} from '../column-filtering/ColumnFiltering.types'
 
 export interface GlobalFilterTableState {
   globalFilter: any
@@ -89,74 +83,4 @@ export interface GlobalFilterInstance<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   setGlobalFilter: (updater: Updater<any>) => void
-}
-
-//
-
-export const GlobalFiltering: TableFeature = {
-  _getInitialState: (state): GlobalFilterTableState => {
-    return {
-      globalFilter: undefined,
-      ...state,
-    }
-  },
-
-  _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
-  ): GlobalFilterOptions<TData> => {
-    return {
-      onGlobalFilterChange: makeStateUpdater('globalFilter', table),
-      globalFilterFn: 'auto',
-      getColumnCanGlobalFilter: column => {
-        const value = table
-          .getCoreRowModel()
-          .flatRows[0]?._getAllCellsByColumnId()
-          [column.id]?.getValue()
-
-        return typeof value === 'string' || typeof value === 'number'
-      },
-    } as GlobalFilterOptions<TData>
-  },
-
-  _createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
-    table: Table<TData>
-  ): void => {
-    column.getCanGlobalFilter = () => {
-      return (
-        (column.columnDef.enableGlobalFilter ?? true) &&
-        (table.options.enableGlobalFilter ?? true) &&
-        (table.options.enableFilters ?? true) &&
-        (table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
-        !!column.accessorFn
-      )
-    }
-  },
-
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.getGlobalAutoFilterFn = () => {
-      return filterFns.includesString
-    }
-
-    table.getGlobalFilterFn = () => {
-      const { globalFilterFn: globalFilterFn } = table.options
-
-      return isFunction(globalFilterFn)
-        ? globalFilterFn
-        : globalFilterFn === 'auto'
-          ? table.getGlobalAutoFilterFn()
-          : table.options.filterFns?.[globalFilterFn as string] ??
-            filterFns[globalFilterFn as BuiltInFilterFn]
-    }
-
-    table.setGlobalFilter = updater => {
-      table.options.onGlobalFilterChange?.(updater)
-    }
-
-    table.resetGlobalFilter = defaultState => {
-      table.setGlobalFilter(
-        defaultState ? undefined : table.initialState.globalFilter
-      )
-    }
-  },
 }

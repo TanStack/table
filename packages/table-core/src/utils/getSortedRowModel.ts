@@ -1,5 +1,5 @@
 import { Table, Row, RowModel, RowData } from '../types'
-import { SortingFn } from '../features/RowSorting'
+import { SortingFn } from '../features/row-sorting/RowSorting.types'
 import { getMemoOptions, memo } from '../utils'
 
 export function getSortedRowModel<TData extends RowData>(): (

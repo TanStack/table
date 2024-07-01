@@ -38,13 +38,21 @@ export * from './features/column-grouping/ColumnGrouping.types'
 export * from './features/column-grouping/ColumnGrouping.utils'
 
 //ColumnOrdering
-export * from './features/ColumnOrdering'
+export * from './features/column-ordering/ColumnOrdering'
+export * from './features/column-ordering/ColumnOrdering.types'
+export * from './features/column-ordering/ColumnOrdering.utils'
 
 //ColumnPinning
-export * from './features/ColumnPinning'
+export * from './features/column-pinning/ColumnPinning'
+export * from './features/column-pinning/ColumnPinning.types'
+export * from './features/column-pinning/ColumnPinning.utils'
 
 //ColumnSizing
-export * from './features/ColumnSizing'
+export * from './features/column-sizing/ColumnSizing'
+export * from './features/column-sizing/ColumnSizing.types'
+export * from './features/column-sizing/ColumnSizing.utils'
+export * from './features/column-sizing/isTouchStartEvent'
+export * from './features/column-sizing/passiveSupported'
 
 //ColumnVisibility
 export * from './features/column-visibility/ColumnVisibility'
@@ -52,16 +60,24 @@ export * from './features/column-visibility/ColumnVisibility.types'
 export * from './features/column-visibility/ColumnVisibility.utils'
 
 //GlobalFaceting
-export * from './features/GlobalFaceting'
+export * from './features/global-faceting/GlobalFaceting'
+export * from './features/global-faceting/GlobalFaceting.types'
+export * from './features/global-faceting/GlobalFaceting.utils'
 
 //GlobalFiltering
-export * from './features/GlobalFiltering'
+export * from './features/global-filtering/GlobalFiltering'
+export * from './features/global-filtering/GlobalFiltering.types'
+export * from './features/global-filtering/GlobalFiltering.utils'
 
 //RowExpanding
-export * from './features/RowExpanding'
+export * from './features/row-expanding/RowExpanding'
+export * from './features/row-expanding/RowExpanding.types'
+export * from './features/row-expanding/RowExpanding.utils'
 
 //RowPagination
-export * from './features/RowPagination'
+export * from './features/row-pagination/RowPagination'
+export * from './features/row-pagination/RowPagination.types'
+export * from './features/row-pagination/RowPagination.utils'
 
 //RowPinning
 export * from './features/row-pinning/RowPinning'
@@ -69,10 +85,14 @@ export * from './features/row-pinning/RowPinning.types'
 export * from './features/row-pinning/RowPinning.utils'
 
 //RowSelection
-export * from './features/RowSelection'
+export * from './features/row-selection/RowSelection'
+export * from './features/row-selection/RowSelection.types'
+export * from './features/row-selection/RowSelection.utils'
 
 //RowSorting
-export * from './features/RowSorting'
+export * from './features/row-sorting/RowSorting'
+export * from './features/row-sorting/RowSorting.types'
+export * from './features/row-sorting/RowSorting.utils'
 
 /**
  * Utils

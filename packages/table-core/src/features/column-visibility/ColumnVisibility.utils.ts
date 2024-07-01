@@ -1,6 +1,6 @@
 import { Cell, Column, Row, RowData, Table, Updater } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
-import { ColumnPinningPosition } from '../ColumnPinning'
+import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import { VisibilityState } from './ColumnVisibility.types'
 
 export function column_toggleVisibility<TData extends RowData, TValue>(
