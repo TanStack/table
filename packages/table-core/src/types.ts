@@ -82,7 +82,7 @@ import {
   ColumnSizingInstance,
   ColumnSizingOptions,
   ColumnSizingTableState,
-} from './features/ColumnSizing'
+} from './features/column-sizing/ColumnSizing.types'
 import {
   PaginationInitialTableState,
   PaginationInstance,

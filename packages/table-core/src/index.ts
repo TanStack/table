@@ -48,7 +48,9 @@ export * from './features/column-pinning/ColumnPinning.types'
 export * from './features/column-pinning/ColumnPinning.utils'
 
 //ColumnSizing
-export * from './features/ColumnSizing'
+export * from './features/column-sizing/ColumnSizing'
+export * from './features/column-sizing/ColumnSizing.types'
+export * from './features/column-sizing/ColumnSizing.utils'
 
 //ColumnVisibility
 export * from './features/column-visibility/ColumnVisibility'
