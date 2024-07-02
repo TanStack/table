@@ -724,6 +724,10 @@
             {
               "to": "framework/vue/examples/sub-components",
               "label": "Sub Components"
+            },
+            {
+              "to": "framework/vue/examples/filters",
+              "label": "Column Filters"
             }
           ]
         }

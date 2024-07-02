@@ -239,7 +239,7 @@ export default function MyComponent() {
 
 ### How TanStack Table Transforms Data
 
-Later, in other parts of these docs, you will see how TanStack Table processes the `data` that you pass to the table and generates the row and cell objects that are used to create the table. The `data` the you pass to the table is never mutated by TanStack Table, but the actual values in the rows and cells may be transformed by the accessors in your column definitions, or by other features performed by [row models](../row-models) like grouping or aggregation.
+Later, in other parts of these docs, you will see how TanStack Table processes the `data` that you pass to the table and generates the row and cell objects that are used to create the table. The `data` that you pass to the table is never mutated by TanStack Table, but the actual values in the rows and cells may be transformed by the accessors in your column definitions, or by other features performed by [row models](../row-models) like grouping or aggregation.
 
 ### How Much Data Can TanStack Table Handle?
 
