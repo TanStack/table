@@ -1,4 +1,12 @@
-import { Cell, Column, OnChangeFn, RowData, Updater } from '../../types'
+import {
+  Cell,
+  Column,
+  Header,
+  HeaderGroup,
+  OnChangeFn,
+  RowData,
+  Updater,
+} from '../../types'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
 
@@ -131,4 +139,76 @@ export interface ColumnPinningInstance<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
+  /**
+   * If pinning, returns the header groups for the left pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getLeftHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the header groups for columns that are not pinned.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getCenterHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the header groups for the right pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getRightHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the footer groups for the left pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getLeftFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the footer groups for columns that are not pinned.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getCenterFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns the footer groups for the right pinned columns.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getRightFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * If pinning, returns headers for all left pinned columns in the table, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getLeftFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all columns that are not pinned, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getCenterFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all right pinned columns in the table, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getRightFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getLeftLeafHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all columns that are not pinned, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getCenterLeafHeaders: () => Header<TData, unknown>[]
+  /**
+   * If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getRightLeafHeaders: () => Header<TData, unknown>[]
 }

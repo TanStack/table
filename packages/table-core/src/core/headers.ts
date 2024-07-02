@@ -114,49 +114,11 @@ export interface HeadersInstance<TData extends RowData> {
    */
   getHeaderGroups: () => HeaderGroup<TData>[]
   /**
-   * If pinning, returns the header groups for the left pinned columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftheadergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getLeftHeaderGroups: () => HeaderGroup<TData>[]
-  /**
-   * If pinning, returns the header groups for columns that are not pinned.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterheadergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getCenterHeaderGroups: () => HeaderGroup<TData>[]
-  /**
-   * If pinning, returns the header groups for the right pinned columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightheadergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getRightHeaderGroups: () => HeaderGroup<TData>[]
-
-  /**
    * Returns the footer groups for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
   getFooterGroups: () => HeaderGroup<TData>[]
-  /**
-   * If pinning, returns the footer groups for the left pinned columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftfootergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getLeftFooterGroups: () => HeaderGroup<TData>[]
-  /**
-   * If pinning, returns the footer groups for columns that are not pinned.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterfootergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getCenterFooterGroups: () => HeaderGroup<TData>[]
-  /**
-   * If pinning, returns the footer groups for the right pinned columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightfootergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getRightFooterGroups: () => HeaderGroup<TData>[]
-
   /**
    * Returns headers for all columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
@@ -164,48 +126,11 @@ export interface HeadersInstance<TData extends RowData> {
    */
   getFlatHeaders: () => Header<TData, unknown>[]
   /**
-   * If pinning, returns headers for all left pinned columns in the table, including parent headers.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftflatheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getLeftFlatHeaders: () => Header<TData, unknown>[]
-  /**
-   * If pinning, returns headers for all columns that are not pinned, including parent headers.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterflatheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getCenterFlatHeaders: () => Header<TData, unknown>[]
-  /**
-   * If pinning, returns headers for all right pinned columns in the table, including parent headers.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightflatheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getRightFlatHeaders: () => Header<TData, unknown>[]
-
-  /**
    * Returns headers for all leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
   getLeafHeaders: () => Header<TData, unknown>[]
-  /**
-   * If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftleafheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getLeftLeafHeaders: () => Header<TData, unknown>[]
-  /**
-   * If pinning, returns headers for all columns that are not pinned, (not including parent headers).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterleafheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getCenterLeafHeaders: () => Header<TData, unknown>[]
-  /**
-   * If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightleafheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getRightLeafHeaders: () => Header<TData, unknown>[]
 }
 
 //
@@ -264,8 +189,6 @@ function _createHeader<TData extends RowData, TValue>(
 
 export const Headers: TableFeature = {
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    // Header Groups
-
     table.getHeaderGroups = memo(
       () => [
         table.getAllColumns(),
@@ -299,58 +222,6 @@ export const Headers: TableFeature = {
       getMemoOptions(table.options, debug, 'getHeaderGroups')
     )
 
-    table.getCenterHeaderGroups = memo(
-      () => [
-        table.getAllColumns(),
-        table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
-      ],
-      (allColumns, leafColumns, left, right) => {
-        leafColumns = leafColumns.filter(
-          column => !left?.includes(column.id) && !right?.includes(column.id)
-        )
-        return buildHeaderGroups(allColumns, leafColumns, table, 'center')
-      },
-      getMemoOptions(table.options, debug, 'getCenterHeaderGroups')
-    )
-
-    table.getLeftHeaderGroups = memo(
-      () => [
-        table.getAllColumns(),
-        table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
-      ],
-      (allColumns, leafColumns, left) => {
-        const orderedLeafColumns =
-          left
-            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
-            .filter(Boolean) ?? []
-
-        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
-      },
-      getMemoOptions(table.options, debug, 'getLeftHeaderGroups')
-    )
-
-    table.getRightHeaderGroups = memo(
-      () => [
-        table.getAllColumns(),
-        table.getVisibleLeafColumns(),
-        table.getState().columnPinning.right,
-      ],
-      (allColumns, leafColumns, right) => {
-        const orderedLeafColumns =
-          right
-            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
-            .filter(Boolean) ?? []
-
-        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
-      },
-      getMemoOptions(table.options, debug, 'getRightHeaderGroups')
-    )
-
-    // Footer Groups
-
     table.getFooterGroups = memo(
       () => [table.getHeaderGroups()],
       headerGroups => {
@@ -358,32 +229,6 @@ export const Headers: TableFeature = {
       },
       getMemoOptions(table.options, debug, 'getFooterGroups')
     )
-
-    table.getLeftFooterGroups = memo(
-      () => [table.getLeftHeaderGroups()],
-      headerGroups => {
-        return [...headerGroups].reverse()
-      },
-      getMemoOptions(table.options, debug, 'getLeftFooterGroups')
-    )
-
-    table.getCenterFooterGroups = memo(
-      () => [table.getCenterHeaderGroups()],
-      headerGroups => {
-        return [...headerGroups].reverse()
-      },
-      getMemoOptions(table.options, debug, 'getCenterFooterGroups')
-    )
-
-    table.getRightFooterGroups = memo(
-      () => [table.getRightHeaderGroups()],
-      headerGroups => {
-        return [...headerGroups].reverse()
-      },
-      getMemoOptions(table.options, debug, 'getRightFooterGroups')
-    )
-
-    // Flat Headers
 
     table.getFlatHeaders = memo(
       () => [table.getHeaderGroups()],
@@ -395,68 +240,6 @@ export const Headers: TableFeature = {
           .flat()
       },
       getMemoOptions(table.options, debug, 'getFlatHeaders')
-    )
-
-    table.getLeftFlatHeaders = memo(
-      () => [table.getLeftHeaderGroups()],
-      left => {
-        return left
-          .map(headerGroup => {
-            return headerGroup.headers
-          })
-          .flat()
-      },
-      getMemoOptions(table.options, debug, 'getLeftFlatHeaders')
-    )
-
-    table.getCenterFlatHeaders = memo(
-      () => [table.getCenterHeaderGroups()],
-      left => {
-        return left
-          .map(headerGroup => {
-            return headerGroup.headers
-          })
-          .flat()
-      },
-      getMemoOptions(table.options, debug, 'getCenterFlatHeaders')
-    )
-
-    table.getRightFlatHeaders = memo(
-      () => [table.getRightHeaderGroups()],
-      left => {
-        return left
-          .map(headerGroup => {
-            return headerGroup.headers
-          })
-          .flat()
-      },
-      getMemoOptions(table.options, debug, 'getRightFlatHeaders')
-    )
-
-    // Leaf Headers
-
-    table.getCenterLeafHeaders = memo(
-      () => [table.getCenterFlatHeaders()],
-      flatHeaders => {
-        return flatHeaders.filter(header => !header.subHeaders?.length)
-      },
-      getMemoOptions(table.options, debug, 'getCenterLeafHeaders')
-    )
-
-    table.getLeftLeafHeaders = memo(
-      () => [table.getLeftFlatHeaders()],
-      flatHeaders => {
-        return flatHeaders.filter(header => !header.subHeaders?.length)
-      },
-      getMemoOptions(table.options, debug, 'getLeftLeafHeaders')
-    )
-
-    table.getRightLeafHeaders = memo(
-      () => [table.getRightFlatHeaders()],
-      flatHeaders => {
-        return flatHeaders.filter(header => !header.subHeaders?.length)
-      },
-      getMemoOptions(table.options, debug, 'getRightLeafHeaders')
     )
 
     table.getLeafHeaders = memo(

@@ -1,3 +1,4 @@
+import { buildHeaderGroups } from '../../core/headers'
 import { Table, Column, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
@@ -19,6 +20,8 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './ColumnPinning.utils'
+
+const debug = 'debugHeaders'
 
 export const ColumnPinning: TableFeature = {
   _getInitialState: (state): ColumnPinningTableState => {
@@ -102,6 +105,140 @@ export const ColumnPinning: TableFeature = {
       ],
       (allColumns, left, right) => table_getCenterLeafColumns(allColumns, left),
       getMemoOptions(table.options, 'debugColumns', 'getCenterLeafColumns')
+    )
+
+    table.getCenterHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.left,
+        table.getState().columnPinning.right,
+      ],
+      (allColumns, leafColumns, left, right) => {
+        leafColumns = leafColumns.filter(
+          column => !left?.includes(column.id) && !right?.includes(column.id)
+        )
+        return buildHeaderGroups(allColumns, leafColumns, table, 'center')
+      },
+      getMemoOptions(table.options, debug, 'getCenterHeaderGroups')
+    )
+
+    table.getLeftHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.left,
+      ],
+      (allColumns, leafColumns, left) => {
+        const orderedLeafColumns =
+          left
+            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            .filter(Boolean) ?? []
+
+        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
+      },
+      getMemoOptions(table.options, debug, 'getLeftHeaderGroups')
+    )
+
+    table.getRightHeaderGroups = memo(
+      () => [
+        table.getAllColumns(),
+        table.getVisibleLeafColumns(),
+        table.getState().columnPinning.right,
+      ],
+      (allColumns, leafColumns, right) => {
+        const orderedLeafColumns =
+          right
+            ?.map(columnId => leafColumns.find(d => d.id === columnId)!)
+            .filter(Boolean) ?? []
+
+        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
+      },
+      getMemoOptions(table.options, debug, 'getRightHeaderGroups')
+    )
+
+    table.getLeftFooterGroups = memo(
+      () => [table.getLeftHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      getMemoOptions(table.options, debug, 'getLeftFooterGroups')
+    )
+
+    table.getCenterFooterGroups = memo(
+      () => [table.getCenterHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      getMemoOptions(table.options, debug, 'getCenterFooterGroups')
+    )
+
+    table.getRightFooterGroups = memo(
+      () => [table.getRightHeaderGroups()],
+      headerGroups => {
+        return [...headerGroups].reverse()
+      },
+      getMemoOptions(table.options, debug, 'getRightFooterGroups')
+    )
+
+    table.getLeftFlatHeaders = memo(
+      () => [table.getLeftHeaderGroups()],
+      left => {
+        return left
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      getMemoOptions(table.options, debug, 'getLeftFlatHeaders')
+    )
+
+    table.getCenterFlatHeaders = memo(
+      () => [table.getCenterHeaderGroups()],
+      left => {
+        return left
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      getMemoOptions(table.options, debug, 'getCenterFlatHeaders')
+    )
+
+    table.getRightFlatHeaders = memo(
+      () => [table.getRightHeaderGroups()],
+      left => {
+        return left
+          .map(headerGroup => {
+            return headerGroup.headers
+          })
+          .flat()
+      },
+      getMemoOptions(table.options, debug, 'getRightFlatHeaders')
+    )
+
+    table.getCenterLeafHeaders = memo(
+      () => [table.getCenterFlatHeaders()],
+      flatHeaders => {
+        return flatHeaders.filter(header => !header.subHeaders?.length)
+      },
+      getMemoOptions(table.options, debug, 'getCenterLeafHeaders')
+    )
+
+    table.getLeftLeafHeaders = memo(
+      () => [table.getLeftFlatHeaders()],
+      flatHeaders => {
+        return flatHeaders.filter(header => !header.subHeaders?.length)
+      },
+      getMemoOptions(table.options, debug, 'getLeftLeafHeaders')
+    )
+
+    table.getRightLeafHeaders = memo(
+      () => [table.getRightFlatHeaders()],
+      flatHeaders => {
+        return flatHeaders.filter(header => !header.subHeaders?.length)
+      },
+      getMemoOptions(table.options, debug, 'getRightLeafHeaders')
     )
   },
 }
