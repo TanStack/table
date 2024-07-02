@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { ColumnDef, getCoreRowModel } from '../src'
+import { ColumnDef, getCoreRowModel, getGroupedRowModel } from '../src'
 import { createColumnHelper } from '../src/columnHelper'
 import { _createTable } from '../src/core/table'
-import { getGroupedRowModel } from '../src/utils/getGroupedRowModel'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person

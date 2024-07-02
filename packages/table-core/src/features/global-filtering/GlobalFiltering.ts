@@ -5,14 +5,12 @@ import {
   table_getGlobalFilterFn,
   table_resetGlobalFilter,
   table_setGlobalFilter,
-} from '../..'
+} from './GlobalFiltering.utils'
 import { Column, Table, RowData, TableFeature } from '../../types'
 import {
   GlobalFilterOptions,
   GlobalFilterTableState,
 } from './GlobalFiltering.types'
-
-//
 
 export const GlobalFiltering: TableFeature = {
   _getInitialState: (state): GlobalFilterTableState => {

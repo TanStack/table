@@ -1,6 +1,6 @@
-import { _createRow } from '../core/row'
-import { Table, Row, RowModel, RowData } from '../types'
-import { flattenBy, getMemoOptions, memo } from '../utils'
+import { _createRow } from '../../core/row'
+import { Table, Row, RowModel, RowData } from '../../types'
+import { flattenBy, getMemoOptions, memo } from '../../utils'
 
 export function getGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>

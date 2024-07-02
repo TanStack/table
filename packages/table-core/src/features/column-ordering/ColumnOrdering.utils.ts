@@ -1,12 +1,10 @@
+import { Column, RowData, Table, Updater } from '../../types'
 import {
-  ColumnPinningPosition,
+  GroupingColumnMode,
   GroupingState,
-  Table,
-  Updater,
-  column_getVisibleLeafColumns,
-} from '../..'
-import { Column, RowData } from '../../types'
-import { GroupingColumnMode } from '../column-grouping/ColumnGrouping.types'
+} from '../column-grouping/ColumnGrouping.types'
+import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
+import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import { ColumnOrderState } from './ColumnOrdering.types'
 
 export function column_getIndex<TData extends RowData>(

@@ -1,4 +1,4 @@
-import { BuiltInFilterFn, filterFns } from '../../filterFns'
+import { BuiltInFilterFn, filterFns } from '../../fns/filterFns'
 import { Column, RowData, Table, Updater } from '../../types'
 import { functionalUpdate, isFunction } from '../../utils'
 import { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'

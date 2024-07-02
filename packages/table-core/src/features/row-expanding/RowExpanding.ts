@@ -1,10 +1,6 @@
 import { Table, Row, RowData, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
-import {
-  ExpandedOptions,
-  ExpandedStateList,
-  ExpandedTableState,
-} from './RowExpanding.types'
+import { ExpandedOptions, ExpandedTableState } from './RowExpanding.types'
 import {
   row_getCanExpand,
   row_getIsAllParentsExpanded,

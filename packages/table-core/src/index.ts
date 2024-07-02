@@ -9,11 +9,14 @@ export * from './types'
  * Core
  */
 
+export * from './utils'
+
 export * from './core/cell'
 export * from './core/column'
 export * from './core/headers'
 export * from './core/row'
 export * from './core/table'
+export * from './core/getCoreRowModel'
 
 /**
  * Features
@@ -31,11 +34,13 @@ export * from './features/column-faceting/getFacetedUniqueValues'
 export * from './features/column-filtering/ColumnFiltering'
 export * from './features/column-filtering/ColumnFiltering.types'
 export * from './features/column-filtering/ColumnFiltering.utils'
+export * from './features/column-filtering/getFilteredRowModel'
 
 //ColumnGrouping
 export * from './features/column-grouping/ColumnGrouping'
 export * from './features/column-grouping/ColumnGrouping.types'
 export * from './features/column-grouping/ColumnGrouping.utils'
+export * from './features/column-grouping/getGroupedRowModel'
 
 //ColumnOrdering
 export * from './features/column-ordering/ColumnOrdering'
@@ -73,11 +78,13 @@ export * from './features/global-filtering/GlobalFiltering.utils'
 export * from './features/row-expanding/RowExpanding'
 export * from './features/row-expanding/RowExpanding.types'
 export * from './features/row-expanding/RowExpanding.utils'
+export * from './features/row-expanding/getExpandedRowModel'
 
 //RowPagination
 export * from './features/row-pagination/RowPagination'
 export * from './features/row-pagination/RowPagination.types'
 export * from './features/row-pagination/RowPagination.utils'
+export * from './features/row-pagination/getPaginationRowModel'
 
 //RowPinning
 export * from './features/row-pinning/RowPinning'
@@ -93,23 +100,12 @@ export * from './features/row-selection/RowSelection.utils'
 export * from './features/row-sorting/RowSorting'
 export * from './features/row-sorting/RowSorting.types'
 export * from './features/row-sorting/RowSorting.utils'
-
-/**
- * Utils
- */
-
-export * from './utils'
-export * from './utils/getCoreRowModel'
-export * from './utils/getExpandedRowModel'
-export * from './utils/getFilteredRowModel'
-export * from './utils/getGroupedRowModel'
-export * from './utils/getPaginationRowModel'
-export * from './utils/getSortedRowModel'
+export * from './features/row-sorting/getSortedRowModel'
 
 /**
  * Fns
  */
 
-export * from './aggregationFns'
-export * from './filterFns'
-export * from './sortingFns'
+export * from './fns/aggregationFns'
+export * from './fns/filterFns'
+export * from './fns/sortingFns'

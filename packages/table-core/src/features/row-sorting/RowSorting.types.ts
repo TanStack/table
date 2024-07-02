@@ -1,4 +1,4 @@
-import { BuiltInSortingFn } from '../../sortingFns'
+import { BuiltInSortingFn } from '../../fns/sortingFns'
 import {
   OnChangeFn,
   Row,

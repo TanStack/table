@@ -1,8 +1,5 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-
 import { Column, RowData, Table, TableFeature } from '../../types'
-
-import { column_getVisibleLeafColumns } from '../..'
 import {
   ColumnOrderDefaultOptions,
   ColumnOrderTableState,
@@ -15,6 +12,7 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
+import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 
 export const ColumnOrdering: TableFeature = {
   _getInitialState: (state): ColumnOrderTableState => {

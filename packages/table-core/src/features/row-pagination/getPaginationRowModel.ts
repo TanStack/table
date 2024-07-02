@@ -1,6 +1,6 @@
-import { Table, RowModel, Row, RowData } from '../types'
-import { getMemoOptions, memo } from '../utils'
-import { expandRows } from './getExpandedRowModel'
+import { Table, RowModel, Row, RowData } from '../../types'
+import { getMemoOptions, memo } from '../../utils'
+import { expandRows } from '../row-expanding/getExpandedRowModel'
 
 export function getPaginationRowModel<TData extends RowData>(opts?: {
   initialSync: boolean

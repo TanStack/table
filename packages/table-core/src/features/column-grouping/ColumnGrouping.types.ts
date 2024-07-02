@@ -1,4 +1,4 @@
-import { BuiltInAggregationFn } from '../../aggregationFns'
+import { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import {
   AggregationFns,
   Cell,

@@ -2,7 +2,7 @@ import {
   BuiltInSortingFn,
   reSplitAlphaNumeric,
   sortingFns,
-} from '../../sortingFns'
+} from '../../fns/sortingFns'
 import { Column, RowData, Table, Updater } from '../../types'
 import { isFunction } from '../../utils'
 import { SortingState } from './RowSorting.types'

@@ -1,4 +1,4 @@
-import { BuiltInAggregationFn, aggregationFns } from '../../aggregationFns'
+import { BuiltInAggregationFn, aggregationFns } from '../../fns/aggregationFns'
 import { Cell, Column, Row, RowData, Table, Updater } from '../../types'
 import { isFunction } from '../../utils'
 import { GroupingState } from './ColumnGrouping.types'

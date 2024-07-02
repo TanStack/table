@@ -39,6 +39,7 @@ describe('RowPinning', () => {
               pageIndex: 0, //pinned rows will be on page 0
             },
             rowPinning: {
+              bottom: [],
               top: ['0', '1'],
             },
           },
@@ -69,6 +70,7 @@ describe('RowPinning', () => {
               pageIndex: 1, //pinned rows will be on page 0
             },
             rowPinning: {
+              bottom: [],
               top: ['0', '1'],
             },
           },
@@ -99,6 +101,7 @@ describe('RowPinning', () => {
               pageIndex: 0, //pinned rows will be on page 0
             },
             rowPinning: {
+              bottom: [],
               top: ['0', '1'],
             },
           },
@@ -129,6 +132,7 @@ describe('RowPinning', () => {
               pageIndex: 1, //pinned rows will be on page 0, but this is page 1
             },
             rowPinning: {
+              bottom: [],
               top: ['0', '1'],
             },
           },
@@ -158,6 +162,7 @@ describe('RowPinning', () => {
               pageIndex: 0, //pinned rows will be on page 0
             },
             rowPinning: {
+              bottom: [],
               top: ['1', '3'],
             },
           },
@@ -189,6 +194,7 @@ describe('RowPinning', () => {
             },
             rowPinning: {
               bottom: ['1', '3'],
+              top: [],
             },
           },
           columns,

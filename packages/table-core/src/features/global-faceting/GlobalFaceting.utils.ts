@@ -1,31 +1,28 @@
-import { RowData, Table } from '../../types'
-
-export function table_getGlobalFacetedRowModel<TData extends RowData>(
-  table: Table<TData>
-) {
-  if (table.options.manualFiltering || !table._getGlobalFacetedRowModel) {
-    return table.getPreFilteredRowModel()
-  }
-
-  return table._getGlobalFacetedRowModel()
-}
-
-export function table_getGlobalFacetedUniqueValues<TData extends RowData>(
-  table: Table<TData>
-) {
-  if (!table._getGlobalFacetedUniqueValues) {
-    return new Map()
-  }
-
-  return table._getGlobalFacetedUniqueValues()
-}
+import { RowData, RowModel, Table } from '../../types'
 
 export function table_getGlobalFacetedMinMaxValues<TData extends RowData>(
   table: Table<TData>
 ) {
-  if (!table._getGlobalFacetedMinMaxValues) {
-    return
-  }
+  return (
+    table.options.getFacetedMinMaxValues?.(table, '__global__') ??
+    (() => undefined)
+  )
+}
 
-  return table._getGlobalFacetedMinMaxValues()
+export function table_getGlobalFacetedRowModel<TData extends RowData>(
+  table: Table<TData>
+): () => RowModel<TData> {
+  return (
+    table.options.getFacetedRowModel?.(table, '__global__') ??
+    (() => table.getPreFilteredRowModel())
+  )
+}
+
+export function table_getGlobalFacetedUniqueValues<TData extends RowData>(
+  table: Table<TData>
+): () => Map<any, number> {
+  return (
+    table.options.getFacetedUniqueValues?.(table, '__global__') ??
+    (() => new Map())
+  )
 }

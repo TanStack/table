@@ -1,4 +1,4 @@
-import { BuiltInFilterFn } from '../../filterFns'
+import { BuiltInFilterFn } from '../../fns/filterFns'
 import {
   Column,
   FilterFns,

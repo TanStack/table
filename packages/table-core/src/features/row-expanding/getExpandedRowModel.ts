@@ -1,5 +1,5 @@
-import { Table, Row, RowModel, RowData } from '../types'
-import { getMemoOptions, memo } from '../utils'
+import { Table, Row, RowModel, RowData } from '../../types'
+import { getMemoOptions, memo } from '../../utils'
 
 export function getExpandedRowModel<TData extends RowData>(): (
   table: Table<TData>

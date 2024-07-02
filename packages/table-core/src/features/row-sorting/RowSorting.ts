@@ -1,7 +1,4 @@
 import {
-  SortingColumnDef,
-  SortingOptions,
-  SortingTableState,
   column_clearSorting,
   column_getAutoSortDir,
   column_getAutoSortingFn,
@@ -18,7 +15,12 @@ import {
   table_getSortedRowModel,
   table_resetSorting,
   table_setSorting,
-} from '../..'
+} from './RowSorting.utils'
+import {
+  SortingColumnDef,
+  SortingOptions,
+  SortingTableState,
+} from './RowSorting.types'
 import { Column, Table, RowData, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
 
