@@ -118,6 +118,10 @@ export function getGroupedRowModel<TData extends RowData>(): (
               })
 
               subRows.forEach(subRow => {
+                if (!subRow.parentId) {
+                  Object.assign(subRow, { parentId: id });
+                }
+
                 groupedFlatRows.push(subRow)
                 groupedRowsById[subRow.id] = subRow
                 // if (subRow.getIsGrouped?.()) {
