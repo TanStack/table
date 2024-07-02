@@ -8,7 +8,7 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  useVueTable,
+  useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
@@ -99,7 +99,7 @@ const rerender = () => {
 }
 const columnFilters = ref<ColumnFiltersState>([])
 const globalFilter = ref('')
-const table = useVueTable({
+const table = useTable({
   get data() {
     return data.value
   },

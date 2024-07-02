@@ -2673,7 +2673,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.19.2
+        specifier: ^9.0.0-alpha.10
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
