@@ -10,7 +10,7 @@ import {
   flexRender,
   getCoreRowModel,
   useTable,
-  VisibilityState,
+  ColumnVisibilityState,
 } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 
@@ -71,7 +71,7 @@ function App() {
   const [columns] = React.useState(() => [...defaultColumns])
 
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<ColumnVisibilityState>({})
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
   const [columnPinning, setColumnPinning] = React.useState({})
 

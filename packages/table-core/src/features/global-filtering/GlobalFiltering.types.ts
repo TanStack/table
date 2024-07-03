@@ -4,11 +4,11 @@ import {
   FilterFnOption,
 } from '../column-filtering/ColumnFiltering.types'
 
-export interface GlobalFilterTableState {
+export interface TableState_GlobalFiltering {
   globalFilter: any
 }
 
-export interface GlobalFilterColumnDef {
+export interface ColumnDef_GlobalFiltering {
   /**
    * Enables/disables the **global** filter for this column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#enableglobalfilter)
@@ -17,7 +17,7 @@ export interface GlobalFilterColumnDef {
   enableGlobalFilter?: boolean
 }
 
-export interface GlobalFilterColumn {
+export interface Column_GlobalFiltering {
   /**
    * Returns whether or not the column can be **globally** filtered. Set to `false` to disable a column from being scanned during global filtering.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getcanglobalfilter)
@@ -26,7 +26,7 @@ export interface GlobalFilterColumn {
   getCanGlobalFilter: () => boolean
 }
 
-export interface GlobalFilterOptions<TData extends RowData> {
+export interface TableOptions_GlobalFiltering<TData extends RowData> {
   /**
    * Enables/disables **global** filtering for all columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#enableglobalfilter)
@@ -58,7 +58,7 @@ export interface GlobalFilterOptions<TData extends RowData> {
   onGlobalFilterChange?: OnChangeFn<any>
 }
 
-export interface GlobalFilterInstance<TData extends RowData> {
+export interface Table_GlobalFiltering<TData extends RowData> {
   /**
    * Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getglobalautofilterfn)

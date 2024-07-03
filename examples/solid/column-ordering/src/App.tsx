@@ -5,7 +5,7 @@ import {
   flexRender,
   getCoreRowModel,
   ColumnOrderState,
-  VisibilityState,
+  ColumnVisibilityState,
   ColumnDef,
   createTable,
 } from '@tanstack/solid-table'
@@ -65,9 +65,8 @@ const defaultColumns: ColumnDef<Person>[] = [
 function App() {
   const [data, setData] = createSignal(makeData(20))
   const [columnOrder, setColumnOrder] = createSignal<ColumnOrderState>([])
-  const [columnVisibility, setColumnVisibility] = createSignal<VisibilityState>(
-    {}
-  )
+  const [columnVisibility, setColumnVisibility] =
+    createSignal<ColumnVisibilityState>({})
   const rerender = () => setData(() => makeData(20))
 
   const table = createTable({

@@ -2,11 +2,12 @@ import { OnChangeFn, Row, RowData, RowModel, Table, Updater } from '../../types'
 
 export type ExpandedStateList = Record<string, boolean>
 export type ExpandedState = true | Record<string, boolean>
-export interface ExpandedTableState {
+
+export interface TableState_RowExpanding {
   expanded: ExpandedState
 }
 
-export interface ExpandedRow {
+export interface Row_RowExpanding {
   /**
    * Returns whether the row can be expanded.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getcanexpand)
@@ -39,7 +40,7 @@ export interface ExpandedRow {
   toggleExpanded: (expanded?: boolean) => void
 }
 
-export interface ExpandedOptions<TData extends RowData> {
+export interface TableOptions_RowExpanding<TData extends RowData> {
   /**
    * Enable this setting to automatically reset the expanded state of the table when expanding state changes.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#autoresetexpanded)
@@ -90,7 +91,7 @@ export interface ExpandedOptions<TData extends RowData> {
   paginateExpandedRows?: boolean
 }
 
-export interface ExpandedInstance<TData extends RowData> {
+export interface Table_RowExpanding<TData extends RowData> {
   _autoResetExpanded: () => void
   _getExpandedRowModel?: () => RowModel<TData>
   /**

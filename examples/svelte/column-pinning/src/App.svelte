@@ -5,7 +5,7 @@
     ColumnOrderState,
     ColumnPinningState,
     TableOptions,
-    VisibilityState,
+    ColumnVisibilityState,
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
@@ -76,7 +76,7 @@
   const [columnPinning, setColumnPinning] =
     createTableState<ColumnPinningState>({})
   const [columnVisibility, setColumnVisibility] =
-    createTableState<VisibilityState>({})
+    createTableState<ColumnVisibilityState>({})
 
   const options: TableOptions<Person> = {
     get data() {

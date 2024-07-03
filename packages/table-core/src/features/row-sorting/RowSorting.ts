@@ -17,22 +17,24 @@ import {
   table_setSorting,
 } from './RowSorting.utils'
 import {
-  SortingColumnDef,
-  SortingOptions,
-  SortingTableState,
+  ColumnDef_RowSorting,
+  TableOptions_RowSorting,
+  TableState_RowSorting,
 } from './RowSorting.types'
 import { Column, Table, RowData, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
 
 export const RowSorting: TableFeature = {
-  _getInitialState: (state): SortingTableState => {
+  _getInitialState: (state): TableState_RowSorting => {
     return {
       sorting: [],
       ...state,
     }
   },
 
-  _getDefaultColumnDef: <TData extends RowData>(): SortingColumnDef<TData> => {
+  _getDefaultColumnDef: <
+    TData extends RowData,
+  >(): ColumnDef_RowSorting<TData> => {
     return {
       sortingFn: 'auto',
       sortUndefined: 1,
@@ -41,7 +43,7 @@ export const RowSorting: TableFeature = {
 
   _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): SortingOptions<TData> => {
+  ): TableOptions_RowSorting<TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
       isMultiSortEvent: (e: unknown) => {

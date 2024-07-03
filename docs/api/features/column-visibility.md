@@ -8,10 +8,10 @@ id: column-visibility
 Column visibility state is stored on the table using the following shape:
 
 ```tsx
-export type VisibilityState = Record<string, boolean>
+export type ColumnVisibilityState = Record<string, boolean>
 
 export type VisibilityTableState = {
-  columnVisibility: VisibilityState
+  columnVisibility: ColumnVisibilityState
 }
 ```
 
@@ -64,7 +64,7 @@ Returns a function that can be used to toggle the column visibility. This functi
 ### `onColumnVisibilityChange`
 
 ```tsx
-onColumnVisibilityChange?: OnChangeFn<VisibilityState>
+onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
 ```
 
 If provided, this function will be called with an `updaterFn` when `state.columnVisibility` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
@@ -122,7 +122,7 @@ If column pinning, returns a flat array of leaf-node columns that are visible in
 ### `setColumnVisibility`
 
 ```tsx
-setColumnVisibility: (updater: Updater<VisibilityState>) => void
+setColumnVisibility: (updater: Updater<ColumnVisibilityState>) => void
 ```
 
 Updates the column visibility state via an updater function or value

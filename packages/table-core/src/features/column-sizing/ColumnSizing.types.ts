@@ -1,13 +1,13 @@
 import { OnChangeFn, Updater } from '../../types'
 import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
-export interface ColumnSizingTableState {
+export interface TableState_ColumnSizing {
   columnSizing: ColumnSizingState
 }
 
 export type ColumnSizingState = Record<string, number>
 
-export interface ColumnSizingOptions {
+export interface TableOptions_ColumnSizing {
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnSizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnSizing` from your own managed state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnsizingchange)
@@ -17,11 +17,11 @@ export interface ColumnSizingOptions {
 }
 
 export type ColumnSizingDefaultOptions = Pick<
-  ColumnSizingOptions,
+  TableOptions_ColumnSizing,
   'onColumnSizingChange'
 >
 
-export interface ColumnSizingInstance {
+export interface Table_ColumnSizing {
   /**
    * If pinning, returns the total size of the center portion of the table by calculating the sum of the sizes of all unpinned/center leaf-columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getcentertotalsize)
@@ -60,7 +60,7 @@ export interface ColumnSizingInstance {
   setColumnSizing: (updater: Updater<ColumnSizingState>) => void
 }
 
-export interface ColumnSizingColumnDef {
+export interface ColumnDef_ColumnSizing {
   /**
    * The maximum allowed size for the column
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#maxsize)
@@ -81,7 +81,7 @@ export interface ColumnSizingColumnDef {
   size?: number
 }
 
-export interface ColumnSizingColumn {
+export interface Column_ColumnSizing {
   /**
    * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all succeeding (right) headers in relation to the current column.
    */
@@ -106,7 +106,7 @@ export interface ColumnSizingColumn {
   resetSize: () => void
 }
 
-export interface ColumnSizingHeader {
+export interface Header_ColumnSizing {
   /**
    * Returns the current size of the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getsize)

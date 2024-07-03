@@ -2,7 +2,7 @@ import { RowData, Column, Header, Table, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
 import {
   ColumnResizingDefaultOptions,
-  ColumnResizingTableState,
+  TableState_ColumnResizing,
 } from './ColumnResizing.types'
 import {
   column_getCanResize,
@@ -14,7 +14,7 @@ import {
 } from './ColumnResizing.utils'
 
 export const ColumnResizing: TableFeature = {
-  _getInitialState: (state): ColumnResizingTableState => {
+  _getInitialState: (state): TableState_ColumnResizing => {
     return {
       columnSizing: {},
       columnSizingInfo: getDefaultColumnSizingInfoState(),

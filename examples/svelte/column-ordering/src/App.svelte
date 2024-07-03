@@ -5,7 +5,7 @@
     ColumnOrderState,
     OnChangeFn,
     TableOptions,
-    VisibilityState,
+    ColumnVisibilityState,
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
@@ -73,7 +73,7 @@
 
   const [columnOrder, setColumnOrder] = createTableState<ColumnOrderState>([])
   const [columnVisibility, setColumnVisibility] =
-    createTableState<VisibilityState>({})
+    createTableState<ColumnVisibilityState>({})
 
   const options: TableOptions<Person> = {
     get data() {

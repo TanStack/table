@@ -1,8 +1,8 @@
 import { Table, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
-  RowSelectionOptions,
-  RowSelectionTableState,
+  TableOptions_RowSelection,
+  TableState_RowSelection,
 } from './RowSelection.types'
 import {
   row_getCanMultiSelect,
@@ -30,7 +30,7 @@ import {
 } from './RowSelection.utils'
 
 export const RowSelection: TableFeature = {
-  _getInitialState: (state): RowSelectionTableState => {
+  _getInitialState: (state): TableState_RowSelection => {
     return {
       rowSelection: {},
       ...state,
@@ -39,7 +39,7 @@ export const RowSelection: TableFeature = {
 
   _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): RowSelectionOptions<TData> => {
+  ): TableOptions_RowSelection<TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
       enableRowSelection: true,

@@ -1,6 +1,6 @@
 import { OnChangeFn, Updater } from '../../types'
 
-export interface ColumnResizingTableState {
+export interface TableState_ColumnResizing {
   columnSizingInfo: ColumnResizingInfoState
 }
 
@@ -17,7 +17,7 @@ export type ColumnResizeMode = 'onChange' | 'onEnd'
 
 export type ColumnResizeDirection = 'ltr' | 'rtl'
 
-export interface ColumnResizingOptions {
+export interface TableOptions_ColumnResizing {
   /**
    * Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#columnresizemode)
@@ -45,11 +45,11 @@ export interface ColumnResizingOptions {
 }
 
 export type ColumnResizingDefaultOptions = Pick<
-  ColumnResizingOptions,
+  TableOptions_ColumnResizing,
   'columnResizeMode' | 'onColumnSizingInfoChange' | 'columnResizeDirection'
 >
 
-export interface ColumnResizingInstance {
+export interface Table_ColumnResizing {
   /**
    * Resets column sizing info to its initial state. If `defaultState` is `true`, the default state for the table will be used instead of the initialValue provided to the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#resetheadersizeinfo)
@@ -64,7 +64,7 @@ export interface ColumnResizingInstance {
   setColumnSizingInfo: (updater: Updater<ColumnResizingInfoState>) => void
 }
 
-export interface ColumnResizingColumnDef {
+export interface ColumnDef_ColumnResizing {
   /**
    * Enables or disables column resizing for the column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#enableresizing)
@@ -73,7 +73,7 @@ export interface ColumnResizingColumnDef {
   enableResizing?: boolean
 }
 
-export interface ColumnResizingColumn {
+export interface Column_ColumnResizing {
   /**
    * Returns `true` if the column can be resized.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getcanresize)
@@ -88,7 +88,7 @@ export interface ColumnResizingColumn {
   getIsResizing: () => boolean
 }
 
-export interface ColumnResizingHeader {
+export interface Header_ColumnResizing {
   /**
    * Returns an event handler function that can be used to resize the header. It can be used as an:
    * - `onMouseDown` handler

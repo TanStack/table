@@ -1,6 +1,9 @@
 import { Table, Row, RowData, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
-import { ExpandedOptions, ExpandedTableState } from './RowExpanding.types'
+import {
+  TableOptions_RowExpanding,
+  TableState_RowExpanding,
+} from './RowExpanding.types'
 import {
   row_getCanExpand,
   row_getIsAllParentsExpanded,
@@ -21,7 +24,7 @@ import {
 } from './RowExpanding.utils'
 
 export const RowExpanding: TableFeature = {
-  _getInitialState: (state): ExpandedTableState => {
+  _getInitialState: (state): TableState_RowExpanding => {
     return {
       expanded: {},
       ...state,
@@ -30,7 +33,7 @@ export const RowExpanding: TableFeature = {
 
   _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): ExpandedOptions<TData> => {
+  ): TableOptions_RowExpanding<TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
       paginateExpandedRows: true,

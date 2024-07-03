@@ -1,6 +1,6 @@
-import { _createRow } from './row'
-import { Table, Row, RowModel, RowData } from '../types'
-import { getMemoOptions, memo } from '../utils'
+import { _createRow } from '../rows/Rows'
+import { Table, Row, RowModel, RowData } from '../../types'
+import { getMemoOptions, memo } from '../../utils'
 
 export function getCoreRowModel<TData extends RowData>(): (
   table: Table<TData>

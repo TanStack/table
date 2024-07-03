@@ -1,7 +1,7 @@
 import { BuiltInFilterFn, filterFns } from '../../fns/filterFns'
 import { Column, RowData, Table } from '../../types'
 import { isFunction, makeStateUpdater } from '../../utils'
-import { GlobalFilterOptions } from './GlobalFiltering.types'
+import { TableOptions_GlobalFiltering } from './GlobalFiltering.types'
 
 export function column_getCanGlobalFilter<TData extends RowData>(
   column: Column<TData, unknown>,
@@ -63,5 +63,5 @@ export function getGlobalFilteringDefaultOptions<TData extends RowData>(
 
       return typeof value === 'string' || typeof value === 'number'
     },
-  } as GlobalFilterOptions<TData>
+  } as TableOptions_GlobalFiltering<TData>
 }

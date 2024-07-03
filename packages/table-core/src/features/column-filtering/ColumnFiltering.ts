@@ -1,10 +1,10 @@
 import { Column, Row, RowData, Table, TableFeature, Updater } from '../../types'
 import { makeStateUpdater } from '../../utils'
 import {
-  ColumnFiltersColumnDef,
-  ColumnFiltersOptions,
+  ColumnDef_ColumnFiltering,
+  TableOptions_ColumnFiltering,
   ColumnFiltersState,
-  ColumnFiltersTableState,
+  TableState_ColumnFiltering,
 } from './ColumnFiltering.types'
 import {
   column_getAutoFilterFn,
@@ -23,13 +23,13 @@ import {
 export const ColumnFiltering: TableFeature = {
   _getDefaultColumnDef: <
     TData extends RowData,
-  >(): ColumnFiltersColumnDef<TData> => {
+  >(): ColumnDef_ColumnFiltering<TData> => {
     return {
       filterFn: 'auto',
     }
   },
 
-  _getInitialState: (state): ColumnFiltersTableState => {
+  _getInitialState: (state): TableState_ColumnFiltering => {
     return {
       columnFilters: [],
       ...state,
@@ -38,12 +38,12 @@ export const ColumnFiltering: TableFeature = {
 
   _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): ColumnFiltersOptions<TData> => {
+  ): TableOptions_ColumnFiltering<TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
       filterFromLeafRows: false,
       maxLeafRowFilterDepth: 100,
-    } as ColumnFiltersOptions<TData>
+    } as TableOptions_ColumnFiltering<TData>
   },
 
   _createColumn: <TData extends RowData>(

@@ -18,7 +18,7 @@ export interface ColumnSort {
 
 export type SortingState = ColumnSort[]
 
-export interface SortingTableState {
+export interface TableState_RowSorting {
   sorting: SortingState
 }
 
@@ -37,7 +37,7 @@ export type SortingFnOption<TData extends RowData> =
   | BuiltInSortingFn
   | SortingFn<TData>
 
-export interface SortingColumnDef<TData extends RowData> {
+export interface ColumnDef_RowSorting<TData extends RowData> {
   /**
    * Enables/Disables multi-sorting for this column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#enablemultisort)
@@ -84,7 +84,7 @@ export interface SortingColumnDef<TData extends RowData> {
   sortUndefined?: false | -1 | 1 | 'first' | 'last'
 }
 
-export interface SortingColumn<TData extends RowData> {
+export interface Column_RowSorting<TData extends RowData> {
   /**
    * Removes this column from the table's sorting state
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#clearsorting)
@@ -232,11 +232,11 @@ type ResolvedSortingFns = keyof SortingFns extends never
       sortingFns: Record<keyof SortingFns, SortingFn<any>>
     }
 
-export interface SortingOptions<TData extends RowData>
+export interface TableOptions_RowSorting<TData extends RowData>
   extends SortingOptionsBase,
     ResolvedSortingFns {}
 
-export interface SortingInstance<TData extends RowData> {
+export interface Table_RowSorting<TData extends RowData> {
   _getSortedRowModel?: () => RowModel<TData>
   /**
    * Returns the row model for the table before any sorting has been applied.

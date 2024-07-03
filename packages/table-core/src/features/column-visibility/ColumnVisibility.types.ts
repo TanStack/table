@@ -1,12 +1,12 @@
 import { Cell, Column, OnChangeFn, RowData, Updater } from '../../types'
 
-export type VisibilityState = Record<string, boolean>
+export type ColumnVisibilityState = Record<string, boolean>
 
-export interface VisibilityTableState {
-  columnVisibility: VisibilityState
+export interface TableState_ColumnVisibility {
+  columnVisibility: ColumnVisibilityState
 }
 
-export interface VisibilityOptions {
+export interface TableOptions_ColumnVisibility {
   /**
    * Whether to enable column hiding. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
@@ -18,15 +18,15 @@ export interface VisibilityOptions {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#oncolumnvisibilitychange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  onColumnVisibilityChange?: OnChangeFn<VisibilityState>
+  onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
 }
 
 export type VisibilityDefaultOptions = Pick<
-  VisibilityOptions,
+  TableOptions_ColumnVisibility,
   'onColumnVisibilityChange'
 >
 
-export interface VisibilityInstance<TData extends RowData> {
+export interface Table_ColumnVisibility<TData extends RowData> {
   /**
    * If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcentervisibleleafcolumns)
@@ -86,7 +86,7 @@ export interface VisibilityInstance<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#setcolumnvisibility)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  setColumnVisibility: (updater: Updater<VisibilityState>) => void
+  setColumnVisibility: (updater: Updater<ColumnVisibilityState>) => void
   /**
    * Toggles the visibility of all columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#toggleallcolumnsvisible)
@@ -95,11 +95,11 @@ export interface VisibilityInstance<TData extends RowData> {
   toggleAllColumnsVisible: (value?: boolean) => void
 }
 
-export interface VisibilityColumnDef {
+export interface ColumnDef_ColumnVisibility {
   enableHiding?: boolean
 }
 
-export interface VisibilityRow<TData extends RowData> {
+export interface Row_ColumnVisibility<TData extends RowData> {
   _getAllVisibleCells: () => Cell<TData, unknown>[]
   /**
    * Returns an array of cells that account for column visibility for the row.
@@ -109,7 +109,7 @@ export interface VisibilityRow<TData extends RowData> {
   getVisibleCells: () => Cell<TData, unknown>[]
 }
 
-export interface VisibilityColumn {
+export interface Column_ColumnVisibility {
   /**
    * Returns whether the column can be hidden
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcanhide)

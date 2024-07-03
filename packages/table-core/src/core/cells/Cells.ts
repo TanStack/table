@@ -1,5 +1,5 @@
-import { RowData, Cell, Column, Row, Table } from '../types'
-import { Getter, getMemoOptions, memo } from '../utils'
+import { RowData, Cell, Column, Row, Table } from '../../types'
+import { Getter, getMemoOptions, memo } from '../../utils'
 
 export interface CellContext<TData extends RowData, TValue> {
   cell: Cell<TData, TValue>
@@ -10,7 +10,7 @@ export interface CellContext<TData extends RowData, TValue> {
   table: Table<TData>
 }
 
-export interface CoreCell<TData extends RowData, TValue> {
+export interface Cell_Core<TData extends RowData, TValue> {
   /**
    * The associated Column object for the cell.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#column)
@@ -58,7 +58,7 @@ export function _createCell<TData extends RowData, TValue>(
   const getRenderValue = () =>
     cell.getValue() ?? table.options.renderFallbackValue
 
-  const cell: CoreCell<TData, TValue> = {
+  const cell: Cell_Core<TData, TValue> = {
     id: `${row.id}_${column.id}`,
     row,
     column,

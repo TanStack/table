@@ -1,13 +1,13 @@
 import { Column, OnChangeFn, RowData, Updater } from '../../types'
 import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
-export interface ColumnOrderTableState {
+export type ColumnOrderState = string[]
+
+export interface TableState_ColumnOrdering {
   columnOrder: ColumnOrderState
 }
 
-export type ColumnOrderState = string[]
-
-export interface ColumnOrderOptions {
+export interface TableOptions_ColumnOrdering {
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#oncolumnorderchange)
@@ -16,7 +16,7 @@ export interface ColumnOrderOptions {
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 }
 
-export interface ColumnOrderColumn {
+export interface Column_ColumnOrdering {
   /**
    * Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#getindex)
@@ -41,7 +41,7 @@ export interface ColumnOrderDefaultOptions {
   onColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
-export interface ColumnOrderInstance<TData extends RowData> {
+export interface Table_ColumnOrdering<TData extends RowData> {
   _getOrderColumnsFn: () => (
     columns: Column<TData, unknown>[]
   ) => Column<TData, unknown>[]

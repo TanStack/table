@@ -11,7 +11,7 @@ import {
   injectTable,
   FlexRenderDirective,
   getCoreRowModel,
-  type VisibilityState,
+  type ColumnVisibilityState,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
 import { faker } from '@faker-js/faker'
@@ -87,7 +87,7 @@ const defaultColumns: ColumnDef<Person>[] = [
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(5000))
-  readonly columnVisibility = signal<VisibilityState>({})
+  readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
   readonly columnPinning = signal<ColumnPinningState>({})
   readonly split = signal(false)

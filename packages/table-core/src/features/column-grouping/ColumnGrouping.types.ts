@@ -13,7 +13,7 @@ import {
 
 export type GroupingState = string[]
 
-export interface GroupingTableState {
+export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
 
@@ -31,7 +31,7 @@ export type AggregationFnOption<TData extends RowData> =
   | BuiltInAggregationFn
   | AggregationFn<TData>
 
-export interface GroupingColumnDef<TData extends RowData, TValue> {
+export interface ColumnDef_ColumnGrouping<TData extends RowData, TValue> {
   /**
    * The cell to display each row for the column if the cell is an aggregate. If a function is passed, it will be passed a props object with the context of the cell and should return the property type for your adapter (the exact type depends on the adapter being used).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#aggregatedcell)
@@ -60,7 +60,7 @@ export interface GroupingColumnDef<TData extends RowData, TValue> {
   getGroupingValue?: (row: TData) => any
 }
 
-export interface GroupingColumn<TData extends RowData> {
+export interface Column_ColumnGrouping<TData extends RowData> {
   /**
    * Returns the aggregation function for the column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getaggregationfn)
@@ -105,7 +105,7 @@ export interface GroupingColumn<TData extends RowData> {
   toggleGrouping: () => void
 }
 
-export interface GroupingRow {
+export interface Row_ColumnGrouping {
   _groupingValuesCache: Record<string, any>
   /**
    * Returns the grouping value for any row and column (including leaf rows).
@@ -133,7 +133,7 @@ export interface GroupingRow {
   groupingValue?: unknown
 }
 
-export interface GroupingCell {
+export interface Cell_ColumnGrouping {
   /**
    * Returns whether or not the cell is currently aggregated.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getisaggregated)
@@ -200,13 +200,13 @@ type ResolvedAggregationFns = keyof AggregationFns extends never
       aggregationFns: Record<keyof AggregationFns, AggregationFn<any>>
     }
 
-export interface GroupingOptions
+export interface TableOptions_ColumnGrouping
   extends GroupingOptionsBase,
     ResolvedAggregationFns {}
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
-export interface GroupingInstance<TData extends RowData> {
+export interface Table_ColumnGrouping<TData extends RowData> {
   _getGroupedRowModel?: () => RowModel<TData>
   /**
    * Returns the row model for the table after grouping has been applied.

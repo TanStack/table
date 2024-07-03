@@ -5,15 +5,11 @@ export interface PaginationState {
   pageSize: number
 }
 
-export interface PaginationTableState {
+export interface TableState_RowPagination {
   pagination: PaginationState
 }
 
-export interface PaginationInitialTableState {
-  pagination?: Partial<PaginationState>
-}
-
-export interface PaginationOptions {
+export interface TableOptions_RowPagination {
   /**
    * If set to `true`, pagination will be reset to the first page when page-altering state changes eg. `data` is updated, filters change, grouping changes, etc.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#autoresetpageindex)
@@ -58,7 +54,7 @@ export interface PaginationDefaultOptions {
   onPaginationChange: OnChangeFn<PaginationState>
 }
 
-export interface PaginationInstance<TData extends RowData> {
+export interface Table_RowPagination<TData extends RowData> {
   _autoResetPageIndex: () => void
   _getPaginationRowModel?: () => RowModel<TData>
   /**

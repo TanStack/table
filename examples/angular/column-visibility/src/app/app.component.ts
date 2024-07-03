@@ -10,7 +10,7 @@ import {
   injectTable,
   FlexRenderDirective,
   getCoreRowModel,
-  type VisibilityState,
+  type ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
 type Person = {
@@ -110,7 +110,7 @@ const defaultColumns: ColumnDef<Person>[] = [
 })
 export class AppComponent implements OnInit {
   data = signal<Person[]>([])
-  readonly columnVisibility = signal<VisibilityState>({})
+  readonly columnVisibility = signal<ColumnVisibilityState>({})
 
   table = injectTable(() => ({
     data: this.data(),

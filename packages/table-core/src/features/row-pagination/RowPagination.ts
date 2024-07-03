@@ -2,7 +2,7 @@ import { Table, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
   PaginationDefaultOptions,
-  PaginationTableState,
+  TableState_RowPagination,
   getDefaultPaginationState,
 } from './RowPagination.types'
 import {
@@ -28,7 +28,7 @@ import {
 } from './RowPagination.utils'
 
 export const RowPagination: TableFeature = {
-  _getInitialState: (state): PaginationTableState => {
+  _getInitialState: (state): TableState_RowPagination => {
     return {
       ...state,
       pagination: {

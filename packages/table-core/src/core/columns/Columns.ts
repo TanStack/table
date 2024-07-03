@@ -5,10 +5,10 @@ import {
   ColumnDef,
   RowData,
   ColumnDefResolved,
-} from '../types'
-import { getMemoOptions, memo } from '../utils'
+} from '../../types'
+import { getMemoOptions, memo } from '../../utils'
 
-export interface CoreColumn<TData extends RowData, TValue> {
+export interface Column_Core<TData extends RowData, TValue> {
   /**
    * The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#accessorfn)
@@ -122,7 +122,7 @@ export function _createColumn<TData extends RowData, TValue>(
     throw new Error()
   }
 
-  let column: CoreColumn<TData, any> = {
+  let column: Column_Core<TData, any> = {
     id: `${String(id)}`,
     accessorFn,
     parent: parent as any,

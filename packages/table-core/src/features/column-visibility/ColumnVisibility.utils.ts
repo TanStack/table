@@ -1,7 +1,7 @@
 import { Cell, Column, Row, RowData, Table, Updater } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
-import { VisibilityState } from './ColumnVisibility.types'
+import { ColumnVisibilityState } from './ColumnVisibility.types'
 
 export function column_toggleVisibility<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
@@ -98,7 +98,7 @@ export function table_makeVisibleColumnsMethod<TData extends RowData>(
 
 export function table_setColumnVisibility<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<VisibilityState>
+  updater: Updater<ColumnVisibilityState>
 ) {
   table.options.onColumnVisibilityChange?.(updater)
 }

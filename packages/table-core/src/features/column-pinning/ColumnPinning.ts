@@ -1,9 +1,9 @@
-import { buildHeaderGroups } from '../../core/headers'
+import { buildHeaderGroups } from '../../core/headers/Headers'
 import { Table, Column, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
   ColumnPinningDefaultOptions,
-  ColumnPinningTableState,
+  TableState_ColumnPinning,
 } from './ColumnPinning.types'
 import {
   column_getCanPin,
@@ -24,7 +24,7 @@ import {
 const debug = 'debugHeaders'
 
 export const ColumnPinning: TableFeature = {
-  _getInitialState: (state): ColumnPinningTableState => {
+  _getInitialState: (state): TableState_ColumnPinning => {
     return {
       columnPinning: getDefaultColumnPinningState(),
       ...state,

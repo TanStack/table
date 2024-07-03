@@ -1,11 +1,15 @@
-import { functionalUpdate, getMemoOptions, memo, RequiredKeys } from '../utils'
+import {
+  functionalUpdate,
+  getMemoOptions,
+  memo,
+  RequiredKeys,
+} from '../../utils'
 
 import {
   Updater,
   TableOptionsResolved,
   TableState,
   Table,
-  InitialTableState,
   Row,
   Column,
   RowModel,
@@ -16,28 +20,28 @@ import {
   ColumnDefResolved,
   GroupColumnDef,
   TableFeature,
-} from '../types'
+} from '../../types'
 
 //
-import { _createColumn } from './column'
-import { Headers } from './headers'
+import { _createColumn } from '../columns/Columns'
+import { Headers } from '../headers/Headers'
 //
 
-import { ColumnFaceting } from '../features/column-faceting/ColumnFaceting'
-import { ColumnFiltering } from '../features/column-filtering/ColumnFiltering'
-import { ColumnGrouping } from '../features/column-grouping/ColumnGrouping'
-import { ColumnOrdering } from '../features/column-ordering/ColumnOrdering'
-import { ColumnPinning } from '../features/column-pinning/ColumnPinning'
-import { ColumnResizing } from '../features/column-resizing/ColumnResizing'
-import { ColumnSizing } from '../features/column-sizing/ColumnSizing'
-import { ColumnVisibility } from '../features/column-visibility/ColumnVisibility'
-import { GlobalFaceting } from '../features/global-faceting/GlobalFaceting'
-import { GlobalFiltering } from '../features/global-filtering/GlobalFiltering'
-import { RowExpanding } from '../features/row-expanding/RowExpanding'
-import { RowPagination } from '../features/row-pagination/RowPagination'
-import { RowPinning } from '../features/row-pinning/RowPinning'
-import { RowSelection } from '../features/row-selection/RowSelection'
-import { RowSorting } from '../features/row-sorting/RowSorting'
+import { ColumnFaceting } from '../../features/column-faceting/ColumnFaceting'
+import { ColumnFiltering } from '../../features/column-filtering/ColumnFiltering'
+import { ColumnGrouping } from '../../features/column-grouping/ColumnGrouping'
+import { ColumnOrdering } from '../../features/column-ordering/ColumnOrdering'
+import { ColumnPinning } from '../../features/column-pinning/ColumnPinning'
+import { ColumnResizing } from '../../features/column-resizing/ColumnResizing'
+import { ColumnSizing } from '../../features/column-sizing/ColumnSizing'
+import { ColumnVisibility } from '../../features/column-visibility/ColumnVisibility'
+import { GlobalFaceting } from '../../features/global-faceting/GlobalFaceting'
+import { GlobalFiltering } from '../../features/global-filtering/GlobalFiltering'
+import { RowExpanding } from '../../features/row-expanding/RowExpanding'
+import { RowPagination } from '../../features/row-pagination/RowPagination'
+import { RowPinning } from '../../features/row-pinning/RowPinning'
+import { RowSelection } from '../../features/row-selection/RowSelection'
+import { RowSorting } from '../../features/row-sorting/RowSorting'
 
 const builtInFeatures = [
   Headers,
@@ -60,9 +64,7 @@ const builtInFeatures = [
 
 //
 
-export interface CoreTableState {}
-
-export interface CoreOptions<TData extends RowData> {
+export interface TableOptions_Core<TData extends RowData> {
   /**
    * An array of extra features that you can add to the table instance.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
@@ -157,7 +159,7 @@ export interface CoreOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  initialState?: InitialTableState
+  initialState?: Partial<TableState>
   /**
    * This option is used to optionally implement the merging of table options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#mergeoptions)
@@ -230,7 +232,7 @@ export function tableOptions(options: unknown) {
   return options
 }
 
-export interface CoreInstance<TData extends RowData> {
+export interface Table_Core<TData extends RowData> {
   _features: readonly TableFeature[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
   _getColumnDefs: () => ColumnDef<TData, unknown>[]
@@ -347,12 +349,7 @@ export function _createTable<TData extends RowData>(
     }
   }
 
-  const coreInitialState: CoreTableState = {}
-
-  let initialState = {
-    ...coreInitialState,
-    ...(options.initialState ?? {}),
-  } as TableState
+  let initialState = (options.initialState ?? {}) as TableState
 
   table._features.forEach(feature => {
     initialState = (feature._getInitialState?.(initialState) ??
@@ -362,7 +359,7 @@ export function _createTable<TData extends RowData>(
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
-  const coreInstance: CoreInstance<TData> = {
+  const coreInstance: Table_Core<TData> = {
     _features,
     options: {
       ...defaultOptions,

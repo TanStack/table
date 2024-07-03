@@ -11,7 +11,7 @@ import {
   Updater,
 } from '../../types'
 
-export interface ColumnFiltersTableState {
+export interface TableState_ColumnFiltering {
   columnFilters: ColumnFiltersState
 }
 
@@ -60,7 +60,7 @@ export type FilterFnOption<TData extends RowData> =
   | keyof FilterFns
   | FilterFn<TData>
 
-export interface ColumnFiltersColumnDef<TData extends RowData> {
+export interface ColumnDef_ColumnFiltering<TData extends RowData> {
   /**
    * Enables/disables the **column** filter for this column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#enablecolumnfilter)
@@ -75,7 +75,7 @@ export interface ColumnFiltersColumnDef<TData extends RowData> {
   filterFn?: FilterFnOption<TData>
 }
 
-export interface ColumnFiltersColumn<TData extends RowData> {
+export interface Column_ColumnFiltering<TData extends RowData> {
   /**
    * Returns an automatically calculated filter function for the column based off of the columns first known value.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getautofilterfn)
@@ -120,7 +120,7 @@ export interface ColumnFiltersColumn<TData extends RowData> {
   setFilterValue: (updater: Updater<any>) => void
 }
 
-export interface ColumnFiltersRow<TData extends RowData> {
+export interface Row_ColumnFiltering<TData extends RowData> {
   /**
    * The column filters map for the row. This object tracks whether a row is passing/failing specific filters by their column ID.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#columnfilters)
@@ -192,11 +192,11 @@ type ResolvedFilterFns = keyof FilterFns extends never
       filterFns: Record<keyof FilterFns, FilterFn<any>>
     }
 
-export interface ColumnFiltersOptions<TData extends RowData>
+export interface TableOptions_ColumnFiltering<TData extends RowData>
   extends ColumnFiltersOptionsBase<TData>,
     ResolvedFilterFns {}
 
-export interface ColumnFiltersInstance<TData extends RowData> {
+export interface Table_ColumnFiltering<TData extends RowData> {
   _getFilteredRowModel?: () => RowModel<TData>
   /**
    * Returns the row model for the table after **column** filtering has been applied.

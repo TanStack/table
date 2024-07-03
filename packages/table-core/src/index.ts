@@ -9,14 +9,25 @@ export * from './types'
  * Core
  */
 
-export * from './utils'
+//Cells
+export * from './core/cells/Cells'
 
-export * from './core/cell'
-export * from './core/column'
-export * from './core/headers'
-export * from './core/row'
-export * from './core/table'
-export * from './core/getCoreRowModel'
+//Columns
+export * from './core/columns/Columns'
+
+//Headers
+export * from './core/headers/Headers'
+
+//Rows
+export * from './core/rows/Rows'
+export * from './core/rows/Rows.types'
+
+//Table
+export * from './core/table/Table'
+
+//Utils
+export * from './utils'
+export * from './core/table/getCoreRowModel'
 
 /**
  * Features

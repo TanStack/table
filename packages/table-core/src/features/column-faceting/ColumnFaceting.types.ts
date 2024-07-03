@@ -1,6 +1,6 @@
 import { RowData, RowModel, Table } from '../../types'
 
-export interface ColumnFacetingOptions<TData extends RowData> {
+export interface TableOptions_ColumnFaceting<TData extends RowData> {
   getFacetedMinMaxValues?: (
     table: Table<TData>,
     columnId: string
@@ -15,7 +15,7 @@ export interface ColumnFacetingOptions<TData extends RowData> {
   ) => () => Map<any, number>
 }
 
-export interface ColumnFacetingColumn<TData extends RowData> {
+export interface Column_ColumnFaceting<TData extends RowData> {
   /**
    * A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
    * > ⚠️ Requires that you pass a valid `getFacetedMinMaxValues` function to `options.getFacetedMinMaxValues`. A default implementation is provided via the exported `getFacetedMinMaxValues` function.

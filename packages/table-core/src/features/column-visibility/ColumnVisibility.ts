@@ -2,7 +2,7 @@ import { Column, Row, RowData, Table, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
   VisibilityDefaultOptions,
-  VisibilityTableState,
+  TableState_ColumnVisibility,
 } from './ColumnVisibility.types'
 import {
   column_getCanHide,
@@ -21,7 +21,7 @@ import {
 } from './ColumnVisibility.utils'
 
 export const ColumnVisibility: TableFeature = {
-  _getInitialState: (state): VisibilityTableState => {
+  _getInitialState: (state): TableState_ColumnVisibility => {
     return {
       columnVisibility: {},
       ...state,

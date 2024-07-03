@@ -8,12 +8,12 @@ import {
 } from './GlobalFiltering.utils'
 import { Column, Table, RowData, TableFeature } from '../../types'
 import {
-  GlobalFilterOptions,
-  GlobalFilterTableState,
+  TableOptions_GlobalFiltering,
+  TableState_GlobalFiltering,
 } from './GlobalFiltering.types'
 
 export const GlobalFiltering: TableFeature = {
-  _getInitialState: (state): GlobalFilterTableState => {
+  _getInitialState: (state): TableState_GlobalFiltering => {
     return {
       globalFilter: undefined,
       ...state,
@@ -22,7 +22,8 @@ export const GlobalFiltering: TableFeature = {
 
   _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): GlobalFilterOptions<TData> => getGlobalFilteringDefaultOptions(table),
+  ): TableOptions_GlobalFiltering<TData> =>
+    getGlobalFilteringDefaultOptions(table),
 
   _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,

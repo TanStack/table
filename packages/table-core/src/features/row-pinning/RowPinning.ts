@@ -2,7 +2,7 @@ import { Table, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
   RowPinningDefaultOptions,
-  RowPinningTableState,
+  TableState_RowPinning,
 } from './RowPinning.types'
 import {
   getDefaultRowPinningState,
@@ -18,7 +18,7 @@ import {
 } from './RowPinning.utils'
 
 export const RowPinning: TableFeature = {
-  _getInitialState: (state): RowPinningTableState => {
+  _getInitialState: (state): TableState_RowPinning => {
     return {
       rowPinning: getDefaultRowPinningState(),
       ...state,

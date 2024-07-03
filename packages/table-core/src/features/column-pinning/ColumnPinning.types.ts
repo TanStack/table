@@ -15,11 +15,11 @@ export interface ColumnPinningState {
   right?: string[]
 }
 
-export interface ColumnPinningTableState {
+export interface TableState_ColumnPinning {
   columnPinning: ColumnPinningState
 }
 
-export interface ColumnPinningOptions {
+export interface TableOptions_ColumnPinning {
   /**
    * Enables/disables column pinning for the table. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#enablecolumnpinning)
@@ -45,7 +45,7 @@ export interface ColumnPinningDefaultOptions {
   onColumnPinningChange: OnChangeFn<ColumnPinningState>
 }
 
-export interface ColumnPinningColumnDef {
+export interface ColumnDef_ColumnPinning {
   /**
    * Enables/disables column pinning for this column. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#enablepinning-1)
@@ -54,7 +54,7 @@ export interface ColumnPinningColumnDef {
   enablePinning?: boolean
 }
 
-export interface ColumnPinningColumn {
+export interface Column_ColumnPinning {
   /**
    * Returns whether or not the column can be pinned.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getcanpin)
@@ -81,7 +81,7 @@ export interface ColumnPinningColumn {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export interface ColumnPinningRow<TData extends RowData> {
+export interface Row_ColumnPinning<TData extends RowData> {
   /**
    * Returns all center pinned (unpinned) leaf cells in the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getcentervisiblecells)
@@ -102,7 +102,7 @@ export interface ColumnPinningRow<TData extends RowData> {
   getRightVisibleCells: () => Cell<TData, unknown>[]
 }
 
-export interface ColumnPinningInstance<TData extends RowData> {
+export interface Table_ColumnPinning<TData extends RowData> {
   /**
    * Returns all center pinned (unpinned) leaf columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getcenterleafcolumns)

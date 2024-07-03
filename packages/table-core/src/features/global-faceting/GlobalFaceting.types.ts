@@ -1,6 +1,6 @@
 import { RowData, RowModel } from '../../types'
 
-export interface GlobalFacetingInstance<TData extends RowData> {
+export interface Table_GlobalFaceting<TData extends RowData> {
   /**
    * Returns the min and max values for the global filter.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfacetedminmaxvalues)

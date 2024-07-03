@@ -1,9 +1,9 @@
 import { Cell, Column, Row, RowData, Table, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
 import {
-  GroupingColumnDef,
-  GroupingOptions,
-  GroupingTableState,
+  ColumnDef_ColumnGrouping,
+  TableOptions_ColumnGrouping,
+  TableState_ColumnGrouping,
 } from './ColumnGrouping.types'
 import {
   cell_getIsAggregated,
@@ -25,7 +25,7 @@ import {
 } from './ColumnGrouping.utils'
 
 export const ColumnGrouping: TableFeature = {
-  _getDefaultColumnDef: <TData extends RowData>(): GroupingColumnDef<
+  _getDefaultColumnDef: <TData extends RowData>(): ColumnDef_ColumnGrouping<
     TData,
     unknown
   > => {
@@ -35,7 +35,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  _getInitialState: (state): GroupingTableState => {
+  _getInitialState: (state): TableState_ColumnGrouping => {
     return {
       grouping: [],
       ...state,
@@ -44,7 +44,7 @@ export const ColumnGrouping: TableFeature = {
 
   _getDefaultOptions: <TData extends RowData>(
     table: Table<TData>
-  ): GroupingOptions => {
+  ): TableOptions_ColumnGrouping => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
       groupedColumnMode: 'reorder',

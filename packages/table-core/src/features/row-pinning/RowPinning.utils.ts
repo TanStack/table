@@ -1,6 +1,6 @@
 import { Row, RowData, Table, Updater } from '../../types'
 import {
-  RowPinningOptions,
+  TableOptions_RowPinning,
   RowPinningPosition,
   RowPinningState,
 } from './RowPinning.types'
@@ -18,7 +18,7 @@ export function getDefaultRowPinningState(): RowPinningState {
 
 export function table_setRowPinning<TData extends RowData>(
   table: Table<TData> & {
-    options: RowPinningOptions<TData>
+    options: TableOptions_RowPinning<TData>
   },
   updater: Updater<RowPinningState>
 ): void {

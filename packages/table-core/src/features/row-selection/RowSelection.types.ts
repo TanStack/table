@@ -2,11 +2,11 @@ import { OnChangeFn, Row, RowData, RowModel, Updater } from '../../types'
 
 export type RowSelectionState = Record<string, boolean>
 
-export interface RowSelectionTableState {
+export interface TableState_RowSelection {
   rowSelection: RowSelectionState
 }
 
-export interface RowSelectionOptions<TData extends RowData> {
+export interface TableOptions_RowSelection<TData extends RowData> {
   /**
    * - Enables/disables multiple row selection for all rows in the table OR
    * - A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
@@ -47,7 +47,7 @@ export interface RowSelectionOptions<TData extends RowData> {
   // ) => RowModel<TData>
 }
 
-export interface RowSelectionRow {
+export interface Row_RowSelection {
   /**
    * Returns whether or not the row can multi-select.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getcanmultiselect)
@@ -98,7 +98,7 @@ export interface RowSelectionRow {
   toggleSelected: (value?: boolean, opts?: { selectChildren?: boolean }) => void
 }
 
-export interface RowSelectionInstance<TData extends RowData> {
+export interface Table_RowSelection<TData extends RowData> {
   /**
    * Returns the row model of all rows that are selected after filtering has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getfilteredselectedrowmodel)

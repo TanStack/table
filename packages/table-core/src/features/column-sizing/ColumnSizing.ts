@@ -2,9 +2,9 @@ import { RowData, Column, Header, Table, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import {
-  ColumnSizingColumnDef,
+  ColumnDef_ColumnSizing,
   ColumnSizingDefaultOptions,
-  ColumnSizingTableState,
+  TableState_ColumnSizing,
 } from './ColumnSizing.types'
 import {
   column_getAfter,
@@ -23,10 +23,10 @@ import {
 } from './ColumnSizing.utils'
 
 export const ColumnSizing: TableFeature = {
-  _getDefaultColumnDef: (): ColumnSizingColumnDef => {
+  _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
     return defaultColumnSizing
   },
-  _getInitialState: (state): ColumnSizingTableState => {
+  _getInitialState: (state): TableState_ColumnSizing => {
     return {
       columnSizing: {},
       ...state,

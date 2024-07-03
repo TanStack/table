@@ -7,11 +7,11 @@ export interface RowPinningState {
   top: string[]
 }
 
-export interface RowPinningTableState {
+export interface TableState_RowPinning {
   rowPinning: RowPinningState
 }
 
-export interface RowPinningOptions<TData extends RowData> {
+export interface TableOptions_RowPinning<TData extends RowData> {
   /**
    * Enables/disables row pinning for the table. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#enablerowpinning)
@@ -36,7 +36,7 @@ export interface RowPinningDefaultOptions {
   onRowPinningChange: OnChangeFn<RowPinningState>
 }
 
-export interface RowPinningRow {
+export interface Row_RowPinning {
   /**
    * Returns whether or not the row can be pinned.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#getcanpin-1)
@@ -67,7 +67,7 @@ export interface RowPinningRow {
   ) => void
 }
 
-export interface RowPinningInstance<TData extends RowData> {
+export interface Table_RowPinning<TData extends RowData> {
   /**
    * Returns all bottom pinned rows.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#getbottomrows)

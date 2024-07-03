@@ -5,12 +5,12 @@ import {
   HeaderGroup,
   Table,
   TableFeature,
-} from '../types'
-import { getMemoOptions, memo } from '../utils'
+} from '../../types'
+import { getMemoOptions, memo } from '../../utils'
 
 const debug = 'debugHeaders'
 
-export interface CoreHeaderGroup<TData extends RowData> {
+export interface HeaderGroup_Core<TData extends RowData> {
   depth: number
   headers: Header<TData, unknown>[]
   id: string
@@ -31,7 +31,7 @@ export interface HeaderContext<TData, TValue> {
   table: Table<TData>
 }
 
-export interface CoreHeader<TData extends RowData, TValue> {
+export interface Header_Core<TData extends RowData, TValue> {
   /**
    * The col-span for the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#colspan)
@@ -106,7 +106,7 @@ export interface CoreHeader<TData extends RowData, TValue> {
   subHeaders: Header<TData, TValue>[]
 }
 
-export interface HeadersInstance<TData extends RowData> {
+export interface Table_Headers<TData extends RowData> {
   /**
    * Returns all header groups for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
@@ -148,7 +148,7 @@ function _createHeader<TData extends RowData, TValue>(
 ): Header<TData, TValue> {
   const id = options.id ?? column.id
 
-  let header: CoreHeader<TData, TValue> = {
+  let header: Header_Core<TData, TValue> = {
     id,
     column,
     index: options.index,
@@ -162,7 +162,7 @@ function _createHeader<TData extends RowData, TValue>(
     getLeafHeaders: (): Header<TData, unknown>[] => {
       const leafHeaders: Header<TData, unknown>[] = []
 
-      const recurseHeader = (h: CoreHeader<TData, any>) => {
+      const recurseHeader = (h: Header_Core<TData, any>) => {
         if (h.subHeaders && h.subHeaders.length) {
           h.subHeaders.map(recurseHeader)
         }

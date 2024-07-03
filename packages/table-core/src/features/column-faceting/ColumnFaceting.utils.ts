@@ -1,4 +1,4 @@
-import { ColumnFacetingOptions } from './ColumnFaceting.types'
+import { TableOptions_ColumnFaceting } from './ColumnFaceting.types'
 import { CellData, Column, RowData, RowModel, Table } from '../../types'
 
 export function column_getFacetedMinMaxValues<
@@ -7,7 +7,7 @@ export function column_getFacetedMinMaxValues<
 >(
   column: Column<TData, TValue>,
   table: Table<TData> & {
-    options: ColumnFacetingOptions<TData>
+    options: TableOptions_ColumnFaceting<TData>
   }
 ): () => [number, number] | undefined {
   return (
@@ -22,7 +22,7 @@ export function column_getFacetedRowModel<
 >(
   column: Column<TData, TValue>,
   table: Table<TData> & {
-    options: ColumnFacetingOptions<TData>
+    options: TableOptions_ColumnFaceting<TData>
   }
 ): () => RowModel<TData> {
   return (
@@ -37,7 +37,7 @@ export function column_getFacetedUniqueValues<
 >(
   column: Column<TData, TValue>,
   table: Table<TData> & {
-    options: ColumnFacetingOptions<TData>
+    options: TableOptions_ColumnFaceting<TData>
   }
 ): () => Map<any, number> {
   return (

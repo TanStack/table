@@ -2,7 +2,7 @@
   import type {
     ColumnDef,
     TableOptions,
-    VisibilityState,
+    ColumnVisibilityState,
     Updater,
   } from '@tanstack/svelte-table'
   import {
@@ -101,9 +101,9 @@
     },
   ]
 
-  let columnVisibility = $state<VisibilityState>({})
+  let columnVisibility = $state<ColumnVisibilityState>({})
 
-  function setColumnVisibility(updater: Updater<VisibilityState>) {
+  function setColumnVisibility(updater: Updater<ColumnVisibilityState>) {
     if (updater instanceof Function) {
       columnVisibility = updater(columnVisibility)
     } else columnVisibility = updater
