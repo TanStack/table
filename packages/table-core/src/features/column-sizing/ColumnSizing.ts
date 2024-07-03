@@ -8,14 +8,10 @@ import {
 } from './ColumnSizing.types'
 import {
   column_getAfter,
-  column_getCanResize,
-  column_getIsResizing,
   column_getSize,
   column_getStart,
   column_resetSize,
   defaultColumnSizing,
-  getDefaultColumnSizingInfoState,
-  header_getResizeHandler,
   header_getSize,
   header_getStart,
   table_getCenterTotalSize,
@@ -23,9 +19,7 @@ import {
   table_getRightTotalSize,
   table_getTotalSize,
   table_resetColumnSizing,
-  table_resetHeaderSizeInfo,
   table_setColumnSizing,
-  table_setColumnSizingInfo,
 } from './ColumnSizing.utils'
 
 export const ColumnSizing: TableFeature = {
@@ -35,7 +29,6 @@ export const ColumnSizing: TableFeature = {
   _getInitialState: (state): ColumnSizingTableState => {
     return {
       columnSizing: {},
-      columnSizingInfo: getDefaultColumnSizingInfoState(),
       ...state,
     }
   },
@@ -44,10 +37,7 @@ export const ColumnSizing: TableFeature = {
     table: Table<TData>
   ): ColumnSizingDefaultOptions => {
     return {
-      columnResizeMode: 'onEnd',
-      columnResizeDirection: 'ltr',
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
-      onColumnSizingInfoChange: makeStateUpdater('columnSizingInfo', table),
     }
   },
 
@@ -78,10 +68,6 @@ export const ColumnSizing: TableFeature = {
     )
 
     column.resetSize = () => column_resetSize(table, column)
-
-    column.getCanResize = () => column_getCanResize(table, column)
-
-    column.getIsResizing = () => column_getIsResizing(table, column)
   },
 
   _createHeader: <TData extends RowData, TValue>(
@@ -91,22 +77,13 @@ export const ColumnSizing: TableFeature = {
     header.getSize = () => header_getSize(header)
 
     header.getStart = () => header_getStart(header)
-
-    header.getResizeHandler = _contextDocument =>
-      header_getResizeHandler(header, table, _contextDocument)
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnSizing = updater => table_setColumnSizing(table, updater)
 
-    table.setColumnSizingInfo = updater =>
-      table_setColumnSizingInfo(table, updater)
-
     table.resetColumnSizing = defaultState =>
       table_resetColumnSizing(table, defaultState)
-
-    table.resetHeaderSizeInfo = defaultState =>
-      table_resetHeaderSizeInfo(table, defaultState)
 
     table.getTotalSize = () => table_getTotalSize(table)
 

@@ -28,6 +28,7 @@ import { ColumnFiltering } from '../features/column-filtering/ColumnFiltering'
 import { ColumnGrouping } from '../features/column-grouping/ColumnGrouping'
 import { ColumnOrdering } from '../features/column-ordering/ColumnOrdering'
 import { ColumnPinning } from '../features/column-pinning/ColumnPinning'
+import { ColumnResizing } from '../features/column-resizing/ColumnResizing'
 import { ColumnSizing } from '../features/column-sizing/ColumnSizing'
 import { ColumnVisibility } from '../features/column-visibility/ColumnVisibility'
 import { GlobalFaceting } from '../features/global-faceting/GlobalFaceting'
@@ -54,6 +55,7 @@ const builtInFeatures = [
   RowPinning,
   RowSelection,
   ColumnSizing,
+  ColumnResizing,
 ] as const
 
 //

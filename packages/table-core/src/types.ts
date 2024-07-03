@@ -84,6 +84,15 @@ import {
   ColumnSizingTableState,
 } from './features/column-sizing/ColumnSizing.types'
 import {
+  ColumnResizingColumn,
+  ColumnResizingColumnDef,
+  ColumnResizingHeader,
+  ColumnResizingInfoState,
+  ColumnResizingInstance,
+  ColumnResizingOptions,
+  ColumnResizingTableState,
+} from './features/column-resizing/ColumnResizing.types'
+import {
   PaginationInitialTableState,
   PaginationInstance,
   PaginationOptions,
@@ -152,6 +161,7 @@ export interface Table<TData extends RowData>
     SortingInstance<TData>,
     GroupingInstance<TData>,
     ColumnSizingInstance,
+    ColumnResizingInstance,
     ExpandedInstance<TData>,
     PaginationInstance<TData>,
     RowSelectionInstance<TData> {}
@@ -168,6 +178,7 @@ interface FeatureOptions<TData extends RowData>
     GroupingOptions,
     ExpandedOptions<TData>,
     ColumnSizingOptions,
+    ColumnResizingOptions,
     PaginationOptions,
     RowSelectionOptions<TData> {}
 
@@ -193,6 +204,7 @@ export interface TableState
     ExpandedTableState,
     GroupingTableState,
     ColumnSizingTableState,
+    ColumnResizingTableState,
     PaginationTableState,
     RowSelectionTableState {}
 
@@ -208,6 +220,7 @@ interface CompleteInitialTableState
     ExpandedTableState,
     GroupingTableState,
     ColumnSizingTableState,
+    ColumnResizingTableState,
     PaginationInitialTableState,
     RowSelectionTableState {}
 
@@ -265,7 +278,8 @@ interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
     GlobalFilterColumnDef,
     SortingColumnDef<TData>,
     GroupingColumnDef<TData, TValue>,
-    ColumnSizingColumnDef {}
+    ColumnSizingColumnDef,
+    ColumnResizingColumnDef {}
 
 export interface ColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefExtensions<TData, TValue> {
@@ -352,6 +366,7 @@ export interface Column<TData extends RowData, TValue = unknown>
     SortingColumn<TData>,
     GroupingColumn<TData>,
     ColumnSizingColumn,
+    ColumnResizingColumn,
     ColumnOrderColumn {}
 
 export interface Cell<TData extends RowData, TValue>
@@ -360,7 +375,8 @@ export interface Cell<TData extends RowData, TValue>
 
 export interface Header<TData extends RowData, TValue>
   extends CoreHeader<TData, TValue>,
-    ColumnSizingHeader {}
+    ColumnSizingHeader,
+    ColumnResizingHeader {}
 
 export interface HeaderGroup<TData extends RowData>
   extends CoreHeaderGroup<TData> {}

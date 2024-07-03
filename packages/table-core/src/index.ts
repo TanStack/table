@@ -52,12 +52,15 @@ export * from './features/column-pinning/ColumnPinning'
 export * from './features/column-pinning/ColumnPinning.types'
 export * from './features/column-pinning/ColumnPinning.utils'
 
+//ColumnResizing
+export * from './features/column-resizing/ColumnResizing'
+export * from './features/column-resizing/ColumnResizing.types'
+export * from './features/column-resizing/ColumnResizing.utils'
+
 //ColumnSizing
 export * from './features/column-sizing/ColumnSizing'
 export * from './features/column-sizing/ColumnSizing.types'
 export * from './features/column-sizing/ColumnSizing.utils'
-export * from './features/column-sizing/isTouchStartEvent'
-export * from './features/column-sizing/passiveSupported'
 
 //ColumnVisibility
 export * from './features/column-visibility/ColumnVisibility'
