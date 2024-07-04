@@ -97,9 +97,10 @@ export const ColumnGrouping: TableFeature = {
 
   _createCell: <TData extends RowData, TValue>(
     cell: Cell<TData, TValue>,
-    column: Column<TData, TValue>,
-    row: Row<TData>
+    _table: Table<TData>
   ): void => {
+    const { column, row } = cell
+
     cell.getIsGrouped = () => cell_getIsGrouped(column, row)
 
     cell.getIsPlaceholder = () => cell_getIsPlaceholder(cell, column)

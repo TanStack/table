@@ -25,6 +25,7 @@ import {
 import { _createColumn } from '../columns/Columns'
 import { Headers } from '../headers/Headers'
 import { Rows } from '../rows/Rows'
+import { Cells } from '../cells/Cells'
 //
 
 import { ColumnFaceting } from '../../features/column-faceting/ColumnFaceting'
@@ -43,7 +44,7 @@ import { RowPinning } from '../../features/row-pinning/RowPinning'
 import { RowSelection } from '../../features/row-selection/RowSelection'
 import { RowSorting } from '../../features/row-sorting/RowSorting'
 
-const coreFeatures = [Rows, Headers] as const
+const coreFeatures = [Cells, Rows, Headers] as const
 
 const builtInFeatures = [
   ColumnVisibility,
@@ -96,12 +97,6 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugAll?: boolean
-  /**
-   * Set this option to `true` to output cell debugging information to the console.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcells]
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugCells?: boolean
   /**
    * Set this option to `true` to output column debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcolumns)
@@ -162,12 +157,6 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   onStateChange: (updater: Updater<TableState>) => void
-  /**
-   * Value used when the desired value is not found in the data.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#renderfallbackvalue)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  renderFallbackValue: any
   /**
    * The `state` option can be used to optionally _control_ part or all of the table state. The state you pass here will merge with and overwrite the internal automatically-managed state to produce the final state for the table. You can also listen to state changes via the `onStateChange` option.
    * > Note: Any state passed in here will override both the internal state and any other `initialState` you provide.

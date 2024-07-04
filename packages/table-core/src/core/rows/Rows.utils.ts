@@ -1,6 +1,6 @@
 import { Cell, Column, Row, RowData, Table } from '../../types'
 import { flattenBy } from '../../utils'
-import { _createCell } from '../cells/Cells'
+import { _createCell } from '../cells/CreateCell'
 
 export function row_getValue<TData extends RowData>(
   row: Row<TData>,
@@ -95,7 +95,7 @@ export function row_getAllCells<TData extends RowData>(
   leafColumns: Column<TData, unknown>[]
 ): Cell<TData, unknown>[] {
   return leafColumns.map(column => {
-    return _createCell(table, row as Row<TData>, column, column.id)
+    return _createCell(column, row, table)
   })
 }
 

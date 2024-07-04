@@ -10,7 +10,10 @@ export * from './types'
  */
 
 //Cells
+export * from './core/cells/CreateCell'
 export * from './core/cells/Cells'
+export * from './core/cells/Cells.types'
+export * from './core/cells/Cells.utils'
 
 //Columns
 export * from './core/columns/Columns'

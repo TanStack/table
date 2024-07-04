@@ -104,16 +104,15 @@ import {
 } from './features/row-selection/RowSelection.types'
 import { Row_Core, Table_Rows, TableOptions_Rows } from './core/rows/Rows.types'
 import { PartialKeys, UnionToIntersection } from './utils'
-import { CellContext, Cell_Core } from './core/cells/Cells'
+import {
+  CellContext,
+  Cell_Core,
+  TableOptions_Cell,
+} from './core/cells/Cells.types'
 import { Column_Core } from './core/columns/Columns'
 
 export interface TableFeature<TData extends RowData = any> {
-  _createCell?: (
-    cell: Cell<TData, unknown>,
-    column: Column<TData>,
-    row: Row<TData>,
-    table: Table<TData>
-  ) => void
+  _createCell?: (cell: Cell<TData, unknown>, table: Table<TData>) => void
   _createColumn?: (column: Column<TData, unknown>, table: Table<TData>) => void
   _createHeader?: (header: Header<TData, unknown>, table: Table<TData>) => void
   _createRow?: (row: Row<TData>, table: Table<TData>) => void
@@ -167,6 +166,7 @@ export interface Table<TData extends RowData>
 
 export interface TableOptionsResolved<TData extends RowData>
   extends TableOptions_Core<TData>,
+    TableOptions_Cell,
     TableOptions_Rows<TData>,
     TableOptions_ColumnFaceting<TData>,
     TableOptions_ColumnFiltering<TData>,
@@ -184,10 +184,7 @@ export interface TableOptionsResolved<TData extends RowData>
     TableOptions_RowSorting<TData> {}
 
 export interface TableOptions<TData extends RowData>
-  extends PartialKeys<
-    TableOptionsResolved<TData>,
-    'state' | 'onStateChange' | 'renderFallbackValue'
-  > {}
+  extends PartialKeys<TableOptionsResolved<TData>, 'state' | 'onStateChange'> {}
 
 export interface TableState
   extends TableState_ColumnFiltering,

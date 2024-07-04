@@ -1,8 +1,7 @@
 import { RowData, Cell, Row } from '../../types'
-import { _createCell } from '../cells/Cells'
+import { _createCell } from '../cells/CreateCell'
 
-export interface Row_Core<TData extends RowData> {
-  _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
+export interface Row_CoreProperties<TData extends RowData> {
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
   /**
@@ -11,6 +10,47 @@ export interface Row_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
   depth: number
+  /**
+   * The resolved unique identifier for the row resolved via the `options.getRowId` option. Defaults to the row's index (or relative index if it is a subRow).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#id)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
+   */
+  id: string
+  /**
+   * The index of the row within its parent array (or the root data array).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#index)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
+   */
+  index: number
+  /**
+   * The original row object provided to the table. If the row is a grouped row, the original row object will be the first original in the group.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#original)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
+   */
+  original: TData
+  /**
+   * An array of the original subRows as returned by the `options.getSubRows` option.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#originalsubrows)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
+   */
+  originalSubRows?: TData[]
+  /**
+   * If nested, this row's parent row id.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#parentid)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
+   */
+  parentId?: string
+  /**
+   * An array of subRows for the row as returned and created by the `options.getSubRows` option.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#subrows)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
+   */
+  subRows: Row<TData>[]
+}
+
+export interface Row_Core<TData extends RowData>
+  extends Row_CoreProperties<TData> {
+  _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
   /**
    * Returns all of the cells for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getallcells)
@@ -48,47 +88,11 @@ export interface Row_Core<TData extends RowData> {
    */
   getValue: <TValue>(columnId: string) => TValue
   /**
-   * The resolved unique identifier for the row resolved via the `options.getRowId` option. Defaults to the row's index (or relative index if it is a subRow).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#id)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
-   */
-  id: string
-  /**
-   * The index of the row within its parent array (or the root data array).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#index)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
-   */
-  index: number
-  /**
-   * The original row object provided to the table. If the row is a grouped row, the original row object will be the first original in the group.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#original)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
-   */
-  original: TData
-  /**
-   * An array of the original subRows as returned by the `options.getSubRows` option.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#originalsubrows)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
-   */
-  originalSubRows?: TData[]
-  /**
-   * If nested, this row's parent row id.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#parentid)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
-   */
-  parentId?: string
-  /**
    * Renders the value for the row in a given columnId the same as `getValue`, but will return the `renderFallbackValue` if no value is found.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#rendervalue)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
   renderValue: <TValue>(columnId: string) => TValue
-  /**
-   * An array of subRows for the row as returned and created by the `options.getSubRows` option.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#subrows)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
-   */
-  subRows: Row<TData>[]
 }
 
 export interface TableOptions_Rows<TData extends RowData> {
