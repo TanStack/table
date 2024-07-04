@@ -90,3 +90,36 @@ export interface Row_Core<TData extends RowData> {
    */
   subRows: Row<TData>[]
 }
+
+export interface TableOptions_Rows<TData extends RowData> {
+  /**
+   * Set this option to `true` to output row debugging information to the console.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugrows)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  debugRows?: boolean
+  /**
+   * This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
+   * @example getRowId: row => row.userId
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowid)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
+  /**
+   * This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
+   * @example getSubRows: row => row.subRows
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getsubrows)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
+}
+
+export interface Table_Rows<TData extends RowData> {
+  _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
+  /**
+   * Returns the row with the given ID.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrow)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  getRow: (id: string, searchAll?: boolean) => Row<TData>
+}

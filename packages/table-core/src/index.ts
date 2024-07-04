@@ -19,8 +19,10 @@ export * from './core/columns/Columns'
 export * from './core/headers/Headers'
 
 //Rows
+export * from './core/rows/CreateRow'
 export * from './core/rows/Rows'
 export * from './core/rows/Rows.types'
+export * from './core/rows/Rows.utils'
 
 //Table
 export * from './core/table/Table'

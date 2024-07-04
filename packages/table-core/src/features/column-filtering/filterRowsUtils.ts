@@ -1,4 +1,4 @@
-import { _createRow } from '../../core/rows/Rows'
+import { _createRow } from '../../core/rows/CreateRow'
 import { Row, RowModel, Table, RowData } from '../../types'
 
 export function filterRows<TData extends RowData>(

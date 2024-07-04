@@ -102,7 +102,7 @@ import {
   TableState_RowSelection,
   Table_RowSelection,
 } from './features/row-selection/RowSelection.types'
-import { Row_Core } from './core/rows/Rows.types'
+import { Row_Core, Table_Rows, TableOptions_Rows } from './core/rows/Rows.types'
 import { PartialKeys, UnionToIntersection } from './utils'
 import { CellContext, Cell_Core } from './core/cells/Cells'
 import { Column_Core } from './core/columns/Columns'
@@ -148,6 +148,7 @@ export type AnyRender = (Comp: any, props: any) => any
 
 export interface Table<TData extends RowData>
   extends Table_Core<TData>,
+    Table_Rows<TData>,
     Table_Headers<TData>,
     Table_ColumnFiltering<TData>,
     Table_ColumnGrouping<TData>,
@@ -166,6 +167,7 @@ export interface Table<TData extends RowData>
 
 export interface TableOptionsResolved<TData extends RowData>
   extends TableOptions_Core<TData>,
+    TableOptions_Rows<TData>,
     TableOptions_ColumnFaceting<TData>,
     TableOptions_ColumnFiltering<TData>,
     TableOptions_ColumnGrouping,

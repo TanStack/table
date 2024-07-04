@@ -10,7 +10,6 @@ import {
   TableOptionsResolved,
   TableState,
   Table,
-  Row,
   Column,
   RowModel,
   ColumnDef,
@@ -25,6 +24,7 @@ import {
 //
 import { _createColumn } from '../columns/Columns'
 import { Headers } from '../headers/Headers'
+import { Rows } from '../rows/Rows'
 //
 
 import { ColumnFaceting } from '../../features/column-faceting/ColumnFaceting'
@@ -43,8 +43,9 @@ import { RowPinning } from '../../features/row-pinning/RowPinning'
 import { RowSelection } from '../../features/row-selection/RowSelection'
 import { RowSorting } from '../../features/row-sorting/RowSorting'
 
+const coreFeatures = [Rows, Headers] as const
+
 const builtInFeatures = [
-  Headers,
   ColumnVisibility,
   ColumnOrdering,
   ColumnPinning,
@@ -114,12 +115,6 @@ export interface TableOptions_Core<TData extends RowData> {
    */
   debugHeaders?: boolean
   /**
-   * Set this option to `true` to output row debugging information to the console.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugrows)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugRows?: boolean
-  /**
    * Set this option to `true` to output table debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugtable)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
@@ -137,20 +132,6 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   getCoreRowModel: (table: Table<any>) => () => RowModel<any>
-  /**
-   * This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
-   * @example getRowId: row => row.userId
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowid)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
-  /**
-   * This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
-   * @example getSubRows: row => row.subRows
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getsubrows)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
   /**
    * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
    *
@@ -238,7 +219,6 @@ export interface Table_Core<TData extends RowData> {
   _getColumnDefs: () => ColumnDef<TData, unknown>[]
   _getCoreRowModel?: () => RowModel<TData>
   _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
-  _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
   _queue: (cb: () => void) => void
   /**
    * Returns all columns in the table in their normalized and nested hierarchy.
@@ -270,12 +250,6 @@ export interface Table_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   getCoreRowModel: () => RowModel<TData>
-  /**
-   * Returns the row with the given ID.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrow)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getRow: (id: string, searchAll?: boolean) => Row<TData>
   /**
    * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
@@ -330,7 +304,11 @@ export function _createTable<TData extends RowData>(
     console.info('Creating Table Instance...')
   }
 
-  const _features = [...builtInFeatures, ...(options._features ?? [])]
+  const _features = [
+    ...coreFeatures,
+    ...builtInFeatures,
+    ...(options._features ?? []),
+  ]
 
   let table = { _features } as unknown as Table<TData>
 
@@ -407,10 +385,6 @@ export function _createTable<TData extends RowData>(
       table.options.onStateChange?.(updater)
     },
 
-    _getRowId: (row: TData, index: number, parent?: Row<TData>) =>
-      table.options.getRowId?.(row, index, parent) ??
-      `${parent ? [parent.id, index].join('.') : index}`,
-
     getCoreRowModel: () => {
       if (!table._getCoreRowModel) {
         table._getCoreRowModel = table.options.getCoreRowModel(table)
@@ -426,23 +400,7 @@ export function _createTable<TData extends RowData>(
       return table.getPaginationRowModel()
     },
     //in next version, we should just pass in the row model as the optional 2nd arg
-    getRow: (id: string, searchAll?: boolean) => {
-      let row = (
-        searchAll ? table.getPrePaginationRowModel() : table.getRowModel()
-      ).rowsById[id]
 
-      if (!row) {
-        row = table.getCoreRowModel().rowsById[id]
-        if (!row) {
-          if (process.env.NODE_ENV !== 'production') {
-            throw new Error(`getRow could not find row with ID: ${id}`)
-          }
-          throw new Error()
-        }
-      }
-
-      return row
-    },
     _getDefaultColumnDef: memo(
       () => [table.options.defaultColumn],
       defaultColumn => {
