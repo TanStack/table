@@ -1,31 +1,22 @@
-import {
-  functionalUpdate,
-  getMemoOptions,
-  memo,
-  RequiredKeys,
-} from '../../utils'
+import { functionalUpdate, RequiredKeys } from '../../utils'
 
 import {
   Updater,
   TableOptionsResolved,
   TableState,
   Table,
-  Column,
   RowModel,
-  ColumnDef,
   TableOptions,
   RowData,
   TableMeta,
-  ColumnDefResolved,
-  GroupColumnDef,
   TableFeature,
 } from '../../types'
 
 //
-import { _createColumn } from '../columns/Columns'
 import { Headers } from '../headers/Headers'
 import { Rows } from '../rows/Rows'
 import { Cells } from '../cells/Cells'
+import { Columns } from '../columns/Columns'
 //
 
 import { ColumnFaceting } from '../../features/column-faceting/ColumnFaceting'
@@ -44,7 +35,7 @@ import { RowPinning } from '../../features/row-pinning/RowPinning'
 import { RowSelection } from '../../features/row-selection/RowSelection'
 import { RowSorting } from '../../features/row-sorting/RowSorting'
 
-const coreFeatures = [Cells, Rows, Headers] as const
+const coreFeatures = [Cells, Columns, Rows, Headers] as const
 
 const builtInFeatures = [
   ColumnVisibility,
@@ -80,12 +71,6 @@ export interface TableOptions_Core<TData extends RowData> {
    */
   autoResetAll?: boolean
   /**
-   * The array of column defs to use for the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#columns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  columns: ColumnDef<TData, any>[]
-  /**
    * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. Columns can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
@@ -98,12 +83,6 @@ export interface TableOptions_Core<TData extends RowData> {
    */
   debugAll?: boolean
   /**
-   * Set this option to `true` to output column debugging information to the console.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugColumns?: boolean
-  /**
    * Set this option to `true` to output header debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
@@ -115,12 +94,7 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugTable?: boolean
-  /**
-   * Default column options to use for all column defs supplied to the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#defaultcolumn)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  defaultColumn?: Partial<ColumnDef<TData, unknown>>
+
   /**
    * This required option is a factory for a function that computes and returns the core row model for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
@@ -204,35 +178,8 @@ export function tableOptions(options: unknown) {
 
 export interface Table_Core<TData extends RowData> {
   _features: readonly TableFeature[]
-  _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
-  _getColumnDefs: () => ColumnDef<TData, unknown>[]
   _getCoreRowModel?: () => RowModel<TData>
-  _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
   _queue: (cb: () => void) => void
-  /**
-   * Returns all columns in the table in their normalized and nested hierarchy.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getAllColumns: () => Column<TData, unknown>[]
-  /**
-   * Returns all columns in the table flattened to a single level.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallflatcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getAllFlatColumns: () => Column<TData, unknown>[]
-  /**
-   * Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallleafcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getAllLeafColumns: () => Column<TData, unknown>[]
-  /**
-   * Returns a single column by its ID.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcolumn)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getColumn: (columnId: string) => Column<TData, unknown> | undefined
   /**
    * Returns the core row model before any processing has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
@@ -387,114 +334,6 @@ export function _createTable<TData extends RowData>(
 
     getRowModel: () => {
       return table.getPaginationRowModel()
-    },
-    //in next version, we should just pass in the row model as the optional 2nd arg
-
-    _getDefaultColumnDef: memo(
-      () => [table.options.defaultColumn],
-      defaultColumn => {
-        defaultColumn = (defaultColumn ?? {}) as Partial<
-          ColumnDef<TData, unknown>
-        >
-
-        return {
-          header: props => {
-            const resolvedColumnDef = props.header.column
-              .columnDef as ColumnDefResolved<TData>
-
-            if (resolvedColumnDef.accessorKey) {
-              return resolvedColumnDef.accessorKey
-            }
-
-            if (resolvedColumnDef.accessorFn) {
-              return resolvedColumnDef.id
-            }
-
-            return null
-          },
-          // footer: props => props.header.column.id,
-          cell: props => props.renderValue<any>()?.toString?.() ?? null,
-          ...table._features.reduce((obj, feature) => {
-            return Object.assign(obj, feature._getDefaultColumnDef?.())
-          }, {}),
-          ...defaultColumn,
-        } as Partial<ColumnDef<TData, unknown>>
-      },
-      getMemoOptions(options, 'debugColumns', '_getDefaultColumnDef')
-    ),
-
-    _getColumnDefs: () => table.options.columns,
-
-    getAllColumns: memo(
-      () => [table._getColumnDefs()],
-      columnDefs => {
-        const recurseColumns = (
-          columnDefs: ColumnDef<TData, unknown>[],
-          parent?: Column<TData, unknown>,
-          depth = 0
-        ): Column<TData, unknown>[] => {
-          return columnDefs.map(columnDef => {
-            const column = _createColumn(table, columnDef, depth, parent)
-
-            const groupingColumnDef = columnDef as GroupColumnDef<
-              TData,
-              unknown
-            >
-
-            column.columns = groupingColumnDef.columns
-              ? recurseColumns(groupingColumnDef.columns, column, depth + 1)
-              : []
-
-            return column
-          })
-        }
-
-        return recurseColumns(columnDefs)
-      },
-      getMemoOptions(options, 'debugColumns', 'getAllColumns')
-    ),
-
-    getAllFlatColumns: memo(
-      () => [table.getAllColumns()],
-      allColumns => {
-        return allColumns.flatMap(column => {
-          return column.getFlatColumns()
-        })
-      },
-      getMemoOptions(options, 'debugColumns', 'getAllFlatColumns')
-    ),
-
-    _getAllFlatColumnsById: memo(
-      () => [table.getAllFlatColumns()],
-      flatColumns => {
-        return flatColumns.reduce(
-          (acc, column) => {
-            acc[column.id] = column
-            return acc
-          },
-          {} as Record<string, Column<TData, unknown>>
-        )
-      },
-      getMemoOptions(options, 'debugColumns', 'getAllFlatColumnsById')
-    ),
-
-    getAllLeafColumns: memo(
-      () => [table.getAllColumns(), table._getOrderColumnsFn()],
-      (allColumns, orderColumns) => {
-        let leafColumns = allColumns.flatMap(column => column.getLeafColumns())
-        return orderColumns(leafColumns)
-      },
-      getMemoOptions(options, 'debugColumns', 'getAllLeafColumns')
-    ),
-
-    getColumn: columnId => {
-      const column = table._getAllFlatColumnsById()[columnId]
-
-      if (process.env.NODE_ENV !== 'production' && !column) {
-        console.error(`[Table] Column with id '${columnId}' does not exist.`)
-      }
-
-      return column
     },
   }
 

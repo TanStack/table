@@ -109,7 +109,11 @@ import {
   Cell_Core,
   TableOptions_Cell,
 } from './core/cells/Cells.types'
-import { Column_Core } from './core/columns/Columns'
+import {
+  Column_Core,
+  Table_Columns,
+  TableOptions_Columns,
+} from './core/columns/Columns.types'
 
 export interface TableFeature<TData extends RowData = any> {
   _createCell?: (cell: Cell<TData, unknown>, table: Table<TData>) => void
@@ -147,6 +151,7 @@ export type AnyRender = (Comp: any, props: any) => any
 
 export interface Table<TData extends RowData>
   extends Table_Core<TData>,
+    Table_Columns<TData>,
     Table_Rows<TData>,
     Table_Headers<TData>,
     Table_ColumnFiltering<TData>,
@@ -167,6 +172,7 @@ export interface Table<TData extends RowData>
 export interface TableOptionsResolved<TData extends RowData>
   extends TableOptions_Core<TData>,
     TableOptions_Cell,
+    TableOptions_Columns<TData>,
     TableOptions_Rows<TData>,
     TableOptions_ColumnFaceting<TData>,
     TableOptions_ColumnFiltering<TData>,
@@ -323,7 +329,8 @@ export type ColumnDefResolved<
 }
 
 export interface Column<TData extends RowData, TValue = unknown>
-  extends Column_ColumnFaceting<TData>,
+  extends Column_Core<TData, TValue>,
+    Column_ColumnFaceting<TData>,
     Column_ColumnFiltering<TData>,
     Column_ColumnGrouping<TData>,
     Column_ColumnOrdering,
@@ -331,7 +338,6 @@ export interface Column<TData extends RowData, TValue = unknown>
     Column_ColumnResizing,
     Column_ColumnSizing,
     Column_ColumnVisibility,
-    Column_Core<TData, TValue>,
     Column_GlobalFiltering,
     Column_RowSorting<TData> {}
 

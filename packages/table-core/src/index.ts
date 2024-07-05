@@ -16,6 +16,9 @@ export * from './core/cells/Cells.types'
 export * from './core/cells/Cells.utils'
 
 //Columns
+export * from './core/columns/CreateColumn'
+export * from './core/columns/Columns.utils'
+export * from './core/columns/Columns.types'
 export * from './core/columns/Columns'
 
 //Headers

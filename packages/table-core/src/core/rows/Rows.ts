@@ -47,6 +47,7 @@ export const Rows: TableFeature = {
     table._getRowId = (row: TData, index: number, parent?: Row<TData>) =>
       table_getRowId(row, table, index, parent)
 
+    //in next version, we should just pass in the row model as the optional 2nd arg
     table.getRow = (id: string, searchAll?: boolean) =>
       table_getRow(table, id, searchAll)
   },
