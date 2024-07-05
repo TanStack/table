@@ -17,12 +17,15 @@ export * from './core/cells/Cells.utils'
 
 //Columns
 export * from './core/columns/CreateColumn'
-export * from './core/columns/Columns.utils'
-export * from './core/columns/Columns.types'
 export * from './core/columns/Columns'
+export * from './core/columns/Columns.types'
+export * from './core/columns/Columns.utils'
 
 //Headers
+export * from './core/headers/CreateHeader'
 export * from './core/headers/Headers'
+export * from './core/headers/Headers.types'
+export * from './core/headers/Headers.utils'
 
 //Rows
 export * from './core/rows/CreateRow'
@@ -32,9 +35,11 @@ export * from './core/rows/Rows.utils'
 
 //Table
 export * from './core/table/Table'
+export * from './core/table/Table.types'
 
 //Utils
 export * from './utils'
+export * from './core/headers/buildHeaderGroups'
 export * from './core/table/getCoreRowModel'
 
 /**

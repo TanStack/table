@@ -1,4 +1,4 @@
-import { buildHeaderGroups } from '../../core/headers/Headers'
+import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { Table, Column, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
