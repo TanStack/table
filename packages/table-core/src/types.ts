@@ -1,4 +1,4 @@
-import { TableOptions_Core, Table_Core } from './core/table/Table'
+import { TableOptions_Core, Table_Core } from './core/table/Table.types'
 import {
   Table_ColumnVisibility,
   TableState_ColumnVisibility,
@@ -32,7 +32,7 @@ import {
   HeaderGroup_Core,
   HeaderContext,
   Table_Headers,
-} from './core/headers/Headers'
+} from './core/headers/Headers.types'
 import {
   Column_ColumnFaceting,
   TableOptions_ColumnFaceting,
